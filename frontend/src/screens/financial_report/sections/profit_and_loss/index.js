@@ -294,7 +294,7 @@ class ProfitAndLossReport extends React.Component {
 																				`${item}`
 																			].toFixed(2)}
 																			currencySymbol={
-																				universal_currency_list
+																				universal_currency_list[0]
 																					? universal_currency_list[0]
 																							.currencyIsoCode
 																					: 'USD'
@@ -316,7 +316,7 @@ class ProfitAndLossReport extends React.Component {
 																				'totalOperatingIncome'
 																			].toFixed(2)}
 																			currencySymbol={
-																				universal_currency_list
+																				universal_currency_list[0]
 																					? universal_currency_list[0]
 																							.currencyIsoCode
 																					: 'USD'
@@ -346,7 +346,7 @@ class ProfitAndLossReport extends React.Component {
 																				`${item}`
 																			].toFixed(2)}
 																			currencySymbol={
-																				universal_currency_list
+																				universal_currency_list[0]
 																					? universal_currency_list[0]
 																							.currencyIsoCode
 																					: 'USD'
@@ -368,7 +368,7 @@ class ProfitAndLossReport extends React.Component {
 																				'totalCostOfGoodsSold'
 																			].toFixed(2)}
 																			currencySymbol={
-																				universal_currency_list
+																				universal_currency_list[0]
 																					? universal_currency_list[0]
 																							.currencyIsoCode
 																					: 'USD'
@@ -389,7 +389,7 @@ class ProfitAndLossReport extends React.Component {
 																				'grossProfit'
 																			].toFixed(2)}
 																			currencySymbol={
-																				universal_currency_list
+																				universal_currency_list[0]
 																					? universal_currency_list[0]
 																							.currencyIsoCode
 																					: 'USD'
@@ -417,7 +417,7 @@ class ProfitAndLossReport extends React.Component {
 																				'operatingExpense'
 																			][`${item}`].toFixed(2)}
 																			currencySymbol={
-																				universal_currency_list
+																				universal_currency_list[0]
 																					? universal_currency_list[0]
 																							.currencyIsoCode
 																					: 'USD'
@@ -439,7 +439,7 @@ class ProfitAndLossReport extends React.Component {
 																				'totalOperatingExpense'
 																			].toFixed(2)}
 																			currencySymbol={
-																				universal_currency_list
+																				universal_currency_list[0]
 																					? universal_currency_list[0]
 																							.currencyIsoCode
 																					: 'USD'
@@ -461,7 +461,7 @@ class ProfitAndLossReport extends React.Component {
 																				'operatingProfit'
 																			].toFixed(2)}
 																			currencySymbol={
-																				universal_currency_list
+																				universal_currency_list[0]
 																					? universal_currency_list[0]
 																							.currencyIsoCode
 																					: 'USD'
@@ -491,7 +491,7 @@ class ProfitAndLossReport extends React.Component {
 																				'nonOperatingIncome'
 																			][`${item}`].toFixed(2)}
 																			currencySymbol={
-																				universal_currency_list
+																				universal_currency_list[0]
 																					? universal_currency_list[0]
 																							.currencyIsoCode
 																					: 'USD'
@@ -513,7 +513,7 @@ class ProfitAndLossReport extends React.Component {
 																				'totalNonOperatingIncome'
 																			].toFixed(2)}
 																			currencySymbol={
-																				universal_currency_list
+																				universal_currency_list[0]
 																					? universal_currency_list[0]
 																							.currencyIsoCode
 																					: 'USD'
@@ -543,7 +543,7 @@ class ProfitAndLossReport extends React.Component {
 																				'nonOperatingExpense'
 																			][`${item}`].toFixed(2)}
 																			currencySymbol={
-																				universal_currency_list
+																				universal_currency_list[0]
 																					? universal_currency_list[0]
 																							.currencyIsoCode
 																					: 'USD'
@@ -566,7 +566,7 @@ class ProfitAndLossReport extends React.Component {
 																				'totalNonOperatingExpense'
 																			].toFixed(2)}
 																			currencySymbol={
-																				universal_currency_list
+																				universal_currency_list[0]
 																					? universal_currency_list[0]
 																							.currencyIsoCode
 																					: 'USD'
@@ -587,7 +587,7 @@ class ProfitAndLossReport extends React.Component {
 																				'netProfitLoss'
 																			].toFixed(2)}
 																			currencySymbol={
-																				universal_currency_list
+																				universal_currency_list[0]
 																					? universal_currency_list[0]
 																							.currencyIsoCode
 																					: 'USD'

@@ -316,7 +316,7 @@ class BalanceSheet extends React.Component {
 																					`${item}`
 																				].toFixed(2)}
 																				currencySymbol={
-																					universal_currency_list
+																					universal_currency_list[0]
 																						? universal_currency_list[0]
 																								.currencyIsoCode
 																						: 'USD'
@@ -345,7 +345,7 @@ class BalanceSheet extends React.Component {
 																						`${item}`
 																					].toFixed(2)}
 																					currencySymbol={
-																						universal_currency_list
+																						universal_currency_list[0]
 																							? universal_currency_list[0]
 																									.currencyIsoCode
 																							: 'USD'
@@ -370,7 +370,7 @@ class BalanceSheet extends React.Component {
 																				'totalAccountReceivable'
 																			].toFixed(2)}
 																			currencySymbol={
-																				universal_currency_list
+																				universal_currency_list[0]
 																					? universal_currency_list[0]
 																							.currencyIsoCode
 																					: 'USD'
@@ -401,7 +401,7 @@ class BalanceSheet extends React.Component {
 																					'otherCurrentAssets'
 																				][`${item}`].toFixed(2)}
 																				currencySymbol={
-																					universal_currency_list
+																					universal_currency_list[0]
 																						? universal_currency_list[0]
 																								.currencyIsoCode
 																						: 'USD'
@@ -425,7 +425,7 @@ class BalanceSheet extends React.Component {
 																				'totalCurrentAssets'
 																			].toFixed(2)}
 																			currencySymbol={
-																				universal_currency_list
+																				universal_currency_list[0]
 																					? universal_currency_list[0]
 																							.currencyIsoCode
 																					: 'USD'
@@ -454,7 +454,7 @@ class BalanceSheet extends React.Component {
 																						`${item}`
 																					].toFixed(2)}
 																					currencySymbol={
-																						universal_currency_list
+																						universal_currency_list[0]
 																							? universal_currency_list[0]
 																									.currencyIsoCode
 																							: 'USD'
@@ -479,7 +479,7 @@ class BalanceSheet extends React.Component {
 																				'totalFixedAssets'
 																			].toFixed(2)}
 																			currencySymbol={
-																				universal_currency_list
+																				universal_currency_list[0]
 																					? universal_currency_list[0]
 																							.currencyIsoCode
 																					: 'USD'
@@ -503,7 +503,7 @@ class BalanceSheet extends React.Component {
 																				'totalAssets'
 																			].toFixed(2)}
 																			currencySymbol={
-																				universal_currency_list
+																				universal_currency_list[0]
 																					? universal_currency_list[0]
 																							.currencyIsoCode
 																					: 'USD'
@@ -540,7 +540,7 @@ class BalanceSheet extends React.Component {
 																					'otherLiability'
 																				][`${item}`].toFixed(2)}
 																				currencySymbol={
-																					universal_currency_list
+																					universal_currency_list[0]
 																						? universal_currency_list[0]
 																								.currencyIsoCode
 																						: 'USD'
@@ -564,7 +564,7 @@ class BalanceSheet extends React.Component {
 																				'totalOtherLiability'
 																			].toFixed(2)}
 																			currencySymbol={
-																				universal_currency_list
+																				universal_currency_list[0]
 																					? universal_currency_list[0]
 																							.currencyIsoCode
 																					: 'USD'
@@ -598,7 +598,7 @@ class BalanceSheet extends React.Component {
 																					'otherCurrentLiability'
 																				][`${item}`].toFixed(2)}
 																				currencySymbol={
-																					universal_currency_list
+																					universal_currency_list[0]
 																						? universal_currency_list[0]
 																								.currencyIsoCode
 																						: 'USD'
@@ -624,7 +624,7 @@ class BalanceSheet extends React.Component {
 																				'totalOtherCurrentLiability'
 																			].toFixed(2)}
 																			currencySymbol={
-																				universal_currency_list
+																				universal_currency_list[0]
 																					? universal_currency_list[0]
 																							.currencyIsoCode
 																					: 'USD'
@@ -648,7 +648,7 @@ class BalanceSheet extends React.Component {
 																				'totalLiability'
 																			].toFixed(2)}
 																			currencySymbol={
-																				universal_currency_list
+																				universal_currency_list[0]
 																					? universal_currency_list[0]
 																							.currencyIsoCode
 																					: 'USD'
@@ -677,7 +677,7 @@ class BalanceSheet extends React.Component {
 																						`${item}`
 																					].toFixed(2)}
 																					currencySymbol={
-																						universal_currency_list
+																						universal_currency_list[0]
 																							? universal_currency_list[0]
 																									.currencyIsoCode
 																							: 'USD'
@@ -702,7 +702,7 @@ class BalanceSheet extends React.Component {
 																				'totalEquities'
 																			].toFixed(2)}
 																			currencySymbol={
-																				universal_currency_list
+																				universal_currency_list[0]
 																					? universal_currency_list[0]
 																							.currencyIsoCode
 																					: 'USD'
@@ -723,7 +723,7 @@ class BalanceSheet extends React.Component {
 																				'totalAccountPayable'
 																			].toFixed(2)}
 																			currencySymbol={
-																				universal_currency_list
+																				universal_currency_list[0]
 																					? universal_currency_list[0]
 																							.currencyIsoCode
 																					: 'USD'
@@ -746,7 +746,7 @@ class BalanceSheet extends React.Component {
 																				'totalLiabilityEquities'
 																			].toFixed(2)}
 																			currencySymbol={
-																				universal_currency_list
+																				universal_currency_list[0]
 																					? universal_currency_list[0]
 																							.currencyIsoCode
 																					: 'USD'

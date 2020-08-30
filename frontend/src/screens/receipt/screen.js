@@ -149,7 +149,7 @@ class Receipt extends React.Component {
 		return row.amount ? (
 			<Currency
 				value={row.amount.toFixed(2)}
-				currencySymbol={extraData ? extraData[0].currencyIsoCode : 'USD'}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 			/>
 		) : (
 			''

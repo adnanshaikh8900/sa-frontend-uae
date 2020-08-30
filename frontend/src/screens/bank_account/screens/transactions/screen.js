@@ -242,7 +242,7 @@ class BankTransactions extends React.Component {
 		return row.depositeAmount >= 0 ? (
 			<Currency
 				value={row.depositeAmount}
-				currencySymbol={extraData ? extraData[0].currencyIsoCode : 'USD'}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 			/>
 		) : (
 			''
@@ -252,7 +252,7 @@ class BankTransactions extends React.Component {
 		return row.withdrawalAmount >= 0 ? (
 			<Currency
 				value={row.withdrawalAmount}
-				currencySymbol={extraData ? extraData[0].currencyIsoCode : 'USD'}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 			/>
 		) : (
 			''

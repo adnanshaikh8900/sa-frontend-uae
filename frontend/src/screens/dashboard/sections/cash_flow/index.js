@@ -101,9 +101,19 @@ class CashFlow extends Component {
 								<img alt="income" src={incomeIcon} />
 								<div>
 									<h3>
-										<Currency
-											value={(this.props.cash_flow_graph.inflow || {})['sum']}
-										/>
+										{universal_currency_list[0] &&
+											this.props.cash_flow_graph.inflow && (
+												<Currency
+													value={
+														(this.props.cash_flow_graph.inflow || {})['sum']
+													}
+													currencySymbol={
+														universal_currency_list[0]
+															? universal_currency_list[0].currencyIsoCode
+															: 'USD'
+													}
+												/>
+											)}
 									</h3>
 									<p>INFLOW</p>
 								</div>
@@ -113,18 +123,17 @@ class CashFlow extends Component {
 								<div>
 									<h3>
 										{universal_currency_list[0] &&
-											this.props.cash_flow_graph.outflow &&
-											(this.props.cash_flow_graph.outflow || {})[
-												'sum'
-											].toLocaleString(
-												`en-${universal_currency_list[0].currencyIsoCode.slice(
-													0,
-													universal_currency_list[0].currencyIsoCode.length - 1,
-												)}`,
-												{
-													style: 'currency',
-													currency: universal_currency_list[0].currencyIsoCode,
-												},
+											this.props.cash_flow_graph.outflow && (
+												<Currency
+													value={
+														(this.props.cash_flow_graph.outflow || {})['sum']
+													}
+													currencySymbol={
+														universal_currency_list[0]
+															? universal_currency_list[0].currencyIsoCode
+															: 'USD'
+													}
+												/>
 											)}
 									</h3>
 									<p>OUTFLOW</p>
@@ -136,19 +145,18 @@ class CashFlow extends Component {
 									<h3>
 										{' '}
 										{universal_currency_list[0] &&
-											this.props.cash_flow_graph.outflow &&
-											(
-												(this.props.cash_flow_graph.inflow || {})['sum'] -
-												(this.props.cash_flow_graph.outflow || {})['sum']
-											).toLocaleString(
-												`en-${universal_currency_list[0].currencyIsoCode.slice(
-													0,
-													universal_currency_list[0].currencyIsoCode.length - 1,
-												)}`,
-												{
-													style: 'currency',
-													currency: universal_currency_list[0].currencyIsoCode,
-												},
+											this.props.cash_flow_graph.outflow && (
+												<Currency
+													value={
+														(this.props.cash_flow_graph.inflow || {})['sum'] -
+														(this.props.cash_flow_graph.outflow || {})['sum']
+													}
+													currencySymbol={
+														universal_currency_list[0]
+															? universal_currency_list[0].currencyIsoCode
+															: 'USD'
+													}
+												/>
 											)}
 									</h3>
 									<p>NET</p>

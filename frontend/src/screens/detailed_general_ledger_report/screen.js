@@ -496,7 +496,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 																											2,
 																										)}
 																										currencySymbol={
-																											universal_currency_list
+																											universal_currency_list[0]
 																												? universal_currency_list[0]
 																														.currencyIsoCode
 																												: 'INR'
@@ -517,7 +517,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 																											2,
 																										)}
 																										currencySymbol={
-																											universal_currency_list
+																											universal_currency_list[0]
 																												? universal_currency_list[0]
 																														.currencyIsoCode
 																												: 'INR'
@@ -553,7 +553,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 																											2,
 																										)}
 																										currencySymbol={
-																											universal_currency_list
+																											universal_currency_list[0]
 																												? universal_currency_list[0]
 																														.currencyIsoCode
 																												: 'USD'
@@ -574,7 +574,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 																											2,
 																										)}
 																										currencySymbol={
-																											universal_currency_list
+																											universal_currency_list[0]
 																												? universal_currency_list[0]
 																														.currencyIsoCode
 																												: 'USD'
@@ -605,7 +605,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 																								<Currency
 																									value={row.amount.toFixed(2)}
 																									currencySymbol={
-																										universal_currency_list
+																										universal_currency_list[0]
 																											? universal_currency_list[0]
 																													.currencyIsoCode
 																											: 'USD'

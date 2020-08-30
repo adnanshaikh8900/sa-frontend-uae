@@ -130,7 +130,7 @@ class AccountBalances extends React.Component {
 		return row.transactionAmount ? (
 			<Currency
 				value={row.transactionAmount}
-				currencySymbol={extraData ? extraData[0].currencyIsoCode : 'USD'}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 			/>
 		) : (
 			row.transactionAmount
@@ -215,7 +215,7 @@ class AccountBalances extends React.Component {
 
 									<Col lg={2} className="mb-1">
 										<Select
-										styles={customStyles}
+											styles={customStyles}
 											className=""
 											options={
 												account_type_list

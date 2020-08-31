@@ -95,6 +95,7 @@ public class BankAccountRestHelper {
 			bankModel.setOpeningBalance(bank.getOpeningBalance());
 			bankModel.setPersonalCorporateAccountInd(bank.getPersonalCorporateAccountInd().toString());
 			bankModel.setSwiftCode(bank.getSwiftCode());
+			bankModel.setCurrentBalance(bank.getCurrentBalance());
 
 			if (bank.getBankAccountStatus() != null) {
 				bankModel.setBankAccountStatus(bank.getBankAccountStatus().getBankAccountStatusCode());

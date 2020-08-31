@@ -398,7 +398,7 @@ class ExplainTrasactionDetail extends React.Component {
 					isOpen={true}
 					okHandler={() => this.removeTransaction(id)}
 					cancelHandler={this.removeDialog}
-					message="test"
+					message="This Transaction will be deleted and cannot be reversed "
 				/>
 			),
 		});

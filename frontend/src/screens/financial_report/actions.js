@@ -23,7 +23,7 @@ export const getProfitAndLossReport = (postData) => {
 
 export const getTrialBalanceReport = (postData) => {
 	const { startDate, endDate } = postData;
-	let url = `/rest/financialReport/trialBalanceReport?startDate=${startDate}&endDate=${endDate}`;
+	let url = `/rest/financialReport/trialBalanceReport?endDate=${endDate}`;
 
 	return (dispatch) => {
 		let data = {
@@ -44,7 +44,7 @@ export const getTrialBalanceReport = (postData) => {
 
 export const getBalanceReport = (postData) => {
 	const { startDate, endDate } = postData;
-	let url = `/rest/financialReport/balanceSheet?startDate=${startDate}&endDate=${endDate}`;
+	let url = `/rest/financialReport/balanceSheet?endDate=${endDate}`;
 
 	return (dispatch) => {
 		let data = {

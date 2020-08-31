@@ -20,7 +20,7 @@ class InvoiceTemplate extends Component {
 		} else if (invoiceData.status == 'Sent') {
 			return 'saved-color';
 		} else {
-			return 'pending';
+			return 'saved-color';
 		}
 	};
 

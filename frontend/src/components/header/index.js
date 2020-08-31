@@ -131,13 +131,13 @@ class Header extends Component {
 							>
 								<i className="fas fa-bell"></i> Notifications
 							</DropdownItem> */}
-							<DropdownItem
+							{/* <DropdownItem
 								onClick={() =>
 									this.props.history.push('/admin/settings/data-backup')
 								}
 							>
 								<i className="fas fa-hdd-o"></i> Data Backup
-							</DropdownItem>
+							</DropdownItem> */}
 							<DropdownItem
 								onClick={() => this.props.history.push('/admin/settings/help')}
 							>

@@ -275,6 +275,13 @@ class CreateExpense extends React.Component {
 
 													// })
 												}}
+												validate={(values) => {
+													let errors = {};
+													if (values.payMode.value === 'BANK') {
+														errors.bankAccountId = 'Bank Account is Required';
+													}
+													return errors;
+												}}
 												validationSchema={Yup.object().shape({
 													expenseCategory: Yup.string().required(
 														'Expense Category is required',
@@ -288,13 +295,6 @@ class CreateExpense extends React.Component {
 													expenseAmount: Yup.string()
 														.required('Amount is Required')
 														.matches(/^[0-9]*$/, 'Enter a Valid Amount'),
-													bankAccountId: Yup.string().when('payMode', {
-														is: (val) =>
-															val['value'] === 'BANK' ? true : false,
-														then: Yup.string().required(
-															'Bank Account is Required',
-														),
-													}),
 													attachmentFile: Yup.mixed()
 														.test(
 															'fileType',
@@ -381,7 +381,16 @@ class CreateExpense extends React.Component {
 																	<Label htmlFor="payee">Payee</Label>
 																	<Select
 																		styles={customStyles}
-																		options={user_list ? user_list : []}
+																		options={
+																			user_list
+																				? selectOptionsFactory.renderOptions(
+																						'label',
+																						'value',
+																						user_list,
+																						'Payee',
+																				  )
+																				: []
+																		}
 																		value={props.values.payee}
 																		onChange={(option) => {
 																			if (option && option.value) {
@@ -390,7 +399,7 @@ class CreateExpense extends React.Component {
 																				props.handleChange('payee')('');
 																			}
 																		}}
-																		placeholder="Select Type"
+																		placeholder="Select Payee"
 																		id="payee"
 																		name="payee"
 																		className={
@@ -559,10 +568,7 @@ class CreateExpense extends React.Component {
 
 															<Col lg={3}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="payMode">
-																		<span className="text-danger">*</span>Pay
-																		Through
-																	</Label>
+																	<Label htmlFor="payMode">Pay Through</Label>
 																	<Select
 																		styles={customStyles}
 																		id="payMode"

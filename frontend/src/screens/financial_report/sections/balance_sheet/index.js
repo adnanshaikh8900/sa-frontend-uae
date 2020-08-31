@@ -267,7 +267,7 @@ class BalanceSheet extends React.Component {
 											<br style={{ marginBottom: '5px' }} />
 											Balance Sheet
 											<br style={{ marginBottom: '5px' }} />
-											From {initValue.startDate} To {initValue.endDate}
+											As on {initValue.endDate}
 										</p>
 									</div>
 									{loading ? (

@@ -97,6 +97,7 @@ class BankTransactions extends React.Component {
 			bankId: '',
 			openingBalance: '',
 			closingBalance: '',
+			currentBalance: '',
 			accounName: '',
 			expanded: [],
 			page: 1,
@@ -130,7 +131,7 @@ class BankTransactions extends React.Component {
 			.getBankAccountByID(this.props.location.state.bankAccountId)
 			.then((res) => {
 				this.setState({
-					openingBalance: res.openingBalance,
+					currentBalance: res.currentBalance,
 					closingBalance: res.closingBalance,
 					accounName: res.bankAccountName,
 				});
@@ -629,7 +630,7 @@ class BankTransactions extends React.Component {
 												</Col>
 												<Col lg={3}>
 													<h5>Current Bank Balance</h5>
-													<h3>{this.state.openingBalance}</h3>
+													<h3>{this.state.currentBalance}</h3>
 												</Col>
 												<Col lg={3}>
 													<h5>SimpleVat Balance</h5>

@@ -75,9 +75,13 @@ private DateFormatUtil dateUtil;
     {
         LocalDateTime fromDate = null;
         LocalDateTime toDate = null;
+        String dateClause = " <= :endDate ";
         String chartOfAccountCodes = reportRequestModel.getChartOfAccountCodes();
         try {
-            fromDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getStartDate(), CommonColumnConstants.DD_MM_YYYY);
+            if(reportRequestModel.getStartDate()!=null) {
+                fromDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getStartDate(), CommonColumnConstants.DD_MM_YYYY);
+                dateClause = " BETWEEN :startDate and :endDate ";
+            }
         } catch (Exception e) {
             LOGGER.error("Exception is ", e);
         }
@@ -87,8 +91,8 @@ private DateFormatUtil dateUtil;
             LOGGER.error(ERROR, e);
         }
 
-        String queryStr = "select cb from TransactionCategoryClosingBalance cb where cb.deleteFlag = false and cb.closingBalanceDate " +
-                "BETWEEN :startDate and :endDate and cb.transactionCategory.chartOfAccount.chartOfAccountCode in ("+chartOfAccountCodes+") order by cb.closingBalanceDate DESC  ";
+        String queryStr = "select cb from TransactionCategoryClosingBalance cb where cb.deleteFlag = false and cb.closingBalanceDate " +dateClause+
+                " and cb.transactionCategory.chartOfAccount.chartOfAccountCode in ("+chartOfAccountCodes+") order by cb.closingBalanceDate DESC  ";
 
         TypedQuery<TransactionCategoryClosingBalance> query = getEntityManager().createQuery(queryStr, TransactionCategoryClosingBalance.class);
         if (fromDate != null) {
@@ -97,15 +101,6 @@ private DateFormatUtil dateUtil;
         if (toDate != null) {
             query.setParameter(CommonColumnConstants.END_DATE, toDate);
         }
-//        if (reportRequestModel.getChartOfAccountId() != null) {
-//            query.setParameter("transactionCategoryId", reportRequestModel.getChartOfAccountId());
-//        }
-//        if (reportRequestModel.getReportBasis() != null && !reportRequestModel.getReportBasis().isEmpty()
-//                && reportRequestModel.getReportBasis().equals("CASH")) {
-//            query.setParameter("transactionCategoryIdList",
-//                    Arrays.asList(TransactionCategoryCodeEnum.ACCOUNT_RECEIVABLE.getCode(),
-//                            TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode()));
-//        }
         List<TransactionCategoryClosingBalance> list = query.getResultList();
         return list != null && !list.isEmpty() ? list : null;
     }

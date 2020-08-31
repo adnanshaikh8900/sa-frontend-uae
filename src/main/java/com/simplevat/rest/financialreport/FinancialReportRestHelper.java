@@ -28,7 +28,6 @@ public class FinancialReportRestHelper {
 
 		BalanceSheetResponseModel balanceSheetResponseModel= new BalanceSheetResponseModel();
 		ReportRequestModel requestModel = new ReportRequestModel();
-		requestModel.setStartDate(reportRequestModel.getStartDate());
 		requestModel.setEndDate(reportRequestModel.getEndDate());
 		String chartOfAccountCodes = getChartOfAccountCategoryCodes("BalanceSheet");
 		requestModel.setChartOfAccountCodes(chartOfAccountCodes);
@@ -299,7 +298,6 @@ public class FinancialReportRestHelper {
 	public TrialBalanceResponseModel getTrialBalanceReport(FinancialReportRequestModel reportRequestModel) {
 		TrialBalanceResponseModel trialBalanceResponseModel = new TrialBalanceResponseModel();
 		ReportRequestModel requestModel = new ReportRequestModel();
-		requestModel.setStartDate(reportRequestModel.getStartDate());
 		requestModel.setEndDate(reportRequestModel.getEndDate());
 		String chartOfAccountCodes = getChartOfAccountCategoryCodes("TrailBalance");
 		requestModel.setChartOfAccountCodes(chartOfAccountCodes);

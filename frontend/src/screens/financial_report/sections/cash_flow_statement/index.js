@@ -284,7 +284,7 @@ class CashFlowStatement extends React.Component {
 											<br style={{ marginBottom: '5px' }} />
 											Trial Balance Report
 											<br style={{ marginBottom: '5px' }} />
-											From {initValue.startDate} To {initValue.endDate}
+											As on {initValue.endDate}
 										</p>
 									</div>
 									{loading ? (

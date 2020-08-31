@@ -241,6 +241,25 @@ public class TransactionRestController {
 				journalService.persist(journal);
 				break;
 			case TRANSFERD_TO:
+				updateTransactionForMoneySpent(trnx,transactionPresistModel);
+				TransactionCategory explainedTransactionCategory = trnx.getExplainedTransactionCategory();
+				boolean isdebitFromBank = false;
+				if(explainedTransactionCategory!=null && explainedTransactionCategory.getChartOfAccount()
+						.getChartOfAccountCode().equalsIgnoreCase(ChartOfAccountCategoryCodeEnum.BANK.getCode()))
+				{
+					TransactionCategory transactionCategory = transactionCategoryService
+							.findTransactionCategoryByTransactionCategoryCode(
+									TransactionCategoryCodeEnum.AMOUNT_IN_TRANSIT.getCode());
+					trnx.setExplainedTransactionCategory(transactionCategory);
+					trnx.setExplainedTransactionDescription("Transferred to "+explainedTransactionCategory.getTransactionCategoryName());
+					isdebitFromBank = true;
+				}
+				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
+						transactionPresistModel.getAmount(), userId, trnx, isdebitFromBank);
+				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+						transactionPresistModel.getDATE_FORMAT()));
+				journalService.persist(journal);
+				break;
 			case MONEY_SPENT:
 			case MONEY_SPENT_OTHERS:
 			case PURCHASE_OF_CAPITAL_ASSET:
@@ -264,6 +283,26 @@ public class TransactionRestController {
 				reconsileCustomerInvoices(userId, trnx, itemModels);
 				break;
 			case TRANSFER_FROM:
+				updateTransactionForMoneyReceived(trnx,transactionPresistModel);
+				explainedTransactionCategory = trnx.getExplainedTransactionCategory();
+				isdebitFromBank = true;
+				if(explainedTransactionCategory!=null && explainedTransactionCategory.getChartOfAccount()
+						.getChartOfAccountCode().equalsIgnoreCase(ChartOfAccountCategoryCodeEnum.BANK.getCode()))
+				{
+					TransactionCategory transactionCategory = transactionCategoryService
+							.findTransactionCategoryByTransactionCategoryCode(
+									TransactionCategoryCodeEnum.AMOUNT_IN_TRANSIT.getCode());
+					trnx.setExplainedTransactionCategory(transactionCategory);
+					trnx.setExplainedTransactionDescription("Transferred from "+explainedTransactionCategory.getTransactionCategoryName());
+					isdebitFromBank = false;
+				}
+				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
+						transactionPresistModel.getAmount(), userId, trnx, isdebitFromBank);
+				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+						transactionPresistModel.getDATE_FORMAT()));
+				journalService.persist(journal);
+
+				break;
 			case REFUND_RECEIVED:
 			case INTEREST_RECEVIED:
 			case DISPOSAL_OF_CAPITAL_ASSET:
@@ -343,6 +382,25 @@ public class TransactionRestController {
 				journalService.persist(journal);
 				break;
 			case TRANSFERD_TO:
+				updateTransactionForMoneySpent(trnx,transactionPresistModel);
+				TransactionCategory explainedTransactionCategory = trnx.getExplainedTransactionCategory();
+				boolean isdebitFromBank = false;
+				if(explainedTransactionCategory!=null && explainedTransactionCategory.getChartOfAccount()
+						.getChartOfAccountCode().equalsIgnoreCase(ChartOfAccountCategoryCodeEnum.BANK.getCode()))
+				{
+					TransactionCategory transactionCategory = transactionCategoryService
+							.findTransactionCategoryByTransactionCategoryCode(
+									TransactionCategoryCodeEnum.AMOUNT_IN_TRANSIT.getCode());
+					trnx.setExplainedTransactionCategory(transactionCategory);
+					trnx.setExplainedTransactionDescription("Transferred to "+explainedTransactionCategory.getTransactionCategoryName());
+					isdebitFromBank = true;
+				}
+				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
+						transactionPresistModel.getAmount(), userId, trnx, isdebitFromBank);
+				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+						transactionPresistModel.getDATE_FORMAT()));
+				journalService.persist(journal);
+				break;
 			case MONEY_SPENT:
 			case MONEY_SPENT_OTHERS:
 			case PURCHASE_OF_CAPITAL_ASSET:
@@ -366,6 +424,26 @@ public class TransactionRestController {
 				reconsileCustomerInvoices(userId, trnx, itemModels);
 				break;
 			case TRANSFER_FROM:
+				updateTransactionForMoneyReceived(trnx,transactionPresistModel);
+				explainedTransactionCategory = trnx.getExplainedTransactionCategory();
+				isdebitFromBank = true;
+				if(explainedTransactionCategory!=null && explainedTransactionCategory.getChartOfAccount()
+						.getChartOfAccountCode().equalsIgnoreCase(ChartOfAccountCategoryCodeEnum.BANK.getCode()))
+				{
+					TransactionCategory transactionCategory = transactionCategoryService
+							.findTransactionCategoryByTransactionCategoryCode(
+									TransactionCategoryCodeEnum.AMOUNT_IN_TRANSIT.getCode());
+					trnx.setExplainedTransactionCategory(transactionCategory);
+					trnx.setExplainedTransactionDescription("Transferred from "+explainedTransactionCategory.getTransactionCategoryName());
+					isdebitFromBank =false;
+				}
+				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
+						transactionPresistModel.getAmount(), userId, trnx, isdebitFromBank);
+				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+						transactionPresistModel.getDATE_FORMAT()));
+				journalService.persist(journal);
+
+				break;
 			case REFUND_RECEIVED:
 			case INTEREST_RECEVIED:
 			case DISPOSAL_OF_CAPITAL_ASSET:
@@ -384,6 +462,167 @@ public class TransactionRestController {
 		if(transactionPresistModel.getIsValidForClosingBalance()!=null && transactionPresistModel.getIsValidForClosingBalance())
 		{
 		//	transactionCategoryClosingBalanceService.updateClosingBalance(trnx);
+		}
+		if (transactionPresistModel.getIsValidForCurrentBalance()!=null && transactionPresistModel.getIsValidForCurrentBalance()){
+
+			BigDecimal oldTransactionAmount = transactionPresistModel.getOldTransactionAmount();
+			BigDecimal newTransactionAmount =transactionPresistModel.getAmount();
+			BigDecimal currentBalance = trnx.getBankAccount().getCurrentBalance();
+
+			BigDecimal updateTransactionAmount= BigDecimal.ZERO;
+			updateTransactionAmount=newTransactionAmount.subtract(oldTransactionAmount);
+			if(trnx.getDebitCreditFlag() == 'C'){
+
+				currentBalance= currentBalance.subtract(oldTransactionAmount);
+				currentBalance= currentBalance.add(newTransactionAmount);
+			}
+			else{
+				currentBalance= currentBalance.add(oldTransactionAmount);
+				currentBalance= currentBalance.subtract(newTransactionAmount);
+			}
+
+			BankAccount bankAccount =trnx.getBankAccount();
+			bankAccount.setCurrentBalance(currentBalance);
+			bankAccountService.update(bankAccount);
+			trnx.setTransactionAmount(updateTransactionAmount);
+			//transactionCategoryClosingBalanceService.updateClosingBalance(trnx);
+
+		}
+		return new ResponseEntity<>("Saved successfull", HttpStatus.OK);
+	}
+	protected Transaction isValidTransactionToExplain(TransactionPresistModel transactionPresistModel)
+	 {
+		 if(transactionPresistModel.getTransactionId()==null)
+		 	return null;
+		 Transaction transaction =  transactionService.findByPK(transactionPresistModel.getTransactionId());
+		 if(transaction.getTransactionExplinationStatusEnum()== TransactionExplinationStatusEnum.FULL)
+		 return transaction;
+		 else
+		 return	null;
+	 }
+	@ApiOperation(value = "Un explain Transaction", response = Transaction.class)
+	@PostMapping(value = "/unexplain")
+	public ResponseEntity<String> unExplainTransaction(@ModelAttribute TransactionPresistModel transactionPresistModel,
+													   HttpServletRequest request) {
+
+		Transaction trnx = isValidTransactionToExplain(transactionPresistModel);
+		if(trnx==null)
+			return new ResponseEntity<String>("Transaction already unexplained", HttpStatus.OK);
+
+		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+
+		int chartOfAccountCategory = transactionPresistModel.getCoaCategoryId();
+
+	//	Transaction trnx = updateTransactionWithCommonFields(transactionPresistModel,userId,TransactionCreationMode.IMPORT);
+
+		switch(ChartOfAccountCategoryIdEnumConstant.get(chartOfAccountCategory))
+		{
+//---------------------------------------Expense Chart of Account Category----------------------------------
+			case EXPENSE:
+				if(transactionPresistModel.getExpenseCategory()!=null && transactionPresistModel.getExpenseCategory() !=0)
+				{
+					explainExpenses(transactionPresistModel, userId, trnx);
+				}
+				else
+				{  // Supplier Invoices
+					updateTransactionForSupplierInvoices(trnx,transactionPresistModel);
+					// JOURNAL LINE ITEM FOR normal transaction
+					Journal journal = null;
+//					reconsilationRestHelper.invoiceReconsile(userId,trnx,false);
+//					journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+//							transactionPresistModel.getDATE_FORMAT()));
+//					journalService.persist(journal);
+					List<ReconsileRequestLineItemModel> itemModels = getReconsileRequestLineItemModels(transactionPresistModel);
+					reconsileSupplierInvoices(userId, trnx, itemModels);
+				}
+				break;
+			case MONEY_PAID_TO_USER:
+				updateTransactionMoneyPaidToUser(trnx,transactionPresistModel);
+				Journal journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
+						transactionPresistModel.getAmount(), userId, trnx, false);
+				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+						transactionPresistModel.getDATE_FORMAT()));
+				journalService.persist(journal);
+				break;
+			case TRANSFERD_TO:
+				updateTransactionForMoneySpent(trnx,transactionPresistModel);
+				TransactionCategory explainedTransactionCategory = trnx.getExplainedTransactionCategory();
+				if(explainedTransactionCategory!=null && explainedTransactionCategory.getChartOfAccount()
+						.getChartOfAccountCode().equalsIgnoreCase(ChartOfAccountCategoryCodeEnum.BANK.getCode()))
+				{
+					TransactionCategory transactionCategory = transactionCategoryService
+							.findTransactionCategoryByTransactionCategoryCode(
+									TransactionCategoryCodeEnum.AMOUNT_IN_TRANSIT.getCode());
+					trnx.setExplainedTransactionCategory(transactionCategory);
+					trnx.setExplainedTransactionDescription("Transferred to "+explainedTransactionCategory.getTransactionCategoryName());
+				}
+				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
+						transactionPresistModel.getAmount(), userId, trnx, true);
+				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+						transactionPresistModel.getDATE_FORMAT()));
+				journalService.persist(journal);
+				break;
+			case MONEY_SPENT:
+			case MONEY_SPENT_OTHERS:
+			case PURCHASE_OF_CAPITAL_ASSET:
+				updateTransactionForMoneySpent(trnx,transactionPresistModel);
+				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
+						transactionPresistModel.getAmount(), userId, trnx, true);
+				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+						transactionPresistModel.getDATE_FORMAT()));
+				journalService.persist(journal);
+				break;
+//-----------------------------------------------------Sales Chart of Account Category-----------------------------------------
+			case SALES:
+				// Customer Invoices
+				updateTransactionForCustomerInvoices(trnx,transactionPresistModel);
+				// JOURNAL LINE ITEM FOR normal transaction
+//				journal = reconsilationRestHelper.invoiceReconsile(userId,trnx,true);
+//				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+//						transactionPresistModel.getDATE_FORMAT()));
+//				journalService.persist(journal);
+				List<ReconsileRequestLineItemModel> itemModels = getReconsileRequestLineItemModels(transactionPresistModel);
+				reconsileCustomerInvoices(userId, trnx, itemModels);
+				break;
+			case TRANSFER_FROM:
+				updateTransactionForMoneyReceived(trnx,transactionPresistModel);
+				explainedTransactionCategory = trnx.getExplainedTransactionCategory();
+			////	isdebitFromBank = true;
+				if(explainedTransactionCategory!=null && explainedTransactionCategory.getChartOfAccount()
+						.getChartOfAccountCode().equalsIgnoreCase(ChartOfAccountCategoryCodeEnum.BANK.getCode()))
+				{
+					TransactionCategory transactionCategory = transactionCategoryService
+							.findTransactionCategoryByTransactionCategoryCode(
+									TransactionCategoryCodeEnum.AMOUNT_IN_TRANSIT.getCode());
+					trnx.setExplainedTransactionCategory(transactionCategory);
+					trnx.setExplainedTransactionDescription("Transferred from "+explainedTransactionCategory.getTransactionCategoryName());
+		//			isdebitFromBank = false;
+				}
+				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
+						transactionPresistModel.getAmount(), userId, trnx, false);
+				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+						transactionPresistModel.getDATE_FORMAT()));
+				journalService.persist(journal);
+
+				break;
+			case REFUND_RECEIVED:
+			case INTEREST_RECEVIED:
+			case DISPOSAL_OF_CAPITAL_ASSET:
+			case MONEY_RECEIVED_FROM_USER:
+			case MONEY_RECEIVED_OTHERS:
+				updateTransactionForMoneyReceived(trnx,transactionPresistModel);
+				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
+						transactionPresistModel.getAmount(), userId, trnx, true);
+				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+						transactionPresistModel.getDATE_FORMAT()));
+				journalService.persist(journal);
+				break;
+			default:
+				return new ResponseEntity<>("Chart of Category Id not sent correctly", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		if(transactionPresistModel.getIsValidForClosingBalance()!=null && transactionPresistModel.getIsValidForClosingBalance())
+		{
+			//	transactionCategoryClosingBalanceService.updateClosingBalance(trnx);
 		}
 		if (transactionPresistModel.getIsValidForCurrentBalance()!=null && transactionPresistModel.getIsValidForCurrentBalance()){
 

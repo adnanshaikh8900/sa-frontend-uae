@@ -238,7 +238,7 @@ class BankTransactions extends React.Component {
 		return <span className={`badge ${classname} mb-0`}>{value}</span>;
 	};
 
-	renderDepositAmount = (cell, row, extraData) => {
+	renderDepositAmount = (cell, row, rowIndex, extraData) => {
 		return row.depositeAmount >= 0 ? (
 			<Currency
 				value={row.depositeAmount}
@@ -248,7 +248,7 @@ class BankTransactions extends React.Component {
 			''
 		);
 	};
-	renderWithdrawalAmount = (cell, row, extraData) => {
+	renderWithdrawalAmount = (cell, row, rowIndex, extraData) => {
 		return row.withdrawalAmount >= 0 ? (
 			<Currency
 				value={row.withdrawalAmount}
@@ -552,7 +552,6 @@ class BankTransactions extends React.Component {
 			transaction_type_list,
 			universal_currency_list,
 		} = this.props;
-
 		const columns = [
 			{
 				dataField: 'transactionDate',
@@ -565,8 +564,8 @@ class BankTransactions extends React.Component {
 			{
 				dataField: 'depositeAmount',
 				text: 'Deposit Amount',
-				formatExtraData: universal_currency_list,
 				formatter: this.renderDepositAmount,
+				formatExtraData: universal_currency_list,
 			},
 			{
 				dataField: 'withdrawalAmount',

@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: simplevat-ingress-test
+  namespace: simplevat-test
+#  annotations:
+#    kubernetes.io/ingress.global-static-ip-name: simplevat-test-ip
+spec:
+  backend:
+    serviceName: simplevat-service-test
+    servicePort: 80
+  rules:
+    - host: k8s.test.simplevat.com
+      http:
+        paths:
+          - backend:
+              serviceName: simplevat-service-test
+              servicePort: 80
+            path: /*

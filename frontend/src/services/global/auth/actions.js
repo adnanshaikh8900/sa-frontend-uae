@@ -43,7 +43,7 @@ export const logIn = (obj) => {
 				dispatch({
 					type: AUTH.SIGNED_IN,
 				});
-				window['sessionStorage'].setItem('accessToken', res.data.token);
+				window['localStorage'].setItem('accessToken', res.data.token);
 				// window['sessionStorage'].setItem('userId', res.data.userId);
 
 				return res;
@@ -54,9 +54,33 @@ export const logIn = (obj) => {
 	};
 };
 
+export const register = (obj) => {
+	return (dispatch) => {
+		let data = {
+			method: 'post',
+			url: '/rest/company/register',
+			data: obj,
+		};
+		return api(data)
+			.then((res) => {
+				console.log(res);
+				// dispatch({
+				// 	type: AUTH.REGISTER,
+				// });
+				//window['localStorage'].setItem('accessToken', res.data.token);
+				// window['sessionStorage'].setItem('userId', res.data.userId);
+
+				//return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
 export const logOut = () => {
 	return (dispatch) => {
-		window['sessionStorage'].clear();
+		window['localStorage'].clear();
 
 		dispatch({
 			type: AUTH.SIGNED_OUT,

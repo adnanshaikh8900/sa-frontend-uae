@@ -44,6 +44,14 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
         return transactionCategoryClosingBalanceDao.getList(reportRequestModel);
     }
 
+    public List<TransactionCategoryClosingBalance> getListByChartOfAccountIds(ReportRequestModel reportRequestModel)
+    {
+        return transactionCategoryClosingBalanceDao.getListByChartOfAccountIds(reportRequestModel);
+    }
+    public TransactionCategoryClosingBalance getLastClosingBalanceByDate(TransactionCategory category){
+        return transactionCategoryClosingBalanceDao.getLastClosingBalanceByDate(category);
+    }
+
     public void updateClosingBalance(JournalLineItem lineItem)
     {
         TransactionCategory category = lineItem.getTransactionCategory();
@@ -55,12 +63,12 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
                     ? Boolean.TRUE
                     : Boolean.FALSE;
             if(isDebit)
-                transaction.setDebitCreditFlag('D');
-            else
                 transaction.setDebitCreditFlag('C');
+            else
+                transaction.setDebitCreditFlag('D');
             transaction.setCreatedBy(lineItem.getCreatedBy());
             transaction.setTransactionDate(journalDate);
-            BigDecimal transactionAmount = lineItem.getDebitAmount() != null ? lineItem.getDebitAmount():lineItem.getCreditAmount();
+            BigDecimal transactionAmount = isDebit ? lineItem.getDebitAmount():lineItem.getCreditAmount();
             if(lineItem.getDeleteFlag())
                 transactionAmount = transactionAmount.negate();
             transaction.setTransactionAmount(transactionAmount);

@@ -20,7 +20,7 @@ import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { CSVLink } from 'react-csv';
 
-import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader, ConfirmDeleteModal, Currency } from 'components';
 import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 
 import { CommonActions } from 'services/global';
@@ -259,6 +259,9 @@ class BankAccount extends React.Component {
 				onClick={() =>
 					this.props.history.push('/admin/banking/bank-account/transaction', {
 						bankAccountId: row.bankAccountId,
+						closingBalance: row.closingBalance,
+						openingBalance: row.openingBalance,
+						accounName: row.accounName,
 					})
 				}
 			>
@@ -284,7 +287,11 @@ class BankAccount extends React.Component {
 	};
 
 	renderBalance(cell, row) {
-		return row.openingBalance ? row.openingBalance.toFixed(2) : '';
+		return row.openingBalance ? (
+			<Currency value={row.openingBalance} currencySymbol={row.currancyName} />
+		) : (
+			row.openingBalance
+		);
 	}
 
 	renderActions = (cell, row) => {
@@ -320,6 +327,9 @@ class BankAccount extends React.Component {
 									'/admin/banking/bank-account/transaction',
 									{
 										bankAccountId: row.bankAccountId,
+										closingBalance: row.closingBalance,
+										openingBalance: row.openingBalance,
+										accounName: row.accounName,
 									},
 								);
 							}}
@@ -338,12 +348,15 @@ class BankAccount extends React.Component {
 	};
 
 	closeBankAccount = (_id) => {
+		const message =
+			'Warning: This Bank Account will be deleted permanently and cannot be recovered. ';
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
 					isOpen={true}
 					okHandler={() => this.removeBankAccount(_id)}
 					cancelHandler={this.removeDialog}
+					message={message}
 				/>
 			),
 		});
@@ -356,7 +369,7 @@ class BankAccount extends React.Component {
 			.then(() => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Bank Account Deleted Successfully',
+					'Bank account deleted successfully  ',
 				);
 				this.initializeData();
 				let tempList = [];
@@ -388,7 +401,7 @@ class BankAccount extends React.Component {
 		return (
 			<div>
 				<div>
-					<label className="font-weight-bold mr-2">Book Balance : </label>
+					<label className="font-weight-bold mr-2">Reconciled Balance : </label>
 					<label className="badge badge-success mb-0">
 						{row.closingBalance}
 					</label>
@@ -434,6 +447,8 @@ class BankAccount extends React.Component {
 
 	bulkDeleteBankAccount = () => {
 		let { selected_id_list } = this.state;
+		const message =
+			'Warning: This Bank Account will be deleted permanently and cannot be recovered. ';
 		if (selected_id_list.length > 0) {
 			this.setState({
 				dialog: (
@@ -441,6 +456,7 @@ class BankAccount extends React.Component {
 						isOpen={true}
 						okHandler={this.removeBulkBankAccount}
 						cancelHandler={this.removeDialog}
+						message={message}
 					/>
 				),
 			});
@@ -561,7 +577,7 @@ class BankAccount extends React.Component {
 										<div className="d-flex justify-content-end">
 											<ButtonGroup size="sm">
 												<Button
-													color="success"
+													color="primary"
 													className="btn-square"
 													onClick={() => this.getCsvData()}
 												>
@@ -724,6 +740,14 @@ class BankAccount extends React.Component {
 												}}
 											>
 												<TableHeaderColumn
+													dataField="bankAccountNo"
+													dataFormat={this.renderAccountNumber}
+													dataSort
+													width="15%"
+												>
+													Account Number
+												</TableHeaderColumn>
+												<TableHeaderColumn
 													dataField="name"
 													dataSort
 													width="10%"
@@ -731,29 +755,20 @@ class BankAccount extends React.Component {
 													Bank
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													dataFormat={this.renderAccountType}
-													dataField="bankAccountTypeName"
-													dataSort
-													width="15%"
-												>
-													Account Type
-												</TableHeaderColumn>
-												<TableHeaderColumn
 													dataField="accounName"
 													dataSort
-													width="15%"
+													width="18%"
 												>
 													Account Name
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													dataField="bankAccountNo"
-													dataFormat={this.renderAccountNumber}
+													dataFormat={this.renderAccountType}
+													dataField="bankAccountTypeName"
 													dataSort
-													width="18%"
+													width="12%"
 												>
-													Account Number
+													Account Type
 												</TableHeaderColumn>
-
 												<TableHeaderColumn
 													dataFormat={this.renderCurrency}
 													dataSort

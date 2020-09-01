@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: simplevat-test
+  name: simplevat-service-test
+  namespace: simplevat-test
+spec:
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: simplevat-test
+  sessionAffinity: None
+  type: NodePort
+status:
+  loadBalancer: {}

@@ -22,6 +22,28 @@ steps:
     - 'CLOUDSDK_CONTAINER_CLUSTER=gtt-k8s'
   waitFor:
   - docker-build-push
+- name: 'gcr.io/cloud-builders/kubectl'
+  args:
+    - 'rolling-update'
+    - 'simplevat-test-rep'
+    - '--image=gcr.io/gtt-k8s/simplevat:$TAG_NAME'
+    - '--namespace=simplevat-test'
+  env:
+    - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=gtt-k8s'
+  waitFor:
+    - docker-build-push
+- name: 'gcr.io/cloud-builders/kubectl'
+  args:
+    - 'rolling-update'
+    - 'simplevat-waqas-rep'
+    - '--image=gcr.io/gtt-k8s/simplevat:$TAG_NAME'
+    - '--namespace=simplevat-test'
+  env:
+    - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=gtt-k8s'
+  waitFor:
+    - docker-build-push
 timeout: 2400s
 options:
   machineType: 'N1_HIGHCPU_8'

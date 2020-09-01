@@ -22,7 +22,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
 import { CSVLink } from 'react-csv';
 
-import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader, ConfirmDeleteModal, Currency } from 'components';
 
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -41,7 +41,7 @@ const mapStateToProps = (state) => {
 		supplier_invoice_list: state.supplier_invoice.supplier_invoice_list,
 		supplier_list: state.supplier_invoice.supplier_list,
 		status_list: state.supplier_invoice.status_list,
-		currency_list: state.customer_invoice.currency_list,
+		universal_currency_list: state.common.universal_currency_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -53,6 +53,21 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
+
+const invoiceimage = require('assets/images/invoice/invoice.png');
+const overWeekly = require('assets/images/invoice/icons_due within a week.png');
+const overduemonthly = require('assets/images/invoice/icons_due within month.png');
+const overdue = require('assets/images/invoice/icons_overdue.png');
 
 class SupplierInvoice extends React.Component {
 	constructor(props) {
@@ -196,12 +211,29 @@ class SupplierInvoice extends React.Component {
 		this.initializeData();
 	};
 
-	renderInvoiceAmount = (cell, row) => {
-		return row.invoiceAmount ? row.invoiceAmount.toFixed(2) : '';
+	renderInvoiceAmount = (cell, row, extraData) => {
+		return row.invoiceAmount ? (
+			<Currency
+				value={row.invoiceAmount}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			''
+		);
 	};
 
-	renderVatAmount = (cell, row) => {
-		return row.vatAmount === 0 ? row.vatAmount : row.vatAmount;
+	renderVatAmount = (cell, row, extraData) => {
+		return row.vatAmount === 0 ? (
+			<Currency
+				value={row.vatAmount}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			<Currency
+				value={row.vatAmount}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		);
 	};
 
 	invoiceDueDate = (cell, row) => {
@@ -238,23 +270,25 @@ class SupplierInvoice extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-						<DropdownItem
-							onClick={() =>
-								this.props.history.push(
-									'/admin/expense/supplier-invoice/detail',
-									{ id: row.id },
-								)
-							}
-						>
-							<i className="fas fa-edit" /> Edit
-						</DropdownItem>
+						{row.statusEnum !== 'Paid' && (
+							<DropdownItem
+								onClick={() =>
+									this.props.history.push(
+										'/admin/expense/supplier-invoice/detail',
+										{ id: row.id },
+									)
+								}
+							>
+								<i className="fas fa-edit" /> Edit
+							</DropdownItem>
+						)}
 						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && (
 							<DropdownItem
 								onClick={() => {
 									this.postInvoice(row);
 								}}
 							>
-								<i className="fas fa-heart" /> Send
+								<i className="fas fa-send" /> Send
 							</DropdownItem>
 						)}
 						{/* <DropdownItem  onClick={() => {this.openInvoicePreviewModal(row.id)}}>
@@ -360,6 +394,8 @@ class SupplierInvoice extends React.Component {
 
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
+		const message =
+			'Warning: This Supplier Invoice will be deleted permanently and cannot be recovered.  ';
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
@@ -367,6 +403,7 @@ class SupplierInvoice extends React.Component {
 						isOpen={true}
 						okHandler={this.removeBulk}
 						cancelHandler={this.removeDialog}
+						message={message}
 					/>
 				),
 			});
@@ -391,7 +428,7 @@ class SupplierInvoice extends React.Component {
 				this.initializeData(filterData);
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Invoice Deleted Successfully',
+					'Supplier Invoice Deleted Successfully',
 				);
 				if (supplier_invoice_list && supplier_invoice_list.length > 0) {
 					this.setState({
@@ -572,7 +609,12 @@ class SupplierInvoice extends React.Component {
 			csvData,
 			view,
 		} = this.state;
-		const { status_list, supplier_list, supplier_invoice_list } = this.props;
+		const {
+			status_list,
+			supplier_list,
+			supplier_invoice_list,
+			universal_currency_list,
+		} = this.props;
 		// const containerStyle = {
 		//   zIndex: 1999
 		// }
@@ -604,7 +646,11 @@ class SupplierInvoice extends React.Component {
 							<Row>
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
-										<i className="fas fa-address-book" />
+										<img
+											alt="invoiceimage"
+											src={invoiceimage}
+											style={{ width: '40px' }}
+										/>
 										<span className="ml-2">Supplier Invoices</span>
 									</div>
 								</Col>
@@ -623,32 +669,59 @@ class SupplierInvoice extends React.Component {
 							<Row>
 								<Col lg={12}>
 									<div className="mb-4 status-panel p-3">
-										<Row>
-											<Col lg={3}>
-												<h5>Overdue</h5>
-												<h3 className="status-title">
-													{this.state.overDueAmountDetails.overDueAmount}
-												</h3>
-											</Col>
-											<Col lg={3}>
-												<h5>Due Within This Week</h5>
-												<h3 className="status-title">
-													{this.state.overDueAmountDetails.overDueAmountWeekly}
-												</h3>
-											</Col>
-											<Col lg={3}>
-												<h5>Due Within 30 Days</h5>
-												<h3 className="status-title">
-													{this.state.overDueAmountDetails.overDueAmountMonthly}
-												</h3>
-											</Col>
+										<Row className="align-items-center justify-content-around">
+											<div className="h4 mb-0 d-flex align-items-center ">
+												<img
+													alt="overdue"
+													src={overdue}
+													style={{ width: '60px' }}
+												/>
+												<div>
+													<h5>Overdue</h5>
+													<h3 className="invoice-detail ml-2">
+														{this.state.overDueAmountDetails.overDueAmount}
+													</h3>
+												</div>
+											</div>
+											<div className="h4 mb-0 d-flex align-items-center">
+												<img
+													alt="overWeekly"
+													src={overWeekly}
+													style={{ width: '60px' }}
+												/>
+												<div>
+													<h5>Due Within This Week</h5>
+													<h3 className="invoice-detail ml-3">
+														{
+															this.state.overDueAmountDetails
+																.overDueAmountWeekly
+														}
+													</h3>
+												</div>
+											</div>
+											<div className="h4 mb-0 d-flex align-items-center">
+												<img
+													alt="overduemonthly"
+													src={overduemonthly}
+													style={{ width: '60px' }}
+												/>
+												<div>
+													<h5>Due Within 30 Days</h5>
+													<h3 className="invoice-detail ml-3">
+														{
+															this.state.overDueAmountDetails
+																.overDueAmountMonthly
+														}
+													</h3>
+												</div>
+											</div>
 										</Row>
 									</div>
 									<div className="d-flex justify-content-end">
 										<ButtonGroup size="sm">
 											<Button
-												color="success"
-												className="btn-square"
+												color="primary"
+												className="btn-square mr-1"
 												onClick={() => this.getCsvData()}
 											>
 												<i className="fa glyphicon glyphicon-export fa-download mr-1" />
@@ -664,8 +737,8 @@ class SupplierInvoice extends React.Component {
 												/>
 											)}
 											<Button
-												color="warning"
-												className="btn-square"
+												color="primary"
+												className="btn-square mr-1"
 												onClick={this.bulkDelete}
 												disabled={selectedRows.length === 0}
 											>
@@ -679,6 +752,7 @@ class SupplierInvoice extends React.Component {
 										<Row>
 											<Col lg={2} className="mb-1">
 												<Select
+													styles={customStyles}
 													className="select-default-width"
 													placeholder="Select Supplier"
 													id="supplier"
@@ -750,6 +824,7 @@ class SupplierInvoice extends React.Component {
 											</Col>
 											<Col lg={2} className="mb-1">
 												<Select
+													styles={customStyles}
 													className=""
 													// options={status_list ? status_list.map((item) => {
 													//   return { label: item, value: item }
@@ -775,7 +850,7 @@ class SupplierInvoice extends React.Component {
 													placeholder="Status"
 												/>
 											</Col>
-											<Col lg={1} className="pl-0 pr-0">
+											<Col lg={2} className="pl-0 pr-0">
 												<Button
 													type="button"
 													color="primary"
@@ -833,22 +908,22 @@ class SupplierInvoice extends React.Component {
 											ref={(node) => (this.table = node)}
 										>
 											<TableHeaderColumn
+												dataField="invoiceNumber"
+												// dataFormat={this.renderInvoiceNumber}
+												dataSort
+											>
+												Invoice Number
+											</TableHeaderColumn>
+											<TableHeaderColumn dataField="customerName" dataSort>
+												Supplier Name
+											</TableHeaderColumn>
+											<TableHeaderColumn
 												width="230"
 												dataField="status"
 												dataFormat={this.renderInvoiceStatus}
 												dataSort
 											>
 												Status
-											</TableHeaderColumn>
-											<TableHeaderColumn dataField="customerName" dataSort>
-												Supplier Name
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												dataField="invoiceNumber"
-												// dataFormat={this.renderInvoiceNumber}
-												dataSort
-											>
-												Invoice Number
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="invoiceDate"
@@ -868,6 +943,7 @@ class SupplierInvoice extends React.Component {
 												dataField="totalAmount"
 												dataSort
 												dataFormat={this.renderInvoiceAmount}
+												formatExtraData={universal_currency_list}
 											>
 												Invoice Amount
 											</TableHeaderColumn>
@@ -875,6 +951,7 @@ class SupplierInvoice extends React.Component {
 												dataField="totalVatAmount"
 												dataSort
 												dataFormat={this.renderVatAmount}
+												formatExtraData={universal_currency_list}
 											>
 												VAT Amount
 											</TableHeaderColumn>

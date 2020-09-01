@@ -42,6 +42,16 @@ const mapDispatchToProps = (dispatch) => {
 		),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
 
 class DetailBankAccount extends React.Component {
 	constructor(props) {
@@ -235,32 +245,31 @@ class DetailBankAccount extends React.Component {
 												this.handleSubmit(values);
 											}}
 											validationSchema={Yup.object().shape({
-												account_name: Yup.string().required(
-													'Account Name is Required',
-												),
+												account_name: Yup.string()
+													.required('Account Name is Required')
+													.min(2, 'Account Name Is Too Short!')
+													.max(30, 'Account Name Is Too Long!'),
 												opening_balance: Yup.string().required(
 													'Opening Balance is Required',
 												),
-												currency: Yup.string().required('Currency is Required'),
+												currency: Yup.string().required('Currency is required'),
 												account_type: Yup.string().required(
-													'Account Type is Required',
+													'Account Type is required',
 												),
-												bank_name: Yup.string().required(
-													'Bank Name is Required',
-												),
-												account_number: Yup.string().required(
-													'Account Number is Required',
-												),
+												bank_name: Yup.string()
+													.required('Bank Name is Required')
+													.min(2, 'Bank Name Is Too Short!')
+													.max(20, 'Bank Name Is Too Long!'),
+												account_number: Yup.string()
+													.required('Account Number is Required')
+													.min(2, 'Account Number Is Too Short!')
+													.max(20, 'Account Number Is Too Long!'),
 												account_is_for: Yup.string().required(
-													'Account is for is Required',
+													'Account for is required',
 												),
-												ifsc_code: Yup.string().required(
-													'IFSC Code is Required',
+												swift_code: Yup.string().required(
+													'Please Enter Valid Swift Code',
 												),
-												swift_code: Yup.string().matches(this.swiftRegex, {
-													message: 'Please enter valid Swift Code.',
-													excludeEmptyString: false,
-												}),
 											})}
 										>
 											{(props) => (
@@ -283,6 +292,10 @@ class DetailBankAccount extends React.Component {
 																			option.target.value === '' ||
 																			this.regExAlpha.test(option.target.value)
 																		) {
+																			props.handleChange('account_name')(
+																				option,
+																			);
+																		} else {
 																			props.handleChange('account_name')(
 																				option,
 																			);
@@ -309,6 +322,7 @@ class DetailBankAccount extends React.Component {
 																	<span className="text-danger">*</span>Currency
 																</Label>
 																<Select
+																styles={customStyles}
 																	id="currency"
 																	name="currency"
 																	options={
@@ -380,6 +394,10 @@ class DetailBankAccount extends React.Component {
 																			props.handleChange('opening_balance')(
 																				option,
 																			);
+																		} else {
+																			props.handleChange('opening_balance')(
+																				option,
+																			);
 																		}
 																	}}
 																	className={
@@ -406,6 +424,7 @@ class DetailBankAccount extends React.Component {
 																	Account Type
 																</Label>
 																<Select
+																styles={customStyles}
 																	id="account_type"
 																	name="account_type"
 																	options={
@@ -479,6 +498,9 @@ class DetailBankAccount extends React.Component {
 																		) {
 																			props.handleChange('bank_name')(option);
 																		}
+																		{
+																			props.handleChange('bank_name')(option);
+																		}
 																	}}
 																	className={
 																		props.errors.bank_name &&
@@ -515,6 +537,10 @@ class DetailBankAccount extends React.Component {
 																			props.handleChange('account_number')(
 																				option,
 																			);
+																		} else {
+																			props.handleChange('account_number')(
+																				option,
+																			);
 																		}
 																	}}
 																	className={
@@ -536,10 +562,7 @@ class DetailBankAccount extends React.Component {
 													<Row>
 														<Col lg={4}>
 															<FormGroup className="mb-3">
-																<Label htmlFor="ifsc_code">
-																	<span className="text-danger">*</span>IFSC
-																	Code
-																</Label>
+																<Label htmlFor="ifsc_code">IFSC Code</Label>
 																<Input
 																	type="text"
 																	id="ifsc_code"
@@ -551,6 +574,8 @@ class DetailBankAccount extends React.Component {
 																			option.target.value === '' ||
 																			this.ifscCode.test(option.target.value)
 																		) {
+																			props.handleChange('ifsc_code')(option);
+																		} else {
 																			props.handleChange('ifsc_code')(option);
 																		}
 																	}}
@@ -575,6 +600,7 @@ class DetailBankAccount extends React.Component {
 																<Input
 																	type="text"
 																	id="swift_code"
+																	maxLength="11"
 																	name="swift_code"
 																	placeholder="Enter Swift Code"
 																	value={props.values.swift_code}
@@ -598,6 +624,7 @@ class DetailBankAccount extends React.Component {
 															<FormGroup className="mb-3">
 																<Label htmlFor="country">Country</Label>
 																<Select
+																styles={customStyles}
 																	id="country"
 																	name="country"
 																	options={
@@ -651,6 +678,7 @@ class DetailBankAccount extends React.Component {
 																	is for
 																</Label>
 																<Select
+																styles={customStyles}
 																	id="account_is_for"
 																	name="account_is_for"
 																	options={

@@ -193,6 +193,8 @@ class ChartAccount extends React.Component {
 
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
+		const message =
+			'Warning: This Chart Of Account will be deleted permanently and cannot be recovered. ';
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
@@ -200,6 +202,7 @@ class ChartAccount extends React.Component {
 						isOpen={true}
 						okHandler={this.removeBulk}
 						cancelHandler={this.removeDialog}
+						message={message}
 					/>
 				),
 			});
@@ -310,6 +313,12 @@ class ChartAccount extends React.Component {
 		);
 	};
 
+	customName(cell, row) {
+		if (row.transactionCategoryName.length > 15) {
+			return `${cell}`;
+		}
+	}
+
 	render() {
 		const {
 			loading,
@@ -320,6 +329,16 @@ class ChartAccount extends React.Component {
 			filterData,
 		} = this.state;
 		const { transaction_category_list, transaction_type_list } = this.props;
+		const customStyles = {
+			control: (base, state) => ({
+				...base,
+				borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+				boxShadow: state.isFocused ? null : null,
+				'&:hover': {
+					borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+				},
+			}),
+		};
 		return (
 			<div className="chart-account-screen">
 				<div className="animated fadeIn">
@@ -348,8 +367,8 @@ class ChartAccount extends React.Component {
 										<div className="d-flex justify-content-end">
 											<ButtonGroup size="sm">
 												<Button
-													color="success"
-													className="btn-square"
+													color="primary"
+													className="btn-square mr-1"
 													onClick={() => this.getCsvData()}
 												>
 													<i className="fa glyphicon glyphicon-export fa-download mr-1" />
@@ -365,8 +384,8 @@ class ChartAccount extends React.Component {
 													/>
 												)}
 												<Button
-													color="warning"
-													className="btn-square"
+													color="primary"
+													className="btn-square mr-1"
 													onClick={this.bulkDelete}
 													disabled={selectedRows.length === 0}
 												>
@@ -408,6 +427,7 @@ class ChartAccount extends React.Component {
 													<Col lg={3} className="mb-1">
 														<FormGroup className="mb-3">
 															<Select
+																styles={customStyles}
 																options={
 																	transaction_type_list
 																		? selectOptionsFactory.renderOptions(
@@ -437,7 +457,7 @@ class ChartAccount extends React.Component {
 															/>
 														</FormGroup>
 													</Col>
-													<Col lg={1} className="pl-0 pr-0">
+													<Col lg={3} className="pl-0 pr-0">
 														<Button
 															type="button"
 															color="primary"
@@ -462,6 +482,7 @@ class ChartAccount extends React.Component {
 											color="primary"
 											className="btn-square"
 											onClick={this.goToCreatePage}
+											style={{ marginBottom: '10px' }}
 										>
 											<i className="fas fa-plus mr-1" />
 											Add New Account
@@ -507,6 +528,7 @@ class ChartAccount extends React.Component {
 												<TableHeaderColumn
 													dataField="transactionCategoryName"
 													dataSort
+													columnTitle={this.customName}
 												>
 													Name
 												</TableHeaderColumn>
@@ -520,7 +542,9 @@ class ChartAccount extends React.Component {
 												<TableHeaderColumn
 													dataField="isEditable"
 													dataFormat={this.editFormatter}
-												></TableHeaderColumn>
+												>
+													Status
+												</TableHeaderColumn>
 											</BootstrapTable>
 										</div>
 									</Col>

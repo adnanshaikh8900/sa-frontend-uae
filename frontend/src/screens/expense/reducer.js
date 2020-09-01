@@ -41,7 +41,7 @@ const ExpenseReducer = (state = initState, action) => {
 
 			return {
 				...state,
-				currency_list: Object.assign([], payload),
+				currency_list: Object.assign([], payload.data),
 			};
 
 		case EXPENSE.PROJECT_LIST:

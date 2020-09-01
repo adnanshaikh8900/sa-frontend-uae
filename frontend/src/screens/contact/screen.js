@@ -37,6 +37,17 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
+
 
 class Contact extends React.Component {
 	constructor(props) {
@@ -170,6 +181,7 @@ class Contact extends React.Component {
 
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
+		const message = 'Warning: This Contact will be deleted permanently and cannot be recovered. '
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
@@ -177,6 +189,7 @@ class Contact extends React.Component {
 						isOpen={true}
 						okHandler={this.removeBulk}
 						cancelHandler={this.removeDialog}
+						message={message}
 					/>
 				),
 			});
@@ -321,8 +334,8 @@ class Contact extends React.Component {
 										<div className="d-flex justify-content-end">
 											<ButtonGroup size="sm">
 												<Button
-													color="success"
-													className="btn-square"
+													color="primary"
+													className="btn-square mr-1"
 													onClick={() => this.getCsvData()}
 												>
 													<i className="fa glyphicon glyphicon-export fa-download mr-1" />
@@ -338,8 +351,8 @@ class Contact extends React.Component {
 													/>
 												)}
 												<Button
-													color="warning"
-													className="btn-square"
+													color="primary"
+													className="btn-square mr-1"
 													onClick={this.bulkDelete}
 													disabled={selectedRows.length === 0}
 												>
@@ -376,6 +389,7 @@ class Contact extends React.Component {
 
 													<Col lg={3} className="mb-1">
 														<Select
+														styles={customStyles}
 															options={
 																contact_type_list
 																	? selectOptionsFactory.renderOptions(
@@ -425,6 +439,7 @@ class Contact extends React.Component {
 										<Button
 											color="primary"
 											className="btn-square"
+											style={{ marginBottom: '10px' }}
 											onClick={() =>
 												this.props.history.push(`/admin/master/contact/create`)
 											}

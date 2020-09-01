@@ -46,7 +46,7 @@ class AdminLayout extends React.Component {
 	}
 
 	componentDidMount() {
-		if (!window['sessionStorage'].getItem('accessToken')) {
+		if (!window['localStorage'].getItem('accessToken')) {
 			this.props.history.push('/login');
 		} else {
 			this.props.authActions.checkAuthStatus().catch((err) => {
@@ -54,6 +54,7 @@ class AdminLayout extends React.Component {
 				this.props.history.push('/login');
 			});
 			this.props.commonActions.getSimpleVATVersion();
+			this.props.commonActions.getCurrencyList();
 			const toastifyAlert = (status, message) => {
 				if (!message) {
 					message = 'Unexpected Error';
@@ -100,6 +101,7 @@ class AdminLayout extends React.Component {
 							<Suspense>
 								<AppSidebarNav navConfig={navigation} {...this.props} />
 							</Suspense>
+							<AppSidebarMinimizer />
 							<AppSidebarFooter />
 						</AppSidebar>
 						<main className="main">

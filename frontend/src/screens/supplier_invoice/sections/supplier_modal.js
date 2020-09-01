@@ -84,13 +84,13 @@ class SupplierModal extends React.Component {
 				}
 			})
 			.catch((err) => {
-				this.displayMsg();
+				this.displayMsg(err);
 				this.formikRef.current.setSubmitting(false);
 			});
 	};
 
-	displayMsg = () => {
-		toast.error('Something Went Wrong... ', {
+	displayMsg = (err) => {
+		toast.error(`${err.data}`, {
 			position: toast.POSITION.TOP_RIGHT,
 		});
 	};
@@ -273,7 +273,7 @@ class SupplierModal extends React.Component {
 														<span className="text-danger">*</span>First Name
 													</Label>
 													<Input
-														type="text"
+														type="text" maxLength='26'
 														id="firstName"
 														name="firstName"
 														onChange={(option) => {
@@ -304,7 +304,7 @@ class SupplierModal extends React.Component {
 												<FormGroup>
 													<Label htmlFor="middleName">Middle Name</Label>
 													<Input
-														type="text"
+														type="text" maxLength='26'
 														id="middleName "
 														name="middleName "
 														onChange={(option) => {
@@ -336,7 +336,7 @@ class SupplierModal extends React.Component {
 												<FormGroup>
 													<Label htmlFor="lastName">Last Name</Label>
 													<Input
-														type="text"
+														type="text" maxLength='26'
 														id="lastName"
 														name="lastName"
 														onChange={(option) => {
@@ -372,7 +372,7 @@ class SupplierModal extends React.Component {
 														Organization Name
 													</Label>
 													<Input
-														type="text"
+														type="text" maxLength='100'
 														id="organization"
 														name="organization"
 														onChange={(value) => {
@@ -399,7 +399,7 @@ class SupplierModal extends React.Component {
 												<FormGroup>
 													<Label htmlFor="select">PO Box Number</Label>
 													<Input
-														type="text"
+														type="text" maxLength='10'
 														id="poBoxNumber"
 														name="poBoxNumber"
 														onChange={(value) => {
@@ -430,7 +430,7 @@ class SupplierModal extends React.Component {
 														<span className="text-danger">*</span>Email
 													</Label>
 													<Input
-														type="text"
+														type="text"maxLength='80'
 														id="email"
 														name="email"
 														onChange={(value) => {
@@ -536,7 +536,7 @@ class SupplierModal extends React.Component {
 												<FormGroup>
 													<Label htmlFor="addressLine1">Address Line 1</Label>
 													<Input
-														type="text"
+														type="text" maxLength='100'
 														id="addressLine1"
 														name="addressLine1"
 														onChange={(value) => {
@@ -563,7 +563,7 @@ class SupplierModal extends React.Component {
 												<FormGroup>
 													<Label htmlFor="addressLine2">Address Line 2</Label>
 													<Input
-														type="text"
+														type="text" maxLength='100'
 														id="addressLine2"
 														name="addressLine2"
 														onChange={(value) => {
@@ -577,7 +577,7 @@ class SupplierModal extends React.Component {
 												<FormGroup>
 													<Label htmlFor="addressLine3">Address Line 3</Label>
 													<Input
-														type="text"
+														type="text" maxLength='100'
 														id="addressLine3"
 														name="addressLine3"
 														onChange={(value) => {
@@ -681,6 +681,7 @@ class SupplierModal extends React.Component {
 														placeholder="Select City"
 														id="city"
 														name="city"
+														type="text" maxLength='20'
 														className={
 															props.errors.city && props.touched.city
 																? 'is-invalid'
@@ -700,7 +701,7 @@ class SupplierModal extends React.Component {
 												<FormGroup>
 													<Label htmlFor="postZipCode">Post Zip Code</Label>
 													<Input
-														type="text"
+														type="text" maxLength='10'
 														id="postZipCode"
 														name="postZipCode"
 														onChange={(option) => {
@@ -737,7 +738,7 @@ class SupplierModal extends React.Component {
 												<FormGroup>
 													<Label htmlFor="billingEmail">Billing Email</Label>
 													<Input
-														type="text"
+														type="text" maxLength='80'
 														id="billingEmail"
 														name="billingEmail"
 														onChange={(value) => {
@@ -765,7 +766,7 @@ class SupplierModal extends React.Component {
 														Contract PO Number
 													</Label>
 													<Input
-														type="text"
+														type="text"maxLength='10'
 														id="contractPoNumber"
 														name="contractPoNumber"
 														onChange={(value) => {
@@ -796,7 +797,7 @@ class SupplierModal extends React.Component {
 														Tax Registration Number
 													</Label>
 													<Input
-														type="text"
+														type="text" maxLength='20'
 														id="vatRegistrationNumber"
 														name="vatRegistrationNumber"
 														onChange={(option) => {

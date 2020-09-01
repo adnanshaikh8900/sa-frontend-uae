@@ -52,6 +52,17 @@ const mapDispatchToProps = (dispatch) => {
 		receiptActions: bindActionCreators(ReceiptActions, dispatch),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
+
 
 class CreateReceipt extends React.Component {
 	constructor(props) {
@@ -63,6 +74,7 @@ class CreateReceipt extends React.Component {
 				receiptDate: new Date(),
 				contactId: '',
 				amount: '',
+				fileName: '',
 				payMode: '',
 				notes: '',
 				depositeTo: '',
@@ -83,8 +95,19 @@ class CreateReceipt extends React.Component {
 			onSelect: this.onRowSelect,
 		};
 		this.csvLink = React.createRef();
+		this.file_size = 1024000;
+		this.supported_format = [
+			'image/png',
+			'image/jpeg',
+			'text/plain',
+			'application/pdf',
+			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+			'application/vnd.ms-excel',
+			'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+		];
 	}
 
+	
 	onRowSelect = (row, isSelected, e) => {
 		console.log(this.state.initValue);
 		let tempList = [];
@@ -128,6 +151,17 @@ class CreateReceipt extends React.Component {
 				console.log(this.state.initValue);
 			},
 		);
+	};
+
+	handleFileChange = (e, props) => {
+		e.preventDefault();
+		let reader = new FileReader();
+		let file = e.target.files[0];
+		if (file) {
+			reader.onloadend = () => {};
+			reader.readAsDataURL(file);
+			props.setFieldValue('attachmentFile', file, true);
+		}
 	};
 
 	componentDidMount = () => {
@@ -188,7 +222,7 @@ class CreateReceipt extends React.Component {
 					'success',
 					'Invoice Updated Successfully.',
 				);
-				this.props.history.push('/admin/revenue/customer-invoice');
+				this.props.history.push('/admin/income/customer-invoice');
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
@@ -329,6 +363,40 @@ class CreateReceipt extends React.Component {
 															message: 'Please enter valid Amount.',
 															excludeEmptyString: false,
 														}),
+														attachmentFile: Yup.mixed()
+														.test(
+															'fileType',
+															'*Unsupported File Format',
+															(value) => {
+																value &&
+																	this.setState({
+																		fileName: value.name,
+																	});
+																if (
+																	!value ||
+																	(value &&
+																		this.supported_format.includes(value.type))
+																) {
+																	return true;
+																} else {
+																	return false;
+																}
+															},
+														)
+														.test(
+															'fileSize',
+															'*File Size is too large',
+															(value) => {
+																if (
+																	!value ||
+																	(value && value.size <= this.file_size)
+																) {
+																	return true;
+																} else {
+																	return false;
+																}
+															},
+														),
 												})}
 											>
 												{(props) => (
@@ -341,6 +409,7 @@ class CreateReceipt extends React.Component {
 																		Customer Name
 																	</Label>
 																	<Select
+																	styles={customStyles}
 																		options={
 																			contact_list
 																				? selectOptionsFactory.renderOptions(
@@ -377,7 +446,7 @@ class CreateReceipt extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
-															<Col lg={4}>
+															{/* <Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="receiptNo">Payment</Label>
 																	<Input
@@ -397,7 +466,7 @@ class CreateReceipt extends React.Component {
 																		}}
 																	/>
 																</FormGroup>
-															</Col>
+															</Col> */}
 														</Row>
 														<hr />
 														{props.values.contactId && (
@@ -495,6 +564,7 @@ class CreateReceipt extends React.Component {
 																						Payment Mode
 																					</Label>
 																					<Select
+																					styles={customStyles}
 																						options={
 																							pay_mode
 																								? selectOptionsFactory.renderOptions(
@@ -544,6 +614,7 @@ class CreateReceipt extends React.Component {
 																						Deposit To
 																					</Label>
 																					<Select
+																					styles={customStyles}
 																						options={deposit_list}
 																						value={props.values.depositeTo}
 																						onChange={(option) => {
@@ -639,74 +710,58 @@ class CreateReceipt extends React.Component {
 																				<Row>
 																					<Col lg={12}>
 																						<FormGroup className="mb-3">
-																							<Field
-																								name="attachmentFile"
-																								render={({ field, form }) => (
-																									<div>
-																										<Label>Attachment</Label>{' '}
-																										<br />
-																										<div className="file-upload-cont">
-																											<Button
-																												color="primary"
-																												onClick={() => {
-																													document
-																														.getElementById(
-																															'fileInput',
-																														)
-																														.click();
-																												}}
-																												className="btn-square mr-3"
-																											>
-																												<i className="fa fa-upload"></i>{' '}
-																												Upload
-																											</Button>
-																											<input
-																												id="fileInput"
-																												ref={(ref) => {
-																													this.uploadFile = ref;
-																												}}
-																												type="file"
-																												style={{
-																													display: 'none',
-																												}}
-																												onChange={(e) => {
-																													this.handleFileChange(
-																														e,
-																														props,
-																													);
-																												}}
-																											/>
-																											{this.state.fileName ? (
-																												this.state.fileName
-																											) : (
-																												<NavLink
-																													href={`${API_ROOT_URL.API_ROOT_URL}${initValue.filePath}`}
-																													download={
-																														this.state.initValue
-																															.fileName
-																													}
-																													style={{
-																														fontSize:
-																															'0.875rem',
-																													}}
-																													target="_blank"
-																												>
-																													{
-																														this.state.initValue
-																															.fileName
-																													}
-																												</NavLink>
-																											)}
-																										</div>
-																									</div>
-																								)}
-																							/>
-																							{props.errors.attachmentFile && (
-																								<div className="invalid-file">
-																									{props.errors.attachmentFile}
+																						<Field
+																				name="attachmentFile"
+																				render={({ field, form }) => (
+																					<div>
+																						<Label>Reciept Attachment</Label>{' '}
+																						<br />
+																						<Button
+																							color="primary"
+																							onClick={() => {
+																								document
+																									.getElementById('fileInput')
+																									.click();
+																							}}
+																							className="btn-square mr-3"
+																						>
+																							<i className="fa fa-upload"></i>{' '}
+																							Upload
+																						</Button>
+																						<input
+																							id="fileInput"
+																							ref={(ref) => {
+																								this.uploadFile = ref;
+																							}}
+																							type="file"
+																							style={{ display: 'none' }}
+																							onChange={(e) => {
+																								this.handleFileChange(e, props);
+																							}}
+																						/>
+																					</div>
+																				)}
+																			/>
+																			{this.state.fileName && (
+																								<div>
+																									<i
+																										className="fa fa-close"
+																										onClick={() =>
+																											this.setState({
+																												fileName: '',
+																											})
+																										}
+																									></i>{' '}
+																									{this.state.fileName}
 																								</div>
 																							)}
-																						</FormGroup>
+																			{props.errors.attachmentFile &&
+																				props.touched.attachmentFile && (
+																					<div className="invalid-file">
+																						{props.errors.attachmentFile}
+																					</div>
+																				)}
+																		</FormGroup>
 																					</Col>
 																				</Row>
 																			</Col>
@@ -789,7 +844,7 @@ class CreateReceipt extends React.Component {
 																						className="btn-square"
 																						onClick={() => {
 																							this.props.history.push(
-																								'/admin/revenue/receipt',
+																								'/admin/income/receipt',
 																							);
 																						}}
 																					>

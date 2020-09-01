@@ -309,9 +309,10 @@ public class InvoiceRestHelper {
 			lineItemModel.setVatCategoryId(lineItem.getVatCategory().getId().toString());
 			lineItemModel.setVatPercentage(lineItem.getVatCategory().getVat().intValue());
 		}
-		if (lineItem.getProduct() != null)
+		if (lineItem.getProduct() != null) {
 			lineItemModel.setProductId(lineItem.getProduct().getProductID());
-		if (lineItem.getTrnsactioncCategory() != null) {
+            lineItemModel.setProductName(lineItem.getProduct().getProductName());
+		}if (lineItem.getTrnsactioncCategory() != null) {
 			lineItemModel.setTransactionCategoryId(lineItem.getTrnsactioncCategory().getTransactionCategoryId());
 			lineItemModel.setTransactionCategoryLabel(
 					lineItem.getTrnsactioncCategory().getChartOfAccount().getChartOfAccountName());
@@ -617,6 +618,15 @@ public class InvoiceRestHelper {
 				BigDecimal amntWithoutVat = sortedLineItem.getUnitPrice()
 						.multiply(BigDecimal.valueOf(sortedLineItem.getQuantity()));
 				totalAmount = totalAmount.add(amntWithoutVat);
+//				if(invoice.getDiscount()!=null)
+//				{
+//					totalAmount = totalAmount.subtract(invoice.getDiscount());
+//				}
+			}
+
+			if(invoice.getDiscount()!=null)
+			{
+				totalAmount = totalAmount.subtract(invoice.getDiscount());
 			}
 			JournalLineItem journalLineItem = new JournalLineItem();
 			journalLineItem.setTransactionCategory(tnxcatMap.get(categoryId));

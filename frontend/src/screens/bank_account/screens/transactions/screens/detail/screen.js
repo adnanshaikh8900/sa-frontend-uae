@@ -50,6 +50,17 @@ const mapDispatchToProps = (dispatch) => {
     commonActions: bindActionCreators(CommonActions, dispatch),
   };
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
+
 
 class DetailBankTransaction extends React.Component {
   constructor(props) {
@@ -65,7 +76,8 @@ class DetailBankTransaction extends React.Component {
 
     this.file_size = 1024000;
     this.supported_format = [
-      '',
+      'image/png',
+			'image/jpeg',
       'text/plain',
       'application/pdf',
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -83,7 +95,6 @@ class DetailBankTransaction extends React.Component {
   };
 
   initializeData = () => {
-    console.log(this.props.location.state);
     this.props.transactionActions.getTransactionCategoryList();
     this.props.transactionActions.getTransactionTypeList();
     this.props.transactionActions.getProjectList();
@@ -352,6 +363,7 @@ class DetailBankTransaction extends React.Component {
                                       Transaction Type
                                     </Label>
                                     <Select
+                                    styles={customStyles}
                                       options={
                                         transaction_type_list
                                           ? selectOptionsFactory.renderOptions(
@@ -493,6 +505,7 @@ class DetailBankTransaction extends React.Component {
                                       Category
                                     </Label>
                                     <Select
+                                    styles={customStyles}
                                       className="select-default-width"
                                       options={
                                         transaction_category_list &&
@@ -567,6 +580,7 @@ class DetailBankTransaction extends React.Component {
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="projectId">Project</Label>
                                     <Select
+                                    styles={customStyles}
                                       className="select-default-width"
                                       options={
                                         project_list
@@ -695,6 +709,19 @@ class DetailBankTransaction extends React.Component {
                                                     );
                                                   }}
                                                 />
+                                                {this.state.fileName && (
+																								<div>
+																									<i
+																										className="fa fa-close"
+																										onClick={() =>
+																											this.setState({
+																												fileName: '',
+																											})
+																										}
+																									></i>{' '}
+																									{this.state.fileName}
+																								</div>
+																							)}
                                                 {this.state.fileName ? (
                                                   this.state.fileName
                                                 ) : (

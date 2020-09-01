@@ -15,7 +15,7 @@ import {
 } from 'reactstrap';
 
 import Select from 'react-select';
-import { DateRangePicker2 } from 'components';
+import { DateRangePicker2, Currency } from 'components';
 import moment from 'moment';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import * as VatTransactionActions from './actions';
@@ -27,6 +27,7 @@ import './style.scss';
 const mapStateToProps = (state) => {
 	return {
 		vat_transaction_list: state.vat_transactions.vat_transaction_list,
+		universal_currency_list: state.common.universal_currency_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -40,6 +41,16 @@ const vatOptions = [
 	{ value: 'output', label: 'Output' },
 	{ value: 'all', label: 'All' },
 ];
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
 
 const tempdata = [
 	{
@@ -191,6 +202,28 @@ class VatTransactions extends React.Component {
 		return <button className="btn">Detail</button>;
 	};
 
+	renderAmount(cell, row, extraData) {
+		return row.amount ? (
+			<Currency
+				value={row.amount}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			row.amount
+		);
+	}
+
+	renderVatAmount(cell, row, extraData) {
+		return row.vatAmount ? (
+			<Currency
+				value={row.vatAmount}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			row.vatAmount
+		);
+	}
+
 	render() {
 		const vat_transaction_data =
 			this.props.vat_transaction_list && this.props.vat_transaction_list.data
@@ -203,6 +236,7 @@ class VatTransactions extends React.Component {
 						vatType: data.vatType,
 				  }))
 				: '';
+		const { universal_currency_list } = this.props;
 		return (
 			<div className="vat-transactions-screen ">
 				<div className="animated fadeIn">
@@ -223,7 +257,7 @@ class VatTransactions extends React.Component {
 									<FormGroup>
 										<ButtonGroup className="mr-3">
 											<Button
-												color="success"
+												color="primary"
 												className="btn-square"
 												onClick={() => this.table.handleExportCSV()}
 											>
@@ -247,6 +281,7 @@ class VatTransactions extends React.Component {
 									</Col>
 									<Col lg={2} className="mb-1">
 										<Select
+											styles={customStyles}
 											className=""
 											options={vatOptions}
 											value={this.state.selectedType}
@@ -256,6 +291,7 @@ class VatTransactions extends React.Component {
 									</Col>
 									<Col lg={2} className="mb-1">
 										<Select
+											styles={customStyles}
 											className=""
 											options={vatOptions}
 											value={this.state.selectedType}
@@ -265,6 +301,7 @@ class VatTransactions extends React.Component {
 									</Col>
 									<Col lg={2} className="mb-1">
 										<Select
+											styles={customStyles}
 											className=""
 											options={vatOptions}
 											value={this.state.selectedType}
@@ -312,10 +349,18 @@ class VatTransactions extends React.Component {
 									<TableHeaderColumn dataField="vatType">
 										Vat Type
 									</TableHeaderColumn>
-									<TableHeaderColumn dataField="amount">
+									<TableHeaderColumn
+										dataField="amount"
+										dataFormat={this.renderAmount}
+										formatExtraData={universal_currency_list}
+									>
 										Amount
 									</TableHeaderColumn>
-									<TableHeaderColumn dataField="vatAmount">
+									<TableHeaderColumn
+										dataField="vatAmount"
+										dataFormat={this.renderVatAmount}
+										formatExtraData={universal_currency_list}
+									>
 										Vat Amount
 									</TableHeaderColumn>
 								</BootstrapTable>

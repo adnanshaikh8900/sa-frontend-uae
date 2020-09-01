@@ -84,7 +84,7 @@ public class TransactionCategoryServiceImpl extends TransactionCategoryService {
 	}
 
 	@Override
-	@Cacheable(cacheNames = "transactionCategoryCache", key = "#chartOfAccountId")
+//	@Cacheable(cacheNames = "transactionCategoryCache", key = "#chartOfAccountId")
 	public List<TransactionCategory> findAllTransactionCategoryByChartOfAccount(Integer chartOfAccountId) {
 		return dao.findAllTransactionCategoryByChartOfAccount(chartOfAccountId);
 	}
@@ -137,7 +137,7 @@ public class TransactionCategoryServiceImpl extends TransactionCategoryService {
 	}
 
 	@Override
-	@Cacheable(cacheNames = "transactionCategoryCache", key = "#chartOfAccountCategoryId")
+//	@Cacheable(cacheNames = "transactionCategoryCache", key = "#chartOfAccountCategoryId")
 	public List<TransactionCategory> getTransactionCatByChartOfAccountCategoryId(Integer chartOfAccountCategoryId) {
 		return dao.getTransactionCatByChartOfAccountCategoryId(chartOfAccountCategoryId);
 	}

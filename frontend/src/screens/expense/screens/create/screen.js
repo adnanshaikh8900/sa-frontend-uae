@@ -56,6 +56,7 @@ class CreateExpense extends React.Component {
 		this.state = {
 			loading: false,
 			createMore: false,
+			disabled: false,
 			initValue: {
 				payee: '',
 				expenseDate: '',
@@ -76,7 +77,7 @@ class CreateExpense extends React.Component {
 			fileName: '',
 			payMode: '',
 		};
-
+		this.formRef = React.createRef();
 		this.options = {
 			paginationPosition: 'top',
 		};
@@ -86,7 +87,8 @@ class CreateExpense extends React.Component {
 
 		this.file_size = 1024000;
 		this.supported_format = [
-			'',
+			'image/png',
+			'image/jpeg',
 			'text/plain',
 			'application/pdf',
 			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -107,13 +109,30 @@ class CreateExpense extends React.Component {
 	initializeData = () => {
 		this.props.expenseActions.getVatList();
 		this.props.expenseActions.getExpenseCategoriesList();
-		this.props.expenseActions.getCurrencyList();
+		this.props.expenseActions.getCurrencyList().then((response) => {
+			this.setState({
+				initValue: {
+					...this.state.initValue,
+					...{
+						currency: response.data
+							? parseInt(response.data[0].currencyCode)
+							: '',
+					},
+				},
+			});
+			this.formRef.current.setFieldValue(
+				'currency',
+				response.data[0].currencyCode,
+				true,
+			);
+		});
 		this.props.expenseActions.getBankList();
 		this.props.expenseActions.getPaymentMode();
 		this.props.expenseActions.getUserForDropdown();
 	};
 
 	handleSubmit = (data, resetForm) => {
+		this.setState({ disabled: true });
 		const {
 			payee,
 			expenseDate,
@@ -124,13 +143,14 @@ class CreateExpense extends React.Component {
 			employee,
 			expenseDescription,
 			receiptNumber,
+			attachmentFile,
 			receiptAttachmentDescription,
 			vatCategoryId,
 			payMode,
 			bankAccountId,
 		} = data;
 		let formData = new FormData();
-		formData.append('payee', payee.value);
+		formData.append('payee', payee.value ? payee.value : '');
 		formData.append('expenseDate', expenseDate !== null ? expenseDate : '');
 		formData.append('expenseDescription', expenseDescription);
 		formData.append('receiptNumber', receiptNumber);
@@ -148,8 +168,8 @@ class CreateExpense extends React.Component {
 		if (employee && employee.value) {
 			formData.append('employeeId', employee.value);
 		}
-		if (currency && currency.value) {
-			formData.append('currencyCode', currency.value);
+		if (currency) {
+			formData.append('currencyCode', currency);
 		}
 		if (vatCategoryId && vatCategoryId.value) {
 			formData.append('vatCategoryId', vatCategoryId.value);
@@ -166,6 +186,7 @@ class CreateExpense extends React.Component {
 		this.props.expenseCreateActions
 			.createExpense(formData)
 			.then((res) => {
+				this.setState({ disabled: false });
 				if (res.status === 200) {
 					resetForm(this.state.initValue);
 					this.props.commonActions.tostifyAlert(
@@ -182,6 +203,7 @@ class CreateExpense extends React.Component {
 				}
 			})
 			.catch((err) => {
+				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err && err.data ? err.data.message : 'Something Went Wrong',
@@ -210,7 +232,16 @@ class CreateExpense extends React.Component {
 			pay_mode_list,
 			user_list,
 		} = this.props;
-
+		const customStyles = {
+			control: (base, state) => ({
+				...base,
+				borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+				boxShadow: state.isFocused ? null : null,
+				'&:hover': {
+					borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+				},
+			}),
+		};
 		return (
 			<div className="create-expense-screen">
 				<div className="animated fadeIn">
@@ -232,6 +263,7 @@ class CreateExpense extends React.Component {
 										<Col lg={12}>
 											<Formik
 												initialValues={initValue}
+												ref={this.formRef}
 												onSubmit={(values, { resetForm }) => {
 													this.handleSubmit(values, resetForm);
 
@@ -243,11 +275,17 @@ class CreateExpense extends React.Component {
 
 													// })
 												}}
+												validate={(values) => {
+													let errors = {};
+													if (values.payMode.value === 'BANK') {
+														errors.bankAccountId = 'Bank Account is Required';
+													}
+													return errors;
+												}}
 												validationSchema={Yup.object().shape({
 													expenseCategory: Yup.string().required(
 														'Expense Category is required',
 													),
-													payee: Yup.string().required('Payee is required'),
 													expenseDate: Yup.date().required(
 														'Expense Date is Required',
 													),
@@ -257,16 +295,6 @@ class CreateExpense extends React.Component {
 													expenseAmount: Yup.string()
 														.required('Amount is Required')
 														.matches(/^[0-9]*$/, 'Enter a Valid Amount'),
-													payMode: Yup.string().required(
-														'Pay Through is Required',
-													),
-													bankAccountId: Yup.string().when('payMode', {
-														is: (val) =>
-															val['value'] === 'BANK' ? true : false,
-														then: Yup.string().required(
-															'Bank Account is Required',
-														),
-													}),
 													attachmentFile: Yup.mixed()
 														.test(
 															'fileType',
@@ -313,8 +341,10 @@ class CreateExpense extends React.Component {
 																		Expense Category
 																	</Label>
 																	<Select
+																		styles={customStyles}
 																		id="expenseCategory"
 																		name="expenseCategory"
+																		placeholder="Select Expense Category"
 																		options={
 																			expense_categories_list
 																				? selectOptionsFactory.renderOptions(
@@ -348,11 +378,19 @@ class CreateExpense extends React.Component {
 															</Col>
 															<Col lg={3}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="payee">
-																		<span className="text-danger">*</span> Payee
-																	</Label>
+																	<Label htmlFor="payee">Payee</Label>
 																	<Select
-																		options={user_list ? user_list : []}
+																		styles={customStyles}
+																		options={
+																			user_list
+																				? selectOptionsFactory.renderOptions(
+																						'label',
+																						'value',
+																						user_list,
+																						'Payee',
+																				  )
+																				: []
+																		}
 																		value={props.values.payee}
 																		onChange={(option) => {
 																			if (option && option.value) {
@@ -361,7 +399,7 @@ class CreateExpense extends React.Component {
 																				props.handleChange('payee')('');
 																			}
 																		}}
-																		placeholder="Select Type"
+																		placeholder="Select Payee"
 																		id="payee"
 																		name="payee"
 																		className={
@@ -413,6 +451,7 @@ class CreateExpense extends React.Component {
 																		Currency
 																	</Label>
 																	<Select
+																		styles={customStyles}
 																		id="currencyCode"
 																		name="currencyCode"
 																		options={
@@ -425,7 +464,21 @@ class CreateExpense extends React.Component {
 																				  )
 																				: []
 																		}
-																		value={props.values.currency}
+																		value={
+																			currency_list &&
+																			selectCurrencyFactory
+																				.renderOptions(
+																					'currencyName',
+																					'currencyCode',
+																					currency_list,
+																					'Currency',
+																				)
+																				.find(
+																					(option) =>
+																						option.value ===
+																						+props.values.currency,
+																				)
+																		}
 																		onChange={(option) =>
 																			props.handleChange('currency')(option)
 																		}
@@ -453,6 +506,7 @@ class CreateExpense extends React.Component {
 																	</Label>
 																	<Input
 																		type="text"
+																		maxLength="10"
 																		name="expenseAmount"
 																		id="expenseAmount"
 																		rows="5"
@@ -487,9 +541,11 @@ class CreateExpense extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="vatCategoryId">Tax</Label>
 																	<Select
+																		styles={customStyles}
 																		className="select-default-width"
 																		id="vatCategoryId"
 																		name="vatCategoryId"
+																		placeholder="Select Tax "
 																		options={
 																			vat_list
 																				? selectOptionsFactory.renderOptions(
@@ -512,13 +568,13 @@ class CreateExpense extends React.Component {
 
 															<Col lg={3}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="payMode">
-																		<span className="text-danger">*</span>Pay
-																		Through
-																	</Label>
+																	<Label htmlFor="payMode">Pay Through</Label>
 																	<Select
+																		styles={customStyles}
 																		id="payMode"
 																		name="payMode"
+																		placeholder="Select Pay
+																		Through"
 																		options={
 																			pay_mode_list
 																				? selectOptionsFactory.renderOptions(
@@ -562,12 +618,13 @@ class CreateExpense extends React.Component {
 																			<span className="text-danger">*</span>Bank
 																		</Label>
 																		<Select
+																			styles={customStyles}
 																			id="bankAccountId"
 																			name="bankAccountId"
 																			options={
 																				bank_list && bank_list.data
 																					? selectOptionsFactory.renderOptions(
-																							'name',
+																							'accounName',
 																							'bankAccountId',
 																							bank_list.data,
 																							'Bank',
@@ -606,10 +663,11 @@ class CreateExpense extends React.Component {
 																	</Label>
 																	<Input
 																		type="textarea"
+																		maxLength="255"
 																		name="expenseDescription"
 																		id="expenseDescription"
 																		rows="5"
-																		placeholder="1024 characters..."
+																		placeholder="Expense Description"
 																		onChange={(option) =>
 																			props.handleChange('expenseDescription')(
 																				option,
@@ -631,6 +689,7 @@ class CreateExpense extends React.Component {
 																			</Label>
 																			<Input
 																				type="text"
+																				maxLength="50"
 																				id="receiptNumber"
 																				name="receiptNumber"
 																				placeholder="Enter Reciept Number"
@@ -659,10 +718,11 @@ class CreateExpense extends React.Component {
 																			</Label>
 																			<Input
 																				type="textarea"
+																				maxLength="255"
 																				name="receiptAttachmentDescription"
 																				id="receiptAttachmentDescription"
 																				rows="5"
-																				placeholder="1024 characters..."
+																				placeholder="Receipt Attachment Description"
 																				onChange={(option) =>
 																					props.handleChange(
 																						'receiptAttachmentDescription',
@@ -682,11 +742,10 @@ class CreateExpense extends React.Component {
 																	<Col lg={12}>
 																		<FormGroup className="mb-3">
 																			<Field
-																				name="attachmentFile"
+																				name="attachment"
 																				render={({ field, form }) => (
 																					<div>
-																						<Label>Reciept Attachment</Label>{' '}
-																						<br />
+																						<Label>Attachment</Label> <br />
 																						<Button
 																							color="primary"
 																							onClick={() => {
@@ -710,7 +769,19 @@ class CreateExpense extends React.Component {
 																								this.handleFileChange(e, props);
 																							}}
 																						/>
-																						{this.state.fileName}
+																						{this.state.fileName && (
+																							<div>
+																								<i
+																									className="fa fa-close"
+																									onClick={() =>
+																										this.setState({
+																											fileName: '',
+																										})
+																									}
+																								></i>{' '}
+																								{this.state.fileName}
+																							</div>
+																						)}
 																					</div>
 																				)}
 																			/>
@@ -745,7 +816,7 @@ class CreateExpense extends React.Component {
 																		Create
 																	</Button>
 																	<Button
-																		type="button"
+																		name="button"
 																		color="primary"
 																		className="btn-square mr-3"
 																		onClick={() => {
@@ -757,7 +828,7 @@ class CreateExpense extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-repeat"></i> Create and
+																		<i className="fa fa-refresh"></i> Create and
 																		More
 																	</Button>
 																	<Button

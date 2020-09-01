@@ -16,7 +16,7 @@ import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import { selectOptionsFactory } from 'utils';
 
-import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader, ConfirmDeleteModal, Currency } from 'components';
 
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -34,6 +34,7 @@ const mapStateToProps = (state) => {
 		receipt_list: state.receipt.receipt_list,
 		invoice_list: state.receipt.invoice_list,
 		contact_list: state.receipt.contact_list,
+		universal_currency_list: state.common.universal_currency_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -41,6 +42,16 @@ const mapDispatchToProps = (dispatch) => {
 		receiptActions: bindActionCreators(ReceiptActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
+};
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
 };
 
 class Receipt extends React.Component {
@@ -119,7 +130,7 @@ class Receipt extends React.Component {
 	};
 
 	goToDetail = (row) => {
-		this.props.history.push('/admin/revenue/receipt/detail', {
+		this.props.history.push('/admin/income/receipt/detail', {
 			id: row.receiptId,
 		});
 	};
@@ -134,8 +145,15 @@ class Receipt extends React.Component {
 			: '';
 	};
 
-	renderAmount = (cell, row) => {
-		return row.amount ? row.amount.toFixed(2) : '';
+	renderAmount = (cell, row, extraData) => {
+		return row.amount ? (
+			<Currency
+				value={row.amount.toFixed(2)}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			''
+		);
 	};
 
 	renderUnusedAmount = (cell, row) => {
@@ -191,6 +209,8 @@ class Receipt extends React.Component {
 
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
+		const message =
+			'Warning: This Income Receipt will be deleted permanently and cannot be recovered.  ';
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
@@ -198,6 +218,7 @@ class Receipt extends React.Component {
 						isOpen={true}
 						okHandler={this.removeBulk}
 						cancelHandler={this.removeDialog}
+						message={message}
 					/>
 				),
 			});
@@ -222,7 +243,7 @@ class Receipt extends React.Component {
 				this.initializeData();
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Receipt Deleted Successfully',
+					'Income Receipt Deleted Successfully',
 				);
 				if (receipt_list && receipt_list.length > 0) {
 					this.setState({
@@ -301,7 +322,12 @@ class Receipt extends React.Component {
 			csvData,
 			view,
 		} = this.state;
-		const { receipt_list, invoice_list, contact_list } = this.props;
+		const {
+			receipt_list,
+			invoice_list,
+			contact_list,
+			universal_currency_list,
+		} = this.props;
 
 		return (
 			<div className="receipt-screen">
@@ -332,8 +358,8 @@ class Receipt extends React.Component {
 										<div className="d-flex justify-content-end">
 											<ButtonGroup size="sm">
 												<Button
-													color="success"
-													className="btn-square"
+													color="primary"
+													className="btn-square mr-1"
 													onClick={() => this.getCsvData()}
 												>
 													<i className="fa glyphicon glyphicon-export fa-download mr-1" />
@@ -349,8 +375,8 @@ class Receipt extends React.Component {
 													/>
 												)}
 												<Button
-													color="warning"
-													className="btn-square"
+													color="primary"
+													className="btn-square mr-1"
 													onClick={this.bulkDelete}
 													disabled={selectedRows.length === 0}
 												>
@@ -392,8 +418,9 @@ class Receipt extends React.Component {
 														}}
 													/>
 												</Col>
-												<Col lg={3} className="mb-1">
+												<Col lg={2} className="mb-1">
 													<Select
+														styles={customStyles}
 														options={
 															invoice_list
 																? selectOptionsFactory.renderOptions(
@@ -418,6 +445,7 @@ class Receipt extends React.Component {
 												</Col>
 												<Col lg={3} className="mb-1">
 													<Select
+														styles={customStyles}
 														options={
 															contact_list
 																? selectOptionsFactory.renderOptions(
@@ -440,7 +468,7 @@ class Receipt extends React.Component {
 														}}
 													/>
 												</Col>
-												<Col lg={1} className="pl-0 pr-0">
+												<Col lg={3} className="pl-0 pr-0">
 													<Button
 														type="button"
 														color="primary"
@@ -465,7 +493,7 @@ class Receipt extends React.Component {
 											style={{ marginBottom: '10px' }}
 											className="btn-square"
 											onClick={() =>
-												this.props.history.push(`/admin/revenue/receipt/create`)
+												this.props.history.push(`/admin/income/receipt/create`)
 											}
 										>
 											<i className="fas fa-plus mr-1" />
@@ -516,7 +544,7 @@ class Receipt extends React.Component {
 													Customer Name
 												</TableHeaderColumn>
 												<TableHeaderColumn dataField="receiptId" dataSort>
-													Receipt No
+													Receipt Number
 												</TableHeaderColumn>
 												{/* <TableHeaderColumn
                             dataField="transactionType"
@@ -529,6 +557,7 @@ class Receipt extends React.Component {
 													dataField="amount"
 													dataSort
 													dataFormat={this.renderAmount}
+													formatExtraData={universal_currency_list}
 												>
 													Amount
 												</TableHeaderColumn>

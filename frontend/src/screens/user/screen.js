@@ -47,6 +47,16 @@ const mapDispatchToProps = (dispatch) => {
 
   })
 }
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
 
 class User extends React.Component {
 
@@ -76,7 +86,6 @@ class User extends React.Component {
 
     this.options = {
       onRowClick: this.goToDetail,
-      paginationPosition: 'top',
       page: 1,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
@@ -184,13 +193,15 @@ class User extends React.Component {
   bulkDelete = () => {
     const {
       selectedRows
-    } = this.state
+    } = this.state;
+    const message = 'Warning: This User will be deleted permanently and cannot be recovered.  ';
     if (selectedRows.length > 0) {
       this.setState({
         dialog: <ConfirmDeleteModal
           isOpen={true}
           okHandler={this.removeBulk}
           cancelHandler={this.removeDialog}
+          message={message}
         />
       })
     } else {
@@ -376,6 +387,7 @@ class User extends React.Component {
                           </Col>
                           <Col lg={2} className="mb-1">
                             <Select
+                            styles={customStyles}
                               className="select-default-width"
                               placeholder="Select Role"
                               id="roleId"
@@ -393,6 +405,7 @@ class User extends React.Component {
                           </Col>
                           <Col lg={2} className="mb-1">
                             <Select
+                            styles={customStyles}
                               className="select-default-width"
                               placeholder="Select Status"
                               id="active"
@@ -422,7 +435,7 @@ class User extends React.Component {
                               onChange={(option) => { this.handleChange(option.value, 'companyId') }}
                             />
                           </Col> */}
-                          <Col lg={1} className="pl-0 pr-0">
+                          <Col lg={3} className="pl-0 pr-0">
                             <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
                               <i className="fa fa-search"></i>
                             </Button>

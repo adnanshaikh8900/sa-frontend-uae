@@ -10,7 +10,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.simplevat.constant.TransactionCategoryCodeEnum;
 import com.simplevat.entity.*;
+import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.model.DashBoardBankDataModel;
 import com.simplevat.rest.transactioncategorybalancecontroller.TransactionCategoryBalanceRestHelper;
 import com.simplevat.rest.transactioncategorybalancecontroller.TransactioncategoryBalancePersistModel;
@@ -58,6 +60,9 @@ public class BankAccountController{
 	private BankAccountService bankAccountService;
 
 	@Autowired
+	protected JournalService journalService;
+
+	@Autowired
 	private CoacTransactionCategoryService coacTransactionCategoryService;
 	@Autowired
 	private TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
@@ -87,6 +92,9 @@ public class BankAccountController{
 
 	@Autowired
 	private BankAccountRestHelper bankAccountRestHelper;
+
+	@Autowired
+	private TransactionCategoryService transactionCategoryService;
 
 	@Autowired
 	JwtTokenUtil jwtTokenUtil;
@@ -152,11 +160,24 @@ public class BankAccountController{
 				Addition of opening balance while creating bank account
 
 				 */
-				TransactionCategoryBalance   openingBalance = bankAccountRestHelper.getOpeningBalanceEntity(bankAccount);
-				TransactionCategoryClosingBalance closingBalance = bankAccountRestHelper.getClosingBalanceEntity(bankAccount);
+				TransactionCategoryBalance   openingBalance = bankAccountRestHelper.getOpeningBalanceEntity(bankAccount,bankAccount.getTransactionCategory());
+			    TransactionCategoryClosingBalance closingBalance = bankAccountRestHelper
+						.getClosingBalanceEntity(bankAccount,bankAccount.getTransactionCategory());
 				closingBalance.setTransactionCategory(bankAccount.getTransactionCategory());
 				transactionCategoryBalanceService.persist(openingBalance);
 				transactionCategoryClosingBalanceService.persist(closingBalance);
+
+				TransactionCategory transactionCategory = transactionCategoryService
+						.findTransactionCategoryByTransactionCategoryCode(
+								TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET.getCode());
+				openingBalance = bankAccountRestHelper.getOpeningBalanceEntity(bankAccount,transactionCategory);
+				transactionCategoryBalanceService.persist(openingBalance);
+				closingBalance = bankAccountRestHelper
+						.getClosingBalanceEntity(bankAccount,transactionCategory);
+				closingBalance.setOpeningBalance(bankAccount.getOpeningBalance().negate());
+				closingBalance.setClosingBalance(bankAccount.getOpeningBalance().negate());
+				transactionCategoryClosingBalanceService.persist(closingBalance);
+
 				coacTransactionCategoryService.addCoacTransactionCategory(bankAccount.getTransactionCategory().getChartOfAccount(),
 						bankAccount.getTransactionCategory());
 				return new ResponseEntity<>("Save Successfull..",HttpStatus.OK);
@@ -257,12 +278,17 @@ public class BankAccountController{
 	public ResponseEntity<BankModel> getById(@RequestParam("id") Integer id) {
 		try {
 			BankAccount bankAccount = bankAccountService.findByPK(id);
+			TransactionCategoryClosingBalance closingBalance = transactionCategoryClosingBalanceService.
+					getLastClosingBalanceByDate(bankAccount.getTransactionCategory());
+			BankModel bankModel = bankAccountRestHelper.getModel(bankAccount);
+			bankModel.setClosingBalance(closingBalance.getClosingBalance());
+
 
 			if (bankAccount == null) {
 				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 			}
 
-			return new ResponseEntity<>(bankAccountRestHelper.getModel(bankAccount), HttpStatus.OK);
+			return new ResponseEntity<>( bankModel, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
@@ -323,4 +349,5 @@ public class BankAccountController{
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+
 }

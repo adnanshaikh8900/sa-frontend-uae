@@ -12,7 +12,7 @@ import {
 } from 'reactstrap';
 
 import Select from 'react-select';
-import { DateRangePicker2 } from 'components';
+import { DateRangePicker2, Currency } from 'components';
 import moment from 'moment';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DateRangePicker from 'react-bootstrap-daterangepicker';
@@ -32,12 +32,23 @@ const mapStateToProps = (state) => {
 		transaction_type_list: state.transaction_data.transaction_type_list,
 		transaction_category_list: state.transaction_data.transaction_category_list,
 		account_type_list: state.transaction_data.account_type_list,
+		universal_currency_list: state.common.universal_currency_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
 		accountBalanceData: bindActionCreators(accountBalanceData, dispatch),
 	};
+};
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
 };
 
 // const colourOptions = [
@@ -75,13 +86,13 @@ class AccountBalances extends React.Component {
 			filter_account: '',
 			startDate: '',
 			endDate: '',
+			universal_currency_list: this.props.universal_currency_list,
 		};
 	}
 
 	componentDidMount = () => {
 		this.getAccountBalanceData();
 	};
-
 	getAccountBalanceData = () => {
 		this.props.accountBalanceData.getAccountBalanceReport();
 		//this.props.accountBalanceData.getTransactionTypeList();
@@ -115,7 +126,16 @@ class AccountBalances extends React.Component {
 		let endingDate = picker ? moment(picker.endDate._d).format('L') : '';
 		this.setState({ startDate: startingDate, endDate: endingDate });
 	};
-
+	transactionAmount(cell, row, extraData) {
+		return row.transactionAmount ? (
+			<Currency
+				value={row.transactionAmount}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			row.transactionAmount
+		);
+	}
 	render() {
 		const account_balance_table = this.props.account_balance_report
 			? this.props.account_balance_report.map((account) => ({
@@ -133,6 +153,7 @@ class AccountBalances extends React.Component {
 			transaction_type_list,
 			transaction_category_list,
 			account_type_list,
+			universal_currency_list,
 		} = this.props;
 
 		return (
@@ -143,10 +164,8 @@ class AccountBalances extends React.Component {
 							<div className="flex-wrap d-flex align-items-start justify-content-between">
 								<div className="info-block">
 									<h4>
-										Company Name -{' '}
-										<small>
-											<i>Transactions</i>
-										</small>
+										{/* Company Name -{' '} */}
+										<small>{/* <i>Transactions</i> */}</small>
 									</h4>
 								</div>
 								<Form onSubmit={this.handleSubmit} name="simpleForm">
@@ -154,7 +173,7 @@ class AccountBalances extends React.Component {
 										<FormGroup>
 											<ButtonGroup className="mr-3">
 												<Button
-													color="success"
+													color="primary"
 													className="btn-square"
 													onClick={() => this.table.handleExportCSV()}
 												>
@@ -196,6 +215,7 @@ class AccountBalances extends React.Component {
 
 									<Col lg={2} className="mb-1">
 										<Select
+											styles={customStyles}
 											className=""
 											options={
 												account_type_list
@@ -263,7 +283,7 @@ class AccountBalances extends React.Component {
 									</Col> */}
 									<Col lg={2} className="mb-1">
 										<Button
-											color="secondary"
+											color="primary"
 											className="btn-square"
 											type="submit"
 											name="submit"
@@ -314,7 +334,12 @@ class AccountBalances extends React.Component {
 									>
 										Transaction Description
 									</TableHeaderColumn>
-									<TableHeaderColumn dataField="transactionAmount" dataSort>
+									<TableHeaderColumn
+										dataField="transactionAmount"
+										dataSort
+										dataFormat={this.transactionAmount}
+										formatExtraData={universal_currency_list}
+									>
 										Transaction Amount
 									</TableHeaderColumn>
 								</BootstrapTable>

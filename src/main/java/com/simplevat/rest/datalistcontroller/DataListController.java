@@ -138,7 +138,13 @@ public class DataListController {
 			List<DropdownModel> dropdownModels = new ArrayList<>();
 			if (statusEnums != null && !statusEnums.isEmpty()) {
 				for (InvoiceStatusEnum statusEnum : statusEnums) {
-					dropdownModels.add(new DropdownModel(statusEnum.getValue(), statusEnum.getDesc()));
+					switch (statusEnum) {
+						case PENDING:
+						case SAVED:
+						case POST:
+							dropdownModels.add(new DropdownModel(statusEnum.getValue(), statusEnum.getDesc()));
+							break;
+					}
 				}
 				return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
 			} else {
@@ -217,7 +223,13 @@ public class DataListController {
 			if (payModes != null && !payModes.isEmpty()) {
 				List<EnumDropdownModel> modelList = new ArrayList<>();
 				for (PayMode payMode : payModes)
-					modelList.add(new EnumDropdownModel(payMode.toString(), payMode.toString()));
+					switch (payMode){
+						case BANK:
+							modelList.add(new EnumDropdownModel(payMode.toString(), payMode.toString()));
+							break;
+				}
+
+
 				return new ResponseEntity<>(modelList, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -70,7 +70,7 @@ class Header extends Component {
 					to={'/admin/dashboard'}
 					full={{
 						src: logo,
-						width: '100%',
+						width: '115%',
 						height: 'auto',
 						alt: 'CoreUI Logo',
 					}}
@@ -85,11 +85,11 @@ class Header extends Component {
 					<i className="fa fa-list-ul header-sidebar-icon"></i>
 				</AppSidebarToggler>
 				<Nav className="ml-auto" navbar>
-					<NavItem>
+					{/* <NavItem>
 						<AppAsideToggler className="d-md-down-none">
 							<i className="fa fa-bell header-icon"></i>
 						</AppAsideToggler>
-					</NavItem>
+					</NavItem> */}
 					<UncontrolledDropdown nav direction="down">
 						<DropdownToggle nav>
 							{/* {profilePic ?  'data:image/jpg;base64,'+avatar : ''} */}
@@ -124,20 +124,20 @@ class Header extends Component {
 							>
 								<i className="fas fa-users"></i> Users & Roles
 							</DropdownItem>
-							<DropdownItem
+							{/* <DropdownItem
 								onClick={() =>
 									this.props.history.push('/admin/settings/notification')
 								}
 							>
 								<i className="fas fa-bell"></i> Notifications
-							</DropdownItem>
-							<DropdownItem
+							</DropdownItem> */}
+							{/* <DropdownItem
 								onClick={() =>
 									this.props.history.push('/admin/settings/data-backup')
 								}
 							>
 								<i className="fas fa-hdd-o"></i> Data Backup
-							</DropdownItem>
+							</DropdownItem> */}
 							<DropdownItem
 								onClick={() => this.props.history.push('/admin/settings/help')}
 							>

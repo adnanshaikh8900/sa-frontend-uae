@@ -5,17 +5,15 @@
  */
 package com.simplevat.rest.transactioncontroller;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.List;
-
-import org.springframework.web.multipart.MultipartFile;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.simplevat.constant.TransactionExplinationStatusEnum;
 import com.simplevat.rest.ReconsileRequestLineItemModel;
-
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  *
@@ -66,5 +64,6 @@ public class TransactionPresistModel implements Serializable {
 	private Boolean isValidForCurrentBalance;
 
 	private BigDecimal oldTransactionAmount;
+
 
 }

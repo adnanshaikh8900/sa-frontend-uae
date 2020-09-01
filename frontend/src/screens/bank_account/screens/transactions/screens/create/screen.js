@@ -52,6 +52,17 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
+
 
 class CreateBankTransaction extends React.Component {
 	constructor(props) {
@@ -76,6 +87,7 @@ class CreateBankTransaction extends React.Component {
 				vatId: '',
 				vendorId: '',
 				employeeId: '',
+				currencyCode: '',
 			},
 			transactionCategoryList: [],
 			totalAmount: '',
@@ -149,7 +161,8 @@ class CreateBankTransaction extends React.Component {
 
 		this.file_size = 1024000;
 		this.supported_format = [
-			'',
+			'image/png',
+			'image/jpeg',
 			'text/plain',
 			'application/pdf',
 			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -158,7 +171,7 @@ class CreateBankTransaction extends React.Component {
 		];
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
-
+		this.regDecimal = /^\d*\.?\d*$/;
 		this.formRef = React.createRef();
 	}
 
@@ -167,14 +180,14 @@ class CreateBankTransaction extends React.Component {
 	};
 
 	initializeData = () => {
-		console.log(this.props.location.state.bankAccountId);
+		//console.log(this.props.location.state.bankAccountId);
 		if (this.props.location.state && this.props.location.state.bankAccountId) {
 			this.setState(
 				{
 					id: this.props.location.state.bankAccountId,
 				},
 				() => {
-					console.log(this.state.id);
+					//console.log(this.state.id);
 				},
 			);
 			// this.props.transactionActions.getTransactionCategoryList();
@@ -256,6 +269,7 @@ class CreateBankTransaction extends React.Component {
 		if (currencyCode && coaCategoryId.label === 'Expense') {
 			formData.append('currencyCode', currencyCode ? currencyCode : '');
 		}
+		console.log(currencyCode);
 		if (
 			(customerId &&
 				coaCategoryId.value &&
@@ -343,7 +357,23 @@ class CreateBankTransaction extends React.Component {
 
 	getExpensesCategoriesList = () => {
 		this.props.transactionActions.getExpensesCategoriesList();
-		this.props.transactionActions.getCurrencyList();
+		this.props.transactionActions.getCurrencyList().then((response) => {
+			this.setState({
+				initValue: {
+					...this.state.initValue,
+					...{
+						currencyCode: response.data
+							? parseInt(response.data[0].currencyCode)
+							: '',
+					},
+				},
+			});
+			this.formRef.current.setFieldValue(
+				'currencyCode',
+				response.data[0].currencyCode,
+				true,
+			);
+		});
 		this.props.transactionActions.getUserForDropdown();
 		this.props.transactionActions.getVatList();
 	};
@@ -438,7 +468,6 @@ class CreateBankTransaction extends React.Component {
 			vendor_list,
 			vat_list,
 		} = this.props;
-		console.log(customer_invoice_list);
 		return (
 			<div className="create-bank-transaction-screen">
 				<div className="animated fadeIn">
@@ -468,9 +497,13 @@ class CreateBankTransaction extends React.Component {
 													transactionDate: Yup.date().required(
 														'Transaction Date is Required',
 													),
-													transactionAmount: Yup.string().required(
-														'Transaction Amount is Required',
-													),
+													transactionAmount: Yup.string()
+														.required('Transaction Amount is Required')
+														.test(
+															'transactionAmount',
+															'Transaction Amount Must Be Greater Than 0',
+															(value) => value > 0,
+														),
 													coaCategoryId: Yup.string().required(
 														'Transaction Type is Required',
 													),
@@ -524,6 +557,7 @@ class CreateBankTransaction extends React.Component {
 																		Transaction Type
 																	</Label>
 																	<Select
+																	styles={customStyles}
 																		options={categoriesList}
 																		value={props.values.coaCategoryId}
 																		onChange={(option) => {
@@ -609,14 +643,16 @@ class CreateBankTransaction extends React.Component {
 																		Amount
 																	</Label>
 																	<Input
-																		type="text"
+																		type="text" maxLength='10'
 																		id="transactionAmount"
 																		name="transactionAmount"
 																		placeholder="Amount"
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regEx.test(option.target.value)
+																				this.regDecimal.test(
+																					option.target.value,
+																				)
 																			) {
 																				props.handleChange('transactionAmount')(
 																					option,
@@ -652,6 +688,7 @@ class CreateBankTransaction extends React.Component {
 																				Expense Category
 																			</Label>
 																			<Select
+																			styles={customStyles}
 																				options={
 																					expense_categories_list
 																						? selectOptionsFactory.renderOptions(
@@ -692,6 +729,7 @@ class CreateBankTransaction extends React.Component {
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="vatId">Vat</Label>
 																					<Select
+																					styles={customStyles}
 																						options={
 																							vat_list
 																								? selectOptionsFactory.renderOptions(
@@ -742,6 +780,7 @@ class CreateBankTransaction extends React.Component {
 																						Currency
 																					</Label>
 																					<Select
+																					styles={customStyles}
 																						id="currencyCode"
 																						name="currencyCode"
 																						options={
@@ -766,7 +805,7 @@ class CreateBankTransaction extends React.Component {
 																								.find(
 																									(option) =>
 																										option.value ===
-																										+props.values.currency,
+																										+props.values.currencyCode,
 																								)
 																						}
 																						onChange={(option) => {
@@ -810,6 +849,7 @@ class CreateBankTransaction extends React.Component {
 																				Vendor
 																			</Label>
 																			<Select
+																			styles={customStyles}
 																				options={vendor_list ? vendor_list : []}
 																				// value={
 																				// 	props.values.vendorId
@@ -855,6 +895,7 @@ class CreateBankTransaction extends React.Component {
 																						Invoice
 																					</Label>
 																					<Select
+																					styles={customStyles}
 																						isMulti
 																						options={
 																							vendor_invoice_list
@@ -925,6 +966,7 @@ class CreateBankTransaction extends React.Component {
 																				Category
 																			</Label>
 																			<Select
+																			styles={customStyles}
 																				className="select-default-width"
 																				options={
 																					transactionCategoryList
@@ -960,6 +1002,7 @@ class CreateBankTransaction extends React.Component {
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="employeeId">User</Label>
 																			<Select
+																			styles={customStyles}
 																				className="select-default-width"
 																				options={
 																					transactionCategoryList.dataList[0]
@@ -983,6 +1026,7 @@ class CreateBankTransaction extends React.Component {
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="employeeId">User</Label>
 																			<Select
+																			styles={customStyles}
 																				className="select-default-width"
 																				options={
 																					transactionCategoryList.dataList[0]
@@ -1011,6 +1055,7 @@ class CreateBankTransaction extends React.Component {
 																					Customer
 																				</Label>
 																				<Select
+																				styles={customStyles}
 																					className="select-default-width"
 																					options={
 																						transactionCategoryList.dataList[1]
@@ -1040,6 +1085,7 @@ class CreateBankTransaction extends React.Component {
 																				Invoice
 																			</Label>
 																			<Select
+																			styles={customStyles}
 																				isMulti
 																				className="select-default-width"
 																				options={
@@ -1155,7 +1201,19 @@ class CreateBankTransaction extends React.Component {
 																								this.handleFileChange(e, props);
 																							}}
 																						/>
-																						{this.state.fileName}
+																						{this.state.fileName && (
+																							<div>
+																								<i
+																									className="fa fa-close"
+																									onClick={() =>
+																										this.setState({
+																											fileName: '',
+																										})
+																									}
+																								></i>{' '}
+																								{this.state.fileName}
+																							</div>
+																						)}
 																					</div>
 																				)}
 																			/>

@@ -54,6 +54,16 @@ const mapDispatchToProps = (dispatch) => {
 		paymentActions: bindActionCreators(PaymentActions, dispatch),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
 
 class CreatePayment extends React.Component {
 	constructor(props) {
@@ -413,6 +423,7 @@ class CreatePayment extends React.Component {
 																	Supplier Name
 																</Label>
 																<Select
+																styles={customStyles}
 																	id="contactId"
 																	name="contactId"
 																	options={
@@ -449,7 +460,7 @@ class CreatePayment extends React.Component {
 																	)}
 															</FormGroup>
 														</Col>
-														<Col lg={4}>
+														{/* <Col lg={4}>
 															<FormGroup className="mb-3">
 																<Label htmlFor="project">
 																	<span className="text-danger">*</span> Payment
@@ -478,7 +489,7 @@ class CreatePayment extends React.Component {
 																		</div>
 																	)}
 															</FormGroup>
-														</Col>
+														</Col> */}
 													</Row>
 													<hr />
 													{props.values.contactId && (
@@ -575,6 +586,7 @@ class CreatePayment extends React.Component {
 																					Payment Mode
 																				</Label>
 																				<Select
+																				styles={customStyles}
 																					options={
 																						pay_mode
 																							? selectOptionsFactory.renderOptions(
@@ -620,6 +632,7 @@ class CreatePayment extends React.Component {
 																					Deposit To
 																				</Label>
 																				<Select
+																				styles={customStyles}
 																					options={deposit_list}
 																					value={props.values.depositeTo}
 																					onChange={(option) => {
@@ -745,6 +758,19 @@ class CreatePayment extends React.Component {
 																												);
 																											}}
 																										/>
+																										{this.state.fileName && (
+																								<div>
+																									<i
+																										className="fa fa-close"
+																										onClick={() =>
+																											this.setState({
+																												fileName: '',
+																											})
+																										}
+																									></i>{' '}
+																									{this.state.fileName}
+																								</div>
+																							)}
 																										{this.state.fileName ? (
 																											this.state.fileName
 																										) : (

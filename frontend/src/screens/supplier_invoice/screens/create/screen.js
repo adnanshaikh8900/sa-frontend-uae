@@ -12,6 +12,7 @@ import {
 	FormGroup,
 	Input,
 	Label,
+	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
@@ -56,6 +57,18 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
+
+const invoiceimage = require('assets/images/invoice/invoice.png');
 
 class CreateSupplierInvoice extends React.Component {
 	constructor(props) {
@@ -67,7 +80,7 @@ class CreateSupplierInvoice extends React.Component {
 				{ value: 'PERCENTAGE', label: 'Percentage' },
 			],
 			discount_option: '',
-
+			disabled: false,
 			data: [
 				{
 					id: 0,
@@ -95,7 +108,7 @@ class CreateSupplierInvoice extends React.Component {
 					{
 						id: 0,
 						description: '',
-						quantity: '',
+						quantity: 1,
 						unitPrice: '',
 						vatCategoryId: '',
 						subTotal: 0,
@@ -129,7 +142,8 @@ class CreateSupplierInvoice extends React.Component {
 		this.formRef = React.createRef();
 		this.file_size = 1024000;
 		this.supported_format = [
-			'',
+			'image/png',
+			'image/jpeg',
 			'text/plain',
 			'application/pdf',
 			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -218,6 +232,7 @@ class CreateSupplierInvoice extends React.Component {
 				render={({ field, form }) => (
 					<Input
 						type="text"
+						maxLength="10"
 						value={row['quantity'] !== 0 ? row['quantity'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regEx.test(e.target.value)) {
@@ -265,6 +280,7 @@ class CreateSupplierInvoice extends React.Component {
 				render={({ field, form }) => (
 					<Input
 						type="text"
+						maxLength="10"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regEx.test(e.target.value)) {
@@ -308,7 +324,23 @@ class CreateSupplierInvoice extends React.Component {
 	getInitialData = () => {
 		this.getInvoiceNo();
 		this.props.supplierInvoiceActions.getSupplierList(this.state.contactType);
-		this.props.supplierInvoiceActions.getCurrencyList();
+		this.props.supplierInvoiceActions.getCurrencyList().then((response) => {
+			this.setState({
+				initValue: {
+					...this.state.initValue,
+					...{
+						currency: response.data
+							? parseInt(response.data[0].currencyCode)
+							: '',
+					},
+				},
+			});
+			this.formRef.current.setFieldValue(
+				'currency',
+				response.data[0].currencyCode,
+				true,
+			);
+		});
 		this.props.supplierInvoiceActions.getVatList();
 		this.props.supplierInvoiceActions.getCountryList();
 		this.props.supplierInvoiceActions.getProductList();
@@ -341,7 +373,7 @@ class CreateSupplierInvoice extends React.Component {
 				data: data.concat({
 					id: this.state.idCount + 1,
 					description: '',
-					quantity: '',
+					quantity: 1,
 					unitPrice: '',
 					vatCategoryId: '',
 					subTotal: 0,
@@ -412,6 +444,7 @@ class CreateSupplierInvoice extends React.Component {
 				name={`lineItemsString.${idx}.vatCategoryId`}
 				render={({ field, form }) => (
 					<Select
+					styles={customStyles}
 						options={
 							vat_list
 								? selectOptionsFactory.renderOptions(
@@ -429,6 +462,7 @@ class CreateSupplierInvoice extends React.Component {
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
+						placeholder="Select Vat"
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -459,9 +493,7 @@ class CreateSupplierInvoice extends React.Component {
 	prductValue = (e, row, name, form, field, props) => {
 		const { product_list } = this.props;
 		let data = this.state.data;
-		const result = product_list.find(
-			(item) => item.id === parseInt(e.target.value),
-		);
+		const result = product_list.find((item) => item.id === parseInt(e));
 		let idx;
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -504,9 +536,6 @@ class CreateSupplierInvoice extends React.Component {
 
 	renderProduct = (cell, row, props) => {
 		const { product_list } = this.props;
-		let productList = product_list.length
-			? [{ id: '', name: 'Select Product' }, ...product_list]
-			: product_list;
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -514,27 +543,78 @@ class CreateSupplierInvoice extends React.Component {
 			}
 			return obj;
 		});
-		if (productList.length > 0) {
+		if (product_list.length > 0) {
 			return (
 				<Field
 					name={`lineItemsString.${idx}.productId`}
 					render={({ field, form }) => (
-						<Input
-							type="select"
+						<Select
+						styles={customStyles}
+							options={
+								product_list
+									? selectOptionsFactory.renderOptions(
+											'name',
+											'id',
+											product_list,
+											'Product',
+									  )
+									: []
+							}
+							id="productId"
+							placeholder="Select Product"
 							onChange={(e) => {
-								this.selectItem(
-									e.target.value,
-									row,
-									'productId',
-									form,
-									field,
-									props,
-								);
-								this.prductValue(e, row, 'productId', form, field, props);
-								// this.formRef.current.props.handleChange(field.name)(e.value)
+								if (e && e.label !== 'Select Product') {
+									this.selectItem(
+										e.value,
+										row,
+										'productId',
+										form,
+										field,
+										props,
+									);
+									this.prductValue(
+										e.value,
+										row,
+										'productId',
+										form,
+										field,
+										props,
+									);
+									// this.formRef.current.props.handleChange(field.name)(e.value)
+								} else {
+									form.setFieldValue(
+										`lineItemsString.${idx}.productId`,
+										e.value,
+										true,
+									);
+									form.setFieldValue(
+										`lineItemsString.${idx}.vatCategoryId`,
+										'',
+										true,
+									);
+									form.setFieldValue(
+										`lineItemsString.${idx}.unitPrice`,
+										200,
+										true,
+									);
+									form.setFieldValue(
+										`lineItemsString.${idx}.description`,
+										'',
+										true,
+									);
+									form.setFieldValue(
+										`lineItemsString.${idx}.transactionCategoryId`,
+										'',
+										true,
+									);
+									form.setFieldValue(
+										`lineItemsString.${idx}.transactionCategoryLabel`,
+										'',
+										true,
+									);
+								}
 							}}
-							value={row.productId}
-							className={`form-control ${
+							className={`${
 								props.errors.lineItemsString &&
 								props.errors.lineItemsString[parseInt(idx, 10)] &&
 								props.errors.lineItemsString[parseInt(idx, 10)].productId &&
@@ -545,18 +625,7 @@ class CreateSupplierInvoice extends React.Component {
 									? 'is-invalid'
 									: ''
 							}`}
-						>
-							{productList
-								? productList.map((obj) => {
-										// obj.name = obj.name === 'default' ? '0' : obj.name
-										return (
-											<option value={obj.id} key={obj.id}>
-												{obj.name}
-											</option>
-										);
-								  })
-								: ''}
-						</Input>
+						/>
 					)}
 				/>
 			);
@@ -718,7 +787,7 @@ class CreateSupplierInvoice extends React.Component {
 	updateAmount = (data, props) => {
 		const { vat_list } = this.props;
 		const { discountPercentage, discountAmount } = this.state;
-
+		console.log(discountAmount);
 		let total_net = 0;
 		let total = 0;
 		let total_vat = 0;
@@ -728,29 +797,39 @@ class CreateSupplierInvoice extends React.Component {
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-			// let val = (((+obj.unitPrice) * vat) / 100)
-			let val = (+obj.unitPrice * vat * obj.quantity) / 100;
+			if (props.values.discountType.value === 'PERCENTAGE') {
+				var val =
+					((+obj.unitPrice -
+						+((obj.unitPrice * discountPercentage) / 100).toFixed(2)) *
+						vat *
+						obj.quantity) /
+					100;
+			} else if (props.values.discountType.value === 'FIXED') {
+				var val =
+					(obj.unitPrice * obj.quantity - discountAmount / data.length) *
+					(vat / 100);
+			} else {
+				var val = (+obj.unitPrice * vat * obj.quantity) / 100;
+			}
 			obj.subTotal =
-				obj.unitPrice && obj.vatCategoryId
-					? +obj.unitPrice * obj.quantity + val
-					: 0;
+				obj.unitPrice && obj.vatCategoryId ? +obj.unitPrice * obj.quantity : 0;
 			total_net = +(total_net + +obj.unitPrice * obj.quantity);
 			total_vat = +(total_vat + val);
 			total = total_vat + total_net;
 			return obj;
 		});
+
 		const discount =
 			props.values.discountType.value === 'PERCENTAGE'
-				? (total_net * discountPercentage) / 100
+				? +((total_net * discountPercentage) / 100).toFixed(2)
 				: discountAmount;
-
 		this.setState(
 			{
 				data,
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net,
+						total_net: discount ? total_net - discount : total_net,
 						invoiceVATAmount: total_vat,
 						discount: total_net > discount ? discount : 0,
 						totalAmount: total_net > discount ? total - discount : total,
@@ -766,6 +845,7 @@ class CreateSupplierInvoice extends React.Component {
 	};
 
 	handleSubmit = (data, resetForm) => {
+		this.setState({ disabled: true });
 		const {
 			receiptAttachmentDescription,
 			receiptNumber,
@@ -819,8 +899,8 @@ class CreateSupplierInvoice extends React.Component {
 		if (contactId && contactId.value) {
 			formData.append('contactId', contactId.value);
 		}
-		if (currency !== null && currency.value) {
-			formData.append('currencyCode', currency.value);
+		if (currency !== null && currency) {
+			formData.append('currencyCode', currency);
 		}
 		if (project !== null && project.value) {
 			formData.append('projectId', project.value);
@@ -831,6 +911,7 @@ class CreateSupplierInvoice extends React.Component {
 		this.props.supplierInvoiceCreateActions
 			.createInvoice(formData)
 			.then((res) => {
+				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
 					'New Invoice Created Successfully.',
@@ -879,6 +960,7 @@ class CreateSupplierInvoice extends React.Component {
 				}
 			})
 			.catch((err) => {
+				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err && err.data ? err.data.message : 'Something Went Wrong',
@@ -947,7 +1029,7 @@ class CreateSupplierInvoice extends React.Component {
 		const { currency_list, supplier_list } = this.props;
 		return (
 			<div className="create-supplier-invoice-screen">
-				<div className="animated fadeIn">
+				<div className=" fadeIn">
 					<Row>
 						<Col lg={12} className="mx-auto">
 							<Card>
@@ -955,7 +1037,11 @@ class CreateSupplierInvoice extends React.Component {
 									<Row>
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
-												<i className="fas fa-address-book" />
+												<img
+													alt="invoiceimage"
+													src={invoiceimage}
+													style={{ width: '40px' }}
+												/>
 												<span className="ml-2">Create Invoice</span>
 											</div>
 										</Col>
@@ -999,16 +1085,12 @@ class CreateSupplierInvoice extends React.Component {
 														)
 														.of(
 															Yup.object().shape({
-																description: Yup.string().required(
-																	'Value is Required',
-																),
 																quantity: Yup.string()
 																	.required('Value is Required')
 																	.test(
 																		'quantity',
 																		'Quantity Should be Greater than 1',
 																		(value) => {
-																			console.log(value);
 																			if (value > 0) {
 																				return true;
 																			} else {
@@ -1118,8 +1200,10 @@ class CreateSupplierInvoice extends React.Component {
 																		Supplier Name
 																	</Label>
 																	<Select
+																	styles={customStyles}
 																		id="contactId"
 																		name="contactId"
+																		placeholder="Select Supplier Name"
 																		options={
 																			supplier_list
 																				? selectOptionsFactory.renderOptions(
@@ -1176,9 +1260,37 @@ class CreateSupplierInvoice extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="term">
 																		<span className="text-danger">*</span>Terms{' '}
-																		<i className="fa fa-question-circle"></i>
+																		<i
+																			id="UncontrolledTooltipExample"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="UncontrolledTooltipExample"
+																		>
+																			<p>
+																				{' '}
+																				Terms- The duration given to a buyer for
+																				payment.
+																			</p>
+																			<p>
+																				Net 7 – payment due in 7 days from
+																				invoice date{' '}
+																			</p>
+																			<p>
+																				{' '}
+																				Net 10 – payment due in 10 days from
+																				invoice date{' '}
+																			</p>
+																			<p>
+																				{' '}
+																				Net 30 – payment due in 30 days from
+																				invoice date{' '}
+																			</p>
+																		</UncontrolledTooltip>
 																	</Label>
 																	<Select
+																	styles={customStyles}
 																		options={
 																			this.termList
 																				? selectOptionsFactory.renderOptions(
@@ -1191,6 +1303,7 @@ class CreateSupplierInvoice extends React.Component {
 																		}
 																		id="term"
 																		name="term"
+																		placeholder="Select Terms"
 																		value={this.state.term}
 																		onChange={(option) => {
 																			props.handleChange('term')(option);
@@ -1305,6 +1418,7 @@ class CreateSupplierInvoice extends React.Component {
 																		Currency
 																	</Label>
 																	<Select
+																	styles={customStyles}
 																		options={
 																			currency_list
 																				? selectCurrencyFactory.renderOptions(
@@ -1317,7 +1431,21 @@ class CreateSupplierInvoice extends React.Component {
 																		}
 																		id="currency"
 																		name="currency"
-																		value={props.values.currency}
+																		value={
+																			currency_list &&
+																			selectCurrencyFactory
+																				.renderOptions(
+																					'currencyName',
+																					'currencyCode',
+																					currency_list,
+																					'Currency',
+																				)
+																				.find(
+																					(option) =>
+																						option.value ===
+																						+props.values.currency,
+																				)
+																		}
 																		onChange={(option) =>
 																			props.handleChange('currency')(option)
 																		}
@@ -1428,7 +1556,18 @@ class CreateSupplierInvoice extends React.Component {
 																			this.renderUnitPrice(cell, rows, props)
 																		}
 																	>
-																		Unit Price (All)
+																		Unit Price
+																		<i
+																			id="UnitPriceToolTip"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="UnitPriceToolTip"
+																		>
+																			Unit Price – Price of a single product or
+																			service
+																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="vat"
@@ -1444,7 +1583,7 @@ class CreateSupplierInvoice extends React.Component {
 																		className="text-right"
 																		columnClassName="text-right"
 																	>
-																		Sub Total (All)
+																		Sub Total
 																	</TableHeaderColumn>
 																</BootstrapTable>
 															</Col>
@@ -1457,17 +1596,129 @@ class CreateSupplierInvoice extends React.Component {
 																		<Label htmlFor="notes">Notes</Label>
 																		<Input
 																			type="textarea"
+																			maxLength="255"
 																			name="notes"
 																			id="notes"
 																			rows="6"
-																			placeholder="notes..."
+																			placeholder="Notes"
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}
 																			value={props.values.notes}
 																		/>
 																	</FormGroup>
+
+																	<Row>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="receiptNumber">
+																					Reciept Number
+																				</Label>
+																				<Input
+																					type="text"
+																					maxLength="50"
+																					id="receiptNumber"
+																					name="receiptNumber"
+																					placeholder="Reciept Number"
+																					onChange={(option) => {
+																						if (
+																							option.target.value === '' ||
+																							this.regExBoth.test(
+																								option.target.value,
+																							)
+																						) {
+																							props.handleChange(
+																								'receiptNumber',
+																							)(option);
+																						}
+																					}}
+																					value={props.values.receiptNumber}
+																				/>
+																			</FormGroup>
+																		</Col>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Field
+																					name="attachmentFile"
+																					render={({ field, form }) => (
+																						<div>
+																							<Label>Reciept Attachment</Label>{' '}
+																							<br />
+																							<Button
+																								color="primary"
+																								onClick={() => {
+																									document
+																										.getElementById('fileInput')
+																										.click();
+																								}}
+																								className="btn-square mr-3"
+																							>
+																								<i className="fa fa-upload"></i>{' '}
+																								Upload
+																							</Button>
+																							<input
+																								id="fileInput"
+																								ref={(ref) => {
+																									this.uploadFile = ref;
+																								}}
+																								type="file"
+																								style={{ display: 'none' }}
+																								onChange={(e) => {
+																									this.handleFileChange(
+																										e,
+																										props,
+																									);
+																								}}
+																							/>
+																						</div>
+																					)}
+																				/>
+																				{this.state.fileName && (
+																								<div>
+																									<i
+																										className="fa fa-close"
+																										onClick={() =>
+																											this.setState({
+																												fileName: '',
+																											})
+																										}
+																									></i>{' '}
+																									{this.state.fileName}
+																								</div>
+																							)}
+																				{props.errors.attachmentFile &&
+																					props.touched.attachmentFile && (
+																						<div className="invalid-file">
+																							{props.errors.attachmentFile}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+																	</Row>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="receiptAttachmentDescription">
+																			Attachment Description
+																		</Label>
+																		<Input
+																			type="textarea"
+																			maxLength="255"
+																			name="receiptAttachmentDescription"
+																			id="receiptAttachmentDescription"
+																			rows="5"
+																			placeholder="Receipt Attachment Description"
+																			onChange={(option) =>
+																				props.handleChange(
+																					'receiptAttachmentDescription',
+																				)(option)
+																			}
+																			value={
+																				props.values
+																					.receiptAttachmentDescription
+																			}
+																		/>
+																	</FormGroup>
 																</Col>
+
 																<Col lg={4}>
 																	<div className="">
 																		<div className="total-item p-2">
@@ -1478,6 +1729,7 @@ class CreateSupplierInvoice extends React.Component {
 																							Discount Type
 																						</Label>
 																						<Select
+																						styles={customStyles}
 																							className="select-default-width"
 																							options={discountOptions}
 																							id="discountType"
@@ -1522,6 +1774,7 @@ class CreateSupplierInvoice extends React.Component {
 																								name="discountPercentage"
 																								placeholder="Discount Percentage"
 																								type="text"
+																								maxLength="5"
 																								value={
 																									props.values
 																										.discountPercentage
@@ -1565,6 +1818,7 @@ class CreateSupplierInvoice extends React.Component {
 																							id="discount"
 																							name="discount"
 																							type="text"
+																							maxLength="7"
 																							disabled={
 																								props.values.discountType &&
 																								props.values.discountType
@@ -1667,114 +1921,6 @@ class CreateSupplierInvoice extends React.Component {
 																</Col>
 															</Row>
 														) : null}
-														<hr />
-														<Row>
-															<Col lg={8}>
-																<Row>
-																	<Col lg={6}>
-																		<FormGroup className="mb-3">
-																			<Label htmlFor="receiptNumber">
-																				Reciept Number
-																			</Label>
-																			<Input
-																				type="text"
-																				id="receiptNumber"
-																				name="receiptNumber"
-																				placeholder="Reciept Number"
-																				onChange={(option) => {
-																					if (
-																						option.target.value === '' ||
-																						this.regExBoth.test(
-																							option.target.value,
-																						)
-																					) {
-																						props.handleChange('receiptNumber')(
-																							option,
-																						);
-																					}
-																				}}
-																				value={props.values.receiptNumber}
-																			/>
-																		</FormGroup>
-																	</Col>
-																</Row>
-																<Row>
-																	<Col lg={12}>
-																		<FormGroup className="mb-3">
-																			<Label htmlFor="receiptAttachmentDescription">
-																				Attachment Description
-																			</Label>
-																			<Input
-																				type="textarea"
-																				name="receiptAttachmentDescription"
-																				id="receiptAttachmentDescription"
-																				rows="5"
-																				placeholder="1024 characters..."
-																				onChange={(option) =>
-																					props.handleChange(
-																						'receiptAttachmentDescription',
-																					)(option)
-																				}
-																				value={
-																					props.values
-																						.receiptAttachmentDescription
-																				}
-																			/>
-																		</FormGroup>
-																	</Col>
-																</Row>
-															</Col>
-															<Col lg={4}>
-																<Row>
-																	<Col lg={12}>
-																		<FormGroup className="mb-3">
-																			<Field
-																				name="attachmentFile"
-																				render={({ field, form }) => (
-																					<div>
-																						<Label>Reciept Attachment</Label>{' '}
-																						<br />
-																						<Button
-																							color="primary"
-																							onClick={() => {
-																								document
-																									.getElementById('fileInput')
-																									.click();
-																							}}
-																							className="btn-square mr-3"
-																						>
-																							<i className="fa fa-upload"></i>{' '}
-																							Upload
-																						</Button>
-																						<input
-																							id="fileInput"
-																							ref={(ref) => {
-																								this.uploadFile = ref;
-																							}}
-																							type="file"
-																							style={{ display: 'none' }}
-																							onChange={(e) => {
-																								this.handleFileChange(e, props);
-																							}}
-																						/>
-																						{this.state.fileName}
-																					</div>
-																				)}
-																			/>
-																			{props.errors.attachmentFile &&
-																				props.touched.attachmentFile && (
-																					<div className="invalid-file">
-																						{props.errors.attachmentFile}
-																					</div>
-																				)}
-																		</FormGroup>
-																	</Col>
-																</Row>
-															</Col>
-														</Row>
-
-														<hr />
-
 														<Row>
 															<Col lg={12} className="mt-5">
 																<FormGroup className="text-right">
@@ -1782,6 +1928,7 @@ class CreateSupplierInvoice extends React.Component {
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
+																		disabled={this.state.disabled}
 																		onClick={() => {
 																			this.setState(
 																				{ createMore: false },
@@ -1792,12 +1939,15 @@ class CreateSupplierInvoice extends React.Component {
 																		}}
 																	>
 																		<i className="fa fa-dot-circle-o"></i>{' '}
-																		Create
+																		{this.state.disabled
+																			? 'Creating...'
+																			: 'Create'}
 																	</Button>
 																	<Button
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
+																		disabled={this.state.disabled}
 																		onClick={() => {
 																			this.setState(
 																				{ createMore: true },
@@ -1807,8 +1957,10 @@ class CreateSupplierInvoice extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-repeat"></i> Create and
-																		More
+																		<i className="fa fa-repeat mr-1"></i>
+																		{this.state.disabled
+																			? 'Creating...'
+																			: 'Create & More'}
 																	</Button>
 																	<Button
 																		type="button"

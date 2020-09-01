@@ -111,10 +111,11 @@ export const getProjectList = () => {
 };
 
 export const getCustomerInvoiceList = (param) => {
+	console.log(param);
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: `/rest/invoice/getSuggestionInvoicesFotCust?amount=${param.amount}&id=${param.id}`,
+			url: `/rest/invoice/getSuggestionInvoicesFotCust?amount=${param.amount}&id=${param.id}&bankId=${param.bankId}`,
 		};
 		return authApi(data)
 			.then((res) => {
@@ -148,6 +149,7 @@ export const getCurrencyList = () => {
 							data: res.data,
 						},
 					});
+					return res;
 				}
 			})
 			.catch((err) => {
@@ -181,7 +183,7 @@ export const getVendorInvoiceList = (param) => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: `/rest/invoice/getSuggestionInvoicesFotVend?amount=${param.amount}&id=${param.id}`,
+			url: `/rest/invoice/getSuggestionInvoicesFotVend?amount=${param.amount}&id=${param.id}&bankId=${param.bankId}`,
 		};
 		return authApi(data)
 			.then((res) => {

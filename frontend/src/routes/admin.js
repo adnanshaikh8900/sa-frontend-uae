@@ -190,50 +190,50 @@ const adminRoutes = [
 	},
 
 	{
-		path: '/admin/revenue/customer-invoice/create',
+		path: '/admin/income/customer-invoice/create',
 		name: 'Create',
 		component: CreateCustomerInvoice.screen,
 	},
 	{
-		path: '/admin/revenue/customer-invoice/view',
+		path: '/admin/income/customer-invoice/view',
 		name: 'View',
 		component: ViewCustomerInvoice.screen,
 	},
 	{
-		path: '/admin/revenue/customer-invoice/detail',
+		path: '/admin/income/customer-invoice/detail',
 		name: 'Detail',
 		component: DetailCustomerInvoice.screen,
 	},
 	{
-		path: '/admin/revenue/customer-invoice/record-payment',
+		path: '/admin/income/customer-invoice/record-payment',
 		name: 'Record Payment',
 		component: RecordCustomerPayment.screen,
 	},
 	{
-		path: '/admin/revenue/customer-invoice',
+		path: '/admin/income/customer-invoice',
 		name: 'Customer Invoice',
 		component: CustomerInvoice.screen,
 	},
 	{
-		path: '/admin/revenue/receipt/create',
+		path: '/admin/income/receipt/create',
 		name: 'Create',
 		component: CreateReceipt.screen,
 	},
 	{
-		path: '/admin/revenue/receipt/detail',
+		path: '/admin/income/receipt/detail',
 		name: 'Detail',
 		component: DetailReceipt.screen,
 	},
 	{
-		path: '/admin/revenue/receipt',
+		path: '/admin/income/receipt',
 		name: 'Receipt',
 		component: Receipt.screen,
 	},
 	{
 		redirect: true,
-		path: '/admin/revenue',
-		pathTo: '/admin/revenue/customer-invoice',
-		name: 'Revenue',
+		path: '/admin/income',
+		pathTo: '/admin/income/customer-invoice',
+		name: 'Income',
 	},
 
 	{
@@ -413,18 +413,18 @@ const adminRoutes = [
 		component: Project.screen,
 	},
 	{
-		path: '/admin/master/vat-code/create',
+		path: '/admin/master/vat-category/create',
 		name: 'Create',
 		component: CreateVatCode.screen,
 	},
 	{
-		path: '/admin/master/vat-code/detail',
+		path: '/admin/master/vat-category/detail',
 		name: 'Detail',
 		component: DetailVatCode.screen,
 	},
 	{
-		path: '/admin/master/vat-code',
-		name: 'Vat Code',
+		path: '/admin/master/vat-category',
+		name: 'Vat Category',
 		component: VatCode.screen,
 	},
 	{
@@ -460,7 +460,7 @@ const adminRoutes = [
 	{
 		redirect: true,
 		path: '/admin/master',
-		pathTo: '/admin/master/chart-accounts',
+		pathTo: '/admin/master/chart-account',
 		name: 'Master',
 	},
 

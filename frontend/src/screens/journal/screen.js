@@ -64,8 +64,7 @@ class Journal extends React.Component {
 
     this.options = {
       onRowClick: this.goToDetail,
-      paginationPosition: 'top',
-      page: 1,
+        page: 1,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
@@ -270,12 +269,14 @@ class Journal extends React.Component {
     const {
       selectedRows
     } = this.state
+    const message = 'Warning: This Journal will be deleted permanently and cannot be recovered.  ';
     if (selectedRows.length > 0) {
       this.setState({
         dialog: <ConfirmDeleteModal
           isOpen={true}
           okHandler={this.removeBulkJournal}
           cancelHandler={this.removeDialog}
+          message={message}
         />
       })
     } else {
@@ -395,8 +396,8 @@ class Journal extends React.Component {
                       <div className="d-flex justify-content-end">
                         <ButtonGroup size="sm">
                           <Button
-                            color="success"
-                            className="btn-square"
+                            color="primary"
+                            className="btn-square mr-1"
                             onClick={() => this.getCsvData()}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
@@ -410,15 +411,15 @@ class Journal extends React.Component {
                           />}
                           <Button
                             color="primary"
-                            className="btn-square"
+                            className="btn-square mr-1"
                             onClick={() => this.props.history.push(`/admin/accountant/journal/create`)}
                           >
                             <i className="fas fa-plus mr-1" />
                             New Journal
                           </Button>
                           <Button
-                            color="warning"
-                            className="btn-square"
+                            color="primary"
+                            className="btn-square mr-1"
                             onClick={this.bulkDeleteJournal}
                             disabled={selectedRows.length === 0}
                           >
@@ -468,17 +469,34 @@ class Journal extends React.Component {
                           selectRow={this.selectRowProp}
                           search={false}
                           options={this.options}
-                          data={journal_list && journal_list.data ? journal_list.data : []}
+                          data={
+                            journal_list && journal_list.data
+                              ? journal_list.data
+                              : []
+                          }
                           version="4"
                           hover
                           keyField="journalId"
-                          pagination={journal_list && journal_list.data && journal_list.data.length ? true : false}
+                          pagination={
+                            journal_list &&
+                            journal_list.data &&
+                            journal_list.data.length > 0
+                              ? true
+                              : false
+                          }
                           remote
-                          fetchInfo={{ dataTotalSize: journal_list.count ? journal_list.count : 0 }}
+                          fetchInfo={{
+                            dataTotalSize: journal_list.count
+                              ? journal_list.count
+                              : 0,
+                          }}
                           // totalSize={journal_list ? journal_list.length : 0}
                           className="journal-table"
                           trClassName="cursor-pointer"
-                          ref={(node) => this.table = node}
+                          csvFileName="Journal.csv"
+                          ref={(node) => {
+                            this.table = node;
+                          }}
                         >
                           <TableHeaderColumn
                             dataField="journalDate"

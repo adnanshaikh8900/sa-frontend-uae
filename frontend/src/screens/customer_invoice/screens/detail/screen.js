@@ -58,6 +58,17 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
+
 
 class DetailCustomerInvoice extends React.Component {
 	constructor(props) {
@@ -65,6 +76,7 @@ class DetailCustomerInvoice extends React.Component {
 		this.state = {
 			loading: true,
 			dialog: false,
+			disabled: false,
 			discountOptions: [
 				{ value: 'FIXED', label: 'Fixed' },
 				{ value: 'PERCENTAGE', label: 'Percentage' },
@@ -98,6 +110,8 @@ class DetailCustomerInvoice extends React.Component {
 
 		this.file_size = 1024000;
 		this.supported_format = [
+			'image/png',
+			'image/jpeg',
 			'text/plain',
 			'application/pdf',
 			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -207,7 +221,7 @@ class DetailCustomerInvoice extends React.Component {
 					}
 				});
 		} else {
-			this.props.history.push('/admin/revenue/customer-invoice');
+			this.props.history.push('/admin/income/customer-invoice');
 		}
 	};
 
@@ -239,7 +253,7 @@ class DetailCustomerInvoice extends React.Component {
 						type="text"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
-							this.selectItem(e, row, 'description', form, field);
+							this.selectItem(e.target.value, row, 'description', form, field);
 						}}
 						placeholder="Description"
 						className={`form-control 
@@ -278,7 +292,14 @@ class DetailCustomerInvoice extends React.Component {
 						value={row['quantity'] !== 0 ? row['quantity'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regEx.test(e.target.value)) {
-								this.selectItem(e, row, 'quantity', form, field, props);
+								this.selectItem(
+									e.target.value,
+									row,
+									'quantity',
+									form,
+									field,
+									props,
+								);
 							}
 						}}
 						placeholder="Quantity"
@@ -303,7 +324,6 @@ class DetailCustomerInvoice extends React.Component {
 	};
 
 	renderUnitPrice = (cell, row, props) => {
-		console.log('ss');
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -321,7 +341,14 @@ class DetailCustomerInvoice extends React.Component {
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regEx.test(e.target.value)) {
-								this.selectItem(e, row, 'unitPrice', form, field, props);
+								this.selectItem(
+									e.target.value,
+									row,
+									'unitPrice',
+									form,
+									field,
+									props,
+								);
 							}
 						}}
 						placeholder="Unit Price"
@@ -356,7 +383,7 @@ class DetailCustomerInvoice extends React.Component {
 				data: data.concat({
 					id: this.state.idCount + 1,
 					description: '',
-					quantity: '',
+					quantity: 1,
 					unitPrice: '',
 					vatCategoryId: '',
 					subTotal: 0,
@@ -375,12 +402,12 @@ class DetailCustomerInvoice extends React.Component {
 	};
 
 	selectItem = (e, row, name, form, field, props) => {
-		e.preventDefault();
+		//e.preventDefault();
 		let data = this.state.data;
 		let idx;
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
-				obj[`${name}`] = e.target.value;
+				obj[`${name}`] = e;
 				idx = index;
 			}
 			return obj;
@@ -424,15 +451,37 @@ class DetailCustomerInvoice extends React.Component {
 			<Field
 				name={`lineItemsString.${idx}.vatCategoryId`}
 				render={({ field, form }) => (
-					<Input
-						type="select"
+					<Select
+					styles={customStyles}
+						options={
+							vat_list
+								? selectOptionsFactory.renderOptions(
+										'name',
+										'id',
+										vat_list,
+										'Vat',
+								  )
+								: []
+						}
+						value={
+							vat_list &&
+							selectOptionsFactory
+								.renderOptions('name', 'id', vat_list, 'Vat')
+								.find((option) => option.value === +row.vatCategoryId)
+						}
+						id="vatCategoryId"
+						placeholder="Select Vat"
 						onChange={(e) => {
-							this.selectItem(e, row, 'vatCategoryId', form, field, props);
-							// this.formRef.current.props.handleChange(field.name)(e.value)
+							this.selectItem(
+								e.value,
+								row,
+								'vatCategoryId',
+								form,
+								field,
+								props,
+							);
 						}}
-						value={row.vatCategoryId}
-						className={`form-control 
-            ${
+						className={`${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
@@ -443,18 +492,7 @@ class DetailCustomerInvoice extends React.Component {
 								? 'is-invalid'
 								: ''
 						}`}
-					>
-						{vatList
-							? vatList.map((obj) => {
-									// obj.name = obj.name === 'default' ? '0' : obj.name
-									return (
-										<option value={obj.id} key={obj.id}>
-											{obj.vat}
-										</option>
-									);
-							  })
-							: ''}
-					</Input>
+					/>
 				)}
 			/>
 		);
@@ -463,9 +501,7 @@ class DetailCustomerInvoice extends React.Component {
 	prductValue = (e, row, name, form, field, props) => {
 		const { product_list } = this.props;
 		let data = this.state.data;
-		const result = product_list.find(
-			(item) => item.id === parseInt(e.target.value),
-		);
+		const result = product_list.find((item) => item.id === parseInt(e));
 		let idx;
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -511,15 +547,32 @@ class DetailCustomerInvoice extends React.Component {
 			<Field
 				name={`lineItemsString.${idx}.productId`}
 				render={({ field, form }) => (
-					<Input
-						type="select"
+					<Select
+					styles={customStyles}
+						options={
+							product_list
+								? selectOptionsFactory.renderOptions(
+										'name',
+										'id',
+										product_list,
+										'Product',
+								  )
+								: []
+						}
+						value={
+							product_list &&
+							selectOptionsFactory
+								.renderOptions('name', 'id', product_list, 'Product')
+								.find((option) => option.value === +row.productId)
+						}
+						id="productId"
 						onChange={(e) => {
-							this.selectItem(e, row, 'productId', form, field, props);
-							this.prductValue(e, row, 'productId', form, field, props);
-							// this.formRef.current.props.handleChange(field.name)(e.value)
+							if (e && e.label !== 'Select Product') {
+								this.selectItem(e.value, row, 'productId', form, field, props);
+								this.prductValue(e.value, row, 'productId', form, field, props);
+							}
 						}}
-						value={row.productId}
-						className={`form-control ${
+						className={`${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].productId &&
@@ -530,18 +583,7 @@ class DetailCustomerInvoice extends React.Component {
 								? 'is-invalid'
 								: ''
 						}`}
-					>
-						{productList
-							? productList.map((obj) => {
-									// obj.name = obj.name === 'default' ? '0' : obj.name
-									return (
-										<option value={obj.id} key={obj.id}>
-											{obj.name}
-										</option>
-									);
-							  })
-							: ''}
-					</Input>
+					/>
 				)}
 			/>
 		);
@@ -587,7 +629,6 @@ class DetailCustomerInvoice extends React.Component {
 	};
 
 	updateAmount = (data, props) => {
-		console.log(data);
 		const { vat_list } = this.props;
 		let total_net = 0;
 		let total = 0;
@@ -601,7 +642,21 @@ class DetailCustomerInvoice extends React.Component {
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 			// let val = (((+obj.unitPrice) * vat) / 100)
-			let val = (+obj.unitPrice * vat * obj.quantity) / 100;
+			if (props.values.discountType.value === 'PERCENTAGE') {
+				var val =
+					((+obj.unitPrice -
+						+((obj.unitPrice * discountPercentage) / 100).toFixed(2)) *
+						vat *
+						obj.quantity) /
+					100;
+			} else if (props.values.discountType.value === 'FIXED') {
+				console.log(obj.unitPrice - discountAmount);
+				var val =
+					(obj.unitPrice * obj.quantity - discountAmount / data.length) *
+					(vat / 100);
+			} else {
+				var val = (+obj.unitPrice * vat * obj.quantity) / 100;
+			}
 			obj.subTotal =
 				obj.unitPrice && obj.vatCategoryId
 					? +obj.unitPrice * obj.quantity + val
@@ -664,6 +719,7 @@ class DetailCustomerInvoice extends React.Component {
 	};
 
 	handleSubmit = (data) => {
+		this.setState({ disabled: true });
 		const { current_customer_id, term } = this.state;
 		const {
 			receiptAttachmentDescription,
@@ -737,13 +793,15 @@ class DetailCustomerInvoice extends React.Component {
 		this.props.customerInvoiceDetailActions
 			.updateInvoice(formData)
 			.then((res) => {
+				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
 					'Invoice Updated Successfully.',
 				);
-				this.props.history.push('/admin/revenue/customer-invoice');
+				this.props.history.push('/admin/income/customer-invoice');
 			})
 			.catch((err) => {
+				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err && err.data ? err.data.message : 'Something Went Wrong',
@@ -801,7 +859,7 @@ class DetailCustomerInvoice extends React.Component {
 						'success',
 						'Data Deleted Successfully',
 					);
-					this.props.history.push('/admin/revenue/customer-invoice');
+					this.props.history.push('/admin/income/customer-invoice');
 				}
 			})
 			.catch((err) => {
@@ -992,6 +1050,7 @@ class DetailCustomerInvoice extends React.Component {
 																			Customer Name
 																		</Label>
 																		<Select
+																		styles={customStyles}
 																			id="contactId"
 																			name="contactId"
 																			options={
@@ -1065,6 +1124,7 @@ class DetailCustomerInvoice extends React.Component {
 																			<i className="fa fa-question-circle"></i>
 																		</Label>
 																		<Select
+																		styles={customStyles}
 																			options={
 																				this.termList
 																					? selectOptionsFactory.renderOptions(
@@ -1204,6 +1264,7 @@ class DetailCustomerInvoice extends React.Component {
 																			Currency
 																		</Label>
 																		<Select
+																		styles={customStyles}
 																			options={
 																				currency_list
 																					? selectCurrencyFactory.renderOptions(
@@ -1251,7 +1312,7 @@ class DetailCustomerInvoice extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																<Col lg={4}>
+																{/* <Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="contact_po_number">
 																			Contact PO Number
@@ -1276,7 +1337,7 @@ class DetailCustomerInvoice extends React.Component {
 																			}}
 																		/>
 																	</FormGroup>
-																</Col>
+																</Col> */}
 															</Row>
 
 															<hr />
@@ -1375,6 +1436,19 @@ class DetailCustomerInvoice extends React.Component {
 																										);
 																									}}
 																								/>
+																								{this.state.fileName && (
+																								<div>
+																									<i
+																										className="fa fa-close"
+																										onClick={() =>
+																											this.setState({
+																												fileName: '',
+																											})
+																										}
+																									></i>{' '}
+																									{this.state.fileName}
+																								</div>
+																							)}
 																								{this.state.fileName ? (
 																									this.state.fileName
 																								) : (
@@ -1545,6 +1619,7 @@ class DetailCustomerInvoice extends React.Component {
 																								Discount Type
 																							</Label>
 																							<Select
+																							styles={customStyles}
 																								className="select-default-width"
 																								options={discountOptions}
 																								id="discountType"
@@ -1763,16 +1838,19 @@ class DetailCustomerInvoice extends React.Component {
 																			type="submit"
 																			color="primary"
 																			className="btn-square mr-3"
+																			disabled={this.state.disabled}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			Update
+																			{this.state.disabled
+																				? 'Updating...'
+																				: 'Update'}
 																		</Button>
 																		<Button
 																			color="secondary"
 																			className="btn-square"
 																			onClick={() => {
 																				this.props.history.push(
-																					'/admin/revenue/customer-invoice',
+																					'/admin/income/customer-invoice',
 																				);
 																			}}
 																		>

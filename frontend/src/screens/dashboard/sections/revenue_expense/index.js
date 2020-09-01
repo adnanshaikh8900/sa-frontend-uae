@@ -196,14 +196,14 @@ class RevenueAndExpense extends Component {
 										className="data-info"
 										style={{ border: 'none', marginBottom: 12 }}
 									></div>
-									<div className="data-info">
+									{/* <div className="data-info">
 										<div className="data-item">
 											<div>
-												<h3>${outstanding.toFixed(2)}</h3>
+												<h3>{outstanding.toFixed(2)}</h3>
 												<p>OUTSTANDING</p>
 											</div>
 										</div>
-									</div>
+									</div> */}
 								</div>
 								<div className="chart-wrapper">
 									<Pie
@@ -231,14 +231,14 @@ class RevenueAndExpense extends Component {
 											<span>New Expense</span>
 										</button>
 									</div>
-									<div className="data-info">
+									{/* <div className="data-info">
 										<div className="data-item">
 											<div>
-												<h3>${outstanding.toFixed(2)}</h3>
+												<h3>{outstanding.toFixed(2)}</h3>
 												<p>OUTSTANDING</p>
 											</div>
 										</div>
-									</div>
+									</div> */}
 								</div>
 								<div className="chart-wrapper">
 									<Doughnut

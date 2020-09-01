@@ -23,7 +23,6 @@ em {
 
 // form styles
 .form-control {
-	border-radius: 4px !important;
 	border-color: #ccc !important;
 }
 
@@ -91,14 +90,10 @@ div.Select.is-invalid {
 
 // dropdown styles
 .dropdown-menu {
-	border-radius: 0 !important;
-	border: none !important;
+	border-radius: 15 !important;
+	border: 10 !important;
 	box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.2),
 		0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 3px 3px -2px rgba(0, 0, 0, 0.12) !important;
-}
-
-button {
-	border-radius: 4px !important;
 }
 
 // react-bootstrap-table styles
@@ -127,6 +122,9 @@ button {
 			border-right: 0px !important;
 		}
 	}
+	.cursor-pointer td {
+		overflow: hidden;
+	}
 	.react-bs-table-tool-bar {
 		.btn {
 			border-radius: 0 !important;
@@ -141,10 +139,10 @@ button {
 			margin-bottom: 0px;
 		}
 		.btn.dropdown-toggle {
-			border-radius: 0 !important;
+			border-radius: 15 !important;
 		}
 		.page-link {
-			border-radius: 0 !important;
+			border-radius: 15 !important;
 		}
 	}
 }
@@ -162,8 +160,10 @@ th {
 	border-radius: 0 !important;
 	.modal-content {
 		border-radius: 0 !important;
+		border-color: none !important;
 		.modal-header {
 			border-radius: 0 !important;
+			background-color: #6a4bc4;
 			button.close {
 				display: none;
 				span {
@@ -176,6 +176,10 @@ th {
 		}
 		.modal-footer {
 			border-radius: 0 !important;
+			button {
+				border-radius: 40px !important;
+				padding: 5px 40px;
+			}
 		}
 	}
 }
@@ -248,18 +252,18 @@ th {
 	width: 100%;
 }
 .daterangepicker {
-	border-radius: 0px !important;
+	border-radius: 10px !important;
 	border: none !important;
 	box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.2),
 		0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 3px 3px -2px rgba(0, 0, 0, 0.12) !important;
 	.applyBtn {
-		border-radius: 0px !important;
+		border-radius: 10px !important;
 	}
 	.start-date {
-		border-radius: 0px !important;
+		border-radius: 10px !important;
 	}
 	.end-date {
-		border-radius: 0px !important;
+		border-radius: 10px !important;
 	}
 }
 .daterangepicker::before {
@@ -300,6 +304,10 @@ th {
 		width: 63.7% !important;
 		transition: width 3s;
 	}
+}
+
+.form-control {
+	height: calc(1.5em + 0.75rem + 4px) !important;
 }
 
 //responsive

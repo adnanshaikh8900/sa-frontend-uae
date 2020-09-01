@@ -12,13 +12,10 @@ import com.simplevat.service.TransactionCategoryClosingBalanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.simplevat.service.JournalLineItemService;
 
 @Component
 public class FinancialReportRestHelper {
 
-	@Autowired
-	private JournalLineItemService journalLineItemService;
 	@Autowired
 	TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
 
@@ -30,232 +27,284 @@ public class FinancialReportRestHelper {
 	public BalanceSheetResponseModel getBalanceSheetReport(FinancialReportRequestModel reportRequestModel){
 
 		BalanceSheetResponseModel balanceSheetResponseModel= new BalanceSheetResponseModel();
-		Map<Integer, CreditDebitAggregator> aggregatedTransactionMap = journalLineItemService.getAggregateTransactionCategoryMap(reportRequestModel,"BalanceSheet");
+		ReportRequestModel requestModel = new ReportRequestModel();
+		requestModel.setEndDate(reportRequestModel.getEndDate());
+		String chartOfAccountCodes = getChartOfAccountCategoryCodes("BalanceSheet");
+		requestModel.setChartOfAccountCodes(chartOfAccountCodes);
+		List<TransactionCategoryClosingBalance> closingBalanceList = transactionCategoryClosingBalanceService.getListByChartOfAccountIds(requestModel);
 
-		if (aggregatedTransactionMap != null && !aggregatedTransactionMap.isEmpty()) {
+		if (closingBalanceList != null && !closingBalanceList.isEmpty()) {
+			Map<Integer,TransactionCategoryClosingBalance> transactionCategoryClosingBalanceMap = processTransactionCategoryClosingBalance(closingBalanceList);
+			BigDecimal totalCurrentAssets = BigDecimal.ZERO;
+			BigDecimal totalAccumulatedDepriciation = BigDecimal.ZERO;
+			BigDecimal totalOtherCurrentAssets = BigDecimal.ZERO;
+			BigDecimal totalFixedAssets = BigDecimal.ZERO;
+			BigDecimal totalAccountReceivable =BigDecimal.ZERO;
+			BigDecimal totalAccountPayable =BigDecimal.ZERO;
+			BigDecimal totalOtherCurrentLiability = BigDecimal.ZERO;
+			BigDecimal totalOtherLiability = BigDecimal.ZERO;
+			BigDecimal totalEquities = BigDecimal.ZERO;
+//Profit and Loss
+			BigDecimal totalOperatingIncome = BigDecimal.ZERO;
+			BigDecimal totalCostOfGoodsSold = BigDecimal.ZERO;
+			BigDecimal totalOperatingExpense = BigDecimal.ZERO;
 
-			Map<String,ChartOfAccountCategoryCodeEnum> chartOfAccountCategoryCodeEnumMap = getChartOfAccountCodeEnumMapForBalanceSheet();
-			Double totalCurrentAssets = (double) 0;
-			Double totalAccumulatedDepriciation = (double) 0;
-			Double totalOtherCurrentAssets = (double) 0;
-			Double totalFixedAssets = (double) 0;
-			Double totalAccountReceivable =(double)0;
-			Double totalAccountPayable =(double)0;
-			Double totalOtherCurrentLiability = (double) 0;
-			Double totalLiability = (double) 0;
-			Double totalOtherLiability = (double) 0;
-			Double totalEquities = (double) 0;
+			BigDecimal totalNonOperatingIncome = BigDecimal.ZERO;
+			BigDecimal totalNonOperatingExpense = BigDecimal.ZERO;
 
-			Double totalBank = (double) 0;
+			BigDecimal totalBank = BigDecimal.ZERO;
 
-			for (Map.Entry<Integer,CreditDebitAggregator> entry : aggregatedTransactionMap.entrySet()) {
-				CreditDebitAggregator creditDebitAggregator = entry.getValue();
-				String transactionCategoryCode = creditDebitAggregator.getTransactionCategoryCode();
-				String transactionCategoryName = creditDebitAggregator.getTransactionCategoryName();
-				ChartOfAccountCategoryCodeEnum chartOfAccountCategoryCodeEnum = chartOfAccountCategoryCodeEnumMap.get(transactionCategoryCode);
-
+			for (Map.Entry<Integer,TransactionCategoryClosingBalance> entry : transactionCategoryClosingBalanceMap.entrySet()) {
+				TransactionCategoryClosingBalance transactionCategoryClosingBalance = entry.getValue();
+				String transactionCategoryCode = transactionCategoryClosingBalance.getTransactionCategory().getChartOfAccount().getChartOfAccountCode();
+				String transactionCategoryName = transactionCategoryClosingBalance.getTransactionCategory().getTransactionCategoryName();
+				BigDecimal closingBalance = transactionCategoryClosingBalance.getClosingBalance();
+				if (closingBalance.longValue() < 0) {
+					closingBalance = closingBalance.negate();
+				}
+				ChartOfAccountCategoryCodeEnum chartOfAccountCategoryCodeEnum = ChartOfAccountCategoryCodeEnum.getChartOfAccountCategoryCodeEnum(transactionCategoryCode);
+				if (chartOfAccountCategoryCodeEnum == null)
+					continue;
 				switch (chartOfAccountCategoryCodeEnum) {
+					case CASH:
+						balanceSheetResponseModel.getCurrentAssets().put(transactionCategoryName,closingBalance);
+						totalCurrentAssets = totalCurrentAssets.add(closingBalance);
+						break;
 					case BANK:
-						balanceSheetResponseModel.getBank().put(transactionCategoryName,
-								BigDecimal.valueOf(creditDebitAggregator.getActualAmount()));
-						totalBank += creditDebitAggregator.getActualAmount();
+						balanceSheetResponseModel.getBank().put(transactionCategoryName,closingBalance);
+						totalBank = totalBank.add(closingBalance);
 						break;
 
 					case CURRENT_ASSET:
-						balanceSheetResponseModel.getCurrentAssets().put(transactionCategoryName,
-								BigDecimal.valueOf(creditDebitAggregator.getActualAmount()));
-						totalCurrentAssets += creditDebitAggregator.getActualAmount();
+						balanceSheetResponseModel.getCurrentAssets().put(transactionCategoryName,closingBalance);
+						totalCurrentAssets = totalCurrentAssets.add(closingBalance);
 						break;
 
 					case ACCOUNTS_RECEIVABLE:
-						totalAccountReceivable += creditDebitAggregator.getActualAmount();
+						totalAccountReceivable = totalAccountReceivable.add(closingBalance);
 						break;
 
 					case FIXED_ASSET:
-						balanceSheetResponseModel.getFixedAssets().put(transactionCategoryName,
-								BigDecimal.valueOf(creditDebitAggregator.getTotalAmount()));
+						balanceSheetResponseModel.getFixedAssets().put(transactionCategoryName,closingBalance);
 						if(transactionCategoryName.contains("Depreciation")){
-							totalAccumulatedDepriciation+=creditDebitAggregator.getTotalAmount();
+							totalAccumulatedDepriciation= totalAccumulatedDepriciation.add(closingBalance);
 						}
-						totalFixedAssets += creditDebitAggregator.getTotalAmount();
+						totalFixedAssets = totalFixedAssets.add(closingBalance);
 						break;
 
 					case OTHER_CURRENT_ASSET:
-						balanceSheetResponseModel.getOtherCurrentAssets().put(transactionCategoryName,
-								BigDecimal.valueOf(creditDebitAggregator.getTotalAmount()));
-						totalOtherCurrentAssets += creditDebitAggregator.getTotalAmount();
+						balanceSheetResponseModel.getOtherCurrentAssets().put(transactionCategoryName,closingBalance);
+						totalOtherCurrentAssets = totalOtherCurrentAssets.add(closingBalance);
 						break;
 
 					case OTHER_LIABILITY:
-						balanceSheetResponseModel.getOtherLiability().put(transactionCategoryName,
-								BigDecimal.valueOf(creditDebitAggregator.getTotalAmount()));
-						totalOtherLiability += creditDebitAggregator.getTotalAmount();
+						balanceSheetResponseModel.getOtherLiability().put(transactionCategoryName,closingBalance);
+						totalOtherLiability = totalOtherLiability.add(closingBalance);
 						break;
 
 					case ACCOUNTS_PAYABLE:
-						totalAccountPayable += creditDebitAggregator.getActualAmount();
+						totalAccountPayable = totalAccountPayable.add(closingBalance);
 						break;
 
 					case OTHER_CURRENT_LIABILITIES:
-						balanceSheetResponseModel.getOtherCurrentLiability().put(transactionCategoryName,
-								BigDecimal.valueOf(creditDebitAggregator.getTotalAmount()));
-						totalOtherCurrentLiability += creditDebitAggregator.getTotalAmount();
+						balanceSheetResponseModel.getOtherCurrentLiability().put(transactionCategoryName,closingBalance);
+						totalOtherCurrentLiability = totalOtherCurrentLiability.add(closingBalance);
 						break;
 
 					case EQUITY:
-						balanceSheetResponseModel.getEquities().put(transactionCategoryName,
-								BigDecimal.valueOf(creditDebitAggregator.getTotalAmount()));
-						totalEquities += creditDebitAggregator.getTotalAmount();
+						balanceSheetResponseModel.getEquities().put(transactionCategoryName,closingBalance);
+						totalEquities = totalEquities.add(closingBalance);
 						break;
-
+					case INCOME:
+						if (transactionCategoryName.equalsIgnoreCase("Sales") ||
+								transactionCategoryName.equalsIgnoreCase("Other Charges")) {
+							totalOperatingIncome = totalOperatingIncome.add(closingBalance);
+						} else {
+							totalNonOperatingIncome = totalNonOperatingIncome.add(closingBalance);
+						}
+						break;
+					case ADMIN_EXPENSE:
+						totalOperatingExpense = totalOperatingExpense.add(closingBalance);
+						break;
+					case OTHER_EXPENSE:
+						totalNonOperatingExpense = totalNonOperatingExpense.add(closingBalance);
+						break;
+					case COST_OF_GOODS_SOLD:
+						totalCostOfGoodsSold = totalCostOfGoodsSold.add(closingBalance);
+						break;
 					default:
 						break;
 				}
 			}
-			balanceSheetResponseModel.setTotalBank(BigDecimal.valueOf(totalBank));
-			totalCurrentAssets+=totalBank+totalAccountReceivable+totalOtherCurrentAssets;
-			balanceSheetResponseModel.setTotalCurrentAssets(BigDecimal.valueOf(totalCurrentAssets));
-			balanceSheetResponseModel.setTotalAccountReceivable(BigDecimal.valueOf(totalAccountReceivable));
-			balanceSheetResponseModel.setTotalOtherCurrentAssets(BigDecimal.valueOf(totalOtherCurrentAssets));
-			totalFixedAssets=totalFixedAssets-totalAccumulatedDepriciation;
-			balanceSheetResponseModel.setTotalFixedAssets(BigDecimal.valueOf(totalFixedAssets));
-			double totalAssets = totalCurrentAssets+totalFixedAssets;
-			balanceSheetResponseModel.setTotalAssets(BigDecimal.valueOf(totalAssets));
-
-			balanceSheetResponseModel.setTotalOtherLiability(BigDecimal.valueOf(totalOtherLiability));
-			balanceSheetResponseModel.setTotalOtherCurrentLiability(BigDecimal.valueOf(totalOtherCurrentLiability));
-			double totalLiabilities = totalOtherLiability+totalOtherCurrentLiability+totalAccountPayable;
-			balanceSheetResponseModel.setTotalLiability(BigDecimal.valueOf(totalLiabilities));
-			balanceSheetResponseModel.setTotalAccountPayable(BigDecimal.valueOf(totalAccountPayable));
-			balanceSheetResponseModel.setTotalEquities(BigDecimal.valueOf(totalEquities));
-			double totalLiabilityEquities =totalLiabilities+totalEquities;
-			balanceSheetResponseModel.setTotalLiabilityEquities(BigDecimal.valueOf(totalLiabilityEquities));
+			balanceSheetResponseModel.setTotalBank(totalBank);
+			totalCurrentAssets = totalCurrentAssets.add(totalAccountReceivable).add(totalOtherCurrentAssets).add(totalBank);
+			balanceSheetResponseModel.setTotalCurrentAssets(totalCurrentAssets);
+			balanceSheetResponseModel.setTotalAccountReceivable(totalAccountReceivable);
+			balanceSheetResponseModel.setTotalOtherCurrentAssets(totalOtherCurrentAssets);
+			totalFixedAssets=totalFixedAssets.subtract(totalAccumulatedDepriciation);
+			balanceSheetResponseModel.setTotalFixedAssets(totalFixedAssets);
+			BigDecimal totalAssets = totalCurrentAssets.add(totalFixedAssets);
+			balanceSheetResponseModel.setTotalAssets(totalAssets);
+			BigDecimal totalIncome = totalOperatingIncome.add(totalNonOperatingIncome);
+			BigDecimal totalExpense = totalCostOfGoodsSold.add(totalOperatingExpense).add(totalNonOperatingExpense);
+			BigDecimal netProfitLoss = totalIncome.subtract(totalExpense);
+//			if(netProfitLoss.longValue()<0)
+//				netProfitLoss = netProfitLoss.negate();
+			balanceSheetResponseModel.getOtherLiability().put("Retained Earnings",netProfitLoss);
+			balanceSheetResponseModel.setTotalOtherLiability(totalOtherLiability);
+			balanceSheetResponseModel.setTotalOtherCurrentLiability(totalOtherCurrentLiability);
+			BigDecimal totalLiabilities = totalOtherLiability.add(totalOtherCurrentLiability).add(totalAccountPayable).add(netProfitLoss);
+			balanceSheetResponseModel.setTotalLiability(totalLiabilities);
+			balanceSheetResponseModel.setTotalAccountPayable(totalAccountPayable);
+			balanceSheetResponseModel.setTotalEquities(totalEquities);
+			BigDecimal totalLiabilityEquities =totalLiabilities.add(totalEquities);
+			balanceSheetResponseModel.setTotalLiabilityEquities(totalLiabilityEquities);
 
 		}
-
-
-		return balanceSheetResponseModel;
+	return balanceSheetResponseModel;
 	}
 	public ProfitAndLossResponseModel getProfitAndLossReport(FinancialReportRequestModel reportRequestModel) {
 
 		ProfitAndLossResponseModel responseModel = new ProfitAndLossResponseModel();
-		Map<Integer, CreditDebitAggregator> aggregatedTransactionMap = journalLineItemService.getAggregateTransactionCategoryMap(reportRequestModel, "ProfitAndLoss");
+		ReportRequestModel requestModel = new ReportRequestModel();
+		requestModel.setStartDate(reportRequestModel.getStartDate());
+		requestModel.setEndDate(reportRequestModel.getEndDate());
+		String chartOfAccountCodes = getChartOfAccountCategoryCodes("ProfitLoss");
+		requestModel.setChartOfAccountCodes(chartOfAccountCodes);
+		List<TransactionCategoryClosingBalance> closingBalanceList = transactionCategoryClosingBalanceService.getListByChartOfAccountIds(requestModel);
 
-		if (aggregatedTransactionMap != null && !aggregatedTransactionMap.isEmpty()) {
+		if (closingBalanceList != null && !closingBalanceList.isEmpty()) {
+			Map<Integer, TransactionCategoryClosingBalance> transactionCategoryClosingBalanceMap = processTransactionCategoryClosingBalance(closingBalanceList);
+			BigDecimal totalOperatingIncome = BigDecimal.ZERO;
+			BigDecimal totalCostOfGoodsSold = BigDecimal.ZERO;
+			BigDecimal totalOperatingExpense = BigDecimal.ZERO;
 
-			Map<String,ChartOfAccountCategoryCodeEnum> chartOfAccountCategoryCodeEnumMap = getChartOfAccountCodeEnumMapForProfitLoss();
-			Double totalOperatingIncome = (double) 0;
-			Double totalCostOfGoodsSold = (double) 0;
-			Double totalOperatingExpense = (double) 0;
+			BigDecimal totalNonOperatingIncome = BigDecimal.ZERO;
+			BigDecimal totalNonOperatingExpense = BigDecimal.ZERO;
 
-			Double totalNonOperatingIncome = (double) 0;
-			Double totalNonOperatingExpense = (double) 0;
-
-			for (Map.Entry<Integer,CreditDebitAggregator> entry : aggregatedTransactionMap.entrySet())
-			{
-				CreditDebitAggregator creditDebitAggregator = entry.getValue();
-				String transactionCategoryCode = creditDebitAggregator.getTransactionCategoryCode();
-				String transactionCategoryName = creditDebitAggregator.getTransactionCategoryName();
-				ChartOfAccountCategoryCodeEnum chartOfAccountCategoryCodeEnum = chartOfAccountCategoryCodeEnumMap.get(transactionCategoryCode);
-
-				switch (chartOfAccountCategoryCodeEnum)
-				{
+			for (Map.Entry<Integer, TransactionCategoryClosingBalance> entry : transactionCategoryClosingBalanceMap.entrySet()) {
+				TransactionCategoryClosingBalance transactionCategoryClosingBalance = entry.getValue();
+				String transactionCategoryCode = transactionCategoryClosingBalance.getTransactionCategory().getChartOfAccount().getChartOfAccountCode();
+				String transactionCategoryName = transactionCategoryClosingBalance.getTransactionCategory().getTransactionCategoryName();
+				BigDecimal closingBalance = transactionCategoryClosingBalance.getClosingBalance();
+				ChartOfAccountCategoryCodeEnum chartOfAccountCategoryCodeEnum = ChartOfAccountCategoryCodeEnum.
+						getChartOfAccountCategoryCodeEnum(transactionCategoryCode);
+				if (chartOfAccountCategoryCodeEnum == null)
+					continue;
+				if (closingBalance.longValue() < 0) {
+					closingBalance = closingBalance.negate();
+				}
+				switch (chartOfAccountCategoryCodeEnum) {
 					case INCOME:
-						if(transactionCategoryName.equalsIgnoreCase("Sales") ||
-								transactionCategoryName.equalsIgnoreCase("Other Charges"))
-						{
-							responseModel.getOperatingIncome().put(transactionCategoryName,
-									BigDecimal.valueOf(creditDebitAggregator.getTotalAmount()));
-							totalOperatingIncome += creditDebitAggregator.getTotalAmount();
-						}
-						else
-						{
-							responseModel.getNonOperatingIncome().put(transactionCategoryName,
-									BigDecimal.valueOf(creditDebitAggregator.getTotalAmount()));
-							totalNonOperatingIncome += creditDebitAggregator.getTotalAmount();
+						if (transactionCategoryName.equalsIgnoreCase("Sales") ||
+								transactionCategoryName.equalsIgnoreCase("Other Charges")) {
+							responseModel.getOperatingIncome().put(transactionCategoryName, closingBalance);
+							totalOperatingIncome = totalOperatingIncome.add(closingBalance);
+						} else {
+							responseModel.getNonOperatingIncome().put(transactionCategoryName, closingBalance);
+							totalNonOperatingIncome = totalNonOperatingIncome.add(closingBalance);
 						}
 						break;
 					case ADMIN_EXPENSE:
-						responseModel.getOperatingExpense().put(transactionCategoryName,
-								BigDecimal.valueOf(creditDebitAggregator.getTotalAmount()));
-						totalOperatingExpense  += creditDebitAggregator.getTotalAmount();
+						responseModel.getOperatingExpense().put(transactionCategoryName, closingBalance);
+						totalOperatingExpense = totalOperatingExpense.add(closingBalance);
 						break;
 
 					case OTHER_EXPENSE:
-						responseModel.getNonOperatingExpense().put(transactionCategoryName,
-								BigDecimal.valueOf(creditDebitAggregator.getTotalAmount()));
-						totalNonOperatingExpense += creditDebitAggregator.getTotalAmount();
+						responseModel.getNonOperatingExpense().put(transactionCategoryName, closingBalance);
+						totalNonOperatingExpense = totalNonOperatingExpense.add(closingBalance);
 						break;
 					case COST_OF_GOODS_SOLD:
-						responseModel.getCostOfGoodsSold().put(transactionCategoryName,
-								BigDecimal.valueOf(creditDebitAggregator.getTotalAmount()));
-						totalCostOfGoodsSold += creditDebitAggregator.getTotalAmount();
+						responseModel.getCostOfGoodsSold().put(transactionCategoryName, closingBalance);
+						totalCostOfGoodsSold = totalCostOfGoodsSold.add(closingBalance);
 						break;
 					default:
 						break;
 				}
 			}
-			responseModel.setTotalOperatingIncome(BigDecimal.valueOf(totalOperatingIncome));
-			responseModel.setTotalCostOfGoodsSold(BigDecimal.valueOf(totalCostOfGoodsSold));
+				responseModel.setTotalOperatingIncome(totalOperatingIncome);
+				responseModel.setTotalCostOfGoodsSold(totalCostOfGoodsSold);
 
-			Double grossProfit = totalOperatingIncome-totalCostOfGoodsSold;
-			responseModel.setGrossProfit(BigDecimal.valueOf(grossProfit));
+				BigDecimal grossProfit = totalOperatingIncome.subtract(totalCostOfGoodsSold);
+				responseModel.setGrossProfit(grossProfit);
 
-			responseModel.setTotalOperatingExpense(BigDecimal.valueOf(totalOperatingExpense));
+				responseModel.setTotalOperatingExpense(totalOperatingExpense);
 
-			Double operatingProfit = grossProfit - totalOperatingExpense;
-			responseModel.setOperatingProfit(BigDecimal.valueOf(operatingProfit));
+				BigDecimal operatingProfit = grossProfit.subtract(totalOperatingExpense);
+				responseModel.setOperatingProfit(operatingProfit);
 
-			responseModel.setTotalNonOperatingIncome(BigDecimal.valueOf(totalNonOperatingIncome));
-			responseModel.setTotalNonOperatingExpense(BigDecimal.valueOf(totalNonOperatingExpense));
-			Double totalNonOperatingIncomeLoss = totalNonOperatingIncome - totalNonOperatingExpense;
-			responseModel.setNonOperatingIncomeExpense(BigDecimal.valueOf(totalNonOperatingIncomeLoss));
+				responseModel.setTotalNonOperatingIncome(totalNonOperatingIncome);
+				responseModel.setTotalNonOperatingExpense(totalNonOperatingExpense);
+				BigDecimal totalNonOperatingIncomeLoss = totalNonOperatingIncome.subtract(totalNonOperatingExpense);
+				responseModel.setNonOperatingIncomeExpense(totalNonOperatingIncomeLoss);
 
-			Double netProfitLoss = operatingProfit + totalNonOperatingIncomeLoss;
-			responseModel.setNetProfitLoss(BigDecimal.valueOf(netProfitLoss));
-
+				BigDecimal netProfitLoss = operatingProfit.add(totalNonOperatingIncomeLoss);
+				responseModel.setNetProfitLoss(netProfitLoss);
 		}
 		return responseModel;
 	}
 
-	/**
-	 *
-	 * @return
-	 */
-	private  Map<String,ChartOfAccountCategoryCodeEnum> getChartOfAccountCodeEnumMapForProfitLoss() {
-		Map<String,ChartOfAccountCategoryCodeEnum>  stringChartOfAccountCategoryCodeEnumHashMap = new HashMap<>();
-		Map <String,ChartOfAccountCategoryCodeEnum> chartOfAccountCategoryCodeEnumMap = ChartOfAccountCategoryCodeEnum.getChartOfAccountCategoryCodeEnumMap();
-		for (Map.Entry<String,ChartOfAccountCategoryCodeEnum> enumEntry : chartOfAccountCategoryCodeEnumMap.entrySet())
-		{
-			String chartOfAccountCode = enumEntry.getKey();
-			if(chartOfAccountCode.startsWith("03")||chartOfAccountCode.startsWith("04"))
-				stringChartOfAccountCategoryCodeEnumHashMap.put(chartOfAccountCode,enumEntry.getValue());
+	public String getChartOfAccountCategoryCodes(String chartOfAccountType) {
+		StringBuilder builder = new StringBuilder();
+		switch (chartOfAccountType) {
+			case "ProfitLoss":
+				builder.append("'").append(ChartOfAccountCategoryCodeEnum.INCOME.getCode()).append("',")
+						.append("'").append(ChartOfAccountCategoryCodeEnum.ADMIN_EXPENSE.getCode()).append("',")
+						.append("'").append(ChartOfAccountCategoryCodeEnum.COST_OF_GOODS_SOLD.getCode()).append("',")
+						.append("'").append(ChartOfAccountCategoryCodeEnum.OTHER_EXPENSE.getCode()).append("'");
+				break;
+			case "BalanceSheet":
+				builder.append("'").append(ChartOfAccountCategoryCodeEnum.ACCOUNTS_RECEIVABLE.getCode()).append("',")
+						.append("'").append(ChartOfAccountCategoryCodeEnum.BANK.getCode()).append("',")
+						.append("'").append(ChartOfAccountCategoryCodeEnum.CASH.getCode()).append("',")
+						.append("'").append(ChartOfAccountCategoryCodeEnum.CURRENT_ASSET.getCode()).append("',")
+						.append("'").append(ChartOfAccountCategoryCodeEnum.FIXED_ASSET.getCode()).append("',")
+						.append("'").append(ChartOfAccountCategoryCodeEnum.OTHER_CURRENT_ASSET.getCode()).append("',")
+						.append("'").append(ChartOfAccountCategoryCodeEnum.STOCK.getCode()).append("',")
+						.append("'").append(ChartOfAccountCategoryCodeEnum.ACCOUNTS_PAYABLE.getCode()).append("',")
+						.append("'").append(ChartOfAccountCategoryCodeEnum.OTHER_CURRENT_LIABILITIES.getCode()).append("',")
+						.append("'").append(ChartOfAccountCategoryCodeEnum.OTHER_LIABILITY.getCode()).append("',")
+						.append("'").append(ChartOfAccountCategoryCodeEnum.EQUITY.getCode()).append("',");
+				builder.append("'").append(ChartOfAccountCategoryCodeEnum.INCOME.getCode()).append("',")
+					.append("'").append(ChartOfAccountCategoryCodeEnum.ADMIN_EXPENSE.getCode()).append("',")
+					.append("'").append(ChartOfAccountCategoryCodeEnum.COST_OF_GOODS_SOLD.getCode()).append("',")
+					.append("'").append(ChartOfAccountCategoryCodeEnum.OTHER_EXPENSE.getCode()).append("'");
+				break;
+			case "TrailBalance":
+				builder.append("'").append(ChartOfAccountCategoryCodeEnum.INCOME.getCode()).append("',")
+						.append("'").append(ChartOfAccountCategoryCodeEnum.ADMIN_EXPENSE.getCode()).append("',")
+						.append("'").append(ChartOfAccountCategoryCodeEnum.COST_OF_GOODS_SOLD.getCode()).append("',")
+						.append("'").append(ChartOfAccountCategoryCodeEnum.OTHER_EXPENSE.getCode()).append("',")
+						.append("'").append(ChartOfAccountCategoryCodeEnum.ACCOUNTS_RECEIVABLE.getCode()).append("',")
+						.append("'").append(ChartOfAccountCategoryCodeEnum.BANK.getCode()).append("',")
+						.append("'").append(ChartOfAccountCategoryCodeEnum.CASH.getCode()).append("',")
+						.append("'").append(ChartOfAccountCategoryCodeEnum.CURRENT_ASSET.getCode()).append("',")
+						.append("'").append(ChartOfAccountCategoryCodeEnum.FIXED_ASSET.getCode()).append("',")
+						.append("'").append(ChartOfAccountCategoryCodeEnum.OTHER_CURRENT_ASSET.getCode()).append("',")
+						.append("'").append(ChartOfAccountCategoryCodeEnum.STOCK.getCode()).append("',")
+						.append("'").append(ChartOfAccountCategoryCodeEnum.ACCOUNTS_PAYABLE.getCode()).append("',")
+						.append("'").append(ChartOfAccountCategoryCodeEnum.OTHER_CURRENT_LIABILITIES.getCode()).append("',")
+						.append("'").append(ChartOfAccountCategoryCodeEnum.OTHER_LIABILITY.getCode()).append("',")
+						.append("'").append(ChartOfAccountCategoryCodeEnum.EQUITY.getCode()).append("'");
+				break;
+			case "VatReport":
+				builder.append("'").append(ChartOfAccountCategoryCodeEnum.OTHER_CURRENT_ASSET.getCode()).append("',")
+						.append("'").append(ChartOfAccountCategoryCodeEnum.OTHER_CURRENT_LIABILITIES.getCode()).append("'");
+				break;
 		}
-		return stringChartOfAccountCategoryCodeEnumHashMap;
-	}
-
-	private  Map<String,ChartOfAccountCategoryCodeEnum> getChartOfAccountCodeEnumMapForBalanceSheet() {
-		Map<String,ChartOfAccountCategoryCodeEnum>  stringChartOfAccountCategoryCodeEnumHashMap = new HashMap<>();
-		Map <String,ChartOfAccountCategoryCodeEnum> chartOfAccountCategoryCodeEnumMap = ChartOfAccountCategoryCodeEnum.getChartOfAccountCategoryCodeEnumMap();
-		for (Map.Entry<String,ChartOfAccountCategoryCodeEnum> enumEntry : chartOfAccountCategoryCodeEnumMap.entrySet())
-		{
-			String chartOfAccountCode = enumEntry.getKey();
-			if(chartOfAccountCode.startsWith("01")||chartOfAccountCode.startsWith("02")||chartOfAccountCode.startsWith("05"))
-				stringChartOfAccountCategoryCodeEnumHashMap.put(chartOfAccountCode,enumEntry.getValue());
-		}
-		return stringChartOfAccountCategoryCodeEnumHashMap;
+		return builder.toString();
 	}
 
 	public TrialBalanceResponseModel getTrialBalanceReport(FinancialReportRequestModel reportRequestModel) {
 		TrialBalanceResponseModel trialBalanceResponseModel = new TrialBalanceResponseModel();
 		ReportRequestModel requestModel = new ReportRequestModel();
-		requestModel.setStartDate(reportRequestModel.getStartDate());
 		requestModel.setEndDate(reportRequestModel.getEndDate());
-		List<TransactionCategoryClosingBalance> closingBalanceList = transactionCategoryClosingBalanceService.getList(requestModel);
+		String chartOfAccountCodes = getChartOfAccountCategoryCodes("TrailBalance");
+		requestModel.setChartOfAccountCodes(chartOfAccountCodes);
+		List<TransactionCategoryClosingBalance> closingBalanceList = transactionCategoryClosingBalanceService.getListByChartOfAccountIds(requestModel);
 
 		if (closingBalanceList != null && !closingBalanceList.isEmpty()) {
 			Map<Integer,TransactionCategoryClosingBalance> transactionCategoryClosingBalanceMap = processTransactionCategoryClosingBalance(closingBalanceList);
-			Map<String,ChartOfAccountCategoryCodeEnum> chartOfAccountCategoryCodeEnumMap = getChartOfAccountCodeEnumMapForTrialBalance();
 			BigDecimal totalDebitAmount = BigDecimal.ZERO;
 			BigDecimal totalCreditAmount = BigDecimal.ZERO;
 
@@ -265,14 +314,16 @@ public class FinancialReportRestHelper {
 				String transactionCategoryCode = transactionCategoryClosingBalance.getTransactionCategory().getChartOfAccount().getChartOfAccountCode();
 				String transactionCategoryName = transactionCategoryClosingBalance.getTransactionCategory().getTransactionCategoryName();
 				BigDecimal closingBalance = transactionCategoryClosingBalance.getClosingBalance();
-				Boolean isDebitFlag = false;
+				Boolean isDebitFlag = true;
 				if(closingBalance.longValue()<0)
 				{	closingBalance = closingBalance.negate();
-					isDebitFlag = true;
+					isDebitFlag = false;
 
 				}
-				ChartOfAccountCategoryCodeEnum chartOfAccountCategoryCodeEnum = chartOfAccountCategoryCodeEnumMap.
-						get(transactionCategoryCode);
+				ChartOfAccountCategoryCodeEnum chartOfAccountCategoryCodeEnum = ChartOfAccountCategoryCodeEnum.
+						getChartOfAccountCategoryCodeEnum(transactionCategoryCode);
+				if (chartOfAccountCategoryCodeEnum == null)
+					continue;
 				switch (chartOfAccountCategoryCodeEnum)
 				{
 					case ACCOUNTS_RECEIVABLE:
@@ -289,6 +340,7 @@ public class FinancialReportRestHelper {
 						break;
 
 					case BANK:
+					case CASH:
 						trialBalanceResponseModel.getBank().put(transactionCategoryName,
 								closingBalance);
 						if(isDebitFlag) {
@@ -301,8 +353,6 @@ public class FinancialReportRestHelper {
 						}
 						break;
 					case OTHER_CURRENT_ASSET:
-						//if (transactionCategoryName.equalsIgnoreCase("Input Vat"))
-					//	{
 							trialBalanceResponseModel.getAssets().put(transactionCategoryName,
 									closingBalance);
 						if(isDebitFlag) {
@@ -313,7 +363,6 @@ public class FinancialReportRestHelper {
 							trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName, "Credit");
 							totalCreditAmount = totalCreditAmount.add(closingBalance);
 						}
-					//	}
 						break;
 					case FIXED_ASSET:
 						trialBalanceResponseModel.getFixedAsset().put(transactionCategoryName,
@@ -401,119 +450,8 @@ public class FinancialReportRestHelper {
 		}
 		return trialBalanceResponseModel;
 	}
-//    public TrialBalanceResponseModel getTrialBalanceReport(FinancialReportRequestModel reportRequestModel) {
-//        TrialBalanceResponseModel trialBalanceResponseModel = new TrialBalanceResponseModel();
-//        Map<Integer, CreditDebitAggregator> aggregatedTransactionMap = journalLineItemService.getAggregateTransactionCategoryMap(reportRequestModel,"TrialBalance");
-//		ReportRequestModel requestModel = new ReportRequestModel();
-//		requestModel.setStartDate(reportRequestModel.getStartDate());
-//		requestModel.setEndDate(reportRequestModel.getEndDate());
-//        List<TransactionCategoryClosingBalance> closingBalanceList = transactionCategoryClosingBalanceService.getList(requestModel);
-//
-//		if (aggregatedTransactionMap != null && !aggregatedTransactionMap.isEmpty()) {
-//            Map<String,ChartOfAccountCategoryCodeEnum> chartOfAccountCategoryCodeEnumMap = getChartOfAccountCodeEnumMapForTrialBalance();
-//            Double totalDebitAmount = (double) 0;
-//			Double totalCreditAmount = (double) 0;
-//
-//            for (Map.Entry<Integer,CreditDebitAggregator> entry : aggregatedTransactionMap.entrySet())
-//            {
-//                CreditDebitAggregator creditDebitAggregator = entry.getValue();
-//                String transactionCategoryCode = creditDebitAggregator.getTransactionCategoryCode();
-//                String transactionCategoryName = creditDebitAggregator.getTransactionCategoryName();
-//                ChartOfAccountCategoryCodeEnum chartOfAccountCategoryCodeEnum = chartOfAccountCategoryCodeEnumMap.get(transactionCategoryCode);
-//                switch (chartOfAccountCategoryCodeEnum)
-//                {
-//                    case ACCOUNTS_RECEIVABLE:
-//                        trialBalanceResponseModel.getAccountReceivable().put(transactionCategoryName,
-//                                BigDecimal.valueOf(creditDebitAggregator.getActualAmount()));
-//						trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName,"Debit");
-//						totalDebitAmount += creditDebitAggregator.getActualAmount();
-//                        break;
-//
-//                    case BANK:
-//                        trialBalanceResponseModel.getBank().put(transactionCategoryName,
-//                                BigDecimal.valueOf(creditDebitAggregator.getActualAmount()));
-//						trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName,"Debit");
-//						totalDebitAmount +=creditDebitAggregator.getActualAmount();
-//                        break;
-//                    case OTHER_CURRENT_ASSET:
-//                        if (transactionCategoryName.equalsIgnoreCase("Input Vat"))
-//                        {
-//                            trialBalanceResponseModel.getAssets().put(transactionCategoryName,
-//                                    BigDecimal.valueOf(creditDebitAggregator.getActualAmount()));
-//							trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName,"Debit");
-//							totalDebitAmount +=creditDebitAggregator.getActualAmount();
-//                        }
-//                        break;
-//                    case FIXED_ASSET:
-//                        trialBalanceResponseModel.getFixedAsset().put(transactionCategoryName,
-//                                BigDecimal.valueOf(creditDebitAggregator.getActualAmount()));
-//						if(transactionCategoryName.contains("Depreciation")){
-//							trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName,"Credit");
-//							totalCreditAmount +=creditDebitAggregator.getActualAmount();
-//						}
-//						else {
-//							totalDebitAmount +=creditDebitAggregator.getActualAmount();
-//							trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName,"Debit");
-//						}
-//                        break;
-//
-//                    case ACCOUNTS_PAYABLE:
-//                        trialBalanceResponseModel.getAccountpayable().put(transactionCategoryName,
-//                                BigDecimal.valueOf(creditDebitAggregator.getActualAmount()));
-//						trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName,"Credit");
-//						totalCreditAmount += creditDebitAggregator.getActualAmount();
-//                        break;
-//                    case OTHER_LIABILITY:
-//
-//                    	trialBalanceResponseModel.getLiabilities().put(transactionCategoryName,
-//								BigDecimal.valueOf(creditDebitAggregator.getActualAmount()));
-//						trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName,"Credit");
-//                    	totalCreditAmount += creditDebitAggregator.getActualAmount();
-//
-//                        break;
-//                    case EQUITY:
-//                        if(transactionCategoryName.equalsIgnoreCase("Drawing")||
-//                                transactionCategoryName.equalsIgnoreCase("Owner's Capital"))
-//
-//                        {
-//                            trialBalanceResponseModel.getEquities().put(transactionCategoryName,
-//                                    BigDecimal.valueOf(creditDebitAggregator.getActualAmount()));
-//							trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName,"Debit");
-//                            totalDebitAmount +=creditDebitAggregator.getActualAmount();
-//                        }
-//                        else if( transactionCategoryName.equalsIgnoreCase("Owner's Equity")||
-//								transactionCategoryName.equalsIgnoreCase("Retained Earnings")){
-//							trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName,"Credit");
-//							totalCreditAmount +=creditDebitAggregator.getActualAmount();
-//                        }
-//                        break;
-//                    case INCOME:
-//
-//                            trialBalanceResponseModel.getIncome().put(transactionCategoryName,
-//                                    BigDecimal.valueOf(creditDebitAggregator.getActualAmount()));
-//						trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName,"Credit");
-//							totalCreditAmount +=creditDebitAggregator.getActualAmount();
-//
-//                        break;
-//                    case ADMIN_EXPENSE:
-//                    case OTHER_EXPENSE:
-//                        trialBalanceResponseModel.getExpense().put(transactionCategoryName,
-//                                BigDecimal.valueOf(creditDebitAggregator.getActualAmount()));
-//						trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName,"Debit");
-//						totalDebitAmount  +=creditDebitAggregator.getActualAmount();
-//                        break;
-//                    default:
-//                        break;
-//                }
-//            }
-//            trialBalanceResponseModel.setTotalCreditAmount(BigDecimal.valueOf(totalCreditAmount));
-//            trialBalanceResponseModel.setTotalDebitAmount(BigDecimal.valueOf(totalDebitAmount));
-//
-//        }
-//        return trialBalanceResponseModel;
-//    }
 
-	private Map<Integer, TransactionCategoryClosingBalance> processTransactionCategoryClosingBalance(List<TransactionCategoryClosingBalance> closingBalanceList) {
+	public Map<Integer, TransactionCategoryClosingBalance> processTransactionCategoryClosingBalance(List<TransactionCategoryClosingBalance> closingBalanceList) {
 		Map<Integer, TransactionCategoryClosingBalance> transactionCategoryClosingBalanceMap = new HashMap<>();
 		for(TransactionCategoryClosingBalance transactionCategoryClosingBalance :closingBalanceList)
 		{
@@ -533,22 +471,5 @@ public class FinancialReportRestHelper {
 			tempTransactionCategoryClosingBalance.setCreatedDate(Date.from(transactionCategoryClosingBalance.getClosingBalanceDate().atZone(ZoneId.systemDefault()).toInstant()));
 		}
 		return transactionCategoryClosingBalanceMap;
-	}
-	/**
-	 *
-	 * @return
-	 */
-	private  Map<String,ChartOfAccountCategoryCodeEnum> getChartOfAccountCodeEnumMapForTrialBalance() {
-		Map<String,ChartOfAccountCategoryCodeEnum>  stringChartOfAccountCategoryCodeEnumHashMap = new HashMap<>();
-		Map <String,ChartOfAccountCategoryCodeEnum> chartOfAccountCategoryCodeEnumMap = ChartOfAccountCategoryCodeEnum.getChartOfAccountCategoryCodeEnumMap();
-		for (Map.Entry<String,ChartOfAccountCategoryCodeEnum> enumEntry : chartOfAccountCategoryCodeEnumMap.entrySet())
-		{
-			String chartOfAccountCode = enumEntry.getKey();
-			if(chartOfAccountCode.startsWith("01") || chartOfAccountCode.startsWith("02") ||
-					chartOfAccountCode.startsWith("03") || chartOfAccountCode.startsWith("04") ||
-					chartOfAccountCode.startsWith("05"))
-				stringChartOfAccountCategoryCodeEnumHashMap.put(chartOfAccountCode,enumEntry.getValue());
-		}
-		return stringChartOfAccountCategoryCodeEnumHashMap;
 	}
 }

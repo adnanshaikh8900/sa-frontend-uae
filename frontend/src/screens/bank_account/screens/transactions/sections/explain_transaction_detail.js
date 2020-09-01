@@ -46,6 +46,17 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
+
 
 class ExplainTrasactionDetail extends React.Component {
 	constructor(props) {
@@ -59,13 +70,14 @@ class ExplainTrasactionDetail extends React.Component {
 			chartOfAccountCategoryList: [],
 			transactionCategoryList: [],
 			id: '',
-			dialog: null,
+			dialog: true,
 			totalAmount: '',
 		};
 
 		this.file_size = 1024000;
 		this.supported_format = [
-			'',
+			'image/png',
+			'image/jpeg',
 			'text/plain',
 			'application/pdf',
 			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -119,8 +131,8 @@ class ExplainTrasactionDetail extends React.Component {
 								: '',
 							transactionCategoryLabel: res.data.transactionCategoryLabel,
 							invoiceError: '',
-							expenseCategory: '',
-							currencyCode: '',
+							expenseCategory: res.data.expenseCategory,
+							currencyCode: parseInt(res.data.currencyCode),
 						},
 					},
 					() => {
@@ -161,6 +173,12 @@ class ExplainTrasactionDetail extends React.Component {
 							);
 							this.getTransactionCategoryList(id);
 						}
+						if (this.state.initValue.expenseCategory) {
+							this.props.transactionsActions.getExpensesCategoriesList();
+							this.props.transactionsActions.getCurrencyList();
+							this.props.transactionsActions.getUserForDropdown();
+							this.props.transactionsActions.getVatList();
+						}
 					},
 				);
 			}
@@ -176,28 +194,31 @@ class ExplainTrasactionDetail extends React.Component {
 	getTransactionCategoryList = (type) => {
 		this.formRef.current.setFieldValue('coaCategoryId', type, true);
 		this.setValue(null);
-		this.props.transactionsActions
-			.getTransactionCategoryListForExplain(
-				type.value,
-				this.state.initValue.bankId,
-			)
-			.then((res) => {
-				if (res.status === 200) {
-					this.setState(
-						{
-							transactionCategoryList: res.data,
-						},
-						() => {
-							//console.log(this.state.transactionCategoryList);
-						},
-					);
-				}
-			});
+		if (this.state.initValue.coaCategoryId !== 10) {
+			this.props.transactionsActions
+				.getTransactionCategoryListForExplain(
+					type.value,
+					this.state.initValue.bankId,
+				)
+				.then((res) => {
+					if (res.status === 200) {
+						this.setState(
+							{
+								transactionCategoryList: res.data,
+							},
+							() => {
+								//console.log(this.state.transactionCategoryList);
+							},
+						);
+					}
+				});
+		}
 	};
 	getSuggestionInvoicesFotCust = (option, amount) => {
 		const data = {
 			amount: amount,
 			id: option,
+			bankId: this.props.bankId,
 		};
 		this.props.transactionsActions.getCustomerInvoiceList(data);
 	};
@@ -205,6 +226,7 @@ class ExplainTrasactionDetail extends React.Component {
 		const data = {
 			amount: amount,
 			id: option,
+			bankId: this.props.bankId,
 		};
 		this.props.transactionsActions.getVendorInvoiceList(data);
 	};
@@ -215,7 +237,23 @@ class ExplainTrasactionDetail extends React.Component {
 
 	getExpensesCategoriesList = () => {
 		this.props.transactionsActions.getExpensesCategoriesList();
-		this.props.transactionsActions.getCurrencyList();
+		this.props.transactionsActions.getCurrencyList().then((response) => {
+			this.setState({
+				initValue: {
+					...this.state.initValue,
+					...{
+						currency: response.data
+							? parseInt(response.data[0].currencyCode)
+							: '',
+					},
+				},
+			});
+			this.formRef.current.setFieldValue(
+				'currency',
+				response.data[0].currencyCode,
+				true,
+			);
+		});
 		this.props.transactionsActions.getUserForDropdown();
 		this.props.transactionsActions.getVatList();
 	};
@@ -252,6 +290,7 @@ class ExplainTrasactionDetail extends React.Component {
 				transactionId,
 				expenseCategory,
 			} = data;
+			console.log(data);
 			if (
 				(invoiceIdList && coaCategoryId.label === 'Sales') ||
 				(invoiceIdList && coaCategoryId.label === 'Supplier Invoice')
@@ -303,7 +342,7 @@ class ExplainTrasactionDetail extends React.Component {
 				(vatId && coaCategoryId.value === 10) ||
 				(vatId && coaCategoryId.label === 'Expense')
 			) {
-				formData.append('vatId', vatId ? vatId.value : '');
+				formData.append('vatId', vatId ? vatId : '');
 			}
 			if (employeeId) {
 				formData.append('employeeId', employeeId ? employeeId.value : '');
@@ -330,11 +369,7 @@ class ExplainTrasactionDetail extends React.Component {
 							'success',
 							'Transaction Detail Updated Successfully.',
 						);
-						//this.props.closeExplainTransactionModal(this.state.id);
-						//this.initializeData();
-						// this.props.history.push('/admin/banking/bank-account/transaction', {
-						//   bankId,
-						// });
+						this.props.closeExplainTransactionModal(this.state.id);
 					}
 				})
 				.catch((err) => {
@@ -346,30 +381,45 @@ class ExplainTrasactionDetail extends React.Component {
 				});
 		}
 	};
-
+	handleFileChange = (e, props) => {
+		e.preventDefault();
+		let reader = new FileReader();
+		let file = e.target.files[0];
+		if (file) {
+			reader.onloadend = () => {};
+			reader.readAsDataURL(file);
+			props.setFieldValue('attachmentFile', file, true);
+		}
+	};
 	closeTransaction = (id) => {
-		alert();
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
+					isOpen={true}
 					okHandler={() => this.removeTransaction(id)}
 					cancelHandler={this.removeDialog}
+					message="This Transaction will be deleted and cannot be reversed "
 				/>
 			),
 		});
 	};
+
 	invoiceIdList = (option) => {
-		this.setState({
-			initValue: {
-				...this.state.initValue,
-				...{
-					invoiceIdList: option,
+		this.setState(
+			{
+				initValue: {
+					...this.state.initValue,
+					...{
+						invoiceIdList: option,
+					},
 				},
 			},
-		});
+			() => {},
+		);
 		this.formRef.current.setFieldValue('invoiceIdList', option, true);
 	};
 	removeTransaction = (id) => {
+		this.removeDialog();
 		this.props.transactionsActions
 			.deleteTransactionById(id)
 			.then((res) => {
@@ -377,6 +427,7 @@ class ExplainTrasactionDetail extends React.Component {
 					'success',
 					'Transaction Deleted Successfully',
 				);
+				this.props.closeExplainTransactionModal(this.state.id);
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
@@ -385,10 +436,22 @@ class ExplainTrasactionDetail extends React.Component {
 				);
 			});
 	};
+
 	removeDialog = () => {
 		this.setState({
 			dialog: null,
 		});
+	};
+
+	handleFileChange = (e, props) => {
+		e.preventDefault();
+		let reader = new FileReader();
+		let file = e.target.files[0];
+		if (file) {
+			reader.onloadend = () => {};
+			reader.readAsDataURL(file);
+			props.setFieldValue('attachment', file, true);
+		}
 	};
 
 	render() {
@@ -397,6 +460,7 @@ class ExplainTrasactionDetail extends React.Component {
 			loading,
 			chartOfAccountCategoryList,
 			transactionCategoryList,
+			dialog,
 		} = this.state;
 		const {
 			customer_invoice_list,
@@ -411,6 +475,7 @@ class ExplainTrasactionDetail extends React.Component {
 				<div className="animated fadeIn">
 					<Row>
 						<Col lg={12} className="mx-auto">
+							{dialog}
 							{loading ? (
 								<Loader />
 							) : (
@@ -436,24 +501,32 @@ class ExplainTrasactionDetail extends React.Component {
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values, resetForm);
 													}}
+													validate={(values) => {
+														let errors = {};
+														if (
+															(values.coaCategoryId.label ===
+																'Supplier Invoice' ||
+																values.coaCategoryId.label === 'Sales') &&
+															!values.invoiceIdList
+														) {
+															errors.invoiceIdList = 'Invoice is  required';
+														}
+														return errors;
+													}}
 													validationSchema={Yup.object().shape({
 														date: Yup.string().required(
 															'Transaction Date is Required',
 														),
-														amount: Yup.string().required(
-															'Transaction Amount is Required',
-														),
+														amount: Yup.string()
+															.required('Transaction Amount is Required')
+															.test(
+																'amount',
+																'Transaction Amount Must Be Greater Than 0',
+																(value) => value > 0,
+															),
 														coaCategoryId: Yup.object().required(
 															'Transaction Type is Required',
 														),
-														invoiceIdList: Yup.string().when('coaCategoryId', {
-															is: (item) =>
-																item.label === 'Supplier Invoice' ||
-																item.label === 'Sales',
-															then: Yup.string().required(
-																'Invoice Is Required',
-															),
-														}),
 														attachment: Yup.mixed()
 															.test(
 																'fileType',
@@ -504,6 +577,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			Transaction Type
 																		</Label>
 																		<Select
+																		styles={customStyles}
 																			options={
 																				chartOfAccountCategoryList
 																					? chartOfAccountCategoryList
@@ -543,6 +617,12 @@ class ExplainTrasactionDetail extends React.Component {
 																				) {
 																					this.getVendorList();
 																				}
+																				this.formRef.current.setFieldValue(
+																					'transactionCategoryLabel',
+																					'',
+																					true,
+																				);
+																				this.setValue(null);
 																			}}
 																			placeholder="Select Type"
 																			id="coaCategoryId"
@@ -578,7 +658,9 @@ class ExplainTrasactionDetail extends React.Component {
 																					option.target.value === '' ||
 																					this.regEx.test(option.target.value)
 																				) {
-																					props.handleChange('amount')(option);
+																					props.handleChange('amount')(
+																						option.target.value,
+																					);
 																				}
 																			}}
 																			value={props.values.amount}
@@ -677,6 +759,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					Expense Category
 																				</Label>
 																				<Select
+																				styles={customStyles}
 																					options={
 																						expense_categories_list
 																							? selectOptionsFactory.renderOptions(
@@ -686,6 +769,21 @@ class ExplainTrasactionDetail extends React.Component {
 																									'Expense Category',
 																							  )
 																							: []
+																					}
+																					value={
+																						expense_categories_list &&
+																						selectOptionsFactory
+																							.renderOptions(
+																								'transactionCategoryName',
+																								'transactionCategoryId',
+																								expense_categories_list,
+																								'Expense Category',
+																							)
+																							.find(
+																								(option) =>
+																									option.value ===
+																									props.values.expenseCategory,
+																							)
 																					}
 																					// value={props.values.expenseCategory}
 																					onChange={(option) => {
@@ -727,19 +825,25 @@ class ExplainTrasactionDetail extends React.Component {
 																									  )
 																									: []
 																							}
-																							// value={
-																							// 	transactionCategoryList.dataList
-																							// 		? transactionCategoryList.dataList[0].options.find(
-																							// 				(option) =>
-																							// 					option.value ===
-																							// 					+props.values.vatId,
-																							// 		  )
-																							// 		: []
-																							// }
+																							value={
+																								vat_list &&
+																								selectOptionsFactory
+																									.renderOptions(
+																										'name',
+																										'id',
+																										vat_list,
+																										'Tax',
+																									)
+																									.find(
+																										(option) =>
+																											option.value ===
+																											props.values.vatId,
+																									)
+																							}
 																							onChange={(option) => {
 																								if (option && option.value) {
 																									props.handleChange('vatId')(
-																										option,
+																										option.value,
 																									);
 																								} else {
 																									props.handleChange('vatId')(
@@ -769,6 +873,7 @@ class ExplainTrasactionDetail extends React.Component {
 																							Currency
 																						</Label>
 																						<Select
+																						styles={customStyles}
 																							id="currencyCode"
 																							name="currencyCode"
 																							options={
@@ -793,7 +898,8 @@ class ExplainTrasactionDetail extends React.Component {
 																									.find(
 																										(option) =>
 																											option.value ===
-																											+props.values.currency,
+																											+props.values
+																												.currencyCode,
 																									)
 																							}
 																							onChange={(option) => {
@@ -836,6 +942,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					Vendor
 																				</Label>
 																				<Select
+																				styles={customStyles}
 																					options={
 																						vendor_list ? vendor_list : []
 																					}
@@ -876,6 +983,7 @@ class ExplainTrasactionDetail extends React.Component {
 																							Invoice
 																						</Label>
 																						<Select
+																						styles={customStyles}
 																							isMulti
 																							options={
 																								vendor_invoice_list
@@ -910,24 +1018,28 @@ class ExplainTrasactionDetail extends React.Component {
 																								(totalAmount, invoice) =>
 																									totalAmount + invoice.amount,
 																								0,
-																							) >
-																								this.state.initValue.amount && (
+																							) !== props.values.amount && (
 																								<div
 																									className={
 																										this.state.initValue.invoiceIdList.reduce(
 																											(totalAmount, invoice) =>
-																												totalAmount +
-																												invoice.amount,
+																												parseInt(
+																													totalAmount +
+																														invoice.amount,
+																												),
 																											0,
-																										) >
-																										this.state.initValue.amount
+																										) !==
+																										parseInt(
+																											props.values.amount,
+																										)
 																											? 'is-invalid'
 																											: ''
 																									}
 																								>
 																									<div className="invalid-feedback">
-																										Total Invoice Amount Is More
-																										Than The Transaction Amount
+																										Total Invoice Amount Is Not
+																										Equal to the Transaction
+																										Amount please create invoice
 																									</div>
 																								</div>
 																							)}
@@ -946,6 +1058,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					Customer
 																				</Label>
 																				<Select
+																				styles={customStyles}
 																					options={
 																						transactionCategoryList.dataList[0]
 																							? transactionCategoryList
@@ -989,6 +1102,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					Invoice
 																				</Label>
 																				<Select
+																				styles={customStyles}
 																					isMulti
 																					options={
 																						customer_invoice_list
@@ -999,6 +1113,7 @@ class ExplainTrasactionDetail extends React.Component {
 																						props.handleChange('invoiceIdList')(
 																							option,
 																						);
+																						this.invoiceIdList(option);
 																					}}
 																					placeholder="Select Type"
 																					id="invoiceIdList"
@@ -1010,6 +1125,43 @@ class ExplainTrasactionDetail extends React.Component {
 																							: ''
 																					}
 																				/>
+																				{props.errors.invoiceIdList &&
+																					props.touched.invoiceIdList && (
+																						<div className="invalid-feedback">
+																							{props.errors.invoiceIdList}
+																						</div>
+																					)}
+																				{this.state.initValue.invoiceIdList &&
+																					this.state.initValue.invoiceIdList.reduce(
+																						(totalAmount, invoice) =>
+																							parseInt(
+																								totalAmount + invoice.amount,
+																							),
+																						0,
+																					) !==
+																						parseInt(props.values.amount) && (
+																						<div
+																							className={
+																								this.state.initValue.invoiceIdList.reduce(
+																									(totalAmount, invoice) =>
+																										parseInt(
+																											totalAmount +
+																												invoice.amount,
+																										),
+																									0,
+																								) !==
+																								parseInt(props.values.amount)
+																									? 'is-invalid'
+																									: ''
+																							}
+																						>
+																							<div className="invalid-feedback">
+																								Total Invoice Amount Is Not
+																								Equal to the Transaction Amount
+																								please create invoice
+																							</div>
+																						</div>
+																					)}
 																			</FormGroup>
 																		</Col>
 																	)}
@@ -1026,6 +1178,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					Category
 																				</Label>
 																				<Select
+																				styles={customStyles}
 																					options={
 																						transactionCategoryList
 																							? transactionCategoryList.categoriesList
@@ -1037,11 +1190,31 @@ class ExplainTrasactionDetail extends React.Component {
 																								'transactionCategoryId',
 																							)(option.value);
 																						} else {
+																							console.log('sss');
 																							props.handleChange(
 																								'transactionCategoryId',
 																							)('');
 																						}
 																					}}
+																					value={
+																						transactionCategoryList.categoriesList &&
+																						props.values
+																							.transactionCategoryLabel
+																							? transactionCategoryList.categoriesList
+																									.find(
+																										(item) =>
+																											item.label ===
+																											props.values
+																												.transactionCategoryLabel,
+																									)
+																									.options.find(
+																										(item) =>
+																											item.value ===
+																											+props.values
+																												.transactionCategoryId,
+																									)
+																							: console.log('')
+																					}
 																					placeholder="Select Category"
 																					id="transactionCategoryId"
 																					name="transactionCategoryId"
@@ -1062,6 +1235,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="employeeId">User</Label>
 																				<Select
+																				styles={customStyles}
 																					options={
 																						transactionCategoryList.dataList
 																							? transactionCategoryList
@@ -1132,8 +1306,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					name="attachment"
 																					render={({ field, form }) => (
 																						<div>
-																							<Label>Reciept Attachment</Label>{' '}
-																							<br />
+																							<Label>Attachment</Label> <br />
 																							<Button
 																								color="primary"
 																								onClick={() => {
@@ -1160,10 +1333,22 @@ class ExplainTrasactionDetail extends React.Component {
 																									);
 																								}}
 																							/>
-																							{this.state.fileName}
 																						</div>
 																					)}
 																				/>
+																				{this.state.fileName && (
+																					<div>
+																						<i
+																							className="fa fa-close"
+																							onClick={() =>
+																								this.setState({
+																									fileName: '',
+																								})
+																							}
+																						></i>{' '}
+																						{this.state.fileName}
+																					</div>
+																				)}
 																				{props.errors.attachment &&
 																					props.touched.attachment && (
 																						<div className="invalid-file">
@@ -1260,6 +1445,7 @@ class ExplainTrasactionDetail extends React.Component {
 																						User
 																					</Label>
 																					<Select
+																					styles={customStyles}
 																						options={
 																							transactionCategoryList.dataList
 																								? transactionCategoryList
@@ -1317,7 +1503,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			color="secondary"
 																			className="btn-square"
 																			onClick={() =>
-																				this.removeTransaction(
+																				this.closeTransaction(
 																					props.values.transactionId,
 																				)
 																			}

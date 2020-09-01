@@ -12,6 +12,7 @@ import {
 	FormGroup,
 	Input,
 	Label,
+	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
 
@@ -39,6 +40,17 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
+
 
 class CreateProduct extends React.Component {
 	constructor(props) {
@@ -78,6 +90,7 @@ class CreateProduct extends React.Component {
 			purchaseCategory: [],
 			salesCategory: [],
 			createMore: false,
+			exist: false,
 		};
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
@@ -243,6 +256,24 @@ class CreateProduct extends React.Component {
 			});
 	};
 
+	validationCheck = (value) => {
+		const data = {
+			moduleType: 1,
+			name: value,
+		};
+		this.props.productActions.checkValidation(data).then((response) => {
+			if (response.data === 'Product name already exists') {
+				this.setState({
+					exist: true,
+				});
+			} else {
+				this.setState({
+					exist: false,
+				});
+			}
+		});
+	};
+
 	render() {
 		const { vat_list, product_category_list } = this.props;
 		const { initValue, purchaseCategory, salesCategory } = this.state;
@@ -271,10 +302,19 @@ class CreateProduct extends React.Component {
 												onSubmit={(values, { resetForm }) => {
 													this.handleSubmit(values, resetForm);
 												}}
+												validate={(values) => {
+													let errors = {};
+													if (!values.productName) {
+														errors.productName =
+															'Product Category Name is  required';
+													}
+													if (this.state.exist === true) {
+														errors.productName =
+															'Product Category Name is already exist';
+													}
+													return errors;
+												}}
 												validationSchema={Yup.object().shape({
-													productName: Yup.string().required(
-														'Product Name is Required',
-													),
 													purchaseUnitPrice: Yup.string().when(
 														'productPriceType',
 														{
@@ -323,166 +363,187 @@ class CreateProduct extends React.Component {
 														.nullable(),
 												})}
 											>
-												{(props) => (
-													<Form onSubmit={props.handleSubmit}>
-														<Row>
-															<Col lg={12}>
-																<FormGroup check inline className="mb-3">
-																	<Label className="productlabel">Type</Label>
-																	<div className="wrapper">
-																		<Label
-																			className="form-check-label"
-																			check
-																			htmlFor="producttypeone"
-																		>
-																			<Input
-																				className="form-check-input"
-																				type="radio"
-																				id="producttypeone"
-																				name="producttypeone"
-																				value="GOODS"
-																				onChange={(value) => {
-																					props.handleChange('productType')(
-																						value,
-																					);
-																				}}
-																				checked={
-																					props.values.productType === 'GOODS'
-																				}
-																			/>
-																			Goods
+												{(props) => {
+													const { handleBlur } = props;
+													return (
+														<Form onSubmit={props.handleSubmit}>
+															<Row>
+																<Col lg={12}>
+																	<FormGroup check inline className="mb-3">
+																		<Label className="productlabel">Type</Label>
+																		<div className="wrapper">
+																			<Label
+																				className="form-check-label"
+																				check
+																				htmlFor="producttypeone"
+																			>
+																				<Input
+																					className="form-check-input"
+																					type="radio"
+																					id="producttypeone"
+																					name="producttypeone"
+																					value="GOODS"
+																					onChange={(value) => {
+																						props.handleChange('productType')(
+																							value,
+																						);
+																					}}
+																					checked={
+																						props.values.productType === 'GOODS'
+																					}
+																				/>
+																				Goods
+																			</Label>
+																			<Label
+																				className="form-check-label"
+																				check
+																				htmlFor="producttypetwo"
+																			>
+																				<Input
+																					className="form-check-input"
+																					type="radio"
+																					id="producttypetwo"
+																					name="producttypetwo"
+																					value="SERVICE"
+																					onChange={(value) => {
+																						props.handleChange('productType')(
+																							value,
+																						);
+																					}}
+																					checked={
+																						props.values.productType ===
+																						'SERVICE'
+																					}
+																				/>
+																				Service
+																			</Label>
+																		</div>
+																	</FormGroup>
+																</Col>
+															</Row>
+															<Row>
+																<Col lg={4}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="productName">
+																			<span className="text-danger">*</span>Name
 																		</Label>
-																		<Label
-																			className="form-check-label"
-																			check
-																			htmlFor="producttypetwo"
-																		>
-																			<Input
-																				className="form-check-input"
-																				type="radio"
-																				id="producttypetwo"
-																				name="producttypetwo"
-																				value="SERVICE"
-																				onChange={(value) => {
-																					props.handleChange('productType')(
-																						value,
+																		<Input
+																			type="text" maxLength='70'
+																			id="productName"
+																			name="productName"
+																			onChange={(option) => {
+																				if (
+																					option.target.value === '' ||
+																					this.regExBoth.test(
+																						option.target.value,
+																					)
+																				) {
+																					props.handleChange('productName')(
+																						option,
 																					);
-																				}}
-																				checked={
-																					props.values.productType === 'SERVICE'
 																				}
-																			/>
-																			Service
-																		</Label>
-																	</div>
-																</FormGroup>
-															</Col>
-														</Row>
-														<Row>
-															<Col lg={4}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="productName">
-																		<span className="text-danger">*</span>Name
-																	</Label>
-																	<Input
-																		type="text"
-																		id="productName"
-																		name="productName"
-																		onChange={(option) => {
-																			if (
-																				option.target.value === '' ||
-																				this.regExAlpha.test(
+																				this.validationCheck(
 																					option.target.value,
-																				)
-																			) {
-																				props.handleChange('productName')(
-																					option,
 																				);
+																			}}
+																			onBlur={handleBlur}
+																			value={props.values.productName}
+																			placeholder="Enter Product Name"
+																			className={
+																				props.errors.productName &&
+																				props.touched.productName
+																					? 'is-invalid'
+																					: ''
 																			}
-																		}}
-																		value={props.values.productName}
-																		placeholder="Enter Product Name"
-																		className={
-																			props.errors.productName &&
-																			props.touched.productName
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.productName &&
-																		props.touched.productName && (
-																			<div className="invalid-feedback">
-																				{props.errors.productName}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
+																		/>
+																		{props.errors.productName &&
+																			props.touched.productName && (
+																				<div className="invalid-feedback">
+																					{props.errors.productName}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
 
-															<Col lg={4}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="productCode">
-																		Product Code
-																	</Label>
-																	<Input
-																		type="text"
-																		id="productCode"
-																		name="productCode"
-																		placeholder="Enter Product Code"
-																		onChange={(option) => {
-																			if (
-																				option.target.value === '' ||
-																				this.regExBoth.test(option.target.value)
-																			) {
-																				props.handleChange('productCode')(
-																					option,
-																				);
+																<Col lg={4}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="productCode">
+																			Product Code
+																			<i
+																				id="ProductCodeTooltip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="ProductCodeTooltip"
+																			>
+																				Product Code - Unique identifier code for the product 
+																			</UncontrolledTooltip>
+																		</Label>
+																		<Input
+																			type="text" maxLength='70'
+																			id="productCode"
+																			name="productCode"
+																			placeholder="Enter Product Code"
+																			onChange={(option) => {
+																				if (
+																					option.target.value === '' ||
+																					this.regExBoth.test(
+																						option.target.value,
+																					)
+																				) {
+																					props.handleChange('productCode')(
+																						option,
+																					);
+																				}
+																			}}
+																			value={props.values.productCode}
+																		/>
+																	</FormGroup>
+																</Col>
+															</Row>
+															<Row>
+																<Col lg={4}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="productCategoryId">
+																			Product Category
+																		</Label>
+																		<Select
+																			styles={customStyles}
+																			className="select-default-width"
+																			options={
+																				product_category_list &&
+																				product_category_list.data
+																					? selectOptionsFactory.renderOptions(
+																							'productCategoryName',
+																							'id',
+																							product_category_list.data,
+																							'Product Category',
+																					  )
+																					: []
 																			}
-																		}}
-																		value={props.values.productCode}
-																	/>
-																</FormGroup>
-															</Col>
-														</Row>
-														<Row>
-															<Col lg={4}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="productCategoryId">
-																		Product Category
-																	</Label>
-																	<Select
-																		className="select-default-width"
-																		options={
-																			product_category_list &&
-																			product_category_list.data
-																				? selectOptionsFactory.renderOptions(
-																						'productCategoryName',
-																						'id',
-																						product_category_list.data,
-																						'Product Category',
-																				  )
-																				: []
-																		}
-																		id="productCategoryId"
-																		name="productCategoryId"
-																		value={props.values.productCategoryId}
-																		onChange={(option) => {
-																			// this.setState({
-																			//   selectedParentProduct: option.value
-																			// })
-																			if (option && option.value) {
-																				props.handleChange('productCategoryId')(
-																					option,
-																				);
-																			} else {
-																				props.handleChange('productCategoryId')(
-																					'',
-																				);
-																			}
-																		}}
-																	/>
-																</FormGroup>
-															</Col>
-															{/* <Col lg={4}>
+																			id="productCategoryId"
+																			name="productCategoryId"
+																			placeholder="Select Product Category"
+																			value={props.values.productCategoryId}
+																			onChange={(option) => {
+																				// this.setState({
+																				//   selectedParentProduct: option.value
+																				// })
+																				if (option && option.value) {
+																					props.handleChange(
+																						'productCategoryId',
+																					)(option);
+																				} else {
+																					props.handleChange(
+																						'productCategoryId',
+																					)('');
+																				}
+																			}}
+																		/>
+																	</FormGroup>
+																</Col>
+																{/* <Col lg={4}>
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="unitPrice">
                                     Product Price
@@ -504,55 +565,59 @@ class CreateProduct extends React.Component {
                                   />
                                 </FormGroup>
                               </Col> */}
-															<Col lg={4}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="vatCategoryId">
-																		<span className="text-danger">*</span>Vat
-																		Percentage
-																	</Label>
-																	<Select
-																		options={
-																			vat_list
-																				? selectOptionsFactory.renderOptions(
-																						'name',
-																						'id',
-																						vat_list,
-																						'Vat',
-																				  )
-																				: []
-																		}
-																		id="vatCategoryId"
-																		name="vatCategoryId"
-																		value={props.values.vatCategoryId}
-																		onChange={(option) => {
-																			// this.setState({
-																			//   selectedVatCategory: option.value
-																			// })
-																			if (option && option.value) {
-																				props.handleChange('vatCategoryId')(
-																					option,
-																				);
-																			} else {
-																				props.handleChange('vatCategoryId')('');
+																<Col lg={4}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="vatCategoryId">
+																			<span className="text-danger">*</span>Vat
+																			Percentage
+																		</Label>
+																		<Select
+																			styles={customStyles}
+																			options={
+																				vat_list
+																					? selectOptionsFactory.renderOptions(
+																							'name',
+																							'id',
+																							vat_list,
+																							'Vat',
+																					  )
+																					: []
 																			}
-																		}}
-																		className={
-																			props.errors.vatCategoryId &&
-																			props.touched.vatCategoryId
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.vatCategoryId &&
-																		props.touched.vatCategoryId && (
-																			<div className="invalid-feedback">
-																				{props.errors.vatCategoryId}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
-														</Row>
-														<Row>
+																			id="vatCategoryId"
+																			name="vatCategoryId"
+																			placeholder="Select Vat Category"
+																			value={props.values.vatCategoryId}
+																			onChange={(option) => {
+																				// this.setState({
+																				//   selectedVatCategory: option.value
+																				// })
+																				if (option && option.value) {
+																					props.handleChange('vatCategoryId')(
+																						option,
+																					);
+																				} else {
+																					props.handleChange('vatCategoryId')(
+																						'',
+																					);
+																				}
+																			}}
+																			className={
+																				props.errors.vatCategoryId &&
+																				props.touched.vatCategoryId
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{props.errors.vatCategoryId &&
+																			props.touched.vatCategoryId && (
+																				<div className="invalid-feedback">
+																					{props.errors.vatCategoryId}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
+															</Row>
+															{/* <Row>
 															<Col lg={12}>
 																<FormGroup check inline className="mb-3">
 																	<Input
@@ -574,9 +639,9 @@ class CreateProduct extends React.Component {
 																	</Label>
 																</FormGroup>
 															</Col>
-														</Row>
+														</Row> */}
 
-														{/* <Row>
+															{/* <Row>
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="productWarehouseId">
@@ -615,7 +680,7 @@ class CreateProduct extends React.Component {
                                 </FormGroup>
                               </Col>
                             </Row> */}
-														{/* <Row>
+															{/* <Row>
                               <Col lg={4}>
                                 <FormGroup className="text-right">
                                   <Button
@@ -630,7 +695,7 @@ class CreateProduct extends React.Component {
                                 </FormGroup>
                               </Col>
                             </Row> */}
-														{/* <Row>
+															{/* <Row>
                               <Col lg={8}>
                                 <FormGroup className="">
                                   <Label htmlFor="description">
@@ -652,411 +717,439 @@ class CreateProduct extends React.Component {
                                 </FormGroup>
                               </Col>
                             </Row> */}
-														<Row className="secondary-info">
-															<Col lg={4}>
-																<FormGroup check inline className="mb-3">
-																	<Label
-																		className="form-check-label"
-																		check
-																		htmlFor="productPriceTypeOne"
-																	>
+															<Row className="secondary-info">
+																<Col lg={4}>
+																	<FormGroup check inline className="mb-3">
+																		<Label
+																			className="form-check-label"
+																			check
+																			htmlFor="productPriceTypeOne"
+																		>
+																			<Input
+																				type="checkbox"
+																				id="productPriceTypeOne"
+																				name="productPriceTypeOne"
+																				onChange={(event) => {
+																					if (
+																						props.values.productPriceType.includes(
+																							'SALES',
+																						)
+																					) {
+																						const nextValue = props.values.productPriceType.filter(
+																							(value) => value !== 'SALES',
+																						);
+																						props.setFieldValue(
+																							'productPriceType',
+																							nextValue,
+																						);
+																					} else {
+																						const nextValue = props.values.productPriceType.concat(
+																							'SALES',
+																						);
+																						props.setFieldValue(
+																							'productPriceType',
+																							nextValue,
+																						);
+																					}
+																				}}
+																				checked={props.values.productPriceType.includes(
+																					'SALES',
+																				)}
+																				className={
+																					props.errors.productPriceType &&
+																					props.touched.productPriceType
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			Sales Information
+																			{props.errors.productPriceType &&
+																				props.touched.productPriceType && (
+																					<div className="invalid-feedback">
+																						{props.errors.productPriceType}
+																					</div>
+																				)}
+																		</Label>
+																	</FormGroup>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="salesUnitPrice">
+																			<span className="text-danger">*</span>{' '}
+																			Selling Price
+																			<i
+																				id="SalesTooltip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="SalesTooltip"
+																			>
+																				Selling price – Price at which your product is sold 
+																			</UncontrolledTooltip>
+																		</Label>
 																		<Input
-																			type="checkbox"
-																			id="productPriceTypeOne"
-																			name="productPriceTypeOne"
-																			onChange={(event) => {
+																			type="text" maxLength='10'
+																			id="salesUnitPrice"
+																			name="salesUnitPrice"
+																			placeholder="Enter Selling Price"
+																			readOnly={
+																				props.values.productPriceType.includes(
+																					'SALES',
+																				)
+																					? false
+																					: true
+																			}
+																			onChange={(option) => {
 																				if (
-																					props.values.productPriceType.includes(
-																						'SALES',
-																					)
+																					option.target.value === '' ||
+																					this.regEx.test(option.target.value)
 																				) {
-																					const nextValue = props.values.productPriceType.filter(
-																						(value) => value !== 'SALES',
-																					);
-																					props.setFieldValue(
-																						'productPriceType',
-																						nextValue,
-																					);
-																				} else {
-																					const nextValue = props.values.productPriceType.concat(
-																						'SALES',
-																					);
-																					props.setFieldValue(
-																						'productPriceType',
-																						nextValue,
+																					props.handleChange('salesUnitPrice')(
+																						option,
 																					);
 																				}
 																			}}
-																			checked={props.values.productPriceType.includes(
-																				'SALES',
-																			)}
+																			value={props.values.salesUnitPrice}
 																			className={
-																				props.errors.productPriceType &&
-																				props.touched.productPriceType
+																				props.errors.salesUnitPrice &&
+																				props.touched.salesUnitPrice
 																					? 'is-invalid'
 																					: ''
 																			}
 																		/>
-																		Sales Information
-																		{props.errors.productPriceType &&
-																			props.touched.productPriceType && (
+																		{props.errors.salesUnitPrice &&
+																			props.touched.salesUnitPrice && (
 																				<div className="invalid-feedback">
-																					{props.errors.productPriceType}
+																					{props.errors.salesUnitPrice}
 																				</div>
 																			)}
-																	</Label>
-																</FormGroup>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="salesUnitPrice">
-																		<span className="text-danger">*</span>{' '}
-																		Selling Price
-																	</Label>
-																	<Input
-																		type="text"
-																		id="salesUnitPrice"
-																		name="salesUnitPrice"
-																		placeholder="Enter Selling Price"
-																		readOnly={
-																			props.values.productPriceType.includes(
-																				'SALES',
-																			)
-																				? false
-																				: true
-																		}
-																		onChange={(option) => {
-																			if (
-																				option.target.value === '' ||
-																				this.regEx.test(option.target.value)
-																			) {
-																				props.handleChange('salesUnitPrice')(
-																					option,
-																				);
+																	</FormGroup>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="transactionCategoryId">
+																			<span className="text-danger">*</span>{' '}
+																			Account
+																		</Label>
+																		<Select
+																			styles={customStyles}
+																			isDisabled={
+																				props.values.productPriceType.includes(
+																					'SALES',
+																				)
+																					? false
+																					: true
 																			}
-																		}}
-																		value={props.values.salesUnitPrice}
-																		className={
-																			props.errors.salesUnitPrice &&
-																			props.touched.salesUnitPrice
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.salesUnitPrice &&
-																		props.touched.salesUnitPrice && (
-																			<div className="invalid-feedback">
-																				{props.errors.salesUnitPrice}
-																			</div>
-																		)}
-																</FormGroup>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="transactionCategoryId">
-																		<span className="text-danger">*</span>{' '}
-																		Account
-																	</Label>
-																	<Select
-																		isDisabled={
-																			props.values.productPriceType.includes(
-																				'SALES',
-																			)
-																				? false
-																				: true
-																		}
-																		options={
-																			salesCategory
-																				? salesCategory.categoriesList
-																				: []
-																		}
-																		value={
-																			salesCategory
-																				? props.values
-																						.salesTransactionCategoryId
-																				: ''
-																		}
-																		id="salesTransactionCategoryId"
-																		onChange={(option) => {
-																			if (option && option.value) {
-																				props.handleChange(
-																					'salesTransactionCategoryId',
-																				)(option);
-																			} else {
-																				props.handleChange(
-																					'salesTransactionCategoryId',
-																				)('');
+																			options={
+																				salesCategory
+																					? salesCategory.categoriesList
+																					: []
 																			}
-																		}}
-																		className={
-																			props.errors.salesTransactionCategoryId &&
-																			props.touched.salesTransactionCategoryId
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.salesTransactionCategoryId &&
-																		props.touched
-																			.salesTransactionCategoryId && (
-																			<div className="invalid-feedback">
-																				{
-																					props.errors
-																						.salesTransactionCategoryId
-																				}
-																			</div>
-																		)}
-																</FormGroup>
-																<FormGroup className="">
-																	<Label htmlFor="salesDescription">
-																		Description
-																	</Label>
-																	<Input
-																		readOnly={
-																			props.values.productPriceType.includes(
-																				'SALES',
-																			)
-																				? false
-																				: true
-																		}
-																		type="textarea"
-																		name="salesDescription"
-																		id="salesDescription"
-																		rows="3"
-																		placeholder="Description..."
-																		onChange={(value) => {
-																			props.handleChange('salesDescription')(
-																				value,
-																			);
-																		}}
-																		value={props.values.salesDescription}
-																	/>
-																</FormGroup>
-															</Col>
-															<Col lg={4}>
-																<FormGroup check inline className="mb-3">
-																	<Label
-																		className="form-check-label"
-																		check
-																		htmlFor="productPriceTypetwo"
-																	>
-																		<Input
-																			type="checkbox"
-																			id="productPriceTypetwo"
-																			name="productPriceTypetwo"
-																			onChange={(event) => {
-																				if (
-																					props.values.productPriceType.includes(
-																						'PURCHASE',
-																					)
-																				) {
-																					const nextValue = props.values.productPriceType.filter(
-																						(value) => value !== 'PURCHASE',
-																					);
-																					props.setFieldValue(
-																						'productPriceType',
-																						nextValue,
-																					);
+																			value={
+																				salesCategory
+																					? props.values
+																							.salesTransactionCategoryId
+																					: ''
+																			}
+																			id="salesTransactionCategoryId"
+																			onChange={(option) => {
+																				if (option && option.value) {
+																					props.handleChange(
+																						'salesTransactionCategoryId',
+																					)(option);
 																				} else {
-																					const nextValue = props.values.productPriceType.concat(
-																						'PURCHASE',
-																					);
-																					console.log(nextValue);
-																					props.setFieldValue(
-																						'productPriceType',
-																						nextValue,
-																					);
+																					props.handleChange(
+																						'salesTransactionCategoryId',
+																					)('');
 																				}
 																			}}
-																			checked={props.values.productPriceType.includes(
-																				'PURCHASE',
-																			)}
 																			className={
-																				props.errors.productPriceType &&
-																				props.touched.productPriceType
+																				props.errors
+																					.salesTransactionCategoryId &&
+																				props.touched.salesTransactionCategoryId
 																					? 'is-invalid'
 																					: ''
 																			}
 																		/>
-																		Purchase Information
-																		{props.errors.productPriceType &&
-																			props.touched.productPriceType && (
-																				<div className="invalid-feedback">
-																					{props.errors.productPriceType}
-																				</div>
-																			)}
-																	</Label>
-																</FormGroup>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="salesUnitPrice">
-																		<span className="text-danger">*</span>{' '}
-																		Purchase Price
-																	</Label>
-																	<Input
-																		type="text"
-																		id="purchaseUnitPrice"
-																		name="purchaseUnitPrice"
-																		placeholder="Enter Selling Price"
-																		onChange={(option) => {
-																			if (
-																				option.target.value === '' ||
-																				this.regEx.test(option.target.value)
-																			) {
-																				props.handleChange('purchaseUnitPrice')(
-																					option,
-																				);
-																			}
-																		}}
-																		readOnly={
-																			props.values.productPriceType.includes(
-																				'PURCHASE',
-																			)
-																				? false
-																				: true
-																		}
-																		value={props.values.purchaseUnitPrice}
-																		className={
-																			props.errors.purchaseUnitPrice &&
-																			props.touched.purchaseUnitPrice
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.purchaseUnitPrice &&
-																		props.touched.purchaseUnitPrice && (
-																			<div className="invalid-feedback">
-																				{props.errors.purchaseUnitPrice}
-																			</div>
-																		)}
-																</FormGroup>
-
-																<FormGroup className="mb-3">
-																	<Label htmlFor="purchaseTransactionCategoryId">
-																		<span className="text-danger">*</span>{' '}
-																		Account
-																	</Label>
-																	<Select
-																		isDisabled={
-																			props.values.productPriceType.includes(
-																				'PURCHASE',
-																			)
-																				? false
-																				: true
-																		}
-																		options={
-																			purchaseCategory
-																				? purchaseCategory.categoriesList
-																				: []
-																		}
-																		value={
-																			purchaseCategory
-																				? props.values
-																						.purchaseTransactionCategoryId
-																				: ''
-																		}
-																		id="purchaseTransactionCategoryId"
-																		onChange={(option) => {
-																			if (option && option.value) {
-																				props.handleChange(
-																					'purchaseTransactionCategoryId',
-																				)(option);
-																			} else {
-																				props.handleChange(
-																					'purchaseTransactionCategoryId',
-																				)('');
-																			}
-																		}}
-																		className={
-																			props.errors
-																				.purchaseTransactionCategoryId &&
+																		{props.errors.salesTransactionCategoryId &&
 																			props.touched
-																				.purchaseTransactionCategoryId
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.purchaseTransactionCategoryId &&
-																		props.touched
-																			.purchaseTransactionCategoryId && (
-																			<div className="invalid-feedback">
-																				{
-																					props.errors
-																						.purchaseTransactionCategoryId
+																				.salesTransactionCategoryId && (
+																				<div className="invalid-feedback">
+																					{
+																						props.errors
+																							.salesTransactionCategoryId
+																					}
+																				</div>
+																			)}
+																	</FormGroup>
+																	<FormGroup className="">
+																		<Label htmlFor="salesDescription">
+																			Description
+																		</Label>
+																		<Input
+																			readOnly={
+																				props.values.productPriceType.includes(
+																					'SALES',
+																				)
+																					? false
+																					: true
+																			}
+																			type="textarea"maxLength='200'
+																			name="salesDescription"
+																			id="salesDescription"
+																			rows="3"
+																			placeholder="Description..."
+																			onChange={(value) => {
+																				props.handleChange('salesDescription')(
+																					value,
+																				);
+																			}}
+																			value={props.values.salesDescription}
+																		/>
+																	</FormGroup>
+																</Col>
+																<Col lg={4}>
+																	<FormGroup check inline className="mb-3">
+																		<Label
+																			className="form-check-label"
+																			check
+																			htmlFor="productPriceTypetwo"
+																		>
+																			<Input
+																				type="checkbox"
+																				id="productPriceTypetwo"
+																				name="productPriceTypetwo"
+																				onChange={(event) => {
+																					if (
+																						props.values.productPriceType.includes(
+																							'PURCHASE',
+																						)
+																					) {
+																						const nextValue = props.values.productPriceType.filter(
+																							(value) => value !== 'PURCHASE',
+																						);
+																						props.setFieldValue(
+																							'productPriceType',
+																							nextValue,
+																						);
+																					} else {
+																						const nextValue = props.values.productPriceType.concat(
+																							'PURCHASE',
+																						);
+																						console.log(nextValue);
+																						props.setFieldValue(
+																							'productPriceType',
+																							nextValue,
+																						);
+																					}
+																				}}
+																				checked={props.values.productPriceType.includes(
+																					'PURCHASE',
+																				)}
+																				className={
+																					props.errors.productPriceType &&
+																					props.touched.productPriceType
+																						? 'is-invalid'
+																						: ''
 																				}
-																			</div>
-																		)}
-																</FormGroup>
-																<FormGroup className="">
-																	<Label htmlFor="purchaseDescription">
-																		Description
-																	</Label>
-																	<Input
-																		readOnly={
-																			props.values.productPriceType.includes(
-																				'PURCHASE',
-																			)
-																				? false
-																				: true
-																		}
-																		type="textarea"
-																		name="purchaseDescription"
-																		id="purchaseDescription"
-																		rows="3"
-																		placeholder="Description..."
-																		onChange={(value) => {
-																			props.handleChange('purchaseDescription')(
-																				value,
-																			);
-																		}}
-																		value={props.values.purchaseDescription}
-																	/>
-																</FormGroup>
-															</Col>
-														</Row>
-														<Row>
-															<Col lg={12} className="mt-5">
-																<FormGroup className="text-right">
-																	<Button
-																		type="button"
-																		color="primary"
-																		className="btn-square mr-3"
-																		disabled={this.state.disabled}
-																		onClick={() => {
-																			this.setState({ createMore: false });
-																			props.handleSubmit();
-																		}}
-																	>
-																		<i className="fa fa-dot-circle-o"></i>{' '}
-																		{this.state.disabled
-																			? 'Creating...'
-																			: 'Create'}
-																	</Button>
-																	<Button
-																		type="button"
-																		color="primary"
-																		className="btn-square mr-3"
-																		disabled={this.state.disabled}
-																		onClick={() => {
-																			this.setState({ createMore: true });
-																			props.handleSubmit();
-																		}}
-																	>
-																		<i className="fa fa-repeat"></i>
-																		{this.state.disabled
-																			? 'Creating...'
-																			: 'Create and More'}
-																	</Button>
-																	<Button
-																		color="secondary"
-																		className="btn-square"
-																		onClick={() => {
-																			this.props.history.push(
-																				'/admin/master/product',
-																			);
-																		}}
-																	>
-																		<i className="fa fa-ban"></i> Cancel
-																	</Button>
-																</FormGroup>
-															</Col>
-														</Row>
-													</Form>
-												)}
+																			/>
+																			Purchase Information
+																			{props.errors.productPriceType &&
+																				props.touched.productPriceType && (
+																					<div className="invalid-feedback">
+																						{props.errors.productPriceType}
+																					</div>
+																				)}
+																		</Label>
+																	</FormGroup>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="salesUnitPrice">
+																			<span className="text-danger">*</span>{' '}
+																			Purchase Price
+																			<i
+																				id="PurchaseTooltip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="PurchaseTooltip"
+																			>
+																				Purchase price – Amount of money you paid for the product 
+																			</UncontrolledTooltip>
+																		</Label>
+																		<Input
+																			type="text" maxLength='10'
+																			id="purchaseUnitPrice"
+																			name="purchaseUnitPrice"
+																			placeholder="Enter Selling Price"
+																			onChange={(option) => {
+																				if (
+																					option.target.value === '' ||
+																					this.regEx.test(option.target.value)
+																				) {
+																					props.handleChange(
+																						'purchaseUnitPrice',
+																					)(option);
+																				}
+																			}}
+																			readOnly={
+																				props.values.productPriceType.includes(
+																					'PURCHASE',
+																				)
+																					? false
+																					: true
+																			}
+																			value={props.values.purchaseUnitPrice}
+																			className={
+																				props.errors.purchaseUnitPrice &&
+																				props.touched.purchaseUnitPrice
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{props.errors.purchaseUnitPrice &&
+																			props.touched.purchaseUnitPrice && (
+																				<div className="invalid-feedback">
+																					{props.errors.purchaseUnitPrice}
+																				</div>
+																			)}
+																	</FormGroup>
+
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="salesUnitPrice">
+																			<span className="text-danger">*</span>{' '}	
+																			Account
+																			
+																		</Label>
+																		<Select
+																			styles={customStyles}
+																			isDisabled={
+																				props.values.productPriceType.includes(
+																					'PURCHASE',
+																				)
+																					? false
+																					: true
+																			}
+																			options={
+																				purchaseCategory
+																					? purchaseCategory.categoriesList
+																					: []
+																			}
+																			value={
+																				purchaseCategory
+																					? props.values
+																							.purchaseTransactionCategoryId
+																					: ''
+																			}
+																			id="purchaseTransactionCategoryId"
+																			onChange={(option) => {
+																				if (option && option.value) {
+																					props.handleChange(
+																						'purchaseTransactionCategoryId',
+																					)(option);
+																				} else {
+																					props.handleChange(
+																						'purchaseTransactionCategoryId',
+																					)('');
+																				}
+																			}}
+																			className={
+																				props.errors
+																					.purchaseTransactionCategoryId &&
+																				props.touched
+																					.purchaseTransactionCategoryId
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{props.errors
+																			.purchaseTransactionCategoryId &&
+																			props.touched
+																				.purchaseTransactionCategoryId && (
+																				<div className="invalid-feedback">
+																					{
+																						props.errors
+																							.purchaseTransactionCategoryId
+																					}
+																				</div>
+																			)}
+																	</FormGroup>
+																	<FormGroup className="">
+																		<Label htmlFor="purchaseDescription">
+																			Description
+																		</Label>
+																		<Input
+																			readOnly={
+																				props.values.productPriceType.includes(
+																					'PURCHASE',
+																				)
+																					? false
+																					: true
+																			}
+																			type="textarea" maxLength='200'
+																			name="purchaseDescription"
+																			id="purchaseDescription"
+																			rows="3"
+																			placeholder="Description..."
+																			onChange={(value) => {
+																				props.handleChange(
+																					'purchaseDescription',
+																				)(value);
+																			}}
+																			value={props.values.purchaseDescription}
+																		/>
+																	</FormGroup>
+																</Col>
+															</Row>
+															<Row>
+																<Col lg={12} className="mt-5">
+																	<FormGroup className="text-right">
+																		<Button
+																			type="button"
+																			color="primary"
+																			className="btn-square mr-3"
+																			onClick={() => {
+																				this.setState(
+																					{ createMore: false },
+																					() => {
+																						props.handleSubmit();
+																					},
+																				);
+																			}}
+																		>
+																			<i className="fa fa-dot-circle-o"></i>{' '}
+																			Create
+																		</Button>
+																		<Button
+																			name="button"
+																			color="primary"
+																			className="btn-square mr-3"
+																			onClick={() => {
+																				this.setState(
+																					{ createMore: true },
+																					() => {
+																						props.handleSubmit();
+																					},
+																				);
+																			}}
+																		>
+																			<i className="fa fa-refresh"></i> Create
+																			and More
+																		</Button>
+																		<Button
+																			color="secondary"
+																			className="btn-square"
+																			onClick={() => {
+																				this.props.history.push(
+																					'/admin/master/product',
+																				);
+																			}}
+																		>
+																			<i className="fa fa-ban"></i> Cancel
+																		</Button>
+																	</FormGroup>
+																</Col>
+															</Row>
+														</Form>
+													);
+												}}
 											</Formik>
 										</Col>
 									</Row>

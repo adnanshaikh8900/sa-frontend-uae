@@ -54,6 +54,16 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
 
 class RecordCustomerPayment extends React.Component {
 	constructor(props) {
@@ -106,6 +116,8 @@ class RecordCustomerPayment extends React.Component {
 
 		this.file_size = 1024000;
 		this.supported_format = [
+			'image/png',
+			'image/jpeg',
 			'text/plain',
 			'application/pdf',
 			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -262,7 +274,7 @@ class RecordCustomerPayment extends React.Component {
 					'success',
 					'Invoice Updated Successfully.',
 				);
-				this.props.history.push('/admin/revenue/customer-invoice');
+				this.props.history.push('/admin/income/customer-invoice');
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
@@ -322,7 +334,7 @@ class RecordCustomerPayment extends React.Component {
 						'success',
 						'Data Deleted Successfully',
 					);
-					this.props.history.push('/admin/revenue/customer-invoice');
+					this.props.history.push('/admin/income/customer-invoice');
 				}
 			})
 			.catch((err) => {
@@ -424,6 +436,7 @@ class RecordCustomerPayment extends React.Component {
 																			Customer Name
 																		</Label>
 																		<Select
+																		styles={customStyles}
 																			id="contactId"
 																			name="contactId"
 																			isDisabled
@@ -567,6 +580,7 @@ class RecordCustomerPayment extends React.Component {
 																			Payment Mode
 																		</Label>
 																		<Select
+																		styles={customStyles}
 																			options={
 																				pay_mode
 																					? selectOptionsFactory.renderOptions(
@@ -610,6 +624,7 @@ class RecordCustomerPayment extends React.Component {
 																			Deposit To
 																		</Label>
 																		<Select
+																		styles={customStyles}
 																			options={deposit_list}
 																			value={props.values.depositeTo}
 																			onChange={(option) => {
@@ -728,6 +743,19 @@ class RecordCustomerPayment extends React.Component {
 																										);
 																									}}
 																								/>
+																								{this.state.fileName && (
+																								<div>
+																									<i
+																										className="fa fa-close"
+																										onClick={() =>
+																											this.setState({
+																												fileName: '',
+																											})
+																										}
+																									></i>{' '}
+																									{this.state.fileName}
+																								</div>
+																							)}
 																								{this.state.fileName ? (
 																									this.state.fileName
 																								) : (
@@ -781,7 +809,7 @@ class RecordCustomerPayment extends React.Component {
 																			className="btn-square"
 																			onClick={() => {
 																				this.props.history.push(
-																					'/admin/revenue/customer-invoice',
+																					'/admin/income/customer-invoice',
 																				);
 																			}}
 																		>

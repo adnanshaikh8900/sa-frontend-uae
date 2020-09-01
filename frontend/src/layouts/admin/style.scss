@@ -54,7 +54,6 @@
 	.app-footer {
 		border-top: none;
 		background: #ffffff;
-		margin-left: 0px !important;
 		z-index: 1000;
 		.footer-logo {
 			max-width: 100px;
@@ -68,7 +67,7 @@
 	}
 
 	.sidebar {
-		background: transparent;
+		background: #ffffff;
 		// box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.05),
 		// 	0 1px 5px 0 rgba(63, 63, 68, 0.15);
 

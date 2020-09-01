@@ -141,7 +141,9 @@ class VatCode extends React.Component {
 	};
 
 	goToDetail = (row) => {
-		this.props.history.push('/admin/master/vat-code/detail', { id: row.id });
+		this.props.history.push('/admin/master/vat-category/detail', {
+			id: row.id,
+		});
 	};
 
 	// Show Success Toast
@@ -172,6 +174,8 @@ class VatCode extends React.Component {
 	// Delete Vat By ID
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
+		const message =
+			'Warning: This Vat Code will be deleted permanently and cannot be recovered.  ';
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
@@ -179,6 +183,7 @@ class VatCode extends React.Component {
 						isOpen={true}
 						okHandler={this.removeBulk}
 						cancelHandler={this.removeDialog}
+						message={message}
 					/>
 				),
 			});
@@ -203,7 +208,7 @@ class VatCode extends React.Component {
 				this.initializeData();
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Vat Deleted Successfully',
+					'Vat Code Deleted Successfully',
 				);
 				if (vat_list && vat_list.data && vat_list.data.length > 0) {
 					this.setState({
@@ -288,7 +293,7 @@ class VatCode extends React.Component {
 						<CardHeader>
 							<div className="h4 mb-0 d-flex align-items-center">
 								<i className="nav-icon icon-briefcase" />
-								<span className="ml-2">Vat Code</span>
+								<span className="ml-2">Vat Categories</span>
 							</div>
 						</CardHeader>
 						<CardBody>
@@ -301,8 +306,8 @@ class VatCode extends React.Component {
 										<div className="d-flex justify-content-end">
 											<ButtonGroup className="toolbar" size="sm">
 												<Button
-													color="success"
-													className="btn-square"
+													color="primary"
+													className="btn-square mr-1"
 													onClick={() => this.getCsvData()}
 												>
 													<i className="fa glyphicon glyphicon-export fa-download mr-1" />
@@ -318,8 +323,8 @@ class VatCode extends React.Component {
 													/>
 												)}
 												<Button
-													color="warning"
-													className="btn-square"
+													color="primary"
+													className="btn-square mr-1"
 													onClick={this.bulkDelete}
 													disabled={selectedRows.length === 0}
 												>
@@ -356,7 +361,7 @@ class VatCode extends React.Component {
 														}}
 													/>
 												</Col>
-												<Col lg={1} className="pl-0 pr-0">
+												<Col lg={3} className="pl-0 pr-0">
 													<Button
 														type="button"
 														color="primary"
@@ -379,8 +384,11 @@ class VatCode extends React.Component {
 										<Button
 											color="primary"
 											className="btn-square"
+											style={{ marginBottom: '10px' }}
 											onClick={() =>
-												this.props.history.push(`/admin/master/vat-code/create`)
+												this.props.history.push(
+													`/admin/master/vat-category/create`,
+												)
 											}
 										>
 											<i className="fas fa-plus mr-1" />

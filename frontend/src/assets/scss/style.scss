@@ -29,7 +29,8 @@ $spinkit-spinner-color: $body-color;
 	color: #6a4bc4 !important;
 }
 .btn-primary,
-.page-item.active .page-link {
+.page-item.active .page-link,
+.btn-square {
 	background-color: #54e0c4;
 	border-color: #54e0c4;
 }
@@ -37,7 +38,8 @@ $spinkit-spinner-color: $body-color;
 	background-color: #54e0c4;
 	border-color: #54e0c4;
 }
-.btn-primary:hover {
+.btn-primary:hover,
+.btn-square:hover {
 	background-color: #6a4bc4;
 	border-color: #6a4bc4;
 }
@@ -46,17 +48,33 @@ $spinkit-spinner-color: $body-color;
 }
 .bank-account-screen .bank-account-table .my-link {
 	color: #6a4bc4;
+	text-decoration: underline;
+}
+.btn-secondary {
+	color: #000;
+	background-color: #c8ced3;
+	border-color: #c8ced3;
+}
+.btn-secondary:hover {
+	color: #fff;
+	background-color: #6a4bc4;
+	border-color: #6a4bc4;
 }
 .breadcrumb-item {
 	a {
 		color: #6a4bc4 !important;
 	}
 }
-.table {
-	.icon {
-		background-color: #6a4bc4;
+.btn-brand {
+	i {
+		background-color: inherit;
 	}
 }
+// .table {
+// 	.icon {
+// 		background-color: #6a4bc4;
+// 	}
+// }
 .card-columns .card {
 	margin-bottom: 1.5rem;
 }
@@ -89,4 +107,23 @@ $spinkit-spinner-color: $body-color;
 .badge-info,
 .badge-success {
 	background-color: #6a4bc4;
+}
+.card-body th {
+	font-weight: 600 !important;
+}
+.card-body .btn-square {
+	border-radius: 40px !important;
+	box-shadow: 0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03),
+		0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03),
+		0 0.25rem 0.53125rem rgba(4, 9, 20, 0.05),
+		0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03) !important;
+	padding-left: 20px !important;
+	padding-right: 20px !important;
+}
+.card-body .form-control:focus {
+	border: 1px solid #6a4bc4 !important;
+	box-shadow: none !important;
+}
+.invoice-detail {
+	font-weight: 600;
 }

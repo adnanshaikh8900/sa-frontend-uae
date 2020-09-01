@@ -170,6 +170,7 @@ class ProductCategory extends React.Component {
 	// Delete Vat By ID
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
+		const message = 'Warning: This Product Category will be deleted permanently and cannot be recovered.  ';
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
@@ -177,6 +178,7 @@ class ProductCategory extends React.Component {
 						isOpen={true}
 						okHandler={this.removeBulk}
 						cancelHandler={this.removeDialog}
+						message={message}
 					/>
 				),
 			});
@@ -330,8 +332,8 @@ class ProductCategory extends React.Component {
 										<div className="d-flex justify-content-end">
 											<ButtonGroup className="toolbar" size="sm">
 												<Button
-													color="success"
-													className="btn-square"
+													color="primary"
+													className="btn-square mr-1"
 													onClick={() => this.getCsvData()}
 												>
 													<i className="fa glyphicon glyphicon-export fa-download mr-1" />
@@ -347,8 +349,8 @@ class ProductCategory extends React.Component {
 													/>
 												)}
 												<Button
-													color="warning"
-													className="btn-square"
+													color="primary"
+													className="btn-square mr-1"
 													onClick={this.bulkDelete}
 													disabled={selectedRows.length === 0}
 												>
@@ -417,6 +419,7 @@ class ProductCategory extends React.Component {
 										<Button
 											color="primary"
 											className="btn-square"
+											style={{ marginBottom: '10px' }}
 											onClick={() =>
 												this.props.history.push(
 													`/admin/master/product-category/create`,

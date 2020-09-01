@@ -71,6 +71,39 @@ private DateFormatUtil dateUtil;
         return list != null && !list.isEmpty() ? list : null;
     }
 
+    public List<TransactionCategoryClosingBalance> getListByChartOfAccountIds(ReportRequestModel reportRequestModel)
+    {
+        LocalDateTime fromDate = null;
+        LocalDateTime toDate = null;
+        String dateClause = " <= :endDate ";
+        String chartOfAccountCodes = reportRequestModel.getChartOfAccountCodes();
+        try {
+            if(reportRequestModel.getStartDate()!=null) {
+                fromDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getStartDate(), CommonColumnConstants.DD_MM_YYYY);
+                dateClause = " BETWEEN :startDate and :endDate ";
+            }
+        } catch (Exception e) {
+            LOGGER.error("Exception is ", e);
+        }
+        try {
+            toDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getEndDate(), CommonColumnConstants.DD_MM_YYYY);
+        } catch (Exception e) {
+            LOGGER.error(ERROR, e);
+        }
+
+        String queryStr = "select cb from TransactionCategoryClosingBalance cb where cb.deleteFlag = false and cb.closingBalanceDate " +dateClause+
+                " and cb.transactionCategory.chartOfAccount.chartOfAccountCode in ("+chartOfAccountCodes+") order by cb.closingBalanceDate DESC  ";
+
+        TypedQuery<TransactionCategoryClosingBalance> query = getEntityManager().createQuery(queryStr, TransactionCategoryClosingBalance.class);
+        if (fromDate != null) {
+            query.setParameter(CommonColumnConstants.START_DATE, fromDate);
+        }
+        if (toDate != null) {
+            query.setParameter(CommonColumnConstants.END_DATE, toDate);
+        }
+        List<TransactionCategoryClosingBalance> list = query.getResultList();
+        return list != null && !list.isEmpty() ? list : null;
+    }
     @Override
     public PaginationResponseModel getAll(Map<TransactionCategoryBalanceFilterEnum, Object> filterMap) {
         List<DbFilter> dbFilters = new ArrayList<>();

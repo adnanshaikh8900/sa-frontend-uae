@@ -20,7 +20,7 @@ import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import { CSVLink } from 'react-csv';
 import FilterComponent from './sections/filterComponent';
-import { Loader } from 'components';
+import { Loader, Currency } from 'components';
 
 import * as DetailGeneralLedgerActions from './actions';
 
@@ -30,6 +30,7 @@ import './style.scss';
 const mapStateToProps = (state) => {
 	return {
 		profile: state.auth.profile,
+		universal_currency_list: state.common.universal_currency_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -259,7 +260,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 						id,
 					});
 				} else {
-					this.props.history.push('/admin/revenue/customer-invoice/view', {
+					this.props.history.push('/admin/income/customer-invoice/view', {
 						id,
 					});
 				}
@@ -292,8 +293,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 			view,
 			chart_of_account_list,
 		} = this.state;
-		const { profile } = this.props;
-		console.log(this.state.detailedGeneralLedgerList);
+		const { profile, universal_currency_list } = this.props;
 		return (
 			<div className="transactions-report-screen">
 				<div className="animated fadeIn">
@@ -491,7 +491,17 @@ class DetailedGeneralLedgerReport extends React.Component {
 																										)
 																									}
 																								>
-																									{row.debitAmount.toFixed(2)}
+																									<Currency
+																										value={row.debitAmount.toFixed(
+																											2,
+																										)}
+																										currencySymbol={
+																											universal_currency_list[0]
+																												? universal_currency_list[0]
+																														.currencyIsoCode
+																												: 'INR'
+																										}
+																									/>
 																								</p>
 																							)}
 																						</td>
@@ -501,9 +511,21 @@ class DetailedGeneralLedgerReport extends React.Component {
 																								style={{ color: '#000000' }}
 																								className="text-right"
 																							>
-																								{row.debitAmount !== null
-																									? row.debitAmount.toFixed(2)
-																									: ''}
+																								{row.debitAmount !== null ? (
+																									<Currency
+																										value={row.debitAmount.toFixed(
+																											2,
+																										)}
+																										currencySymbol={
+																											universal_currency_list[0]
+																												? universal_currency_list[0]
+																														.currencyIsoCode
+																												: 'INR'
+																										}
+																									/>
+																								) : (
+																									''
+																								)}
 																							</p>
 																						</td>
 																					)}
@@ -526,7 +548,17 @@ class DetailedGeneralLedgerReport extends React.Component {
 																										)
 																									}
 																								>
-																									{row.creditAmount.toFixed(2)}
+																									<Currency
+																										value={row.creditAmount.toFixed(
+																											2,
+																										)}
+																										currencySymbol={
+																											universal_currency_list[0]
+																												? universal_currency_list[0]
+																														.currencyIsoCode
+																												: 'USD'
+																										}
+																									/>
 																								</p>
 																							)}
 																						</td>
@@ -536,9 +568,21 @@ class DetailedGeneralLedgerReport extends React.Component {
 																								style={{ color: '#000000' }}
 																								className="text-right"
 																							>
-																								{row.creditAmount !== null
-																									? row.creditAmount.toFixed(2)
-																									: ''}
+																								{row.creditAmount !== null ? (
+																									<Currency
+																										value={row.creditAmount.toFixed(
+																											2,
+																										)}
+																										currencySymbol={
+																											universal_currency_list[0]
+																												? universal_currency_list[0]
+																														.currencyIsoCode
+																												: 'USD'
+																										}
+																									/>
+																								) : (
+																									''
+																								)}
 																							</p>
 																						</td>
 																					)}
@@ -557,7 +601,17 @@ class DetailedGeneralLedgerReport extends React.Component {
 																								)
 																							}
 																						>
-																							{`${row.amount.toFixed(2)}`}
+																							{
+																								<Currency
+																									value={row.amount.toFixed(2)}
+																									currencySymbol={
+																										universal_currency_list[0]
+																											? universal_currency_list[0]
+																													.currencyIsoCode
+																											: 'USD'
+																									}
+																								/>
+																							}
 																							{`${row.debitAmount}` > 0
 																								? 'Dr'
 																								: 'Cr'}

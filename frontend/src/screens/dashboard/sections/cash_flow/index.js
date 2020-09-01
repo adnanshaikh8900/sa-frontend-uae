@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import { Bar } from 'react-chartjs-2';
 import { Card, CardBody } from 'reactstrap';
-
+import { Currency } from 'components';
 import './style.scss';
 
 const cashBarOption = {
@@ -20,7 +20,7 @@ const cashBarOption = {
 				ticks: {
 					// Include a dollar sign in the ticks
 					callback(value, index, values) {
-						return '$' + value;
+						return value;
 					},
 					beginAtZero: true,
 				},
@@ -77,7 +77,7 @@ class CashFlow extends Component {
 				},
 			],
 		};
-
+		const { universal_currency_list } = this.props;
 		return (
 			<div className="animated fadeIn">
 				<Card className="cash-card">
@@ -100,14 +100,42 @@ class CashFlow extends Component {
 							<div className="data-item">
 								<img alt="income" src={incomeIcon} />
 								<div>
-									<h3>$ {(this.props.cash_flow_graph.inflow || {})['sum']}</h3>
+									<h3>
+										{universal_currency_list[0] &&
+											this.props.cash_flow_graph.inflow && (
+												<Currency
+													value={
+														(this.props.cash_flow_graph.inflow || {})['sum']
+													}
+													currencySymbol={
+														universal_currency_list[0]
+															? universal_currency_list[0].currencyIsoCode
+															: 'USD'
+													}
+												/>
+											)}
+									</h3>
 									<p>INFLOW</p>
 								</div>
 							</div>
 							<div className="data-item">
 								<img alt="outgoing" src={outcomeIcon} />
 								<div>
-									<h3>$ {(this.props.cash_flow_graph.outflow || {})['sum']}</h3>
+									<h3>
+										{universal_currency_list[0] &&
+											this.props.cash_flow_graph.outflow && (
+												<Currency
+													value={
+														(this.props.cash_flow_graph.outflow || {})['sum']
+													}
+													currencySymbol={
+														universal_currency_list[0]
+															? universal_currency_list[0].currencyIsoCode
+															: 'USD'
+													}
+												/>
+											)}
+									</h3>
 									<p>OUTFLOW</p>
 								</div>
 							</div>
@@ -115,9 +143,21 @@ class CashFlow extends Component {
 								<img alt="total" src={totalIcon} />
 								<div>
 									<h3>
-										${' '}
-										{(this.props.cash_flow_graph.inflow || {})['sum'] -
-											(this.props.cash_flow_graph.outflow || {})['sum']}
+										{' '}
+										{universal_currency_list[0] &&
+											this.props.cash_flow_graph.outflow && (
+												<Currency
+													value={
+														(this.props.cash_flow_graph.inflow || {})['sum'] -
+														(this.props.cash_flow_graph.outflow || {})['sum']
+													}
+													currencySymbol={
+														universal_currency_list[0]
+															? universal_currency_list[0].currencyIsoCode
+															: 'USD'
+													}
+												/>
+											)}
 									</h3>
 									<p>NET</p>
 								</div>

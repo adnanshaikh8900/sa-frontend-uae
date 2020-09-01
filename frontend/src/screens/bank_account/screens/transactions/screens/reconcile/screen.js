@@ -82,7 +82,8 @@ class ReconcileTransaction extends React.Component {
 		};
 		this.file_size = 1024000;
 		this.supported_format = [
-			'',
+			'image/png',
+			'image/jpeg',
 			'text/plain',
 			'application/pdf',
 			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -91,7 +92,7 @@ class ReconcileTransaction extends React.Component {
 		];
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
-
+		this.regDecimal = /^\d*\.?\d*$/;
 		this.formRef = React.createRef();
 	}
 
@@ -251,7 +252,7 @@ class ReconcileTransaction extends React.Component {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="closingBalance">
-																			Clsoing Balance
+																			Closing Balance
 																		</Label>
 																		<Input
 																			type="text"
@@ -261,7 +262,9 @@ class ReconcileTransaction extends React.Component {
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
-																					this.regEx.test(option.target.value)
+																					this.regDecimal.test(
+																						option.target.value,
+																					)
 																				) {
 																					props.handleChange('closingBalance')(
 																						option,
@@ -304,8 +307,8 @@ class ReconcileTransaction extends React.Component {
 																				this.props.history.push(
 																					'/admin/banking/bank-account/transaction',
 																					{
-																						bankAccountId:
-																							initValue.bankAccountId,
+																						bankAccountId: this.props.location
+																							.state.bankAccountId,
 																					},
 																				)
 																			}

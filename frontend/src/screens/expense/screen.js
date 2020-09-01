@@ -22,7 +22,7 @@ import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader, ConfirmDeleteModal, Currency } from 'components';
 
 import { selectOptionsFactory } from 'utils';
 
@@ -42,6 +42,7 @@ const mapStateToProps = (state) => {
 	return {
 		expense_list: state.expense.expense_list,
 		expense_categories_list: state.expense.expense_categories_list,
+		universal_currency_list: state.common.universal_currency_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -49,6 +50,16 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 		expenseActions: bindActionCreators(ExpenseActions, dispatch),
 	};
+};
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
 };
 
 class Expense extends React.Component {
@@ -197,17 +208,19 @@ class Expense extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-						<DropdownItem>
-							<div
-								onClick={() => {
-									this.props.history.push('/admin/expense/expense/detail', {
-										expenseId: row['expenseId'],
-									});
-								}}
-							>
-								<i className="fas fa-edit" /> Edit
-							</div>
-						</DropdownItem>
+						{row.expenseStatus !== 'Post' && (
+							<DropdownItem>
+								<div
+									onClick={() => {
+										this.props.history.push('/admin/expense/expense/detail', {
+											expenseId: row['expenseId'],
+										});
+									}}
+								>
+									<i className="fas fa-edit" /> Edit
+								</div>
+							</DropdownItem>
+						)}
 						{row.expenseStatus !== 'Post' && (
 							<DropdownItem
 								onClick={() => {
@@ -280,8 +293,15 @@ class Expense extends React.Component {
 		);
 	};
 
-	renderAmount = (cell, row) => {
-		return row.expenseAmount ? row.expenseAmount.toFixed(2) : '';
+	renderAmount = (cell, row, extraData) => {
+		return row.expenseAmount ? (
+			<Currency
+				value={row.expenseAmount.toFixed(2)}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			''
+		);
 	};
 
 	handleSearch = () => {
@@ -339,6 +359,8 @@ class Expense extends React.Component {
 
 	bulkDeleteExpenses = () => {
 		const { selectedRows } = this.state;
+		const message =
+			'Warning: This Expense will be deleted permanently and cannot be recovered.  ';
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
@@ -346,6 +368,7 @@ class Expense extends React.Component {
 						isOpen={true}
 						okHandler={this.removeBulkExpenses}
 						cancelHandler={this.removeDialog}
+						message={message}
 					/>
 				),
 			});
@@ -466,7 +489,11 @@ class Expense extends React.Component {
 			csvData,
 			view,
 		} = this.state;
-		const { expense_list, expense_categories_list } = this.props;
+		const {
+			expense_list,
+			expense_categories_list,
+			universal_currency_list,
+		} = this.props;
 		// const containerStyle = {
 		//   zIndex: 1999
 		// }
@@ -500,8 +527,8 @@ class Expense extends React.Component {
 									<div className="d-flex justify-content-end">
 										<ButtonGroup size="sm">
 											<Button
-												color="success"
-												className="btn-square"
+												color="primary"
+												className="btn-square mr-1"
 												onClick={() => this.getCsvData()}
 											>
 												<i className="fa glyphicon glyphicon-export fa-download mr-1" />
@@ -517,8 +544,8 @@ class Expense extends React.Component {
 												/>
 											)}
 											<Button
-												color="warning"
-												className="btn-square"
+												color="primary"
+												className="btn-square mr-1"
 												onClick={this.bulkDeleteExpenses}
 												disabled={selectedRows.length === 0}
 											>
@@ -565,6 +592,7 @@ class Expense extends React.Component {
 												{/* <Input type="text" placeholder="Supplier Name" /> */}
 												<FormGroup className="mb-3">
 													<Select
+														styles={customStyles}
 														className="select-default-width"
 														id="expenseCategoryId"
 														name="expenseCategoryId"
@@ -593,7 +621,7 @@ class Expense extends React.Component {
 													/>
 												</FormGroup>
 											</Col>
-											<Col lg={1} className="pl-0 pr-0">
+											<Col lg={3} className="pl-0 pr-0">
 												<Button
 													type="button"
 													color="primary"
@@ -689,12 +717,13 @@ class Expense extends React.Component {
 												dataSort
 												width="20%"
 											>
-												Transaction Category
+												Expense Category
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="expenseAmount"
 												dataSort
 												dataFormat={this.renderAmount}
+												formatExtraData={universal_currency_list}
 												width="15%"
 											>
 												Expense Amount

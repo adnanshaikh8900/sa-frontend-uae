@@ -22,7 +22,7 @@ import Select from 'react-select';
 import BootstrapTable from 'react-bootstrap-table-next';
 import DatePicker from 'react-datepicker';
 
-import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader, ConfirmDeleteModal, Currency } from 'components';
 
 import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -32,6 +32,7 @@ import paginationFactory from 'react-bootstrap-table2-paginator';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 
 import * as TransactionsActions from './actions';
+import * as detailBankAccountActions from './../detail/actions';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 import { CSVLink } from 'react-csv';
@@ -43,11 +44,16 @@ const mapStateToProps = (state) => {
 	return {
 		bank_transaction_list: state.bank_account.bank_transaction_list,
 		transaction_type_list: state.bank_account.transaction_type_list,
+		universal_currency_list: state.common.universal_currency_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
 		transactionsActions: bindActionCreators(TransactionsActions, dispatch),
+		detailBankAccountActions: bindActionCreators(
+			detailBankAccountActions,
+			dispatch,
+		),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
@@ -89,6 +95,10 @@ class BankTransactions extends React.Component {
 			rowId: null,
 			show: false,
 			bankId: '',
+			openingBalance: '',
+			closingBalance: '',
+			currentBalance: '',
+			accounName: '',
 			expanded: [],
 			page: 1,
 			activeTab: new Array(3).fill('all'),
@@ -117,12 +127,25 @@ class BankTransactions extends React.Component {
 		this.props.transactionsActions.getTransactionTypeList();
 		this.initializeData();
 		//this.setState({ bankId: this.props.location.state.bankAccountId });
+		this.props.detailBankAccountActions
+			.getBankAccountByID(this.props.location.state.bankAccountId)
+			.then((res) => {
+				this.setState({
+					currentBalance: res.currentBalance,
+					closingBalance: res.closingBalance,
+					accounName: res.bankAccountName,
+				});
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+				this.props.history.push('/admin/banking/bank-account');
+			});
 	};
 
 	initializeData = (search) => {
-		this.setState({
-			bankId: this.props.location.state.bankAccountId,
-		});
 		let { filterData } = this.state;
 		const data = {
 			pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -216,11 +239,25 @@ class BankTransactions extends React.Component {
 		return <span className={`badge ${classname} mb-0`}>{value}</span>;
 	};
 
-	renderDepositAmount = (cell, row) => {
-		return row.depositeAmount >= 0 ? row.depositeAmount.toFixed(2) : '';
+	renderDepositAmount = (cell, row, rowIndex, extraData) => {
+		return row.depositeAmount >= 0 ? (
+			<Currency
+				value={row.depositeAmount}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			''
+		);
 	};
-	renderWithdrawalAmount = (cell, row) => {
-		return row.withdrawalAmount >= 0 ? row.withdrawalAmount.toFixed(2) : '';
+	renderWithdrawalAmount = (cell, row, rowIndex, extraData) => {
+		return row.withdrawalAmount >= 0 ? (
+			<Currency
+				value={row.withdrawalAmount}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			''
+		);
 	};
 	renderRunningAmount = (cell, row) => {
 		return row.runningAmount >= 0 ? row.runningAmount.toFixed(2) : '';
@@ -450,11 +487,15 @@ class BankTransactions extends React.Component {
 	statusFormatter = (cell, row, extraData) => {
 		if (row.explinationStatusEnum === 'FULL') {
 			return <div>Explained</div>;
+		} else if (row.explinationStatusEnum === 'RECONCILED') {
+			return <div>Reconciled</div>;
 		} else if (
 			row.explinationStatusEnum === 'NOT_EXPLAIN' &&
 			row.creationMode !== 'POTENTIAL_DUPLICATE'
 		) {
 			return <div>Not Explained</div>;
+		} else if (row.explinationStatusEnum === 'RECONCILED') {
+			return <div>Reconciled</div>;
 		} else if (row.creationMode === 'POTENTIAL_DUPLICATE') {
 			return (
 				<div>
@@ -507,8 +548,11 @@ class BankTransactions extends React.Component {
 			csvData,
 			view,
 		} = this.state;
-		const { bank_transaction_list, transaction_type_list } = this.props;
-
+		const {
+			bank_transaction_list,
+			transaction_type_list,
+			universal_currency_list,
+		} = this.props;
 		const columns = [
 			{
 				dataField: 'transactionDate',
@@ -521,10 +565,14 @@ class BankTransactions extends React.Component {
 			{
 				dataField: 'depositeAmount',
 				text: 'Deposit Amount',
+				formatter: this.renderDepositAmount,
+				formatExtraData: universal_currency_list,
 			},
 			{
 				dataField: 'withdrawalAmount',
 				text: 'Withdrawal Amount',
+				formatter: this.renderWithdrawalAmount,
+				formatExtraData: universal_currency_list,
 			},
 			{
 				dataField: 'explinationStatusEnum',
@@ -540,12 +588,13 @@ class BankTransactions extends React.Component {
 					closeExplainTransactionModal={(e) => {
 						this.closeExplainTransactionModal(e);
 					}}
-					bankId={this.state.bankId}
+					bankId={this.props.location.state.bankAccountId}
 					selectedData={row}
 				/>
 			),
 			nonExpandable: this.state.nonexpand,
 			showExpandColumn: true,
+			expanded: [],
 		};
 
 		return (
@@ -573,6 +622,22 @@ class BankTransactions extends React.Component {
 							) : (
 								<Row>
 									<Col lg={12}>
+										<div className="mb-4 status-panel p-3">
+											<Row>
+												<Col lg={3}>
+													<h5>Account Name</h5>
+													<h3>{this.state.accounName}</h3>
+												</Col>
+												<Col lg={3}>
+													<h5>Current Bank Balance</h5>
+													<h3>{this.state.currentBalance}</h3>
+												</Col>
+												<Col lg={3}>
+													<h5>SimpleVat Balance</h5>
+													<h3>{this.state.closingBalance}</h3>
+												</Col>
+											</Row>
+										</div>
 										<div className="d-flex justify-content-end">
 											<ButtonGroup size="sm">
 												<Button
@@ -729,8 +794,8 @@ class BankTransactions extends React.Component {
 												</Col>
 											</Row>
 										</div>
-										<div className="d-flex justify-content-between">
-											<Nav tabs>
+										<div>
+											<Nav tabs className="pull-left">
 												<NavItem>
 													<NavLink
 														active={this.state.activeTab[0] === 'all'}
@@ -766,7 +831,7 @@ class BankTransactions extends React.Component {
 											</Nav>
 											<Button
 												color="primary"
-												className="btn-square"
+												className="btn-square pull-right"
 												onClick={() =>
 													this.props.history.push(
 														'/admin/banking/bank-account/transaction/create',

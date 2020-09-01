@@ -18,6 +18,16 @@ import moment from 'moment'
 
 import { selectOptionsFactory } from "utils";
 import './style.scss'
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
 
 
 class FilterComponent extends Component {
@@ -111,6 +121,7 @@ class FilterComponent extends Component {
 											<FormGroup className="mb-3">
 												<Label htmlFor="reportBasis">Report Basis</Label>
 												<Select
+												styles={customStyles}
 													className="select-default-width"
 													id="reportBasis"
 													name="reportBasis"
@@ -126,6 +137,7 @@ class FilterComponent extends Component {
 											<FormGroup className="mb-3">
 												<Label htmlFor="chart_of_account">Chart Of Account</Label>
 												<Select
+												styles={customStyles}
 													className="select-default-width"
 													id="chart_of_account"
 													name="chart_of_account_list"

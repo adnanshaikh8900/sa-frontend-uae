@@ -51,6 +51,7 @@ class BankAccount extends Component {
 	};
 
 	componentDidMount = () => {
+		console.log(this.props);
 		this.props.DashboardActions.getBankAccountTypes().then((res) => {
 			if (res.status === 200) {
 				let val =
@@ -162,7 +163,7 @@ class BankAccount extends Component {
 													{this.props.bank_account_type.map(
 														(account, index) => (
 															<option key={index} value={account.bankAccountId}>
-																{account.name}
+																{account.name+"-"+account.accounName}
 															</option>
 														),
 													)}
@@ -178,13 +179,13 @@ class BankAccount extends Component {
 									<div className="data-info">
 										<div className="data-item">
 											<div>
-												<h3>${this.props.bank_account_graph.balance}</h3>
+												<h3>{this.props.bank_account_graph.balance}</h3>
 												<p>BALANCE</p>
 											</div>
 										</div>
 										<div className="data-item">
 											<div>
-												<h3>${this.state.totalBalance}</h3>
+												<h3>{this.state.totalBalance}</h3>
 												<p>ALL ACCOUNTS</p>
 											</div>
 										</div>

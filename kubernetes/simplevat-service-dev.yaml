@@ -3,11 +3,11 @@ kind: Service
 metadata:
   labels:
     app: simplevat
-  name: simplevat-service-dev
-  namespace: simplevat-dev
+  name: simplevat-service-waqas
+  namespace: simplevat-test
 spec:
   ports:
-    - nodePort: 30769
+    - name: http
       port: 80
       protocol: TCP
       targetPort: 8080

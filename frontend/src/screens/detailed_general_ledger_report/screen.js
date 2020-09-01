@@ -481,15 +481,15 @@ class DetailedGeneralLedgerReport extends React.Component {
 																							{row.debitAmount > 0 && (
 																								<p
 																									className="text-right"
-																									onClick={() =>
-																										this.getInvoice(
-																											row[
-																												'postingReferenceType'
-																											],
-																											row['invoiceType'],
-																											row['referenceId'],
-																										)
-																									}
+																									// onClick={() =>
+																									// 	this.getInvoice(
+																									// 		row[
+																									// 			'postingReferenceType'
+																									// 		],
+																									// 		row['invoiceType'],
+																									// 		row['referenceId'],
+																									// 	)
+																									// }
 																								>
 																									<Currency
 																										value={row.debitAmount.toFixed(
@@ -538,15 +538,15 @@ class DetailedGeneralLedgerReport extends React.Component {
 																							{row.creditAmount > 0 && (
 																								<p
 																									className="text-right"
-																									onClick={() =>
-																										this.getInvoice(
-																											row[
-																												'postingReferenceType'
-																											],
-																											row['invoiceType'],
-																											row['referenceId'],
-																										)
-																									}
+																									// onClick={() =>
+																									// 	this.getInvoice(
+																									// 		row[
+																									// 			'postingReferenceType'
+																									// 		],
+																									// 		row['invoiceType'],
+																									// 		row['referenceId'],
+																									// 	)
+																									// }
 																								>
 																									<Currency
 																										value={row.creditAmount.toFixed(
@@ -593,13 +593,13 @@ class DetailedGeneralLedgerReport extends React.Component {
 																						<td
 																							className="amount-col text-right"
 																							style={{ width: '15%' }}
-																							onClick={() =>
-																								this.getInvoice(
-																									row['postingReferenceType'],
-																									row['invoiceType'],
-																									row['referenceId'],
-																								)
-																							}
+																							// onClick={() =>
+																							// 	this.getInvoice(
+																							// 		row['postingReferenceType'],
+																							// 		row['invoiceType'],
+																							// 		row['referenceId'],
+																							// 	)
+																							// }
 																						>
 																							{
 																								<Currency

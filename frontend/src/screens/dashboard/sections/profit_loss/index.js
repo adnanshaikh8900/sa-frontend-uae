@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Currency } from 'components';
 // import { HorizontalBar } from 'react-chartjs-2'
 // import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips'
 import {
@@ -58,6 +59,7 @@ class ProfitAndLoss extends Component {
 	};
 
 	render() {
+		const { universal_currency_list } = this.props;
 		return (
 			<div className="animated fadeIn">
 				<Card className="profit-card">
@@ -103,14 +105,36 @@ class ProfitAndLoss extends Component {
 									<div className="data-info align-items-center">
 										<div className="data-item m-0">
 											<div>
-												<h3>{this.props.profit_loss['Income']}</h3>
+											<h3>
+													{universal_currency_list[0] &&
+													<Currency
+														value={this.props.profit_loss['Income']}
+															currencySymbol={
+															universal_currency_list[0]
+															? universal_currency_list[0].currencyIsoCode
+															: 'USD'
+														}
+													/>
+													}
+												</h3>
 												<p>INCOME</p>
 											</div>
 										</div>
 										<img alt="minus" src={minusIcon} className="m-0" />
 										<div className="data-item m-0">
 											<div>
-												<h3> {this.props.profit_loss['Expense']}</h3>
+											<h3>
+													{universal_currency_list[0] &&
+													<Currency
+														value= {this.props.profit_loss['Expense']}
+															currencySymbol={
+															universal_currency_list[0]
+															? universal_currency_list[0].currencyIsoCode
+															: 'USD'
+														}
+													/>
+													}
+												</h3>
 												<p>EXPENSES</p>
 											</div>
 										</div>
@@ -158,31 +182,58 @@ class ProfitAndLoss extends Component {
 										<div className="data-info">
 											<div className="data-item">
 												<div>
-													<h3>
-														{this.props.taxes['InputVat']
-															? this.props.taxes['InputVat']
-															: 0}
-													</h3>
+												<h3>
+													{universal_currency_list[0] &&
+													<Currency
+														value={this.props.taxes['InputVat']
+														? this.props.taxes['InputVat']
+														: 0}
+															currencySymbol={
+															universal_currency_list[0]
+															? universal_currency_list[0].currencyIsoCode
+															: 'USD'
+														}
+													/>
+													}
+												</h3>
 													<p>Input Vat</p>
 												</div>
 											</div>
 											<div className="data-item total">
 												<div>
-													<h3>
-														{this.props.taxes['OutputVat']
-															? this.props.taxes['OutputVat']
-															: 0}
-													</h3>
+												<h3>
+													{universal_currency_list[0] &&
+													<Currency
+														value={this.props.taxes['OutputVat']
+														? this.props.taxes['OutputVat']
+														: 0}
+															currencySymbol={
+															universal_currency_list[0]
+															? universal_currency_list[0].currencyIsoCode
+															: 'USD'
+														}
+													/>
+													}
+												</h3>
 													<p>Output Vat</p>
 												</div>
 											</div>
 											<div className="data-item">
 												<div>
-													<h3>
-														{this.props.taxes['Tax payable']
-															? this.props.taxes['Tax payable']
-															: 0}
-													</h3>
+												<h3>
+													{universal_currency_list[0] &&
+													<Currency
+														value={this.props.taxes['Tax payable']
+														? this.props.taxes['Tax payable']
+														: 0}
+															currencySymbol={
+															universal_currency_list[0]
+															? universal_currency_list[0].currencyIsoCode
+															: 'USD'
+														}
+													/>
+													}
+												</h3>
 													<p>Tax Payable</p>
 												</div>
 											</div>

@@ -565,52 +565,53 @@ class CreateExpense extends React.Component {
 																	/>
 																</FormGroup>
 															</Col>
-
-															<Col lg={3}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="payMode">Pay Through</Label>
-																	<Select
-																		styles={customStyles}
-																		id="payMode"
-																		name="payMode"
-																		placeholder="Select Pay
+															{!props.values.payee && (
+																<Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="payMode">Pay Through</Label>
+																		<Select
+																			styles={customStyles}
+																			id="payMode"
+																			name="payMode"
+																			placeholder="Select Pay
 																		Through"
-																		options={
-																			pay_mode_list
-																				? selectOptionsFactory.renderOptions(
-																						'label',
-																						'value',
-																						pay_mode_list,
-																						'',
-																				  )
-																				: []
-																		}
-																		value={props.values.payMode}
-																		onChange={(option) => {
-																			props.handleChange('payMode')(option);
-																			if (option && option.value) {
-																				this.setState({
-																					payMode: option,
-																				});
-																			} else {
-																				this.setState({ payMode: '' });
+																			options={
+																				pay_mode_list
+																					? selectOptionsFactory.renderOptions(
+																							'label',
+																							'value',
+																							pay_mode_list,
+																							'',
+																					  )
+																					: []
 																			}
-																		}}
-																		className={
-																			props.errors.payMode &&
-																			props.touched.payMode
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.payMode &&
-																		props.touched.payMode && (
-																			<div className="invalid-feedback">
-																				{props.errors.payMode}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
+																			value={props.values.payMode}
+																			onChange={(option) => {
+																				props.handleChange('payMode')(option);
+																				if (option && option.value) {
+																					this.setState({
+																						payMode: option,
+																					});
+																				} else {
+																					this.setState({ payMode: '' });
+																				}
+																			}}
+																			className={
+																				props.errors.payMode &&
+																				props.touched.payMode
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{props.errors.payMode &&
+																			props.touched.payMode && (
+																				<div className="invalid-feedback">
+																					{props.errors.payMode}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
+															)}
 															{payMode.value === 'BANK' && (
 																<Col lg={3}>
 																	<FormGroup className="mb-3">

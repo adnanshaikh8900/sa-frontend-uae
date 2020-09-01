@@ -12,7 +12,10 @@ import {
 	FormGroup,
 	Input,
 	Label,
-	NavLink,
+	ButtonDropdown,
+	DropdownToggle,
+	DropdownMenu,
+	DropdownItem,
 } from 'reactstrap';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
@@ -23,7 +26,7 @@ import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 
 import moment from 'moment';
-import { Loader } from 'components';
+import { Loader, ConfirmDeleteModal } from 'components';
 
 import * as transactionReconcileActions from './actions';
 import * as transactionActions from '../../actions';
@@ -58,12 +61,14 @@ class ReconcileTransaction extends React.Component {
 		this.state = {
 			createMore: false,
 			loading: true,
+			actionButtons: {},
 			fileName: '',
 			initValue: {
 				closingBalance: '',
 				date: '',
 			},
 			transaction_id: null,
+			dialog: null,
 			view: false,
 		};
 		this.options = {
@@ -165,12 +170,99 @@ class ReconcileTransaction extends React.Component {
 		});
 	};
 
+	closeReconciled = (_id) => {
+		const message =
+			'Warning: This Bank Account will be deleted permanently and cannot be recovered. ';
+		this.setState({
+			dialog: (
+				<ConfirmDeleteModal
+					isOpen={true}
+					okHandler={() => this.removeReconciled(_id)}
+					cancelHandler={this.removeDialog}
+					message={message}
+				/>
+			),
+		});
+	};
+
+	removeReconciled = (_id) => {
+		this.removeDialog();
+		let { selected_id_list } = this.state;
+		let obj = {
+			ids: [_id],
+		};
+		this.props.transactionReconcileActions
+			.removeBulkReconciled(obj)
+			.then(() => {
+				this.props.commonActions.tostifyAlert(
+					'success',
+					'Deleted Successfully',
+				);
+				this.initializeData();
+				this.setState({
+					selected_id_list: [],
+				});
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
+	};
+
+	removeDialog = () => {
+		this.setState({
+			dialog: null,
+		});
+	};
+
+	toggleActionButton = (index) => {
+		let temp = Object.assign({}, this.state.actionButtons);
+		if (temp[parseInt(index, 10)]) {
+			temp[parseInt(index, 10)] = false;
+		} else {
+			temp[parseInt(index, 10)] = true;
+		}
+		this.setState({
+			actionButtons: temp,
+		});
+	};
+
+	renderActions = (cell, row) => {
+		return (
+			<div>
+				<ButtonDropdown
+					isOpen={this.state.actionButtons[row.reconcileId]}
+					toggle={(e) => {
+						e.preventDefault();
+						this.toggleActionButton(row.reconcileId);
+					}}
+				>
+					<DropdownToggle size="sm" color="primary" className="btn-brand icon">
+						{this.state.actionButtons[row.reconcileId] === true ? (
+							<i className="fas fa-chevron-up" />
+						) : (
+							<i className="fas fa-chevron-down" />
+						)}
+					</DropdownToggle>
+					<DropdownMenu right>
+						<DropdownItem onClick={() => this.closeReconciled(row.reconcileId)}>
+							<i className="fa fa-trash" /> Delete
+						</DropdownItem>
+					</DropdownMenu>
+				</ButtonDropdown>
+			</div>
+		);
+	};
+
 	render() {
 		const { reconcile_list } = this.props;
-		const { initValue, loading } = this.state;
+		const { initValue, loading, dialog } = this.state;
 		return (
 			<div className="detail-bank-transaction-screen">
 				<div className="animated fadeIn">
+					{dialog}
 					<Row>
 						<Col lg={12} className="mx-auto">
 							{loading ? (
@@ -374,6 +466,14 @@ class ReconcileTransaction extends React.Component {
 												>
 													Closing Balance
 												</TableHeaderColumn>
+												<TableHeaderColumn
+													className="text-right"
+													columnClassName="text-right"
+													width="5%"
+													dataSort={false}
+													export={false}
+													dataFormat={this.renderActions}
+												></TableHeaderColumn>
 											</BootstrapTable>
 										</Row>
 									</CardBody>

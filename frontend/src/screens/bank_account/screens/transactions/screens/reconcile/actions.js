@@ -62,3 +62,20 @@ export const reconcilenow = (obj) => {
 			});
 	};
 };
+
+export const removeBulkReconciled = (obj) => {
+	return (dispatch) => {
+		let data = {
+			method: 'delete',
+			url: '/rest/reconsile/deletes',
+			data: obj,
+		};
+		return authApi(data)
+			.then((res) => {
+				return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

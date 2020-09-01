@@ -130,6 +130,7 @@ class BankTransactions extends React.Component {
 		this.props.detailBankAccountActions
 			.getBankAccountByID(this.props.location.state.bankAccountId)
 			.then((res) => {
+				console.log(res);
 				this.setState({
 					currentBalance: res.currentBalance,
 					closingBalance: res.closingBalance,

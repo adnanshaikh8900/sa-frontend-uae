@@ -9,6 +9,7 @@ import {
 	TabPane,
 	Card,
 	CardBody,
+	Button,
 } from 'reactstrap';
 // import { DateRangePicker2 } from 'components'
 // import moment from 'moment'
@@ -221,15 +222,17 @@ class RevenueAndExpense extends Component {
 										className="data-info"
 										style={{ border: 'none', marginBottom: 12 }}
 									>
-										<button
-											className="btn-instagram btn-brand mr-1 mb-1 btn btn-secondary btn-sm"
-											onClick={() =>
-												this.props.history.push('/admin/expense/expense/create')
-											}
-										>
-											<i className="nav-icon icon-speech"></i>
-											<span>New Expense</span>
-										</button>
+										<Button
+										color="primary"
+										style={{ marginBottom: '10px' }}
+										className="btn-square"
+										onClick={() =>
+											this.props.history.push(`/admin/expense/expense/create`)
+										}
+									>
+										<i className="fas fa-plus mr-1" />
+										 New Expense
+									</Button>
 									</div>
 									{/* <div className="data-info">
 										<div className="data-item">

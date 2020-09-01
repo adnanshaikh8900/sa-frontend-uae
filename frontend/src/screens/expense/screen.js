@@ -227,7 +227,7 @@ class Expense extends React.Component {
 									this.postExpense(row);
 								}}
 							>
-								<i className="fas fa-heart" /> Post
+								<i className="fas fa-send" /> Post
 							</DropdownItem>
 						)}
 						{/* <DropdownItem  onClick={() => {this.openInvoicePreviewModal(row.expenseId)}}>

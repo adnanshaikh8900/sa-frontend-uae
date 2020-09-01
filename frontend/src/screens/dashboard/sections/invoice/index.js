@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { HorizontalBar } from 'react-chartjs-2';
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
+import { Currency } from 'components';
 import {
 	Nav,
 	NavItem,
@@ -9,6 +10,7 @@ import {
 	TabPane,
 	Card,
 	CardBody,
+	Button,
 } from 'reactstrap';
 // import { DateRangePicker2 } from 'components'
 
@@ -108,6 +110,7 @@ class Invoice extends Component {
 		} else {
 			var sum = 0;
 		}
+		const { universal_currency_list } = this.props;
 		return (
 			<div className="animated fadeIn">
 				<Card className="invoice-card">
@@ -141,22 +144,35 @@ class Invoice extends Component {
 							<TabPane tabId="1">
 								<div className="flex-wrapper" style={{ paddingLeft: 20 }}>
 									<div className="data-info">
-										<button
-											className="btn-instagram btn-brand mr-1 mb-1 btn btn-secondary btn-sm"
-											onClick={() => {
-												this.props.history.push(
-													'/admin/income/customer-invoice/create',
-												);
-											}}
-										>
-											<i className="nav-icon icon-speech"></i>
-											<span>New Invoice</span>
-										</button>
+										<Button
+										color="primary"
+										style={{ marginBottom: '10px' }}
+										className="btn-square"
+										onClick={() =>
+											this.props.history.push(`/admin/expense/expense/create`)
+										}
+									>
+										<i className="nav-icon icon-speech mr-1" />
+										New Invoice
+									</Button>
 									</div>
 									<div className="data-info">
 										<div className="data-item">
 											<div>
-												<h3>{sum}</h3>
+											<h3>
+										{universal_currency_list[0] &&
+											
+												<Currency
+												value={sum}
+													currencySymbol={
+														universal_currency_list[0]
+															? universal_currency_list[0].currencyIsoCode
+															: 'USD'
+														}
+													/>
+													}
+												</h3>
+											
 												<p>OUTSTANDING</p>
 											</div>
 										</div>

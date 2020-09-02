@@ -57,7 +57,6 @@ const customStyles = {
 	}),
 };
 
-
 class ExplainTrasactionDetail extends React.Component {
 	constructor(props) {
 		super(props);
@@ -404,6 +403,10 @@ class ExplainTrasactionDetail extends React.Component {
 		});
 	};
 
+	UnexplainTransaction = (id) => {
+		alert(id);
+	};
+
 	invoiceIdList = (option) => {
 		this.setState(
 			{
@@ -577,7 +580,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			Transaction Type
 																		</Label>
 																		<Select
-																		styles={customStyles}
+																			styles={customStyles}
 																			options={
 																				chartOfAccountCategoryList
 																					? chartOfAccountCategoryList
@@ -759,7 +762,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					Expense Category
 																				</Label>
 																				<Select
-																				styles={customStyles}
+																					styles={customStyles}
 																					options={
 																						expense_categories_list
 																							? selectOptionsFactory.renderOptions(
@@ -873,7 +876,7 @@ class ExplainTrasactionDetail extends React.Component {
 																							Currency
 																						</Label>
 																						<Select
-																						styles={customStyles}
+																							styles={customStyles}
 																							id="currencyCode"
 																							name="currencyCode"
 																							options={
@@ -942,7 +945,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					Vendor
 																				</Label>
 																				<Select
-																				styles={customStyles}
+																					styles={customStyles}
 																					options={
 																						vendor_list ? vendor_list : []
 																					}
@@ -983,7 +986,7 @@ class ExplainTrasactionDetail extends React.Component {
 																							Invoice
 																						</Label>
 																						<Select
-																						styles={customStyles}
+																							styles={customStyles}
 																							isMulti
 																							options={
 																								vendor_invoice_list
@@ -1058,7 +1061,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					Customer
 																				</Label>
 																				<Select
-																				styles={customStyles}
+																					styles={customStyles}
 																					options={
 																						transactionCategoryList.dataList[0]
 																							? transactionCategoryList
@@ -1102,7 +1105,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					Invoice
 																				</Label>
 																				<Select
-																				styles={customStyles}
+																					styles={customStyles}
 																					isMulti
 																					options={
 																						customer_invoice_list
@@ -1178,7 +1181,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					Category
 																				</Label>
 																				<Select
-																				styles={customStyles}
+																					styles={customStyles}
 																					options={
 																						transactionCategoryList
 																							? transactionCategoryList.categoriesList
@@ -1235,7 +1238,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="employeeId">User</Label>
 																				<Select
-																				styles={customStyles}
+																					styles={customStyles}
 																					options={
 																						transactionCategoryList.dataList
 																							? transactionCategoryList
@@ -1445,7 +1448,7 @@ class ExplainTrasactionDetail extends React.Component {
 																						User
 																					</Label>
 																					<Select
-																					styles={customStyles}
+																						styles={customStyles}
 																						options={
 																							transactionCategoryList.dataList
 																								? transactionCategoryList
@@ -1490,26 +1493,54 @@ class ExplainTrasactionDetail extends React.Component {
 															<Row>
 																<Col lg={12} className="mt-5">
 																	<FormGroup className="text-left">
-																		<Button
-																			type="button"
-																			color="primary"
-																			className="btn-square mr-3"
-																			onClick={props.handleSubmit}
-																		>
-																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			Explain
-																		</Button>
-																		<Button
-																			color="secondary"
-																			className="btn-square"
-																			onClick={() =>
-																				this.closeTransaction(
-																					props.values.transactionId,
-																				)
-																			}
-																		>
-																			<i className="fa fa-ban"></i> Delete
-																		</Button>
+																		{props.values.explinationStatusEnum !==
+																		'FULL' ? (
+																			<div>
+																				<Button
+																					type="button"
+																					color="primary"
+																					className="btn-square mr-3"
+																					onClick={props.handleSubmit}
+																				>
+																					<i className="fa fa-dot-circle-o"></i>{' '}
+																					Explain
+																				</Button>
+																				<Button
+																					color="secondary"
+																					className="btn-square"
+																					onClick={() =>
+																						this.closeTransaction(
+																							props.values.transactionId,
+																						)
+																					}
+																				>
+																					<i className="fa fa-ban"></i> Delete
+																				</Button>
+																			</div>
+																		) : (
+																			<div>
+																				<Button
+																					type="button"
+																					color="primary"
+																					className="btn-square mr-3"
+																					onClick={() =>
+																						this.UnexplainTransaction(
+																							props.values.transactionId,
+																						)
+																					}
+																				>
+																					<i className="fa fa-dot-circle-o"></i>{' '}
+																					Unexplain
+																				</Button>
+																				<Button
+																					color="secondary"
+																					className="btn-square"
+																					onClick={props.handleSubmit}
+																				>
+																					<i className="fa fa-ban"></i> Update
+																				</Button>
+																			</div>
+																		)}
 																	</FormGroup>
 																</Col>
 															</Row>

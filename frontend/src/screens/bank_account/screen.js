@@ -743,21 +743,24 @@ class BankAccount extends React.Component {
 													dataField="bankAccountNo"
 													dataFormat={this.renderAccountNumber}
 													dataSort
-													width="15%"
+													width="150"
+													thStyle={{ whiteSpace: 'normal' }}
 												>
 													Account Number
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="name"
 													dataSort
-													width="10%"
+													width="150"
+													thStyle={{ whiteSpace: 'normal' }}
 												>
 													Bank
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="accounName"
 													dataSort
-													width="18%"
+													width="150"
+													thStyle={{ whiteSpace: 'normal' }}
 												>
 													Account Name
 												</TableHeaderColumn>
@@ -765,7 +768,8 @@ class BankAccount extends React.Component {
 													dataFormat={this.renderAccountType}
 													dataField="bankAccountTypeName"
 													dataSort
-													width="12%"
+													width="150"
+													thStyle={{ whiteSpace: 'normal' }}
 												>
 													Account Type
 												</TableHeaderColumn>
@@ -773,15 +777,17 @@ class BankAccount extends React.Component {
 													dataFormat={this.renderCurrency}
 													dataSort
 													dataField="currancyName"
-													width="12%"
+													width="150"
+													thStyle={{ whiteSpace: 'normal' }}
 												>
 													Currency
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="openingBalance"
 													dataSort
-													width="15%"
+													width="150"
 													dataFormat={this.renderBalance}
+													thStyle={{ whiteSpace: 'normal' }}
 												>
 													Bank Balance
 												</TableHeaderColumn>
@@ -790,14 +796,15 @@ class BankAccount extends React.Component {
 													export={false}
 													dataSort={false}
 													dataFormat={this.renderLastReconciled}
-													width="20%"
+													width="150"
+													thStyle={{ whiteSpace: 'normal' }}
 												>
 													Last Reconciled
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													className="text-right"
 													columnClassName="text-right"
-													width="5%"
+													width="150"
 													dataSort={false}
 													export={false}
 													dataFormat={this.renderActions}

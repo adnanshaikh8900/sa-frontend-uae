@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Line } from 'react-chartjs-2';
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
+import { Currency } from 'components';
 import {
 	Nav,
 	NavItem,
@@ -113,7 +114,7 @@ class BankAccount extends Component {
 				},
 			],
 		};
-
+		const { universal_currency_list } = this.props;
 		return (
 			<div className="animated fadeIn">
 				<Card className="bank-card">
@@ -179,13 +180,37 @@ class BankAccount extends Component {
 									<div className="data-info">
 										<div className="data-item">
 											<div>
-												<h3>{this.props.bank_account_graph.balance}</h3>
+												<h3>
+													{universal_currency_list[0] &&
+													<Currency
+														value={this.props.bank_account_graph.balance
+														}
+															currencySymbol={
+															universal_currency_list[0]
+															? universal_currency_list[0].currencyIsoCode
+															: 'USD'
+														}
+													/>
+													}
+												</h3>
 												<p>BALANCE</p>
 											</div>
 										</div>
 										<div className="data-item">
 											<div>
-												<h3>{this.state.totalBalance}</h3>
+											<h3>
+													{universal_currency_list[0] &&
+													<Currency
+														value={this.state.totalBalance
+														}
+															currencySymbol={
+															universal_currency_list[0]
+															? universal_currency_list[0].currencyIsoCode
+															: 'USD'
+														}
+													/>
+													}
+												</h3>
 												<p>ALL ACCOUNTS</p>
 											</div>
 										</div>

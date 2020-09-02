@@ -3,8 +3,8 @@ kind: Service
 metadata:
   labels:
     app: simplevat
-  name: simplevat-service-dev
-  namespace: simplevat-dev
+  name: simplevat-service-waqas
+  namespace: simplevat-test
 spec:
   ports:
     - name: http

@@ -51,7 +51,6 @@ const customStyles = {
 	}),
 };
 
-
 class CreateProduct extends React.Component {
 	constructor(props) {
 		super(props);
@@ -93,7 +92,7 @@ class CreateProduct extends React.Component {
 			exist: false,
 		};
 		this.regEx = /^[0-9\d]+$/;
-		this.regExBoth = /[a-zA-Z0-9]+$/;
+		this.regExBoth = /[a-zA-Z0-9 ]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 	}
 
@@ -428,7 +427,8 @@ class CreateProduct extends React.Component {
 																			<span className="text-danger">*</span>Name
 																		</Label>
 																		<Input
-																			type="text" maxLength='70'
+																			type="text"
+																			maxLength="70"
 																			id="productName"
 																			name="productName"
 																			onChange={(option) => {
@@ -477,11 +477,13 @@ class CreateProduct extends React.Component {
 																				placement="right"
 																				target="ProductCodeTooltip"
 																			>
-																				Product Code - Unique identifier code for the product 
+																				Product Code - Unique identifier code
+																				for the product
 																			</UncontrolledTooltip>
 																		</Label>
 																		<Input
-																			type="text" maxLength='70'
+																			type="text"
+																			maxLength="70"
 																			id="productCode"
 																			name="productCode"
 																			placeholder="Enter Product Code"
@@ -783,11 +785,13 @@ class CreateProduct extends React.Component {
 																				placement="right"
 																				target="SalesTooltip"
 																			>
-																				Selling price – Price at which your product is sold 
+																				Selling price – Price at which your
+																				product is sold
 																			</UncontrolledTooltip>
 																		</Label>
 																		<Input
-																			type="text" maxLength='10'
+																			type="text"
+																			maxLength="10"
 																			id="salesUnitPrice"
 																			name="salesUnitPrice"
 																			placeholder="Enter Selling Price"
@@ -891,7 +895,8 @@ class CreateProduct extends React.Component {
 																					? false
 																					: true
 																			}
-																			type="textarea"maxLength='200'
+																			type="textarea"
+																			maxLength="200"
 																			name="salesDescription"
 																			id="salesDescription"
 																			rows="3"
@@ -971,11 +976,13 @@ class CreateProduct extends React.Component {
 																				placement="right"
 																				target="PurchaseTooltip"
 																			>
-																				Purchase price – Amount of money you paid for the product 
+																				Purchase price – Amount of money you
+																				paid for the product
 																			</UncontrolledTooltip>
 																		</Label>
 																		<Input
-																			type="text" maxLength='10'
+																			type="text"
+																			maxLength="10"
 																			id="purchaseUnitPrice"
 																			name="purchaseUnitPrice"
 																			placeholder="Enter Selling Price"
@@ -1014,9 +1021,8 @@ class CreateProduct extends React.Component {
 
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="salesUnitPrice">
-																			<span className="text-danger">*</span>{' '}	
+																			<span className="text-danger">*</span>{' '}
 																			Account
-																			
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -1083,7 +1089,8 @@ class CreateProduct extends React.Component {
 																					? false
 																					: true
 																			}
-																			type="textarea" maxLength='200'
+																			type="textarea"
+																			maxLength="200"
 																			name="purchaseDescription"
 																			id="purchaseDescription"
 																			rows="3"

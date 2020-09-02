@@ -126,11 +126,9 @@ class BankTransactions extends React.Component {
 	componentDidMount = () => {
 		this.props.transactionsActions.getTransactionTypeList();
 		this.initializeData();
-		//this.setState({ bankId: this.props.location.state.bankAccountId });
 		this.props.detailBankAccountActions
 			.getBankAccountByID(this.props.location.state.bankAccountId)
 			.then((res) => {
-				console.log(res);
 				this.setState({
 					currentBalance: res.currentBalance,
 					closingBalance: res.closingBalance,
@@ -299,6 +297,10 @@ class BankTransactions extends React.Component {
 			this.options.page = page;
 			this.initializeData();
 		}
+		if (this.options.sizePerPage !== sizePerPage) {
+			this.options.sizePerPage = sizePerPage;
+			this.initializeData();
+		}
 	};
 
 	handleChange = (val, name, reconcile, row, label) => {
@@ -431,6 +433,7 @@ class BankTransactions extends React.Component {
 	}
 
 	handleTableChange = (type, { page, sizePerPage }) => {
+		console.log(sizePerPage);
 		this.setState(
 			{
 				page,
@@ -599,7 +602,7 @@ class BankTransactions extends React.Component {
 		};
 
 		return (
-			<div className="bank-transaction-screen">
+			<div className="bank-transaction-screen transaction">
 				<div className="animated fadeIn">
 					<Card className={this.state.sidebarOpen ? `main-table-panel` : ''}>
 						<CardHeader>
@@ -869,8 +872,8 @@ class BankTransactions extends React.Component {
 												}}
 												onTableChange={this.handleTableChange}
 												pagination={paginationFactory({
-													page: this.state.page,
-													sizePerPage: 10,
+													page: this.options.page,
+													sizePerPage: this.options.sizePerPage,
 													totalSize: bank_transaction_list.count,
 												})}
 											/>

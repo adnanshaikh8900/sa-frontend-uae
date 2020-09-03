@@ -184,7 +184,7 @@ public class TransactionImportController{
 
 	@ApiOperation(value = "Import Trnsaction")
 	@PostMapping(value = "/save")
-	public ResponseEntity<Integer> importTransaction(@RequestBody TransactionImportModel transactionImportModel,
+	public ResponseEntity<String> importTransaction(@RequestBody TransactionImportModel transactionImportModel,
 			HttpServletRequest request) {
 
 		List<com.simplevat.entity.bankaccount.Transaction> transactionList = null;
@@ -195,14 +195,13 @@ public class TransactionImportController{
 		if (transactionList == null) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+		String status = transactionService.saveTransactions(transactionList);
 
-		boolean status = transactionService.saveTransactions(transactionList);
-
-		if (!status) {
+		if (status==null) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-		return new ResponseEntity<>(transactionImportModel.getBankId(), HttpStatus.OK);
+		return new ResponseEntity<>(status, HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "parse file and return data according template")

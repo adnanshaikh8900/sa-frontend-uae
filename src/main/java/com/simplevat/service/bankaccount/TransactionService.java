@@ -86,7 +86,7 @@ public abstract class TransactionService extends SimpleVatService<Integer, Trans
 			Integer bankAccountId, int rowCount, Integer transactionStatus, Map<String, Object> filters,
 			String sortField, String sortOrder);
 
-	public abstract boolean saveTransactions(List<Transaction> transactions);
+	public abstract String saveTransactions(List<Transaction> transactions);
 
 	public abstract BigDecimal getCurrentBalanceByBankId(Integer bankId);
 

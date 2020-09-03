@@ -1,7 +1,9 @@
 package com.simplevat.rest.bankaccountcontroller;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +11,7 @@ import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.entity.*;
 import com.simplevat.entity.bankaccount.*;
 import com.simplevat.rest.PostingRequestModel;
+import com.simplevat.rest.invoicecontroller.InvoiceRequestModel;
 import com.simplevat.service.*;
 import com.simplevat.service.bankaccount.ReconcileStatusService;
 import com.simplevat.utils.DateFormatUtil;
@@ -135,6 +138,7 @@ public class BankAccountRestHelper {
 		bankAccount.setPersonalCorporateAccountInd(bankModel.getPersonalCorporateAccountInd().charAt(0));
 		bankAccount.setSwiftCode(bankModel.getSwiftCode());
 		bankAccount.setVersionNumber(1);
+		openingDate(bankModel, bankAccount);
 
 		if (bankModel.getBankAccountStatus() != null) {
 			BankAccountStatus bankAccountStatus = bankAccountStatusService
@@ -176,6 +180,14 @@ public class BankAccountRestHelper {
 			bankAccount.setTransactionCategory(category);
 		}
 		return bankAccount;
+	}
+	private void openingDate(BankModel bankModel, BankAccount bankAccount) {
+		if (bankModel.getOpeningDate()!= null) {
+			LocalDateTime openingDate = Instant.ofEpochMilli(bankModel.getOpeningDate().getTime())
+					.atZone(ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0).withNano(0)
+					.toLocalDateTime();
+			bankAccount.setOpeningDate(openingDate);
+		}
 	}
 
 	public BankAccount getBankAccountByBankAccountModel(BankModel bankModel) {

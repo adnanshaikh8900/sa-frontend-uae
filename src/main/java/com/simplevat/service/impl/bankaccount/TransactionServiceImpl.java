@@ -331,31 +331,49 @@ public class TransactionServiceImpl extends TransactionService {
 	}
 
 	@Override
-	public boolean saveTransactions(List<Transaction> transactions) {
+	public String saveTransactions(List<Transaction> transactions) {
 
 		try {
 			BankAccount bankAccount =null;
 			if(transactions!=null && transactions.size()>0)
 			bankAccount = bankAccountService.findByPK(transactions.get(0).getBankAccount().getBankAccountId());
+			BigDecimal currentBalance = bankAccount.getCurrentBalance();
 
+			int count = 0;
+			int totalCount = transactions.size();
 			for (Transaction transaction : transactions) {
 				if(isAlreadyExistSimilarTransaction(transaction))
 					transaction.setCreationMode(TransactionCreationMode.POTENTIAL_DUPLICATE);
-				if(isValidTransaction(transaction,bankAccount))
-				transactionDao.persist(transaction);
+				if(isValidTransaction(transaction,bankAccount)){
+					if (transaction.getDebitCreditFlag()=='C')
+						currentBalance = currentBalance.add(transaction.getTransactionAmount());
+					else
+						currentBalance = currentBalance.subtract(transaction.getTransactionAmount());
+					transaction.setCurrentBalance(currentBalance);
+					transactionDao.persist(transaction);
+				}
+
+				else {
+					count++;
+
+				}
+
 			}
-			return true;
+			String returnMessage ="Total Transactions To Import "+totalCount + " Transactions Imported " + (totalCount-count);
+			bankAccount.setCurrentBalance(currentBalance);
+			bankAccountService.update(bankAccount);
+			return returnMessage;
 		} catch (Exception e) {
 			logger.error("Error", e);
-			return false;
+			return null;
 		}
 	}
 
 	private boolean isValidTransaction(Transaction transaction, BankAccount bankAccount) {
-		//if(bankAccount.getAsOFDate() < transaction.getTransactionDate())
+		if(bankAccount.getOpeningDate().isBefore(transaction.getTransactionDate()))
 		return true;
-		//else
-		//	return false;
+		else
+		return false;
 	}
 
 	private boolean isAlreadyExistSimilarTransaction(Transaction transaction) {

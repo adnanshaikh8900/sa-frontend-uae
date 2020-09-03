@@ -18,7 +18,8 @@ import Select from 'react-select';
 import _ from 'lodash';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
 import { Loader, ConfirmDeleteModal } from 'components';
 import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import { CommonActions } from 'services/global';
@@ -105,6 +106,9 @@ class DetailBankAccount extends React.Component {
 									country: res.bankCountry ? res.bankCountry : '',
 									account_is_for: res.personalCorporateAccountInd
 										? res.personalCorporateAccountInd
+										: '',
+									openingDate: res.openingDate
+										? moment(res.openingDate).utc().format('YYYY-MM-DD')
 										: '',
 								},
 							});
@@ -322,7 +326,7 @@ class DetailBankAccount extends React.Component {
 																	<span className="text-danger">*</span>Currency
 																</Label>
 																<Select
-																styles={customStyles}
+																	styles={customStyles}
 																	id="currency"
 																	name="currency"
 																	options={
@@ -418,13 +422,49 @@ class DetailBankAccount extends React.Component {
 													</Row>
 													<Row>
 														<Col lg={4}>
+															<FormGroup className="mb-3">
+																<Label htmlFor="opening_date">
+																	<span className="text-danger">*</span>
+																	Opening Date
+																</Label>
+																<DatePicker
+																	id="date"
+																	name="openingDate"
+																	className={`form-control ${
+																		props.errors.openingDate &&
+																		props.touched.openingDate
+																			? 'is-invalid'
+																			: ''
+																	}`}
+																	placeholderText="Expense Date"
+																	value={moment(
+																		props.values.openingDate,
+																	).format('DD-MM-YYYY')}
+																	showMonthDropdown
+																	showYearDropdown
+																	dropdownMode="select"
+																	dateFormat="dd/MM/yyyy"
+																	// maxDate={new Date()}
+																	onChange={(value) => {
+																		props.handleChange('openingDate')(value);
+																	}}
+																/>
+																{props.errors.openingDate &&
+																	props.touched.openingDate && (
+																		<div className="invalid-feedback">
+																			{props.errors.openingDate}
+																		</div>
+																	)}
+															</FormGroup>
+														</Col>
+														<Col lg={4}>
 															<FormGroup className="">
 																<Label htmlFor="account_type">
 																	<span className="text-danger">*</span>
 																	Account Type
 																</Label>
 																<Select
-																styles={customStyles}
+																	styles={customStyles}
 																	id="account_type"
 																	name="account_type"
 																	options={
@@ -624,7 +664,7 @@ class DetailBankAccount extends React.Component {
 															<FormGroup className="mb-3">
 																<Label htmlFor="country">Country</Label>
 																<Select
-																styles={customStyles}
+																	styles={customStyles}
 																	id="country"
 																	name="country"
 																	options={
@@ -678,7 +718,7 @@ class DetailBankAccount extends React.Component {
 																	is for
 																</Label>
 																<Select
-																styles={customStyles}
+																	styles={customStyles}
 																	id="account_is_for"
 																	name="account_is_for"
 																	options={

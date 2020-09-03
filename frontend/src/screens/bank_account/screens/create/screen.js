@@ -21,7 +21,8 @@ import * as Yup from 'yup';
 import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import { CommonActions } from 'services/global';
 import * as createBankAccountActions from './actions';
-
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
 import './style.scss';
 
 const mapStateToProps = (state) => {
@@ -69,6 +70,7 @@ class CreateBankAccount extends React.Component {
 				ifsc_code: '',
 				swift_code: '',
 				country: '',
+				openingDate: '',
 				account_is_for: { label: 'Corporate', value: 'Corporate' },
 			},
 			currentData: {},
@@ -155,11 +157,13 @@ class CreateBankAccount extends React.Component {
 			swift_code,
 			country,
 			account_is_for,
+			openingDate,
 		} = data;
 		let obj = {
 			bankAccountName: account_name,
 			bankAccountCurrency: currency ? currency : '',
 			openingBalance: opening_balance,
+			openingDate: openingDate ? openingDate : '',
 			bankAccountType: account_type ? account_type.value : '',
 			bankName: bank_name,
 			accountNumber: account_number,
@@ -239,6 +243,9 @@ class CreateBankAccount extends React.Component {
 														.max(30, 'Account Name Is Too Long!'),
 													opening_balance: Yup.string().required(
 														'Opening Balance is Required',
+													),
+													openingDate: Yup.date().required(
+														'Opening Date is Required',
 													),
 													currency: Yup.string().required(
 														'Currency is required',
@@ -405,6 +412,40 @@ class CreateBankAccount extends React.Component {
 															</Col>
 														</Row>
 														<Row>
+															<Col lg={4}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="expense_date">
+																		<span className="text-danger">*</span>
+																		Opening Date
+																	</Label>
+																	<DatePicker
+																		id="date"
+																		name="openingDate"
+																		className={`form-control ${
+																			props.errors.openingDate &&
+																			props.touched.openingDate
+																				? 'is-invalid'
+																				: ''
+																		}`}
+																		placeholderText="Opening Date"
+																		selected={props.values.openingDate}
+																		showMonthDropdown
+																		showYearDropdown
+																		dropdownMode="select"
+																		dateFormat="dd/MM/yyyy"
+																		maxDate={new Date()}
+																		onChange={(value) => {
+																			props.handleChange('openingDate')(value);
+																		}}
+																	/>
+																	{props.errors.openingDate &&
+																		props.touched.openingDate && (
+																			<div className="invalid-feedback">
+																				{props.errors.openingDate}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="account_type">
@@ -586,6 +627,7 @@ class CreateBankAccount extends React.Component {
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="swift_code">
+																		<span className="text-danger">*</span>
 																		Swift Code
 																		<i
 																			id="SwiftCodeToolTip"

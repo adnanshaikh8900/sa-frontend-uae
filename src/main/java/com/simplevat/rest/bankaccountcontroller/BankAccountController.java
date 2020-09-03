@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -172,13 +173,26 @@ public class BankAccountController{
 								TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET.getCode());
 				openingBalance = bankAccountRestHelper.getOpeningBalanceEntity(bankAccount,transactionCategory);
 				transactionCategoryBalanceService.persist(openingBalance);
-				closingBalance = bankAccountRestHelper
-						.getClosingBalanceEntity(bankAccount,transactionCategory);
-				closingBalance.setOpeningBalance(bankAccount.getOpeningBalance().negate());
-				closingBalance.setClosingBalance(bankAccount.getOpeningBalance().negate());
+				Map<String,Object> filterObject = new HashMap<>();
+				filterObject.put("transactionCategory",transactionCategory);
+				List<TransactionCategoryClosingBalance>closingBalanceList = transactionCategoryClosingBalanceService.findByAttributes(filterObject);
+				if(closingBalanceList!=null && closingBalanceList.size()>0)
+				{
+					closingBalance = closingBalanceList.get(0);
+					BigDecimal closingBalanceValue = closingBalance.getClosingBalance();
+					closingBalanceValue = closingBalanceValue.negate();
+					closingBalanceValue = closingBalanceValue.add(bankAccount.getOpeningBalance());
+					closingBalance.setOpeningBalance(bankAccount.getOpeningBalance().negate());
+					closingBalance.setClosingBalance(closingBalanceValue.negate());
+				}
+				else {
+					closingBalance = bankAccountRestHelper
+							.getClosingBalanceEntity(bankAccount, transactionCategory);
+					closingBalance.setOpeningBalance(bankAccount.getOpeningBalance().negate());
+					closingBalance.setClosingBalance(bankAccount.getOpeningBalance().negate());
+				}
 				transactionCategoryClosingBalanceService.persist(closingBalance);
-
-				coacTransactionCategoryService.addCoacTransactionCategory(bankAccount.getTransactionCategory().getChartOfAccount(),
+                coacTransactionCategoryService.addCoacTransactionCategory(bankAccount.getTransactionCategory().getChartOfAccount(),
 						bankAccount.getTransactionCategory());
 				return new ResponseEntity<>("Save Successfull..",HttpStatus.OK);
 			}

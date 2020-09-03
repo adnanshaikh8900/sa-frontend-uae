@@ -11,6 +11,7 @@ import java.util.Objects;
 
 import com.simplevat.constant.TransactionCreationMode;
 import com.simplevat.constant.TransactionExplinationStatusEnum;
+import com.simplevat.service.BankAccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,8 @@ public class TransactionServiceImpl extends TransactionService {
 
 	@Autowired
 	private BankAccountDao bankAccountDao;
+	@Autowired
+	private BankAccountService bankAccountService;
 
 	private static final String TRANSACTION = "TRANSACTION";
 
@@ -331,9 +334,14 @@ public class TransactionServiceImpl extends TransactionService {
 	public boolean saveTransactions(List<Transaction> transactions) {
 
 		try {
+			BankAccount bankAccount =null;
+			if(transactions!=null && transactions.size()>0)
+			bankAccount = bankAccountService.findByPK(transactions.get(0).getBankAccount().getBankAccountId());
+
 			for (Transaction transaction : transactions) {
 				if(isAlreadyExistSimilarTransaction(transaction))
 					transaction.setCreationMode(TransactionCreationMode.POTENTIAL_DUPLICATE);
+				if(isValidTransaction(transaction,bankAccount))
 				transactionDao.persist(transaction);
 			}
 			return true;
@@ -341,6 +349,13 @@ public class TransactionServiceImpl extends TransactionService {
 			logger.error("Error", e);
 			return false;
 		}
+	}
+
+	private boolean isValidTransaction(Transaction transaction, BankAccount bankAccount) {
+		//if(bankAccount.getAsOFDate() < transaction.getTransactionDate())
+		return true;
+		//else
+		//	return false;
 	}
 
 	private boolean isAlreadyExistSimilarTransaction(Transaction transaction) {

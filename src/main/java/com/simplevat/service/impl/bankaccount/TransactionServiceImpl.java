@@ -11,6 +11,7 @@ import java.util.Objects;
 
 import com.simplevat.constant.TransactionCreationMode;
 import com.simplevat.constant.TransactionExplinationStatusEnum;
+import com.simplevat.service.BankAccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,8 @@ public class TransactionServiceImpl extends TransactionService {
 
 	@Autowired
 	private BankAccountDao bankAccountDao;
+	@Autowired
+	private BankAccountService bankAccountService;
 
 	private static final String TRANSACTION = "TRANSACTION";
 
@@ -328,19 +331,49 @@ public class TransactionServiceImpl extends TransactionService {
 	}
 
 	@Override
-	public boolean saveTransactions(List<Transaction> transactions) {
+	public String saveTransactions(List<Transaction> transactions) {
 
 		try {
+			BankAccount bankAccount =null;
+			if(transactions!=null && transactions.size()>0)
+			bankAccount = bankAccountService.findByPK(transactions.get(0).getBankAccount().getBankAccountId());
+			BigDecimal currentBalance = bankAccount.getCurrentBalance();
+
+			int count = 0;
+			int totalCount = transactions.size();
 			for (Transaction transaction : transactions) {
 				if(isAlreadyExistSimilarTransaction(transaction))
 					transaction.setCreationMode(TransactionCreationMode.POTENTIAL_DUPLICATE);
-				transactionDao.persist(transaction);
+				if(isValidTransaction(transaction,bankAccount)){
+					if (transaction.getDebitCreditFlag()=='C')
+						currentBalance = currentBalance.add(transaction.getTransactionAmount());
+					else
+						currentBalance = currentBalance.subtract(transaction.getTransactionAmount());
+					transaction.setCurrentBalance(currentBalance);
+					transactionDao.persist(transaction);
+				}
+
+				else {
+					count++;
+
+				}
+
 			}
-			return true;
+			String returnMessage ="Total Transactions To Import "+totalCount + " Transactions Imported " + (totalCount-count);
+			bankAccount.setCurrentBalance(currentBalance);
+			bankAccountService.update(bankAccount);
+			return returnMessage;
 		} catch (Exception e) {
 			logger.error("Error", e);
-			return false;
+			return null;
 		}
+	}
+
+	private boolean isValidTransaction(Transaction transaction, BankAccount bankAccount) {
+		if(bankAccount.getOpeningDate().isBefore(transaction.getTransactionDate()))
+		return true;
+		else
+		return false;
 	}
 
 	private boolean isAlreadyExistSimilarTransaction(Transaction transaction) {

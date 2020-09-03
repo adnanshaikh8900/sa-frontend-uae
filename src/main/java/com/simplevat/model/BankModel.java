@@ -7,6 +7,8 @@ package com.simplevat.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
+
 import lombok.Data;
 
 /**
@@ -49,4 +51,6 @@ public class BankModel implements Serializable {
     private Integer bankAccountType;
 
     private BigDecimal closingBalance;
+
+    private Date openingDate;
 }

@@ -118,6 +118,10 @@ public class BankAccount implements Serializable {
 	@Convert(converter = DateConverter.class)
 	private LocalDateTime createdDate;
 
+	@Column(name = "OPENING_DATE")
+	@Convert(converter = DateConverter.class)
+	private LocalDateTime openingDate;
+
 	@Basic
 	@Column(name = "LAST_UPDATED_BY")
 	private Integer lastUpdatedBy;

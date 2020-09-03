@@ -64,6 +64,7 @@ class ImportBankStatement extends React.Component {
 
 	initializeData = () => {
 		if (this.props.location.state && this.props.location.state.bankAccountId) {
+			console.log(this.props.location.state.bankAccountId);
 			this.props.importBankStatementActions.getTemplateList().then((res) => {
 				if (res.status === 200) {
 					let id;
@@ -97,10 +98,6 @@ class ImportBankStatement extends React.Component {
 	};
 
 	columnClassNameFormat = (fieldValue, row, rowIdx, colIdx) => {
-		// fieldValue is column value
-		// row is whole row object
-		// rowIdx is index of row
-		// colIdx is index of column
 		const index = `${rowIdx.toString()},${colIdx.toString()}`;
 		return this.state.errorIndexList.indexOf(index) > -1 ? 'invalid' : '';
 	};
@@ -113,6 +110,12 @@ class ImportBankStatement extends React.Component {
 			formData.append('file', this.uploadFile.files[0]);
 		}
 		formData.append('id', selectedTemplate ? +selectedTemplate : '');
+		formData.append(
+			'bankId',
+			this.props.location.state.bankAccountId
+				? this.props.location.state.bankAccountId
+				: '',
+		);
 		// this.setState({
 		//       // tableData: [...res.data],
 		//       tableDataKey: ['a','b','c','d']
@@ -120,6 +123,7 @@ class ImportBankStatement extends React.Component {
 		this.props.importBankStatementActions
 			.parseFile(formData)
 			.then((res) => {
+				console.log(res);
 				this.setState({
 					tableData: res.data['data'],
 					tableDataKey: res.data.data[0] ? Object.keys(res.data.data[0]) : [],

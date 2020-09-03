@@ -26,13 +26,3 @@
 .bank-transaction-screen .nav-tabs .nav-link {
 	border: 1px solid transparent;
 }
-.react-bs-table {
-	overflow: scroll;
-}
-.react-bs-table-container {
-	.react-bs-table table td,
-	.react-bs-table table th {
-		text-overflow: unset !important;
-		overflow-wrap: break-word;
-	}
-}

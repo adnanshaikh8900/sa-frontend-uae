@@ -85,9 +85,11 @@ public class MailUtility {
 		sender.setUsername(mailConfigurationModel.getMailusername());
 		sender.setPassword(mailConfigurationModel.getMailpassword());
 		Properties mailProps = new Properties();
-		mailProps.put("mail.smtps.auth", mailConfigurationModel.getMailsmtpAuth());
+		//mailProps.put("mail.smtps.auth", mailConfigurationModel.getMailsmtpAuth());
+		mailProps.put("mail.smtps.host", "smtp.mailgun.org");
 		mailProps.put("mail.smtp.starttls.enable", mailConfigurationModel.getMailstmpStartTLSEnable());
 		mailProps.put("mail.smtp.debug", "true");
+		mailProps.put("mail.smtps.auth", "true");
 		mailProps.put("mail.smtp.socketFactory.port", "465");
 		mailProps.put("mail.smtp.starttls.enable prop", "true");
 		mailProps.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
@@ -136,6 +138,13 @@ public class MailUtility {
 				mailDefaultConfigurationModel.setMailsmtpAuth(config.get().getValue());
 			}
 
+			config = configurationList.stream().filter(
+					mailConfiguration -> mailConfiguration.getName().equals(ConfigurationConstants.MAIL_API_KEY))
+					.findAny();
+			if (config.isPresent()) {
+				mailDefaultConfigurationModel.setMailApiKey(config.get().getValue());
+			}
+
 			config = configurationList.stream().filter(mailConfiguration -> mailConfiguration.getName()
 					.equals(ConfigurationConstants.MAIL_SMTP_STARTTLS_ENABLE)).findAny();
 			if (config.isPresent()) {
@@ -152,6 +161,7 @@ public class MailUtility {
 		mailDefaultConfigurationModel.setMailusername(System.getenv("SIMPLEVAT_SMTP_USER"));
 		mailDefaultConfigurationModel.setMailpassword(System.getenv("SIMPLEVAT_SMTP_PASS"));
 		mailDefaultConfigurationModel.setMailsmtpAuth(System.getenv("SIMPLEVAT_SMTP_AUTH"));
+		mailDefaultConfigurationModel.setMailApiKey(System.getenv("SIMPLEVAT_API_KEY"));
 		mailDefaultConfigurationModel.setMailstmpStartTLSEnable(System.getenv("SIMPLEVAT_SMTP_STARTTLS_ENABLE"));
 		return mailDefaultConfigurationModel;
 	}
@@ -206,6 +216,10 @@ public class MailUtility {
 						&& configuration.getValue() != null && !configuration.getValue().isEmpty()) {
 					mailConfigCount++;
 
+				} else if (configuration.getName().equals(ConfigurationConstants.MAIL_API_KEY)
+						&& configuration.getValue() != null && !configuration.getValue().isEmpty()) {
+					mailConfigCount++;
+
 				} else if (configuration.getName().equals(ConfigurationConstants.MAIL_SMTP_STARTTLS_ENABLE)
 						&& configuration.getValue() != null && !configuration.getValue().isEmpty()) {
 					mailConfigCount++;
@@ -213,6 +227,6 @@ public class MailUtility {
 				}
 			}
 		}
-		return (mailConfigCount == 6);
+		return (mailConfigCount == 7);
 	}
 }

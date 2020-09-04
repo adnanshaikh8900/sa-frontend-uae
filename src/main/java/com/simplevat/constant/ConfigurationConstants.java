@@ -9,6 +9,7 @@ public final class ConfigurationConstants {
 	public static final String MAIL_USERNAME = "MAIL_USERNAME";
 	public static final String MAIL_PASSWORD = "MAIL_PASSWORD";
 	public static final String MAIL_SMTP_AUTH = "MAIL_SMTP_AUTH";
+	public static final String MAIL_API_KEY = "MAIL_API_KEY";
 	public static final String MAIL_SMTP_STARTTLS_ENABLE = "MAIL_SMTP_STARTTLS_ENABLE";
 	public static final String INVOICE_MAIL_TAMPLATE_SUBJECT = "INVOICE_MAIL_TAMPLATE_SUBJECT";
 	public static final String INVOICE_MAIL_TAMPLATE_BODY = "INVOICE_MAIL_TAMPLATE_BODY";

@@ -65,6 +65,13 @@ public class CompanySettingRestHelper {
 			companySettingModel.setMailingSmtpAuthorization(config.get().getValue());
 		}
 
+		config = configurationList.stream().filter(
+				mailConfiguration -> mailConfiguration.getName().equals(ConfigurationConstants.MAIL_API_KEY))
+				.findAny();
+		if (config.isPresent()) {
+			companySettingModel.setMailApiKey(config.get().getValue());
+
+		}
 		config = configurationList.stream().filter(mailConfiguration -> mailConfiguration.getName()
 				.equals(ConfigurationConstants.MAIL_SMTP_STARTTLS_ENABLE)).findAny();
 		if (config.isPresent()) {
@@ -160,6 +167,12 @@ public class CompanySettingRestHelper {
 				&& !companySettingReqModel.getMailingPassword().isEmpty()) {
 			config = configurationService.getConfigurationByName(ConfigurationConstants.MAIL_PASSWORD);
 			config.setValue(companySettingReqModel.getMailingPassword());
+			configList.add(config);
+
+		}
+		if (companySettingReqModel.getMailingHost() != null && !companySettingReqModel.getMailingHost().isEmpty()) {
+			config = configurationService.getConfigurationByName(ConfigurationConstants.MAIL_API_KEY);
+			config.setValue(companySettingReqModel.getMailApiKey());
 			configList.add(config);
 
 		}

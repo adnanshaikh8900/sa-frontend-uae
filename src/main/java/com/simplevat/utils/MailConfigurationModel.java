@@ -20,6 +20,7 @@ public class MailConfigurationModel implements Serializable {
     String mailusername;
     String mailpassword;
     String mailsmtpAuth;
+    String mailApiKey;
     String mailstmpStartTLSEnable;
  
     

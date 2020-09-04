@@ -130,6 +130,7 @@ class CreateCustomerInvoice extends React.Component {
 			selectedType: { value: 'FIXED', label: 'Fixed' },
 			discountPercentage: '',
 			discountAmount: 0,
+			exist: false,
 		};
 
 		this.formRef = React.createRef();
@@ -324,6 +325,29 @@ class CreateCustomerInvoice extends React.Component {
 		}
 	};
 
+	validationCheck = (value) => {
+		const data = {
+			moduleType: 6,
+			name: value,
+		};
+		this.props.customerInvoiceCreateActions
+			.checkValidation(data)
+			.then((response) => {
+				if (response.data === 'Invoice Number already exists') {
+					this.setState(
+						{
+							exist: true,
+						},
+						() => {},
+					);
+				} else {
+					this.setState({
+						exist: false,
+					});
+				}
+			});
+	};
+
 	componentDidMount = () => {
 		this.getInitialData();
 	};
@@ -434,7 +458,7 @@ class CreateCustomerInvoice extends React.Component {
 				name={`lineItemsString.${idx}.vatCategoryId`}
 				render={({ field, form }) => (
 					<Select
-					styles={customStyles}
+						styles={customStyles}
 						options={
 							vat_list
 								? selectOptionsFactory.renderOptions(
@@ -526,7 +550,7 @@ class CreateCustomerInvoice extends React.Component {
 					name={`lineItemsString.${idx}.productId`}
 					render={({ field, form }) => (
 						<Select
-						styles={customStyles}
+							styles={customStyles}
 							options={
 								product_list
 									? selectOptionsFactory.renderOptions(
@@ -891,7 +915,7 @@ class CreateCustomerInvoice extends React.Component {
 	};
 
 	render() {
-		const { data, discountOptions, initValue } = this.state;
+		const { data, discountOptions, initValue, exist } = this.state;
 		const { currency_list, customer_list } = this.props;
 		return (
 			<div className="create-customer-invoice-screen">
@@ -921,6 +945,14 @@ class CreateCustomerInvoice extends React.Component {
 												ref={this.formRef}
 												onSubmit={(values, { resetForm }) => {
 													this.handleSubmit(values, resetForm);
+												}}
+												validate={(values) => {
+													let errors = {};
+													if (exist === true) {
+														errors.invoice_number =
+															'Invoice Number cannot be same';
+													}
+													return errors;
 												}}
 												validationSchema={Yup.object().shape({
 													invoice_number: Yup.string().required(
@@ -1027,10 +1059,12 @@ class CreateCustomerInvoice extends React.Component {
 																		name="invoice_number"
 																		placeholder="Invoice Number"
 																		value={props.values.invoice_number}
+																		onBlur={props.handleBlur('invoice_number')}
 																		onChange={(value) => {
 																			props.handleChange('invoice_number')(
 																				value,
 																			);
+																			this.validationCheck(value.target.value);
 																		}}
 																		className={
 																			props.errors.invoice_number &&
@@ -1054,7 +1088,7 @@ class CreateCustomerInvoice extends React.Component {
 																		Customer Name
 																	</Label>
 																	<Select
-																	styles={customStyles}
+																		styles={customStyles}
 																		id="contactId"
 																		name="contactId"
 																		placeholder="Select Customer name"
@@ -1149,7 +1183,7 @@ class CreateCustomerInvoice extends React.Component {
 																		</UncontrolledTooltip>
 																	</Label>
 																	<Select
-																	styles={customStyles}
+																		styles={customStyles}
 																		options={
 																			this.termList
 																				? selectOptionsFactory.renderOptions(
@@ -1270,7 +1304,7 @@ class CreateCustomerInvoice extends React.Component {
 																		Currency
 																	</Label>
 																	<Select
-																	styles={customStyles}
+																		styles={customStyles}
 																		options={
 																			currency_list
 																				? selectCurrencyFactory.renderOptions(
@@ -1568,7 +1602,7 @@ class CreateCustomerInvoice extends React.Component {
 																							Discount Type
 																						</Label>
 																						<Select
-																						styles={customStyles}
+																							styles={customStyles}
 																							className="select-default-width"
 																							options={discountOptions}
 																							id="discountType"

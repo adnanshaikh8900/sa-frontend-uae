@@ -444,7 +444,7 @@ class CreateSupplierInvoice extends React.Component {
 				name={`lineItemsString.${idx}.vatCategoryId`}
 				render={({ field, form }) => (
 					<Select
-					styles={customStyles}
+						styles={customStyles}
 						options={
 							vat_list
 								? selectOptionsFactory.renderOptions(
@@ -549,7 +549,7 @@ class CreateSupplierInvoice extends React.Component {
 					name={`lineItemsString.${idx}.productId`}
 					render={({ field, form }) => (
 						<Select
-						styles={customStyles}
+							styles={customStyles}
 							options={
 								product_list
 									? selectOptionsFactory.renderOptions(
@@ -1023,6 +1023,31 @@ class CreateSupplierInvoice extends React.Component {
 		});
 	};
 
+	validationCheck = (value) => {
+		const data = {
+			moduleType: 6,
+			name: value,
+		};
+		this.props.supplierInvoiceCreateActions
+			.checkValidation(data)
+			.then((response) => {
+				if (response.data === 'Invoice Number already exists') {
+					this.setState(
+						{
+							exist: true,
+						},
+						() => {
+							console.log(this.state.exist);
+						},
+					);
+				} else {
+					this.setState({
+						exist: false,
+					});
+				}
+			});
+	};
+
 	render() {
 		const { data, discountOptions, initValue } = this.state;
 
@@ -1064,6 +1089,14 @@ class CreateSupplierInvoice extends React.Component {
 													//   selectedCustomer: null
 
 													// })
+												}}
+												validate={(values) => {
+													let errors = {};
+													if (this.state.exist === true) {
+														errors.invoice_number =
+															'Invoice Number cannot be same';
+													}
+													return errors;
 												}}
 												validationSchema={Yup.object().shape({
 													invoice_number: Yup.string().required(
@@ -1172,10 +1205,12 @@ class CreateSupplierInvoice extends React.Component {
 																		id="invoice_number"
 																		name="invoice_number"
 																		placeholder="Invoice Number"
+																		onBlur={props.handleBlur('invoice_number')}
 																		onChange={(value) => {
 																			props.handleChange('invoice_number')(
 																				value,
 																			);
+																			this.validationCheck(value.target.value);
 																		}}
 																		value={props.values.invoice_number}
 																		className={
@@ -1200,7 +1235,7 @@ class CreateSupplierInvoice extends React.Component {
 																		Supplier Name
 																	</Label>
 																	<Select
-																	styles={customStyles}
+																		styles={customStyles}
 																		id="contactId"
 																		name="contactId"
 																		placeholder="Select Supplier Name"
@@ -1290,7 +1325,7 @@ class CreateSupplierInvoice extends React.Component {
 																		</UncontrolledTooltip>
 																	</Label>
 																	<Select
-																	styles={customStyles}
+																		styles={customStyles}
 																		options={
 																			this.termList
 																				? selectOptionsFactory.renderOptions(
@@ -1418,7 +1453,7 @@ class CreateSupplierInvoice extends React.Component {
 																		Currency
 																	</Label>
 																	<Select
-																	styles={customStyles}
+																		styles={customStyles}
 																		options={
 																			currency_list
 																				? selectCurrencyFactory.renderOptions(
@@ -1674,18 +1709,18 @@ class CreateSupplierInvoice extends React.Component {
 																					)}
 																				/>
 																				{this.state.fileName && (
-																								<div>
-																									<i
-																										className="fa fa-close"
-																										onClick={() =>
-																											this.setState({
-																												fileName: '',
-																											})
-																										}
-																									></i>{' '}
-																									{this.state.fileName}
-																								</div>
-																							)}
+																					<div>
+																						<i
+																							className="fa fa-close"
+																							onClick={() =>
+																								this.setState({
+																									fileName: '',
+																								})
+																							}
+																						></i>{' '}
+																						{this.state.fileName}
+																					</div>
+																				)}
 																				{props.errors.attachmentFile &&
 																					props.touched.attachmentFile && (
 																						<div className="invalid-file">
@@ -1729,7 +1764,7 @@ class CreateSupplierInvoice extends React.Component {
 																							Discount Type
 																						</Label>
 																						<Select
-																						styles={customStyles}
+																							styles={customStyles}
 																							className="select-default-width"
 																							options={discountOptions}
 																							id="discountType"

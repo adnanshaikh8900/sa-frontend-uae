@@ -126,7 +126,7 @@ class CreateCustomerInvoice extends React.Component {
 			selectedContact: '',
 			createMore: false,
 			fileName: '',
-			term: '',
+			term: { label: 'Net 7', value: 'NET_7' },
 			selectedType: { value: 'FIXED', label: 'Fixed' },
 			discountPercentage: '',
 			discountAmount: 0,

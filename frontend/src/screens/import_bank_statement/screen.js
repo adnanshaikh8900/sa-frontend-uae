@@ -149,11 +149,16 @@ class ImportBankStatement extends React.Component {
 		this.props.importBankStatementActions
 			.importTransaction(postData)
 			.then((res) => {
-				this.props.commonActions.tostifyAlert(
-					'success',
-					'Transaction  Imported Successfully',
-				);
-				this.props.history.push('/admin/banking/bank-account');
+				if (res.data.includes('Transactions Imported 0')) {
+					this.props.commonActions.tostifyAlert(
+						'error',
+						'Imported transaction should not contain any outdated transation',
+					);
+					this.setState({ selectedTemplate: [], tableData: [] });
+				} else {
+					this.props.commonActions.tostifyAlert('success', res.data);
+					this.props.history.push('/admin/banking/bank-account');
+				}
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(

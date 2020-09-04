@@ -108,7 +108,9 @@ class ProfitAndLoss extends Component {
 											<h3>
 													{universal_currency_list[0] &&
 													<Currency
-														value={this.props.profit_loss['Income']}
+														value={this.props.profit_loss['Income']
+														? this.props.profit_loss['Income']
+														: 0}
 															currencySymbol={
 															universal_currency_list[0]
 															? universal_currency_list[0].currencyIsoCode
@@ -126,7 +128,9 @@ class ProfitAndLoss extends Component {
 											<h3>
 													{universal_currency_list[0] &&
 													<Currency
-														value= {this.props.profit_loss['Expense']}
+													value={this.props.profit_loss['Expense']
+														? this.props.profit_loss['Expense']
+														: 0}
 															currencySymbol={
 															universal_currency_list[0]
 															? universal_currency_list[0].currencyIsoCode

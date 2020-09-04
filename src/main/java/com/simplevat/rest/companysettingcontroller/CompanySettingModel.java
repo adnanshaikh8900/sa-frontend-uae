@@ -19,6 +19,8 @@ public class CompanySettingModel {
 
 	private String mailingSmtpAuthorization;
 
+	private String mailApiKey;
+
 	private String mailingSmtpStarttlsEnable;
 
 	private String invoiceMailingSubject;

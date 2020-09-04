@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.simplevat.constant.ErrorConstant;
+import com.simplevat.entity.Currency;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.service.*;
 import org.slf4j.Logger;
@@ -139,6 +141,21 @@ public class CompanyController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	@ApiOperation(value = "Get Company Count ")
+	@GetMapping(value = "/getCompanyCount")
+	public ResponseEntity<Integer> getCompanyCount(HttpServletRequest request) {
+		try {
+			Company company = companyService.getCompany();
+			if (company == null) {
+				return new ResponseEntity<>(0, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(1, HttpStatus.OK);
+			}
+		} catch (Exception e) {
+			logger.error(ERROR, e);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
 	@ApiOperation(value = "Add New Company")
 	@PostMapping(value = "/save")
@@ -218,4 +235,19 @@ public class CompanyController {
 		}
 	}
 
+	@ApiOperation(value = "Get Currency List", response = List.class)
+	@GetMapping(value = "/getcurrency")
+	public ResponseEntity<List<Currency>> getCurrencies() {
+		try {
+			List<Currency> currencies = currencyService.getCurrenciesProfile();
+			if (currencies != null && !currencies.isEmpty()) {
+				return new ResponseEntity<>(currencies, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			}
+		} catch (Exception e) {
+			logger.error(ErrorConstant.ERROR, e);
+		}
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 }

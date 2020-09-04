@@ -214,7 +214,14 @@ public class BankAccountController{
 			bankAccount.setBankAccountId(bankModel.getBankAccountId());
 			bankAccount.setLastUpdateDate(LocalDateTime.now());
 			bankAccount.setLastUpdatedBy(user.getUserId());
+			if (bankModel.getOpeningDate()!= null) {
+				LocalDateTime openingDate = Instant.ofEpochMilli(bankModel.getOpeningDate().getTime())
+						.atZone(ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0).withNano(0)
+						.toLocalDateTime();
+				bankAccount.setOpeningDate(openingDate);
+			}
 			bankAccountService.update(bankAccount);
+
 			return new ResponseEntity<>("Update Successfull..",HttpStatus.OK);
 
 		} catch (Exception e) {

@@ -12,6 +12,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.simplevat.service.CoacTransactionCategoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,9 @@ public class TransactionCategoryRestController{
 
 	@Autowired
 	private  UserService userServiceNew;
+
+	@Autowired
+	CoacTransactionCategoryService coacTransactionCategoryService;
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -165,6 +169,8 @@ public class TransactionCategoryRestController{
 			selectedTransactionCategory.setCreatedBy(user.getUserId());
 			selectedTransactionCategory.setCreatedDate(LocalDateTime.now());
 			transactionCategoryService.persist(selectedTransactionCategory);
+			coacTransactionCategoryService.addCoacTransactionCategory(selectedTransactionCategory.getChartOfAccount(),
+					selectedTransactionCategory);
 			return new ResponseEntity<>("Saved successful",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);

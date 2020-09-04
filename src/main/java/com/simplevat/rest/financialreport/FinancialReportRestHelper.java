@@ -151,9 +151,10 @@ public class FinancialReportRestHelper {
 //			if(netProfitLoss.longValue()<0)
 //				netProfitLoss = netProfitLoss.negate();
 			balanceSheetResponseModel.getOtherLiability().put("Retained Earnings",netProfitLoss);
+			totalOtherLiability = totalOtherLiability.add(netProfitLoss);
 			balanceSheetResponseModel.setTotalOtherLiability(totalOtherLiability);
 			balanceSheetResponseModel.setTotalOtherCurrentLiability(totalOtherCurrentLiability);
-			BigDecimal totalLiabilities = totalOtherLiability.add(totalOtherCurrentLiability).add(totalAccountPayable).add(netProfitLoss);
+			BigDecimal totalLiabilities = totalOtherLiability.add(totalOtherCurrentLiability).add(totalAccountPayable);
 			balanceSheetResponseModel.setTotalLiability(totalLiabilities);
 			balanceSheetResponseModel.setTotalAccountPayable(totalAccountPayable);
 			balanceSheetResponseModel.setTotalEquities(totalEquities);

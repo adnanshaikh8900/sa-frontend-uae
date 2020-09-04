@@ -256,11 +256,11 @@ class CreateBankAccount extends React.Component {
 													bank_name: Yup.string()
 														.required('Bank Name is Required')
 														.min(2, 'Bank Name Is Too Short!')
-														.max(20, 'Bank Name Is Too Long!'),
+														.max(30, 'Bank Name Is Too Long!'),
 													account_number: Yup.string()
 														.required('Account Number is Required')
 														.min(2, 'Account Number Is Too Short!')
-														.max(20, 'Account Number Is Too Long!'),
+														.max(30, 'Account Number Is Too Long!'),
 													account_is_for: Yup.string().required(
 														'Account for is required',
 													),

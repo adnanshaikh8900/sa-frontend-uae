@@ -3,6 +3,7 @@ import { AUTH } from 'constants/types';
 const initState = {
 	is_authed: true,
 	profile: [],
+	ccount: '',
 };
 
 const AuthReducer = (state = initState, action) => {
@@ -25,6 +26,12 @@ const AuthReducer = (state = initState, action) => {
 			return {
 				...state,
 				profile: Object.assign({}, payload.data),
+			};
+
+		case AUTH.COMPANYCOUNT:
+			return {
+				...state,
+				ccount: Object.assign({}, payload.data),
 			};
 
 		default:

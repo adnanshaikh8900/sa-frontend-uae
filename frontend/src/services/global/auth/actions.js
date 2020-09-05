@@ -1,4 +1,4 @@
-import { AUTH } from 'constants/types';
+import { AUTH, COMMON } from 'constants/types';
 import { api, authApi, cryptoService } from 'utils';
 
 export const checkAuthStatus = () => {
@@ -78,6 +78,24 @@ export const register = (obj) => {
 	};
 };
 
+export const getCurrencyList = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/company/getCurrency',
+		};
+		return api(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
 export const logOut = () => {
 	return (dispatch) => {
 		window['localStorage'].clear();
@@ -85,5 +103,23 @@ export const logOut = () => {
 		dispatch({
 			type: AUTH.SIGNED_OUT,
 		});
+	};
+};
+
+export const getCompanyCount = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/company/getCompanyCount',
+		};
+		return api(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
 	};
 };

@@ -112,7 +112,10 @@ public class FinancialReportRestHelper {
 						break;
 
 					case EQUITY:
-						balanceSheetResponseModel.getEquities().put(transactionCategoryName,closingBalance);
+						if (transactionCategoryName.equalsIgnoreCase("Owners Drawing")) {
+							closingBalance = closingBalance.negate();
+						}
+							balanceSheetResponseModel.getEquities().put(transactionCategoryName,closingBalance);
 						totalEquities = totalEquities.add(closingBalance);
 						break;
 					case INCOME:

@@ -54,6 +54,7 @@ class GeneralSettings extends React.Component {
         invoicingReferencePattern: '',
         mailingHost: '',
         mailingPassword: '',
+        mailingAPIKey: '',
         mailingPort: '',
         mailingUserName: ''
       },
@@ -92,6 +93,7 @@ class GeneralSettings extends React.Component {
             mailingPort: res.data.mailingPort ? res.data.mailingPort : '',
             mailingUserName: res.data.mailingUserName ? res.data.mailingUserName : '',
             mailingPassword:  res.data.mailingPassword ? res.data.mailingPassword : '',
+            mailingAPIKey:  res.data.mailingAPIKey ? res.data.mailingAPIKey : '',
           },
           message: res.data.invoiceMailingBody ? res.data.invoiceMailingBody : '',
           selected_smtp_auth: res.data.mailingSmtpAuthorization ? res.data.mailingSmtpAuthorization : '',
@@ -123,6 +125,7 @@ handleSubmit = (data) => {
     mailingPassword: data.mailingPassword,
     mailingPort: data.mailingPort,
     mailingSmtpAuthorization: selected_smtp_auth,
+    mailingAPIKey: data.mailingAPIKey,
     mailingSmtpStarttlsEnable: selected_smtp_enable,
     mailingUserName: data.mailingUserName
   }
@@ -392,6 +395,31 @@ render() {
                                 </div>
                               </FormGroup>
                             </Col>
+                          </Row>
+                          <Row>
+                            {this.state.selected_smtp_auth === true && ( 
+                          <Col sm='6'>
+                              <FormGroup>
+                                <Label htmlFor="Api key">API Key </Label>
+                                <Input
+                                  type="text"
+                                  id="mailingAPIKey"
+                                  name="mailingAPIKey"
+                                  placeholder="API key "
+                                  value={props.values.mailingAPIKey}
+                                  onChange={(option) => { props.handleChange('mailingAPIKey')(option) }}
+                                  className={
+                                    props.errors.mailingAPIKey && props.touched.mailingAPIKey
+                                      ? "is-invalid"
+                                      : ""
+                                  }
+                                />
+                                {props.errors.mailingAPIKey && props.touched.mailingAPIKey && (
+                                  <div className="invalid-feedback">{props.errors.mailingAPIKey}</div>
+                                )}
+                              </FormGroup>
+                            </Col>
+                            )}
                           </Row>
                           <h4>Invoice Mail Configuration</h4>
                           {this.state.viewEditor && <Row>

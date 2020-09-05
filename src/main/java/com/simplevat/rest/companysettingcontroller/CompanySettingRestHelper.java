@@ -172,10 +172,9 @@ public class CompanySettingRestHelper {
 		}
 		if (companySettingReqModel.getMailingHost() != null && !companySettingReqModel.getMailingHost().isEmpty()) {
 			config = configurationService.getConfigurationByName(ConfigurationConstants.MAIL_API_KEY);
-			config.setValue(companySettingReqModel.getMailApiKey());
+			config.setValue(companySettingReqModel.getMailingAPIKey());
 			configList.add(config);
-
-		}
+    	}
 		return configList;
 	}
 

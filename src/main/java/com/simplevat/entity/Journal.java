@@ -6,28 +6,11 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
+import javax.persistence.*;
 
 import org.hibernate.annotations.ColumnDefault;
 
 import com.simplevat.entity.converter.DateConverter;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 
 import lombok.Data;
 
@@ -38,6 +21,8 @@ import lombok.Data;
 @Table(name = "JOURNAL")
 @Data
 @TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
+@NamedQueries({
+		@NamedQuery(name = "getJournalByReferenceId", query = "select j from Journal j ,JournalLineItem jn where jn.journal.id = j.id and jn.referenceId = :referenceId")})
 public class Journal implements Serializable {
 
 	/**

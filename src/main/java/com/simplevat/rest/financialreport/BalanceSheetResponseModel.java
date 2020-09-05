@@ -47,4 +47,6 @@ public class BalanceSheetResponseModel {
     private Map<String,BigDecimal> otherCurrentLiability  = new HashMap<>();
 
     private Map<String,BigDecimal> equities  = new HashMap<>();
+
+    private BigDecimal stocks;
 }

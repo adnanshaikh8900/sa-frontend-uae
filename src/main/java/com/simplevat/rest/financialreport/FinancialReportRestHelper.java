@@ -44,6 +44,7 @@ public class FinancialReportRestHelper {
 			BigDecimal totalOtherCurrentLiability = BigDecimal.ZERO;
 			BigDecimal totalOtherLiability = BigDecimal.ZERO;
 			BigDecimal totalEquities = BigDecimal.ZERO;
+			BigDecimal totalStocks = BigDecimal.ZERO;
 //Profit and Loss
 			BigDecimal totalOperatingIncome = BigDecimal.ZERO;
 			BigDecimal totalCostOfGoodsSold = BigDecimal.ZERO;
@@ -79,6 +80,12 @@ public class FinancialReportRestHelper {
 						balanceSheetResponseModel.getCurrentAssets().put(transactionCategoryName,closingBalance);
 						totalCurrentAssets = totalCurrentAssets.add(closingBalance);
 						break;
+
+					case STOCK:
+
+						totalStocks= totalStocks.add(closingBalance);
+						break;
+
 
 					case ACCOUNTS_RECEIVABLE:
 						totalAccountReceivable = totalAccountReceivable.add(closingBalance);
@@ -151,6 +158,7 @@ public class FinancialReportRestHelper {
 			BigDecimal totalIncome = totalOperatingIncome.add(totalNonOperatingIncome);
 			BigDecimal totalExpense = totalCostOfGoodsSold.add(totalOperatingExpense).add(totalNonOperatingExpense);
 			BigDecimal netProfitLoss = totalIncome.subtract(totalExpense);
+			balanceSheetResponseModel.setStocks(totalStocks);
 //			if(netProfitLoss.longValue()<0)
 //				netProfitLoss = netProfitLoss.negate();
 			balanceSheetResponseModel.getOtherLiability().put("Retained Earnings",netProfitLoss);
@@ -311,6 +319,7 @@ public class FinancialReportRestHelper {
 			Map<Integer,TransactionCategoryClosingBalance> transactionCategoryClosingBalanceMap = processTransactionCategoryClosingBalance(closingBalanceList);
 			BigDecimal totalDebitAmount = BigDecimal.ZERO;
 			BigDecimal totalCreditAmount = BigDecimal.ZERO;
+			BigDecimal totalStocks = BigDecimal.ZERO;
 
 			for (Map.Entry<Integer,TransactionCategoryClosingBalance> entry : transactionCategoryClosingBalanceMap.entrySet())
 			{
@@ -342,7 +351,15 @@ public class FinancialReportRestHelper {
 							totalCreditAmount = totalCreditAmount.add(closingBalance);
 						}
 						break;
-
+					case STOCK:
+						if (isDebitFlag){
+							totalStocks = totalStocks.add(closingBalance);
+						}
+						else
+						{
+							totalStocks = totalStocks.subtract(closingBalance);
+						}
+						trialBalanceResponseModel.setStocks(totalStocks);
 					case BANK:
 					case CASH:
 						trialBalanceResponseModel.getBank().put(transactionCategoryName,
@@ -451,6 +468,7 @@ public class FinancialReportRestHelper {
 			}
 			trialBalanceResponseModel.setTotalCreditAmount(totalCreditAmount);
 			trialBalanceResponseModel.setTotalDebitAmount(totalDebitAmount);
+
 		}
 		return trialBalanceResponseModel;
 	}

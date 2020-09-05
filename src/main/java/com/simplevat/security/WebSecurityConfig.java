@@ -56,7 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			//antMatchers("/config/getreleasenumber").permitAll().
 					antMatchers("/rest/company/register").permitAll().
 				antMatchers("/rest/company/getCompanyCount").permitAll().
-				antMatchers("/rest/company/getcurrency").permitAll().
+				antMatchers("/rest/company/getCurrency").permitAll().
 				antMatchers("/public/**").permitAll().
 				antMatchers("/rest/**").authenticated().and().
 				// make sure we use stateless session; session won't be used to

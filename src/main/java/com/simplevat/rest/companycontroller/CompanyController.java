@@ -236,7 +236,7 @@ public class CompanyController {
 	}
 
 	@ApiOperation(value = "Get Currency List", response = List.class)
-	@GetMapping(value = "/getcurrency")
+	@GetMapping(value = "/getCurrency")
 	public ResponseEntity<List<Currency>> getCurrencies() {
 		try {
 			List<Currency> currencies = currencyService.getCurrenciesProfile();

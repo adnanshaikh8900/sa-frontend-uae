@@ -24,6 +24,7 @@ public class TrialBalanceResponseModel {
     private Map<String, BigDecimal> bank = new HashMap<>();
     private BigDecimal totalCreditAmount;
     private BigDecimal totalDebitAmount;
+    private BigDecimal stocks;
 
 
 

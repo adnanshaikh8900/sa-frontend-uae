@@ -276,7 +276,6 @@ class CreateProduct extends React.Component {
 	render() {
 		const { vat_list, product_category_list } = this.props;
 		const { initValue, purchaseCategory, salesCategory } = this.state;
-		console.log(initValue.salesTransactionCategoryId);
 		return (
 			<div className="create-product-screen">
 				<div className="animated fadeIn">

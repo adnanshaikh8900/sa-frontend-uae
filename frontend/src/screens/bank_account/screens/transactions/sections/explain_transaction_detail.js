@@ -289,7 +289,6 @@ class ExplainTrasactionDetail extends React.Component {
 				transactionId,
 				expenseCategory,
 			} = data;
-			console.log(data);
 			if (
 				(invoiceIdList && coaCategoryId.label === 'Sales') ||
 				(invoiceIdList && coaCategoryId.label === 'Supplier Invoice')
@@ -404,7 +403,24 @@ class ExplainTrasactionDetail extends React.Component {
 	};
 
 	UnexplainTransaction = (id) => {
-		alert(id);
+		this.props.transactionDetailActions
+			.UnexplainTransaction(this.state.initValue)
+			.then((res) => {
+				if (res.status === 200) {
+					this.props.commonActions.tostifyAlert(
+						'success',
+						'Transaction Detail Updated Successfully.',
+					);
+					this.props.closeExplainTransactionModal(this.state.id);
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
 	};
 
 	invoiceIdList = (option) => {

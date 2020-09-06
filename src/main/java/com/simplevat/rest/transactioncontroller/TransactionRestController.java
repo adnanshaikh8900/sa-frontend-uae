@@ -504,7 +504,7 @@ public class TransactionRestController {
 
 		Transaction trnx = isValidTransactionToExplain(transactionPresistModel);
 		if(trnx==null)
-			return new ResponseEntity<String>("Transaction already unexplained", HttpStatus.OK);
+			return new ResponseEntity<String>("Transaction is already unexplained", HttpStatus.OK);
 
 		String response = unExplain(transactionPresistModel, trnx);
 		return new ResponseEntity<>(response, HttpStatus.OK);

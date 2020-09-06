@@ -19,7 +19,7 @@ public class CompanySettingRequestModel {
 
 	private String mailingSmtpAuthorization;
 
-	private String mailApiKey;
+	private String mailingAPIKey;
 
 	private String mailingSmtpStarttlsEnable;
 

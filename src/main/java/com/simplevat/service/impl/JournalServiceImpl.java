@@ -30,7 +30,10 @@ public class JournalServiceImpl extends JournalService {
 			PaginationModel paginationModel) {
 		return journalDao.getJornalList(filterMap, paginationModel);
 	}
-
+	public  Journal getJournalByReferenceId(Integer transactionId)
+	{
+		return journalDao.getJournalByReferenceId(transactionId);
+	}
 	@Override
 	public void deleteByIds(List<Integer> ids) {
 		journalDao.deleteByIds(ids);

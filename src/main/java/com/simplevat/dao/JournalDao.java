@@ -14,5 +14,6 @@ public interface JournalDao extends Dao<Integer, Journal> {
 
 	public PaginationResponseModel getJornalList(Map<JournalFilterEnum, Object> filterMap,
 			PaginationModel paginationModel);
-	
+    public Journal getJournalByReferenceId(Integer transactionId);
+
 }

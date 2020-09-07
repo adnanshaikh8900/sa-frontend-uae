@@ -24,6 +24,7 @@ import moment from 'moment';
 
 import * as transactionCreateActions from './actions';
 import * as transactionActions from '../../actions';
+import * as detailBankAccountActions from '../../../detail/actions';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
@@ -50,6 +51,10 @@ const mapDispatchToProps = (dispatch) => {
 			dispatch,
 		),
 		commonActions: bindActionCreators(CommonActions, dispatch),
+		detailBankAccountActions: bindActionCreators(
+			detailBankAccountActions,
+			dispatch,
+		),
 	};
 };
 const customStyles = {
@@ -62,7 +67,6 @@ const customStyles = {
 		},
 	}),
 };
-
 
 class CreateBankTransaction extends React.Component {
 	constructor(props) {
@@ -190,9 +194,19 @@ class CreateBankTransaction extends React.Component {
 					//console.log(this.state.id);
 				},
 			);
-			// this.props.transactionActions.getTransactionCategoryList();
-			// this.props.transactionActions.getTransactionTypeList();
-			// this.props.transactionActions.getProjectList();
+			this.props.detailBankAccountActions
+				.getBankAccountByID(this.props.location.state.bankAccountId)
+				.then((res) => {
+					this.setState({
+						date: res.openingDate,
+					});
+				})
+				.catch((err) => {
+					this.props.commonActions.tostifyAlert(
+						'error',
+						err && err.data ? err.data.message : 'Something Went Wrong',
+					);
+				});
 		}
 	};
 
@@ -557,7 +571,7 @@ class CreateBankTransaction extends React.Component {
 																		Transaction Type
 																	</Label>
 																	<Select
-																	styles={customStyles}
+																		styles={customStyles}
 																		options={categoriesList}
 																		value={props.values.coaCategoryId}
 																		onChange={(option) => {
@@ -643,7 +657,8 @@ class CreateBankTransaction extends React.Component {
 																		Amount
 																	</Label>
 																	<Input
-																		type="text" maxLength='10'
+																		type="text"
+																		maxLength="10"
 																		id="transactionAmount"
 																		name="transactionAmount"
 																		placeholder="Amount"
@@ -688,7 +703,7 @@ class CreateBankTransaction extends React.Component {
 																				Expense Category
 																			</Label>
 																			<Select
-																			styles={customStyles}
+																				styles={customStyles}
 																				options={
 																					expense_categories_list
 																						? selectOptionsFactory.renderOptions(
@@ -729,7 +744,7 @@ class CreateBankTransaction extends React.Component {
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="vatId">Vat</Label>
 																					<Select
-																					styles={customStyles}
+																						styles={customStyles}
 																						options={
 																							vat_list
 																								? selectOptionsFactory.renderOptions(
@@ -780,7 +795,7 @@ class CreateBankTransaction extends React.Component {
 																						Currency
 																					</Label>
 																					<Select
-																					styles={customStyles}
+																						styles={customStyles}
 																						id="currencyCode"
 																						name="currencyCode"
 																						options={
@@ -849,7 +864,7 @@ class CreateBankTransaction extends React.Component {
 																				Vendor
 																			</Label>
 																			<Select
-																			styles={customStyles}
+																				styles={customStyles}
 																				options={vendor_list ? vendor_list : []}
 																				// value={
 																				// 	props.values.vendorId
@@ -895,7 +910,7 @@ class CreateBankTransaction extends React.Component {
 																						Invoice
 																					</Label>
 																					<Select
-																					styles={customStyles}
+																						styles={customStyles}
 																						isMulti
 																						options={
 																							vendor_invoice_list
@@ -966,7 +981,7 @@ class CreateBankTransaction extends React.Component {
 																				Category
 																			</Label>
 																			<Select
-																			styles={customStyles}
+																				styles={customStyles}
 																				className="select-default-width"
 																				options={
 																					transactionCategoryList
@@ -1002,7 +1017,7 @@ class CreateBankTransaction extends React.Component {
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="employeeId">User</Label>
 																			<Select
-																			styles={customStyles}
+																				styles={customStyles}
 																				className="select-default-width"
 																				options={
 																					transactionCategoryList.dataList[0]
@@ -1026,7 +1041,7 @@ class CreateBankTransaction extends React.Component {
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="employeeId">User</Label>
 																			<Select
-																			styles={customStyles}
+																				styles={customStyles}
 																				className="select-default-width"
 																				options={
 																					transactionCategoryList.dataList[0]
@@ -1055,7 +1070,7 @@ class CreateBankTransaction extends React.Component {
 																					Customer
 																				</Label>
 																				<Select
-																				styles={customStyles}
+																					styles={customStyles}
 																					className="select-default-width"
 																					options={
 																						transactionCategoryList.dataList[1]
@@ -1085,7 +1100,7 @@ class CreateBankTransaction extends React.Component {
 																				Invoice
 																			</Label>
 																			<Select
-																			styles={customStyles}
+																				styles={customStyles}
 																				isMulti
 																				className="select-default-width"
 																				options={

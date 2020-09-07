@@ -327,10 +327,20 @@ class ExplainTrasactionDetail extends React.Component {
 			if (vendorId && coaCategoryId.label === 'Supplier Invoice') {
 				formData.append('vendorId', vendorId ? vendorId : '');
 			}
-			if (currencyCode && coaCategoryId.label === 'Expense') {
+			if (
+				currencyCode &&
+				(coaCategoryId.label === 'Expense' ||
+					coaCategoryId.label === 'Admin Expense' ||
+					coaCategoryId.label === 'Other Expense')
+			) {
 				formData.append('currencyCode', currencyCode ? currencyCode : '');
 			}
-			if (expenseCategory && coaCategoryId.label === 'Expense') {
+			if (
+				expenseCategory &&
+				(coaCategoryId.label === 'Expense' ||
+					coaCategoryId.label === 'Admin Expense' ||
+					coaCategoryId.label === 'Other Expense')
+			) {
 				formData.append(
 					'expenseCategory',
 					expenseCategory ? expenseCategory.value : '',

@@ -9,6 +9,7 @@ import com.simplevat.entity.TransactionCategoryClosingBalance;
 import com.simplevat.model.TrialBalanceResponseModel;
 import com.simplevat.rest.detailedgeneralledgerreport.ReportRequestModel;
 import com.simplevat.service.TransactionCategoryClosingBalanceService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -72,8 +73,15 @@ public class FinancialReportRestHelper {
 						totalCurrentAssets = totalCurrentAssets.add(closingBalance);
 						break;
 					case BANK:
-						balanceSheetResponseModel.getBank().put(transactionCategoryName,closingBalance);
-						totalBank = totalBank.add(closingBalance);
+						if(StringUtils.equals(transactionCategoryName,"Amount In Transit"))
+						{
+							totalAccountReceivable = totalAccountReceivable.add(closingBalance);
+						}
+						else
+						{
+							balanceSheetResponseModel.getBank().put(transactionCategoryName,closingBalance);
+							totalBank = totalBank.add(closingBalance);
+						}
 						break;
 
 					case CURRENT_ASSET:

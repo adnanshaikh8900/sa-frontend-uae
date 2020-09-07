@@ -4,9 +4,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Collection;
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -90,17 +88,12 @@ public class JournalRestController {
 
 	@ApiOperation(value = "Delete Journal By ID")
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity<String> deleteProduct(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity<String> deleteJournal(@RequestParam(value = "id") Integer id) {
 		Journal journal = journalService.findByPK(id);
 		if (journal != null) {
-			if (journal.getJournalLineItems() != null) {
-				for (JournalLineItem lineItem : journal.getJournalLineItems()) {
-					lineItem.setDeleteFlag(Boolean.TRUE);
-					journalLineItemService.update(lineItem);
-				}
-			}
-			journal.setDeleteFlag(Boolean.TRUE);
-			journalService.update(journal, journal.getId());
+			List<Integer> list = new ArrayList<>();
+			list.add(journal.getId());
+			journalService.deleteByIds(list);
 		}
 		return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
 
@@ -108,10 +101,10 @@ public class JournalRestController {
 
 	@ApiOperation(value = "Delete Journal in Bulk")
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity<String> deleteProducts(@RequestBody DeleteModel ids) {
+	public ResponseEntity<String> deleteJournals(@RequestBody DeleteModel ids) {
 		try {
 			for (Integer id : ids.getIds()) {
-				deleteProduct(id);
+				deleteJournal(id);
 			}
 			return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
 		} catch (Exception e) {

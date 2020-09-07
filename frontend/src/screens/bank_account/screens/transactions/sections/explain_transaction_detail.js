@@ -371,7 +371,6 @@ class ExplainTrasactionDetail extends React.Component {
 					}
 				})
 				.catch((err) => {
-					console.log(err);
 					this.props.commonActions.tostifyAlert(
 						'error',
 						err && err.data ? err.data.message : 'Something Went Wrong',
@@ -403,8 +402,12 @@ class ExplainTrasactionDetail extends React.Component {
 	};
 
 	UnexplainTransaction = (id) => {
+		let formData = new FormData();
+		for (var key in this.state.initValue) {
+			formData.append(key, this.state.initValue[key]);
+		}
 		this.props.transactionDetailActions
-			.UnexplainTransaction(this.state.initValue)
+			.UnexplainTransaction(formData)
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
@@ -801,7 +804,7 @@ class ExplainTrasactionDetail extends React.Component {
 																							.find(
 																								(option) =>
 																									option.value ===
-																									props.values.expenseCategory,
+																									+props.values.expenseCategory,
 																							)
 																					}
 																					// value={props.values.expenseCategory}

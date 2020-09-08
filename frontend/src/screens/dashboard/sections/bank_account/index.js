@@ -211,7 +211,7 @@ class BankAccount extends Component {
 													/>
 													}
 												</h3>
-												<p>ALL ACCOUNTS</p>
+												<p>ALL BANk ACCOUNTS</p>
 											</div>
 										</div>
 									</div>

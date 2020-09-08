@@ -38,8 +38,8 @@ class LogIn extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			username: 'admin123@gmail.com',
-			password: 'admin',
+			username: '',
+			password: '',
 			alert: null,
 			openForgotPasswordModal: false,
 			companyCount: 1,

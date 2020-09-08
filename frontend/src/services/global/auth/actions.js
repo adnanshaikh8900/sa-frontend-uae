@@ -1,5 +1,5 @@
 import { AUTH, COMMON } from 'constants/types';
-import { api, authApi, authFileUploadApi, cryptoService } from 'utils';
+import { api, authApi, cryptoService } from 'utils';
 
 export const checkAuthStatus = () => {
 	return (dispatch) => {
@@ -61,7 +61,7 @@ export const register = (obj) => {
 			url: '/rest/company/register',
 			data: obj,
 		};
-		return authFileUploadApi(data)
+		return api(data)
 			.then((res) => {
 				console.log(res);
 				// dispatch({
@@ -87,6 +87,12 @@ export const getCurrencyList = () => {
 		return api(data)
 			.then((res) => {
 				if (res.status === 200) {
+					dispatch({
+						type: COMMON.UNIVERSAL_CURRENCY_LIST,
+						payload: {
+							data: res.data,
+						},
+					});
 					return res;
 				}
 			})

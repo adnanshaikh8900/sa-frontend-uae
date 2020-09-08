@@ -517,7 +517,7 @@ class BalanceSheet extends React.Component {
 															<br />
 															<tr>
 																<td className="mainLable">
-																	Liabilities & Equities
+																Equities & Liabilities
 																</td>
 																<td></td>
 																<td></td>
@@ -757,7 +757,7 @@ class BalanceSheet extends React.Component {
 															</tr>
 															<tr className="mainLable">
 																<td className="mainLable text-right">
-																	Total Liability & Equities
+																	Total Equities & Liability
 																</td>
 																<td></td>
 																<td className="text-right">

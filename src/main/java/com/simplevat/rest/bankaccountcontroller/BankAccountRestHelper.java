@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.simplevat.constant.PostingReferenceTypeEnum;
@@ -99,7 +100,10 @@ public class BankAccountRestHelper {
 			bankModel.setPersonalCorporateAccountInd(bank.getPersonalCorporateAccountInd().toString());
 			bankModel.setSwiftCode(bank.getSwiftCode());
 			bankModel.setCurrentBalance(bank.getCurrentBalance());
-
+			if (bank.getOpeningDate() != null) {
+				Date date = Date.from(bank.getOpeningDate().atZone(ZoneId.systemDefault()).toInstant());
+				bankModel.setOpeningDate(date);
+			}
 			if (bank.getBankAccountStatus() != null) {
 				bankModel.setBankAccountStatus(bank.getBankAccountStatus().getBankAccountStatusCode());
 			}

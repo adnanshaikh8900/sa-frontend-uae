@@ -9,6 +9,7 @@ import com.simplevat.entity.TransactionCategoryClosingBalance;
 import com.simplevat.model.TrialBalanceResponseModel;
 import com.simplevat.rest.detailedgeneralledgerreport.ReportRequestModel;
 import com.simplevat.service.TransactionCategoryClosingBalanceService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -60,8 +61,10 @@ public class FinancialReportRestHelper {
 				String transactionCategoryCode = transactionCategoryClosingBalance.getTransactionCategory().getChartOfAccount().getChartOfAccountCode();
 				String transactionCategoryName = transactionCategoryClosingBalance.getTransactionCategory().getTransactionCategoryName();
 				BigDecimal closingBalance = transactionCategoryClosingBalance.getClosingBalance();
+				boolean isNegative = false;
 				if (closingBalance.longValue() < 0) {
 					closingBalance = closingBalance.negate();
+					isNegative=true;
 				}
 				ChartOfAccountCategoryCodeEnum chartOfAccountCategoryCodeEnum = ChartOfAccountCategoryCodeEnum.getChartOfAccountCategoryCodeEnum(transactionCategoryCode);
 				if (chartOfAccountCategoryCodeEnum == null)
@@ -72,8 +75,15 @@ public class FinancialReportRestHelper {
 						totalCurrentAssets = totalCurrentAssets.add(closingBalance);
 						break;
 					case BANK:
-						balanceSheetResponseModel.getBank().put(transactionCategoryName,closingBalance);
-						totalBank = totalBank.add(closingBalance);
+						if(StringUtils.equals(transactionCategoryName,"Amount In Transit"))
+						{
+							totalAccountReceivable = totalAccountReceivable.add(closingBalance);
+						}
+						else
+						{
+							balanceSheetResponseModel.getBank().put(transactionCategoryName,closingBalance);
+							totalBank = totalBank.add(closingBalance);
+						}
 						break;
 
 					case CURRENT_ASSET:
@@ -123,7 +133,7 @@ public class FinancialReportRestHelper {
 							closingBalance = closingBalance.negate();
 						}
 							balanceSheetResponseModel.getEquities().put(transactionCategoryName,closingBalance);
-						totalEquities = totalEquities.add(closingBalance);
+							totalEquities = totalEquities.add(closingBalance);
 						break;
 					case INCOME:
 						if (transactionCategoryName.equalsIgnoreCase("Sales") ||
@@ -134,10 +144,16 @@ public class FinancialReportRestHelper {
 						}
 						break;
 					case ADMIN_EXPENSE:
+						if(isNegative)
+						totalOperatingExpense = totalOperatingExpense.subtract(closingBalance);
+						else
 						totalOperatingExpense = totalOperatingExpense.add(closingBalance);
 						break;
 					case OTHER_EXPENSE:
-						totalNonOperatingExpense = totalNonOperatingExpense.add(closingBalance);
+						if(isNegative)
+							totalNonOperatingExpense = totalNonOperatingExpense.subtract(closingBalance);
+						else
+							totalNonOperatingExpense = totalNonOperatingExpense.add(closingBalance);
 						break;
 					case COST_OF_GOODS_SOLD:
 						totalCostOfGoodsSold = totalCostOfGoodsSold.add(closingBalance);
@@ -203,8 +219,10 @@ public class FinancialReportRestHelper {
 						getChartOfAccountCategoryCodeEnum(transactionCategoryCode);
 				if (chartOfAccountCategoryCodeEnum == null)
 					continue;
+				boolean isNegative = false;
 				if (closingBalance.longValue() < 0) {
 					closingBalance = closingBalance.negate();
+					isNegative=true;
 				}
 				switch (chartOfAccountCategoryCodeEnum) {
 					case INCOME:
@@ -219,13 +237,20 @@ public class FinancialReportRestHelper {
 						break;
 					case ADMIN_EXPENSE:
 						responseModel.getOperatingExpense().put(transactionCategoryName, closingBalance);
-						totalOperatingExpense = totalOperatingExpense.add(closingBalance);
+						if(isNegative)
+							totalOperatingExpense = totalOperatingExpense.subtract(closingBalance);
+						else
+							totalOperatingExpense = totalOperatingExpense.add(closingBalance);
 						break;
 
 					case OTHER_EXPENSE:
 						responseModel.getNonOperatingExpense().put(transactionCategoryName, closingBalance);
-						totalNonOperatingExpense = totalNonOperatingExpense.add(closingBalance);
+						if(isNegative)
+							totalNonOperatingExpense = totalNonOperatingExpense.subtract(closingBalance);
+						else
+							totalNonOperatingExpense = totalNonOperatingExpense.add(closingBalance);
 						break;
+
 					case COST_OF_GOODS_SOLD:
 						responseModel.getCostOfGoodsSold().put(transactionCategoryName, closingBalance);
 						totalCostOfGoodsSold = totalCostOfGoodsSold.add(closingBalance);

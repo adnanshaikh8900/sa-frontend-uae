@@ -1,5 +1,5 @@
 import { AUTH, COMMON } from 'constants/types';
-import { api, authApi, cryptoService } from 'utils';
+import { api, authApi, authFileUploadApi, cryptoService } from 'utils';
 
 export const checkAuthStatus = () => {
 	return (dispatch) => {
@@ -61,7 +61,7 @@ export const register = (obj) => {
 			url: '/rest/company/register',
 			data: obj,
 		};
-		return api(data)
+		return authFileUploadApi(data)
 			.then((res) => {
 				console.log(res);
 				// dispatch({

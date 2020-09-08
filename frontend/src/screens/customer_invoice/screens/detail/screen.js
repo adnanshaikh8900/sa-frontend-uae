@@ -69,7 +69,6 @@ const customStyles = {
 	}),
 };
 
-
 class DetailCustomerInvoice extends React.Component {
 	constructor(props) {
 		super(props);
@@ -452,7 +451,7 @@ class DetailCustomerInvoice extends React.Component {
 				name={`lineItemsString.${idx}.vatCategoryId`}
 				render={({ field, form }) => (
 					<Select
-					styles={customStyles}
+						styles={customStyles}
 						options={
 							vat_list
 								? selectOptionsFactory.renderOptions(
@@ -505,7 +504,7 @@ class DetailCustomerInvoice extends React.Component {
 		let idx;
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
-				obj['unitPrice'] = result.unitPrice;
+				obj['unitPrice'] = parseInt(result.unitPrice);
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
 				idx = index;
@@ -548,7 +547,7 @@ class DetailCustomerInvoice extends React.Component {
 				name={`lineItemsString.${idx}.productId`}
 				render={({ field, form }) => (
 					<Select
-					styles={customStyles}
+						styles={customStyles}
 						options={
 							product_list
 								? selectOptionsFactory.renderOptions(
@@ -641,7 +640,6 @@ class DetailCustomerInvoice extends React.Component {
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-			// let val = (((+obj.unitPrice) * vat) / 100)
 			if (props.values.discountType.value === 'PERCENTAGE') {
 				var val =
 					((+obj.unitPrice -
@@ -650,7 +648,6 @@ class DetailCustomerInvoice extends React.Component {
 						obj.quantity) /
 					100;
 			} else if (props.values.discountType.value === 'FIXED') {
-				console.log(obj.unitPrice - discountAmount);
 				var val =
 					(obj.unitPrice * obj.quantity - discountAmount / data.length) *
 					(vat / 100);
@@ -658,26 +655,24 @@ class DetailCustomerInvoice extends React.Component {
 				var val = (+obj.unitPrice * vat * obj.quantity) / 100;
 			}
 			obj.subTotal =
-				obj.unitPrice && obj.vatCategoryId
-					? +obj.unitPrice * obj.quantity + val
-					: 0;
+				obj.unitPrice && obj.vatCategoryId ? +obj.unitPrice * obj.quantity : 0;
 			total_net = +(total_net + +obj.unitPrice * obj.quantity);
 			total_vat = +(total_vat + val);
 			total = total_vat + total_net;
-
 			return obj;
 		});
 		const discount =
 			props.values.discountType === 'PERCENTAGE'
-				? +((total_net * discountPercentage) / 100).toFixed(2)
+				? (total_net * discountPercentage) / 100
 				: discountAmount;
+
 		this.setState(
 			{
 				data,
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net,
+						total_net: discount ? total_net - discount : total_net,
 						invoiceVATAmount: total_vat,
 						discount: total_net > discount ? discount : 0,
 						totalAmount: total_net > discount ? total - discount : total,
@@ -685,7 +680,7 @@ class DetailCustomerInvoice extends React.Component {
 				},
 			},
 			() => {
-				if (props.values.discountType === 'PERCENTAGE') {
+				if (props.values.discountType.value === 'PERCENTAGE') {
 					this.formRef.current.setFieldValue('discount', discount);
 				}
 			},
@@ -1050,7 +1045,7 @@ class DetailCustomerInvoice extends React.Component {
 																			Customer Name
 																		</Label>
 																		<Select
-																		styles={customStyles}
+																			styles={customStyles}
 																			id="contactId"
 																			name="contactId"
 																			options={
@@ -1124,7 +1119,7 @@ class DetailCustomerInvoice extends React.Component {
 																			<i className="fa fa-question-circle"></i>
 																		</Label>
 																		<Select
-																		styles={customStyles}
+																			styles={customStyles}
 																			options={
 																				this.termList
 																					? selectOptionsFactory.renderOptions(
@@ -1264,7 +1259,7 @@ class DetailCustomerInvoice extends React.Component {
 																			Currency
 																		</Label>
 																		<Select
-																		styles={customStyles}
+																			styles={customStyles}
 																			options={
 																				currency_list
 																					? selectCurrencyFactory.renderOptions(
@@ -1437,18 +1432,18 @@ class DetailCustomerInvoice extends React.Component {
 																									}}
 																								/>
 																								{this.state.fileName && (
-																								<div>
-																									<i
-																										className="fa fa-close"
-																										onClick={() =>
-																											this.setState({
-																												fileName: '',
-																											})
-																										}
-																									></i>{' '}
-																									{this.state.fileName}
-																								</div>
-																							)}
+																									<div>
+																										<i
+																											className="fa fa-close"
+																											onClick={() =>
+																												this.setState({
+																													fileName: '',
+																												})
+																											}
+																										></i>{' '}
+																										{this.state.fileName}
+																									</div>
+																								)}
 																								{this.state.fileName ? (
 																									this.state.fileName
 																								) : (
@@ -1619,7 +1614,7 @@ class DetailCustomerInvoice extends React.Component {
 																								Discount Type
 																							</Label>
 																							<Select
-																							styles={customStyles}
+																								styles={customStyles}
 																								className="select-default-width"
 																								options={discountOptions}
 																								id="discountType"

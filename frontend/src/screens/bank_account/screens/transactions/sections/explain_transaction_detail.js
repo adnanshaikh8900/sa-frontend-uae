@@ -118,15 +118,15 @@ class ExplainTrasactionDetail extends React.Component {
 								: '',
 							transactionId: selectedData.id,
 							vatId: res.data.vatId ? res.data.vatId : '',
-							vendorId: res.data.vatId ? res.data.vendorId : '',
+							vendorId: res.data.vendorId ? res.data.vendorId : '',
 							customerId: res.data.customerId ? res.data.customerId : '',
 							explinationStatusEnum: res.data.explinationStatusEnum,
 							reference: res.data.reference ? res.data.reference : '',
 							coaCategoryId: res.data.coaCategoryId
 								? res.data.coaCategoryId
 								: '',
-							invoiceIdList: res.data.invoiceIdList
-								? res.data.invoiceIdList
+							explainParamList: res.data.explainParamList
+								? res.data.explainParamList
 								: '',
 							transactionCategoryLabel: res.data.transactionCategoryLabel,
 							invoiceError: '',
@@ -135,6 +135,25 @@ class ExplainTrasactionDetail extends React.Component {
 						},
 					},
 					() => {
+						if (
+							this.state.initValue.coaCategoryId === 10 &&
+							this.state.initValue.explainParamList
+						) {
+							this.getVendorList();
+							this.setState(
+								{
+									initValue: {
+										...this.state.initValue,
+										...{
+											coaCategoryId: 100,
+										},
+									},
+								},
+								() => {
+									console.log(this.state.initValue.coaCategoryId);
+								},
+							);
+						}
 						if (this.state.initValue.customerId) {
 							this.getSuggestionInvoicesFotCust(
 								this.state.initValue.customerId,
@@ -993,6 +1012,14 @@ class ExplainTrasactionDetail extends React.Component {
 																							props.values.amount,
 																						);
 																					}}
+																					value={
+																						vendor_list &&
+																						vendor_list.find(
+																							(option) =>
+																								option.value ===
+																								+props.values.vendorId,
+																						)
+																					}
 																					placeholder="Select Type"
 																					id="vendorId"
 																					name="vendorId"
@@ -1400,6 +1427,7 @@ class ExplainTrasactionDetail extends React.Component {
 																				<DatePicker
 																					id="date"
 																					name="date"
+																					readOnly
 																					placeholderText="Transaction Date"
 																					showMonthDropdown
 																					showYearDropdown

@@ -104,8 +104,13 @@ class Register extends React.Component {
 			email: email,
 			password: password,
 		};
+		let formData = new FormData();
+for (var key in this.state.initValue) {
+formData.append(key, data[key]);
+}
+console.log(data);
 		this.props.authActions
-			.register(obj)
+			.register(formData)
 			.then((res) => {
 				this.setState({
 					alert: (

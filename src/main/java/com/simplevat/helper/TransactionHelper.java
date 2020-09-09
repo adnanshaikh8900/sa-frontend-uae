@@ -5,6 +5,7 @@
  */
 package com.simplevat.helper;
 
+import com.simplevat.constant.ChartOfAccountCategoryCodeEnum;
 import com.simplevat.constant.ChartOfAccountCategoryIdEnumConstant;
 import com.simplevat.constant.PayMode;
 import com.simplevat.constant.PostingReferenceTypeEnum;
@@ -152,19 +153,34 @@ public class TransactionHelper {
 		TransactionPresistModel model = new TransactionPresistModel();
 		model.setBankId(transaction.getBankAccount().getBankAccountId());
 		model.setTransactionId(transaction.getTransactionId());
+		model.setDescription(transaction.getExplainedTransactionDescription());
+		if (transaction.getExplainedTransactionCategory() != null)
+			model.setExpenseCategory(transaction.getExplainedTransactionCategory().getTransactionCategoryId());
 
 		if (transaction.getCoaCategory() != null)
 			model.setCoaCategoryId(transaction.getCoaCategory().getChartOfAccountCategoryId());
 		if (transaction.getExplainedTransactionCategory() != null) {
-			model.setTransactionCategoryLabel(
-					transaction.getExplainedTransactionCategory().getChartOfAccount().getChartOfAccountName());
-			model.setTransactionCategoryId(transaction.getExplainedTransactionCategory().getTransactionCategoryId());
+			if(transaction.getExplainedTransactionCategory().getChartOfAccount()
+					.getChartOfAccountCode().equalsIgnoreCase(ChartOfAccountCategoryCodeEnum.BANK.getCode()))
+			{
+				model.setTransactionCategoryLabel(
+						transaction.getExplainedTransactionCategory().getChartOfAccount().getChartOfAccountName());
+				String description = transaction.getExplainedTransactionDescription();
+				model.setTransactionCategoryId(Integer.parseInt(description.substring(description.indexOf("=")+1,description.length())));
+				description = description.substring(0,description.indexOf(":"));
+				model.setDescription(description);
+				model.setExpenseCategory(null);
+			}
+			else {
+				model.setTransactionCategoryLabel(
+						transaction.getExplainedTransactionCategory().getChartOfAccount().getChartOfAccountName());
+				model.setTransactionCategoryId(transaction.getExplainedTransactionCategory().getTransactionCategoryId());
+			}
 		}
 		model.setAmount(transaction.getTransactionAmount());
 		if (transaction.getTransactionDate() != null)
 			model.setDate(dateUtil.getLocalDateTimeAsString(transaction.getTransactionDate(), model.getDATE_FORMAT()));
 		model.setCurrencyCode(transaction.getBankAccount().getBankAccountCurrency().getCurrencyCode());
-		model.setDescription(transaction.getExplainedTransactionDescription());
 		model.setReference(transaction.getReferenceStr());
 
 
@@ -175,8 +191,6 @@ public class TransactionHelper {
 			model.setVendorId(transaction.getExplinationVendor().getContactId());
 		if (transaction.getExplinationCustomer() != null)
 			model.setCustomerId(transaction.getExplinationCustomer().getContactId());
-		if (transaction.getExplainedTransactionCategory() != null)
-			model.setExpenseCategory(transaction.getExplainedTransactionCategory().getTransactionCategoryId());
 
 
 

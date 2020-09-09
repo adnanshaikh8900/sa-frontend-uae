@@ -248,7 +248,8 @@ public class TransactionRestController {
 							.findTransactionCategoryByTransactionCategoryCode(
 									TransactionCategoryCodeEnum.AMOUNT_IN_TRANSIT.getCode());
 					trnx.setExplainedTransactionCategory(transactionCategory);
-					trnx.setExplainedTransactionDescription("Transferred to "+explainedTransactionCategory.getTransactionCategoryName());
+					trnx.setExplainedTransactionDescription("Transferred to "+explainedTransactionCategory.getTransactionCategoryName()
+							+" : TransactionId="+explainedTransactionCategory.getTransactionCategoryId());
 					isdebitFromBank = true;
 				}
 				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
@@ -290,7 +291,8 @@ public class TransactionRestController {
 							.findTransactionCategoryByTransactionCategoryCode(
 									TransactionCategoryCodeEnum.AMOUNT_IN_TRANSIT.getCode());
 					trnx.setExplainedTransactionCategory(transactionCategory);
-					trnx.setExplainedTransactionDescription("Transferred from "+explainedTransactionCategory.getTransactionCategoryName());
+					trnx.setExplainedTransactionDescription("Transferred from "+explainedTransactionCategory.getTransactionCategoryName()
+							+" : TransactionId="+explainedTransactionCategory.getTransactionCategoryId());
 					isdebitFromBank = false;
 				}
 				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
@@ -391,7 +393,8 @@ public class TransactionRestController {
 							.findTransactionCategoryByTransactionCategoryCode(
 									TransactionCategoryCodeEnum.AMOUNT_IN_TRANSIT.getCode());
 					trnx.setExplainedTransactionCategory(transactionCategory);
-					trnx.setExplainedTransactionDescription("Transferred to "+explainedTransactionCategory.getTransactionCategoryName());
+					trnx.setExplainedTransactionDescription("Transferred to "+explainedTransactionCategory.getTransactionCategoryName()
+							+" : TransactionId="+explainedTransactionCategory.getTransactionCategoryId());
 					isdebitFromBank = true;
 				}
 				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
@@ -433,7 +436,8 @@ public class TransactionRestController {
 							.findTransactionCategoryByTransactionCategoryCode(
 									TransactionCategoryCodeEnum.AMOUNT_IN_TRANSIT.getCode());
 					trnx.setExplainedTransactionCategory(transactionCategory);
-					trnx.setExplainedTransactionDescription("Transferred from "+explainedTransactionCategory.getTransactionCategoryName());
+					trnx.setExplainedTransactionDescription("Transferred from "+explainedTransactionCategory.getTransactionCategoryName()
+							+" : TransactionId="+explainedTransactionCategory.getTransactionCategoryId());
 					isdebitFromBank =false;
 				}
 				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),

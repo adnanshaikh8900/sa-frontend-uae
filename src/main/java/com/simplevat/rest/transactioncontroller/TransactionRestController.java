@@ -1144,6 +1144,12 @@ public class TransactionRestController {
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+	@ApiOperation(value = "Get Explained Transaction Count")
+	@GetMapping(value = "/getExplainedTransactionCount")
+	public ResponseEntity<Integer> getExplainedTransactionCount(@RequestParam int bankAccountId){
+		Integer response = transactionService.getTotalExplainedTransactionCountByBankAccountId(bankAccountId);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 
 
 }

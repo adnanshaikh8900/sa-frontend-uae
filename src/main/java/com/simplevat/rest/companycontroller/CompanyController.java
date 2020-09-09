@@ -204,6 +204,7 @@ public class CompanyController {
 			if (registrationModel.getCurrencyCode() != null) {
 				company.setCurrencyCode(currencyService.findByPK(registrationModel.getCurrencyCode()));
 			}
+			currencyService.updateCurrencyProfile(company.getCurrencyCode().getCurrencyCode());
 			company.setCreatedBy(user.getUserId());
 			company.setCreatedDate(LocalDateTime.now());
 			company.setDeleteFlag(Boolean.FALSE);

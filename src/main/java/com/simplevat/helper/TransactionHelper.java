@@ -210,12 +210,12 @@ public class TransactionHelper {
 							status.getRemainingToExplain(), PostingReferenceTypeEnum.INVOICE));
 				}
 
-				List<TransactionExpenses> mappedExpenseList = transactionExpensesService
-						.findAllForTransactionExpenses(transaction.getTransactionId());
-				for (TransactionExpenses expense : mappedExpenseList) {
-					explainParamList.add(new ReconsileRequestLineItemModel(expense.getExpense().getExpenseId(),
-							expense.getRemainingToExplain(), PostingReferenceTypeEnum.EXPENSE));
-				}
+//				List<TransactionExpenses> mappedExpenseList = transactionExpensesService
+//						.findAllForTransactionExpenses(transaction.getTransactionId());
+//				for (TransactionExpenses expense : mappedExpenseList) {
+//					explainParamList.add(new ReconsileRequestLineItemModel(expense.getExpense().getExpenseId(),
+//							expense.getRemainingToExplain(), PostingReferenceTypeEnum.EXPENSE));
+//				}
 			}
 
 			model.setExplainParamList(explainParamList);

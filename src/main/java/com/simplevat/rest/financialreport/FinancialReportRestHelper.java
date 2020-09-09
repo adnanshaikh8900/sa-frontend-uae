@@ -81,6 +81,8 @@ public class FinancialReportRestHelper {
 //						}
 //						else
 						{
+							if(isNegative)
+								closingBalance = closingBalance.negate();
 							balanceSheetResponseModel.getBank().put(transactionCategoryName,closingBalance);
 							totalBank = totalBank.add(closingBalance);
 						}

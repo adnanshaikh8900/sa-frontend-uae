@@ -199,7 +199,7 @@ class CreateBankTransaction extends React.Component {
 				.then((res) => {
 					this.setState({
 						date: res.openingDate
-							? moment(res.openingDate).utc().format('DD/MM/YYYY')
+							? moment(res.openingDate).utc().format('MM/DD/YYYY')
 							: '',
 					});
 				})
@@ -510,12 +510,13 @@ class CreateBankTransaction extends React.Component {
 													this.handleSubmit(values, resetForm);
 												}}
 												validate={(values) => {
+													const date = moment(values.transactionDate).format(
+														'MM/DD/YYYY',
+													);
+													const date1 = new Date(date);
+													const date2 = new Date(this.state.date);
 													let errors = {};
-													if (
-														moment(values.transactionDate).format(
-															'DD/MM/YYYY',
-														) < this.state.date
-													) {
+													if (date1 < date2) {
 														errors.transactionDate =
 															'Transaction Date Cannot be less than Bank opening date';
 													}

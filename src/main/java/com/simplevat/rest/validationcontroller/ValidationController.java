@@ -1,5 +1,6 @@
 package com.simplevat.rest.validationcontroller;
 
+import com.simplevat.constant.dbfilter.DateFormatFilterEnum;
 import com.simplevat.entity.Contact;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Product;
@@ -53,6 +54,7 @@ public class ValidationController {
                 case 1: //Product validation
                     Map<String, Object> param = new HashMap<>();
                     param.put("productName", validationModel.getName());
+                    param.put(DateFormatFilterEnum.DELETE_FLAG, false);
                     List<Product> productList = productService.findByAttributes(param);
                     if(productList!= null && productList.size()>0)
                         return new ResponseEntity("Product name already exists", HttpStatus.OK);

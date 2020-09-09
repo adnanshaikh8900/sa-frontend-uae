@@ -74,6 +74,9 @@ public class ContactHelper {
 		contact.setOrganization(contactPersistModel.getOrganization());
 		contact.setPoBoxNumber(contactPersistModel.getPoBoxNumber());
 		contact.setBillingEmail(contactPersistModel.getBillingEmail());
+		if(contact.getBillingEmail() == null && contact.getBillingEmail().isEmpty()){
+			contact.setBillingEmail(contactPersistModel.getEmail());
+		}
 		contact.setState(
 				contactPersistModel.getStateId() != null ? stateService.findByPK(contactPersistModel.getStateId())
 						: null);

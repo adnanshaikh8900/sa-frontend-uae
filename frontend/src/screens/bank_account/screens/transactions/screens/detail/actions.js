@@ -40,7 +40,7 @@ export const UnexplainTransaction = (obj) => {
 			url: '/rest/transaction/unexplain',
 			data: obj,
 		};
-		return authFileUploadApi(data)
+		return authApi(data)
 			.then((res) => {
 				return res;
 			})

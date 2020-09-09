@@ -423,7 +423,7 @@ class CreatePayment extends React.Component {
 																	Supplier Name
 																</Label>
 																<Select
-																styles={customStyles}
+																	styles={customStyles}
 																	id="contactId"
 																	name="contactId"
 																	options={
@@ -586,7 +586,7 @@ class CreatePayment extends React.Component {
 																					Payment Mode
 																				</Label>
 																				<Select
-																				styles={customStyles}
+																					styles={customStyles}
 																					options={
 																						pay_mode
 																							? selectOptionsFactory.renderOptions(
@@ -632,7 +632,7 @@ class CreatePayment extends React.Component {
 																					Deposit To
 																				</Label>
 																				<Select
-																				styles={customStyles}
+																					styles={customStyles}
 																					options={deposit_list}
 																					value={props.values.depositeTo}
 																					onChange={(option) => {
@@ -759,18 +759,18 @@ class CreatePayment extends React.Component {
 																											}}
 																										/>
 																										{this.state.fileName && (
-																								<div>
-																									<i
-																										className="fa fa-close"
-																										onClick={() =>
-																											this.setState({
-																												fileName: '',
-																											})
-																										}
-																									></i>{' '}
-																									{this.state.fileName}
-																								</div>
-																							)}
+																											<div>
+																												<i
+																													className="fa fa-close"
+																													onClick={() =>
+																														this.setState({
+																															fileName: '',
+																														})
+																													}
+																												></i>{' '}
+																												{this.state.fileName}
+																											</div>
+																										)}
 																										{this.state.fileName ? (
 																											this.state.fileName
 																										) : (
@@ -913,7 +913,7 @@ class CreatePayment extends React.Component {
 															) : (
 																<div>
 																	There are no pending invoices for selected
-																	customer. Please select different customer or
+																	supplier. Please select different supplier or
 																	create a new invoice to proceed further.
 																</div>
 															)}

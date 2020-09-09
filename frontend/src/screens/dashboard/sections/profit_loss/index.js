@@ -151,7 +151,7 @@ class ProfitAndLoss extends Component {
 										</div>
 									</div>
 								</div>
-								<div style={{ marginTop: 20 }}>
+								{/* <div style={{ marginTop: 20 }}>
 									<div className="data-info progress">
 										<Progress
 											className="income"
@@ -178,7 +178,7 @@ class ProfitAndLoss extends Component {
 											</div>
 										</div>
 									</div>
-								</div>
+								</div> */}
 							</TabPane>
 							<TabPane tabId="2">
 								{this.props.taxes ? (

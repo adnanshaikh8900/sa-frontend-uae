@@ -78,7 +78,6 @@ class BalanceSheet extends React.Component {
 				totalLiability: 30000,
 				totalEquities: 0,
 				totalLiabilityEquities: 30000,
-				stocks: 0,
 				currentAssets: {},
 				otherCurrentAssets: {
 					'Input VAT': 386.36,
@@ -312,7 +311,7 @@ class BalanceSheet extends React.Component {
 																	<td className="pt-0 pb-0 text-right">
 																		{this.state.data['currentAssets'] ? (
 																			<Currency
-																				value={this.state.data['currentAssets'][
+																				value={this.state.data['bank'][
 																					`${item}`
 																				].toFixed(2)}
 																				currencySymbol={
@@ -517,7 +516,7 @@ class BalanceSheet extends React.Component {
 															<br />
 															<tr>
 																<td className="mainLable">
-																Equities & Liabilities
+																	Liabilities & Equities
 																</td>
 																<td></td>
 																<td></td>
@@ -734,30 +733,9 @@ class BalanceSheet extends React.Component {
 																	)}
 																</td>
 															</tr>
-															<tr className="">
-																<td className="mainLable">Stocks</td>
-																<td></td>
-																<td className="text-right">
-																	{this.state.data['stocks'] ? (
-																		<Currency
-																			value={this.state.data['stocks'].toFixed(
-																				2,
-																			)}
-																			currencySymbol={
-																				universal_currency_list[0]
-																					? universal_currency_list[0]
-																							.currencyIsoCode
-																					: 'USD'
-																			}
-																		/>
-																	) : (
-																		0
-																	)}
-																</td>
-															</tr>
 															<tr className="mainLable">
 																<td className="mainLable text-right">
-																	Total Equities & Liability
+																	Total Liability & Equities
 																</td>
 																<td></td>
 																<td className="text-right">

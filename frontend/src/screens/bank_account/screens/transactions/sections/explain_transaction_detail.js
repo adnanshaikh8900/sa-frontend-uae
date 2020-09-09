@@ -118,15 +118,15 @@ class ExplainTrasactionDetail extends React.Component {
 								: '',
 							transactionId: selectedData.id,
 							vatId: res.data.vatId ? res.data.vatId : '',
-							vendorId: res.data.vendorId ? res.data.vendorId : '',
+							vendorId: res.data.vatId ? res.data.vendorId : '',
 							customerId: res.data.customerId ? res.data.customerId : '',
 							explinationStatusEnum: res.data.explinationStatusEnum,
 							reference: res.data.reference ? res.data.reference : '',
 							coaCategoryId: res.data.coaCategoryId
 								? res.data.coaCategoryId
 								: '',
-							explainParamList: res.data.explainParamList
-								? res.data.explainParamList
+							invoiceIdList: res.data.invoiceIdList
+								? res.data.invoiceIdList
 								: '',
 							transactionCategoryLabel: res.data.transactionCategoryLabel,
 							invoiceError: '',
@@ -135,25 +135,6 @@ class ExplainTrasactionDetail extends React.Component {
 						},
 					},
 					() => {
-						if (
-							this.state.initValue.coaCategoryId === 10 &&
-							this.state.initValue.explainParamList
-						) {
-							this.getVendorList();
-							this.setState(
-								{
-									initValue: {
-										...this.state.initValue,
-										...{
-											coaCategoryId: 100,
-										},
-									},
-								},
-								() => {
-									console.log(this.state.initValue.coaCategoryId);
-								},
-							);
-						}
 						if (this.state.initValue.customerId) {
 							this.getSuggestionInvoicesFotCust(
 								this.state.initValue.customerId,
@@ -346,20 +327,10 @@ class ExplainTrasactionDetail extends React.Component {
 			if (vendorId && coaCategoryId.label === 'Supplier Invoice') {
 				formData.append('vendorId', vendorId ? vendorId : '');
 			}
-			if (
-				currencyCode &&
-				(coaCategoryId.label === 'Expense' ||
-					coaCategoryId.label === 'Admin Expense' ||
-					coaCategoryId.label === 'Other Expense')
-			) {
+			if (currencyCode && coaCategoryId.label === 'Expense') {
 				formData.append('currencyCode', currencyCode ? currencyCode : '');
 			}
-			if (
-				expenseCategory &&
-				(coaCategoryId.label === 'Expense' ||
-					coaCategoryId.label === 'Admin Expense' ||
-					coaCategoryId.label === 'Other Expense')
-			) {
+			if (expenseCategory && coaCategoryId.label === 'Expense') {
 				formData.append(
 					'expenseCategory',
 					expenseCategory ? expenseCategory.value : '',
@@ -400,6 +371,7 @@ class ExplainTrasactionDetail extends React.Component {
 					}
 				})
 				.catch((err) => {
+					console.log(err);
 					this.props.commonActions.tostifyAlert(
 						'error',
 						err && err.data ? err.data.message : 'Something Went Wrong',
@@ -431,12 +403,8 @@ class ExplainTrasactionDetail extends React.Component {
 	};
 
 	UnexplainTransaction = (id) => {
-		let formData = new FormData();
-		for (var key in this.state.initValue) {
-			formData.append(key, this.state.initValue[key]);
-		}
 		this.props.transactionDetailActions
-			.UnexplainTransaction(formData)
+			.UnexplainTransaction(this.state.initValue)
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
@@ -833,7 +801,7 @@ class ExplainTrasactionDetail extends React.Component {
 																							.find(
 																								(option) =>
 																									option.value ===
-																									+props.values.expenseCategory,
+																									props.values.expenseCategory,
 																							)
 																					}
 																					// value={props.values.expenseCategory}
@@ -1012,14 +980,6 @@ class ExplainTrasactionDetail extends React.Component {
 																							props.values.amount,
 																						);
 																					}}
-																					value={
-																						vendor_list &&
-																						vendor_list.find(
-																							(option) =>
-																								option.value ===
-																								+props.values.vendorId,
-																						)
-																					}
 																					placeholder="Select Type"
 																					id="vendorId"
 																					name="vendorId"
@@ -1427,7 +1387,6 @@ class ExplainTrasactionDetail extends React.Component {
 																				<DatePicker
 																					id="date"
 																					name="date"
-																					readOnly
 																					placeholderText="Transaction Date"
 																					showMonthDropdown
 																					showYearDropdown

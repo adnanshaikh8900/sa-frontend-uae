@@ -61,10 +61,8 @@ public class FinancialReportRestHelper {
 				String transactionCategoryCode = transactionCategoryClosingBalance.getTransactionCategory().getChartOfAccount().getChartOfAccountCode();
 				String transactionCategoryName = transactionCategoryClosingBalance.getTransactionCategory().getTransactionCategoryName();
 				BigDecimal closingBalance = transactionCategoryClosingBalance.getClosingBalance();
-				boolean isNegative = false;
 				if (closingBalance.longValue() < 0) {
 					closingBalance = closingBalance.negate();
-					isNegative=true;
 				}
 				ChartOfAccountCategoryCodeEnum chartOfAccountCategoryCodeEnum = ChartOfAccountCategoryCodeEnum.getChartOfAccountCategoryCodeEnum(transactionCategoryCode);
 				if (chartOfAccountCategoryCodeEnum == null)
@@ -133,7 +131,7 @@ public class FinancialReportRestHelper {
 							closingBalance = closingBalance.negate();
 						}
 							balanceSheetResponseModel.getEquities().put(transactionCategoryName,closingBalance);
-							totalEquities = totalEquities.add(closingBalance);
+						totalEquities = totalEquities.add(closingBalance);
 						break;
 					case INCOME:
 						if (transactionCategoryName.equalsIgnoreCase("Sales") ||
@@ -144,16 +142,10 @@ public class FinancialReportRestHelper {
 						}
 						break;
 					case ADMIN_EXPENSE:
-						if(isNegative)
-						totalOperatingExpense = totalOperatingExpense.subtract(closingBalance);
-						else
 						totalOperatingExpense = totalOperatingExpense.add(closingBalance);
 						break;
 					case OTHER_EXPENSE:
-						if(isNegative)
-							totalNonOperatingExpense = totalNonOperatingExpense.subtract(closingBalance);
-						else
-							totalNonOperatingExpense = totalNonOperatingExpense.add(closingBalance);
+						totalNonOperatingExpense = totalNonOperatingExpense.add(closingBalance);
 						break;
 					case COST_OF_GOODS_SOLD:
 						totalCostOfGoodsSold = totalCostOfGoodsSold.add(closingBalance);
@@ -219,10 +211,8 @@ public class FinancialReportRestHelper {
 						getChartOfAccountCategoryCodeEnum(transactionCategoryCode);
 				if (chartOfAccountCategoryCodeEnum == null)
 					continue;
-				boolean isNegative = false;
 				if (closingBalance.longValue() < 0) {
 					closingBalance = closingBalance.negate();
-					isNegative=true;
 				}
 				switch (chartOfAccountCategoryCodeEnum) {
 					case INCOME:
@@ -237,20 +227,13 @@ public class FinancialReportRestHelper {
 						break;
 					case ADMIN_EXPENSE:
 						responseModel.getOperatingExpense().put(transactionCategoryName, closingBalance);
-						if(isNegative)
-							totalOperatingExpense = totalOperatingExpense.subtract(closingBalance);
-						else
-							totalOperatingExpense = totalOperatingExpense.add(closingBalance);
+						totalOperatingExpense = totalOperatingExpense.add(closingBalance);
 						break;
 
 					case OTHER_EXPENSE:
 						responseModel.getNonOperatingExpense().put(transactionCategoryName, closingBalance);
-						if(isNegative)
-							totalNonOperatingExpense = totalNonOperatingExpense.subtract(closingBalance);
-						else
-							totalNonOperatingExpense = totalNonOperatingExpense.add(closingBalance);
+						totalNonOperatingExpense = totalNonOperatingExpense.add(closingBalance);
 						break;
-
 					case COST_OF_GOODS_SOLD:
 						responseModel.getCostOfGoodsSold().put(transactionCategoryName, closingBalance);
 						totalCostOfGoodsSold = totalCostOfGoodsSold.add(closingBalance);

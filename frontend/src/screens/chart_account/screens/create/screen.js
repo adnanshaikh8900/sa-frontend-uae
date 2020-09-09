@@ -167,7 +167,7 @@ class CreateChartAccount extends React.Component {
 													transactionCategoryName: Yup.string()
 														.required('Name is Required')
 														.min(2, 'Name Is Too Short!')
-														.max(40, 'Name Is Too Long!'),
+														.max(20, 'Name Is Too Long!'),
 													chartOfAccount: Yup.string().required(
 														'Type is Required',
 													),

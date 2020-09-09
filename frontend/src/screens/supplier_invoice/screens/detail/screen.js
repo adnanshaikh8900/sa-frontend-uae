@@ -491,7 +491,7 @@ class DetailSupplierInvoice extends React.Component {
 				name={`lineItemsString.${idx}.vatCategoryId`}
 				render={({ field, form }) => (
 					<Select
-						styles={customStyles}
+					styles={customStyles}
 						options={
 							vat_list
 								? selectOptionsFactory.renderOptions(
@@ -599,7 +599,7 @@ class DetailSupplierInvoice extends React.Component {
 				name={`lineItemsString.${idx}.productId`}
 				render={({ field, form }) => (
 					<Select
-						styles={customStyles}
+					styles={customStyles}
 						options={
 							product_list
 								? selectOptionsFactory.renderOptions(
@@ -670,10 +670,14 @@ class DetailSupplierInvoice extends React.Component {
 								props,
 							);
 						}}
+						// value={
+						// 	purchaseCategory &&
+						// 	purchaseCategory.categoriesList.find(
+						// 		(item) => item.value === +row.transactionCategoryId,
+						// 	)
+						// }
 						value={
-							purchaseCategory &&
-							purchaseCategory.categoriesList &&
-							row.transactionCategoryLabel
+							purchaseCategory && purchaseCategory.categoriesList
 								? purchaseCategory.categoriesList
 										.find((item) => item.label === row.transactionCategoryLabel)
 										.options.find(
@@ -1128,7 +1132,7 @@ class DetailSupplierInvoice extends React.Component {
 																			Supplier Name
 																		</Label>
 																		<Select
-																			styles={customStyles}
+																		styles={customStyles}
 																			id="contactId"
 																			name="contactId"
 																			onBlur={props.handlerBlur}
@@ -1185,7 +1189,7 @@ class DetailSupplierInvoice extends React.Component {
 																			<i className="fa fa-question-circle"></i>
 																		</Label>
 																		<Select
-																			styles={customStyles}
+																		styles={customStyles}
 																			options={
 																				this.termList
 																					? selectOptionsFactory.renderOptions(
@@ -1324,7 +1328,7 @@ class DetailSupplierInvoice extends React.Component {
 																			Currency
 																		</Label>
 																		<Select
-																			styles={customStyles}
+																		styles={customStyles}
 																			options={
 																				currency_list
 																					? selectCurrencyFactory.renderOptions(
@@ -1483,18 +1487,18 @@ class DetailSupplierInvoice extends React.Component {
 																									}}
 																								/>
 																								{this.state.fileName && (
-																									<div>
-																										<i
-																											className="fa fa-close"
-																											onClick={() =>
-																												this.setState({
-																													fileName: '',
-																												})
-																											}
-																										></i>{' '}
-																										{this.state.fileName}
-																									</div>
-																								)}
+																								<div>
+																									<i
+																										className="fa fa-close"
+																										onClick={() =>
+																											this.setState({
+																												fileName: '',
+																											})
+																										}
+																									></i>{' '}
+																									{this.state.fileName}
+																								</div>
+																							)}
 																								{this.state.fileName ? (
 																									this.state.fileName
 																								) : (
@@ -1674,7 +1678,7 @@ class DetailSupplierInvoice extends React.Component {
 																								Discount Type
 																							</Label>
 																							<Select
-																								styles={customStyles}
+																							styles={customStyles}
 																								className="select-default-width"
 																								options={discountOptions}
 																								id="discountType"

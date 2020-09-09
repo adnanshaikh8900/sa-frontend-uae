@@ -104,20 +104,15 @@ class Register extends React.Component {
 			email: email,
 			password: password,
 		};
-		let formData = new FormData();
-		for (var key in this.state.initValue) {
-			formData.append(key, data[key]);
-		}
-		console.log(data);
 		this.props.authActions
-			.register(formData)
+			.register(obj)
 			.then((res) => {
 				this.setState({
 					alert: (
 						<Message
 							type="success"
-							title="Register Successfully please log in to continue"
-							content=""
+							title="Register Successfully please sign in to continue"
+							content="Register Successfully please sign in to continue"
 						/>
 					),
 					success: true,
@@ -155,14 +150,14 @@ class Register extends React.Component {
 				<div className="animated fadeIn">
 					<div className="app flex-row align-items-center">
 						<Container>
-							<Row className="justify-content-center flex-column text-center align-items-center">
+							<Row className="justify-content-center">
 								<Col md="6">{this.state.alert}</Col>
 								{this.state.success === true && (
 									<Col md="6">
 										<Button
 											color="primary"
 											type="submit"
-											className="btn-square mr-3 btn btn-primary"
+											className="px-4 btn-square w-100"
 											onClick={() => {
 												this.props.history.push('/login');
 											}}

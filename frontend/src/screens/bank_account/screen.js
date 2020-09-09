@@ -348,18 +348,35 @@ class BankAccount extends React.Component {
 	};
 
 	closeBankAccount = (_id) => {
-		const message =
-			'Warning: This Bank Account will be deleted permanently and cannot be recovered. ';
-		this.setState({
-			dialog: (
-				<ConfirmDeleteModal
-					isOpen={true}
-					okHandler={() => this.removeBankAccount(_id)}
-					cancelHandler={this.removeDialog}
-					message={message}
-				/>
-			),
-		});
+		this.props.bankAccountActions
+			.getExplainCount(_id)
+			.then((res) => {
+				if (res.data > 0) {
+					this.props.commonActions.tostifyAlert(
+						'error',
+						'You need to unexplain all the transaction to delete this bank',
+					);
+				} else {
+					const message =
+						'Warning: This Bank Account will be deleted permanently and cannot be recovered. ';
+					this.setState({
+						dialog: (
+							<ConfirmDeleteModal
+								isOpen={true}
+								okHandler={() => this.removeBankAccount(_id)}
+								cancelHandler={this.removeDialog}
+								message={message}
+							/>
+						),
+					});
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
 	};
 
 	removeBankAccount = (_id) => {

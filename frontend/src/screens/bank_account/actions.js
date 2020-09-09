@@ -137,3 +137,21 @@ export const removeBulkBankAccount = (obj) => {
 			});
 	};
 };
+
+export const getExplainCount = (id) => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: `/rest/transaction/getExplainedTransactionCount/?bankAccountId=${id}`,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

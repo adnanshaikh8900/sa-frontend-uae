@@ -198,7 +198,9 @@ class CreateBankTransaction extends React.Component {
 				.getBankAccountByID(this.props.location.state.bankAccountId)
 				.then((res) => {
 					this.setState({
-						date: res.openingDate,
+						date: res.openingDate
+							? moment(res.openingDate).utc().format('DD/MM/YYYY')
+							: '',
 					});
 				})
 				.catch((err) => {
@@ -506,6 +508,18 @@ class CreateBankTransaction extends React.Component {
 												ref={this.formRef}
 												onSubmit={(values, { resetForm }) => {
 													this.handleSubmit(values, resetForm);
+												}}
+												validate={(values) => {
+													let errors = {};
+													if (
+														moment(values.transactionDate).format(
+															'DD/MM/YYYY',
+														) < this.state.date
+													) {
+														errors.transactionDate =
+															'Transaction Date Cannot be less than Bank opening date';
+													}
+													return errors;
 												}}
 												validationSchema={Yup.object().shape({
 													transactionDate: Yup.date().required(

@@ -54,7 +54,7 @@ public class ValidationController {
                 case 1: //Product validation
                     Map<String, Object> param = new HashMap<>();
                     param.put("productName", validationModel.getName());
-                    param.put(DateFormatFilterEnum.DELETE_FLAG, false);
+                    param.put("deleteFlag", false);
                     List<Product> productList = productService.findByAttributes(param);
                     if(productList!= null && productList.size()>0)
                         return new ResponseEntity("Product name already exists", HttpStatus.OK);
@@ -63,6 +63,7 @@ public class ValidationController {
                 case 2: //Vat validation
                     param = new HashMap<>();
                     param.put("name", validationModel.getName());
+                    param.put("deleteFlag", false);
                     List<VatCategory> vatList = vatCategoryService.findByAttributes(param);
                     if(vatList!= null && vatList.size()>0)
                         return new ResponseEntity("Vat name already exists", HttpStatus.OK);
@@ -71,6 +72,7 @@ public class ValidationController {
                 case 3: //Contact Validation
                     param = new HashMap<>();
                     param.put("email", validationModel.getName());
+                    param.put("deleteFlag", false);
                     List<Contact> list = contactService.findByAttributes(param);
                     if(list!= null && list.size()>0)
                         return new ResponseEntity("Contact email already exists", HttpStatus.OK);
@@ -79,6 +81,7 @@ public class ValidationController {
                 case 4:  //Chart of Account
                     param = new HashMap<>();
                     param.put("transactionCategoryName",validationModel.getName());
+                    param.put("deleteFlag", false);
                     List<TransactionCategory> transactionCategoryList = transactionCategoryService.findByAttributes(param);
                     if(transactionCategoryList!= null && transactionCategoryList.size()>0)
                         return new ResponseEntity("Chart Of Account already exists", HttpStatus.OK);
@@ -87,6 +90,7 @@ public class ValidationController {
                 case 5:
                     param = new HashMap<>();
                     param.put("accountNumber",validationModel.getName());
+                    param.put("deleteFlag", false);
                     List<BankAccount> bankAccountList = bankAccountService.findByAttributes(param);
                     if(bankAccountList!= null && bankAccountList.size()>0)
                         return new ResponseEntity("Bank Account already exists", HttpStatus.OK);
@@ -95,6 +99,7 @@ public class ValidationController {
                 case 6:
                     param = new HashMap<>();
                     param.put("referenceNumber",validationModel.getName());
+                    param.put("deleteFlag", false);
                     List<Invoice> invoiceList = invoiceService.findByAttributes(param);
                     if(invoiceList!= null && invoiceList.size()>0)
                         return new ResponseEntity("Invoice Number already exists", HttpStatus.OK);

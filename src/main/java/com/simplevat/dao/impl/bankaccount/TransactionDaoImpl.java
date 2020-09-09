@@ -360,9 +360,9 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 	@Override
 	public Integer getTotalExplainedTransactionCountByBankAccountId(Integer bankAccountId) {
 		Query query = getEntityManager().createQuery(
-				"SELECT COUNT(t) FROM TransactionView t WHERE t.parentTransaction = null AND t.bankAccountId =:bankAccountId AND t.explanationStatusCode =:explanationStatusCode");
+				"SELECT COUNT(t) FROM Transaction t WHERE t.bankAccount.bankAccountId =:bankAccountId AND t.transactionExplinationStatusEnum != :transactionExplinationStatusEnum" );
 		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankAccountId);
-		query.setParameter(CommonColumnConstants.EXPLANATION_STATUS_CODE, TransactionStatusConstant.EXPLIANED);
+		query.setParameter("transactionExplinationStatusEnum", TransactionExplinationStatusEnum.NOT_EXPLAIN);
 		List<Object> countList = query.getResultList();
 		if (countList != null && !countList.isEmpty()) {
 			return ((Long) countList.get(0)).intValue();

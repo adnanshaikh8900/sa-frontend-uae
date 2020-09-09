@@ -28,8 +28,8 @@ steps:
     - 'patch'
     - 'ReplicationController'
     - 'simplevat-dev-rep'
-    - '--type=''json'''
-    - '-p=''[{"op": "replace", "path": "/spec/template/spec/containers/0/env/9/value", "value":"$TAG_NAME"}]'''
+    - '--type=json'
+    - '-p=[{"op": "replace", "path": "/spec/template/spec/containers/0/env/9/value", "value":"$TAG_NAME"}]'
     - '--namespace=simplevat-dev'
   env:
     - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
@@ -81,7 +81,7 @@ steps:
     - 'ReplicationController'
     - 'simplevat-test-rep'
     - '--type=json'
-    - '-p=''[{"op": "replace", "path": "/spec/template/spec/containers/0/env/9/value", "value":"$TAG_NAME"}]'''
+    - '-p=[{"op": "replace", "path": "/spec/template/spec/containers/0/env/9/value", "value":"$TAG_NAME"}]'
     - '--namespace=simplevat-test'
   env:
     - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
@@ -132,8 +132,8 @@ steps:
     - 'patch'
     - 'ReplicationController'
     - 'simplevat-waqas-rep'
-    - '--type=''json'''
-    - '-p=''[{"op": "replace", "path": "/spec/template/spec/containers/0/env/9/value", "value":"$TAG_NAME"}]'''
+    - '--type=json'
+    - '-p=[{"op": "replace", "path": "/spec/template/spec/containers/0/env/9/value", "value":"$TAG_NAME"}]'
     - '--namespace=simplevat-test'
   env:
     - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'

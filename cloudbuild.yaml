@@ -80,7 +80,7 @@ steps:
     - 'patch'
     - 'ReplicationController'
     - 'simplevat-test-rep'
-    - '--type=''json'''
+    - '--type=json'
     - '-p=''[{"op": "replace", "path": "/spec/template/spec/containers/0/env/9/value", "value":"$TAG_NAME"}]'''
     - '--namespace=simplevat-test'
   env:

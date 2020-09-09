@@ -75,11 +75,11 @@ public class FinancialReportRestHelper {
 						totalCurrentAssets = totalCurrentAssets.add(closingBalance);
 						break;
 					case BANK:
-						if(StringUtils.equals(transactionCategoryName,"Amount In Transit"))
-						{
-							totalAccountReceivable = totalAccountReceivable.add(closingBalance);
-						}
-						else
+//						if(StringUtils.equals(transactionCategoryName,"Amount In Transit"))
+//						{
+//							totalAccountReceivable = totalAccountReceivable.add(closingBalance);
+//						}
+//						else
 						{
 							balanceSheetResponseModel.getBank().put(transactionCategoryName,closingBalance);
 							totalBank = totalBank.add(closingBalance);

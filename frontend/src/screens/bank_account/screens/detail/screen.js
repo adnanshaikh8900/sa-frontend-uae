@@ -24,6 +24,7 @@ import { Loader, ConfirmDeleteModal } from 'components';
 import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import { CommonActions } from 'services/global';
 import * as detailBankAccountActions from './actions';
+import * as BankAccountActions from '../../actions';
 
 import './style.scss';
 
@@ -37,6 +38,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		commonActions: bindActionCreators(CommonActions, dispatch),
+		bankAccountActions: bindActionCreators(BankAccountActions, dispatch),
 		detailBankAccountActions: bindActionCreators(
 			detailBankAccountActions,
 			dispatch,
@@ -82,6 +84,7 @@ class DetailBankAccount extends React.Component {
 	componentDidMount = () => {
 		if (this.props.location.state && this.props.location.state.bankAccountId) {
 			this.initializeData();
+			this.updateOpeningBalance(this.props.location.state.bankAccountId);
 			this.setState(
 				{
 					current_bank_account_id: this.props.location.state.bankAccountId,
@@ -215,6 +218,20 @@ class DetailBankAccount extends React.Component {
 		});
 	};
 
+	updateOpeningBalance = (_id) => {
+		this.props.bankAccountActions
+			.getExplainCount(_id)
+			.then((res) => {
+				this.setState({ transactionCount: res.data });
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
+	};
+
 	render() {
 		const { account_type_list, currency_list, country_list } = this.props;
 
@@ -248,6 +265,14 @@ class DetailBankAccount extends React.Component {
 											initialValues={initialVals}
 											onSubmit={(values, { resetForm }) => {
 												this.handleSubmit(values);
+											}}
+											validate={(values) => {
+												let errors = {};
+												if (this.state.transactionCount > 0) {
+													errors.opening_balance =
+														'You cannot update opening balance';
+												}
+												return errors;
 											}}
 											validationSchema={Yup.object().shape({
 												account_name: Yup.string()

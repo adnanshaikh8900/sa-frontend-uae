@@ -672,7 +672,7 @@ class DetailExpense extends React.Component {
 																		/>
 																	</FormGroup>
 																</Col>
-
+																{!props.values.payee && (
 																<Col lg={2}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="pay_through">
@@ -727,7 +727,7 @@ class DetailExpense extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-
+																)}
 																{props.values.payMode === 'BANK' && (
 																	<Col lg={4}>
 																		<FormGroup className="mb-3">

@@ -65,6 +65,7 @@ class ExplainTrasactionDetail extends React.Component {
 			loading: false,
 			fileName: '',
 			initValue: {},
+			unexplainValue: {},
 			view: false,
 			chartOfAccountCategoryList: [],
 			transactionCategoryList: [],
@@ -127,7 +128,36 @@ class ExplainTrasactionDetail extends React.Component {
 								: '',
 							explainParamList: res.data.explainParamList
 								? res.data.explainParamList
+								: [],
+							transactionCategoryLabel: res.data.transactionCategoryLabel
+								? res.data.transactionCategoryLabel
 								: '',
+							invoiceError: '',
+							expenseCategory: res.data.expenseCategory,
+							currencyCode: parseInt(res.data.currencyCode),
+						},
+						unexplainValue: {
+							bankId: bankId,
+							amount: res.data.amount ? res.data.amount : '',
+							date: res.data.date
+								? moment(res.data.date, 'DD/MM/YYYY').format('DD/MM/YYYY')
+								: '',
+							description: res.data.description ? res.data.description : '',
+							transactionCategoryId: res.data.transactionCategoryId
+								? parseInt(res.data.transactionCategoryId)
+								: '',
+							transactionId: selectedData.id,
+							vatId: res.data.vatId ? res.data.vatId : '',
+							vendorId: res.data.vendorId ? res.data.vendorId : '',
+							customerId: res.data.customerId ? res.data.customerId : '',
+							explinationStatusEnum: res.data.explinationStatusEnum,
+							reference: res.data.reference ? res.data.reference : '',
+							coaCategoryId: res.data.coaCategoryId
+								? res.data.coaCategoryId
+								: '',
+							explainParamList: res.data.explainParamList
+								? res.data.explainParamList
+								: [],
 							transactionCategoryLabel: res.data.transactionCategoryLabel
 								? res.data.transactionCategoryLabel
 								: '',
@@ -352,7 +382,8 @@ class ExplainTrasactionDetail extends React.Component {
 				currencyCode &&
 				(coaCategoryId.label === 'Expense' ||
 					coaCategoryId.label === 'Admin Expense' ||
-					coaCategoryId.label === 'Other Expense')
+					coaCategoryId.label === 'Other Expense'||
+					coaCategoryId.label === 'Cost Of Goods Sold')
 			) {
 				formData.append('currencyCode', currencyCode ? currencyCode : '');
 			}
@@ -360,7 +391,8 @@ class ExplainTrasactionDetail extends React.Component {
 				expenseCategory &&
 				(coaCategoryId.label === 'Expense' ||
 					coaCategoryId.label === 'Admin Expense' ||
-					coaCategoryId.label === 'Other Expense')
+					coaCategoryId.label === 'Other Expense'||
+					coaCategoryId.label === 'Cost Of Goods Sold')
 			) {
 				formData.append(
 					'expenseCategory',
@@ -434,9 +466,18 @@ class ExplainTrasactionDetail extends React.Component {
 
 	UnexplainTransaction = (id) => {
 		let formData = new FormData();
-		for (var key in this.state.initValue) {
-			formData.append(key, this.state.initValue[key]);
-		}
+		for (var key in this.state.unexplainValue) {
+			formData.append(key, this.state.unexplainValue[key]);
+			if (Object.keys(this.state.unexplainValue['explainParamList']).length > 0) {
+			formData.delete('explainParamList');
+			formData.set(
+			'explainParamListStr',
+			JSON.stringify(this.state.unexplainValue['explainParamList']),
+			);
+			} else {
+			formData.delete('explainParamList');
+			}
+			}
 		this.props.transactionDetailActions
 			.UnexplainTransaction(formData)
 			.then((res) => {

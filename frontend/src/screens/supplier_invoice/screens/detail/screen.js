@@ -1030,9 +1030,9 @@ class DetailSupplierInvoice extends React.Component {
 															)
 															.of(
 																Yup.object().shape({
-																	description: Yup.string().required(
-																		'Value is Required',
-																	),
+																	// description: Yup.string().required(
+																	// 	'Value is Required',
+																	// ),
 																	quantity: Yup.number().required(
 																		'Value is Required',
 																	),

@@ -10,17 +10,18 @@ import {
 	Container,
 	Form,
 	Input,
-	InputGroup,
-	InputGroupAddon,
-	InputGroupText,
 	Row,
+	FormGroup,
+	Label,
 } from 'reactstrap';
 import Select from 'react-select';
 import { Message } from 'components';
 import { selectCurrencyFactory } from 'utils';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { AuthActions } from 'services/global';
+import { AuthActions, CommonActions } from 'services/global';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
@@ -33,6 +34,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		authActions: bindActionCreators(AuthActions, dispatch),
+		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
 const options = [
@@ -108,31 +110,25 @@ class Register extends React.Component {
 		for (var key in this.state.initValue) {
 			formData.append(key, data[key]);
 		}
-		console.log(data);
 		this.props.authActions
 			.register(formData)
 			.then((res) => {
-				this.setState({
-					alert: (
-						<Message
-							type="success"
-							title="Register Successfully please log in to continue"
-							content=""
-						/>
-					),
-					success: true,
+				toast.success('Register Successfully please log in to continue', {
+					position: toast.POSITION.TOP_RIGHT,
 				});
+				setTimeout(() => {
+					this.props.history.push('/login');
+				}, 3000);
 			})
 			.catch((err) => {
-				this.setState({
-					alert: (
-						<Message
-							type="danger"
-							title={err ? err.data.error : ''}
-							content="Log in failed. Please try again later"
-						/>
-					),
-				});
+				toast.error(
+					err && err.data
+						? 'Log in failed. Please try again'
+						: 'Something Went Wrong',
+					{
+						position: toast.POSITION.TOP_RIGHT,
+					},
+				);
 			});
 	};
 
@@ -141,7 +137,6 @@ class Register extends React.Component {
 			control: (base, state) => ({
 				...base,
 				flex: '1 1 auto',
-				width: '267px',
 				borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
 				boxShadow: state.isFocused ? null : null,
 				'&:hover': {
@@ -152,6 +147,7 @@ class Register extends React.Component {
 		const { initValue, currencyList } = this.state;
 		return (
 			<div className="log-in-screen">
+				<ToastContainer autoClose={5000} />
 				<div className="animated fadeIn">
 					<div className="app flex-row align-items-center">
 						<Container>
@@ -217,24 +213,24 @@ class Register extends React.Component {
 														return (
 															<Form onSubmit={props.handleSubmit}>
 																{/* <h1>Log In</h1> */}
-																<p className="text-muted">
-																	Create your account
-																</p>
+																<div className="registerScreen">
+																	<h2 className="">Register</h2>
+																	<p>Enter your details below to register</p>
+																</div>
 																<Row>
 																	<Col lg={6}>
-																		<InputGroup className="mb-3">
-																			<InputGroupAddon addonType="prepend">
-																				<InputGroupText>
-																					<i className="icon-user"></i>
-																				</InputGroupText>
-																			</InputGroupAddon>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="companyName">
+																				<span className="text-danger">*</span>
+																				Company Name
+																			</Label>
 																			<Input
 																				type="text"
 																				maxLength="50"
 																				id="companyName"
 																				name="companyName"
-																				placeholder="Enter Company Name"
-																				value={props.values.companyName}
+																				placeholder="Enter Compnay Name"
+																				value={props.values.account_name}
 																				onChange={(option) => {
 																					props.handleChange('companyName')(
 																						option,
@@ -253,15 +249,14 @@ class Register extends React.Component {
 																						{props.errors.companyName}
 																					</div>
 																				)}
-																		</InputGroup>
+																		</FormGroup>
 																	</Col>
 																	<Col lg={6}>
-																		<InputGroup className="mb-3">
-																			<InputGroupAddon addonType="prepend">
-																				<InputGroupText>
-																					<i className="icon-user"></i>
-																				</InputGroupText>
-																			</InputGroupAddon>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="currencyCode">
+																				<span className="text-danger">*</span>
+																				Currency
+																			</Label>
 																			<Select
 																				styles={customStyles}
 																				id="currencyCode"
@@ -300,15 +295,14 @@ class Register extends React.Component {
 																						{props.errors.currencyCode}
 																					</div>
 																				)}
-																		</InputGroup>
+																		</FormGroup>
 																	</Col>
 																	<Col lg={6}>
-																		<InputGroup className="mb-3">
-																			<InputGroupAddon addonType="prepend">
-																				<InputGroupText>
-																					<i className="icon-user"></i>
-																				</InputGroupText>
-																			</InputGroupAddon>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="firstName">
+																				<span className="text-danger">*</span>
+																				First Name
+																			</Label>
 																			<Input
 																				type="text"
 																				maxLength="50"
@@ -334,15 +328,14 @@ class Register extends React.Component {
 																						{props.errors.firstName}
 																					</div>
 																				)}
-																		</InputGroup>
+																		</FormGroup>
 																	</Col>
 																	<Col lg={6}>
-																		<InputGroup className="mb-3">
-																			<InputGroupAddon addonType="prepend">
-																				<InputGroupText>
-																					<i className="icon-user"></i>
-																				</InputGroupText>
-																			</InputGroupAddon>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="lastName">
+																				<span className="text-danger">*</span>
+																				Last Name
+																			</Label>
 																			<Input
 																				type="text"
 																				maxLength="50"
@@ -368,18 +361,16 @@ class Register extends React.Component {
 																						{props.errors.lastName}
 																					</div>
 																				)}
-																		</InputGroup>
+																		</FormGroup>
 																	</Col>
 																	<Col lg={6}>
-																		<InputGroup className="mb-3">
-																			<InputGroupAddon addonType="prepend">
-																				<InputGroupText>
-																					<i className="icon-user"></i>
-																				</InputGroupText>
-																			</InputGroupAddon>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="email">
+																				<span className="text-danger">*</span>
+																				Email Address
+																			</Label>
 																			<Input
 																				type="text"
-																				maxLength="50"
 																				id="email"
 																				name="email"
 																				placeholder="Enter Email Address"
@@ -400,20 +391,19 @@ class Register extends React.Component {
 																						{props.errors.email}
 																					</div>
 																				)}
-																		</InputGroup>
+																		</FormGroup>
 																	</Col>
 																	<Col lg={6}>
-																		<InputGroup className="mb-4">
-																			<InputGroupAddon addonType="prepend">
-																				<InputGroupText>
-																					<i className="icon-lock"></i>
-																				</InputGroupText>
-																			</InputGroupAddon>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="email">
+																				<span className="text-danger">*</span>
+																				Password
+																			</Label>
 																			<Input
 																				type="password"
 																				id="password"
 																				name="password"
-																				placeholder="Enter Password"
+																				placeholder="Enter password"
 																				value={props.values.password}
 																				onChange={(option) => {
 																					props.handleChange('password')(
@@ -433,21 +423,37 @@ class Register extends React.Component {
 																						{props.errors.password}
 																					</div>
 																				)}
-																		</InputGroup>
+																		</FormGroup>
 																	</Col>
 																</Row>
 																<Row>
-																	<Col xs="12" lg="5">
+																	<Col className="text-center">
 																		<Button
 																			type="submit"
 																			name="submit"
 																			color="primary"
-																			className="btn-square mr-3"
+																			className="btn-square mr-3 mt-3 "
+																			style={{ width: '200px' }}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
 																			{this.state.disabled
 																				? 'Creating...'
 																				: 'Register'}
+																		</Button>
+																	</Col>
+																</Row>
+																<Row>
+																	<Col>
+																		<Button
+																			type="button"
+																			color="link"
+																			className="px-0"
+																			onClick={() => {
+																				this.props.history.push('/login');
+																			}}
+																			style={{ marginTop: '-10px' }}
+																		>
+																			Back
 																		</Button>
 																	</Col>
 																</Row>

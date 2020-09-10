@@ -114,7 +114,7 @@ class ExplainTrasactionDetail extends React.Component {
 								: '',
 							description: res.data.description ? res.data.description : '',
 							transactionCategoryId: res.data.transactionCategoryId
-								? res.data.transactionCategoryId
+								? parseInt(res.data.transactionCategoryId)
 								: '',
 							transactionId: selectedData.id,
 							vatId: res.data.vatId ? res.data.vatId : '',
@@ -128,7 +128,9 @@ class ExplainTrasactionDetail extends React.Component {
 							explainParamList: res.data.explainParamList
 								? res.data.explainParamList
 								: '',
-							transactionCategoryLabel: res.data.transactionCategoryLabel,
+							transactionCategoryLabel: res.data.transactionCategoryLabel
+								? res.data.transactionCategoryLabel
+								: '',
 							invoiceError: '',
 							expenseCategory: res.data.expenseCategory,
 							currencyCode: parseInt(res.data.currencyCode),
@@ -137,7 +139,7 @@ class ExplainTrasactionDetail extends React.Component {
 					() => {
 						if (
 							this.state.initValue.coaCategoryId === 10 &&
-							this.state.initValue.explainParamList
+							this.state.initValue.explainParamList.hasOwnProperty()
 						) {
 							this.getVendorList();
 							this.setState(
@@ -1256,6 +1258,7 @@ class ExplainTrasactionDetail extends React.Component {
 																						}
 																					}}
 																					value={
+																						transactionCategoryList &&
 																						transactionCategoryList.categoriesList &&
 																						props.values
 																							.transactionCategoryLabel
@@ -1272,7 +1275,7 @@ class ExplainTrasactionDetail extends React.Component {
 																											+props.values
 																												.transactionCategoryId,
 																									)
-																							: console.log('')
+																							: console.log('ss')
 																					}
 																					placeholder="Select Category"
 																					id="transactionCategoryId"

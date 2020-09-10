@@ -10,16 +10,17 @@ import {
 	Container,
 	Form,
 	Input,
-	InputGroup,
-	InputGroupAddon,
-	InputGroupText,
+	FormGroup,
+	Label,
 	Row,
 } from 'reactstrap';
 
-import { Message } from 'components';
+import { AuthActions, CommonActions } from 'services/global';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-import { AuthActions } from 'services/global';
-
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
 
@@ -31,6 +32,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		authActions: bindActionCreators(AuthActions, dispatch),
+		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
 
@@ -38,8 +40,10 @@ class LogIn extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			username: '',
-			password: '',
+			initValue: {
+				username: '',
+				password: '',
+			},
 			alert: null,
 			openForgotPasswordModal: false,
 			companyCount: 1,
@@ -64,9 +68,8 @@ class LogIn extends React.Component {
 		});
 	};
 
-	logInHandler = (e) => {
-		e.preventDefault();
-		const { username, password } = this.state;
+	handleSubmit = (data, resetForm) => {
+		const { username, password } = data;
 		let obj = {
 			username,
 			password,
@@ -74,21 +77,20 @@ class LogIn extends React.Component {
 		this.props.authActions
 			.logIn(obj)
 			.then((res) => {
-				this.setState({
-					alert: null,
+				toast.success('Log in Succesfully', {
+					position: toast.POSITION.TOP_RIGHT,
 				});
 				this.props.history.push('/admin');
 			})
 			.catch((err) => {
-				this.setState({
-					alert: (
-						<Message
-							type="danger"
-							title={err ? err.data.error : ''}
-							content="Log in failed. Please try again later"
-						/>
-					),
-				});
+				toast.error(
+					err && err.data
+						? 'Log in failed. Please try again'
+						: 'Something Went Wrong',
+					{
+						position: toast.POSITION.TOP_RIGHT,
+					},
+				);
 			});
 	};
 
@@ -101,8 +103,10 @@ class LogIn extends React.Component {
 	};
 
 	render() {
+		const { initValue } = this.state;
 		return (
 			<div className="log-in-screen">
+				<ToastContainer />
 				<div className="animated fadeIn">
 					<div className="app flex-row align-items-center">
 						<Container>
@@ -117,86 +121,143 @@ class LogIn extends React.Component {
 												<div className="logo-container">
 													<img src={logo} alt="logo" />
 												</div>
-												<Form onSubmit={this.logInHandler}>
-													{/* <h1>Log In</h1> */}
-													<p className="text-muted">Log In to your account</p>
-													<InputGroup className="mb-3">
-														<InputGroupAddon addonType="prepend">
-															<InputGroupText>
-																<i className="icon-user"></i>
-															</InputGroupText>
-														</InputGroupAddon>
-														<Input
-															type="text"
-															placeholder="Username"
-															name="username"
-															value={this.state.username}
-															onChange={(e) =>
-																this.handleChange('username', e.target.value)
-															}
-															autoComplete="username"
-															required
-														/>
-													</InputGroup>
-													<InputGroup className="mb-4">
-														<InputGroupAddon addonType="prepend">
-															<InputGroupText>
-																<i className="icon-lock"></i>
-															</InputGroupText>
-														</InputGroupAddon>
-														<Input
-															type="password"
-															placeholder="Password"
-															name="password"
-															value={this.state.password}
-															onChange={(e) =>
-																this.handleChange('password', e.target.value)
-															}
-															autoComplete="current-password"
-															required
-														/>
-													</InputGroup>
-													<Row>
-														<Col xs="12" lg="5">
-															<Button
-																color="primary"
-																type="submit"
-																className="px-4 btn-square w-100"
-															>
-																<i className="fa fa-sign-in" /> Log In
-															</Button>
-														</Col>
-														<Col xs="12" lg="7" className="text-right">
-															<Button
-																type="button"
-																color="link"
-																className="px-0"
-																onClick={() => {
-																	this.props.history.push('/reset-password');
-																}}
-															>
-																Forgot password?
-															</Button>
-														</Col>
-													</Row>
-													{this.state.companyCount < 1 && (
-														<div
-															className="col-12 col-lg-5"
-															style={{ margin: '10px auto 0 auto' }}
-														>
-															<Button
-																color="primary"
-																type="submit"
-																className="px-4 btn-square w-100"
-																onClick={() => {
-																	this.props.history.push('/register');
-																}}
-															>
-																Register
-															</Button>
-														</div>
-													)}
-												</Form>
+												<Formik
+													initialValues={initValue}
+													onSubmit={(values, { resetForm }) => {
+														this.handleSubmit(values, resetForm);
+													}}
+													validationSchema={Yup.object().shape({
+														username: Yup.string().required(
+															'Email is Required',
+														),
+														password: Yup.string().required(
+															'Please Enter your password',
+														),
+													})}
+												>
+													{(props) => {
+														return (
+															<Form onSubmit={props.handleSubmit}>
+																{/* <h1>Log In</h1> */}
+																<div className="registerScreen">
+																	<h2 className="">Login</h2>
+																	<p>Enter your details below to continue</p>
+																</div>
+																<Row>
+																	<Col lg={12}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="username">
+																				<span className="text-danger">*</span>
+																				User Name
+																			</Label>
+																			<Input
+																				type="text"
+																				id="username"
+																				name="username"
+																				placeholder="Enter User Name"
+																				value={props.values.username}
+																				onChange={(option) => {
+																					props.handleChange('username')(
+																						option,
+																					);
+																				}}
+																				className={
+																					props.errors.username &&
+																					props.touched.username
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.username &&
+																				props.touched.username && (
+																					<div className="invalid-feedback">
+																						{props.errors.username}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																	<Col lg={12}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="email">
+																				<span className="text-danger">*</span>
+																				Password
+																			</Label>
+																			<Input
+																				type="password"
+																				id="password"
+																				name="password"
+																				placeholder="Enter password"
+																				value={props.values.password}
+																				onChange={(option) => {
+																					props.handleChange('password')(
+																						option,
+																					);
+																				}}
+																				className={
+																					props.errors.password &&
+																					props.touched.password
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.password &&
+																				props.touched.password && (
+																					<div className="invalid-feedback">
+																						{props.errors.password}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																	<Col>
+																		<Button
+																			type="button"
+																			color="link"
+																			className="px-0"
+																			onClick={() => {
+																				this.props.history.push(
+																					'/reset-password',
+																				);
+																			}}
+																			style={{ marginTop: '-10px' }}
+																		>
+																			Forgot password?
+																		</Button>
+																	</Col>
+																</Row>
+																<Row>
+																	<Col className="text-center">
+																		<Button
+																			color="primary"
+																			type="submit"
+																			className="px-4 btn-square mt-3"
+																			style={{ width: '200px' }}
+																		>
+																			<i className="fa fa-sign-in" /> Log In
+																		</Button>
+																	</Col>
+																</Row>
+																{this.state.companyCount < 1 && (
+																	<Row>
+																		<Col className="mt-3">
+																			<p className="r-btn">
+																				Don't have an account?{' '}
+																				<span
+																					onClick={() => {
+																						this.props.history.push(
+																							'/register',
+																						);
+																					}}
+																				>
+																					Register Here
+																				</span>
+																			</p>
+																		</Col>
+																	</Row>
+																)}
+															</Form>
+														);
+													}}
+												</Formik>
 											</CardBody>
 										</Card>
 									</CardGroup>

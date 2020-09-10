@@ -271,9 +271,9 @@ class DetailBankAccount extends React.Component {
 												account_is_for: Yup.string().required(
 													'Account for is required',
 												),
-												swift_code: Yup.string().required(
-													'Please Enter Valid Swift Code',
-												),
+												// swift_code: Yup.string().required(
+												// 	'Please Enter Valid Swift Code',
+												// ),
 											})}
 										>
 											{(props) => (

@@ -65,6 +65,7 @@ class ExplainTrasactionDetail extends React.Component {
 			loading: false,
 			fileName: '',
 			initValue: {},
+			unexplainValue: {},
 			view: false,
 			chartOfAccountCategoryList: [],
 			transactionCategoryList: [],
@@ -133,9 +134,7 @@ class ExplainTrasactionDetail extends React.Component {
 								? res.data.transactionCategoryLabel
 								: '',
 							invoiceError: '',
-							expenseCategory: res.data.expenseCategory
-								? res.data.expenseCategory
-								: '',
+							expenseCategory: res.data.expenseCategory,
 							currencyCode: parseInt(res.data.currencyCode),
 						},
 						unexplainValue: {
@@ -386,7 +385,8 @@ class ExplainTrasactionDetail extends React.Component {
 				currencyCode &&
 				(coaCategoryId.label === 'Expense' ||
 					coaCategoryId.label === 'Admin Expense' ||
-					coaCategoryId.label === 'Other Expense')
+					coaCategoryId.label === 'Other Expense' ||
+					coaCategoryId.label === 'Cost Of Goods Sold')
 			) {
 				formData.append('currencyCode', currencyCode ? currencyCode : '');
 			}
@@ -394,7 +394,8 @@ class ExplainTrasactionDetail extends React.Component {
 				expenseCategory &&
 				(coaCategoryId.label === 'Expense' ||
 					coaCategoryId.label === 'Admin Expense' ||
-					coaCategoryId.label === 'Other Expense')
+					coaCategoryId.label === 'Other Expense' ||
+					coaCategoryId.label === 'Cost Of Goods Sold')
 			) {
 				formData.append(
 					'expenseCategory',

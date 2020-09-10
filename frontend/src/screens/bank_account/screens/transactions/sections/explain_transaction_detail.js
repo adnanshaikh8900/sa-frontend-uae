@@ -72,6 +72,7 @@ class ExplainTrasactionDetail extends React.Component {
 			id: '',
 			dialog: true,
 			totalAmount: '',
+			unexplainValue: [],
 		};
 
 		this.file_size = 1024000;
@@ -162,7 +163,9 @@ class ExplainTrasactionDetail extends React.Component {
 								? res.data.transactionCategoryLabel
 								: '',
 							invoiceError: '',
-							expenseCategory: res.data.expenseCategory,
+							expenseCategory: res.data.expenseCategory
+								? res.data.expenseCategory
+								: '',
 							currencyCode: parseInt(res.data.currencyCode),
 						},
 					},
@@ -382,7 +385,7 @@ class ExplainTrasactionDetail extends React.Component {
 				currencyCode &&
 				(coaCategoryId.label === 'Expense' ||
 					coaCategoryId.label === 'Admin Expense' ||
-					coaCategoryId.label === 'Other Expense'||
+					coaCategoryId.label === 'Other Expense' ||
 					coaCategoryId.label === 'Cost Of Goods Sold')
 			) {
 				formData.append('currencyCode', currencyCode ? currencyCode : '');
@@ -391,7 +394,7 @@ class ExplainTrasactionDetail extends React.Component {
 				expenseCategory &&
 				(coaCategoryId.label === 'Expense' ||
 					coaCategoryId.label === 'Admin Expense' ||
-					coaCategoryId.label === 'Other Expense'||
+					coaCategoryId.label === 'Other Expense' ||
 					coaCategoryId.label === 'Cost Of Goods Sold')
 			) {
 				formData.append(
@@ -468,16 +471,18 @@ class ExplainTrasactionDetail extends React.Component {
 		let formData = new FormData();
 		for (var key in this.state.unexplainValue) {
 			formData.append(key, this.state.unexplainValue[key]);
-			if (Object.keys(this.state.unexplainValue['explainParamList']).length > 0) {
-			formData.delete('explainParamList');
-			formData.set(
-			'explainParamListStr',
-			JSON.stringify(this.state.unexplainValue['explainParamList']),
-			);
+			if (
+				Object.keys(this.state.unexplainValue['explainParamList']).length > 0
+			) {
+				formData.delete('explainParamList');
+				formData.set(
+					'explainParamListStr',
+					JSON.stringify(this.state.unexplainValue['explainParamList']),
+				);
 			} else {
-			formData.delete('explainParamList');
+				formData.delete('explainParamList');
 			}
-			}
+		}
 		this.props.transactionDetailActions
 			.UnexplainTransaction(formData)
 			.then((res) => {

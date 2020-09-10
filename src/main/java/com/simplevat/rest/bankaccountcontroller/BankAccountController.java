@@ -280,10 +280,42 @@ public class BankAccountController{
 
 			BankAccount bankAccount = bankAccountService.findByPK(bankAccountId);
 			if (bankAccount != null) {
+				//delete coac category
+				Map<String,Object> filterMap = new HashMap<>();
+				filterMap.put("transactionCategory",bankAccount.getTransactionCategory());
+				List<CoacTransactionCategory> coacTransactionCategoryList = coacTransactionCategoryService.findByAttributes(filterMap);
+				for(CoacTransactionCategory coacTransactionCategory: coacTransactionCategoryList)
+				{
+					coacTransactionCategoryService.delete(coacTransactionCategory);
+				}
+				//delete opening balance
+				List<TransactionCategoryBalance> transactionCategoryBalanceList = transactionCategoryBalanceService.findByAttributes(filterMap);
+				for(TransactionCategoryBalance transactionCategoryBalance : transactionCategoryBalanceList)
+				{
+					transactionCategoryBalanceService.delete(transactionCategoryBalance);
+				}
+				//delete closing balance
+				List<TransactionCategoryClosingBalance> transactionCategoryClosingBalanceList = transactionCategoryClosingBalanceService.findByAttributes(filterMap);
+				for(TransactionCategoryClosingBalance transactionCategoryClosingBalance : transactionCategoryClosingBalanceList)
+				{
+					transactionCategoryClosingBalanceService.delete(transactionCategoryClosingBalance);
+				}
+
+
 				bankAccount.setLastUpdateDate(LocalDateTime.now());
 				bankAccount.setLastUpdatedBy(userId);
 				bankAccount.setDeleteFlag(true);
-				bankAccountService.update(bankAccount);
+				bankAccountService.delete(bankAccount);
+
+				//delete transaction category
+				Map<String,Object> filterTransactionCategoryMap = new HashMap<>();
+				filterTransactionCategoryMap.put("transactionCategoryId",bankAccount.getTransactionCategory().getTransactionCategoryId());
+
+				List<TransactionCategory> transactionCategoryList = transactionCategoryService.findByAttributes(filterTransactionCategoryMap);
+				for(TransactionCategory transactionCategory : transactionCategoryList)
+				{
+					transactionCategoryService.delete(transactionCategory);
+				}
 				return new ResponseEntity<>(bankAccount, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);

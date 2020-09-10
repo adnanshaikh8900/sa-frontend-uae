@@ -127,12 +127,14 @@ class ExplainTrasactionDetail extends React.Component {
 								: '',
 							explainParamList: res.data.explainParamList
 								? res.data.explainParamList
-								: '',
+								: [],
 							transactionCategoryLabel: res.data.transactionCategoryLabel
 								? res.data.transactionCategoryLabel
 								: '',
 							invoiceError: '',
-							expenseCategory: res.data.expenseCategory,
+							expenseCategory: res.data.expenseCategory
+								? res.data.expenseCategory
+								: '',
 							currencyCode: parseInt(res.data.currencyCode),
 						},
 					},
@@ -436,6 +438,15 @@ class ExplainTrasactionDetail extends React.Component {
 		let formData = new FormData();
 		for (var key in this.state.initValue) {
 			formData.append(key, this.state.initValue[key]);
+			if (Object.keys(this.state.initValue['explainParamList']).length > 0) {
+				formData.delete('explainParamList');
+				formData.set(
+					'explainParamListStr',
+					JSON.stringify(this.state.initValue['explainParamList']),
+				);
+			} else {
+				formData.delete('explainParamList');
+			}
 		}
 		this.props.transactionDetailActions
 			.UnexplainTransaction(formData)

@@ -11,8 +11,6 @@ import java.util.List;
 import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.entity.*;
 import com.simplevat.entity.bankaccount.*;
-import com.simplevat.rest.PostingRequestModel;
-import com.simplevat.rest.invoicecontroller.InvoiceRequestModel;
 import com.simplevat.service.*;
 import com.simplevat.service.bankaccount.ReconcileStatusService;
 import com.simplevat.utils.DateFormatUtil;
@@ -74,7 +72,6 @@ public class BankAccountRestHelper {
 					model.setReconcileDate(dateUtil.getLocalDateTimeAsString(reconcileStatus.getReconciledDate(), "dd-MM-yyyy"));
 					model.setClosingBalance(reconcileStatus.getClosingBalance());
 				}
-				//model.setOpeningBalance(acc.getOpeningBalance() != null ? acc.getOpeningBalance().doubleValue() : 0);
 				model.setOpeningBalance(acc.getCurrentBalance() != null ? acc.getCurrentBalance().doubleValue() : 0);
 				modelList.add(model);
 			}
@@ -142,9 +139,13 @@ public class BankAccountRestHelper {
 		bankAccount.setPersonalCorporateAccountInd(bankModel.getPersonalCorporateAccountInd().charAt(0));
 		bankAccount.setSwiftCode(bankModel.getSwiftCode());
 		bankAccount.setVersionNumber(1);
-		openingDate(bankModel, bankAccount);
-
-		if (bankModel.getBankAccountStatus() != null) {
+		if (bankModel.getOpeningDate()!= null) {
+			LocalDateTime openingDate = Instant.ofEpochMilli(bankModel.getOpeningDate().getTime())
+					.atZone(ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0).withNano(0)
+					.toLocalDateTime();
+			bankAccount.setOpeningDate(openingDate);
+		}
+	   if (bankModel.getBankAccountStatus() != null) {
 			BankAccountStatus bankAccountStatus = bankAccountStatusService
 					.getBankAccountStatus(bankModel.getBankAccountStatus());
 			bankAccount.setBankAccountStatus(bankAccountStatus);
@@ -215,7 +216,12 @@ public class BankAccountRestHelper {
 			bankAccount.setSwiftCode(bankModel.getSwiftCode());
 			bankAccount.setVersionNumber(
 					bankAccount.getVersionNumber() != null ? 1 : (bankAccount.getVersionNumber() + 1));
-
+			if (bankModel.getOpeningDate()!= null) {
+				LocalDateTime openingDate = Instant.ofEpochMilli(bankModel.getOpeningDate().getTime())
+						.atZone(ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0).withNano(0)
+						.toLocalDateTime();
+				bankAccount.setOpeningDate(openingDate);
+			}
 			if (bankModel.getBankAccountStatus() != null) {
 				BankAccountStatus bankAccountStatus = bankAccountStatusService
 						.getBankAccountStatus(bankModel.getBankAccountStatus());
@@ -264,12 +270,13 @@ public class BankAccountRestHelper {
 	public TransactionCategoryClosingBalance getClosingBalanceEntity(BankAccount bankAccount, TransactionCategory transactionCategory) {
 		TransactionCategoryClosingBalance closingBalance = new TransactionCategoryClosingBalance();
 		closingBalance.setClosingBalance(bankAccount.getOpeningBalance());
-		closingBalance.setClosingBalanceDate(dateUtil.getDateStrAsLocalDateTime(dateUtil.getDate(),"dd/MM/yyyy"));
+		closingBalance.setClosingBalanceDate(bankAccount.getOpeningDate());
 		closingBalance.setCreatedBy(bankAccount.getCreatedBy());
 		closingBalance.setOpeningBalance(bankAccount.getOpeningBalance());
 		closingBalance.setEffectiveDate(dateUtil.getDate());
 		closingBalance.setDeleteFlag(bankAccount.getDeleteFlag());
 		closingBalance.setTransactionCategory(transactionCategory);
+
 		return  closingBalance;
 	}
 

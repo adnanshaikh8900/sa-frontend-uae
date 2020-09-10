@@ -108,7 +108,7 @@ class DetailBankAccount extends React.Component {
 										? res.personalCorporateAccountInd
 										: '',
 									openingDate: res.openingDate
-										? moment(res.openingDate).utc().format('YYYY-MM-DD')
+										? moment(res.openingDate).format('DD/MM/YYYY')
 										: '',
 								},
 							});
@@ -154,6 +154,7 @@ class DetailBankAccount extends React.Component {
 			ifscCode: data.ifsc_code,
 			swiftCode: data.swift_code,
 			openingBalance: data.opening_balance,
+			openingDate: moment(data.openingDate).format('DD/MM/YYYY'),
 			bankCountry: data.country,
 			bankAccountType: data.account_type,
 		};
@@ -270,9 +271,6 @@ class DetailBankAccount extends React.Component {
 													.max(20, 'Account Number Is Too Long!'),
 												account_is_for: Yup.string().required(
 													'Account for is required',
-												),
-												swift_code: Yup.string().required(
-													'Please Enter Valid Swift Code',
 												),
 											})}
 										>
@@ -439,7 +437,7 @@ class DetailBankAccount extends React.Component {
 																	placeholderText="Expense Date"
 																	value={moment(
 																		props.values.openingDate,
-																	).format('DD-MM-YYYY')}
+																	).format('DD/MM/YYYY')}
 																	showMonthDropdown
 																	showYearDropdown
 																	dropdownMode="select"

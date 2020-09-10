@@ -71,6 +71,7 @@ class ExplainTrasactionDetail extends React.Component {
 			id: '',
 			dialog: true,
 			totalAmount: '',
+			unexplainValue: [],
 		};
 
 		this.file_size = 1024000;
@@ -107,6 +108,37 @@ class ExplainTrasactionDetail extends React.Component {
 					{
 						loading: false,
 						initValue: {
+							bankId: bankId,
+							amount: res.data.amount ? res.data.amount : '',
+							date: res.data.date
+								? moment(res.data.date, 'DD/MM/YYYY').format('DD/MM/YYYY')
+								: '',
+							description: res.data.description ? res.data.description : '',
+							transactionCategoryId: res.data.transactionCategoryId
+								? parseInt(res.data.transactionCategoryId)
+								: '',
+							transactionId: selectedData.id,
+							vatId: res.data.vatId ? res.data.vatId : '',
+							vendorId: res.data.vendorId ? res.data.vendorId : '',
+							customerId: res.data.customerId ? res.data.customerId : '',
+							explinationStatusEnum: res.data.explinationStatusEnum,
+							reference: res.data.reference ? res.data.reference : '',
+							coaCategoryId: res.data.coaCategoryId
+								? res.data.coaCategoryId
+								: '',
+							explainParamList: res.data.explainParamList
+								? res.data.explainParamList
+								: [],
+							transactionCategoryLabel: res.data.transactionCategoryLabel
+								? res.data.transactionCategoryLabel
+								: '',
+							invoiceError: '',
+							expenseCategory: res.data.expenseCategory
+								? res.data.expenseCategory
+								: '',
+							currencyCode: parseInt(res.data.currencyCode),
+						},
+						unexplainValue: {
 							bankId: bankId,
 							amount: res.data.amount ? res.data.amount : '',
 							date: res.data.date
@@ -436,13 +468,15 @@ class ExplainTrasactionDetail extends React.Component {
 
 	UnexplainTransaction = (id) => {
 		let formData = new FormData();
-		for (var key in this.state.initValue) {
-			formData.append(key, this.state.initValue[key]);
-			if (Object.keys(this.state.initValue['explainParamList']).length > 0) {
+		for (var key in this.state.unexplainValue) {
+			formData.append(key, this.state.unexplainValue[key]);
+			if (
+				Object.keys(this.state.unexplainValue['explainParamList']).length > 0
+			) {
 				formData.delete('explainParamList');
 				formData.set(
 					'explainParamListStr',
-					JSON.stringify(this.state.initValue['explainParamList']),
+					JSON.stringify(this.state.unexplainValue['explainParamList']),
 				);
 			} else {
 				formData.delete('explainParamList');

@@ -515,15 +515,17 @@ public class TransactionRestController {
 	}
 
 	private String unExplain(@ModelAttribute TransactionPresistModel transactionPresistModel, Transaction trnx) {
-		int chartOfAccountCategory = transactionPresistModel.getCoaCategoryId();
+		int chartOfAccountCategory = trnx.getCoaCategory().getChartOfAccountCategoryId();//transactionPresistModel.getCoaCategoryId();
 
 		switch(ChartOfAccountCategoryIdEnumConstant.get(chartOfAccountCategory))
 		{
 //---------------------------------------Expense Chart of Account Category----------------------------------
 			case EXPENSE:
-				if(transactionPresistModel.getExpenseCategory()!=null && transactionPresistModel.getExpenseCategory() !=0)
+				List<TransactionExpenses> transactionExpensesList = transactionExpensesService
+						.findAllForTransactionExpenses(trnx.getTransactionId());
+				if(transactionExpensesList!=null && transactionExpensesList.size() >0)
 				{
-					unExplainExpenses(transactionPresistModel,trnx);
+					unExplainExpenses(transactionExpensesList,trnx);
 				}
 				else
 				{
@@ -543,6 +545,10 @@ public class TransactionRestController {
 							param.put("invoice", invoice);
 							List<Payment> paymentList = paymentService.findByAttributes(param);
 							if (paymentList != null && paymentList.size() > 0) {
+								supplierInvoicePaymentList.stream().forEach(sp -> {
+									// Delete SupplierInvoicePayment
+									supplierInvoicePaymentService.delete(sp);
+								});
 								paymentList.stream().forEach(p -> {
 									// Delete journal lineitem
 									Journal journal = journalService.getJournalByReferenceId(p.getPaymentId());
@@ -553,10 +559,7 @@ public class TransactionRestController {
 									paymentService.delete(p);
 								});
 							}
-							supplierInvoicePaymentList.stream().forEach(sp -> {
-								// Delete SupplierInvoicePayment
-								supplierInvoicePaymentService.delete(sp);
-							});
+
 						}
 						//Change invoice status from paid to unpaid
 						invoice.setStatus(InvoiceStatusEnum.POST.getValue());
@@ -596,13 +599,18 @@ public class TransactionRestController {
 					for(TransactionStatus transactionStatus : transactionStatusList ) {
 						param.clear();
 						Invoice invoice = transactionStatus.getInvoice();
-						param.put("supplierInvoice", invoice);
+						param.put("customerInvoice", invoice);
 						List<CustomerInvoiceReceipt> customerInvoiceReceiptList = customerInvoiceReceiptService.findByAttributes(param);
 						if (customerInvoiceReceiptList != null ) {
 							param.clear();
 							param.put("invoice", invoice);
+
 							List<Receipt> receiptList = receiptService.findByAttributes(param);
 							if (receiptList != null && receiptList.size() > 0) {
+								customerInvoiceReceiptList.stream().forEach(cp -> {
+									// Delete SupplierInvoicePayment
+									customerInvoiceReceiptService.delete(cp);
+								});
 								receiptList.stream().forEach(r -> {
 									// Delete journal lineitem
 									Journal receiptJournal = journalService.getJournalByReferenceId(r.getId());
@@ -613,10 +621,6 @@ public class TransactionRestController {
 									receiptService.delete(r);
 								});
 							}
-							customerInvoiceReceiptList.stream().forEach(cp -> {
-								// Delete SupplierInvoicePayment
-								customerInvoiceReceiptService.delete(cp);
-							});
 						}
 						//Change invoice status from paid to unpaid
 						invoice.setStatus(InvoiceStatusEnum.POST.getValue());
@@ -663,6 +667,7 @@ public class TransactionRestController {
 				Receipt receipt = transactionHelper.getReceiptEntity(contact, totalAmt,
 						trnx.getBankAccount().getTransactionCategory());
 				receipt.setCreatedBy(userId);
+				receipt.setInvoice(invoiceEntity);
 				receiptService.persist(receipt);
 
 				// POST JOURNAL FOR RECCEPT
@@ -712,6 +717,7 @@ public class TransactionRestController {
 				Payment payment = transactionHelper.getPaymentEntity(contact, totalAmt,
 						trnx.getBankAccount().getTransactionCategory(), invoiceEntity);
 				payment.setCreatedBy(userId);
+				payment.setInvoice(invoiceEntity);
 				paymentService.persist(payment);
 
 				// POST JOURNAL FOR PAYMENT
@@ -770,6 +776,9 @@ public class TransactionRestController {
 	private void explainExpenses(@ModelAttribute TransactionPresistModel transactionPresistModel, Integer userId, Transaction trnx) {
 		//create new expenses
 		Expense expense =  createNewExpense(transactionPresistModel,userId);
+		if (transactionPresistModel.getDescription() != null) {
+			trnx.setTransactionDescription(transactionPresistModel.getDescription());
+		}
 		// create Journal entry for Expense
 		//Chart of account in expense and user
 		Journal journal = null;//getJournalEntryForExpense(transactionPresistModel,expense,userId);
@@ -804,12 +813,11 @@ public class TransactionRestController {
 	}
 	/**
 	 *
-	 * @param transactionPresistModel
 	 * @param transaction
 	 */
-	private void unExplainExpenses(@ModelAttribute TransactionPresistModel transactionPresistModel, Transaction transaction) {
+	private void unExplainExpenses( List<TransactionExpenses> transactionExpensesList, Transaction transaction) {
 		//delete existing expense
-		List<Integer> expenseIdList = deleteExpense(transaction);
+		List<Integer> expenseIdList = deleteExpense(transactionExpensesList,transaction);
 		if(expenseIdList.size()!=0)
 		{
 			Journal journal = journalService.getJournalByReferenceId(expenseIdList.get(0));
@@ -819,16 +827,11 @@ public class TransactionRestController {
 			clearAndUpdateTransaction(transaction);
 			Map<String, Object> param = new HashMap<>();
 			param.put("transaction", transaction);
-			List<TransactionExpenses> transactionExpensesList = transactionExpensesService.findByAttributes(param);
-			for (TransactionExpenses transactionExpenses : transactionExpensesList)
-				transactionExpensesService.delete(transactionExpenses);
 		}
 	}
 
-	private List<Integer> deleteExpense(Transaction transaction) {
+	private List<Integer> deleteExpense( List<TransactionExpenses> transactionExpensesList,Transaction transaction) {
 		List<Integer> expenseIdList = new ArrayList<>();
-		List<TransactionExpenses> transactionExpensesList = transactionExpensesService
-				.findAllForTransactionExpenses(transaction.getTransactionId());
 		for(TransactionExpenses transactionExpenses : transactionExpensesList)
 		{
 			Expense expense = transactionExpenses.getExpense();
@@ -966,7 +969,7 @@ public class TransactionRestController {
 			trnx.setVatCategory(vatCategoryService.findByPK(transactionPresistModel.getVatId()));
 		}
 		if (transactionPresistModel.getCustomerId() != null) {
-			trnx.setExplinationVendor((contactService.findByPK(transactionPresistModel.getCustomerId())));
+			trnx.setExplinationCustomer(contactService.findByPK(transactionPresistModel.getCustomerId()));
 		}
 
 		if (transactionPresistModel.getAttachmentFile() != null

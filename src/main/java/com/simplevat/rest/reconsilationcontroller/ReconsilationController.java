@@ -271,6 +271,11 @@ public class ReconsilationController {
 			LocalDateTime startDate = null;
 			if (status == null) {
 				startDate = transactionService.getTransactionStartDateToReconcile(reconcileDate, reconcilationPersistModel.getBankId());
+				if(startDate == null) {
+					responseModel.setStatus(3);
+					responseModel.setMessage("The Reconcilation date should be later than the last transaction date.");
+					return new ResponseEntity<>(responseModel, HttpStatus.OK);
+				}
 			} else {
 				startDate = status.getReconciledDate();
 			}

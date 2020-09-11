@@ -134,6 +134,31 @@ export const getCustomerInvoiceList = (param) => {
 	};
 };
 
+export const getCustomerExplainedInvoiceList = (param) => {
+	console.log(param);
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: `/rest/invoice/getSuggestionExplainedForCust?amount=${param.amount}&id=${param.id}&bankId=${param.bankId}`,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+						type: BANK_ACCOUNT.CUSTOMER_INVOICE_LIST,
+						payload: {
+							data: res.data,
+						},
+					});
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
 export const getCurrencyList = () => {
 	return (dispatch) => {
 		let data = {
@@ -201,6 +226,30 @@ export const getVendorInvoiceList = (param) => {
 			});
 	};
 };
+
+export const getVendorExplainedInvoiceList = (param) => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: `/rest/invoice/getSuggestionExplainedForVend?amount=${param.amount}&id=${param.id}&bankId=${param.bankId}`,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+						type: BANK_ACCOUNT.VENDOR_INVOICE_LIST,
+						payload: {
+							data: res.data,
+						},
+					});
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
 export const getExpensesList = (param) => {
 	return (dispatch) => {
 		let data = {

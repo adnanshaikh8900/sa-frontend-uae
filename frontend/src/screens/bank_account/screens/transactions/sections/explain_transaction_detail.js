@@ -426,7 +426,7 @@ class ExplainTrasactionDetail extends React.Component {
 				.updateTransaction(formData)
 				.then((res) => {
 					if (res.status === 200) {
-						resetForm();
+						//esetForm();
 						this.props.commonActions.tostifyAlert(
 							'success',
 							'Transaction Detail Updated Successfully.',
@@ -1325,7 +1325,7 @@ class ExplainTrasactionDetail extends React.Component {
 																											+props.values
 																												.transactionCategoryId,
 																									)
-																							: console.log('ss')
+																							: console.log('')
 																					}
 																					placeholder="Select Category"
 																					id="transactionCategoryId"
@@ -1373,7 +1373,7 @@ class ExplainTrasactionDetail extends React.Component {
 																							);
 																						}
 																					}}
-																					placeholder="Select Type"
+																					placeholder="Select User"
 																					id="employeeId"
 																					name="employeeId"
 																					className={

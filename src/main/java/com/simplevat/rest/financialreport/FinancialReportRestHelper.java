@@ -89,6 +89,8 @@ public class FinancialReportRestHelper {
 						break;
 
 					case CURRENT_ASSET:
+						if(isNegative)
+							closingBalance = closingBalance.negate();
 						balanceSheetResponseModel.getCurrentAssets().put(transactionCategoryName,closingBalance);
 						totalCurrentAssets = totalCurrentAssets.add(closingBalance);
 						break;
@@ -104,6 +106,8 @@ public class FinancialReportRestHelper {
 						break;
 
 					case FIXED_ASSET:
+						if(isNegative)
+							closingBalance = closingBalance.negate();
 						balanceSheetResponseModel.getFixedAssets().put(transactionCategoryName,closingBalance);
 						if(transactionCategoryName.contains("Depreciation")){
 							totalAccumulatedDepriciation= totalAccumulatedDepriciation.add(closingBalance);
@@ -112,6 +116,8 @@ public class FinancialReportRestHelper {
 						break;
 
 					case OTHER_CURRENT_ASSET:
+						if(isNegative)
+							closingBalance = closingBalance.negate();
 						balanceSheetResponseModel.getOtherCurrentAssets().put(transactionCategoryName,closingBalance);
 						totalOtherCurrentAssets = totalOtherCurrentAssets.add(closingBalance);
 						break;
@@ -400,6 +406,8 @@ public class FinancialReportRestHelper {
 							totalCreditAmount = totalCreditAmount.add(closingBalance);
 						}
 						break;
+					case CURRENT_ASSET:
+
 					case OTHER_CURRENT_ASSET:
 							trialBalanceResponseModel.getAssets().put(transactionCategoryName,
 									closingBalance);

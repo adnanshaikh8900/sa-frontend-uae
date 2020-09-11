@@ -770,6 +770,9 @@ public class TransactionRestController {
 	private void explainExpenses(@ModelAttribute TransactionPresistModel transactionPresistModel, Integer userId, Transaction trnx) {
 		//create new expenses
 		Expense expense =  createNewExpense(transactionPresistModel,userId);
+		if (transactionPresistModel.getDescription() != null) {
+			trnx.setTransactionDescription(transactionPresistModel.getDescription());
+		}
 		// create Journal entry for Expense
 		//Chart of account in expense and user
 		Journal journal = null;//getJournalEntryForExpense(transactionPresistModel,expense,userId);

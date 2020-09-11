@@ -102,6 +102,8 @@ public class FinancialReportRestHelper {
 
 
 					case ACCOUNTS_RECEIVABLE:
+						if(isNegative)
+							closingBalance = closingBalance.negate();
 						totalAccountReceivable = totalAccountReceivable.add(closingBalance);
 						break;
 
@@ -128,6 +130,9 @@ public class FinancialReportRestHelper {
 						break;
 
 					case ACCOUNTS_PAYABLE:
+
+						if(isNegative)
+							closingBalance = closingBalance.negate();
 						totalAccountPayable = totalAccountPayable.add(closingBalance);
 						break;
 

@@ -565,7 +565,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankId);
 		query.setParameter("endDate", reconcileDate);
 		List<Transaction> transactionList = query.getResultList();
-		return transactionList.get(0).getTransactionDate();
+		return (transactionList!=null && transactionList.size()>0)?transactionList.get(0).getTransactionDate():null;
 	}
 
 	public String updateTransactionStatusReconcile(LocalDateTime startDate, LocalDateTime reconcileDate, Integer bankId,

@@ -47,11 +47,28 @@ class Register extends React.Component {
 		super(props);
 		this.state = {
 			alert: null,
-			currencyList: [],
+			currencyList: [
+				{
+					createdBy: 1,
+					createdDate: '2017-04-01T06:03:11.000+0000',
+					currencyCode: 150,
+					currencyDescription: 'United Arab Emirates Dirham',
+					currencyIsoCode: 'AED',
+					currencyName: 'UAE Dirham',
+					currencySymbol: 'د.إ',
+					defaultFlag: 'N',
+					deleteFlag: true,
+					description: 'United Arab Emirates Dirham - AED(د.إ)',
+					lastUpdateBy: null,
+					lastUpdateDate: null,
+					orderSequence: 151,
+					versionNumber: 1,
+				},
+			],
 			success: false,
 			initValue: {
 				companyName: '',
-				currencyCode: '',
+				currencyCode: 150,
 				companyTypeCode: '',
 				industryTypeCode: '',
 				firstName: '',
@@ -67,11 +84,11 @@ class Register extends React.Component {
 	};
 
 	getInitialData = () => {
-		this.props.authActions.getCurrencyList().then((response) => {
-			this.setState({
-				currencyList: response.data,
-			});
-		});
+		// this.props.authActions.getCurrencyList().then((response) => {
+		// 	this.setState({
+		// 		currencyList: response.data,
+		// 	});
+		// });
 		this.props.authActions.getCompanyCount().then((response) => {
 			if (response.data > 0) {
 				this.props.history.push('/login');
@@ -270,6 +287,21 @@ class Register extends React.Component {
 																								'Currency',
 																						  )
 																						: []
+																				}
+																				value={
+																					currencyList &&
+																					selectCurrencyFactory
+																						.renderOptions(
+																							'currencyName',
+																							'currencyCode',
+																							currencyList,
+																							'Currency',
+																						)
+																						.find(
+																							(option) =>
+																								option.value ===
+																								+props.values.currencyCode,
+																						)
 																				}
 																				onChange={(option) => {
 																					if (option && option.value) {

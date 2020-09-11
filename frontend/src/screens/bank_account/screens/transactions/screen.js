@@ -593,6 +593,7 @@ class BankTransactions extends React.Component {
 						this.closeExplainTransactionModal(e);
 					}}
 					bankId={this.props.location.state.bankAccountId}
+					creationMode={row.creationMode}
 					selectedData={row}
 				/>
 			),

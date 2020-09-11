@@ -73,6 +73,7 @@ class ExplainTrasactionDetail extends React.Component {
 			dialog: true,
 			totalAmount: '',
 			unexplainValue: [],
+			creationMode: '',
 		};
 
 		this.file_size = 1024000;
@@ -108,6 +109,7 @@ class ExplainTrasactionDetail extends React.Component {
 				this.setState(
 					{
 						loading: false,
+						creationMode: this.props.creationMode,
 						initValue: {
 							bankId: bankId,
 							amount: res.data.amount ? res.data.amount : '',
@@ -184,9 +186,7 @@ class ExplainTrasactionDetail extends React.Component {
 										},
 									},
 								},
-								() => {
-									console.log(this.state.initValue.coaCategoryId);
-								},
+								() => {},
 							);
 						}
 						if (this.state.initValue.customerId) {
@@ -247,25 +247,23 @@ class ExplainTrasactionDetail extends React.Component {
 	getTransactionCategoryList = (type) => {
 		this.formRef.current.setFieldValue('coaCategoryId', type, true);
 		this.setValue(null);
-		if (this.state.initValue.coaCategoryId !== 10) {
-			this.props.transactionsActions
-				.getTransactionCategoryListForExplain(
-					type.value,
-					this.state.initValue.bankId,
-				)
-				.then((res) => {
-					if (res.status === 200) {
-						this.setState(
-							{
-								transactionCategoryList: res.data,
-							},
-							() => {
-								//console.log(this.state.transactionCategoryList);
-							},
-						);
-					}
-				});
-		}
+		this.props.transactionsActions
+			.getTransactionCategoryListForExplain(
+				type.value,
+				this.state.initValue.bankId,
+			)
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState(
+						{
+							transactionCategoryList: res.data,
+						},
+						() => {
+							//console.log(this.state.transactionCategoryList);
+						},
+					);
+				}
+			});
 	};
 	getSuggestionInvoicesFotCust = (option, amount) => {
 		const data = {
@@ -691,6 +689,7 @@ class ExplainTrasactionDetail extends React.Component {
 																				)
 																			}
 																			onChange={(option) => {
+																				console.log(option.label);
 																				if (option && option.value) {
 																					props.handleChange('coaCategoryId')(
 																						option,
@@ -752,6 +751,11 @@ class ExplainTrasactionDetail extends React.Component {
 																			id="amount"
 																			name="amount"
 																			placeholder="Amount"
+																			readOnly={
+																				this.state.creationMode === 'MANUAL'
+																					? false
+																					: true
+																			}
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||

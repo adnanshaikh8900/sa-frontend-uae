@@ -421,6 +421,7 @@ class CreateBankAccount extends React.Component {
 																	<DatePicker
 																		id="date"
 																		name="openingDate"
+																		autoComplete="off"
 																		className={`form-control ${
 																			props.errors.openingDate &&
 																			props.touched.openingDate
@@ -428,6 +429,7 @@ class CreateBankAccount extends React.Component {
 																				: ''
 																		}`}
 																		placeholderText="Opening Date"
+																		value={props.values.openingDate}
 																		selected={props.values.openingDate}
 																		showMonthDropdown
 																		showYearDropdown

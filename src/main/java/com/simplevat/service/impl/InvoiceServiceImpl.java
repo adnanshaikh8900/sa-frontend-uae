@@ -159,4 +159,10 @@ public class InvoiceServiceImpl extends InvoiceService {
 		return supplierInvoiceDao.getSuggestionUnpaidInvoices(amount, contactId, type, userId);
 	}
 
+	@Override
+	public List<Invoice> getSuggestionExplainedInvoices(BigDecimal amount, Integer contactId, ContactTypeEnum type,
+											   Integer userId) {
+		return supplierInvoiceDao.getSuggestionExplainedInvoices(amount, contactId, type, userId);
+	}
+
 }

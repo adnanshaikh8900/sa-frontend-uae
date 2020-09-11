@@ -318,6 +318,51 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	}
 
 	/**
+	 * Get Suggestion Invoices & expense for transaction explanation
+	 *
+	 * @param contactId Contact Id
+	 * @return List<InvoiceDueAmountModel> InvoiceDueAmountModel data list
+	 */
+	@ApiOperation(value = "Get Suggestion ofUnpaid Invoices for transaction explination")
+	@GetMapping(value = "/getSuggestionExplainedForVend")
+	public ResponseEntity<List<InviceSingleLevelDropdownModel>> getSuggestionExplainedForVend(
+			@RequestParam("amount") BigDecimal amount, @RequestParam("id") Integer contactId,
+			HttpServletRequest request) {
+		try {
+			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			List<Invoice> invoiceList = invoiceService.getSuggestionExplainedInvoices(amount, contactId,
+					ContactTypeEnum.SUPPLIER, userId);
+			List<InviceSingleLevelDropdownModel> responseList = invoiceRestHelper.getDropDownModelList(invoiceList);
+			return new ResponseEntity<>(responseList, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(ERROR, e);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	/**
+	 * Get Suggestion Invoices for transaction explanation
+	 *
+	 * @param contactId Contact Id
+	 * @return List<InvoiceDueAmountModel> InvoiceDueAmountModel data list
+	 */
+	@ApiOperation(value = "Get Suggestion ofUnpaid Invoices for transaction explination")
+	@GetMapping(value = "/getSuggestionExplainedForCust")
+	public ResponseEntity<List<InviceSingleLevelDropdownModel>> getSuggestionExplainedForCust(
+			@RequestParam("amount") BigDecimal amount, @RequestParam("id") Integer contactId,
+			HttpServletRequest request) {
+		try {
+			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			List<Invoice> invoiceList = invoiceService.getSuggestionExplainedInvoices(amount, contactId,
+					ContactTypeEnum.CUSTOMER, userId);
+			return new ResponseEntity<>(invoiceRestHelper.getDropDownModelList(invoiceList), HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(ERROR, e);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	/**
 	 * Get Suggestion Invoices for transaction explanation
 	 * 
 	 * @param contactId Contact Id

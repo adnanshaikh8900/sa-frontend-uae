@@ -969,7 +969,7 @@ public class TransactionRestController {
 			trnx.setVatCategory(vatCategoryService.findByPK(transactionPresistModel.getVatId()));
 		}
 		if (transactionPresistModel.getCustomerId() != null) {
-			trnx.setExplinationVendor((contactService.findByPK(transactionPresistModel.getCustomerId())));
+			trnx.setExplinationCustomer(contactService.findByPK(transactionPresistModel.getCustomerId()));
 		}
 
 		if (transactionPresistModel.getAttachmentFile() != null

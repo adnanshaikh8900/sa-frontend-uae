@@ -408,7 +408,7 @@ public class TransactionRestController {
 			case PURCHASE_OF_CAPITAL_ASSET:
 				updateTransactionForMoneySpent(trnx,transactionPresistModel);
 				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
-						transactionPresistModel.getAmount(), userId, trnx, true);
+						transactionPresistModel.getAmount(), userId, trnx, false);
 				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
 						transactionPresistModel.getDATE_FORMAT()));
 				journalService.persist(journal);

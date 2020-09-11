@@ -22,7 +22,7 @@ import lombok.Data;
 @Data
 @TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
 @NamedQueries({
-		@NamedQuery(name = "getJournalByReferenceId", query = "select j from Journal j ,JournalLineItem jn where jn.journal.id = j.id and jn.referenceId = :referenceId")})
+		@NamedQuery(name = "getJournalByReferenceId", query = "select j from Journal j ,JournalLineItem jn where jn.journal.id = j.id and jn.deleteFlag = false and jn.referenceId = :referenceId")})
 public class Journal implements Serializable {
 
 	/**

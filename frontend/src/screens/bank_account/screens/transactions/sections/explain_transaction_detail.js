@@ -74,6 +74,7 @@ class ExplainTrasactionDetail extends React.Component {
 			totalAmount: '',
 			unexplainValue: [],
 			creationMode: '',
+			unexplainCust: [],
 		};
 
 		this.file_size = 1024000;
@@ -174,9 +175,8 @@ class ExplainTrasactionDetail extends React.Component {
 					() => {
 						if (
 							this.state.initValue.coaCategoryId === 10 &&
-							this.state.initValue.explainParamList.hasOwnProperty()
+							this.state.initValue.explainParamList
 						) {
-							this.getVendorList();
 							this.setState(
 								{
 									initValue: {
@@ -190,13 +190,13 @@ class ExplainTrasactionDetail extends React.Component {
 							);
 						}
 						if (this.state.initValue.customerId) {
-							this.getSuggestionInvoicesFotCust(
+							this.getCustomerExplainedInvoiceList(
 								this.state.initValue.customerId,
 								this.state.initValue.amount,
 							);
 						}
 						if (this.state.initValue.vendorId) {
-							this.getSuggestionInvoicesFotVend(
+							this.getVendorExplainedInvoiceList(
 								this.state.initValue.vendorId,
 								this.state.initValue.amount,
 							);
@@ -273,6 +273,25 @@ class ExplainTrasactionDetail extends React.Component {
 		};
 		this.props.transactionsActions.getCustomerInvoiceList(data);
 	};
+
+	getCustomerExplainedInvoiceList = (option, amount) => {
+		const data = {
+			amount: amount,
+			id: option,
+			bankId: this.props.bankId,
+		};
+		this.props.transactionsActions.getCustomerExplainedInvoiceList(data);
+	};
+
+	getVendorExplainedInvoiceList = (option, amount) => {
+		const data = {
+			amount: amount,
+			id: option,
+			bankId: this.props.bankId,
+		};
+		this.props.transactionsActions.getVendorExplainedInvoiceList(data);
+	};
+
 	getSuggestionInvoicesFotVend = (option, amount) => {
 		const data = {
 			amount: amount,
@@ -1103,10 +1122,24 @@ class ExplainTrasactionDetail extends React.Component {
 																							}
 																							onChange={(option) => {
 																								props.handleChange(
-																									'invoiceIdList',
+																									'explainParamList',
 																								)(option);
 																								this.invoiceIdList(option);
 																							}}
+																							value={
+																								vendor_invoice_list &&
+																								vendor_invoice_list.data &&
+																								props.values.explainParamList
+																									? vendor_invoice_list.data.find(
+																											(option) =>
+																												option.value ===
+																												+props.values.explainParamList.map(
+																													(item) => item.id,
+																												),
+																									  )
+																									: props.values
+																											.explainParamList
+																							}
 																							placeholder="Select Type"
 																							id="invoiceIdList"
 																							name="invoiceIdList"
@@ -1191,6 +1224,15 @@ class ExplainTrasactionDetail extends React.Component {
 																							props.values.amount,
 																						);
 																					}}
+																					value={
+																						transactionCategoryList
+																							.dataList[0] &&
+																						transactionCategoryList.dataList[0].options.find(
+																							(option) =>
+																								option.value ===
+																								+props.values.customerId,
+																						)
+																					}
 																					placeholder="Select Type"
 																					id="customerId"
 																					name="customerId"
@@ -1221,11 +1263,24 @@ class ExplainTrasactionDetail extends React.Component {
 																							: []
 																					}
 																					onChange={(option) => {
-																						props.handleChange('invoiceIdList')(
-																							option,
-																						);
+																						props.handleChange(
+																							'explainParamList',
+																						)(option);
 																						this.invoiceIdList(option);
 																					}}
+																					value={
+																						customer_invoice_list &&
+																						customer_invoice_list.data &&
+																						props.values.explainParamList
+																							? customer_invoice_list.data.find(
+																									(option) =>
+																										option.value ===
+																										+props.values.explainParamList.map(
+																											(item) => item.id,
+																										),
+																							  )
+																							: props.values.explainParamList
+																					}
 																					placeholder="Select Type"
 																					id="invoiceIdList"
 																					name="invoiceIdList"

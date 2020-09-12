@@ -76,6 +76,8 @@ class Register extends React.Component {
 				email: '',
 				password: '',
 			},
+			userDetail: false,
+			togglePassword: '********',
 		};
 	}
 
@@ -133,9 +135,15 @@ class Register extends React.Component {
 				toast.success('Register Successfully please log in to continue', {
 					position: toast.POSITION.TOP_RIGHT,
 				});
-				setTimeout(() => {
-					this.props.history.push('/login');
-				}, 3000);
+				console.log(this.state.initValue.email);
+				this.setState({
+					userDetail: true,
+					userName: email,
+					password: password,
+				});
+				// setTimeout(() => {
+				// 	this.props.history.push('/login');
+				// }, 3000);
 			})
 			.catch((err) => {
 				toast.error(
@@ -161,343 +169,396 @@ class Register extends React.Component {
 				},
 			}),
 		};
-		const { initValue, currencyList } = this.state;
+		const { initValue, currencyList, userDetail } = this.state;
 		return (
 			<div className="log-in-screen">
 				<ToastContainer autoClose={5000} />
 				<div className="animated fadeIn">
 					<div className="app flex-row align-items-center">
 						<Container>
-							<Row className="justify-content-center flex-column text-center align-items-center">
-								<Col md="6">{this.state.alert}</Col>
-								{this.state.success === true && (
-									<Col md="6">
-										<Button
-											color="primary"
-											type="submit"
-											className="btn-square mr-3 btn btn-primary"
-											onClick={() => {
-												this.props.history.push('/login');
-											}}
-										>
-											Login
-										</Button>
-									</Col>
-								)}
-							</Row>
-							<Row className="justify-content-center">
-								<Col md="8">
-									<CardGroup>
-										<Card className="p-4">
-											<CardBody>
-												<div className="logo-container">
-													<img
-														src={logo}
-														alt="logo"
-														style={{ width: '226px' }}
-													/>
-												</div>
-												<Formik
-													initialValues={initValue}
-													onSubmit={(values, { resetForm }) => {
-														this.handleSubmit(values, resetForm);
-													}}
-													validationSchema={Yup.object().shape({
-														companyName: Yup.string().required(
-															'Company name is required',
-														),
-														currencyCode: Yup.string().required(
-															'Currency is required',
-														),
-														firstName: Yup.string().required(
-															'First Name is required',
-														),
-														lastName: Yup.string().required(
-															'Last Name is required',
-														),
-														email: Yup.string()
-															.required('Email is Required')
-															.email('Invalid Email'),
-														password: Yup.string()
-															.required('Please Enter your password')
-															.matches(
-																/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-																'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
+							{userDetail === false && (
+								<Row className="justify-content-center">
+									<Col md="8">
+										<CardGroup>
+											<Card className="p-4">
+												<CardBody>
+													<div className="logo-container">
+														<img
+															src={logo}
+															alt="logo"
+															style={{ width: '226px' }}
+														/>
+													</div>
+													<Formik
+														initialValues={initValue}
+														onSubmit={(values, { resetForm }) => {
+															this.handleSubmit(values, resetForm);
+														}}
+														validationSchema={Yup.object().shape({
+															companyName: Yup.string().required(
+																'Company name is required',
 															),
-													})}
-												>
-													{(props) => {
-														return (
-															<Form onSubmit={props.handleSubmit}>
-																{/* <h1>Log In</h1> */}
-																<div className="registerScreen">
-																	<h2 className="">Register</h2>
-																	<p>Enter your details below to register</p>
-																</div>
-																<Row>
-																	<Col lg={6}>
-																		<FormGroup className="mb-3">
-																			<Label htmlFor="companyName">
-																				<span className="text-danger">*</span>
-																				Company Name
-																			</Label>
-																			<Input
-																				type="text"
-																				maxLength="50"
-																				id="companyName"
-																				name="companyName"
-																				placeholder="Enter Compnay Name"
-																				value={props.values.account_name}
-																				onChange={(option) => {
-																					props.handleChange('companyName')(
-																						option,
-																					);
-																				}}
-																				className={
-																					props.errors.companyName &&
-																					props.touched.companyName
-																						? 'is-invalid'
-																						: ''
-																				}
-																			/>
-																			{props.errors.companyName &&
-																				props.touched.companyName && (
-																					<div className="invalid-feedback">
-																						{props.errors.companyName}
-																					</div>
-																				)}
-																		</FormGroup>
-																	</Col>
-																	<Col lg={6}>
-																		<FormGroup className="mb-3">
-																			<Label htmlFor="currencyCode">
-																				<span className="text-danger">*</span>
-																				Currency
-																			</Label>
-																			<Select
-																				styles={customStyles}
-																				id="currencyCode"
-																				name="currencyCode"
-																				options={
-																					currencyList
-																						? selectCurrencyFactory.renderOptions(
+															currencyCode: Yup.string().required(
+																'Currency is required',
+															),
+															firstName: Yup.string().required(
+																'First Name is required',
+															),
+															lastName: Yup.string().required(
+																'Last Name is required',
+															),
+															email: Yup.string()
+																.required('Email is Required')
+																.email('Invalid Email'),
+															password: Yup.string()
+																.required('Please Enter your password')
+																.matches(
+																	/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+																	'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
+																),
+														})}
+													>
+														{(props) => {
+															return (
+																<Form onSubmit={props.handleSubmit}>
+																	{/* <h1>Log In</h1> */}
+																	<div className="registerScreen">
+																		<h2 className="">Register</h2>
+																		<p>Enter your details below to register</p>
+																	</div>
+																	<Row>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="companyName">
+																					<span className="text-danger">*</span>
+																					Company Name
+																				</Label>
+																				<Input
+																					type="text"
+																					maxLength="50"
+																					id="companyName"
+																					name="companyName"
+																					placeholder="Enter Compnay Name"
+																					value={props.values.account_name}
+																					onChange={(option) => {
+																						props.handleChange('companyName')(
+																							option,
+																						);
+																					}}
+																					className={
+																						props.errors.companyName &&
+																						props.touched.companyName
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																				{props.errors.companyName &&
+																					props.touched.companyName && (
+																						<div className="invalid-feedback">
+																							{props.errors.companyName}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="currencyCode">
+																					<span className="text-danger">*</span>
+																					Currency
+																				</Label>
+																				<Select
+																					styles={customStyles}
+																					id="currencyCode"
+																					name="currencyCode"
+																					options={
+																						currencyList
+																							? selectCurrencyFactory.renderOptions(
+																									'currencyName',
+																									'currencyCode',
+																									currencyList,
+																									'Currency',
+																							  )
+																							: []
+																					}
+																					value={
+																						currencyList &&
+																						selectCurrencyFactory
+																							.renderOptions(
 																								'currencyName',
 																								'currencyCode',
 																								currencyList,
 																								'Currency',
-																						  )
-																						: []
-																				}
-																				value={
-																					currencyList &&
-																					selectCurrencyFactory
-																						.renderOptions(
-																							'currencyName',
-																							'currencyCode',
-																							currencyList,
-																							'Currency',
-																						)
-																						.find(
-																							(option) =>
-																								option.value ===
-																								+props.values.currencyCode,
-																						)
-																				}
-																				onChange={(option) => {
-																					if (option && option.value) {
-																						props.handleChange('currencyCode')(
-																							option.value,
-																						);
-																					} else {
-																						props.handleChange('currencyCode')(
-																							'',
-																						);
+																							)
+																							.find(
+																								(option) =>
+																									option.value ===
+																									+props.values.currencyCode,
+																							)
 																					}
+																					onChange={(option) => {
+																						if (option && option.value) {
+																							props.handleChange(
+																								'currencyCode',
+																							)(option.value);
+																						} else {
+																							props.handleChange(
+																								'currencyCode',
+																							)('');
+																						}
+																					}}
+																					className={
+																						props.errors.currencyCode &&
+																						props.touched.currencyCode
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																				{props.errors.currencyCode &&
+																					props.touched.currencyCode && (
+																						<div className="invalid-feedback">
+																							{props.errors.currencyCode}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="firstName">
+																					<span className="text-danger">*</span>
+																					First Name
+																				</Label>
+																				<Input
+																					type="text"
+																					maxLength="50"
+																					id="firstName"
+																					name="firstName"
+																					placeholder="Enter First Name"
+																					value={props.values.firstName}
+																					onChange={(option) => {
+																						props.handleChange('firstName')(
+																							option,
+																						);
+																					}}
+																					className={
+																						props.errors.firstName &&
+																						props.touched.firstName
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																				{props.errors.firstName &&
+																					props.touched.firstName && (
+																						<div className="invalid-feedback">
+																							{props.errors.firstName}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="lastName">
+																					<span className="text-danger">*</span>
+																					Last Name
+																				</Label>
+																				<Input
+																					type="text"
+																					maxLength="50"
+																					id="lastName"
+																					name="lastName"
+																					placeholder="Enter Last Name"
+																					value={props.values.lastName}
+																					onChange={(option) => {
+																						props.handleChange('lastName')(
+																							option,
+																						);
+																					}}
+																					className={
+																						props.errors.lastName &&
+																						props.touched.lastName
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																				{props.errors.lastName &&
+																					props.touched.lastName && (
+																						<div className="invalid-feedback">
+																							{props.errors.lastName}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="email">
+																					<span className="text-danger">*</span>
+																					Email Address
+																				</Label>
+																				<Input
+																					type="text"
+																					id="email"
+																					name="email"
+																					placeholder="Enter Email Address"
+																					value={props.values.email}
+																					onChange={(option) => {
+																						props.handleChange('email')(option);
+																					}}
+																					className={
+																						props.errors.email &&
+																						props.touched.email
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																				{props.errors.email &&
+																					props.touched.email && (
+																						<div className="invalid-feedback">
+																							{props.errors.email}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="email">
+																					<span className="text-danger">*</span>
+																					Password
+																				</Label>
+																				<Input
+																					type="password"
+																					id="password"
+																					name="password"
+																					placeholder="Enter password"
+																					value={props.values.password}
+																					onChange={(option) => {
+																						props.handleChange('password')(
+																							option,
+																						);
+																					}}
+																					className={
+																						props.errors.password &&
+																						props.touched.password
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																				{props.errors.password &&
+																					props.touched.password && (
+																						<div className="invalid-feedback">
+																							{props.errors.password}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+																	</Row>
+																	<Row>
+																		<Col className="text-center">
+																			<Button
+																				type="submit"
+																				name="submit"
+																				color="primary"
+																				className="btn-square mr-3 mt-3 "
+																				style={{ width: '200px' }}
+																			>
+																				<i className="fa fa-dot-circle-o"></i>{' '}
+																				{this.state.disabled
+																					? 'Creating...'
+																					: 'Register'}
+																			</Button>
+																		</Col>
+																	</Row>
+																	<Row>
+																		<Col>
+																			<Button
+																				type="button"
+																				color="link"
+																				className="px-0"
+																				onClick={() => {
+																					this.props.history.push('/login');
 																				}}
-																				className={
-																					props.errors.currencyCode &&
-																					props.touched.currencyCode
-																						? 'is-invalid'
-																						: ''
-																				}
-																			/>
-																			{props.errors.currencyCode &&
-																				props.touched.currencyCode && (
-																					<div className="invalid-feedback">
-																						{props.errors.currencyCode}
-																					</div>
-																				)}
-																		</FormGroup>
-																	</Col>
-																	<Col lg={6}>
-																		<FormGroup className="mb-3">
-																			<Label htmlFor="firstName">
-																				<span className="text-danger">*</span>
-																				First Name
-																			</Label>
-																			<Input
-																				type="text"
-																				maxLength="50"
-																				id="firstName"
-																				name="firstName"
-																				placeholder="Enter First Name"
-																				value={props.values.firstName}
-																				onChange={(option) => {
-																					props.handleChange('firstName')(
-																						option,
-																					);
-																				}}
-																				className={
-																					props.errors.firstName &&
-																					props.touched.firstName
-																						? 'is-invalid'
-																						: ''
-																				}
-																			/>
-																			{props.errors.firstName &&
-																				props.touched.firstName && (
-																					<div className="invalid-feedback">
-																						{props.errors.firstName}
-																					</div>
-																				)}
-																		</FormGroup>
-																	</Col>
-																	<Col lg={6}>
-																		<FormGroup className="mb-3">
-																			<Label htmlFor="lastName">
-																				<span className="text-danger">*</span>
-																				Last Name
-																			</Label>
-																			<Input
-																				type="text"
-																				maxLength="50"
-																				id="lastName"
-																				name="lastName"
-																				placeholder="Enter Last Name"
-																				value={props.values.lastName}
-																				onChange={(option) => {
-																					props.handleChange('lastName')(
-																						option,
-																					);
-																				}}
-																				className={
-																					props.errors.lastName &&
-																					props.touched.lastName
-																						? 'is-invalid'
-																						: ''
-																				}
-																			/>
-																			{props.errors.lastName &&
-																				props.touched.lastName && (
-																					<div className="invalid-feedback">
-																						{props.errors.lastName}
-																					</div>
-																				)}
-																		</FormGroup>
-																	</Col>
-																	<Col lg={6}>
-																		<FormGroup className="mb-3">
-																			<Label htmlFor="email">
-																				<span className="text-danger">*</span>
-																				Email Address
-																			</Label>
-																			<Input
-																				type="text"
-																				id="email"
-																				name="email"
-																				placeholder="Enter Email Address"
-																				value={props.values.email}
-																				onChange={(option) => {
-																					props.handleChange('email')(option);
-																				}}
-																				className={
-																					props.errors.email &&
-																					props.touched.email
-																						? 'is-invalid'
-																						: ''
-																				}
-																			/>
-																			{props.errors.email &&
-																				props.touched.email && (
-																					<div className="invalid-feedback">
-																						{props.errors.email}
-																					</div>
-																				)}
-																		</FormGroup>
-																	</Col>
-																	<Col lg={6}>
-																		<FormGroup className="mb-3">
-																			<Label htmlFor="email">
-																				<span className="text-danger">*</span>
-																				Password
-																			</Label>
-																			<Input
-																				type="password"
-																				id="password"
-																				name="password"
-																				placeholder="Enter password"
-																				value={props.values.password}
-																				onChange={(option) => {
-																					props.handleChange('password')(
-																						option,
-																					);
-																				}}
-																				className={
-																					props.errors.password &&
-																					props.touched.password
-																						? 'is-invalid'
-																						: ''
-																				}
-																			/>
-																			{props.errors.password &&
-																				props.touched.password && (
-																					<div className="invalid-feedback">
-																						{props.errors.password}
-																					</div>
-																				)}
-																		</FormGroup>
-																	</Col>
-																</Row>
-																<Row>
-																	<Col className="text-center">
-																		<Button
-																			type="submit"
-																			name="submit"
-																			color="primary"
-																			className="btn-square mr-3 mt-3 "
-																			style={{ width: '200px' }}
-																		>
-																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			{this.state.disabled
-																				? 'Creating...'
-																				: 'Register'}
-																		</Button>
-																	</Col>
-																</Row>
-																<Row>
-																	<Col>
-																		<Button
-																			type="button"
-																			color="link"
-																			className="px-0"
-																			onClick={() => {
-																				this.props.history.push('/login');
-																			}}
-																			style={{ marginTop: '-10px' }}
-																		>
-																			Back
-																		</Button>
-																	</Col>
-																</Row>
-															</Form>
-														);
-													}}
-												</Formik>
-											</CardBody>
-										</Card>
-									</CardGroup>
-								</Col>
-							</Row>
+																				style={{ marginTop: '-10px' }}
+																			>
+																				Back
+																			</Button>
+																		</Col>
+																	</Row>
+																</Form>
+															);
+														}}
+													</Formik>
+												</CardBody>
+											</Card>
+										</CardGroup>
+									</Col>
+								</Row>
+							)}
+							{userDetail === true && (
+								<Row className="justify-content-center">
+									<Col md="8">
+										<CardGroup>
+											<Card className="p-4">
+												<CardBody>
+													<div className="logo-container">
+														<img
+															src={logo}
+															alt="logo"
+															style={{ width: '226px' }}
+														/>
+													</div>
+													<div className="registerScreen">
+														<h2 className="">Login Details</h2>
+														<p>Please save Username and Password to login</p>
+													</div>
+													<Row>
+														<Col md="12">
+															<FormGroup className="mb-3">
+																<Label htmlFor="lastName">User Name</Label>
+																<div style={{ fontWeight: 'bold' }}>
+																	{this.state.userName}
+																</div>
+															</FormGroup>
+														</Col>
+														<Col md="12">
+															<FormGroup className="mb-3">
+																<Label htmlFor="lastName">Password</Label>
+																<div style={{ fontWeight: 'bold' }}>
+																	{this.state.togglePassword}
+																</div>
+																<span
+																	style={{
+																		marginTop: '10px;',
+																		display: 'block',
+																	}}
+																	onClick={() => {
+																		this.setState({
+																			togglePassword: this.state.password,
+																		});
+																	}}
+																>
+																	Show Password
+																</span>
+															</FormGroup>
+														</Col>
+													</Row>
+													<Row>
+														<Col className="mt-3">
+															<p className="r-btn">
+																Saved Credentials? Now{' '}
+																<span
+																	onClick={() => {
+																		this.props.history.push('/login');
+																	}}
+																>
+																	Login
+																</span>
+															</p>
+														</Col>
+													</Row>
+												</CardBody>
+											</Card>
+										</CardGroup>
+									</Col>
+								</Row>
+							)}
 						</Container>
 					</div>
 				</div>

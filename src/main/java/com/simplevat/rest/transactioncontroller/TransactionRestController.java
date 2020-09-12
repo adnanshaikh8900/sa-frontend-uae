@@ -784,7 +784,8 @@ public class TransactionRestController {
 		Journal journal = null;//getJournalEntryForExpense(transactionPresistModel,expense,userId);
 		//journalService.persist(journal);
 		int transactionCategoryId = 0;
-		if(transactionPresistModel.getTransactionCategoryId()==null) {
+		if(transactionPresistModel.getTransactionCategoryId()==null||transactionPresistModel.getExpenseCategory()!=null) {
+
 			transactionCategoryId = transactionPresistModel.getExpenseCategory();//TransactionCategoryConsatant.TRANSACTION_EMPLOYEE_REIMBURSEMENTS;
 			TransactionCategory transactionCategory = transactionCategoryService.findByPK(transactionCategoryId);
 			trnx.setExplainedTransactionCategory(transactionCategory);

@@ -517,7 +517,7 @@ class BalanceSheet extends React.Component {
 															<br />
 															<tr>
 																<td className="mainLable">
-																Equities & Liabilities
+																	Equities & Liabilities
 																</td>
 																<td></td>
 																<td></td>
@@ -722,27 +722,6 @@ class BalanceSheet extends React.Component {
 																			value={this.state.data[
 																				'totalAccountPayable'
 																			].toFixed(2)}
-																			currencySymbol={
-																				universal_currency_list[0]
-																					? universal_currency_list[0]
-																							.currencyIsoCode
-																					: 'USD'
-																			}
-																		/>
-																	) : (
-																		0
-																	)}
-																</td>
-															</tr>
-															<tr className="">
-																<td className="mainLable">Stocks</td>
-																<td></td>
-																<td className="text-right">
-																	{this.state.data['stocks'] ? (
-																		<Currency
-																			value={this.state.data['stocks'].toFixed(
-																				2,
-																			)}
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]

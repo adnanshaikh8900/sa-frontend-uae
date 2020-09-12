@@ -250,7 +250,7 @@ public class TransactionRestController {
 					trnx.setExplainedTransactionCategory(transactionCategory);
 					trnx.setExplainedTransactionDescription("Transferred to "+explainedTransactionCategory.getTransactionCategoryName()
 							+" : TransactionId="+explainedTransactionCategory.getTransactionCategoryId());
-					isdebitFromBank = true;
+					//isdebitFromBank = true;
 				}
 				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
 						transactionPresistModel.getAmount(), userId, trnx, isdebitFromBank);
@@ -293,7 +293,7 @@ public class TransactionRestController {
 					trnx.setExplainedTransactionCategory(transactionCategory);
 					trnx.setExplainedTransactionDescription("Transferred from "+explainedTransactionCategory.getTransactionCategoryName()
 							+" : TransactionId="+explainedTransactionCategory.getTransactionCategoryId());
-					isdebitFromBank = false;
+					//isdebitFromBank = false;
 				}
 				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
 						transactionPresistModel.getAmount(), userId, trnx, isdebitFromBank);
@@ -395,7 +395,7 @@ public class TransactionRestController {
 					trnx.setExplainedTransactionCategory(transactionCategory);
 					trnx.setExplainedTransactionDescription("Transferred to "+explainedTransactionCategory.getTransactionCategoryName()
 							+" : TransactionId="+explainedTransactionCategory.getTransactionCategoryId());
-					isdebitFromBank = true;
+					//isdebitFromBank = true;
 				}
 				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
 						transactionPresistModel.getAmount(), userId, trnx, isdebitFromBank);
@@ -438,7 +438,7 @@ public class TransactionRestController {
 					trnx.setExplainedTransactionCategory(transactionCategory);
 					trnx.setExplainedTransactionDescription("Transferred from "+explainedTransactionCategory.getTransactionCategoryName()
 							+" : TransactionId="+explainedTransactionCategory.getTransactionCategoryId());
-					isdebitFromBank =false;
+				//	isdebitFromBank =false;
 				}
 				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
 						transactionPresistModel.getAmount(), userId, trnx, isdebitFromBank);

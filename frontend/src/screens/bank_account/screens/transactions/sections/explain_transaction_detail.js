@@ -417,7 +417,7 @@ class ExplainTrasactionDetail extends React.Component {
 			) {
 				formData.append(
 					'expenseCategory',
-					expenseCategory ? expenseCategory.value : '',
+					expenseCategory ? expenseCategory : '',
 				);
 			}
 			if (
@@ -912,7 +912,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					onChange={(option) => {
 																						props.handleChange(
 																							'expenseCategory',
-																						)(option);
+																						)(option.value);
 																					}}
 																					id="expenseCategory"
 																					name="expenseCategory"

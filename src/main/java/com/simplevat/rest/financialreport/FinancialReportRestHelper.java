@@ -123,7 +123,11 @@ public class FinancialReportRestHelper {
 						break;
 
 					case OTHER_LIABILITY:
+						if (!isNegative){
+							closingBalance = closingBalance.negate();
+						}
 						balanceSheetResponseModel.getOtherLiability().put(transactionCategoryName,closingBalance);
+
 						totalOtherLiability = totalOtherLiability.add(closingBalance);
 						break;
 
@@ -135,7 +139,11 @@ public class FinancialReportRestHelper {
 						break;
 
 					case OTHER_CURRENT_LIABILITIES:
+						if (!isNegative){
+							closingBalance = closingBalance.negate();
+						}
 						balanceSheetResponseModel.getOtherCurrentLiability().put(transactionCategoryName,closingBalance);
+
 						totalOtherCurrentLiability = totalOtherCurrentLiability.add(closingBalance);
 						break;
 

@@ -167,7 +167,7 @@ class ExplainTrasactionDetail extends React.Component {
 								: '',
 							invoiceError: '',
 							expenseCategory: res.data.expenseCategory
-								? res.data.expenseCategory
+								? parseInt(res.data.expenseCategory)
 								: '',
 							currencyCode: parseInt(res.data.currencyCode),
 						},
@@ -175,7 +175,7 @@ class ExplainTrasactionDetail extends React.Component {
 					() => {
 						if (
 							this.state.initValue.coaCategoryId === 10 &&
-							this.state.initValue.explainParamList
+							Object.keys(this.state.initValue.explainParamList).length !== 0
 						) {
 							this.setState(
 								{
@@ -360,6 +360,7 @@ class ExplainTrasactionDetail extends React.Component {
 				transactionId,
 				expenseCategory,
 			} = data;
+			console.log(expenseCategory);
 			if (
 				(invoiceIdList && coaCategoryId.label === 'Sales') ||
 				(invoiceIdList && coaCategoryId.label === 'Supplier Invoice')

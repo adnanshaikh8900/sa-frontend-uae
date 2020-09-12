@@ -277,7 +277,10 @@ class CreateExpense extends React.Component {
 												}}
 												validate={(values) => {
 													let errors = {};
-													if (values.payMode.value === 'BANK') {
+													if (
+														values.payMode.value === 'BANK' &&
+														!values.bankAccountId
+													) {
 														errors.bankAccountId = 'Bank Account is Required';
 													}
 													return errors;

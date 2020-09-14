@@ -2,12 +2,17 @@ package com.simplevat.rest.transactioncategorybalancecontroller;
 
 import java.math.BigDecimal;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.simplevat.service.TransactionCategoryClosingBalanceService;
+import com.simplevat.constant.TransactionCategoryCodeEnum;
+import com.simplevat.entity.TransactionCategoryClosingBalance;
+import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.rest.bankaccountcontroller.BankAccountRestHelper;
+import com.simplevat.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +29,6 @@ import com.simplevat.entity.TransactionCategoryBalance;
 import com.simplevat.entity.User;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.security.JwtTokenUtil;
-import com.simplevat.service.JournalLineItemService;
-import com.simplevat.service.TransactionCategoryBalanceService;
-import com.simplevat.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -56,6 +58,12 @@ public class TransactionCategoryBalanceController {
 	@Autowired
 	private JournalLineItemService journalLineItemService;
 
+	@Autowired
+	private TransactionCategoryService transactionCategoryService;
+
+	@Autowired
+	private BankAccountRestHelper bankAccountRestHelper;
+
 	@ApiOperation(value = "Save")
 	@PostMapping(value = "/save")
 	public ResponseEntity<String> save(@RequestBody TransactioncategoryBalancePersistModel persistmodel,
@@ -65,11 +73,35 @@ public class TransactionCategoryBalanceController {
 			User user = userServiceNew.findByPK(userId);
 			TransactionCategoryBalance openingBalance = transactionCategoryBalanceRestHelper.getEntity(persistmodel);
 			openingBalance.setCreatedBy(user.getUserId());
-			if(openingBalance.getTransactionCategory().getChartOfAccount().getChartOfAccountId()== BANK)
+			//if(openingBalance.getTransactionCategory().getChartOfAccount().getChartOfAccountId()== BANK)
 			{
 				transactionCategoryClosingBalanceService.addNewClosingBalance(openingBalance);
 			}
 			transactionCategoryBalanceService.persist(openingBalance);
+
+			TransactionCategory transactionCategory = transactionCategoryService
+					.findTransactionCategoryByTransactionCategoryCode(
+							TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET.getCode());
+			Map<String,Object> filterObject = new HashMap<>();
+			filterObject.put("transactionCategory",transactionCategory);
+			List<TransactionCategoryClosingBalance>closingBalanceList = transactionCategoryClosingBalanceService.findByAttributes(filterObject);
+			TransactionCategoryClosingBalance closingBalance = null;
+			if(closingBalanceList!=null && closingBalanceList.size()>0)
+			{
+				closingBalance = closingBalanceList.get(0);
+				BigDecimal closingBalanceValue = closingBalance.getClosingBalance();
+				closingBalanceValue = closingBalanceValue.negate();
+				closingBalanceValue = closingBalanceValue.add(openingBalance.getOpeningBalance());
+				closingBalance.setOpeningBalance(openingBalance.getOpeningBalance().negate());
+				closingBalance.setClosingBalance(closingBalanceValue.negate());
+			}
+			else {
+				closingBalance = bankAccountRestHelper
+						.getClosingBalanceEntity(openingBalance, transactionCategory);
+				closingBalance.setOpeningBalance(openingBalance.getOpeningBalance().negate());
+				closingBalance.setClosingBalance(openingBalance.getOpeningBalance().negate());
+			}
+			transactionCategoryClosingBalanceService.persist(closingBalance);
 
 			return new ResponseEntity<>("Saved successfull",HttpStatus.OK);
 		} catch (Exception e) {

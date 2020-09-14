@@ -219,7 +219,10 @@ public class ExpenseRestHelper {
 			}
 			expenseModel.setDeleteFlag(entity.getDeleteFlag());
 			expenseModel.setExpenseAmount(entity.getExpenseAmount());
-			expenseModel.setPayee(entity.getPayee());
+			if (entity.getPayee()!=null){
+				expenseModel.setPayee(userService.findByPK(Integer.parseInt(entity.getPayee())).getFirstName());
+			}
+
 			if (entity.getExpenseDate() != null) {
 				Date expenseDate = Date.from(entity.getExpenseDate().atZone(ZoneId.systemDefault()).toInstant());
 				expenseModel.setExpenseDate(expenseDate);

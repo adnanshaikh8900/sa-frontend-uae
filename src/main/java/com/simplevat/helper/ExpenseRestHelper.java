@@ -75,7 +75,7 @@ public class ExpenseRestHelper {
 
 	public Expense getExpenseEntity(ExpenseModel model) {
 		Expense expense = new Expense();
-		expense.setStatus(ExpenseStatusEnum.SAVED.getValue());
+		expense.setStatus(ExpenseStatusEnum.DRAFT.getValue());
 		if (model.getExpenseId() != null) {
 			expense = expenseService.findByPK(model.getExpenseId());
 		}
@@ -219,7 +219,10 @@ public class ExpenseRestHelper {
 			}
 			expenseModel.setDeleteFlag(entity.getDeleteFlag());
 			expenseModel.setExpenseAmount(entity.getExpenseAmount());
-			expenseModel.setPayee(entity.getPayee());
+			if (entity.getPayee()!=null){
+				expenseModel.setPayee(userService.findByPK(Integer.parseInt(entity.getPayee())).getFirstName());
+			}
+
 			if (entity.getExpenseDate() != null) {
 				Date expenseDate = Date.from(entity.getExpenseDate().atZone(ZoneId.systemDefault()).toInstant());
 				expenseModel.setExpenseDate(expenseDate);

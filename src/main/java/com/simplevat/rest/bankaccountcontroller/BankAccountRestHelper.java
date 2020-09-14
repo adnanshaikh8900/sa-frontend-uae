@@ -280,6 +280,22 @@ public class BankAccountRestHelper {
 		return  closingBalance;
 	}
 
+	public TransactionCategoryClosingBalance getClosingBalanceEntity(TransactionCategoryBalance transactionCategoryBalance, TransactionCategory transactionCategory) {
+		TransactionCategoryClosingBalance closingBalance = new TransactionCategoryClosingBalance();
+		closingBalance.setClosingBalance(transactionCategoryBalance.getOpeningBalance());
+		LocalDateTime openingDate = Instant.ofEpochMilli(new Date().getTime())
+				.atZone(ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0).withNano(0)
+				.toLocalDateTime();
+		closingBalance.setClosingBalanceDate(openingDate);
+		closingBalance.setCreatedBy(transactionCategoryBalance.getCreatedBy());
+		closingBalance.setOpeningBalance(transactionCategoryBalance.getOpeningBalance());
+		closingBalance.setEffectiveDate(dateUtil.getDate());
+		closingBalance.setDeleteFlag(Boolean.FALSE);
+		closingBalance.setTransactionCategory(transactionCategory);
+
+		return  closingBalance;
+	}
+
 	public Journal getJournalEntries(BankAccount bankAccount)
 	{
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();

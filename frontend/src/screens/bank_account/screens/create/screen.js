@@ -57,6 +57,25 @@ class CreateBankAccount extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+
+			country_list: [
+				{
+					countryCode: 229,
+					countryDescription: null,
+					countryFullName: "United Arab Emirates - (null)",
+					countryName: "United Arab Emirates",
+					createdBy: 0,
+					createdDate: "2020-03-21T05:55:16.000+0000",
+					currencyCode: null,
+					defaltFlag: "Y",
+					deleteFlag: false,
+					isoAlpha3Code: null,
+					lastUpdateBy: null,
+					lastUpdateDate: null,
+					orderSequence: null,
+					versionNumber: 1,
+				}
+			],
 			loading: false,
 			createMore: false,
 			disabled: false,
@@ -69,7 +88,7 @@ class CreateBankAccount extends React.Component {
 				account_number: '',
 				ifsc_code: '',
 				swift_code: '',
-				country: '',
+				countrycode: 229,
 				openingDate: '',
 				account_is_for: { label: 'Corporate', value: 'Corporate' },
 			},
@@ -155,7 +174,7 @@ class CreateBankAccount extends React.Component {
 			account_number,
 			ifsc_code,
 			swift_code,
-			country,
+			countrycode,
 			account_is_for,
 			openingDate,
 		} = data;
@@ -169,7 +188,7 @@ class CreateBankAccount extends React.Component {
 			accountNumber: account_number,
 			ifscCode: ifsc_code,
 			swiftCode: swift_code,
-			bankCountry: country ? country.value : '',
+			countrycode: countrycode ? countrycode : '',
 			personalCorporateAccountInd: account_is_for ? account_is_for.value : '',
 		};
 		this.props.createBankAccountActions
@@ -299,7 +318,7 @@ class CreateBankAccount extends React.Component {
 																		}}
 																		className={
 																			props.errors.account_name &&
-																			props.touched.account_name
+																				props.touched.account_name
 																				? 'is-invalid'
 																				: ''
 																		}
@@ -325,11 +344,11 @@ class CreateBankAccount extends React.Component {
 																		options={
 																			currency_list
 																				? selectCurrencyFactory.renderOptions(
-																						'currencyName',
-																						'currencyCode',
-																						currency_list,
-																						'Currency',
-																				  )
+																					'currencyName',
+																					'currencyCode',
+																					currency_list,
+																					'Currency',
+																				)
 																				: []
 																		}
 																		value={
@@ -358,7 +377,7 @@ class CreateBankAccount extends React.Component {
 																		}}
 																		className={
 																			props.errors.currency &&
-																			props.touched.currency
+																				props.touched.currency
 																				? 'is-invalid'
 																				: ''
 																		}
@@ -397,7 +416,7 @@ class CreateBankAccount extends React.Component {
 																		}}
 																		className={
 																			props.errors.opening_balance &&
-																			props.touched.opening_balance
+																				props.touched.opening_balance
 																				? 'is-invalid'
 																				: ''
 																		}
@@ -424,10 +443,10 @@ class CreateBankAccount extends React.Component {
 																		autoComplete="off"
 																		className={`form-control ${
 																			props.errors.openingDate &&
-																			props.touched.openingDate
+																				props.touched.openingDate
 																				? 'is-invalid'
 																				: ''
-																		}`}
+																			}`}
 																		placeholderText="Opening Date"
 																		value={props.values.openingDate}
 																		selected={props.values.openingDate}
@@ -461,11 +480,11 @@ class CreateBankAccount extends React.Component {
 																		options={
 																			account_type_list
 																				? selectOptionsFactory.renderOptions(
-																						'name',
-																						'id',
-																						account_type_list,
-																						'Account Type',
-																				  )
+																					'name',
+																					'id',
+																					account_type_list,
+																					'Account Type',
+																				)
 																				: []
 																		}
 																		value={props.values.account_type}
@@ -480,7 +499,7 @@ class CreateBankAccount extends React.Component {
 																		}}
 																		className={
 																			props.errors.account_type &&
-																			props.touched.account_type
+																				props.touched.account_type
 																				? 'is-invalid'
 																				: ''
 																		}
@@ -512,7 +531,7 @@ class CreateBankAccount extends React.Component {
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regExAlpha.test(
+																				this.regExBoth.test(
 																					option.target.value,
 																				)
 																			) {
@@ -521,7 +540,7 @@ class CreateBankAccount extends React.Component {
 																		}}
 																		className={
 																			props.errors.bank_name &&
-																			props.touched.bank_name
+																				props.touched.bank_name
 																				? 'is-invalid'
 																				: ''
 																		}
@@ -561,7 +580,7 @@ class CreateBankAccount extends React.Component {
 																		}}
 																		className={
 																			props.errors.account_number &&
-																			props.touched.account_number
+																				props.touched.account_number
 																				? 'is-invalid'
 																				: ''
 																		}
@@ -613,7 +632,7 @@ class CreateBankAccount extends React.Component {
 																		}}
 																		className={
 																			props.errors.ifsc_code &&
-																			props.touched.ifsc_code
+																				props.touched.ifsc_code
 																				? 'is-invalid'
 																				: ''
 																		}
@@ -652,7 +671,7 @@ class CreateBankAccount extends React.Component {
 																		onChange={props.handleChange}
 																		className={
 																			props.errors.swift_code &&
-																			props.touched.swift_code
+																				props.touched.swift_code
 																				? 'is-invalid'
 																				: ''
 																		}
@@ -667,39 +686,52 @@ class CreateBankAccount extends React.Component {
 															</Col>
 															<Col lg={4}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="country">Country</Label>
+																	<Label htmlFor="countrycode">Country</Label>
 																	<Select
 																		styles={customStyles}
-																		id="country"
-																		name="country"
-																		getOptionValue={(option) =>
-																			option.countryName
-																		}
+																		id="countrycode"
+																		name="countrycode"
+																		// getOptionValue={(option) =>
+																		// 	option.countrycode
+																		// }
 																		options={
-																			country_list
+																			this.state.country_list
 																				? selectOptionsFactory.renderOptions(
-																						'countryName',
-																						'countryCode',
-																						country_list,
-																						'Country',
-																				  )
+																					'countryName',
+																					'countryCode',
+																					this.state.country_list,
+																					'Country',
+																				)
 																				: []
 																		}
-																		value={props.values.country}
-																		onChange={(option) => {
-																			if (option && option.value) {
-																				props.handleChange('country')(option);
-																			} else {
-																				props.handleChange('country')('');
-																			}
-																		}}
+																		value={this.state.country_list &&
+																			selectOptionsFactory
+																				.renderOptions(
+																					'countryName',
+																					'countryCode',
+																					this.state.country_list,
+																					'Country',
+																				)
+																				.find(
+																					(option) =>
+																						option.value ===
+																						+props.values.countrycode,
+																				)
+																		}
 																		className={
-																			props.errors.country &&
-																			props.touched.country
+																			props.errors.countrycode &&
+																				props.touched.countrycode
 																				? 'is-invalid'
 																				: ''
 																		}
 																	/>
+																	{props.errors.countrycode &&
+																		props.touched.countrycode && (
+																			<div className="invalid-feedback">
+																				{props.errors.countrycode}
+																			</div>
+																		)}
+
 																</FormGroup>
 															</Col>
 														</Row>
@@ -717,11 +749,11 @@ class CreateBankAccount extends React.Component {
 																		options={
 																			this.account_for
 																				? selectOptionsFactory.renderOptions(
-																						'label',
-																						'value',
-																						this.account_for,
-																						'Account is for',
-																				  )
+																					'label',
+																					'value',
+																					this.account_for,
+																					'Account is for',
+																				)
 																				: []
 																		}
 																		value={props.values.account_is_for}
@@ -738,7 +770,7 @@ class CreateBankAccount extends React.Component {
 																		}}
 																		className={
 																			props.errors.account_is_for &&
-																			props.touched.account_is_for
+																				props.touched.account_is_for
 																				? 'is-invalid'
 																				: ''
 																		}

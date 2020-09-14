@@ -65,7 +65,6 @@ class ExplainTrasactionDetail extends React.Component {
 			loading: false,
 			fileName: '',
 			initValue: {},
-			unexplainValue: {},
 			view: false,
 			chartOfAccountCategoryList: [],
 			transactionCategoryList: [],
@@ -1703,7 +1702,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					className="btn-square"
 																					onClick={props.handleSubmit}
 																				>
-																					<i className="fa fa-ban"></i> Update
+																					<i className="fa fa-dot-circle-o"></i> Update
 																				</Button>
 																			</div>
 																		)}

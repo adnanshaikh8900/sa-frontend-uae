@@ -10,7 +10,7 @@ import lombok.Setter;
 
 public enum ExpenseStatusEnum {
 
-	SAVED("Saved", 1), PENDING("Pending", 2), POST("Post", 3), APPROVED("Approved", 4),
+	DRAFT("Draft", 1), PENDING("Pending", 2), POSTED("Posted", 3), APPROVED("Approved", 4),
 	PARTIALLY_PAID("Partially Paid", 5), PAID("Paid", 6);
 
 	@Getter

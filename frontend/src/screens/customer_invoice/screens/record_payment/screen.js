@@ -367,7 +367,7 @@ class RecordCustomerPayment extends React.Component {
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="fas fa-address-book" />
 												<span className="ml-2">
-													Payment for INV-{this.state.initValue.receiptNo}
+													Payment for Customer Invoice
 												</span>
 											</div>
 										</Col>
@@ -469,7 +469,7 @@ class RecordCustomerPayment extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																<Col lg={4}>
+																{/* <Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="project">
 																			<span className="text-danger">*</span>{' '}
@@ -499,7 +499,7 @@ class RecordCustomerPayment extends React.Component {
 																				</div>
 																			)}
 																	</FormGroup>
-																</Col>
+																</Col> */}
 															</Row>
 															<hr />
 															<Row>

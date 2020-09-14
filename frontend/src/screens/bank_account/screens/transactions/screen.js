@@ -635,11 +635,33 @@ class BankTransactions extends React.Component {
 												</Col>
 												<Col lg={3}>
 													<h5>Current Bank Balance</h5>
-													<h3>{this.state.currentBalance}</h3>
+													<h3>
+													{universal_currency_list[0] &&
+													<Currency
+													value={this.state.currentBalance}
+															currencySymbol={
+															universal_currency_list[0]
+															? universal_currency_list[0].currencyIsoCode
+															: 'USD'
+														}
+													/>
+													}
+												</h3>
 												</Col>
 												<Col lg={3}>
 													<h5>SimpleVat Balance</h5>
-													<h3>{this.state.closingBalance}</h3>
+													<h3>
+													{universal_currency_list[0] &&
+													<Currency
+													value={this.state.closingBalance}
+															currencySymbol={
+															universal_currency_list[0]
+															? universal_currency_list[0].currencyIsoCode
+															: 'USD'
+														}
+													/>
+													}
+												</h3>
 												</Col>
 											</Row>
 										</div>

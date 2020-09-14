@@ -52,8 +52,9 @@ class InvoiceTemplate extends Component {
 												  companyData.company.companyLogo
 												: logo
 										}
-										className="img-avatar"
+										className=""
 										alt=""
+										style={{ width: ' 150px' }}
 									/>
 									<h6 className="mb-0">
 										{companyData && companyData.company
@@ -83,7 +84,9 @@ class InvoiceTemplate extends Component {
 										</span>
 									</h6>
 									<h6>
-										{companyData && companyData.company
+										{companyData &&
+										companyData.company &&
+										companyData.company.companyCountryCode
 											? companyData.company.companyCountryCode
 													.countryDescription
 											: ''}

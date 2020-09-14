@@ -501,7 +501,7 @@ class CreatePayment extends React.Component {
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="amount">
 																					<span className="text-danger">*</span>
-																					Amount Received
+																					Amount Paid
 																				</Label>
 																				<Input
 																					type="text"

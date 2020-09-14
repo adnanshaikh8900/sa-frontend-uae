@@ -132,7 +132,7 @@ class CreateSupplierInvoice extends React.Component {
 			selectedContact: '',
 			createMore: false,
 			fileName: '',
-			term: { label: 'Net 7', value: 'NET_7' },
+			term: '',
 			selectedType: { value: 'FIXED', label: 'Fixed' },
 			discountPercentage: '',
 			discountAmount: 0,
@@ -771,7 +771,7 @@ class CreateSupplierInvoice extends React.Component {
 
 	setDate = (props, value) => {
 		const { term } = this.state;
-		const val = term.value.split('_');
+		const val = term ? term.value.split('_') : '';
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 		const values = value
 			? value
@@ -926,11 +926,13 @@ class CreateSupplierInvoice extends React.Component {
 								{
 									id: 0,
 									description: '',
-									quantity: '',
+									quantity: 1,
 									unitPrice: '',
 									vatCategoryId: '',
 									subTotal: 0,
 									productId: '',
+									transactionCategoryId: '',
+									transactionCategoryLabel: '',
 								},
 							],
 							initValue: {

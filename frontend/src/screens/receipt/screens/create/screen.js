@@ -63,7 +63,6 @@ const customStyles = {
 	}),
 };
 
-
 class CreateReceipt extends React.Component {
 	constructor(props) {
 		super(props);
@@ -107,7 +106,6 @@ class CreateReceipt extends React.Component {
 		];
 	}
 
-	
 	onRowSelect = (row, isSelected, e) => {
 		console.log(this.state.initValue);
 		let tempList = [];
@@ -354,6 +352,9 @@ class CreateReceipt extends React.Component {
 													depositeTo: Yup.string().required(
 														'Deposit to is required',
 													),
+													payMode: Yup.string().required(
+														'Payment mode is Required',
+													),
 													paidInvoiceListStr: Yup.string().required(
 														'Please select atleast one invoice',
 													),
@@ -363,7 +364,7 @@ class CreateReceipt extends React.Component {
 															message: 'Please enter valid Amount.',
 															excludeEmptyString: false,
 														}),
-														attachmentFile: Yup.mixed()
+													attachmentFile: Yup.mixed()
 														.test(
 															'fileType',
 															'*Unsupported File Format',
@@ -409,7 +410,7 @@ class CreateReceipt extends React.Component {
 																		Customer Name
 																	</Label>
 																	<Select
-																	styles={customStyles}
+																		styles={customStyles}
 																		options={
 																			contact_list
 																				? selectOptionsFactory.renderOptions(
@@ -561,10 +562,13 @@ class CreateReceipt extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="payMode">
+																						<span className="text-danger">
+																							*
+																						</span>{' '}
 																						Payment Mode
 																					</Label>
 																					<Select
-																					styles={customStyles}
+																						styles={customStyles}
 																						options={
 																							pay_mode
 																								? selectOptionsFactory.renderOptions(
@@ -614,7 +618,7 @@ class CreateReceipt extends React.Component {
 																						Deposit To
 																					</Label>
 																					<Select
-																					styles={customStyles}
+																						styles={customStyles}
 																						options={deposit_list}
 																						value={props.values.depositeTo}
 																						onChange={(option) => {
@@ -710,39 +714,48 @@ class CreateReceipt extends React.Component {
 																				<Row>
 																					<Col lg={12}>
 																						<FormGroup className="mb-3">
-																						<Field
-																				name="attachmentFile"
-																				render={({ field, form }) => (
-																					<div>
-																						<Label>Reciept Attachment</Label>{' '}
-																						<br />
-																						<Button
-																							color="primary"
-																							onClick={() => {
-																								document
-																									.getElementById('fileInput')
-																									.click();
-																							}}
-																							className="btn-square mr-3"
-																						>
-																							<i className="fa fa-upload"></i>{' '}
-																							Upload
-																						</Button>
-																						<input
-																							id="fileInput"
-																							ref={(ref) => {
-																								this.uploadFile = ref;
-																							}}
-																							type="file"
-																							style={{ display: 'none' }}
-																							onChange={(e) => {
-																								this.handleFileChange(e, props);
-																							}}
-																						/>
-																					</div>
-																				)}
-																			/>
-																			{this.state.fileName && (
+																							<Field
+																								name="attachmentFile"
+																								render={({ field, form }) => (
+																									<div>
+																										<Label>
+																											Reciept Attachment
+																										</Label>{' '}
+																										<br />
+																										<Button
+																											color="primary"
+																											onClick={() => {
+																												document
+																													.getElementById(
+																														'fileInput',
+																													)
+																													.click();
+																											}}
+																											className="btn-square mr-3"
+																										>
+																											<i className="fa fa-upload"></i>{' '}
+																											Upload
+																										</Button>
+																										<input
+																											id="fileInput"
+																											ref={(ref) => {
+																												this.uploadFile = ref;
+																											}}
+																											type="file"
+																											style={{
+																												display: 'none',
+																											}}
+																											onChange={(e) => {
+																												this.handleFileChange(
+																													e,
+																													props,
+																												);
+																											}}
+																										/>
+																									</div>
+																								)}
+																							/>
+																							{this.state.fileName && (
 																								<div>
 																									<i
 																										className="fa fa-close"
@@ -755,13 +768,17 @@ class CreateReceipt extends React.Component {
 																									{this.state.fileName}
 																								</div>
 																							)}
-																			{props.errors.attachmentFile &&
-																				props.touched.attachmentFile && (
-																					<div className="invalid-file">
-																						{props.errors.attachmentFile}
-																					</div>
-																				)}
-																		</FormGroup>
+																							{props.errors.attachmentFile &&
+																								props.touched
+																									.attachmentFile && (
+																									<div className="invalid-file">
+																										{
+																											props.errors
+																												.attachmentFile
+																										}
+																									</div>
+																								)}
+																						</FormGroup>
 																					</Col>
 																				</Row>
 																			</Col>

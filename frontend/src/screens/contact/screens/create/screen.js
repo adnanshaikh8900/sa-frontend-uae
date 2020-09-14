@@ -270,7 +270,8 @@ class CreateContact extends React.Component {
 																		Name
 																	</Label>
 																	<Input
-																		type="text" maxLength='26'
+																		type="text"
+																		maxLength="26"
 																		id="firstName"
 																		name="firstName"
 																		placeholder="Enter First Name"
@@ -306,7 +307,8 @@ class CreateContact extends React.Component {
 																		Middle Name
 																	</Label>
 																	<Input
-																		type="text" maxLength='26'
+																		type="text"
+																		maxLength="26"
 																		id="middleName "
 																		name="middleName "
 																		placeholder="Enter Middle Name"
@@ -342,7 +344,8 @@ class CreateContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="lastName">Last Name</Label>
 																	<Input
-																		type="text" maxLength='26'
+																		type="text"
+																		maxLength="26"
 																		id="lastName"
 																		name="lastName"
 																		placeholder="Enter Last Name"
@@ -383,7 +386,7 @@ class CreateContact extends React.Component {
 																		Contact Type
 																	</Label>
 																	<Select
-																	styles={customStyles}
+																		styles={customStyles}
 																		options={
 																			contact_type_list
 																				? selectOptionsFactory.renderOptions(
@@ -428,7 +431,8 @@ class CreateContact extends React.Component {
 																		Organization Name
 																	</Label>
 																	<Input
-																		type="text" maxLength='50'
+																		type="text"
+																		maxLength="50"
 																		id="organization"
 																		name="organization"
 																		placeholder="Enter Organization Name"
@@ -464,7 +468,8 @@ class CreateContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="select">PO Box Number</Label>
 																	<Input
-																		type="text" maxLength='8'
+																		type="text"
+																		maxLength="8"
 																		id="poBoxNumber"
 																		name="poBoxNumber"
 																		placeholder="Enter PO Box Number"
@@ -502,7 +507,8 @@ class CreateContact extends React.Component {
 																		<span className="text-danger">*</span>Email
 																	</Label>
 																	<Input
-																		type="text" maxLength='80'
+																		type="text"
+																		maxLength="80"
 																		id="email"
 																		name="email"
 																		placeholder="Enter Email Address"
@@ -579,10 +585,13 @@ class CreateContact extends React.Component {
                                     <div className="invalid-feedback">{props.errors.mobileNumber}</div>
                                   )} */}
 																	<PhoneInput
+																		id="mobileNumber"
+																		name="mobileNumber"
 																		defaultCountry="AE"
 																		international
 																		value={props.values.mobileNumber}
 																		placeholder="Enter Mobile Number"
+																		onBlur={props.handleBlur('mobileNumber')}
 																		onChange={(option) => {
 																			props.handleChange('mobileNumber')(
 																				option,
@@ -611,7 +620,8 @@ class CreateContact extends React.Component {
 																		Address Line1
 																	</Label>
 																	<Input
-																		type="text" maxLength='100'
+																		type="text"
+																		maxLength="100"
 																		id="addressLine1"
 																		name="addressLine1"
 																		placeholder="Enter Address Line1"
@@ -649,7 +659,8 @@ class CreateContact extends React.Component {
 																		Address Line2
 																	</Label>
 																	<Input
-																		type="text" maxLength='100'
+																		type="text"
+																		maxLength="100"
 																		id="addressLine2"
 																		name="addressLine2"
 																		placeholder="Enter Address Line2"
@@ -675,7 +686,8 @@ class CreateContact extends React.Component {
 																		Address Line3
 																	</Label>
 																	<Input
-																		type="text" maxLength='100'
+																		type="text"
+																		maxLength="100"
 																		id="addressLine3"
 																		name="addressLine3"
 																		placeholder="Enter Address Line3"
@@ -701,7 +713,7 @@ class CreateContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="countryId">Country</Label>
 																	<Select
-																	styles={customStyles}
+																		styles={customStyles}
 																		options={
 																			country_list
 																				? selectOptionsFactory.renderOptions(
@@ -748,7 +760,7 @@ class CreateContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="stateId">State Region</Label>
 																	<Select
-																	styles={customStyles}
+																		styles={customStyles}
 																		options={
 																			state_list
 																				? selectOptionsFactory.renderOptions(
@@ -804,7 +816,8 @@ class CreateContact extends React.Component {
 																		placeholder="Enter City"
 																		id="city"
 																		name="city"
-																		type="text"maxLength='20'
+																		type="text"
+																		maxLength="20"
 																		className={
 																			props.errors.city && props.touched.city
 																				? 'is-invalid'
@@ -826,7 +839,8 @@ class CreateContact extends React.Component {
 																		Post Zip Code
 																	</Label>
 																	<Input
-																		type="text" maxLength='8'
+																		type="text"
+																		maxLength="8"
 																		id="postZipCode"
 																		name="postZipCode"
 																		placeholder="Enter Postal Zip Code"
@@ -867,7 +881,8 @@ class CreateContact extends React.Component {
 																		Billing Email
 																	</Label>
 																	<Input
-																		type="text" maxLength='80'
+																		type="text"
+																		maxLength="80"
 																		id="billingEmail"
 																		name="billingEmail"
 																		placeholder="Enter Billing Email Address"
@@ -896,16 +911,15 @@ class CreateContact extends React.Component {
 																		Contract PO Number
 																	</Label>
 																	<Input
-																		type="text" maxLength='8'
+																		type="text"
+																		maxLength="8"
 																		id="contractPoNumber"
 																		name="contractPoNumber"
 																		placeholder="Enter Contract PO Number"
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regEx.test(
-																					option.target.value,
-																				)
+																				this.regEx.test(option.target.value)
 																			) {
 																				props.handleChange('contractPoNumber')(
 																					option,
@@ -936,7 +950,8 @@ class CreateContact extends React.Component {
 																		Tax Registration Number
 																	</Label>
 																	<Input
-																		type="text" maxLength='20'
+																		type="text"
+																		maxLength="20"
 																		id="vatRegistrationNumber"
 																		name="vatRegistrationNumber"
 																		placeholder="Enter Tax Registration Number"
@@ -973,7 +988,7 @@ class CreateContact extends React.Component {
 																		Currency
 																	</Label>
 																	<Select
-																	styles={customStyles}
+																		styles={customStyles}
 																		options={
 																			currency_list
 																				? selectCurrencyFactory.renderOptions(
@@ -1016,23 +1031,47 @@ class CreateContact extends React.Component {
 														<Row>
 															<Col lg={12} className="mt-5">
 																<FormGroup className="text-right">
-																	<Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
-																		this.setState({ createMore: false }, () => {
-																			props.handleSubmit()
-																		})
-																	}}>
-																		<i className="fa fa-dot-circle-o"></i> Create
+																	<Button
+																		type="button"
+																		color="primary"
+																		className="btn-square mr-3"
+																		onClick={() => {
+																			this.setState(
+																				{ createMore: false },
+																				() => {
+																					props.handleSubmit();
+																				},
+																			);
+																		}}
+																	>
+																		<i className="fa fa-dot-circle-o"></i>{' '}
+																		Create
 																	</Button>
-																	<Button name="button" color="primary" className="btn-square mr-3"
-																			onClick={() => {
-																				this.setState({ createMore: true }, () => {
-																					props.handleSubmit()
-																				})
-																			}}>
-																		<i className="fa fa-refresh"></i> Create and More
+																	<Button
+																		name="button"
+																		color="primary"
+																		className="btn-square mr-3"
+																		onClick={() => {
+																			this.setState(
+																				{ createMore: true },
+																				() => {
+																					props.handleSubmit();
+																				},
+																			);
+																		}}
+																	>
+																		<i className="fa fa-refresh"></i> Create and
+																		More
 																	</Button>
-																	<Button color="secondary" className="btn-square"
-																			onClick={() => { this.props.history.push('/admin/master/contact') }}>
+																	<Button
+																		color="secondary"
+																		className="btn-square"
+																		onClick={() => {
+																			this.props.history.push(
+																				'/admin/master/contact',
+																			);
+																		}}
+																	>
 																		<i className="fa fa-ban"></i> Cancel
 																	</Button>
 																</FormGroup>

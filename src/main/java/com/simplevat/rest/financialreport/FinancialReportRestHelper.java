@@ -148,7 +148,7 @@ public class FinancialReportRestHelper {
 						break;
 
 					case EQUITY:
-						if (transactionCategoryName.equalsIgnoreCase("Owners Drawing")) {
+						if (!isNegative||transactionCategoryName.equalsIgnoreCase("Owners Drawing")){
 							closingBalance = closingBalance.negate();
 						}
 							balanceSheetResponseModel.getEquities().put(transactionCategoryName,closingBalance);

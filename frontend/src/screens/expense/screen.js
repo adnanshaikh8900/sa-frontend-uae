@@ -414,6 +414,8 @@ class Expense extends React.Component {
 			dialog: (
 				<ConfirmDeleteModal
 					isOpen={true}
+					const message =
+			'Warning: This Expense will be deleted permanently and cannot be recovered.  '
 					okHandler={() => this.removeExpense(id)}
 					cancelHandler={this.removeDialog}
 				/>
@@ -546,7 +548,7 @@ class Expense extends React.Component {
 											<Button
 												color="primary"
 												className="btn-square mr-1"
-												onClick={this.bulkDeleteExpenses}
+												onClick={this. bulkDeleteExpenses}
 												disabled={selectedRows.length === 0}
 											>
 												<i className="fa glyphicon glyphicon-trash fa-trash mr-1" />

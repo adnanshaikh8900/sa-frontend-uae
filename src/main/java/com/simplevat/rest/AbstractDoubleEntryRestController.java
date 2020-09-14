@@ -75,7 +75,7 @@ public abstract class AbstractDoubleEntryRestController {
 			invoiceService.persist(invoice);
 		} else if (postingRequestModel.getPostingRefType().equalsIgnoreCase(PostingReferenceTypeEnum.EXPENSE.name())) {
 			Expense expense = expenseService.findByPK(postingRequestModel.getPostingRefId());
-			expense.setStatus(ExpenseStatusEnum.POST.getValue());
+			expense.setStatus(ExpenseStatusEnum.POSTED.getValue());
 			expenseService.persist(expense);
 		}
 

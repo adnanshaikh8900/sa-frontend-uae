@@ -52,9 +52,9 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const invoiceimage = require('assets/images/invoice/invoice.png');
-const overWeekly = require('assets/images/invoice/icons_due within a week.png');
-const overduemonthly = require('assets/images/invoice/icons_due within month.png');
-const overdue = require('assets/images/invoice/icons_overdue.png');
+const overWeekly = require('assets/images/invoice/week1.png');
+const overduemonthly = require('assets/images/invoice/month.png');
+const overdue = require('assets/images/invoice/due1.png');
 
 class CustomerInvoice extends React.Component {
 	constructor(props) {
@@ -648,8 +648,9 @@ class CustomerInvoice extends React.Component {
 													style={{ width: '60px' }}
 												/>
 												<div>
-													<h5>Overdue</h5>
-													<h3 className="invoice-detail ml-2">
+												<h5 className ="ml-3">
+													Overdue</h5>
+													<h3 className="invoice-detail ml-3">
 														{this.state.overDueAmountDetails.overDueAmount}
 													</h3>
 												</div>
@@ -661,7 +662,8 @@ class CustomerInvoice extends React.Component {
 													style={{ width: '60px' }}
 												/>
 												<div>
-													<h5>Due Within This Week</h5>
+												<h5 className ="ml-3">
+													Due Within This Week</h5>
 													<h3 className="invoice-detail ml-3">
 														{
 															this.state.overDueAmountDetails
@@ -677,7 +679,8 @@ class CustomerInvoice extends React.Component {
 													style={{ width: '60px' }}
 												/>
 												<div>
-													<h5>Due Within 30 Days</h5>
+												<h5 className ="ml-3">
+													Due Within 30 Days</h5>
 													<h3 className="invoice-detail ml-3">
 														{
 															this.state.overDueAmountDetails

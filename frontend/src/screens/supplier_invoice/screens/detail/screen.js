@@ -422,7 +422,7 @@ class DetailSupplierInvoice extends React.Component {
 				data: data.concat({
 					id: this.state.idCount + 1,
 					description: '',
-					quantity: '',
+					quantity: 1,
 					unitPrice: '',
 					vatCategoryId: '',
 					subTotal: 0,

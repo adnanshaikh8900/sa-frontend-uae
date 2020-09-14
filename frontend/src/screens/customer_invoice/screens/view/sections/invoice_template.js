@@ -88,7 +88,9 @@ class InvoiceTemplate extends Component {
 										</span>
 									</h6>
 									<h6>
-										{companyData && companyData.company
+										{companyData &&
+										companyData.company &&
+										companyData.company.companyCountryCode
 											? companyData.company.companyCountryCode
 													.countryDescription
 											: ''}

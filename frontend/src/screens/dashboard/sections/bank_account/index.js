@@ -164,7 +164,7 @@ class BankAccount extends Component {
 													{this.props.bank_account_type.map(
 														(account, index) => (
 															<option key={index} value={account.bankAccountId}>
-																{account.name+"-"+account.accounName}
+																{account.name + '-' + account.accounName}
 															</option>
 														),
 													)}
@@ -181,35 +181,37 @@ class BankAccount extends Component {
 										<div className="data-item">
 											<div>
 												<h3>
-													{universal_currency_list[0] &&
-													<Currency
-														value={this.props.bank_account_graph.balance
-														}
+													{universal_currency_list[0] && (
+														<Currency
+															value={
+																this.props.bank_account_graph.balance
+																	? this.props.bank_account_graph.balance
+																	: 0
+															}
 															currencySymbol={
-															universal_currency_list[0]
-															? universal_currency_list[0].currencyIsoCode
-															: 'USD'
-														}
-													/>
-													}
+																universal_currency_list[0]
+																	? universal_currency_list[0].currencyIsoCode
+																	: 'USD'
+															}
+														/>
+													)}
 												</h3>
 												<p>BALANCE</p>
 											</div>
 										</div>
 										<div className="data-item">
 											<div>
-											<h3>
-													{universal_currency_list[0] &&
-													<Currency
-														value={this.state.totalBalance
-														}
+												<h3>
+													{universal_currency_list[0] && (
+														<Currency
+															value={this.state.totalBalance}
 															currencySymbol={
-															universal_currency_list[0]
-															? universal_currency_list[0].currencyIsoCode
-															: 'USD'
-														}
-													/>
-													}
+																universal_currency_list[0]
+																	? universal_currency_list[0].currencyIsoCode
+																	: 'USD'
+															}
+														/>
+													)}
 												</h3>
 												<p>ALL BANk ACCOUNTS</p>
 											</div>

@@ -268,7 +268,10 @@ class DetailBankAccount extends React.Component {
 											}}
 											validate={(values) => {
 												let errors = {};
-												if (this.state.transactionCount > 0) {
+												if (
+													this.state.transactionCount > 0 &&
+													!values.opening_balance
+												) {
 													errors.opening_balance =
 														'You cannot update opening balance';
 												}

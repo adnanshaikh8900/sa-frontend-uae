@@ -140,7 +140,7 @@ public class DataListController {
 				for (InvoiceStatusEnum statusEnum : statusEnums) {
 					switch (statusEnum) {
 						case PENDING:
-						case SAVED:
+						case PAID:
 						case POST:
 							dropdownModels.add(new DropdownModel(statusEnum.getValue(), statusEnum.getDesc()));
 							break;

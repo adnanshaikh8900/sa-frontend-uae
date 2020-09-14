@@ -75,7 +75,7 @@ public class ExpenseRestHelper {
 
 	public Expense getExpenseEntity(ExpenseModel model) {
 		Expense expense = new Expense();
-		expense.setStatus(ExpenseStatusEnum.SAVED.getValue());
+		expense.setStatus(ExpenseStatusEnum.DRAFT.getValue());
 		if (model.getExpenseId() != null) {
 			expense = expenseService.findByPK(model.getExpenseId());
 		}

@@ -65,7 +65,6 @@ class ExplainTrasactionDetail extends React.Component {
 			loading: false,
 			fileName: '',
 			initValue: {},
-			unexplainValue: {},
 			view: false,
 			chartOfAccountCategoryList: [],
 			transactionCategoryList: [],

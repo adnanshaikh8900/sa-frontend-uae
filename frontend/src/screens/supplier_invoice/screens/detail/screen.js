@@ -326,23 +326,24 @@ class DetailSupplierInvoice extends React.Component {
 			<Field
 				name={`lineItemsString.${idx}.quantity`}
 				render={({ field, form }) => (
-					<Input
-						type="text"
-						value={row['quantity'] !== 0 ? row['quantity'] : 0}
-						onChange={(e) => {
-							if (e.target.value === '' || this.regEx.test(e.target.value)) {
-								this.selectItem(
-									e.target.value,
-									row,
-									'quantity',
-									form,
-									field,
-									props,
-								);
-							}
-						}}
-						placeholder="Quantity"
-						className={`form-control 
+					<div>
+						<Input
+							type="text"
+							value={row['quantity'] !== 0 ? row['quantity'] : 0}
+							onChange={(e) => {
+								if (e.target.value === '' || this.regEx.test(e.target.value)) {
+									this.selectItem(
+										e.target.value,
+										row,
+										'quantity',
+										form,
+										field,
+										props,
+									);
+								}
+							}}
+							placeholder="Quantity"
+							className={`form-control 
            						${
 												props.errors.lineItemsString &&
 												props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -356,7 +357,19 @@ class DetailSupplierInvoice extends React.Component {
 													? 'is-invalid'
 													: ''
 											}`}
-					/>
+						/>
+						{props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].quantity && (
+								<div className="invalid-feedback">
+									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
+								</div>
+							)}
+					</div>
 				)}
 			/>
 		);
@@ -754,14 +767,14 @@ class DetailSupplierInvoice extends React.Component {
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 			// let val = (((+obj.unitPrice) * vat) / 100)
-			if (props.values.discountType.value === 'PERCENTAGE') {
+			if (props.values.discountType === 'PERCENTAGE') {
 				var val =
 					((+obj.unitPrice -
 						+((obj.unitPrice * discountPercentage) / 100).toFixed(2)) *
 						vat *
 						obj.quantity) /
 					100;
-			} else if (props.values.discountType.value === 'FIXED') {
+			} else if (props.values.discountType === 'FIXED') {
 				var val =
 					(obj.unitPrice * obj.quantity - discountAmount / data.length) *
 					(vat / 100);
@@ -777,9 +790,8 @@ class DetailSupplierInvoice extends React.Component {
 		});
 		const discount =
 			props.values.discountType === 'PERCENTAGE'
-				? (total_net * discountPercentage) / 100
+				? +((total_net * discountPercentage) / 100).toFixed(2)
 				: discountAmount;
-
 		this.setState(
 			{
 				data,
@@ -794,7 +806,7 @@ class DetailSupplierInvoice extends React.Component {
 				},
 			},
 			() => {
-				if (props.values.discountType.value === 'PERCENTAGE') {
+				if (props.values.discountType === 'PERCENTAGE') {
 					this.formRef.current.setFieldValue('discount', discount);
 				}
 			},
@@ -1033,9 +1045,13 @@ class DetailSupplierInvoice extends React.Component {
 																	// description: Yup.string().required(
 																	// 	'Value is Required',
 																	// ),
-																	quantity: Yup.number().required(
-																		'Value is Required',
-																	),
+																	quantity: Yup.number()
+																		.required('Value is Required')
+																		.test(
+																			'quantity',
+																			'Quantity Should be Greater than 1',
+																			(value) => value > 0,
+																		),
 																	unitPrice: Yup.number().required(
 																		'Value is Required',
 																	),

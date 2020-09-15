@@ -127,7 +127,7 @@ class ExplainTrasactionDetail extends React.Component {
 							explinationStatusEnum: res.data.explinationStatusEnum,
 							reference: res.data.reference ? res.data.reference : '',
 							coaCategoryId: res.data.coaCategoryId
-								? res.data.coaCategoryId
+								? parseInt(res.data.coaCategoryId)
 								: '',
 							explainParamList: res.data.explainParamList
 								? res.data.explainParamList
@@ -172,6 +172,7 @@ class ExplainTrasactionDetail extends React.Component {
 						},
 					},
 					() => {
+						console.log(typeof this.state.initValue.coaCategoryId);
 						if (
 							this.state.initValue.coaCategoryId === 10 &&
 							Object.keys(this.state.initValue.explainParamList).length !== 0
@@ -219,7 +220,10 @@ class ExplainTrasactionDetail extends React.Component {
 					},
 					() => {
 						//console.log(this.state.chartOfAccountCategoryList);
-						if (this.props.selectedData.explinationStatusEnum === 'FULL') {
+						if (
+							this.props.selectedData.explinationStatusEnum === 'FULL' ||
+							this.props.selectedData.explinationStatusEnum === 'RECONCILED'
+						) {
 							const id = this.state.chartOfAccountCategoryList[0].options.find(
 								(option) => option.value === this.state.initValue.coaCategoryId,
 							);
@@ -1706,7 +1710,8 @@ class ExplainTrasactionDetail extends React.Component {
 																					className="btn-square"
 																					onClick={props.handleSubmit}
 																				>
-																					<i className="fa fa-dot-circle-o"></i> Update
+																					<i className="fa fa-dot-circle-o"></i>{' '}
+																					Update
 																				</Button>
 																			</div>
 																		)}

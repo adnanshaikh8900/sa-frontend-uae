@@ -157,7 +157,7 @@ class DetailBankAccount extends React.Component {
 			ifscCode: data.ifsc_code,
 			swiftCode: data.swift_code,
 			openingBalance: data.opening_balance,
-			openingDate: moment(data.openingDate).format('DD/MM/YYYY'),
+			openingDate: data.openingDate,
 			bankCountry: data.country,
 			bankAccountType: data.account_type,
 		};
@@ -463,16 +463,16 @@ class DetailBankAccount extends React.Component {
 																			: ''
 																	}`}
 																	placeholderText="Expense Date"
-																	value={moment(
-																		props.values.openingDate,
-																	).format('DD/MM/YYYY')}
+																	value={props.values.openingDate}
 																	showMonthDropdown
 																	showYearDropdown
 																	dropdownMode="select"
 																	dateFormat="dd/MM/yyyy"
 																	// maxDate={new Date()}
 																	onChange={(value) => {
-																		props.handleChange('openingDate')(value);
+																		props.handleChange('openingDate')(
+																			moment(value).format('DD/MM/YYYY'),
+																		);
 																	}}
 																/>
 																{props.errors.openingDate &&

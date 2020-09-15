@@ -1055,14 +1055,23 @@ class DetailJournal extends React.Component {
 																	className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
 																>
 																	<FormGroup>
+																	{props.values.postingReferenceType ===
+																			'MANUAL' && 
 																		<Button
 																			type="button"
 																			color="danger"
 																			className="btn-square"
+																			disabled={
+																				props.values.postingReferenceType ===
+																				'MANUAL'
+																					? false
+																					: true
+																			}
 																			onClick={this.deleteJournal}
 																		>
 																			<i className="fa fa-trash"></i> Delete
 																		</Button>
+																			}	
 																	</FormGroup>
 																	<FormGroup className="text-right">
 																		{props.values.postingReferenceType ===

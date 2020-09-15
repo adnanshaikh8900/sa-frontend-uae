@@ -220,7 +220,8 @@ public class ExpenseRestHelper {
 			expenseModel.setDeleteFlag(entity.getDeleteFlag());
 			expenseModel.setExpenseAmount(entity.getExpenseAmount());
 			if (entity.getPayee()!=null){
-				expenseModel.setPayee(userService.findByPK(Integer.parseInt(entity.getPayee())).getFirstName());
+				User user = userService.findByPK(Integer.parseInt(entity.getPayee()));
+				expenseModel.setPayee(user.getFirstName()+" "+user.getLastName());
 			}
 
 			if (entity.getExpenseDate() != null) {

@@ -226,34 +226,47 @@ class CreateCustomerInvoice extends React.Component {
 			<Field
 				name={`lineItemsString.${idx}.quantity`}
 				render={({ field, form }) => (
-					<Input
-						type="text"
-						value={row['quantity'] !== 0 ? row['quantity'] : 0}
-						onChange={(e) => {
-							if (e.target.value === '' || this.regEx.test(e.target.value)) {
-								this.selectItem(
-									e.target.value,
-									row,
-									'quantity',
-									form,
-									field,
-									props,
-								);
-							}
-						}}
-						placeholder="Quantity"
-						className={`form-control  ${
-							props.errors.lineItemsString &&
+					<div>
+						<Input
+							type="text"
+							value={row['quantity'] !== 0 ? row['quantity'] : 0}
+							onChange={(e) => {
+								if (e.target.value === '' || this.regEx.test(e.target.value)) {
+									this.selectItem(
+										e.target.value,
+										row,
+										'quantity',
+										form,
+										field,
+										props,
+									);
+								}
+							}}
+							placeholder="Quantity"
+							className={`form-control  ${
+								props.errors.lineItemsString &&
+								props.errors.lineItemsString[parseInt(idx, 10)] &&
+								props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
+								Object.keys(props.touched).length > 0 &&
+								props.touched.lineItemsString &&
+								props.touched.lineItemsString[parseInt(idx, 10)] &&
+								props.touched.lineItemsString[parseInt(idx, 10)].quantity
+									? 'is-invalid'
+									: ''
+							}`}
+						/>
+						{props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
 							Object.keys(props.touched).length > 0 &&
 							props.touched.lineItemsString &&
 							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].quantity
-								? 'is-invalid'
-								: ''
-						}`}
-					/>
+							props.touched.lineItemsString[parseInt(idx, 10)].quantity && (
+								<div className="invalid-feedback">
+									{props.errors.lineItemsString[parseInt(idx, 10)].quantity}
+								</div>
+							)}
+					</div>
 				)}
 			/>
 		);

@@ -44,6 +44,7 @@ const mapStateToProps = (state) => {
 		expense_categories_list: state.expense.expense_categories_list,
 		bank_list: state.expense.bank_list,
 		pay_mode_list: state.expense.pay_mode_list,
+		user_list: state.expense.user_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -107,16 +108,14 @@ class DetailExpense extends React.Component {
 						this.props.expenseActions.getExpenseCategoriesList();
 						this.props.expenseActions.getBankList();
 						this.props.expenseActions.getPaymentMode();
-
+						this.props.expenseActions.getUserForDropdown();
 						this.setState(
 							{
 								loading: false,
 								current_expense_id: this.props.location.state.expenseId,
 								initValue: {
 									payee: res.data.payee,
-									expenseDate: res.data.expenseDate
-										? moment(res.data.expenseDate).utc().format('YYYY-MM-DD')
-										: '',
+									expenseDate: res.data.expenseDate ? res.data.expenseDate : '',
 									currency: res.data.currencyCode ? res.data.currencyCode : '',
 									expenseCategory: res.data.expenseCategory
 										? res.data.expenseCategory
@@ -183,7 +182,7 @@ class DetailExpense extends React.Component {
 
 		let formData = new FormData();
 		formData.append('expenseId', current_expense_id);
-		formData.append('payee', payee);
+		formData.append('payee', payee ? payee.value : '');
 		formData.append(
 			'expenseDate',
 			expenseDate !== null ? moment(expenseDate).utc().toDate() : '',
@@ -195,7 +194,9 @@ class DetailExpense extends React.Component {
 			receiptAttachmentDescription,
 		);
 		formData.append('expenseAmount', expenseAmount);
-		formData.append('payMode', payMode);
+		if (payMode && payMode.value) {
+			formData.append('payMode', payMode.value);
+		}
 		if (expenseCategory && expenseCategory.value) {
 			formData.append('expenseCategory', expenseCategory.value);
 		}
@@ -291,8 +292,7 @@ class DetailExpense extends React.Component {
 	render() {
 		const {
 			currency_list,
-			project_list,
-			employee_list,
+			user_list,
 			bank_list,
 			vat_list,
 			expense_categories_list,
@@ -343,6 +343,16 @@ class DetailExpense extends React.Component {
 
 														// })
 													}}
+													validate={(values) => {
+														let errors = {};
+														if (
+															values.payMode.value === 'BANK' &&
+															!values.bankAccountId
+														) {
+															errors.bankAccountId = 'Bank Account is Required';
+														}
+														return errors;
+													}}
 													validationSchema={Yup.object().shape({
 														expenseCategory: Yup.string().required(
 															'Expense Category is required',
@@ -350,21 +360,12 @@ class DetailExpense extends React.Component {
 														expenseDate: Yup.date().required(
 															'Expense Date is Required',
 														),
-														expenseAmount: Yup.string()
-															.required('Amount is Required')
-															.matches(/^[0-9]*$/, 'Enter a Valid Amount'),
 														currency: Yup.string().required(
 															'Currency is required',
 														),
-														payMode: Yup.string().required(
-															'Pay Through is Required',
-														),
-														bankAccountId: Yup.string().when('payMode', {
-															is: (val) => (val === 'BANK' ? true : false),
-															then: Yup.string().required(
-																'Bank Account is Required',
-															),
-														}),
+														expenseAmount: Yup.string()
+															.required('Amount is Required')
+															.matches(/^[0-9]*$/, 'Enter a Valid Amount'),
 														attachmentFile: Yup.mixed()
 															.test(
 																'fileType',
@@ -406,14 +407,14 @@ class DetailExpense extends React.Component {
 													{(props) => (
 														<Form onSubmit={props.handleSubmit}>
 															<Row>
-																<Col lg={4}>
+																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="expenseCategoryId">
 																			<span className="text-danger">*</span>
 																			Expense Category
 																		</Label>
 																		<Select
-																		styles={customStyles}
+																			styles={customStyles}
 																			id="expenseCategory"
 																			name="expenseCategory"
 																			options={
@@ -461,29 +462,46 @@ class DetailExpense extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																<Col lg={4}>
+																<Col lg={3}>
 																	<FormGroup className="mb-3">
-																		<Label htmlFor="payee">
-																			<span className="text-danger">*</span>
-																			Payee
-																		</Label>
-																		<Input
-																			type="text"
-																			name="payee"
-																			id="payee"
-																			rows="5"
-																			placeholder="Payee"
-																			onChange={(option) => {
-																				if (
-																					option.target.value === '' ||
-																					this.regExAlpha.test(
-																						option.target.value,
+																		<Label htmlFor="payee">Payee</Label>
+																		<Select
+																			styles={customStyles}
+																			options={
+																				user_list
+																					? selectOptionsFactory.renderOptions(
+																							'label',
+																							'value',
+																							user_list,
+																							'Payee',
+																					  )
+																					: []
+																			}
+																			value={
+																				user_list &&
+																				selectOptionsFactory
+																					.renderOptions(
+																						'label',
+																						'value',
+																						user_list,
+																						'Payee',
 																					)
-																				) {
+																					.find(
+																						(option) =>
+																							option.value ===
+																							+props.values.payee,
+																					)
+																			}
+																			onChange={(option) => {
+																				if (option && option.value) {
 																					props.handleChange('payee')(option);
+																				} else {
+																					props.handleChange('payee')('');
 																				}
 																			}}
-																			defaultValue={props.values.payee}
+																			placeholder="Select Payee"
+																			id="payee"
+																			name="payee"
 																			className={
 																				props.errors.payee &&
 																				props.touched.payee
@@ -491,15 +509,9 @@ class DetailExpense extends React.Component {
 																					: ''
 																			}
 																		/>
-																		{props.errors.payee &&
-																			props.touched.payee && (
-																				<div className="invalid-feedback">
-																					{props.errors.payee}
-																				</div>
-																			)}
 																	</FormGroup>
 																</Col>
-																<Col lg={4}>
+																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="expense_date">
 																			<span className="text-danger">*</span>
@@ -517,7 +529,7 @@ class DetailExpense extends React.Component {
 																			placeholderText="Expense Date"
 																			value={moment(
 																				props.values.expenseDate,
-																			).format('DD-MM-YYYY')}
+																			).format('DD/MM/YYYY')}
 																			showMonthDropdown
 																			showYearDropdown
 																			dropdownMode="select"
@@ -537,16 +549,14 @@ class DetailExpense extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-															</Row>
-															<Row>
-																<Col lg={4}>
+																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="currency">
 																			<span className="text-danger">*</span>
 																			Currency
 																		</Label>
 																		<Select
-																		styles={customStyles}
+																			styles={customStyles}
 																			id="currencyCode"
 																			name="currencyCode"
 																			options={
@@ -594,7 +604,7 @@ class DetailExpense extends React.Component {
 																</Col>
 															</Row>
 															<Row>
-																<Col lg={4}>
+																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="expenseAmount">
 																			<span className="text-danger">*</span>
@@ -631,11 +641,11 @@ class DetailExpense extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																<Col lg={2}>
+																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="vatCategoryId">Tax</Label>
 																		<Select
-																		styles={customStyles}
+																			styles={customStyles}
 																			className="select-default-width"
 																			id="vatCategoryId"
 																			name="vatCategoryId"
@@ -673,118 +683,119 @@ class DetailExpense extends React.Component {
 																	</FormGroup>
 																</Col>
 																{!props.values.payee && (
-																<Col lg={2}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="pay_through">
-																			Pay Through
-																		</Label>
-																		<Select
-																		styles={customStyles}
-																			id="pay_through"
-																			name="pay_through"
-																			options={
-																				pay_mode_list
-																					? selectOptionsFactory.renderOptions(
-																							'label',
-																							'value',
-																							pay_mode_list,
-																							'',
-																					  )
-																					: []
-																			}
-																			value={
-																				pay_mode_list &&
-																				pay_mode_list.find(
-																					(option) =>
-																						option.value ===
-																						props.values.payMode,
-																				)
-																			}
-																			onChange={(option) => {
-																				props.handleChange('payMode')(
-																					option.value,
-																				);
-																				if (option && option.value) {
-																					this.setState({
-																						payMode: option.value,
-																					});
-																				} else {
-																					this.setState({ payMode: '' });
-																				}
-																			}}
-																			className={
-																				props.errors.payMode &&
-																				props.touched.payMode
-																					? 'is-invalid'
-																					: ''
-																			}
-																		/>
-																		{props.errors.payMode &&
-																			props.touched.payMode && (
-																				<div className="invalid-feedback">
-																					{props.errors.payMode}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col>
-																)}
-																{props.values.payMode === 'BANK' && (
-																	<Col lg={4}>
+																	<Col lg={3}>
 																		<FormGroup className="mb-3">
-																			<Label htmlFor="bankAccountId">
-																				Bank
+																			<Label htmlFor="pay_through">
+																				Pay Through
 																			</Label>
 																			<Select
-																			styles={customStyles}
-																				id="bankAccountId"
-																				name="bankAccountId"
+																				styles={customStyles}
+																				id="pay_through"
+																				name="pay_through"
 																				options={
-																					bank_list && bank_list.data
+																					pay_mode_list
 																						? selectOptionsFactory.renderOptions(
-																								'name',
-																								'bankAccountId',
-																								bank_list.data,
-																								'Bank',
+																								'label',
+																								'value',
+																								pay_mode_list,
+																								'',
 																						  )
 																						: []
 																				}
 																				value={
-																					bank_list &&
-																					bank_list.data &&
-																					selectOptionsFactory
-																						.renderOptions(
-																							'name',
-																							'bankAccountId',
-																							bank_list.data,
-																							'Bank',
-																						)
-																						.find(
-																							(option) =>
-																								option.value ===
-																								+props.values.bankAccountId,
-																						)
-																				}
-																				onChange={(option) =>
-																					props.handleChange('bankAccountId')(
-																						option,
+																					pay_mode_list &&
+																					pay_mode_list.find(
+																						(option) =>
+																							option.value ===
+																							props.values.payMode,
 																					)
 																				}
+																				onChange={(option) => {
+																					props.handleChange('payMode')(
+																						option.value,
+																					);
+																					if (option && option.value) {
+																						this.setState({
+																							payMode: option.value,
+																						});
+																					} else {
+																						this.setState({ payMode: '' });
+																					}
+																				}}
 																				className={
-																					props.errors.bankAccountId &&
-																					props.touched.bankAccountId
+																					props.errors.payMode &&
+																					props.touched.payMode
 																						? 'is-invalid'
 																						: ''
 																				}
 																			/>
-																			{props.errors.bankAccountId &&
-																				props.touched.bankAccountId && (
+																			{props.errors.payMode &&
+																				props.touched.payMode && (
 																					<div className="invalid-feedback">
-																						{props.errors.bankAccountId}
+																						{props.errors.payMode}
 																					</div>
 																				)}
 																		</FormGroup>
 																	</Col>
 																)}
+																{props.values.payMode === 'BANK' &&
+																	!props.values.payee && (
+																		<Col lg={3}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="bankAccountId">
+																					Bank
+																				</Label>
+																				<Select
+																					styles={customStyles}
+																					id="bankAccountId"
+																					name="bankAccountId"
+																					options={
+																						bank_list && bank_list.data
+																							? selectOptionsFactory.renderOptions(
+																									'name',
+																									'bankAccountId',
+																									bank_list.data,
+																									'Bank',
+																							  )
+																							: []
+																					}
+																					value={
+																						bank_list &&
+																						bank_list.data &&
+																						selectOptionsFactory
+																							.renderOptions(
+																								'name',
+																								'bankAccountId',
+																								bank_list.data,
+																								'Bank',
+																							)
+																							.find(
+																								(option) =>
+																									option.value ===
+																									+props.values.bankAccountId,
+																							)
+																					}
+																					onChange={(option) =>
+																						props.handleChange('bankAccountId')(
+																							option,
+																						)
+																					}
+																					className={
+																						props.errors.bankAccountId &&
+																						props.touched.bankAccountId
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																				{props.errors.bankAccountId &&
+																					props.touched.bankAccountId && (
+																						<div className="invalid-feedback">
+																							{props.errors.bankAccountId}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+																	)}
 															</Row>
 															<Row>
 																<Col lg={8}>
@@ -898,18 +909,18 @@ class DetailExpense extends React.Component {
 																									}}
 																								/>
 																								{this.state.fileName && (
-																								<div>
-																									<i
-																										className="fa fa-close"
-																										onClick={() =>
-																											this.setState({
-																												fileName: '',
-																											})
-																										}
-																									></i>{' '}
-																									{this.state.fileName}
-																								</div>
-																							)}
+																									<div>
+																										<i
+																											className="fa fa-close"
+																											onClick={() =>
+																												this.setState({
+																													fileName: '',
+																												})
+																											}
+																										></i>{' '}
+																										{this.state.fileName}
+																									</div>
+																								)}
 																								{this.state.fileName ? (
 																									this.state.fileName
 																								) : (

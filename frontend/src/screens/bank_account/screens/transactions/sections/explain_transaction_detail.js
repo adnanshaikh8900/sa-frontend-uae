@@ -1535,7 +1535,11 @@ class ExplainTrasactionDetail extends React.Component {
 																				<DatePicker
 																					id="date"
 																					name="date"
-																					readOnly
+																					readOnly={
+																						this.state.creationMode === 'MANUAL'
+																							? false
+																							: true
+																					}
 																					placeholderText="Transaction Date"
 																					showMonthDropdown
 																					showYearDropdown

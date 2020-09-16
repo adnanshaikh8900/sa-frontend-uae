@@ -60,6 +60,24 @@ class DetailBankAccount extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			country_list: [
+				{
+					countryCode: 229,
+					countryDescription: null,
+					countryFullName: 'United Arab Emirates - (null)',
+					countryName: 'United Arab Emirates',
+					createdBy: 0,
+					createdDate: '2020-03-21T05:55:16.000+0000',
+					currencyCode: null,
+					defaltFlag: 'Y',
+					deleteFlag: false,
+					isoAlpha3Code: null,
+					lastUpdateBy: null,
+					lastUpdateDate: null,
+					orderSequence: null,
+					versionNumber: 1,
+				},
+			],
 			dialog: null,
 
 			current_bank_account_id: null,
@@ -72,7 +90,7 @@ class DetailBankAccount extends React.Component {
 		this.regExAlpha = /^[a-zA-Z]+$/;
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
-		this.ifscCode = /[A-Z0-9]+$/;
+		this.ifscCode = /[a-zA-Z0-9]+$/;
 		this.swiftRegex = /^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/;
 
 		this.account_for = [
@@ -640,9 +658,9 @@ class DetailBankAccount extends React.Component {
 																			option.target.value === '' ||
 																			this.ifscCode.test(option.target.value)
 																		) {
-																			props.handleChange('ifsc_code')(option);
+																			props.handleChange('ifsc_code')(option.target.value.toUpperCase(),);
 																		} else {
-																			props.handleChange('ifsc_code')(option);
+																			props.handleChange('ifsc_code')(option.target.value.toUpperCase(),);
 																		}
 																	}}
 																	className={
@@ -694,22 +712,22 @@ class DetailBankAccount extends React.Component {
 																	id="country"
 																	name="country"
 																	options={
-																		country_list
+																		this.state.country_list
 																			? selectOptionsFactory.renderOptions(
 																					'countryName',
 																					'countryCode',
-																					country_list,
+																					this.state.country_list,
 																					'Country',
 																			  )
 																			: []
 																	}
 																	value={
-																		country_list &&
+																		this.state.country_list &&
 																		selectOptionsFactory
 																			.renderOptions(
 																				'countryName',
 																				'countryCode',
-																				country_list,
+																				this.state.country_list,
 																				'Country',
 																			)
 																			.find(

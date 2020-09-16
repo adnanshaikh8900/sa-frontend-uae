@@ -98,8 +98,8 @@ public class BankAccountRestHelper {
 			bankModel.setSwiftCode(bank.getSwiftCode());
 			bankModel.setCurrentBalance(bank.getCurrentBalance());
 			if (bank.getOpeningDate() != null) {
-				Date date = Date.from(bank.getOpeningDate().atZone(ZoneId.systemDefault()).toInstant());
-				bankModel.setOpeningDate(date);
+			//	Date date = Date.from(bank.getOpeningDate().atZone(ZoneId.systemDefault()).toInstant());
+				bankModel.setOpeningDate(bank.getOpeningDate());
 			}
 			if (bank.getBankAccountStatus() != null) {
 				bankModel.setBankAccountStatus(bank.getBankAccountStatus().getBankAccountStatusCode());
@@ -113,6 +113,15 @@ public class BankAccountRestHelper {
 			}
 			if (bank.getBankCountry() != null) {
 				bankModel.setBankCountry(bank.getBankCountry().getCountryCode());
+			}
+			List<ReconcileStatus> reconcileStatusList = reconcileStatusService.getAllReconcileStatusListByBankAccountId(bankModel.getBankAccountId());
+			if(reconcileStatusList != null && !reconcileStatusList.isEmpty()) {
+				ReconcileStatus reconcileStatus = reconcileStatusList.get(0);
+				if (reconcileStatus.getReconciledDate()!=null){
+				//	Date date = Date.from(reconcileStatus.getReconciledDate().atZone(ZoneId.systemDefault()).toInstant());
+					bankModel.setLastReconcileDate(reconcileStatus.getReconciledDate());
+				}
+
 			}
 			return bankModel;
 		}
@@ -140,10 +149,10 @@ public class BankAccountRestHelper {
 		bankAccount.setSwiftCode(bankModel.getSwiftCode());
 		bankAccount.setVersionNumber(1);
 		if (bankModel.getOpeningDate()!= null) {
-			LocalDateTime openingDate = Instant.ofEpochMilli(bankModel.getOpeningDate().getTime())
-					.atZone(ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0).withNano(0)
-					.toLocalDateTime();
-			bankAccount.setOpeningDate(openingDate);
+//			//LocalDateTime openingDate = Instant.ofEpochMilli(bankModel.getOpeningDate().getTime())
+//					.atZone(ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0).withNano(0)
+//					.toLocalDateTime();
+			bankAccount.setOpeningDate(bankModel.getOpeningDate());
 		}
 	   if (bankModel.getBankAccountStatus() != null) {
 			BankAccountStatus bankAccountStatus = bankAccountStatusService
@@ -186,14 +195,14 @@ public class BankAccountRestHelper {
 		}
 		return bankAccount;
 	}
-	private void openingDate(BankModel bankModel, BankAccount bankAccount) {
-		if (bankModel.getOpeningDate()!= null) {
-			LocalDateTime openingDate = Instant.ofEpochMilli(bankModel.getOpeningDate().getTime())
-					.atZone(ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0).withNano(0)
-					.toLocalDateTime();
-			bankAccount.setOpeningDate(openingDate);
-		}
-	}
+//	private void openingDate(BankModel bankModel, BankAccount bankAccount) {
+//		if (bankModel.getOpeningDate()!= null) {
+//			LocalDateTime openingDate = Instant.ofEpochMilli(bankModel.getOpeningDate().getTime())
+//					.atZone(ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0).withNano(0)
+//					.toLocalDateTime();
+//			bankAccount.setOpeningDate(openingDate);
+//		}
+//	}
 
 	public BankAccount getBankAccountByBankAccountModel(BankModel bankModel) {
 		if (bankModel.getBankAccountId() != null) {
@@ -217,10 +226,10 @@ public class BankAccountRestHelper {
 			bankAccount.setVersionNumber(
 					bankAccount.getVersionNumber() != null ? 1 : (bankAccount.getVersionNumber() + 1));
 			if (bankModel.getOpeningDate()!= null) {
-				LocalDateTime openingDate = Instant.ofEpochMilli(bankModel.getOpeningDate().getTime())
-						.atZone(ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0).withNano(0)
-						.toLocalDateTime();
-				bankAccount.setOpeningDate(openingDate);
+//				LocalDateTime openingDate = Instant.ofEpochMilli(bankModel.getOpeningDate().getTime())
+//						.atZone(ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0).withNano(0)
+//						.toLocalDateTime();
+				bankAccount.setOpeningDate(bankModel.getOpeningDate());
 			}
 			if (bankModel.getBankAccountStatus() != null) {
 				BankAccountStatus bankAccountStatus = bankAccountStatusService

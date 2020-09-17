@@ -7,6 +7,7 @@ package com.simplevat.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import lombok.Data;
@@ -52,5 +53,7 @@ public class BankModel implements Serializable {
 
     private BigDecimal closingBalance;
 
-    private Date openingDate;
+    private LocalDateTime openingDate;
+
+    private LocalDateTime lastReconcileDate;
 }

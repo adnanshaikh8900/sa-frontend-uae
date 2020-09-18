@@ -149,7 +149,7 @@ class Invoice extends Component {
 										style={{ marginBottom: '10px' }}
 										className="btn-square"
 										onClick={() =>
-											this.props.history.push(`/admin/expense/expense/create`)
+											this.props.history.push(`/admin/income/customer-invoice/create`)
 										}
 									>
 										<i className="nav-icon icon-speech mr-1" />

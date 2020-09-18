@@ -1209,7 +1209,7 @@ class CreateSupplierInvoice extends React.Component {
 												{(props) => (
 													<Form onSubmit={props.handleSubmit}>
 														<Row>
-															<Col lg={3}>
+															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="invoice_number">
 																		<span className="text-danger">*</span>
@@ -1243,7 +1243,7 @@ class CreateSupplierInvoice extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
-															<Col lg={3}>
+															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="contactId">
 																		<span className="text-danger">*</span>

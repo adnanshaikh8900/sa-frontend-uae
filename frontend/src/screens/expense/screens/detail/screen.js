@@ -493,6 +493,7 @@ class DetailExpense extends React.Component {
 																					)
 																			}
 																			onChange={(option) => {
+																				console.log(props.values.payee);
 																				if (option && option.value) {
 																					props.handleChange('payee')(option);
 																				} else {

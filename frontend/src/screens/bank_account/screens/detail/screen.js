@@ -128,9 +128,7 @@ class DetailBankAccount extends React.Component {
 									account_is_for: res.personalCorporateAccountInd
 										? res.personalCorporateAccountInd
 										: '',
-									openingDate: res.openingDate
-										? moment(res.openingDate).format('DD/MM/YYYY')
-										: '',
+									openingDate: res.openingDate ? res.openingDate : '',
 								},
 							});
 						})
@@ -284,17 +282,6 @@ class DetailBankAccount extends React.Component {
 											onSubmit={(values, { resetForm }) => {
 												this.handleSubmit(values);
 											}}
-											validate={(values) => {
-												let errors = {};
-												if (
-													this.state.transactionCount > 0 &&
-													!values.opening_balance
-												) {
-													errors.opening_balance =
-														'You cannot update opening balance';
-												}
-												return errors;
-											}}
 											validationSchema={Yup.object().shape({
 												account_name: Yup.string()
 													.required('Account Name is Required')
@@ -432,6 +419,11 @@ class DetailBankAccount extends React.Component {
 																	type="text"
 																	id="opening_balance"
 																	name="opening_balance"
+																	readOnly={
+																		this.state.transactionCount > 0
+																			? true
+																			: false
+																	}
 																	placeholder="Your Opening Balance"
 																	value={props.values.opening_balance}
 																	onChange={(option) => {
@@ -481,16 +473,16 @@ class DetailBankAccount extends React.Component {
 																			: ''
 																	}`}
 																	placeholderText="Expense Date"
-																	value={props.values.openingDate}
+																	value={moment(
+																		props.values.openingDate,
+																	).format('DD/MM/YYYY')}
 																	showMonthDropdown
 																	showYearDropdown
 																	dropdownMode="select"
 																	dateFormat="dd/MM/yyyy"
 																	// maxDate={new Date()}
 																	onChange={(value) => {
-																		props.handleChange('openingDate')(
-																			moment(value).format('DD/MM/YYYY'),
-																		);
+																		props.handleChange('openingDate')(value);
 																	}}
 																/>
 																{props.errors.openingDate &&
@@ -658,9 +650,13 @@ class DetailBankAccount extends React.Component {
 																			option.target.value === '' ||
 																			this.ifscCode.test(option.target.value)
 																		) {
-																			props.handleChange('ifsc_code')(option.target.value.toUpperCase(),);
+																			props.handleChange('ifsc_code')(
+																				option.target.value.toUpperCase(),
+																			);
 																		} else {
-																			props.handleChange('ifsc_code')(option.target.value.toUpperCase(),);
+																			props.handleChange('ifsc_code')(
+																				option.target.value.toUpperCase(),
+																			);
 																		}
 																	}}
 																	className={

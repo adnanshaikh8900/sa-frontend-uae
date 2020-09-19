@@ -208,7 +208,7 @@ class Expense extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-						{row.expenseStatus !== 'Post' && (
+						{row.expenseStatus !== 'Posted' && (
 							<DropdownItem>
 								<div
 									onClick={() => {
@@ -221,7 +221,7 @@ class Expense extends React.Component {
 								</div>
 							</DropdownItem>
 						)}
-						{row.expenseStatus !== 'Post' && (
+						{row.expenseStatus !== 'Posted' && (
 							<DropdownItem
 								onClick={() => {
 									this.postExpense(row);

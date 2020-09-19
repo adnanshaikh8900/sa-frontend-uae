@@ -97,7 +97,7 @@ class CreateBankAccount extends React.Component {
 		this.regExAlpha = /^[a-zA-Z_ ]+$/;
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
-		this.ifscCode = /[A-Z0-9]+$/;
+		this.ifscCode = /[a-zA-Z0-9]+$/;
 		this.swiftRegex = /^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/;
 		this.regDecimal = /^\d*\.?\d*$/;
 		this.account_for = [
@@ -626,7 +626,7 @@ class CreateBankAccount extends React.Component {
 																				option.target.value === '' ||
 																				this.ifscCode.test(option.target.value)
 																			) {
-																				props.handleChange('ifsc_code')(option);
+																				props.handleChange('ifsc_code')(option.target.value.toUpperCase(),);
 																			}
 																		}}
 																		className={

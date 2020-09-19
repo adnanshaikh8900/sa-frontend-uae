@@ -173,11 +173,10 @@ class DetailBankAccount extends React.Component {
 			ifscCode: data.ifsc_code,
 			swiftCode: data.swift_code,
 			openingBalance: data.opening_balance,
-			openingDate: '2020-09-17T09:46:51.337+0000',
+			openingDate: data.openingDate,
 			bankCountry: data.country,
 			bankAccountType: data.account_type,
 		};
-		console.log(moment(data.openingDate).toString());
 		this.props.detailBankAccountActions
 			.updateBankAccount(obj)
 			.then((res) => {
@@ -651,9 +650,13 @@ class DetailBankAccount extends React.Component {
 																			option.target.value === '' ||
 																			this.ifscCode.test(option.target.value)
 																		) {
-																			props.handleChange('ifsc_code')(option.target.value.toUpperCase(),);
+																			props.handleChange('ifsc_code')(
+																				option.target.value.toUpperCase(),
+																			);
 																		} else {
-																			props.handleChange('ifsc_code')(option.target.value.toUpperCase(),);
+																			props.handleChange('ifsc_code')(
+																				option.target.value.toUpperCase(),
+																			);
 																		}
 																	}}
 																	className={

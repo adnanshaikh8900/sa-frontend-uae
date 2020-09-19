@@ -21,7 +21,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import * as VatTransactionActions from './actions';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-toastify/dist/ReactToastify.css';
-// import 'react-select/dist/react-select.css'
+import { CommonActions } from 'services/global';
 import './style.scss';
 
 const mapStateToProps = (state) => {
@@ -33,6 +33,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		vatTransactionActions: bindActionCreators(VatTransactionActions, dispatch),
+		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
 

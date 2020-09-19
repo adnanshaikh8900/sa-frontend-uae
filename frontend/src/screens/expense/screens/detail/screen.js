@@ -488,11 +488,12 @@ class DetailExpense extends React.Component {
 																					)
 																					.find(
 																						(option) =>
-																							option.value ===
-																							+props.values.payee,
+																							option.label ===
+																							props.values.payee,
 																					)
 																			}
 																			onChange={(option) => {
+																				console.log(props.values.payee);
 																				if (option && option.value) {
 																					props.handleChange('payee')(option);
 																				} else {

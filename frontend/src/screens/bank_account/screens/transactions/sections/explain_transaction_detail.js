@@ -124,6 +124,7 @@ class ExplainTrasactionDetail extends React.Component {
 							vatId: res.data.vatId ? res.data.vatId : '',
 							vendorId: res.data.vendorId ? res.data.vendorId : '',
 							customerId: res.data.customerId ? res.data.customerId : '',
+							employeeId: res.data.employeeId ? res.data.employeeId : '',
 							explinationStatusEnum: res.data.explinationStatusEnum,
 							reference: res.data.reference ? res.data.reference : '',
 							coaCategoryId: res.data.coaCategoryId

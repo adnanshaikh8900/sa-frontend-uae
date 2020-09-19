@@ -190,6 +190,9 @@ class CreateBankAccount extends React.Component {
 			countrycode: countrycode ? countrycode : '',
 			personalCorporateAccountInd: account_is_for ? account_is_for.value : '',
 		};
+		console.log(moment(openingDate, 'DD/MM/YYYY').toString());
+		console.log(moment(openingDate).format('DD/MM/YYYY HH:mm:ss'));
+		console.log(obj);
 		this.props.createBankAccountActions
 			.createBankAccount(obj)
 			.then((res) => {

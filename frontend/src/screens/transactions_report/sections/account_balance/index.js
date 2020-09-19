@@ -15,7 +15,7 @@ import Select from 'react-select';
 import { DateRangePicker2, Currency } from 'components';
 import moment from 'moment';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import DateRangePicker from 'react-bootstrap-daterangepicker';
+import DatePicker from 'react-datepicker';
 
 import * as accountBalanceData from '../../actions';
 import { selectOptionsFactory } from 'utils';
@@ -87,6 +87,13 @@ class AccountBalances extends React.Component {
 			startDate: '',
 			endDate: '',
 			universal_currency_list: this.props.universal_currency_list,
+			filterData: {
+				filter_type: '',
+				filter_category: '',
+				filter_account: '',
+				startDate: '',
+				endDate: '',
+			},
 		};
 	}
 
@@ -95,8 +102,6 @@ class AccountBalances extends React.Component {
 	};
 	getAccountBalanceData = () => {
 		this.props.accountBalanceData.getAccountBalanceReport();
-		//this.props.accountBalanceData.getTransactionTypeList();
-		//this.props.accountBalanceData.getTransactionCategoryList();
 		this.props.accountBalanceData.getAccountTypeList();
 	};
 
@@ -110,21 +115,36 @@ class AccountBalances extends React.Component {
 
 	getSelectedData = () => {
 		const postObj = {
-			filter_type: this.state.filter_type !== '' ? this.state.filter_type : '',
+			filter_type:
+				this.state.filterData.filter_type !== ''
+					? this.state.filterData.filter_type
+					: '',
 			filter_category:
-				this.state.filter_category !== '' ? this.state.filter_category : '',
+				this.state.filterData.filter_category !== ''
+					? this.state.filterData.filter_category
+					: '',
 			filter_account:
-				this.state.filter_account !== '' ? this.state.filter_account : '',
-			startDate: this.state.startDate !== '' ? this.state.startDate : '',
-			endDate: this.state.endDate !== '' ? this.state.endDate : '',
+				this.state.filterData.filter_account !== ''
+					? this.state.filterData.filter_account
+					: '',
+			startDate:
+				this.state.filterData.startDate !== ''
+					? moment(this.state.filterData.startDate).format('DD/MM/YYYY')
+					: '',
+			endDate:
+				this.state.filterData.endDate !== ''
+					? moment(this.state.filterData.endDate).format('DD/MM/YYYY')
+					: '',
 		};
 		this.props.accountBalanceData.getAccountBalanceReport(postObj);
 	};
 
-	handleChange = (e, picker) => {
-		let startingDate = picker ? moment(picker.startDate._d).format('L') : '';
-		let endingDate = picker ? moment(picker.endDate._d).format('L') : '';
-		this.setState({ startDate: startingDate, endDate: endingDate });
+	handleChange = (val, name) => {
+		this.setState({
+			filterData: Object.assign(this.state.filterData, {
+				[name]: val,
+			}),
+		});
 	};
 	transactionAmount(cell, row, extraData) {
 		return row.transactionAmount ? (
@@ -149,12 +169,8 @@ class AccountBalances extends React.Component {
 			  }))
 			: '';
 
-		const {
-			transaction_type_list,
-			transaction_category_list,
-			account_type_list,
-			universal_currency_list,
-		} = this.props;
+		const { account_type_list, universal_currency_list } = this.props;
+		const { filterData } = this.state;
 
 		return (
 			<div className="transaction-report-section">
@@ -194,23 +210,37 @@ class AccountBalances extends React.Component {
 								<h5>Filter : </h5>
 								<Row>
 									<Col lg={2} className="mb-1">
-										{/* <DateRangePicker>
-                      <Input type="text" placeholder="Transaction Date" />
-                    </DateRangePicker> */}
-										<DateRangePicker
-											id="transaction_date"
-											name="transaction_date"
-											// onChange={(option) => this.handleChange('payment_date')(option)}
-
-											onApply={this.handleChange}
-										>
-											<Input
-												type="text"
-												value={this.state.startDate}
-												selected={this.state.startDate}
-												placeholder="Transaction Date"
-											/>
-										</DateRangePicker>
+										<DatePicker
+											className="form-control"
+											id="startDate"
+											name="startDate"
+											placeholderText="Start Date"
+											showMonthDropdown
+											showYearDropdown
+											autoComplete="off"
+											dropdownMode="select"
+											dateFormat="dd/MM/yyyy"
+											selected={filterData.startDate}
+											onChange={(value) => {
+												this.handleChange(value, 'startDate');
+											}}
+										/>
+									</Col>
+									<Col lg={2} className="mb-1">
+										<DatePicker
+											id="endDate"
+											name="endDate"
+											className="form-control"
+											placeholderText="End Date"
+											showMonthDropdown
+											showYearDropdown
+											dropdownMode="select"
+											dateFormat="dd/MM/yyyy"
+											selected={filterData.endDate}
+											onChange={(value) => {
+												this.handleChange(value, 'endDate');
+											}}
+										/>
 									</Col>
 
 									<Col lg={2} className="mb-1">
@@ -223,17 +253,20 @@ class AccountBalances extends React.Component {
 															'name',
 															'id',
 															account_type_list,
+															'Account',
 													  )
 													: []
 											}
 											// options={colourOptions}
-											value={this.state.filter_account}
 											placeholder="Account"
-											onChange={(option) =>
-												this.setState({
-													filter_account: option,
-												})
-											}
+											value={filterData.filter_account}
+											onChange={(option) => {
+												if (option && option.value) {
+													this.handleChange(option, 'filter_account');
+												} else {
+													this.handleChange('', 'filter_account');
+												}
+											}}
 										/>
 									</Col>
 									{/* <Col lg={2} className="mb-1">

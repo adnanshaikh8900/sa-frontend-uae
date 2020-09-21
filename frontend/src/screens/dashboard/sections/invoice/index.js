@@ -83,17 +83,23 @@ class Invoice extends Component {
 			labels: this.props.invoice_graph.labels || [],
 			datasets: [
 				{
-					label: (this.props.invoice_graph.paid || {})['label'],
+					label: this.props.invoice_graph.paid
+						? (this.props.invoice_graph.paid || {})['label']
+						: 'Paid',
 					backgroundColor: '#36A2EB89',
 					data: (this.props.invoice_graph.paid || {})['data'],
 				},
 				{
-					label: (this.props.invoice_graph.due || {})['label'],
+					label: this.props.invoice_graph.due
+						? (this.props.invoice_graph.due || {})['label']
+						: 'Due',
 					backgroundColor: '#FF638489',
 					data: (this.props.invoice_graph.due || {})['data'],
 				},
 				{
-					label: (this.props.invoice_graph.overdue || {})['label'],
+					label: this.props.invoice_graph.overdue
+						? (this.props.invoice_graph.overdue || {})['label']
+						: 'Overdue',
 					backgroundColor: '#FFCE5689',
 					data: (this.props.invoice_graph.overdue || {})['data'],
 				},
@@ -145,34 +151,35 @@ class Invoice extends Component {
 								<div className="flex-wrapper" style={{ paddingLeft: 20 }}>
 									<div className="data-info">
 										<Button
-										color="primary"
-										style={{ marginBottom: '10px' }}
-										className="btn-square"
-										onClick={() =>
-											this.props.history.push(`/admin/income/customer-invoice/create`)
-										}
-									>
-										<i className="nav-icon icon-speech mr-1" />
-										New Invoice
-									</Button>
+											color="primary"
+											style={{ marginBottom: '10px' }}
+											className="btn-square"
+											onClick={() =>
+												this.props.history.push(
+													`/admin/income/customer-invoice/create`,
+												)
+											}
+										>
+											<i className="nav-icon icon-speech mr-1" />
+											New Invoice
+										</Button>
 									</div>
 									<div className="data-info">
 										<div className="data-item">
 											<div>
-											<h3>
-										{universal_currency_list[0] &&
-											
-												<Currency
-												value={sum}
-													currencySymbol={
-														universal_currency_list[0]
-															? universal_currency_list[0].currencyIsoCode
-															: 'USD'
-														}
-													/>
-													}
+												<h3>
+													{universal_currency_list[0] && (
+														<Currency
+															value={sum}
+															currencySymbol={
+																universal_currency_list[0]
+																	? universal_currency_list[0].currencyIsoCode
+																	: 'USD'
+															}
+														/>
+													)}
 												</h3>
-											
+
 												<p>OUTSTANDING</p>
 											</div>
 										</div>

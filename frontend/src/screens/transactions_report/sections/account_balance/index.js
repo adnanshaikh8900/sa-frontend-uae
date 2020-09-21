@@ -94,6 +94,10 @@ class AccountBalances extends React.Component {
 				startDate: '',
 				endDate: '',
 			},
+			initValue: {
+				startDate: moment().startOf('month').format('DD/MM/YYYY'),
+				endDate: moment().endOf('month').format('DD/MM/YYYY'),
+			},
 		};
 	}
 
@@ -101,7 +105,12 @@ class AccountBalances extends React.Component {
 		this.getAccountBalanceData();
 	};
 	getAccountBalanceData = () => {
-		this.props.accountBalanceData.getAccountBalanceReport();
+		const { initValue } = this.state;
+		const postData = {
+			startDate: initValue.startDate,
+			endDate: initValue.endDate,
+		};
+		this.props.accountBalanceData.getAccountBalanceReport(postData);
 		this.props.accountBalanceData.getAccountTypeList();
 	};
 
@@ -164,7 +173,7 @@ class AccountBalances extends React.Component {
 					transactionDescription: account.transactionDescription,
 					transactionCategory: account.transactionCategory,
 					transactionAmount: account.transactionAmount,
-					transactionDate: moment(account.transactionDate).format('L'),
+					transactionDate: moment(account.transactionDate).format('DD/MM/YYYY'),
 					transactionId: account.transactionId,
 			  }))
 			: '';

@@ -687,6 +687,7 @@ class Expense extends React.Component {
 											csvFileName="expense_list.csv"
 										>
 											<TableHeaderColumn
+											thStyle={{ whiteSpace: 'normal' }} 
 												dataField="expenseDate"
 												dataSort
 												dataFormat={this.renderDate}
@@ -694,10 +695,11 @@ class Expense extends React.Component {
 											>
 												Expense Date
 											</TableHeaderColumn>
-											<TableHeaderColumn dataField="payee" dataSort>
+											<TableHeaderColumn thStyle={{ whiteSpace: 'normal' }} dataField="payee" dataSort>
 												Payee
 											</TableHeaderColumn>
 											<TableHeaderColumn
+											thStyle={{ whiteSpace: 'normal' }} 
 												width="20%"
 												dataField="expenseStatus"
 												dataFormat={this.renderInvoiceStatus}
@@ -715,6 +717,7 @@ class Expense extends React.Component {
 												Receipt No
 											</TableHeaderColumn> */}
 											<TableHeaderColumn
+											thStyle={{ whiteSpace: 'normal' }} 
 												dataField="transactionCategoryName"
 												dataSort
 												width="20%"
@@ -722,6 +725,7 @@ class Expense extends React.Component {
 												Expense Category
 											</TableHeaderColumn>
 											<TableHeaderColumn
+											thStyle={{ whiteSpace: 'normal' }} 
 												dataField="expenseAmount"
 												dataSort
 												dataFormat={this.renderAmount}
@@ -731,6 +735,7 @@ class Expense extends React.Component {
 												Expense Amount
 											</TableHeaderColumn>
 											<TableHeaderColumn
+											thStyle={{ whiteSpace: 'normal' }} 
 												className="text-right"
 												columnClassName="text-right"
 												width="55"

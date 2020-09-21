@@ -17,5 +17,6 @@ public class ExpenseListModel {
 	private Date expenseDate;
 	private Integer chartOfAccountId;
 	private String expenseStatus;
+	private Integer bankAccountId;
 
 }

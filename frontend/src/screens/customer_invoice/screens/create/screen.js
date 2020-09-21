@@ -131,6 +131,7 @@ class CreateCustomerInvoice extends React.Component {
 			discountPercentage: '',
 			discountAmount: 0,
 			exist: false,
+			prefix: 'INV-',
 		};
 
 		this.formRef = React.createRef();
@@ -767,7 +768,7 @@ class CreateCustomerInvoice extends React.Component {
 		const formData = new FormData();
 		formData.append(
 			'referenceNumber',
-			invoice_number !== null ? invoice_number : '',
+			invoice_number !== null ? this.state.prefix + invoice_number : '',
 		);
 		formData.append(
 			'invoiceDueDate',
@@ -821,6 +822,7 @@ class CreateCustomerInvoice extends React.Component {
 		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
+
 		this.props.customerInvoiceCreateActions
 			.createInvoice(formData)
 			.then((res) => {
@@ -928,7 +930,7 @@ class CreateCustomerInvoice extends React.Component {
 	};
 
 	render() {
-		const { data, discountOptions, initValue, exist } = this.state;
+		const { data, discountOptions, initValue, exist, prefix } = this.state;
 		const { currency_list, customer_list } = this.props;
 		return (
 			<div className="create-customer-invoice-screen">
@@ -1071,13 +1073,17 @@ class CreateCustomerInvoice extends React.Component {
 																		id="invoice_number"
 																		name="invoice_number"
 																		placeholder="Invoice Number"
-																		value={props.values.invoice_number}
+																		value={prefix + props.values.invoice_number}
 																		onBlur={props.handleBlur('invoice_number')}
-																		onChange={(value) => {
-																			props.handleChange('invoice_number')(
-																				value,
+																		onChange={(e) => {
+																			const input = e.target.value;
+																			const string = input.substr(
+																				prefix.length,
 																			);
-																			this.validationCheck(value.target.value);
+																			props.handleChange('invoice_number')(
+																				string,
+																			);
+																			this.validationCheck(e.target.value);
 																		}}
 																		className={
 																			props.errors.invoice_number &&

@@ -36,38 +36,59 @@ export const getCustomerInvoiceReport = (inputObj) => {
 	};
 };
 
-export const getAccountBalanceReport = (postObj) => {
-	let transactionTypeCode, transactionCategoryId, accountId;
+// export const getAccountBalanceReport = (postObj) => {
+// 	let transactionTypeCode, transactionCategoryId, accountId;
 
-	transactionTypeCode =
-		postObj && postObj.filter_type !== ''
-			? `transactionTypeCode=${postObj.filter_type.value}`
-			: '';
-	transactionCategoryId =
-		postObj && postObj.filter_category !== ''
-			? `transactionCategoryId=${postObj.filter_category.value}`
-			: '';
-	accountId =
-		postObj && postObj.filter_account !== ''
-			? `accountId=${postObj.filter_account.value}`
-			: '';
+// 	transactionTypeCode =
+// 		postObj && postObj.filter_type !== ''
+// 			? `transactionTypeCode=${postObj.filter_type.value}`
+// 			: '';
+// 	transactionCategoryId =
+// 		postObj && postObj.filter_category !== ''
+// 			? `transactionCategoryId=${postObj.filter_category.value}`
+// 			: '';
+// 	accountId =
+// 		postObj && postObj.filter_account !== ''
+// 			? `accountId=${postObj.filter_account.value}`
+// 			: '';
+
+// 	return (dispatch) => {
+// 		let data = {
+// 			method: 'post',
+// 			url: `/rest/transactionreport/accountBalanceReport?${transactionTypeCode}&${transactionCategoryId}&${accountId}`,
+
+// 			data: postObj,
+// 		};
+// 		return authApi(data)
+// 			.then((res) => {
+// 				if (res.status === 200) {
+// 					dispatch({
+// 						type: TEMP.ACCOUNT_BALANCE_REPORT,
+// 						payload: {
+// 							data: res.data,
+// 						},
+// 					});
+// 				}
+// 			})
+// 			.catch((err) => {
+// 				throw err;
+// 			});
+// 	};
+// };
+
+export const getAccountBalanceReport = (postData) => {
+	const { startDate, endDate } = postData;
+	let url = `/rest/transactionreport/accountBalanceReport?startDate=${startDate}&endDate=${endDate}`;
 
 	return (dispatch) => {
 		let data = {
-			method: 'post',
-			url: `/rest/transactionreport/accountBalanceReport?${transactionTypeCode}&${transactionCategoryId}&${accountId}`,
-
-			data: postObj,
+			method: 'get',
+			url,
 		};
 		return authApi(data)
 			.then((res) => {
 				if (res.status === 200) {
-					dispatch({
-						type: TEMP.ACCOUNT_BALANCE_REPORT,
-						payload: {
-							data: res.data,
-						},
-					});
+					return res;
 				}
 			})
 			.catch((err) => {

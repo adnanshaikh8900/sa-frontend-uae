@@ -16,7 +16,7 @@ import Select from 'react-select';
 
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
-import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader, ConfirmDeleteModal,Currency } from 'components';
 
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -32,6 +32,7 @@ const mapStateToProps = (state) => {
 	return {
 		product_list: state.product.product_list,
 		vat_list: state.product.vat_list,
+		universal_currency_list: state.common.universal_currency_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -291,7 +292,7 @@ class Product extends React.Component {
 			csvData,
 			view,
 		} = this.state;
-		const { product_list, vat_list } = this.props;
+		const { product_list, vat_list,universal_currency_list } = this.props;
 
 		return (
 			<div className="product-screen">
@@ -484,6 +485,7 @@ class Product extends React.Component {
 													dataField="unitPrice"
 													dataSort
 													// dataFormat={this.vatCategoryFormatter}
+													formatExtraData={universal_currency_list}
 												>
 													Unit Price
 												</TableHeaderColumn>

@@ -267,11 +267,11 @@ class VatTransactions extends React.Component {
 											</Button>
 										</ButtonGroup>
 									</FormGroup>
-									<FormGroup>
+									{/* <FormGroup>
 										<div className="date-range">
 											<DateRangePicker2 ranges={ranges} opens={'left'} />
 										</div>
-									</FormGroup>
+									</FormGroup> */}
 								</div>
 							</Form>
 							<div className="py-3">
@@ -310,15 +310,23 @@ class VatTransactions extends React.Component {
 											onChange={this.changeType}
 										/>
 									</Col>
-									<Col lg={1} className="mb-1">
+									<Col lg={3} className="mb-1">
 										<Button
 											type="button"
 											color="primary"
-											className="btn-square"
+											className="btn-square mr-1"
 											onClick={this.handleSearch}
 										>
 											<i className="fa fa-search"></i>
 										</Button>
+										<Button
+														type="button"
+														color="primary"
+														className="btn-square"
+														onClick={this.clearAll}
+													>
+														<i className="fa fa-refresh"></i>
+													</Button>
 									</Col>
 								</Row>
 							</div>

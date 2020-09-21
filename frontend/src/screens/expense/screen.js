@@ -244,7 +244,7 @@ class Expense extends React.Component {
             </DropdownItem>  */}
 						<DropdownItem
 							onClick={() => {
-								this.closeExpense(row.expenseId);
+								this.closeExpense(row.expenseId, row.bankAccountId);
 							}}
 						>
 							<i className="fa fa-trash-o" /> Delete
@@ -409,18 +409,33 @@ class Expense extends React.Component {
 			});
 	};
 
-	closeExpense = (id) => {
-		this.setState({
-			dialog: (
-				<ConfirmDeleteModal
-					isOpen={true}
-					const message =
-			'Warning: This Expense will be deleted permanently and cannot be recovered.  '
-					okHandler={() => this.removeExpense(id)}
-					cancelHandler={this.removeDialog}
-				/>
-			),
-		});
+	closeExpense = (id, bankId) => {
+		console.log(bankId);
+		if (bankId) {
+			this.setState({
+				dialog: (
+					<ConfirmDeleteModal
+						isOpen={true}
+						const
+						message="Please unexplain the transaction first to delete the expense"
+						okHandler={this.removeDialog}
+						cancelHandler={this.removeDialog}
+					/>
+				),
+			});
+		} else {
+			this.setState({
+				dialog: (
+					<ConfirmDeleteModal
+						isOpen={true}
+						const
+						message="Warning: This Expense will be deleted permanently and cannot be recovered.  "
+						okHandler={() => this.removeExpense(id)}
+						cancelHandler={this.removeDialog}
+					/>
+				),
+			});
+		}
 	};
 
 	removeExpense = (id) => {
@@ -548,7 +563,7 @@ class Expense extends React.Component {
 											<Button
 												color="primary"
 												className="btn-square mr-1"
-												onClick={this. bulkDeleteExpenses}
+												onClick={this.bulkDeleteExpenses}
 												disabled={selectedRows.length === 0}
 											>
 												<i className="fa glyphicon glyphicon-trash fa-trash mr-1" />

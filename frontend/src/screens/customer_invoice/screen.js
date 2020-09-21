@@ -306,7 +306,7 @@ class CustomerInvoice extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-						{row.statusEnum !== 'Paid' && (
+						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
 							<DropdownItem>
 								<div
 									onClick={() => {
@@ -651,7 +651,19 @@ class CustomerInvoice extends React.Component {
 												<h5 className ="ml-3">
 													Overdue</h5>
 													<h3 className="invoice-detail ml-3">
-														{this.state.overDueAmountDetails.overDueAmount}
+													{universal_currency_list[0] &&
+											this.state.overDueAmountDetails.overDueAmount && (
+												<Currency
+													value={
+														(this.state.overDueAmountDetails.overDueAmount)
+													}
+													currencySymbol={
+														universal_currency_list[0]
+															? universal_currency_list[0].currencyIsoCode
+															: 'USD'
+													}
+												/>
+											)}
 													</h3>
 												</div>
 											</div>
@@ -665,10 +677,21 @@ class CustomerInvoice extends React.Component {
 												<h5 className ="ml-3">
 													Due Within This Week</h5>
 													<h3 className="invoice-detail ml-3">
-														{
-															this.state.overDueAmountDetails
-																.overDueAmountWeekly
-														}
+													{universal_currency_list[0] &&
+											this.state.overDueAmountDetails
+											.overDueAmountWeekly && (
+												<Currency
+													value={
+														(this.state.overDueAmountDetails
+															.overDueAmountWeekly)
+													}
+													currencySymbol={
+														universal_currency_list[0]
+															? universal_currency_list[0].currencyIsoCode
+															: 'USD'
+													}
+												/>
+											)}
 													</h3>
 												</div>
 											</div>
@@ -682,10 +705,21 @@ class CustomerInvoice extends React.Component {
 												<h5 className ="ml-3">
 													Due Within 30 Days</h5>
 													<h3 className="invoice-detail ml-3">
-														{
-															this.state.overDueAmountDetails
-																.overDueAmountMonthly
-														}
+													{universal_currency_list[0] &&
+											this.state.overDueAmountDetails
+											.overDueAmountMonthly && (
+												<Currency
+													value={
+														(this.state.overDueAmountDetails
+															.overDueAmountMonthly)
+													}
+													currencySymbol={
+														universal_currency_list[0]
+															? universal_currency_list[0].currencyIsoCode
+															: 'USD'
+													}
+												/>
+											)}
 													</h3>
 												</div>
 											</div>
@@ -881,6 +915,7 @@ class CustomerInvoice extends React.Component {
 											}}
 										>
 											<TableHeaderColumn
+											thStyle={{ whiteSpace: 'normal' }} 
 												dataField="invoiceNumber"
 												// dataFormat={this.renderInvoiceNumber}
 												dataSort
@@ -891,6 +926,7 @@ class CustomerInvoice extends React.Component {
 												Customer Name
 											</TableHeaderColumn>
 											<TableHeaderColumn
+											thStyle={{ whiteSpace: 'normal' }} 
 												width="200"
 												dataField="status"
 												dataFormat={this.renderInvoiceStatus}
@@ -899,6 +935,7 @@ class CustomerInvoice extends React.Component {
 												Status
 											</TableHeaderColumn>
 											<TableHeaderColumn
+											thStyle={{ whiteSpace: 'normal' }} 
 												dataField="invoiceDate"
 												dataSort
 												dataFormat={this.invoiceDate}
@@ -906,6 +943,7 @@ class CustomerInvoice extends React.Component {
 												Invoice Date
 											</TableHeaderColumn>
 											<TableHeaderColumn
+											thStyle={{ whiteSpace: 'normal' }} 
 												dataField="invoiceDueDate"
 												dataSort
 												dataFormat={this.invoiceDueDate}
@@ -913,6 +951,7 @@ class CustomerInvoice extends React.Component {
 												Due Date
 											</TableHeaderColumn>
 											<TableHeaderColumn
+											thStyle={{ whiteSpace: 'normal' }} 
 												dataField="totalAmount"
 												dataSort
 												dataFormat={this.renderInvoiceAmount}
@@ -921,6 +960,7 @@ class CustomerInvoice extends React.Component {
 												Invoice Amount
 											</TableHeaderColumn>
 											<TableHeaderColumn
+											thStyle={{ whiteSpace: 'normal' }} 
 												dataField="totalVatAmount"
 												dataSort
 												dataFormat={this.renderVatAmount}
@@ -929,6 +969,7 @@ class CustomerInvoice extends React.Component {
 												VAT Amount
 											</TableHeaderColumn>
 											<TableHeaderColumn
+											thStyle={{ whiteSpace: 'normal' }} 
 												className="text-right"
 												columnClassName="text-right"
 												dataFormat={this.renderActions}

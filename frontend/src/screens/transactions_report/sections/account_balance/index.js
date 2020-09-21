@@ -207,11 +207,11 @@ class AccountBalances extends React.Component {
 												</Button>
 											</ButtonGroup>
 										</FormGroup>
-										<FormGroup>
+										{/* <FormGroup>
 											<div className="date-range">
 												<DateRangePicker2 ranges={ranges} opens={'left'} />
 											</div>
-										</FormGroup>
+										</FormGroup> */}
 									</div>
 								</Form>
 							</div>
@@ -323,17 +323,23 @@ class AccountBalances extends React.Component {
 											// onChange={this.changeType}
 										/>
 									</Col> */}
-									<Col lg={2} className="mb-1">
+									<Col lg={3} className="mb-1">
 										<Button
+											type="button"
 											color="primary"
-											className="btn-square"
-											type="submit"
-											name="submit"
-											onClick={this.getSelectedData}
+											className="btn-square mr-1"
+											onClick={this.handleSearch}
 										>
-											<i className="fa glyphicon glyphicon-export fa-search mr-1" />
-											Search
+											<i className="fa fa-search"></i>
 										</Button>
+										<Button
+														type="button"
+														color="primary"
+														className="btn-square"
+														onClick={this.clearAll}
+													>
+														<i className="fa fa-refresh"></i>
+													</Button>
 									</Col>
 								</Row>
 							</div>
@@ -358,25 +364,27 @@ class AccountBalances extends React.Component {
 									}}
 									version="4"
 								>
-									<TableHeaderColumn dataField="transactionDate" dataSort>
+									<TableHeaderColumn thStyle={{ whiteSpace: 'normal' }} dataField="transactionDate" dataSort>
 										Transaction Date
 									</TableHeaderColumn>
-									<TableHeaderColumn dataField="account" dataSort>
+									<TableHeaderColumn thStyle={{ whiteSpace: 'normal' }} dataField="account" dataSort>
 										Account
 									</TableHeaderColumn>
-									<TableHeaderColumn dataField="transactionType" dataSort>
+									<TableHeaderColumn thStyle={{ whiteSpace: 'normal' }} dataField="transactionType" dataSort>
 										Transaction Type
 									</TableHeaderColumn>
-									<TableHeaderColumn dataField="transactionCategory" dataSort>
+									<TableHeaderColumn thStyle={{ whiteSpace: 'normal' }}dataField="transactionCategory" dataSort>
 										Transaction Category
 									</TableHeaderColumn>
 									<TableHeaderColumn
+									thStyle={{ whiteSpace: 'normal' }}
 										dataField="transactionDescription"
 										dataSort
 									>
 										Transaction Description
 									</TableHeaderColumn>
 									<TableHeaderColumn
+									thStyle={{ whiteSpace: 'normal' }}
 										dataField="transactionAmount"
 										dataSort
 										dataFormat={this.transactionAmount}

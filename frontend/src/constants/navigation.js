@@ -11,15 +11,16 @@ export default {
 			icon: 'icon-user',
 			children: [
 				{
-					name: 'Journals',
-					url: '/admin/accountant/journal',
-					icon: 'fa fa-diamond',
-				},
-				{
 					name: 'Opening Balance',
 					url: '/admin/accountant/opening-balance',
 					icon: 'fas fa-balance-scale',
 				},
+				{
+					name: 'Journals',
+					url: '/admin/accountant/journal',
+					icon: 'fa fa-diamond',
+				},
+				
 			],
 		},
 		{

@@ -282,6 +282,10 @@ public class ExpenseRestHelper {
 					expenseModel.setPayee("Company Expense");
 				}
 				expenseModel.setExpenseDescription(expense.getExpenseDescription());
+				if (expense.getBankAccount()!=null){
+					expenseModel.setBankAccountId(expense.getBankAccount().getBankAccountId());
+
+				}
 				if (expense.getExpenseDate() != null) {
 					Date date = Date.from(expense.getExpenseDate().atZone(ZoneId.systemDefault()).toInstant());
 					expenseModel.setExpenseDate(date);

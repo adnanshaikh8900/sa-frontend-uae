@@ -757,6 +757,7 @@ class BankAccount extends React.Component {
 												}}
 											>
 												<TableHeaderColumn
+												thStyle={{ whiteSpace: 'normal' }} 
 													dataField="bankAccountNo"
 													dataFormat={this.renderAccountNumber}
 													dataSort
@@ -766,6 +767,7 @@ class BankAccount extends React.Component {
 													Account Number
 												</TableHeaderColumn>
 												<TableHeaderColumn
+												thStyle={{ whiteSpace: 'normal' }} 
 													dataField="name"
 													dataSort
 													width="150"
@@ -774,6 +776,7 @@ class BankAccount extends React.Component {
 													Bank
 												</TableHeaderColumn>
 												<TableHeaderColumn
+												thStyle={{ whiteSpace: 'normal' }} 
 													dataField="accounName"
 													dataSort
 													width="150"
@@ -782,6 +785,7 @@ class BankAccount extends React.Component {
 													Account Name
 												</TableHeaderColumn>
 												<TableHeaderColumn
+												thStyle={{ whiteSpace: 'normal' }} 
 													dataFormat={this.renderAccountType}
 													dataField="bankAccountTypeName"
 													dataSort
@@ -791,6 +795,7 @@ class BankAccount extends React.Component {
 													Account Type
 												</TableHeaderColumn>
 												<TableHeaderColumn
+												thStyle={{ whiteSpace: 'normal' }} 
 													dataFormat={this.renderCurrency}
 													dataSort
 													dataField="currancyName"
@@ -800,6 +805,7 @@ class BankAccount extends React.Component {
 													Currency
 												</TableHeaderColumn>
 												<TableHeaderColumn
+												thStyle={{ whiteSpace: 'normal' }} 
 													dataField="openingBalance"
 													dataSort
 													width="150"
@@ -809,6 +815,7 @@ class BankAccount extends React.Component {
 													Bank Balance
 												</TableHeaderColumn>
 												<TableHeaderColumn
+												thStyle={{ whiteSpace: 'normal' }} 
 													dataField="swift_code"
 													export={false}
 													dataSort={false}
@@ -819,6 +826,7 @@ class BankAccount extends React.Component {
 													Last Reconciled
 												</TableHeaderColumn>
 												<TableHeaderColumn
+												thStyle={{ whiteSpace: 'normal' }} 
 													className="text-right"
 													columnClassName="text-right"
 													width="150"

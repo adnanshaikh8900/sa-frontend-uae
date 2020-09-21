@@ -137,6 +137,7 @@ class CreateSupplierInvoice extends React.Component {
 			discountPercentage: '',
 			discountAmount: 0,
 			purchaseCategory: [],
+			prefix: 'SUP-',
 		};
 
 		this.formRef = React.createRef();
@@ -877,7 +878,10 @@ class CreateSupplierInvoice extends React.Component {
 		const { term } = this.state;
 
 		let formData = new FormData();
-		formData.append('referenceNumber', invoice_number ? invoice_number : '');
+		formData.append(
+			'referenceNumber',
+			invoice_number ? this.state.prefix + invoice_number : '',
+		);
 		formData.append('invoiceDate', invoiceDate ? invoiceDate : '');
 		formData.append(
 			'invoiceDueDate',
@@ -1064,7 +1068,7 @@ class CreateSupplierInvoice extends React.Component {
 	};
 
 	render() {
-		const { data, discountOptions, initValue } = this.state;
+		const { data, discountOptions, initValue, prefix } = this.state;
 
 		const { currency_list, supplier_list } = this.props;
 		return (
@@ -1221,13 +1225,17 @@ class CreateSupplierInvoice extends React.Component {
 																		name="invoice_number"
 																		placeholder="Invoice Number"
 																		onBlur={props.handleBlur('invoice_number')}
-																		onChange={(value) => {
-																			props.handleChange('invoice_number')(
-																				value,
+																		onChange={(e) => {
+																			const input = e.target.value;
+																			const string = input.substr(
+																				prefix.length,
 																			);
-																			this.validationCheck(value.target.value);
+																			props.handleChange('invoice_number')(
+																				string,
+																			);
+																			this.validationCheck(e.target.value);
 																		}}
-																		value={props.values.invoice_number}
+																		value={prefix + props.values.invoice_number}
 																		className={
 																			props.errors.invoice_number &&
 																			props.touched.invoice_number

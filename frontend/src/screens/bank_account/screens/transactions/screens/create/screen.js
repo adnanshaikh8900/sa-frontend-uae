@@ -197,11 +197,17 @@ class CreateBankTransaction extends React.Component {
 			this.props.detailBankAccountActions
 				.getBankAccountByID(this.props.location.state.bankAccountId)
 				.then((res) => {
-					this.setState({
-						date: res.openingDate
-							? moment(res.openingDate).utc().format('MM/DD/YYYY')
-							: '',
-					});
+					this.setState(
+						{
+							date: res.openingDate
+								? moment(res.openingDate).format('MM/DD/YYYY')
+								: '',
+							reconciledDate: res.lastReconcileDate
+								? moment(res.lastReconcileDate).format('MM/DD/YYYY')
+								: '',
+						},
+						() => {},
+					);
 				})
 				.catch((err) => {
 					this.props.commonActions.tostifyAlert(
@@ -479,7 +485,6 @@ class CreateBankTransaction extends React.Component {
 			customer_invoice_list,
 			vendor_invoice_list,
 			expense_categories_list,
-			user_list,
 			currency_list,
 			vendor_list,
 			vat_list,
@@ -516,9 +521,12 @@ class CreateBankTransaction extends React.Component {
 													const date1 = new Date(date);
 													const date2 = new Date(this.state.date);
 													let errors = {};
-													if (date1 < date2) {
+													if (
+														date1 < date2 ||
+														date1 < new Date(this.state.reconciledDate)
+													) {
 														errors.transactionDate =
-															'Transaction Date Cannot be less than Bank opening date';
+															'Transaction Date Cannot be less than Bank opening date or Last Reconciled Date';
 													}
 													return errors;
 												}}
@@ -645,6 +653,7 @@ class CreateBankTransaction extends React.Component {
 																		dropdownMode="select"
 																		value={props.values.transactionDate}
 																		selected={props.values.transactionDate}
+																		onBlur={props.handleBlur('transactionDate')}
 																		onChange={(value) => {
 																			props.handleChange('transactionDate')(
 																				value,

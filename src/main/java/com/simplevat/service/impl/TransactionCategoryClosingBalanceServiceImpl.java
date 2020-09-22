@@ -51,7 +51,10 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
     public TransactionCategoryClosingBalance getLastClosingBalanceByDate(TransactionCategory category){
         return transactionCategoryClosingBalanceDao.getLastClosingBalanceByDate(category);
     }
-
+    public TransactionCategoryClosingBalance getFirstClosingBalanceByDate(TransactionCategory category)
+    {
+        return transactionCategoryClosingBalanceDao.getFirstClosingBalanceByDate(category);
+    }
     public void updateClosingBalance(JournalLineItem lineItem)
     {
         TransactionCategory category = lineItem.getTransactionCategory();

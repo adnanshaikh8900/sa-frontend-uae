@@ -75,19 +75,11 @@ public class FinancialReportRestHelper {
 						totalCurrentAssets = totalCurrentAssets.add(closingBalance);
 						break;
 					case BANK:
-//						if(StringUtils.equals(transactionCategoryName,"Amount In Transit"))
-//						{
-//							totalAccountReceivable = totalAccountReceivable.add(closingBalance);
-//						}
-//						else
-						{
 							if(isNegative)
 								closingBalance = closingBalance.negate();
 							balanceSheetResponseModel.getBank().put(transactionCategoryName,closingBalance);
 							totalBank = totalBank.add(closingBalance);
-						}
 						break;
-
 					case CURRENT_ASSET:
 					case STOCK:
 						if(isNegative)
@@ -95,16 +87,11 @@ public class FinancialReportRestHelper {
 						balanceSheetResponseModel.getCurrentAssets().put(transactionCategoryName,closingBalance);
 						totalCurrentAssets = totalCurrentAssets.add(closingBalance);
 						break;
-
-
-
-
 					case ACCOUNTS_RECEIVABLE:
 						if(isNegative)
 							closingBalance = closingBalance.negate();
 						totalAccountReceivable = totalAccountReceivable.add(closingBalance);
 						break;
-
 					case FIXED_ASSET:
 						if(isNegative)
 							closingBalance = closingBalance.negate();
@@ -123,11 +110,7 @@ public class FinancialReportRestHelper {
 						break;
 
 					case OTHER_LIABILITY:
-						if (!isNegative){
-							closingBalance = closingBalance.negate();
-						}
 						balanceSheetResponseModel.getOtherLiability().put(transactionCategoryName,closingBalance);
-
 						totalOtherLiability = totalOtherLiability.add(closingBalance);
 						break;
 
@@ -139,18 +122,11 @@ public class FinancialReportRestHelper {
 						break;
 
 					case OTHER_CURRENT_LIABILITIES:
-						if (!isNegative){
-							closingBalance = closingBalance.negate();
-						}
 						balanceSheetResponseModel.getOtherCurrentLiability().put(transactionCategoryName,closingBalance);
-
 						totalOtherCurrentLiability = totalOtherCurrentLiability.add(closingBalance);
 						break;
 
 					case EQUITY:
-						if (!isNegative||transactionCategoryName.equalsIgnoreCase("Owners Drawing")){
-							closingBalance = closingBalance.negate();
-						}
 							balanceSheetResponseModel.getEquities().put(transactionCategoryName,closingBalance);
 							totalEquities = totalEquities.add(closingBalance);
 						break;

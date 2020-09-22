@@ -167,7 +167,7 @@ public class BankAccountController{
 
 				TransactionCategory transactionCategory = transactionCategoryService
 						.findTransactionCategoryByTransactionCategoryCode(
-								TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET.getCode());
+								TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
 				openingBalance = bankAccountRestHelper.getOpeningBalanceEntity(bankAccount,transactionCategory);
 				transactionCategoryBalanceService.persist(openingBalance);
 				Map<String,Object> filterObject = new HashMap<>();

@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.simplevat.constant.TransactionCategoryCodeEnum;
 import com.simplevat.entity.*;
-import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.entity.bankaccount.*;
 import com.simplevat.model.DashBoardBankDataModel;
 import com.simplevat.rest.transactioncategorybalancecontroller.TransactionCategoryBalanceRestHelper;
 import com.simplevat.rest.transactioncategorybalancecontroller.TransactioncategoryBalancePersistModel;
@@ -35,9 +35,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.dbfilter.BankAccounrFilterEnum;
-import com.simplevat.entity.bankaccount.BankAccount;
-import com.simplevat.entity.bankaccount.BankAccountStatus;
-import com.simplevat.entity.bankaccount.BankAccountType;
 import com.simplevat.model.BankModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.security.JwtTokenUtil;
@@ -280,42 +277,53 @@ public class BankAccountController{
 
 			BankAccount bankAccount = bankAccountService.findByPK(bankAccountId);
 			if (bankAccount != null) {
-				//delete coac category
+				//delete Transaction
+				List<Transaction> transactionList = transactionService.getAllTransactionListByBankAccountId(bankAccountId);
+				for(Transaction transaction:transactionList)
+				{
+					transactionService.delete(transaction);
+
+				}
+				//delete closing balance
 				Map<String,Object> filterMap = new HashMap<>();
 				filterMap.put("transactionCategory",bankAccount.getTransactionCategory());
-				List<CoacTransactionCategory> coacTransactionCategoryList = coacTransactionCategoryService.findByAttributes(filterMap);
-				for(CoacTransactionCategory coacTransactionCategory: coacTransactionCategoryList)
+				List<TransactionCategoryClosingBalance> transactionCategoryClosingBalanceList =
+						transactionCategoryClosingBalanceService.findByAttributes(filterMap);
+				for(TransactionCategoryClosingBalance transactionCategoryClosingBalance :
+						transactionCategoryClosingBalanceList)
 				{
-					coacTransactionCategoryService.delete(coacTransactionCategory);
+					transactionCategoryClosingBalanceService.delete(transactionCategoryClosingBalance);
 				}
 				//delete opening balance
-				List<TransactionCategoryBalance> transactionCategoryBalanceList = transactionCategoryBalanceService.findByAttributes(filterMap);
+				List<TransactionCategoryBalance> transactionCategoryBalanceList =
+						transactionCategoryBalanceService.findByAttributes(filterMap);
 				for(TransactionCategoryBalance transactionCategoryBalance : transactionCategoryBalanceList)
 				{
 					transactionCategoryBalanceService.delete(transactionCategoryBalance);
 				}
-				//delete closing balance
-				List<TransactionCategoryClosingBalance> transactionCategoryClosingBalanceList = transactionCategoryClosingBalanceService.findByAttributes(filterMap);
-				for(TransactionCategoryClosingBalance transactionCategoryClosingBalance : transactionCategoryClosingBalanceList)
-				{
-					transactionCategoryClosingBalanceService.delete(transactionCategoryClosingBalance);
-				}
-
-
 				bankAccount.setLastUpdateDate(LocalDateTime.now());
 				bankAccount.setLastUpdatedBy(userId);
 				bankAccount.setDeleteFlag(true);
 				bankAccountService.delete(bankAccount);
-
+				//delete coac category
+				List<CoacTransactionCategory> coacTransactionCategoryList = coacTransactionCategoryService
+						.findByAttributes(filterMap);
+				for(CoacTransactionCategory coacTransactionCategory: coacTransactionCategoryList)
+				{
+					coacTransactionCategoryService.delete(coacTransactionCategory);
+				}
 				//delete transaction category
 				Map<String,Object> filterTransactionCategoryMap = new HashMap<>();
-				filterTransactionCategoryMap.put("transactionCategoryId",bankAccount.getTransactionCategory().getTransactionCategoryId());
+				filterTransactionCategoryMap.put("transactionCategoryId",bankAccount.getTransactionCategory()
+						.getTransactionCategoryId());
 
-				List<TransactionCategory> transactionCategoryList = transactionCategoryService.findByAttributes(filterTransactionCategoryMap);
+				List<TransactionCategory> transactionCategoryList = transactionCategoryService
+						.findByAttributes(filterTransactionCategoryMap);
 				for(TransactionCategory transactionCategory : transactionCategoryList)
 				{
 					transactionCategoryService.delete(transactionCategory);
 				}
+
 				return new ResponseEntity<>(bankAccount, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);

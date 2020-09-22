@@ -156,4 +156,12 @@ private DateFormatUtil dateUtil;
         return transactionCategoryClosingBalanceList != null && !transactionCategoryClosingBalanceList.isEmpty() ?
                 transactionCategoryClosingBalanceList.get(0) :null;
     }
+    public TransactionCategoryClosingBalance getFirstClosingBalanceByDate(TransactionCategory category)
+    {
+        TypedQuery<TransactionCategoryClosingBalance> query = getEntityManager().createNamedQuery("getLastClosingBalanceByDate", TransactionCategoryClosingBalance.class);
+        query.setParameter("transactionCategory", category);
+        List<TransactionCategoryClosingBalance> transactionCategoryClosingBalanceList = query.getResultList();
+        return transactionCategoryClosingBalanceList != null && !transactionCategoryClosingBalanceList.isEmpty() ?
+                transactionCategoryClosingBalanceList.get(transactionCategoryClosingBalanceList.size()-1) :null;
+    }
 }

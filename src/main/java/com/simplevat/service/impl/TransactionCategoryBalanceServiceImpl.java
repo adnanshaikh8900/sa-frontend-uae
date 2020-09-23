@@ -62,7 +62,7 @@ public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBa
 
 			boolean isDelated = lineItem.getDeleteFlag();
 
-			boolean isDebit = (lineItem.getDebitAmount() != null && !BigDecimal.ZERO.equals(lineItem.getDebitAmount()))
+			boolean isDebit = (lineItem.getDebitAmount() != null && lineItem.getDebitAmount().intValue()!=0)
 					? Boolean.TRUE
 					: Boolean.FALSE;
 

@@ -62,10 +62,12 @@ public class FinancialReportRestHelper {
 				String transactionCategoryName = transactionCategoryClosingBalance.getTransactionCategory().getTransactionCategoryName();
 				BigDecimal closingBalance = transactionCategoryClosingBalance.getClosingBalance();
 				boolean isNegative = false;
-				if (closingBalance.longValue() < 0) {
-					closingBalance = closingBalance.negate();
-					isNegative=true;
-				}
+//				if (closingBalance.longValue() < 0) {
+//					closingBalance = closingBalance.negate();
+//					isNegative=true;
+//				}
+				if(closingBalance.longValue()==0)
+					continue;
 				ChartOfAccountCategoryCodeEnum chartOfAccountCategoryCodeEnum = ChartOfAccountCategoryCodeEnum.getChartOfAccountCategoryCodeEnum(transactionCategoryCode);
 				if (chartOfAccountCategoryCodeEnum == null)
 					continue;

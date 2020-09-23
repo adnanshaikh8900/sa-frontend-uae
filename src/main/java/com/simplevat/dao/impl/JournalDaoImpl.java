@@ -46,7 +46,8 @@ public class JournalDaoImpl extends AbstractDao<Integer, Journal> implements Jou
 
 				if (journal.getJournalLineItems() != null && !journal.getJournalLineItems().isEmpty()) {
 					for (JournalLineItem journalLineItem : journal.getJournalLineItems()) {
-						journalLineItem.setCurrentBalance(transactionCategoryBalanceService.updateRunningBalance(journalLineItem));
+						journalLineItem.setDeleteFlag(true);
+						transactionCategoryBalanceService.updateRunningBalance(journalLineItem);
 						journalLineItemDao.delete(journalLineItem);
 					}
 				}

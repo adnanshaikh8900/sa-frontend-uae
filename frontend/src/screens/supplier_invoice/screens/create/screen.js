@@ -601,33 +601,28 @@ class CreateSupplierInvoice extends React.Component {
 										e.value,
 										true,
 									);
-									form.setFieldValue(
-										`lineItemsString.${idx}.vatCategoryId`,
-										'',
-										true,
-									);
-									form.setFieldValue(
-										`lineItemsString.${idx}.unitPrice`,
-										200,
-										true,
-									);
-									form.setFieldValue(
-										`lineItemsString.${idx}.description`,
-										'',
-										true,
-									);
-									form.setFieldValue(
-										`lineItemsString.${idx}.transactionCategoryId`,
-										'',
-										true,
-									);
-									form.setFieldValue(
-										`lineItemsString.${idx}.transactionCategoryLabel`,
-										'',
-										true,
-									);
+									this.setState({
+										data: [
+											{
+												id: 0,
+												description: '',
+												quantity: 1,
+												unitPrice: '',
+												vatCategoryId: '',
+												subTotal: 0,
+												productId: '',
+											},
+										],
+									});
 								}
 							}}
+							value={
+								product_list && row.productId
+									? selectOptionsFactory
+											.renderOptions('name', 'id', product_list, 'Product')
+											.find((option) => option.value === +row.productId)
+									: []
+							}
 							className={`${
 								props.errors.lineItemsString &&
 								props.errors.lineItemsString[parseInt(idx, 10)] &&

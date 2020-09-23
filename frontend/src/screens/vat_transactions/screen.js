@@ -23,6 +23,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { CommonActions } from 'services/global';
 import './style.scss';
+import DatePicker from 'react-datepicker';
 
 const mapStateToProps = (state) => {
 	return {
@@ -136,6 +137,11 @@ class VatTransactions extends React.Component {
 		this.state = {
 			selectedVat: '',
 			selectedStatus: '',
+			filterData: {
+				vat_type: '',
+				reference_type: '',
+				date: '',
+			},
 		};
 		this.options = {
 			paginationPosition: 'bottom',
@@ -225,6 +231,14 @@ class VatTransactions extends React.Component {
 		);
 	}
 
+	handleChange = (val, name) => {
+		this.setState({
+			filterData: Object.assign(this.state.filterData, {
+				[name]: val,
+			}),
+		});
+	};
+
 	render() {
 		const vat_transaction_data =
 			this.props.vat_transaction_list && this.props.vat_transaction_list.data
@@ -238,6 +252,7 @@ class VatTransactions extends React.Component {
 				  }))
 				: '';
 		const { universal_currency_list } = this.props;
+		const { filterData } = this.state;
 		return (
 			<div className="vat-transactions-screen ">
 				<div className="animated fadeIn">
@@ -278,16 +293,36 @@ class VatTransactions extends React.Component {
 								<h5>Filter : </h5>
 								<Row>
 									<Col lg={2} className="mb-1">
-										<Input type="text" placeholder="Party Name" />
+										<DatePicker
+											className="form-control"
+											id="date"
+											name="date"
+											placeholderText="Date"
+											showMonthDropdown
+											showYearDropdown
+											autoComplete="off"
+											dropdownMode="select"
+											dateFormat="dd/MM/yyyy"
+											selected={filterData.date}
+											onChange={(value) => {
+												this.handleChange(value, 'date');
+											}}
+										/>
 									</Col>
 									<Col lg={2} className="mb-1">
 										<Select
 											styles={customStyles}
 											className=""
 											options={vatOptions}
-											value={this.state.selectedType}
+											value={filterData.vat_type}
 											placeholder="Vat Type"
-											onChange={this.changeType}
+											onChange={(option) => {
+												if (option && option.value) {
+													this.handleChange(option, 'vat_type');
+												} else {
+													this.handleChange('', 'vat_type');
+												}
+											}}
 										/>
 									</Col>
 									<Col lg={2} className="mb-1">
@@ -295,19 +330,16 @@ class VatTransactions extends React.Component {
 											styles={customStyles}
 											className=""
 											options={vatOptions}
+											value={filterData.reference_type}
 											value={this.state.selectedType}
-											placeholder="Source"
-											onChange={this.changeType}
-										/>
-									</Col>
-									<Col lg={2} className="mb-1">
-										<Select
-											styles={customStyles}
-											className=""
-											options={vatOptions}
-											value={this.state.selectedType}
-											placeholder="Status"
-											onChange={this.changeType}
+											placeholder="Reference Type"
+											onChange={(option) => {
+												if (option && option.value) {
+													this.handleChange(option, 'reference_type');
+												} else {
+													this.handleChange('', 'reference_type');
+												}
+											}}
 										/>
 									</Col>
 									<Col lg={3} className="mb-1">
@@ -320,13 +352,13 @@ class VatTransactions extends React.Component {
 											<i className="fa fa-search"></i>
 										</Button>
 										<Button
-														type="button"
-														color="primary"
-														className="btn-square"
-														onClick={this.clearAll}
-													>
-														<i className="fa fa-refresh"></i>
-													</Button>
+											type="button"
+											color="primary"
+											className="btn-square"
+											onClick={this.clearAll}
+										>
+											<i className="fa fa-refresh"></i>
+										</Button>
 									</Col>
 								</Row>
 							</div>

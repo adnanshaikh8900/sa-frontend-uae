@@ -363,7 +363,7 @@ class RecordSupplierPayment extends React.Component {
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="fas fa-address-book" />
-												<span className="ml-2">Payment for INV-000001</span>
+												<span className="ml-2">Payment for Supplier Invoice</span>
 											</div>
 										</Col>
 									</Row>
@@ -461,7 +461,7 @@ class RecordSupplierPayment extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																<Col lg={4}>
+																{/* <Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="project">
 																			<span className="text-danger">*</span>{' '}
@@ -491,7 +491,7 @@ class RecordSupplierPayment extends React.Component {
 																				</div>
 																			)}
 																	</FormGroup>
-																</Col>
+																</Col> */}
 															</Row>
 															<hr />
 															<Row>

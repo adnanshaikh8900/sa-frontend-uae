@@ -145,7 +145,20 @@ class ProfitAndLoss extends Component {
 										<img alt="sum" src={equalIcon} className="m-0" />
 										<div className="data-item total m-0">
 											<div>
-												<h3>{this.props.profit_loss['NetProfit']}</h3>
+												<h3>
+												{universal_currency_list[0] &&
+													<Currency
+													value={this.props.profit_loss['NetProfit']
+													? this.props.profit_loss['NetProfit']
+														: 0
+													}
+															currencySymbol={
+															universal_currency_list[0]
+															? universal_currency_list[0].currencyIsoCode
+															: 'USD'
+														}
+													/>
+													}</h3>
 												<p>PROFIT</p>
 											</div>
 										</div>

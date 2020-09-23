@@ -82,7 +82,10 @@ public class InvoiceServiceImpl extends InvoiceService {
 		Invoice invoice = supplierInvoiceDao.getLastInvoice();
 		if (invoice != null) {
 			try {
-				return Integer.valueOf(invoice.getReferenceNumber()) + 1;
+				String referenceNumber = invoice.getReferenceNumber();
+				if(referenceNumber!=null && (referenceNumber.contains("INV")||referenceNumber.contains("SUP")))
+					referenceNumber=referenceNumber.substring(referenceNumber.indexOf("-")+1);
+				return Integer.valueOf(referenceNumber) + 1;
 			} catch (Exception e) {
 				return 0;
 			}

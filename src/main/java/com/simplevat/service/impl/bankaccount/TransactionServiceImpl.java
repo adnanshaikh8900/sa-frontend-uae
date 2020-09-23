@@ -11,7 +11,9 @@ import java.util.Objects;
 
 import com.simplevat.constant.TransactionCreationMode;
 import com.simplevat.constant.TransactionExplinationStatusEnum;
+import com.simplevat.entity.bankaccount.ReconcileStatus;
 import com.simplevat.service.BankAccountService;
+import com.simplevat.service.bankaccount.ReconcileStatusService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +52,9 @@ public class TransactionServiceImpl extends TransactionService {
 	private BankAccountDao bankAccountDao;
 	@Autowired
 	private BankAccountService bankAccountService;
+
+	@Autowired
+    private ReconcileStatusService reconcileStatusService;
 
 	private static final String TRANSACTION = "TRANSACTION";
 
@@ -338,13 +343,20 @@ public class TransactionServiceImpl extends TransactionService {
 			if(transactions!=null && transactions.size()>0)
 			bankAccount = bankAccountService.findByPK(transactions.get(0).getBankAccount().getBankAccountId());
 			BigDecimal currentBalance = bankAccount.getCurrentBalance();
+			List<ReconcileStatus> reconcileStatusList = reconcileStatusService.getAllReconcileStatusListByBankAccountId(bankAccount.getBankAccountId());
+			LocalDateTime  lastReconcileDate= null;
+			if (reconcileStatusList!=null&&reconcileStatusList.size()>0)
+			{
+				ReconcileStatus reconcileStatus = reconcileStatusList.get(0);
+				lastReconcileDate =	reconcileStatus.getReconciledDate();
+			}
 
 			int count = 0;
 			int totalCount = transactions.size();
 			for (Transaction transaction : transactions) {
 				if(isAlreadyExistSimilarTransaction(transaction))
 					transaction.setCreationMode(TransactionCreationMode.POTENTIAL_DUPLICATE);
-				if(isValidTransaction(transaction,bankAccount)){
+				if(isValidTransaction(transaction,bankAccount,lastReconcileDate)){
 					if (transaction.getDebitCreditFlag()=='C')
 						currentBalance = currentBalance.add(transaction.getTransactionAmount());
 					else
@@ -369,11 +381,15 @@ public class TransactionServiceImpl extends TransactionService {
 		}
 	}
 
-	private boolean isValidTransaction(Transaction transaction, BankAccount bankAccount) {
+	private boolean isValidTransaction(Transaction transaction, BankAccount bankAccount,LocalDateTime lastReconciledDate) {
 		if(bankAccount.getOpeningDate().isBefore(transaction.getTransactionDate()))
 		return true;
-		else
-		return false;
+		if (lastReconciledDate==null)
+				return true;
+			if (lastReconciledDate!=null&&lastReconciledDate.isBefore(transaction.getTransactionDate()))
+			return true;
+			else
+				return false;
 	}
 
 	private boolean isAlreadyExistSimilarTransaction(Transaction transaction) {

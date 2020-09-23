@@ -30,5 +30,6 @@ public abstract class TransactionCategoryClosingBalanceService extends SimpleVat
     public abstract List<TransactionCategoryClosingBalance> getListByChartOfAccountIds(ReportRequestModel reportRequestModel);
 
     public abstract TransactionCategoryClosingBalance getLastClosingBalanceByDate(TransactionCategory category);
+    public abstract TransactionCategoryClosingBalance getFirstClosingBalanceByDate(TransactionCategory category);
 }
 

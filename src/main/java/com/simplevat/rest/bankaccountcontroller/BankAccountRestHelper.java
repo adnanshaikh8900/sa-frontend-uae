@@ -314,7 +314,7 @@ public class BankAccountRestHelper {
 
 			TransactionCategory transactionCategory = transactionCategoryService
 					.findTransactionCategoryByTransactionCategoryCode(
-							TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET.getCode());
+							TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
 			journalLineItem1.setTransactionCategory(transactionCategory);
 
 			journalLineItem1.setCreditAmount(bankAccount.getOpeningBalance());

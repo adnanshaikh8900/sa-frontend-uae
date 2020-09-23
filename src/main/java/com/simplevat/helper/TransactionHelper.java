@@ -156,7 +156,8 @@ public class TransactionHelper {
 		model.setDescription(transaction.getExplainedTransactionDescription());
 		if (transaction.getExplainedTransactionCategory() != null)
 			model.setExpenseCategory(transaction.getExplainedTransactionCategory().getTransactionCategoryId());
-
+        if(transaction.getExplainationUser()!=null)
+        	model.setEmployeeId(transaction.getExplainationUser().getUserId());
 		if (transaction.getCoaCategory() != null)
 			model.setCoaCategoryId(transaction.getCoaCategory().getChartOfAccountCategoryId());
 		if (transaction.getExplainedTransactionCategory() != null) {

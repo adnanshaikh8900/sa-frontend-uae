@@ -1,9 +1,15 @@
 package com.simplevat.dao.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.simplevat.dao.JournalLineItemDao;
+import com.simplevat.entity.TransactionCategoryClosingBalance;
+import com.simplevat.service.JournalLineItemService;
+import com.simplevat.service.JournalService;
+import com.simplevat.service.TransactionCategoryClosingBalanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +36,12 @@ public class JournalDaoImpl extends AbstractDao<Integer, Journal> implements Jou
 	@Autowired
 	private TransactionCategoryBalanceService transactionCategoryBalanceService;
 
+	@Autowired
+	private JournalLineItemDao journalLineItemDao;
+
+	@Autowired
+	private TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
+
 	@Override
 	@Transactional
 	public void deleteByIds(List<Integer> ids) {
@@ -39,14 +51,24 @@ public class JournalDaoImpl extends AbstractDao<Integer, Journal> implements Jou
 				journal.setDeleteFlag(Boolean.TRUE);
 
 				if (journal.getJournalLineItems() != null && !journal.getJournalLineItems().isEmpty()) {
-					for (JournalLineItem journalLineItem : journal.getJournalLineItems())
-						journalLineItem.setDeleteFlag(Boolean.TRUE);
-				}
+					for (JournalLineItem journalLineItem : journal.getJournalLineItems()) {
+						Map<String,Object> filterMap = new HashMap<>();
+						filterMap.put("transactionCategory",journalLineItem.getTransactionCategory());
+						List<TransactionCategoryClosingBalance> transactionCategoryClosingBalanceList =
+								transactionCategoryClosingBalanceService.findByAttributes(filterMap);
+						journalLineItem.setCurrentBalance(transactionCategoryBalanceService.updateRunningBalance(journalLineItem));
+						for(TransactionCategoryClosingBalance transactionCategoryClosingBalance :
+								transactionCategoryClosingBalanceList)
+						{
+							transactionCategoryClosingBalanceService.delete(transactionCategoryClosingBalance);
+						}
+						journalLineItemDao.delete(journalLineItem);
+					}
 
-				update(journal);
-				for (JournalLineItem lineItem : journal.getJournalLineItems()) {
-					lineItem.setCurrentBalance(transactionCategoryBalanceService.updateRunningBalance(lineItem));
+
 				}
+				delete(journal);
+
 			}
 		}
 	}

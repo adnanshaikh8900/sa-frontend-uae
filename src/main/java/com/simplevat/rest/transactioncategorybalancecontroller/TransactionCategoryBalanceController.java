@@ -121,13 +121,13 @@ public class TransactionCategoryBalanceController {
 			case STOCK:
 				return transactionCategoryService
 						.findTransactionCategoryByTransactionCategoryCode(
-								TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_ASSETS.getCode());
+								TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
 			case OTHER_LIABILITY:
 			case OTHER_CURRENT_LIABILITIES:
 			case EQUITY:
 				return transactionCategoryService
 						.findTransactionCategoryByTransactionCategoryCode(
-								TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
+								TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_ASSETS.getCode());
 		}
 		return transactionCategoryService
 				.findTransactionCategoryByTransactionCategoryCode(

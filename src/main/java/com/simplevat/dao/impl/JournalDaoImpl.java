@@ -52,6 +52,7 @@ public class JournalDaoImpl extends AbstractDao<Integer, Journal> implements Jou
 					}
 				}
 				delete(journal);
+
 			}
 		}
 	}

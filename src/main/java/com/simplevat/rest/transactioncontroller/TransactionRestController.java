@@ -147,7 +147,8 @@ public class TransactionRestController {
 	public ResponseEntity<PaginationResponseModel> getAllTransaction(TransactionRequestFilterModel filterModel) {
 
 		Map<TransactionFilterEnum, Object> dataMap = new EnumMap<>(TransactionFilterEnum.class);
-
+ 			if(filterModel.getSortingCol()==null|| filterModel.getSortingCol()=="-1")
+ 				filterModel.setSortingCol("transactionDate");
 		if (filterModel.getBankId() != null) {
 			dataMap.put(TransactionFilterEnum.BANK_ID, bankAccountService.findByPK(filterModel.getBankId()));
 		}
@@ -1011,6 +1012,7 @@ public class TransactionRestController {
 		trnx.setCoaCategory(chartOfAccountCategoryService.findByPK(transactionPresistModel.getCoaCategoryId()));
 		trnx.setTransactionAmount(transactionPresistModel.getAmount());
 		trnx.setCreationMode(mode);
+		trnx.setReferenceStr(transactionPresistModel.getReference());
 		trnx.setTransactionExplinationStatusEnum(TransactionExplinationStatusEnum.FULL);
 		trnx.setTransactionDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
 				transactionPresistModel.getDATE_FORMAT()));

@@ -9,16 +9,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import com.simplevat.constant.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.simplevat.constant.ContactTypeEnum;
-import com.simplevat.constant.DatatableSortingFilterConstant;
-import com.simplevat.constant.InvoiceStatusEnum;
-import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import com.simplevat.dao.AbstractDao;
@@ -189,4 +187,17 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		List<Invoice> invoiceList = query.getResultList();
 		return invoiceList != null && !invoiceList.isEmpty() ? invoiceList : null;
 	}
+
+	@Override
+	public Integer getTotalInvoiceCountByContactId(Integer contactId){
+		Query query = getEntityManager().createQuery(
+				"SELECT COUNT(i) FROM Invoice i WHERE i.contact.contactId =:contactId AND i.deleteFlag=false" );
+		query.setParameter("contactId",contactId);
+		List<Object> countList = query.getResultList();
+		if (countList != null && !countList.isEmpty()) {
+			return ((Long) countList.get(0)).intValue();
+		}
+		return null;
+	}
+
 }

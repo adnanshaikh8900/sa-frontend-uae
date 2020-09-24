@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.simplevat.service.InvoiceLineItemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,9 @@ public class ProductRestController {
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
+
+	@Autowired
+	private InvoiceLineItemService invoiceLineItemService;
 
 	@ApiOperation(value = "Get Product List")
 	@GetMapping(value = "/getList")
@@ -174,5 +178,10 @@ public class ProductRestController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-
+	@ApiOperation(value = "Get Invoices Count For Product")
+	@GetMapping(value = "/getInvoicesCountForProduct")
+	public ResponseEntity<Integer> getExplainedTransactionCount(@RequestParam int productId){
+		Integer response = invoiceLineItemService.getTotalInvoiceCountByProductId(productId);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 }

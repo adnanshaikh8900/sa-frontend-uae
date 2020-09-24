@@ -13,6 +13,8 @@ import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ContactService;
+import com.simplevat.service.InvoiceService;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +49,9 @@ public class ContactController {
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
+
+	@Autowired
+	private InvoiceService invoiceService;
 
 	@GetMapping(value = "/getContactList")
 	public ResponseEntity<PaginationResponseModel> getContactList(ContactRequestFilterModel filterModel, HttpServletRequest request) {
@@ -158,5 +163,11 @@ public class ContactController {
 		}
 
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	@ApiOperation(value = "Get Invoices Count For Contact")
+	@GetMapping(value = "/getInvoicesCountForContact")
+	public ResponseEntity<Integer> getExplainedTransactionCount(@RequestParam int contactId){
+		Integer response = invoiceService.getTotalInvoiceCountByContactId(contactId);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 }

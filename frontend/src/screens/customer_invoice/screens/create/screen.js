@@ -445,6 +445,7 @@ class CreateCustomerInvoice extends React.Component {
 			this.updateAmount(data, props);
 		} else {
 			this.setState({ data }, () => {
+				console.log(data);
 				form.setFieldValue(
 					field.name,
 					this.state.data[parseInt(idx, 10)][`${name}`],
@@ -524,6 +525,7 @@ class CreateCustomerInvoice extends React.Component {
 		let idx;
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
+				console.log(result);
 				obj['unitPrice'] = result.unitPrice;
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
@@ -547,6 +549,13 @@ class CreateCustomerInvoice extends React.Component {
 			true,
 		);
 		this.updateAmount(data, props);
+	};
+
+	setValue = (value) => {
+		this.setState((prevState) => ({
+			...prevState,
+			initValue: [],
+		}));
 	};
 
 	renderProduct = (cell, row, props) => {
@@ -576,6 +585,7 @@ class CreateCustomerInvoice extends React.Component {
 									: []
 							}
 							id="productId"
+							placeholder="Select Product"
 							onChange={(e) => {
 								if (e && e.label !== 'Select Product') {
 									this.selectItem(
@@ -601,8 +611,28 @@ class CreateCustomerInvoice extends React.Component {
 										e.value,
 										true,
 									);
+									this.setState({
+										data: [
+											{
+												id: 0,
+												description: '',
+												quantity: 1,
+												unitPrice: '',
+												vatCategoryId: '',
+												subTotal: 0,
+												productId: '',
+											},
+										],
+									});
 								}
 							}}
+							value={
+								product_list && row.productId
+									? selectOptionsFactory
+											.renderOptions('name', 'id', product_list, 'Product')
+											.find((option) => option.value === +row.productId)
+									: []
+							}
 							className={`${
 								props.errors.lineItemsString &&
 								props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -642,7 +672,6 @@ class CreateCustomerInvoice extends React.Component {
 		e.preventDefault();
 		const data = this.state.data;
 		newData = data.filter((obj) => obj.id !== id);
-		console.log(newData);
 		props.setFieldValue('lineItemsString', newData, true);
 		this.updateAmount(newData, props);
 	};
@@ -845,7 +874,8 @@ class CreateCustomerInvoice extends React.Component {
 									unitPrice: '',
 									vatCategoryId: '',
 									subTotal: 0,
-									productId: '',
+									productId: 0,
+									name: '',
 								},
 							],
 							initValue: {
@@ -1749,7 +1779,7 @@ class CreateCustomerInvoice extends React.Component {
 																				</Col>
 																			</Row>
 																		</div>
-																		<div className="total-item p-2">
+																		{/* <div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
@@ -1808,7 +1838,7 @@ class CreateCustomerInvoice extends React.Component {
 																					</label>
 																				</Col>
 																			</Row>
-																		</div>
+																		</div> */}
 																	</div>
 																</Col>
 															</Row>

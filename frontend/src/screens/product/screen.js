@@ -16,7 +16,7 @@ import Select from 'react-select';
 
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
-import { Loader, ConfirmDeleteModal,Currency } from 'components';
+import { Loader, ConfirmDeleteModal, Currency } from 'components';
 
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -158,24 +158,37 @@ class Product extends React.Component {
 
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
-		const message = 'Warning: This Product will be deleted permanently and cannot be recovered.  ';
-		if (selectedRows.length > 0) {
-			this.setState({
-				dialog: (
-					<ConfirmDeleteModal
-						isOpen={true}
-						okHandler={this.removeBulk}
-						cancelHandler={this.removeDialog}
-						message={message}
-					/>
-				),
+		console.log(selectedRows);
+		this.props.productActions
+			.getInvoicesCountProduct(selectedRows)
+			.then((res) => {
+				if (res.data > 0) {
+					this.props.commonActions.tostifyAlert(
+						'error',
+						'You need to delete invoices to delete the product',
+					);
+				} else {
+					const message =
+						'Warning: This Product will be deleted permanently and cannot be recovered.  ';
+					if (selectedRows.length > 0) {
+						this.setState({
+							dialog: (
+								<ConfirmDeleteModal
+									isOpen={true}
+									okHandler={this.removeBulk}
+									cancelHandler={this.removeDialog}
+									message={message}
+								/>
+							),
+						});
+					} else {
+						this.props.commonActions.tostifyAlert(
+							'info',
+							'Please select the rows of the table and try again.',
+						);
+					}
+				}
 			});
-		} else {
-			this.props.commonActions.tostifyAlert(
-				'info',
-				'Please select the rows of the table and try again.',
-			);
-		}
 	};
 
 	removeBulk = () => {
@@ -292,7 +305,7 @@ class Product extends React.Component {
 			csvData,
 			view,
 		} = this.state;
-		const { product_list, vat_list,universal_currency_list } = this.props;
+		const { product_list, vat_list, universal_currency_list } = this.props;
 
 		return (
 			<div className="product-screen">

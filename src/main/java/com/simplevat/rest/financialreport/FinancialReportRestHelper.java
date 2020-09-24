@@ -66,6 +66,8 @@ public class FinancialReportRestHelper {
 					closingBalance = closingBalance.negate();
 					isNegative=true;
 				}
+				if(closingBalance.longValue()==0)
+					continue;
 				ChartOfAccountCategoryCodeEnum chartOfAccountCategoryCodeEnum = ChartOfAccountCategoryCodeEnum.getChartOfAccountCategoryCodeEnum(transactionCategoryCode);
 				if (chartOfAccountCategoryCodeEnum == null)
 					continue;

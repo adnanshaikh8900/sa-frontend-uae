@@ -62,7 +62,7 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
         {
             Transaction transaction = new Transaction();
             LocalDateTime journalDate = lineItem.getJournal().getJournalDate().truncatedTo(ChronoUnit.DAYS);
-            boolean isDebit = (lineItem.getDebitAmount() != null && !BigDecimal.ZERO.equals(lineItem.getDebitAmount()))
+            boolean isDebit = (lineItem.getDebitAmount() != null && lineItem.getDebitAmount().intValue()!=0)
                     ? Boolean.TRUE
                     : Boolean.FALSE;
             if(isDebit)
@@ -72,8 +72,14 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
             transaction.setCreatedBy(lineItem.getCreatedBy());
             transaction.setTransactionDate(journalDate);
             BigDecimal transactionAmount = isDebit ? lineItem.getDebitAmount():lineItem.getCreditAmount();
-            if(lineItem.getDeleteFlag())
-                transactionAmount = transactionAmount.negate();
+           if(lineItem.getDeleteFlag()&&isDebit)
+           {
+               transaction.setDebitCreditFlag('D');
+           }
+           else if(lineItem.getDeleteFlag()&&!isDebit){
+               transaction.setDebitCreditFlag('C');
+           }
+          //      transactionAmount = transactionAmount.negate();
             transaction.setTransactionAmount(transactionAmount);
             updateClosingBalance(transaction,category);
         }

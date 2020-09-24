@@ -101,11 +101,11 @@ export default {
 			url: '/admin/report',
 			icon: 'fas fa-chart-bar',
 			children: [
-				{
-					name: 'Transactions',
-					url: '/admin/report/transactions',
-					icon: 'fas fa-exchange-alt',
-				},
+				// {
+				// 	name: 'Transactions',
+				// 	url: '/admin/report/transactions',
+				// 	icon: 'fas fa-exchange-alt',
+				// },
 				{
 					name: 'Financial',
 					url: '/admin/report/financial',

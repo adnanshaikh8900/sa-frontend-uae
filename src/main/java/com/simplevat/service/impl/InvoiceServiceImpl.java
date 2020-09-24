@@ -173,4 +173,15 @@ public class InvoiceServiceImpl extends InvoiceService {
 		return supplierInvoiceDao.getTotalInvoiceCountByContactId(contactId);
 	}
 
+	@Override
+	public Integer getReceiptCountByCustInvoiceId(Integer invoiceId){
+		return supplierInvoiceDao.getReceiptCountByCustInvoiceId(invoiceId);
+
+	}
+	@Override
+	public Integer getReceiptCountBySupInvoiceId(Integer invoiceId){
+		return supplierInvoiceDao.getReceiptCountBySupInvoiceId(invoiceId);
+
+	}
+
 }

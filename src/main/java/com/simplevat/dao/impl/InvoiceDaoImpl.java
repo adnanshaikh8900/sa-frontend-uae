@@ -200,4 +200,27 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		return null;
 	}
 
+	@Override
+	public Integer getReceiptCountByCustInvoiceId(Integer invoiceId){
+		Query query = getEntityManager().createQuery(
+				"SELECT COUNT(c) FROM CustomerInvoiceReceipt c WHERE c.customerInvoice.id =:invoiceId AND c.deleteFlag=false" );
+		query.setParameter("invoiceId",invoiceId);
+		List<Object> countList = query.getResultList();
+		if (countList != null && !countList.isEmpty()) {
+			return ((Long) countList.get(0)).intValue();
+		}
+		return null;
+	}
+
+	@Override
+	public Integer getReceiptCountBySupInvoiceId(Integer invoiceId){
+		Query query = getEntityManager().createQuery(
+				"SELECT COUNT(s) FROM SupplierInvoicePayment s WHERE s.supplierInvoice.id =:invoiceId AND s.deleteFlag=false" );
+		query.setParameter("invoiceId",invoiceId);
+		List<Object> countList = query.getResultList();
+		if (countList != null && !countList.isEmpty()) {
+			return ((Long) countList.get(0)).intValue();
+		}
+		return null;
+	}
 }

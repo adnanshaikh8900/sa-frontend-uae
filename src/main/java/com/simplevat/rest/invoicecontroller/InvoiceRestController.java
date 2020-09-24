@@ -428,4 +428,18 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
+	@ApiOperation(value = "Get Invoices Count For receipt")
+	@GetMapping(value = "/getCustomerInvoicesCountForDelete")
+	public ResponseEntity<Integer> getCustomerInvoicesCountForDelete(@RequestParam int invoiceId){
+		Integer response = invoiceService.getReceiptCountByCustInvoiceId(invoiceId);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "Get Invoices Count For receipt")
+	@GetMapping(value = "/getSupplierInvoicesCountForDelete")
+	public ResponseEntity<Integer> getSupInvoicesCountForDelete(@RequestParam int invoiceId){
+		Integer response = invoiceService.getReceiptCountBySupInvoiceId(invoiceId);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 }

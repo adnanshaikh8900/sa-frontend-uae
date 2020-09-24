@@ -255,7 +255,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 	@Override
 	public List<Transaction> getAllTransactionListByBankAccountId(Integer bankAccountId) {
 		TypedQuery<Transaction> query = getEntityManager().createQuery(
-				"SELECT t FROM Transaction t WHERE t.deleteFlag = false AND t.bankAccount.bankAccountId =:bankAccountId ORDER BY t.transactionDate ASC",
+				"SELECT t FROM Transaction t WHERE  t.bankAccount.bankAccountId =:bankAccountId ORDER BY t.transactionDate ASC",
 				Transaction.class);
 		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankAccountId);
 		List<Transaction> transactionList = query.getResultList();

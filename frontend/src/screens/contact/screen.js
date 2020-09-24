@@ -48,7 +48,6 @@ const customStyles = {
 	}),
 };
 
-
 class Contact extends React.Component {
 	constructor(props) {
 		super(props);
@@ -181,24 +180,36 @@ class Contact extends React.Component {
 
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
-		const message = 'Warning: This Contact will be deleted permanently and cannot be recovered. '
-		if (selectedRows.length > 0) {
-			this.setState({
-				dialog: (
-					<ConfirmDeleteModal
-						isOpen={true}
-						okHandler={this.removeBulk}
-						cancelHandler={this.removeDialog}
-						message={message}
-					/>
-				),
+		this.props.contactActions
+			.getInvoicesCountContact(selectedRows)
+			.then((res) => {
+				if (res.data > 0) {
+					this.props.commonActions.tostifyAlert(
+						'error',
+						'You need to delete invoices to delete the contact',
+					);
+				} else {
+					const message =
+						'Warning: This Contact will be deleted permanently and cannot be recovered. ';
+					if (selectedRows.length > 0) {
+						this.setState({
+							dialog: (
+								<ConfirmDeleteModal
+									isOpen={true}
+									okHandler={this.removeBulk}
+									cancelHandler={this.removeDialog}
+									message={message}
+								/>
+							),
+						});
+					} else {
+						this.props.commonActions.tostifyAlert(
+							'info',
+							'Please select the rows of the table and try again.',
+						);
+					}
+				}
 			});
-		} else {
-			this.props.commonActions.tostifyAlert(
-				'info',
-				'Please select the rows of the table and try again.',
-			);
-		}
 	};
 
 	removeBulk = () => {
@@ -389,7 +400,7 @@ class Contact extends React.Component {
 
 													<Col lg={3} className="mb-1">
 														<Select
-														styles={customStyles}
+															styles={customStyles}
 															options={
 																contact_type_list
 																	? selectOptionsFactory.renderOptions(

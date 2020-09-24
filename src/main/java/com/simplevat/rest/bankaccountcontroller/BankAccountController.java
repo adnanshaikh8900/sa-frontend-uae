@@ -284,6 +284,30 @@ public class BankAccountController{
 					transactionService.delete(transaction);
 
 				}
+				if (bankAccount.getCurrentBalance()!=null&&bankAccount.getCurrentBalance().longValue()>0)
+				{
+					//Subtract Bank balance from opening Balance Offset liabilities
+					TransactionCategory transactionCategory = transactionCategoryService
+							.findTransactionCategoryByTransactionCategoryCode(
+									TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
+					TransactionCategoryClosingBalance transactionCategoryClosingBalance =
+							transactionCategoryClosingBalanceService.getLastClosingBalanceByDate(transactionCategory);
+					if (transactionCategoryClosingBalance!=null){
+						transactionCategoryClosingBalance.setClosingBalance(transactionCategoryClosingBalance.getClosingBalance()
+								.add(bankAccount.getCurrentBalance()));
+						transactionCategoryClosingBalanceService.update(transactionCategoryClosingBalance);
+					}
+					Map<String,Object> filterMap = new HashMap<>();
+					filterMap.put("transactionCategory",transactionCategory);
+					List<TransactionCategoryBalance> transactionCategoryBalanceList =
+							transactionCategoryBalanceService.findByAttributes(filterMap);
+					for(TransactionCategoryBalance transactionCategoryBalance : transactionCategoryBalanceList)
+					{
+						transactionCategoryBalance.setOpeningBalance(transactionCategoryBalance.getOpeningBalance()
+								.subtract(bankAccount.getCurrentBalance()));
+						transactionCategoryBalanceService.update(transactionCategoryBalance);
+					}
+				}
 				//delete closing balance
 				Map<String,Object> filterMap = new HashMap<>();
 				filterMap.put("transactionCategory",bankAccount.getTransactionCategory());
@@ -301,6 +325,7 @@ public class BankAccountController{
 				{
 					transactionCategoryBalanceService.delete(transactionCategoryBalance);
 				}
+
 				bankAccount.setLastUpdateDate(LocalDateTime.now());
 				bankAccount.setLastUpdatedBy(userId);
 				bankAccount.setDeleteFlag(true);
@@ -314,6 +339,7 @@ public class BankAccountController{
 				}
 				//delete transaction category
 				Map<String,Object> filterTransactionCategoryMap = new HashMap<>();
+
 				filterTransactionCategoryMap.put("transactionCategoryId",bankAccount.getTransactionCategory()
 						.getTransactionCategoryId());
 

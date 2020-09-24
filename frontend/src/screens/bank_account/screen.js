@@ -532,7 +532,17 @@ class BankAccount extends React.Component {
 			};
 			this.props.bankAccountActions.getBankAccountList(obj).then((res) => {
 				if (res.status === 200) {
-					this.setState({ csvData: res.data.data, view: true }, () => {
+					var result = res.data.data.map((o) => ({
+						'Bank Name': o.name,
+						'Account Number': o.bankAccountNo,
+						'Account Name': o.accounName,
+						'Bank Account Type': o.bankAccountTypeName,
+						'Closing Balance': o.closingBalance,
+						'Opening Balance': o.openingBalance,
+						'Reconciled Date': o.reconcileDate,
+						currency: o.currancyName,
+					}));
+					this.setState({ csvData: result, view: true }, () => {
 						setTimeout(() => {
 							this.csvLink.current.link.click();
 						}, 0);
@@ -757,7 +767,7 @@ class BankAccount extends React.Component {
 												}}
 											>
 												<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }} 
+													thStyle={{ whiteSpace: 'normal' }}
 													dataField="bankAccountNo"
 													dataFormat={this.renderAccountNumber}
 													dataSort
@@ -767,7 +777,7 @@ class BankAccount extends React.Component {
 													Account Number
 												</TableHeaderColumn>
 												<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }} 
+													thStyle={{ whiteSpace: 'normal' }}
 													dataField="name"
 													dataSort
 													width="150"
@@ -776,7 +786,7 @@ class BankAccount extends React.Component {
 													Bank
 												</TableHeaderColumn>
 												<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }} 
+													thStyle={{ whiteSpace: 'normal' }}
 													dataField="accounName"
 													dataSort
 													width="150"
@@ -785,7 +795,7 @@ class BankAccount extends React.Component {
 													Account Name
 												</TableHeaderColumn>
 												<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }} 
+													thStyle={{ whiteSpace: 'normal' }}
 													dataFormat={this.renderAccountType}
 													dataField="bankAccountTypeName"
 													dataSort
@@ -795,7 +805,7 @@ class BankAccount extends React.Component {
 													Account Type
 												</TableHeaderColumn>
 												<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }} 
+													thStyle={{ whiteSpace: 'normal' }}
 													dataFormat={this.renderCurrency}
 													dataSort
 													dataField="currancyName"
@@ -805,7 +815,7 @@ class BankAccount extends React.Component {
 													Currency
 												</TableHeaderColumn>
 												<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }} 
+													thStyle={{ whiteSpace: 'normal' }}
 													dataField="openingBalance"
 													dataSort
 													width="150"
@@ -815,7 +825,7 @@ class BankAccount extends React.Component {
 													Bank Balance
 												</TableHeaderColumn>
 												<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }} 
+													thStyle={{ whiteSpace: 'normal' }}
 													dataField="swift_code"
 													export={false}
 													dataSort={false}
@@ -826,7 +836,7 @@ class BankAccount extends React.Component {
 													Last Reconciled
 												</TableHeaderColumn>
 												<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }} 
+													thStyle={{ whiteSpace: 'normal' }}
 													className="text-right"
 													columnClassName="text-right"
 													width="150"

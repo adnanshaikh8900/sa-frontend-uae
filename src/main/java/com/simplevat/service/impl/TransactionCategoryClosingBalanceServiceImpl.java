@@ -62,7 +62,7 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
         {
             Transaction transaction = new Transaction();
             LocalDateTime journalDate = lineItem.getJournal().getJournalDate().truncatedTo(ChronoUnit.DAYS);
-            boolean isDebit = (lineItem.getDebitAmount() != null && !BigDecimal.ZERO.equals(lineItem.getDebitAmount()))
+            boolean isDebit = (lineItem.getDebitAmount() != null && lineItem.getDebitAmount().intValue()!=0)
                     ? Boolean.TRUE
                     : Boolean.FALSE;
             if(isDebit)

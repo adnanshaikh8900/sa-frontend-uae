@@ -168,4 +168,9 @@ public class InvoiceServiceImpl extends InvoiceService {
 		return supplierInvoiceDao.getSuggestionExplainedInvoices(amount, contactId, type, userId);
 	}
 
+	@Override
+	public Integer getTotalInvoiceCountByContactId(Integer contactId){
+		return supplierInvoiceDao.getTotalInvoiceCountByContactId(contactId);
+	}
+
 }

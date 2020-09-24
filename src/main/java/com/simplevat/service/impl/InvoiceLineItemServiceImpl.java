@@ -23,5 +23,9 @@ public class InvoiceLineItemServiceImpl extends InvoiceLineItemService {
     public void deleteByInvoiceId(Integer invoiceId) {
         invoiceLineItemDao.deleteByInvoiceId(invoiceId);
     }
-  
+  @Override
+  public Integer getTotalInvoiceCountByProductId(Integer productId){
+     return invoiceLineItemDao.getTotalInvoiceCountByProductId(productId);
+
+  }
 }

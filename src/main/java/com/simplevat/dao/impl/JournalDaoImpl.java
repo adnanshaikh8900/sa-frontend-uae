@@ -49,30 +49,17 @@ public class JournalDaoImpl extends AbstractDao<Integer, Journal> implements Jou
 			for (Integer id : ids) {
 				Journal journal = findByPK(id);
 				journal.setDeleteFlag(Boolean.TRUE);
-
 				if (journal.getJournalLineItems() != null && !journal.getJournalLineItems().isEmpty()) {
 					for (JournalLineItem journalLineItem : journal.getJournalLineItems()) {
-						Map<String,Object> filterMap = new HashMap<>();
-						filterMap.put("transactionCategory",journalLineItem.getTransactionCategory());
-						List<TransactionCategoryClosingBalance> transactionCategoryClosingBalanceList =
-								transactionCategoryClosingBalanceService.findByAttributes(filterMap);
-						journalLineItem.setCurrentBalance(transactionCategoryBalanceService.updateRunningBalance(journalLineItem));
-						for(TransactionCategoryClosingBalance transactionCategoryClosingBalance :
-								transactionCategoryClosingBalanceList)
-						{
-							transactionCategoryClosingBalanceService.delete(transactionCategoryClosingBalance);
-						}
+						journalLineItem.setDeleteFlag(true);
+						transactionCategoryBalanceService.updateRunningBalance(journalLineItem);
 						journalLineItemDao.delete(journalLineItem);
 					}
-
-
 				}
 				delete(journal);
-
 			}
 		}
 	}
-
 	@Override
 	public PaginationResponseModel getJornalList(Map<JournalFilterEnum, Object> filterMap,
 			PaginationModel paginationModel) {

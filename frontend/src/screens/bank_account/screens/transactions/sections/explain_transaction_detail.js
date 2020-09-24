@@ -1665,59 +1665,62 @@ class ExplainTrasactionDetail extends React.Component {
 															)}
 
 															<Row>
-																<Col lg={12} className="mt-5">
-																	<FormGroup className="text-left">
-																		{props.values.explinationStatusEnum !==
-																		'FULL' ? (
-																			<div>
-																				<Button
-																					type="button"
-																					color="primary"
-																					className="btn-square mr-3"
-																					onClick={props.handleSubmit}
-																				>
-																					<i className="fa fa-dot-circle-o"></i>{' '}
-																					Explain
-																				</Button>
-																				<Button
-																					color="secondary"
-																					className="btn-square"
-																					onClick={() =>
-																						this.closeTransaction(
-																							props.values.transactionId,
-																						)
-																					}
-																				>
-																					<i className="fa fa-ban"></i> Delete
-																				</Button>
-																			</div>
-																		) : (
-																			<div>
-																				<Button
-																					type="button"
-																					color="primary"
-																					className="btn-square mr-3"
-																					onClick={() =>
-																						this.UnexplainTransaction(
-																							props.values.transactionId,
-																						)
-																					}
-																				>
-																					<i className="fa fa-dot-circle-o"></i>{' '}
-																					Unexplain
-																				</Button>
-																				<Button
-																					color="secondary"
-																					className="btn-square"
-																					onClick={props.handleSubmit}
-																				>
-																					<i className="fa fa-dot-circle-o"></i>{' '}
-																					Update
-																				</Button>
-																			</div>
-																		)}
-																	</FormGroup>
-																</Col>
+																{props.values.explinationStatusEnum !==
+																	'RECONCILED' && (
+																	<Col lg={12} className="mt-5">
+																		<FormGroup className="text-left">
+																			{props.values.explinationStatusEnum !==
+																			'FULL' ? (
+																				<div>
+																					<Button
+																						type="button"
+																						color="primary"
+																						className="btn-square mr-3"
+																						onClick={props.handleSubmit}
+																					>
+																						<i className="fa fa-dot-circle-o"></i>{' '}
+																						Explain
+																					</Button>
+																					<Button
+																						color="secondary"
+																						className="btn-square"
+																						onClick={() =>
+																							this.closeTransaction(
+																								props.values.transactionId,
+																							)
+																						}
+																					>
+																						<i className="fa fa-ban"></i> Delete
+																					</Button>
+																				</div>
+																			) : (
+																				<div>
+																					<Button
+																						type="button"
+																						color="primary"
+																						className="btn-square mr-3"
+																						onClick={() =>
+																							this.UnexplainTransaction(
+																								props.values.transactionId,
+																							)
+																						}
+																					>
+																						<i className="fa fa-dot-circle-o"></i>{' '}
+																						Unexplain
+																					</Button>
+																					<Button
+																						color="secondary"
+																						className="btn-square"
+																						onClick={props.handleSubmit}
+																					>
+																						<i className="fa fa-dot-circle-o"></i>{' '}
+																						Update
+																					</Button>
+																				</div>
+																			)}
+																		</FormGroup>
+																	</Col>
+																)}
 															</Row>
 														</Form>
 													)}

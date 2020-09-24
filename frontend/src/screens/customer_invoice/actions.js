@@ -424,3 +424,21 @@ export const getOverdueAmountDetails = (invoiceType) => {
 			});
 	};
 };
+
+export const getCustomerInvoicesCountForDelete = (id) => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: `/rest/invoice/getCustomerInvoicesCountForDelete/?invoiceId=${id}`,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

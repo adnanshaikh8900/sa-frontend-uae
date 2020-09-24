@@ -13,6 +13,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import com.simplevat.service.CoacTransactionCategoryService;
+import com.simplevat.service.bankaccount.TransactionService;
+import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +70,9 @@ public class TransactionCategoryRestController{
 
 	@Autowired
 	private TranscationCategoryHelper transcationCategoryHelper;
+
+	@Autowired
+	private TransactionService transactionService;
 
 	@ApiOperation(value = "Get All Transaction Categories for the Loggedin User and the Master data")
 	@GetMapping(value = "/gettransactioncategory")
@@ -221,5 +226,10 @@ public class TransactionCategoryRestController{
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}
-
+	@ApiOperation(value = "Get Explained Transaction Count For Transaction Id")
+	@GetMapping(value = "/getExplainedTransactionCountForTransactionCategory")
+	public ResponseEntity<Integer> getExplainedTransactionCount(@RequestParam int transactionCategoryId) {
+		Integer response = transactionService.getExplainedTransactionCountByTransactionCategoryId(transactionCategoryId);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 }

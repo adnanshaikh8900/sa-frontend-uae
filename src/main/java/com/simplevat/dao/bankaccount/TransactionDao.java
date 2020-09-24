@@ -87,4 +87,6 @@ public interface TransactionDao extends Dao<Integer, Transaction> {
    public boolean isAlreadyExistSimilarTransaction(BigDecimal transactionAmount, LocalDateTime transactionDate, BankAccount bankAccount);
 
    public void updateStatusByIds(ArrayList<Integer> ids, TransactionCreationMode potentialDuplicate);
+
+   public Integer getExplainedTransactionCountByTransactionCategoryId(Integer transactionCategoryId);
 }

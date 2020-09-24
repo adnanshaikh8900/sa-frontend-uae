@@ -104,4 +104,6 @@ public abstract class TransactionService extends SimpleVatService<Integer, Trans
     public abstract Boolean matchClosingBalanceForReconcile(LocalDateTime reconcileDate, BigDecimal closingBalance, Integer bankId);
 
     public abstract void updateStatusByIds(ArrayList<Integer> ids, TransactionCreationMode potentialDuplicate);
+
+    public abstract Integer getExplainedTransactionCountByTransactionCategoryId(Integer transactionCategoryId);
 }

@@ -443,5 +443,8 @@ public class TransactionServiceImpl extends TransactionService {
 	{
 		return transactionDao.matchClosingBalanceForReconcile(reconcileDate,closingBalance,bankId);
 	}
-
+    @Override
+    public Integer getExplainedTransactionCountByTransactionCategoryId(Integer transactionCategoryId){
+	return 	transactionDao.getExplainedTransactionCountByTransactionCategoryId(transactionCategoryId);
+}
 }

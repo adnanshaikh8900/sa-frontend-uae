@@ -601,4 +601,16 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		List<Transaction> transactionList = query.getResultList();
 		return transactionList!=null && transactionList.size()>0;
 	}
+    @Override
+	public Integer getExplainedTransactionCountByTransactionCategoryId(Integer transactionCategoryId){
+		Query query = getEntityManager().createQuery(
+				"SELECT COUNT(t) FROM Transaction t WHERE t.explainedTransactionCategory.transactionCategoryId =:transactionCategoryId AND t.deleteFlag=false" );
+		query.setParameter("transactionCategoryId",transactionCategoryId);
+		List<Object> countList = query.getResultList();
+		if (countList != null && !countList.isEmpty()) {
+			return ((Long) countList.get(0)).intValue();
+		}
+		return null;
+
+	}
 }

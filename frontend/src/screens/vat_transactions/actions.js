@@ -7,27 +7,27 @@ export const initialData = (obj) => {
 };
 
 export const vatTransactionList = (postObj) => {
-	// let customerName = postObj.customerId ? postObj.customerId.value : '';
-	// let referenceNumber = postObj.referenceNumber ? postObj.referenceNumber : '';
-	// let invoiceDate = postObj.invoiceDate ? postObj.invoiceDate : '';
-	// let invoiceDueDate = postObj.invoiceDueDate ? postObj.invoiceDueDate : '';
-	// let amount = postObj.amount ? postObj.amount : '';
-	// let status = postObj.status ? postObj.status.value : '';
-	// let contactType = 2; //postObj.contactType ? postObj.contactType : ''
-	// let pageNo = postObj.pageNo ? postObj.pageNo : '';
-	// let pageSize = postObj.pageSize ? postObj.pageSize : '';
-	// let order = postObj.order ? postObj.order : '';
-	// let sortingCol = postObj.sortingCol ? postObj.sortingCol : '';
-	// let paginationDisable = postObj.paginationDisable
-	// 	? postObj.paginationDisable
-	// 	: false;
+	let customerName = postObj.customerId ? postObj.customerId.value : '';
+	let referenceNumber = postObj.referenceNumber ? postObj.referenceNumber : '';
+	let invoiceDate = postObj.invoiceDate ? postObj.invoiceDate : '';
+	let invoiceDueDate = postObj.invoiceDueDate ? postObj.invoiceDueDate : '';
+	let amount = postObj.amount ? postObj.amount : '';
+	let status = postObj.status ? postObj.status.value : '';
+	let contactType = 2; //postObj.contactType ? postObj.contactType : ''
+	let pageNo = postObj.pageNo ? postObj.pageNo : '';
+	let pageSize = postObj.pageSize ? postObj.pageSize : '';
+	let order = postObj.order ? postObj.order : '';
+	let sortingCol = postObj.sortingCol ? postObj.sortingCol : '';
+	let paginationDisable = postObj.paginationDisable
+		? postObj.paginationDisable
+		: false;
 
 	return (dispatch) => {
-		let param = `/rest/taxes/getVatTransationList`;
+		let param = `/rest/taxes/getVatTransationList?pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`;
 		let data = {
 			method: 'get',
 			url: param,
-			// data: postObj
+			//data: postObj,
 		};
 		return authApi(data)
 			.then((res) => {

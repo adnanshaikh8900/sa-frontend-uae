@@ -26,8 +26,6 @@ import moment from 'moment';
 import { selectOptionsFactory, selectCurrencyFactory } from 'utils';
 const mapStateToProps = (state) => {
 	return {
-		customer_invoice_list: state.bank_account.customer_invoice_list,
-		vendor_invoice_list: state.bank_account.vendor_invoice_list,
 		expense_list: state.bank_account.expense_list,
 		expense_categories_list: state.expense.expense_categories_list,
 		user_list: state.bank_account.user_list,
@@ -74,6 +72,8 @@ class ExplainTrasactionDetail extends React.Component {
 			unexplainValue: [],
 			creationMode: '',
 			unexplainCust: [],
+			customer_invoice_list_state: [],
+			supplier_invoice_list_state: [],
 		};
 
 		this.file_size = 1024000;
@@ -173,7 +173,6 @@ class ExplainTrasactionDetail extends React.Component {
 						},
 					},
 					() => {
-						console.log(typeof this.state.initValue.coaCategoryId);
 						if (
 							this.state.initValue.coaCategoryId === 10 &&
 							Object.keys(this.state.initValue.explainParamList).length !== 0
@@ -251,23 +250,27 @@ class ExplainTrasactionDetail extends React.Component {
 	getTransactionCategoryList = (type) => {
 		this.formRef.current.setFieldValue('coaCategoryId', type, true);
 		this.setValue(null);
-		this.props.transactionsActions
-			.getTransactionCategoryListForExplain(
-				type.value,
-				this.state.initValue.bankId,
-			)
-			.then((res) => {
-				if (res.status === 200) {
-					this.setState(
-						{
-							transactionCategoryList: res.data,
-						},
-						() => {
-							//console.log(this.state.transactionCategoryList);
-						},
-					);
-				}
-			});
+		if (type.value === 100) {
+			this.getVendorList();
+		} else {
+			this.props.transactionsActions
+				.getTransactionCategoryListForExplain(
+					type.value,
+					this.state.initValue.bankId,
+				)
+				.then((res) => {
+					if (res.status === 200) {
+						this.setState(
+							{
+								transactionCategoryList: res.data,
+							},
+							() => {
+								//console.log(this.state.transactionCategoryList);
+							},
+						);
+					}
+				});
+		}
 	};
 	getSuggestionInvoicesFotCust = (option, amount) => {
 		const data = {
@@ -275,7 +278,11 @@ class ExplainTrasactionDetail extends React.Component {
 			id: option,
 			bankId: this.props.bankId,
 		};
-		this.props.transactionsActions.getCustomerInvoiceList(data);
+		this.props.transactionsActions.getCustomerInvoiceList(data).then((res) => {
+			this.setState({
+				customer_invoice_list_state: res.data,
+			});
+		});
 	};
 
 	getCustomerExplainedInvoiceList = (option, amount) => {
@@ -284,7 +291,13 @@ class ExplainTrasactionDetail extends React.Component {
 			id: option,
 			bankId: this.props.bankId,
 		};
-		this.props.transactionsActions.getCustomerExplainedInvoiceList(data);
+		this.props.transactionsActions
+			.getCustomerExplainedInvoiceList(data)
+			.then((res) => {
+				this.setState({
+					customer_invoice_list_state: res.data,
+				});
+			});
 	};
 
 	getVendorExplainedInvoiceList = (option, amount) => {
@@ -293,7 +306,13 @@ class ExplainTrasactionDetail extends React.Component {
 			id: option,
 			bankId: this.props.bankId,
 		};
-		this.props.transactionsActions.getVendorExplainedInvoiceList(data);
+		this.props.transactionsActions
+			.getVendorExplainedInvoiceList(data)
+			.then((res) => {
+				this.setState({
+					supplier_invoice_list_state: res.data,
+				});
+			});
 	};
 
 	getSuggestionInvoicesFotVend = (option, amount) => {
@@ -302,7 +321,11 @@ class ExplainTrasactionDetail extends React.Component {
 			id: option,
 			bankId: this.props.bankId,
 		};
-		this.props.transactionsActions.getVendorInvoiceList(data);
+		this.props.transactionsActions.getVendorInvoiceList(data).then((res) => {
+			this.setState({
+				supplier_invoice_list_state: res.data,
+			});
+		});
 	};
 
 	getUserList = () => {
@@ -582,10 +605,10 @@ class ExplainTrasactionDetail extends React.Component {
 			chartOfAccountCategoryList,
 			transactionCategoryList,
 			dialog,
+			customer_invoice_list_state,
+			supplier_invoice_list_state,
 		} = this.state;
 		const {
-			customer_invoice_list,
-			vendor_invoice_list,
 			expense_categories_list,
 			currency_list,
 			vendor_list,
@@ -1121,8 +1144,8 @@ class ExplainTrasactionDetail extends React.Component {
 																							styles={customStyles}
 																							isMulti
 																							options={
-																								vendor_invoice_list
-																									? vendor_invoice_list.data
+																								supplier_invoice_list_state
+																									? supplier_invoice_list_state
 																									: []
 																							}
 																							onChange={(option) => {
@@ -1132,10 +1155,9 @@ class ExplainTrasactionDetail extends React.Component {
 																								this.invoiceIdList(option);
 																							}}
 																							value={
-																								vendor_invoice_list &&
-																								vendor_invoice_list.data &&
+																								supplier_invoice_list_state &&
 																								props.values.explainParamList
-																									? vendor_invoice_list.data.find(
+																									? supplier_invoice_list_state.find(
 																											(option) =>
 																												option.value ===
 																												+props.values.explainParamList.map(
@@ -1263,8 +1285,8 @@ class ExplainTrasactionDetail extends React.Component {
 																					styles={customStyles}
 																					isMulti
 																					options={
-																						customer_invoice_list
-																							? customer_invoice_list.data
+																						customer_invoice_list_state
+																							? customer_invoice_list_state
 																							: []
 																					}
 																					onChange={(option) => {
@@ -1274,10 +1296,9 @@ class ExplainTrasactionDetail extends React.Component {
 																						this.invoiceIdList(option);
 																					}}
 																					value={
-																						customer_invoice_list &&
-																						customer_invoice_list.data &&
+																						customer_invoice_list_state &&
 																						props.values.explainParamList
-																							? customer_invoice_list.data.find(
+																							? customer_invoice_list_state.find(
 																									(option) =>
 																										option.value ===
 																										+props.values.explainParamList.map(

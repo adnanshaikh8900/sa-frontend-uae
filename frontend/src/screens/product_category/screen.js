@@ -170,7 +170,8 @@ class ProductCategory extends React.Component {
 	// Delete Vat By ID
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
-		const message = 'Warning: This Product Category will be deleted permanently and cannot be recovered.  ';
+		const message =
+			'Warning: This Product Category will be deleted permanently and cannot be recovered.  ';
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
@@ -395,7 +396,7 @@ class ProductCategory extends React.Component {
 														/>
 													</Col>
 
-													<Col lg={1} className="pl-0 pr-0">
+													<Col lg={2} className="pl-0 pr-0">
 														<Button
 															type="button"
 															color="primary"

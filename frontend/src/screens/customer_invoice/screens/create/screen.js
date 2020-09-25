@@ -1779,7 +1779,7 @@ class CreateCustomerInvoice extends React.Component {
 																				</Col>
 																			</Row>
 																		</div>
-																		{/* <div className="total-item p-2">
+																		<div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
@@ -1838,7 +1838,7 @@ class CreateCustomerInvoice extends React.Component {
 																					</label>
 																				</Col>
 																			</Row>
-																		</div> */}
+																		</div>
 																	</div>
 																</Col>
 															</Row>

@@ -363,7 +363,9 @@ class RecordSupplierPayment extends React.Component {
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="fas fa-address-book" />
-												<span className="ml-2">Payment for Supplier Invoice</span>
+												<span className="ml-2">
+													Payment for Supplier Invoice
+												</span>
 											</div>
 										</Col>
 									</Row>
@@ -384,6 +386,9 @@ class RecordSupplierPayment extends React.Component {
 													validationSchema={Yup.object().shape({
 														depositeTo: Yup.string().required(
 															'Deposit To is Required',
+														),
+														payMode: Yup.string().required(
+															'Payment Mode is Required',
 														),
 														attachmentFile: Yup.mixed()
 															.test(
@@ -433,7 +438,7 @@ class RecordSupplierPayment extends React.Component {
 																			Customer Name
 																		</Label>
 																		<Select
-																		styles={customStyles}
+																			styles={customStyles}
 																			id="contactId"
 																			name="contactId"
 																			isDisabled
@@ -574,10 +579,11 @@ class RecordSupplierPayment extends React.Component {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="payMode">
+																			<span className="text-danger">*</span>
 																			Payment Mode
 																		</Label>
 																		<Select
-																		styles={customStyles}
+																			styles={customStyles}
 																			options={
 																				pay_mode
 																					? selectOptionsFactory.renderOptions(
@@ -621,7 +627,7 @@ class RecordSupplierPayment extends React.Component {
 																			Deposit To
 																		</Label>
 																		<Select
-																		styles={customStyles}
+																			styles={customStyles}
 																			options={deposit_list}
 																			value={props.values.depositeTo}
 																			onChange={(option) => {
@@ -741,18 +747,18 @@ class RecordSupplierPayment extends React.Component {
 																									}}
 																								/>
 																								{this.state.fileName && (
-																								<div>
-																									<i
-																										className="fa fa-close"
-																										onClick={() =>
-																											this.setState({
-																												fileName: '',
-																											})
-																										}
-																									></i>{' '}
-																									{this.state.fileName}
-																								</div>
-																							)}
+																									<div>
+																										<i
+																											className="fa fa-close"
+																											onClick={() =>
+																												this.setState({
+																													fileName: '',
+																												})
+																											}
+																										></i>{' '}
+																										{this.state.fileName}
+																									</div>
+																								)}
 																								{this.state.fileName ? (
 																									this.state.fileName
 																								) : (

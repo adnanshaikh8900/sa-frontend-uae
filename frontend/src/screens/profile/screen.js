@@ -1697,7 +1697,7 @@ class Profile extends React.Component {
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="product_code">
-																					Invoicing Address Line1
+																					Invoicing Address Line 1
 																				</Label>
 																				<Input
 																					type="textarea"
@@ -1728,7 +1728,7 @@ class Profile extends React.Component {
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="product_code">
-																					Invoicing Address Line2
+																					Invoicing Address Line 2
 																				</Label>
 																				<Input
 																					type="textarea"
@@ -1759,7 +1759,7 @@ class Profile extends React.Component {
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="product_code">
-																					Invoicing Address Line3
+																					Invoicing Address Line 3
 																				</Label>
 																				<Input
 																					type="textarea"

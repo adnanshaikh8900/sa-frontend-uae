@@ -36,4 +36,8 @@ public abstract class InvoiceService extends SimpleVatService<Integer, Invoice> 
 	public abstract List<Invoice> getSuggestionExplainedInvoices(BigDecimal amount, Integer contactId,ContactTypeEnum type,Integer userId);
 
     public abstract Integer getTotalInvoiceCountByContactId(Integer contactId);
+
+	public abstract Integer getReceiptCountByCustInvoiceId(Integer invoiceId);
+
+	public abstract Integer getReceiptCountBySupInvoiceId(Integer invoiceId);
 }

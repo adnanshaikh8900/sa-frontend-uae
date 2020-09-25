@@ -306,15 +306,30 @@ class DetailProduct extends React.Component {
 	};
 
 	deleteProduct = () => {
-		this.setState({
-			dialog: (
-				<ConfirmDeleteModal
-					isOpen={true}
-					okHandler={this.removeProduct}
-					cancelHandler={this.removeDialog}
-				/>
-			),
-		});
+		const { current_product_id } = this.state;
+		this.props.productActions
+			.getInvoicesCountProduct(current_product_id)
+			.then((res) => {
+				if (res.data > 0) {
+					this.props.commonActions.tostifyAlert(
+						'error',
+						'You need to delete invoices to delete the contact',
+					);
+				} else {
+					this.setState({
+						dialog: (
+							<ConfirmDeleteModal
+								isOpen={true}
+								okHandler={this.removeProduct}
+								cancelHandler={this.removeDialog}
+								message={
+									'Warning: This Product will be deleted permanently and cannot be recovered.  '
+								}
+							/>
+						),
+					});
+				}
+			});
 	};
 
 	removeProduct = () => {
@@ -561,7 +576,7 @@ class DetailProduct extends React.Component {
 																			Product Category
 																		</Label>
 																		<Select
-																		styles={customStyles}
+																			styles={customStyles}
 																			className="select-default-width"
 																			options={
 																				product_category_list &&
@@ -617,7 +632,7 @@ class DetailProduct extends React.Component {
 																			Percentage
 																		</Label>
 																		<Select
-																		styles={customStyles}
+																			styles={customStyles}
 																			options={
 																				vat_list
 																					? selectOptionsFactory.renderOptions(
@@ -800,7 +815,7 @@ class DetailProduct extends React.Component {
 																			Category
 																		</Label>
 																		<Select
-																		styles={customStyles}
+																			styles={customStyles}
 																			isDisabled={
 																				props.values.productPriceType &&
 																				props.values.productPriceType.includes(
@@ -994,7 +1009,7 @@ class DetailProduct extends React.Component {
 																			Category
 																		</Label>
 																		<Select
-																		styles={customStyles}
+																			styles={customStyles}
 																			isDisabled={
 																				props.values.productPriceType &&
 																				props.values.productPriceType.includes(

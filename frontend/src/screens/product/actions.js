@@ -193,3 +193,21 @@ export const checkValidation = (obj) => {
 			});
 	};
 };
+
+export const getInvoicesCountProduct = (id) => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: `/rest/product/getInvoicesCountForProduct/?productId=${id}`,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

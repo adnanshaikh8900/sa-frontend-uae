@@ -384,9 +384,7 @@ public class TransactionServiceImpl extends TransactionService {
 	private boolean isValidTransaction(Transaction transaction, BankAccount bankAccount,LocalDateTime lastReconciledDate) {
 		if(bankAccount.getOpeningDate().isBefore(transaction.getTransactionDate()))
 		return true;
-		if (lastReconciledDate==null)
-				return true;
-			if (lastReconciledDate!=null&&lastReconciledDate.isBefore(transaction.getTransactionDate()))
+		else if (lastReconciledDate!=null&&lastReconciledDate.isBefore(transaction.getTransactionDate()))
 			return true;
 			else
 				return false;
@@ -445,5 +443,8 @@ public class TransactionServiceImpl extends TransactionService {
 	{
 		return transactionDao.matchClosingBalanceForReconcile(reconcileDate,closingBalance,bankId);
 	}
-
+    @Override
+    public Integer getExplainedTransactionCountByTransactionCategoryId(Integer transactionCategoryId){
+	return 	transactionDao.getExplainedTransactionCountByTransactionCategoryId(transactionCategoryId);
+}
 }

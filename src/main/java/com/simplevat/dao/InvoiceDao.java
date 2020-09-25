@@ -44,4 +44,8 @@ public interface InvoiceDao extends Dao<Integer, Invoice> {
 	public List<Invoice> getSuggestionExplainedInvoices(BigDecimal amount, Integer contactId,ContactTypeEnum type,Integer userId);
 
 	public Integer getTotalInvoiceCountByContactId(Integer contactId);
+
+	public Integer getReceiptCountByCustInvoiceId(Integer invoiceId);
+
+	public Integer getReceiptCountBySupInvoiceId(Integer invoiceId);
 }

@@ -226,15 +226,27 @@ class DetailContact extends React.Component {
 	};
 
 	deleteContact = () => {
-		this.setState({
-			dialog: (
-				<ConfirmDeleteModal
-					isOpen={true}
-					okHandler={this.removeContact}
-					cancelHandler={this.removeDialog}
-				/>
-			),
-		});
+		const { current_contact_id } = this.state;
+		this.props.contactActions
+			.getInvoicesCountContact(current_contact_id)
+			.then((res) => {
+				if (res.data > 0) {
+					this.props.commonActions.tostifyAlert(
+						'error',
+						'You need to delete invoices to delete the contact',
+					);
+				} else {
+					this.setState({
+						dialog: (
+							<ConfirmDeleteModal
+								isOpen={true}
+								okHandler={this.removeContact}
+								cancelHandler={this.removeDialog}
+							/>
+						),
+					});
+				}
+			});
 	};
 
 	removeContact = () => {

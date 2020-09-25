@@ -143,8 +143,8 @@ class InvoiceTemplate extends Component {
 														}}
 													>
 														{currencyData[0] &&
-															currencyData[0].currencySymbol &&
-															`${currencyData[0].currencySymbol}`}
+															currencyData[0].currencyIsoCode &&
+															`${currencyData[0].currencyIsoCode}`}
 													</span>
 													{invoiceData.dueAmount ? invoiceData.dueAmount : 0.0}
 												</b>
@@ -275,7 +275,7 @@ class InvoiceTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}>
 													{currencyData[0] &&
-														`${currencyData[0].currencySymbol}`}
+														`${currencyData[0].currencyIsoCode}`}
 												</span>
 												<span>{totalNet ? totalNet.toFixed(2) : 0.0}</span>
 											</td>
@@ -297,7 +297,7 @@ class InvoiceTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}>
 													{currencyData[0] &&
-														`${currencyData[0].currencySymbol}`}
+														`${currencyData[0].currencyIsoCode}`}
 												</span>
 												<span>
 													{invoiceData.discount &&
@@ -317,7 +317,7 @@ class InvoiceTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}>
 													{currencyData[0] &&
-														`${currencyData[0].currencySymbol}`}
+														`${currencyData[0].currencyIsoCode}`}
 												</span>
 												<span>
 													{invoiceData.totalVatAmount
@@ -338,7 +338,7 @@ class InvoiceTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}>
 													{currencyData[0] &&
-														`${currencyData[0].currencySymbol}`}
+														`${currencyData[0].currencyIsoCode}`}
 												</span>
 												<span>
 													{invoiceData.totalAmount
@@ -361,7 +361,7 @@ class InvoiceTemplate extends Component {
 												>
 													<span style={{ marginLeft: '2rem' }}>
 														{currencyData[0] &&
-															`${currencyData[0].currencySymbol}`}
+															`${currencyData[0].currencyIsoCode}`}
 													</span>
 													<span>
 														{invoiceData.dueAmount

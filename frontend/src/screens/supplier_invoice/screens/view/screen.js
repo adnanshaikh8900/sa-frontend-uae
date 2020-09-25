@@ -113,7 +113,7 @@ class ViewInvoice extends React.Component {
 					<Row>
 						<Col lg={12} className="mx-auto">
 							<div className="action-btn-container">
-								<Button
+								{/* <Button
 									className="btn btn-sm edit-btn"
 									onClick={() => {
 										this.props.history.push(
@@ -123,7 +123,7 @@ class ViewInvoice extends React.Component {
 									}}
 								>
 									<i className="fa fa-pencil"></i>
-								</Button>
+								</Button> */}
 								<Button
 									className="btn btn-sm pdf-btn"
 									onClick={() => {

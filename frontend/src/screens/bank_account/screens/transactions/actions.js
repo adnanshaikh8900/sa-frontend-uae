@@ -126,6 +126,7 @@ export const getCustomerInvoiceList = (param) => {
 							data: res.data,
 						},
 					});
+					return res;
 				}
 			})
 			.catch((err) => {
@@ -219,6 +220,7 @@ export const getVendorInvoiceList = (param) => {
 							data: res.data,
 						},
 					});
+					return res;
 				}
 			})
 			.catch((err) => {
@@ -242,6 +244,7 @@ export const getVendorExplainedInvoiceList = (param) => {
 							data: res.data,
 						},
 					});
+					return res;
 				}
 			})
 			.catch((err) => {

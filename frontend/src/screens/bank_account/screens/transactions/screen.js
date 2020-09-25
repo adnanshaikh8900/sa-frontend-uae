@@ -636,32 +636,32 @@ class BankTransactions extends React.Component {
 												<Col lg={3}>
 													<h5>Current Bank Balance</h5>
 													<h3>
-													{universal_currency_list[0] &&
-													<Currency
-													value={this.state.currentBalance}
-															currencySymbol={
-															universal_currency_list[0]
-															? universal_currency_list[0].currencyIsoCode
-															: 'USD'
-														}
-													/>
-													}
-												</h3>
+														{universal_currency_list[0] && (
+															<Currency
+																value={this.state.currentBalance}
+																currencySymbol={
+																	universal_currency_list[0]
+																		? universal_currency_list[0].currencyIsoCode
+																		: 'USD'
+																}
+															/>
+														)}
+													</h3>
 												</Col>
 												<Col lg={3}>
 													<h5>SimpleVat Balance</h5>
 													<h3>
-													{universal_currency_list[0] &&
-													<Currency
-													value={this.state.closingBalance}
-															currencySymbol={
-															universal_currency_list[0]
-															? universal_currency_list[0].currencyIsoCode
-															: 'USD'
-														}
-													/>
-													}
-												</h3>
+														{universal_currency_list[0] && (
+															<Currency
+																value={this.state.closingBalance}
+																currencySymbol={
+																	universal_currency_list[0]
+																		? universal_currency_list[0].currencyIsoCode
+																		: 'USD'
+																}
+															/>
+														)}
+													</h3>
 												</Col>
 											</Row>
 										</div>
@@ -669,7 +669,7 @@ class BankTransactions extends React.Component {
 											<ButtonGroup size="sm">
 												<Button
 													color="success"
-													className="btn-square"
+													className="btn-square mr-1"
 													onClick={() => this.getCsvData()}
 												>
 													<i className="fa glyphicon glyphicon-export fa-download mr-1" />
@@ -686,7 +686,7 @@ class BankTransactions extends React.Component {
 												)}
 												<Button
 													color="info"
-													className="btn-square"
+													className="btn-square mr-1"
 													onClick={() =>
 														this.props.history.push(
 															'/admin/banking/upload-statement',
@@ -705,7 +705,7 @@ class BankTransactions extends React.Component {
 												</Button>
 												<Button
 													color="success"
-													className="btn-square"
+													className="btn-square mr-1"
 													onClick={() =>
 														this.props.history.push(
 															'/admin/banking/bank-account/detail',
@@ -724,7 +724,7 @@ class BankTransactions extends React.Component {
 												</Button>
 												<Button
 													color="info"
-													className="btn-square"
+													className="btn-square mr-1"
 													onClick={() =>
 														this.props.history.push(
 															'/admin/banking/bank-account/transaction/reconcile',

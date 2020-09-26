@@ -25,6 +25,7 @@ public class PostingRequestModel implements Serializable {
 	private String postingRefType;
 	private Integer postingChartOfAccountId;
 	private BigDecimal amount;
+	private String comment;
 
 	public PostingRequestModel(Integer postingRefId) {
 		super();

@@ -366,9 +366,8 @@ class CreateSupplierInvoice extends React.Component {
 
 	salesCategory = () => {
 		try {
-			this.props.productActions
-				.getTransactionCategoryListForExplain('2')
-				.then((res) => {
+			this.props.ProductActions.getTransactionCategoryListForExplain('2').then(
+				(res) => {
 					if (res.status === 200) {
 						this.setState(
 							{
@@ -379,7 +378,8 @@ class CreateSupplierInvoice extends React.Component {
 							},
 						);
 					}
-				});
+				},
+			);
 		} catch (err) {
 			console.log(err);
 		}
@@ -1053,21 +1053,29 @@ class CreateSupplierInvoice extends React.Component {
 
 	getCurrentProduct = () => {
 		this.props.supplierInvoiceActions.getProductList().then((res) => {
-			this.setState({
-				data: [
-					{
-						id: 0,
-						description: res.data[0].description,
-						quantity: 1,
-						unitPrice: res.data[0].unitPrice,
-						vatCategoryId: res.data[0].vatCategoryId,
-						subTotal: res.data[0].unitPrice,
-						productId: res.data[0].id,
-						transactionCategoryId: res.data[0].transactionCategoryId,
-						transactionCategoryLabel: res.data[0].transactionCategoryLabel,
-					},
-				],
-			});
+			this.setState(
+				{
+					data: [
+						{
+							id: 0,
+							description: res.data[0].description,
+							quantity: 1,
+							unitPrice: res.data[0].unitPrice,
+							vatCategoryId: res.data[0].vatCategoryId,
+							subTotal: res.data[0].unitPrice,
+							productId: res.data[0].id,
+							transactionCategoryId: res.data[0].transactionCategoryId,
+							transactionCategoryLabel: res.data[0].transactionCategoryLabel,
+						},
+					],
+				},
+				() => {
+					const values = {
+						values: this.state.initValue,
+					};
+					this.updateAmount(this.state.data, values);
+				},
+			);
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.unitPrice`,
 				res.data[0].unitPrice,

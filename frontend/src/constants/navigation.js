@@ -20,7 +20,6 @@ export default {
 					url: '/admin/accountant/journal',
 					icon: 'fa fa-diamond',
 				},
-				
 			],
 		},
 		{
@@ -73,8 +72,8 @@ export default {
 					icon: 'fab fa-stack-exchange',
 				},
 				{
-					name: 'Payment Receipts',
-					url: '/admin/expense/payment',
+					name: 'Purchase receipts',
+					url: '/admin/expense/purchase',
 					icon: 'fas fa-money-check',
 				},
 			],

@@ -287,8 +287,8 @@ const adminRoutes = [
 		component: DetailPayment.screen,
 	},
 	{
-		path: '/admin/expense/payment',
-		name: 'Payment',
+		path: '/admin/expense/purchase',
+		name: 'Prchase',
 		component: Payment.screen,
 	},
 	{

@@ -62,15 +62,16 @@
 
 		.data-item:not(:last-child) {
 			border-right: 1px solid #eee;
-			padding: 0px 3%;
+			padding: 0px 1%;
 			margin-bottom: 20px;
 		}
 
 		.data-item {
-			padding: 0 3%;
+			padding: 0 1%;
 			display: flex;
 			margin-bottom: 20px;
 			width: max-content;
+			text-align: center;
 
 			img {
 				margin-right: 20px;

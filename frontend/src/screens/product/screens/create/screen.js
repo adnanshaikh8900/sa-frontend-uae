@@ -99,16 +99,9 @@ class CreateProduct extends React.Component {
 	componentDidMount = () => {
 		this.props.productActions.getProductVatCategoryList();
 		this.props.productActions.getProductCategoryList();
-		//this.props.productActions.getProductWareHouseList();
 		this.salesCategory();
 		this.purchaseCategory();
 	};
-
-	// componentDidUpdate(prevProps, prevState, snapshot) {
-	//   if (prevProps.vat_list !== this.props.vat_list) {
-	//     this.props.productActions.getProductVatCategoryList();
-	//   }
-	// }
 
 	salesCategory = () => {
 		try {

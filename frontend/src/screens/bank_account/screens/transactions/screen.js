@@ -701,7 +701,7 @@ class BankTransactions extends React.Component {
 													}
 												>
 													<i className="fa glyphicon glyphicon-export fa-upload mr-1" />
-													Upload Statement
+													Import Statement
 												</Button>
 												<Button
 													color="success"

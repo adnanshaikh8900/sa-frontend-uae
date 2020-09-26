@@ -65,6 +65,7 @@ export const getCurrencyList = () => {
 						type: CONTACT.CURRENCY_LIST,
 						payload: res.data,
 					});
+					return res;
 				}
 			})
 			.catch((err) => {

@@ -43,6 +43,7 @@ const mapStateToProps = (state) => {
 		expense_list: state.expense.expense_list,
 		expense_categories_list: state.expense.expense_categories_list,
 		universal_currency_list: state.common.universal_currency_list,
+		user_list: state.expense.user_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -93,7 +94,7 @@ class Expense extends React.Component {
 		};
 
 		this.selectRowProp = {
-		//	mode: 'checkbox',
+			//	mode: 'checkbox',
 			bgColor: 'rgba(0,0,0, 0.05)',
 			clickToSelect: false,
 			onSelect: this.onRowSelect,
@@ -105,6 +106,7 @@ class Expense extends React.Component {
 	componentDidMount = () => {
 		this.props.expenseActions.getExpenseCategoriesList();
 		this.initializeData();
+		this.props.expenseActions.getUserForDropdown();
 	};
 
 	initializeData = (search) => {
@@ -510,6 +512,7 @@ class Expense extends React.Component {
 			expense_list,
 			expense_categories_list,
 			universal_currency_list,
+			user_list,
 		} = this.props;
 		// const containerStyle = {
 		//   zIndex: 1999
@@ -575,14 +578,33 @@ class Expense extends React.Component {
 										<h5>Filter : </h5>
 										<Row>
 											<Col lg={2} className="mb-1">
-												<Input
-													type="text"
-													placeholder="Payee"
-													value={filterData.payee}
-													onChange={(e) =>
-														this.handleChange(e.target.value, 'payee')
-													}
-												/>
+												<FormGroup className="mb-3">
+													<Select
+														styles={customStyles}
+														className="select-default-width"
+														id="payee"
+														name="payee"
+														value={filterData.payee}
+														options={
+															user_list
+																? selectOptionsFactory.renderOptions(
+																		'label',
+																		'value',
+																		user_list,
+																		'Payee',
+																  )
+																: []
+														}
+														onChange={(option) => {
+															if (option && option.value) {
+																this.handleChange(option, 'payee');
+															} else {
+																this.handleChange('', 'payee');
+															}
+														}}
+														placeholder="Select Payee"
+													/>
+												</FormGroup>
 											</Col>
 											<Col lg={2} className="mb-1">
 												{/* <DateRangePicker>
@@ -606,7 +628,6 @@ class Expense extends React.Component {
 											</Col>
 
 											<Col lg={2} className="mb-1">
-												{/* <Input type="text" placeholder="Supplier Name" /> */}
 												<FormGroup className="mb-3">
 													<Select
 														styles={customStyles}
@@ -702,7 +723,7 @@ class Expense extends React.Component {
 											csvFileName="expense_list.csv"
 										>
 											<TableHeaderColumn
-											thStyle={{ whiteSpace: 'normal' }} 
+												thStyle={{ whiteSpace: 'normal' }}
 												dataField="expenseDate"
 												dataSort
 												dataFormat={this.renderDate}
@@ -710,11 +731,15 @@ class Expense extends React.Component {
 											>
 												Expense Date
 											</TableHeaderColumn>
-											<TableHeaderColumn thStyle={{ whiteSpace: 'normal' }} dataField="payee" dataSort>
+											<TableHeaderColumn
+												thStyle={{ whiteSpace: 'normal' }}
+												dataField="payee"
+												dataSort
+											>
 												Payee
 											</TableHeaderColumn>
 											<TableHeaderColumn
-											thStyle={{ whiteSpace: 'normal' }} 
+												thStyle={{ whiteSpace: 'normal' }}
 												width="20%"
 												dataField="expenseStatus"
 												dataFormat={this.renderInvoiceStatus}
@@ -732,7 +757,7 @@ class Expense extends React.Component {
 												Receipt No
 											</TableHeaderColumn> */}
 											<TableHeaderColumn
-											thStyle={{ whiteSpace: 'normal' }} 
+												thStyle={{ whiteSpace: 'normal' }}
 												dataField="transactionCategoryName"
 												dataSort
 												width="20%"
@@ -740,7 +765,7 @@ class Expense extends React.Component {
 												Expense Category
 											</TableHeaderColumn>
 											<TableHeaderColumn
-											thStyle={{ whiteSpace: 'normal' }} 
+												thStyle={{ whiteSpace: 'normal' }}
 												dataField="expenseAmount"
 												dataSort
 												dataFormat={this.renderAmount}
@@ -750,7 +775,7 @@ class Expense extends React.Component {
 												Expense Amount
 											</TableHeaderColumn>
 											<TableHeaderColumn
-											thStyle={{ whiteSpace: 'normal' }} 
+												thStyle={{ whiteSpace: 'normal' }}
 												className="text-right"
 												columnClassName="text-right"
 												width="55"

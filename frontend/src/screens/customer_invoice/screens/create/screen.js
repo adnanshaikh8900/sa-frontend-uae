@@ -21,7 +21,8 @@ import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import * as CustomerInvoiceCreateActions from './actions';
 import * as CustomerInvoiceActions from '../../actions';
-import { CustomerModal } from '../../sections';
+import * as ProductActions from '../../../product/actions';
+import { CustomerModal, ProductModal } from '../../sections';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -38,6 +39,7 @@ const mapStateToProps = (state) => {
 		product_list: state.customer_invoice.product_list,
 		customer_list: state.customer_invoice.customer_list,
 		country_list: state.customer_invoice.country_list,
+		product_category_list: state.product.product_category_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -50,6 +52,7 @@ const mapDispatchToProps = (dispatch) => {
 			CustomerInvoiceCreateActions,
 			dispatch,
 		),
+		productActions: bindActionCreators(ProductActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
@@ -123,6 +126,7 @@ class CreateCustomerInvoice extends React.Component {
 			currentData: {},
 			contactType: 2,
 			openCustomerModal: false,
+			openProductModal: false,
 			selectedContact: '',
 			createMore: false,
 			fileName: '',
@@ -132,6 +136,8 @@ class CreateCustomerInvoice extends React.Component {
 			discountAmount: 0,
 			exist: false,
 			prefix: 'INV-',
+			purchaseCategory: [],
+			salesCategory: [],
 		};
 
 		this.formRef = React.createRef();
@@ -389,6 +395,48 @@ class CreateCustomerInvoice extends React.Component {
 		this.props.customerInvoiceActions.getCountryList();
 		this.props.customerInvoiceActions.getVatList();
 		this.props.customerInvoiceActions.getProductList();
+		this.props.productActions.getProductCategoryList();
+		this.salesCategory();
+		this.purchaseCategory();
+	};
+
+	salesCategory = () => {
+		try {
+			this.props.productActions
+				.getTransactionCategoryListForExplain('2')
+				.then((res) => {
+					if (res.status === 200) {
+						this.setState(
+							{
+								salesCategory: res.data,
+							},
+							() => {
+								console.log(this.state.salesCategory);
+							},
+						);
+					}
+				});
+		} catch (err) {
+			console.log(err);
+		}
+	};
+	purchaseCategory = () => {
+		try {
+			this.props.productActions
+				.getTransactionCategoryListForExplain('10')
+				.then((res) => {
+					if (res.status === 200) {
+						this.setState(
+							{
+								purchaseCategory: res.data,
+							},
+							() => {},
+						);
+					}
+				});
+		} catch (err) {
+			console.log(err);
+		}
 	};
 
 	addRow = () => {
@@ -445,7 +493,6 @@ class CreateCustomerInvoice extends React.Component {
 			this.updateAmount(data, props);
 		} else {
 			this.setState({ data }, () => {
-				console.log(data);
 				form.setFieldValue(
 					field.name,
 					this.state.data[parseInt(idx, 10)][`${name}`],
@@ -650,18 +697,16 @@ class CreateCustomerInvoice extends React.Component {
 			);
 		} else {
 			return (
-				<div
-					className={`addProduct ${
-						props.errors.lineItemsString && props.touched.lineItemsString
-							? 'is-invalid'
-							: ''
-					}`}
-					onClick={() => {
-						this.props.history.push('/admin/master/product');
+				<Button
+					type="button"
+					color="primary"
+					className="btn-square mr-3 mb-3"
+					onClick={(e, props) => {
+						this.openProductModal(props);
 					}}
 				>
-					Please add product
-				</div>
+					<i className="fa fa-plus"></i> Add a Product
+				</Button>
 			);
 		}
 	};
@@ -706,6 +751,7 @@ class CreateCustomerInvoice extends React.Component {
 	};
 
 	updateAmount = (data, props) => {
+		console.log(props);
 		const { vat_list } = this.props;
 		const { discountPercentage, discountAmount } = this.state;
 		let total_net = 0;
@@ -916,6 +962,9 @@ class CreateCustomerInvoice extends React.Component {
 	openCustomerModal = (props) => {
 		this.setState({ openCustomerModal: true });
 	};
+	openProductModal = (props) => {
+		this.setState({ openProductModal: true });
+	};
 
 	openInvoicePreviewModal = (props) => {
 		this.setState({ openInvoicePreviewModal: true });
@@ -933,12 +982,60 @@ class CreateCustomerInvoice extends React.Component {
 		}
 		this.formRef.current.setFieldValue('contactId', option, true);
 	};
+	getCurrentProduct = () => {
+		this.props.customerInvoiceActions.getProductList().then((res) => {
+			this.setState(
+				{
+					data: [
+						{
+							id: 0,
+							description: res.data[0].description,
+							quantity: 1,
+							unitPrice: res.data[0].unitPrice,
+							vatCategoryId: res.data[0].vatCategoryId,
+							subTotal: res.data[0].unitPrice,
+							productId: res.data[0].id,
+						},
+					],
+				},
+				() => {
+					const values = {
+						values: this.state.initValue,
+					};
+					this.updateAmount(this.state.data, values);
+				},
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.unitPrice`,
+				res.data[0].unitPrice,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.quantity`,
+				1,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.vatCategoryId`,
+				res.data[0].vatCategoryId,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.productId`,
+				res.data[0].id,
+				true,
+			);
+		});
+	};
 
 	closeCustomerModal = (res) => {
 		if (res) {
 			this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
 		}
 		this.setState({ openCustomerModal: false });
+	};
+	closeProductModal = (res) => {
+		this.setState({ openProductModal: false });
 	};
 
 	closeInvoicePreviewModal = (res) => {
@@ -1921,8 +2018,21 @@ class CreateCustomerInvoice extends React.Component {
 					getCurrentUser={(e) => this.getCurrentUser(e)}
 					createCustomer={this.props.customerInvoiceActions.createCustomer}
 					currency_list={this.props.currency_list}
+					currency={this.state.currency}
 					country_list={this.props.country_list}
 					getStateList={this.props.customerInvoiceActions.getStateList}
+				/>
+				<ProductModal
+					openProductModal={this.state.openProductModal}
+					closeProductModal={(e) => {
+						this.closeProductModal(e);
+					}}
+					getCurrentProduct={(e) => this.getCurrentProduct(e)}
+					createProduct={this.props.productActions.createAndSaveProduct}
+					vat_list={this.props.vat_list}
+					product_category_list={this.props.product_category_list}
+					salesCategory={this.state.salesCategory}
+					purchaseCategory={this.state.purchaseCategory}
 				/>
 			</div>
 		);

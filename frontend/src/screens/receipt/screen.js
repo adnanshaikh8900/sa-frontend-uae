@@ -85,7 +85,7 @@ class Receipt extends React.Component {
 		};
 
 		this.selectRowProp = {
-		//	mode: 'checkbox',
+			//	mode: 'checkbox',
 			bgColor: 'rgba(0,0,0, 0.05)',
 			clickToSelect: false,
 			onSelect: this.onRowSelect,
@@ -488,7 +488,7 @@ class Receipt extends React.Component {
 												</Col>
 											</Row>
 										</div>
-										<Button
+										{/* <Button
 											color="primary"
 											style={{ marginBottom: '10px' }}
 											className="btn-square"
@@ -498,7 +498,7 @@ class Receipt extends React.Component {
 										>
 											<i className="fas fa-plus mr-1" />
 											Add New Receipt
-										</Button>
+										</Button> */}
 										<div>
 											<BootstrapTable
 												selectRow={this.selectRowProp}

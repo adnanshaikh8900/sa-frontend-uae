@@ -275,16 +275,16 @@ class CreateExpense extends React.Component {
 
 													// })
 												}}
-												validate={(values) => {
-													let errors = {};
-													if (
-														values.payMode.value === 'BANK' &&
-														!values.bankAccountId
-													) {
-														errors.bankAccountId = 'Bank Account is Required';
-													}
-													return errors;
-												}}
+												// validate={(values) => {
+												// 	let errors = {};
+												// 	if (
+												// 		values.payMode.value === 'BANK' &&
+												// 		!values.bankAccountId
+												// 	) {
+												// 		errors.bankAccountId = 'Bank Account is Required';
+												// 	}
+												// 	return errors;
+												// }}
 												validationSchema={Yup.object().shape({
 													expenseCategory: Yup.string().required(
 														'Expense Category is required',
@@ -568,7 +568,7 @@ class CreateExpense extends React.Component {
 																	/>
 																</FormGroup>
 															</Col>
-															{!props.values.payee && (
+															{/* {!props.values.payee && (
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="payMode">Pay Through</Label>
@@ -656,7 +656,7 @@ class CreateExpense extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-															)}
+															)} */}
 														</Row>
 
 														<Row>

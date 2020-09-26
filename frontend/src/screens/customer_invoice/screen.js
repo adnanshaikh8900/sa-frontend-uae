@@ -96,7 +96,7 @@ class CustomerInvoice extends React.Component {
 		};
 
 		this.selectRowProp = {
-		//	mode: 'checkbox',
+			//	mode: 'checkbox',
 			bgColor: 'rgba(0,0,0, 0.05)',
 			clickToSelect: false,
 			onSelect: this.onRowSelect,
@@ -199,6 +199,40 @@ class CustomerInvoice extends React.Component {
 					this.props.commonActions.tostifyAlert(
 						'success',
 						'Invoice Posted Successfully',
+					);
+					this.setState({
+						loading: false,
+					});
+					this.initializeData();
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+				this.setState({
+					loading: false,
+				});
+			});
+	};
+
+	unPostInvoice = (row) => {
+		this.setState({
+			loading: true,
+		});
+		const postingRequestModel = {
+			amount: row.invoiceAmount,
+			postingRefId: row.id,
+			postingRefType: 'INVOICE',
+		};
+		this.props.customerInvoiceActions
+			.unPostInvoice(postingRequestModel)
+			.then((res) => {
+				if (res.status === 200) {
+					this.props.commonActions.tostifyAlert(
+						'success',
+						'Invoice Moved To Draft Successfully',
 					);
 					this.setState({
 						loading: false,
@@ -343,6 +377,15 @@ class CustomerInvoice extends React.Component {
 						</DropdownItem>
 						{row.statusEnum === 'Sent' && (
 							<DropdownItem
+								onClick={() => {
+									this.unPostInvoice(row);
+								}}
+							>
+								<i className="fas fa-file" /> Draft
+							</DropdownItem>
+						)}
+						{/* {row.statusEnum === 'Sent' && (
+							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
 										'/admin/income/customer-invoice/record-payment',
@@ -352,14 +395,16 @@ class CustomerInvoice extends React.Component {
 							>
 								<i className="fas fa-university" /> Record Payment
 							</DropdownItem>
+						)} */}
+						{row.statusEnum !== 'Paid' && (
+							<DropdownItem
+								onClick={() => {
+									this.closeInvoice(row.id, row.status);
+								}}
+							>
+								<i className="fa fa-trash-o" /> Delete
+							</DropdownItem>
 						)}
-						<DropdownItem
-							onClick={() => {
-								this.closeInvoice(row.id, row.status);
-							}}
-						>
-							<i className="fa fa-trash-o" /> Delete
-						</DropdownItem>
 					</DropdownMenu>
 				</ButtonDropdown>
 			</div>
@@ -963,21 +1008,21 @@ class CustomerInvoice extends React.Component {
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}
-												dataField="totalAmount"
-												dataSort
-												dataFormat={this.renderInvoiceAmount}
-												formatExtraData={universal_currency_list}
-											>
-												Invoice Amount
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
 												dataField="totalVatAmount"
 												dataSort
 												dataFormat={this.renderVatAmount}
 												formatExtraData={universal_currency_list}
 											>
 												VAT Amount
+											</TableHeaderColumn>
+											<TableHeaderColumn
+												thStyle={{ whiteSpace: 'normal' }}
+												dataField="totalAmount"
+												dataSort
+												dataFormat={this.renderInvoiceAmount}
+												formatExtraData={universal_currency_list}
+											>
+												Invoice Amount
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}

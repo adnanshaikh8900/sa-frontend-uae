@@ -229,6 +229,7 @@ export const getProductList = () => {
 							data: res.data,
 						},
 					});
+					return res;
 				}
 			})
 			.catch((err) => {
@@ -319,6 +320,25 @@ export const postInvoice = (obj) => {
 		let data = {
 			method: 'post',
 			url: '/rest/invoice/posting',
+			data: obj,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const unPostInvoice = (obj) => {
+	return (dispatch) => {
+		let data = {
+			method: 'post',
+			url: '/rest/invoice/undoPosting',
 			data: obj,
 		};
 		return authApi(data)

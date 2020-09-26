@@ -478,6 +478,7 @@ class DetailBankAccount extends React.Component {
 																	).format('DD/MM/YYYY')}
 																	showMonthDropdown
 																	showYearDropdown
+																	disabled
 																	dropdownMode="select"
 																	dateFormat="dd/MM/yyyy"
 																	// maxDate={new Date()}
@@ -634,6 +635,56 @@ class DetailBankAccount extends React.Component {
 																	)}
 															</FormGroup>
 														</Col>
+														<Col lg={4}>
+															<FormGroup className="mb-3">
+																<Label htmlFor="countrycode">Country</Label>
+																<Select
+																	styles={customStyles}
+																	id="countrycode"
+																	name="countrycode"
+																	// getOptionValue={(option) =>
+																	// 	option.countrycode
+																	// }
+																	options={
+																		this.state.country_list
+																			? selectOptionsFactory.renderOptions(
+																					'countryName',
+																					'countryCode',
+																					this.state.country_list,
+																					'Country',
+																			  )
+																			: []
+																	}
+																	value={
+																		this.state.country_list &&
+																		selectOptionsFactory
+																			.renderOptions(
+																				'countryName',
+																				'countryCode',
+																				this.state.country_list,
+																				'Country',
+																			)
+																			.find(
+																				(option) =>
+																					option.value ===
+																					+props.values.country,
+																			)
+																	}
+																	className={
+																		props.errors.countrycode &&
+																		props.touched.countrycode
+																			? 'is-invalid'
+																			: ''
+																	}
+																/>
+																{props.errors.countrycode &&
+																	props.touched.countrycode && (
+																		<div className="invalid-feedback">
+																			{props.errors.countrycode}
+																		</div>
+																	)}
+															</FormGroup>
+														</Col>
 													</Row>
 													<Row>
 														{/* <Col lg={4}>
@@ -700,56 +751,6 @@ class DetailBankAccount extends React.Component {
 																	)}
 															</FormGroup>
 														</Col> */}
-														<Col lg={4}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="countrycode">Country</Label>
-																	<Select
-																		styles={customStyles}
-																		id="countrycode"
-																		name="countrycode"
-																		// getOptionValue={(option) =>
-																		// 	option.countrycode
-																		// }
-																		options={
-																			this.state.country_list
-																				? selectOptionsFactory.renderOptions(
-																						'countryName',
-																						'countryCode',
-																						this.state.country_list,
-																						'Country',
-																				  )
-																				: []
-																		}
-																		value={
-																			this.state.country_list &&
-																			selectOptionsFactory
-																				.renderOptions(
-																					'countryName',
-																					'countryCode',
-																					this.state.country_list,
-																					'Country',
-																				)
-																				.find(
-																					(option) =>
-																						option.value ===
-																						+props.values.countrycode,
-																				)
-																		}
-																		className={
-																			props.errors.countrycode &&
-																			props.touched.countrycode
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.countrycode &&
-																		props.touched.countrycode && (
-																			<div className="invalid-feedback">
-																				{props.errors.countrycode}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
 													</Row>
 													<Row>
 														<Col lg={4}>

@@ -478,15 +478,15 @@ class Product extends React.Component {
 												csvFileName="product_list.csv"
 												ref={(node) => (this.table = node)}
 											>
-												<TableHeaderColumn isKey dataField="name" dataSort>
-													Name
-												</TableHeaderColumn>
 												<TableHeaderColumn dataField="productCode" dataSort>
 													Product Code
 												</TableHeaderColumn>
-												<TableHeaderColumn dataField="description" dataSort>
-													Description
+												<TableHeaderColumn isKey dataField="name" dataSort>
+													Name
 												</TableHeaderColumn>
+												{/* <TableHeaderColumn dataField="description" dataSort>
+													Description
+												</TableHeaderColumn> */}
 												<TableHeaderColumn
 													dataField="vatPercentage"
 													dataSort

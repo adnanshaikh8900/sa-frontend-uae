@@ -95,7 +95,7 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
             if(transaction.getBankAccount()!=null)
                 category = transaction.getBankAccount().getTransactionCategory();
             else if(transaction.getExplainedTransactionCategory()!=null)
-                transaction.getExplainedTransactionCategory();
+                category =  transaction.getExplainedTransactionCategory();
             return updateClosingBalance(transaction,category);
         }
         return BigDecimal.ZERO;

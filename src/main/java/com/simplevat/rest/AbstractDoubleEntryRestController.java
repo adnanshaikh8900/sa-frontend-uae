@@ -96,6 +96,16 @@ public abstract class AbstractDoubleEntryRestController {
 		if (postingRequestModel.getPostingRefType().equalsIgnoreCase(PostingReferenceTypeEnum.INVOICE.name())) {
 			Invoice invoice = invoiceService.findByPK(postingRequestModel.getPostingRefId());
 			invoice.setStatus(InvoiceStatusEnum.PENDING.getValue());
+			if(postingRequestModel.getComment()!=null) {
+			String notes = invoice.getNotes();
+			if(notes!=null && !notes.isEmpty())
+			{
+				notes=notes+"\n"+postingRequestModel.getComment();
+			}
+			else
+				notes = postingRequestModel.getComment();
+				invoice.setNotes(notes);
+			}
 			invoiceService.update(invoice);
 		} else if (postingRequestModel.getPostingRefType().equalsIgnoreCase(PostingReferenceTypeEnum.EXPENSE.name())) {
 			Expense expense = expenseService.findByPK(postingRequestModel.getPostingRefId());

@@ -375,7 +375,7 @@ class CustomerInvoice extends React.Component {
 						>
 							<i className="fas fa-eye" /> View
 						</DropdownItem>
-						{row.statusEnum === 'Sent' && (
+						{row.statusEnum === 'Sent' && row.statusEnum === 'Paid' && (
 							<DropdownItem
 								onClick={() => {
 									this.unPostInvoice(row);

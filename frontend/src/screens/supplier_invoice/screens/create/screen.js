@@ -24,6 +24,7 @@ import * as SupplierInvoiceActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
 
 import { SupplierModal } from '../../sections';
+import { ProductModal } from '../../../customer_invoice/sections';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -129,6 +130,7 @@ class CreateSupplierInvoice extends React.Component {
 			currentData: {},
 			contactType: 1,
 			openSupplierModal: false,
+			openProductModal: false,
 			selectedContact: '',
 			createMore: false,
 			fileName: '',
@@ -359,6 +361,28 @@ class CreateSupplierInvoice extends React.Component {
 		this.props.supplierInvoiceActions.getCountryList();
 		this.props.supplierInvoiceActions.getProductList();
 		this.purchaseCategory();
+		this.salesCategory();
+	};
+
+	salesCategory = () => {
+		try {
+			this.props.productActions
+				.getTransactionCategoryListForExplain('2')
+				.then((res) => {
+					if (res.status === 200) {
+						this.setState(
+							{
+								salesCategory: res.data,
+							},
+							() => {
+								console.log(this.state.salesCategory);
+							},
+						);
+					}
+				});
+		} catch (err) {
+			console.log(err);
+		}
 	};
 
 	purchaseCategory = () => {
@@ -640,18 +664,16 @@ class CreateSupplierInvoice extends React.Component {
 			);
 		} else {
 			return (
-				<div
-					className={`addProduct ${
-						props.errors.lineItemsString && props.touched.lineItemsString
-							? 'is-invalid'
-							: ''
-					}`}
-					onClick={() => {
-						this.props.history.push('/admin/master/product');
+				<Button
+					type="button"
+					color="primary"
+					className="btn-square mr-3 mb-3"
+					onClick={(e, props) => {
+						this.openProductModal(props);
 					}}
 				>
-					Please add product
-				</div>
+					<i className="fa fa-plus"></i> Add a Product
+				</Button>
 			);
 		}
 	};
@@ -986,6 +1008,10 @@ class CreateSupplierInvoice extends React.Component {
 		this.setState({ openSupplierModal: true });
 	};
 
+	openProductModal = (props) => {
+		this.setState({ openProductModal: true });
+	};
+
 	handleFileChange = (e, props) => {
 		e.preventDefault();
 		let reader = new FileReader();
@@ -1019,6 +1045,60 @@ class CreateSupplierInvoice extends React.Component {
 			this.getInvoiceNo();
 		}
 		this.setState({ openSupplierModal: false });
+	};
+
+	closeProductModal = (res) => {
+		this.setState({ openProductModal: false });
+	};
+
+	getCurrentProduct = () => {
+		this.props.supplierInvoiceActions.getProductList().then((res) => {
+			this.setState({
+				data: [
+					{
+						id: 0,
+						description: res.data[0].description,
+						quantity: 1,
+						unitPrice: res.data[0].unitPrice,
+						vatCategoryId: res.data[0].vatCategoryId,
+						subTotal: res.data[0].unitPrice,
+						productId: res.data[0].id,
+						transactionCategoryId: res.data[0].transactionCategoryId,
+						transactionCategoryLabel: res.data[0].transactionCategoryLabel,
+					},
+				],
+			});
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.unitPrice`,
+				res.data[0].unitPrice,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.quantity`,
+				1,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.vatCategoryId`,
+				res.data[0].vatCategoryId,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.productId`,
+				res.data[0].id,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.transactionCategoryId`,
+				res.data[0].transactionCategoryId,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.transactionCategoryLabel`,
+				res.data[0].transactionCategoryLabel,
+				true,
+			);
+		});
 	};
 
 	getInvoiceNo = () => {
@@ -2050,6 +2130,18 @@ class CreateSupplierInvoice extends React.Component {
 					getStateList={this.props.supplierInvoiceActions.getStateList}
 					currency_list={this.props.currency_list}
 					country_list={this.props.country_list}
+				/>
+				<ProductModal
+					openProductModal={this.state.openProductModal}
+					closeProductModal={(e) => {
+						this.closeProductModal(e);
+					}}
+					getCurrentProduct={(e) => this.getCurrentProduct(e)}
+					createProduct={this.props.ProductActions.createAndSaveProduct}
+					vat_list={this.props.vat_list}
+					product_category_list={this.props.product_category_list}
+					salesCategory={this.state.salesCategory}
+					purchaseCategory={this.state.purchaseCategory}
 				/>
 			</div>
 		);

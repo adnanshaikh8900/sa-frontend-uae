@@ -87,6 +87,7 @@ class CreateContact extends React.Component {
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExAddress = /^[a-zA-Z0-9\s,'-]+$/;
+		this.formRef = React.createRef();
 	}
 
 	componentDidMount = () => {
@@ -96,7 +97,23 @@ class CreateContact extends React.Component {
 	initializeData = () => {
 		this.props.contactActions.getContactTypeList();
 		this.props.contactActions.getCountryList();
-		this.props.contactActions.getCurrencyList();
+		this.props.contactActions.getCurrencyList().then((response) => {
+			this.setState({
+				initValue: {
+					...this.state.initValue,
+					...{
+						currencyCode: response.data
+							? parseInt(response.data[0].currencyCode)
+							: '',
+					},
+				},
+			});
+			this.formRef.current.setFieldValue(
+				'currencyCode',
+				response.data[0].currencyCode,
+				true,
+			);
+		});
 	};
 
 	getData = (data) => {
@@ -174,6 +191,7 @@ class CreateContact extends React.Component {
 										<Col lg={12}>
 											<Formik
 												initialValues={initValue}
+												ref={this.formRef}
 												onSubmit={(values, { resetForm }) => {
 													this.handleSubmit(values, resetForm);
 												}}
@@ -999,7 +1017,21 @@ class CreateContact extends React.Component {
 																				  )
 																				: []
 																		}
-																		value={props.values.currencyCode}
+																		value={
+																			currency_list &&
+																			selectCurrencyFactory
+																				.renderOptions(
+																					'currencyName',
+																					'currencyCode',
+																					currency_list,
+																					'Currency',
+																				)
+																				.find(
+																					(option) =>
+																						option.value ===
+																						+props.values.currencyCode,
+																				)
+																		}
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				props.handleChange('currencyCode')(

@@ -161,6 +161,7 @@ export const getProductList = () => {
 							data: res.data,
 						},
 					});
+					return res;
 				}
 			})
 			.catch((err) => {

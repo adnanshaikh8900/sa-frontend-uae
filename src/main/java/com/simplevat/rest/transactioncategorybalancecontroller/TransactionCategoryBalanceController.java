@@ -87,16 +87,16 @@ public class TransactionCategoryBalanceController {
 			{
 				closingBalance = closingBalanceList.get(0);
 				BigDecimal closingBalanceValue = closingBalance.getClosingBalance();
-				closingBalanceValue = closingBalanceValue.negate();
+				//closingBalanceValue = closingBalanceValue.negate();
 				closingBalanceValue = closingBalanceValue.add(openingBalance.getOpeningBalance());
-				closingBalance.setOpeningBalance(openingBalance.getOpeningBalance().negate());
-				closingBalance.setClosingBalance(closingBalanceValue.negate());
+				closingBalance.setOpeningBalance(openingBalance.getOpeningBalance());
+				closingBalance.setClosingBalance(closingBalanceValue);
 			}
 			else {
 				closingBalance = bankAccountRestHelper
 						.getClosingBalanceEntity(openingBalance, transactionCategory);
-				closingBalance.setOpeningBalance(openingBalance.getOpeningBalance().negate());
-				closingBalance.setClosingBalance(openingBalance.getOpeningBalance().negate());
+				closingBalance.setOpeningBalance(openingBalance.getOpeningBalance());
+				closingBalance.setClosingBalance(openingBalance.getOpeningBalance());
 			}
 			transactionCategoryClosingBalanceService.persist(closingBalance);
 			return new ResponseEntity<>("Saved successfull",HttpStatus.OK);
@@ -149,11 +149,11 @@ public class TransactionCategoryBalanceController {
 			transactionCategoryBalanceService.persist(openingBalance);
 			TransactionCategoryClosingBalance closingBalance = transactionCategoryClosingBalanceService
 					.getFirstClosingBalanceByDate(openingBalance.getTransactionCategory());
-			Transaction transaction = getTransactionFromClosingBalance(closingBalance,'C');
+			Transaction transaction = getTransactionFromClosingBalance(persistmodel,closingBalance,'C');
 			transactionCategoryClosingBalanceService.updateClosingBalance(transaction);
 			TransactionCategory transactionCategory = getValidTransactionCategory(openingBalance.getTransactionCategory());
 			closingBalance = transactionCategoryClosingBalanceService.getFirstClosingBalanceByDate(transactionCategory);
-			transaction = getTransactionFromClosingBalance(closingBalance,'D');
+			transaction = getTransactionFromClosingBalance(persistmodel,closingBalance,'C');
 			transactionCategoryClosingBalanceService.updateClosingBalance(transaction);
 			return new ResponseEntity<>("Updated successfull",HttpStatus.OK);
 		} catch (Exception e) {
@@ -162,13 +162,20 @@ public class TransactionCategoryBalanceController {
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	private Transaction getTransactionFromClosingBalance(TransactionCategoryClosingBalance closingBalance,Character debitCreditFlag) {
+	private Transaction getTransactionFromClosingBalance(TransactioncategoryBalancePersistModel persistModel,TransactionCategoryClosingBalance closingBalance,Character debitCreditFlag) {
+		BigDecimal transactionAmount = BigDecimal.ZERO;
+		if(persistModel.getOpeningBalance()!=null)
+		{
+			transactionAmount = persistModel.getOpeningBalance();
+			BigDecimal closingBalanceAmount = closingBalance.getOpeningBalance();
+			transactionAmount = transactionAmount.subtract(closingBalanceAmount);
+		}
 		Transaction transaction = new Transaction();
 		LocalDateTime journalDate = closingBalance.getClosingBalanceDate();
 		transaction.setDebitCreditFlag(debitCreditFlag);
 		transaction.setCreatedBy(closingBalance.getCreatedBy());
 		transaction.setTransactionDate(journalDate);
-		transaction.setTransactionAmount(closingBalance.getOpeningBalance());
+		transaction.setTransactionAmount(transactionAmount);
 		transaction.setExplainedTransactionCategory(closingBalance.getTransactionCategory());
 		return transaction;
 	}

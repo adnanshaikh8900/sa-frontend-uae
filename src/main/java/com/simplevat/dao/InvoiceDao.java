@@ -31,7 +31,7 @@ public interface InvoiceDao extends Dao<Integer, Invoice> {
 
 	public void deleteByIds(List<Integer> ids);
 
-	public Invoice getLastInvoice();
+	public Invoice getLastInvoice(Integer invoiceType);
 
 	public List<Invoice> getInvoiceList(Date startDate, Date endDate);
 

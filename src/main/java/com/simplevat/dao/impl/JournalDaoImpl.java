@@ -1,15 +1,12 @@
 package com.simplevat.dao.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.simplevat.dao.JournalLineItemDao;
-import com.simplevat.entity.TransactionCategoryClosingBalance;
 import com.simplevat.service.JournalLineItemService;
 import com.simplevat.service.JournalService;
-import com.simplevat.service.TransactionCategoryClosingBalanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,9 +35,6 @@ public class JournalDaoImpl extends AbstractDao<Integer, Journal> implements Jou
 
 	@Autowired
 	private JournalLineItemDao journalLineItemDao;
-
-	@Autowired
-	private TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
 
 	@Override
 	@Transactional

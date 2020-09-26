@@ -91,7 +91,11 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
     @Override
     public BigDecimal updateClosingBalance(Transaction transaction) {
         if (transaction != null) {
-            TransactionCategory category = transaction.getBankAccount().getTransactionCategory();
+            TransactionCategory category =null;
+            if(transaction.getBankAccount()!=null)
+                category = transaction.getBankAccount().getTransactionCategory();
+            else if(transaction.getExplainedTransactionCategory()!=null)
+                transaction.getExplainedTransactionCategory();
             return updateClosingBalance(transaction,category);
         }
         return BigDecimal.ZERO;

@@ -295,7 +295,7 @@ public class BankAccountController{
 					if (transactionCategoryClosingBalance!=null){
 						transactionCategoryClosingBalance.setClosingBalance(transactionCategoryClosingBalance.getClosingBalance()
 								.add(bankAccount.getCurrentBalance()));
-						transactionCategoryClosingBalanceService.delete(transactionCategoryClosingBalance);
+						transactionCategoryClosingBalanceService.update(transactionCategoryClosingBalance);
 					}
 					Map<String,Object> filterMap = new HashMap<>();
 					filterMap.put("transactionCategory",transactionCategory);
@@ -305,7 +305,7 @@ public class BankAccountController{
 					{
 						transactionCategoryBalance.setOpeningBalance(transactionCategoryBalance.getOpeningBalance()
 								.subtract(bankAccount.getCurrentBalance()));
-						transactionCategoryBalanceService.delete(transactionCategoryBalance);
+						transactionCategoryBalanceService.update(transactionCategoryBalance);
 					}
 				}
 				//delete closing balance

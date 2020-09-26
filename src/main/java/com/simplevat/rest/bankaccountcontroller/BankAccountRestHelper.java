@@ -4,12 +4,11 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.entity.*;
+import com.simplevat.entity.Currency;
 import com.simplevat.entity.bankaccount.*;
 import com.simplevat.service.*;
 import com.simplevat.service.bankaccount.ReconcileStatusService;
@@ -48,6 +47,9 @@ public class BankAccountRestHelper {
 
 	@Autowired
 	private TransactionCategoryService transactionCategoryService;
+
+	@Autowired
+	private TransactionCategoryBalanceService transactionCategoryBalanceService;
 
 	public PaginationResponseModel getListModel(PaginationResponseModel pagiantionResponseModel) {
 
@@ -262,16 +264,26 @@ public class BankAccountRestHelper {
 	}
 
 	public TransactionCategoryBalance getOpeningBalanceEntity(BankAccount bankAccount,TransactionCategory transactionCategory) {
-
-		TransactionCategoryBalance openingBalance = new TransactionCategoryBalance();
-		openingBalance.setCreatedBy(bankAccount.getCreatedBy());
-		openingBalance.setEffectiveDate(dateUtil.getDate());
-		openingBalance.setRunningBalance(bankAccount.getOpeningBalance());
-		openingBalance.setOpeningBalance(bankAccount.getOpeningBalance());
-		openingBalance.setTransactionCategory(transactionCategory);
-		openingBalance.setLastUpdateBy(bankAccount.getLastUpdatedBy());
-		openingBalance.setDeleteFlag(bankAccount.getDeleteFlag());
-		//openingBalance.setCreatedDate(bankAccount.getCreatedDate());
+        Map<String,Object> filterMap = new HashMap<String,Object>();
+        filterMap.put("transactionCategory",transactionCategory);
+		List<TransactionCategoryBalance> transactionCategoryBalanceList = transactionCategoryBalanceService.findByAttributes(filterMap);
+		TransactionCategoryBalance openingBalance =null;
+		if(transactionCategoryBalanceList!=null && transactionCategoryBalanceList.size()>0)
+		{
+			openingBalance = transactionCategoryBalanceList.get(0);
+			openingBalance.setOpeningBalance(openingBalance.getOpeningBalance().add(bankAccount.getOpeningBalance()));
+			openingBalance.setRunningBalance(openingBalance.getRunningBalance().add(bankAccount.getOpeningBalance()));
+		}
+		else {
+			openingBalance = new TransactionCategoryBalance();
+			openingBalance.setCreatedBy(bankAccount.getCreatedBy());
+			openingBalance.setEffectiveDate(dateUtil.getDate());
+			openingBalance.setRunningBalance(bankAccount.getOpeningBalance());
+			openingBalance.setOpeningBalance(bankAccount.getOpeningBalance());
+			openingBalance.setTransactionCategory(transactionCategory);
+			openingBalance.setLastUpdateBy(bankAccount.getLastUpdatedBy());
+			openingBalance.setDeleteFlag(bankAccount.getDeleteFlag());
+		}//openingBalance.setCreatedDate(bankAccount.getCreatedDate());
 		//openingBalance.setLastUpdateDate(bankAccount.getLastUpdateDate());
 		return  openingBalance;
 	}

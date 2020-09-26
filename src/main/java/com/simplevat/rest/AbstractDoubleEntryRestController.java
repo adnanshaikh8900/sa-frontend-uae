@@ -21,6 +21,8 @@ import com.simplevat.service.JournalService;
 import com.simplevat.service.TransactionCategoryService;
 import io.swagger.annotations.ApiOperation;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 
 
 /**
@@ -81,4 +83,25 @@ public abstract class AbstractDoubleEntryRestController {
 
 	 return new ResponseEntity<>("Journal Entries created Successfully", HttpStatus.OK);
 }
+
+	@ApiOperation(value = "UndoPost Journal Entry")
+	@PostMapping(value = "/undoPosting")
+	public ResponseEntity<String> undoPosting(@RequestBody PostingRequestModel postingRequestModel, HttpServletRequest request) {
+
+		Journal journal = journalService.getJournalByReferenceId(postingRequestModel.getPostingRefId());
+		if (journal != null) {
+			journalService.deleteByIds(Arrays.asList(journal.getId()));
+		}
+
+		if (postingRequestModel.getPostingRefType().equalsIgnoreCase(PostingReferenceTypeEnum.INVOICE.name())) {
+			Invoice invoice = invoiceService.findByPK(postingRequestModel.getPostingRefId());
+			invoice.setStatus(InvoiceStatusEnum.PENDING.getValue());
+			invoiceService.update(invoice);
+		} else if (postingRequestModel.getPostingRefType().equalsIgnoreCase(PostingReferenceTypeEnum.EXPENSE.name())) {
+			Expense expense = expenseService.findByPK(postingRequestModel.getPostingRefId());
+			expense.setStatus(ExpenseStatusEnum.DRAFT.getValue());
+			expenseService.update(expense);
+		}
+		return new ResponseEntity<>("Journal Entries created Successfully", HttpStatus.OK);
+	}
 }

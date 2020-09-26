@@ -53,7 +53,7 @@ import org.hibernate.annotations.ColumnDefault;
 		@NamedQuery(name = "invoiceForDropdown", query = "SELECT new " + CommonConstant.DROPDOWN_MODEL_PACKAGE
 				+ "(i.id , i.referenceNumber )" + " FROM Invoice i where i.deleteFlag = FALSE order by i.invoiceDate "), 
 		@NamedQuery(name = "updateStatus", query = "Update Invoice i set i.status = :status where id = :id "),
-		@NamedQuery(name = "lastInvoice", query = "from Invoice i order by i.id desc"),
+		@NamedQuery(name = "lastInvoice", query = "from Invoice i where i.type = :type order by i.id desc"),
 		@NamedQuery(name = "activeInvoicesByDateRange", query = "from Invoice i where i.invoiceDate between :startDate and :endDate and i.deleteFlag = false"),
 		@NamedQuery(name = "overDueAmount", query = "SELECT Sum(i.totalAmount) from Invoice i where i.type = :type and i.status in (2,3) and i.deleteFlag = false"),
 		@NamedQuery(name = "overDueAmountWeeklyMonthly", query = "SELECT Sum(i.totalAmount) from Invoice i where i.type = :type and i.status in (2,3)and i.deleteFlag = false and i.invoiceDueDate between :startDate and :endDate"),

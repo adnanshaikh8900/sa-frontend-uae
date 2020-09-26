@@ -82,7 +82,7 @@ class CreateBankAccount extends React.Component {
 				account_name: '',
 				currency: '',
 				opening_balance: '',
-				account_type: '',
+				account_type: 2,
 				bank_name: '',
 				account_number: '',
 				ifsc_code: '',
@@ -182,7 +182,7 @@ class CreateBankAccount extends React.Component {
 			bankAccountCurrency: currency ? currency : '',
 			openingBalance: opening_balance,
 			openingDate: openingDate ? openingDate : null,
-			bankAccountType: account_type ? account_type.value : '',
+			bankAccountType: account_type ? account_type : '',
 			bankName: bank_name,
 			accountNumber: account_number,
 			ifscCode: ifsc_code,
@@ -190,9 +190,6 @@ class CreateBankAccount extends React.Component {
 			countrycode: countrycode ? countrycode : '',
 			personalCorporateAccountInd: account_is_for ? account_is_for.value : '',
 		};
-		console.log(moment(openingDate, 'DD/MM/YYYY').toString());
-		console.log(moment(openingDate).format('DD/MM/YYYY HH:mm:ss'));
-		console.log(obj);
 		this.props.createBankAccountActions
 			.createBankAccount(obj)
 			.then((res) => {
@@ -488,11 +485,25 @@ class CreateBankAccount extends React.Component {
 																				  )
 																				: []
 																		}
-																		value={props.values.account_type}
+																		value={
+																			account_type_list &&
+																			selectOptionsFactory
+																				.renderOptions(
+																					'name',
+																					'id',
+																					account_type_list,
+																					'Account Type',
+																				)
+																				.find(
+																					(option) =>
+																						option.value ===
+																						+props.values.account_type,
+																				)
+																		}
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				props.handleChange('account_type')(
-																					option,
+																					option.value,
 																				);
 																			} else {
 																				props.handleChange('account_type')('');
@@ -626,7 +637,9 @@ class CreateBankAccount extends React.Component {
 																				option.target.value === '' ||
 																				this.ifscCode.test(option.target.value)
 																			) {
-																				props.handleChange('ifsc_code')(option.target.value.toUpperCase(),);
+																				props.handleChange('ifsc_code')(
+																					option.target.value.toUpperCase(),
+																				);
 																			}
 																		}}
 																		className={

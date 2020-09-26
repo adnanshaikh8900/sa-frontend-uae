@@ -366,18 +366,11 @@ class OpeningBalance extends React.Component {
                       Account
                     </TableHeaderColumn>
                     <TableHeaderColumn
-                      dataField="openingBalance"
-                      dataFormat={this.renderOpeningBalance}
-                      width="20%"
-                    >
-                      Opening Balance
-                    </TableHeaderColumn>
-                    <TableHeaderColumn
                       dataField="effectiveDate"
                       dataFormat={this.renderDate}
                       width="20%"
                     >
-                      Effective Date
+                      Opening Date
                     </TableHeaderColumn>
                     <TableHeaderColumn
                       dataField="currency"
@@ -385,6 +378,13 @@ class OpeningBalance extends React.Component {
                       dataFormat={this.renderCurrency}
                     >
                       Currency
+                    </TableHeaderColumn>
+                    <TableHeaderColumn
+                      dataField="openingBalance"
+                      dataFormat={this.renderOpeningBalance}
+                      width="20%"
+                    >
+                      Opening Balance
                     </TableHeaderColumn>
                     <TableHeaderColumn
                       dataFormat={this.renderEdit}

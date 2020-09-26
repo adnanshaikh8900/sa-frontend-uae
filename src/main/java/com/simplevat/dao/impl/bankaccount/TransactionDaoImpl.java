@@ -536,7 +536,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 												   String dateFilter,String filterQuery){
 
 		StringBuilder queryBuilder = new StringBuilder("SELECT count(t.transactionId) FROM Transaction t " +
-				"WHERE t.bankAccount.bankAccountId = :bankAccountId and t.transactionDate ");
+				"WHERE t.bankAccount.bankAccountId = :bankAccountId  and t.deleteFlag=false and t.transactionDate ");
 		if(dateFilter==null)
 		{
 			queryBuilder.append("between :startDate and :endDate ");

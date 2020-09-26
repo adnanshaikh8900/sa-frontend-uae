@@ -70,7 +70,7 @@ class ChartAccount extends React.Component {
 		};
 
 		this.selectRowProp = {
-			mode: 'checkbox',
+			//mode: 'checkbox',
 			bgColor: 'rgba(0,0,0, 0.05)',
 			clickToSelect: false,
 			onSelect: this.onRowSelect,
@@ -383,7 +383,7 @@ class ChartAccount extends React.Component {
 														target="_blank"
 													/>
 												)}
-												<Button
+												{/* <Button
 													color="primary"
 													className="btn-square mr-1"
 													onClick={this.bulkDelete}
@@ -391,7 +391,7 @@ class ChartAccount extends React.Component {
 												>
 													<i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
 													Bulk Delete
-												</Button>
+												</Button> */}
 											</ButtonGroup>
 										</div>
 										<div className="py-3">

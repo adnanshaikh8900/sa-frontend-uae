@@ -71,7 +71,7 @@ class Product extends React.Component {
 		};
 
 		this.selectRowProp = {
-			mode: 'checkbox',
+			//mode: 'checkbox',
 			bgColor: 'rgba(0,0,0, 0.05)',
 			clickToSelect: false,
 			onSelect: this.onRowSelect,
@@ -352,7 +352,7 @@ class Product extends React.Component {
 														target="_blank"
 													/>
 												)}
-												<Button
+												{/* <Button
 													color="primary"
 													className="btn-square mr-1"
 													onClick={this.bulkDelete}
@@ -360,7 +360,7 @@ class Product extends React.Component {
 												>
 													<i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
 													Bulk Delete
-												</Button>
+												</Button> */}
 											</ButtonGroup>
 										</div>
 										<div className="py-3">
@@ -478,15 +478,15 @@ class Product extends React.Component {
 												csvFileName="product_list.csv"
 												ref={(node) => (this.table = node)}
 											>
-												<TableHeaderColumn isKey dataField="name" dataSort>
-													Name
-												</TableHeaderColumn>
 												<TableHeaderColumn dataField="productCode" dataSort>
 													Product Code
 												</TableHeaderColumn>
-												<TableHeaderColumn dataField="description" dataSort>
-													Description
+												<TableHeaderColumn isKey dataField="name" dataSort>
+													Name
 												</TableHeaderColumn>
+												{/* <TableHeaderColumn dataField="description" dataSort>
+													Description
+												</TableHeaderColumn> */}
 												<TableHeaderColumn
 													dataField="vatPercentage"
 													dataSort

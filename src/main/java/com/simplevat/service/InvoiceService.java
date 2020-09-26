@@ -21,7 +21,7 @@ public abstract class InvoiceService extends SimpleVatService<Integer, Invoice> 
 
 	public abstract void deleteByIds(List<Integer> ids);
 
-	public abstract Integer getLastInvoiceNo();
+	public abstract Integer getLastInvoiceNo(Integer invoiceType);
 
 	public abstract List<Invoice> getInvoiceList(int mounthCount);
 

@@ -605,7 +605,7 @@ class CreateBankAccount extends React.Component {
 															</Col>
 														</Row>
 														<Row>
-															<Col lg={4}>
+															{/* <Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="ifsc_code">
 																		IFSC Code
@@ -661,7 +661,7 @@ class CreateBankAccount extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="swift_code">
 																		{/* <span className="text-danger">*</span> */}
-																		Swift Code
+																	{/* 	Swift Code
 																		<i
 																			id="SwiftCodeToolTip"
 																			className="fa fa-question-circle ml-1"
@@ -695,7 +695,7 @@ class CreateBankAccount extends React.Component {
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>
+															</Col> */} 
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="countrycode">Country</Label>

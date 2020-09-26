@@ -230,9 +230,9 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 
 	@ApiOperation(value = "Next invoice No")
 	@GetMapping(value = "/getNextInvoiceNo")
-	public ResponseEntity<Integer> getNextInvoiceNo() {
+	public ResponseEntity<Integer> getNextInvoiceNo(@RequestParam(value = "invoiceType") Integer invoiceType) {
 		try {
-			Integer nxtInvoiceNo = invoiceService.getLastInvoiceNo();
+			Integer nxtInvoiceNo = invoiceService.getLastInvoiceNo(invoiceType);
 			if (nxtInvoiceNo == null) {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}

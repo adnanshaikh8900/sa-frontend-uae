@@ -169,6 +169,7 @@ public class TransactionCategoryBalanceController {
 		transaction.setCreatedBy(closingBalance.getCreatedBy());
 		transaction.setTransactionDate(journalDate);
 		transaction.setTransactionAmount(closingBalance.getOpeningBalance());
+		transaction.setExplainedTransactionCategory(closingBalance.getTransactionCategory());
 		return transaction;
 	}
 

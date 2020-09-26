@@ -91,8 +91,9 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 	}
 
 	@Override
-	public Invoice getLastInvoice() {
+	public Invoice getLastInvoice(Integer invoiceType) {
 		TypedQuery<Invoice> query = getEntityManager().createNamedQuery("lastInvoice", Invoice.class);
+		query.setParameter("type", invoiceType);
 		query.setMaxResults(1);
 		List<Invoice> invoiceList = query.getResultList();
 
@@ -113,6 +114,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 
 		TypedQuery<BigDecimal> query = getEntityManager().createNamedQuery("overDueAmount", BigDecimal.class);
 		query.setParameter("type", type);
+		query.setParameter("currentDate",dateUtil.get(new Date()));
 		query.setMaxResults(1);
 
 		BigDecimal overDueAmount = query.getSingleResult();

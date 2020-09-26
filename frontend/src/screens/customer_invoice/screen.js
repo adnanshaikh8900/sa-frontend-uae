@@ -96,7 +96,7 @@ class CustomerInvoice extends React.Component {
 		};
 
 		this.selectRowProp = {
-			mode: 'checkbox',
+		//	mode: 'checkbox',
 			bgColor: 'rgba(0,0,0, 0.05)',
 			clickToSelect: false,
 			onSelect: this.onRowSelect,
@@ -341,7 +341,7 @@ class CustomerInvoice extends React.Component {
 						>
 							<i className="fas fa-eye" /> View
 						</DropdownItem>
-						{row.statusEnum === 'Sent' && (
+						{/* {row.statusEnum === 'Sent' && (
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
@@ -352,7 +352,7 @@ class CustomerInvoice extends React.Component {
 							>
 								<i className="fas fa-university" /> Record Payment
 							</DropdownItem>
-						)}
+						)} */}
 						<DropdownItem
 							onClick={() => {
 								this.closeInvoice(row.id, row.status);
@@ -501,6 +501,8 @@ class CustomerInvoice extends React.Component {
 	};
 
 	closeInvoice = (id, status) => {
+		const message =
+			'Warning: This Customer nvoice will be deleted permanently and cannot be recovered.  ';
 		if (status === 'Paid') {
 			this.props.commonActions.tostifyAlert(
 				'error',
@@ -513,6 +515,7 @@ class CustomerInvoice extends React.Component {
 						isOpen={true}
 						okHandler={() => this.removeInvoice(id)}
 						cancelHandler={this.removeDialog}
+						message={message}
 					/>
 				),
 			});
@@ -752,7 +755,7 @@ class CustomerInvoice extends React.Component {
 													target="_blank"
 												/>
 											)}
-											<Button
+											{/* <Button
 												color="primary"
 												className="btn-square "
 												onClick={this.bulkDelete}
@@ -760,7 +763,7 @@ class CustomerInvoice extends React.Component {
 											>
 												<i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
 												Bulk Delete
-											</Button>
+											</Button> */}
 										</ButtonGroup>
 									</div>
 									<div className="py-3">
@@ -960,21 +963,21 @@ class CustomerInvoice extends React.Component {
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}
-												dataField="totalAmount"
-												dataSort
-												dataFormat={this.renderInvoiceAmount}
-												formatExtraData={universal_currency_list}
-											>
-												Invoice Amount
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
 												dataField="totalVatAmount"
 												dataSort
 												dataFormat={this.renderVatAmount}
 												formatExtraData={universal_currency_list}
 											>
 												VAT Amount
+											</TableHeaderColumn>
+											<TableHeaderColumn
+												thStyle={{ whiteSpace: 'normal' }}
+												dataField="totalAmount"
+												dataSort
+												dataFormat={this.renderInvoiceAmount}
+												formatExtraData={universal_currency_list}
+											>
+												Invoice Amount
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}

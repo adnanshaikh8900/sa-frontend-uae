@@ -77,9 +77,9 @@ public class InvoiceServiceImpl extends InvoiceService {
 	}
 
 	@Override
-	public Integer getLastInvoiceNo() {
+	public Integer getLastInvoiceNo(Integer invoiceType) {
 
-		Invoice invoice = supplierInvoiceDao.getLastInvoice();
+		Invoice invoice = supplierInvoiceDao.getLastInvoice(invoiceType);
 		if (invoice != null) {
 			try {
 				String referenceNumber = invoice.getReferenceNumber();

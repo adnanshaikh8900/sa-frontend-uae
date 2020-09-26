@@ -325,13 +325,15 @@ class SupplierInvoice extends React.Component {
 								<i className="fas fa-university" /> Record Payment
 							</DropdownItem>
 						)} */}
-						<DropdownItem
-							onClick={() => {
-								this.closeInvoice(row.id, row.status);
-							}}
-						>
-							<i className="fa fa-trash-o" /> Delete
-						</DropdownItem>
+						{row.statusEnum !== 'Paid' && (
+							<DropdownItem
+								onClick={() => {
+									this.closeInvoice(row.id, row.status);
+								}}
+							>
+								<i className="fa fa-trash-o" /> Delete
+							</DropdownItem>
+						)}
 					</DropdownMenu>
 				</ButtonDropdown>
 			</div>

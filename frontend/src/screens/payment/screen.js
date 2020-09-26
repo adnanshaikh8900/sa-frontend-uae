@@ -54,7 +54,6 @@ const customStyles = {
 	}),
 };
 
-
 class Payment extends React.Component {
 	constructor(props) {
 		super(props);
@@ -135,7 +134,8 @@ class Payment extends React.Component {
 
 	bulkDeletePayments = () => {
 		let { selectedRows } = this.state;
-		const message = 'Warning: This Payment Receipt will be deleted permanently and cannot be recovered.  ';
+		const message =
+			'Warning: This Payment Receipt will be deleted permanently and cannot be recovered.  ';
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
@@ -320,7 +320,7 @@ class Payment extends React.Component {
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="fas fa-money-check" />
-										<span className="ml-2">Payments</span>
+										<span className="ml-2">Purchase receipts</span>
 									</div>
 								</Col>
 							</Row>
@@ -370,7 +370,7 @@ class Payment extends React.Component {
 											<Row>
 												<Col lg={3} className="mb-1">
 													<Select
-													styles={customStyles}
+														styles={customStyles}
 														className="select-default-width"
 														placeholder="Select Supplier"
 														id="supplier"
@@ -443,7 +443,7 @@ class Payment extends React.Component {
 												</Col>
 											</Row>
 										</div>
-										<Button
+										{/* <Button
 											color="primary"
 											style={{ marginBottom: '10px' }}
 											className="btn-square"
@@ -453,7 +453,7 @@ class Payment extends React.Component {
 										>
 											<i className="fas fa-plus mr-1" />
 											Add New Payment
-										</Button>
+										</Button> */}
 										<div>
 											<BootstrapTable
 												selectRow={this.selectRowProp}
@@ -499,7 +499,7 @@ class Payment extends React.Component {
 												</TableHeaderColumn>
 
 												<TableHeaderColumn dataField="paymentId" dataSort>
-												       Payment Number
+													Payment Number
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="invoiceAmount"

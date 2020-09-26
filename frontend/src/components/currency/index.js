@@ -15,7 +15,7 @@ class Currency extends React.Component {
 			var currencySymbolMain = 'USD';
 		}
 
-		return new Intl.NumberFormat(`en-${currencyCode}`, {
+		return new Intl.NumberFormat('ar', {
 			style: 'currency',
 			currency: currencySymbolMain,
 		}).format(value);

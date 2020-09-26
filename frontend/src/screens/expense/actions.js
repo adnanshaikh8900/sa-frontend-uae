@@ -3,7 +3,7 @@ import { authApi } from 'utils';
 import moment from 'moment';
 
 export const getExpenseList = (obj) => {
-	let payee = obj.payee ? obj.payee : '';
+	let payee = obj.payee ? obj.payee.value : '';
 	let expenseDate = obj.expenseDate ? obj.expenseDate : '';
 	let transactionCategoryId = obj.transactionCategoryId
 		? obj.transactionCategoryId.value

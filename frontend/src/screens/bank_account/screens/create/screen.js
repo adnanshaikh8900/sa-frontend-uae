@@ -82,7 +82,7 @@ class CreateBankAccount extends React.Component {
 				account_name: '',
 				currency: '',
 				opening_balance: '',
-				account_type: '',
+				account_type: 2,
 				bank_name: '',
 				account_number: '',
 				ifsc_code: '',
@@ -182,17 +182,14 @@ class CreateBankAccount extends React.Component {
 			bankAccountCurrency: currency ? currency : '',
 			openingBalance: opening_balance,
 			openingDate: openingDate ? openingDate : null,
-			bankAccountType: account_type ? account_type.value : '',
+			bankAccountType: account_type ? account_type : '',
 			bankName: bank_name,
 			accountNumber: account_number,
 			ifscCode: ifsc_code,
 			swiftCode: swift_code,
-			countrycode: countrycode ? countrycode : '',
+			bankCountry: countrycode ? countrycode : '',
 			personalCorporateAccountInd: account_is_for ? account_is_for.value : '',
 		};
-		console.log(moment(openingDate, 'DD/MM/YYYY').toString());
-		console.log(moment(openingDate).format('DD/MM/YYYY HH:mm:ss'));
-		console.log(obj);
 		this.props.createBankAccountActions
 			.createBankAccount(obj)
 			.then((res) => {
@@ -488,11 +485,25 @@ class CreateBankAccount extends React.Component {
 																				  )
 																				: []
 																		}
-																		value={props.values.account_type}
+																		value={
+																			account_type_list &&
+																			selectOptionsFactory
+																				.renderOptions(
+																					'name',
+																					'id',
+																					account_type_list,
+																					'Account Type',
+																				)
+																				.find(
+																					(option) =>
+																						option.value ===
+																						+props.values.account_type,
+																				)
+																		}
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				props.handleChange('account_type')(
-																					option,
+																					option.value,
 																				);
 																			} else {
 																				props.handleChange('account_type')('');
@@ -592,97 +603,6 @@ class CreateBankAccount extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
-														</Row>
-														<Row>
-															{/* <Col lg={4}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="ifsc_code">
-																		IFSC Code
-																		<i
-																			id="IFSCcodeToolTip"
-																			className="fa fa-question-circle ml-1"
-																		></i>
-																		<UncontrolledTooltip
-																			placement="right"
-																			target="IFSCcodeToolTip"
-																		>
-																			<p>
-																				{' '}
-																				IFSC code – 11-digit unique bank branch
-																				identifier code And Should be in capital
-																				and numbers{' '}
-																			</p>
-																		</UncontrolledTooltip>
-																	</Label>
-																	<Input
-																		type="text"
-																		maxLength="11"
-																		id="ifsc_code"
-																		name="ifsc_code"
-																		placeholder="Enter IFSC Code"
-																		value={props.values.ifsc_code}
-																		onChange={(option) => {
-																			if (
-																				option.target.value === '' ||
-																				this.ifscCode.test(option.target.value)
-																			) {
-																				props.handleChange('ifsc_code')(option.target.value.toUpperCase(),);
-																			}
-																		}}
-																		className={
-																			props.errors.ifsc_code &&
-																			props.touched.ifsc_code
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.ifsc_code &&
-																		props.touched.ifsc_code && (
-																			<div className="invalid-feedback">
-																				{props.errors.ifsc_code}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
-															<Col lg={4}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="swift_code">
-																		{/* <span className="text-danger">*</span> */}
-																	{/* 	Swift Code
-																		<i
-																			id="SwiftCodeToolTip"
-																			className="fa fa-question-circle ml-1"
-																		></i>
-																		<UncontrolledTooltip
-																			placement="right"
-																			target="SwiftCodeToolTip"
-																		>
-																			<p> Swift Code - Bank identifier code </p>
-																		</UncontrolledTooltip>
-																	</Label>
-																	<Input
-																		type="text"
-																		maxLength="11"
-																		id="swift_code"
-																		name="swift_code"
-																		placeholder="Enter Swift Code"
-																		value={props.values.swift_code}
-																		onChange={props.handleChange}
-																		className={
-																			props.errors.swift_code &&
-																			props.touched.swift_code
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.swift_code &&
-																		props.touched.swift_code && (
-																			<div className="invalid-feedback">
-																				{props.errors.swift_code}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col> */} 
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="countrycode">Country</Label>
@@ -733,6 +653,99 @@ class CreateBankAccount extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
+														</Row>
+														<Row>
+															{/* <Col lg={4}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="ifsc_code">
+																		IFSC Code
+																		<i
+																			id="IFSCcodeToolTip"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="IFSCcodeToolTip"
+																		>
+																			<p>
+																				{' '}
+																				IFSC code – 11-digit unique bank branch
+																				identifier code And Should be in capital
+																				and numbers{' '}
+																			</p>
+																		</UncontrolledTooltip>
+																	</Label>
+																	<Input
+																		type="text"
+																		maxLength="11"
+																		id="ifsc_code"
+																		name="ifsc_code"
+																		placeholder="Enter IFSC Code"
+																		value={props.values.ifsc_code}
+																		onChange={(option) => {
+																			if (
+																				option.target.value === '' ||
+																				this.ifscCode.test(option.target.value)
+																			) {
+																				props.handleChange('ifsc_code')(
+																					option.target.value.toUpperCase(),
+																				);
+																			}
+																		}}
+																		className={
+																			props.errors.ifsc_code &&
+																			props.touched.ifsc_code
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.ifsc_code &&
+																		props.touched.ifsc_code && (
+																			<div className="invalid-feedback">
+																				{props.errors.ifsc_code}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+															<Col lg={4}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="swift_code">
+																		{/* <span className="text-danger">*</span> */}
+															{/* 	Swift Code
+																		<i
+																			id="SwiftCodeToolTip"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="SwiftCodeToolTip"
+																		>
+																			<p> Swift Code - Bank identifier code </p>
+																		</UncontrolledTooltip>
+																	</Label>
+																	<Input
+																		type="text"
+																		maxLength="11"
+																		id="swift_code"
+																		name="swift_code"
+																		placeholder="Enter Swift Code"
+																		value={props.values.swift_code}
+																		onChange={props.handleChange}
+																		className={
+																			props.errors.swift_code &&
+																			props.touched.swift_code
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.swift_code &&
+																		props.touched.swift_code && (
+																			<div className="invalid-feedback">
+																				{props.errors.swift_code}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col> */}
 														</Row>
 														<Row>
 															<Col lg={4}>

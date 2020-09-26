@@ -636,7 +636,7 @@ class DetailBankAccount extends React.Component {
 														</Col>
 													</Row>
 													<Row>
-														<Col lg={4}>
+														{/* <Col lg={4}>
 															<FormGroup className="mb-3">
 																<Label htmlFor="ifsc_code">IFSC Code</Label>
 																<Input
@@ -699,56 +699,57 @@ class DetailBankAccount extends React.Component {
 																		</div>
 																	)}
 															</FormGroup>
-														</Col>
+														</Col> */}
 														<Col lg={4}>
-															<FormGroup className="mb-3">
-																<Label htmlFor="country">Country</Label>
-																<Select
-																	styles={customStyles}
-																	id="country"
-																	name="country"
-																	options={
-																		this.state.country_list
-																			? selectOptionsFactory.renderOptions(
+																<FormGroup className="mb-3">
+																	<Label htmlFor="countrycode">Country</Label>
+																	<Select
+																		styles={customStyles}
+																		id="countrycode"
+																		name="countrycode"
+																		// getOptionValue={(option) =>
+																		// 	option.countrycode
+																		// }
+																		options={
+																			this.state.country_list
+																				? selectOptionsFactory.renderOptions(
+																						'countryName',
+																						'countryCode',
+																						this.state.country_list,
+																						'Country',
+																				  )
+																				: []
+																		}
+																		value={
+																			this.state.country_list &&
+																			selectOptionsFactory
+																				.renderOptions(
 																					'countryName',
 																					'countryCode',
 																					this.state.country_list,
 																					'Country',
-																			  )
-																			: []
-																	}
-																	value={
-																		this.state.country_list &&
-																		selectOptionsFactory
-																			.renderOptions(
-																				'countryName',
-																				'countryCode',
-																				this.state.country_list,
-																				'Country',
-																			)
-																			.find(
-																				(option) =>
-																					option.value === props.values.country,
-																			)
-																	}
-																	onChange={(option) => {
-																		if (option && option.value) {
-																			props.handleChange('country')(
-																				option.value,
-																			);
-																		} else {
-																			props.handleChange('country')('');
+																				)
+																				.find(
+																					(option) =>
+																						option.value ===
+																						+props.values.countrycode,
+																				)
 																		}
-																	}}
-																	className={
-																		props.errors.country &&
-																		props.touched.country
-																			? 'is-invalid'
-																			: ''
-																	}
-																/>
-															</FormGroup>
-														</Col>
+																		className={
+																			props.errors.countrycode &&
+																			props.touched.countrycode
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.countrycode &&
+																		props.touched.countrycode && (
+																			<div className="invalid-feedback">
+																				{props.errors.countrycode}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
 													</Row>
 													<Row>
 														<Col lg={4}>

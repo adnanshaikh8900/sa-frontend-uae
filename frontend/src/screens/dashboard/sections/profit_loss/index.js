@@ -87,7 +87,7 @@ class ProfitAndLoss extends Component {
 									</NavLink>
 								</NavItem>
 							</Nav>
-							<div className="card-header-actions">
+							{/* <div className="card-header-actions">
 								<select
 									className="form-control"
 									ref={this.dateRangeSelect}
@@ -97,7 +97,7 @@ class ProfitAndLoss extends Component {
 									<option value="6">Last 6 Months</option>
 									<option value="3">Last 3 Months</option>
 								</select>
-							</div>
+							</div> */}
 						</div>
 						<TabContent activeTab={this.state.activeTab[0]}>
 							<TabPane tabId="1">

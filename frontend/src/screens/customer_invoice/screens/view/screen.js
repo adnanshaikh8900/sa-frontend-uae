@@ -145,7 +145,7 @@ class ViewCustomerInvoice extends React.Component {
 								<p
 									className="close"
 									onClick={() => {
-										this.props.history.push('/admin/revenue/customer-invoice');
+										this.props.history.push('/admin/income/customer-invoice');
 									}}
 								>
 									X

@@ -478,6 +478,7 @@ class DetailBankAccount extends React.Component {
 																	).format('DD/MM/YYYY')}
 																	showMonthDropdown
 																	showYearDropdown
+																	disabled
 																	dropdownMode="select"
 																	dateFormat="dd/MM/yyyy"
 																	// maxDate={new Date()}

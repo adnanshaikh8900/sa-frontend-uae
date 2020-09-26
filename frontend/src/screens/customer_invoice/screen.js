@@ -341,7 +341,7 @@ class CustomerInvoice extends React.Component {
 						>
 							<i className="fas fa-eye" /> View
 						</DropdownItem>
-						{row.statusEnum === 'Sent' && (
+						{/* {row.statusEnum === 'Sent' && (
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
@@ -352,7 +352,7 @@ class CustomerInvoice extends React.Component {
 							>
 								<i className="fas fa-university" /> Record Payment
 							</DropdownItem>
-						)}
+						)} */}
 						<DropdownItem
 							onClick={() => {
 								this.closeInvoice(row.id, row.status);
@@ -963,21 +963,21 @@ class CustomerInvoice extends React.Component {
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}
-												dataField="totalAmount"
-												dataSort
-												dataFormat={this.renderInvoiceAmount}
-												formatExtraData={universal_currency_list}
-											>
-												Invoice Amount
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
 												dataField="totalVatAmount"
 												dataSort
 												dataFormat={this.renderVatAmount}
 												formatExtraData={universal_currency_list}
 											>
 												VAT Amount
+											</TableHeaderColumn>
+											<TableHeaderColumn
+												thStyle={{ whiteSpace: 'normal' }}
+												dataField="totalAmount"
+												dataSort
+												dataFormat={this.renderInvoiceAmount}
+												formatExtraData={universal_currency_list}
+											>
+												Invoice Amount
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}

@@ -12,6 +12,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.simplevat.constant.ChartOfAccountCategoryCodeEnum;
 import com.simplevat.service.CoacTransactionCategoryService;
 import com.simplevat.service.bankaccount.TransactionService;
 import org.hibernate.Transaction;
@@ -229,6 +230,10 @@ public class TransactionCategoryRestController{
 	@ApiOperation(value = "Get Explained Transaction Count For Transaction Id")
 	@GetMapping(value = "/getExplainedTransactionCountForTransactionCategory")
 	public ResponseEntity<Integer> getExplainedTransactionCount(@RequestParam int transactionCategoryId) {
+		TransactionCategory transactionCategory = transactionCategoryService.findByPK(transactionCategoryId);
+		if(transactionCategory.getChartOfAccount().getChartOfAccountCode().equalsIgnoreCase(ChartOfAccountCategoryCodeEnum.BANK.getCode())){
+			return new ResponseEntity<>(1, HttpStatus.OK);
+		}
 		Integer response = transactionService.getExplainedTransactionCountByTransactionCategoryId(transactionCategoryId);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}

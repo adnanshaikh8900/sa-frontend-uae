@@ -109,7 +109,7 @@ class SupplierInvoice extends React.Component {
 			onSortChange: this.sortColumn,
 		};
 		this.selectRowProp = {
-		//	mode: 'checkbox',
+			//	mode: 'checkbox',
 			bgColor: 'rgba(0,0,0, 0.05)',
 			clickToSelect: false,
 			onSelect: this.onRowSelect,
@@ -306,6 +306,15 @@ class SupplierInvoice extends React.Component {
 						</DropdownItem>
 						{row.statusEnum === 'Sent' && (
 							<DropdownItem
+								onClick={() => {
+									this.unPostInvoice(row);
+								}}
+							>
+								<i className="fas fa-file" /> Draft
+							</DropdownItem>
+						)}
+						{/* {row.statusEnum === 'Sent' && (
+							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
 										'/admin/expense/supplier-invoice/record-payment',
@@ -315,7 +324,7 @@ class SupplierInvoice extends React.Component {
 							>
 								<i className="fas fa-university" /> Record Payment
 							</DropdownItem>
-						)}
+						)} */}
 						<DropdownItem
 							onClick={() => {
 								this.closeInvoice(row.id, row.status);
@@ -478,6 +487,40 @@ class SupplierInvoice extends React.Component {
 					this.props.commonActions.tostifyAlert(
 						'success',
 						'Invoice Posted Successfully',
+					);
+					this.setState({
+						loading: false,
+					});
+					this.initializeData();
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+				this.setState({
+					loading: false,
+				});
+			});
+	};
+
+	unPostInvoice = (row) => {
+		this.setState({
+			loading: true,
+		});
+		const postingRequestModel = {
+			amount: row.invoiceAmount,
+			postingRefId: row.id,
+			postingRefType: 'INVOICE',
+		};
+		this.props.supplierInvoiceActions
+			.unPostInvoice(postingRequestModel)
+			.then((res) => {
+				if (res.status === 200) {
+					this.props.commonActions.tostifyAlert(
+						'success',
+						'Invoice Moved To Draft Successfully',
 					);
 					this.setState({
 						loading: false,

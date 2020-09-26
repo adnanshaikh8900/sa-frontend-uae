@@ -187,7 +187,7 @@ class CreateBankAccount extends React.Component {
 			accountNumber: account_number,
 			ifscCode: ifsc_code,
 			swiftCode: swift_code,
-			countrycode: countrycode ? countrycode : '',
+			bankCountry: countrycode ? countrycode : '',
 			personalCorporateAccountInd: account_is_for ? account_is_for.value : '',
 		};
 		this.props.createBankAccountActions
@@ -603,6 +603,56 @@ class CreateBankAccount extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
+															<Col lg={4}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="countrycode">Country</Label>
+																	<Select
+																		styles={customStyles}
+																		id="countrycode"
+																		name="countrycode"
+																		// getOptionValue={(option) =>
+																		// 	option.countrycode
+																		// }
+																		options={
+																			this.state.country_list
+																				? selectOptionsFactory.renderOptions(
+																						'countryName',
+																						'countryCode',
+																						this.state.country_list,
+																						'Country',
+																				  )
+																				: []
+																		}
+																		value={
+																			this.state.country_list &&
+																			selectOptionsFactory
+																				.renderOptions(
+																					'countryName',
+																					'countryCode',
+																					this.state.country_list,
+																					'Country',
+																				)
+																				.find(
+																					(option) =>
+																						option.value ===
+																						+props.values.countrycode,
+																				)
+																		}
+																		className={
+																			props.errors.countrycode &&
+																			props.touched.countrycode
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.countrycode &&
+																		props.touched.countrycode && (
+																			<div className="invalid-feedback">
+																				{props.errors.countrycode}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
 														</Row>
 														<Row>
 															{/* <Col lg={4}>
@@ -661,7 +711,7 @@ class CreateBankAccount extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="swift_code">
 																		{/* <span className="text-danger">*</span> */}
-																	{/* 	Swift Code
+															{/* 	Swift Code
 																		<i
 																			id="SwiftCodeToolTip"
 																			className="fa fa-question-circle ml-1"
@@ -695,57 +745,7 @@ class CreateBankAccount extends React.Component {
 																			</div>
 																		)}
 																</FormGroup>
-															</Col> */} 
-															<Col lg={4}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="countrycode">Country</Label>
-																	<Select
-																		styles={customStyles}
-																		id="countrycode"
-																		name="countrycode"
-																		// getOptionValue={(option) =>
-																		// 	option.countrycode
-																		// }
-																		options={
-																			this.state.country_list
-																				? selectOptionsFactory.renderOptions(
-																						'countryName',
-																						'countryCode',
-																						this.state.country_list,
-																						'Country',
-																				  )
-																				: []
-																		}
-																		value={
-																			this.state.country_list &&
-																			selectOptionsFactory
-																				.renderOptions(
-																					'countryName',
-																					'countryCode',
-																					this.state.country_list,
-																					'Country',
-																				)
-																				.find(
-																					(option) =>
-																						option.value ===
-																						+props.values.countrycode,
-																				)
-																		}
-																		className={
-																			props.errors.countrycode &&
-																			props.touched.countrycode
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.countrycode &&
-																		props.touched.countrycode && (
-																			<div className="invalid-feedback">
-																				{props.errors.countrycode}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
+															</Col> */}
 														</Row>
 														<Row>
 															<Col lg={4}>

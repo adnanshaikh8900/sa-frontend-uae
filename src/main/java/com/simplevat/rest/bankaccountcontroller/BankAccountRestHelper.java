@@ -182,8 +182,8 @@ public class BankAccountRestHelper {
 
 			TransactionCategory category = new TransactionCategory();
 			category.setChartOfAccount(bankCategory.getChartOfAccount());
-			category.setEditableFlag(Boolean.TRUE);
-			category.setSelectableFlag(Boolean.TRUE);
+			category.setEditableFlag(Boolean.FALSE);
+			category.setSelectableFlag(Boolean.FALSE);
 			category.setTransactionCategoryCode(transactionCategoryService
 					.getNxtTransactionCatCodeByChartOfAccount(bankCategory.getChartOfAccount()));
 			category.setTransactionCategoryName(bankModel.getBankName() + "-" + bankModel.getBankAccountName());

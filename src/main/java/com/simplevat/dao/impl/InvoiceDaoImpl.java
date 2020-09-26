@@ -114,6 +114,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 
 		TypedQuery<BigDecimal> query = getEntityManager().createNamedQuery("overDueAmount", BigDecimal.class);
 		query.setParameter("type", type);
+		query.setParameter("currentDate",dateUtil.get(new Date()));
 		query.setMaxResults(1);
 
 		BigDecimal overDueAmount = query.getSingleResult();

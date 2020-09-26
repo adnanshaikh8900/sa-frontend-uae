@@ -751,6 +751,7 @@ class CreateCustomerInvoice extends React.Component {
 	};
 
 	updateAmount = (data, props) => {
+		console.log(props);
 		const { vat_list } = this.props;
 		const { discountPercentage, discountAmount } = this.state;
 		let total_net = 0;
@@ -983,19 +984,27 @@ class CreateCustomerInvoice extends React.Component {
 	};
 	getCurrentProduct = () => {
 		this.props.customerInvoiceActions.getProductList().then((res) => {
-			this.setState({
-				data: [
-					{
-						id: 0,
-						description: res.data[0].description,
-						quantity: 1,
-						unitPrice: res.data[0].unitPrice,
-						vatCategoryId: res.data[0].vatCategoryId,
-						subTotal: res.data[0].unitPrice,
-						productId: res.data[0].id,
-					},
-				],
-			});
+			this.setState(
+				{
+					data: [
+						{
+							id: 0,
+							description: res.data[0].description,
+							quantity: 1,
+							unitPrice: res.data[0].unitPrice,
+							vatCategoryId: res.data[0].vatCategoryId,
+							subTotal: res.data[0].unitPrice,
+							productId: res.data[0].id,
+						},
+					],
+				},
+				() => {
+					const values = {
+						values: this.state.initValue,
+					};
+					this.updateAmount(this.state.data, values);
+				},
+			);
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.unitPrice`,
 				res.data[0].unitPrice,

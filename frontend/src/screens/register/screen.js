@@ -520,22 +520,26 @@ class Register extends React.Component {
 														<Col md="12">
 															<FormGroup className="mb-3">
 																<Label htmlFor="lastName">Password</Label>
-																<div style={{ fontWeight: 'bold' }}>
-																	{this.state.togglePassword}
-																</div>
-																<span
-																	style={{
-																		marginTop: '10px;',
-																		display: 'block',
-																	}}
-																	onClick={() => {
-																		this.setState({
-																			togglePassword: this.state.password,
-																		});
-																	}}
+																<div
+																	style={{ fontWeight: 'bold' }}
+																	className="d-flex align-items-center"
 																>
-																	Show Password
-																</span>
+																	{this.state.togglePassword}
+																	<span
+																		className="ml-1"
+																		style={{ cursor: 'pointer' }}
+																	>
+																		<i
+																			className="fa fa-eye"
+																			onClick={() => {
+																				this.setState({
+																					togglePassword: this.state.password,
+																				});
+																			}}
+																			aria-hidden="true"
+																		></i>
+																	</span>
+																</div>
 															</FormGroup>
 														</Col>
 													</Row>

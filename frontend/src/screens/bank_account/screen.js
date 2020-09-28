@@ -36,6 +36,7 @@ const mapStateToProps = (state) => {
 		account_type_list: state.bank_account.account_type_list,
 		currency_list: state.bank_account.currency_list,
 		bank_account_list: state.bank_account.bank_account_list,
+		universal_currency_list: state.common.universal_currency_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -574,7 +575,7 @@ class BankAccount extends React.Component {
 
 	render() {
 		const { loading, filterData, dialog, csvData, view } = this.state;
-		const { account_type_list, currency_list, bank_account_list } = this.props;
+		const { account_type_list, currency_list,universal_currency_list, bank_account_list } = this.props;
 
 		return (
 			<div className="bank-account-screen">
@@ -821,6 +822,7 @@ class BankAccount extends React.Component {
 													width="150"
 													dataFormat={this.renderBalance}
 													thStyle={{ whiteSpace: 'normal' }}
+													formatExtraData={universal_currency_list}
 												>
 													Bank Balance
 												</TableHeaderColumn>

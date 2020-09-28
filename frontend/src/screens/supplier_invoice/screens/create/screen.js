@@ -18,6 +18,7 @@ import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
+import { Currency } from 'components';
 import * as Yup from 'yup';
 import * as SupplierInvoiceCreateActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
@@ -330,7 +331,7 @@ class CreateSupplierInvoice extends React.Component {
 	};
 
 	renderSubTotal = (cell, row) => {
-		return <label className="mb-0">{row.subTotal.toFixed(2)}</label>;
+		return <label className="mb-0"><Currency value={row.subTotal.toFixed(2)} currencySymbol={"AED"}/></label>;
 	};
 
 	componentDidMount = () => {
@@ -1153,7 +1154,7 @@ class CreateSupplierInvoice extends React.Component {
 	render() {
 		const { data, discountOptions, initValue, prefix } = this.state;
 
-		const { currency_list, supplier_list } = this.props;
+		const { currency_list, supplier_list,universal_currency_list } = this.props;
 		return (
 			<div className="create-supplier-invoice-screen">
 				<div className=" fadeIn">
@@ -1723,6 +1724,7 @@ class CreateSupplierInvoice extends React.Component {
 																		dataFormat={this.renderSubTotal}
 																		className="text-right"
 																		columnClassName="text-right"
+																		formatExtraData={universal_currency_list}
 																	>
 																		Sub Total
 																	</TableHeaderColumn>
@@ -2007,7 +2009,8 @@ class CreateSupplierInvoice extends React.Component {
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																						{initValue.total_net.toFixed(2)}
+																					<Currency value={initValue.total_net.toFixed(2)}currencySymbol={"AED"}/>
+																						
 																					</label>
 																				</Col>
 																			</Row>
@@ -2021,9 +2024,9 @@ class CreateSupplierInvoice extends React.Component {
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																						{initValue.invoiceVATAmount.toFixed(
+																					<Currency value={initValue.invoiceVATAmount.toFixed(
 																							2,
-																						)}
+																						)}currencySymbol={"AED"}/>
 																					</label>
 																				</Col>
 																			</Row>
@@ -2037,9 +2040,9 @@ class CreateSupplierInvoice extends React.Component {
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																						{this.state.initValue.discount.toFixed(
+																					<Currency value={this.state.initValue.discount.toFixed(
 																							2,
-																						)}
+																						)} currencySymbol={"AED"}/>
 																					</label>
 																				</Col>
 																			</Row>
@@ -2053,7 +2056,7 @@ class CreateSupplierInvoice extends React.Component {
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																						{initValue.totalAmount.toFixed(2)}
+																					<Currency value={initValue.totalAmount.toFixed(2)} currencySymbol={"AED"}/>
 																					</label>
 																				</Col>
 																			</Row>

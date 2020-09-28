@@ -97,7 +97,7 @@ class ReconcileTransaction extends React.Component {
 		];
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
-		this.regDecimal = /^\d*\.?\d*$/;
+		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 		this.formRef = React.createRef();
 	}
 

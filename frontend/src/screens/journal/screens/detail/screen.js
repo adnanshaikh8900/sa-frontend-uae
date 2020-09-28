@@ -74,6 +74,7 @@ class DetailJournal extends React.Component {
 		this.formRef = React.createRef();
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
+		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 	}
 
 	componentDidMount = () => {
@@ -369,7 +370,7 @@ class DetailJournal extends React.Component {
 							props.values.postingReferenceType === 'MANUAL' ? false : true
 						}
 						onChange={(e) => {
-							if (e.target.value === '' || this.regEx.test(e.target.value)) {
+							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
 								this.selectItem(e, row, 'debitAmount', form, field);
 							}
 						}}
@@ -412,7 +413,7 @@ class DetailJournal extends React.Component {
 							props.values.postingReferenceType === 'MANUAL' ? false : true
 						}
 						onChange={(e) => {
-							if (e.target.value === '' || this.regEx.test(e.target.value)) {
+							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
 								this.selectItem(e, row, 'creditAmount', form, field);
 							}
 						}}

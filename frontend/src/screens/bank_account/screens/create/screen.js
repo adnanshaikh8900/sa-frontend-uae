@@ -99,7 +99,7 @@ class CreateBankAccount extends React.Component {
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.ifscCode = /[a-zA-Z0-9]+$/;
 		this.swiftRegex = /^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/;
-		this.regDecimal = /^\d*\.?\d*$/;
+		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 		this.account_for = [
 			{ label: 'Personal', value: 'Personal' },
 			{ label: 'Corporate', value: 'Corporate' },

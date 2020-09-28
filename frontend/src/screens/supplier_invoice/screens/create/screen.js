@@ -166,6 +166,7 @@ class CreateSupplierInvoice extends React.Component {
 
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
+		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 	}
 
 	renderProductName = (cell, row) => {
@@ -300,7 +301,7 @@ class CreateSupplierInvoice extends React.Component {
 						maxLength="10"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
-							if (e.target.value === '' || this.regEx.test(e.target.value)) {
+							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
 								this.selectItem(
 									e.target.value,
 									row,
@@ -1974,7 +1975,7 @@ class CreateSupplierInvoice extends React.Component {
 																							onChange={(option) => {
 																								if (
 																									option.target.value === '' ||
-																									this.regEx.test(
+																									this.regDecimal.test(
 																										option.target.value,
 																									)
 																								) {

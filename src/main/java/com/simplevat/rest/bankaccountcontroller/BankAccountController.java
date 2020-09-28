@@ -177,16 +177,16 @@ public class BankAccountController{
 				{
 					closingBalance = closingBalanceList.get(0);
 					BigDecimal closingBalanceValue = closingBalance.getClosingBalance();
-					closingBalanceValue = closingBalanceValue.negate();
+					//closingBalanceValue = closingBalanceValue.negate();
 					closingBalanceValue = closingBalanceValue.add(bankAccount.getOpeningBalance());
-					closingBalance.setOpeningBalance(bankAccount.getOpeningBalance().negate());
-					closingBalance.setClosingBalance(closingBalanceValue.negate());
+					closingBalance.setOpeningBalance(bankAccount.getOpeningBalance());
+					closingBalance.setClosingBalance(closingBalanceValue);
 				}
 				else {
 					closingBalance = bankAccountRestHelper
 							.getClosingBalanceEntity(bankAccount, transactionCategory);
-					closingBalance.setOpeningBalance(bankAccount.getOpeningBalance().negate());
-					closingBalance.setClosingBalance(bankAccount.getOpeningBalance().negate());
+					closingBalance.setOpeningBalance(bankAccount.getOpeningBalance());
+					closingBalance.setClosingBalance(bankAccount.getOpeningBalance());
 				}
 				transactionCategoryClosingBalanceService.persist(closingBalance);
                 coacTransactionCategoryService.addCoacTransactionCategory(bankAccount.getTransactionCategory().getChartOfAccount(),
@@ -281,7 +281,18 @@ public class BankAccountController{
 				List<Transaction> transactionList = transactionService.getAllTransactionListByBankAccountId(bankAccountId);
 				for(Transaction transaction:transactionList)
 				{
+					if(transaction.getDebitCreditFlag()=='C' && !transaction.getDeleteFlag())
+					{
+						bankAccount.setCurrentBalance(bankAccount.getCurrentBalance()
+								.subtract(transaction.getTransactionAmount()));
+					}
+					else if( !transaction.getDeleteFlag())
+					{
+						bankAccount.setCurrentBalance(bankAccount.getCurrentBalance()
+								.add(transaction.getTransactionAmount()));
+					}
 					transactionService.delete(transaction);
+
 
 				}
 				if (bankAccount.getCurrentBalance()!=null&&bankAccount.getCurrentBalance().longValue()>0)
@@ -293,8 +304,10 @@ public class BankAccountController{
 					TransactionCategoryClosingBalance transactionCategoryClosingBalance =
 							transactionCategoryClosingBalanceService.getLastClosingBalanceByDate(transactionCategory);
 					if (transactionCategoryClosingBalance!=null){
+						transactionCategoryClosingBalance.setOpeningBalance(transactionCategoryClosingBalance.getClosingBalance()
+								.subtract(bankAccount.getCurrentBalance()));
 						transactionCategoryClosingBalance.setClosingBalance(transactionCategoryClosingBalance.getClosingBalance()
-								.add(bankAccount.getCurrentBalance()));
+								.subtract(bankAccount.getCurrentBalance()));
 						transactionCategoryClosingBalanceService.update(transactionCategoryClosingBalance);
 					}
 					Map<String,Object> filterMap = new HashMap<>();
@@ -304,6 +317,8 @@ public class BankAccountController{
 					for(TransactionCategoryBalance transactionCategoryBalance : transactionCategoryBalanceList)
 					{
 						transactionCategoryBalance.setOpeningBalance(transactionCategoryBalance.getOpeningBalance()
+								.subtract(bankAccount.getCurrentBalance()));
+						transactionCategoryBalance.setRunningBalance(transactionCategoryBalance.getRunningBalance()
 								.subtract(bankAccount.getCurrentBalance()));
 						transactionCategoryBalanceService.update(transactionCategoryBalance);
 					}

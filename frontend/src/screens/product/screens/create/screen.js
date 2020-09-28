@@ -297,11 +297,11 @@ class CreateProduct extends React.Component {
 													let errors = {};
 													if (!values.productName) {
 														errors.productName =
-															'Product Category Name is  required';
+															'Product  Name is  required';
 													}
 													if (this.state.exist === true) {
 														errors.productName =
-															'Product Category Name is already exist';
+															'Product  Name is already exist';
 													}
 													return errors;
 												}}
@@ -352,6 +352,9 @@ class CreateProduct extends React.Component {
 													vatCategoryId: Yup.string()
 														.required('Vat Category is Required')
 														.nullable(),
+													productCode: Yup.string().required(
+															'At least one Selling type is required',
+														),	
 												})}
 											>
 												{(props) => {
@@ -460,7 +463,7 @@ class CreateProduct extends React.Component {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="productCode">
-																			Product Code
+																		<span className="text-danger">*</span>Product Code
 																			<i
 																				id="ProductCodeTooltip"
 																				className="fa fa-question-circle ml-1"
@@ -977,7 +980,7 @@ class CreateProduct extends React.Component {
 																			maxLength="10"
 																			id="purchaseUnitPrice"
 																			name="purchaseUnitPrice"
-																			placeholder="Enter Selling Price"
+																			placeholder="Enter Purchase Price"
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||

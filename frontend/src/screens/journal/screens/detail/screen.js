@@ -26,7 +26,7 @@ import { CommonActions } from 'services/global';
 import { selectCurrencyFactory } from 'utils';
 import * as JournalActions from '../../actions';
 import * as JournalDetailActions from './actions';
-import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader, ConfirmDeleteModal,Currency} from 'components';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -1004,19 +1004,19 @@ class DetailJournal extends React.Component {
 																				</Col>
 																				<Col xs={4} className="text-right">
 																					<label className="mb-0">
-																						{' '}
-																						{
+																					<Currency value=	{
 																							this.state.initValue
 																								.subTotalDebitAmount
-																						}{' '}
+																						} currencySymbol={"AED"} />
 																					</label>
 																				</Col>
 																				<Col xs={4} className="text-right">
 																					<label className="mb-0">
-																						{
+																					<Currency value=	{
 																							this.state.initValue
 																								.subTotalCreditAmount
-																						}
+																						} currencySymbol={"AED"} />
+																					
 																					</label>
 																				</Col>
 																			</Row>
@@ -1030,18 +1030,17 @@ class DetailJournal extends React.Component {
 																				</Col>
 																				<Col xs={4} className="text-right">
 																					<label className="mb-0">
-																						{
-																							this.state.initValue
-																								.subTotalDebitAmount
-																						}
+																					<Currency value={this.state.initValue
+																								.subTotalDebitAmount} currencySymbol={"AED"} />
 																					</label>
 																				</Col>
 																				<Col xs={4} className="text-right">
 																					<label className="mb-0">
-																						{
+																					<Currency value={
 																							this.state.initValue
 																								.subTotalCreditAmount
-																						}
+																						} currencySymbol={"AED"} />
+																						
 																					</label>
 																				</Col>
 																			</Row>

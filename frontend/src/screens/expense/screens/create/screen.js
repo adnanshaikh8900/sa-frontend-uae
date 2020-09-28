@@ -84,6 +84,7 @@ class CreateExpense extends React.Component {
 		this.regEx = /^[0-9\b]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
+		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 
 		this.file_size = 1024000;
 		this.supported_format = [
@@ -522,7 +523,7 @@ class CreateExpense extends React.Component {
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regEx.test(option.target.value)
+																				this.regDecimal.test(option.target.value)
 																			) {
 																				props.handleChange('expenseAmount')(
 																					option,

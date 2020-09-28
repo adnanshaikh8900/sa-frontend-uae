@@ -94,6 +94,7 @@ class CreateProduct extends React.Component {
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9 ]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
+		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 	}
 
 	componentDidMount = () => {
@@ -352,9 +353,6 @@ class CreateProduct extends React.Component {
 													vatCategoryId: Yup.string()
 														.required('Vat Category is Required')
 														.nullable(),
-													productCode: Yup.string().required(
-															'At least one Selling type is required',
-														),	
 												})}
 											>
 												{(props) => {
@@ -800,7 +798,7 @@ class CreateProduct extends React.Component {
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
-																					this.regEx.test(option.target.value)
+																					this.regDecimal.test(option.target.value)
 																				) {
 																					props.handleChange('salesUnitPrice')(
 																						option,
@@ -984,7 +982,7 @@ class CreateProduct extends React.Component {
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
-																					this.regEx.test(option.target.value)
+																					this.regDecimal.test(option.target.value)
 																				) {
 																					props.handleChange(
 																						'purchaseUnitPrice',

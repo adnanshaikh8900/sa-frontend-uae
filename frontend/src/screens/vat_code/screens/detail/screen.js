@@ -99,6 +99,7 @@ class DetailVatCode extends React.Component {
 					isOpen={true}
 					okHandler={this.removeVat}
 					cancelHandler={this.removeDialog}
+					message="Warning: This Vat Code will be deleted permanently and cannot be recovered. "
 				/>
 			),
 		});

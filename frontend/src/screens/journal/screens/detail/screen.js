@@ -26,7 +26,7 @@ import { CommonActions } from 'services/global';
 import { selectCurrencyFactory } from 'utils';
 import * as JournalActions from '../../actions';
 import * as JournalDetailActions from './actions';
-import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader, ConfirmDeleteModal,Currency} from 'components';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -74,6 +74,7 @@ class DetailJournal extends React.Component {
 		this.formRef = React.createRef();
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
+		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 	}
 
 	componentDidMount = () => {
@@ -369,7 +370,7 @@ class DetailJournal extends React.Component {
 							props.values.postingReferenceType === 'MANUAL' ? false : true
 						}
 						onChange={(e) => {
-							if (e.target.value === '' || this.regEx.test(e.target.value)) {
+							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
 								this.selectItem(e, row, 'debitAmount', form, field);
 							}
 						}}
@@ -412,7 +413,7 @@ class DetailJournal extends React.Component {
 							props.values.postingReferenceType === 'MANUAL' ? false : true
 						}
 						onChange={(e) => {
-							if (e.target.value === '' || this.regEx.test(e.target.value)) {
+							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
 								this.selectItem(e, row, 'creditAmount', form, field);
 							}
 						}}
@@ -1004,19 +1005,19 @@ class DetailJournal extends React.Component {
 																				</Col>
 																				<Col xs={4} className="text-right">
 																					<label className="mb-0">
-																						{' '}
-																						{
+																					<Currency value=	{
 																							this.state.initValue
 																								.subTotalDebitAmount
-																						}{' '}
+																						} currencySymbol={"AED"} />
 																					</label>
 																				</Col>
 																				<Col xs={4} className="text-right">
 																					<label className="mb-0">
-																						{
+																					<Currency value=	{
 																							this.state.initValue
 																								.subTotalCreditAmount
-																						}
+																						} currencySymbol={"AED"} />
+																					
 																					</label>
 																				</Col>
 																			</Row>
@@ -1030,18 +1031,17 @@ class DetailJournal extends React.Component {
 																				</Col>
 																				<Col xs={4} className="text-right">
 																					<label className="mb-0">
-																						{
-																							this.state.initValue
-																								.subTotalDebitAmount
-																						}
+																					<Currency value={this.state.initValue
+																								.subTotalDebitAmount} currencySymbol={"AED"} />
 																					</label>
 																				</Col>
 																				<Col xs={4} className="text-right">
 																					<label className="mb-0">
-																						{
+																					<Currency value={
 																							this.state.initValue
 																								.subTotalCreditAmount
-																						}
+																						} currencySymbol={"AED"} />
+																						
 																					</label>
 																				</Col>
 																			</Row>

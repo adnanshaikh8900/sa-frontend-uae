@@ -118,6 +118,7 @@ class DetailSupplierInvoice extends React.Component {
 			'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 		];
 		this.regEx = /^[0-9\b]+$/;
+		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 	}
 
 	// renderActions  = (cell, row) => {
@@ -331,7 +332,7 @@ class DetailSupplierInvoice extends React.Component {
 							type="text"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regEx.test(e.target.value)) {
+								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
 									this.selectItem(
 										e.target.value,
 										row,
@@ -392,7 +393,7 @@ class DetailSupplierInvoice extends React.Component {
 						type="text"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
-							if (e.target.value === '' || this.regEx.test(e.target.value)) {
+							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
 								this.selectItem(
 									e.target.value,
 									row,
@@ -1799,7 +1800,7 @@ class DetailSupplierInvoice extends React.Component {
 																									if (
 																										option.target.value ===
 																											'' ||
-																										this.regEx.test(
+																										this.regDecimal.test(
 																											option.target.value,
 																										)
 																									) {

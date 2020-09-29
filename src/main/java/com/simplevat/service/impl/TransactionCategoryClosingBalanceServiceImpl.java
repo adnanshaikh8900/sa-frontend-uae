@@ -95,7 +95,7 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
             if(transaction.getBankAccount()!=null)
                 category = transaction.getBankAccount().getTransactionCategory();
             else if(transaction.getExplainedTransactionCategory()!=null)
-                transaction.getExplainedTransactionCategory();
+                category =  transaction.getExplainedTransactionCategory();
             return updateClosingBalance(transaction,category);
         }
         return BigDecimal.ZERO;
@@ -108,7 +108,7 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
             boolean isDebit = transaction.getDebitCreditFlag().equals('D')
                     ? Boolean.TRUE
                     : Boolean.FALSE;
-            BigDecimal transactionAmount = transaction.getTransactionAmount();
+            BigDecimal transactionAmount = transaction.getTransactionAmount()!=null?transaction.getTransactionAmount():BigDecimal.ZERO;
 
             Map<String, Object> param = new HashMap<>();
             param.put("transactionCategory", category);

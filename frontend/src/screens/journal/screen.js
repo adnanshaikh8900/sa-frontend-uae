@@ -15,7 +15,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
 import { CSVLink } from 'react-csv';
 
-import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader, ConfirmDeleteModal,Currency } from 'components';
 
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -31,6 +31,7 @@ import './style.scss';
 const mapStateToProps = (state) => {
 	return {
 		journal_list: state.journal.journal_list,
+		universal_currency_list: state.common.universal_currency_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -253,12 +254,12 @@ class Journal extends React.Component {
 		const temp =
 			rows && rows.journalLineItems
 				? rows.journalLineItems.map((item) => {
-						return item['creditAmount'];
+						return item['creditAmount'];		
 				  })
 				: [];
 		const listItems = temp.map((number, index) => (
 			<li key={index} style={{ listStyleType: 'none', paddingBottom: '5px' }}>
-				{number.toFixed(2)}
+			<Currency value={number.toFixed(2)} currencySymbol={"AED"} />
 			</li>
 		));
 		return <ul style={{ padding: '0', marginBottom: '0px' }}>{listItems}</ul>;
@@ -273,8 +274,8 @@ class Journal extends React.Component {
 				: [];
 		const listItems = temp.map((number, index) => (
 			<li key={index} style={{ listStyleType: 'none', paddingBottom: '5px' }}>
-				{number.toFixed(2)}
-			</li>
+			<Currency value={number.toFixed(2)} currencySymbol={"AED"} />
+			</li> 
 		));
 		return <ul style={{ padding: '0', marginBottom: '0px' }}>{listItems}</ul>;
 	};
@@ -408,7 +409,7 @@ class Journal extends React.Component {
 			csvData,
 			view,
 		} = this.state;
-		const { journal_list } = this.props;
+		const { journal_list,universal_currency_list } = this.props;
 
 		return (
 			<div className="journal-screen">
@@ -586,14 +587,14 @@ class Journal extends React.Component {
 												<TableHeaderColumn
 													dataField="journalReferenceNo"
 													dataSort={true}
-													width="20%"
+													width="18%"
 												>
 													JOURNAL REFERENCE NO
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="postingReferenceTypeDisplayName"
 													dataSort
-													width="15%"
+													width="13%"
 													tdStyle={{ whiteSpace: 'unset' }}
 												>
 													Type
@@ -601,14 +602,14 @@ class Journal extends React.Component {
 												<TableHeaderColumn
 													dataField="description"
 													dataSort
-													width="15%"
+													width="10%"
 												>
 													Notes
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="journalLineItems"
 													dataFormat={this.renderAccount}
-													width="15%"
+													width="20%"
 													dataAlign="left"
 												>
 													Account
@@ -616,6 +617,7 @@ class Journal extends React.Component {
 												<TableHeaderColumn
 													dataField="journalLineItems"
 													dataFormat={this.renderDebitAmount}
+													formatExtraData={universal_currency_list}
 													dataAlign="right"
 													width="13%"
 												>
@@ -626,6 +628,7 @@ class Journal extends React.Component {
 													dataFormat={this.renderCreditAmount}
 													dataAlign="right"
 													width="14%"
+													formatExtraData={universal_currency_list}
 												>
 													CREDIT AMOUNT
 												</TableHeaderColumn>

@@ -83,7 +83,7 @@ public class Product implements Serializable {
 	@ColumnDefault(value = "0")
 	private Boolean vatIncluded = Boolean.FALSE;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "product")
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "product")
 	private List<ProductLineItem> lineItemList;
 
 	@Enumerated(EnumType.STRING)

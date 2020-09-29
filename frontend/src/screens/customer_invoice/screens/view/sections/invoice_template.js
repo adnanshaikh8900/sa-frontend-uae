@@ -3,6 +3,7 @@ import { Card, CardBody, Row, Col, Table } from 'reactstrap';
 import moment from 'moment';
 import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
+import { Currency } from 'components';
 
 class InvoiceTemplate extends Component {
 	constructor(props) {
@@ -143,8 +144,8 @@ class InvoiceTemplate extends Component {
 														}}
 													>
 														{currencyData[0] &&
-															currencyData[0].currencyIsoCode &&
-															`${currencyData[0].currencyIsoCode}`}
+															currencyData[0].currencySymbol &&
+															`${currencyData[0].currencySymbol}`}
 													</span>
 													{invoiceData.dueAmount ? invoiceData.dueAmount : 0.0}
 												</b>
@@ -275,7 +276,7 @@ class InvoiceTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}>
 													{currencyData[0] &&
-														`${currencyData[0].currencyIsoCode}`}
+														`${currencyData[0].currencySymbol}`}
 												</span>
 												<span>{totalNet ? totalNet.toFixed(2) : 0.0}</span>
 											</td>
@@ -297,7 +298,7 @@ class InvoiceTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}>
 													{currencyData[0] &&
-														`${currencyData[0].currencyIsoCode}`}
+														`${currencyData[0].currencySymbol}`}
 												</span>
 												<span>
 													{invoiceData.discount &&
@@ -317,7 +318,7 @@ class InvoiceTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}>
 													{currencyData[0] &&
-														`${currencyData[0].currencyIsoCode}`}
+														`${currencyData[0].currencySymbol}`}
 												</span>
 												<span>
 													{invoiceData.totalVatAmount
@@ -338,7 +339,7 @@ class InvoiceTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}>
 													{currencyData[0] &&
-														`${currencyData[0].currencyIsoCode}`}
+														`${currencyData[0].currencySymbol}`}
 												</span>
 												<span>
 													{invoiceData.totalAmount
@@ -361,7 +362,7 @@ class InvoiceTemplate extends Component {
 												>
 													<span style={{ marginLeft: '2rem' }}>
 														{currencyData[0] &&
-															`${currencyData[0].currencyIsoCode}`}
+															`${currencyData[0].currencySymbol}`}
 													</span>
 													<span>
 														{invoiceData.dueAmount

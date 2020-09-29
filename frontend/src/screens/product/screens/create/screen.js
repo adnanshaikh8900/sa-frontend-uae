@@ -98,10 +98,13 @@ class CreateProduct extends React.Component {
 	}
 
 	componentDidMount = () => {
-		this.props.productActions.getProductVatCategoryList();
-		this.props.productActions.getProductCategoryList();
+		this.initializeData();
 		this.salesCategory();
 		this.purchaseCategory();
+	};
+	initializeData = () => {
+		this.props.productActions.getProductVatCategoryList();
+		this.props.productActions.getProductCategoryList();
 	};
 
 	salesCategory = () => {

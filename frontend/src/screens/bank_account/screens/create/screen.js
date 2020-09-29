@@ -446,6 +446,18 @@ class CreateBankAccount extends React.Component {
 																				? 'is-invalid'
 																				: ''
 																		}`}
+																		popperPlacement="bottom-start"
+																		popperModifiers={{
+																			flip: {
+																				behavior: ['bottom'],
+																			},
+																			preventOverflow: {
+																				enabled: false,
+																			},
+																			hide: {
+																				enabled: false,
+																			},
+																		}}
 																		placeholderText="Opening Date"
 																		selected={props.values.openingDate}
 																		showMonthDropdown

@@ -93,7 +93,8 @@ public class BankAccountController{
 
 	@Autowired
 	private TransactionCategoryService transactionCategoryService;
-
+	@Autowired
+	private ExpenseService expenseService;
 	@Autowired
 	JwtTokenUtil jwtTokenUtil;
 
@@ -340,6 +341,13 @@ public class BankAccountController{
 				{
 					transactionCategoryBalanceService.delete(transactionCategoryBalance);
 				}
+                // Delete Expenses created from Bank
+
+				Map<String,Object> expenseFilterMap = new HashMap<>();
+				expenseFilterMap.put("bankAccount",bankAccount);
+				List<Expense> expenseList = expenseService.findByAttributes(expenseFilterMap);
+                for(Expense expense : expenseList)
+                	expenseService.delete(expense);
 
 				bankAccount.setLastUpdateDate(LocalDateTime.now());
 				bankAccount.setLastUpdatedBy(userId);

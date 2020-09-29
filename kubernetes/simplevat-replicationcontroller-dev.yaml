@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: simplevat
-          image: gcr.io/gtt-k8s/simplevat:0-0-1-rc-13
+          image: gcr.io/gtt-k8s/simplevat:0-0-1-rc-36
           ports:
           - containerPort: 8080
           readinessProbe:

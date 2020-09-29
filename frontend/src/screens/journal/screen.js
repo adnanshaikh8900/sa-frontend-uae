@@ -587,14 +587,14 @@ class Journal extends React.Component {
 												<TableHeaderColumn
 													dataField="journalReferenceNo"
 													dataSort={true}
-													width="20%"
+													width="18%"
 												>
 													JOURNAL REFERENCE NO
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="postingReferenceTypeDisplayName"
 													dataSort
-													width="15%"
+													width="13%"
 													tdStyle={{ whiteSpace: 'unset' }}
 												>
 													Type
@@ -602,14 +602,14 @@ class Journal extends React.Component {
 												<TableHeaderColumn
 													dataField="description"
 													dataSort
-													width="15%"
+													width="10%"
 												>
 													Notes
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="journalLineItems"
 													dataFormat={this.renderAccount}
-													width="15%"
+													width="20%"
 													dataAlign="left"
 												>
 													Account

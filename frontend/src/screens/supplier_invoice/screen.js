@@ -288,7 +288,7 @@ class SupplierInvoice extends React.Component {
 									this.postInvoice(row);
 								}}
 							>
-								<i className="fas fa-send" /> Send
+								<i className="fas fa-send" /> Post
 							</DropdownItem>
 						)}
 						{/* <DropdownItem  onClick={() => {this.openInvoicePreviewModal(row.id)}}>
@@ -325,7 +325,7 @@ class SupplierInvoice extends React.Component {
 								<i className="fas fa-university" /> Record Payment
 							</DropdownItem>
 						)} */}
-						{row.statusEnum !== 'Paid' && (
+						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
 							<DropdownItem
 								onClick={() => {
 									this.closeInvoice(row.id, row.status);
@@ -1039,21 +1039,21 @@ class SupplierInvoice extends React.Component {
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}
-												dataField="totalAmount"
-												dataSort
-												dataFormat={this.renderInvoiceAmount}
-												formatExtraData={universal_currency_list}
-											>
-												Invoice Amount
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
 												dataField="totalVatAmount"
 												dataSort
 												dataFormat={this.renderVatAmount}
 												formatExtraData={universal_currency_list}
 											>
 												VAT Amount
+											</TableHeaderColumn>
+											<TableHeaderColumn
+												thStyle={{ whiteSpace: 'normal' }}
+												dataField="totalAmount"
+												dataSort
+												dataFormat={this.renderInvoiceAmount}
+												formatExtraData={universal_currency_list}
+											>
+												Invoice Amount
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}

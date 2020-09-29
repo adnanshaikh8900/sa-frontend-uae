@@ -360,7 +360,7 @@ class CustomerInvoice extends React.Component {
 									this.postInvoice(row);
 								}}
 							>
-								<i className="fas fa-send" /> Send
+								<i className="fas fa-send" /> Post
 							</DropdownItem>
 						)}
 						{/* <DropdownItem onClick={() => { this.openInvoicePreviewModal(row.id) }}>
@@ -396,7 +396,7 @@ class CustomerInvoice extends React.Component {
 								<i className="fas fa-university" /> Record Payment
 							</DropdownItem>
 						)} */}
-						{row.statusEnum !== 'Paid' && (
+						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
 							<DropdownItem
 								onClick={() => {
 									this.closeInvoice(row.id, row.status);

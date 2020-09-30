@@ -66,7 +66,9 @@ public class TransactionCategoryBalanceRestHelper {
 				if(balance.getTransactionCategory().getTransactionCategoryCode()
 						.equalsIgnoreCase(TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_ASSETS.getCode())
 				||balance.getTransactionCategory().getTransactionCategoryCode()
-						.equalsIgnoreCase(TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode()))
+						.equalsIgnoreCase(TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode())
+						||balance.getTransactionCategory().getTransactionCategoryCode()
+						.equalsIgnoreCase(TransactionCategoryCodeEnum.BANK.getCode()))
 					continue;
 				TransactionCategoryBalanceListModel model = new TransactionCategoryBalanceListModel();
 				model.setTransactionCategoryId(balance.getTransactionCategory().getTransactionCategoryId());

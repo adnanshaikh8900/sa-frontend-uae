@@ -39,4 +39,7 @@ public abstract class TransactionCategoryService extends SimpleVatService<Intege
 	public abstract List<TransactionCategory> getTransactionCatByChartOfAccountCategoryId(Integer chartOfAccountCategoryId);
 	
 	public abstract List<TransactionCategory> getListForReceipt();
+
+	public abstract List<TransactionCategory> getTransactionCategoryListForSalesProduct( );
+    public abstract List<TransactionCategory> getTransactionCategoryListForPurchaseProduct();
 }

@@ -146,4 +146,12 @@ public class TransactionCategoryServiceImpl extends TransactionCategoryService {
 	public List<TransactionCategory> getListForReceipt() {
 		return dao.findTnxCatForReicpt();
 	}
+	@Override
+	public List<TransactionCategory> getTransactionCategoryListForSalesProduct(){
+		return dao.getTransactionCategoryListForSalesProduct();
+	}
+	@Override
+	public List<TransactionCategory> getTransactionCategoryListForPurchaseProduct(){
+		return dao.getTransactionCategoryListForPurchaseProduct();
+	}
 }

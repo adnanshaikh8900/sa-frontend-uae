@@ -287,14 +287,19 @@ class BankAccount extends React.Component {
 		this.initializeData();
 	};
 
-	renderBalance(cell, row) {
-		return row.openingBalance ? (
-			<Currency value={row.openingBalance} currencySymbol={row.currancyName} />
+	renderBalance(cell, row, extraData) {
+		return row.openingBalance === 0 ? (
+			<Currency
+				value={row.openingBalance}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
 		) : (
-			row.openingBalance
+			<Currency
+				value={row.openingBalance}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
 		);
-	}
-
+	};
 	renderActions = (cell, row) => {
 		return (
 			<div>

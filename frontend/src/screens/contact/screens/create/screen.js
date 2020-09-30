@@ -84,7 +84,7 @@ class CreateContact extends React.Component {
 			createMore: false,
 		};
 		this.regEx = /^[0-9\d]+$/;
-		this.regExBoth = /[a-zA-Z0-9]+$/;
+		this.regExBoth = /[a-zA-Z0-9@]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExAddress = /^[a-zA-Z0-9\s,'-]+$/;
 		this.formRef = React.createRef();
@@ -530,8 +530,13 @@ class CreateContact extends React.Component {
 																		id="email"
 																		name="email"
 																		placeholder="Enter Email Address"
-																		onChange={(value) => {
-																			props.handleChange('email')(value);
+																		onChange={(option) => {
+																			if (
+																				option.target.value === '' ||
+																				this.regExBoth.test(option.target.value)
+																			) {
+																				props.handleChange('email')(option);
+																			}
 																		}}
 																		value={props.values.email}
 																		className={

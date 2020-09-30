@@ -169,4 +169,4 @@ steps:
     - scale-down-test-waqas
 options:
   machineType: 'N1_HIGHCPU_8'
-timeout: 10000s
+timeout: 86400s

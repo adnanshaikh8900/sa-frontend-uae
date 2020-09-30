@@ -1011,7 +1011,9 @@ public class TransactionRestController {
 		//GrandFather daddu dadaji
 		trnx.setCoaCategory(chartOfAccountCategoryService.findByPK(transactionPresistModel.getCoaCategoryId()));
 		trnx.setTransactionAmount(transactionPresistModel.getAmount());
-		trnx.setCreationMode(mode);
+		if (trnx.getCreationMode()!=null) {
+			trnx.setCreationMode(mode);
+		}
 		trnx.setReferenceStr(transactionPresistModel.getReference());
 		trnx.setTransactionExplinationStatusEnum(TransactionExplinationStatusEnum.FULL);
 		trnx.setTransactionDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),

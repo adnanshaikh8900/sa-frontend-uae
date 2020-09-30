@@ -37,4 +37,8 @@ public interface TransactionCategoryDao extends Dao<Integer, TransactionCategory
 	public List<TransactionCategory> getTransactionCatByChartOfAccountCategoryId(Integer chartOfAccountCategoryId);
 
 	public List<TransactionCategory> findTnxCatForReicpt();
+
+	public List<TransactionCategory> getTransactionCategoryListForSalesProduct();
+
+    public List<TransactionCategory> getTransactionCategoryListForPurchaseProduct();
 }

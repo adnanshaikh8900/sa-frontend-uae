@@ -3,7 +3,7 @@ import { Card, CardBody, Row, Col, Table } from 'reactstrap';
 import moment from 'moment';
 import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
-
+import { Currency } from 'components';
 class InvoiceTemplate extends Component {
 	constructor(props) {
 		super(props);
@@ -121,20 +121,27 @@ class InvoiceTemplate extends Component {
 												<b
 													style={{
 														fontWeight: '600',
-														unicodeBidi: 'bidi-override',
 													}}
 												>
-													<span
-														style={{
-															unicodeBidi: 'embed',
-															paddingRight: '5px',
-														}}
-													>
-														{currencyData[0] &&
-															currencyData[0].currencyIsoCode &&
-															`${currencyData[0].currencyIsoCode}`}
-													</span>
-													{invoiceData.dueAmount ? invoiceData.dueAmount : 0.0}
+													{invoiceData.dueAmount ? (
+														<Currency
+															value={invoiceData.dueAmount}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															}
+														/>
+													) : (
+														<Currency
+															value={0}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															}
+														/>
+													)}
 												</b>
 											</td>
 										</tr>
@@ -235,12 +242,28 @@ class InvoiceTemplate extends Component {
 												<td>{item.description}</td>
 												<td>{item.quantity}</td>
 												<td style={{ textAlign: 'right', width: '20%' }}>
-													{item.unitPrice}
+													<Currency
+														value={item.unitPrice}
+														currencySymbol={
+															currencyData[0]
+																? currencyData[0].currencyIsoCode
+																: 'USD'
+														}
+													/>
 												</td>
 												<td
 													style={{ textAlign: 'right' }}
 												>{`${item.vatPercentage}%`}</td>
-												<td style={{ textAlign: 'right' }}>{item.subTotal}</td>
+												<td style={{ textAlign: 'right' }}>
+													<Currency
+														value={item.subTotal}
+														currencySymbol={
+															currencyData[0]
+																? currencyData[0].currencyIsoCode
+																: 'USD'
+														}
+													/>
+												</td>
 											</tr>
 										);
 									})}
@@ -261,16 +284,51 @@ class InvoiceTemplate extends Component {
 													justifyContent: 'space-between',
 												}}
 											>
-												<span style={{ marginLeft: '2rem' }}>
-													{currencyData[0] &&
-														`${currencyData[0].currencyIsoCode}`}
-												</span>
+												<span style={{ marginLeft: '2rem' }}></span>
 												{invoiceData.discount ? (
 													<span>
-														{totalNet ? totalNet - invoiceData.discount : 0.0}{' '}
+														{totalNet ? (
+															<Currency
+																value={totalNet - invoiceData.discount}
+																currencySymbol={
+																	currencyData[0]
+																		? currencyData[0].currencyIsoCode
+																		: 'USD'
+																}
+															/>
+														) : (
+															<Currency
+																value={0}
+																currencySymbol={
+																	currencyData[0]
+																		? currencyData[0].currencyIsoCode
+																		: 'USD'
+																}
+															/>
+														)}
 													</span>
 												) : (
-													<span>{totalNet ? totalNet : 0.0} </span>
+													<span>
+														{totalNet ? (
+															<Currency
+																value={totalNet}
+																currencySymbol={
+																	currencyData[0]
+																		? currencyData[0].currencyIsoCode
+																		: 'USD'
+																}
+															/>
+														) : (
+															<Currency
+																value={0}
+																currencySymbol={
+																	currencyData[0]
+																		? currencyData[0].currencyIsoCode
+																		: 'USD'
+																}
+															/>
+														)}
+													</span>
 												)}
 											</td>
 										</tr>
@@ -289,13 +347,27 @@ class InvoiceTemplate extends Component {
 													justifyContent: 'space-between',
 												}}
 											>
-												<span style={{ marginLeft: '2rem' }}>
-													{currencyData[0] &&
-														`${currencyData[0].currencyIsoCode}`}
-												</span>
+												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{invoiceData.discount &&
-														invoiceData.discount.toFixed(2)}
+													{invoiceData.discount ? (
+														<Currency
+															value={invoiceData.discount.toFixed(2)}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															}
+														/>
+													) : (
+														<Currency
+															value={0}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															}
+														/>
+													)}
 												</span>
 											</td>
 										</tr>
@@ -309,14 +381,27 @@ class InvoiceTemplate extends Component {
 													justifyContent: 'space-between',
 												}}
 											>
-												<span style={{ marginLeft: '2rem' }}>
-													{currencyData[0] &&
-														`${currencyData[0].currencyIsoCode}`}
-												</span>
+												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{invoiceData.totalVatAmount
-														? invoiceData.totalVatAmount.toFixed(2)
-														: 0.0}
+													{invoiceData.totalVatAmount ? (
+														<Currency
+															value={invoiceData.totalVatAmount.toFixed(2)}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															}
+														/>
+													) : (
+														<Currency
+															value={0}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															}
+														/>
+													)}
 												</span>
 											</td>
 										</tr>
@@ -330,14 +415,27 @@ class InvoiceTemplate extends Component {
 													justifyContent: 'space-between',
 												}}
 											>
-												<span style={{ marginLeft: '2rem' }}>
-													{currencyData[0] &&
-														`${currencyData[0].currencyIsoCode}`}
-												</span>
+												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{invoiceData.totalAmount
-														? invoiceData.totalAmount.toFixed(2)
-														: 0.0}
+													{invoiceData.totalAmount ? (
+														<Currency
+															value={invoiceData.totalAmount.toFixed(2)}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															}
+														/>
+													) : (
+														<Currency
+															value={0}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															}
+														/>
+													)}
 												</span>
 											</td>
 										</tr>
@@ -353,14 +451,27 @@ class InvoiceTemplate extends Component {
 														justifyContent: 'space-between',
 													}}
 												>
-													<span style={{ marginLeft: '2rem' }}>
-														{currencyData[0] &&
-															`${currencyData[0].currencyIsoCode}`}
-													</span>
+													<span style={{ marginLeft: '2rem' }}></span>
 													<span>
-														{invoiceData.dueAmount
-															? invoiceData.dueAmount.toFixed(2)
-															: 0.0}
+														{invoiceData.dueAmount ? (
+															<Currency
+																value={invoiceData.dueAmount.toFixed(2)}
+																currencySymbol={
+																	currencyData[0]
+																		? currencyData[0].currencyIsoCode
+																		: 'USD'
+																}
+															/>
+														) : (
+															<Currency
+																value={0}
+																currencySymbol={
+																	currencyData[0]
+																		? currencyData[0].currencyIsoCode
+																		: 'USD'
+																}
+															/>
+														)}
 													</span>
 												</b>
 											</td>

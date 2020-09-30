@@ -296,6 +296,20 @@ class Product extends React.Component {
 		);
 	};
 
+	unitPrice(cell, row, extraData) {
+		return row.unitPrice === 0 ? (
+			<Currency
+				value={row.unitPrice}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			<Currency
+				value={row.unitPrice}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		);
+	}
+
 	render() {
 		const {
 			loading,
@@ -497,7 +511,7 @@ class Product extends React.Component {
 												<TableHeaderColumn
 													dataField="unitPrice"
 													dataSort
-													// dataFormat={this.vatCategoryFormatter}
+													dataFormat={this.unitPrice}
 													formatExtraData={universal_currency_list}
 												>
 													Unit Price

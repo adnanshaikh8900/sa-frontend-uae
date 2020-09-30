@@ -646,6 +646,8 @@ class ExplainTrasactionDetail extends React.Component {
 														this.handleSubmit(values, resetForm);
 													}}
 													validate={(values) => {
+														console.log(values.coaCategoryId);
+														console.log(values.transactionCategoryId);
 														let errors = {};
 														if (
 															(values.coaCategoryId.label ===
@@ -654,6 +656,16 @@ class ExplainTrasactionDetail extends React.Component {
 															!values.invoiceIdList
 														) {
 															errors.invoiceIdList = 'Invoice is  required';
+														}
+														if (
+															(values.coaCategoryId.label !==
+																'Supplier Invoice' ||
+																values.coaCategoryId.label !== 'Sales' ||
+																values.coaCategoryId.label !== 'Expense') &&
+															!values.transactionCategoryId
+														) {
+															errors.transactionCategoryId =
+																'Transaction Category is Required';
 														}
 														return errors;
 													}}
@@ -1367,6 +1379,7 @@ class ExplainTrasactionDetail extends React.Component {
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="transactionCategoryId">
+																					<span className="text-danger">*</span>
 																					Category
 																				</Label>
 																				<Select
@@ -1382,7 +1395,6 @@ class ExplainTrasactionDetail extends React.Component {
 																								'transactionCategoryId',
 																							)(option.value);
 																						} else {
-																							console.log('sss');
 																							props.handleChange(
 																								'transactionCategoryId',
 																							)('');
@@ -1419,6 +1431,16 @@ class ExplainTrasactionDetail extends React.Component {
 																							: ''
 																					}
 																				/>
+																				{props.errors.transactionCategoryId &&
+																					props.touched
+																						.transactionCategoryId && (
+																						<div className="invalid-feedback">
+																							{
+																								props.errors
+																									.transactionCategoryId
+																							}
+																						</div>
+																					)}
 																			</FormGroup>
 																		</Col>
 																	)}

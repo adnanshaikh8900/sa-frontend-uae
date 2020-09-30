@@ -528,6 +528,13 @@ class CreateBankTransaction extends React.Component {
 														errors.transactionDate =
 															'Transaction Date Cannot be less than Bank opening date or Last Reconciled Date';
 													}
+													if (
+														values.coaCategoryId !== 10 &&
+														!values.transactionCategoryId
+													) {
+														errors.transactionCategoryId =
+															'Transaction Category is Required';
+													}
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({
@@ -1002,6 +1009,7 @@ class CreateBankTransaction extends React.Component {
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="transactionCategoryId">
+																				<span className="text-danger">*</span>
 																				Category
 																			</Label>
 																			<Select
@@ -1029,7 +1037,19 @@ class CreateBankTransaction extends React.Component {
 																						)('');
 																					}
 																				}}
+																				className={
+																					props.errors.transactionCategoryId &&
+																					props.touched.transactionCategoryId
+																						? 'is-invalid'
+																						: ''
+																				}
 																			/>
+																			{props.errors.transactionCategoryId &&
+																				props.touched.transactionCategoryId && (
+																					<div className="invalid-feedback">
+																						{props.errors.transactionCategoryId}
+																					</div>
+																				)}
 																		</FormGroup>
 																	</Col>
 																</Row>

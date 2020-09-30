@@ -287,11 +287,17 @@ class BankAccount extends React.Component {
 		this.initializeData();
 	};
 
-	renderBalance(cell, row) {
-		return row.openingBalance ? (
-			<Currency value={row.openingBalance} currencySymbol={row.currancyName} />
+	renderBalance(cell, row, extraData) {
+		return row.openingBalance === 0 ? (
+			<Currency
+				value={row.openingBalance}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
 		) : (
-			row.openingBalance
+			<Currency
+				value={row.openingBalance}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
 		);
 	}
 
@@ -575,7 +581,12 @@ class BankAccount extends React.Component {
 
 	render() {
 		const { loading, filterData, dialog, csvData, view } = this.state;
-		const { account_type_list, currency_list,universal_currency_list, bank_account_list } = this.props;
+		const {
+			account_type_list,
+			currency_list,
+			universal_currency_list,
+			bank_account_list,
+		} = this.props;
 
 		return (
 			<div className="bank-account-screen">

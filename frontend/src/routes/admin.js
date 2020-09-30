@@ -333,7 +333,7 @@ const adminRoutes = [
 	{
 		redirect: true,
 		path: '/admin/report',
-		pathTo: '/admin/report/transactions',
+		pathTo: '/admin/report/financial',
 		name: 'Report',
 	},
 

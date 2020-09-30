@@ -440,6 +440,9 @@ class DetailProduct extends React.Component {
 														productPriceType: Yup.string().required(
 															'At least one Selling type is required',
 														),
+														productCode: Yup.string().required(
+															'Product code is required',
+														),
 														vatCategoryId: Yup.string()
 															.required('Vat Category is Required')
 															.nullable(),
@@ -545,6 +548,7 @@ class DetailProduct extends React.Component {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="productCode">
+																			<span className="text-danger">*</span>
 																			Product Code
 																		</Label>
 																		<Input
@@ -565,7 +569,19 @@ class DetailProduct extends React.Component {
 																					);
 																				}
 																			}}
+																			className={
+																				props.errors.productCode &&
+																				props.touched.productCode
+																					? 'is-invalid'
+																					: ''
+																			}
 																		/>
+																		{props.errors.productCode &&
+																			props.touched.productCode && (
+																				<div className="invalid-feedback">
+																					{props.errors.productCode}
+																				</div>
+																			)}
 																	</FormGroup>
 																</Col>
 															</Row>

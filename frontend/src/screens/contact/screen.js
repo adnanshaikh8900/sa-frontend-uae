@@ -267,7 +267,16 @@ class Contact extends React.Component {
 			};
 			this.props.contactActions.getContactList(obj).then((res) => {
 				if (res.status === 200) {
-					this.setState({ csvData: res.data.data, view: true }, () => {
+					var result = res.data.data.map((o) => ({
+						'First Name': o.firstName,
+						'Last Name': o.lastName,
+						Email: o.email,
+						'Mobile Number': o.mobileNumber,
+						Currency: o.currencySymbol,
+						Type: o.contactTypeString,
+					}));
+
+					this.setState({ csvData: result, view: true }, () => {
 						setTimeout(() => {
 							this.csvLink.current.link.click();
 						}, 0);
@@ -358,6 +367,7 @@ class Contact extends React.Component {
 														filename={'Contact.csv'}
 														className="hidden"
 														ref={this.csvLink}
+														enclosingCharacter={`'`}
 														target="_blank"
 													/>
 												)}

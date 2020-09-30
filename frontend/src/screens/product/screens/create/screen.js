@@ -300,8 +300,7 @@ class CreateProduct extends React.Component {
 												validate={(values) => {
 													let errors = {};
 													if (!values.productName) {
-														errors.productName =
-															'Product  Name is  required';
+														errors.productName = 'Product  Name is  required';
 													}
 													if (this.state.exist === true) {
 														errors.productName =
@@ -352,6 +351,9 @@ class CreateProduct extends React.Component {
 													),
 													productPriceType: Yup.string().required(
 														'At least one Selling type is required',
+													),
+													productCode: Yup.string().required(
+														'Product code is required',
 													),
 													vatCategoryId: Yup.string()
 														.required('Vat Category is Required')
@@ -464,7 +466,8 @@ class CreateProduct extends React.Component {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="productCode">
-																		<span className="text-danger">*</span>Product Code
+																			<span className="text-danger">*</span>
+																			Product Code
 																			<i
 																				id="ProductCodeTooltip"
 																				className="fa fa-question-circle ml-1"
@@ -496,7 +499,19 @@ class CreateProduct extends React.Component {
 																				}
 																			}}
 																			value={props.values.productCode}
+																			className={
+																				props.errors.productCode &&
+																				props.touched.productCode
+																					? 'is-invalid'
+																					: ''
+																			}
 																		/>
+																		{props.errors.productCode &&
+																			props.touched.productCode && (
+																				<div className="invalid-feedback">
+																					{props.errors.productCode}
+																				</div>
+																			)}
 																	</FormGroup>
 																</Col>
 															</Row>
@@ -801,7 +816,9 @@ class CreateProduct extends React.Component {
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
-																					this.regDecimal.test(option.target.value)
+																					this.regDecimal.test(
+																						option.target.value,
+																					)
 																				) {
 																					props.handleChange('salesUnitPrice')(
 																						option,
@@ -985,7 +1002,9 @@ class CreateProduct extends React.Component {
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
-																					this.regDecimal.test(option.target.value)
+																					this.regDecimal.test(
+																						option.target.value,
+																					)
 																				) {
 																					props.handleChange(
 																						'purchaseUnitPrice',

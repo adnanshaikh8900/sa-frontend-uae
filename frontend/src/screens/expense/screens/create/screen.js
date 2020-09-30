@@ -40,6 +40,7 @@ const mapStateToProps = (state) => {
 		bank_list: state.expense.bank_list,
 		pay_mode_list: state.expense.pay_mode_list,
 		user_list: state.expense.user_list,
+		profile: state.auth.profile,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -58,6 +59,7 @@ class CreateExpense extends React.Component {
 			createMore: false,
 			disabled: false,
 			initValue: {
+				payee: this.props.profile.userId,
 				payee: '',
 				expenseDate: '',
 				currency: '',
@@ -229,8 +231,7 @@ class CreateExpense extends React.Component {
 			currency_list,
 			expense_categories_list,
 			vat_list,
-			bank_list,
-			pay_mode_list,
+			profile,
 			user_list,
 		} = this.props;
 		const customStyles = {
@@ -395,7 +396,22 @@ class CreateExpense extends React.Component {
 																				  )
 																				: []
 																		}
-																		value={props.values.payee}
+																		value={
+																			user_list &&
+																			profile &&
+																			selectOptionsFactory
+																				.renderOptions(
+																					'label',
+																					'value',
+																					user_list,
+																					'Payee',
+																				)
+																				.find((option) =>
+																					option.value === props.values.payee
+																						? +props.values.payee
+																						: +profile.userId,
+																				)
+																		}
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				props.handleChange('payee')(option);
@@ -523,7 +539,9 @@ class CreateExpense extends React.Component {
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regDecimal.test(option.target.value)
+																				this.regDecimal.test(
+																					option.target.value,
+																				)
 																			) {
 																				props.handleChange('expenseAmount')(
 																					option,

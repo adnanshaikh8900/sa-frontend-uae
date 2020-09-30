@@ -173,7 +173,7 @@ class DetailBankAccount extends React.Component {
 			ifscCode: data.ifsc_code,
 			swiftCode: data.swift_code,
 			openingBalance: data.opening_balance,
-			openingDate: data.openingDate,
+			//openingDate: data.openingDate,
 			bankCountry: data.country,
 			bankAccountType: data.account_type,
 		};

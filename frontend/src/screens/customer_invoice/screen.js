@@ -547,7 +547,7 @@ class CustomerInvoice extends React.Component {
 
 	closeInvoice = (id, status) => {
 		const message =
-			'Warning: This Customer nvoice will be deleted permanently and cannot be recovered.  ';
+			'Warning: This Customer Invoice will be deleted permanently and cannot be recovered.  ';
 		if (status === 'Paid') {
 			this.props.commonActions.tostifyAlert(
 				'error',
@@ -715,7 +715,7 @@ class CustomerInvoice extends React.Component {
 																	currencySymbol={
 																		universal_currency_list[0]
 																			? universal_currency_list[0]
-																					.currencyIsoCode
+																					.currencyIsoCode 
 																			: 'USD'
 																	}
 																/>

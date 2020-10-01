@@ -178,4 +178,8 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 	public List<TransactionCategory> getTransactionCategoryListForPurchaseProduct(){
 		return getEntityManager().createNamedQuery("getTransactionCategoryListForPurchaseProduct").getResultList();
 	}
+    @Override
+	public List<TransactionCategory> getTransactionCategoryListManualJornal(){
+		return getEntityManager().createNamedQuery("getTransactionCategoryListManualJornal").getResultList();
+	}
 }

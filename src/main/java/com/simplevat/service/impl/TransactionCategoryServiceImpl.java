@@ -154,4 +154,8 @@ public class TransactionCategoryServiceImpl extends TransactionCategoryService {
 	public List<TransactionCategory> getTransactionCategoryListForPurchaseProduct(){
 		return dao.getTransactionCategoryListForPurchaseProduct();
 	}
+	@Override
+	public List<TransactionCategory> getTransactionCategoryListManualJornal(){
+		return dao.getTransactionCategoryListManualJornal();
+	}
 }

@@ -36,7 +36,8 @@ import lombok.Data;
 		@NamedQuery(name = "findMaxTnxCodeByChartOfAccId", query = "SELECT t FROM TransactionCategory t where chartOfAccount =:chartOfAccountId ORDER BY transactionCategoryId  DESC"),
 		@NamedQuery(name = "findTnxCatForReicpt", query = "SELECT t FROM TransactionCategory t WHERE t.transactionCategoryCode in  ('01-04-006') or t.chartOfAccount.chartOfAccountId =8 or t.parentTransactionCategory.transactionCategoryId = 46  and t.deleteFlag=false "),
 		@NamedQuery(name = "getTransactionCategoryListForPurchaseProduct", query = "SELECT t FROM TransactionCategory t WHERE t.chartOfAccount.chartOfAccountId in ('12','16','17','18') AND t.transactionCategoryId not in ('18','99','101','103')"),
-		@NamedQuery(name = "getTransactionCategoryListForSalesProduct", query = "SELECT t FROM TransactionCategory t WHERE t.chartOfAccount.chartOfAccountId in ('15') AND t.transactionCategoryId in ('80','84')")
+		@NamedQuery(name = "getTransactionCategoryListForSalesProduct", query = "SELECT t FROM TransactionCategory t WHERE t.chartOfAccount.chartOfAccountId in ('15') AND t.transactionCategoryId in ('80','84')"),
+		@NamedQuery(name = "getTransactionCategoryListManualJornal", query = "SELECT t FROM TransactionCategory t WHERE t.chartOfAccount.chartOfAccountId not in ('7')")
 
 })
 

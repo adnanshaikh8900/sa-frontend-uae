@@ -362,6 +362,10 @@ class BankTransactions extends React.Component {
 		if (this.state.csvData.length === 0) {
 			let obj = {
 				paginationDisable: true,
+				id: this.props.location.state
+					? this.props.location.state.bankAccountId
+					: '',
+				transactionType: this.state.transactionType,
 			};
 			this.props.transactionsActions.getTransactionList(obj).then((res) => {
 				if (res.status === 200) {

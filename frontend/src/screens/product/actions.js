@@ -157,12 +157,31 @@ export const removeBulk = (obj) => {
 	};
 };
 
-export const getTransactionCategoryListForExplain = (id) => {
+export const getTransactionCategoryListForSalesProduct = (id) => {
 	console.log(id);
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: `/rest/reconsile/getTransactionCat?chartOfAccountCategoryId=${id}`,
+			url: `/rest/product/getTransactionCategoryListForSalesProduct`,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const getTransactionCategoryListForPurchaseProduct = (id) => {
+	console.log(id);
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: `/rest/product/getTransactionCategoryListForPurchaseProduct`,
 		};
 		return authApi(data)
 			.then((res) => {

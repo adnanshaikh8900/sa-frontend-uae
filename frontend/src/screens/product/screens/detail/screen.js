@@ -157,7 +157,7 @@ class DetailProduct extends React.Component {
 	salesCategory = () => {
 		try {
 			this.props.productActions
-				.getTransactionCategoryListForExplain('2')
+				.getTransactionCategoryListForSalesProduct('2')
 				.then((res) => {
 					if (res.status === 200) {
 						this.setState(
@@ -177,7 +177,7 @@ class DetailProduct extends React.Component {
 	purchaseCategory = () => {
 		try {
 			this.props.productActions
-				.getTransactionCategoryListForExplain('10')
+				.getTransactionCategoryListForPurchaseProduct('10')
 				.then((res) => {
 					if (res.status === 200) {
 						this.setState(
@@ -841,15 +841,13 @@ class DetailProduct extends React.Component {
 																					: true
 																			}
 																			options={
-																				salesCategory
-																					? salesCategory.categoriesList
-																					: []
+																				salesCategory ? salesCategory : []
 																			}
 																			value={
 																				salesCategory &&
 																				props.values
 																					.salesTransactionCategoryLabel
-																					? salesCategory.categoriesList
+																					? salesCategory
 																							.find(
 																								(item) =>
 																									item.label ===
@@ -1035,15 +1033,13 @@ class DetailProduct extends React.Component {
 																					: true
 																			}
 																			options={
-																				purchaseCategory
-																					? purchaseCategory.categoriesList
-																					: []
+																				purchaseCategory ? purchaseCategory : []
 																			}
 																			value={
 																				purchaseCategory &&
 																				props.values
 																					.purchaseTransactionCategoryLabel
-																					? purchaseCategory.categoriesList
+																					? purchaseCategory
 																							.find(
 																								(item) =>
 																									item.label ===

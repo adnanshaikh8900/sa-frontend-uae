@@ -184,10 +184,6 @@ class CashFlowStatement extends React.Component {
 	render() {
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
 		const { profile, universal_currency_list } = this.props;
-		console.log(this.state.data['expense']);
-		console.log(
-			this.state.data['transactionCategoryMapper']['Accommodation and Meals'],
-		);
 		return (
 			<div className="transactions-report-screen">
 				<div className="animated fadeIn">

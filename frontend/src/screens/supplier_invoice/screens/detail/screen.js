@@ -241,18 +241,20 @@ class DetailSupplierInvoice extends React.Component {
 
 	purchaseCategory = () => {
 		try {
-			this.props.ProductActions.getTransactionCategoryListForExplain('10').then(
-				(res) => {
-					if (res.status === 200) {
-						this.setState(
-							{
-								purchaseCategory: res.data,
-							},
-							() => {},
-						);
-					}
-				},
-			);
+			this.props.ProductActions.getTransactionCategoryListForPurchaseProduct(
+				'10',
+			).then((res) => {
+				if (res.status === 200) {
+					this.setState(
+						{
+							purchaseCategory: res.data,
+						},
+						() => {
+							console.log(this.state.purchaseCategory);
+						},
+					);
+				}
+			});
 		} catch (err) {
 			console.log(err);
 		}
@@ -332,7 +334,10 @@ class DetailSupplierInvoice extends React.Component {
 							type="text"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+								if (
+									e.target.value === '' ||
+									this.regDecimal.test(e.target.value)
+								) {
 									this.selectItem(
 										e.target.value,
 										row,
@@ -393,7 +398,10 @@ class DetailSupplierInvoice extends React.Component {
 						type="text"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
-							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+							if (
+								e.target.value === '' ||
+								this.regDecimal.test(e.target.value)
+							) {
 								this.selectItem(
 									e.target.value,
 									row,
@@ -672,7 +680,7 @@ class DetailSupplierInvoice extends React.Component {
 						styles={{
 							menu: (provided) => ({ ...provided, zIndex: 9999 }),
 						}}
-						options={purchaseCategory ? purchaseCategory.categoriesList : []}
+						options={purchaseCategory ? purchaseCategory : []}
 						id="transactionCategoryId"
 						onChange={(e) => {
 							this.selectItem(
@@ -685,10 +693,8 @@ class DetailSupplierInvoice extends React.Component {
 							);
 						}}
 						value={
-							purchaseCategory &&
-							purchaseCategory.categoriesList &&
-							row.transactionCategoryLabel
-								? purchaseCategory.categoriesList
+							purchaseCategory.length > 0 && row.transactionCategoryLabel
+								? purchaseCategory
 										.find((item) => item.label === row.transactionCategoryLabel)
 										.options.find(
 											(item) => item.value === +row.transactionCategoryId,
@@ -1610,6 +1616,7 @@ class DetailSupplierInvoice extends React.Component {
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="account"
+																			width="300"
 																			dataFormat={(cell, rows) =>
 																				this.renderAccount(cell, rows, props)
 																			}
@@ -1630,6 +1637,7 @@ class DetailSupplierInvoice extends React.Component {
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="quantity"
+																			width="100"
 																			dataFormat={(cell, rows) =>
 																				this.renderQuantity(cell, rows, props)
 																			}

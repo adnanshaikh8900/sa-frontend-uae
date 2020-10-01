@@ -15,6 +15,7 @@ public class JournalModel implements Serializable{
     private Integer journalId;
     private String description;
     private Date journalDate;
+    private String journalTransactionCategoryLabel;
     private String journalReferenceNo;
     private BigDecimal subTotalDebitAmount;
     private BigDecimal subTotalCreditAmount;

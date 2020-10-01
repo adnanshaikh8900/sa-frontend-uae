@@ -240,7 +240,10 @@ class CreateCustomerInvoice extends React.Component {
 							type="text"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+								if (
+									e.target.value === '' ||
+									this.regDecimal.test(e.target.value)
+								) {
 									this.selectItem(
 										e.target.value,
 										row,
@@ -299,7 +302,10 @@ class CreateCustomerInvoice extends React.Component {
 						maxLength="10"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
-							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+							if (
+								e.target.value === '' ||
+								this.regDecimal.test(e.target.value)
+							) {
 								this.selectItem(
 									e.target.value,
 									row,
@@ -329,7 +335,11 @@ class CreateCustomerInvoice extends React.Component {
 	};
 
 	renderSubTotal = (cell, row) => {
-		return <label className="mb-0"><Currency value={row.subTotal} currencySymbol={"AED"}/></label>;
+		return (
+			<label className="mb-0">
+				<Currency value={row.subTotal} currencySymbol={'AED'} />
+			</label>
+		);
 	};
 	setDate = (props, value) => {
 		const { term } = this.state;
@@ -404,7 +414,7 @@ class CreateCustomerInvoice extends React.Component {
 	salesCategory = () => {
 		try {
 			this.props.productActions
-				.getTransactionCategoryListForExplain('2')
+				.getTransactionCategoryListForSalesProduct('2')
 				.then((res) => {
 					if (res.status === 200) {
 						this.setState(
@@ -424,7 +434,7 @@ class CreateCustomerInvoice extends React.Component {
 	purchaseCategory = () => {
 		try {
 			this.props.productActions
-				.getTransactionCategoryListForExplain('10')
+				.getTransactionCategoryListForPurchaseProduct('10')
 				.then((res) => {
 					if (res.status === 200) {
 						this.setState(
@@ -1059,7 +1069,11 @@ class CreateCustomerInvoice extends React.Component {
 
 	render() {
 		const { data, discountOptions, initValue, exist, prefix } = this.state;
-		const { currency_list, customer_list,universal_currency_list } = this.props;
+		const {
+			currency_list,
+			customer_list,
+			universal_currency_list,
+		} = this.props;
 		return (
 			<div className="create-customer-invoice-screen">
 				<div className="animated fadeIn">
@@ -1887,7 +1901,12 @@ class CreateCustomerInvoice extends React.Component {
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																					<Currency value={initValue.total_net.toFixed(2)}currencySymbol={"AED"}/>
+																						<Currency
+																							value={initValue.total_net.toFixed(
+																								2,
+																							)}
+																							currencySymbol={'AED'}
+																						/>
 																					</label>
 																				</Col>
 																			</Row>
@@ -1901,9 +1920,12 @@ class CreateCustomerInvoice extends React.Component {
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																					<Currency value={initValue.invoiceVATAmount.toFixed(
-																							2,
-																						)}currencySymbol={"AED"}/>
+																						<Currency
+																							value={initValue.invoiceVATAmount.toFixed(
+																								2,
+																							)}
+																							currencySymbol={'AED'}
+																						/>
 																					</label>
 																				</Col>
 																			</Row>
@@ -1917,9 +1939,12 @@ class CreateCustomerInvoice extends React.Component {
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																					<Currency value={this.state.initValue.discount.toFixed(
-																							2,
-																						)} currencySymbol={"AED"}/>
+																						<Currency
+																							value={this.state.initValue.discount.toFixed(
+																								2,
+																							)}
+																							currencySymbol={'AED'}
+																						/>
 																					</label>
 																				</Col>
 																			</Row>
@@ -1933,7 +1958,12 @@ class CreateCustomerInvoice extends React.Component {
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																						<Currency value={initValue.totalAmount.toFixed(2)} currencySymbol={"AED"}/>
+																						<Currency
+																							value={initValue.totalAmount.toFixed(
+																								2,
+																							)}
+																							currencySymbol={'AED'}
+																						/>
 																					</label>
 																				</Col>
 																			</Row>

@@ -65,7 +65,7 @@ export const getTransactionCategoryList = (obj) => {
 	return (dispatch) => {
 		let data = {
 			method: 'GET',
-			url: `/rest/transactioncategory/getList?paginationDisable=true`,
+			url: `/rest/transactioncategory/getTransactionCategoryListForManualJornal`,
 		};
 
 		return authApi(data)

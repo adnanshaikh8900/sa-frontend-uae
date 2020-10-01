@@ -110,7 +110,7 @@ class CreateProduct extends React.Component {
 	salesCategory = () => {
 		try {
 			this.props.productActions
-				.getTransactionCategoryListForExplain('2')
+				.getTransactionCategoryListForSalesProduct('2')
 				.then((res) => {
 					if (res.status === 200) {
 						this.setState(
@@ -130,7 +130,7 @@ class CreateProduct extends React.Component {
 	purchaseCategory = () => {
 		try {
 			this.props.productActions
-				.getTransactionCategoryListForExplain('10')
+				.getTransactionCategoryListForPurchaseProduct('10')
 				.then((res) => {
 					if (res.status === 200) {
 						this.setState(
@@ -855,9 +855,7 @@ class CreateProduct extends React.Component {
 																					: true
 																			}
 																			options={
-																				salesCategory
-																					? salesCategory.categoriesList
-																					: []
+																				salesCategory ? salesCategory : []
 																			}
 																			value={
 																				salesCategory
@@ -1049,9 +1047,7 @@ class CreateProduct extends React.Component {
 																					: true
 																			}
 																			options={
-																				purchaseCategory
-																					? purchaseCategory.categoriesList
-																					: []
+																				purchaseCategory ? purchaseCategory : []
 																			}
 																			value={
 																				purchaseCategory

@@ -26,7 +26,7 @@ import { CommonActions } from 'services/global';
 import { selectCurrencyFactory } from 'utils';
 import * as JournalActions from '../../actions';
 import * as JournalDetailActions from './actions';
-import { Loader, ConfirmDeleteModal,Currency} from 'components';
+import { Loader, ConfirmDeleteModal, Currency } from 'components';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -58,7 +58,6 @@ const customStyles = {
 		},
 	}),
 };
-
 
 class DetailJournal extends React.Component {
 	constructor(props) {
@@ -191,14 +190,14 @@ class DetailJournal extends React.Component {
 		const { transaction_category_list } = this.props;
 		let transactionCategoryList =
 			transaction_category_list &&
-			transaction_category_list.data &&
-			transaction_category_list.data.length
+			transaction_category_list &&
+			transaction_category_list.length
 				? [
 						{
 							transactionCategoryId: '',
 							transactionCategoryName: 'Select Account',
 						},
-						...transaction_category_list.data,
+						...transaction_category_list,
 				  ]
 				: [];
 		let idx;
@@ -213,17 +212,37 @@ class DetailJournal extends React.Component {
 			<Field
 				name={`journalLineItems.${idx}.transactionCategoryId`}
 				render={({ field, form }) => (
-					<Input
-						type="select"
-						onChange={(e) => {
-							this.selectItem(e, row, 'transactionCategoryId', form, field);
+					<Select
+						styles={{
+							menu: (provided) => ({ ...provided, zIndex: 9999 }),
 						}}
-						disabled={
-							props.values.postingReferenceType === 'MANUAL' ? false : true
+						options={transactionCategoryList ? transactionCategoryList : []}
+						id="transactionCategoryId"
+						onChange={(e) => {
+							this.selectItem(
+								e.value,
+								row,
+								'transactionCategoryId',
+								form,
+								field,
+							);
+						}}
+						value={
+							transactionCategoryList &&
+							transactionCategoryList.length > 0 &&
+							row.journalTransactionCategoryLabel
+								? transactionCategoryList
+										.find(
+											(item) =>
+												item.label === row.journalTransactionCategoryLabel,
+										)
+										.options.find(
+											(item) => item.value === +row.transactionCategoryId,
+										)
+								: row.transactionCategoryId
 						}
-						value={row.transactionCategoryId}
-						className={`form-control 
-            ${
+						placeholder="Select Account"
+						className={`${
 							props.errors.journalLineItems &&
 							props.errors.journalLineItems[parseInt(idx, 10)] &&
 							props.errors.journalLineItems[parseInt(idx, 10)]
@@ -236,20 +255,7 @@ class DetailJournal extends React.Component {
 								? 'is-invalid'
 								: ''
 						}`}
-					>
-						{transactionCategoryList
-							? transactionCategoryList.map((obj) => {
-									return (
-										<option
-											value={obj.transactionCategoryId}
-											key={obj.transactionCategoryId}
-										>
-											{obj.transactionCategoryName}
-										</option>
-									);
-							  })
-							: ''}
-					</Input>
+					/>
 				)}
 			/>
 		);
@@ -275,7 +281,7 @@ class DetailJournal extends React.Component {
 							props.values.postingReferenceType === 'MANUAL' ? false : true
 						}
 						onChange={(e) => {
-							this.selectItem(e, row, 'description', form, field);
+							this.selectItem(e.target.value, row, 'description', form, field);
 						}}
 						placeholder="Description"
 						className={`form-control 
@@ -316,7 +322,7 @@ class DetailJournal extends React.Component {
 					<Input
 						type="select"
 						onChange={(e) => {
-							this.selectItem(e, row, 'contactId', form, field);
+							this.selectItem(e.target.value, row, 'contactId', form, field);
 						}}
 						disabled={
 							props.values.postingReferenceType === 'MANUAL' ? false : true
@@ -370,8 +376,17 @@ class DetailJournal extends React.Component {
 							props.values.postingReferenceType === 'MANUAL' ? false : true
 						}
 						onChange={(e) => {
-							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
-								this.selectItem(e, row, 'debitAmount', form, field);
+							if (
+								e.target.value === '' ||
+								this.regDecimal.test(e.target.value)
+							) {
+								this.selectItem(
+									e.target.value,
+									row,
+									'debitAmount',
+									form,
+									field,
+								);
 							}
 						}}
 						placeholder="Debit Amount"
@@ -413,8 +428,17 @@ class DetailJournal extends React.Component {
 							props.values.postingReferenceType === 'MANUAL' ? false : true
 						}
 						onChange={(e) => {
-							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
-								this.selectItem(e, row, 'creditAmount', form, field);
+							if (
+								e.target.value === '' ||
+								this.regDecimal.test(e.target.value)
+							) {
+								this.selectItem(
+									e.target.value,
+									row,
+									'creditAmount',
+									form,
+									field,
+								);
 							}
 						}}
 						placeholder="Credit Amount"
@@ -461,19 +485,19 @@ class DetailJournal extends React.Component {
 	};
 
 	selectItem = (e, row, name, form, field) => {
-		e.preventDefault();
+		//	e.preventDefault();
 		let idx;
 		const data = this.state.data;
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
 				if (name === 'debitAmount') {
-					obj[`${name}`] = e.target.value;
+					obj[`${name}`] = e;
 					obj['creditAmount'] = 0;
 				} else if (name === 'creditAmount') {
-					obj[`${name}`] = e.target.value;
+					obj[`${name}`] = e;
 					obj['debitAmount'] = 0;
 				} else {
-					obj[`${name}`] = e.target.value;
+					obj[`${name}`] = e;
 				}
 				idx = index;
 			}
@@ -793,7 +817,7 @@ class DetailJournal extends React.Component {
 																			Currency
 																		</Label>
 																		<Select
-																		styles={customStyles}
+																			styles={customStyles}
 																			className="select-default-width"
 																			options={
 																				currency_list
@@ -1005,19 +1029,24 @@ class DetailJournal extends React.Component {
 																				</Col>
 																				<Col xs={4} className="text-right">
 																					<label className="mb-0">
-																					<Currency value=	{
-																							this.state.initValue
-																								.subTotalDebitAmount
-																						} currencySymbol={"AED"} />
+																						<Currency
+																							value={
+																								this.state.initValue
+																									.subTotalDebitAmount
+																							}
+																							currencySymbol={'AED'}
+																						/>
 																					</label>
 																				</Col>
 																				<Col xs={4} className="text-right">
 																					<label className="mb-0">
-																					<Currency value=	{
-																							this.state.initValue
-																								.subTotalCreditAmount
-																						} currencySymbol={"AED"} />
-																					
+																						<Currency
+																							value={
+																								this.state.initValue
+																									.subTotalCreditAmount
+																							}
+																							currencySymbol={'AED'}
+																						/>
 																					</label>
 																				</Col>
 																			</Row>
@@ -1031,17 +1060,24 @@ class DetailJournal extends React.Component {
 																				</Col>
 																				<Col xs={4} className="text-right">
 																					<label className="mb-0">
-																					<Currency value={this.state.initValue
-																								.subTotalDebitAmount} currencySymbol={"AED"} />
+																						<Currency
+																							value={
+																								this.state.initValue
+																									.subTotalDebitAmount
+																							}
+																							currencySymbol={'AED'}
+																						/>
 																					</label>
 																				</Col>
 																				<Col xs={4} className="text-right">
 																					<label className="mb-0">
-																					<Currency value={
-																							this.state.initValue
-																								.subTotalCreditAmount
-																						} currencySymbol={"AED"} />
-																						
+																						<Currency
+																							value={
+																								this.state.initValue
+																									.subTotalCreditAmount
+																							}
+																							currencySymbol={'AED'}
+																						/>
 																					</label>
 																				</Col>
 																			</Row>
@@ -1055,23 +1091,23 @@ class DetailJournal extends React.Component {
 																	className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
 																>
 																	<FormGroup>
-																	{props.values.postingReferenceType ===
-																			'MANUAL' && 
-																		<Button
-																			type="button"
-																			color="danger"
-																			className="btn-square"
-																			disabled={
-																				props.values.postingReferenceType ===
-																				'MANUAL'
-																					? false
-																					: true
-																			}
-																			onClick={this.deleteJournal}
-																		>
-																			<i className="fa fa-trash"></i> Delete
-																		</Button>
-																			}	
+																		{props.values.postingReferenceType ===
+																			'MANUAL' && (
+																			<Button
+																				type="button"
+																				color="danger"
+																				className="btn-square"
+																				disabled={
+																					props.values.postingReferenceType ===
+																					'MANUAL'
+																						? false
+																						: true
+																				}
+																				onClick={this.deleteJournal}
+																			>
+																				<i className="fa fa-trash"></i> Delete
+																			</Button>
+																		)}
 																	</FormGroup>
 																	<FormGroup className="text-right">
 																		{props.values.postingReferenceType ===

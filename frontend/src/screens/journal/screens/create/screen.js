@@ -57,7 +57,6 @@ const customStyles = {
 	}),
 };
 
-
 class CreateJournal extends React.Component {
 	constructor(props) {
 		super(props);
@@ -119,7 +118,6 @@ class CreateJournal extends React.Component {
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
-
 	}
 
 	componentDidMount = () => {
@@ -179,18 +177,17 @@ class CreateJournal extends React.Component {
 
 	renderAccount = (cell, row, props) => {
 		const { transaction_category_list } = this.props;
+		console.log(transaction_category_list);
 		let transactionCategoryList =
-			transaction_category_list &&
-			transaction_category_list.data &&
-			transaction_category_list.data.length
+			transaction_category_list && transaction_category_list.length
 				? [
 						{
 							transactionCategoryId: '',
 							transactionCategoryName: 'Select Account',
 						},
-						...transaction_category_list.data,
+						...transaction_category_list,
 				  ]
-				: transaction_category_list.data;
+				: transaction_category_list;
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -200,18 +197,67 @@ class CreateJournal extends React.Component {
 		});
 
 		return (
+			// <Field
+			// 	name={`journalLineItems.${idx}.transactionCategoryId`}
+			// 	render={({ field, form }) => (
+			// 		<Input
+			// 			styles={customStyles}
+			// 			type="select"
+			// 			onChange={(e) => {
+			// 				this.selectItem(e, row, 'transactionCategoryId', form, field);
+			// 			}}
+			// 			value={row.transactionCategoryId}
+			// 			className={`form-control
+			//       ${
+			// 				props.errors.journalLineItems &&
+			// 				props.errors.journalLineItems[parseInt(idx, 10)] &&
+			// 				props.errors.journalLineItems[parseInt(idx, 10)]
+			// 					.transactionCategoryId &&
+			// 				Object.keys(props.touched).length > 0 &&
+			// 				props.touched.journalLineItems &&
+			// 				props.touched.journalLineItems[parseInt(idx, 10)] &&
+			// 				props.touched.journalLineItems[parseInt(idx, 10)]
+			// 					.transactionCategoryId
+			// 					? 'is-invalid'
+			// 					: ''
+			// 			}`}
+			// 		>
+			// 			{transactionCategoryList
+			// 				? transactionCategoryList.map((obj) => {
+			// 						return (
+			// 							<option
+			// 								value={obj.transactionCategoryId}
+			// 								key={obj.transactionCategoryId}
+			// 							>
+			// 								{obj.transactionCategoryName}
+			// 							</option>
+			// 						);
+			// 				  })
+			// 				: ''}
+			// 		</Input>
+			// 	)}
+			// />
+
 			<Field
 				name={`journalLineItems.${idx}.transactionCategoryId`}
 				render={({ field, form }) => (
-					<Input
-					styles={customStyles}
-						type="select"
-						onChange={(e) => {
-							this.selectItem(e, row, 'transactionCategoryId', form, field);
+					<Select
+						styles={{
+							menu: (provided) => ({ ...provided, zIndex: 9999 }),
 						}}
-						value={row.transactionCategoryId}
-						className={`form-control 
-            ${
+						options={transactionCategoryList ? transactionCategoryList : []}
+						id="transactionCategoryId"
+						onChange={(e) => {
+							this.selectItem(
+								e.value,
+								row,
+								'transactionCategoryId',
+								form,
+								field,
+							);
+						}}
+						placeholder="Select Account"
+						className={`${
 							props.errors.journalLineItems &&
 							props.errors.journalLineItems[parseInt(idx, 10)] &&
 							props.errors.journalLineItems[parseInt(idx, 10)]
@@ -224,20 +270,7 @@ class CreateJournal extends React.Component {
 								? 'is-invalid'
 								: ''
 						}`}
-					>
-						{transactionCategoryList
-							? transactionCategoryList.map((obj) => {
-									return (
-										<option
-											value={obj.transactionCategoryId}
-											key={obj.transactionCategoryId}
-										>
-											{obj.transactionCategoryName}
-										</option>
-									);
-							  })
-							: ''}
-					</Input>
+					/>
 				)}
 			/>
 		);
@@ -257,10 +290,11 @@ class CreateJournal extends React.Component {
 				name={`journalLineItems.${idx}.description`}
 				render={({ field, form }) => (
 					<Input
-						type="text"  maxLength='100'
+						type="text"
+						maxLength="100"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
-							this.selectItem(e, row, 'description', form, field);
+							this.selectItem(e.target.value, row, 'description', form, field);
 						}}
 						placeholder="Description"
 						className={`form-control 
@@ -301,7 +335,7 @@ class CreateJournal extends React.Component {
 					<Input
 						type="select"
 						onChange={(e) => {
-							this.selectItem(e, row, 'contactId', form, field);
+							this.selectItem(e.target.value, row, 'contactId', form, field);
 						}}
 						value={row.contactId}
 						className={`form-control 
@@ -349,8 +383,17 @@ class CreateJournal extends React.Component {
 						type="text"
 						value={row['debitAmount'] !== 0 ? row['debitAmount'] : 0}
 						onChange={(e) => {
-							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
-								this.selectItem(e, row, 'debitAmount', form, field);
+							if (
+								e.target.value === '' ||
+								this.regDecimal.test(e.target.value)
+							) {
+								this.selectItem(
+									e.target.value,
+									row,
+									'debitAmount',
+									form,
+									field,
+								);
 							}
 						}}
 						placeholder="Debit Amount"
@@ -389,8 +432,17 @@ class CreateJournal extends React.Component {
 						type="text"
 						value={row['creditAmount'] !== 0 ? row['creditAmount'] : 0}
 						onChange={(e) => {
-							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
-								this.selectItem(e, row, 'creditAmount', form, field);
+							if (
+								e.target.value === '' ||
+								this.regDecimal.test(e.target.value)
+							) {
+								this.selectItem(
+									e.target.value,
+									row,
+									'creditAmount',
+									form,
+									field,
+								);
 							}
 						}}
 						placeholder="Credit Amount"
@@ -442,19 +494,19 @@ class CreateJournal extends React.Component {
 	};
 
 	selectItem = (e, row, name, form, field) => {
-		e.preventDefault();
+		//e.preventDefault();
 		let idx;
 		const data = this.state.data;
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
 				if (name === 'debitAmount') {
-					obj[`${name}`] = e.target.value;
+					obj[`${name}`] = e;
 					obj['creditAmount'] = 0;
 				} else if (name === 'creditAmount') {
-					obj[`${name}`] = e.target.value;
+					obj[`${name}`] = e;
 					obj['debitAmount'] = 0;
 				} else {
-					obj[`${name}`] = e.target.value;
+					obj[`${name}`] = e;
 				}
 				idx = index;
 			}
@@ -721,7 +773,8 @@ class CreateJournal extends React.Component {
 																		Journal Reference #
 																	</Label>
 																	<Input
-																		type="text" maxLength='20'
+																		type="text"
+																		maxLength="20"
 																		id="journalReferenceNo"
 																		name="journalReferenceNo"
 																		placeholder="Reference Number"
@@ -747,7 +800,8 @@ class CreateJournal extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="description">Notes</Label>
 																	<Input
-																		type="textarea" maxLength='255'
+																		type="textarea"
+																		maxLength="255"
 																		name="description"
 																		id="description"
 																		rows="5"
@@ -765,7 +819,7 @@ class CreateJournal extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currencyCode">Currency</Label>
 																	<Select
-																	styles={customStyles}
+																		styles={customStyles}
 																		className="select-default-width"
 																		options={
 																			currency_list

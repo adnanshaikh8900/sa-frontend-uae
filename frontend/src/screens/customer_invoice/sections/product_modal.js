@@ -707,9 +707,7 @@ class ProductModal extends React.Component {
 																? false
 																: true
 														}
-														options={
-															salesCategory ? salesCategory.categoriesList : []
-														}
+														options={salesCategory ? salesCategory : []}
 														value={
 															salesCategory
 																? props.values.salesTransactionCategoryId
@@ -878,11 +876,7 @@ class ProductModal extends React.Component {
 																? false
 																: true
 														}
-														options={
-															purchaseCategory
-																? purchaseCategory.categoriesList
-																: []
-														}
+														options={purchaseCategory ? purchaseCategory : []}
 														value={
 															purchaseCategory
 																? props.values.purchaseTransactionCategoryId

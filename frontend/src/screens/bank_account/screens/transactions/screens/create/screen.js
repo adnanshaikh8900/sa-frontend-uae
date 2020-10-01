@@ -529,7 +529,7 @@ class CreateBankTransaction extends React.Component {
 															'Transaction Date Cannot be less than Bank opening date or Last Reconciled Date';
 													}
 													if (
-														values.coaCategoryId !== 10 &&
+														values.coaCategoryId.value !== 10 &&
 														!values.transactionCategoryId
 													) {
 														errors.transactionCategoryId =

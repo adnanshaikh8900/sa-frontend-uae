@@ -614,7 +614,7 @@ class DetailBankAccount extends React.Component {
 																			props.handleChange('account_number')(
 																				option,
 																			);
-																		} else {
+																		} else if(this.regEx.test(option.target.value)) {
 																			props.handleChange('account_number')(
 																				option,
 																			);

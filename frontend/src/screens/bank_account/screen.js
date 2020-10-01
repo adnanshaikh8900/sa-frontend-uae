@@ -299,8 +299,7 @@ class BankAccount extends React.Component {
 				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 			/>
 		);
-	}
-
+	};
 	renderActions = (cell, row) => {
 		return (
 			<div>

@@ -6,6 +6,7 @@
 package com.simplevat.rest.transactioncategorycontroller;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import com.simplevat.constant.ChartOfAccountCategoryCodeEnum;
+import com.simplevat.rest.SingleLevelDropDownModel;
 import com.simplevat.service.CoacTransactionCategoryService;
 import com.simplevat.service.bankaccount.TransactionService;
 import org.hibernate.Transaction;
@@ -236,5 +238,18 @@ public class TransactionCategoryRestController{
 		}
 		Integer response = transactionService.getExplainedTransactionCountByTransactionCategoryId(transactionCategoryId);
 		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "Get Transaction category For Product")
+	@GetMapping(value = "/getTransactionCategoryListForManualJornal")
+	public ResponseEntity getTransactionCategoryListManualJornal(){
+		List<SingleLevelDropDownModel> response  = new ArrayList<>();
+		List<TransactionCategory> transactionCategoryList = transactionCategoryService.getTransactionCategoryListManualJornal();
+		if (transactionCategoryList!=null){
+			response = transcationCategoryHelper.getSinleLevelDropDownModelList(transactionCategoryList);
+		}
+
+
+		return new ResponseEntity (response, HttpStatus.OK);
 	}
 }

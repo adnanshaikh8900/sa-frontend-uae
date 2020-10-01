@@ -200,8 +200,11 @@ public class JournalRestHelper {
 		List<JournalLineItemRequestModel> requestModels = new ArrayList<>();
 		if (journal.getJournalLineItems() != null && !journal.getJournalLineItems().isEmpty()) {
 			for (JournalLineItem lineItem : journal.getJournalLineItems()) {
+				model.setJournalTransactionCategoryLabel(lineItem.getTransactionCategory().getChartOfAccount().getChartOfAccountName());
 				JournalLineItemRequestModel requestModel = getLineItemModel(lineItem, list);
 				requestModels.add(requestModel);
+
+
 			}
 			model.setJournalLineItems(requestModels);
 		}
@@ -217,6 +220,7 @@ public class JournalRestHelper {
 		if (lineItem.getTransactionCategory() != null) {
 			requestModel.setTransactionCategoryId(lineItem.getTransactionCategory().getTransactionCategoryId());
 			requestModel.setTransactionCategoryName(lineItem.getTransactionCategory().getTransactionCategoryName());
+			requestModel.setJournalTransactionCategoryLabel(lineItem.getTransactionCategory().getChartOfAccount().getChartOfAccountName());
 		}
 		BigDecimal creditVatAmt = BigDecimal.valueOf(0);
 		BigDecimal debitVatAmt = BigDecimal.valueOf(0);
@@ -231,6 +235,7 @@ public class JournalRestHelper {
 			}
 		}
 		requestModel.setDescription(lineItem.getDescription());
+
 
 		requestModel.setCreditAmount(lineItem.getCreditAmount() != null ? lineItem.getCreditAmount().add(creditVatAmt)
 				: BigDecimal.valueOf(0));

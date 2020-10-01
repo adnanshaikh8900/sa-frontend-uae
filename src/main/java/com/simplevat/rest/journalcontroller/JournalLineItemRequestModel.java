@@ -14,6 +14,7 @@ public class JournalLineItemRequestModel implements Serializable  {
 	private String description;
 	private Integer transactionCategoryId;
 	private String transactionCategoryName;
+	private String journalTransactionCategoryLabel;
 	private Integer contactId;
 	private Integer vatCategoryId;
 	private BigDecimal debitAmount;

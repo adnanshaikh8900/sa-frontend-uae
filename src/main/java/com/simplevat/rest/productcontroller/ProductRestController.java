@@ -9,7 +9,12 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.rest.DropdownModel;
+import com.simplevat.rest.SingleLevelDropDownModel;
+import com.simplevat.rest.transactioncategorycontroller.TranscationCategoryHelper;
 import com.simplevat.service.InvoiceLineItemService;
+import com.simplevat.service.TransactionCategoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +64,12 @@ public class ProductRestController {
 
 	@Autowired
 	private InvoiceLineItemService invoiceLineItemService;
+
+	@Autowired
+	private TransactionCategoryService transactionCategoryService;
+
+	@Autowired
+	TranscationCategoryHelper transcationCategoryHelper;
 
 	@ApiOperation(value = "Get Product List")
 	@GetMapping(value = "/getList")
@@ -183,5 +194,29 @@ public class ProductRestController {
 	public ResponseEntity<Integer> getExplainedTransactionCount(@RequestParam int productId){
 		Integer response = invoiceLineItemService.getTotalInvoiceCountByProductId(productId);
 		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	@ApiOperation(value = "Get Transaction category For Product")
+	@GetMapping(value = "/getTransactionCategoryListForSalesProduct")
+	public ResponseEntity getTransactionCategoryListForProduct(){
+		List<SingleLevelDropDownModel> response  = new ArrayList<>();
+		List<TransactionCategory> transactionCategoryList = transactionCategoryService.getTransactionCategoryListForSalesProduct();
+        if (transactionCategoryList!=null){
+			response = transcationCategoryHelper.getSinleLevelDropDownModelList(transactionCategoryList);
+		}
+
+
+		return new ResponseEntity (response, HttpStatus.OK);
+	}
+	@ApiOperation(value = "Get Transaction category For Product")
+	@GetMapping(value = "/getTransactionCategoryListForPurchaseProduct")
+	public ResponseEntity getTransactionCategoryListForPurchaseProduct(){
+		List<SingleLevelDropDownModel> response  = new ArrayList<>();
+		List<TransactionCategory> transactionCategoryList = transactionCategoryService.getTransactionCategoryListForPurchaseProduct();
+		if (transactionCategoryList!=null){
+			response = transcationCategoryHelper.getSinleLevelDropDownModelList(transactionCategoryList);
+		}
+
+
+		return new ResponseEntity (response, HttpStatus.OK);
 	}
 }

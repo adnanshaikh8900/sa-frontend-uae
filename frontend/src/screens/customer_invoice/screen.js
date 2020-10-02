@@ -110,6 +110,12 @@ class CustomerInvoice extends React.Component {
 		let { filterData } = this.state;
 		this.props.customerInvoiceActions.getStatusList();
 		this.props.customerInvoiceActions.getCustomerList(filterData.contactType);
+		this.initializeData();
+		this.getOverdue();
+	};
+
+	getOverdue = () => {
+		let { filterData } = this.state;
 		this.props.customerInvoiceActions
 			.getOverdueAmountDetails(filterData.contactType)
 			.then((res) => {
@@ -124,7 +130,6 @@ class CustomerInvoice extends React.Component {
 				);
 				this.setState({ loading: false });
 			});
-		this.initializeData();
 	};
 
 	initializeData = (search) => {
@@ -203,6 +208,7 @@ class CustomerInvoice extends React.Component {
 					this.setState({
 						loading: false,
 					});
+					this.getOverdue();
 					this.initializeData();
 				}
 			})
@@ -237,6 +243,7 @@ class CustomerInvoice extends React.Component {
 					this.setState({
 						loading: false,
 					});
+					this.getOverdue();
 					this.initializeData();
 				}
 			})
@@ -715,7 +722,7 @@ class CustomerInvoice extends React.Component {
 																	currencySymbol={
 																		universal_currency_list[0]
 																			? universal_currency_list[0]
-																					.currencyIsoCode 
+																					.currencyIsoCode
 																			: 'USD'
 																	}
 																/>

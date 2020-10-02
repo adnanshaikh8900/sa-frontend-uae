@@ -176,18 +176,16 @@ public class InvoiceRestHelper {
 
 	private void invoiceDueDate(InvoiceRequestModel invoiceModel, Invoice invoice) {
 		if (invoiceModel.getInvoiceDueDate() != null) {
-			LocalDateTime invoiceDueDate = Instant.ofEpochMilli(invoiceModel.getInvoiceDueDate().getTime())
-					.atZone(ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0).withNano(0)
-					.toLocalDateTime();
+			LocalDateTime invoiceDueDate = LocalDateTime.ofInstant(invoiceModel.getInvoiceDueDate().toInstant(),
+					ZoneId.systemDefault());
 			invoice.setInvoiceDueDate(invoiceDueDate);
 		}
 	}
 
 	private void invoiceDate(InvoiceRequestModel invoiceModel, Invoice invoice) {
 		if (invoiceModel.getInvoiceDate() != null) {
-			LocalDateTime invoiceDate = Instant.ofEpochMilli(invoiceModel.getInvoiceDate().getTime())
-					.atZone(ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0).withNano(0)
-					.toLocalDateTime();
+			LocalDateTime invoiceDate = LocalDateTime.ofInstant(invoiceModel.getInvoiceDate().toInstant(),
+					ZoneId.systemDefault());
 			invoice.setInvoiceDate(invoiceDate);
 		}
 	}

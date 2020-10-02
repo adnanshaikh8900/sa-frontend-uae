@@ -126,40 +126,34 @@ class OpeningBalance extends React.Component {
 		);
 	};
 
-	renderTransactionCategory = (cell, row) => {
-		const { transaction_category_list } = this.props;
+	renderOpeningBalance = (cell, row) => {
 		const { submitBtnClick } = this.state;
-		let value =
-			typeof row.transactionCategory === 'string'
-				? row.transactionCategory
-				: row.transactionCategory.value;
 		return (
-			<Select
-				styles={customStyles}
-				id="chart_of_account"
-				name="chart_of_account_list"
-				options={
-					transaction_category_list
-						? selectOptionsFactory.renderOptions(
-								'transactionCategoryName',
-								'transactionCategoryId',
-								transaction_category_list,
-								'Chart of Account',
-						  )
-						: []
-				}
-				value={row.transactionCategory}
-				isDisabled={row['disabled']}
-				menuPosition="fixed"
-				maxMenuHeight="250px"
-				className={`${value === '' && submitBtnClick ? 'is-invalid' : ''} ${
-					row.disabled ? 'selectField' : ''
-				}`}
-				isOptionDisabled={(option) => this.checkCategory(option.value)}
-				onChange={(option) => {
-					this.selectItem(option, row, 'transactionCategory');
-				}}
-			/>
+			<div>
+				{!row['disabled'] ? (
+					<Input
+						type="text"
+						value={row['openingBalance'] !== '' ? row['openingBalance'] : ''}
+						disabled={row['disabled']}
+						onChange={(e) => {
+							if (e.target.value === '' || this.regEx.test(e.target.value)) {
+								this.selectItem(e, row, 'openingBalance');
+							}
+						}}
+						placeholder="Opening Balance"
+						className={`form-control ${
+							row.openingBalance === '' && submitBtnClick ? 'is-invalid' : ''
+						}`}
+					/>
+				) : (
+					<div>
+						{new Intl.NumberFormat('ar', {
+							style: 'currency',
+							currency: 'AED',
+						}).format(row['openingBalance'])}
+					</div>
+				)}
+			</div>
 		);
 	};
 

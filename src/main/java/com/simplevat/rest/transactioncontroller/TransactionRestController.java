@@ -223,8 +223,7 @@ public class TransactionRestController {
 					updateTransactionForSupplierInvoices(trnx,transactionPresistModel);
 					// JOURNAL LINE ITEM FOR normal transaction
 					Journal journal = reconsilationRestHelper.invoiceReconsile(userId,trnx,false);
-					journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
-							transactionPresistModel.getDATE_FORMAT()));
+					journal.setJournalDate(LocalDateTime.now());
 					journalService.persist(journal);
 					List<ReconsileRequestLineItemModel> itemModels = getReconsileRequestLineItemModels(transactionPresistModel);
 					reconsileSupplierInvoices(userId, trnx, itemModels);
@@ -234,8 +233,7 @@ public class TransactionRestController {
 				updateTransactionMoneyPaidToUser(trnx,transactionPresistModel);
 				Journal journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
 						transactionPresistModel.getAmount(), userId, trnx,false);
-				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
-						transactionPresistModel.getDATE_FORMAT()));
+				journal.setJournalDate(LocalDateTime.now());
 				journalService.persist(journal);
 				break;
 			case TRANSFERD_TO:
@@ -255,8 +253,7 @@ public class TransactionRestController {
 				}
 				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
 						transactionPresistModel.getAmount(), userId, trnx, isdebitFromBank);
-				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
-						transactionPresistModel.getDATE_FORMAT()));
+				journal.setJournalDate(LocalDateTime.now());
 				journalService.persist(journal);
 				break;
 			case MONEY_SPENT:
@@ -265,8 +262,7 @@ public class TransactionRestController {
 				updateTransactionForMoneySpent(trnx,transactionPresistModel);
 				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
 						transactionPresistModel.getAmount(), userId, trnx, false);
-				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
-						transactionPresistModel.getDATE_FORMAT()));
+				journal.setJournalDate(LocalDateTime.now());
 				journalService.persist(journal);
 				break;
 //-----------------------------------------------------Sales Chart of Account Category-----------------------------------------
@@ -275,8 +271,7 @@ public class TransactionRestController {
 				updateTransactionForCustomerInvoices(trnx,transactionPresistModel);
 				// JOURNAL LINE ITEM FOR normal transaction
 				journal = reconsilationRestHelper.invoiceReconsile(userId,trnx,true);
-				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
-						transactionPresistModel.getDATE_FORMAT()));
+				journal.setJournalDate(LocalDateTime.now());
 				journalService.persist(journal);
 				List<ReconsileRequestLineItemModel> itemModels = getReconsileRequestLineItemModels(transactionPresistModel);
 				reconsileCustomerInvoices(userId, trnx, itemModels);
@@ -298,8 +293,7 @@ public class TransactionRestController {
 				}
 				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
 						transactionPresistModel.getAmount(), userId, trnx, isdebitFromBank);
-				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
-						transactionPresistModel.getDATE_FORMAT()));
+				journal.setJournalDate(LocalDateTime.now());
 				journalService.persist(journal);
 
 				break;
@@ -311,8 +305,7 @@ public class TransactionRestController {
 				updateTransactionForMoneyReceived(trnx,transactionPresistModel);
 				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
 						transactionPresistModel.getAmount(), userId, trnx, true);
-				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
-						transactionPresistModel.getDATE_FORMAT()));
+				journal.setJournalDate(LocalDateTime.now());
 				journalService.persist(journal);
 				break;
 			default:
@@ -379,8 +372,7 @@ public class TransactionRestController {
 				updateTransactionMoneyPaidToUser(trnx,transactionPresistModel);
 				Journal journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
 						transactionPresistModel.getAmount(), userId, trnx, false);
-				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
-						transactionPresistModel.getDATE_FORMAT()));
+				journal.setJournalDate(LocalDateTime.now());
 				journalService.persist(journal);
 				break;
 			case TRANSFERD_TO:
@@ -400,8 +392,7 @@ public class TransactionRestController {
 				}
 				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
 						transactionPresistModel.getAmount(), userId, trnx, isdebitFromBank);
-				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
-						transactionPresistModel.getDATE_FORMAT()));
+				journal.setJournalDate(LocalDateTime.now());
 				journalService.persist(journal);
 				break;
 			case MONEY_SPENT:
@@ -410,8 +401,7 @@ public class TransactionRestController {
 				updateTransactionForMoneySpent(trnx,transactionPresistModel);
 				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
 						transactionPresistModel.getAmount(), userId, trnx, false);
-				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
-						transactionPresistModel.getDATE_FORMAT()));
+				journal.setJournalDate(LocalDateTime.now());
 				journalService.persist(journal);
 				break;
 //-----------------------------------------------------Sales Chart of Account Category-----------------------------------------
@@ -443,8 +433,7 @@ public class TransactionRestController {
 				}
 				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
 						transactionPresistModel.getAmount(), userId, trnx, isdebitFromBank);
-				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
-						transactionPresistModel.getDATE_FORMAT()));
+				journal.setJournalDate(LocalDateTime.now());
 				journalService.persist(journal);
 
 				break;
@@ -456,8 +445,7 @@ public class TransactionRestController {
 				updateTransactionForMoneyReceived(trnx,transactionPresistModel);
 				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
 						transactionPresistModel.getAmount(), userId, trnx, true);
-				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
-						transactionPresistModel.getDATE_FORMAT()));
+				journal.setJournalDate(LocalDateTime.now());
 				journalService.persist(journal);
 				break;
 			default:
@@ -802,8 +790,7 @@ public class TransactionRestController {
 		journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel,transactionCategoryId
 				, userId, trnx,expense);
 
-		journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
-				transactionPresistModel.getDATE_FORMAT()));
+		journal.setJournalDate(LocalDateTime.now());
 		journalService.persist(journal);
 		TransactionExpenses status = new TransactionExpenses();
 		status.setCreatedBy(userId);

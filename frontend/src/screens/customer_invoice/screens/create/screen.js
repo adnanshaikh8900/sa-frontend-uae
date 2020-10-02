@@ -858,15 +858,14 @@ class CreateCustomerInvoice extends React.Component {
 		);
 		formData.append(
 			'invoiceDueDate',
-			invoiceDueDate ? moment(invoiceDueDate, 'DD/MM/YYYY').toDate() : null,
+			invoiceDueDate
+				? moment(invoiceDueDate, 'DD/MM/YYYY').format('MM/DD/YYYY')
+				: null,
 		);
 		formData.append(
 			'invoiceDate',
 			invoiceDate
-				? moment(
-						moment(invoiceDate).format('DD/MM/YYYY'),
-						'DD/MM/YYYY',
-				  ).toDate()
+				? moment(invoiceDate, 'DD/MM/YYYY').format('MM/DD/YYYY')
 				: null,
 		);
 		formData.append(

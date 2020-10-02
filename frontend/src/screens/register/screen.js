@@ -77,7 +77,8 @@ class Register extends React.Component {
 				password: '',
 			},
 			userDetail: false,
-			togglePassword: '********',
+			show: false,
+			togglePassword: '***********',
 		};
 	}
 
@@ -524,7 +525,9 @@ class Register extends React.Component {
 																	style={{ fontWeight: 'bold' }}
 																	className="d-flex align-items-center"
 																>
-																	{this.state.togglePassword}
+																	{this.state.show
+																		? this.state.password
+																		: this.state.togglePassword}
 																	<span
 																		className="ml-1"
 																		style={{ cursor: 'pointer' }}
@@ -533,7 +536,7 @@ class Register extends React.Component {
 																			className="fa fa-eye"
 																			onClick={() => {
 																				this.setState({
-																					togglePassword: this.state.password,
+																					show: !this.state.show,
 																				});
 																			}}
 																			aria-hidden="true"

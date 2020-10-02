@@ -23,7 +23,8 @@ import * as CustomerInvoiceDetailActions from './actions';
 import * as CustomerInvoiceActions from '../../actions';
 
 import { CustomerModal } from '../../sections';
-import { Loader, ConfirmDeleteModal, Currency } from 'components';
+import { Loader, ConfirmDeleteModal } from 'components';
+
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -291,10 +292,7 @@ class DetailCustomerInvoice extends React.Component {
 							type="text"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (
-									e.target.value === '' ||
-									this.regDecimal.test(e.target.value)
-								) {
+								if (e.target.value === '' || this.regEx.test(e.target.value)) {
 									this.selectItem(
 										e.target.value,
 										row,
@@ -355,10 +353,7 @@ class DetailCustomerInvoice extends React.Component {
 						type="text"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
-							if (
-								e.target.value === '' ||
-								this.regDecimal.test(e.target.value)
-							) {
+							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
 								this.selectItem(
 									e.target.value,
 									row,
@@ -391,11 +386,7 @@ class DetailCustomerInvoice extends React.Component {
 	};
 
 	renderSubTotal = (cell, row) => {
-		return (
-			<label className="mb-0">
-				<Currency value={row.subTotal.toFixed(2)} currencySymbol={'AED'} />
-			</label>
-		);
+		return <label className="mb-0">{row.subTotal.toFixed(2)}</label>;
 	};
 
 	addRow = () => {
@@ -1781,12 +1772,7 @@ class DetailCustomerInvoice extends React.Component {
 																					</Col>
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
-																							<Currency
-																								value={initValue.total_net.toFixed(
-																									2,
-																								)}
-																								currencySymbol={'AED'}
-																							/>
+																							{initValue.total_net.toFixed(2)}
 																						</label>
 																					</Col>
 																				</Row>
@@ -1800,12 +1786,9 @@ class DetailCustomerInvoice extends React.Component {
 																					</Col>
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
-																							<Currency
-																								value={initValue.invoiceVATAmount.toFixed(
-																									2,
-																								)}
-																								currencySymbol={'AED'}
-																							/>
+																							{initValue.invoiceVATAmount.toFixed(
+																								2,
+																							)}
 																						</label>
 																					</Col>
 																				</Row>
@@ -1819,12 +1802,9 @@ class DetailCustomerInvoice extends React.Component {
 																					</Col>
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
-																							<Currency
-																								value={this.state.initValue.discount.toFixed(
-																									2,
-																								)}
-																								currencySymbol={'AED'}
-																							/>
+																							{this.state.initValue.discount.toFixed(
+																								2,
+																							)}
 																						</label>
 																					</Col>
 																				</Row>
@@ -1838,12 +1818,7 @@ class DetailCustomerInvoice extends React.Component {
 																					</Col>
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
-																							<Currency
-																								value={initValue.totalAmount.toFixed(
-																									2,
-																								)}
-																								currencySymbol={'AED'}
-																							/>
+																							{initValue.totalAmount.toFixed(2)}
 																						</label>
 																					</Col>
 																				</Row>

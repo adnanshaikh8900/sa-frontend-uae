@@ -303,7 +303,7 @@ class CreateSupplierInvoice extends React.Component {
 						onChange={(e) => {
 							if (
 								e.target.value === '' ||
-								this.regDecimal.test(e.target.value)
+								this.regEx.test(e.target.value)
 							) {
 								this.selectItem(
 									e.target.value,

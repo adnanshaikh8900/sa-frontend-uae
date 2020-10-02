@@ -148,20 +148,35 @@ class OpeningBalance extends React.Component {
   }
 
   renderOpeningBalance = (cell, row) => {
-    const { submitBtnClick } = this.state
+    const { submitBtnClick } = this.state;
     return (
-      <Input
-        type="text"
-        value={row['openingBalance'] !== '' ? row['openingBalance'] : ''}
-        disabled={row['disabled']}
-        onChange={(e) => {
-          if (e.target.value === '' || this.regEx.test(e.target.value)) { this.selectItem(e, row, 'openingBalance') }
-        }}
-        placeholder="Opening Balance"
-        className={`form-control ${row.openingBalance === "" && submitBtnClick ? "is-invalid" : ""}`}
-      />
-    )
-  }
+    <div>
+    {!row['disabled'] ? (
+    <Input
+    type="text"
+    value={row['openingBalance'] !== '' ? row['openingBalance'] : ''}
+    disabled={row['disabled']}
+    onChange={(e) => {
+    if (e.target.value === '' || this.regEx.test(e.target.value)) {
+    this.selectItem(e, row, 'openingBalance');
+    }
+    }}
+    placeholder="Opening Balance"
+    className={`form-control ${
+    row.openingBalance === '' && submitBtnClick ? 'is-invalid' : ''
+    }`}
+    />
+    ) : (
+    <div>
+    {new Intl.NumberFormat('ar', {
+    style: 'currency',
+    currency: 'AED',
+    }).format(row['openingBalance'])}
+    </div>
+    )}
+    </div>
+    );
+    };
 
   renderCurrency = (cell, rows) => {
     return this.props.profile && this.props.profile.company.currencyCode.currencyIsoCode ? this.props.profile.company.currencyCode.currencyIsoCode : ''

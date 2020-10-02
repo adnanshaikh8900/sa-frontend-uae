@@ -181,7 +181,9 @@ class CreateBankAccount extends React.Component {
 			bankAccountName: account_name,
 			bankAccountCurrency: currency ? currency : '',
 			openingBalance: opening_balance,
-			openingDate: openingDate ? openingDate : null,
+			openingDate: openingDate
+				? moment(openingDate).format('DD/MM/YYYY')
+				: null,
 			bankAccountType: account_type ? account_type : '',
 			bankName: bank_name,
 			accountNumber: account_number,

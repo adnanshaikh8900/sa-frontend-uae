@@ -426,7 +426,7 @@ class BankAccount extends React.Component {
 				<div>
 					<label className="font-weight-bold mr-2">Reconciled Balance : </label>
 					<label className="badge badge-success mb-0">
-						{row.closingBalance}
+					<Currency value={row.closingBalance} currencySymbol={'AED'} />
 					</label>
 				</div>
 				<div>

@@ -122,6 +122,12 @@ class SupplierInvoice extends React.Component {
 		let { filterData } = this.state;
 		this.props.supplierInvoiceActions.getStatusList();
 		this.props.supplierInvoiceActions.getSupplierList(filterData.contactType);
+		this.initializeData();
+		this.getOverdue();
+	};
+
+	getOverdue = () => {
+		let { filterData } = this.state;
 		this.props.supplierInvoiceActions
 			.getOverdueAmountDetails(filterData.contactType)
 			.then((res) => {
@@ -135,7 +141,6 @@ class SupplierInvoice extends React.Component {
 					err && err.data ? err.data.message : 'Something Went Wrong',
 				);
 			});
-		this.initializeData();
 	};
 
 	initializeData = (search) => {
@@ -493,6 +498,7 @@ class SupplierInvoice extends React.Component {
 					this.setState({
 						loading: false,
 					});
+					this.getOverdue();
 					this.initializeData();
 				}
 			})
@@ -527,6 +533,7 @@ class SupplierInvoice extends React.Component {
 					this.setState({
 						loading: false,
 					});
+					this.getOverdue();
 					this.initializeData();
 				}
 			})

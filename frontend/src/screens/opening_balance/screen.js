@@ -330,8 +330,12 @@ class OpeningBalance extends React.Component {
 				effectiveDate:
 					typeof row.effectiveDate === 'string'
 						? row.effectiveDate
-						: moment(row.effectiveDate).format('DD/MM/YYYY'),
+						: moment(
+								moment(row.effectiveDate).format('DD/MM/YYYY'),
+								'DD/MM/YYYY',
+						  ).toDate(),
 			};
+			console.log(postData);
 			if (row.transactionCategoryBalanceId) {
 				save = false;
 				postData['transactionCategoryBalanceId'] =

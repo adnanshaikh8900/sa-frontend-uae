@@ -89,6 +89,7 @@ class CreateBankAccount extends React.Component {
 				swift_code: '',
 				countrycode: 229,
 				openingDate: '',
+				account_is_for: '',
 			},
 			currentData: {},
 		};
@@ -120,6 +121,9 @@ class CreateBankAccount extends React.Component {
 							? parseInt(response.data[0].currencyCode)
 							: '',
 					},
+					...{
+						account_is_for: 'Corporate',
+					},
 				},
 			});
 			this.formRef.current.setFieldValue(
@@ -127,6 +131,7 @@ class CreateBankAccount extends React.Component {
 				response.data[0].currencyCode,
 				true,
 			);
+			this.formRef.current.setFieldValue('account_is_for', 'Corporate', true);
 		});
 		this.props.createBankAccountActions.getCountryList();
 	};
@@ -187,12 +192,8 @@ class CreateBankAccount extends React.Component {
 			ifscCode: ifsc_code,
 			swiftCode: swift_code,
 			bankCountry: countrycode ? countrycode : '',
-			personalCorporateAccountInd: account_is_for ? account_is_for.value : '',
+			personalCorporateAccountInd: account_is_for ? account_is_for : '',
 		};
-		// let formData = new FormData();
-		// for (var key in this.state.initialVals) {
-		// 	formData.append(key, data[key]);
-		// }
 		this.props.createBankAccountActions
 			.createBankAccount(obj)
 			.then((res) => {
@@ -224,7 +225,6 @@ class CreateBankAccount extends React.Component {
 		const { account_type_list, currency_list, country_list } = this.props;
 
 		const { initialVals } = this.state;
-
 		return (
 			<div className="create-bank-account-screen">
 				<div className="animated fadeIn">
@@ -784,11 +784,25 @@ class CreateBankAccount extends React.Component {
 																				  )
 																				: []
 																		}
-																		value={props.values.account_is_for}
+																		value={
+																			this.account_for &&
+																			selectOptionsFactory
+																				.renderOptions(
+																					'label',
+																					'value',
+																					this.account_for,
+																					'Account is for',
+																				)
+																				.find(
+																					(option) =>
+																						option.value ===
+																						props.values.account_is_for,
+																				)
+																		}
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				props.handleChange('account_is_for')(
-																					option,
+																					option.value,
 																				);
 																			} else {
 																				props.handleChange('account_is_for')(

@@ -301,10 +301,7 @@ class CreateSupplierInvoice extends React.Component {
 						maxLength="10"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
-							if (
-								e.target.value === '' ||
-								this.regEx.test(e.target.value)
-							) {
+							if (e.target.value === '' || this.regEx.test(e.target.value)) {
 								this.selectItem(
 									e.target.value,
 									row,
@@ -1320,10 +1317,15 @@ class CreateSupplierInvoice extends React.Component {
 																			const string = input.substr(
 																				prefix.length,
 																			);
-																			props.handleChange('invoice_number')(
-																				string,
-																			);
-																			this.validationCheck(e.target.value);
+																			if (
+																				input === '' ||
+																				this.regEx.test(string)
+																			) {
+																				props.handleChange('invoice_number')(
+																					string,
+																				);
+																				this.validationCheck(e.target.value);
+																			}
 																		}}
 																		value={prefix + props.values.invoice_number}
 																		className={

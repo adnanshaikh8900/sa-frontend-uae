@@ -163,7 +163,7 @@ class CreateExpense extends React.Component {
 			bankAccountId,
 		} = data;
 		let formData = new FormData();
-		formData.append('payee', payee.value ? payee.value : '');
+		formData.append('payee', payee ? payee : '');
 		formData.append('expenseDate', expenseDate !== null ? expenseDate : '');
 		formData.append('expenseDescription', expenseDescription);
 		formData.append('receiptNumber', receiptNumber);
@@ -175,6 +175,7 @@ class CreateExpense extends React.Component {
 		if (payMode && payMode.value) {
 			formData.append('payMode', payMode.value);
 		}
+		console.log(payee);
 		if (expenseCategory && expenseCategory.value) {
 			formData.append('expenseCategory', expenseCategory.value);
 		}
@@ -427,7 +428,9 @@ class CreateExpense extends React.Component {
 																		}
 																		onChange={(option) => {
 																			if (option && option.value) {
-																				props.handleChange('payee')(option);
+																				props.handleChange('payee')(
+																					option.value,
+																				);
 																			} else {
 																				props.handleChange('payee')('');
 																			}

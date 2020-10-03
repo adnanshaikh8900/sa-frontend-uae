@@ -47,6 +47,7 @@ class LogIn extends React.Component {
 			alert: null,
 			openForgotPasswordModal: false,
 			companyCount: 1,
+			loading: false,
 		};
 	}
 
@@ -71,6 +72,7 @@ class LogIn extends React.Component {
 	};
 
 	handleSubmit = (data, resetForm) => {
+		this.setState({ loading: true });
 		const { username, password } = data;
 		let obj = {
 			username,
@@ -83,8 +85,10 @@ class LogIn extends React.Component {
 					position: toast.POSITION.TOP_RIGHT,
 				});
 				this.props.history.push('/admin');
+				this.setState({ loading: true });
 			})
 			.catch((err) => {
+				this.setState({ loading: true });
 				toast.error(
 					err && err.data
 						? 'Log in failed. Please try again'
@@ -233,6 +237,7 @@ class LogIn extends React.Component {
 																			type="submit"
 																			className="px-4 btn-square mt-3"
 																			style={{ width: '200px' }}
+																			disabled={this.state.loading}
 																		>
 																			<i className="fa fa-sign-in" /> Log In
 																		</Button>

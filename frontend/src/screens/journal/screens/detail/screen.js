@@ -696,9 +696,6 @@ class DetailJournal extends React.Component {
 																	transactionCategoryId: Yup.string().required(
 																		'Account is required',
 																	),
-																	contactId: Yup.string().required(
-																		'Contact is required',
-																	),
 																	debitAmount: Yup.number().required(),
 																	creditAmount: Yup.number().required(),
 																}),

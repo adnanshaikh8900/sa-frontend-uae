@@ -59,7 +59,6 @@ class CreateExpense extends React.Component {
 			createMore: false,
 			disabled: false,
 			initValue: {
-				payee: this.props.profile.userId,
 				payee: '',
 				expenseDate: '',
 				currency: '',
@@ -128,6 +127,17 @@ class CreateExpense extends React.Component {
 				response.data[0].currencyCode,
 				true,
 			);
+		});
+		this.props.expenseCreateActions.checkAuthStatus().then((response) => {
+			this.setState({
+				initValue: {
+					...this.state.initValue,
+					...{
+						payee: response.data ? parseInt(response.data.userId) : '',
+					},
+				},
+			});
+			this.formRef.current.setFieldValue('payee', response.data.userId, true);
 		});
 		this.props.expenseActions.getBankList();
 		this.props.expenseActions.getPaymentMode();
@@ -297,6 +307,7 @@ class CreateExpense extends React.Component {
 													currency: Yup.string().required(
 														'Currency is required',
 													),
+													payee: Yup.string().required('Payee is required'),
 													expenseAmount: Yup.string()
 														.required('Amount is Required')
 														.matches(/^[0-9]*$/, 'Enter a Valid Amount'),
@@ -383,7 +394,9 @@ class CreateExpense extends React.Component {
 															</Col>
 															<Col lg={3}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="payee">Payee</Label>
+																	<Label htmlFor="payee">
+																		<span className="text-danger">*</span>Payee
+																	</Label>
 																	<Select
 																		styles={customStyles}
 																		options={
@@ -406,10 +419,10 @@ class CreateExpense extends React.Component {
 																					user_list,
 																					'Payee',
 																				)
-																				.find((option) =>
-																					option.value === props.values.payee
-																						? +props.values.payee
-																						: +profile.userId,
+																				.find(
+																					(option) =>
+																						option.value ===
+																						+props.values.payee,
 																				)
 																		}
 																		onChange={(option) => {

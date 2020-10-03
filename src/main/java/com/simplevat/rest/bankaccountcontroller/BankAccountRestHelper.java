@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.*;
 
 import com.simplevat.constant.PostingReferenceTypeEnum;
@@ -100,8 +101,9 @@ public class BankAccountRestHelper {
 			bankModel.setSwiftCode(bank.getSwiftCode());
 			bankModel.setCurrentBalance(bank.getCurrentBalance());
 			if (bank.getOpeningDate() != null) {
-			//	Date date = Date.from(bank.getOpeningDate().atZone(ZoneId.systemDefault()).toInstant());
-				bankModel.setOpeningDate(bank.getOpeningDate());
+				LocalDateTime openingDate = bank.getOpeningDate();
+				openingDate = LocalDateTime.ofInstant(openingDate.toInstant(ZoneOffset.UTC),ZoneId.of(System.getProperty("user.timezone","Asia/Dubai")));
+				bankModel.setOpeningDate(openingDate);
 			}
 			if (bank.getBankAccountStatus() != null) {
 				bankModel.setBankAccountStatus(bank.getBankAccountStatus().getBankAccountStatusCode());

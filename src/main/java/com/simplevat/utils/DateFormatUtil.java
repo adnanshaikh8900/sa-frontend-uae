@@ -11,10 +11,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +42,7 @@ public class DateFormatUtil {
 	public String getLocalDateTimeAsString(LocalDateTime localDateTimeDate, String format) {
 		Date date = Date.from(localDateTimeDate.atZone(ZoneId.systemDefault()).toInstant());
 		SimpleDateFormat dateFormatter = new SimpleDateFormat(format);
+		dateFormatter.setTimeZone(TimeZone.getTimeZone(System.getProperty("user.timezone","Asia/Dubai")));
 		return dateFormatter.format(date);
 
 	}

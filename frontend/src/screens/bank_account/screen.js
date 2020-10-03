@@ -299,7 +299,7 @@ class BankAccount extends React.Component {
 				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 			/>
 		);
-	};
+	}
 	renderActions = (cell, row) => {
 		return (
 			<div>
@@ -420,13 +420,18 @@ class BankAccount extends React.Component {
 		});
 	};
 
-	renderLastReconciled = (cell, row) => {
+	renderLastReconciled = (cell, row, extraData) => {
 		return (
 			<div>
 				<div>
 					<label className="font-weight-bold mr-2">Reconciled Balance : </label>
 					<label className="badge badge-success mb-0">
-					<Currency value={row.closingBalance} currencySymbol={'AED'} />
+						<Currency
+							value={row.closingBalance}
+							currencySymbol={
+								extraData[0] ? extraData[0].currencyIsoCode : 'USD'
+							}
+						/>
 					</label>
 				</div>
 				<div>
@@ -842,6 +847,7 @@ class BankAccount extends React.Component {
 													export={false}
 													dataSort={false}
 													dataFormat={this.renderLastReconciled}
+													formatExtraData={universal_currency_list}
 													width="150"
 													thStyle={{ whiteSpace: 'normal' }}
 												>

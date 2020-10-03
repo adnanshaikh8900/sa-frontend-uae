@@ -89,7 +89,6 @@ class CreateBankAccount extends React.Component {
 				swift_code: '',
 				countrycode: 229,
 				openingDate: '',
-				account_is_for: { label: 'Corporate', value: 'Corporate' },
 			},
 			currentData: {},
 		};
@@ -181,9 +180,7 @@ class CreateBankAccount extends React.Component {
 			bankAccountName: account_name,
 			bankAccountCurrency: currency ? currency : '',
 			openingBalance: opening_balance,
-			openingDate: openingDate
-				? moment(openingDate, 'DD/MM/YYYY').toDate()
-				: null,
+			openingDate: openingDate ? openingDate : null,
 			bankAccountType: account_type ? account_type : '',
 			bankName: bank_name,
 			accountNumber: account_number,
@@ -192,6 +189,10 @@ class CreateBankAccount extends React.Component {
 			bankCountry: countrycode ? countrycode : '',
 			personalCorporateAccountInd: account_is_for ? account_is_for.value : '',
 		};
+		// let formData = new FormData();
+		// for (var key in this.state.initialVals) {
+		// 	formData.append(key, data[key]);
+		// }
 		this.props.createBankAccountActions
 			.createBankAccount(obj)
 			.then((res) => {

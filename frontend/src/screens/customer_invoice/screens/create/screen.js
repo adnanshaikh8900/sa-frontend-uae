@@ -240,10 +240,7 @@ class CreateCustomerInvoice extends React.Component {
 							type="text"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (
-									e.target.value === '' ||
-									this.regEx.test(e.target.value)
-								) {
+								if (e.target.value === '' || this.regEx.test(e.target.value)) {
 									this.selectItem(
 										e.target.value,
 										row,
@@ -858,16 +855,11 @@ class CreateCustomerInvoice extends React.Component {
 		);
 		formData.append(
 			'invoiceDueDate',
-			invoiceDueDate ? moment(invoiceDueDate, 'DD/MM/YYYY').toDate() : null,
+			invoiceDueDate ? moment.utc(invoiceDate).format() : null,
 		);
 		formData.append(
 			'invoiceDate',
-			invoiceDate
-				? moment(
-						moment(invoiceDate).format('DD/MM/YYYY'),
-						'DD/MM/YYYY',
-				  ).toDate()
-				: null,
+			invoiceDate ? moment.utc(invoiceDate).format() : null,
 		);
 		formData.append(
 			'receiptNumber',

@@ -739,20 +739,29 @@ class SupplierInvoice extends React.Component {
 													<h5 className="ml-3">Overdue</h5>
 													<h3 className="invoice-detail ml-3">
 														{universal_currency_list[0] &&
-															this.state.overDueAmountDetails.overDueAmount && (
-																<Currency
-																	value={
-																		this.state.overDueAmountDetails
-																			.overDueAmount
-																	}
-																	currencySymbol={
-																		universal_currency_list[0]
-																			? universal_currency_list[0]
-																					.currencyIsoCode
-																			: 'USD'
-																	}
-																/>
-															)}
+														this.state.overDueAmountDetails.overDueAmount ? (
+															<Currency
+																value={
+																	this.state.overDueAmountDetails.overDueAmount
+																}
+																currencySymbol={
+																	universal_currency_list[0]
+																		? universal_currency_list[0].currencyIsoCode
+																		: 'USD'
+																}
+															/>
+														) : (
+															<Currency
+																value={
+																	this.state.overDueAmountDetails.overDueAmount
+																}
+																currencySymbol={
+																	universal_currency_list[0]
+																		? universal_currency_list[0].currencyIsoCode
+																		: 'USD'
+																}
+															/>
+														)}
 													</h3>
 												</div>
 											</div>
@@ -766,21 +775,32 @@ class SupplierInvoice extends React.Component {
 													<h5 className="ml-3">Due Within This Week</h5>
 													<h3 className="invoice-detail ml-3">
 														{universal_currency_list[0] &&
-															this.state.overDueAmountDetails
-																.overDueAmountWeekly && (
-																<Currency
-																	value={
-																		this.state.overDueAmountDetails
-																			.overDueAmountWeekly
-																	}
-																	currencySymbol={
-																		universal_currency_list[0]
-																			? universal_currency_list[0]
-																					.currencyIsoCode
-																			: 'USD'
-																	}
-																/>
-															)}
+														this.state.overDueAmountDetails
+															.overDueAmountWeekly ? (
+															<Currency
+																value={
+																	this.state.overDueAmountDetails
+																		.overDueAmountWeekly
+																}
+																currencySymbol={
+																	universal_currency_list[0]
+																		? universal_currency_list[0].currencyIsoCode
+																		: 'USD'
+																}
+															/>
+														) : (
+															<Currency
+																value={
+																	this.state.overDueAmountDetails
+																		.overDueAmountWeekly
+																}
+																currencySymbol={
+																	universal_currency_list[0]
+																		? universal_currency_list[0].currencyIsoCode
+																		: 'USD'
+																}
+															/>
+														)}
 													</h3>
 												</div>
 											</div>
@@ -794,21 +814,32 @@ class SupplierInvoice extends React.Component {
 													<h5 className="ml-3">Due Within 30 Days</h5>
 													<h3 className="invoice-detail ml-3">
 														{universal_currency_list[0] &&
-															this.state.overDueAmountDetails
-																.overDueAmountMonthly && (
-																<Currency
-																	value={
-																		this.state.overDueAmountDetails
-																			.overDueAmountMonthly
-																	}
-																	currencySymbol={
-																		universal_currency_list[0]
-																			? universal_currency_list[0]
-																					.currencyIsoCode
-																			: 'USD'
-																	}
-																/>
-															)}
+														this.state.overDueAmountDetails
+															.overDueAmountMonthly ? (
+															<Currency
+																value={
+																	this.state.overDueAmountDetails
+																		.overDueAmountMonthly
+																}
+																currencySymbol={
+																	universal_currency_list[0]
+																		? universal_currency_list[0].currencyIsoCode
+																		: 'USD'
+																}
+															/>
+														) : (
+															<Currency
+																value={
+																	this.state.overDueAmountDetails
+																		.overDueAmountMonthly
+																}
+																currencySymbol={
+																	universal_currency_list[0]
+																		? universal_currency_list[0].currencyIsoCode
+																		: 'USD'
+																}
+															/>
+														)}
 													</h3>
 												</div>
 											</div>

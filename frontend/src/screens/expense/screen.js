@@ -232,6 +232,15 @@ class Expense extends React.Component {
 								<i className="fas fa-send" /> Post
 							</DropdownItem>
 						)}
+						{row.expenseStatus === 'Posted' && (
+							<DropdownItem
+								onClick={() => {
+									this.unPostExpense(row);
+								}}
+							>
+								<i className="fas fa-file" /> Draft
+							</DropdownItem>
+						)}
 						{/* <DropdownItem  onClick={() => {this.openInvoicePreviewModal(row.expenseId)}}>
               <i className="fas fa-eye" /> View
             </DropdownItem>
@@ -341,6 +350,41 @@ class Expense extends React.Component {
 					this.props.commonActions.tostifyAlert(
 						'success',
 						'Expense Posted Successfully',
+					);
+					this.setState({
+						loading: false,
+					});
+					this.initializeData();
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+				this.setState({
+					loading: false,
+				});
+			});
+	};
+
+	unPostExpense = (row) => {
+		this.setState({
+			loading: true,
+		});
+		const postingRequestModel = {
+			amount: row.expenseAmount,
+			postingRefId: row.expenseId,
+			postingRefType: 'EXPENSE',
+			postingChartOfAccountId: row.chartOfAccountId,
+		};
+		this.props.expenseActions
+			.unPostExpense(postingRequestModel)
+			.then((res) => {
+				if (res.status === 200) {
+					this.props.commonActions.tostifyAlert(
+						'success',
+						'Expense Moved To Draft Successfully',
 					);
 					this.setState({
 						loading: false,

@@ -855,11 +855,16 @@ class CreateCustomerInvoice extends React.Component {
 		);
 		formData.append(
 			'invoiceDueDate',
-			invoiceDueDate ? moment.utc(invoiceDate).format() : null,
+			invoiceDueDate ? moment(invoiceDueDate, 'DD/MM/YYYY').toDate() : null,
 		);
 		formData.append(
 			'invoiceDate',
-			invoiceDate ? moment.utc(invoiceDate).format() : null,
+			invoiceDate
+				? moment(
+						moment(invoiceDate).format('DD/MM/YYYY'),
+						'DD/MM/YYYY',
+				  ).toDate()
+				: null,
 		);
 		formData.append(
 			'receiptNumber',
@@ -1214,10 +1219,15 @@ class CreateCustomerInvoice extends React.Component {
 																			const string = input.substr(
 																				prefix.length,
 																			);
-																			props.handleChange('invoice_number')(
-																				string,
-																			);
-																			this.validationCheck(e.target.value);
+																			if (
+																				input === '' ||
+																				this.regEx.test(string)
+																			) {
+																				props.handleChange('invoice_number')(
+																					string,
+																				);
+																				this.validationCheck(e.target.value);
+																			}
 																		}}
 																		className={
 																			props.errors.invoice_number &&

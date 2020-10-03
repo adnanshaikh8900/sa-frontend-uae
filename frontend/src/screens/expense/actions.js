@@ -350,3 +350,22 @@ export const getPaymentMode = () => {
 			});
 	};
 };
+
+export const unPostExpense = (obj) => {
+	return (dispatch) => {
+		let data = {
+			method: 'post',
+			url: '/rest/invoice/undoPosting',
+			data: obj,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

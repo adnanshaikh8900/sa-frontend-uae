@@ -79,6 +79,7 @@ class Register extends React.Component {
 			userDetail: false,
 			show: false,
 			togglePassword: '***********',
+			loading: false,
 		};
 	}
 
@@ -106,6 +107,7 @@ class Register extends React.Component {
 	};
 
 	handleSubmit = (data, resetForm) => {
+		this.setState({ loading: true });
 		const {
 			companyName,
 			currencyCode,
@@ -133,6 +135,7 @@ class Register extends React.Component {
 		this.props.authActions
 			.register(formData)
 			.then((res) => {
+				this.setState({ loading: true });
 				toast.success('Register Successfully please log in to continue', {
 					position: toast.POSITION.TOP_RIGHT,
 				});
@@ -147,6 +150,7 @@ class Register extends React.Component {
 				// }, 3000);
 			})
 			.catch((err) => {
+				this.setState({ loading: true });
 				toast.error(
 					err && err.data
 						? 'Log in failed. Please try again'
@@ -457,11 +461,12 @@ class Register extends React.Component {
 																				type="submit"
 																				name="submit"
 																				color="primary"
+																				disabled={this.state.loading}
 																				className="btn-square mr-3 mt-3 "
 																				style={{ width: '200px' }}
 																			>
 																				<i className="fa fa-dot-circle-o"></i>{' '}
-																				{this.state.disabled
+																				{this.state.loading
 																					? 'Creating...'
 																					: 'Register'}
 																			</Button>

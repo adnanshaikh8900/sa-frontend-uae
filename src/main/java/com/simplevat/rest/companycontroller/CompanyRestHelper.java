@@ -3,6 +3,7 @@ package com.simplevat.rest.companycontroller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -172,4 +173,12 @@ public class CompanyRestHelper{
 		return company;
 	}
 
+	public List<String> getTimeZoneList() {
+		List<String> timeZoneList = new ArrayList<>();
+		String[] ids = TimeZone.getAvailableIDs();
+		for (String id : ids) {
+			timeZoneList.add(TimeZone.getTimeZone(id).getID());
+		}
+     return timeZoneList;
+	}
 }

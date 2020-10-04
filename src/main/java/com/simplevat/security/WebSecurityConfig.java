@@ -55,6 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.authorizeRequests().// all other requests need to be authenticated
 			//antMatchers("/config/getreleasenumber").permitAll().
 					antMatchers("/rest/company/register").permitAll().
+				antMatchers("/rest/company/getTimeZoneList").permitAll().
 				antMatchers("/rest/company/getCompanyCount").permitAll().
 				antMatchers("/rest/company/getCurrency").permitAll().
 				antMatchers("/public/**").permitAll().

@@ -42,7 +42,7 @@ public class DateFormatUtil {
 	public String getLocalDateTimeAsString(LocalDateTime localDateTimeDate, String format) {
 		Date date = Date.from(localDateTimeDate.atZone(ZoneId.systemDefault()).toInstant());
 		SimpleDateFormat dateFormatter = new SimpleDateFormat(format);
-		dateFormatter.setTimeZone(TimeZone.getTimeZone(System.getProperty("user.timezone","Asia/Dubai")));
+		dateFormatter.setTimeZone(TimeZone.getTimeZone(System.getProperty("simplevat.user.timezone","Asia/Dubai")));
 		return dateFormatter.format(date);
 
 	}

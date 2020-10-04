@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -176,16 +177,18 @@ public class InvoiceRestHelper {
 
 	private void invoiceDueDate(InvoiceRequestModel invoiceModel, Invoice invoice) {
 		if (invoiceModel.getInvoiceDueDate() != null) {
-			LocalDateTime invoiceDueDate = LocalDateTime.ofInstant(invoiceModel.getInvoiceDueDate().toInstant(),
-					ZoneId.systemDefault());
+			Instant instant = Instant.ofEpochMilli(invoiceModel.getInvoiceDueDate().getTime());
+			LocalDateTime invoiceDueDate = LocalDateTime.ofInstant(instant,
+					ZoneOffset.UTC);
 			invoice.setInvoiceDueDate(invoiceDueDate);
 		}
 	}
 
 	private void invoiceDate(InvoiceRequestModel invoiceModel, Invoice invoice) {
 		if (invoiceModel.getInvoiceDate() != null) {
-			LocalDateTime invoiceDate = LocalDateTime.ofInstant(invoiceModel.getInvoiceDate().toInstant(),
-					ZoneId.systemDefault());
+			Instant instant = Instant.ofEpochMilli(invoiceModel.getInvoiceDate().getTime());
+			LocalDateTime invoiceDate = LocalDateTime.ofInstant(instant,
+					ZoneOffset.UTC);
 			invoice.setInvoiceDate(invoiceDate);
 		}
 	}

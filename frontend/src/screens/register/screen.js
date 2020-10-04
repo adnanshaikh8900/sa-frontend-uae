@@ -75,11 +75,14 @@ class Register extends React.Component {
 				lastName: '',
 				email: '',
 				password: '',
+				confirmPassword: '',
+				timeZone: '',
 			},
 			userDetail: false,
 			show: false,
 			togglePassword: '***********',
 			loading: false,
+			timezone: [],
 		};
 	}
 
@@ -88,11 +91,12 @@ class Register extends React.Component {
 	};
 
 	getInitialData = () => {
-		// this.props.authActions.getCurrencyList().then((response) => {
-		// 	this.setState({
-		// 		currencyList: response.data,
-		// 	});
-		// });
+		this.props.authActions.getTimeZoneList().then((response) => {
+			let output = response.data.map(function (value) {
+				return { label: value, value: value };
+			});
+			this.setState({ timezone: output });
+		});
 		this.props.authActions.getCompanyCount().then((response) => {
 			if (response.data > 0) {
 				this.props.history.push('/login');
@@ -117,6 +121,7 @@ class Register extends React.Component {
 			lastName,
 			email,
 			password,
+			timezone,
 		} = data;
 		let obj = {
 			companyName: companyName,
@@ -127,6 +132,7 @@ class Register extends React.Component {
 			lastName: lastName,
 			email: email,
 			password: password,
+			timeZone: timezone,
 		};
 		let formData = new FormData();
 		for (var key in this.state.initValue) {
@@ -174,7 +180,7 @@ class Register extends React.Component {
 				},
 			}),
 		};
-		const { initValue, currencyList, userDetail } = this.state;
+		const { initValue, currencyList, userDetail, timezone } = this.state;
 		return (
 			<div className="log-in-screen">
 				<ToastContainer autoClose={5000} />
@@ -215,11 +221,20 @@ class Register extends React.Component {
 															email: Yup.string()
 																.required('Email is Required')
 																.email('Invalid Email'),
+															timeZone: Yup.string().required(
+																'Time Zone is Required',
+															),
 															password: Yup.string()
 																.required('Please Enter your password')
 																.matches(
 																	/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
 																	'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
+																),
+															confirmPassword: Yup.string()
+																.required('Please Confirm Password')
+																.oneOf(
+																	[Yup.ref('password'), null],
+																	'Passwords must match',
 																),
 														})}
 													>
@@ -424,6 +439,44 @@ class Register extends React.Component {
 																		</Col>
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
+																				<Label htmlFor="timeZone">
+																					<span className="text-danger">*</span>
+																					Time Zone Preference
+																				</Label>
+																				<Select
+																					styles={customStyles}
+																					id="timeZone"
+																					name="timeZone"
+																					options={timezone ? timezone : []}
+																					value={props.values.timezone}
+																					onChange={(option) => {
+																						if (option && option.value) {
+																							props.handleChange('timeZone')(
+																								option.value,
+																							);
+																						} else {
+																							props.handleChange('timeZone')(
+																								'',
+																							);
+																						}
+																					}}
+																					className={
+																						props.errors.timeZone &&
+																						props.touched.timeZone
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																				{props.errors.timeZone &&
+																					props.touched.timeZone && (
+																						<div className="invalid-feedback">
+																							{props.errors.timeZone}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
 																				<Label htmlFor="email">
 																					<span className="text-danger">*</span>
 																					Password
@@ -454,6 +507,38 @@ class Register extends React.Component {
 																					)}
 																			</FormGroup>
 																		</Col>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="email">
+																					<span className="text-danger">*</span>
+																					Confirm Password
+																				</Label>
+																				<Input
+																					type="password"
+																					id="confirmPassword"
+																					name="confirmPassword"
+																					placeholder="Confirm Password"
+																					onChange={(option) => {
+																						props.handleChange(
+																							'confirmPassword',
+																						)(option);
+																					}}
+																					value={props.values.confirmPassword}
+																					className={
+																						props.errors.confirmPassword &&
+																						props.touched.confirmPassword
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																				{props.errors.confirmPassword &&
+																					props.touched.confirmPassword && (
+																						<div className="invalid-feedback">
+																							{props.errors.confirmPassword}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
 																	</Row>
 																	<Row>
 																		<Col className="text-center">
@@ -472,7 +557,7 @@ class Register extends React.Component {
 																			</Button>
 																		</Col>
 																	</Row>
-																	<Row>
+																	{/* <Row>
 																		<Col>
 																			<Button
 																				type="button"
@@ -486,7 +571,7 @@ class Register extends React.Component {
 																				Back
 																			</Button>
 																		</Col>
-																	</Row>
+																	</Row> */}
 																</Form>
 															);
 														}}

@@ -156,6 +156,16 @@ public class CompanyController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	@ApiOperation(value = "Get List of Time zones ")
+	@GetMapping(value = "/getTimeZoneList")
+	public ResponseEntity<List<String>> getGetTimeZoneList(HttpServletRequest request) {
+		try {
+			return new ResponseEntity<List<String>>(companyRestHelper.getTimeZoneList(), HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(ERROR, e);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
 	@ApiOperation(value = "Add New Company")
 	@PostMapping(value = "/save")
@@ -189,6 +199,8 @@ public class CompanyController {
 			user.setLastName(registrationModel.getLastName());
 			user.setUserEmail(registrationModel.getEmail());
 			user.setPassword(registrationModel.getPassword());
+			if(registrationModel.getTimeZone()!=null)
+				user.setUserTimezone(registrationModel.getTimeZone());
 			user.setRole(roleService.findByPK(1));
 			user.setCreatedBy(1);
 			user.setIsActive(true);

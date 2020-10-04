@@ -51,4 +51,6 @@ public class UserModel {
         }
         return sb.toString();
     }
+    private String timeZone;
+
 }

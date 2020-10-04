@@ -119,6 +119,9 @@ public class User implements Serializable {
 	@Column(name = "FORGOT_PASS_TOKEN", length = 4000)
 	private String forgotPasswordToken;
 
+	@Column(name = "USER_TIMEZONE")
+	private String userTimezone;
+
 	// @Convert(converter = DateConverter.class)
 	@Column(name = "FORGOT_PASSWORD_TOKEN_EXPIRY_DATE")
 	private LocalDateTime forgotPasswordTokenExpiryDate;

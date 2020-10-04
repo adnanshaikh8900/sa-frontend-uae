@@ -12,5 +12,6 @@ public class RegistrationModel {
     private String lastName;
     private String password;
     private String email;
+    private String timeZone;
 }
 

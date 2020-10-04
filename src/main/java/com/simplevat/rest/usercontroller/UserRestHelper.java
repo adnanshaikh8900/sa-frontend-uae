@@ -48,6 +48,8 @@ public class UserRestHelper {
 					userModel.setCompanyId(user.getCompany().getCompanyId());
 					userModel.setCompanyName(user.getCompany().getCompanyName());
 				}
+				if(user.getUserTimezone()!=null)
+					userModel.setTimeZone(user.getUserTimezone());
 				userModelList.add(userModel);
 			}
 		}
@@ -74,6 +76,8 @@ public class UserRestHelper {
 			if (userModel.getPassword() != null && !userModel.getPassword().isEmpty()) {
 				user.setPassword(userModel.getPassword());
 			}
+			if(userModel.getTimeZone()!=null)
+				user.setUserTimezone(userModel.getTimeZone());
 			if (userModel.getProfilePic() != null) {
 				try {
 					user.setProfileImageBinary(userModel.getProfilePic().getBytes());

@@ -199,6 +199,8 @@ public class CompanyController {
 			user.setLastName(registrationModel.getLastName());
 			user.setUserEmail(registrationModel.getEmail());
 			user.setPassword(registrationModel.getPassword());
+			if(registrationModel.getTimeZone()!=null)
+				user.setUserTimezone(registrationModel.getTimeZone());
 			user.setRole(roleService.findByPK(1));
 			user.setCreatedBy(1);
 			user.setIsActive(true);

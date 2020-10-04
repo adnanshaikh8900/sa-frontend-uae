@@ -27,7 +27,10 @@ public class CustomUserDetailsService implements UserDetailsService
         Optional<User> user = userService.getUserByEmail(emailAddress);
 
         if (user.isPresent()) {
-            return new CustomUserDetails(user.get());
+            User singleUser = user.get();
+            if(singleUser.getUserTimezone()!=null)
+            System.setProperty("simplevat.user.timezone",singleUser.getUserTimezone());
+            return new CustomUserDetails(singleUser);
         } else {
             throw new UsernameNotFoundException("Email not found");
         }

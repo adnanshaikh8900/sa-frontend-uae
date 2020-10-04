@@ -182,3 +182,6 @@ ALTER TABLE BANK_ACCOUNT add column OPENING_DATE datetime;
 
 --changeset 05/09/2020 zain:ddl-17
 create table TRANSACTON_INVOICES (ID integer not null auto_increment, CREATED_BY integer not null, CREATED_DATE datetime default CURRENT_TIMESTAMP, EXPLANATION_STATUS_NAME varchar(255) not null, LAST_UPDATED_BY integer, LAST_UPDATE_DATE datetime, REMANING_TO_EXLAIN_BALANCE decimal(19,2) default 0.00 not null, INVOICE_ID integer, TRANSACTION_ID integer,INVOICE_TYPE integer, primary key (ID));
+
+--changeset 03/10/2020 Afzal:ddl-18
+ALTER TABLE USER add column USER_TIMEZONE varchar(255);

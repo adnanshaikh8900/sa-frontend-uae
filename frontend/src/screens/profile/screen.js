@@ -128,6 +128,7 @@ class Profile extends React.Component {
 				companyPoBoxNumber: '',
 				companyCountryCode: '',
 			},
+			timezone: [],
 		};
 
 		this.regEx = /^[0-9\d]+$/;
@@ -180,6 +181,12 @@ class Profile extends React.Component {
 	};
 
 	getUserData = () => {
+		this.props.authActions.getTimeZoneList().then((response) => {
+			let output = response.data.map(function (value) {
+				return { label: value, value: value };
+			});
+			this.setState({ timezone: output });
+		});
 		const userId = cryptoService.decryptService('userId');
 		this.setState({
 			loading: true,
@@ -208,6 +215,7 @@ class Profile extends React.Component {
 								active: res.data.active ? res.data.active : '',
 								// confirmPassword: '',
 								roleId: res.data.roleId ? res.data.roleId : '',
+								timezone: res.data.timeZone ? res.data.timeZone : '',
 								// companyId: res.data.companyId ? res.data.companyId : '',
 							},
 							loading: false,
@@ -241,7 +249,7 @@ class Profile extends React.Component {
 			dob,
 			password,
 			roleId,
-			// companyId,
+			timezone,
 		} = data;
 		const { userPhotoFile } = this.state;
 		const userId = cryptoService.decryptService('userId');
@@ -253,7 +261,7 @@ class Profile extends React.Component {
 		formData.append('email', email ? email : '');
 		formData.append('dob', dob ? moment(dob).format('DD-MM-YYYY') : '');
 		formData.append('active', this.state.selectedStatus);
-		// formData.append("companyId", companyId ? companyId : '');
+		formData.append('timeZone', timezone ? timezone.value : '');
 		formData.append('roleId', roleId ? roleId : '');
 
 		if (password.length > 0) {
@@ -596,7 +604,7 @@ class Profile extends React.Component {
 	};
 
 	render() {
-		const { loading, isSame } = this.state;
+		const { loading, isSame, timezone } = this.state;
 		const {
 			currency_list,
 			country_list,
@@ -966,6 +974,47 @@ class Profile extends React.Component {
 																							props.touched.roleId && (
 																								<div className="invalid-feedback">
 																									{props.errors.roleId}
+																								</div>
+																							)}
+																					</FormGroup>
+																				</Col>
+																				<Col lg={6}>
+																					<FormGroup>
+																						<Label htmlFor="roleId">
+																							<span className="text-danger">
+																								*
+																							</span>
+																							Time Zone Preference
+																						</Label>
+																						<Select
+																							styles={customStyles}
+																							options={timezone ? timezone : []}
+																							value={props.values.timezone}
+																							onChange={(option) => {
+																								if (option.value) {
+																									props.handleChange(
+																										'timezone',
+																									)(option);
+																								} else {
+																									props.handleChange(
+																										'timezone',
+																									)('');
+																								}
+																							}}
+																							placeholder="Select Role"
+																							id="timezone"
+																							name="timezone"
+																							className={
+																								props.errors.timezone &&
+																								props.touched.timezone
+																									? 'is-invalid'
+																									: ''
+																							}
+																						/>
+																						{props.errors.timezone &&
+																							props.touched.timezone && (
+																								<div className="invalid-feedback">
+																									{props.errors.timezone}
 																								</div>
 																							)}
 																					</FormGroup>

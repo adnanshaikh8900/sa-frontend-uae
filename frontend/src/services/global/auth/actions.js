@@ -129,3 +129,21 @@ export const getCompanyCount = () => {
 			});
 	};
 };
+
+export const getTimeZoneList = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/company/getTimeZoneList',
+		};
+		return api(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

@@ -128,7 +128,7 @@ class DetailBankAccount extends React.Component {
 									account_is_for: res.personalCorporateAccountInd
 										? res.personalCorporateAccountInd
 										: '',
-									openingDate: res.openingDate ? res.openingDate : '',
+									openingDate: res.openingDate,
 								},
 							});
 						})
@@ -614,7 +614,9 @@ class DetailBankAccount extends React.Component {
 																			props.handleChange('account_number')(
 																				option,
 																			);
-																		} else if(this.regEx.test(option.target.value)) {
+																		} else if (
+																			this.regEx.test(option.target.value)
+																		) {
 																			props.handleChange('account_number')(
 																				option,
 																			);

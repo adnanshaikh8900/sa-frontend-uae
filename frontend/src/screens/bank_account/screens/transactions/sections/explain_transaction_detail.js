@@ -646,8 +646,6 @@ class ExplainTrasactionDetail extends React.Component {
 														this.handleSubmit(values, resetForm);
 													}}
 													validate={(values) => {
-														console.log(values.coaCategoryId);
-														console.log(values.transactionCategoryId);
 														let errors = {};
 														if (
 															(values.coaCategoryId.label ===
@@ -658,10 +656,16 @@ class ExplainTrasactionDetail extends React.Component {
 															errors.invoiceIdList = 'Invoice is  required';
 														}
 														if (
-															(values.coaCategoryId.label !==
-																'Supplier Invoice' ||
-																values.coaCategoryId.label !== 'Sales' ||
-																values.coaCategoryId.label !== 'Expense') &&
+															values.coaCategoryId.label === 'Sales' &&
+															!values.customerId
+														) {
+															errors.customerId = 'Customer is  required';
+														}
+														if (
+															values.coaCategoryId.label !==
+																'Supplier Invoice' &&
+															values.coaCategoryId.label !== 'Sales' &&
+															values.coaCategoryId.label !== 'Expense' &&
 															!values.transactionCategoryId
 														) {
 															errors.transactionCategoryId =
@@ -1150,6 +1154,9 @@ class ExplainTrasactionDetail extends React.Component {
 																				<Col lg={4}>
 																					<FormGroup className="mb-3">
 																						<Label htmlFor="invoiceIdList">
+																							<span className="text-danger">
+																								*
+																							</span>
 																							Invoice
 																						</Label>
 																						<Select
@@ -1282,6 +1289,12 @@ class ExplainTrasactionDetail extends React.Component {
 																							: ''
 																					}
 																				/>
+																				{props.errors.customerId &&
+																					props.touched.customerId && (
+																						<div className="invalid-feedback">
+																							{props.errors.customerId}
+																						</div>
+																					)}
 																			</FormGroup>
 																		</Col>
 																	)}
@@ -1291,6 +1304,7 @@ class ExplainTrasactionDetail extends React.Component {
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="invoiceIdList">
+																					<span className="text-danger">*</span>
 																					Invoice
 																				</Label>
 																				<Select

@@ -115,6 +115,8 @@ public class UserRestHelper {
 			if (user.getProfileImageBinary() != null) {
 				userModel.setProfilePicByteArray(user.getProfileImageBinary());
 			}
+			if(user.getUserTimezone()!=null)
+				userModel.setTimeZone(user.getUserTimezone());
 			return userModel;
 		}
 		return null;

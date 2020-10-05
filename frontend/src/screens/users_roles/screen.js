@@ -135,13 +135,13 @@ class UsersRoles extends React.Component {
                   <Col lg='12'>
                     <div className="d-flex justify-content-end">
                         <ButtonGroup className="toolbar" size="sm">
-                          <Button
+                          {/* <Button
                             color="success"
                             className="btn-square"
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                             Export to CSV
-                          </Button>
+                          </Button> */}
                           <Button
                             color="primary"
                             className="btn-square"
@@ -150,13 +150,13 @@ class UsersRoles extends React.Component {
                             <i className="fas fa-plus mr-1" />
                             Invite User
                           </Button>
-                          <Button
+                          {/* <Button
                             color="warning"
                             className="btn-square"
                           >
                             <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
                             Bulk Delete
-                          </Button>
+                          </Button> */}
                         </ButtonGroup>
                         </div>
                         <div className="py-3">

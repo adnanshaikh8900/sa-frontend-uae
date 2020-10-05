@@ -102,7 +102,7 @@ public class BankAccountRestHelper {
 			bankModel.setCurrentBalance(bank.getCurrentBalance());
 			if (bank.getOpeningDate() != null) {
 				LocalDateTime openingDate = bank.getOpeningDate();
-				openingDate = LocalDateTime.ofInstant(openingDate.toInstant(ZoneOffset.UTC),ZoneId.of(System.getProperty("user.timezone","Asia/Dubai")));
+				openingDate = LocalDateTime.ofInstant(openingDate.toInstant(ZoneOffset.UTC),ZoneId.of(System.getProperty("simplevat.user.timezone","Asia/Dubai")));
 				bankModel.setOpeningDate(openingDate);
 			}
 			if (bank.getBankAccountStatus() != null) {

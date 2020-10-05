@@ -128,7 +128,7 @@ class DetailBankAccount extends React.Component {
 									account_is_for: res.personalCorporateAccountInd
 										? res.personalCorporateAccountInd
 										: '',
-									openingDate: res.openingDate,
+									openingDate: moment(res.openingDate).format('DD/MM/YYYY'),
 								},
 							});
 						})
@@ -473,9 +473,7 @@ class DetailBankAccount extends React.Component {
 																			: ''
 																	}`}
 																	placeholderText="Expense Date"
-																	value={moment(
-																		props.values.openingDate,
-																	).format('DD/MM/YYYY')}
+																	value={props.values.openingDate}
 																	showMonthDropdown
 																	showYearDropdown
 																	disabled

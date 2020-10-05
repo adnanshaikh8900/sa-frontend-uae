@@ -353,7 +353,10 @@ class DetailCustomerInvoice extends React.Component {
 						type="text"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
-							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+							if (
+								e.target.value === '' ||
+								this.regDecimal.test(e.target.value)
+							) {
 								this.selectItem(
 									e.target.value,
 									row,
@@ -1125,7 +1128,7 @@ class DetailCustomerInvoice extends React.Component {
 															</Row>
 															<hr />
 															<Row>
-																<Col lg={4}>
+																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="term">
 																			<span className="text-danger">*</span>
@@ -1190,7 +1193,7 @@ class DetailCustomerInvoice extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																<Col lg={4}>
+																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">
 																			<span className="text-danger">*</span>
@@ -1226,7 +1229,7 @@ class DetailCustomerInvoice extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																<Col lg={4}>
+																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="due_date">
 																			Invoice Due Date
@@ -1264,9 +1267,7 @@ class DetailCustomerInvoice extends React.Component {
 																		</div>
 																	</FormGroup>
 																</Col>
-															</Row>
-															<Row>
-																<Col lg={4}>
+																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="currency">
 																			<span className="text-danger">*</span>

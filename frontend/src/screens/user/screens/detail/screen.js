@@ -19,7 +19,7 @@ import { Loader, ConfirmDeleteModal, ImageUploader } from 'components';
 import * as UserActions from '../../actions';
 import * as UserDetailActions from './actions';
 
-import { CommonActions } from 'services/global';
+import { CommonActions, AuthActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 import moment from 'moment';
 import { Formik } from 'formik';
@@ -36,6 +36,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
+		authActions: bindActionCreators(AuthActions, dispatch),
 		userDetailActions: bindActionCreators(UserDetailActions, dispatch),
 		userActions: bindActionCreators(UserActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
@@ -66,6 +67,7 @@ class DetailUser extends React.Component {
 			imageState: true,
 			current_user_id: null,
 			disabled: false,
+			timezone: [],
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 	}
@@ -75,10 +77,12 @@ class DetailUser extends React.Component {
 	};
 
 	initializeData = () => {
-		// this.setState({
-		//   loading: false,
-		//   userPhoto: this.state.userPhoto.concat(`https://i.picsum.photos/id/1/5616/3744.jpg`),
-		// });
+		this.props.authActions.getTimeZoneList().then((response) => {
+			let output = response.data.map(function (value) {
+				return { label: value, value: value };
+			});
+			this.setState({ timezone: output });
+		});
 		if (this.props.location.state && this.props.location.state.id) {
 			this.props.userDetailActions
 				.getUserById(this.props.location.state.id)
@@ -98,6 +102,7 @@ class DetailUser extends React.Component {
 								confirmPassword: '',
 								roleId: res.data.roleId ? res.data.roleId : '',
 								companyId: res.data.companyId ? res.data.companyId : '',
+								timeZone: res.data.timeZone ? res.data.timeZone : '',
 							},
 							loading: false,
 							selectedStatus: res.data.active ? true : false,
@@ -136,7 +141,6 @@ class DetailUser extends React.Component {
 	};
 
 	deleteUser = () => {
-		
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
@@ -145,9 +149,7 @@ class DetailUser extends React.Component {
 					cancelHandler={this.removeDialog}
 					message="Warning: This User will be deleted permanently and cannot be recovered. "
 				/>
-				
 			),
-
 		});
 	};
 
@@ -188,6 +190,7 @@ class DetailUser extends React.Component {
 			password,
 			roleId,
 			companyId,
+			timeZone,
 		} = data;
 		const { current_user_id } = this.state;
 		const { userPhotoFile } = this.state;
@@ -197,6 +200,7 @@ class DetailUser extends React.Component {
 		formData.append('firstName', firstName ? firstName : '');
 		formData.append('lastName', lastName ? lastName : '');
 		formData.append('email', email ? email : '');
+		formData.append('timeZone', timeZone ? timeZone : '');
 		formData.append('dob', dob ? moment(dob).format('DD-MM-YYYY') : '');
 		formData.append(
 			'roleId',
@@ -233,7 +237,7 @@ class DetailUser extends React.Component {
 	};
 
 	render() {
-		const { loading, dialog } = this.state;
+		const { loading, dialog, timezone } = this.state;
 		const { role_list } = this.props;
 
 		return (
@@ -283,6 +287,9 @@ class DetailUser extends React.Component {
 															.email('Invalid Email'),
 														roleId: Yup.string().required(
 															'Role Name is Required',
+														),
+														timeZone: Yup.string().required(
+															'Time Zone is Required',
 														),
 														password: Yup.string()
 															// .required("Password is Required")
@@ -513,7 +520,7 @@ class DetailUser extends React.Component {
 																					Role
 																				</Label>
 																				<Select
-																				styles={customStyles}
+																					styles={customStyles}
 																					options={
 																						role_list
 																							? selectOptionsFactory.renderOptions(
@@ -562,6 +569,51 @@ class DetailUser extends React.Component {
 																					props.touched.roleId && (
 																						<div className="invalid-feedback">
 																							{props.errors.roleId}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="timeZone">
+																					<span className="text-danger">*</span>
+																					Time Zone Preference
+																				</Label>
+																				<Select
+																					styles={customStyles}
+																					id="timeZone"
+																					name="timeZone"
+																					options={timezone ? timezone : []}
+																					value={
+																						timezone &&
+																						timezone.find(
+																							(option) =>
+																								option.value ===
+																								props.values.timeZone,
+																						)
+																					}
+																					onChange={(option) => {
+																						if (option && option.value) {
+																							props.handleChange('timeZone')(
+																								option.value,
+																							);
+																						} else {
+																							props.handleChange('timeZone')(
+																								'',
+																							);
+																						}
+																					}}
+																					className={
+																						props.errors.timeZone &&
+																						props.touched.timeZone
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																				{props.errors.timeZone &&
+																					props.touched.timeZone && (
+																						<div className="invalid-feedback">
+																							{props.errors.timeZone}
 																						</div>
 																					)}
 																			</FormGroup>
@@ -739,7 +791,6 @@ class DetailUser extends React.Component {
 																			color="danger"
 																			className="btn-square"
 																			onClick={this.deleteUser}
-																			
 																		>
 																			<i className="fa fa-trash"></i> Delete
 																		</Button>

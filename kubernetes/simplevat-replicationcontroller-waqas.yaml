@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: simplevat-waqas
-          image: gcr.io/gtt-k8s/simplevat:0-0-1-rc-07
+          image: gcr.io/gtt-k8s/simplevat:0-0-1-rc-47
           ports:
           - containerPort: 8080
           readinessProbe:
@@ -51,7 +51,7 @@ spec:
             - name: SIMPLEVAT_TOKEN
               value: XXXX
             - name: SIMPLEVAT_RELEASE
-              value: 0-0-1-rc-07
+              value: 0-0-1-rc-47
             - name: SIMPLEVAT_HOST
               value: http://waqas.test.simplevat.com
             - name: SIMPLEVAT_DB_HOST

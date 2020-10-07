@@ -73,6 +73,8 @@ public class FinancialReportRestHelper {
 					continue;
 				switch (chartOfAccountCategoryCodeEnum) {
 					case CASH:
+						if(isNegative)
+							closingBalance = closingBalance.negate();
 						balanceSheetResponseModel.getCurrentAssets().put(transactionCategoryName,closingBalance);
 						totalCurrentAssets = totalCurrentAssets.add(closingBalance);
 						break;
@@ -112,24 +114,34 @@ public class FinancialReportRestHelper {
 						break;
 
 					case OTHER_LIABILITY:
+						if(!isNegative)
+							closingBalance = closingBalance.negate();
 						balanceSheetResponseModel.getOtherLiability().put(transactionCategoryName,closingBalance);
 						totalOtherLiability = totalOtherLiability.add(closingBalance);
 						break;
 
 					case ACCOUNTS_PAYABLE:
+						if(!isNegative)
+							closingBalance = closingBalance.negate();
 						totalAccountPayable = totalAccountPayable.add(closingBalance);
 						break;
 
 					case OTHER_CURRENT_LIABILITIES:
+						if(!isNegative)
+							closingBalance = closingBalance.negate();
 						balanceSheetResponseModel.getOtherCurrentLiability().put(transactionCategoryName,closingBalance);
 						totalOtherCurrentLiability = totalOtherCurrentLiability.add(closingBalance);
 						break;
 
 					case EQUITY:
+						if(!isNegative && !transactionCategoryName.equalsIgnoreCase("Opening Balance Offset Liabilities"))
+							closingBalance = closingBalance.negate();
 							balanceSheetResponseModel.getEquities().put(transactionCategoryName,closingBalance);
 							totalEquities = totalEquities.add(closingBalance);
 						break;
 					case INCOME:
+						if(!isNegative)
+							closingBalance = closingBalance.negate();
 						if (transactionCategoryName.equalsIgnoreCase("Sales") ||
 								transactionCategoryName.equalsIgnoreCase("Other Charges")) {
 							totalOperatingIncome = totalOperatingIncome.add(closingBalance);
@@ -347,8 +359,10 @@ public class FinancialReportRestHelper {
 				String transactionCategoryName = transactionCategoryClosingBalance.getTransactionCategory().getTransactionCategoryName();
 				BigDecimal closingBalance = transactionCategoryClosingBalance.getClosingBalance();
 				String type = "Debit";
-				if(closingBalance.longValue()<0)
-				{	closingBalance = closingBalance.negate();
+                boolean transactionTypeDebitFlag = true;
+				if(closingBalance.longValue()<0) {
+					transactionTypeDebitFlag = false;
+					closingBalance = closingBalance.negate();
 					type = "Credit";
 				}
 				ChartOfAccountCategoryCodeEnum chartOfAccountCategoryCodeEnum = ChartOfAccountCategoryCodeEnum.
@@ -360,39 +374,56 @@ public class FinancialReportRestHelper {
 					case ACCOUNTS_RECEIVABLE:
 						trialBalanceResponseModel.getAccountReceivable().put(transactionCategoryName,
 								closingBalance);
-							trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName, type);
+						trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName, type);
+						if(transactionTypeDebitFlag)
 							totalDebitAmount = totalDebitAmount.add(closingBalance);
-
+						else
+							totalCreditAmount = totalCreditAmount.add(closingBalance);
 						break;
 					case BANK:
 					case CASH:
 						trialBalanceResponseModel.getBank().put(transactionCategoryName,
 								closingBalance);
 							trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName, type);
+						if(transactionTypeDebitFlag)
 							totalDebitAmount = totalDebitAmount.add(closingBalance);
+						else
+							totalCreditAmount = totalCreditAmount.add(closingBalance);
 						break;
 					case CURRENT_ASSET:
 					case STOCK:
 							totalStocks = totalStocks.add(closingBalance);
 						trialBalanceResponseModel.setStocks(totalStocks);
-
+						if(transactionTypeDebitFlag)
+							totalDebitAmount = totalDebitAmount.add(totalStocks);
+						else
+							totalCreditAmount = totalCreditAmount.add(totalStocks);
 					case OTHER_CURRENT_ASSET:
 							trialBalanceResponseModel.getAssets().put(transactionCategoryName,
 									closingBalance);
 							trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName, type);
+						if(transactionTypeDebitFlag)
 							totalDebitAmount = totalDebitAmount.add(closingBalance);
+						else
+							totalCreditAmount = totalCreditAmount.add(closingBalance);
 						break;
 					case FIXED_ASSET:
 						trialBalanceResponseModel.getFixedAsset().put(transactionCategoryName,
 								closingBalance);
 							trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName, type);
+						if(transactionTypeDebitFlag)
 							totalDebitAmount = totalDebitAmount.add(closingBalance);
+						else
+							totalCreditAmount = totalCreditAmount.add(closingBalance);
 						break;
 
 					case ACCOUNTS_PAYABLE:
 						trialBalanceResponseModel.getAccountpayable().put(transactionCategoryName,
 								closingBalance);
 							trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName, type);
+						if(transactionTypeDebitFlag)
+							totalDebitAmount = totalDebitAmount.add(closingBalance);
+						else
 							totalCreditAmount = totalCreditAmount.add(closingBalance);
 						break;
 					case OTHER_LIABILITY:
@@ -401,24 +432,42 @@ public class FinancialReportRestHelper {
 								closingBalance);
 
 							trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName, type);
+						if(transactionTypeDebitFlag)
+							totalDebitAmount = totalDebitAmount.add(closingBalance);
+						else
 							totalCreditAmount = totalCreditAmount.add(closingBalance);
 						break;
 					case EQUITY:
 						trialBalanceResponseModel.getEquities().put(transactionCategoryName,closingBalance);
-							trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName, type);
-							totalCreditAmount = totalCreditAmount.add(closingBalance);
+
+							if(transactionTypeDebitFlag&&!transactionCategoryName.equalsIgnoreCase("Opening Balance Offset Liabilities"))
+							{
+								totalDebitAmount = totalDebitAmount.add(closingBalance);
+								trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName, "Debit");
+							}
+						else {
+								totalCreditAmount = totalCreditAmount.add(closingBalance);
+								trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName, "Credit");
+							}
 						break;
 					case INCOME:
 						trialBalanceResponseModel.getIncome().put(transactionCategoryName,
 								closingBalance);
 							trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName, type);
+						if(transactionTypeDebitFlag)
+							totalDebitAmount = totalDebitAmount.add(closingBalance);
+						else
 							totalCreditAmount = totalCreditAmount.add(closingBalance);
 						break;
 					case ADMIN_EXPENSE:
 					case OTHER_EXPENSE:
 					case COST_OF_GOODS_SOLD:
+						trialBalanceResponseModel.getExpense().put(transactionCategoryName,closingBalance);
 							trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName, type);
+						if(transactionTypeDebitFlag)
 							totalDebitAmount = totalDebitAmount.add(closingBalance);
+						else
+							totalCreditAmount = totalCreditAmount.add(closingBalance);
 						break;
 					default:
 						break;

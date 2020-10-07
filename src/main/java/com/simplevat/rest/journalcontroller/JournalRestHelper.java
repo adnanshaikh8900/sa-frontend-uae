@@ -57,10 +57,12 @@ public class JournalRestHelper {
 	public Journal getEntity(JournalRequestModel journalRequestModel, Integer userId) {
 		Journal journal = new Journal();
 		if (journalRequestModel.getJournalId() != null) {
-			journal = journalService.findByPK(journalRequestModel.getJournalId());
-			if (journal.getJournalLineItems() != null) {
-				journalLineItemService.deleteByJournalId(journalRequestModel.getJournalId());
-			}
+			Journal journal1 = journalService.getJournalByReferenceId(journalRequestModel.getJournalId());
+			journal.setPostingReferenceType(journal1.getPostingReferenceType());
+			journal.setJournlReferencenNo(journal1.getJournlReferencenNo());
+			List<Integer> list = new ArrayList<>();
+			list.add(journal1.getId());
+			journalService.deleteByIds(list);
 		}
 		if (journalRequestModel.getCurrencyCode() != null) {
 			journal.setCurrency(currencyService.getCurrency(journalRequestModel.getCurrencyCode()));
@@ -127,7 +129,7 @@ public class JournalRestHelper {
 				lineItem.setReferenceId(journal.getId());
 				lineItem.setReferenceType(lineItem.getReferenceType() != null ? lineItem.getReferenceType()
 						: PostingReferenceTypeEnum.MANUAL);
-
+				lineItem.setCurrentBalance(model.getCreditAmount()!=null?model.getCreditAmount():model.getDebitAmount());
 				lineItems.add(lineItem);
 			} catch (Exception e) {
 				logger.error("Error", e);

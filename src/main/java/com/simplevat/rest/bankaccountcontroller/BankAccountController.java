@@ -203,7 +203,7 @@ public class BankAccountController{
 	@ApiOperation(value = "Update Bank Account", response = BankAccount.class)
 	@PutMapping("/{bankAccountId}")
 	public ResponseEntity<String> updateBankAccount(@PathVariable("bankAccountId") Integer bankAccountId, BankModel bankModel,
-			HttpServletRequest request) {
+													HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			bankModel.setBankAccountId(bankAccountId);
@@ -212,16 +212,28 @@ public class BankAccountController{
 			bankAccount.setBankAccountId(bankModel.getBankAccountId());
 			bankAccount.setLastUpdateDate(LocalDateTime.now());
 			bankAccount.setLastUpdatedBy(user.getUserId());
-			if (bankModel.getOpeningDate()!= null) {
-//				LocalDateTime openingDate = Instant.ofEpochMilli(bankModel.getOpeningDate().getTime())
-//						.atZone(ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0).withNano(0)
-//						.toLocalDateTime();
-				bankAccount.setOpeningDate(bankModel.getOpeningDate());
-			}
+
 			bankAccountService.update(bankAccount);
-
+			TransactionCategoryBalance openingBalance = bankAccountRestHelper.getOpeningBalanceEntity
+					(bankAccount,bankAccount.getTransactionCategory());
+			openingBalance.setOpeningBalance(bankAccount.getOpeningBalance());
+			openingBalance.setRunningBalance(bankAccount.getCurrentBalance());
+			transactionCategoryBalanceService.update(openingBalance);
+			TransactionCategory transactionCategory = transactionCategoryService
+					.findTransactionCategoryByTransactionCategoryCode(
+							TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
+			openingBalance = bankAccountRestHelper.getOpeningBalanceEntity(bankAccount,transactionCategory);
+			openingBalance.setOpeningBalance(openingBalance.getOpeningBalance().add(bankModel.getActualOpeningBalance()));
+			openingBalance.setRunningBalance(openingBalance.getRunningBalance().add(bankModel.getActualOpeningBalance()));
+			transactionCategoryBalanceService.update(openingBalance);
+			TransactionCategoryClosingBalance closingBalance = transactionCategoryClosingBalanceService
+					.getFirstClosingBalanceByDate(bankAccount.getTransactionCategory());
+			Transaction transaction = bankAccountRestHelper.getBankBalanceFromClosingBalance(bankModel,closingBalance,'C');
+			transactionCategoryClosingBalanceService.updateClosingBalance(transaction);
+			closingBalance = transactionCategoryClosingBalanceService.getFirstClosingBalanceByDate(transactionCategory);
+			transaction = bankAccountRestHelper.getBankBalanceFromClosingBalance(bankModel,closingBalance,'C');
+			transactionCategoryClosingBalanceService.updateClosingBalance(transaction);
 			return new ResponseEntity<>("Update Successfull..",HttpStatus.OK);
-
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}

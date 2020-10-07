@@ -160,6 +160,7 @@ public class JournalRestController {
 			Journal journal = journalRestHelper.getEntity(jouralRequestModel, userId);
 			journal.setLastUpdateDate(LocalDateTime.now());
 			journal.setLastUpdateBy(userId);
+			journal.setCreatedBy(userId);
 			journalService.update(journal);
 			return new ResponseEntity<>("Updated Successfully",HttpStatus.OK);
 		} catch (Exception e) {

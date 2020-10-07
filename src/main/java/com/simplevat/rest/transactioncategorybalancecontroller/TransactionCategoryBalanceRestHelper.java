@@ -3,6 +3,7 @@ package com.simplevat.rest.transactioncategorybalancecontroller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.simplevat.constant.ChartOfAccountCategoryCodeEnum;
 import com.simplevat.constant.TransactionCategoryCodeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -65,10 +66,10 @@ public class TransactionCategoryBalanceRestHelper {
 			for (TransactionCategoryBalance balance : balaneList) {
 				if(balance.getTransactionCategory().getTransactionCategoryCode()
 						.equalsIgnoreCase(TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_ASSETS.getCode())
-				||balance.getTransactionCategory().getTransactionCategoryCode()
-						.equalsIgnoreCase(TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode())
 						||balance.getTransactionCategory().getTransactionCategoryCode()
-						.equalsIgnoreCase(TransactionCategoryCodeEnum.BANK.getCode()))
+						.equalsIgnoreCase(TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode())
+						||balance.getTransactionCategory().getChartOfAccount().getChartOfAccountCode()
+						.equalsIgnoreCase(ChartOfAccountCategoryCodeEnum.BANK.getCode()))
 					continue;
 				TransactionCategoryBalanceListModel model = new TransactionCategoryBalanceListModel();
 				model.setTransactionCategoryId(balance.getTransactionCategory().getTransactionCategoryId());

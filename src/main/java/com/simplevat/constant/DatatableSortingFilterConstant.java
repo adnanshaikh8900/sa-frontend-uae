@@ -24,6 +24,11 @@ public class DatatableSortingFilterConstant {
 	public static final String JOURNAL_COL_LABEL_STRING = "journalDate,journalReferenceNo,postingReferenceTypeDisplayName,description";
 	public static final String JOURNAL_COL_NAME_STRING = "journalDate,journlReferencenNo,postingReferenceType,description";
 
+	//JOURNAL table
+	public static final String JOURNAL_LINE_ITEM = "JOURNAL_LINE_ITEM";
+	public static final String JOURNAL_LINE_ITEM_DEFAULT_VALUE = "id";
+	public static final String JOURNAL_LINE_ITEM_COL_LABEL_STRING = "transactionCategory,description";
+	public static final String JOURNAL_LINE_ITEM_COL_NAME_STRING = "transactionCategory,description";
 	//BANK_ACCOUNT table
 	public static final String BANK_ACCOUNT = "BANK_ACCOUNT";
 	public static final String BANK_ACCOUNT_DEFAULT_VALUE = "id";
@@ -123,6 +128,12 @@ public class DatatableSortingFilterConstant {
 		tempDataMap = createMap(colLabelStringArray,colNameStringArray);
 		tableColumnNameMappingDataMap.put(JOURNAL,tempDataMap);
 
+		//JOURNAL_LINE_ITEM
+		colLabelStringArray = JOURNAL_LINE_ITEM_COL_LABEL_STRING.split(",");
+		colNameStringArray = JOURNAL_LINE_ITEM_COL_NAME_STRING.split(",");
+		tempDataMap = createMap(colLabelStringArray,colNameStringArray);
+		tableColumnNameMappingDataMap.put(JOURNAL_LINE_ITEM,tempDataMap);
+
 		//BANK_ACCOUNT
 		colLabelStringArray = BANK_ACCOUNT_COL_LABEL_STRING.split(",");
 		colNameStringArray = BANK_ACCOUNT_COL_NAME_STRING.split(",");
@@ -201,6 +212,7 @@ public class DatatableSortingFilterConstant {
 		tableDefaultValueMap = new HashMap<>();
 		tableDefaultValueMap.put(EXPENSE, EXPENSE_DEFAULT_VALUE);
 		tableDefaultValueMap.put(JOURNAL,JOURNAL_DEFAULT_VALUE);
+		tableDefaultValueMap.put(JOURNAL_LINE_ITEM,JOURNAL_LINE_ITEM_DEFAULT_VALUE);
 		tableDefaultValueMap.put(BANK_ACCOUNT,BANK_ACCOUNT_DEFAULT_VALUE);
 		tableDefaultValueMap.put(INVOICE,INVOICE_DEFAULT_VALUE);
 		tableDefaultValueMap.put(RECEIPT,RECEIPT_DEFAULT_VALUE);

@@ -2,6 +2,8 @@ package com.simplevat.dao.impl;
 
 import com.simplevat.constant.ChartOfAccountCategoryCodeEnum;
 import com.simplevat.constant.CommonColumnConstants;
+import com.simplevat.constant.DatatableSortingFilterConstant;
+import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.rest.financialreport.CreditDebitAggregator;
 import com.simplevat.rest.financialreport.FinancialReportRequestModel;
@@ -22,11 +24,7 @@ import com.simplevat.utils.DateFormatUtil;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Date;
+import java.util.*;
 
 import javax.persistence.ParameterMode;
 import javax.persistence.Query;
@@ -44,6 +42,9 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 
 	@Autowired
 	private DateFormatUtil dateUtil;
+
+	@Autowired
+	private DatatableSortingFilterConstant datatableUtil;
 
 	@Override
 	@Transactional
@@ -110,19 +111,31 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 	}
 
 	@Override
-	public PaginationResponseModel getVatTransactionList(Map<TaxesFilterEnum, Object> filterMap, TaxesFilterModel paginationModel){
-		PaginationResponseModel response = new PaginationResponseModel();
-		TypedQuery<JournalLineItem> typedQuery = getEntityManager().createNamedQuery("getVatTransationList", JournalLineItem.class );
-		if (paginationModel != null && !paginationModel.isPaginationDisable()) {
-			typedQuery.setFirstResult(paginationModel.getPageNo());
-			typedQuery.setMaxResults(paginationModel.getPageSize());
-		}
-		List<JournalLineItem> journalLineItemList = typedQuery.getResultList();
-		if (journalLineItemList != null && !journalLineItemList.isEmpty()){
-			response.setCount(journalLineItemList.size());
-			response.setData(journalLineItemList);
-		}
+	public PaginationResponseModel getVatTransactionList(Map<TaxesFilterEnum, Object> filterMap, TaxesFilterModel paginationModel, List<TransactionCategory> transactionCategoryList){
+			List<DbFilter> dbFilters = new ArrayList<>();
+			filterMap.forEach(
+					(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
+							.condition(productFilter.getCondition()).value(value).build()));
+			paginationModel.setSortingCol(
+					datatableUtil.getColName(paginationModel.getSortingCol(), DatatableSortingFilterConstant.JOURNAL_LINE_ITEM));
+		   dbFilters.add(DbFilter.builder().dbCoulmnName("transactionCategory")
+				.condition(" IN (:transactionCategory) ").value(transactionCategoryList).build());
+			PaginationResponseModel response = new PaginationResponseModel();
+			response.setCount(this.getResultCount(dbFilters));
+			response.setData(this.executeQuery(dbFilters, paginationModel));
 			return response;
+//		PaginationResponseModel response = new PaginationResponseModel();
+//		TypedQuery<JournalLineItem> typedQuery = getEntityManager().createNamedQuery("getVatTransationList", JournalLineItem.class );
+//		if (paginationModel != null && !paginationModel.isPaginationDisable()) {
+//			typedQuery.setFirstResult(paginationModel.getPageNo());
+//			typedQuery.setMaxResults(paginationModel.getPageSize());
+//		}
+//		List<JournalLineItem> journalLineItemList = typedQuery.getResultList();
+//		if (journalLineItemList != null && !journalLineItemList.isEmpty()){
+//			response.setCount(journalLineItemList.size());
+//			response.setData(journalLineItemList);
+//		}
+//			return response;
 	}
 
 

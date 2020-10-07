@@ -71,8 +71,8 @@ public class JournalLineItemServiceImpl extends JournalLineItemService {
 	}
 
 	@Override
-	public PaginationResponseModel getVatTransactionList(Map<TaxesFilterEnum, Object> filterMap, TaxesFilterModel paginationModel) {
-		return journalLineItemDao.getVatTransactionList(filterMap, paginationModel);
+	public PaginationResponseModel getVatTransactionList(Map<TaxesFilterEnum, Object> filterMap, TaxesFilterModel paginationModel, List<TransactionCategory> transactionCategoryList) {
+		return journalLineItemDao.getVatTransactionList(filterMap, paginationModel,transactionCategoryList);
 	}
 
 	@Override

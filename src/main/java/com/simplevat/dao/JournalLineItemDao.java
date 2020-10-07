@@ -32,7 +32,7 @@ public interface JournalLineItemDao extends Dao<Integer, JournalLineItem> {
 
 	public List<JournalLineItem> getListByTransactionCategory(TransactionCategory transactionCategory);
 
-    public PaginationResponseModel getVatTransactionList(Map<TaxesFilterEnum, Object> map, TaxesFilterModel paginationResponseModel);
+    public PaginationResponseModel getVatTransactionList(Map<TaxesFilterEnum, Object> map, TaxesFilterModel paginationResponseModel, List<TransactionCategory> transactionCategoryList);
 
 	public 	Map<Integer, CreditDebitAggregator> getTaxReport(Date startDate, Date endDate);
 

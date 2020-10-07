@@ -617,7 +617,7 @@ class BankAccount extends React.Component {
 							) : (
 								<Row>
 									<Col lg={12}>
-										<div className="d-flex justify-content-end">
+										{/* <div className="d-flex justify-content-end">
 											<ButtonGroup size="sm">
 												<Button
 													color="primary"
@@ -637,7 +637,7 @@ class BankAccount extends React.Component {
 													/>
 												)}
 											</ButtonGroup>
-										</div>
+										</div> */}
 										{/* <div className="py-3">
 											<h5>Filter : </h5>
 											<Row>

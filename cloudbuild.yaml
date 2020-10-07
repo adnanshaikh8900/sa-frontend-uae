@@ -53,7 +53,7 @@ steps:
 - name: 'gcr.io/cloud-builders/kubectl'
   args:
     - 'scale'
-    - '--replicas=3'
+    - '--replicas=1'
     - 'rc'
     - 'simplevat-dev-rep'
     - '--namespace=simplevat-dev'
@@ -105,7 +105,7 @@ steps:
 - name: 'gcr.io/cloud-builders/kubectl'
   args:
     - 'scale'
-    - '--replicas=3'
+    - '--replicas=1'
     - 'rc'
     - 'simplevat-test-rep'
     - '--namespace=simplevat-test'
@@ -157,7 +157,7 @@ steps:
 - name: 'gcr.io/cloud-builders/kubectl'
   args:
     - 'scale'
-    - '--replicas=3'
+    - '--replicas=1'
     - 'rc'
     - 'simplevat-waqas-rep'
     - '--namespace=simplevat-test'

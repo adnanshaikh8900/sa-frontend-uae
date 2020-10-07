@@ -272,14 +272,14 @@ class VatTransactions extends React.Component {
 								<div className="flex-wrap d-flex justify-content-end">
 									<FormGroup>
 										<ButtonGroup className="mr-3">
-											<Button
+											{/* <Button
 												color="primary"
 												className="btn-square"
 												onClick={() => this.table.handleExportCSV()}
 											>
 												<i className="fa glyphicon glyphicon-export fa-download mr-1" />
 												Export to CSV
-											</Button>
+											</Button> */}
 										</ButtonGroup>
 									</FormGroup>
 									{/* <FormGroup>

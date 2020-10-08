@@ -17,6 +17,7 @@ import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.bankaccountcontroller.BankAccountRestHelper;
 import com.simplevat.service.*;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +71,7 @@ public class TransactionCategoryBalanceController {
 	@ApiOperation(value = "Save")
 	@PostMapping(value = "/save")
 	public ResponseEntity<String> save(@RequestBody TransactioncategoryBalancePersistModel persistmodel,
-			HttpServletRequest request) {
+									   HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			User user = userServiceNew.findByPK(userId);
@@ -87,10 +88,19 @@ public class TransactionCategoryBalanceController {
 			{
 				closingBalance = closingBalanceList.get(0);
 				BigDecimal closingBalanceValue = closingBalance.getClosingBalance();
-				//closingBalanceValue = closingBalanceValue.negate();
-				closingBalanceValue = closingBalanceValue.add(openingBalance.getOpeningBalance());
-				closingBalance.setOpeningBalance(openingBalance.getOpeningBalance());
-				closingBalance.setClosingBalance(closingBalanceValue);
+				if(StringUtils.equalsAnyIgnoreCase(transactionCategory.getTransactionCategoryCode(),
+						TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode()))
+				{
+					closingBalanceValue = closingBalanceValue.negate();
+					closingBalanceValue = closingBalanceValue.add(openingBalance.getOpeningBalance().negate());
+					closingBalance.setOpeningBalance(openingBalance.getOpeningBalance());
+					closingBalance.setClosingBalance(closingBalanceValue);
+				}
+				else{
+					closingBalanceValue = closingBalanceValue.add(openingBalance.getOpeningBalance());
+					closingBalance.setOpeningBalance(openingBalance.getOpeningBalance());
+					closingBalance.setClosingBalance(closingBalanceValue);
+				}
 			}
 			else {
 				closingBalance = bankAccountRestHelper
@@ -137,7 +147,7 @@ public class TransactionCategoryBalanceController {
 	@ApiOperation(value = "/Update")
 	@PostMapping(value = "update")
 	public ResponseEntity<String> update(@RequestBody TransactioncategoryBalancePersistModel persistmodel,
-			HttpServletRequest request) {
+										 HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			User user = userServiceNew.findByPK(userId);

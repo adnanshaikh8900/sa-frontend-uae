@@ -148,7 +148,7 @@ public class TransactionRestController {
 
 		Map<TransactionFilterEnum, Object> dataMap = new EnumMap<>(TransactionFilterEnum.class);
  			if(filterModel.getSortingCol()==null|| filterModel.getSortingCol()=="-1")
- 				filterModel.setSortingCol("transactionDate");
+ 				filterModel.setSortingCol("transactionDate,createdDate");
 		if (filterModel.getBankId() != null) {
 			dataMap.put(TransactionFilterEnum.BANK_ID, bankAccountService.findByPK(filterModel.getBankId()));
 		}

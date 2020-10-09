@@ -786,14 +786,14 @@ class DetailUser extends React.Component {
 																	className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
 																>
 																	<FormGroup>
-																		<Button
+																		{/* <Button
 																			type="button"
 																			color="danger"
 																			className="btn-square"
 																			onClick={this.deleteUser}
 																		>
 																			<i className="fa fa-trash"></i> Delete
-																		</Button>
+																		</Button> */}
 																	</FormGroup>
 																	<FormGroup className="text-right">
 																		<Button

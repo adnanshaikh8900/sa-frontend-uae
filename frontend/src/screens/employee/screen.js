@@ -288,7 +288,7 @@ class Employee extends React.Component {
                     <Col lg={12}>
                       <div className="d-flex justify-content-end">
                         <ButtonGroup size="sm">
-                          <Button
+                          {/* <Button
                             color="success"
                             className="btn-square"
                             onClick={() => this.getCsvData()}
@@ -301,7 +301,7 @@ class Employee extends React.Component {
                             className="hidden"
                             ref={this.csvLink}
                             target="_blank"
-                          />}
+                          />} */}
                           <Button
                             color="primary"
                             className="btn-square"

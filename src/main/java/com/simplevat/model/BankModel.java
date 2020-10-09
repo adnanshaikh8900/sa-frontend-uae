@@ -56,4 +56,5 @@ public class BankModel implements Serializable {
     private LocalDateTime openingDate;
 
     private LocalDateTime lastReconcileDate;
+    private BigDecimal actualOpeningBalance;
 }

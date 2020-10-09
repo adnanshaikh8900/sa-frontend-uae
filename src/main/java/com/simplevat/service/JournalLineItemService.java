@@ -26,7 +26,7 @@ public abstract class JournalLineItemService extends SimpleVatService<Integer, J
 			FinancialReportRequestModel reportRequestModel, String reportType);
 
 
-	public abstract PaginationResponseModel getVatTransactionList(Map<TaxesFilterEnum, Object> filterMap, TaxesFilterModel paginationModel);
+	public abstract PaginationResponseModel getVatTransactionList(Map<TaxesFilterEnum, Object> filterMap, TaxesFilterModel paginationModel, List<TransactionCategory> transactionCategoryList);
 
 	public abstract  Map<Integer, CreditDebitAggregator> getTaxReport(Date startDate, Date endDate);
 }

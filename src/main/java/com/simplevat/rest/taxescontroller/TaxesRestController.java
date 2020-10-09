@@ -1,9 +1,11 @@
 package com.simplevat.rest.taxescontroller;
 
+import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.JournalLineItemService;
+import com.simplevat.service.TransactionCategoryService;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +21,9 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.simplevat.constant.ErrorConstant.ERROR;
@@ -29,7 +33,8 @@ import static com.simplevat.constant.ErrorConstant.ERROR;
 public class TaxesRestController {
     private final Logger logger = LoggerFactory.getLogger(TaxesRestController.class);
 
-
+    @Autowired
+    private TransactionCategoryService transactionCategoryService;
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
@@ -64,9 +69,11 @@ public class TaxesRestController {
             filterDataMap.put(TaxesFilterEnum.USER_ID, userId);
             filterDataMap.put(TaxesFilterEnum.DELETE_FLAG, false);
 
-            filterDataMap.put(TaxesFilterEnum.TYPE,  " ( 88,94 ) " );
-
-            PaginationResponseModel responseModel = journalLineItemService.getVatTransactionList(filterDataMap,filterModel);
+        //    filterDataMap.put(TaxesFilterEnum.TYPE,  " ( 88,94 ) " );
+            List<TransactionCategory> transactionCategoryList = new ArrayList<>();
+            transactionCategoryList.add(transactionCategoryService.findByPK(88));
+            transactionCategoryList.add(transactionCategoryService.findByPK(94));
+            PaginationResponseModel responseModel = journalLineItemService.getVatTransactionList(filterDataMap,filterModel,transactionCategoryList);
             if (responseModel == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }

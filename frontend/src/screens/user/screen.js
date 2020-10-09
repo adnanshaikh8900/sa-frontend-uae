@@ -328,7 +328,7 @@ class User extends React.Component {
                     <Col lg={12}>
                       <div className="d-flex justify-content-end">
                         <ButtonGroup size="sm">
-                          <Button
+                          {/* <Button
                             color="success"
                             className="btn-square"
                             onClick={() => this.getCsvData()}
@@ -341,16 +341,10 @@ class User extends React.Component {
                             className="hidden"
                             ref={this.csvLink}
                             target="_blank"
-                          />}
-                          <Button
-                            color="primary"
-                            className="btn-square"
-                            onClick={() => this.props.history.push(`/admin/settings/user/create`)}
-                          >
-                            <i className="fas fa-plus mr-1" />
-                            New Users
-                          </Button>
-                          <Button
+                          />} */}
+                         
+                          
+                          {/* <Button
                             color="warning"
                             className="btn-square"
                             onClick={this.bulkDelete}
@@ -358,7 +352,7 @@ class User extends React.Component {
                           >
                             <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
                             Bulk Delete
-                          </Button>
+                          </Button> */}
                         </ButtonGroup>
                       </div>
                       <div className="py-3">
@@ -445,6 +439,19 @@ class User extends React.Component {
                           </Col>
                         </Row>
                       </div>
+                      <Button
+										color="primary"
+										style={{ marginBottom: '10px' }}
+										className="btn-square"
+										onClick={() =>
+											this.props.history.push(
+												`/admin/settings/user/create`,
+											)
+										}
+									>
+										<i className="fas fa-plus mr-1" />
+                    New Users
+									</Button>
                       <div>
                         <BootstrapTable
                           selectRow={this.selectRowProp}

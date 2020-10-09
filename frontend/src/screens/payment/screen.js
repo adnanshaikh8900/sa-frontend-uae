@@ -337,7 +337,7 @@ class Payment extends React.Component {
 									<Col lg={12}>
 										<div className="d-flex justify-content-end">
 											<ButtonGroup size="sm">
-												<Button
+												{/* <Button
 													color="primary"
 													className="btn-square mr-1"
 													onClick={() => this.getCsvData()}
@@ -353,7 +353,7 @@ class Payment extends React.Component {
 														ref={this.csvLink}
 														target="_blank"
 													/>
-												)}
+												)} */}
 												{/* <Button
 													color="primary"
 													className="btn-square mr-1"

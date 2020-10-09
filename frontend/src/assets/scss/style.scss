@@ -26,28 +26,28 @@ $spinkit-spinner-color: $body-color;
 @import '~spinkit/scss/spinkit.scss';
 
 .card-header {
-	color: #6a4bc4 !important;
+	color: #20a8d8 !important;
 }
 .btn-primary,
 .page-item.active .page-link,
 .btn-square {
-	background-color: #54e0c4;
-	border-color: #54e0c4;
+	background-color: #20a8d8;
+	border-color: #20a8d8;
 }
 .btn-primary:disabled {
-	background-color: #54e0c4;
-	border-color: #54e0c4;
+	background-color: #21d8aa;
+	border-color: #21d8aa;
 }
 .btn-primary:hover,
 .btn-square:hover {
-	background-color: #6a4bc4;
-	border-color: #6a4bc4;
+	background-color: #21d8aa;
+	border-color: #21d8aa;
 }
 .badge-primary {
-	background-color: #6a4bc4;
+	background-color: #20a8d8;
 }
 .bank-account-screen .bank-account-table .my-link {
-	color: #6a4bc4;
+	color: #20a8d8;
 	text-decoration: underline;
 }
 .btn-secondary {
@@ -57,12 +57,12 @@ $spinkit-spinner-color: $body-color;
 }
 .btn-secondary:hover {
 	color: #fff;
-	background-color: #6a4bc4;
-	border-color: #6a4bc4;
+	background-color: #20a8d8;
+	border-color: #20a8d8;
 }
 .breadcrumb-item {
 	a {
-		color: #6a4bc4 !important;
+		color: #20a8d8 !important;
 	}
 }
 .btn-brand {
@@ -72,14 +72,14 @@ $spinkit-spinner-color: $body-color;
 }
 // .table {
 // 	.icon {
-// 		background-color: #6a4bc4;
+// 		background-color: #20a8d8;
 // 	}
 // }
 .card-columns .card {
 	margin-bottom: 1.5rem;
 }
 .btn-link {
-	color: #6a4bc4;
+	color: #20a8d8;
 }
 .tab-content {
 	border: none;
@@ -91,10 +91,10 @@ $spinkit-spinner-color: $body-color;
 	font-weight: 600;
 }
 // a {
-// 	color: #6a4bc4 !important;
+// 	color: #20a8d8 !important;
 // }
 .app-footer .text-primary {
-	color: #6a4bc4 !important;
+	color: #20a8d8 !important;
 }
 .btn-primary:focus,
 .btn-primary.focus {
@@ -106,7 +106,7 @@ $spinkit-spinner-color: $body-color;
 }
 .badge-info,
 .badge-success {
-	background-color: #6a4bc4;
+	background-color: #20a8d8;
 }
 .card-body th {
 	font-weight: 600 !important;
@@ -121,9 +121,79 @@ $spinkit-spinner-color: $body-color;
 	padding-right: 20px !important;
 }
 .card-body .form-control:focus {
-	border: 1px solid #6a4bc4 !important;
+	border: 1px solid #20a8d8 !important;
 	box-shadow: none !important;
 }
 .invoice-detail {
 	font-weight: 600;
+}
+.label-success {
+	background-color: #e5f9ed !important;
+	color: #1bc943 !important;
+	display: inline;
+	padding: 4px 10px;
+	font-weight: 600;
+}
+.label-info {
+	background-color: #e8fbfd !important;
+	color: #11c5db !important;
+	display: inline;
+	padding: 4px 10px;
+	font-weight: 600;
+}
+.label-danger {
+	background-color: #fff5f6 !important;
+	color: #f83245 !important;
+	display: inline;
+	padding: 4px 10px;
+	font-weight: 600;
+}
+.Toastify__toast--error {
+	color: #f83245;
+	border: 1px solid #f83245;
+	background-color: #fff;
+	position: relative;
+}
+.Toastify__toast--success {
+	color: #21d8aa;
+	border: 1px solid #21d8aa;
+	background-color: #fff;
+	position: relative;
+}
+.Toastify__toast--error .Toastify__close-button {
+	color: #f83245;
+}
+.Toastify__toast--success .Toastify__close-button {
+	color: #21d8aa;
+}
+.Toastify__toast--success .Toastify__progress-bar {
+	background-color: #21d8aa;
+}
+.Toastify__toast--error .Toastify__progress-bar {
+	background-color: #f83245;
+}
+.Toastify__toast--error::before {
+	font-family: 'Font Awesome 5 Free';
+	font-weight: 900;
+	position: absolute;
+	content: '\f06a';
+	left: 8px;
+	width: 20px;
+	height: 20px;
+	top: 50%;
+	transform: translateY(-50%);
+}
+.Toastify__toast--success::before {
+	font-family: 'Font Awesome 5 Free';
+	font-weight: 900;
+	position: absolute;
+	content: '\f058';
+	left: 8px;
+	width: 20px;
+	height: 20px;
+	top: 50%;
+	transform: translateY(-50%);
+}
+.Toastify__toast-body {
+	padding-left: 20px;
 }

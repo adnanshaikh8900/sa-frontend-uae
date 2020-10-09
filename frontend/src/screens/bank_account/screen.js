@@ -184,7 +184,7 @@ class BankAccount extends React.Component {
 				case 'Saving':
 				case 'saving':
 					data = (
-						<label className="badge badge-primary text-white mb-0">
+						<label className="badge label-success text-white mb-0">
 							{row.bankAccountTypeName}
 						</label>
 					);
@@ -192,7 +192,7 @@ class BankAccount extends React.Component {
 				case 'Current':
 				case 'current':
 					data = (
-						<label className="badge badge-info text-white mb-0">
+						<label className="badge label-success text-white mb-0">
 							{row.bankAccountTypeName}
 						</label>
 					);
@@ -200,7 +200,7 @@ class BankAccount extends React.Component {
 				case 'Checking':
 				case 'checking':
 					data = (
-						<label className="badge badge-warning text-white mb-0">
+						<label className="badge label-success text-white mb-0">
 							{row.bankAccountTypeName}
 						</label>
 					);
@@ -208,7 +208,7 @@ class BankAccount extends React.Component {
 				case 'Credit Card':
 				case 'credit card':
 					data = (
-						<label className="badge badge-success text-white mb-0">
+						<label className="badge label-danger text-white mb-0">
 							{row.bankAccountTypeName}
 						</label>
 					);
@@ -216,7 +216,7 @@ class BankAccount extends React.Component {
 				case 'Others':
 				case 'others':
 					data = (
-						<label className="badge badge-info text-white mb-0">
+						<label className="badge label-danger text-white mb-0">
 							{row.bankAccountTypeName}
 						</label>
 					);
@@ -224,20 +224,20 @@ class BankAccount extends React.Component {
 				case 'Paypal':
 				case 'paypal':
 					data = (
-						<label className="badge badge-danger text-white mb-0">
+						<label className="badge label-danger text-white mb-0">
 							{row.bankAccountTypeName}
 						</label>
 					);
 					break;
 				default:
 					data = (
-						<label className="badge badge-default mb-0">No Specified</label>
+						<label className="badge label-danger mb-0">No Specified</label>
 					);
 					break;
 			}
 			return data;
 		} else {
-			return <label className="badge badge-danger mb-0">No Specified</label>;
+			return <label className="badge label-danger mb-0">No Specified</label>;
 		}
 	};
 
@@ -256,7 +256,7 @@ class BankAccount extends React.Component {
 	renderAccountNumber = (cell, row) => {
 		return (
 			<label
-				className="mb-0 my-link"
+				className="mb-0 label-danger"
 				onClick={() =>
 					this.props.history.push('/admin/banking/bank-account/transaction', {
 						bankAccountId: row.bankAccountId,
@@ -274,7 +274,7 @@ class BankAccount extends React.Component {
 	renderCurrency = (cell, row) => {
 		if (row.currancyName) {
 			return (
-				<label className="badge badge-primary mb-0">{row.currancyName}</label>
+				<label className="badge label-info mb-0">{row.currancyName}</label>
 			);
 		} else {
 			return <label className="badge badge-danger mb-0">No Specified</label>;
@@ -425,7 +425,7 @@ class BankAccount extends React.Component {
 			<div>
 				<div>
 					<label className="font-weight-bold mr-2">Reconciled Balance : </label>
-					<label className="badge badge-success mb-0">
+					<label className="badge label-danger mb-0">
 						<Currency
 							value={row.closingBalance}
 							currencySymbol={
@@ -584,13 +584,8 @@ class BankAccount extends React.Component {
 	};
 
 	render() {
-		const { loading, filterData, dialog, csvData, view } = this.state;
-		const {
-			account_type_list,
-			currency_list,
-			universal_currency_list,
-			bank_account_list,
-		} = this.props;
+		const { loading, dialog, csvData, view } = this.state;
+		const { universal_currency_list, bank_account_list } = this.props;
 
 		return (
 			<div className="bank-account-screen">

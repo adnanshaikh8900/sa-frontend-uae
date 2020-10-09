@@ -288,14 +288,14 @@ class Expense extends React.Component {
 
 	renderInvoiceStatus = (cell, row) => {
 		let classname = '';
-		if (row.expenseStatus === 'Post') {
-			classname = 'badge-success';
-		} else if (row.expenseStatus === 'Unpaid') {
-			classname = 'badge-danger';
+		if (row.expenseStatus === 'Paid') {
+			classname = 'label-success';
+		} else if (row.expenseStatus === 'Draft') {
+			classname = 'label-danger';
 		} else if (row.expenseStatus === 'Pending') {
-			classname = 'badge-warning';
+			classname = 'label-danger';
 		} else {
-			classname = 'badge-primary';
+			classname = 'label-info';
 		}
 		return (
 			<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>

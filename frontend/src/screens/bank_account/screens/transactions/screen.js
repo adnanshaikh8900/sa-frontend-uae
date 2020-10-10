@@ -124,10 +124,21 @@ class BankTransactions extends React.Component {
 	}
 
 	componentDidMount = () => {
+		if (this.props.location.state !== undefined) {
+			localStorage.setItem(
+				'bankId',
+				localStorage.getItem('bankId') !==
+					this.props.location.state.bankAccountId
+					? this.props.location.state.bankAccountId
+					: localStorage.getItem('bankId'),
+			);
+		} else {
+			localStorage.setItem('bankId', localStorage.getItem('bankId'));
+		}
 		this.props.transactionsActions.getTransactionTypeList();
 		this.initializeData();
 		this.props.detailBankAccountActions
-			.getBankAccountByID(this.props.location.state.bankAccountId)
+			.getBankAccountByID(localStorage.getItem('bankId'))
 			.then((res) => {
 				this.setState({
 					currentBalance: res.currentBalance,
@@ -150,11 +161,11 @@ class BankTransactions extends React.Component {
 			pageNo: this.options.page ? this.options.page - 1 : 0,
 			pageSize: this.options.sizePerPage,
 		};
-		if (this.props.location.state && this.props.location.state.bankAccountId) {
+		if (localStorage.getItem('bankId')) {
 			const postData = {
 				...filterData,
 				...data,
-				id: this.props.location.state.bankAccountId,
+				id: localStorage.getItem('bankId'),
 				transactionType: this.state.transactionType,
 			};
 			this.props.transactionsActions
@@ -494,14 +505,14 @@ class BankTransactions extends React.Component {
 
 	statusFormatter = (cell, row, extraData) => {
 		if (row.explinationStatusEnum === 'FULL') {
-			return <div>Explained</div>;
+			return <div className="label-info">Explained</div>;
 		} else if (row.explinationStatusEnum === 'RECONCILED') {
-			return <div>Reconciled</div>;
+			return <div className="label-success">Reconciled</div>;
 		} else if (
 			row.explinationStatusEnum === 'NOT_EXPLAIN' &&
 			row.creationMode !== 'POTENTIAL_DUPLICATE'
 		) {
-			return <div>Not Explained</div>;
+			return <div className="label-danger">Not Explained</div>;
 		} else if (row.explinationStatusEnum === 'RECONCILED') {
 			return <div>Reconciled</div>;
 		} else if (row.creationMode === 'POTENTIAL_DUPLICATE') {

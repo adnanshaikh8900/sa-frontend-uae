@@ -6,14 +6,18 @@ metadata:
 #  annotations:
 #    kubernetes.io/ingress.global-static-ip-name: simplevat-test-ip
 spec:
-  backend:
-    serviceName: simplevat-service-test
-    servicePort: 80
   rules:
     - host: k8s.test.simplevat.com
       http:
         paths:
           - backend:
               serviceName: simplevat-service-test
+              servicePort: 80
+            path: /*
+    - host: waqas.test.simplevat.com
+      http:
+        paths:
+          - backend:
+              serviceName: simplevat-service-waqas
               servicePort: 80
             path: /*

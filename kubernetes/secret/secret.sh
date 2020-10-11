@@ -1,4 +1,3 @@
-kubectl create namespace simplevat-dev
+echo -n '39528$vdg7Jb' | base64
 
-kubectl create secret generic cloudsql-db-credentials --from-file=username=username.txt --from-file=password=password.txt --from-file=database=database.txt --namespace=simplevat-dev
-
+echo QWxhZGRpbjpvcGVuIHNlc2FtZQ== | base64 --decode

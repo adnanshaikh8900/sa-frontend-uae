@@ -39,6 +39,7 @@ const mapStateToProps = (state) => {
 		currency_list: state.journal.currency_list,
 		contact_list: state.journal.contact_list,
 		vat_list: state.journal.vat_list,
+		universal_currency_list: state.common.universal_currency_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -655,7 +656,7 @@ class DetailJournal extends React.Component {
 
 	render() {
 		const { data, initValue, dialog, loading } = this.state;
-		const { currency_list } = this.props;
+		const { currency_list,universal_currency_list } = this.props;
 
 		return (
 			<div className="detail-journal-screen">
@@ -1026,24 +1027,36 @@ class DetailJournal extends React.Component {
 																				</Col>
 																				<Col xs={4} className="text-right">
 																					<label className="mb-0">
+																					{universal_currency_list[0] && (
 																						<Currency
-																							value={
-																								this.state.initValue
-																									.subTotalDebitAmount
+																						value={
+																							this.state.initValue
+																								.subTotalDebitAmount
+																						}
+																						currencySymbol={
+																						universal_currency_list[0]
+																						? universal_currency_list[0].currencyIsoCode
+																						: 'USD'
 																							}
-																							currencySymbol={'AED'}
-																						/>
+																							/>
+																							)}
 																					</label>
 																				</Col>
 																				<Col xs={4} className="text-right">
 																					<label className="mb-0">
+																					{universal_currency_list[0] && (
 																						<Currency
-																							value={
-																								this.state.initValue
-																									.subTotalCreditAmount
+																						value={
+																							this.state.initValue
+																								.subTotalCreditAmount
+																						}
+																						currencySymbol={
+																						universal_currency_list[0]
+																						? universal_currency_list[0].currencyIsoCode
+																						: 'USD'
 																							}
-																							currencySymbol={'AED'}
-																						/>
+																							/>
+																							)}
 																					</label>
 																				</Col>
 																			</Row>
@@ -1057,24 +1070,36 @@ class DetailJournal extends React.Component {
 																				</Col>
 																				<Col xs={4} className="text-right">
 																					<label className="mb-0">
+																					{universal_currency_list[0] && (
 																						<Currency
-																							value={
-																								this.state.initValue
-																									.subTotalDebitAmount
+																						value={
+																							this.state.initValue
+																								.subTotalDebitAmount
+																						}
+																						currencySymbol={
+																						universal_currency_list[0]
+																						? universal_currency_list[0].currencyIsoCode
+																						: 'USD'
 																							}
-																							currencySymbol={'AED'}
-																						/>
+																							/>
+																							)}
 																					</label>
 																				</Col>
 																				<Col xs={4} className="text-right">
 																					<label className="mb-0">
+																					{universal_currency_list[0] && (
 																						<Currency
-																							value={
-																								this.state.initValue
-																									.subTotalCreditAmount
+																						value={
+																							this.state.initValue
+																								.subTotalCreditAmount
+																						}
+																						currencySymbol={
+																						universal_currency_list[0]
+																						? universal_currency_list[0].currencyIsoCode
+																						: 'USD'
 																							}
-																							currencySymbol={'AED'}
-																						/>
+																							/>
+																							)}
 																					</label>
 																				</Col>
 																			</Row>

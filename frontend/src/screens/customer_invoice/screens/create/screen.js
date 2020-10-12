@@ -766,7 +766,6 @@ return row.subTotal === 0 ? (
 	};
 
 	updateAmount = (data, props) => {
-		console.log(props);
 		const { vat_list } = this.props;
 		const { discountPercentage, discountAmount } = this.state;
 		let total_net = 0;
@@ -931,12 +930,11 @@ return row.subTotal === 0 ? (
 								{
 									id: 0,
 									description: '',
-									quantity: '',
+									quantity: 1,
 									unitPrice: '',
 									vatCategoryId: '',
 									subTotal: 0,
-									productId: 0,
-									name: '',
+									productId: '',
 								},
 							],
 							initValue: {
@@ -962,7 +960,7 @@ return row.subTotal === 0 ? (
 						},
 					);
 				} else {
-					this.props.history.push('/admin/income/customer-invoice');
+					this.props.history.push('/admin/expense/supplier-invoice');
 				}
 			})
 			.catch((err) => {

@@ -184,16 +184,16 @@ class OpeningBalance extends React.Component {
 					/>
 				) : (
 					<div>
- {new Intl.NumberFormat('ar', {
- style: 'currency',
- currency:
- this.props.profile &&
- this.props.profile.company &&
- this.props.profile.company.currencyCode.currencyIsoCode
- ? this.props.profile.company.currencyCode.currencyIsoCode
- : 'AED',
- }).format(row['openingBalance'])}
- </div>
+						{new Intl.NumberFormat('ar', {
+							style: 'currency',
+							currency:
+								this.props.profile &&
+								this.props.profile.company &&
+								this.props.profile.company.currencyCode.currencyIsoCode
+									? this.props.profile.company.currencyCode.currencyIsoCode
+									: 'AED',
+						}).format(row['openingBalance'])}
+					</div>
 				)}
 			</div>
 		);

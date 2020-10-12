@@ -1,0 +1,37 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: simplevat-ingress-app
+  namespace: simplevat-app
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: simplevat-app-ip
+spec:
+  rules:
+    - host: datainn-india.app.simplevat.com
+      http:
+        paths:
+          - backend:
+              serviceName: simplevat-datainn-india-service-prod
+              servicePort: 80
+            path: /*
+    - host: www.datainn-india.app.simplevat.com
+      http:
+        paths:
+          - backend:
+              serviceName: simplevat-datainn-india-service-prod
+              servicePort: 80
+            path: /*
+    - host: datainn.app.simplevat.com
+      http:
+        paths:
+          - backend:
+              serviceName: simplevat-datainn-service-prod
+              servicePort: 80
+            path: /*
+    - host: www.datainn.app.simplevat.com
+      http:
+        paths:
+          - backend:
+              serviceName: simplevat-datainn-service-prod
+              servicePort: 80
+            path: /*

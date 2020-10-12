@@ -1,0 +1,19 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: simplevat-service-test
+spec:
+  type: ExternalName
+  externalName: simplevat-service-test.simplevat-test.svc.cluster.local
+  ports:
+    - port: 80
+      targetPort: 49763
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: simplevat-service-waqas
+spec:
+  type: ExternalName
+  externalName: simplevat-service-waqas.simplevat-test.svc.cluster.local
+

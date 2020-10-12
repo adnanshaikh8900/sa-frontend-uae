@@ -253,13 +253,15 @@ class Expense extends React.Component {
             <DropdownItem>
               <i className="fas fa-times" /> Cancel
             </DropdownItem>  */}
-						<DropdownItem
-							onClick={() => {
-								this.closeExpense(row.expenseId, row.bankAccountId);
-							}}
-						>
-							<i className="fa fa-trash-o" /> Delete
-						</DropdownItem>
+						{row.expenseStatus !== 'Posted' && (
+							<DropdownItem
+								onClick={() => {
+									this.closeExpense(row.expenseId, row.bankAccountId);
+								}}
+							>
+								<i className="fa fa-trash-o" /> Delete
+							</DropdownItem>
+						)}
 					</DropdownMenu>
 				</ButtonDropdown>
 			</div>

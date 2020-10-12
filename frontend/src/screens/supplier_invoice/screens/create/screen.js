@@ -43,6 +43,7 @@ const mapStateToProps = (state) => {
 		product_list: state.supplier_invoice.product_list,
 		supplier_list: state.supplier_invoice.supplier_list,
 		country_list: state.supplier_invoice.country_list,
+		universal_currency_list: state.common.universal_currency_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -331,13 +332,19 @@ class CreateSupplierInvoice extends React.Component {
 		);
 	};
 
-	renderSubTotal = (cell, row) => {
-		return (
-			<label className="mb-0">
-				<Currency value={row.subTotal.toFixed(2)} currencySymbol={'AED'} />
-			</label>
+	renderSubTotal = (cell, row,extraData) => {
+		return row.subTotal === 0 ? (
+			<Currency
+				value={row.subTotal.toFixed(2)}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			<Currency
+				value={row.subTotal.toFixed(2)}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
 		);
-	};
+		}
 
 	componentDidMount = () => {
 		this.getInitialData();
@@ -2017,12 +2024,18 @@ class CreateSupplierInvoice extends React.Component {
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
+																					{universal_currency_list[0] && (
 																						<Currency
-																							value={initValue.total_net.toFixed(
-																								2,
+																						value={initValue.total_net.toFixed(
+																							2,
+																						)}
+																						currencySymbol={
+																						universal_currency_list[0]
+																						? universal_currency_list[0].currencyIsoCode
+																						: 'USD'
+																							}
+																							/>
 																							)}
-																							currencySymbol={'AED'}
-																						/>
 																					</label>
 																				</Col>
 																			</Row>
@@ -2036,12 +2049,18 @@ class CreateSupplierInvoice extends React.Component {
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
+																					{universal_currency_list[0] && (
 																						<Currency
-																							value={initValue.invoiceVATAmount.toFixed(
-																								2,
+																						value={initValue.invoiceVATAmount.toFixed(
+																							2,
+																						)}
+																						currencySymbol={
+																						universal_currency_list[0]
+																						? universal_currency_list[0].currencyIsoCode
+																						: 'USD'
+																							}
+																							/>
 																							)}
-																							currencySymbol={'AED'}
-																						/>
 																					</label>
 																				</Col>
 																			</Row>
@@ -2055,12 +2074,18 @@ class CreateSupplierInvoice extends React.Component {
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
+																					{universal_currency_list[0] && (
 																						<Currency
-																							value={this.state.initValue.discount.toFixed(
-																								2,
+																						value={this.state.initValue.discount.toFixed(
+																							2,
+																						)}
+																						currencySymbol={
+																						universal_currency_list[0]
+																						? universal_currency_list[0].currencyIsoCode
+																						: 'USD'
+																							}
+																							/>
 																							)}
-																							currencySymbol={'AED'}
-																						/>
 																					</label>
 																				</Col>
 																			</Row>
@@ -2074,12 +2099,18 @@ class CreateSupplierInvoice extends React.Component {
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
+																					{universal_currency_list[0] && (
 																						<Currency
-																							value={initValue.totalAmount.toFixed(
-																								2,
+																						value={initValue.totalAmount.toFixed(
+																							2,
+																						)}
+																						currencySymbol={
+																						universal_currency_list[0]
+																						? universal_currency_list[0].currencyIsoCode
+																						: 'USD'
+																							}
+																							/>
 																							)}
-																							currencySymbol={'AED'}
-																						/>
 																					</label>
 																				</Col>
 																			</Row>

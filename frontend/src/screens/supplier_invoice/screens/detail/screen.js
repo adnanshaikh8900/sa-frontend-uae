@@ -24,7 +24,7 @@ import * as SupplierInvoiceActions from '../../actions';
 import * as transactionCreateActions from '../../../bank_account/screens/transactions/actions';
 import * as ProductActions from '../../../product/actions';
 import { SupplierModal } from '../../sections';
-import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader, ConfirmDeleteModal,Currency } from 'components';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -44,6 +44,7 @@ const mapStateToProps = (state) => {
 		product_list: state.customer_invoice.product_list,
 		supplier_list: state.supplier_invoice.supplier_list,
 		country_list: state.supplier_invoice.country_list,
+		universal_currency_list: state.common.universal_currency_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -429,11 +430,16 @@ class DetailSupplierInvoice extends React.Component {
 			/>
 		);
 	};
-
-	renderSubTotal = (cell, row) => {
-		return <label className="mb-0">{row.subTotal.toFixed(2)}</label>;
+	renderSubTotal = (cell, row,extraData) => {
+		return row.subTotal ? (
+			<Currency
+				value={row.subTotal.toFixed(2)}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			''
+		);
 	};
-
 	addRow = () => {
 		const data = [...this.state.data];
 		this.setState(
@@ -993,7 +999,7 @@ class DetailSupplierInvoice extends React.Component {
 	render() {
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
 
-		const { project_list, currency_list, supplier_list } = this.props;
+		const { project_list, currency_list, supplier_list,universal_currency_list } = this.props;
 		return (
 			<div className="detail-supplier-invoice-screen">
 				<div className="animated fadeIn">
@@ -1662,6 +1668,7 @@ class DetailSupplierInvoice extends React.Component {
 																			dataFormat={this.renderSubTotal}
 																			className="text-right"
 																			columnClassName="text-right"
+																			formatExtraData={universal_currency_list}
 																		>
 																			Sub Total (All)
 																		</TableHeaderColumn>
@@ -1840,7 +1847,17 @@ class DetailSupplierInvoice extends React.Component {
 																					</Col>
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
-																							{initValue.total_net.toFixed(2)}
+																						{universal_currency_list[0] && (
+																						<Currency
+																						value=	{initValue.total_net.toFixed(2)}
+																						currencySymbol={
+																						universal_currency_list[0]
+																						? universal_currency_list[0].currencyIsoCode
+																						: 'USD'
+																							}
+																							/>
+																							)}
+																						
 																						</label>
 																					</Col>
 																				</Row>
@@ -1854,8 +1871,17 @@ class DetailSupplierInvoice extends React.Component {
 																					</Col>
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
-																							{initValue.invoiceVATAmount.toFixed(
-																								2,
+																						{universal_currency_list[0] && (
+																						<Currency
+																						value=	{initValue.invoiceVATAmount.toFixed(
+																							2,
+																						)}
+																						currencySymbol={
+																						universal_currency_list[0]
+																						? universal_currency_list[0].currencyIsoCode
+																						: 'USD'
+																							}
+																							/>
 																							)}
 																						</label>
 																					</Col>
@@ -1870,8 +1896,17 @@ class DetailSupplierInvoice extends React.Component {
 																					</Col>
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
-																							{this.state.initValue.discount.toFixed(
-																								2,
+																						{universal_currency_list[0] && (
+																						<Currency
+																						value=		{this.state.initValue.discount.toFixed(
+																							2,
+																						)}
+																						currencySymbol={
+																						universal_currency_list[0]
+																						? universal_currency_list[0].currencyIsoCode
+																						: 'USD'
+																							}
+																							/>
 																							)}
 																						</label>
 																					</Col>
@@ -1886,7 +1921,16 @@ class DetailSupplierInvoice extends React.Component {
 																					</Col>
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
-																							{initValue.totalAmount.toFixed(2)}
+																						{universal_currency_list[0] && (
+																						<Currency
+																						value=	{initValue.totalAmount.toFixed(2)}
+																						currencySymbol={
+																						universal_currency_list[0]
+																						? universal_currency_list[0].currencyIsoCode
+																						: 'USD'
+																							}
+																							/>
+																							)}
 																						</label>
 																					</Col>
 																				</Row>

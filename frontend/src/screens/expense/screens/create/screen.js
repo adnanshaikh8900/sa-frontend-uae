@@ -311,7 +311,7 @@ class CreateExpense extends React.Component {
 													payee: Yup.string().required('Payee is required'),
 													expenseAmount: Yup.string()
 														.required('Amount is Required')
-														.matches(/^[0-9]*$/, 'Enter a Valid Amount'),
+														.matches(/^[0-9][0-9]*[.]?[0-9]{0,2}$$/, 'Enter a Valid Amount'),
 													attachmentFile: Yup.mixed()
 														.test(
 															'fileType',

@@ -202,6 +202,9 @@ class CreateUser extends React.Component {
 													roleId: Yup.string().required(
 														'Role Name is Required',
 													),
+													timezone: Yup.string().required(
+														'Time Zone is Required',
+													),
 													password: Yup.string()
 														.required('Password is Required')
 														// .min(8, "Password Too Short")

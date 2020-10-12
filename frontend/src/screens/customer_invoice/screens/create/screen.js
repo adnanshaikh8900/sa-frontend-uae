@@ -759,7 +759,6 @@ class CreateCustomerInvoice extends React.Component {
 	};
 
 	updateAmount = (data, props) => {
-		console.log(props);
 		const { vat_list } = this.props;
 		const { discountPercentage, discountAmount } = this.state;
 		let total_net = 0;
@@ -924,12 +923,11 @@ class CreateCustomerInvoice extends React.Component {
 								{
 									id: 0,
 									description: '',
-									quantity: '',
+									quantity: 1,
 									unitPrice: '',
 									vatCategoryId: '',
 									subTotal: 0,
-									productId: 0,
-									name: '',
+									productId: '',
 								},
 							],
 							initValue: {
@@ -955,7 +953,7 @@ class CreateCustomerInvoice extends React.Component {
 						},
 					);
 				} else {
-					this.props.history.push('/admin/income/customer-invoice');
+					this.props.history.push('/admin/expense/supplier-invoice');
 				}
 			})
 			.catch((err) => {

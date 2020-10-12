@@ -21,6 +21,7 @@ import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 
+import { Currency } from 'components';
 import { CommonActions } from 'services/global';
 import { selectCurrencyFactory } from 'utils';
 import * as JournalActions from '../../actions';
@@ -37,6 +38,7 @@ const mapStateToProps = (state) => {
 		currency_list: state.journal.currency_list,
 		contact_list: state.journal.contact_list,
 		vat_list: state.journal.vat_list,
+		universal_currency_list: state.common.universal_currency_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -681,7 +683,7 @@ class CreateJournal extends React.Component {
 
 	render() {
 		const { data, initValue } = this.state;
-		const { currency_list } = this.props;
+		const { currency_list,universal_currency_list } = this.props;
 
 		return (
 			<div className="create-journal-screen">
@@ -1013,17 +1015,36 @@ class CreateJournal extends React.Component {
 																			</Col>
 																			<Col xs={4} className="text-right">
 																				<label className="mb-0">
-																					{' '}
-																					{this.state.initValue.subTotalDebitAmount.toFixed(
-																						2,
-																					)}{' '}
+																				{universal_currency_list[0] && (
+																						<Currency
+																						value=
+																						{this.state.initValue.subTotalDebitAmount.toFixed(
+																							2,
+																						)}
+																						currencySymbol={
+																						universal_currency_list[0]
+																						? universal_currency_list[0].currencyIsoCode
+																						: 'USD'
+																							}
+																							/>
+																							)}
 																				</label>
 																			</Col>
 																			<Col xs={4} className="text-right">
 																				<label className="mb-0">
-																					{this.state.initValue.subTotalCreditAmount.toFixed(
-																						2,
-																					)}
+																				{universal_currency_list[0] && (
+																						<Currency
+																						value=
+																						{this.state.initValue.subTotalCreditAmount.toFixed(
+																							2,
+																						)}
+																						currencySymbol={
+																						universal_currency_list[0]
+																						? universal_currency_list[0].currencyIsoCode
+																						: 'USD'
+																							}
+																							/>
+																							)}
 																				</label>
 																			</Col>
 																		</Row>
@@ -1037,16 +1058,36 @@ class CreateJournal extends React.Component {
 																			</Col>
 																			<Col xs={4} className="text-right">
 																				<label className="mb-0">
-																					{this.state.initValue.subTotalDebitAmount.toFixed(
-																						2,
-																					)}
+																				{universal_currency_list[0] && (
+																						<Currency
+																						value=
+																						{this.state.initValue.subTotalDebitAmount.toFixed(
+																							2,
+																						)}
+																						currencySymbol={
+																						universal_currency_list[0]
+																						? universal_currency_list[0].currencyIsoCode
+																						: 'USD'
+																							}
+																							/>
+																							)}
 																				</label>
 																			</Col>
 																			<Col xs={4} className="text-right">
 																				<label className="mb-0">
-																					{this.state.initValue.subTotalCreditAmount.toFixed(
-																						2,
-																					)}
+																				{universal_currency_list[0] && (
+																						<Currency
+																						value=
+																						{this.state.initValue.subTotalCreditAmount.toFixed(
+																							2,
+																						)}
+																						currencySymbol={
+																						universal_currency_list[0]
+																						? universal_currency_list[0].currencyIsoCode
+																						: 'USD'
+																							}
+																							/>
+																							)}
 																				</label>
 																			</Col>
 																		</Row>

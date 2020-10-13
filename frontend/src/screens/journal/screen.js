@@ -250,7 +250,7 @@ class Journal extends React.Component {
 		return <ul style={{ padding: '0', marginBottom: '0px' }}>{listItems}</ul>;
 	};
 
-	renderCreditAmount = (cell, rows) => {
+	renderCreditAmount = (cell, rows,extraData) => {
 		const temp =
 			rows && rows.journalLineItems
 				? rows.journalLineItems.map((item) => {
@@ -259,13 +259,16 @@ class Journal extends React.Component {
 				: [];
 		const listItems = temp.map((number, index) => (
 			<li key={index} style={{ listStyleType: 'none', paddingBottom: '5px' }}>
-			<Currency value={number.toFixed(2)} currencySymbol={"AED"} />
+			<Currency
+				value={number.toFixed(2)}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
 			</li>
 		));
 		return <ul style={{ padding: '0', marginBottom: '0px' }}>{listItems}</ul>;
 	};
 
-	renderDebitAmount = (cell, rows) => {
+	renderDebitAmount = (cell, rows,extraData) => {
 		const temp =
 			rows && rows.journalLineItems
 				? rows.journalLineItems.map((item) => {
@@ -274,7 +277,10 @@ class Journal extends React.Component {
 				: [];
 		const listItems = temp.map((number, index) => (
 			<li key={index} style={{ listStyleType: 'none', paddingBottom: '5px' }}>
-			<Currency value={number.toFixed(2)} currencySymbol={"AED"} />
+				<Currency
+				value={number.toFixed(2)}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
 			</li> 
 		));
 		return <ul style={{ padding: '0', marginBottom: '0px' }}>{listItems}</ul>;

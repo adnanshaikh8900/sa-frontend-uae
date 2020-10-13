@@ -24,6 +24,7 @@ const mapStateToProps = (state) => {
 	return {
 		transaction_category_list: state.opening_balance.transaction_category_list,
 		profile: state.auth.profile,
+		universal_currency_list: state.common.universal_currency_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -418,6 +419,7 @@ class OpeningBalance extends React.Component {
 	};
 
 	render() {
+		const { universal_currency_list } = this.props;
 		return (
 			<div className="opening-balance-screen">
 				<div className="animated fadeIn">
@@ -479,6 +481,7 @@ class OpeningBalance extends React.Component {
 											dataField="openingBalance"
 											dataFormat={this.renderOpeningBalance}
 											width="20%"
+											formatExtraData={universal_currency_list}
 										>
 											Opening Balance
 										</TableHeaderColumn>

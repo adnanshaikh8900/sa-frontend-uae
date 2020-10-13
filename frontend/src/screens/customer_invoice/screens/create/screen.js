@@ -960,7 +960,7 @@ return row.subTotal === 0 ? (
 						},
 					);
 				} else {
-					this.props.history.push('/admin/expense/supplier-invoice');
+					this.props.history.push('/admin/income/customer-invoice');
 				}
 			})
 			.catch((err) => {

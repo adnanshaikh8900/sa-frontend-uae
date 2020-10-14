@@ -131,6 +131,7 @@ public class CompanyRestHelper{
 		}
 		if (companyModel.getCurrencyCode() != null) {
 			company.setCurrencyCode(currencyService.findByPK(companyModel.getCurrencyCode()));
+			currencyService.updateCurrency(companyModel.getCurrencyCode());
 		}
 
 		company.setWebsite(companyModel.getWebsite());

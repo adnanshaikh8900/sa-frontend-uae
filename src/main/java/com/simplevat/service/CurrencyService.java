@@ -36,4 +36,7 @@ public abstract class CurrencyService extends SimpleVatService<Integer, Currency
 			PaginationModel paginationModel);
 
 	public abstract void updateCurrencyProfile(Integer currencyCode);
+
+	public abstract void updateCurrency(Integer currencyCode);
+
 }

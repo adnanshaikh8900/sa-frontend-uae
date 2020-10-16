@@ -54,6 +54,7 @@ public class ValidationController {
                 case 1: //Product validation
                     Map<String, Object> param = new HashMap<>();
                     param.put("productName", validationModel.getName());
+                   // param.put("productCode",validationModel.getProductCode());
                     param.put("deleteFlag", false);
                     List<Product> productList = productService.findByAttributes(param);
                     if(productList!= null && productList.size()>0)
@@ -105,6 +106,17 @@ public class ValidationController {
                         return new ResponseEntity("Invoice Number already exists", HttpStatus.OK);
                     else
                         return new ResponseEntity("Invoice Number does not exists", HttpStatus.OK);
+
+                case 7: //Product validation
+                    Map<String, Object> param1 = new HashMap<>();
+                    param1.put("productCode",validationModel.getProductCode());
+                    param1.put("deleteFlag", false);
+                    List<Product> productList1 = productService.findByAttributes(param1);
+                    if(productList1!= null && productList1.size()>0)
+                        return new ResponseEntity("Product code already exists", HttpStatus.OK);
+                    else
+                        return new ResponseEntity("Product code does not exists", HttpStatus.OK);
+
                 default:
                     return new ResponseEntity("Bad request", HttpStatus.BAD_REQUEST);
 

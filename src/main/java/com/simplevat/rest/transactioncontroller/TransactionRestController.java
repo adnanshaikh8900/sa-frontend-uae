@@ -766,7 +766,7 @@ public class TransactionRestController {
 		//create new expenses
 		Expense expense =  createNewExpense(transactionPresistModel,userId);
 		if (transactionPresistModel.getDescription() != null) {
-			trnx.setTransactionDescription(transactionPresistModel.getDescription());
+			trnx.setExplainedTransactionDescription(transactionPresistModel.getDescription());
 		}
 		// create Journal entry for Expense
 		//Chart of account in expense and user

@@ -55,6 +55,24 @@ public class JournalDaoImpl extends AbstractDao<Integer, Journal> implements Jou
 		}
 	}
 	@Override
+	@Transactional
+	public void deleteAndUpdateByIds(List<Integer> ids,Boolean updateOpeningBalance) {
+		if (ids != null && !ids.isEmpty()) {
+			for (Integer id : ids) {
+				Journal journal = findByPK(id);
+				journal.setDeleteFlag(Boolean.TRUE);
+				if (journal.getJournalLineItems() != null && !journal.getJournalLineItems().isEmpty()) {
+					for (JournalLineItem journalLineItem : journal.getJournalLineItems()) {
+						journalLineItem.setDeleteFlag(true);
+						transactionCategoryBalanceService.updateRunningBalanceAndOpeningBalance(journalLineItem ,updateOpeningBalance);
+						journalLineItemDao.delete(journalLineItem);
+					}
+				}
+				delete(journal);
+			}
+		}
+	}
+	@Override
 	public PaginationResponseModel getJornalList(Map<JournalFilterEnum, Object> filterMap,
 			PaginationModel paginationModel) {
 

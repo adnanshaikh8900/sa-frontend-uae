@@ -392,8 +392,8 @@ public class FinancialReportRestHelper {
 						break;
 					case CURRENT_ASSET:
 					case STOCK:
-							totalStocks = totalStocks.add(closingBalance);
-						trialBalanceResponseModel.setStocks(totalStocks);
+//							totalStocks = totalStocks.add(closingBalance);
+//						trialBalanceResponseModel.setStocks(totalStocks);
 						if(transactionTypeDebitFlag)
 							totalDebitAmount = totalDebitAmount.add(totalStocks);
 						else

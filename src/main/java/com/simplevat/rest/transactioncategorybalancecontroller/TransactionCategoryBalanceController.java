@@ -3,16 +3,14 @@ package com.simplevat.rest.transactioncategorybalancecontroller;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
 import com.simplevat.constant.ChartOfAccountCategoryCodeEnum;
+import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.TransactionCategoryCodeEnum;
-import com.simplevat.entity.TransactionCategoryClosingBalance;
+import com.simplevat.entity.*;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.bankaccountcontroller.BankAccountRestHelper;
@@ -30,8 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.constant.dbfilter.TransactionCategoryBalanceFilterEnum;
-import com.simplevat.entity.TransactionCategoryBalance;
-import com.simplevat.entity.User;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.security.JwtTokenUtil;
 
@@ -60,13 +56,10 @@ public class TransactionCategoryBalanceController {
 	private TransactionCategoryBalanceRestHelper transactionCategoryBalanceRestHelper;
 
 	@Autowired
-	private JournalLineItemService journalLineItemService;
-
-	@Autowired
 	private TransactionCategoryService transactionCategoryService;
 
 	@Autowired
-	private BankAccountRestHelper bankAccountRestHelper;
+	private JournalService journalService;
 
 	@ApiOperation(value = "Save")
 	@PostMapping(value = "/save")
@@ -75,40 +68,46 @@ public class TransactionCategoryBalanceController {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			User user = userServiceNew.findByPK(userId);
-			TransactionCategoryBalance openingBalance = transactionCategoryBalanceRestHelper.getEntity(persistmodel);
-			openingBalance.setCreatedBy(user.getUserId());
-			transactionCategoryClosingBalanceService.addNewClosingBalance(openingBalance);
-			transactionCategoryBalanceService.persist(openingBalance);
-			TransactionCategory transactionCategory = getValidTransactionCategory(openingBalance.getTransactionCategory());
-			Map<String,Object> filterObject = new HashMap<>();
-			filterObject.put("transactionCategory",transactionCategory);
-			List<TransactionCategoryClosingBalance>closingBalanceList = transactionCategoryClosingBalanceService.findByAttributes(filterObject);
-			TransactionCategoryClosingBalance closingBalance = null;
-			if(closingBalanceList!=null && closingBalanceList.size()>0)
-			{
-				closingBalance = closingBalanceList.get(0);
-				BigDecimal closingBalanceValue = closingBalance.getClosingBalance();
-				if(StringUtils.equalsAnyIgnoreCase(transactionCategory.getTransactionCategoryCode(),
-						TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode()))
-				{
-					closingBalanceValue = closingBalanceValue.negate();
-					closingBalanceValue = closingBalanceValue.add(openingBalance.getOpeningBalance().negate());
-					closingBalance.setOpeningBalance(openingBalance.getOpeningBalance());
-					closingBalance.setClosingBalance(closingBalanceValue);
-				}
-				else{
-					closingBalanceValue = closingBalanceValue.add(openingBalance.getOpeningBalance());
-					closingBalance.setOpeningBalance(openingBalance.getOpeningBalance());
-					closingBalance.setClosingBalance(closingBalanceValue);
-				}
+			TransactionCategory category = transactionCategoryService.findByPK(persistmodel.getTransactionCategoryId());
+			TransactionCategory transactionCategory = getValidTransactionCategory(category);
+			boolean isDebit=false;
+			if(StringUtils.equalsAnyIgnoreCase(transactionCategory.getTransactionCategoryCode(),
+					TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode())){
+						isDebit=true;
+					}
+			List<JournalLineItem> journalLineItemList = new ArrayList<>();
+			Journal journal = new Journal();
+			JournalLineItem journalLineItem1 = new JournalLineItem();
+			journalLineItem1.setTransactionCategory(category);
+			if (isDebit) {
+				journalLineItem1.setDebitAmount(persistmodel.getOpeningBalance());
+			} else {
+				journalLineItem1.setCreditAmount(persistmodel.getOpeningBalance());
 			}
-			else {
-				closingBalance = bankAccountRestHelper
-						.getClosingBalanceEntity(openingBalance, transactionCategory);
-				closingBalance.setOpeningBalance(openingBalance.getOpeningBalance());
-				closingBalance.setClosingBalance(openingBalance.getOpeningBalance());
+			journalLineItem1.setReferenceType(PostingReferenceTypeEnum.BALANCE_ADJUSTMENT);
+			journalLineItem1.setReferenceId(category.getTransactionCategoryId());
+			journalLineItem1.setCreatedBy(userId);
+			journalLineItem1.setJournal(journal);
+			journalLineItemList.add(journalLineItem1);
+
+			JournalLineItem journalLineItem2 = new JournalLineItem();
+			journalLineItem2.setTransactionCategory(transactionCategory);
+			if (!isDebit) {
+				journalLineItem2.setDebitAmount(persistmodel.getOpeningBalance());
+			} else {
+				journalLineItem2.setCreditAmount(persistmodel.getOpeningBalance());
 			}
-			transactionCategoryClosingBalanceService.persist(closingBalance);
+			journalLineItem2.setReferenceType(PostingReferenceTypeEnum.BALANCE_ADJUSTMENT);
+			journalLineItem2.setReferenceId(transactionCategory.getTransactionCategoryId());
+			journalLineItem2.setCreatedBy(userId);
+			journalLineItem2.setJournal(journal);
+			journalLineItemList.add(journalLineItem2);
+
+			journal.setJournalLineItems(journalLineItemList);
+			journal.setCreatedBy(userId);
+			journal.setPostingReferenceType(PostingReferenceTypeEnum.BALANCE_ADJUSTMENT);
+			journal.setJournalDate(LocalDateTime.now());
+			journalService.persist(journal);
 			return new ResponseEntity<>("Saved successfull",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
@@ -146,26 +145,61 @@ public class TransactionCategoryBalanceController {
 
 	@ApiOperation(value = "/Update")
 	@PostMapping(value = "update")
-	public ResponseEntity<String> update(@RequestBody TransactioncategoryBalancePersistModel persistmodel,
+	public ResponseEntity<String> update(@RequestBody TransactioncategoryBalancePersistModel persistModel,
 										 HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			User user = userServiceNew.findByPK(userId);
-			TransactionCategoryBalance openingBalance = transactionCategoryBalanceRestHelper.getEntity(persistmodel);
-			BigDecimal currentRunnigBalance = journalLineItemService
-					.updateCurrentBalance(openingBalance.getTransactionCategory(), openingBalance.getOpeningBalance());
-			openingBalance.setRunningBalance(currentRunnigBalance);
-			openingBalance.setLastUpdateBy(user.getUserId());
-			transactionCategoryBalanceService.persist(openingBalance);
-			TransactionCategoryClosingBalance closingBalance = transactionCategoryClosingBalanceService
-					.getFirstClosingBalanceByDate(openingBalance.getTransactionCategory());
-			Transaction transaction = getTransactionFromClosingBalance(persistmodel,closingBalance,'C');
-			transactionCategoryClosingBalanceService.updateClosingBalance(transaction);
-			TransactionCategory transactionCategory = getValidTransactionCategory(openingBalance.getTransactionCategory());
-			closingBalance = transactionCategoryClosingBalanceService.getFirstClosingBalanceByDate(transactionCategory);
-			transaction = getTransactionFromClosingBalance(persistmodel,closingBalance,'C');
-			transactionCategoryClosingBalanceService.updateClosingBalance(transaction);
-			return new ResponseEntity<>("Updated successfull",HttpStatus.OK);
+			TransactionCategoryBalance transactionCategoryBalance= null;
+			if (persistModel.getTransactionCategoryBalanceId() != null) {
+				transactionCategoryBalance = transactionCategoryBalanceService
+						.findByPK(persistModel.getTransactionCategoryBalanceId());
+			}
+			Journal journal = journalService.getJournalByReferenceId(transactionCategoryBalance.getTransactionCategory().getTransactionCategoryId());
+			if (journal != null) {
+				journalService.deleteAndUpdateByIds(Arrays.asList(journal.getId()),false);
+			}
+			TransactionCategory category = transactionCategoryService.findByPK(persistModel.getTransactionCategoryId());
+			TransactionCategory transactionCategory = getValidTransactionCategory(category);
+			boolean isDebit=false;
+			if(StringUtils.equalsAnyIgnoreCase(transactionCategory.getTransactionCategoryCode(),
+					TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode())){
+				isDebit=true;
+			}
+			List<JournalLineItem> journalLineItemList = new ArrayList<>();
+			journal = new Journal();
+			JournalLineItem journalLineItem1 = new JournalLineItem();
+			journalLineItem1.setTransactionCategory(category);
+			if (isDebit) {
+				journalLineItem1.setDebitAmount(persistModel.getOpeningBalance());
+			} else {
+				journalLineItem1.setCreditAmount(persistModel.getOpeningBalance());
+			}
+			journalLineItem1.setReferenceType(PostingReferenceTypeEnum.BALANCE_ADJUSTMENT);
+			journalLineItem1.setReferenceId(category.getTransactionCategoryId());
+			journalLineItem1.setCreatedBy(userId);
+			journalLineItem1.setJournal(journal);
+			journalLineItemList.add(journalLineItem1);
+
+			JournalLineItem journalLineItem2 = new JournalLineItem();
+			journalLineItem2.setTransactionCategory(transactionCategory);
+			if (!isDebit) {
+				journalLineItem2.setDebitAmount(persistModel.getOpeningBalance());
+			} else {
+				journalLineItem2.setCreditAmount(persistModel.getOpeningBalance());
+			}
+			journalLineItem2.setReferenceType(PostingReferenceTypeEnum.BALANCE_ADJUSTMENT);
+			journalLineItem2.setReferenceId(transactionCategory.getTransactionCategoryId());
+			journalLineItem2.setCreatedBy(userId);
+			journalLineItem2.setJournal(journal);
+			journalLineItemList.add(journalLineItem2);
+
+			journal.setJournalLineItems(journalLineItemList);
+			journal.setCreatedBy(userId);
+			journal.setPostingReferenceType(PostingReferenceTypeEnum.BALANCE_ADJUSTMENT);
+			journal.setJournalDate(LocalDateTime.now());
+			journalService.updateOpeningBalance(journal,true);
+			return new ResponseEntity<>("Updated successfully",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
@@ -207,5 +241,4 @@ public class TransactionCategoryBalanceController {
 				transactionCategoryBalanceRestHelper.getList((List<TransactionCategoryBalance>) response.getData()));
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-
 }

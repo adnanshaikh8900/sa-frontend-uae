@@ -6,4 +6,5 @@ import lombok.Data;
 public class ValidationModel {
     private Integer moduleType;
     private String name;
+    private String productCode;
 }

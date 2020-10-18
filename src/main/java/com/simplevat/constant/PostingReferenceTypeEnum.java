@@ -15,6 +15,7 @@ public enum PostingReferenceTypeEnum {
     BANK_ACCOUNT("Bank Account"),
     PURCHASE("Purchase"),
     RECEIPT("Customer Payment"),
+    BALANCE_ADJUSTMENT("Opening Balance Adjustments"),
     PAYMENT("Supplier Payment");
 	
 	@Getter

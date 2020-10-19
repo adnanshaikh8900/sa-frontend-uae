@@ -353,10 +353,11 @@ public class TransactionServiceImpl extends TransactionService {
 
 			int count = 0;
 			int totalCount = transactions.size();
+			LocalDateTime currentDate = LocalDateTime.now();
 			for (Transaction transaction : transactions) {
 				if(isAlreadyExistSimilarTransaction(transaction))
 					transaction.setCreationMode(TransactionCreationMode.POTENTIAL_DUPLICATE);
-				if(isValidTransaction(transaction,bankAccount,lastReconcileDate)){
+				if(isValidTransaction(transaction,bankAccount,lastReconcileDate,currentDate)){
 					if (transaction.getDebitCreditFlag()=='C')
 						currentBalance = currentBalance.add(transaction.getTransactionAmount());
 					else
@@ -381,10 +382,13 @@ public class TransactionServiceImpl extends TransactionService {
 		}
 	}
 
-	private boolean isValidTransaction(Transaction transaction, BankAccount bankAccount,LocalDateTime lastReconciledDate) {
-		 if (lastReconciledDate!=null&&lastReconciledDate.isBefore(transaction.getTransactionDate()))
+	private boolean isValidTransaction(Transaction transaction, BankAccount bankAccount,LocalDateTime lastReconciledDate,
+									   LocalDateTime currentDate) {
+		 if (lastReconciledDate!=null&&lastReconciledDate.isBefore(transaction.getTransactionDate())
+		 && transaction.getTransactionDate().isBefore(currentDate))
 		return true;
-		else if (bankAccount.getOpeningDate().isBefore(transaction.getTransactionDate()))
+		else if (bankAccount.getOpeningDate().isBefore(transaction.getTransactionDate())
+				 && transaction.getTransactionDate().isBefore(currentDate))
 			return true;
 			else
 				return false;

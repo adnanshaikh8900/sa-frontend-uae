@@ -91,7 +91,7 @@ public class UserController{
 	@Autowired
 	private MailIntegration mailIntegration;
 
-	private boolean isEmailPresent = false;
+
 
 	@ApiOperation(value = "Get User List")
 	@GetMapping(value = "/getList")
@@ -168,7 +168,7 @@ public class UserController{
 	public ResponseEntity<String> save(@ModelAttribute UserModel selectedUser, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-
+			boolean isEmailPresent = false;
 			boolean isUserNew = true;
 			User creatingUser = userService.findByPK(userId);
 			String password = selectedUser.getPassword();

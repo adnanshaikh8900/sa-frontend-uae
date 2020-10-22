@@ -44,6 +44,10 @@ public class CurrencyServiceImpl extends CurrencyService {
 		getDao().update(newCurrency);
 	}
 	@Override
+	public void updateCurrency(Integer currencyCode){
+		getDao().updateCurrency(currencyCode);
+	}
+	@Override
 	public Currency getCurrency(final int currencyCode) {
 		return getDao().getCurrency(currencyCode);
 	}

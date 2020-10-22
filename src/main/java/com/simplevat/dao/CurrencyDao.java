@@ -33,4 +33,6 @@ public interface CurrencyDao extends Dao<Integer, Currency> {
     Boolean isCurrencyDataAvailableOnTodayDate();
 
     PaginationResponseModel getCurrencies(Map<CurrencyFilterEnum, Object> filterDataMap, PaginationModel paginationModel);
+
+    void updateCurrency(Integer currencyCode);
 }

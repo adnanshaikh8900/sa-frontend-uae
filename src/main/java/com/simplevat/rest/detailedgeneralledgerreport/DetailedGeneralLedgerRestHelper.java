@@ -155,12 +155,12 @@ public class DetailedGeneralLedgerRestHelper {
 
 					switch (postingType) {
 						case BANK_ACCOUNT:
-							bankAccountMap = findOrGetFromDbBn(bankAccountMap, lineItem.getReferenceId());
-							BankAccount bn = bankAccountMap.get(lineItem.getReferenceId());
+							//bankAccountMap = findOrGetFromDbBn(bankAccountMap, lineItem.getReferenceId());
+							//BankAccount bn = bankAccountMap.get(lineItem.getReferenceId());
 							model.setAmount(lineItem.getDebitAmount()!=null?lineItem.getDebitAmount():lineItem.getCreditAmount());
 							model.setDebitAmount(lineItem.getDebitAmount());
 							model.setCreditAmount( lineItem.getCreditAmount());
-							model.setName( bn.getBankName()+"-"+bn.getBankAccountName());
+							//model.setName( bn.getBankName()+"-"+bn.getBankAccountName());
 							break;
 
 						case TRANSACTION_RECONSILE:
@@ -222,7 +222,9 @@ public class DetailedGeneralLedgerRestHelper {
 							model.setInvoiceType(invoice.getType());
 							break;
 
+
 						case MANUAL:
+						case BALANCE_ADJUSTMENT:
 							model.setReferenceNo(journal.getJournlReferencenNo());
 							model.setAmount(isDebit ? lineItem.getDebitAmount() : lineItem.getCreditAmount());
 							model.setCreditAmount(lineItem.getCreditAmount());

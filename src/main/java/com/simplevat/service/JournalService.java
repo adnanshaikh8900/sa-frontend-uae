@@ -14,6 +14,9 @@ import com.simplevat.rest.PaginationResponseModel;
 public abstract class JournalService extends SimpleVatService<Integer, Journal> {
 	public abstract void deleteByIds(List<Integer> ids);
 
+	public abstract void deleteAndUpdateByIds(List<Integer> ids,Boolean updateOpeningBalance);
+	public abstract void updateOpeningBalance(Journal entity,Boolean updateOpeningBalance);
+
 	public abstract PaginationResponseModel getJornalList(Map<JournalFilterEnum, Object> filterMap,
 			PaginationModel paginationModel);
 

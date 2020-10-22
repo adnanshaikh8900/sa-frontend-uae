@@ -121,4 +121,12 @@ public class CurrencyDaoImpl extends AbstractDao<Integer, Currency> implements C
 		return new PaginationResponseModel(this.getResultCount(dbFilters),
 				this.executeQuery(dbFilters, paginationModel));
 	}
+	@Override
+	public void updateCurrency(Integer currencyCode){
+
+		Query query = getEntityManager()
+				.createQuery("UPDATE Currency c SET c.deleteFlag=false WHERE c.currencyCode != :currencyCode");
+		query.setParameter(CommonColumnConstants.CURRENCY_CODE,currencyCode);
+		query.executeUpdate();
+	}
 }

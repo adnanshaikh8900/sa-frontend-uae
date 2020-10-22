@@ -11,7 +11,7 @@ import com.simplevat.rest.PaginationResponseModel;
 public interface JournalDao extends Dao<Integer, Journal> {
 
 	public void deleteByIds(List<Integer> ids);
-
+	public void deleteAndUpdateByIds(List<Integer> ids,Boolean updateOpeningBalance);
 	public PaginationResponseModel getJornalList(Map<JournalFilterEnum, Object> filterMap,
 			PaginationModel paginationModel);
     public Journal getJournalByReferenceId(Integer transactionId);

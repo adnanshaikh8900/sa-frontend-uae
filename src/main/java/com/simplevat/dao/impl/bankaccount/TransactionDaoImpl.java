@@ -593,7 +593,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 	public boolean isAlreadyExistSimilarTransaction(BigDecimal transactionAmount, LocalDateTime transactionDate, BankAccount bankAccount)
 	{
 		StringBuilder queryBuilder = new StringBuilder("SELECT t FROM Transaction t " +
-				"WHERE t.creationMode = 'MANUAL' and t.bankAccount = :bankAccount and t.transactionDate =:transactionDate and t.transactionAmount=:transactionAmount");
+				"WHERE t.bankAccount = :bankAccount and t.transactionDate =:transactionDate and t.transactionAmount=:transactionAmount");
 		TypedQuery<Transaction> query = getEntityManager().createQuery(queryBuilder.toString(),	Transaction.class);
 		query.setParameter("bankAccount",bankAccount);
 		query.setParameter("transactionDate", transactionDate);

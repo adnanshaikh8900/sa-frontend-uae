@@ -4,20 +4,21 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.simplevat.constant.ChartOfAccountCategoryCodeEnum;
+import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.TransactionCategoryCodeEnum;
 import com.simplevat.entity.*;
+import com.simplevat.entity.Currency;
 import com.simplevat.entity.bankaccount.*;
 import com.simplevat.model.DashBoardBankDataModel;
 import com.simplevat.rest.transactioncategorybalancecontroller.TransactionCategoryBalanceRestHelper;
 import com.simplevat.rest.transactioncategorybalancecontroller.TransactioncategoryBalancePersistModel;
 import com.simplevat.service.*;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,6 +105,9 @@ public class BankAccountController{
 	@Autowired
 	private TransactionService transactionService;
 
+	@Autowired
+	private JournalLineItemService journalLineItemService;
+
 	@ApiOperation(value = "Get All Bank Accounts", response = List.class)
 	@GetMapping(value = "/list")
 	public ResponseEntity<PaginationResponseModel> getBankAccountList(BankAccountFilterModel filterModel) {
@@ -151,45 +155,48 @@ public class BankAccountController{
 				}
 
 				bankAccountService.persist(bankAccount);
-				/*
 
-				Added by Adil
-				Date - 12-07-2020
-				New feature
-				Addition of opening balance while creating bank account
-
-				 */
-				TransactionCategoryBalance   openingBalance = bankAccountRestHelper.getOpeningBalanceEntity(bankAccount,bankAccount.getTransactionCategory());
-			    TransactionCategoryClosingBalance closingBalance = bankAccountRestHelper
-						.getClosingBalanceEntity(bankAccount,bankAccount.getTransactionCategory());
-				closingBalance.setTransactionCategory(bankAccount.getTransactionCategory());
-				transactionCategoryBalanceService.persist(openingBalance);
-				transactionCategoryClosingBalanceService.persist(closingBalance);
-
-				TransactionCategory transactionCategory = transactionCategoryService
-						.findTransactionCategoryByTransactionCategoryCode(
-								TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
-				openingBalance = bankAccountRestHelper.getOpeningBalanceEntity(bankAccount,transactionCategory);
-				transactionCategoryBalanceService.persist(openingBalance);
-				Map<String,Object> filterObject = new HashMap<>();
-				filterObject.put("transactionCategory",transactionCategory);
-				List<TransactionCategoryClosingBalance>closingBalanceList = transactionCategoryClosingBalanceService.findByAttributes(filterObject);
-				if(closingBalanceList!=null && closingBalanceList.size()>0)
-				{
-					closingBalance = closingBalanceList.get(0);
-					BigDecimal closingBalanceValue = closingBalance.getClosingBalance();
-					//closingBalanceValue = closingBalanceValue.negate();
-					closingBalanceValue = closingBalanceValue.add(bankAccount.getOpeningBalance());
-					closingBalance.setOpeningBalance(bankAccount.getOpeningBalance());
-					closingBalance.setClosingBalance(closingBalanceValue);
+				TransactionCategory category = transactionCategoryService.findByPK(bankAccount.getTransactionCategory().getTransactionCategoryId());
+				TransactionCategory transactionCategory = getValidTransactionCategory(category);
+				boolean isDebit=false;
+				if(StringUtils.equalsAnyIgnoreCase(transactionCategory.getTransactionCategoryCode(),
+						TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode())){
+					isDebit=true;
 				}
-				else {
-					closingBalance = bankAccountRestHelper
-							.getClosingBalanceEntity(bankAccount, transactionCategory);
-					closingBalance.setOpeningBalance(bankAccount.getOpeningBalance());
-					closingBalance.setClosingBalance(bankAccount.getOpeningBalance());
+
+				List<JournalLineItem> journalLineItemList = new ArrayList<>();
+				Journal journal = new Journal();
+				JournalLineItem journalLineItem1 = new JournalLineItem();
+				journalLineItem1.setTransactionCategory(category);
+				if (isDebit) {
+					journalLineItem1.setDebitAmount(bankModel.getOpeningBalance());
+				} else {
+					journalLineItem1.setCreditAmount(bankModel.getOpeningBalance());
 				}
-				transactionCategoryClosingBalanceService.persist(closingBalance);
+				journalLineItem1.setReferenceType(PostingReferenceTypeEnum.BANK_ACCOUNT);
+				journalLineItem1.setReferenceId(category.getTransactionCategoryId());
+				journalLineItem1.setCreatedBy(userId);
+				journalLineItem1.setJournal(journal);
+				journalLineItemList.add(journalLineItem1);
+
+				JournalLineItem journalLineItem2 = new JournalLineItem();
+				journalLineItem2.setTransactionCategory(transactionCategory);
+				if (!isDebit) {
+					journalLineItem2.setDebitAmount(bankModel.getOpeningBalance());
+				} else {
+					journalLineItem2.setCreditAmount(bankModel.getOpeningBalance());
+				}
+				journalLineItem2.setReferenceType(PostingReferenceTypeEnum.BANK_ACCOUNT);
+				journalLineItem2.setReferenceId(transactionCategory.getTransactionCategoryId());
+				journalLineItem2.setCreatedBy(userId);
+				journalLineItem2.setJournal(journal);
+				journalLineItemList.add(journalLineItem2);
+
+				journal.setJournalLineItems(journalLineItemList);
+				journal.setCreatedBy(userId);
+				journal.setPostingReferenceType(PostingReferenceTypeEnum.BANK_ACCOUNT);
+				journal.setJournalDate(LocalDateTime.now());
+				journalService.persist(journal);
                 coacTransactionCategoryService.addCoacTransactionCategory(bankAccount.getTransactionCategory().getChartOfAccount(),
 						bankAccount.getTransactionCategory());
 				return new ResponseEntity<>("Save Successfull..",HttpStatus.OK);
@@ -198,6 +205,33 @@ public class BankAccountController{
 			logger.error(ERROR, e);
 		}
 		return new ResponseEntity<>("Save Failure",HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	private TransactionCategory getValidTransactionCategory(TransactionCategory transactionCategory) {
+		String transactionCategoryCode = transactionCategory.getChartOfAccount().getChartOfAccountCode();
+		ChartOfAccountCategoryCodeEnum chartOfAccountCategoryCodeEnum = ChartOfAccountCategoryCodeEnum.getChartOfAccountCategoryCodeEnum(transactionCategoryCode);
+		if (chartOfAccountCategoryCodeEnum == null)
+			return null;
+		switch (chartOfAccountCategoryCodeEnum) {
+			case ACCOUNTS_RECEIVABLE:
+			case BANK:
+			case CASH:
+			case CURRENT_ASSET:
+			case FIXED_ASSET:
+			case OTHER_CURRENT_ASSET:
+			case STOCK:
+				return transactionCategoryService
+						.findTransactionCategoryByTransactionCategoryCode(
+								TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
+			case OTHER_LIABILITY:
+			case OTHER_CURRENT_LIABILITIES:
+			case EQUITY:
+				return transactionCategoryService
+						.findTransactionCategoryByTransactionCategoryCode(
+								TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_ASSETS.getCode());
+		}
+		return transactionCategoryService
+				.findTransactionCategoryByTransactionCategoryCode(
+						TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
 	}
 
 	@ApiOperation(value = "Update Bank Account", response = BankAccount.class)
@@ -212,27 +246,52 @@ public class BankAccountController{
 			bankAccount.setBankAccountId(bankModel.getBankAccountId());
 			bankAccount.setLastUpdateDate(LocalDateTime.now());
 			bankAccount.setLastUpdatedBy(user.getUserId());
-
 			bankAccountService.update(bankAccount);
-			TransactionCategoryBalance openingBalance = bankAccountRestHelper.getOpeningBalanceEntity
-					(bankAccount,bankAccount.getTransactionCategory());
-			openingBalance.setOpeningBalance(bankAccount.getOpeningBalance());
-			openingBalance.setRunningBalance(bankAccount.getCurrentBalance());
-			transactionCategoryBalanceService.update(openingBalance);
-			TransactionCategory transactionCategory = transactionCategoryService
-					.findTransactionCategoryByTransactionCategoryCode(
-							TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
-			openingBalance = bankAccountRestHelper.getOpeningBalanceEntity(bankAccount,transactionCategory);
-			openingBalance.setOpeningBalance(openingBalance.getOpeningBalance().add(bankModel.getActualOpeningBalance()));
-			openingBalance.setRunningBalance(openingBalance.getRunningBalance().add(bankModel.getActualOpeningBalance()));
-			transactionCategoryBalanceService.update(openingBalance);
-			TransactionCategoryClosingBalance closingBalance = transactionCategoryClosingBalanceService
-					.getFirstClosingBalanceByDate(bankAccount.getTransactionCategory());
-			Transaction transaction = bankAccountRestHelper.getBankBalanceFromClosingBalance(bankModel,closingBalance,'C');
-			transactionCategoryClosingBalanceService.updateClosingBalance(transaction);
-			closingBalance = transactionCategoryClosingBalanceService.getFirstClosingBalanceByDate(transactionCategory);
-			transaction = bankAccountRestHelper.getBankBalanceFromClosingBalance(bankModel,closingBalance,'C');
-			transactionCategoryClosingBalanceService.updateClosingBalance(transaction);
+			Journal journal = journalService.getJournalByReferenceId(bankAccount.getTransactionCategory().getTransactionCategoryId());
+			if (journal != null) {
+				journalService.deleteByIds(Arrays.asList(journal.getId()));
+			}
+			TransactionCategory category = transactionCategoryService.findByPK(bankAccount.getTransactionCategory().getTransactionCategoryId());
+			TransactionCategory transactionCategory = getValidTransactionCategory(category);
+			boolean isDebit=false;
+			if(StringUtils.equalsAnyIgnoreCase(transactionCategory.getTransactionCategoryCode(),
+					TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode())){
+				isDebit=true;
+			}
+
+			List<JournalLineItem> journalLineItemList = new ArrayList<>();
+			journal = new Journal();
+			JournalLineItem journalLineItem1 = new JournalLineItem();
+			journalLineItem1.setTransactionCategory(category);
+			if (isDebit) {
+				journalLineItem1.setDebitAmount(bankModel.getOpeningBalance());
+			} else {
+				journalLineItem1.setCreditAmount(bankModel.getOpeningBalance());
+			}
+			journalLineItem1.setReferenceType(PostingReferenceTypeEnum.BANK_ACCOUNT);
+			journalLineItem1.setReferenceId(category.getTransactionCategoryId());
+			journalLineItem1.setCreatedBy(userId);
+			journalLineItem1.setJournal(journal);
+			journalLineItemList.add(journalLineItem1);
+
+			JournalLineItem journalLineItem2 = new JournalLineItem();
+			journalLineItem2.setTransactionCategory(transactionCategory);
+			if (!isDebit) {
+				journalLineItem2.setDebitAmount(bankModel.getOpeningBalance());
+			} else {
+				journalLineItem2.setCreditAmount(bankModel.getOpeningBalance());
+			}
+			journalLineItem2.setReferenceType(PostingReferenceTypeEnum.BANK_ACCOUNT);
+			journalLineItem2.setReferenceId(transactionCategory.getTransactionCategoryId());
+			journalLineItem2.setCreatedBy(userId);
+			journalLineItem2.setJournal(journal);
+			journalLineItemList.add(journalLineItem2);
+
+			journal.setJournalLineItems(journalLineItemList);
+			journal.setCreatedBy(userId);
+			journal.setPostingReferenceType(PostingReferenceTypeEnum.BANK_ACCOUNT);
+			journal.setJournalDate(LocalDateTime.now());
+			journalService.persist(journal);
 			return new ResponseEntity<>("Update Successfull..",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
@@ -288,8 +347,15 @@ public class BankAccountController{
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
-			BankAccount bankAccount = bankAccountService.findByPK(bankAccountId);
+			BankAccount  bankAccount = bankAccountService.findByPK(bankAccountId);
 			if (bankAccount != null) {
+				Map<String,Object> filterMap = new HashMap<>();
+				filterMap.put("transactionCategory",bankAccount.getTransactionCategory());
+
+				Journal journal = journalService.getJournalByReferenceId(bankAccount.getTransactionCategory().getTransactionCategoryId());
+				if (journal != null) {
+					journalService.deleteByIds(Arrays.asList(journal.getId()));
+				}
 				//delete Transaction
 				List<Transaction> transactionList = transactionService.getAllTransactionListByBankAccountId(bankAccountId);
 				for(Transaction transaction:transactionList)
@@ -308,36 +374,36 @@ public class BankAccountController{
 
 
 				}
-				if (bankAccount.getCurrentBalance()!=null&&bankAccount.getCurrentBalance().longValue()>0)
-				{
-					//Subtract Bank balance from opening Balance Offset liabilities
-					TransactionCategory transactionCategory = transactionCategoryService
-							.findTransactionCategoryByTransactionCategoryCode(
-									TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
-					TransactionCategoryClosingBalance transactionCategoryClosingBalance =
-							transactionCategoryClosingBalanceService.getLastClosingBalanceByDate(transactionCategory);
-					if (transactionCategoryClosingBalance!=null){
-						transactionCategoryClosingBalance.setOpeningBalance(transactionCategoryClosingBalance.getClosingBalance()
-								.subtract(bankAccount.getCurrentBalance()));
-						transactionCategoryClosingBalance.setClosingBalance(transactionCategoryClosingBalance.getClosingBalance()
-								.subtract(bankAccount.getCurrentBalance()));
-						transactionCategoryClosingBalanceService.update(transactionCategoryClosingBalance);
-					}
-					Map<String,Object> filterMap = new HashMap<>();
-					filterMap.put("transactionCategory",transactionCategory);
-					List<TransactionCategoryBalance> transactionCategoryBalanceList =
-							transactionCategoryBalanceService.findByAttributes(filterMap);
-					for(TransactionCategoryBalance transactionCategoryBalance : transactionCategoryBalanceList)
-					{
-						transactionCategoryBalance.setOpeningBalance(transactionCategoryBalance.getOpeningBalance()
-								.subtract(bankAccount.getCurrentBalance()));
-						transactionCategoryBalance.setRunningBalance(transactionCategoryBalance.getRunningBalance()
-								.subtract(bankAccount.getCurrentBalance()));
-						transactionCategoryBalanceService.update(transactionCategoryBalance);
-					}
-				}
+//				if (bankAccount.getCurrentBalance()!=null&&bankAccount.getCurrentBalance().longValue()>0)
+//				{
+////					Subtract Bank balance from opening Balance Offset liabilities
+//					TransactionCategory transactionCategory = transactionCategoryService
+//							.findTransactionCategoryByTransactionCategoryCode(
+//									TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
+//					TransactionCategoryClosingBalance transactionCategoryClosingBalance =
+//							transactionCategoryClosingBalanceService.getLastClosingBalanceByDate(transactionCategory);
+//					if (transactionCategoryClosingBalance!=null){
+//						transactionCategoryClosingBalance.setOpeningBalance(transactionCategoryClosingBalance.getClosingBalance()
+//								.subtract(bankAccount.getCurrentBalance()));
+//						transactionCategoryClosingBalance.setClosingBalance(transactionCategoryClosingBalance.getClosingBalance()
+//								.subtract(bankAccount.getCurrentBalance()));
+//						transactionCategoryClosingBalanceService.update(transactionCategoryClosingBalance);
+//					}
+//					Map<String,Object> filterMap = new HashMap<>();
+//					filterMap.put("transactionCategory",transactionCategory);
+//					List<TransactionCategoryBalance> transactionCategoryBalanceList =
+//							transactionCategoryBalanceService.findByAttributes(filterMap);
+//					for(TransactionCategoryBalance transactionCategoryBalance : transactionCategoryBalanceList)
+//					{
+//						transactionCategoryBalance.setOpeningBalance(transactionCategoryBalance.getOpeningBalance()
+//								.subtract(bankAccount.getCurrentBalance()));
+//						transactionCategoryBalance.setRunningBalance(transactionCategoryBalance.getRunningBalance()
+//								.subtract(bankAccount.getCurrentBalance()));
+//						transactionCategoryBalanceService.update(transactionCategoryBalance);
+//					}
+//				}
 				//delete closing balance
-				Map<String,Object> filterMap = new HashMap<>();
+				filterMap = new HashMap<>();
 				filterMap.put("transactionCategory",bankAccount.getTransactionCategory());
 				List<TransactionCategoryClosingBalance> transactionCategoryClosingBalanceList =
 						transactionCategoryClosingBalanceService.findByAttributes(filterMap);

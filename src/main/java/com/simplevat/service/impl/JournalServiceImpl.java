@@ -40,6 +40,12 @@ public class JournalServiceImpl extends JournalService {
 	}
 
 	@Override
+	public void deleteAndUpdateByIds(List<Integer> ids,Boolean updateOpeningBalance) {
+		journalDao.deleteAndUpdateByIds(ids,updateOpeningBalance);
+	}
+
+
+	@Override
 	protected Dao<Integer, Journal> getDao() {
 		return journalDao;
 	}
@@ -51,5 +57,12 @@ public class JournalServiceImpl extends JournalService {
 		}
 		super.persist(journal);
 
+	}
+	public void updateOpeningBalance(Journal journal,Boolean updateOpeningBalance)
+	{
+		for (JournalLineItem lineItem : journal.getJournalLineItems()) {
+			lineItem.setCurrentBalance(transactionCategoryBalanceService.updateRunningBalanceAndOpeningBalance(lineItem,updateOpeningBalance));
+		}
+		super.persist(journal);
 	}
 }

@@ -766,7 +766,7 @@ public class TransactionRestController {
 		//create new expenses
 		Expense expense =  createNewExpense(transactionPresistModel,userId);
 		if (transactionPresistModel.getDescription() != null) {
-			trnx.setTransactionDescription(transactionPresistModel.getDescription());
+			trnx.setExplainedTransactionDescription(transactionPresistModel.getDescription());
 		}
 		// create Journal entry for Expense
 		//Chart of account in expense and user
@@ -1113,7 +1113,7 @@ public class TransactionRestController {
 	@PostMapping(value = "/changestatus")
 	public ResponseEntity<String> updateTransactions(@RequestBody DeleteModel ids) {
 		try {
-			transactionService.updateStatusByIds(ids.getIds(),TransactionCreationMode.POTENTIAL_DUPLICATE);
+			transactionService.updateStatusByIds(ids.getIds(),TransactionCreationMode.IMPORT);
 			return new ResponseEntity<>("Transaction status mode updated successfully", HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);

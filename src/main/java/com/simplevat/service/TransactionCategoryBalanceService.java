@@ -14,4 +14,6 @@ public abstract class TransactionCategoryBalanceService extends SimpleVatService
 
 	public abstract BigDecimal updateRunningBalance(JournalLineItem lineItems);
 
+	public abstract BigDecimal updateRunningBalanceAndOpeningBalance(JournalLineItem lineItems,Boolean updateOpeningBalance);
+
 }

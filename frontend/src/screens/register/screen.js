@@ -113,6 +113,7 @@ class Register extends React.Component {
 			});
 			this.setState({ timezone: output });
 		});
+		this.props.authActions.getCurrencyList();
 		this.props.authActions.getCompanyCount().then((response) => {
 			if (response.data > 0) {
 				this.props.history.push('/login');

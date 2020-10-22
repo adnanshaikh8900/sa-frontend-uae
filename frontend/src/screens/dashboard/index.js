@@ -1,9 +1,11 @@
-import screen from './screen'
-import * as actions from './actions'
-import reducer from './reducer'
+import screen from './screen';
+import screenTwo from './screen-two';
+import * as actions from './actions';
+import reducer from './reducer';
 
 export default {
-  screen,
-  actions,
-  reducer
-}
+	screen,
+	actions,
+	reducer,
+	screenTwo,
+};

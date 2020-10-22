@@ -1,6 +1,6 @@
 import {
 	Dashboard,
-
+	DashboardTwo,
 	// Account Screens
 	Journal,
 	CreateJournal,
@@ -108,6 +108,11 @@ const adminRoutes = [
 		path: '/admin/dashboard',
 		name: 'Dashboard',
 		component: Dashboard.screen,
+	},
+	{
+		path: '/admin/dashboard-two',
+		name: 'DashboardTwo',
+		component: DashboardTwo,
 	},
 
 	{

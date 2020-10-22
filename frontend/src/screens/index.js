@@ -3,6 +3,7 @@ import Register from './register';
 import ResetPassword from './reset_password';
 
 import Dashboard from './dashboard';
+import DashboardTwo from './dashboard/screen-two';
 
 import Journal from './journal';
 import CreateJournal from './journal/screens/create';
@@ -96,6 +97,7 @@ export {
 	Register,
 	ResetPassword,
 	Dashboard,
+	DashboardTwo,
 	Journal,
 	CreateJournal,
 	DetailJournal,

@@ -265,7 +265,7 @@ class ProductModal extends React.Component {
 											<Col lg={12}>
 												<div className="h4 mb-0 d-flex align-items-center">
 													<i className="nav-icon fas fa-id-card-alt" />
-													<span className="ml-2">Create Contact</span>
+													<span className="ml-2">Create Product</span>
 												</div>
 											</Col>
 										</Row>

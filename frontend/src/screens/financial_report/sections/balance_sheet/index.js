@@ -299,6 +299,60 @@ class BalanceSheet extends React.Component {
 																<td></td>
 															</tr>
 															<tr>
+																<td className="mainLable">Fixed Assets</td>
+																<td></td>
+																<td></td>
+															</tr>
+															{Object.keys(this.state.data['fixedAssets']).map(
+																(item) => (
+																	<tr>
+																		<td className="pt-0 pb-0">{item}</td>
+																		<td className="pt-0 pb-0"></td>
+																		<td className="pt-0 pb-0 text-right">
+																			{this.state.data['fixedAssets'] ? (
+																				<Currency
+																					value={this.state.data['fixedAssets'][
+																						`${item}`
+																					].toFixed(2)}
+																					currencySymbol={
+																						universal_currency_list[0]
+																							? universal_currency_list[0]
+																									.currencyIsoCode
+																							: 'USD'
+																					}
+																				/>
+																			) : (
+																				0
+																			)}
+																		</td>
+																	</tr>
+																),
+															)}
+															<tr className="mainLable">
+																<td className="text-right">
+																	Total Fixed Assets
+																</td>
+																<td></td>
+																<td className="text-right">
+																	{this.state.data['totalFixedAssets'] ? (
+																		<Currency
+																			value={this.state.data[
+																				'totalFixedAssets'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		0
+																	)}
+																</td>
+															</tr>
+															<br />
+															<tr>
 																<td className="mainLable">Current Assets</td>
 																<td></td>
 																<td></td>
@@ -437,60 +491,6 @@ class BalanceSheet extends React.Component {
 																</td>
 															</tr>
 															<br />
-															<tr>
-																<td className="mainLable">Fixed Assets</td>
-																<td></td>
-																<td></td>
-															</tr>
-															{Object.keys(this.state.data['fixedAssets']).map(
-																(item) => (
-																	<tr>
-																		<td className="pt-0 pb-0">{item}</td>
-																		<td className="pt-0 pb-0"></td>
-																		<td className="pt-0 pb-0 text-right">
-																			{this.state.data['fixedAssets'] ? (
-																				<Currency
-																					value={this.state.data['fixedAssets'][
-																						`${item}`
-																					].toFixed(2)}
-																					currencySymbol={
-																						universal_currency_list[0]
-																							? universal_currency_list[0]
-																									.currencyIsoCode
-																							: 'USD'
-																					}
-																				/>
-																			) : (
-																				0
-																			)}
-																		</td>
-																	</tr>
-																),
-															)}
-															<tr className="mainLable">
-																<td className="text-right">
-																	Total Fixed Assets
-																</td>
-																<td></td>
-																<td className="text-right">
-																	{this.state.data['totalFixedAssets'] ? (
-																		<Currency
-																			value={this.state.data[
-																				'totalFixedAssets'
-																			].toFixed(2)}
-																			currencySymbol={
-																				universal_currency_list[0]
-																					? universal_currency_list[0]
-																							.currencyIsoCode
-																					: 'USD'
-																			}
-																		/>
-																	) : (
-																		0
-																	)}
-																</td>
-															</tr>
-															<br />
 															<tr className="mainLable">
 																<td className="mainLable text-right">
 																	Total Assets
@@ -522,6 +522,60 @@ class BalanceSheet extends React.Component {
 																<td></td>
 																<td></td>
 															</tr>
+															<tr>
+																<td className="mainLable">Equities</td>
+																<td></td>
+																<td></td>
+															</tr>
+															{Object.keys(this.state.data['equities']).map(
+																(item) => (
+																	<tr>
+																		<td className="pt-0 pb-0">{item}</td>
+																		<td className="pt-0 pb-0"></td>
+																		<td className="pt-0 pb-0 text-right">
+																			{this.state.data['equities'] ? (
+																				<Currency
+																					value={this.state.data['equities'][
+																						`${item}`
+																					].toFixed(2)}
+																					currencySymbol={
+																						universal_currency_list[0]
+																							? universal_currency_list[0]
+																									.currencyIsoCode
+																							: 'USD'
+																					}
+																				/>
+																			) : (
+																				0
+																			)}
+																		</td>
+																	</tr>
+																),
+															)}
+															<tr className="mainLable">
+																<td className="mainLable text-right">
+																	Total Equity
+																</td>
+																<td></td>
+																<td className="text-right">
+																	{this.state.data['totalEquities'] ? (
+																		<Currency
+																			value={this.state.data[
+																				'totalEquities'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		0
+																	)}
+																</td>
+															</tr>
+															<br />
 															<tr>
 																<td className="mainLable">Other Liability</td>
 																<td></td>
@@ -582,6 +636,28 @@ class BalanceSheet extends React.Component {
 																</td>
 																<td></td>
 																<td></td>
+															</tr>
+
+															<tr className="">
+																<td className="mainLable">Accounts Payable</td>
+																<td></td>
+																<td className="text-right">
+																	{this.state.data['totalAccountPayable'] ? (
+																		<Currency
+																			value={this.state.data[
+																				'totalAccountPayable'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		0
+																	)}
+																</td>
 															</tr>
 															{Object.keys(
 																this.state.data['otherCurrentLiability'],
@@ -660,80 +736,6 @@ class BalanceSheet extends React.Component {
 																</td>
 															</tr>
 															<br />
-															<tr>
-																<td className="mainLable">Equities</td>
-																<td></td>
-																<td></td>
-															</tr>
-															{Object.keys(this.state.data['equities']).map(
-																(item) => (
-																	<tr>
-																		<td className="pt-0 pb-0">{item}</td>
-																		<td className="pt-0 pb-0"></td>
-																		<td className="pt-0 pb-0 text-right">
-																			{this.state.data['equities'] ? (
-																				<Currency
-																					value={this.state.data['equities'][
-																						`${item}`
-																					].toFixed(2)}
-																					currencySymbol={
-																						universal_currency_list[0]
-																							? universal_currency_list[0]
-																									.currencyIsoCode
-																							: 'USD'
-																					}
-																				/>
-																			) : (
-																				0
-																			)}
-																		</td>
-																	</tr>
-																),
-															)}
-															<tr className="mainLable">
-																<td className="mainLable text-right">
-																	Total Equity
-																</td>
-																<td></td>
-																<td className="text-right">
-																	{this.state.data['totalEquities'] ? (
-																		<Currency
-																			value={this.state.data[
-																				'totalEquities'
-																			].toFixed(2)}
-																			currencySymbol={
-																				universal_currency_list[0]
-																					? universal_currency_list[0]
-																							.currencyIsoCode
-																					: 'USD'
-																			}
-																		/>
-																	) : (
-																		0
-																	)}
-																</td>
-															</tr>
-															<tr className="">
-																<td className="mainLable">Accounts Payable</td>
-																<td></td>
-																<td className="text-right">
-																	{this.state.data['totalAccountPayable'] ? (
-																		<Currency
-																			value={this.state.data[
-																				'totalAccountPayable'
-																			].toFixed(2)}
-																			currencySymbol={
-																				universal_currency_list[0]
-																					? universal_currency_list[0]
-																							.currencyIsoCode
-																					: 'USD'
-																			}
-																		/>
-																	) : (
-																		0
-																	)}
-																</td>
-															</tr>
 															<tr className="mainLable">
 																<td className="mainLable text-right">
 																	Total Equities & Liability

@@ -15,7 +15,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
 import { CSVLink } from 'react-csv';
 
-import { Loader, ConfirmDeleteModal,Currency } from 'components';
+import { Loader, ConfirmDeleteModal, Currency } from 'components';
 
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -244,31 +244,33 @@ class Journal extends React.Component {
 				: [];
 		const listItems = temp.map((number, index) => (
 			<li key={index} style={{ listStyleType: 'none', paddingBottom: '5px' }}>
-				{number}
+				{index === 0
+					? number + ' (' + (index === 0 ? rows.createdByName : '') + ')'
+					: number}
 			</li>
 		));
 		return <ul style={{ padding: '0', marginBottom: '0px' }}>{listItems}</ul>;
 	};
 
-	renderCreditAmount = (cell, rows,extraData) => {
+	renderCreditAmount = (cell, rows, extraData) => {
 		const temp =
 			rows && rows.journalLineItems
 				? rows.journalLineItems.map((item) => {
-						return item['creditAmount'];		
+						return item['creditAmount'];
 				  })
 				: [];
 		const listItems = temp.map((number, index) => (
 			<li key={index} style={{ listStyleType: 'none', paddingBottom: '5px' }}>
-			<Currency
-				value={number.toFixed(2)}
-				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-			/>
+				<Currency
+					value={number.toFixed(2)}
+					currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+				/>
 			</li>
 		));
 		return <ul style={{ padding: '0', marginBottom: '0px' }}>{listItems}</ul>;
 	};
 
-	renderDebitAmount = (cell, rows,extraData) => {
+	renderDebitAmount = (cell, rows, extraData) => {
 		const temp =
 			rows && rows.journalLineItems
 				? rows.journalLineItems.map((item) => {
@@ -278,10 +280,10 @@ class Journal extends React.Component {
 		const listItems = temp.map((number, index) => (
 			<li key={index} style={{ listStyleType: 'none', paddingBottom: '5px' }}>
 				<Currency
-				value={number.toFixed(2)}
-				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-			/>
-			</li> 
+					value={number.toFixed(2)}
+					currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+				/>
+			</li>
 		));
 		return <ul style={{ padding: '0', marginBottom: '0px' }}>{listItems}</ul>;
 	};
@@ -415,7 +417,7 @@ class Journal extends React.Component {
 			csvData,
 			view,
 		} = this.state;
-		const { journal_list,universal_currency_list } = this.props;
+		const { journal_list, universal_currency_list } = this.props;
 
 		return (
 			<div className="journal-screen">

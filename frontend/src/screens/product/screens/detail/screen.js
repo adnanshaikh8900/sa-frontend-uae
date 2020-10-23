@@ -983,7 +983,7 @@ class DetailProduct extends React.Component {
 																			type="text"
 																			id="purchaseUnitPrice"
 																			name="purchaseUnitPrice"
-																			placeholder="Enter Selling Price"
+																			placeholder="Enter Purchase Price"
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||

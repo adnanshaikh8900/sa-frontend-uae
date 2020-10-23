@@ -1,4 +1,5 @@
 import LogIn from './log_in';
+import LogInTwo from './log_in/screen-two';
 import Register from './register';
 import ResetPassword from './reset_password';
 
@@ -94,6 +95,7 @@ import Faq from './help/screens/faq';
 
 export {
 	LogIn,
+	LogInTwo,
 	Register,
 	ResetPassword,
 	Dashboard,

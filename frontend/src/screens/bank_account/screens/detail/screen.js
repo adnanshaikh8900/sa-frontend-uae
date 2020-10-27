@@ -77,6 +77,22 @@ class DetailBankAccount extends React.Component {
 					orderSequence: null,
 					versionNumber: 1,
 				},
+				{
+					countryCode: 101,
+					countryDescription: null,
+					countryFullName: 'India  - (null)',
+					countryName: 'India',
+					createdBy: 0,
+					createdDate: '2020-03-21T05:55:16.000+0000',
+					currencyCode: null,
+					defaltFlag: 'Y',
+					deleteFlag: false,
+					isoAlpha3Code: null,
+					lastUpdateBy: null,
+					lastUpdateDate: null,
+					orderSequence: null,
+					versionNumber: 1,
+				},
 			],
 			dialog: null,
 
@@ -642,9 +658,6 @@ class DetailBankAccount extends React.Component {
 																	styles={customStyles}
 																	id="countrycode"
 																	name="countrycode"
-																	// getOptionValue={(option) =>
-																	// 	option.countrycode
-																	// }
 																	options={
 																		this.state.country_list
 																			? selectOptionsFactory.renderOptions(
@@ -655,6 +668,15 @@ class DetailBankAccount extends React.Component {
 																			  )
 																			: []
 																	}
+																	onChange={(option) => {
+																		if (option && option.value) {
+																			props.handleChange('country')(
+																				option.value,
+																			);
+																		} else {
+																			props.handleChange('country')('');
+																		}
+																	}}
 																	value={
 																		this.state.country_list &&
 																		selectOptionsFactory

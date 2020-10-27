@@ -213,6 +213,24 @@ export const checkValidation = (obj) => {
 	};
 };
 
+export const checkProductNameValidation = (obj) => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: `/rest/validation/validate?moduleType=${obj.moduleType}&productCode=${obj.productCode}`,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
 export const getInvoicesCountProduct = (id) => {
 	return (dispatch) => {
 		let data = {

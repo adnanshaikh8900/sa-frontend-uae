@@ -248,9 +248,7 @@ class ProductModal extends React.Component {
 							productPriceType: Yup.string().required(
 								'At least one Selling type is required',
 							),
-							productCode: Yup.string().required(
-								'Product code is required',
-							),
+							productCode: Yup.string().required('Product code is required'),
 							vatCategoryId: Yup.string()
 								.required('Vat Category is Required')
 								.nullable(),
@@ -358,7 +356,7 @@ class ProductModal extends React.Component {
 											<Col lg={4}>
 												<FormGroup className="mb-3">
 													<Label htmlFor="productCode">
-													<span className="text-danger">*</span>
+														<span className="text-danger">*</span>
 														Product Code
 														<i
 															id="ProductCodeTooltip"

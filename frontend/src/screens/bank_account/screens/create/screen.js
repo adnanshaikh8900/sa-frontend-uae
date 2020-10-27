@@ -655,6 +655,15 @@ class CreateBankAccount extends React.Component {
 																				  )
 																				: []
 																		}
+																		onChange={(option) => {
+																			if (option && option.value) {
+																				props.handleChange('countrycode')(
+																					option.value,
+																				);
+																			} else {
+																				props.handleChange('countrycode')('');
+																			}
+																		}}
 																		value={
 																			this.state.country_list &&
 																			selectOptionsFactory

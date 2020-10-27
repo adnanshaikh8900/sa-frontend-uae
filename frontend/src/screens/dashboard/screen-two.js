@@ -263,12 +263,14 @@ class Dashboard extends React.Component {
 										<h6 className="text-uppercase font-weight-bold mb-1 text-black">
 											Total Revenue
 										</h6>
-										<Chart
-											options={chart55Options}
-											series={chart55Data}
-											type="line"
-											height={390}
-										/>
+										<div className="d-block">
+											<Chart
+												options={chart55Options}
+												series={chart55Data}
+												type="line"
+												height={300}
+											/>
+										</div>
 									</CardBody>
 								</Card>
 							</CardGroup>

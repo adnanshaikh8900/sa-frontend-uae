@@ -1,10 +1,15 @@
-import { LogIn, ResetPassword, Register } from 'screens';
+import { LogIn, ResetPassword, Register, LogInTwo } from 'screens';
 
 const initialRoutes = [
 	{
 		path: '/login',
 		name: 'LogIn',
 		component: LogIn.screen,
+	},
+	{
+		path: '/login-two',
+		name: 'LogInTwo',
+		component: LogInTwo,
 	},
 	{
 		path: '/reset-password',

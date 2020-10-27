@@ -90,6 +90,7 @@ class CreateProduct extends React.Component {
 			salesCategory: [],
 			createMore: false,
 			exist: false,
+			ProductExist: false,
 		};
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9 ]+$/;
@@ -270,6 +271,26 @@ class CreateProduct extends React.Component {
 		});
 	};
 
+	ProductvalidationCheck = (value) => {
+		const data = {
+			moduleType: 7,
+			productCode: value,
+		};
+		this.props.productActions
+			.checkProductNameValidation(data)
+			.then((response) => {
+				if (response.data === 'Product code already exists') {
+					this.setState({
+						ProductExist: true,
+					});
+				} else {
+					this.setState({
+						ProductExist: false,
+					});
+				}
+			});
+	};
+
 	render() {
 		const { vat_list, product_category_list } = this.props;
 		const { initValue, purchaseCategory, salesCategory } = this.state;
@@ -305,6 +326,10 @@ class CreateProduct extends React.Component {
 													if (this.state.exist === true) {
 														errors.productName =
 															'Product  Name is already exist';
+													}
+													if (this.state.ProductExist === true) {
+														errors.productCode =
+															'Product Code is already exist';
 													}
 													return errors;
 												}}
@@ -497,7 +522,11 @@ class CreateProduct extends React.Component {
 																						option,
 																					);
 																				}
+																				this.ProductvalidationCheck(
+																					option.target.value,
+																				);
 																			}}
+																			onBlur={handleBlur}
 																			value={props.values.productCode}
 																			className={
 																				props.errors.productCode &&

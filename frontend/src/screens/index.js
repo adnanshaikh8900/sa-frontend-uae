@@ -1,4 +1,5 @@
 import LogIn from './log_in';
+import LogInTwo from './log_in/screen-two';
 import Register from './register';
 import ResetPassword from './reset_password';
 
@@ -86,7 +87,10 @@ import GeneralSettings from './general_settings';
 import TransactionCategory from './transaction_category';
 import CreateTransactionCategory from './transaction_category/screens/create';
 import DetailTransactionCategory from './transaction_category/screens/detail';
+
 import UsersRoles from './users_roles';
+import CreateRole from './users_roles/screens/create';
+
 import Notification from './notification';
 import DataBackup from './data_backup';
 import Help from './help';
@@ -94,6 +98,7 @@ import Faq from './help/screens/faq';
 
 export {
 	LogIn,
+	LogInTwo,
 	Register,
 	ResetPassword,
 	Dashboard,
@@ -169,6 +174,7 @@ export {
 	CreateTransactionCategory,
 	DetailTransactionCategory,
 	UsersRoles,
+	CreateRole,
 	Notification,
 	DataBackup,
 	Help,

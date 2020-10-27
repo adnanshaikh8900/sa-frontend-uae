@@ -1,7 +1,9 @@
-import screen from './screen'
-import * as actions from './actions'
+import screen from './screen';
+import screenTwo from './screen-two';
+import * as actions from './actions';
 
 export default {
-  screen,
-  actions
-}
+	screen,
+	actions,
+	screenTwo,
+};

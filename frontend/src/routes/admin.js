@@ -97,6 +97,7 @@ import {
 	// CreateTransactionCategory,
 	// DetailTransactionCategory,
 	UsersRoles,
+	CreateRole,
 	Notification,
 	DataBackup,
 	Help,
@@ -510,6 +511,11 @@ const adminRoutes = [
 	//   name: 'Transaction Category',
 	//   component: TransactionCategory.screen
 	// },
+	{
+		path: '/admin/settings/user-role/create',
+		name: 'Create Role',
+		component: CreateRole.screen,
+	},
 	{
 		path: '/admin/settings/user-role',
 		name: 'Users & Roles',

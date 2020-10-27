@@ -85,7 +85,7 @@ class LogIn extends React.Component {
 					position: toast.POSITION.TOP_RIGHT,
 				});
 				this.props.history.push('/admin');
-				this.setState({ loading: true });
+				this.setState({ loading: false });
 			})
 			.catch((err) => {
 				this.setState({ loading: true });

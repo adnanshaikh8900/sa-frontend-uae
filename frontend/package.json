@@ -48,6 +48,7 @@
 		"react-bootstrap-table-next": "^4.0.1",
 		"react-bootstrap-table2-paginator": "^2.1.2",
 		"react-chartjs-2": "^2.7.6",
+		"react-checkbox-tree": "^1.6.0",
 		"react-codemirror2": "^6.0.0",
 		"react-csv": "^2.0.1",
 		"react-date-range": "^0.9.4",

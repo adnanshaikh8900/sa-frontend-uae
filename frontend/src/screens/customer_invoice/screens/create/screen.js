@@ -629,7 +629,7 @@ return row.subTotal === 0 ? (
 			}
 			return obj;
 		});
-		if (product_list.length > 0) {
+	//	if (product_list.length > 0) {
 			return (
 				<Field
 					name={`lineItemsString.${idx}.productId`}
@@ -710,20 +710,20 @@ return row.subTotal === 0 ? (
 					)}
 				/>
 			);
-		} else {
-			return (
-				<Button
-					type="button"
-					color="primary"
-					className="btn-square mr-3 mb-3"
-					onClick={(e, props) => {
-						this.openProductModal(props);
-					}}
-				>
-					<i className="fa fa-plus"></i> Add a Product
-				</Button>
-			);
-		}
+		// } else {
+		// 	return (
+		// 		<Button
+		// 			type="button"
+		// 			color="primary"
+		// 			className="btn-square mr-3 mb-3"
+		// 			onClick={(e, props) => {
+		// 				this.openProductModal(props);
+		// 			}}
+		// 		>
+		// 			<i className="fa fa-plus"></i> Add a Product
+		// 		</Button>
+		// 	);
+		// }
 	};
 
 	deleteRow = (e, row, props) => {
@@ -747,6 +747,20 @@ return row.subTotal === 0 ? (
 				}}
 			>
 				<i className="fas fa-trash"></i>
+			</Button>
+		);
+	};
+
+	renderAddProduct = (cell, rows, props) => {
+		return (
+			<Button
+				color="primary"
+				className="btn-twitter btn-brand icon"
+				onClick={(e, props) => {
+				this.openProductModal(props);
+				}}
+			>
+				<i className="fas fa-plus"></i>
 			</Button>
 		);
 	};
@@ -1578,6 +1592,13 @@ return row.subTotal === 0 ? (
 																	>
 																		Product
 																	</TableHeaderColumn>
+																	<TableHeaderColumn
+																		width="55"
+																		dataAlign="center"
+																		dataFormat={(cell, rows) =>
+																			this.renderAddProduct(cell, rows, props)
+																		}
+																	></TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="description"
 																		dataFormat={(cell, rows) =>

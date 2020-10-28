@@ -20,9 +20,10 @@ import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import * as CustomerInvoiceDetailActions from './actions';
+import * as ProductActions from '../../../product/actions';
 import * as CustomerInvoiceActions from '../../actions';
 
-import { CustomerModal } from '../../sections';
+import { CustomerModal ,ProductModal } from '../../sections';
 import { Loader, ConfirmDeleteModal,Currency } from 'components';
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -56,6 +57,7 @@ const mapDispatchToProps = (dispatch) => {
 			CustomerInvoiceDetailActions,
 			dispatch,
 		),
+		productActions: bindActionCreators(ProductActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
@@ -87,6 +89,7 @@ class DetailCustomerInvoice extends React.Component {
 			initValue: {},
 			contactType: 2,
 			openCustomerModal: false,
+			openProductModal: false,
 			selectedContact: '',
 			term: '',
 			selectedType: '',
@@ -124,6 +127,27 @@ class DetailCustomerInvoice extends React.Component {
 	componentDidMount = () => {
 		this.initializeData();
 	};
+	salesCategory = () => {
+		try {
+			this.props.productActions
+				.getTransactionCategoryListForSalesProduct('2')
+				.then((res) => {
+					if (res.status === 200) {
+						this.setState(
+							{
+								salesCategory: res.data,
+							},
+							() => {
+								console.log(this.state.salesCategory);
+							},
+						);
+					}
+				});
+		} catch (err) {
+			console.log(err);
+		}
+	};
+	
 
 	initializeData = () => {
 		if (this.props.location.state && this.props.location.state.id) {
@@ -552,7 +576,19 @@ class DetailCustomerInvoice extends React.Component {
 		);
 		this.updateAmount(data, props);
 	};
-
+	renderAddProduct = (cell, rows, props) => {
+		return (
+			<Button
+				color="primary"
+				className="btn-twitter btn-brand icon"
+				onClick={(e, props) => {
+				this.openProductModal(props);
+				}}
+			>
+				<i className="fas fa-plus"></i>
+			</Button>
+		);
+	};
 	renderProduct = (cell, row, props) => {
 		const { product_list } = this.props;
 		let productList = product_list.length
@@ -832,6 +868,9 @@ class DetailCustomerInvoice extends React.Component {
 		e.preventDefault();
 		this.setState({ openCustomerModal: true });
 	};
+	openProductModal = (props) => {
+		this.setState({ openProductModal: true });
+	};
 
 	getCurrentUser = (data) => {
 		let option;
@@ -854,6 +893,56 @@ class DetailCustomerInvoice extends React.Component {
 			this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
 		}
 		this.setState({ openCustomerModal: false });
+	};
+
+	closeProductModal = (res) => {
+		this.setState({ openProductModal: false });
+	};
+
+	getCurrentProduct = () => {
+		this.props.customerInvoiceActions.getProductList().then((res) => {
+			this.setState(
+				{
+					data: [
+						{
+							id: 0,
+							description: res.data[0].description,
+							quantity: 1,
+							unitPrice: res.data[0].unitPrice,
+							vatCategoryId: res.data[0].vatCategoryId,
+							subTotal: res.data[0].unitPrice,
+							productId: res.data[0].id,
+						},
+					],
+				},
+				() => {
+					const values = {
+						values: this.state.initValue,
+					};
+					this.updateAmount(this.state.data, values);
+				},
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.unitPrice`,
+				res.data[0].unitPrice,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.quantity`,
+				1,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.vatCategoryId`,
+				res.data[0].vatCategoryId,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.productId`,
+				res.data[0].id,
+				true,
+			);
+		});
 	};
 
 	deleteInvoice = () => {
@@ -1356,151 +1445,6 @@ class DetailCustomerInvoice extends React.Component {
 																	</FormGroup>
 																</Col> */}
 															</Row>
-
-															<hr />
-															<Row>
-																<Col lg={8}>
-																	<Row>
-																		<Col lg={6}>
-																			<FormGroup className="mb-3">
-																				<Label htmlFor="receiptNumber">
-																					Reciept Number
-																				</Label>
-																				<Input
-																					type="text"
-																					id="receiptNumber"
-																					name="receiptNumber"
-																					placeholder="Enter Reciept Number"
-																					onChange={(option) => {
-																						if (
-																							option.target.value === '' ||
-																							this.regExBoth.test(
-																								option.target.value,
-																							)
-																						) {
-																							props.handleChange(
-																								'receiptNumber',
-																							)(option);
-																						}
-																					}}
-																					value={props.values.receiptNumber}
-																				/>
-																			</FormGroup>
-																		</Col>
-																	</Row>
-																	<Row>
-																		<Col lg={12}>
-																			<FormGroup className="mb-3">
-																				<Label htmlFor="receiptAttachmentDescription">
-																					Attachment Description
-																				</Label>
-																				<Input
-																					type="textarea"
-																					name="receiptAttachmentDescription"
-																					id="receiptAttachmentDescription"
-																					rows="5"
-																					placeholder="1024 characters..."
-																					onChange={(option) =>
-																						props.handleChange(
-																							'receiptAttachmentDescription',
-																						)(option)
-																					}
-																					defaultValue={
-																						props.values
-																							.receiptAttachmentDescription
-																					}
-																				/>
-																			</FormGroup>
-																		</Col>
-																	</Row>
-																</Col>
-																<Col lg={4}>
-																	<Row>
-																		<Col lg={12}>
-																			<FormGroup className="mb-3">
-																				<Field
-																					name="attachmentFile"
-																					render={({ field, form }) => (
-																						<div>
-																							<Label>Reciept Attachment</Label>{' '}
-																							<br />
-																							<div className="file-upload-cont">
-																								<Button
-																									color="primary"
-																									onClick={() => {
-																										document
-																											.getElementById(
-																												'fileInput',
-																											)
-																											.click();
-																									}}
-																									className="btn-square mr-3"
-																								>
-																									<i className="fa fa-upload"></i>{' '}
-																									Upload
-																								</Button>
-																								<input
-																									id="fileInput"
-																									ref={(ref) => {
-																										this.uploadFile = ref;
-																									}}
-																									type="file"
-																									style={{ display: 'none' }}
-																									onChange={(e) => {
-																										this.handleFileChange(
-																											e,
-																											props,
-																										);
-																									}}
-																								/>
-																								{this.state.fileName && (
-																									<div>
-																										<i
-																											className="fa fa-close"
-																											onClick={() =>
-																												this.setState({
-																													fileName: '',
-																												})
-																											}
-																										></i>{' '}
-																										{this.state.fileName}
-																									</div>
-																								)}
-																								{this.state.fileName ? (
-																									this.state.fileName
-																								) : (
-																									<NavLink
-																										href={`${API_ROOT_URL.API_ROOT_URL}${initValue.filePath}`}
-																										download={
-																											this.state.initValue
-																												.fileName
-																										}
-																										style={{
-																											fontSize: '0.875rem',
-																										}}
-																										target="_blank"
-																									>
-																										{
-																											this.state.initValue
-																												.fileName
-																										}
-																									</NavLink>
-																								)}
-																							</div>
-																						</div>
-																					)}
-																				/>
-																				{props.errors.attachmentFile && (
-																					<div className="invalid-file">
-																						{props.errors.attachmentFile}
-																					</div>
-																				)}
-																			</FormGroup>
-																		</Col>
-																	</Row>
-																</Col>
-															</Row>
-
 															<hr />
 															<Row>
 																<Col lg={12} className="mb-3">
@@ -1562,6 +1506,13 @@ class DetailCustomerInvoice extends React.Component {
 																			Product
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
+																		width="55"
+																		dataAlign="center"
+																		dataFormat={(cell, rows) =>
+																			this.renderAddProduct(cell, rows, props)
+																		}
+																	></TableHeaderColumn>
+																		<TableHeaderColumn
 																			dataField="description"
 																			dataFormat={(cell, rows) =>
 																				this.renderDescription(
@@ -1612,21 +1563,131 @@ class DetailCustomerInvoice extends React.Component {
 															{data.length > 0 && (
 																<Row>
 																	<Col lg={8}>
-																		<FormGroup className="py-2">
-																			<Label htmlFor="notes">Notes</Label>
-																			<Input
-																				type="textarea"
-																				name="notes"
-																				id="notes"
-																				rows="6"
-																				placeholder="notes..."
-																				onChange={(option) =>
-																					props.handleChange('notes')(option)
-																				}
-																				value={props.values.notes}
-																			/>
-																		</FormGroup>
-																	</Col>
+																	<FormGroup className="py-2">
+																		<Label htmlFor="notes">Notes</Label>
+																		<Input
+																			type="textarea"
+																			maxLength="255"
+																			name="notes"
+																			id="notes"
+																			rows="6"
+																			placeholder="Notes"
+																			onChange={(option) =>
+																				props.handleChange('notes')(option)
+																			}
+																			value={props.values.notes}
+																		/>
+																	</FormGroup>
+																	<Row>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="receiptNumber">
+																					Reciept Number
+																				</Label>
+																				<Input
+																					type="text"
+																					maxLength="100"
+																					id="receiptNumber"
+																					name="receiptNumber"
+																					placeholder="Reciept Number"
+																					onChange={(option) => {
+																						if (
+																							option.target.value === '' ||
+																							this.regExBoth.test(
+																								option.target.value,
+																							)
+																						) {
+																							props.handleChange(
+																								'receiptNumber',
+																							)(option);
+																						}
+																					}}
+																					value={props.values.receiptNumber}
+																				/>
+																			</FormGroup>
+																		</Col>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Field
+																					name="attachmentFile"
+																					render={({ field, form }) => (
+																						<div>
+																							<Label>Reciept Attachment</Label>{' '}
+																							<br />
+																							<Button
+																								color="primary"
+																								onClick={() => {
+																									document
+																										.getElementById('fileInput')
+																										.click();
+																								}}
+																								className="btn-square mr-3"
+																							>
+																								<i className="fa fa-upload"></i>{' '}
+																								Upload
+																							</Button>
+																							<input
+																								id="fileInput"
+																								ref={(ref) => {
+																									this.uploadFile = ref;
+																								}}
+																								type="file"
+																								style={{ display: 'none' }}
+																								onChange={(e) => {
+																									this.handleFileChange(
+																										e,
+																										props,
+																									);
+																								}}
+																							/>
+																							{this.state.fileName && (
+																								<div>
+																									<i
+																										className="fa fa-close"
+																										onClick={() =>
+																											this.setState({
+																												fileName: '',
+																											})
+																										}
+																									></i>{' '}
+																									{this.state.fileName}
+																								</div>
+																							)}
+																						</div>
+																					)}
+																				/>
+																				{props.errors.attachmentFile &&
+																					props.touched.attachmentFile && (
+																						<div className="invalid-file">
+																							{props.errors.attachmentFile}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+																	</Row>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="receiptAttachmentDescription">
+																			Attachment Description
+																		</Label>
+																		<Input
+																			type="textarea"
+																			maxLength="255"
+																			name="receiptAttachmentDescription"
+																			id="receiptAttachmentDescription"
+																			rows="5"
+																			placeholder="Receipt Attachment Description"
+																			onChange={(option) =>
+																				props.handleChange(
+																					'receiptAttachmentDescription',
+																				)(option)
+																			}
+																			value={
+																				props.values
+																					.receiptAttachmentDescription
+																			}
+																		/>
+																	</FormGroup>
+																</Col>
 																	<Col lg={4}>
 																		<div className="">
 																			<div className="total-item p-2">
@@ -1934,6 +1995,18 @@ class DetailCustomerInvoice extends React.Component {
 					currency_list={this.props.currency_list}
 					country_list={this.props.country_list}
 					getStateList={this.props.customerInvoiceActions.getStateList}
+				/>
+				<ProductModal
+					openProductModal={this.state.openProductModal}
+					closeProductModal={(e) => {
+						this.closeProductModal(e);
+					}}
+					getCurrentProduct={(e) => this.getCurrentProduct(e)}
+					createProduct={this.props.productActions.createAndSaveProduct}
+					vat_list={this.props.vat_list}
+					product_category_list={this.props.product_category_list}
+					salesCategory={this.state.salesCategory}
+					purchaseCategory={this.state.purchaseCategory}
 				/>
 			</div>
 		);

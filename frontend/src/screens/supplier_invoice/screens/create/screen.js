@@ -23,6 +23,7 @@ import * as Yup from 'yup';
 import * as SupplierInvoiceCreateActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
+import TextareaAutosize from 'react-textarea-autosize';
 
 import { SupplierModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
@@ -584,6 +585,19 @@ class CreateSupplierInvoice extends React.Component {
 		);
 		this.updateAmount(data, props);
 	};
+	renderAddProduct = (cell, rows, props) => {
+		return (
+			<Button
+				color="primary"
+				className="btn-twitter btn-brand icon"
+				onClick={(e, props) => {
+				this.openProductModal(props);
+				}}
+			>
+				<i className="fas fa-plus"></i>
+			</Button>
+		);
+	};
 
 	renderProduct = (cell, row, props) => {
 		const { product_list } = this.props;
@@ -594,7 +608,7 @@ class CreateSupplierInvoice extends React.Component {
 			}
 			return obj;
 		});
-		if (product_list.length > 0) {
+		// if (product_list.length > 0) {
 			return (
 				<Field
 					name={`lineItemsString.${idx}.productId`}
@@ -675,20 +689,20 @@ class CreateSupplierInvoice extends React.Component {
 					)}
 				/>
 			);
-		} else {
-			return (
-				<Button
-					type="button"
-					color="primary"
-					className="btn-square mr-3 mb-3"
-					onClick={(e, props) => {
-						this.openProductModal(props);
-					}}
-				>
-					<i className="fa fa-plus"></i> Add a Product
-				</Button>
-			);
-		}
+		// } else {
+		// 	return (
+		// 		<Button
+		// 			type="button"
+		// 			color="primary"
+		// 			className="btn-square mr-3 mb-3"
+		// 			onClick={(e, props) => {
+		// 				this.openProductModal(props);
+		// 			}}
+		// 		>
+		// 			<i className="fa fa-plus"></i> Add a Product
+		// 		</Button>
+		// 	);
+		// }
 	};
 
 	// selectCategory = (options, row, name, form, field, props) => {
@@ -1681,6 +1695,13 @@ class CreateSupplierInvoice extends React.Component {
 																	>
 																		Product
 																	</TableHeaderColumn>
+																	<TableHeaderColumn
+																		width="55"
+																		dataAlign="center"
+																		dataFormat={(cell, rows) =>
+																			this.renderAddProduct(cell, rows, props)
+																		}
+																		></TableHeaderColumn>
 																	<TableHeaderColumn
 																		width="300"
 																		dataField="account"

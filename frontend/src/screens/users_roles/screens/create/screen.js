@@ -12,12 +12,13 @@ import {
 	Label,
 	Row,
 	Col,
-	UncontrolledTooltip,
 } from 'reactstrap';
 import { toast } from 'react-toastify';
 import _ from 'lodash';
 import { Loader } from 'components';
 import Select from 'react-select';
+import CheckboxTree from 'react-checkbox-tree';
+import 'react-checkbox-tree/lib/react-checkbox-tree.css';
 
 import { CommonActions } from 'services/global';
 
@@ -41,6 +42,66 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+const nodes = [
+	{
+		value: 'Accountant',
+		label: 'Accountant',
+		children: [
+			{
+				value: 'Opening Balance',
+				label: 'Opening Balance',
+				icon: <i className="fas fa-file-archive" />,
+				children: [
+					{
+						value: 'View',
+						label: 'View',
+					},
+					{
+						value: 'Edit',
+						label: 'Edit',
+					},
+				],
+			},
+			{
+				value: 'Journals',
+				label: 'Journals',
+				icon: <i className="fas fa-file-pdf" />,
+				children: [
+					{
+						value: 'View',
+						label: 'View',
+					},
+					{
+						value: 'Edit',
+						label: 'Edit',
+					},
+				],
+			},
+		],
+	},
+	{
+		value: 'Banking',
+		label: 'Banking',
+		children: [
+			{
+				value: 'Bank Account',
+				label: 'Bank Account',
+				icon: <i className="fa fa-file-image-o" />,
+				children: [
+					{
+						value: 'Views',
+						label: 'View',
+					},
+					{
+						value: 'Edits',
+						label: 'Edit',
+					},
+				],
+			},
+		],
+	},
+];
+
 class CreateRole extends React.Component {
 	constructor(props) {
 		super(props);
@@ -49,6 +110,7 @@ class CreateRole extends React.Component {
 			loading: false,
 			createMore: false,
 			vat_list: [],
+			checked: [],
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExDecimal = /^[0-9]*(\.[0-9]{0,2})?$/;
@@ -110,6 +172,14 @@ class CreateRole extends React.Component {
 			});
 	};
 
+	onCheck = (checked) => {
+		this.setState({ checked });
+	};
+
+	onExpand = (expanded) => {
+		this.setState({ expanded });
+	};
+
 	render() {
 		const { loading, vat_list } = this.state;
 
@@ -126,6 +196,7 @@ class CreateRole extends React.Component {
 		const optionsTwo = [
 			{ value: 'Customer Invoice', label: 'Customer Invoice' },
 		];
+		const { checked, expanded } = this.state;
 		return (
 			<div className="role-create-screen">
 				<div className="animated fadeIn">
@@ -222,21 +293,24 @@ class CreateRole extends React.Component {
 														</FormGroup>
 														<FormGroup>
 															<Label htmlFor="name">Modules</Label>
-															<Select
-																options={options}
-																className="basic-multi-select"
-																isMulti
+															<CheckboxTree
+																checked={checked}
+																expanded={expanded}
+																iconsClass="fa5"
+																nodes={nodes}
+																onCheck={this.onCheck}
+																onExpand={this.onExpand}
 															/>
 														</FormGroup>
-														<FormGroup>
+														{/* <FormGroup>
 															<Label htmlFor="name">Feature</Label>
 															<Select
 																options={optionsTwo}
 																className="basic-multi-select"
 																isMulti
 															/>
-														</FormGroup>
-														<div htmlFor="name">Operation</div>
+														</FormGroup> */}
+														{/* <div htmlFor="name">Operation</div>
 														<FormGroup check inline className="mb-3 mt-2">
 															<Label
 																className="form-check-label"
@@ -268,7 +342,7 @@ class CreateRole extends React.Component {
 																/>
 																Delete
 															</Label>
-														</FormGroup>
+														</FormGroup> */}
 														<FormGroup className="text-right mt-5">
 															<Button
 																type="button"

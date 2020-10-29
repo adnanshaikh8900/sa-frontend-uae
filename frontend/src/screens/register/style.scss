@@ -17,3 +17,12 @@
 .registerScreen {
 	margin-bottom: 40px;
 }
+.inputRShow {
+    position: absolute;
+    top: 45%;
+    right: 10%;
+  }
+  .inputRShow:hover {
+    color: #2064d8;
+    cursor: pointer;
+  }

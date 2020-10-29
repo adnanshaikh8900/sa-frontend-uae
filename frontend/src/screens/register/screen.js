@@ -22,6 +22,8 @@ import * as Yup from 'yup';
 import { AuthActions, CommonActions } from 'services/global';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
 
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
@@ -31,6 +33,7 @@ const mapStateToProps = (state) => {
 		version: state.common.version,
 	};
 };
+const eye = <FontAwesomeIcon icon={faEye} />;
 const mapDispatchToProps = (dispatch) => {
 	return {
 		authActions: bindActionCreators(AuthActions, dispatch),
@@ -46,6 +49,7 @@ class Register extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			passwordShown: false,
 			alert: null,
 			currencyList: [
 				{
@@ -121,6 +125,13 @@ class Register extends React.Component {
 		});
 	};
 
+	togglePasswordVisiblity = () => {
+		this.setState({
+		passwordShown: !this.state.passwordShown,
+		});
+	   };
+	   
+	
 	handleChange = (key, val) => {
 		this.setState({
 			[key]: val,
@@ -499,7 +510,7 @@ class Register extends React.Component {
 																					Password
 																				</Label>
 																				<Input
-																					type="password"
+																					type={this.state.passwordShown ? "text" : "password"}
 																					id="password"
 																					name="password"
 																					placeholder="Enter password"
@@ -516,6 +527,8 @@ class Register extends React.Component {
 																							: ''
 																					}
 																				/>
+																				<i className="inputRShow"
+																				onClick={this.togglePasswordVisiblity}>{eye}</i>
 																				{props.errors.password &&
 																					props.touched.password && (
 																						<div className="invalid-feedback">
@@ -600,79 +613,79 @@ class Register extends React.Component {
 								</Row>
 							)}
 							{userDetail === true && (
-								<Row className="justify-content-center">
-									<Col md="8">
-										<CardGroup>
-											<Card className="p-4">
-												<CardBody>
-													<div className="logo-container">
-														<img
-															src={logo}
-															alt="logo"
-															style={{ width: '226px' }}
-														/>
-													</div>
-													<div className="registerScreen">
-														<h2 className="">Login Details</h2>
-														<p>Please save Username and Password to login</p>
-													</div>
-													<Row>
-														<Col md="12">
-															<FormGroup className="mb-3">
-																<Label htmlFor="lastName">User Name</Label>
-																<div style={{ fontWeight: 'bold' }}>
-																	{this.state.userName}
-																</div>
-															</FormGroup>
-														</Col>
-														<Col md="12">
-															<FormGroup className="mb-3">
-																<Label htmlFor="lastName">Password</Label>
-																<div
-																	style={{ fontWeight: 'bold' }}
-																	className="d-flex align-items-center"
-																>
-																	{this.state.show
-																		? this.state.password
-																		: this.state.togglePassword}
-																	<span
-																		className="ml-1"
-																		style={{ cursor: 'pointer' }}
-																	>
-																		<i
-																			className="fa fa-eye"
-																			onClick={() => {
-																				this.setState({
-																					show: !this.state.show,
-																				});
-																			}}
-																			aria-hidden="true"
-																		></i>
-																	</span>
-																</div>
-															</FormGroup>
-														</Col>
-													</Row>
-													<Row>
-														<Col className="mt-3">
-															<p className="r-btn">
-																Saved Credentials? Now{' '}
-																<span
-																	onClick={() => {
-																		this.props.history.push('/login');
-																	}}
-																>
-																	Login
-																</span>
-															</p>
-														</Col>
-													</Row>
-												</CardBody>
-											</Card>
-										</CardGroup>
-									</Col>
-								</Row>
-							)}
+								// <Row className="justify-content-center">
+								// 	<Col md="8">
+								// 		<CardGroup>
+								// 			<Card className="p-4">
+								// 				<CardBody>
+								// 					<div className="logo-container">
+								// 						<img
+								// 							src={logo}
+								// 							alt="logo"
+								// 							style={{ width: '226px' }}
+								// 						/>
+								// 					</div>
+								// 					<div className="registerScreen">
+								// 						<h2 className="">Login Details</h2>
+								// 						<p>Please save Username and Password to login</p>
+								// 					</div>
+								// 					<Row>
+								// 						<Col md="12">
+								// 							<FormGroup className="mb-3">
+								// 								<Label htmlFor="lastName">User Name</Label>
+								// 								<div style={{ fontWeight: 'bold' }}>
+								// 									{this.state.userName}
+								// 								</div>
+								// 							</FormGroup>
+								// 						</Col>
+								// 						<Col md="12">
+								// 							<FormGroup className="mb-3">
+								// 								<Label htmlFor="lastName">Password</Label>
+								// 								<div
+								// 									style={{ fontWeight: 'bold' }}
+								// 									className="d-flex align-items-center"
+								// 								>
+								// 									{this.state.show
+								// 										? this.state.password
+								// 										: this.state.togglePassword}
+								// 									<span
+								// 										className="ml-1"
+								// 										style={{ cursor: 'pointer' }}
+								// 									>
+								// 										<i
+								// 											className="fa fa-eye"
+								// 											onClick={() => {
+								// 												this.setState({
+								// 													show: !this.state.show,
+								// 												});
+								// 											}}
+								// 											aria-hidden="true"
+								// 										></i>
+								// 									</span>
+								// 								</div>
+								// 							</FormGroup>
+								// 						</Col>
+								// 					</Row>
+								// 					<Row>
+								// 						<Col className="mt-3">
+								// 							<p className="r-btn">
+								// 								Saved Credentials? Now{' '}
+								// 								<span
+								// 									onClick={() => {
+								// 										this.props.history.push('/login');
+								// 									}}
+								// 								>
+								// 									Login
+								// 								</span>
+								// 							</p>
+								// 						</Col>
+								// 					</Row>
+								// 				</CardBody>
+								// 			</Card>
+								// 		</CardGroup>
+								// 	</Col>
+								// </Row>
+								this.props.history.push('/login'))}
 						</Container>
 					</div>
 				</div>

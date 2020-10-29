@@ -1516,3 +1516,8 @@ ALTER TABLE USER
   ADD CONSTRAINT FKe4ndlf6wkwgphdwe7tbrift9u FOREIGN KEY (EMPLOYEE_ID) REFERENCES CONTACT (CONTACT_ID),
   ADD CONSTRAINT FKkaa9gg6h8pjd26u4ejhxg2lp6 FOREIGN KEY (ROLE_CODE) REFERENCES ROLE (ROLE_CODE);
 COMMIT;
+
+--changeset 24/10/2020 zain:ddl-2
+create table SIMPLEVAT_MODULES (SIMPLEVAT_MODULE_ID integer not null, SIMPLEVAT_MODULE_NAME varchar(255) not null, DEFAULT_FLAG char(1) default 'N' not null, DELETE_FLAG bit default 0 not null, ORDER_SEQUENCE integer, PARENT_SIMPLEVAT_MODULE_ID integer, EDITABLE_FLAG bit default 0 not null, SELECTABLE_FLAG bit default 0 not null,MODULE_TYPE varchar(255) not null, primary key (SIMPLEVAT_MODULE_ID)) engine=InnoDB DEFAULT CHARSET=utf8;
+
+create table ROLE_MODULE_RELATION (ID integer not null auto_increment, SIMPLEVAT_MODULE_ID integer, ROLE_CODE integer, primary key (ID)) engine=InnoDB DEFAULT CHARSET=utf8;

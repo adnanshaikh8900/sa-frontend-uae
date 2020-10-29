@@ -7,4 +7,12 @@
   .password-msg {
     font-size: 0.7rem;
   }
-  
+  .inputShow {
+    position: absolute;
+    top: 35%;
+    right: 7%;
+  }
+  .inputShow:hover {
+    color: #2064d8;
+    cursor: pointer;
+  }

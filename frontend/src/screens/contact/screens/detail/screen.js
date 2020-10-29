@@ -236,12 +236,19 @@ class DetailContact extends React.Component {
 						'You need to delete invoices to delete the contact',
 					);
 				} else {
+						const message1 =
+						<text>
+						<b>Delete Contact?</b>
+						</text>
+						const message = 'This Contact will be deleted permanently and cannot be recovered. ';
 					this.setState({
 						dialog: (
 							<ConfirmDeleteModal
 								isOpen={true}
 								okHandler={this.removeContact}
 								cancelHandler={this.removeDialog}
+								message1={message1}
+								message={message}
 							/>
 						),
 					});

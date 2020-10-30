@@ -531,12 +531,7 @@ class CreateContact extends React.Component {
 																		name="email"
 																		placeholder="Enter Email Address"
 																		onChange={(option) => {
-																			if (
-																				option.target.value === '' ||
-																				this.regExBoth.test(option.target.value)
-																			) {
 																				props.handleChange('email')(option);
-																			}
 																		}}
 																		value={props.values.email}
 																		className={

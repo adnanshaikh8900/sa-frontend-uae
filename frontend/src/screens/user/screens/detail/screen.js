@@ -28,7 +28,10 @@ import * as Yup from 'yup';
 // import 'react-images-uploader/font.css'
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
 
+const eye = <FontAwesomeIcon icon={faEye} />;
 const mapStateToProps = (state) => {
 	return {
 		role_list: state.user.role_list,
@@ -60,6 +63,7 @@ class DetailUser extends React.Component {
 			loading: true,
 			dialog: null,
 			initValue: {},
+			passwordShown: false,
 			selectedStatus: false,
 			userPhoto: [],
 			showIcon: false,
@@ -139,7 +143,11 @@ class DetailUser extends React.Component {
 			userPhotoFile: file,
 		});
 	};
-
+	togglePasswordVisiblity = () => {
+		this.setState({
+		passwordShown: !this.state.passwordShown,
+		});
+	   };
 	deleteUser = () => {
 		this.setState({
 			dialog: (
@@ -304,7 +312,7 @@ class DetailUser extends React.Component {
 																[Yup.ref('password'), null],
 																'Passwords must match',
 															),
-														dob: Yup.string().required('DOB is Required'),
+													//	dob: Yup.string().required('DOB is Required'),
 													})}
 												>
 													{(props) => (
@@ -472,7 +480,6 @@ class DetailUser extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="date">
-																					<span className="text-danger">*</span>
 																					Date Of Birth
 																				</Label>
 																				<DatePicker
@@ -715,7 +722,7 @@ class DetailUser extends React.Component {
 																					Password
 																				</Label>
 																				<Input
-																					type="password"
+																					type={this.state.passwordShown ? "text" : "password"}
 																					id="password"
 																					name="password"
 																					placeholder="Enter the Password"
@@ -732,6 +739,8 @@ class DetailUser extends React.Component {
 																							: ''
 																					}
 																				/>
+																					<i className="inputShow"
+																					onClick={this.togglePasswordVisiblity}>{eye}</i>
 																				{props.errors.password &&
 																				props.touched.password ? (
 																					<div className="invalid-feedback">

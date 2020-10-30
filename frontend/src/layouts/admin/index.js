@@ -21,6 +21,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import { adminRoutes } from 'routes';
 import { AuthActions, CommonActions } from 'services/global';
 
+import PrivateRoute from '../private';
+
 import navigation from 'constants/navigation';
 
 import { Aside, Header, Footer, Loading } from 'components';
@@ -30,6 +32,7 @@ import './style.scss';
 const mapStateToProps = (state) => {
 	return {
 		version: state.common.version,
+		role_list: state.user.role_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -55,6 +58,7 @@ class AdminLayout extends React.Component {
 			});
 			this.props.commonActions.getSimpleVATVersion();
 			this.props.commonActions.getCurrencyList();
+			this.props.commonActions.getRoleList();
 			const toastifyAlert = (status, message) => {
 				if (!message) {
 					message = 'Unexpected Error';
@@ -85,7 +89,13 @@ class AdminLayout extends React.Component {
 		const containerStyle = {
 			zIndex: 1999,
 		};
-
+		const { role_list } = this.props;
+		let myArrayFiltered = navigation.items.filter((el) => {
+			return role_list.some((f) => {
+				return f.moduleName === el.path;
+			});
+		});
+		let result = { items: myArrayFiltered };
 		return (
 			<div className="admin-container">
 				<div className="app">
@@ -99,7 +109,7 @@ class AdminLayout extends React.Component {
 							<AppSidebarHeader />
 							<AppSidebarForm />
 							<Suspense>
-								<AppSidebarNav navConfig={navigation} {...this.props} />
+								<AppSidebarNav navConfig={result} {...this.props} />
 							</Suspense>
 							<AppSidebarMinimizer />
 							<AppSidebarFooter />
@@ -127,10 +137,13 @@ class AdminLayout extends React.Component {
 												);
 											}
 											return (
-												<Route
+												<PrivateRoute
 													path={prop.path}
+													name={prop.name}
+													node={role_list}
 													component={prop.component}
 													key={key}
+													exact
 												/>
 											);
 										})}

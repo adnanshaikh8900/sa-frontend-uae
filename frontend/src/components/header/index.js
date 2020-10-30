@@ -122,14 +122,14 @@ class Header extends Component {
 							<DropdownItem
 								onClick={() => this.props.history.push('/admin/settings/user')}
 							>
-								<i className="fas fa-users"></i> Users & Roles
+								<i className="fas fa-users"></i> User
 							</DropdownItem>
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push('/admin/settings/user-role')
 								}
 							>
-								<i className="fas fa-users"></i> Roles
+								<i className="fas fa-users"></i> Role
 							</DropdownItem>
 							{/* <DropdownItem
 								onClick={() =>

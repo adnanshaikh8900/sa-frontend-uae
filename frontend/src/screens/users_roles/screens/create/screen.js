@@ -27,6 +27,7 @@ import './style.scss';
 
 import * as VatCreateActions from '../../../vat_code/screens/create/actions';
 import * as VatActions from '../../../vat_code/actions';
+import * as roleActions from '../../screens/create/actions';
 
 import { Formik } from 'formik';
 const mapStateToProps = (state) => {
@@ -39,78 +40,20 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 		vatActions: bindActionCreators(VatActions, dispatch),
 		vatCreateActions: bindActionCreators(VatCreateActions, dispatch),
+		RoleActions: bindActionCreators(roleActions, dispatch),
 	};
 };
-
-const nodes = [
-	{
-		value: 'Accountant',
-		label: 'Accountant',
-		children: [
-			{
-				value: 'Opening Balance',
-				label: 'Opening Balance',
-				icon: <i className="fas fa-file-archive" />,
-				children: [
-					{
-						value: 'View',
-						label: 'View',
-					},
-					{
-						value: 'Edit',
-						label: 'Edit',
-					},
-				],
-			},
-			{
-				value: 'Journals',
-				label: 'Journals',
-				icon: <i className="fas fa-file-pdf" />,
-				children: [
-					{
-						value: 'View',
-						label: 'View',
-					},
-					{
-						value: 'Edit',
-						label: 'Edit',
-					},
-				],
-			},
-		],
-	},
-	{
-		value: 'Banking',
-		label: 'Banking',
-		children: [
-			{
-				value: 'Bank Account',
-				label: 'Bank Account',
-				icon: <i className="fa fa-file-image-o" />,
-				children: [
-					{
-						value: 'Views',
-						label: 'View',
-					},
-					{
-						value: 'Edits',
-						label: 'Edit',
-					},
-				],
-			},
-		],
-	},
-];
 
 class CreateRole extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			initValue: { name: '', vat: '' },
+			initValue: { name: '', description: '' },
 			loading: false,
 			createMore: false,
 			vat_list: [],
 			checked: [],
+			roleList: [],
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExDecimal = /^[0-9]*(\.[0-9]{0,2})?$/;
@@ -120,13 +63,45 @@ class CreateRole extends React.Component {
 	}
 
 	componentDidMount = () => {
-		this.props.vatActions.getVatList().then((res) => {
+		this.props.RoleActions.getRoleList().then((res) => {
 			if (res.status === 200) {
-				this.setState({
-					vat_list: res.data.data,
+				var result = res.data.map(function (el) {
+					var o = Object.assign({}, el);
+					o.value = el.moduleId;
+					o.label = el.moduleName;
+					return o;
 				});
+				this.list_to_tree(result);
 			}
 		});
+		this.props.RoleActions.getUpdatedRoleList();
+	};
+
+	list_to_tree = (arr) => {
+		let arrMap = new Map(arr.map((item) => [item.moduleId, item]));
+		let tree = [];
+
+		for (let i = 0; i < arr.length; i++) {
+			let item = arr[i];
+
+			if (item.parentModuleId) {
+				let parentItem = arrMap.get(item.parentModuleId);
+
+				if (parentItem) {
+					let { children } = parentItem;
+
+					if (children) {
+						parentItem.children.push(item);
+					} else {
+						parentItem.children = [item];
+					}
+				}
+			} else {
+				tree.push(item);
+			}
+		}
+		console.log(tree);
+		this.setState({ roleList: tree });
 	};
 
 	// Save Updated Field's Value to State
@@ -149,13 +124,17 @@ class CreateRole extends React.Component {
 
 	// Create or Edit Vat
 	handleSubmit = (data, resetForm) => {
-		this.props.vatCreateActions
-			.createVat(data)
+		const obj = {
+			roleName: data.name,
+			roleDescription: data.description,
+			moduleListIds: this.state.checked,
+		};
+		this.props.RoleActions.createRole(obj)
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'New vat code Created Successfully!',
+						'New Role Created Successfully!',
 					);
 					resetForm();
 					if (this.state.createMore) {
@@ -163,7 +142,7 @@ class CreateRole extends React.Component {
 							createMore: false,
 						});
 					} else {
-						this.props.history.push('/admin/master/vat-category');
+						this.props.history.push('/admin/settings/user-role');
 					}
 				}
 			})
@@ -173,7 +152,9 @@ class CreateRole extends React.Component {
 	};
 
 	onCheck = (checked) => {
-		this.setState({ checked });
+		this.setState({ checked }, () => {
+			console.log(this.state.checked);
+		});
 	};
 
 	onExpand = (expanded) => {
@@ -266,30 +247,25 @@ class CreateRole extends React.Component {
 															<Label htmlFor="name">Description</Label>
 															<Input
 																type="text"
-																maxLength="5"
-																id="vat"
-																name="vat"
+																id="description"
+																name="description"
 																placeholder="Description"
 																onChange={(option) => {
 																	if (
 																		option.target.value === '' ||
-																		this.regExDecimal.test(option.target.value)
+																		this.vatCode.test(option.target.value)
 																	) {
-																		props.handleChange('vat')(option);
+																		props.handleChange('description')(option);
 																	}
 																}}
-																value={props.values.vat}
+																value={props.values.description}
 																className={
-																	props.errors.vat && props.touched.vat
+																	props.errors.description &&
+																	props.touched.description
 																		? 'is-invalid'
 																		: ''
 																}
 															/>
-															{props.errors.vat && props.touched.vat && (
-																<div className="invalid-feedback">
-																	{props.errors.vat}
-																</div>
-															)}
 														</FormGroup>
 														<FormGroup>
 															<Label htmlFor="name">Modules</Label>
@@ -297,7 +273,7 @@ class CreateRole extends React.Component {
 																checked={checked}
 																expanded={expanded}
 																iconsClass="fa5"
-																nodes={nodes}
+																nodes={this.state.roleList}
 																onCheck={this.onCheck}
 																onExpand={this.onExpand}
 															/>

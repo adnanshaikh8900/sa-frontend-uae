@@ -85,8 +85,9 @@ public class MailUtility {
 		sender.setUsername(mailConfigurationModel.getMailusername());
 		sender.setPassword(mailConfigurationModel.getMailpassword());
 		Properties mailProps = new Properties();
-		//mailProps.put("mail.smtps.auth", mailConfigurationModel.getMailsmtpAuth());
-		mailProps.put("mail.smtps.host", "smtp.mailgun.org");
+		//mailProps.put("mail.smtps.auth", mailmaConfiigurationModel.getMailsmtpAuth());
+		mailProps.put("mail.transport.protocol", "smtp");
+		mailProps.put("mail.smtps.host", mailConfigurationModel.getMailhost());
 		mailProps.put("mail.smtp.starttls.enable", mailConfigurationModel.getMailstmpStartTLSEnable());
 		mailProps.put("mail.smtp.debug", "true");
 		mailProps.put("mail.smtps.auth", "true");

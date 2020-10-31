@@ -2,6 +2,7 @@ package com.simplevat.rest.rolecontroller;
 
 
 import com.simplevat.entity.Role;
+import com.simplevat.entity.RoleModuleRelation;
 import com.simplevat.entity.SimplevatModules;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.model.RoleRequestModel;
@@ -72,6 +73,37 @@ public class RoleModuleRestHelper {
                 moduleResponseModelList.add(moduleResponseModel);
             }
             }
+        return moduleResponseModelList;
+    }
+    public List<ModuleResponseModel> getModuleListForAllRoles(Object roleModuleRelation) {
+        List<ModuleResponseModel> moduleResponseModelList = new ArrayList<>();
+        if (roleModuleRelation!=null){
+            for (RoleModuleRelation moduleRelation:(List<RoleModuleRelation>) roleModuleRelation){
+                ModuleResponseModel moduleResponseModel = new ModuleResponseModel();
+                if (moduleRelation.getRole().getRoleCode()!=null){
+                    moduleResponseModel.setRoleCode(moduleRelation.getRole().getRoleCode());
+                }
+                if (moduleRelation.getRole().getRoleName()!=null){
+                    moduleResponseModel.setRoleName(moduleRelation.getRole().getRoleName());
+                }
+                if (moduleRelation.getRole().getRoleDescription()!=null){
+                    moduleResponseModel.setModuleDescription(moduleRelation.getRole().getRoleDescription());
+                }
+                if (moduleRelation.getSimplevatModule().getSimplevatModuleId()!=null){
+
+                    moduleResponseModel.setModuleId(moduleRelation.getSimplevatModule().getSimplevatModuleId());
+                }
+                if (moduleRelation.getSimplevatModule().getSimplevatModuleName()!=null){
+                    moduleResponseModel.setModuleName(moduleRelation.getSimplevatModule().getSimplevatModuleName());
+                }
+                if (moduleRelation.getSimplevatModule().getModuleType()!=null){
+                    moduleResponseModel.setModuleType(moduleRelation.getSimplevatModule().getModuleType());
+                }
+               moduleResponseModelList.add(moduleResponseModel);
+
+            }
+
+        }
         return moduleResponseModelList;
     }
 }

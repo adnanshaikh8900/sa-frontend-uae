@@ -142,11 +142,18 @@ class DetailReceipt extends React.Component {
   }
 
   deleteReceipt = () => {
-    this.setState({
+    const message1 =
+        <text>
+        <b>Delete Income Receipt?</b>
+        </text>
+        const message = 'This Income Receipt will be deleted permanently and cannot be recovered. ';
+        this.setState({
       dialog: <ConfirmDeleteModal
         isOpen={true}
         okHandler={this.removeReceipt}
         cancelHandler={this.removeDialog}
+        message={message}
+        message1={message1}
       />
     })
   }

@@ -174,8 +174,11 @@ class VatCode extends React.Component {
 	// Delete Vat By ID
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
-		const message =
-			'Warning: This Vat Code will be deleted permanently and cannot be recovered.  ';
+		const message1 =
+        <text>
+        <b>Delete Vat Code?</b>
+        </text>
+        const message = 'This Vat Code will be deleted permanently and cannot be recovered. ';
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
@@ -184,6 +187,7 @@ class VatCode extends React.Component {
 						okHandler={this.removeBulk}
 						cancelHandler={this.removeDialog}
 						message={message}
+						message1={message1}
 					/>
 				),
 			});

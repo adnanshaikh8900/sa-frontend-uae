@@ -164,14 +164,19 @@ class Project extends React.Component {
     const {
       selectedRows
     } = this.state
-    const message = 'Warning: This Project will be deleted permanently and cannot be recovered.  ';
-    if (selectedRows.length > 0) {
+       if (selectedRows.length > 0) {
+        const message1 =
+        <text>
+        <b>Delete Project?</b>
+        </text>
+        const message = 'This Project will be deleted permanently and cannot be recovered. ';
       this.setState({
         dialog: <ConfirmDeleteModal
           isOpen={true}
           okHandler={this.removeBulk}
           cancelHandler={this.removeDialog}
           message={message}
+          message1={message1}
         />
       })
     } else {

@@ -197,7 +197,7 @@ class ProfitAndLoss extends Component {
 								{this.props.taxes ? (
 									<div className="flex-wrapper">
 										<div className="data-info">
-											<div className="data-item">
+											<div className="data-item m-0">
 												<div>
 												<h3>
 													{universal_currency_list[0] &&
@@ -216,7 +216,7 @@ class ProfitAndLoss extends Component {
 													<p>Input Vat</p>
 												</div>
 											</div>
-											<div className="data-item total">
+											<div className="data-item total m-0">
 												<div>
 												<h3>
 													{universal_currency_list[0] &&
@@ -235,7 +235,7 @@ class ProfitAndLoss extends Component {
 													<p>Output Vat</p>
 												</div>
 											</div>
-											<div className="data-item">
+											<div className="data-item m-0">
 												<div>
 												<h3>
 													{universal_currency_list[0] &&

@@ -193,8 +193,11 @@ class ChartAccount extends React.Component {
 
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
-		const message =
-			'Warning: This Chart Of Account will be deleted permanently and cannot be recovered. ';
+		const message1 =
+		<text>
+		<b>Delete Chart of Account?</b>
+		</text>
+		const message ='This Chart of Account will be deleted permanently and cannot be recovered.';
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
@@ -203,6 +206,7 @@ class ChartAccount extends React.Component {
 						okHandler={this.removeBulk}
 						cancelHandler={this.removeDialog}
 						message={message}
+						message1={message1}
 					/>
 				),
 			});

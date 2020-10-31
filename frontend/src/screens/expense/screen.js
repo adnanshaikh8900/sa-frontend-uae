@@ -407,9 +407,12 @@ class Expense extends React.Component {
 
 	bulkDeleteExpenses = () => {
 		const { selectedRows } = this.state;
-		const message =
-			'Warning: This Expense will be deleted permanently and cannot be recovered.  ';
-		if (selectedRows.length > 0) {
+				if (selectedRows.length > 0) {
+			const message1 =
+			<text>
+			<b>Delete Expense?</b>
+			</text>
+			const message = 'This Expense will be deleted permanently and cannot be recovered. ';
 			this.setState({
 				dialog: (
 					<ConfirmDeleteModal
@@ -417,6 +420,7 @@ class Expense extends React.Component {
 						okHandler={this.removeBulkExpenses}
 						cancelHandler={this.removeDialog}
 						message={message}
+						message1={message1}
 					/>
 				),
 			});
@@ -472,12 +476,18 @@ class Expense extends React.Component {
 				),
 			});
 		} else {
+			const message1 =
+			<text>
+			<b>Delete Expense?</b>
+			</text>
+			const message = 'This Expense will be deleted permanently and cannot be recovered. ';
 			this.setState({
 				dialog: (
 					<ConfirmDeleteModal
 						isOpen={true}
 						const
-						message="Warning: This Expense will be deleted permanently and cannot be recovered.  "
+						message={message}
+						message1={message1}
 						okHandler={() => this.removeExpense(id)}
 						cancelHandler={this.removeDialog}
 					/>

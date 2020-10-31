@@ -149,13 +149,19 @@ class DetailUser extends React.Component {
 		});
 	   };
 	deleteUser = () => {
+		const message1 =
+        <text>
+        <b>Delete User?</b>
+        </text>
+        const message = 'This User will be deleted permanently and cannot be recovered. ';
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
 					isOpen={true}
 					okHandler={this.removeUser}
 					cancelHandler={this.removeDialog}
-					message="Warning: This User will be deleted permanently and cannot be recovered. "
+					message={message}
+					message1={message1}
 				/>
 			),
 		});

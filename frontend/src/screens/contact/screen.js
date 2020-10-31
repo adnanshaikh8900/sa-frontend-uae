@@ -189,8 +189,11 @@ class Contact extends React.Component {
 						'You need to delete invoices to delete the contact',
 					);
 				} else {
-					const message =
-						'Warning: This Contact will be deleted permanently and cannot be recovered. ';
+					const message1 =
+		<text>
+		<b>Delete Contact?</b>
+		</text>
+		const message ='This Contact will be deleted permanently and cannot be recovered.';
 					if (selectedRows.length > 0) {
 						this.setState({
 							dialog: (
@@ -199,6 +202,7 @@ class Contact extends React.Component {
 									okHandler={this.removeBulk}
 									cancelHandler={this.removeDialog}
 									message={message}
+									message1={message1}
 								/>
 							),
 						});

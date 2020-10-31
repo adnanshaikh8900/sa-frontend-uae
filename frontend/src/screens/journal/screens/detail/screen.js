@@ -570,12 +570,19 @@ class DetailJournal extends React.Component {
 	};
 
 	deleteJournal = () => {
+		const message1 =
+			<text>
+			<b>Delete Journal?</b>
+			</text>
+			const message = 'This Journal will be deleted permanently and cannot be recovered. ';
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
 					isOpen={true}
 					okHandler={this.removeJournal}
 					cancelHandler={this.removeDialog}
+					message={message}
+					message1={message1}
 				/>
 			),
 		});

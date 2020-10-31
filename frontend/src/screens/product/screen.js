@@ -168,8 +168,11 @@ class Product extends React.Component {
 						'You need to delete invoices to delete the product',
 					);
 				} else {
-					const message =
-						'Warning: This Product will be deleted permanently and cannot be recovered.  ';
+					const message1 =
+			<text>
+			<b>Delete Invoices?</b>
+			</text>
+			const message = 'This Invoices will be deleted permanently and cannot be recovered. ';
 					if (selectedRows.length > 0) {
 						this.setState({
 							dialog: (
@@ -178,6 +181,7 @@ class Product extends React.Component {
 									okHandler={this.removeBulk}
 									cancelHandler={this.removeDialog}
 									message={message}
+									message1={message1}
 								/>
 							),
 						});

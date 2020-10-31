@@ -94,11 +94,18 @@ class DetailProductCategory extends React.Component {
   }
 
   deleteProductCategory = () => {
+    const message1 =
+			<text>
+			<b>Delete Product Category?</b>
+			</text>
+			const message = 'This Product Category will be deleted permanently and cannot be recovered. ';
     this.setState({
       dialog: <ConfirmDeleteModal
         isOpen={true}
         okHandler={this.removeProductCategory}
         cancelHandler={this.removeDialog}
+        message={message}
+        message1={message1}
       />
     })
   }

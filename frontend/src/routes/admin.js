@@ -133,7 +133,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/accountant/opening-balance',
-		name: 'Opening Balance',
+		name: 'OpeningBalance',
 		component: OpeningBalance.screen,
 	},
 	{
@@ -165,17 +165,17 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/banking/bank-account/create',
-		name: 'Create',
+		name: 'AddBankAccount',
 		component: CreateBankAccount.screen,
 	},
 	{
 		path: '/admin/banking/bank-account/detail',
-		name: 'Detail',
+		name: 'UpdateBankAccount',
 		component: DetailBankAccount.screen,
 	},
 	{
 		path: '/admin/banking/bank-account',
-		name: 'Bank Account',
+		name: 'ViewBankAccount',
 		component: BankAccount.screen,
 	},
 	{
@@ -197,17 +197,17 @@ const adminRoutes = [
 
 	{
 		path: '/admin/income/customer-invoice/create',
-		name: 'Create',
+		name: 'AddCustomerInvoices',
 		component: CreateCustomerInvoice.screen,
 	},
 	{
 		path: '/admin/income/customer-invoice/view',
-		name: 'View',
+		name: 'ViewCustomerInvoices',
 		component: ViewCustomerInvoice.screen,
 	},
 	{
 		path: '/admin/income/customer-invoice/detail',
-		name: 'Detail',
+		name: 'UpdateCustomerInvoices',
 		component: DetailCustomerInvoice.screen,
 	},
 	{
@@ -217,7 +217,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/income/customer-invoice',
-		name: 'Customer Invoice',
+		name: 'ViewCustomerInvoices',
 		component: CustomerInvoice.screen,
 	},
 	{
@@ -232,7 +232,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/income/receipt',
-		name: 'Receipt',
+		name: 'ViewIncomeReceipts',
 		component: Receipt.screen,
 	},
 	{

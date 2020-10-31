@@ -4,6 +4,7 @@ export default {
 			name: 'Dashboard',
 			url: '/admin/dashboard',
 			icon: 'icon-speedometer',
+			path: 'Dashboard',
 		},
 		{
 			name: 'Accountant',
@@ -26,6 +27,7 @@ export default {
 			name: 'Banking',
 			url: '/admin/banking',
 			icon: 'fas fa-file',
+			path: 'ViewBankAccount',
 			children: [
 				{
 					name: 'Bank Account',
@@ -43,6 +45,7 @@ export default {
 			name: 'Income',
 			url: '/admin/income',
 			icon: 'far fa-address-book',
+			path: 'ViewCustomerInvoices',
 			children: [
 				{
 					name: 'Customer Invoices',

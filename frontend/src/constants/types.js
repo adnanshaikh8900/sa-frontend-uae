@@ -177,7 +177,9 @@ export const ORGANIZATION = {
 	INDUSTRY_TYPE_LIST: 'INDUSTRY_TYPE_LIST',
 };
 
-export const USERS_ROLES = {};
+export const USERS_ROLES = {
+	ROLE_LIST: 'ROLE_LIST',
+};
 
 export const REPORTS_FILING = {};
 

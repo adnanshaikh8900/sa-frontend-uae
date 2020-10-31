@@ -1,4 +1,4 @@
-import { COMMON } from 'constants/types';
+import { COMMON, USERS_ROLES } from 'constants/types';
 import { authApi } from 'utils';
 
 export const startRequest = () => {
@@ -54,6 +54,27 @@ export const getSimpleVATVersion = () => {
 						data: res.data.simpleVatRelease,
 					},
 				});
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const getRoleList = (obj) => {
+	return (dispatch) => {
+		let data = {
+			method: 'GET',
+			url: `/rest/roleModule/getModuleListByRoleCode?roleCode=1052`,
+		};
+
+		return authApi(data)
+			.then((res) => {
+				dispatch({
+					type: USERS_ROLES.ROLE_LIST,
+					payload: res.data,
+				});
+				return res;
 			})
 			.catch((err) => {
 				throw err;

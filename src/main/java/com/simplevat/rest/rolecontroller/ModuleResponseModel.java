@@ -7,6 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ModuleResponseModel {
+    private Integer roleCode;
+    private String roleName;
+    private String roleDescription;
     private Integer moduleId;
     private String moduleName;
     private String moduleDescription;

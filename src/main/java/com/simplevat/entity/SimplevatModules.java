@@ -18,7 +18,8 @@ import javax.persistence.*;
 
 @NamedQueries({
         @NamedQuery(name = "listOfSimplevatModules", query = "SELECT sm FROM SimplevatModules sm Where sm.deleteFlag=false"),
-        @NamedQuery(name= "moduleListByRoleCode",query = "SELECT sm FROM SimplevatModules sm ,RoleModuleRelation rm WHERE sm.simplevatModuleId =rm.simplevatModule.simplevatModuleId AND rm.role.roleCode=:roleCode")
+        @NamedQuery(name= "moduleListByRoleCode",query = "SELECT sm FROM SimplevatModules sm ,RoleModuleRelation rm" +
+                " WHERE sm.simplevatModuleId =rm.simplevatModule.simplevatModuleId AND rm.role.roleCode=:roleCode")
        })
 public class SimplevatModules {
 

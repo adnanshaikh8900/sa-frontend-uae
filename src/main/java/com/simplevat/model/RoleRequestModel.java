@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @Component
 public class RoleRequestModel {
-private int roleID;
+private Integer roleID;
 private String roleName;
 private String roleDescription;
 private List<Integer> moduleListIds;

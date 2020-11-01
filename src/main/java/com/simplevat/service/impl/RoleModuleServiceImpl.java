@@ -3,6 +3,7 @@ package com.simplevat.service.impl;
 import com.simplevat.dao.Dao;
 import com.simplevat.dao.RoleModuleDao;
 import com.simplevat.entity.Role;
+import com.simplevat.entity.RoleModuleRelation;
 import com.simplevat.entity.SimplevatModules;
 import com.simplevat.service.RoleModuleService;
 import com.simplevat.service.SimpleVatService;
@@ -21,7 +22,7 @@ RoleModuleDao roleModuleDao;
       return   roleModuleDao.getListOfSimplevatModules();
     }
     @Override
-    public  List<SimplevatModules> getModuleListByRoleCode(Integer roleCode){
+    public  List<RoleModuleRelation> getModuleListByRoleCode(Integer roleCode){
         return  roleModuleDao.getModuleListByRoleCode(roleCode);
     }
     @Override

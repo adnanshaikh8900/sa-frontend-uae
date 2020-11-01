@@ -71,9 +71,9 @@ public class RoleModuleController {
     @GetMapping(value = "/getModuleListByRoleCode")
     public ResponseEntity getModuleListByRoleCode(@RequestParam int roleCode){
         List<ModuleResponseModel> response  = new ArrayList<>();
-        List<SimplevatModules> modulesList=roleModuleService.getModuleListByRoleCode(roleCode);
+        List<RoleModuleRelation> modulesList=roleModuleService.getModuleListByRoleCode(roleCode);
         if (modulesList != null) {
-            response = roleModuleRestHelper.getModuleList(modulesList);
+            response = roleModuleRestHelper.getModuleListForAllRoles(modulesList);
         }
         return new ResponseEntity (response, HttpStatus.OK);
 

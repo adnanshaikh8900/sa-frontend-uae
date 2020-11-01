@@ -28,10 +28,9 @@ import * as Yup from 'yup';
 // import 'react-images-uploader/font.css'
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye } from "@fortawesome/free-solid-svg-icons";
 
-const eye = <FontAwesomeIcon icon={faEye} />;
+
+const eye = require('assets/images/invoice/eye-24.png');
 const mapStateToProps = (state) => {
 	return {
 		role_list: state.user.role_list,
@@ -745,8 +744,8 @@ class DetailUser extends React.Component {
 																							: ''
 																					}
 																				/>
-																					<i className="inputShow"
-																					onClick={this.togglePasswordVisiblity}>{eye}</i>
+																				<i className="inputShow"
+																		onClick={this.togglePasswordVisiblity}><img src={eye} style={{ width: '20px' }}/></i>
 																				{props.errors.password &&
 																				props.touched.password ? (
 																					<div className="invalid-feedback">

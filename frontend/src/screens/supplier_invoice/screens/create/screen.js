@@ -23,7 +23,6 @@ import * as Yup from 'yup';
 import * as SupplierInvoiceCreateActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
-import TextareaAutosize from 'react-textarea-autosize';
 
 import { SupplierModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';

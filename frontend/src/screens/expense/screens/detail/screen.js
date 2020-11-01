@@ -234,12 +234,19 @@ class DetailExpense extends React.Component {
 	};
 
 	deleteExpense = () => {
+		const message1 =
+			<text>
+			<b>Delete Expense?</b>
+			</text>
+			const message = 'This Expense will be deleted permanently and cannot be recovered. ';
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
 					isOpen={true}
 					okHandler={this.removeExpense}
 					cancelHandler={this.removeDialog}
+					message={message}
+					message1={message1}
 				/>
 			),
 		});

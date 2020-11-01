@@ -310,12 +310,19 @@ class RecordSupplierPayment extends React.Component {
 	};
 
 	deleteInvoice = () => {
+		const message1 =
+        <text>
+        <b>Delete Supplier Invoice?</b>
+        </text>
+        const message = 'This Supplier Invoice will be deleted permanently and cannot be recovered. ';
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
 					isOpen={true}
 					okHandler={this.removeInvoice}
 					cancelHandler={this.removeDialog}
+					message={message}
+					message1={message1}
 				/>
 			),
 		});

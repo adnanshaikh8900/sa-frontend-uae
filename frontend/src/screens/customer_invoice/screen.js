@@ -469,8 +469,11 @@ class CustomerInvoice extends React.Component {
 
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
-		const message =
-			'Warning: This Customer nvoice will be deleted permanently and cannot be recovered.  ';
+		const message1 =
+						<text>
+						<b>Delete Customer Invoice?</b>
+						</text>
+						const message = 'This Customer Invoice will be deleted permanently and cannot be recovered. ';
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
@@ -479,6 +482,7 @@ class CustomerInvoice extends React.Component {
 						okHandler={this.removeBulk}
 						cancelHandler={this.removeDialog}
 						message={message}
+						message1={message1}
 					/>
 				),
 			});
@@ -553,14 +557,17 @@ class CustomerInvoice extends React.Component {
 	};
 
 	closeInvoice = (id, status) => {
-		const message =
-			'Warning: This Customer Invoice will be deleted permanently and cannot be recovered.  ';
 		if (status === 'Paid') {
 			this.props.commonActions.tostifyAlert(
 				'error',
 				'Please delete the receipt first to delete the invoice',
 			);
 		} else {
+			const message1 =
+			<text>
+			<b>Delete Customer Invoice?</b>
+			</text>
+			const message = 'This Customer Invoice will be deleted permanently and cannot be recovered. ';
 			this.setState({
 				dialog: (
 					<ConfirmDeleteModal
@@ -568,6 +575,7 @@ class CustomerInvoice extends React.Component {
 						okHandler={() => this.removeInvoice(id)}
 						cancelHandler={this.removeDialog}
 						message={message}
+						message1={message1}
 					/>
 				),
 			});

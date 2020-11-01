@@ -363,14 +363,18 @@ class BankAccount extends React.Component {
 						'You need to unexplain all the transaction to delete this bank',
 					);
 				} else {
-					const message =
-						'Warning: This Bank Account will be deleted permanently and cannot be recovered. ';
+					const message1 =
+					<text>
+					<b>Delete Bank Account?</b>
+					</text>
+					const message ='This Bank Account will be deleted permanently and cannot be recovered.';
 					this.setState({
 						dialog: (
 							<ConfirmDeleteModal
 								isOpen={true}
 								okHandler={() => this.removeBankAccount(_id)}
 								cancelHandler={this.removeDialog}
+								message1={message1}
 								message={message}
 							/>
 						),
@@ -475,8 +479,11 @@ class BankAccount extends React.Component {
 
 	bulkDeleteBankAccount = () => {
 		let { selected_id_list } = this.state;
-		const message =
-			'Warning: This Bank Account will be deleted permanently and cannot be recovered. ';
+		const message1 =
+					<text>
+					<b>Delete Bank Account?</b>
+					</text>
+					const message ='This Bank Account will be deleted permanently and cannot be recovered.';
 		if (selected_id_list.length > 0) {
 			this.setState({
 				dialog: (
@@ -484,6 +491,7 @@ class BankAccount extends React.Component {
 						isOpen={true}
 						okHandler={this.removeBulkBankAccount}
 						cancelHandler={this.removeDialog}
+						message1={message1}
 						message={message}
 					/>
 				),
@@ -813,7 +821,6 @@ class BankAccount extends React.Component {
 													width="150"
 													thStyle={{ whiteSpace: 'normal' }}
 												>
-													Account Type
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													thStyle={{ whiteSpace: 'normal' }}

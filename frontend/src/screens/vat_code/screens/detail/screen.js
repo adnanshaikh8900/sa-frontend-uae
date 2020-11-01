@@ -93,13 +93,20 @@ class DetailVatCode extends React.Component {
 	};
 
 	deleteVat = () => {
+		const { selectedRows } = this.state;
+		const message1 =
+        <text>
+        <b>Delete Vat Code?</b>
+        </text>
+        const message = 'This Vat Code will be deleted permanently and cannot be recovered. ';
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
 					isOpen={true}
 					okHandler={this.removeVat}
 					cancelHandler={this.removeDialog}
-					message="Warning: This Vat Code will be deleted permanently and cannot be recovered. "
+					message={message}
+					message1={message1}
 				/>
 			),
 		});

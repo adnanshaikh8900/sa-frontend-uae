@@ -192,12 +192,19 @@ class DetailPayment extends React.Component {
   }
 
   deletePayment = () => {
+    const message1 =
+			<text>
+			<b>Delete Payments?</b>
+			</text>
+			const message = 'This Payments will be deleted permanently and cannot be recovered. ';
     this.setState({
       dialog: (
         <ConfirmDeleteModal
           isOpen={true}
           okHandler={this.removePayment}
           cancelHandler={this.removeDialog}
+          message={message}
+          message1={message1}
         />
       )
     });

@@ -22,8 +22,7 @@ import * as Yup from 'yup';
 import { AuthActions, CommonActions } from 'services/global';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye } from "@fortawesome/free-solid-svg-icons";
+
 
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
@@ -33,7 +32,7 @@ const mapStateToProps = (state) => {
 		version: state.common.version,
 	};
 };
-const eye = <FontAwesomeIcon icon={faEye} />;
+const eye = require('assets/images/invoice/eye-24.png');
 const mapDispatchToProps = (dispatch) => {
 	return {
 		authActions: bindActionCreators(AuthActions, dispatch),
@@ -528,7 +527,7 @@ class Register extends React.Component {
 																					}
 																				/>
 																				<i className="inputRShow"
-																				onClick={this.togglePasswordVisiblity}>{eye}</i>
+																				onClick={this.togglePasswordVisiblity}><img src={eye} style={{ width: '20px' }}/></i>
 																				{props.errors.password &&
 																					props.touched.password && (
 																						<div className="invalid-feedback">

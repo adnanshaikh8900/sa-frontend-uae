@@ -193,9 +193,12 @@ class User extends React.Component {
 
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
-		const message =
-			'Warning: This User will be deleted permanently and cannot be recovered.  ';
-		if (selectedRows.length > 0) {
+		const message1 =
+        <text>
+        <b>Delete User?</b>
+        </text>
+        const message = 'This User will be deleted permanently and cannot be recovered. ';
+				if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
 					<ConfirmDeleteModal
@@ -203,6 +206,7 @@ class User extends React.Component {
 						okHandler={this.removeBulk}
 						cancelHandler={this.removeDialog}
 						message={message}
+						message1={message1}
 					/>
 				),
 			});

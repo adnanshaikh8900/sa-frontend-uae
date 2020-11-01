@@ -213,12 +213,19 @@ class DetailBankAccount extends React.Component {
 	};
 
 	closeBankAccount = () => {
+		const message1 =
+		<text>
+		<b>Delete Bank Account?</b>
+		</text>
+		const message ='This Bank Account will be deleted permanently and cannot be recovered.';
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
 					isOpen={true}
 					okHandler={this.removeBankAccount}
 					cancelHandler={this.removeDialog}
+					message={message}
+					message1={message1}
 				/>
 			),
 		});

@@ -333,12 +333,19 @@ class BankTransactions extends React.Component {
 	};
 
 	closeTransaction = (id) => {
+		const message1 =
+					<text>
+					<b>Delete Transaction?</b>
+					</text>
+					const message ='This Transaction will be deleted permanently and cannot be recovered.';
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
 					isOpen={true}
 					okHandler={() => this.removeTransaction(id)}
 					cancelHandler={this.removeDialog}
+					message1={message1}
+					message={message}
 				/>
 			),
 		});

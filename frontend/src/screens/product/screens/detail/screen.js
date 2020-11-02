@@ -316,15 +316,20 @@ class DetailProduct extends React.Component {
 						'You need to delete invoices to delete the contact',
 					);
 				} else {
+					const message1 =
+			<text>
+			<b>Delete Product?</b>
+			</text>
+			const message = 'This Product will be deleted permanently and cannot be recovered. ';
 					this.setState({
 						dialog: (
 							<ConfirmDeleteModal
 								isOpen={true}
 								okHandler={this.removeProduct}
 								cancelHandler={this.removeDialog}
-								message={
-									'Warning: This Product will be deleted permanently and cannot be recovered.  '
-								}
+								message={message}
+								message1={message1}
+								
 							/>
 						),
 					});

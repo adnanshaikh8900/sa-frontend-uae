@@ -155,13 +155,19 @@ class DetailChartAccount extends React.Component {
 						'You need to delete invoices to delete the chart of account',
 					);
 				} else {
+					const message1 =
+		<text>
+		<b>Delete Chart of Account?</b>
+		</text>
+		const message ='This Chart of Account will be deleted permanently and cannot be recovered.';
 					this.setState({
 						dialog: (
 							<ConfirmDeleteModal
 								isOpen={true}
 								okHandler={this.removeChartAccount}
 								cancelHandler={this.removeDialog}
-								message={'s'}
+								message={message}
+								message1={message1}
 							/>
 						),
 					});

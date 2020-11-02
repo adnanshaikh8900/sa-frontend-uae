@@ -29,6 +29,8 @@ const mapStateToProps = (state) => {
 		version: state.common.version,
 	};
 };
+
+const eye = require('assets/images/invoice/eye-24.png');
 const mapDispatchToProps = (dispatch) => {
 	return {
 		authActions: bindActionCreators(AuthActions, dispatch),
@@ -40,6 +42,7 @@ class LogIn extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			passwordShown: false,
 			initValue: {
 				username: '',
 				password: '',
@@ -70,6 +73,12 @@ class LogIn extends React.Component {
 			[key]: val,
 		});
 	};
+
+	togglePasswordVisiblity = () => {
+		this.setState({
+		passwordShown: !this.state.passwordShown,
+		});
+	   };
 
 	handleSubmit = (data, resetForm) => {
 		this.setState({ loading: true });
@@ -190,7 +199,7 @@ class LogIn extends React.Component {
 																				Password
 																			</Label>
 																			<Input
-																				type="password"
+																				type={this.state.passwordShown ? "text" : "password"}
 																				id="password"
 																				name="password"
 																				placeholder="Enter password"
@@ -207,6 +216,8 @@ class LogIn extends React.Component {
 																						: ''
 																				}
 																			/>
+																				<i className="inputRShow"
+																				onClick={this.togglePasswordVisiblity}><img src={eye} style={{ width: '20px' }}/></i>
 																			{props.errors.password &&
 																				props.touched.password && (
 																					<div className="invalid-feedback">

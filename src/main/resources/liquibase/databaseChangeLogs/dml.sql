@@ -5118,3 +5118,23 @@ INSERT INTO `ROLE_MODULE_RELATION` (`ID`, `SIMPLEVAT_MODULE_ID`, `ROLE_CODE`) VA
 (121,1100,1);
 
 DELETE FROM `ROLE` WHERE `ROLE_CODE` > 1;
+
+--changeset 31/10/2020 ZAIN KHAN:dml-3
+INSERT INTO `SIMPLEVAT_MODULES` (`SIMPLEVAT_MODULE_ID`, `DEFAULT_FLAG`, `DELETE_FLAG`, `ORDER_SEQUENCE`, `SIMPLEVAT_MODULE_NAME`, `PARENT_SIMPLEVAT_MODULE_ID`, `EDITABLE_FLAG`, `SELECTABLE_FLAG`,`MODULE_TYPE`) VALUES
+(205, 'N', b'0', NULL, 'AddTransaction', 200, b'0', b'1','Operation'),
+(206, 'N', b'0', NULL, 'UpdateTransaction', 200, b'0', b'1','Operation'),
+(207, 'N', b'0', NULL, 'DeleteTransaction', 200, b'0', b'1','Operation'),
+(208, 'N', b'0', NULL, 'ViewTransaction', 200, b'0', b'1','Operation'),
+(654, 'N', b'0', NULL, 'ViewChartOfAccounts', 650, b'0', b'1','Operation'),
+(704, 'N', b'0', NULL, 'ViewContact', 700, b'0', b'1','Operation'),
+(754, 'N', b'0', NULL, 'ViewProduct', 750, b'0', b'1','Operation'),
+(804, 'N', b'0', NULL, 'ViewVatCategory', 800, b'0', b'1','Operation'),
+(854, 'N', b'0', NULL, 'ViewProductCategory', 850, b'0', b'1','Operation'),
+(1004, 'N', b'0', NULL, 'ViewUser', 1000, b'0', b'1','Operation'),
+(1054, 'N', b'0', NULL, 'ViewRole', 1050, b'0', b'1','Operation');
+
+UPDATE `SIMPLEVAT_MODULES` SET `SIMPLEVAT_MODULE_NAME` = 'AddChartOfAccounts' WHERE `SIMPLEVAT_MODULE_ID` = 651;
+UPDATE `SIMPLEVAT_MODULES` SET `SIMPLEVAT_MODULE_NAME` = 'UpdateChartOfAccounts' WHERE `SIMPLEVAT_MODULE_ID` = 652;
+UPDATE `SIMPLEVAT_MODULES` SET `SIMPLEVAT_MODULE_NAME` = 'DeleteChartOfAccounts' WHERE `SIMPLEVAT_MODULE_ID` = 653;
+
+

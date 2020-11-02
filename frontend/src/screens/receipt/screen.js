@@ -209,9 +209,12 @@ class Receipt extends React.Component {
 
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
-		const message =
-			'Warning: This Income Receipt will be deleted permanently and cannot be recovered.  ';
-		if (selectedRows.length > 0) {
+		const message1 =
+        <text>
+        <b>Delete Income Receipt?</b>
+        </text>
+        const message = 'This Income Receipt will be deleted permanently and cannot be recovered. ';
+				if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
 					<ConfirmDeleteModal
@@ -219,6 +222,7 @@ class Receipt extends React.Component {
 						okHandler={this.removeBulk}
 						cancelHandler={this.removeDialog}
 						message={message}
+						message1={message1}
 					/>
 				),
 			});

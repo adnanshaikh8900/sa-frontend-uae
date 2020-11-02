@@ -302,8 +302,11 @@ class Journal extends React.Component {
 
 	bulkDeleteJournal = () => {
 		const { selectedRows } = this.state;
-		const message =
-			'Warning: This Journal will be deleted permanently and cannot be recovered.  ';
+		const message1 =
+			<text>
+			<b>Delete Journal?</b>
+			</text>
+			const message = 'This Journal will be deleted permanently and cannot be recovered. ';
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
@@ -312,6 +315,7 @@ class Journal extends React.Component {
 						okHandler={this.removeBulkJournal}
 						cancelHandler={this.removeDialog}
 						message={message}
+						message1={message1}
 					/>
 				),
 			});

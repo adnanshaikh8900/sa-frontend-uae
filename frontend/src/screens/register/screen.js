@@ -31,6 +31,7 @@ const mapStateToProps = (state) => {
 		version: state.common.version,
 	};
 };
+const eye = require('assets/images/invoice/eye-24.png');
 const mapDispatchToProps = (dispatch) => {
 	return {
 		authActions: bindActionCreators(AuthActions, dispatch),
@@ -527,6 +528,15 @@ class Register extends React.Component {
 																							: ''
 																					}
 																				/>
+																				<i
+																					className="inputRShow"
+																					onClick={this.togglePasswordVisiblity}
+																				>
+																					<img
+																						src={eye}
+																						style={{ width: '20px' }}
+																					/>
+																				</i>
 																				{props.errors.password &&
 																					props.touched.password && (
 																						<div className="invalid-feedback">

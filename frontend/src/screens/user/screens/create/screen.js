@@ -27,8 +27,10 @@ import { selectOptionsFactory } from 'utils';
 import moment from 'moment';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+
 import './style.scss';
 
+const eye = require('assets/images/invoice/eye-24.png');
 const mapStateToProps = (state) => {
 	return {
 		role_list: state.user.role_list,
@@ -614,6 +616,15 @@ class CreateUser extends React.Component {
 																						: ''
 																				}
 																			/>
+																			<i
+																				className="inputShow"
+																				onClick={this.togglePasswordVisiblity}
+																			>
+																				<img
+																					src={eye}
+																					style={{ width: '20px' }}
+																				/>
+																			</i>
 																			{props.errors.password &&
 																			props.touched.password ? (
 																				<div className="invalid-feedback">

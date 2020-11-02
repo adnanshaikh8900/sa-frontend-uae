@@ -171,14 +171,18 @@ class ReconcileTransaction extends React.Component {
 	};
 
 	closeReconciled = (_id) => {
-		const message =
-			'Warning: This Bank Account will be deleted permanently and cannot be recovered. ';
+		const message1 =
+		<text>
+		<b>Delete Bank Reconciliation?</b>
+		</text>
+		const message ='The bank reconciliation of the transaction will be undone. ';
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
 					isOpen={true}
 					okHandler={() => this.removeReconciled(_id)}
 					cancelHandler={this.removeDialog}
+					message1={message1}
 					message={message}
 				/>
 			),

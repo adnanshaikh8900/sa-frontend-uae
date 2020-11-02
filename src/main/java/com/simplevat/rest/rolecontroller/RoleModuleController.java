@@ -41,7 +41,18 @@ public class RoleModuleController {
     @Autowired
     RoleModuleRestHelper roleModuleRestHelper;
 
+    @ApiOperation(value = "Get Module List")
+    @GetMapping(value = "/getListForAllRoles")
+    public ResponseEntity getModuleList(){
+//        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest();
+        List<ModuleResponseModel> response  = new ArrayList<>();
+        List<RoleModuleRelation> modulesList=roleModuleRelationService.getListOfSimplevatModulesForAllRoles();
+        if (modulesList != null) {
+            response = roleModuleRestHelper.getModuleListForAllRoles(modulesList);
+        }
+        return new ResponseEntity (response, HttpStatus.OK);
 
+    }
 
     @ApiOperation(value = "Get Module List")
     @GetMapping(value = "/getList")
@@ -60,9 +71,9 @@ public class RoleModuleController {
     @GetMapping(value = "/getModuleListByRoleCode")
     public ResponseEntity getModuleListByRoleCode(@RequestParam int roleCode){
         List<ModuleResponseModel> response  = new ArrayList<>();
-        List<SimplevatModules> modulesList=roleModuleService.getModuleListByRoleCode(roleCode);
+        List<RoleModuleRelation> modulesList=roleModuleService.getModuleListByRoleCode(roleCode);
         if (modulesList != null) {
-            response = roleModuleRestHelper.getModuleList(modulesList);
+            response = roleModuleRestHelper.getModuleListForAllRoles(modulesList);
         }
         return new ResponseEntity (response, HttpStatus.OK);
 
@@ -118,7 +129,7 @@ public class RoleModuleController {
                     RoleModuleRelation roleModuleRelation = new RoleModuleRelation();
                     roleModuleRelation.setRole(role);
                     roleModuleRelation.setSimplevatModule(simplevatModule);
-                    roleModuleRelationService.update(roleModuleRelation);
+                    roleModuleRelationService.persist(roleModuleRelation);
                 }
             }
             return new ResponseEntity<>("Updated successful",HttpStatus.OK);

@@ -11,13 +11,13 @@ class ConfirmModal extends React.Component {
 	}
 
 	render() {
-		const { isOpen, okHandler, cancelHandler, message } = this.props;
+		const { isOpen, okHandler, cancelHandler, message,message1 } = this.props;
 
 		return (
 			<div className="confirm-modal-component">
 				<Modal isOpen={isOpen} centered className="modal-primary">
 					<ModalHeader toggle={cancelHandler} tag="h4">
-						Are you sure ?
+					<h5 className="mb-0">{message1}</h5>
 					</ModalHeader>
 					<ModalBody>
 						<h5 className="mb-0">{message}</h5>

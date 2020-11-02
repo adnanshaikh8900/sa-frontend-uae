@@ -946,12 +946,19 @@ class DetailCustomerInvoice extends React.Component {
 	};
 
 	deleteInvoice = () => {
+		const message1 =
+			<text>
+			<b>Delete Customer Invoice?</b>
+			</text>
+			const message = 'This Customer Invoice will be deleted permanently and cannot be recovered. ';
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
 					isOpen={true}
 					okHandler={this.removeInvoice}
 					cancelHandler={this.removeDialog}
+					message={message}
+					message1={message1}
 				/>
 			),
 		});

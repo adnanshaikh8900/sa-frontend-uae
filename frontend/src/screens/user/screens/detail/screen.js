@@ -29,6 +29,8 @@ import * as Yup from 'yup';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 
+
+const eye = require('assets/images/invoice/eye-24.png');
 const mapStateToProps = (state) => {
 	return {
 		role_list: state.user.role_list,
@@ -146,13 +148,19 @@ class DetailUser extends React.Component {
 		});
 	};
 	deleteUser = () => {
+		const message1 =
+        <text>
+        <b>Delete User?</b>
+        </text>
+        const message = 'This User will be deleted permanently and cannot be recovered. ';
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
 					isOpen={true}
 					okHandler={this.removeUser}
 					cancelHandler={this.removeDialog}
-					message="Warning: This User will be deleted permanently and cannot be recovered. "
+					message={message}
+					message1={message1}
 				/>
 			),
 		});
@@ -740,6 +748,11 @@ class DetailUser extends React.Component {
 																							: ''
 																					}
 																				/>
+<<<<<<< HEAD
+=======
+																				<i className="inputShow"
+																		onClick={this.togglePasswordVisiblity}><img src={eye} style={{ width: '20px' }}/></i>
+>>>>>>> upstream/develop
 																				{props.errors.password &&
 																				props.touched.password ? (
 																					<div className="invalid-feedback">

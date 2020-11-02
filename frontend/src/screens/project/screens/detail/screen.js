@@ -176,11 +176,18 @@ class DetailProject extends React.Component {
   }
 
   deleteProject = () => {
+    const message1 =
+    <text>
+    <b>Delete Project?</b>
+    </text>
+    const message = 'This Project will be deleted permanently and cannot be recovered. ';
     this.setState({
       dialog: <ConfirmDeleteModal
         isOpen={true}
         okHandler={this.removeProject}
         cancelHandler={this.removeDialog}
+        message={message}
+        message1={message1}
       />
     })
   }

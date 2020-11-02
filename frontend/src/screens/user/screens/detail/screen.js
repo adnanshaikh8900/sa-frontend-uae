@@ -28,10 +28,7 @@ import * as Yup from 'yup';
 // import 'react-images-uploader/font.css'
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye } from "@fortawesome/free-solid-svg-icons";
 
-const eye = <FontAwesomeIcon icon={faEye} />;
 const mapStateToProps = (state) => {
 	return {
 		role_list: state.user.role_list,
@@ -145,9 +142,9 @@ class DetailUser extends React.Component {
 	};
 	togglePasswordVisiblity = () => {
 		this.setState({
-		passwordShown: !this.state.passwordShown,
+			passwordShown: !this.state.passwordShown,
 		});
-	   };
+	};
 	deleteUser = () => {
 		this.setState({
 			dialog: (
@@ -312,7 +309,7 @@ class DetailUser extends React.Component {
 																[Yup.ref('password'), null],
 																'Passwords must match',
 															),
-													//	dob: Yup.string().required('DOB is Required'),
+														//	dob: Yup.string().required('DOB is Required'),
 													})}
 												>
 													{(props) => (
@@ -722,7 +719,11 @@ class DetailUser extends React.Component {
 																					Password
 																				</Label>
 																				<Input
-																					type={this.state.passwordShown ? "text" : "password"}
+																					type={
+																						this.state.passwordShown
+																							? 'text'
+																							: 'password'
+																					}
 																					id="password"
 																					name="password"
 																					placeholder="Enter the Password"
@@ -739,8 +740,6 @@ class DetailUser extends React.Component {
 																							: ''
 																					}
 																				/>
-																					<i className="inputShow"
-																					onClick={this.togglePasswordVisiblity}>{eye}</i>
 																				{props.errors.password &&
 																				props.touched.password ? (
 																					<div className="invalid-feedback">

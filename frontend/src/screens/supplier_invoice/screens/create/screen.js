@@ -23,7 +23,6 @@ import * as Yup from 'yup';
 import * as SupplierInvoiceCreateActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
-import TextareaAutosize from 'react-textarea-autosize';
 
 import { SupplierModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
@@ -333,7 +332,7 @@ class CreateSupplierInvoice extends React.Component {
 		);
 	};
 
-	renderSubTotal = (cell, row,extraData) => {
+	renderSubTotal = (cell, row, extraData) => {
 		return row.subTotal === 0 ? (
 			<Currency
 				value={row.subTotal.toFixed(2)}
@@ -345,7 +344,7 @@ class CreateSupplierInvoice extends React.Component {
 				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 			/>
 		);
-		}
+	};
 
 	componentDidMount = () => {
 		this.getInitialData();
@@ -591,7 +590,7 @@ class CreateSupplierInvoice extends React.Component {
 				color="primary"
 				className="btn-twitter btn-brand icon"
 				onClick={(e, props) => {
-				this.openProductModal(props);
+					this.openProductModal(props);
 				}}
 			>
 				<i className="fas fa-plus"></i>
@@ -609,86 +608,72 @@ class CreateSupplierInvoice extends React.Component {
 			return obj;
 		});
 		// if (product_list.length > 0) {
-			return (
-				<Field
-					name={`lineItemsString.${idx}.productId`}
-					render={({ field, form }) => (
-						<Select
-							styles={customStyles}
-							options={
-								product_list
-									? selectOptionsFactory.renderOptions(
-											'name',
-											'id',
-											product_list,
-											'Product',
-									  )
-									: []
+		return (
+			<Field
+				name={`lineItemsString.${idx}.productId`}
+				render={({ field, form }) => (
+					<Select
+						styles={customStyles}
+						options={
+							product_list
+								? selectOptionsFactory.renderOptions(
+										'name',
+										'id',
+										product_list,
+										'Product',
+								  )
+								: []
+						}
+						id="productId"
+						placeholder="Select Product"
+						onChange={(e) => {
+							if (e && e.label !== 'Select Product') {
+								this.selectItem(e.value, row, 'productId', form, field, props);
+								this.prductValue(e.value, row, 'productId', form, field, props);
+								// this.formRef.current.props.handleChange(field.name)(e.value)
+							} else {
+								form.setFieldValue(
+									`lineItemsString.${idx}.productId`,
+									e.value,
+									true,
+								);
+								this.setState({
+									data: [
+										{
+											id: 0,
+											description: '',
+											quantity: 1,
+											unitPrice: '',
+											vatCategoryId: '',
+											subTotal: 0,
+											productId: '',
+										},
+									],
+								});
 							}
-							id="productId"
-							placeholder="Select Product"
-							onChange={(e) => {
-								if (e && e.label !== 'Select Product') {
-									this.selectItem(
-										e.value,
-										row,
-										'productId',
-										form,
-										field,
-										props,
-									);
-									this.prductValue(
-										e.value,
-										row,
-										'productId',
-										form,
-										field,
-										props,
-									);
-									// this.formRef.current.props.handleChange(field.name)(e.value)
-								} else {
-									form.setFieldValue(
-										`lineItemsString.${idx}.productId`,
-										e.value,
-										true,
-									);
-									this.setState({
-										data: [
-											{
-												id: 0,
-												description: '',
-												quantity: 1,
-												unitPrice: '',
-												vatCategoryId: '',
-												subTotal: 0,
-												productId: '',
-											},
-										],
-									});
-								}
-							}}
-							value={
-								product_list && row.productId
-									? selectOptionsFactory
-											.renderOptions('name', 'id', product_list, 'Product')
-											.find((option) => option.value === +row.productId)
-									: []
-							}
-							className={`${
-								props.errors.lineItemsString &&
-								props.errors.lineItemsString[parseInt(idx, 10)] &&
-								props.errors.lineItemsString[parseInt(idx, 10)].productId &&
-								Object.keys(props.touched).length > 0 &&
-								props.touched.lineItemsString &&
-								props.touched.lineItemsString[parseInt(idx, 10)] &&
-								props.touched.lineItemsString[parseInt(idx, 10)].productId
-									? 'is-invalid'
-									: ''
-							}`}
-						/>
-					)}
-				/>
-			);
+						}}
+						value={
+							product_list && row.productId
+								? selectOptionsFactory
+										.renderOptions('name', 'id', product_list, 'Product')
+										.find((option) => option.value === +row.productId)
+								: []
+						}
+						className={`${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].productId
+								? 'is-invalid'
+								: ''
+						}`}
+					/>
+				)}
+			/>
+		);
 		// } else {
 		// 	return (
 		// 		<Button
@@ -1701,7 +1686,7 @@ class CreateSupplierInvoice extends React.Component {
 																		dataFormat={(cell, rows) =>
 																			this.renderAddProduct(cell, rows, props)
 																		}
-																		></TableHeaderColumn>
+																	></TableHeaderColumn>
 																	<TableHeaderColumn
 																		width="300"
 																		dataField="account"
@@ -2045,18 +2030,19 @@ class CreateSupplierInvoice extends React.Component {
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																					{universal_currency_list[0] && (
-																						<Currency
-																						value={initValue.total_net.toFixed(
-																							2,
-																						)}
-																						currencySymbol={
-																						universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
+																						{universal_currency_list[0] && (
+																							<Currency
+																								value={initValue.total_net.toFixed(
+																									2,
+																								)}
+																								currencySymbol={
+																									universal_currency_list[0]
+																										? universal_currency_list[0]
+																												.currencyIsoCode
+																										: 'USD'
+																								}
 																							/>
-																							)}
+																						)}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2070,18 +2056,19 @@ class CreateSupplierInvoice extends React.Component {
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																					{universal_currency_list[0] && (
-																						<Currency
-																						value={initValue.invoiceVATAmount.toFixed(
-																							2,
-																						)}
-																						currencySymbol={
-																						universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
+																						{universal_currency_list[0] && (
+																							<Currency
+																								value={initValue.invoiceVATAmount.toFixed(
+																									2,
+																								)}
+																								currencySymbol={
+																									universal_currency_list[0]
+																										? universal_currency_list[0]
+																												.currencyIsoCode
+																										: 'USD'
+																								}
 																							/>
-																							)}
+																						)}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2095,18 +2082,19 @@ class CreateSupplierInvoice extends React.Component {
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																					{universal_currency_list[0] && (
-																						<Currency
-																						value={this.state.initValue.discount.toFixed(
-																							2,
-																						)}
-																						currencySymbol={
-																						universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
+																						{universal_currency_list[0] && (
+																							<Currency
+																								value={this.state.initValue.discount.toFixed(
+																									2,
+																								)}
+																								currencySymbol={
+																									universal_currency_list[0]
+																										? universal_currency_list[0]
+																												.currencyIsoCode
+																										: 'USD'
+																								}
 																							/>
-																							)}
+																						)}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2120,18 +2108,19 @@ class CreateSupplierInvoice extends React.Component {
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																					{universal_currency_list[0] && (
-																						<Currency
-																						value={initValue.totalAmount.toFixed(
-																							2,
-																						)}
-																						currencySymbol={
-																						universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
+																						{universal_currency_list[0] && (
+																							<Currency
+																								value={initValue.totalAmount.toFixed(
+																									2,
+																								)}
+																								currencySymbol={
+																									universal_currency_list[0]
+																										? universal_currency_list[0]
+																												.currencyIsoCode
+																										: 'USD'
+																								}
 																							/>
-																							)}
+																						)}
 																					</label>
 																				</Col>
 																			</Row>

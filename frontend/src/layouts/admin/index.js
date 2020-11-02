@@ -31,8 +31,9 @@ import './style.scss';
 
 const mapStateToProps = (state) => {
 	return {
+		user_list: state.user.user_list,
 		version: state.common.version,
-		role_list: state.user.role_list,
+		user_role_list: state.common.user_role_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -52,13 +53,17 @@ class AdminLayout extends React.Component {
 		if (!window['localStorage'].getItem('accessToken')) {
 			this.props.history.push('/login');
 		} else {
-			this.props.authActions.checkAuthStatus().catch((err) => {
-				this.props.authActions.logOut();
-				this.props.history.push('/login');
-			});
+			this.props.authActions
+				.checkAuthStatus()
+				.then((response) => {
+					this.props.commonActions.getRoleList(response.data.role.roleCode);
+				})
+				.catch((err) => {
+					this.props.authActions.logOut();
+					this.props.history.push('/login');
+				});
 			this.props.commonActions.getSimpleVATVersion();
 			this.props.commonActions.getCurrencyList();
-			this.props.commonActions.getRoleList();
 			const toastifyAlert = (status, message) => {
 				if (!message) {
 					message = 'Unexpected Error';
@@ -89,13 +94,43 @@ class AdminLayout extends React.Component {
 		const containerStyle = {
 			zIndex: 1999,
 		};
-		const { role_list } = this.props;
-		let myArrayFiltered = navigation.items.filter((el) => {
-			return role_list.some((f) => {
-				return f.moduleName === el.path;
+		const { user_role_list, user_list } = this.props;
+
+		var arr = [];
+
+		function parentPathPresent(arr, name) {
+			return arr.items.find((path) => path.name == name);
+		}
+
+		function filterPaths(arr, moduleName) {
+			navigation.items.forEach((item) => {
+				if (item.children) {
+					var childPath = item.children.find((child) => {
+						return child.path == moduleName;
+					});
+					if (childPath) {
+						var existingPath = parentPathPresent(arr, item.name);
+						if (existingPath) {
+							existingPath['children'].push(childPath);
+						} else {
+							arr.items.push({
+								name: item.name,
+								url: item.url,
+								icon: item.icon,
+								children: [childPath],
+							});
+						}
+					}
+				}
 			});
+		}
+
+		var finalArray = { items: [] };
+
+		user_role_list.forEach((p) => {
+			filterPaths(finalArray, p.moduleName);
 		});
-		let result = { items: myArrayFiltered };
+		//console.log(user_list && user_list?.data && user_list.data[0].roleId === 1);
 		return (
 			<div className="admin-container">
 				<div className="app">
@@ -109,7 +144,7 @@ class AdminLayout extends React.Component {
 							<AppSidebarHeader />
 							<AppSidebarForm />
 							<Suspense>
-								<AppSidebarNav navConfig={result} {...this.props} />
+								<AppSidebarNav navConfig={finalArray} {...this.props} />
 							</Suspense>
 							<AppSidebarMinimizer />
 							<AppSidebarFooter />
@@ -140,7 +175,7 @@ class AdminLayout extends React.Component {
 												<PrivateRoute
 													path={prop.path}
 													name={prop.name}
-													node={role_list}
+													node={user_role_list}
 													component={prop.component}
 													key={key}
 													exact

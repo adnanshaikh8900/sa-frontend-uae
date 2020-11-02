@@ -15,11 +15,13 @@ export default {
 					name: 'Opening Balance',
 					url: '/admin/accountant/opening-balance',
 					icon: 'fas fa-balance-scale',
+					path: 'ViewOpeningBalance',
 				},
 				{
 					name: 'Journals',
 					url: '/admin/accountant/journal',
 					icon: 'fa fa-diamond',
+					path: 'ViewJournal',
 				},
 			],
 		},
@@ -27,12 +29,12 @@ export default {
 			name: 'Banking',
 			url: '/admin/banking',
 			icon: 'fas fa-file',
-			path: 'ViewBankAccount',
 			children: [
 				{
 					name: 'Bank Account',
 					url: '/admin/banking/bank-account',
 					icon: 'fas fa-university',
+					path: 'ViewBankAccount',
 				},
 				// {
 				//   name: 'Upload Statement',
@@ -45,17 +47,18 @@ export default {
 			name: 'Income',
 			url: '/admin/income',
 			icon: 'far fa-address-book',
-			path: 'ViewCustomerInvoices',
 			children: [
 				{
 					name: 'Customer Invoices',
 					url: '/admin/income/customer-invoice',
 					icon: 'far fa-address-card',
+					path: 'ViewCustomerInvoices',
 				},
 				{
 					name: 'Income Receipts',
 					url: '/admin/income/receipt',
 					icon: 'fa fa-file-o',
+					path: 'ViewIncomeReceipts',
 				},
 			],
 		},
@@ -68,16 +71,19 @@ export default {
 					name: 'Supplier Invoices',
 					url: '/admin/expense/supplier-invoice',
 					icon: 'far fa-address-card',
+					path: 'ViewSupplierInvoices',
 				},
 				{
 					name: 'Expenses',
 					url: '/admin/expense/expense',
 					icon: 'fab fa-stack-exchange',
+					path: 'ViewExpenses',
 				},
 				{
 					name: 'Purchase receipts',
 					url: '/admin/expense/purchase',
 					icon: 'fas fa-money-check',
+					path: 'ViewPaymentReceipts',
 				},
 			],
 		},
@@ -90,6 +96,7 @@ export default {
 					name: 'VAT Transactions',
 					url: '/admin/taxes/vat-transactions',
 					icon: 'fas fa-exchange-alt',
+					path: 'vatTransactions',
 				},
 				// {
 				// 	name: 'VAT Filings',
@@ -112,11 +119,13 @@ export default {
 					name: 'Financial',
 					url: '/admin/report/financial',
 					icon: 'fas fa-usd',
+					path: 'Financial',
 				},
 				{
 					name: 'Detailed General Ledger',
 					url: '/admin/report/detailed-general-ledger',
 					icon: 'fas fa-file-text',
+					path: 'DetailedGeneralLedger',
 				},
 			],
 		},
@@ -124,16 +133,19 @@ export default {
 			name: 'Master',
 			url: '/admin/master',
 			icon: 'fas fa-database',
+			path: 'ViewChartOfAccounts',
 			children: [
 				{
 					name: 'Chart of Accounts',
 					url: '/admin/master/chart-account',
 					icon: 'fas fa-area-chart',
+					path: 'ViewChartOfAccounts',
 				},
 				{
 					name: 'Contact',
 					url: '/admin/master/contact',
 					icon: 'fas fa-id-card-alt',
+					path: 'ViewContact',
 				},
 				// {
 				// 	name: 'Employee',
@@ -144,6 +156,7 @@ export default {
 					name: 'Product',
 					url: '/admin/master/product',
 					icon: 'fas fa-object-group',
+					path: 'ViewProduct',
 				},
 				// {
 				//   name: 'Project',
@@ -154,11 +167,13 @@ export default {
 					name: 'VAT Category',
 					url: '/admin/master/vat-category',
 					icon: 'icon-briefcase',
+					path: 'ViewVatCategory',
 				},
 				{
 					name: 'Product Category',
 					url: '/admin/master/product-category',
 					icon: 'fas fa-money',
+					path: 'ViewProductCategory',
 				},
 				// {
 				//   name: 'Currencies',

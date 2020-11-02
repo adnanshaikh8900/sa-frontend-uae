@@ -84,6 +84,7 @@ class LogIn extends React.Component {
 				toast.success('Log in Succesfully', {
 					position: toast.POSITION.TOP_RIGHT,
 				});
+
 				this.props.history.push('/admin');
 				this.setState({ loading: false });
 			})

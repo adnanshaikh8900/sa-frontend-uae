@@ -29,16 +29,16 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 
-import * as TransactionActions from './actions';
+import * as RolesActions from './actions';
 
 const mapStateToProps = (state) => {
 	return {
-		transaction_list: state.transaction.transaction_list,
+		role_list: state.user.role_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
-		transactionActions: bindActionCreators(TransactionActions, dispatch),
+		rolesActions: bindActionCreators(RolesActions, dispatch),
 	};
 };
 
@@ -84,7 +84,12 @@ class UsersRoles extends React.Component {
 		};
 	}
 
-	componentDidMount = () => {};
+	componentDidMount = () => {
+		this.initializeData();
+	};
+	initializeData = () => {
+		this.props.rolesActions.getRoleList();
+	};
 
 	// Show Invite User Modal
 	showInviteUserModal = () => {
@@ -96,12 +101,13 @@ class UsersRoles extends React.Component {
 	};
 
 	goToDetail = (row) => {
-		this.showInviteUserModal();
+		this.props.history.push('/admin/settings/user-role/update', {
+			id: row.roleCode,
+		});
 	};
 
 	getUserName = (cell, row) => {
 		const avatar = require('assets/images/avatars/6.jpg');
-
 		return (
 			<div className="d-flex">
 				<img
@@ -112,23 +118,18 @@ class UsersRoles extends React.Component {
 					alt="logo"
 				></img>
 				<div className="ml-2">
-					<div>
-						<label className="text-primary my-link mb-0">
-							{row.name}({row.status})
-						</label>
-					</div>
-					<div>{row.email}</div>
+					<div>{row.roleName}</div>
 				</div>
 			</div>
 		);
 	};
 
 	render() {
-		const { loading, users, openInviteUserModal } = this.state;
+		const { loading, openInviteUserModal } = this.state;
 		const containerStyle = {
 			zIndex: 1999,
 		};
-
+		const { role_list } = this.props;
 		return (
 			<div className="transaction-category-screen">
 				<div className="animated fadeIn">
@@ -161,7 +162,7 @@ class UsersRoles extends React.Component {
 												<Col lg={2} className="mb-1">
 													<Select
 														className=""
-														options={[]}
+														options={role_list}
 														placeholder="User Role"
 													/>
 												</Col>
@@ -181,7 +182,7 @@ class UsersRoles extends React.Component {
 											Add New Role
 										</Button>
 										<BootstrapTable
-											data={users}
+											data={role_list}
 											hover
 											pagination
 											version="4"
@@ -198,7 +199,7 @@ class UsersRoles extends React.Component {
 											>
 												User Detail
 											</TableHeaderColumn>
-											<TableHeaderColumn dataField="role" dataSort>
+											<TableHeaderColumn dataField="roleName" dataSort>
 												Role
 											</TableHeaderColumn>
 										</BootstrapTable>

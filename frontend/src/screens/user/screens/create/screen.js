@@ -27,11 +27,8 @@ import { selectOptionsFactory } from 'utils';
 import moment from 'moment';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye } from "@fortawesome/free-solid-svg-icons";
 import './style.scss';
 
-const eye = <FontAwesomeIcon icon={faEye} />;
 const mapStateToProps = (state) => {
 	return {
 		role_list: state.user.role_list,
@@ -107,10 +104,10 @@ class CreateUser extends React.Component {
 
 	togglePasswordVisiblity = () => {
 		this.setState({
-		passwordShown: !this.state.passwordShown,
+			passwordShown: !this.state.passwordShown,
 		});
-	   };
-	   
+	};
+
 	handleSubmit = (data, resetForm) => {
 		const {
 			firstName,
@@ -227,7 +224,7 @@ class CreateUser extends React.Component {
 															[Yup.ref('password'), null],
 															'Passwords must match',
 														),
-												//	dob: Yup.date().required('DOB is Required'),
+													//	dob: Yup.date().required('DOB is Required'),
 												})}
 											>
 												{(props) => (
@@ -597,7 +594,11 @@ class CreateUser extends React.Component {
 																				Password
 																			</Label>
 																			<Input
-																			type={this.state.passwordShown ? "text" : "password"}
+																				type={
+																					this.state.passwordShown
+																						? 'text'
+																						: 'password'
+																				}
 																				id="password"
 																				name="password"
 																				value={props.values.password}
@@ -613,8 +614,6 @@ class CreateUser extends React.Component {
 																						: ''
 																				}
 																			/>
-																		<i className="inputShow"
-																		onClick={this.togglePasswordVisiblity}>{eye}</i>
 																			{props.errors.password &&
 																			props.touched.password ? (
 																				<div className="invalid-feedback">

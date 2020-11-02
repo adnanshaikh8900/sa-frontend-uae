@@ -23,35 +23,28 @@ import 'react-checkbox-tree/lib/react-checkbox-tree.css';
 import { CommonActions } from 'services/global';
 
 import 'react-toastify/dist/ReactToastify.css';
-import './style.scss';
-
-import * as VatCreateActions from '../../../vat_code/screens/create/actions';
-import * as VatActions from '../../../vat_code/actions';
 import * as roleActions from '../../screens/create/actions';
+import * as roleCommonActions from '../../actions';
 
 import { Formik } from 'formik';
 const mapStateToProps = (state) => {
-	return {
-		vat_row: state.vat.vat_row,
-	};
+	return {};
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
 		commonActions: bindActionCreators(CommonActions, dispatch),
-		vatActions: bindActionCreators(VatActions, dispatch),
-		vatCreateActions: bindActionCreators(VatCreateActions, dispatch),
 		RoleActions: bindActionCreators(roleActions, dispatch),
+		RoleCommonActions: bindActionCreators(roleCommonActions, dispatch),
 	};
 };
 
-class CreateRole extends React.Component {
+class UpdateRole extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			initValue: { name: '', description: '' },
 			loading: false,
 			createMore: false,
-			vat_list: [],
 			checked: [],
 			roleList: [],
 		};
@@ -74,7 +67,25 @@ class CreateRole extends React.Component {
 				this.list_to_tree(result);
 			}
 		});
-		//this.props.RoleActions.getUpdatedRoleList();
+		if (this.props.location.state && this.props.location.state.id) {
+			this.props.RoleCommonActions.getModuleList(this.props.location.state.id)
+				.then((res) => {
+					if (res.status === 200) {
+						let tempArray = [];
+						res.data.map((value) => {
+							tempArray.push(value.moduleId.toString());
+						});
+						this.setState({ checked: tempArray }, () => {
+							console.log(this.state.checked);
+						});
+					}
+				})
+				.catch((err) => {
+					this.props.history.push('/admin/settings/user-role');
+				});
+		} else {
+			this.props.history.push('/admin/settings/user-role');
+		}
 	};
 
 	list_to_tree = (arr) => {
@@ -150,8 +161,7 @@ class CreateRole extends React.Component {
 			});
 	};
 
-	onCheck = (checked, targetNode) => {
-		console.log(targetNode);
+	onCheck = (checked) => {
 		this.setState({ checked }, () => {
 			console.log(this.state.checked);
 		});
@@ -162,21 +172,7 @@ class CreateRole extends React.Component {
 	};
 
 	render() {
-		const { loading, vat_list } = this.state;
-
-		if (vat_list) {
-			var VatList = vat_list.map((item) => {
-				return item.name;
-			});
-		}
-		const options = [
-			{ value: 'Accountant', label: 'Accountant' },
-			{ value: 'Banking', label: 'Banking' },
-			{ value: 'Income', label: 'Income' },
-		];
-		const optionsTwo = [
-			{ value: 'Customer Invoice', label: 'Customer Invoice' },
-		];
+		const { loading } = this.state;
 		const { checked, expanded } = this.state;
 		return (
 			<div className="role-create-screen">
@@ -187,7 +183,7 @@ class CreateRole extends React.Component {
 								<CardHeader>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="nav-icon icon-briefcase" />
-										<span className="ml-2">Add New Role</span>
+										<span className="ml-2">Update New Role</span>
 									</div>
 								</CardHeader>
 								<CardBody>
@@ -278,47 +274,6 @@ class CreateRole extends React.Component {
 																onExpand={this.onExpand}
 															/>
 														</FormGroup>
-														{/* <FormGroup>
-															<Label htmlFor="name">Feature</Label>
-															<Select
-																options={optionsTwo}
-																className="basic-multi-select"
-																isMulti
-															/>
-														</FormGroup> */}
-														{/* <div htmlFor="name">Operation</div>
-														<FormGroup check inline className="mb-3 mt-2">
-															<Label
-																className="form-check-label"
-																check
-																htmlFor="productPriceTypeOne"
-																style={{ marginRight: '10px' }}
-															>
-																<Input type="checkbox" id="view" name="view" />
-																View
-															</Label>
-															<Label
-																className="form-check-label"
-																check
-																htmlFor="productPriceTypeOne"
-																style={{ marginRight: '10px' }}
-															>
-																<Input type="checkbox" id="edit" name="edit" />
-																Edit
-															</Label>
-															<Label
-																className="form-check-label"
-																check
-																htmlFor="productPriceTypeOne"
-															>
-																<Input
-																	type="checkbox"
-																	id="Delete"
-																	name="Delete"
-																/>
-																Delete
-															</Label>
-														</FormGroup> */}
 														<FormGroup className="text-right mt-5">
 															<Button
 																type="button"
@@ -375,4 +330,4 @@ class CreateRole extends React.Component {
 	}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateRole);
+export default connect(mapStateToProps, mapDispatchToProps)(UpdateRole);

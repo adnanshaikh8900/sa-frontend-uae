@@ -90,6 +90,7 @@ import DetailTransactionCategory from './transaction_category/screens/detail';
 
 import UsersRoles from './users_roles';
 import CreateRole from './users_roles/screens/create';
+import UpdateRole from './users_roles/screens/detail';
 
 import Notification from './notification';
 import DataBackup from './data_backup';
@@ -175,6 +176,7 @@ export {
 	DetailTransactionCategory,
 	UsersRoles,
 	CreateRole,
+	UpdateRole,
 	Notification,
 	DataBackup,
 	Help,

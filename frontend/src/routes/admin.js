@@ -98,6 +98,7 @@ import {
 	// DetailTransactionCategory,
 	UsersRoles,
 	CreateRole,
+	UpdateRole,
 	Notification,
 	DataBackup,
 	Help,
@@ -118,22 +119,22 @@ const adminRoutes = [
 
 	{
 		path: '/admin/accountant/journal/create',
-		name: 'Create',
+		name: 'AddJournal',
 		component: CreateJournal.screen,
 	},
 	{
 		path: '/admin/accountant/journal/detail',
-		name: 'Detail',
+		name: 'UpdateJournal',
 		component: DetailJournal.screen,
 	},
 	{
 		path: '/admin/accountant/journal',
-		name: 'Journals',
+		name: 'ViewJournal',
 		component: Journal.screen,
 	},
 	{
 		path: '/admin/accountant/opening-balance',
-		name: 'OpeningBalance',
+		name: 'ViewOpeningBalance',
 		component: OpeningBalance.screen,
 	},
 	{
@@ -145,12 +146,12 @@ const adminRoutes = [
 
 	{
 		path: '/admin/banking/bank-account/transaction/create',
-		name: 'Create',
+		name: 'AddTransaction',
 		component: CreateBankTransaction.screen,
 	},
 	{
 		path: '/admin/banking/bank-account/transaction/detail',
-		name: 'Detail',
+		name: 'UpdateTransaction',
 		component: DetailBankTransaction.screen,
 	},
 	{
@@ -160,7 +161,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/banking/bank-account/transaction',
-		name: 'Transaction',
+		name: 'ViewTransaction',
 		component: BankTransactions.screen,
 	},
 	{
@@ -244,17 +245,17 @@ const adminRoutes = [
 
 	{
 		path: '/admin/expense/supplier-invoice/create',
-		name: 'Create',
+		name: 'AddSupplierInvoices',
 		component: CreateSupplierInvoice.screen,
 	},
 	{
 		path: '/admin/expense/supplier-invoice/view',
-		name: 'View Invoice',
+		name: 'ViewSupplierInvoices',
 		component: ViewInvoice.screen,
 	},
 	{
 		path: '/admin/expense/supplier-invoice/detail',
-		name: 'Detail',
+		name: 'UpdateupplierInvoices',
 		component: DetailSupplierInvoice.screen,
 	},
 	{
@@ -264,12 +265,12 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/expense/supplier-invoice',
-		name: 'Supplier Invoice',
+		name: 'ViewSupplierInvoices',
 		component: SupplierInvoice.screen,
 	},
 	{
 		path: '/admin/expense/expense/create',
-		name: 'Create',
+		name: 'AddExpenses',
 		component: CreateExpense.screen,
 	},
 	{
@@ -279,22 +280,22 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/expense/expense',
-		name: 'Expense',
+		name: 'ViewExpenses',
 		component: Expense.screen,
 	},
 	{
 		path: '/admin/expense/payment/create',
-		name: 'Create',
+		name: 'AddPaymentReceipts',
 		component: CreatePayment.screen,
 	},
 	{
 		path: '/admin/expense/payment/detail',
-		name: 'Detail',
+		name: 'UpdatePaymentReceipts',
 		component: DetailPayment.screen,
 	},
 	{
 		path: '/admin/expense/purchase',
-		name: 'Purchase',
+		name: 'ViewPaymentReceipts',
 		component: Payment.screen,
 	},
 	{
@@ -306,7 +307,7 @@ const adminRoutes = [
 
 	{
 		path: '/admin/taxes/vat-transactions',
-		name: 'VAT Transactions',
+		name: 'vatTransactions',
 		component: VatTransactions.screen,
 	},
 	{
@@ -333,7 +334,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/report/detailed-general-ledger',
-		name: 'Detailed General Ledger',
+		name: 'DetailedGeneralLedger',
 		component: DetailedGeneralLedgerReport.screen,
 	},
 	{
@@ -345,32 +346,32 @@ const adminRoutes = [
 
 	{
 		path: '/admin/master/chart-account/create',
-		name: 'Create',
+		name: 'AddChartOfAccounts',
 		component: CreateChartAccount.screen,
 	},
 	{
 		path: '/admin/master/chart-account/detail',
-		name: 'Detail',
+		name: 'UpdateChartOfAccounts',
 		component: DetailChartAccount.screen,
 	},
 	{
 		path: '/admin/master/chart-account',
-		name: 'Chart of Accounts',
+		name: 'ViewChartOfAccounts',
 		component: ChartAccount.screen,
 	},
 	{
 		path: '/admin/master/contact/create',
-		name: 'Create',
+		name: 'AddContact',
 		component: CreateContact.screen,
 	},
 	{
 		path: '/admin/master/contact/detail',
-		name: 'Detail',
+		name: 'UpdateContact',
 		component: DetailContact.screen,
 	},
 	{
 		path: '/admin/master/contact',
-		name: 'Contact',
+		name: 'AddContact',
 		component: Contact.screen,
 	},
 	{
@@ -390,17 +391,17 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/master/product/create',
-		name: 'Create',
+		name: 'AddProductCategory',
 		component: CreateProduct.screen,
 	},
 	{
 		path: '/admin/master/product/detail',
-		name: 'Detail',
+		name: 'UpdateProductCategory',
 		component: DetailProduct.screen,
 	},
 	{
 		path: '/admin/master/product',
-		name: 'Product',
+		name: 'ViewProductCategory',
 		component: Product.screen,
 	},
 	{
@@ -420,32 +421,32 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/master/vat-category/create',
-		name: 'Create',
+		name: 'AddVatCategory',
 		component: CreateVatCode.screen,
 	},
 	{
 		path: '/admin/master/vat-category/detail',
-		name: 'Detail',
+		name: 'UpdateVatCategory',
 		component: DetailVatCode.screen,
 	},
 	{
 		path: '/admin/master/vat-category',
-		name: 'Vat Category',
+		name: 'ViewVatCategory',
 		component: VatCode.screen,
 	},
 	{
 		path: '/admin/master/product-category/create',
-		name: 'Create',
+		name: 'AddProductCategory',
 		component: CreateProductCategory.screen,
 	},
 	{
 		path: '/admin/master/product-category/detail',
-		name: 'Detail',
+		name: 'UpdateProductCategory',
 		component: DetailProductCategory.screen,
 	},
 	{
 		path: '/admin/master/product-category',
-		name: 'Product Category',
+		name: 'ViewProductCategory',
 		component: ProductCategory.screen,
 	},
 	{
@@ -472,17 +473,17 @@ const adminRoutes = [
 
 	{
 		path: '/admin/settings/user/create',
-		name: 'Create',
+		name: 'AddUser',
 		component: CreateUser.screen,
 	},
 	{
 		path: '/admin/settings/user/detail',
-		name: 'Detail',
+		name: 'UpdateUser',
 		component: DetailUser.screen,
 	},
 	{
 		path: '/admin/settings/user',
-		name: 'User',
+		name: 'AddUser',
 		component: User.screen,
 	},
 	{
@@ -513,12 +514,17 @@ const adminRoutes = [
 	// },
 	{
 		path: '/admin/settings/user-role/create',
-		name: 'Create Role',
+		name: 'AddRole',
 		component: CreateRole.screen,
 	},
 	{
+		path: '/admin/settings/user-role/update',
+		name: 'UpdateRole',
+		component: UpdateRole.screen,
+	},
+	{
 		path: '/admin/settings/user-role',
-		name: 'Users & Roles',
+		name: 'AddRole',
 		component: UsersRoles.screen,
 	},
 	{

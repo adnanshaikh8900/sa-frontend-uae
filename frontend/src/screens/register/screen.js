@@ -23,7 +23,6 @@ import { AuthActions, CommonActions } from 'services/global';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
 
@@ -126,11 +125,10 @@ class Register extends React.Component {
 
 	togglePasswordVisiblity = () => {
 		this.setState({
-		passwordShown: !this.state.passwordShown,
+			passwordShown: !this.state.passwordShown,
 		});
-	   };
-	   
-	
+	};
+
 	handleChange = (key, val) => {
 		this.setState({
 			[key]: val,
@@ -509,7 +507,11 @@ class Register extends React.Component {
 																					Password
 																				</Label>
 																				<Input
-																					type={this.state.passwordShown ? "text" : "password"}
+																					type={
+																						this.state.passwordShown
+																							? 'text'
+																							: 'password'
+																					}
 																					id="password"
 																					name="password"
 																					placeholder="Enter password"
@@ -526,8 +528,15 @@ class Register extends React.Component {
 																							: ''
 																					}
 																				/>
-																				<i className="inputRShow"
-																				onClick={this.togglePasswordVisiblity}><img src={eye} style={{ width: '20px' }}/></i>
+																				<i
+																					className="inputRShow"
+																					onClick={this.togglePasswordVisiblity}
+																				>
+																					<img
+																						src={eye}
+																						style={{ width: '20px' }}
+																					/>
+																				</i>
 																				{props.errors.password &&
 																					props.touched.password && (
 																						<div className="invalid-feedback">
@@ -611,7 +620,7 @@ class Register extends React.Component {
 									</Col>
 								</Row>
 							)}
-							{userDetail === true && (
+							{userDetail === true &&
 								// <Row className="justify-content-center">
 								// 	<Col md="8">
 								// 		<CardGroup>
@@ -684,7 +693,7 @@ class Register extends React.Component {
 								// 		</CardGroup>
 								// 	</Col>
 								// </Row>
-								this.props.history.push('/login'))}
+								this.props.history.push('/login')}
 						</Container>
 					</div>
 				</div>

@@ -106,10 +106,10 @@ class CreateUser extends React.Component {
 
 	togglePasswordVisiblity = () => {
 		this.setState({
-		passwordShown: !this.state.passwordShown,
+			passwordShown: !this.state.passwordShown,
 		});
-	   };
-	   
+	};
+
 	handleSubmit = (data, resetForm) => {
 		const {
 			firstName,
@@ -226,7 +226,7 @@ class CreateUser extends React.Component {
 															[Yup.ref('password'), null],
 															'Passwords must match',
 														),
-												//	dob: Yup.date().required('DOB is Required'),
+													//	dob: Yup.date().required('DOB is Required'),
 												})}
 											>
 												{(props) => (
@@ -596,7 +596,11 @@ class CreateUser extends React.Component {
 																				Password
 																			</Label>
 																			<Input
-																			type={this.state.passwordShown ? "text" : "password"}
+																				type={
+																					this.state.passwordShown
+																						? 'text'
+																						: 'password'
+																				}
 																				id="password"
 																				name="password"
 																				value={props.values.password}
@@ -612,8 +616,15 @@ class CreateUser extends React.Component {
 																						: ''
 																				}
 																			/>
-																		<i className="inputShow"
-																		onClick={this.togglePasswordVisiblity}><img src={eye} style={{ width: '20px' }}/></i>
+																			<i
+																				className="inputShow"
+																				onClick={this.togglePasswordVisiblity}
+																			>
+																				<img
+																					src={eye}
+																					style={{ width: '20px' }}
+																				/>
+																			</i>
 																			{props.errors.password &&
 																			props.touched.password ? (
 																				<div className="invalid-feedback">

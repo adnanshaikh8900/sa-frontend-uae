@@ -29,7 +29,6 @@ import * as Yup from 'yup';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 
-
 const eye = require('assets/images/invoice/eye-24.png');
 const mapStateToProps = (state) => {
 	return {
@@ -144,15 +143,17 @@ class DetailUser extends React.Component {
 	};
 	togglePasswordVisiblity = () => {
 		this.setState({
-		passwordShown: !this.state.passwordShown,
+			passwordShown: !this.state.passwordShown,
 		});
-	   };
+	};
 	deleteUser = () => {
-		const message1 =
-        <text>
-        <b>Delete User?</b>
-        </text>
-        const message = 'This User will be deleted permanently and cannot be recovered. ';
+		const message1 = (
+			<text>
+				<b>Delete User?</b>
+			</text>
+		);
+		const message =
+			'This User will be deleted permanently and cannot be recovered. ';
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
@@ -317,7 +318,7 @@ class DetailUser extends React.Component {
 																[Yup.ref('password'), null],
 																'Passwords must match',
 															),
-													//	dob: Yup.string().required('DOB is Required'),
+														//	dob: Yup.string().required('DOB is Required'),
 													})}
 												>
 													{(props) => (
@@ -727,7 +728,11 @@ class DetailUser extends React.Component {
 																					Password
 																				</Label>
 																				<Input
-																					type={this.state.passwordShown ? "text" : "password"}
+																					type={
+																						this.state.passwordShown
+																							? 'text'
+																							: 'password'
+																					}
 																					id="password"
 																					name="password"
 																					placeholder="Enter the Password"
@@ -744,8 +749,15 @@ class DetailUser extends React.Component {
 																							: ''
 																					}
 																				/>
-																				<i className="inputShow"
-																		onClick={this.togglePasswordVisiblity}><img src={eye} style={{ width: '20px' }}/></i>
+																				<i
+																					className="inputShow"
+																					onClick={this.togglePasswordVisiblity}
+																				>
+																					<img
+																						src={eye}
+																						style={{ width: '20px' }}
+																					/>
+																				</i>
 																				{props.errors.password &&
 																				props.touched.password ? (
 																					<div className="invalid-feedback">

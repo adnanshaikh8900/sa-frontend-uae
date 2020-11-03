@@ -19,8 +19,8 @@ export const checkAuthStatus = () => {
 							data: res.data,
 						},
 					});
-					// window['sessionStorage'].setItem('profilePic', res.data.profileImageBinary);
 					cryptoService.encryptService('userId', res.data.userId);
+					return res;
 				} else {
 					throw new Error('Auth Failed');
 				}

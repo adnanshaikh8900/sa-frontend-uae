@@ -61,17 +61,17 @@ export const getSimpleVATVersion = () => {
 	};
 };
 
-export const getRoleList = (obj) => {
+export const getRoleList = (id) => {
 	return (dispatch) => {
 		let data = {
 			method: 'GET',
-			url: `/rest/roleModule/getModuleListByRoleCode?roleCode=1052`,
+			url: `/rest/roleModule/getModuleListByRoleCode?roleCode=${id}`,
 		};
 
 		return authApi(data)
 			.then((res) => {
 				dispatch({
-					type: USERS_ROLES.ROLE_LIST,
+					type: COMMON.USER_ROLE_LIST,
 					payload: res.data,
 				});
 				return res;

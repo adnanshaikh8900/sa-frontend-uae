@@ -494,7 +494,7 @@ const adminRoutes = [
 
 	{
 		path: '/admin/settings/general',
-		name: 'General Settings',
+		name: 'SaveGeneralSetting',
 		component: GeneralSettings.screen,
 	},
 	// {
@@ -556,7 +556,7 @@ const adminRoutes = [
 
 	{
 		path: '/admin/profile',
-		name: 'Profile',
+		name: 'UpdateProfile',
 		component: Profile.screen,
 	},
 

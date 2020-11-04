@@ -122,6 +122,13 @@ class AdminLayout extends React.Component {
 						}
 					}
 				}
+				if (moduleName === 'Dashboard' && item.name === 'Dashboard') {
+					arr.items.push({
+						name: item.name,
+						url: item.url,
+						icon: item.icon,
+					});
+				}
 			});
 		}
 

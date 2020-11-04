@@ -76,9 +76,9 @@ class LogIn extends React.Component {
 
 	togglePasswordVisiblity = () => {
 		this.setState({
-		passwordShown: !this.state.passwordShown,
+			passwordShown: !this.state.passwordShown,
 		});
-	   };
+	};
 
 	handleSubmit = (data, resetForm) => {
 		this.setState({ loading: true });
@@ -98,7 +98,7 @@ class LogIn extends React.Component {
 				this.setState({ loading: false });
 			})
 			.catch((err) => {
-				this.setState({ loading: true });
+				this.setState({ loading: false });
 				toast.error(
 					err && err.data
 						? 'Log in failed. Please try again'
@@ -199,7 +199,11 @@ class LogIn extends React.Component {
 																				Password
 																			</Label>
 																			<Input
-																				type={this.state.passwordShown ? "text" : "password"}
+																				type={
+																					this.state.passwordShown
+																						? 'text'
+																						: 'password'
+																				}
 																				id="password"
 																				name="password"
 																				placeholder="Enter password"
@@ -216,8 +220,15 @@ class LogIn extends React.Component {
 																						: ''
 																				}
 																			/>
-																				<i className="inputRShow"
-																				onClick={this.togglePasswordVisiblity}><img src={eye} style={{ width: '20px' }}/></i>
+																			<i
+																				className="inputRShow"
+																				onClick={this.togglePasswordVisiblity}
+																			>
+																				<img
+																					src={eye}
+																					style={{ width: '20px' }}
+																				/>
+																			</i>
 																			{props.errors.password &&
 																				props.touched.password && (
 																					<div className="invalid-feedback">

@@ -195,6 +195,18 @@ class DetailUser extends React.Component {
 		});
 	};
 
+	updateRoles = (id) => {
+		this.props.authActions
+			.checkAuthStatus()
+			.then((response) => {
+				this.props.commonActions.getRoleList(id);
+			})
+			.catch((err) => {
+				this.props.authActions.logOut();
+				this.props.history.push('/login');
+			});
+	};
+
 	handleSubmit = (data) => {
 		const {
 			firstName,
@@ -237,6 +249,7 @@ class DetailUser extends React.Component {
 							'success',
 							'User Updated Successfully',
 						);
+						this.updateRoles(+current_user_id);
 						this.props.history.push('/admin/settings/user');
 					}
 				})

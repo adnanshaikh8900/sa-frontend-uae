@@ -42,8 +42,8 @@ class UpdateRole extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			initValue: { name: '', description: '' },
-			loading: false,
+			initValue: {},
+			loading: true,
 			createMore: false,
 			checked: [],
 			roleList: [],
@@ -56,6 +56,37 @@ class UpdateRole extends React.Component {
 	}
 
 	componentDidMount = () => {
+		this.initializeData();
+	};
+
+	initializeData = () => {
+		if (this.props.location.state && this.props.location.state.id) {
+			this.props.RoleCommonActions.getModuleList(this.props.location.state.id)
+				.then((res) => {
+					if (res.status === 200) {
+						let tempArray = [];
+						res.data.map((value) => {
+							tempArray.push(value.moduleId.toString());
+						});
+						this.setState(
+							{
+								checked: tempArray,
+								initValue: {
+									name: res.data ? res.data[0].roleName : '',
+									description: res.data ? res.data[0].moduleDescription : '',
+								},
+								loading: false,
+							},
+							() => {},
+						);
+					}
+				})
+				.catch((err) => {
+					this.props.history.push('/admin/settings/user-role');
+				});
+		} else {
+			this.props.history.push('/admin/settings/user-role');
+		}
 		this.props.RoleActions.getRoleList().then((res) => {
 			if (res.status === 200) {
 				var result = res.data.map(function (el) {
@@ -67,25 +98,6 @@ class UpdateRole extends React.Component {
 				this.list_to_tree(result);
 			}
 		});
-		if (this.props.location.state && this.props.location.state.id) {
-			this.props.RoleCommonActions.getModuleList(this.props.location.state.id)
-				.then((res) => {
-					if (res.status === 200) {
-						let tempArray = [];
-						res.data.map((value) => {
-							tempArray.push(value.moduleId.toString());
-						});
-						this.setState({ checked: tempArray }, () => {
-							console.log(this.state.checked);
-						});
-					}
-				})
-				.catch((err) => {
-					this.props.history.push('/admin/settings/user-role');
-				});
-		} else {
-			this.props.history.push('/admin/settings/user-role');
-		}
 	};
 
 	list_to_tree = (arr) => {
@@ -138,8 +150,9 @@ class UpdateRole extends React.Component {
 			roleName: data.name,
 			roleDescription: data.description,
 			moduleListIds: this.state.checked,
+			roleID: this.props.location.state.id,
 		};
-		this.props.RoleActions.createRole(obj)
+		this.props.RoleActions.updateRole(obj)
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
@@ -172,7 +185,7 @@ class UpdateRole extends React.Component {
 	};
 
 	render() {
-		const { loading } = this.state;
+		const { loading, initValue } = this.state;
 		const { checked, expanded } = this.state;
 		return (
 			<div className="role-create-screen">
@@ -187,138 +200,131 @@ class UpdateRole extends React.Component {
 									</div>
 								</CardHeader>
 								<CardBody>
-									<Row>
-										<Col lg={6}>
-											<Formik
-												initialValues={this.state.initValue}
-												onSubmit={(values, { resetForm }) => {
-													this.handleSubmit(values, resetForm);
-													// resetForm(this.state.initValue)
-												}}
-												validate={(values) => {
-													// let status = false
-													let errors = {};
-													if (!values.name) {
-														errors.name = 'Name is  required';
-													}
-													return errors;
-												}}
-											>
-												{(props) => (
-													<Form onSubmit={props.handleSubmit} name="simpleForm">
-														<FormGroup>
-															<Label htmlFor="name">
-																<span className="text-danger">*</span>Name
-															</Label>
-															<Input
-																type="text"
-																maxLength="30"
-																id="name"
-																name="name"
-																placeholder="Enter Name"
-																onBlur={props.handleBlur}
-																onChange={(option) => {
-																	if (
-																		option.target.value === '' ||
-																		this.vatCode.test(option.target.value)
-																	) {
-																		props.handleChange('name')(option);
+									{loading ? (
+										<Loader />
+									) : (
+										<Row>
+											<Col lg={6}>
+												<Formik
+													initialValues={initValue}
+													onSubmit={(values, { resetForm }) => {
+														this.handleSubmit(values, resetForm);
+														// resetForm(this.state.initValue)
+													}}
+													validate={(values) => {
+														// let status = false
+														let errors = {};
+														if (!values.name) {
+															errors.name = 'Name is  required';
+														}
+														return errors;
+													}}
+												>
+													{(props) => (
+														<Form
+															onSubmit={props.handleSubmit}
+															name="simpleForm"
+														>
+															<FormGroup>
+																<Label htmlFor="name">
+																	<span className="text-danger">*</span>Name
+																</Label>
+																<Input
+																	type="text"
+																	maxLength="30"
+																	id="name"
+																	name="name"
+																	placeholder="Enter Name"
+																	onBlur={props.handleBlur}
+																	onChange={(option) => {
+																		if (
+																			option.target.value === '' ||
+																			this.vatCode.test(option.target.value)
+																		) {
+																			props.handleChange('name')(option);
+																		}
+																	}}
+																	value={props.values.name}
+																	className={
+																		props.errors.name && props.touched.name
+																			? 'is-invalid'
+																			: ''
 																	}
-																}}
-																// validate={this.validateCode}
-																value={props.values.name}
-																className={
-																	props.errors.name && props.touched.name
-																		? 'is-invalid'
-																		: ''
-																}
-															/>
-															{props.errors.name && props.touched.name && (
-																<div className="invalid-feedback">
-																	{props.errors.name}
-																</div>
-															)}
-														</FormGroup>
-														<FormGroup>
-															<Label htmlFor="name">Description</Label>
-															<Input
-																type="text"
-																id="description"
-																name="description"
-																placeholder="Description"
-																onChange={(option) => {
-																	if (
-																		option.target.value === '' ||
-																		this.vatCode.test(option.target.value)
-																	) {
-																		props.handleChange('description')(option);
+																/>
+																{props.errors.name && props.touched.name && (
+																	<div className="invalid-feedback">
+																		{props.errors.name}
+																	</div>
+																)}
+															</FormGroup>
+															<FormGroup>
+																<Label htmlFor="name">Description</Label>
+																<Input
+																	type="text"
+																	id="description"
+																	name="description"
+																	placeholder="Description"
+																	onChange={(option) => {
+																		if (
+																			option.target.value === '' ||
+																			this.vatCode.test(option.target.value)
+																		) {
+																			props.handleChange('description')(option);
+																		}
+																	}}
+																	value={props.values.description}
+																	className={
+																		props.errors.description &&
+																		props.touched.description
+																			? 'is-invalid'
+																			: ''
 																	}
-																}}
-																value={props.values.description}
-																className={
-																	props.errors.description &&
-																	props.touched.description
-																		? 'is-invalid'
-																		: ''
-																}
-															/>
-														</FormGroup>
-														<FormGroup>
-															<Label htmlFor="name">Modules</Label>
-															<CheckboxTree
-																checked={checked}
-																expanded={expanded}
-																iconsClass="fa5"
-																nodes={this.state.roleList}
-																onCheck={this.onCheck}
-																onExpand={this.onExpand}
-															/>
-														</FormGroup>
-														<FormGroup className="text-right mt-5">
-															<Button
-																type="button"
-																name="submit"
-																color="primary"
-																className="btn-square mr-3"
-																onClick={() => {
-																	this.setState({ createMore: false }, () => {
-																		props.handleSubmit();
-																	});
-																}}
-															>
-																<i className="fa fa-dot-circle-o"></i> Create
-															</Button>
-															<Button
-																name="button"
-																color="primary"
-																className="btn-square mr-3"
-																onClick={() => {
-																	this.setState({ createMore: true }, () => {
-																		props.handleSubmit();
-																	});
-																}}
-															>
-																<i className="fa fa-refresh"></i> Create and
-																More
-															</Button>
-															<Button
-																type="submit"
-																color="secondary"
-																className="btn-square"
-																onClick={() => {
-																	this.props.history.push(
-																		'/admin/settings/user-role',
-																	);
-																}}
-															>
-																<i className="fa fa-ban"></i> Cancel
-															</Button>
-														</FormGroup>
-													</Form>
-												)}
-											</Formik>
-										</Col>
-									</Row>
+																/>
+															</FormGroup>
+															<FormGroup>
+																<Label htmlFor="name">Modules</Label>
+																<CheckboxTree
+																	checked={checked}
+																	expanded={expanded}
+																	iconsClass="fa5"
+																	nodes={this.state.roleList}
+																	onCheck={this.onCheck}
+																	onExpand={this.onExpand}
+																/>
+															</FormGroup>
+															<FormGroup className="text-right mt-5">
+																<Button
+																	type="button"
+																	name="submit"
+																	color="primary"
+																	className="btn-square mr-3"
+																	onClick={() => {
+																		this.setState({ createMore: false }, () => {
+																			props.handleSubmit();
+																		});
+																	}}
+																>
+																	<i className="fa fa-dot-circle-o"></i> Update
+																</Button>
+																<Button
+																	type="submit"
+																	color="secondary"
+																	className="btn-square"
+																	onClick={() => {
+																		this.props.history.push(
+																			'/admin/settings/user-role',
+																		);
+																	}}
+																>
+																	<i className="fa fa-ban"></i> Cancel
+																</Button>
+															</FormGroup>
+														</Form>
+													)}
+												</Formik>
+											</Col>
+										</Row>
+									)}
 								</CardBody>
 							</Card>
 						</Col>

@@ -181,12 +181,12 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/banking/upload-statement/transaction',
-		name: 'Transaction',
+		name: 'AddBankStatement',
 		component: ImportTransaction.screen,
 	},
 	{
 		path: '/admin/banking/upload-statement',
-		name: 'Import Statement',
+		name: 'AddBankStatement',
 		component: ImportBankStatement.screen,
 	},
 	{

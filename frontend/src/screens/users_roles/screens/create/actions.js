@@ -55,3 +55,20 @@ export const createRole = (obj) => {
 			});
 	};
 };
+
+export const updateRole = (obj) => {
+	return (dispatch) => {
+		let data = {
+			method: 'post',
+			url: '/rest/roleModule/update',
+			data: obj,
+		};
+		return authApi(data)
+			.then((res) => {
+				return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

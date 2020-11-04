@@ -5220,7 +5220,30 @@ INSERT INTO `SIMPLEVAT_MODULES` (`SIMPLEVAT_MODULE_ID`, `DEFAULT_FLAG`, `DELETE_
 (213, 'N', b'0', NULL, 'AddBankTemplate', 200, b'0', b'1','Operation'),
 (214, 'N', b'0', NULL, 'UpdateBankTemplate', 200, b'0', b'1','Operation'),
 (215, 'N', b'0', NULL, 'ViewBankTemplate', 200, b'0', b'1','Operation'),
-(215, 'N', b'0', NULL, 'DeleteBankTemplate', 200, b'0', b'1','Operation');
+(216, 'N', b'0', NULL, 'DeleteBankTemplate', 200, b'0', b'1','Operation');
+
+--changeset 04/111/2020 ZAIN KHAN:dml-5
+UPDATE `SIMPLEVAT_MODULES` SET `SIMPLEVAT_MODULE_ID` = 216 WHERE `SIMPLEVAT_MODULE_NAME` = 'DeleteBankTemplate';
+
+INSERT INTO `SIMPLEVAT_MODULES` (`SIMPLEVAT_MODULE_ID`, `DEFAULT_FLAG`, `DELETE_FLAG`, `ORDER_SEQUENCE`, `SIMPLEVAT_MODULE_NAME`, `PARENT_SIMPLEVAT_MODULE_ID`, `EDITABLE_FLAG`, `SELECTABLE_FLAG`,`MODULE_TYPE`) VALUES
+(1105, 'N', b'0', NULL, 'AddDashBoard', 8, b'0', b'1','Operation'),
+(1106, 'N', b'0', NULL, 'UpdateDashBoard', 8, b'0', b'1','Operation'),
+(1107, 'N', b'0', NULL, 'ViewDashBoard', 8, b'0', b'1','Operation'),
+(1108, 'N', b'0', NULL, 'DeleteDashBoard', 8, b'0', b'1','Operation'),
+(952, 'N', b'0', NULL, 'UpdateGeneralSetting', 950, b'0', b'1','Operation'),
+(953, 'N', b'0', NULL, 'DeleteGeneralSetting', 950, b'0', b'1','Operation'),
+(954, 'N', b'0', NULL, 'ViewGeneralSetting', 950, b'0', b'1','Operation');
+
+INSERT INTO `ROLE_MODULE_RELATION` (`ID`, `SIMPLEVAT_MODULE_ID`, `ROLE_CODE`) VALUES
+(08,8,1),
+(194,1105,1),
+(195,1106,1),
+(196,1107,1),
+(197,1108,1);
+
+
+
+
 
 
 

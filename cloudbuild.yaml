@@ -11,58 +11,58 @@ steps:
   id: docker-build-push
   waitFor:
   - mvn-build
-- name: 'gcr.io/cloud-builders/kubectl'
-  args:
-    - 'rolling-update'
-    - 'simplevat-dev-rep'
-    - '--image=gcr.io/gtt-k8s/simplevat:$TAG_NAME'
-    - '--namespace=simplevat-dev'
-  env:
-    - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
-    - 'CLOUDSDK_CONTAINER_CLUSTER=gtt-k8s'
-  id: image-update-dev
-  waitFor:
-  - docker-build-push
-- name: 'gcr.io/cloud-builders/kubectl'
-  args:
-    - 'patch'
-    - 'ReplicationController'
-    - 'simplevat-dev-rep'
-    - '--type=json'
-    - '-p=[{"op": "replace", "path": "/spec/template/spec/containers/0/env/9/value", "value":"$TAG_NAME"}]'
-    - '--namespace=simplevat-dev'
-  env:
-    - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
-    - 'CLOUDSDK_CONTAINER_CLUSTER=gtt-k8s'
-  id: release-update-dev
-  waitFor:
-    - image-update-dev
-- name: 'gcr.io/cloud-builders/kubectl'
-  args:
-    - 'scale'
-    - '--replicas=0'
-    - 'rc'
-    - 'simplevat-dev-rep'
-    - '--namespace=simplevat-dev'
-  env:
-    - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
-    - 'CLOUDSDK_CONTAINER_CLUSTER=gtt-k8s'
-  id: scale-down-dev
-  waitFor:
-    - release-update-dev
-- name: 'gcr.io/cloud-builders/kubectl'
-  args:
-    - 'scale'
-    - '--replicas=1'
-    - 'rc'
-    - 'simplevat-dev-rep'
-    - '--namespace=simplevat-dev'
-  env:
-    - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
-    - 'CLOUDSDK_CONTAINER_CLUSTER=gtt-k8s'
-  id: scale-up-dev
-  waitFor:
-    - scale-down-dev
+# - name: 'gcr.io/cloud-builders/kubectl'
+#   args:
+#     - 'rolling-update'
+#     - 'simplevat-dev-rep'
+#     - '--image=gcr.io/gtt-k8s/simplevat:$TAG_NAME'
+#     - '--namespace=simplevat-dev'
+#   env:
+#     - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+#     - 'CLOUDSDK_CONTAINER_CLUSTER=gtt-k8s'
+#   id: image-update-dev
+#   waitFor:
+#   - docker-build-push
+# - name: 'gcr.io/cloud-builders/kubectl'
+#   args:
+#     - 'patch'
+#     - 'ReplicationController'
+#     - 'simplevat-dev-rep'
+#     - '--type=json'
+#     - '-p=[{"op": "replace", "path": "/spec/template/spec/containers/0/env/9/value", "value":"$TAG_NAME"}]'
+#     - '--namespace=simplevat-dev'
+#   env:
+#     - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+#     - 'CLOUDSDK_CONTAINER_CLUSTER=gtt-k8s'
+#   id: release-update-dev
+#   waitFor:
+#     - image-update-dev
+# - name: 'gcr.io/cloud-builders/kubectl'
+#   args:
+#     - 'scale'
+#     - '--replicas=0'
+#     - 'rc'
+#     - 'simplevat-dev-rep'
+#     - '--namespace=simplevat-dev'
+#   env:
+#     - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+#     - 'CLOUDSDK_CONTAINER_CLUSTER=gtt-k8s'
+#   id: scale-down-dev
+#   waitFor:
+#     - release-update-dev
+# - name: 'gcr.io/cloud-builders/kubectl'
+#   args:
+#     - 'scale'
+#     - '--replicas=1'
+#     - 'rc'
+#     - 'simplevat-dev-rep'
+#     - '--namespace=simplevat-dev'
+#   env:
+#     - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+#     - 'CLOUDSDK_CONTAINER_CLUSTER=gtt-k8s'
+#   id: scale-up-dev
+#   waitFor:
+#     - scale-down-dev
 - name: 'gcr.io/cloud-builders/kubectl'
   args:
     - 'rolling-update'

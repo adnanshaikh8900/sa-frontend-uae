@@ -310,7 +310,7 @@ class CreateExpense extends React.Component {
 													currency: Yup.string().required(
 														'Currency is required',
 													),
-													payee: Yup.string().required('Payee is required'),
+													//payee: Yup.string().required('Payee is required'),
 													expenseAmount: Yup.string()
 														.required('Amount is Required')
 														.matches(

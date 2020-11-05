@@ -275,7 +275,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/expense/expense/detail',
-		name: 'Detail',
+		name: 'UpdateExpenses',
 		component: DetailExpense.screen,
 	},
 	{

@@ -5260,6 +5260,110 @@ INSERT INTO `ROLE_MODULE_RELATION` (`ID`, `SIMPLEVAT_MODULE_ID`, `ROLE_CODE`) VA
 (209,208,1);
 
 
+--changeset 05/11/2020 ZAIN KHAN:dml-8
+UPDATE `CONFIGURATION` SET `VALUE` = 'postmaster@mg.gulftranstech.com' WHERE `ID` = 7;
+UPDATE `CONFIGURATION` SET `VALUE` = 'f80a72e3f57c12d32283b62604147525-0d2e38f7-52cfc64b' WHERE `ID` = 3;
+UPDATE `CONFIGURATION` SET `VALUE` = 'Smtp.mailgun.org' WHERE `ID` = 2;
+UPDATE `CONFIGURATION` SET `VALUE` = 'a869f97ecc6ac00b604318155202b2b7-07e45e2a-a7099f1e' WHERE `ID` = 11;
+UPDATE `CONFIGURATION` SET `VALUE` = '<!doctype html>
+<html>
+<head>
+</head>
+<body>
+    <div style="max-width: 1000px;
+        margin: auto;
+        padding: 30px;
+        border: 1px solid #eee;
+        box-shadow: 0 0 10px rgba(0, 0, 0, .15);
+        font-size: 15px;
+        line-height: 24px;
+        font-family: ''Helvetica Neue'', ''Helvetica'', Helvetica, Arial, sans-serif;
+        color: #555;">
+ <table style="width: 1000px;">
+ <tr>
+                        <td>
+                        <img src="https://www.simplevat.com/wp-content/uploads/2020/09/simplevat-logo.png"  style="width: 150px;">
+                        </td>
+                            <td style="float:right">
+                                Invoice #: {invoicingReferencePattern}<br>
+                                Invoice date: {invoiceDate}<br>
+                                Balance Due : {dueAmount}
+                            </td>
+                        </tr>
+            <tr >
+               <td>
+                              <br>
+                             </td>
+                              <td>
+                              <br>
+                             </td>
+            </tr>
+                        <tr>
+                            <td>
+                            Bill To,
+                               <br/>{contactName}<br/>
+                               {mobileNumber}<br/>
+                               {contactAddress}<br/>
+                               {contactCountry}<br/>
+                               {contactState}<br/>
+                               {contactCity}</p>
+                            </td>
+                            <td style="float:right">
+                               Term : {invoiceDuePeriod}<br>
+                               Due Date: {invoiceDueDate}<br>
+                             </td>
+                        </tr>
+                        </table>
+                        <table style="width: 1000px;">
+                         <tr style="display: table-row;vertical-align: inherit;border-color: inherit;background: #6a4bc4;color: white";>
+                         <td>Product name</td>
+                <td style="width: 20%;">Description</td>
+                <td>Quantity</td>
+                <td>Unit Cost</td>
+                <td>Vat</td>
+                <td>Total</td>
+            </tr>
+            <tr>
+                <td>{product}</td>
+                 <td>{description}</td>
+                 <td>{quantity}</td>
+                 <td>{unitprice}</td>
+                 <td>{vat}</td>
+                <td>{total}</td>
+            </tr>
+              </table>
+             <tr >
+               <td>
+                              <br>
+                             </td>
+                              <td>
+                              <br>
+                             </td>
+            </tr>
+              <table style="width: 1000px;">
+              <tr><td style="width:80%"></td>
+              <td>Subtotal<td>
+              <td>{subTotal}</td>
+              </tr>
+
+               <tr><td style="width:80%"></td>
+              <td>Discount<td>
+              <td>{invoiceDiscount}</td>
+              </tr>
+
+               <tr><td style="width:80%"></td>
+              <td>VAT<td>
+              <td>{invoiceVatAmount}</td>
+              </tr>
+               <tr><td style="width:80%"></td>
+              <td>Total<td>
+              <td>{invoiceAmount}</td>
+              </tr>
+            </table>
+    </div>
+</body>
+</html>' WHERE `ID` = 9;
+
 
 
 

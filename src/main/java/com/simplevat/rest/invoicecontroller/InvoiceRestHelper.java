@@ -452,47 +452,75 @@ public class InvoiceRestHelper {
 			case MailUtility.INVOICE_REFEREBCE_NO:
 				getReferenceNumber(invoice, invoiceDataMap, value);
 				break;
-
 			case MailUtility.INVOICE_DATE:
 				getInvoiceDate(invoice, invoiceDataMap, value);
 				break;
-
 			case MailUtility.INVOICE_DUE_DATE:
 				getInvoiceDueDate(invoice, invoiceDataMap, value);
 				break;
-
 			case MailUtility.INVOICE_DISCOUNT:
 				getDiscount(invoice, invoiceDataMap, value);
 				break;
-
-			case MailUtility.CONTRACT_PO_NUMBER:
+				case MailUtility.SUB_TOTAL:
+					getsubtotal(invoice,invoiceDataMap,value);
+					break;
+				case MailUtility.CONTRACT_PO_NUMBER:
 				getContactPoNumber(invoice, invoiceDataMap, value);
 				break;
-
 			case MailUtility.CONTACT_NAME:
 				getContact(invoice, invoiceDataMap, value);
-
 				break;
-
+				case MailUtility.CONTACT_ADDRESS:
+					getContactAddress(invoice, invoiceDataMap, value);
+					break;
+				case MailUtility.CONTACT_COUNTRY:
+					getContactCountry(invoice, invoiceDataMap, value);
+					break;
+				case MailUtility.CONTACT_STATE:
+					getContactState(invoice, invoiceDataMap, value);
+					break;
+				case MailUtility.MOBILE_NUMBER:
+					getMobileNumber(invoice, invoiceDataMap, value);
+					break;
+				case MailUtility.CONTACT_CITY:
+					getContactCity(invoice, invoiceDataMap, value);
+					break;
+				case MailUtility.PRODUCT:
+					getProduct(invoice, invoiceDataMap, value);
+					break;
+				case MailUtility.UNIT_PRICE:
+					getUnitPrice(invoice, invoiceDataMap, value);
+					break;
+				case MailUtility.INVOICE_DUE_PERIOD:
+					getInvoiceDuePeriod(invoice, invoiceDataMap, value);
+					break;
+				case MailUtility.INVOICE_VAT_AMOUNT :
+					getInvoiceVatAmount(invoice, invoiceDataMap, value);
+					break;
+				case MailUtility.QUANTITY:
+					getQuantity(invoice, invoiceDataMap, value);
+					break;
+				case MailUtility.TOTAL:
+					getTotal(invoice, invoiceDataMap, value);
+					break;
 			case MailUtility.PROJECT_NAME:
 				getProject(invoice, invoiceDataMap, value);
 				break;
-
 			case MailUtility.INVOICE_AMOUNT:
 				if (invoice.getTotalAmount() != null) {
 					invoiceDataMap.put(value, invoice.getTotalAmount().toString());
 				}
 				break;
-
 			case MailUtility.SENDER_NAME:
-
 				invoiceDataMap.put(value, user.getUserEmail());
 				break;
-
 			case MailUtility.COMPANY_NAME:
 				if (user.getCompany() != null)
 					invoiceDataMap.put(value, user.getCompany().getCompanyName());
 				break;
+
+				case MailUtility.VAT_TYPE:
+					getVat(invoice, invoiceDataMap, value);
 			default:
 			}
 		}
@@ -521,6 +549,119 @@ public class InvoiceRestHelper {
 			invoiceDataMap.put(value, sb.toString());
 		}
 	}
+	private void getContactAddress(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
+		if (invoice.getContact() != null && !invoice.getContact().getAddressLine1().isEmpty()) {
+			StringBuilder sb = new StringBuilder();
+			Contact c = invoice.getContact();
+			if (c.getAddressLine1() != null && !c.getAddressLine1().isEmpty()) {
+				sb.append(c.getAddressLine1()).append(" ");
+			}
+			if (c.getAddressLine2() != null && !c.getAddressLine2().isEmpty()) {
+				sb.append(c.getAddressLine2()).append(" ");
+			}
+			if (c.getAddressLine3() != null && !c.getAddressLine3().isEmpty()) {
+				sb.append(c.getAddressLine3());
+			}
+			invoiceDataMap.put(value, sb.toString());
+		}
+	}
+	private void getContactCountry(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
+		if (invoice.getContact() != null && !invoice.getContact().getCountry().getCountryName().isEmpty()) {
+			StringBuilder sb = new StringBuilder();
+			Contact c = invoice.getContact();
+			if (c.getCountry() != null) {
+				sb.append(c.getCountry().getCountryName()).append(" ");
+			}
+			invoiceDataMap.put(value, sb.toString());
+		}
+	}
+	private void getContactState(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
+		if (invoice.getContact().getState() != null && !invoice.getContact().getState().getStateName().isEmpty()) {
+			StringBuilder sb = new StringBuilder();
+			Contact c = invoice.getContact();
+			if (c.getState().getStateName() != null) {
+				sb.append(c.getState().getStateName()).append(" ");
+			}
+			invoiceDataMap.put(value, sb.toString());
+		}
+	}
+	private void getContactCity(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
+		if (invoice.getContact().getCity() != null  && !invoice.getContact().getCity().isEmpty()) {
+			StringBuilder sb = new StringBuilder();
+			Contact c = invoice.getContact();
+			if (c.getCity()!= null) {
+				sb.append(c.getCity()).append(" ");
+			}
+			invoiceDataMap.put(value, sb.toString());
+		}
+	}
+	private void getMobileNumber(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
+		if (invoice.getContact().getMobileNumber() != null ) {
+			StringBuilder sb = new StringBuilder();
+			Contact c = invoice.getContact();
+			if (c.getMobileNumber() != null) {
+				sb.append(c.getMobileNumber()).append(" ");
+			}
+			invoiceDataMap.put(value, sb.toString());
+		}
+	}
+
+	private void getProduct(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
+		if (invoice.getInvoiceLineItems() != null) {
+
+			for(InvoiceLineItem invoiceLineItem : invoice.getInvoiceLineItems()){
+
+				if (invoiceLineItem.getProduct().getProductName() != null) {
+					invoiceDataMap.put(value, invoiceLineItem.getProduct().getProductName() );
+				}
+			}}
+	}
+	private void getUnitPrice(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
+		if (invoice.getInvoiceLineItems() != null) {
+			for(InvoiceLineItem invoiceLineItem : invoice.getInvoiceLineItems()){
+				if (invoiceLineItem.getProduct().getUnitPrice()!= null) {
+					invoiceDataMap.put(value, invoiceLineItem.getProduct().getUnitPrice()+"" );
+				}
+			}}
+	}
+
+	private void getInvoiceDuePeriod(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
+		if (invoice.getInvoiceDuePeriod() != null) {
+			invoiceDataMap.put(value, invoice.getInvoiceDuePeriod().toString());
+		}
+	}
+	private void getInvoiceVatAmount(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
+		if (invoice.getTotalVatAmount() != null) {
+			invoiceDataMap.put(value, invoice.getTotalVatAmount().toString());
+		}
+	}
+	private void getQuantity(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
+		if (invoice.getInvoiceLineItems() != null) {
+
+			for(InvoiceLineItem invoiceLineItem : invoice.getInvoiceLineItems()){
+
+				if (invoiceLineItem.getQuantity()!= null) {
+					invoiceDataMap.put(value, invoiceLineItem.getQuantity().toString() );
+				}
+			}}
+	}
+	private void getTotal(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
+		if (invoice.getTotalAmount() != null) {
+			invoiceDataMap.put(value, invoice.getTotalAmount().toString());
+		}
+	}
+
+	private void getsubtotal(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
+		if (invoice.getInvoiceLineItems() != null) {
+
+			for(InvoiceLineItem invoiceLineItem : invoice.getInvoiceLineItems()){
+
+			if (invoiceLineItem.getSubTotal() != null) {
+				invoiceDataMap.put(value, invoiceLineItem.getSubTotal()+"" );
+			}
+					}}
+	}
+
 
 	private void getContactPoNumber(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
 		if (invoice.getContactPoNumber() != null && !invoice.getContactPoNumber().isEmpty()) {
@@ -532,6 +673,16 @@ public class InvoiceRestHelper {
 		if (invoice.getDiscount() != null) {
 			invoiceDataMap.put(value, invoice.getDiscount().toString());
 		}
+	}
+	private void getVat(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
+		if (invoice.getInvoiceLineItems() != null) {
+
+			for(InvoiceLineItem invoiceLineItem : invoice.getInvoiceLineItems()){
+
+				if (invoiceLineItem.getVatCategory().getVat() != null) {
+					invoiceDataMap.put(value,invoiceLineItem.getVatCategory().getVat().toString() );
+				}
+			}}
 	}
 
 	private void getInvoiceDueDate(Invoice invoice, Map<String, String> invoiceDataMap, String value) {

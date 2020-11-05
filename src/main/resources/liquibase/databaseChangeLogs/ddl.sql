@@ -1521,3 +1521,6 @@ COMMIT;
 create table SIMPLEVAT_MODULES (SIMPLEVAT_MODULE_ID integer not null, SIMPLEVAT_MODULE_NAME varchar(255) not null, DEFAULT_FLAG char(1) default 'N' not null, DELETE_FLAG bit default 0 not null, ORDER_SEQUENCE integer, PARENT_SIMPLEVAT_MODULE_ID integer, EDITABLE_FLAG bit default 0 not null, SELECTABLE_FLAG bit default 0 not null,MODULE_TYPE varchar(255) not null, primary key (SIMPLEVAT_MODULE_ID)) engine=InnoDB DEFAULT CHARSET=utf8;
 
 create table ROLE_MODULE_RELATION (ID integer not null auto_increment, SIMPLEVAT_MODULE_ID integer, ROLE_CODE integer, primary key (ID)) engine=InnoDB DEFAULT CHARSET=utf8;
+
+--changeset 05/11/2020 zain:ddl-3
+ALTER TABLE CONFIGURATION CHANGE VALUE VALUE TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;

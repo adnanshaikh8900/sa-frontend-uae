@@ -27,6 +27,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
 
+import EmailModal from './sections/email_template';
+
 import * as CustomerInvoiceActions from './actions';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
@@ -62,6 +64,7 @@ class CustomerInvoice extends React.Component {
 		this.state = {
 			loading: true,
 			dialog: false,
+			openEmailModal: false,
 			actionButtons: {},
 			filterData: {
 				customerId: '',
@@ -412,6 +415,15 @@ class CustomerInvoice extends React.Component {
 								<i className="fa fa-trash-o" /> Delete
 							</DropdownItem>
 						)}
+						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
+							<DropdownItem
+								onClick={() => {
+									this.sendCustomEmail(row.id);
+								}}
+							>
+								<i className="fa fa-send" /> Send Custom Email
+							</DropdownItem>
+						)}
 					</DropdownMenu>
 				</ButtonDropdown>
 			</div>
@@ -469,11 +481,13 @@ class CustomerInvoice extends React.Component {
 
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
-		const message1 =
-						<text>
-						<b>Delete Customer Invoice?</b>
-						</text>
-						const message = 'This Customer Invoice will be deleted permanently and cannot be recovered. ';
+		const message1 = (
+			<text>
+				<b>Delete Customer Invoice?</b>
+			</text>
+		);
+		const message =
+			'This Customer Invoice will be deleted permanently and cannot be recovered. ';
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
@@ -563,11 +577,13 @@ class CustomerInvoice extends React.Component {
 				'Please delete the receipt first to delete the invoice',
 			);
 		} else {
-			const message1 =
-			<text>
-			<b>Delete Customer Invoice?</b>
-			</text>
-			const message = 'This Customer Invoice will be deleted permanently and cannot be recovered. ';
+			const message1 = (
+				<text>
+					<b>Delete Customer Invoice?</b>
+				</text>
+			);
+			const message =
+				'This Customer Invoice will be deleted permanently and cannot be recovered. ';
 			this.setState({
 				dialog: (
 					<ConfirmDeleteModal
@@ -580,6 +596,14 @@ class CustomerInvoice extends React.Component {
 				),
 			});
 		}
+	};
+
+	sendCustomEmail = (id) => {
+		this.setState({ openEmailModal: true });
+	};
+
+	closeEmailModal = (res) => {
+		this.setState({ openEmailModal: false });
 	};
 
 	removeInvoice = (id) => {
@@ -1090,6 +1114,12 @@ class CustomerInvoice extends React.Component {
           currency_list={this.props.currency_list}
           id={this.state.selectedId}
         /> */}
+				<EmailModal
+					openEmailModal={this.state.openEmailModal}
+					closeEmailModal={(e) => {
+						this.closeEmailModal(e);
+					}}
+				/>
 			</div>
 		);
 	}

@@ -85,6 +85,7 @@ class CustomerInvoice extends React.Component {
 				overDueAmountWeekly: '',
 				overDueAmountMonthly: '',
 			},
+			rowId: '',
 		};
 
 		this.options = {
@@ -439,6 +440,7 @@ class CustomerInvoice extends React.Component {
 						'success',
 						'Invoice Send Successfully',
 					);
+					this.setState({ openEmailModal: false });
 				}
 			})
 			.catch((err) => {
@@ -599,7 +601,7 @@ class CustomerInvoice extends React.Component {
 	};
 
 	sendCustomEmail = (id) => {
-		this.setState({ openEmailModal: true });
+		this.setState({ openEmailModal: true, rowId: id });
 	};
 
 	closeEmailModal = (res) => {
@@ -1119,6 +1121,10 @@ class CustomerInvoice extends React.Component {
 					closeEmailModal={(e) => {
 						this.closeEmailModal(e);
 					}}
+					sendEmail={(e) => {
+						this.sendMail(this.state.rowId);
+					}}
+					id={this.state.rowId}
 				/>
 			</div>
 		);

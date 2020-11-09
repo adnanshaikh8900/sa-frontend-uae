@@ -640,6 +640,10 @@ class GeneralSettings extends React.Component {
 																					<th>Description</th>
 																				</thead>
 																				<tbody>
+																				<tr>
+																						<td>{'{companyName}'}</td>
+																						<td>Company Name</td>
+																					</tr>
 																					<tr>
 																						<td>
 																							{'{invoicingReferencePattern}'}
@@ -655,23 +659,6 @@ class GeneralSettings extends React.Component {
 																						<td>Invoice Due Date</td>
 																					</tr>
 																					<tr>
-																						<td>{'{invoiceDiscount}'}</td>
-																						<td>Invoice Discount</td>
-																					</tr>
-																					<tr>
-																						<td>{'{contractPoNumber}'}</td>
-																						<td>contract Po Number</td>
-																					</tr>
-
-																					<tr>
-																						<td>{'{contactName}'}</td>
-																						<td>Contact Name</td>
-																					</tr>
-																					<tr>
-																						<td>{'{projectName}'}</td>
-																						<td>Project Name</td>
-																					</tr>
-																					<tr>
 																						<td>{'{invoiceAmount}'}</td>
 																						<td>Invoice Amount</td>
 																					</tr>
@@ -680,13 +667,86 @@ class GeneralSettings extends React.Component {
 																						<td>Due Amount</td>
 																					</tr>
 																					<tr>
+																						<td>{'{invoiceDuePeriod}'}</td>
+																						<td>Invoice Due Period</td>
+																					</tr>
+																					<tr>
+																						<td>{'{invoiceAmount}'}</td>
+																						<td>Invoice Amount</td>
+																					</tr>
+																					<tr>
+																						<td>{'{contactName}'}</td>
+																						<td>Contact Name</td>
+																					</tr>
+																					<tr>
+																						<td>{'{mobileNumber}'}</td>
+																						<td>Mobile Number</td>
+																					</tr>
+																					<tr>
+																						<td>{'{contactAddress}'}</td>
+																						<td>Contact Address</td>
+																					</tr>
+																					<tr>
+																						<td>{'{contactCountry}'}</td>
+																						<td>Contact Country</td>
+																					</tr>
+																					<tr>
+																						<td>{'{contactState}'}</td>
+																						<td>Contact State</td>
+																					</tr>
+																					<tr>	
+																						<td>{'{contactCity}'}</td>
+																						<td>Contact City</td>
+																					</tr>
+																					<tr>
+																						<td>{'{invoiceDiscount}'}</td>
+																						<td>Invoice Discount</td>
+																					</tr>
+																					<tr>
+																						<td>{'{contractPoNumber}'}</td>
+																						<td>contract Po Number</td>
+																					</tr>
+																					<tr>
+																						<td>{'{subTotal}'}</td>
+																						<td>Sub Total</td>
+																					</tr>
+																					<tr>
+																						<td>{'{invoiceVatAmount}'}</td>
+																						<td>Invoice Vat Amount</td>
+																					</tr>
+																					<tr>
+																						<td>{'{product}'}</td>
+																						<td>Product</td>
+																					</tr>
+																					<tr>
+																						<td>{'{description}'}</td>
+																						<td>Description</td>
+																					</tr>
+																					<tr>
+																						<td>{'{quantity}'}</td>
+																						<td>Quantity</td>
+																					</tr>
+																					<tr>
+																						<td>{'{unitprice}'}</td>
+																						<td>Unit Price</td>
+																					</tr>
+																					<tr>
+																						<td>{'{vat}'}</td>
+																						<td>Vat Amount</td>
+																					</tr>
+																					<tr>
+																						<td>{'{total}'}</td>
+																						<td>Total</td>
+																					</tr>
+																					<tr>
+																						<td>{'{projectName}'}</td>
+																						<td>Project Name</td>
+																					</tr>
+																					<tr>
 																						<td>{'{senderName}'}</td>
 																						<td>Sender Name</td>
 																					</tr>
-																					<tr>
-																						<td>{'{companyName}'}</td>
-																						<td>Company Name</td>
-																					</tr>
+																				
 																				</tbody>
 																			</Table>
 																		</FormGroup>

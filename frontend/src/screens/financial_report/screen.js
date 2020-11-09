@@ -14,6 +14,7 @@ import {
 } from 'reactstrap';
 
 import { ProfitAndLoss, BalanceSheet, CashFlowStatement } from './sections';
+import {VatReturnsReport} from './sections';
 
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -31,7 +32,7 @@ class FinancialReport extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			activeTab: new Array(3).fill('2'),
+			activeTab: new Array(4).fill('3'),
 		};
 	}
 
@@ -91,6 +92,16 @@ class FinancialReport extends React.Component {
 										Trial Balance
 									</NavLink>
 								</NavItem>
+								<NavItem>
+									<NavLink
+										active={this.state.activeTab[0] === '4'}
+										onClick={() => {
+											this.toggle(0, '4');
+										}}
+									>
+										Vat Returns Report
+									</NavLink>
+								</NavItem>
 							</Nav>
 							<TabContent activeTab={this.state.activeTab[0]}>
 								<TabPane tabId="1">
@@ -106,6 +117,11 @@ class FinancialReport extends React.Component {
 								<TabPane tabId="3">
 									<div className="table-wrapper">
 										<CashFlowStatement />
+									</div>
+								</TabPane>
+								<TabPane tabId="4">
+									<div className="table-wrapper">
+										<VatReturnsReport />
 									</div>
 								</TabPane>
 							</TabContent>

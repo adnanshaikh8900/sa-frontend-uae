@@ -64,8 +64,6 @@ steps:
     chartType: 'FilePath'
     chartPath: './helm-simplevat'
     releaseName: 'simplevat'
-    resetValues: true
-    force: true
 - task: HelmDeploy@0
   displayName: Heml Kubernetes Logout
   inputs:

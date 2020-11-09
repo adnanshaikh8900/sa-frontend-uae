@@ -30,9 +30,12 @@ steps:
   displayName: Docker Build & Push
   inputs:
     containerRegistry: 'DataInnAzureContainerRegistryConnection'
-    repository: 'simplevat-uae'
+    repository: 'simpleva'
     command: 'buildAndPush'
     Dockerfile: '**/Dockerfile'
+    tags: |
+      $(Build.BuildId)
+      latest
 - task: Docker@2
   displayName: Logout to ACR
   inputs:

@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "helm-simplevat-uae.fullname" . }}
+  namespace: {{ .Values.nameSpace }}
+  labels:
+    {{- include "helm-simplevat-uae.labels" . | nindent 4 }}
+spec:
+  ports:
+    - name: http
+      port: {{ .Values.service.port }}
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    {{- include "helm-simplevat-uae.selectorLabels" . | nindent 4 }}
+  type: {{ .Values.service.type }}
+status:
+  loadBalancer: {}

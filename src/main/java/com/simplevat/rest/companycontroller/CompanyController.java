@@ -1,16 +1,22 @@
 package com.simplevat.rest.companycontroller;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.simplevat.constant.ErrorConstant;
-import com.simplevat.entity.Currency;
+import com.simplevat.constant.*;
+import com.simplevat.entity.*;
+import com.simplevat.entity.bankaccount.BankAccount;
+import com.simplevat.entity.bankaccount.BankAccountStatus;
+import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.service.*;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +34,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.dbfilter.CompanyFilterEnum;
-import com.simplevat.entity.Company;
-import com.simplevat.entity.User;
 import com.simplevat.security.JwtTokenUtil;
 
 import io.swagger.annotations.ApiOperation;
@@ -41,6 +45,20 @@ import static com.simplevat.constant.ErrorConstant.ERROR;
 public class CompanyController {
 
 	private final Logger logger = LoggerFactory.getLogger(CompanyController.class);
+	@Autowired
+	private BankAccountService bankAccountService;
+
+	@Autowired
+	private TransactionCategoryService transactionCategoryService;
+
+	@Autowired
+	protected JournalService journalService;
+
+	@Autowired
+	private CoacTransactionCategoryService coacTransactionCategoryService;
+
+	@Autowired
+	private BankAccountStatusService bankAccountStatusService;
 
 	@Autowired
 	private CompanyService companyService;
@@ -224,13 +242,93 @@ public class CompanyController {
 			user.setCompany(company);
 			userService.update(user);
 
+			BankAccount pettyCash = new BankAccount();
+			pettyCash.setBankName("PettyCash");
+			pettyCash.setCreatedBy(user.getCreatedBy());
+			pettyCash.setCreatedDate(LocalDateTime.now());
+			pettyCash.setBankAccountCurrency(company.getCurrencyCode());
+			pettyCash.setPersonalCorporateAccountInd('C');
+			pettyCash.setOpeningBalance(BigDecimal.ZERO);
+			pettyCash.setCurrentBalance(BigDecimal.ZERO);
+			BankAccountStatus bankAccountStatus = bankAccountStatusService.getBankAccountStatusByName("ACTIVE");
+			pettyCash.setBankAccountStatus(bankAccountStatus);
+
+
+			// create transaction category with bankname-accout name
+
+			if (pettyCash.getTransactionCategory() == null) {
+				TransactionCategory bankCategory = transactionCategoryService
+						.findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.PETTY_CASH.getCode());
+				pettyCash.setTransactionCategory(bankCategory);
+
+			}
+			bankAccountService.persist(pettyCash);
+
+			TransactionCategory category = transactionCategoryService.findByPK(pettyCash.getTransactionCategory().getTransactionCategoryId());
+			TransactionCategory transactionCategory = getValidTransactionCategory(category);
+			boolean isDebit=false;
+			if(StringUtils.equalsAnyIgnoreCase(transactionCategory.getTransactionCategoryCode(),
+					TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode())){
+				isDebit=true;
+			}
+
+			List<JournalLineItem> journalLineItemList = new ArrayList<>();
+			Journal journal = new Journal();
+			JournalLineItem journalLineItem1 = new JournalLineItem();
+			journalLineItem1.setTransactionCategory(category);
+			if (isDebit) {
+				journalLineItem1.setDebitAmount(pettyCash.getOpeningBalance());
+			} else {
+				journalLineItem1.setCreditAmount(pettyCash.getOpeningBalance());
+			}
+			journalLineItem1.setReferenceType(PostingReferenceTypeEnum.PETTY_CASH);
+			journalLineItem1.setReferenceId(category.getTransactionCategoryId());
+			journalLineItem1.setCreatedBy(user.getCreatedBy());
+			journalLineItem1.setJournal(journal);
+			journalLineItemList.add(journalLineItem1);
+
+			JournalLineItem journalLineItem2 = new JournalLineItem();
+			journalLineItem2.setTransactionCategory(transactionCategory);
+			if (!isDebit) {
+				journalLineItem2.setDebitAmount(pettyCash.getOpeningBalance());
+			} else {
+				journalLineItem2.setCreditAmount(pettyCash.getOpeningBalance());
+			}
+			journalLineItem2.setReferenceType(PostingReferenceTypeEnum.PETTY_CASH);
+			journalLineItem2.setReferenceId(transactionCategory.getTransactionCategoryId());
+			journalLineItem2.setCreatedBy(user.getCreatedBy());
+			journalLineItem2.setJournal(journal);
+			journalLineItemList.add(journalLineItem2);
+
+			journal.setJournalLineItems(journalLineItemList);
+			journal.setCreatedBy(user.getCreatedBy());
+			journal.setPostingReferenceType(PostingReferenceTypeEnum.PETTY_CASH);
+			journal.setJournalDate(LocalDateTime.now());
+			journalService.persist(journal);
+			coacTransactionCategoryService.addCoacTransactionCategory(pettyCash.getTransactionCategory().getChartOfAccount(),
+					pettyCash.getTransactionCategory());
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-
+	private TransactionCategory getValidTransactionCategory(TransactionCategory transactionCategory) {
+		String transactionCategoryCode = transactionCategory.getChartOfAccount().getChartOfAccountCode();
+		ChartOfAccountCategoryCodeEnum chartOfAccountCategoryCodeEnum = ChartOfAccountCategoryCodeEnum.getChartOfAccountCategoryCodeEnum(transactionCategoryCode);
+		if (chartOfAccountCategoryCodeEnum == null)
+			return null;
+		switch (chartOfAccountCategoryCodeEnum) {
+			case BANK:
+			case CASH:
+				return transactionCategoryService
+						.findTransactionCategoryByTransactionCategoryCode(
+								TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
+		}
+		return transactionCategoryService
+				.findTransactionCategoryByTransactionCategoryCode(
+						TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
+	}
 	@ApiOperation(value = "Update Company")
 	@PostMapping(value = "/update")
 	public ResponseEntity<String> update(@ModelAttribute CompanyModel companyModel, HttpServletRequest request) {

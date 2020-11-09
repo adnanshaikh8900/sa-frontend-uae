@@ -16,7 +16,8 @@ public enum PostingReferenceTypeEnum {
     PURCHASE("Purchase"),
     RECEIPT("Customer Payment"),
     BALANCE_ADJUSTMENT("Opening Balance Adjustments"),
-    PAYMENT("Supplier Payment");
+    PAYMENT("Supplier Payment"),
+	PETTY_CASH("Petty Cash");
 	
 	@Getter
 	private String displayName;

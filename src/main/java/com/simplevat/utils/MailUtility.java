@@ -45,6 +45,21 @@ public class MailUtility {
 	public static final String DUE_AMOUNT = "Due_Amount";
 	public static final String SENDER_NAME = "Sender_Name";
 	public static final String COMPANY_NAME = "Company_Name";
+	public static final String SUB_TOTAL = "Sub_Total";
+	public static final String MOBILE_NUMBER = "Mobile_Number";
+	public static final String CONTACT_ADDRESS = "Contact_Address";
+	public static final String CONTACT_COUNTRY = "Contact_Country";
+	public static final String CONTACT_STATE = "Contact_State";
+	public static final String CONTACT_CITY = "Contact_City";
+	public static final String INVOICE_DUE_PERIOD = "Invoice_Due_Period";
+	public static final String INVOICE_VAT_AMOUNT = "Invoice_Vat_Amount";
+	public static final String PRODUCT = "PRODUCT";
+	public static final String QUANTITY = "Quantity";
+	public static final String UNIT_PRICE = "Unit_Price";
+	public static final String TOTAL = "Total";
+	public static final String VAT_TYPE="Vat_Type";
+
+
 
 	public void triggerEmailOnBackground(String subject, String body, MimeMultipart mimeMultipart, String fromEmailId,
 			String fromName, String[] toMailAddress, boolean isHtml) {
@@ -189,6 +204,23 @@ public class MailUtility {
 		dataMap.put(DUE_AMOUNT, "{dueAmount}	");
 		dataMap.put(SENDER_NAME, "{senderName}");
 		dataMap.put(COMPANY_NAME, "{companyName}");
+		dataMap.put(PROJECT_NAME, "{projectName}");
+		dataMap.put(INVOICE_AMOUNT, "{invoiceAmount}");
+		dataMap.put(DUE_AMOUNT, "{dueAmount}");
+		dataMap.put(SUB_TOTAL, "{subTotal}");
+		dataMap.put(MOBILE_NUMBER, "{mobileNumber}");
+		dataMap.put(CONTACT_ADDRESS, "{contactAddress}");
+		dataMap.put(CONTACT_COUNTRY, "{contactCountry}");
+		dataMap.put(CONTACT_STATE, "{contactState}");
+		dataMap.put(CONTACT_CITY, "{contactCity}");
+		dataMap.put(INVOICE_DUE_PERIOD, "{invoiceDuePeriod}");
+		dataMap.put(INVOICE_VAT_AMOUNT, "{invoiceVatAmount}");
+		dataMap.put(PRODUCT, "{product}");
+		dataMap.put(QUANTITY, "{quantity}");
+		dataMap.put(UNIT_PRICE, "{unitPrice}");
+		dataMap.put(TOTAL, "{total}");
+		dataMap.put(VAT_TYPE,"{vatType}");
+
 
 		return dataMap;
 	}

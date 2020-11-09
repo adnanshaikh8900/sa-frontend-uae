@@ -6,10 +6,10 @@ nameSpace: simplevat-dev
 replicaCount: 1
 
 image:
-  repository: datainn.azurecr.io/simplevat-uae
+  repository: datainn.azurecr.io/simplevat
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "25"
+  tag: "latest"
 ports:
   containerPort: 8080
 imagePullSecrets:

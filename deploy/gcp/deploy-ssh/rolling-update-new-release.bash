@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# If there is no current context, get one.
+# If there is no current context, get one
 if [[ $(kubectl config current-context 2> /dev/null) == "" ]]; then
     cluster=$(gcloud config get-value container/cluster 2> /dev/null)
     zone=$(gcloud config get-value compute/zone 2> /dev/null)

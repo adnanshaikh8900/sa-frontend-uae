@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "helm-simplevat-uae.fullname" . }}
+  name: {{ include "helm-simplevat.fullname" . }}
   namespace: {{ .Values.nameSpace }}
   labels:
-    {{- include "helm-simplevat-uae.labels" . | nindent 4 }}
+    {{- include "helm-simplevat.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "helm-simplevat-uae.selectorLabels" . | nindent 6 }}
+      {{- include "helm-simplevat.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -19,13 +19,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "helm-simplevat-uae.selectorLabels" . | nindent 8 }}
+        {{- include "helm-simplevat.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "helm-simplevat-uae.serviceAccountName" . }}
+      serviceAccountName: {{ include "helm-simplevat.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:

@@ -61,7 +61,6 @@ steps:
     chartType: 'FilePath'
     chartPath: './helm-simplevat'
     releaseName: 'simplevat'
-    recreate: true
     resetValues: true
     force: true
 - task: HelmDeploy@0

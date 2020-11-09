@@ -244,6 +244,8 @@ class CreateExpense extends React.Component {
 			vat_list,
 			profile,
 			user_list,
+			pay_mode_list,
+			bank_list,
 		} = this.props;
 		const customStyles = {
 			control: (base, state) => ({
@@ -308,10 +310,13 @@ class CreateExpense extends React.Component {
 													currency: Yup.string().required(
 														'Currency is required',
 													),
-													payee: Yup.string().required('Payee is required'),
+													//payee: Yup.string().required('Payee is required'),
 													expenseAmount: Yup.string()
 														.required('Amount is Required')
-														.matches(/^[0-9][0-9]*[.]?[0-9]{0,2}$$/, 'Enter a Valid Amount'),
+														.matches(
+															/^[0-9][0-9]*[.]?[0-9]{0,2}$$/,
+															'Enter a Valid Amount',
+														),
 													attachmentFile: Yup.mixed()
 														.test(
 															'fileType',
@@ -603,7 +608,7 @@ class CreateExpense extends React.Component {
 																	/>
 																</FormGroup>
 															</Col>
-															{/* {!props.values.payee && (
+															{!props.values.payee && (
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="payMode">Pay Through</Label>
@@ -650,7 +655,7 @@ class CreateExpense extends React.Component {
 																	</FormGroup>
 																</Col>
 															)}
-															{payMode.value === 'BANK' && (
+															{!props.values.payee && payMode.value === 'BANK' && (
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="bankAccountId">
@@ -691,7 +696,7 @@ class CreateExpense extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-															)} */}
+															)}
 														</Row>
 
 														<Row>

@@ -22,6 +22,8 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
 import { CSVLink } from 'react-csv';
 
+import EmailModal from '../customer_invoice/sections/email_template';
+
 import { Loader, ConfirmDeleteModal, Currency } from 'components';
 
 import 'react-toastify/dist/ReactToastify.css';
@@ -75,6 +77,7 @@ class SupplierInvoice extends React.Component {
 		this.state = {
 			loading: true,
 			dialog: false,
+			openEmailModal: false,
 			actionButtons: {},
 			filterData: {
 				supplierId: '',
@@ -241,6 +244,14 @@ class SupplierInvoice extends React.Component {
 		);
 	};
 
+	sendCustomEmail = (id) => {
+		this.setState({ openEmailModal: true });
+	};
+
+	closeEmailModal = (res) => {
+		this.setState({ openEmailModal: false });
+	};
+
 	invoiceDueDate = (cell, row) => {
 		return row.invoiceDueDate ? row.invoiceDueDate : '';
 	};
@@ -339,6 +350,15 @@ class SupplierInvoice extends React.Component {
 								<i className="fa fa-trash-o" /> Delete
 							</DropdownItem>
 						)}
+						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
+							<DropdownItem
+								onClick={() => {
+									this.sendCustomEmail(row.id);
+								}}
+							>
+								<i className="fa fa-send" /> Send Custom Email
+							</DropdownItem>
+						)}
 					</DropdownMenu>
 				</ButtonDropdown>
 			</div>
@@ -410,12 +430,14 @@ class SupplierInvoice extends React.Component {
 
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
-		const message1 =
-        <text>
-        <b>Delete Supplier Invoice?</b>
-        </text>
-        const message = 'This Supplier Invoice will be deleted permanently and cannot be recovered. ';
-				if (selectedRows.length > 0) {
+		const message1 = (
+			<text>
+				<b>Delete Supplier Invoice?</b>
+			</text>
+		);
+		const message =
+			'This Supplier Invoice will be deleted permanently and cannot be recovered. ';
+		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
 					<ConfirmDeleteModal
@@ -590,11 +612,13 @@ class SupplierInvoice extends React.Component {
 				'Please delete the receipt first to delete the invoice',
 			);
 		} else {
-			const message1 =
-        <text>
-        <b>Delete Supplier Invoice?</b>
-        </text>
-        const message = 'This Supplier Invoice will be deleted permanently and cannot be recovered. ';
+			const message1 = (
+				<text>
+					<b>Delete Supplier Invoice?</b>
+				</text>
+			);
+			const message =
+				'This Supplier Invoice will be deleted permanently and cannot be recovered. ';
 			this.setState({
 				dialog: (
 					<ConfirmDeleteModal
@@ -1125,6 +1149,12 @@ class SupplierInvoice extends React.Component {
           currency_list={this.props.currency_list}
           history={this.props.history}
         /> */}
+				<EmailModal
+					openEmailModal={this.state.openEmailModal}
+					closeEmailModal={(e) => {
+						this.closeEmailModal(e);
+					}}
+				/>
 			</div>
 		);
 	}

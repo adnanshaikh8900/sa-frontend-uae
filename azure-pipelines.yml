@@ -38,3 +38,33 @@ steps:
   inputs:
     containerRegistry: 'DataInnAzureContainerRegistryConnection'
     command: 'logout'
+- task: HelmDeploy@0
+  displayName: Heml Kubernetes Login
+  inputs:
+    connectionType: 'Azure Resource Manager'
+    azureSubscription: 'Azure subscription 1(278c9e5b-483b-4d3e-b588-e0237b4d29d3)'
+    azureResourceGroup: 'DataInn_Kubernetes_RG'
+    kubernetesCluster: 'k8s'
+    useClusterAdmin: true
+    namespace: 'simplevat_dev'
+    command: 'login'
+- task: HelmDeploy@0
+  displayName: Heml Kubernetes Deploy
+  inputs:
+    connectionType: 'Azure Resource Manager'
+    azureSubscription: 'Azure subscription 1(1)(278c9e5b-483b-4d3e-b588-e0237b4d29d3)'
+    azureResourceGroup: 'DataInn_Kubernetes_RG'
+    kubernetesCluster: 'k8s'
+    useClusterAdmin: true
+    namespace: 'simplevat-dev'
+    command: 'upgrade'
+    chartType: 'FilePath'
+    chartPath: './helm-simplevat'
+    releaseName: 'simplevat'
+    recreate: true
+    resetValues: true
+    force: true
+- task: HelmDeploy@0
+  displayName: Heml Kubernetes Logout
+  inputs:
+    command: 'logout'

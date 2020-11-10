@@ -62,7 +62,7 @@ spec:
             - name: SIMPLEVAT_SMTP_STARTTLS_ENABLE
               value: "true"
             - name: SIMPLEVAT_RELEASE
-              value: 0-0-1-rc-05
+              value: latest
             - name: SIMPLEVAT_HOST
               valueFrom:
                 secretKeyRef:

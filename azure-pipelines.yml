@@ -1,12 +1,13 @@
 name: SimpleVAT-Build
 trigger:
 - develop
+pool:
+  vmImage: 'ubuntu-latest'
 
 stages:
   - stage: ci_build_simplevat
     displayName: CI Build for SimpleVAT
-    pool:
-      vmImage: 'ubuntu-latest'
+
     jobs:
     - job: build
       displayName: Build SimpleVAT Application
@@ -25,12 +26,9 @@ stages:
           testResultsFiles: '**/surefire-reports/TEST-*.xml'
           goals: 'package'
 
-
   - stage: ci_push_simplevat
     displayName: CI Build for SimpleVAT
     dependsOn: ci_build_simplevat
-    pool:
-      vmImage: 'ubuntu-latest'
     jobs:
     - job: Push
       displayName: Push SimpleVAT Application

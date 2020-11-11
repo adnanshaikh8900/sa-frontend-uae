@@ -1,70 +1,46 @@
-# Maven
-# Build your Java project and run tests with Apache Maven.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/java
-
+name: SimpleVAT-Build
 trigger:
 - develop
 
-pool:
-  vmImage: 'ubuntu-latest'
+stages:
+  - stage: ci_simplevat
+    displayName: Continoues Integration for SimpleVAT
+    pool:
+      vmImage: 'ubuntu-latest'
+    jobs:
+    - job: build
+      displayName: Build SimpleVAT Application
+      timeoutInMinutes: 30
 
-steps:
-- task: Maven@3
-  displayName: Maven Build
-  inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.8'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package'
-- task: Docker@2
-  displayName: Login to ACR
-  inputs:
-    command: login
-    containerRegistry: DataInnAzureContainerRegistryConnection
-- task: Docker@2
-  displayName: Docker Build & Push
-  inputs:
-    containerRegistry: 'DataInnAzureContainerRegistryConnection'
-    repository: 'simpleva'
-    command: 'buildAndPush'
-    Dockerfile: '**/Dockerfile'
-    tags: |
-      $(Build.BuildId)
-      latest
-- task: Docker@2
-  displayName: Logout to ACR
-  inputs:
-    containerRegistry: 'DataInnAzureContainerRegistryConnection'
-    command: 'logout'
-- task: HelmDeploy@0
-  displayName: Heml Kubernetes Login
-  inputs:
-    connectionType: 'Azure Resource Manager'
-    azureSubscription: 'Azure subscription 1(278c9e5b-483b-4d3e-b588-e0237b4d29d3)'
-    azureResourceGroup: 'DataInn_Kubernetes_RG'
-    kubernetesCluster: 'k8s'
-    useClusterAdmin: true
-    namespace: 'simplevat_dev'
-    command: 'login'
-- task: HelmDeploy@0
-  displayName: Heml Kubernetes Deploy
-  inputs:
-    connectionType: 'Azure Resource Manager'
-    azureSubscription: 'Azure subscription 1(1)(278c9e5b-483b-4d3e-b588-e0237b4d29d3)'
-    azureResourceGroup: 'DataInn_Kubernetes_RG'
-    kubernetesCluster: 'k8s'
-    useClusterAdmin: true
-    namespace: 'simplevat-dev'
-    command: 'upgrade'
-    chartType: 'FilePath'
-    chartPath: './helm-simplevat'
-    releaseName: 'simplevat'
-- task: HelmDeploy@0
-  displayName: Heml Kubernetes Logout
-  inputs:
-    command: 'logout'
+      steps:
+      - task: Maven@3
+        displayName: Maven Build
+        inputs:
+          mavenPomFile: 'pom.xml'
+          mavenOptions: '-Xmx3072m'
+          javaHomeOption: 'JDKVersion'
+          jdkVersionOption: '1.8'
+          jdkArchitectureOption: 'x64'
+          publishJUnitResults: true
+          testResultsFiles: '**/surefire-reports/TEST-*.xml'
+          goals: 'package'
+      - task: Docker@2
+        displayName: Login to ACR
+        inputs:
+          command: login
+          containerRegistry: DataInnAzureContainerRegistryConnection
+      - task: Docker@2
+        displayName: Docker Build & Push
+        inputs:
+          containerRegistry: 'DataInnAzureContainerRegistryConnection'
+          repository: 'simpleva'
+          command: 'buildAndPush'
+          Dockerfile: '**/Dockerfile'
+          tags: |
+            $(Build.BuildId)
+            latest
+      - task: Docker@2
+        displayName: Logout to ACR
+        inputs:
+          containerRegistry: 'DataInnAzureContainerRegistryConnection'
+          command: 'logout'

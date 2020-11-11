@@ -260,5 +260,28 @@
 			</plugin>
 		</plugins>
 	</build>
-
+	<repositories>
+		<repository>
+		<id>datainn</id>
+		<url>https://pkgs.dev.azure.com/datainn/_packaging/datainn/maven/v1</url>
+		<releases>
+			<enabled>true</enabled>
+		</releases>
+		<snapshots>
+			<enabled>true</enabled>
+		</snapshots>
+		</repository>
+	</repositories>
+	<distributionManagement>
+		<repository>
+		<id>datainn</id>
+		<url>https://pkgs.dev.azure.com/datainn/_packaging/datainn/maven/v1</url>
+		<releases>
+			<enabled>true</enabled>
+		</releases>
+		<snapshots>
+			<enabled>true</enabled>
+		</snapshots>
+		</repository>
+	</distributionManagement>
 </project>

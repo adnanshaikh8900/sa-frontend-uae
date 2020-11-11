@@ -53,7 +53,7 @@ stages:
     - deployment: deploy
       displayName: Deploy to Kubernetes
       timeoutInMinutes: 30
-      environment: simplevat-dev
+      environment: Simplevat-Dev
       strategy:
         runOnce:
           deploy:

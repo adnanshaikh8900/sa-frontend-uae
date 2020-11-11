@@ -3,7 +3,7 @@ trigger:
 - develop
 
 stages:
-  - stage: ci-simplevat
+  - stage: ci_simplevat
     displayName: Continoues Integration for SimpleVAT
     pool:
       vmImage: 'ubuntu-latest'

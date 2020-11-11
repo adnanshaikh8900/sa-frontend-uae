@@ -38,7 +38,7 @@ stages:
           Dockerfile: '**/Dockerfile'
           tags: |
             $(Build.BuildId)
-            ${{ variables.git-tag }}
+            $(variables.git-tag)
             latest
 
 

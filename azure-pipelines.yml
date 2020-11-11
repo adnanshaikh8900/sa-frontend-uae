@@ -3,7 +3,7 @@ trigger:
 - develop
 
 stages:
-  - stage: ci_build-simplevat
+  - stage: ci_build_simplevat
     displayName: CI Build for SimpleVAT
     pool:
       vmImage: 'ubuntu-latest'
@@ -26,9 +26,9 @@ stages:
           goals: 'package'
 
 
-  - stage: ci_push-simplevat
+  - stage: ci_push_simplevat
     displayName: CI Build for SimpleVAT
-    dependsOn: ci_build-simplevat
+    dependsOn: ci_build_simplevat
     pool:
       vmImage: 'ubuntu-latest'
     jobs:

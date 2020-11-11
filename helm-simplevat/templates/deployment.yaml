@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "helm-simplevat.fullname" . }}
-  namespace: {{ .Values.nameSpace }}
+
   labels:
     {{- include "helm-simplevat.labels" . | nindent 4 }}
 spec:

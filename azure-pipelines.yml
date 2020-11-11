@@ -28,7 +28,7 @@ stages:
         displayName: Docker Build & Push
         inputs:
           containerRegistry: 'DataInnAzureContainerRegistryConnection'
-          repository: 'simpleva'
+          repository: 'simplevat'
           command: 'buildAndPush'
           Dockerfile: '**/Dockerfile'
           tags: |

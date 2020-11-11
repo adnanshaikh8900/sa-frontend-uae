@@ -1,16 +1,15 @@
 name: SimpleVAT-Build
 trigger:
 - develop
-pool:
-  vmImage: 'ubuntu-latest'
 
 stages:
   - stage: ci_build_simplevat
     displayName: CI Build for SimpleVAT
-
+    pool:
+      vmImage: 'ubuntu-latest'
     jobs:
     - job: build
-      displayName: Build SimpleVAT Application
+      displayName: Build & Push SimpleVAT Application
       timeoutInMinutes: 30
 
       steps:
@@ -25,15 +24,6 @@ stages:
           publishJUnitResults: true
           testResultsFiles: '**/surefire-reports/TEST-*.xml'
           goals: 'package'
-
-  - stage: ci_push_simplevat
-    displayName: CI Build for SimpleVAT
-    dependsOn: ci_build_simplevat
-    jobs:
-    - job: Push
-      displayName: Push SimpleVAT Application
-      timeoutInMinutes: 30
-      steps:
       - task: Docker@2
         displayName: Docker Build & Push
         inputs:

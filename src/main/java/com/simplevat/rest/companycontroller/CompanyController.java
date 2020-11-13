@@ -1,16 +1,15 @@
 package com.simplevat.rest.companycontroller;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
 import com.simplevat.constant.*;
 import com.simplevat.entity.*;
+import com.simplevat.entity.Currency;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.BankAccountStatus;
 import com.simplevat.entity.bankaccount.TransactionCategory;
@@ -250,6 +249,7 @@ public class CompanyController {
 			pettyCash.setPersonalCorporateAccountInd('C');
 			pettyCash.setOpeningBalance(BigDecimal.ZERO);
 			pettyCash.setCurrentBalance(BigDecimal.ZERO);
+			pettyCash.setOpeningDate(LocalDateTime.now());
 			BankAccountStatus bankAccountStatus = bankAccountStatusService.getBankAccountStatusByName("ACTIVE");
 			pettyCash.setBankAccountStatus(bankAccountStatus);
 

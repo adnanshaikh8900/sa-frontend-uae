@@ -227,6 +227,9 @@ public class DataListController {
 						case BANK:
 							modelList.add(new EnumDropdownModel(payMode.toString(), payMode.toString()));
 							break;
+						case CASH:
+							modelList.add(new  EnumDropdownModel(payMode.toString(), payMode.toString()));
+							break;
 				}
 
 

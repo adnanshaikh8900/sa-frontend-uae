@@ -111,7 +111,7 @@ public class BankAccountRestHelper {
 				bankModel.setBankAccountStatus(bank.getBankAccountStatus().getBankAccountStatusCode());
 			}
 			if (bank.getBankAccountCurrency() != null) {
-				bankModel.setBankAccountCurrency(bank.getBankAccountCurrency().getCurrencyCode().toString());
+				bankModel.setBankAccountCurrency(bank.getBankAccountCurrency().getCurrencyCode());
 			}
 
 			if (bank.getBankAccountType() != null) {

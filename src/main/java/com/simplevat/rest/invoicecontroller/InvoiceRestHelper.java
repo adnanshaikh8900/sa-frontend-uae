@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.simplevat.entity.*;
+import com.simplevat.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,29 +29,10 @@ import com.simplevat.constant.InvoiceTypeConstant;
 import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.ProductPriceType;
 import com.simplevat.constant.TransactionCategoryCodeEnum;
-import com.simplevat.entity.Configuration;
-import com.simplevat.entity.Contact;
-import com.simplevat.entity.Currency;
-import com.simplevat.entity.Invoice;
-import com.simplevat.entity.InvoiceLineItem;
-import com.simplevat.entity.Journal;
-import com.simplevat.entity.JournalLineItem;
-import com.simplevat.entity.Project;
-import com.simplevat.entity.User;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.InviceSingleLevelDropdownModel;
 import com.simplevat.rest.PostingRequestModel;
-import com.simplevat.service.ConfigurationService;
-import com.simplevat.service.ContactService;
-import com.simplevat.service.CurrencyService;
-import com.simplevat.service.InvoiceLineItemService;
-import com.simplevat.service.InvoiceService;
-import com.simplevat.service.ProductService;
-import com.simplevat.service.ProjectService;
-import com.simplevat.service.TransactionCategoryService;
-import com.simplevat.service.UserService;
-import com.simplevat.service.VatCategoryService;
 import com.simplevat.utils.DateFormatUtil;
 import com.simplevat.utils.DateUtils;
 import com.simplevat.utils.FileHelper;
@@ -100,6 +83,9 @@ public class InvoiceRestHelper {
 
 	@Autowired
 	private DateFormatUtil dateFormtUtil;
+
+	@Autowired
+	private CurrencyExchangeService currencyExchangeService;
 
 	public Invoice getEntity(InvoiceRequestModel invoiceModel, Integer userId) {
 		Invoice invoice = new Invoice();
@@ -727,11 +713,13 @@ public class InvoiceRestHelper {
 		}
 		return statusLabel;
 	}
-
+//TODO
 	public Journal invoicePosting(PostingRequestModel postingRequestModel, Integer userId) {
+
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 
 		Invoice invoice = invoiceService.findByPK(postingRequestModel.getPostingRefId());
+		CurrencyConversion exchangeRate =  currencyExchangeService.getExchangeRate(invoice.getCurrency().getCurrencyCode());
 
 		boolean isCustomerInvoice = InvoiceTypeConstant.isCustomerInvoice(invoice.getType());
 
@@ -744,10 +732,10 @@ public class InvoiceRestHelper {
 		journalLineItem1.setTransactionCategory(transactionCategory);
 		if (isCustomerInvoice)
 			//journalLineItem1.setDebitAmount(invoice.getTotalAmount().subtract(invoice.getTotalVatAmount()));
-		journalLineItem1.setDebitAmount(invoice.getTotalAmount());
+		journalLineItem1.setDebitAmount(invoice.getTotalAmount().multiply(exchangeRate.getExchangeRate()));
 		else
 			//journalLineItem1.setCreditAmount(invoice.getTotalAmount().subtract(invoice.getTotalVatAmount()));
-		journalLineItem1.setCreditAmount(invoice.getTotalAmount());
+		journalLineItem1.setCreditAmount(invoice.getTotalAmount().multiply(exchangeRate.getExchangeRate()));
 		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.INVOICE);
 		journalLineItem1.setReferenceId(postingRequestModel.getPostingRefId());
 		journalLineItem1.setCreatedBy(userId);

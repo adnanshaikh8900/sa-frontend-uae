@@ -29,6 +29,9 @@ import javax.persistence.Transient;
         @NamedQuery(name = "allCurrenciesProfile",
                 query = "SELECT c "
                         + "FROM Currency c  ORDER BY c.defaultFlag DESC, c.orderSequence,c.currencyDescription ASC "),
+        @NamedQuery(name = "allActiveCurrencies",
+                query = "SELECT c "
+                        + "FROM Currency c where c.currencyCode IN (Select cc.currencyCode from CurrencyConversion cc) ORDER BY c.defaultFlag DESC, c.orderSequence,c.currencyDescription ASC "),
         @NamedQuery(name = "setDeafualtCurrency",query = "UPDATE Currency c SET c.deleteFlag=false WHERE c.currencyCode != :currencyCode ")
         })
 

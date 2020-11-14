@@ -17,14 +17,7 @@ import com.simplevat.constant.TransactionCategoryCodeEnum;
 import com.simplevat.entity.*;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.PostingRequestModel;
-import com.simplevat.service.UserService;
-import com.simplevat.service.VatCategoryService;
-import com.simplevat.service.CurrencyService;
-import com.simplevat.service.ProjectService;
-import com.simplevat.service.EmployeeService;
-import com.simplevat.service.ExpenseService;
-import com.simplevat.service.TransactionCategoryService;
-import com.simplevat.service.BankAccountService;
+import com.simplevat.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +65,9 @@ public class ExpenseRestHelper {
 
 	@Autowired
 	private FileHelper fileHelper;
+
+	@Autowired
+    private CurrencyExchangeService currencyExchangeService;
 
 	public Expense getExpenseEntity(ExpenseModel model) {
 		Expense expense = new Expense();
@@ -123,13 +119,14 @@ public class ExpenseRestHelper {
 
 		return expenseBuilder.build();
 	}
+	//Todo
 	public Journal expensePosting(PostingRequestModel postingRequestModel, Integer userId)
 	{
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
-
 		Journal journal = new Journal();
 		JournalLineItem journalLineItem1 = new JournalLineItem();
 		Expense expense = expenseService.findByPK(postingRequestModel.getPostingRefId());
+		CurrencyConversion exchangeRate =  currencyExchangeService.getExchangeRate(expense.getCurrency().getCurrencyCode());
 		if(expense.getPayMode()!=null) {
 			switch (expense.getPayMode()) {
 				case BANK:
@@ -155,7 +152,7 @@ public class ExpenseRestHelper {
 							TransactionCategoryCodeEnum.EMPLOYEE_REIMBURSEMENT.getCode());
 			journalLineItem1.setTransactionCategory(transactionCategory);
 		}
-		journalLineItem1.setCreditAmount(postingRequestModel.getAmount());
+		journalLineItem1.setCreditAmount(postingRequestModel.getAmount().multiply(exchangeRate.getExchangeRate()));
 		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.EXPENSE);
 		journalLineItem1.setReferenceId(postingRequestModel.getPostingRefId());
 		journalLineItem1.setCreatedBy(userId);
@@ -166,7 +163,7 @@ public class ExpenseRestHelper {
 		TransactionCategory saleTransactionCategory = transactionCategoryService
 				.findByPK(postingRequestModel.getPostingChartOfAccountId());
 		journalLineItem2.setTransactionCategory(saleTransactionCategory);
-		journalLineItem2.setDebitAmount(postingRequestModel.getAmount());
+		journalLineItem2.setDebitAmount(postingRequestModel.getAmount().multiply(exchangeRate.getExchangeRate()));
 		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.EXPENSE);
 		journalLineItem2.setReferenceId(postingRequestModel.getPostingRefId());
 		journalLineItem2.setCreatedBy(userId);

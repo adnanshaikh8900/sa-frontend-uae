@@ -18,6 +18,8 @@ public abstract class CurrencyService extends SimpleVatService<Integer, Currency
 
 	public abstract List<Currency> getCurrenciesProfile();
 
+	public abstract List<Currency> getActiveCurrencies();
+
 	public abstract Currency getCurrency(final int currencyCode);
 
 	public abstract Currency getDefaultCurrency();

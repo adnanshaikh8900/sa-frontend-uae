@@ -108,6 +108,9 @@ public class BankAccountController{
 	@Autowired
 	private JournalLineItemService journalLineItemService;
 
+	@Autowired
+	private CurrencyExchangeService currencyExchangeService;
+
 	@ApiOperation(value = "Get All Bank Accounts", response = List.class)
 	@GetMapping(value = "/list")
 	public ResponseEntity<PaginationResponseModel> getBankAccountList(BankAccountFilterModel filterModel) {
@@ -163,15 +166,20 @@ public class BankAccountController{
 						TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode())){
 					isDebit=true;
 				}
-
+				BigDecimal openBigDecimal = bankModel.getOpeningBalance();
+				CurrencyConversion exchangeRate =  currencyExchangeService.getExchangeRate(bankModel.getBankAccountCurrency());
+				if(exchangeRate!=null)
+				{
+					openBigDecimal = openBigDecimal.multiply(exchangeRate.getExchangeRate());
+				}
 				List<JournalLineItem> journalLineItemList = new ArrayList<>();
 				Journal journal = new Journal();
 				JournalLineItem journalLineItem1 = new JournalLineItem();
 				journalLineItem1.setTransactionCategory(category);
 				if (isDebit) {
-					journalLineItem1.setDebitAmount(bankModel.getOpeningBalance());
+					journalLineItem1.setDebitAmount(openBigDecimal);
 				} else {
-					journalLineItem1.setCreditAmount(bankModel.getOpeningBalance());
+					journalLineItem1.setCreditAmount(openBigDecimal);
 				}
 				journalLineItem1.setReferenceType(PostingReferenceTypeEnum.BANK_ACCOUNT);
 				journalLineItem1.setReferenceId(category.getTransactionCategoryId());
@@ -181,10 +189,12 @@ public class BankAccountController{
 
 				JournalLineItem journalLineItem2 = new JournalLineItem();
 				journalLineItem2.setTransactionCategory(transactionCategory);
+
+
 				if (!isDebit) {
-					journalLineItem2.setDebitAmount(bankModel.getOpeningBalance());
+					journalLineItem2.setDebitAmount(openBigDecimal);
 				} else {
-					journalLineItem2.setCreditAmount(bankModel.getOpeningBalance());
+					journalLineItem2.setCreditAmount(openBigDecimal);
 				}
 				journalLineItem2.setReferenceType(PostingReferenceTypeEnum.BANK_ACCOUNT);
 				journalLineItem2.setReferenceId(transactionCategory.getTransactionCategoryId());

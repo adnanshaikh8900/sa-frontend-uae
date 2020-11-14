@@ -32,6 +32,10 @@ public class CurrencyServiceImpl extends CurrencyService {
 		return getDao().getCurrenciesProfile();
 	}
 
+	@Override
+	public List<Currency> getActiveCurrencies() {
+		return getDao().getActiveCurrencies();
+	}
 
 	public void updateCurrencyProfile(Integer currencyCode){
 		Currency currentCurrency = getDefaultCurrency();

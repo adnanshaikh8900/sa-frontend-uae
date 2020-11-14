@@ -3,6 +3,7 @@ package com.simplevat.service;
 import com.simplevat.entity.Currency;
 import com.simplevat.entity.CurrencyConversion;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -10,4 +11,6 @@ import java.util.List;
  */
 public abstract class CurrencyExchangeService extends SimpleVatService<Integer, CurrencyConversion> {
 	public abstract void saveExchangeCurrencies(Currency baseCurrency,List<Currency> convertCurrenies);
+	public abstract CurrencyConversion getExchangeRate(Integer currencyCode);
+	public abstract List<CurrencyConversion> getCurrencyConversionList();
 }

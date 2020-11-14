@@ -9,14 +9,8 @@ import com.simplevat.entity.converter.DateConverter;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -28,13 +22,16 @@ import org.hibernate.annotations.ColumnDefault;
 //@Table(name = "CURRENCY_CONVERSION")
 @Table(name = "CONVERTED_CURRENCY")
 @Data
+
+@NamedQueries({
+        @NamedQuery(name = "listOfCurrency", query = "SELECT cc FROM CurrencyConversion cc") })
 public class CurrencyConversion implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @Column(name = "CURRENCY_CONVERSION_ID")
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private long currencyConversionId;
+    private Integer currencyConversionId;
     
     @Column(name = "CURRENCY_CODE")
     private Integer currencyCode;
@@ -45,6 +42,11 @@ public class CurrencyConversion implements Serializable {
     @Basic
     @Column(name = "EXCHANGE_RATE", precision = 19, scale = 9)
     private BigDecimal exchangeRate;
+
+    @Column(name = "DELETE_FLAG")
+    @ColumnDefault(value = "0")
+    @Basic(optional = false)
+    private boolean deleteFlag;
     
     @Column(name = "CREATED_DATE")
     @ColumnDefault(value = "CURRENT_TIMESTAMP")

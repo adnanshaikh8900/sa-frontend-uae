@@ -88,4 +88,13 @@ public class CurrencyExchangeImpl extends CurrencyExchangeService {
         return currencyExchangeDao;
     }
 
+    @Override
+    public  CurrencyConversion getExchangeRate(Integer currencyCode){
+        return currencyExchangeDao.getExchangeRate(currencyCode);
+    }
+@Override
+public  List<CurrencyConversion> getCurrencyConversionList(){
+    return currencyExchangeDao.getCurrencyConversionList();
+}
+
 }

@@ -83,6 +83,9 @@ public class CompanyController {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private CurrencyExchangeService currencyExchangeService;
+
 	/**
 	 * @Deprecated
 	 **/
@@ -234,6 +237,12 @@ public class CompanyController {
 				company.setCurrencyCode(currencyService.findByPK(registrationModel.getCurrencyCode()));
 			}
 			currencyService.updateCurrencyProfile(company.getCurrencyCode().getCurrencyCode());
+			CurrencyConversion currencyConversion = new CurrencyConversion();
+			currencyConversion.setCurrencyCode(company.getCurrencyCode().getCurrencyCode());
+			currencyConversion.setCurrencyCodeConvertedTo(company.getCurrencyCode().getCurrencyCode());
+			currencyConversion.setExchangeRate(BigDecimal.ONE);
+			currencyConversion.setCreatedDate(LocalDateTime.now());
+			currencyExchangeService.persist(currencyConversion);
 			company.setCreatedBy(user.getUserId());
 			company.setCreatedDate(LocalDateTime.now());
 			company.setDeleteFlag(Boolean.FALSE);

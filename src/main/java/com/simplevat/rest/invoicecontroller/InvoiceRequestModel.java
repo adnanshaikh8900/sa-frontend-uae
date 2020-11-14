@@ -21,6 +21,10 @@ public class InvoiceRequestModel {
     private Integer contactId;
     private Date invoiceDate;
     private Date invoiceDueDate;
+
+    public InvoiceRequestModel() {
+    }
+
     private Integer currencyCode;
     private String contactPoNumber;    
     private MultipartFile attachmentFile;

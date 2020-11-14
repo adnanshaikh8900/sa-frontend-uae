@@ -23,7 +23,7 @@ public class BankModel implements Serializable {
 
     private String bankAccountName;
 
-    private String bankAccountCurrency;
+    private Integer bankAccountCurrency;
 
     private Integer bankAccountStatus;
 

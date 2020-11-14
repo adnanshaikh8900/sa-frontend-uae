@@ -5364,6 +5364,9 @@ UPDATE `CONFIGURATION` SET `VALUE` = '<!doctype html>
 </body>
 </html>' WHERE `ID` = 9;
 
+--changeset 12/11/2020 ZAIN KHAN:dml-9
+UPDATE `CURRENCY` SET `DELETE_FLAG`=0 WHERE `CREATED_BY`=1;
+
 
 
 

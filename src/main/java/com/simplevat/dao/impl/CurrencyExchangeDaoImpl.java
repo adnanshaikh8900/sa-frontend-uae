@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.simplevat.entity.RoleModuleRelation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -22,6 +23,8 @@ import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.CurrencyExchangeDao;
 import com.simplevat.entity.Currency;
 import com.simplevat.entity.CurrencyConversion;
+
+import javax.persistence.TypedQuery;
 
 @Repository
 public class CurrencyExchangeDaoImpl extends AbstractDao<Integer, CurrencyConversion> implements CurrencyExchangeDao {
@@ -78,5 +81,20 @@ public class CurrencyExchangeDaoImpl extends AbstractDao<Integer, CurrencyConver
 		}
 
 
+	}
+	@Override
+	public CurrencyConversion getExchangeRate(Integer currencyCode){
+		TypedQuery<CurrencyConversion> query = getEntityManager().createQuery(
+				" SELECT cc FROM CurrencyConversion cc WHERE cc.currencyCode=:currencyCode",
+				CurrencyConversion.class);
+		query.setParameter("currencyCode", currencyCode);
+		if (query.getResultList() != null && !query.getResultList().isEmpty()) {
+			return query.getSingleResult();
+		}
+		return null;
+	}
+	@Override
+	public List<CurrencyConversion> getCurrencyConversionList(){
+		return this.executeNamedQuery("listOfCurrency");
 	}
 }

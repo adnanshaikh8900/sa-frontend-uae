@@ -9,6 +9,7 @@ import com.simplevat.constant.dbfilter.CompanyFilterEnum;
 import com.simplevat.dao.CompanyDao;
 import com.simplevat.dao.Dao;
 import com.simplevat.entity.Company;
+import com.simplevat.entity.Currency;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.service.CompanyService;
 import java.math.BigDecimal;
@@ -67,5 +68,8 @@ public class CompanyServiceImpl extends CompanyService {
     public List<DropdownModel> getCompaniesForDropdown() {
        return companyDao.getCompaniesForDropdown();
     }
-
+    @Override
+    public Currency getCompanyCurrency(){
+        return companyDao.getCompanyCurrency();
+    }
 }

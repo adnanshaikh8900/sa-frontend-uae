@@ -10,6 +10,7 @@ import java.util.Map;
 
 import com.simplevat.constant.dbfilter.CompanyFilterEnum;
 import com.simplevat.entity.Company;
+import com.simplevat.entity.Currency;
 import com.simplevat.rest.DropdownModel;
 
 /**
@@ -25,4 +26,6 @@ public interface CompanyDao extends Dao<Integer, Company> {
     public List<DropdownModel> getCompaniesForDropdown();
 
     public void deleteByIds(List<Integer> ids);
+
+    public Currency getCompanyCurrency();
 }

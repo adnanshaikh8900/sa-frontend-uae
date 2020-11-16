@@ -10,6 +10,7 @@ import com.simplevat.rest.rolecontroller.ModuleResponseModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.CompanyService;
 import com.simplevat.service.CurrencyExchangeService;
+import com.simplevat.service.CurrencyService;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +46,9 @@ public class CurrencyConversionController{
     @Autowired
     private CurrencyConversionHelper currencyConversionHelper;
 
+    @Autowired
+    private CurrencyService currencyService;
+
     @ApiOperation(value = "Save Currency Conversion", response = CurrencyConversion.class)
     @PostMapping(value = "/save")
     public ResponseEntity<String> saveConvertedCurrency(@RequestBody CurrencyConversionRequestModel currencyConversionRequestModel
@@ -52,9 +56,11 @@ public class CurrencyConversionController{
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
         CurrencyConversion currencyConversion = new CurrencyConversion();
-        currencyConversion.setCurrencyCode(currencyConversionRequestModel.getCurrencyCode());
+        Currency currency=currencyService.findByPK(currencyConversionRequestModel.getCurrencyCode());
+        currencyConversion.setCurrencyCode(currency);
         Company company=companyService.getCompany();
-        currencyConversion.setCurrencyCodeConvertedTo(company.getCurrencyCode().getCurrencyCode());
+
+        currencyConversion.setCurrencyCodeConvertedTo(company.getCurrencyCode());
         currencyConversion.setExchangeRate(currencyConversionRequestModel.getExchangeRate());
         currencyConversion.setCreatedDate(LocalDateTime.now());
         currencyExchangeService.persist(currencyConversion);
@@ -69,9 +75,10 @@ public class CurrencyConversionController{
         try {
             CurrencyConversion existingCurrency = currencyExchangeService.findByPK(currencyConversionId);
             if (existingCurrency != null) {
-                existingCurrency.setCurrencyCode(currencyConversionRequestModel.getCurrencyCode());
+                Currency currency = currencyService.findByPK(currencyConversionRequestModel.getCurrencyCode());
+                existingCurrency.setCurrencyCode(currency);
                 Company company = companyService.getCompany();
-                existingCurrency.setCurrencyCodeConvertedTo(company.getCurrencyCode().getCurrencyCode());
+                existingCurrency.setCurrencyCodeConvertedTo(company.getCurrencyCode());
                 existingCurrency.setExchangeRate(currencyConversionRequestModel.getExchangeRate());
                 existingCurrency.setCreatedDate(LocalDateTime.now());
                 currencyExchangeService.update(existingCurrency);
@@ -104,8 +111,9 @@ public class CurrencyConversionController{
         CurrencyConversion currencyConversion = currencyExchangeService.findByPK(id);
        if (currencyConversion != null) {
            CurrencyConversionResponseModel currencyConversionResponseModel = new CurrencyConversionResponseModel();
-           currencyConversionResponseModel.setCurrencyCode(currencyConversion.getCurrencyCode());
-           currencyConversionResponseModel.setCurrencyCodeConvertedTo(currencyConversion.getCurrencyCodeConvertedTo());
+           currencyConversionResponseModel.setCurrencyConversionId(currencyConversion.getCurrencyConversionId());
+           currencyConversionResponseModel.setCurrencyCode(currencyConversion.getCurrencyCode().getCurrencyCode());
+           currencyConversionResponseModel.setCurrencyCodeConvertedTo(currencyConversion.getCurrencyCodeConvertedTo().getCurrencyCode());
            currencyConversionResponseModel.setExchangeRate(currencyConversion.getExchangeRate());
            return new ResponseEntity (currencyConversionResponseModel, HttpStatus.OK);
         }

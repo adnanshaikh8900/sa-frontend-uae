@@ -102,6 +102,9 @@ public class InvoiceRestHelper {
 		if (invoiceModel.getTotalAmount() != null) {
 			invoice.setTotalAmount(invoiceModel.getTotalAmount());
 		}
+		if (invoiceModel.getExchangeRate()!=null){
+			invoice.setExchangeRate(invoiceModel.getExchangeRate());
+		}
 		if (invoiceModel.getTotalVatAmount() != null) {
 			invoice.setTotalVatAmount(invoiceModel.getTotalVatAmount());
 		}
@@ -719,7 +722,7 @@ public class InvoiceRestHelper {
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 
 		Invoice invoice = invoiceService.findByPK(postingRequestModel.getPostingRefId());
-		CurrencyConversion exchangeRate =  currencyExchangeService.getExchangeRate(invoice.getCurrency().getCurrencyCode());
+//		CurrencyConversion exchangeRate =  currencyExchangeService.getExchangeRate(invoice.getCurrency().getCurrencyCode());
 
 		boolean isCustomerInvoice = InvoiceTypeConstant.isCustomerInvoice(invoice.getType());
 
@@ -732,10 +735,10 @@ public class InvoiceRestHelper {
 		journalLineItem1.setTransactionCategory(transactionCategory);
 		if (isCustomerInvoice)
 			//journalLineItem1.setDebitAmount(invoice.getTotalAmount().subtract(invoice.getTotalVatAmount()));
-		journalLineItem1.setDebitAmount(invoice.getTotalAmount().multiply(exchangeRate.getExchangeRate()));
+		journalLineItem1.setDebitAmount(invoice.getTotalAmount().multiply(invoice.getExchangeRate()));
 		else
 			//journalLineItem1.setCreditAmount(invoice.getTotalAmount().subtract(invoice.getTotalVatAmount()));
-		journalLineItem1.setCreditAmount(invoice.getTotalAmount().multiply(exchangeRate.getExchangeRate()));
+		journalLineItem1.setCreditAmount(invoice.getTotalAmount().multiply(invoice.getExchangeRate()));
 		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.INVOICE);
 		journalLineItem1.setReferenceId(postingRequestModel.getPostingRefId());
 		journalLineItem1.setCreatedBy(userId);

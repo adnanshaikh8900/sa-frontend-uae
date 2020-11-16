@@ -243,8 +243,9 @@ public class CompanyController {
 			}
 			currencyService.updateCurrencyProfile(company.getCurrencyCode().getCurrencyCode());
 			CurrencyConversion currencyConversion = new CurrencyConversion();
-			currencyConversion.setCurrencyCode(company.getCurrencyCode().getCurrencyCode());
-			currencyConversion.setCurrencyCodeConvertedTo(company.getCurrencyCode().getCurrencyCode());
+			Currency currency = currencyService.findByPK(company.getCurrencyCode().getCurrencyCode());
+			currencyConversion.setCurrencyCode(currency);
+			currencyConversion.setCurrencyCodeConvertedTo(currency);
 			currencyConversion.setExchangeRate(BigDecimal.ONE);
 			currencyConversion.setCreatedDate(LocalDateTime.now());
 			currencyExchangeService.persist(currencyConversion);

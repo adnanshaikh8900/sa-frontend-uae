@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 public class CurrencyConversionResponseModel {
+    private Integer currencyConversionId;
     private Integer currencyCode;
     private Integer currencyCodeConvertedTo;
     private BigDecimal exchangeRate;

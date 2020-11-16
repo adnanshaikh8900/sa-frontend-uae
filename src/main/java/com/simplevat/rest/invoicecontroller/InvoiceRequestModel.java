@@ -26,6 +26,7 @@ public class InvoiceRequestModel {
     }
 
     private Integer currencyCode;
+    private BigDecimal exchangeRate;
     private String contactPoNumber;    
     private MultipartFile attachmentFile;
     private String receiptAttachmentDescription;

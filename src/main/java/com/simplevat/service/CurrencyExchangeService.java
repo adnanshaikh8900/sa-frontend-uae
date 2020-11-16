@@ -10,7 +10,7 @@ import java.util.List;
  * Created by mohsin on 3/11/2017.
  */
 public abstract class CurrencyExchangeService extends SimpleVatService<Integer, CurrencyConversion> {
-	public abstract void saveExchangeCurrencies(Currency baseCurrency,List<Currency> convertCurrenies);
+//	public abstract void saveExchangeCurrencies(Currency baseCurrency,List<Currency> convertCurrenies);
 	public abstract CurrencyConversion getExchangeRate(Integer currencyCode);
 	public abstract List<CurrencyConversion> getCurrencyConversionList();
 }

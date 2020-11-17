@@ -10,6 +10,7 @@ import com.simplevat.dao.CompanyDao;
 import com.simplevat.dao.Dao;
 import com.simplevat.entity.Company;
 import com.simplevat.entity.Currency;
+import com.simplevat.entity.CurrencyConversion;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.service.CompanyService;
 import java.math.BigDecimal;

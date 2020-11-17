@@ -13,4 +13,6 @@ public class CurrencyConversionResponseModel {
     private Integer currencyCode;
     private Integer currencyCodeConvertedTo;
     private BigDecimal exchangeRate;
+    private String currencyName;
+    private String currencyIsoCode;
 }

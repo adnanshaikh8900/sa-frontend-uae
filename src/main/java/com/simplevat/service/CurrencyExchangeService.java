@@ -13,4 +13,5 @@ public abstract class CurrencyExchangeService extends SimpleVatService<Integer, 
 //	public abstract void saveExchangeCurrencies(Currency baseCurrency,List<Currency> convertCurrenies);
 	public abstract CurrencyConversion getExchangeRate(Integer currencyCode);
 	public abstract List<CurrencyConversion> getCurrencyConversionList();
+//	public abstract List<CurrencyConversion> getCompanyCurrency();
 }

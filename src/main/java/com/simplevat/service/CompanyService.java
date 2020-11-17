@@ -8,6 +8,7 @@ package com.simplevat.service;
 import com.simplevat.constant.dbfilter.CompanyFilterEnum;
 import com.simplevat.entity.Company;
 import com.simplevat.entity.Currency;
+import com.simplevat.entity.CurrencyConversion;
 import com.simplevat.rest.DropdownModel;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -32,6 +33,6 @@ public abstract class CompanyService extends SimpleVatService<Integer, Company> 
     
     public abstract List<DropdownModel> getCompaniesForDropdown();
 
-    public abstract Currency getCompanyCurrency();
+   public abstract Currency getCompanyCurrency();
 
 }

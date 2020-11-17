@@ -97,4 +97,14 @@ public class CurrencyExchangeDaoImpl extends AbstractDao<Integer, CurrencyConver
 	public List<CurrencyConversion> getCurrencyConversionList(){
 		return this.executeNamedQuery("listOfCurrency");
 	}
+
+//	@Override
+//	public List<CurrencyConversion> getCompanyCurrency() {
+////		TypedQuery<CurrencyConversion> query = getEntityManager().createQuery("SELECT cc.currencyCode, cc.exchangeRate FROM CurrencyConversion cc where cc.currencyCode IN (select c.currencyCode from Currency c)", CurrencyConversion.class);
+////		List<CurrencyConversion> currencyList = query.getResultList();
+////		if (currencyList != null && !currencyList.isEmpty()) {
+////			return currencyList;
+////		}
+//	//	return this.executeNamedQuery("getcompanyCurrency");
+//	}
 }

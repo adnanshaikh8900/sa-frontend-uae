@@ -13,4 +13,5 @@ public interface CurrencyExchangeDao extends Dao<Integer, CurrencyConversion> {
 //    void saveExchangeCurrencies(Currency baseCurrency,List<Currency> convertCurrenies);
     public CurrencyConversion getExchangeRate(Integer currencyCode);
     public List<CurrencyConversion> getCurrencyConversionList();
+   //public List<CurrencyConversion> getCompanyCurrency();
 }

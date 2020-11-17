@@ -98,7 +98,6 @@ public class CurrencyConversionController{
     public ResponseEntity getCurrencyConversionList(){
         List<CurrencyConversionResponseModel> response  = new ArrayList<>();
         List<CurrencyConversion> currencyList = currencyExchangeService.getCurrencyConversionList();
-
         if (currencyList != null) {
             response = currencyConversionHelper.getListOfConvertedCurrency(currencyList);
         }

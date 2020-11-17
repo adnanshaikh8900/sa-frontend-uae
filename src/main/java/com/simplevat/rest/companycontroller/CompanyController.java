@@ -14,6 +14,7 @@ import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.BankAccountStatus;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.DropdownModel;
+import com.simplevat.rest.currencyconversioncontroller.CurrencyConversionHelper;
 import com.simplevat.rest.currencyconversioncontroller.CurrencyConversionResponseModel;
 import com.simplevat.service.*;
 import org.apache.commons.lang3.StringUtils;
@@ -86,6 +87,9 @@ public class CompanyController {
 
 	@Autowired
 	private CurrencyExchangeService currencyExchangeService;
+
+	@Autowired
+	private CurrencyConversionHelper currencyConversionHelper;
 
 	/**
 	 * @Deprecated
@@ -381,11 +385,15 @@ public class CompanyController {
 
 	@ApiOperation(value = "Get Company Currency")
 	@GetMapping(value = "/getCompanyCurrency")
-	public ResponseEntity<String> getCurrencyConversionById() {
-
+	public ResponseEntity  getCurrencyConversionById() {
 		Currency companyCurrency = companyService.getCompanyCurrency();
-         String currencyString = companyCurrency.getCurrencyName()+" "+companyCurrency.getCurrencyIsoCode();
-		return new ResponseEntity(currencyString, HttpStatus.OK);
+		if (companyCurrency != null) {
+		}
+       CurrencyConversionResponseModel currencyConversionResponseModel = new CurrencyConversionResponseModel();
+      currencyConversionResponseModel.setCurrencyCode(companyCurrency.getCurrencyCode());
+      currencyConversionResponseModel.setCurrencyName(companyCurrency.getCurrencyName());
+      currencyConversionResponseModel.setCurrencyIsoCode(companyCurrency.getCurrencyIsoCode());
+		return new ResponseEntity(currencyConversionResponseModel, HttpStatus.OK);
 
 	}
 

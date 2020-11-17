@@ -2,11 +2,6 @@ name: SimpleVAT-Build
 trigger:
 - develop
 
-variables:
-- group: universal-variables
-
-
-
 stages:
   - stage: ci_build_simplevat
     displayName: CI Build for SimpleVAT
@@ -38,7 +33,6 @@ stages:
           Dockerfile: '**/Dockerfile'
           tags: |
             $(Build.BuildId)
-            $(variables.git-tag)
             latest
 
 

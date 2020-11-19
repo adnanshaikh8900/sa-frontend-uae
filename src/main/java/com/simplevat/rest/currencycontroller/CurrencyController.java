@@ -85,6 +85,22 @@ public class CurrencyController {
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
+	@ApiOperation(value = "Get Active Currency List", response = List.class)
+	@GetMapping(value = "/getCompanyCurrencies")
+	public ResponseEntity<List<Currency>> getCompanyCurrencies() {
+		try {
+			List<Currency> currencies = currencyService.getCompanyCurrencies();
+			if (currencies != null && !currencies.isEmpty()) {
+				return new ResponseEntity<>(currencies, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			}
+		} catch (Exception e) {
+			logger.error(ErrorConstant.ERROR, e);
+		}
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
 	@ApiOperation(value = "Get Currency by Currency Code", response = Currency.class)
 	@GetMapping("/{currencyCode}")
 	public ResponseEntity<Currency> getCurrency(@RequestParam("currencyCode") Integer currencyCode) {

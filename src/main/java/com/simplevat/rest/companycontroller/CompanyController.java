@@ -14,6 +14,8 @@ import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.BankAccountStatus;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.DropdownModel;
+import com.simplevat.rest.currencyconversioncontroller.CurrencyConversionHelper;
+import com.simplevat.rest.currencyconversioncontroller.CurrencyConversionResponseModel;
 import com.simplevat.service.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -86,6 +88,9 @@ public class CompanyController {
 	@Autowired
 	private CurrencyExchangeService currencyExchangeService;
 
+	@Autowired
+	private CurrencyConversionHelper currencyConversionHelper;
+
 	/**
 	 * @Deprecated
 	 **/
@@ -110,9 +115,10 @@ public class CompanyController {
 	public ResponseEntity<List<DropdownModel>> getCompaniesForDropdown() {
 		return new ResponseEntity<>(companyService.getCompaniesForDropdown(), HttpStatus.OK);
 	}
-/**
- * @Deprecated
- **/
+
+	/**
+	 * @Deprecated
+	 **/
 	@ApiOperation(value = "delete By Id")
 	@DeleteMapping(value = "/delete")
 	public ResponseEntity<String> deleteCompany(@RequestParam(value = "id") Integer id) {
@@ -122,25 +128,26 @@ public class CompanyController {
 				company.setDeleteFlag(Boolean.TRUE);
 				companyService.update(company);
 			}
-			return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
+			return new ResponseEntity<>("Deleted Successfully", HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-/**
-* @Deprecated
-* */
+
+	/**
+	 * @Deprecated
+	 */
 	@ApiOperation(value = "Delete Companies in Bulk")
 	@DeleteMapping(value = "/deletes")
 	public ResponseEntity<String> deleteCompanies(@RequestBody DeleteModel ids) {
 		try {
 			companyService.deleteByIds(ids.getIds());
-			return new ResponseEntity<>("Companies Deleted successfully",HttpStatus.OK);
+			return new ResponseEntity<>("Companies Deleted successfully", HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity<>("Cannot Delete The companies",HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>("Cannot Delete The companies", HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}
 
@@ -161,6 +168,7 @@ public class CompanyController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
 	@ApiOperation(value = "Get Company Count ")
 	@GetMapping(value = "/getCompanyCount")
 	public ResponseEntity<Integer> getCompanyCount(HttpServletRequest request) {
@@ -176,6 +184,7 @@ public class CompanyController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
 	@ApiOperation(value = "Get List of Time zones ")
 	@GetMapping(value = "/getTimeZoneList")
 	public ResponseEntity<List<String>> getGetTimeZoneList(HttpServletRequest request) {
@@ -219,7 +228,7 @@ public class CompanyController {
 			user.setLastName(registrationModel.getLastName());
 			user.setUserEmail(registrationModel.getEmail());
 			user.setPassword(registrationModel.getPassword());
-			if(registrationModel.getTimeZone()!=null)
+			if (registrationModel.getTimeZone() != null)
 				user.setUserTimezone(registrationModel.getTimeZone());
 			user.setRole(roleService.findByPK(1));
 			user.setCreatedBy(1);
@@ -238,8 +247,9 @@ public class CompanyController {
 			}
 			currencyService.updateCurrencyProfile(company.getCurrencyCode().getCurrencyCode());
 			CurrencyConversion currencyConversion = new CurrencyConversion();
-			currencyConversion.setCurrencyCode(company.getCurrencyCode().getCurrencyCode());
-			currencyConversion.setCurrencyCodeConvertedTo(company.getCurrencyCode().getCurrencyCode());
+			Currency currency = currencyService.findByPK(company.getCurrencyCode().getCurrencyCode());
+			currencyConversion.setCurrencyCode(currency);
+			currencyConversion.setCurrencyCodeConvertedTo(currency);
 			currencyConversion.setExchangeRate(BigDecimal.ONE);
 			currencyConversion.setCreatedDate(LocalDateTime.now());
 			currencyExchangeService.persist(currencyConversion);
@@ -275,10 +285,10 @@ public class CompanyController {
 
 			TransactionCategory category = transactionCategoryService.findByPK(pettyCash.getTransactionCategory().getTransactionCategoryId());
 			TransactionCategory transactionCategory = getValidTransactionCategory(category);
-			boolean isDebit=false;
-			if(StringUtils.equalsAnyIgnoreCase(transactionCategory.getTransactionCategoryCode(),
-					TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode())){
-				isDebit=true;
+			boolean isDebit = false;
+			if (StringUtils.equalsAnyIgnoreCase(transactionCategory.getTransactionCategoryCode(),
+					TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode())) {
+				isDebit = true;
 			}
 
 			List<JournalLineItem> journalLineItemList = new ArrayList<>();
@@ -322,6 +332,7 @@ public class CompanyController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
 	private TransactionCategory getValidTransactionCategory(TransactionCategory transactionCategory) {
 		String transactionCategoryCode = transactionCategory.getChartOfAccount().getChartOfAccountCode();
 		ChartOfAccountCategoryCodeEnum chartOfAccountCategoryCodeEnum = ChartOfAccountCategoryCodeEnum.getChartOfAccountCategoryCodeEnum(transactionCategoryCode);
@@ -338,6 +349,7 @@ public class CompanyController {
 				.findTransactionCategoryByTransactionCategoryCode(
 						TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_LIABILITIES.getCode());
 	}
+
 	@ApiOperation(value = "Update Company")
 	@PostMapping(value = "/update")
 	public ResponseEntity<String> update(@ModelAttribute CompanyModel companyModel, HttpServletRequest request) {
@@ -348,7 +360,7 @@ public class CompanyController {
 			company.setLastUpdatedBy(userId);
 			companyService.update(company);
 			currencyService.updateCurrencyProfile(company.getCurrencyCode().getCurrencyCode());
-			return new ResponseEntity<>("Updated Successfully",HttpStatus.OK);
+			return new ResponseEntity<>("Updated Successfully", HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -370,4 +382,22 @@ public class CompanyController {
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+
+	@ApiOperation(value = "Get Company Currency")
+	@GetMapping(value = "/getCompanyCurrency")
+	public ResponseEntity  getCurrencyConversionById() {
+		Currency companyCurrency = companyService.getCompanyCurrency();
+		if (companyCurrency != null) {
+		}
+       CurrencyConversionResponseModel currencyConversionResponseModel = new CurrencyConversionResponseModel();
+      currencyConversionResponseModel.setCurrencyCode(companyCurrency.getCurrencyCode());
+      currencyConversionResponseModel.setCurrencyName(companyCurrency.getCurrencyName());
+      currencyConversionResponseModel.setCurrencyIsoCode(companyCurrency.getCurrencyIsoCode());
+      currencyConversionResponseModel.setDescription(companyCurrency.getDescription());
+      currencyConversionResponseModel.setCurrencySymbol(companyCurrency.getCurrencySymbol());
+		return new ResponseEntity(currencyConversionResponseModel, HttpStatus.OK);
+
+	}
+
 }
+

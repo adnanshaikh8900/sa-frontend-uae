@@ -30,7 +30,8 @@ import org.hibernate.annotations.ColumnDefault;
  */
 @NamedQueries({
     @NamedQuery(name = "companiesForDropdown", query = "SELECT  new " + CommonConstant.DROPDOWN_MODEL_PACKAGE + "(c.companyId , c.companyName) "
-            + " FROM Company c where c.deleteFlag = FALSE order by c.companyName ")
+            + " FROM Company c where c.deleteFlag = FALSE order by c.companyName "),
+        @NamedQuery(name = "getCompanyCurrency",query = " SELECT cc.currencyCode FROM Company cc")
 })
 @Entity
 @Table(name = "COMPANY")

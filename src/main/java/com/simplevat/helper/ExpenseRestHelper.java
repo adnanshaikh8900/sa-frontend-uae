@@ -93,6 +93,9 @@ public class ExpenseRestHelper {
 		if (model.getCurrencyCode() != null) {
 			expenseBuilder.currency(currencyService.findByPK(model.getCurrencyCode()));
 		}
+		if (model.getExchangeRate()!=null){
+			expenseBuilder.exchangeRate(model.getExchangeRate());
+		}
 		if (model.getProjectId() != null) {
 			expenseBuilder.project(projectService.findByPK(model.getProjectId()));
 		}
@@ -126,7 +129,7 @@ public class ExpenseRestHelper {
 		Journal journal = new Journal();
 		JournalLineItem journalLineItem1 = new JournalLineItem();
 		Expense expense = expenseService.findByPK(postingRequestModel.getPostingRefId());
-		CurrencyConversion exchangeRate =  currencyExchangeService.getExchangeRate(expense.getCurrency().getCurrencyCode());
+//		CurrencyConversion exchangeRate =  currencyExchangeService.getExchangeRate(expense.getCurrency().getCurrencyCode());
 		if(expense.getPayMode()!=null) {
 			switch (expense.getPayMode()) {
 				case BANK:
@@ -152,7 +155,7 @@ public class ExpenseRestHelper {
 							TransactionCategoryCodeEnum.EMPLOYEE_REIMBURSEMENT.getCode());
 			journalLineItem1.setTransactionCategory(transactionCategory);
 		}
-		journalLineItem1.setCreditAmount(postingRequestModel.getAmount().multiply(exchangeRate.getExchangeRate()));
+		journalLineItem1.setCreditAmount(postingRequestModel.getAmount().multiply(expense.getExchangeRate()));
 		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.EXPENSE);
 		journalLineItem1.setReferenceId(postingRequestModel.getPostingRefId());
 		journalLineItem1.setCreatedBy(userId);
@@ -163,7 +166,7 @@ public class ExpenseRestHelper {
 		TransactionCategory saleTransactionCategory = transactionCategoryService
 				.findByPK(postingRequestModel.getPostingChartOfAccountId());
 		journalLineItem2.setTransactionCategory(saleTransactionCategory);
-		journalLineItem2.setDebitAmount(postingRequestModel.getAmount().multiply(exchangeRate.getExchangeRate()));
+		journalLineItem2.setDebitAmount(postingRequestModel.getAmount().multiply(expense.getExchangeRate()));
 		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.EXPENSE);
 		journalLineItem2.setReferenceId(postingRequestModel.getPostingRefId());
 		journalLineItem2.setCreatedBy(userId);

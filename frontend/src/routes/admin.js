@@ -73,6 +73,9 @@ import {
 	VatCode,
 	CreateVatCode,
 	DetailVatCode,
+	CurrencyConvert,
+	CreateCurrencyConvert,
+	DetailCurrencyConvert,
 
 	// Product Screens
 	ProductCategory,
@@ -418,6 +421,21 @@ const adminRoutes = [
 		path: '/admin/master/project',
 		name: 'Project',
 		component: Project.screen,
+	},
+	{
+		path: '/admin/master/currencyConvert/create',
+		name: 'CreateCurrencyConversion',
+		component: CreateCurrencyConvert.screen,
+	},
+	{
+		path: '/admin/master/currencyConvert/detail',
+		name: 'UpdateCurrencyConversion',
+		component: DetailCurrencyConvert.screen,
+	},
+	{
+		path: '/admin/master/currencyConvert',
+		name: 'CurrencyConvert',
+		component: CurrencyConvert.screen,
 	},
 	{
 		path: '/admin/master/vat-category/create',

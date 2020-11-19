@@ -65,7 +65,7 @@ export const getCurrencyList = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: '/rest/bank/getcurrenncy'
+      url: '/rest/currency/getactivecurrencies'
     }
 
     return authApi(data).then((res) => {

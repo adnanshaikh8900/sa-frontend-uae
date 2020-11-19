@@ -83,6 +83,10 @@ public class Expense implements Serializable {
 	@JsonManagedReference
 	private Currency currency;
 
+	@Basic
+	@Column(name = "EXCHANGE_RATE", precision = 19, scale = 9)
+	private BigDecimal exchangeRate;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PROJECT_ID")
 	@JsonManagedReference

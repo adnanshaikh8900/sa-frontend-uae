@@ -29,6 +29,7 @@ import logo from 'assets/images/brand/logo.png';
 const mapStateToProps = (state) => {
 	return {
 		version: state.common.version,
+		universal_currency_list :state.common.universal_currency_list,
 	};
 };
 const eye = require('assets/images/invoice/eye-24.png');
@@ -50,43 +51,11 @@ class Register extends React.Component {
 			passwordShown: false,
 			alert: null,
 			currencyList: [
-				{
-					createdBy: 1,
-					createdDate: '2017-04-01T06:03:11.000+0000',
-					currencyCode: 150,
-					currencyDescription: 'United Arab Emirates Dirham',
-					currencyIsoCode: 'AED',
-					currencyName: 'UAE Dirham',
-					currencySymbol: 'د.إ',
-					defaultFlag: 'N',
-					deleteFlag: true,
-					description: 'United Arab Emirates Dirham - AED(د.إ)',
-					lastUpdateBy: null,
-					lastUpdateDate: null,
-					orderSequence: 151,
-					versionNumber: 1,
-				},
-				{
-					createdBy: 1,
-					createdDate: '2017-04-01T06:03:11.000+0000',
-					currencyCode: 62,
-					currencyDescription: 'India Rupee',
-					currencyIsoCode: 'INR',
-					currencyName: 'Indian Rupee',
-					currencySymbol: '₹',
-					defaultFlag: 'N',
-					deleteFlag: true,
-					description: 'India Rupee- INR(₹)',
-					lastUpdateBy: null,
-					lastUpdateDate: null,
-					orderSequence: 63,
-					versionNumber: 1,
-				},
 			],
 			success: false,
 			initValue: {
 				companyName: '',
-				currencyCode: 150,
+				currencyCode: '',
 				companyTypeCode: '',
 				industryTypeCode: '',
 				firstName: '',
@@ -206,6 +175,7 @@ class Register extends React.Component {
 			}),
 		};
 		const { initValue, currencyList, userDetail, timezone } = this.state;
+		const {universal_currency_list} = this.props;
 		return (
 			<div className="log-in-screen">
 				<ToastContainer autoClose={5000} />
@@ -316,22 +286,22 @@ class Register extends React.Component {
 																					id="currencyCode"
 																					name="currencyCode"
 																					options={
-																						currencyList
+																						universal_currency_list
 																							? selectCurrencyFactory.renderOptions(
 																									'currencyName',
 																									'currencyCode',
-																									currencyList,
+																									universal_currency_list,
 																									'Currency',
 																							  )
 																							: []
 																					}
 																					value={
-																						currencyList &&
+																						universal_currency_list &&
 																						selectCurrencyFactory
 																							.renderOptions(
 																								'currencyName',
 																								'currencyCode',
-																								currencyList,
+																								universal_currency_list,
 																								'Currency',
 																							)
 																							.find(

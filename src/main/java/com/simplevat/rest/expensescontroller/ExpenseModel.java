@@ -27,6 +27,7 @@ public class ExpenseModel {
 	private String receiptNumber;
 	private Integer expenseCategory;
 	private Integer currencyCode;
+	private BigDecimal exchangeRate;
 	private Integer employeeId;
 	private Integer projectId;
 	private String receiptAttachmentDescription;

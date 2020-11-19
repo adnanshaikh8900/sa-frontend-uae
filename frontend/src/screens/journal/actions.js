@@ -43,7 +43,7 @@ export const getCurrencyList = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: '/rest/bank/getcurrenncy',
+			url: '/rest/currency/getCompanyCurrencies',
 		};
 		return authApi(data)
 			.then((res) => {

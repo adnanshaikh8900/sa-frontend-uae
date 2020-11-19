@@ -24,7 +24,9 @@ import org.hibernate.annotations.ColumnDefault;
 @Data
 
 @NamedQueries({
-        @NamedQuery(name = "listOfCurrency", query = "SELECT cc FROM CurrencyConversion cc") })
+        @NamedQuery(name = "listOfCurrency", query = "SELECT cc FROM CurrencyConversion cc WHERE cc.deleteFlag=false"),
+        @NamedQuery(name = "getcompanyCurrency", query ="SELECT cc.currencyCode, cc.exchangeRate FROM CurrencyConversion cc where cc.currencyCode IN (select c.currencyCode from Currency c)" )
+})
 public class CurrencyConversion implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -32,12 +34,14 @@ public class CurrencyConversion implements Serializable {
     @Column(name = "CURRENCY_CONVERSION_ID")
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer currencyConversionId;
-    
-    @Column(name = "CURRENCY_CODE")
-    private Integer currencyCode;
-    
-    @Column(name = "CURRENCY_CODE_CONVERTED_TO")
-    private Integer currencyCodeConvertedTo;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CURRENCY_CODE")
+    private Currency currencyCode;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CURRENCY_CODE_CONVERTED_TO")
+    private Currency currencyCodeConvertedTo;
 
     @Basic
     @Column(name = "EXCHANGE_RATE", precision = 19, scale = 9)

@@ -22,10 +22,9 @@ public class InvoiceRequestModel {
     private Date invoiceDate;
     private Date invoiceDueDate;
 
-    public InvoiceRequestModel() {
-    }
 
     private Integer currencyCode;
+    private BigDecimal exchangeRate;
     private String contactPoNumber;    
     private MultipartFile attachmentFile;
     private String receiptAttachmentDescription;

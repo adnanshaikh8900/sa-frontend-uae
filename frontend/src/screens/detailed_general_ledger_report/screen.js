@@ -604,7 +604,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 																						>
 																							{
 																								<Currency
-																									value={row.amount.toFixed(2)}
+																									value={row.amount}
 																									currencySymbol={
 																										universal_currency_list[0]
 																											? universal_currency_list[0]

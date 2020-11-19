@@ -29,6 +29,9 @@ import javax.persistence.Transient;
         @NamedQuery(name = "allCurrenciesProfile",
                 query = "SELECT c "
                         + "FROM Currency c  ORDER BY c.defaultFlag DESC, c.orderSequence,c.currencyDescription ASC "),
+        @NamedQuery(name = "allCompanyCurrencies",
+                query = "SELECT c "
+                        + "FROM Currency c  where c.currencyCode IN (SELECT cc.currencyCode from Company cc)"),
         @NamedQuery(name = "allActiveCurrencies",
                 query = "SELECT c "
                         + "FROM Currency c where c.currencyCode IN (Select cc.currencyCode from CurrencyConversion cc) ORDER BY c.defaultFlag DESC, c.orderSequence,c.currencyDescription ASC "),

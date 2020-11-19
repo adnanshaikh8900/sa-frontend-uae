@@ -104,6 +104,10 @@ public class Invoice implements Serializable {
 	@JoinColumn(name = "CURRENCY_CODE")
 	private Currency currency;
 
+	@Basic
+	@Column(name = "EXCHANGE_RATE", precision = 19, scale = 9)
+	private BigDecimal exchangeRate;
+
 	@Column(name = "CREATED_BY")
 	@Basic(optional = false)
 	private Integer createdBy;

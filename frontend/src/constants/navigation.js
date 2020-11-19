@@ -175,6 +175,12 @@ export default {
 					icon: 'fas fa-money',
 					path: 'ViewProductCategory',
 				},
+				{
+					name: 'Currency Conversion',
+					url: '/admin/master/currencyConvert',
+					icon: 'fas fa-id-card-alt',
+					path: 'CurrencyConvert',
+				},
 				// {
 				//   name: 'Currencies',
 				//   url: '/admin/master/currency',

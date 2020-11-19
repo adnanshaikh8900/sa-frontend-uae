@@ -10,9 +10,12 @@ import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.CompanyDao;
 import com.simplevat.entity.Company;
+import com.simplevat.entity.Currency;
 import com.simplevat.rest.DropdownModel;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -61,4 +64,14 @@ public class CompanyDaoImpl extends AbstractDao<Integer, Company> implements Com
 			}
 		}
 	}
+	@Override
+	public Currency getCompanyCurrency() {
+		TypedQuery<Currency> query = getEntityManager().createQuery("select c from Currency c where c.currencyCode IN(SELECT cc.currencyCode FROM Company cc)", Currency.class);
+		List<Currency> currencyList = query.getResultList();
+		if (currencyList != null && !currencyList.isEmpty()) {
+			return currencyList.get(0);
+		}
+		return null;
+	}
+
 }

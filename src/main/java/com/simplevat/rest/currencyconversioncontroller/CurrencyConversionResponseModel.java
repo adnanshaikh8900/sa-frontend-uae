@@ -15,4 +15,7 @@ public class CurrencyConversionResponseModel {
     private BigDecimal exchangeRate;
     private String currencyName;
     private String currencyIsoCode;
+    private String description;
+    private String currencySymbol;
+
 }

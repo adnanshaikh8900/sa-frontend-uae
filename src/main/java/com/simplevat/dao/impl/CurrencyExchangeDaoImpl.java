@@ -85,7 +85,7 @@ public class CurrencyExchangeDaoImpl extends AbstractDao<Integer, CurrencyConver
 	@Override
 	public CurrencyConversion getExchangeRate(Integer currencyCode){
 		TypedQuery<CurrencyConversion> query = getEntityManager().createQuery(
-				" SELECT cc FROM CurrencyConversion cc WHERE cc.currencyCode=:currencyCode",
+				" SELECT cc FROM CurrencyConversion cc WHERE cc.currencyCode.currencyCode=:currencyCode",
 				CurrencyConversion.class);
 		query.setParameter("currencyCode", currencyCode);
 		if (query.getResultList() != null && !query.getResultList().isEmpty()) {

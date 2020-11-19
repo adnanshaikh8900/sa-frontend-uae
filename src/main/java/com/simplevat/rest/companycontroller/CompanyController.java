@@ -393,6 +393,8 @@ public class CompanyController {
       currencyConversionResponseModel.setCurrencyCode(companyCurrency.getCurrencyCode());
       currencyConversionResponseModel.setCurrencyName(companyCurrency.getCurrencyName());
       currencyConversionResponseModel.setCurrencyIsoCode(companyCurrency.getCurrencyIsoCode());
+      currencyConversionResponseModel.setDescription(companyCurrency.getDescription());
+      currencyConversionResponseModel.setCurrencySymbol(companyCurrency.getCurrencySymbol());
 		return new ResponseEntity(currencyConversionResponseModel, HttpStatus.OK);
 
 	}

@@ -5367,8 +5367,24 @@ UPDATE `CONFIGURATION` SET `VALUE` = '<!doctype html>
 --changeset 12/11/2020 ZAIN KHAN:dml-9
 UPDATE `CURRENCY` SET `DELETE_FLAG`=0 WHERE `CREATED_BY`=1;
 
+--changeset 19/11/2020 MUZAMMIL:dml-10
+INSERT INTO `SIMPLEVAT_MODULES` (`SIMPLEVAT_MODULE_ID`, `DEFAULT_FLAG`, `DELETE_FLAG`, `ORDER_SEQUENCE`, `SIMPLEVAT_MODULE_NAME`, `PARENT_SIMPLEVAT_MODULE_ID`, `EDITABLE_FLAG`, `SELECTABLE_FLAG`,`MODULE_TYPE`) VALUES
+(1150, 'N', b'0', NULL, 'CurrencyConvert',7, b'0', b'0', 'Feature'),
+(1151, 'N', b'0', NULL,'CreateCurrencyConversion',1150, b'0', b'0', 'Operation'),
+(1152, 'N', b'0', NULL,'UpdateCurrencyConversion', 1150, b'0', b'0', 'Operation'),
+(217, 'N', b'0', NULL, 'AddReconcile', 200, b'0', b'1','Operation'),
+(218, 'N', b'0', NULL, 'UpdateReconcile', 200, b'0', b'1','Operation'),
+(219, 'N', b'0', NULL, 'DeleteReconcile', 200, b'0', b'1','Operation'),
+(220, 'N', b'0', NULL, 'ViewReconcile', 200, b'0', b'1','Operation');
 
-
+INSERT INTO `ROLE_MODULE_RELATION` (`ID`, `SIMPLEVAT_MODULE_ID`, `ROLE_CODE`) VALUES
+(210, 1150, 1),
+(211, 1151, 1),
+(212, 1152, 1),
+(213, 217, 1),
+(214, 218, 1),
+(215, 219, 1),
+(216, 220, 1);
 
 
 

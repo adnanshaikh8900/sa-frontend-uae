@@ -31,7 +31,11 @@ public class CurrencyServiceImpl extends CurrencyService {
 	public List<Currency> getCurrenciesProfile() {
 		return getDao().getCurrenciesProfile();
 	}
-
+	@Override
+	public  List<Currency> getCompanyCurrencies()
+	{
+		return getDao().getCompanyCurrencies();
+	}
 	@Override
 	public List<Currency> getActiveCurrencies() {
 		return getDao().getActiveCurrencies();

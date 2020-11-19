@@ -68,12 +68,11 @@ public class CurrencyConversionController{
     }
 
     @ApiOperation(value = "update Currency Conversion", response = CurrencyConversion.class)
-    @PutMapping("/{currencyConversionId}")
+    @PostMapping("/update")
     public ResponseEntity<String> updateConvertedCurrency(@RequestBody CurrencyConversionRequestModel
-                                                                      currencyConversionRequestModel,@RequestParam
-            ("currencyConversionId") int currencyConversionId, HttpServletRequest request){
+                                                                      currencyConversionRequestModel,HttpServletRequest request){
         try {
-            CurrencyConversion existingCurrency = currencyExchangeService.findByPK(currencyConversionId);
+            CurrencyConversion existingCurrency = currencyExchangeService.findByPK(currencyConversionRequestModel.getId());
             if (existingCurrency != null) {
                 Currency currency = currencyService.findByPK(currencyConversionRequestModel.getCurrencyCode());
                 existingCurrency.setCurrencyCode(currency);
@@ -113,6 +112,7 @@ public class CurrencyConversionController{
            currencyConversionResponseModel.setCurrencyConversionId(currencyConversion.getCurrencyConversionId());
            currencyConversionResponseModel.setCurrencyCode(currencyConversion.getCurrencyCode().getCurrencyCode());
            currencyConversionResponseModel.setCurrencyCodeConvertedTo(currencyConversion.getCurrencyCodeConvertedTo().getCurrencyCode());
+           currencyConversionResponseModel.setDescription(currencyConversion.getCurrencyCodeConvertedTo().getDescription());
            currencyConversionResponseModel.setExchangeRate(currencyConversion.getExchangeRate());
            return new ResponseEntity (currencyConversionResponseModel, HttpStatus.OK);
         }

@@ -6,6 +6,7 @@ const initState = {
 	tostifyAlertFunc: null,
 	tostifyAlert: {},
 	universal_currency_list: [],
+	currency_list: [],
 	user_role_list: [],
 };
 
@@ -57,6 +58,12 @@ const CommonReducer = (state = initState, action) => {
 			return {
 				...state,
 				universal_currency_list: Object.assign([], payload.data),
+			};
+
+			case COMMON.CURRENCY_LIST:
+			return {
+				...state,
+				currency_list: Object.assign([], payload.data),
 			};
 
 		default:

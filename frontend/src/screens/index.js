@@ -64,6 +64,9 @@ import DetailEmployee from './employee/screens/detail';
 import Product from './product';
 import CreateProduct from './product/screens/create';
 import DetailProduct from './product/screens/detail';
+import CurrencyConvert from './currencyConvert';
+import CreateCurrencyConvert from './currencyConvert/screens/create';
+import DetailCurrencyConvert from './currencyConvert/screens/detail';
 import Project from './project';
 import CreateProject from './project/screens/create';
 import DetailProject from './project/screens/detail';
@@ -144,6 +147,9 @@ export {
 	ChartAccount,
 	CreateChartAccount,
 	DetailChartAccount,
+	CurrencyConvert,
+	CreateCurrencyConvert,
+	DetailCurrencyConvert,
 	Contact,
 	CreateContact,
 	DetailContact,

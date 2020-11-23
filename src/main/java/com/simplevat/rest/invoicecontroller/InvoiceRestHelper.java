@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.simplevat.entity.*;
+import com.simplevat.rest.customizeinvoiceprefixsuffixccontroller.CustomizeInvoiceTemplateResponseModel;
+import com.simplevat.rest.customizeinvoiceprefixsuffixccontroller.CustomizeInvoiceTemplateService;
 import com.simplevat.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +32,6 @@ import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.ProductPriceType;
 import com.simplevat.constant.TransactionCategoryCodeEnum;
 import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.InviceSingleLevelDropdownModel;
 import com.simplevat.rest.PostingRequestModel;
 import com.simplevat.utils.DateFormatUtil;
@@ -87,6 +88,9 @@ public class InvoiceRestHelper {
 	@Autowired
 	private CurrencyExchangeService currencyExchangeService;
 
+	@Autowired
+	private CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
+
 	public Invoice getEntity(InvoiceRequestModel invoiceModel, Integer userId) {
 		Invoice invoice = new Invoice();
 
@@ -109,11 +113,18 @@ public class InvoiceRestHelper {
 			invoice.setTotalVatAmount(invoiceModel.getTotalVatAmount());
 		}
 		invoice.setReferenceNumber(invoiceModel.getReferenceNumber());
+
 		/**
 		 * @see ContactTypeEnum
 		 */
 		if (invoiceModel.getType() != null && !invoiceModel.getType().isEmpty()) {
-			invoice.setType(Integer.parseInt(invoiceModel.getType()));
+			Integer invoiceType=Integer.parseInt(invoiceModel.getType());
+			invoice.setType(invoiceType);
+			CustomizeInvoiceTemplate template = customizeInvoiceTemplateService.getInvoiceTemplate(invoiceType);
+			String suffix= invoiceModel.getReferenceNumber().substring(invoiceModel.getReferenceNumber().indexOf(template.getPrefix()));
+			template.setSuffix(Integer.parseInt(suffix));
+			customizeInvoiceTemplateService.persist(template);
+
 		}
 		if (invoiceModel.getProjectId() != null) {
 			Project project = projectService.findByPK(invoiceModel.getProjectId());
@@ -885,5 +896,20 @@ public class InvoiceRestHelper {
 
 		return new ArrayList<>();
 
+	}
+	public List<CustomizeInvoiceTemplateResponseModel> getListOfCustomizeInvoicePrefix
+			(List<CustomizeInvoiceTemplate> customizeInvoiceTemplateList) {
+		List<CustomizeInvoiceTemplateResponseModel> customizeInvoiceTemplateResponseModdelList = new ArrayList<>();
+		if (customizeInvoiceTemplateList!=null) {
+			for (CustomizeInvoiceTemplate customizeInvoiceTemplate : customizeInvoiceTemplateList) {
+				CustomizeInvoiceTemplateResponseModel customizeInvoiceTemplateResponseModdel = new CustomizeInvoiceTemplateResponseModel();
+				customizeInvoiceTemplateResponseModdel.setInvoiceType(customizeInvoiceTemplate.getType());
+				customizeInvoiceTemplateResponseModdel.setInvoicePrefix(customizeInvoiceTemplate.getPrefix());
+				customizeInvoiceTemplateResponseModdel.setInvoiceId(customizeInvoiceTemplate.getId());
+				customizeInvoiceTemplateResponseModdel.setInvoiceSuffix(customizeInvoiceTemplate.getSuffix());
+				customizeInvoiceTemplateResponseModdelList.add(customizeInvoiceTemplateResponseModdel);
+			}
+		}
+		return customizeInvoiceTemplateResponseModdelList;
 	}
 }

@@ -12,9 +12,13 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.simplevat.entity.*;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.InviceSingleLevelDropdownModel;
 
+import com.simplevat.rest.currencyconversioncontroller.CurrencyConversionRequestModel;
+import com.simplevat.rest.currencyconversioncontroller.CurrencyConversionResponseModel;
+import com.simplevat.rest.rolecontroller.ModuleResponseModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +38,6 @@ import com.simplevat.constant.ContactTypeEnum;
 import com.simplevat.constant.FileTypeEnum;
 import com.simplevat.constant.InvoiceStatusEnum;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
-import com.simplevat.entity.Expense;
-import com.simplevat.entity.Invoice;
-import com.simplevat.entity.Journal;
 import com.simplevat.helper.ExpenseRestHelper;
 import com.simplevat.model.OverDueAmountDetailsModel;
 import com.simplevat.rest.AbstractDoubleEntryRestController;

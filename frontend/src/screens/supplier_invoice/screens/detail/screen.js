@@ -26,6 +26,7 @@ import * as ProductActions from '../../../product/actions';
 import { SupplierModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
 import { Loader, ConfirmDeleteModal,Currency } from 'components';
+import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -46,6 +47,7 @@ const mapStateToProps = (state) => {
 		supplier_list: state.supplier_invoice.supplier_list,
 		country_list: state.supplier_invoice.country_list,
 		universal_currency_list: state.common.universal_currency_list,
+		currency_convert_list: state.currencyConvert.currency_convert_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -60,6 +62,7 @@ const mapDispatchToProps = (dispatch) => {
 			dispatch,
 		),
 		commonActions: bindActionCreators(CommonActions, dispatch),
+		currencyConvertActions: bindActionCreators(CurrencyConvertActions, dispatch),
 	};
 };
 const customStyles = {
@@ -150,7 +153,7 @@ class DetailSupplierInvoice extends React.Component {
 						this.props.supplierInvoiceActions.getSupplierList(
 							this.state.contactType,
 						);
-						this.props.supplierInvoiceActions.getCurrencyList();
+						this.props.currencyConvertActions.getCurrencyConversionList();
 						this.props.supplierInvoiceActions.getCountryList();
 						this.props.supplierInvoiceActions.getProductList();
 						this.purchaseCategory();
@@ -169,6 +172,7 @@ class DetailSupplierInvoice extends React.Component {
 										? res.data.contactPoNumber
 										: '',
 									currency: res.data.currencyCode ? res.data.currencyCode : '',
+									exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
 									invoiceDueDate: res.data.invoiceDueDate
 										? moment(res.data.invoiceDueDate).format('DD/MM/YYYY')
 										: '',
@@ -901,6 +905,7 @@ class DetailSupplierInvoice extends React.Component {
 			invoiceDate,
 			contactId,
 			project,
+			exchangeRate,
 			invoice_number,
 			notes,
 			discount,
@@ -940,6 +945,7 @@ class DetailSupplierInvoice extends React.Component {
 		formData.append('discount', discount);
 		formData.append('discountType', discountType);
 		formData.append('term', term);
+		formData.append('exchangeRate', exchangeRate.value);
 
 		if (discountType === 'PERCENTAGE') {
 			formData.append('discountPercentage', discountPercentage);
@@ -947,8 +953,8 @@ class DetailSupplierInvoice extends React.Component {
 		if (contactId) {
 			formData.append('contactId', contactId);
 		}
-		if (currency) {
-			formData.append('currencyCode', currency);
+		if (currency !== null && currency) {
+			formData.append('currencyCode', currency.value);
 		}
 		if (project) {
 			formData.append('projectId', project);
@@ -1122,7 +1128,7 @@ class DetailSupplierInvoice extends React.Component {
 	render() {
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
 
-		const { project_list, currency_list, supplier_list,universal_currency_list } = this.props;
+		const { project_list, currency_list,currency_convert_list, supplier_list,universal_currency_list } = this.props;
 		return (
 			<div className="detail-supplier-invoice-screen">
 				<div className="animated fadeIn">
@@ -1517,6 +1523,27 @@ class DetailSupplierInvoice extends React.Component {
 																		)}
 																</FormGroup>
 																</Col>
+																<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="exchangeRate">
+																		Exchange rate
+																	</Label>
+																	<div>
+																		<Input
+																			className="form-control"
+																			id="exchangeRate"
+																			name="exchangeRate"
+																			
+																			value={props.values.exchangeRate}
+																			onChange={(value) => {
+																				props.handleChange('exchangeRate')(
+																					value,
+																				);
+																			}}
+																		/>
+																	</div>
+																</FormGroup>
+															</Col>
 																{/* <Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="contact_po_number">

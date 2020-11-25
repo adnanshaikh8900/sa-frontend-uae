@@ -22,6 +22,7 @@ import * as Yup from 'yup';
 import * as CustomerInvoiceDetailActions from './actions';
 import * as ProductActions from '../../../product/actions';
 import * as CustomerInvoiceActions from '../../actions';
+import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 
 import { CustomerModal ,ProductModal } from '../../sections';
 import { Loader, ConfirmDeleteModal,Currency } from 'components';
@@ -45,10 +46,12 @@ const mapStateToProps = (state) => {
 		customer_list: state.customer_invoice.customer_list,
 		country_list: state.customer_invoice.country_list,
 		universal_currency_list: state.common.universal_currency_list,
+		currency_convert_list: state.currencyConvert.currency_convert_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
+		currencyConvertActions: bindActionCreators(CurrencyConvertActions, dispatch),
 		customerInvoiceActions: bindActionCreators(
 			CustomerInvoiceActions,
 			dispatch,
@@ -159,7 +162,7 @@ class DetailCustomerInvoice extends React.Component {
 						this.props.customerInvoiceActions.getCustomerList(
 							this.state.contactType,
 						);
-						this.props.customerInvoiceActions.getCurrencyList();
+						this.props.currencyConvertActions.getCurrencyConversionList();
 						this.props.customerInvoiceActions.getCountryList();
 						this.props.customerInvoiceActions.getProductList();
 
@@ -178,6 +181,7 @@ class DetailCustomerInvoice extends React.Component {
 										? res.data.contactPoNumber
 										: '',
 									currency: res.data.currencyCode ? res.data.currencyCode : '',
+									exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
 									invoiceDueDate: res.data.invoiceDueDate
 										? moment(res.data.invoiceDueDate).format('DD/MM/YYYY')
 										: '',
@@ -785,6 +789,7 @@ class DetailCustomerInvoice extends React.Component {
 			invoiceDate,
 			contactId,
 			project,
+			exchangeRate,
 			invoice_number,
 			notes,
 			discount,
@@ -811,6 +816,9 @@ class DetailCustomerInvoice extends React.Component {
 				? moment(invoiceDueDate, 'DD/MM/YYYY').toDate()
 				: invoiceDueDate,
 		);
+	
+		formData.append('exchangeRate', exchangeRate.value);
+		
 		formData.append(
 			'receiptNumber',
 			receiptNumber !== null ? receiptNumber : '',
@@ -994,7 +1002,7 @@ class DetailCustomerInvoice extends React.Component {
 	render() {
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
 
-		const { project_list, currency_list, customer_list,universal_currency_list } = this.props;
+		const { project_list, currency_list,currency_convert_list, customer_list,universal_currency_list } = this.props;
 		return (
 			<div className="detail-customer-invoice-screen">
 				<div className="animated fadeIn">
@@ -1379,11 +1387,11 @@ class DetailCustomerInvoice extends React.Component {
 																		<Select
 																			styles={customStyles}
 																			options={
-																				currency_list
+																				currency_convert_list
 																					? selectCurrencyFactory.renderOptions(
 																							'currencyName',
 																							'currencyCode',
-																							currency_list,
+																							currency_convert_list,
 																							'Currency',
 																					  )
 																					: []
@@ -1391,12 +1399,12 @@ class DetailCustomerInvoice extends React.Component {
 																			id="currency"
 																			name="currency"
 																			value={
-																				currency_list &&
+																				currency_convert_list &&
 																				selectCurrencyFactory
 																					.renderOptions(
 																						'currencyName',
 																						'currencyCode',
-																						currency_list,
+																						currency_convert_list,
 																						'Currency',
 																					)
 																					.find(
@@ -1425,6 +1433,27 @@ class DetailCustomerInvoice extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
+																<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="exchangeRate">
+																		Exchange rate
+																	</Label>
+																	<div>
+																		<Input
+																			className="form-control"
+																			id="exchangeRate"
+																			name="exchangeRate"
+																			
+																			value={props.values.exchangeRate}
+																			onChange={(value) => {
+																				props.handleChange('exchangeRate')(
+																					value,
+																				);
+																			}}
+																		/>
+																	</div>
+																</FormGroup>
+															</Col>
 																{/* <Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="contact_po_number">

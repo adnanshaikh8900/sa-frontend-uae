@@ -121,7 +121,8 @@ public class InvoiceRestHelper {
 			Integer invoiceType=Integer.parseInt(invoiceModel.getType());
 			invoice.setType(invoiceType);
 			CustomizeInvoiceTemplate template = customizeInvoiceTemplateService.getInvoiceTemplate(invoiceType);
-			String suffix= invoiceModel.getReferenceNumber().substring(invoiceModel.getReferenceNumber().indexOf(template.getPrefix()));
+			String prefix = template.getPrefix();
+			String suffix= invoiceModel.getReferenceNumber().substring(prefix.length());
 			template.setSuffix(Integer.parseInt(suffix));
 			customizeInvoiceTemplateService.persist(template);
 

@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
 
 @NamedQueries({
-        @NamedQuery(name = "allInvoicesPrefix", query = "select i from CustomizeInvoiceTemplate i where i.deleteFlag = false "),
+        @NamedQuery(name = "allInvoicesPrefix", query = "select i from CustomizeInvoiceTemplate i where i.type = :type and i.deleteFlag = false "),
         @NamedQuery(name = "lastInvoiceSuffixNo", query = "select i from CustomizeInvoiceTemplate i where i.type = :type order by i.id desc"),
 })
 public class CustomizeInvoiceTemplate implements Serializable {

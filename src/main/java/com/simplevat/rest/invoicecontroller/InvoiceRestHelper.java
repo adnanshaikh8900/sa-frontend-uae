@@ -247,6 +247,9 @@ public class InvoiceRestHelper {
 		if (invoice.getReceiptAttachmentFileName() != null) {
 			requestModel.setFileName(invoice.getReceiptAttachmentFileName());
 		}
+		if (invoice.getExchangeRate()!=null){
+			requestModel.setExchangeRate(invoice.getExchangeRate());
+		}
 		requestModel.setTotalAmount(invoice.getTotalAmount());
 		requestModel.setContactPoNumber(invoice.getContactPoNumber());
 		requestModel.setTotalVatAmount(invoice.getTotalVatAmount());

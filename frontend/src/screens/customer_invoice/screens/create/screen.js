@@ -23,7 +23,8 @@ import * as Yup from 'yup';
 import * as CustomerInvoiceCreateActions from './actions';
 import * as CustomerInvoiceActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
-import { CustomerModal, ProductModal } from '../../sections';
+import * as CurrencyConvertActions from '../../../currencyConvert/actions';
+import { CustomerModal, ProductModal,InvoiceNumberModel} from '../../sections';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -42,6 +43,7 @@ const mapStateToProps = (state) => {
 		country_list: state.customer_invoice.country_list,
 		product_category_list: state.product.product_category_list,
 		universal_currency_list: state.common.universal_currency_list,
+		currency_convert_list: state.currencyConvert.currency_convert_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -50,6 +52,7 @@ const mapDispatchToProps = (dispatch) => {
 			CustomerInvoiceActions,
 			dispatch,
 		),
+		currencyConvertActions: bindActionCreators(CurrencyConvertActions, dispatch),
 		customerInvoiceCreateActions: bindActionCreators(
 			CustomerInvoiceCreateActions,
 			dispatch,
@@ -105,6 +108,7 @@ class CreateCustomerInvoice extends React.Component {
 				contactId: '',
 				project: '',
 				term: '',
+				exchangeRate:'',
 				lineItemsString: [
 					{
 						id: 0,
@@ -129,6 +133,7 @@ class CreateCustomerInvoice extends React.Component {
 			contactType: 2,
 			openCustomerModal: false,
 			openProductModal: false,
+			openInvoiceNumberModel: false,
 			selectedContact: '',
 			createMore: false,
 			fileName: '',
@@ -137,9 +142,11 @@ class CreateCustomerInvoice extends React.Component {
 			discountPercentage: '',
 			discountAmount: 0,
 			exist: false,
-			prefix: 'INV-',
+			prefix: '',
 			purchaseCategory: [],
-			salesCategory: [],
+			salesCategory: [],	
+			exchangeRate:'',		
+			prefixData: [],
 		};
 
 		this.formRef = React.createRef();
@@ -360,6 +367,15 @@ return row.subTotal === 0 ? (
 		}
 	};
 
+	setExchange = (value) => {
+		let result = this.props.currency_convert_list.filter((obj) => {
+		return obj.currencyCode === value;
+		});
+		console.log( this.props.currency_convert_list)
+		console.log(result)
+		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
+		};
+
 	validationCheck = (value) => {
 		const data = {
 			moduleType: 6,
@@ -390,7 +406,11 @@ return row.subTotal === 0 ? (
 	getInitialData = () => {
 		this.getInvoiceNo();
 		this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
-		this.props.customerInvoiceActions.getCurrencyList().then((response) => {
+		this.props.customerInvoiceActions.getCountryList();
+		this.props.customerInvoiceActions.getVatList();
+		this.props.customerInvoiceActions.getProductList();
+		this.props.productActions.getProductCategoryList();
+		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
 			this.setState({
 				initValue: {
 					...this.state.initValue,
@@ -407,10 +427,11 @@ return row.subTotal === 0 ? (
 				true,
 			);
 		});
-		this.props.customerInvoiceActions.getCountryList();
-		this.props.customerInvoiceActions.getVatList();
-		this.props.customerInvoiceActions.getProductList();
-		this.props.productActions.getProductCategoryList();
+		this.props.customerInvoiceActions.getInvoicePrefix().then((response) => {
+			this.setState({prefixData:response.data
+			
+			});
+		});
 		this.salesCategory();
 		this.purchaseCategory();
 	};
@@ -857,6 +878,7 @@ return row.subTotal === 0 ? (
 			receiptNumber,
 			contact_po_number,
 			currency,
+			exchangeRate,
 			invoiceDueDate,
 			invoiceDate,
 			contactId,
@@ -891,6 +913,10 @@ return row.subTotal === 0 ? (
 			receiptNumber !== null ? receiptNumber : '',
 		);
 		formData.append(
+			'exchangeRate',
+			exchangeRate !== null ? exchangeRate : '',
+		);
+		formData.append(
 			'contactPoNumber',
 			contact_po_number !== null ? contact_po_number : '',
 		);
@@ -917,7 +943,7 @@ return row.subTotal === 0 ? (
 			formData.append('contactId', contactId.value);
 		}
 		if (currency !== null && currency) {
-			formData.append('currencyCode', currency);
+			formData.append('currencyCode', currency.value);
 		}
 		if (project !== null && project.value) {
 			formData.append('projectId', project.value);
@@ -940,6 +966,7 @@ return row.subTotal === 0 ? (
 							createMore: false,
 							selectedContact: '',
 							term: '',
+							exchangeRate:'',
 							data: [
 								{
 									id: 0,
@@ -985,7 +1012,9 @@ return row.subTotal === 0 ? (
 				);
 			});
 	};
-
+	openInvoiceNumberModel = (props) => {
+		this.setState({ openInvoiceNumberModel : true });
+	};
 	openCustomerModal = (props) => {
 		this.setState({ openCustomerModal: true });
 	};
@@ -1009,6 +1038,11 @@ return row.subTotal === 0 ? (
 		}
 		this.formRef.current.setFieldValue('contactId', option, true);
 	};
+
+	getCurrentNumber = (data) => {
+		this.getInvoiceNo();
+	};
+
 	getCurrentProduct = () => {
 		this.props.customerInvoiceActions.getProductList().then((res) => {
 			this.setState(
@@ -1056,10 +1090,10 @@ return row.subTotal === 0 ? (
 	};
 
 	closeCustomerModal = (res) => {
-		if (res) {
-			this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
-		}
 		this.setState({ openCustomerModal: false });
+	};
+	closeInvoiceNumberModel = (res) => {
+		this.setState({ openInvoiceNumberModel: false });
 	};
 	closeProductModal = (res) => {
 		this.setState({ openProductModal: false });
@@ -1086,9 +1120,9 @@ return row.subTotal === 0 ? (
 	render() {
 		const { data, discountOptions, initValue, exist, prefix } = this.state;
 		const {
-			currency_list,
 			customer_list,
 			universal_currency_list,
+			currency_convert_list,
 		} = this.props;
 		return (
 			<div className="create-customer-invoice-screen">
@@ -1220,7 +1254,7 @@ return row.subTotal === 0 ? (
 												{(props) => (
 													<Form onSubmit={props.handleSubmit}>
 														<Row>
-															<Col lg={4}>
+															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="invoice_number">
 																		<span className="text-danger">*</span>
@@ -1263,7 +1297,19 @@ return row.subTotal === 0 ? (
 																		)}
 																</FormGroup>
 															</Col>
-															<Col lg={4}>
+															<Col lg={1}>
+																<Button
+																	type="button"
+																	color="primary"
+																	className="btn-square1"
+																	onClick={(e, props) => {
+																		this.openInvoiceNumberModel(props);
+																	}}
+																>
+																	<i className="fas fa-cog"></i> 
+																</Button>
+															</Col>
+															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="contactId">
 																		<span className="text-danger">*</span>
@@ -1488,35 +1534,36 @@ return row.subTotal === 0 ? (
 																	<Select
 																		styles={customStyles}
 																		options={
-																			currency_list
+																			currency_convert_list
 																				? selectCurrencyFactory.renderOptions(
 																						'currencyName',
 																						'currencyCode',
-																						currency_list,
+																						currency_convert_list,
 																						'Currency',
 																				  )
 																				: []
 																		}
 																		id="currency"
-																		name="currency"
-																		value={
-																			currency_list &&
+																		 name="currency"
+																		 value={
+																	 	currency_convert_list &&
 																			selectCurrencyFactory
-																				.renderOptions(
+																			.renderOptions(
 																					'currencyName',
-																					'currencyCode',
-																					currency_list,
-																					'Currency',
+																		 			'currencyCode',
+																					currency_convert_list,
+																		 			'Currency',
 																				)
-																				.find(
+																		 		.find(
 																					(option) =>
-																						option.value ===
-																						+props.values.currency,
-																				)
-																		}
-																		onChange={(option) =>
-																			props.handleChange('currency')(option)
-																		}
+																		 				option.value ===
+																	 				+props.values.currency,
+																	 		)
+																		 }
+																		 onChange={(option) => {
+																		 props.handleChange('currency')(option);
+																		 this.setExchange(option.value);
+																		}}
 																		className={`${
 																			props.errors.currency &&
 																			props.touched.currency
@@ -1530,6 +1577,27 @@ return row.subTotal === 0 ? (
 																				{props.errors.currency}
 																			</div>
 																		)}
+																</FormGroup>
+															</Col>
+															<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="exchangeRate">
+																		Exchange rate
+																	</Label>
+																	<div>
+																		<Input
+																			className="form-control"
+																			id="exchangeRate"
+																			name="exchangeRate"
+																			
+																			value={props.values.exchangeRate}
+																			onChange={(value) => {
+																				props.handleChange('exchangeRate')(
+																					value,
+																				);
+																			}}
+																		/>
+																	</div>
 																</FormGroup>
 															</Col>
 														</Row>
@@ -2006,9 +2074,7 @@ return row.subTotal === 0 ? (
 																					<label className="mb-0">
 																					{universal_currency_list[0] && (
 																						<Currency
-																						value={initValue.totalAmount.toFixed(
-																							2,
-																						)}
+																						value={initValue.totalAmount}
 																						currencySymbol={
 																						universal_currency_list[0]
 																						? universal_currency_list[0].currencyIsoCode
@@ -2101,7 +2167,7 @@ return row.subTotal === 0 ? (
 					}}
 					getCurrentUser={(e) => this.getCurrentUser(e)}
 					createCustomer={this.props.customerInvoiceActions.createCustomer}
-					currency_list={this.props.currency_list}
+					currency_list={this.props.currency_convert_list}
 					currency={this.state.currency}
 					country_list={this.props.country_list}
 					getStateList={this.props.customerInvoiceActions.getStateList}
@@ -2117,6 +2183,16 @@ return row.subTotal === 0 ? (
 					product_category_list={this.props.product_category_list}
 					salesCategory={this.state.salesCategory}
 					purchaseCategory={this.state.purchaseCategory}
+				/>
+				<InvoiceNumberModel
+					openInvoiceNumberModel={this.state.openInvoiceNumberModel}
+					closeInvoiceNumberModel={(e) => {
+						this.closeInvoiceNumberModel(e);
+					}}
+					getCurrentNumber={(e) => this.getCurrentNumber(e)}
+						prefix ={this.state.prefixData}
+						updatePrefix={this.props.customerInvoiceActions.updateInvoicePrefix}
+					
 				/>
 			</div>
 		);

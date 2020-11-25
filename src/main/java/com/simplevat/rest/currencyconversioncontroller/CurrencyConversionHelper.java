@@ -16,9 +16,10 @@ public class CurrencyConversionHelper {
                 CurrencyConversionResponseModel currencyConversionResponseModel = new CurrencyConversionResponseModel();
                 currencyConversionResponseModel.setCurrencyConversionId(currencyConversion.getCurrencyConversionId());
                 currencyConversionResponseModel.setCurrencyCode(currencyConversion.getCurrencyCode().getCurrencyCode());
+                currencyConversionResponseModel.setCurrencyIsoCode(currencyConversion.getCurrencyCode().getCurrencyIsoCode());
                 currencyConversionResponseModel.setDescription(currencyConversion.getCurrencyCodeConvertedTo().getDescription());//convertedcurrencyname
                 currencyConversionResponseModel.setExchangeRate(currencyConversion.getExchangeRate());
-                    currencyConversionResponseModel.setCurrencyName(currencyConversion.getCurrencyCode().getDescription());
+                currencyConversionResponseModel.setCurrencyName(currencyConversion.getCurrencyCode().getCurrencyName());
                 currencyConversionResponseModelList.add(currencyConversionResponseModel);
             }
         }

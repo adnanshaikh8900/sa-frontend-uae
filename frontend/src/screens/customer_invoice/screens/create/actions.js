@@ -21,7 +21,7 @@ export const getInvoiceNo = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'GET',
-			url: `/rest/invoice/getNextInvoiceNo?invoiceType=2`,
+			url: `/rest/customizeinvoiceprefixsuffix/getNextInvoiceNo?invoiceType=2`,
 		};
 
 		return authApi(data)

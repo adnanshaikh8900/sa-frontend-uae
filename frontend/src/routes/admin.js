@@ -258,7 +258,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/expense/supplier-invoice/detail',
-		name: 'UpdateupplierInvoices',
+		name: 'UpdateSupplierInvoices',
 		component: DetailSupplierInvoice.screen,
 	},
 	{

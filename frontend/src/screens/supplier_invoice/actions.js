@@ -443,3 +443,20 @@ export const getOverdueAmountDetails = (invoiceType) => {
 			});
 	};
 };
+export const getInvoicePrefix = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/customizeinvoiceprefixsuffix/getListForInvoicePrefixAndSuffix?invoiceType=1',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

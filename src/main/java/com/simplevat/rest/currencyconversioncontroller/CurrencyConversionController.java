@@ -1,12 +1,8 @@
 package com.simplevat.rest.currencyconversioncontroller;
 
-
 import com.simplevat.entity.Company;
 import com.simplevat.entity.Currency;
 import com.simplevat.entity.CurrencyConversion;
-import com.simplevat.entity.RoleModuleRelation;
-import com.simplevat.rest.currencycontroller.CurrencyController;
-import com.simplevat.rest.rolecontroller.ModuleResponseModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.CompanyService;
 import com.simplevat.service.CurrencyExchangeService;
@@ -18,16 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
 import static com.simplevat.constant.ErrorConstant.ERROR;
-
 
 @RestController
 @RequestMapping(value = "/rest/currencyConversion")

@@ -13,7 +13,7 @@ import java.util.List;
 @Component
 public abstract class CustomizeInvoiceTemplateService extends SimpleVatService<Integer, CustomizeInvoiceTemplate> {
 
-    public abstract List<CustomizeInvoiceTemplate> getCustomizeInvoiceTemplate();
+    public abstract CustomizeInvoiceTemplate getCustomizeInvoiceTemplate(Integer invoiceType);
 
     public abstract String getLastInvoice(Integer invoiceType);
 

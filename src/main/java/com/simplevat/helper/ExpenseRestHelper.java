@@ -217,6 +217,7 @@ public class ExpenseRestHelper {
 			if (entity.getReceiptAttachmentFileName() != null) {
 				expenseModel.setFileName(entity.getReceiptAttachmentFileName());
 			}
+			expenseModel.setExchangeRate(entity.getExchangeRate());
 			expenseModel.setDeleteFlag(entity.getDeleteFlag());
 			expenseModel.setExpenseAmount(entity.getExpenseAmount());
 			if (entity.getPayee()!=null){

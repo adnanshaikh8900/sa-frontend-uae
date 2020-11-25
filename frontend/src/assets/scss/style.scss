@@ -34,12 +34,22 @@ $spinkit-spinner-color: $body-color;
 	background-color: #2064d8;
 	border-color: #2064d8;
 }
+.btn-square1 {
+	background-color: #2064d8;
+	border-color: #2064d8;
+	border-radius: 40px;;
+	margin-top: 27px;
+}
 .btn-primary:disabled {
 	background-color: #21d8aa;
 	border-color: #21d8aa;
 }
 .btn-primary:hover,
 .btn-square:hover {
+	background-color: #21d8aa;
+	border-color: #21d8aa;
+}
+.btn-square1:hover {
 	background-color: #21d8aa;
 	border-color: #21d8aa;
 }

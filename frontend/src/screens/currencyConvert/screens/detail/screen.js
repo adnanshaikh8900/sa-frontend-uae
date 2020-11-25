@@ -18,6 +18,7 @@ import {
 } from 'reactstrap'
 import { Loader , ConfirmDeleteModal} from 'components'
 import Select from 'react-select';
+import * as Yup from 'yup';
 
 import {
   CommonActions,AuthActions
@@ -183,12 +184,11 @@ class DetailCurrencyConvert extends React.Component {
                             onSubmit={(values, { resetForm }) => {
                               this.handleSubmit(values, resetForm);
                             }}
-                          // validationSchema={Yup.object().shape({
-                          //   name: Yup.string()
-                          //     .required("Product Category Name is Required"),
-                          //   code: Yup.string()
-                          //     .required("Code is Required")
-                          // })}
+                            validationSchema={Yup.object().shape({
+                              exchangeRate: Yup.string().required(
+                                'Exchange Rate is Required',
+                              ),
+                          })}
                           >
                             {(props) => (
                               

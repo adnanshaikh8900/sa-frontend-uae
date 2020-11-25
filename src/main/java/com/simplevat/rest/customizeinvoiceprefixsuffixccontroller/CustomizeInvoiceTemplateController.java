@@ -1,13 +1,9 @@
 package com.simplevat.rest.customizeinvoiceprefixsuffixccontroller;
 
 
-import com.simplevat.entity.Company;
-import com.simplevat.entity.Currency;
 import com.simplevat.entity.CurrencyConversion;
 import com.simplevat.entity.CustomizeInvoiceTemplate;
-import com.simplevat.rest.invoicecontroller.InvoiceRestController;
 import com.simplevat.rest.invoicecontroller.InvoiceRestHelper;
-import com.simplevat.service.InvoiceService;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,14 +34,19 @@ public class CustomizeInvoiceTemplateController {
 
     @ApiOperation(value = "Get Invoice Prefix List")
     @GetMapping(value = "/getListForInvoicePrefixAndSuffix")
-    public ResponseEntity getListForInvoicePrefix(){
+    public ResponseEntity getListForInvoicePrefix(@RequestParam(value = "invoiceType") Integer invoiceType){
 //        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest();
-        List<CustomizeInvoiceTemplateResponseModel> response  = new ArrayList<>();
-        List<CustomizeInvoiceTemplate> customizeInvoiceTemplateList=customizeInvoiceTemplateService.getCustomizeInvoiceTemplate();
-        if (customizeInvoiceTemplateList != null) {
-            response = invoiceRestHelper.getListOfCustomizeInvoicePrefix(customizeInvoiceTemplateList);
+        CustomizeInvoiceTemplate customizeInvoiceTemplate=customizeInvoiceTemplateService.getCustomizeInvoiceTemplate(invoiceType);
+        if (customizeInvoiceTemplate!=null){
+            CustomizeInvoiceTemplateResponseModel customizeInvoiceTemplateResponseModel = new CustomizeInvoiceTemplateResponseModel();
+            customizeInvoiceTemplateResponseModel.setInvoiceType(customizeInvoiceTemplate.getType());
+            customizeInvoiceTemplateResponseModel.setInvoiceId(customizeInvoiceTemplate.getId());
+            customizeInvoiceTemplateResponseModel.setInvoicePrefix(customizeInvoiceTemplate.getPrefix());
+            customizeInvoiceTemplateResponseModel.setInvoiceSuffix(customizeInvoiceTemplate.getSuffix());
+            return new ResponseEntity (customizeInvoiceTemplateResponseModel, HttpStatus.OK);
         }
-        return new ResponseEntity (response, HttpStatus.OK);
+
+        return new ResponseEntity ("No result found for id-"+invoiceType, HttpStatus.NO_CONTENT);
 
     }
 

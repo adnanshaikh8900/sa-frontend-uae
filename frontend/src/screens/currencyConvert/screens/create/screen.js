@@ -33,7 +33,7 @@ import { Formik } from 'formik';
 
 const mapStateToProps = (state) => {
 	return {
-		currencyList: state.currencyConvert.currency_list,
+		
 		currency_list: state.common.currency_list,
 	};
 };
@@ -159,29 +159,15 @@ class CreateCurrencyConvert extends React.Component {
 												onSubmit={(values, { resetForm }) => {
 													this.handleSubmit(values, resetForm);
 												}}
-												// validate={(values) => {
-												// 	let errors = {};
-												// 	if (!values.productCategoryName) {
-												// 		errors.productCategoryName =
-												// 			'Product Category Name is  required';
-												// 	}
+												validate={(values) => {
+													let errors = {};
+													if (!values.exchangeRate) {
+														errors.exchangeRate =
+															'Exchange Rate is  required';
+													}
 
-												// 	if (
-												// 		product_category_list &&
-												// 		ProductCategoryList.includes(
-												// 			values.productCategoryCode,
-												// 		)
-												// 	) {
-												// 		errors.productCategoryCode =
-												// 			'Product Category Code already Exists';
-												// 	}
-
-												// 	if (!values.productCategoryCode) {
-												// 		errors.productCategoryCode =
-												// 			'Product Category Code is Required';
-												// 	}
-												// 	return errors;
-												// }}
+													return errors;
+												}}
 											>
 												{(props) => {
 													const {

@@ -26,8 +26,8 @@ public class CustomizeInvoiceTemplateServiceImpl extends CustomizeInvoiceTemplat
     }
 
     @Override
-    public List<CustomizeInvoiceTemplate> getCustomizeInvoiceTemplate(){
-        return customizeInvoiceTemplateDao.getCustomizeInvoiceTemplate();
+    public CustomizeInvoiceTemplate getCustomizeInvoiceTemplate(Integer invoiceType){
+        return customizeInvoiceTemplateDao.getCustomizeInvoiceTemplate(invoiceType);
     }
 
     @Override

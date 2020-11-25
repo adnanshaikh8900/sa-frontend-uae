@@ -462,3 +462,36 @@ export const getCustomerInvoicesCountForDelete = (id) => {
 			});
 	};
 };
+
+export const getInvoicePrefix = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/customizeinvoiceprefixsuffix/getListForInvoicePrefixAndSuffix?invoiceType=2',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const updateInvoicePrefix = (obj) => {
+	return (dispatch) => {
+	  let data = {
+		method: 'post',
+		url: '/rest/customizeinvoiceprefixsuffix/update',
+		data: obj
+	  }
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }

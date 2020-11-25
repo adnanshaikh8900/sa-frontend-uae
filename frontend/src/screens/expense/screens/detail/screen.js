@@ -31,6 +31,7 @@ import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import * as ExpenseDetailsAction from './actions';
 import * as ExpenseActions from '../../actions';
 import { CommonActions } from 'services/global';
+import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 
 import moment from 'moment';
 import './style.scss';
@@ -45,6 +46,7 @@ const mapStateToProps = (state) => {
 		bank_list: state.expense.bank_list,
 		pay_mode_list: state.expense.pay_mode_list,
 		user_list: state.expense.user_list,
+		currency_convert_list: state.currencyConvert.currency_convert_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -52,6 +54,7 @@ const mapDispatchToProps = (dispatch) => {
 		expenseDetailActions: bindActionCreators(ExpenseDetailsAction, dispatch),
 		expenseActions: bindActionCreators(ExpenseActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
+		currencyConvertActions: bindActionCreators(CurrencyConvertActions, dispatch),
 	};
 };
 const customStyles = {
@@ -105,7 +108,7 @@ class DetailExpense extends React.Component {
 				.getExpenseDetail(this.props.location.state.expenseId)
 				.then((res) => {
 					if (res.status === 200) {
-						this.props.expenseActions.getCurrencyList();
+						this.props.currencyConvertActions.getCurrencyConversionList();
 						this.props.expenseActions.getExpenseCategoriesList();
 						this.props.expenseActions.getBankList();
 						this.props.expenseActions.getPaymentMode();
@@ -129,6 +132,7 @@ class DetailExpense extends React.Component {
 									bankAccountId: res.data.bankAccountId
 										? res.data.bankAccountId
 										: '',
+									exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
 									expenseDescription: res.data.expenseDescription,
 									receiptNumber: res.data.receiptNumber,
 									attachmentFile: res.data.attachmentFile,
@@ -174,6 +178,7 @@ class DetailExpense extends React.Component {
 			expenseCategory,
 			expenseAmount,
 			expenseDescription,
+			exchangeRate,
 			receiptNumber,
 			receiptAttachmentDescription,
 			vatCategoryId,
@@ -200,6 +205,9 @@ class DetailExpense extends React.Component {
 		}
 		if (expenseCategory && expenseCategory.value) {
 			formData.append('expenseCategory', expenseCategory.value);
+		}
+		if (exchangeRate && exchangeRate.value) {
+			formData.append('exchangeRate', exchangeRate.value);
 		}
 		if (currency && currency.value) {
 			formData.append('currencyCode', currency.value);
@@ -307,6 +315,7 @@ class DetailExpense extends React.Component {
 			vat_list,
 			expense_categories_list,
 			pay_mode_list,
+			currency_convert_list,
 		} = this.props;
 		const { initValue, loading, dialog } = this.state;
 
@@ -574,22 +583,22 @@ class DetailExpense extends React.Component {
 																			id="currencyCode"
 																			name="currencyCode"
 																			options={
-																				currency_list
+																				currency_convert_list
 																					? selectCurrencyFactory.renderOptions(
 																							'currencyName',
 																							'currencyCode',
-																							currency_list,
+																							currency_convert_list,
 																							'Currency',
 																					  )
 																					: []
 																			}
 																			value={
-																				currency_list &&
+																				currency_convert_list &&
 																				selectCurrencyFactory
 																					.renderOptions(
 																						'currencyName',
 																						'currencyCode',
-																						currency_list,
+																						currency_convert_list,
 																						'Currency',
 																					)
 																					.find(
@@ -598,9 +607,9 @@ class DetailExpense extends React.Component {
 																							+props.values.currency,
 																					)
 																			}
-																			onChange={(option) =>
-																				props.handleChange('currency')(option)
-																			}
+																			onChange={(option) => {
+																				props.handleChange('currency')(option);
+																			   }}
 																			className={
 																				props.errors.currency &&
 																				props.touched.currency
@@ -616,6 +625,27 @@ class DetailExpense extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
+																	<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="exchangeRate">
+																		Exchange rate
+																	</Label>
+																	<div>
+																		<Input
+																			className="form-control"
+																			id="exchangeRate"
+																			name="exchangeRate"
+																			
+																			value={props.values.exchangeRate}
+																			onChange={(value) => {
+																				props.handleChange('exchangeRate')(
+																					value,
+																				);
+																			}}
+																		/>
+																	</div>
+																</FormGroup>
+															</Col>
 															</Row>
 															<Row>
 																<Col lg={3}>

@@ -23,9 +23,13 @@ import * as Yup from 'yup';
 import * as SupplierInvoiceCreateActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
+import * as CurrencyConvertActions from '../../../currencyConvert/actions';
+import * as CustomerInvoiceActions from '../../../customer_invoice/actions';
 
 import { SupplierModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
+import { InvoiceNumberModel } from '../../../customer_invoice/sections';
+
 
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -44,6 +48,7 @@ const mapStateToProps = (state) => {
 		supplier_list: state.supplier_invoice.supplier_list,
 		country_list: state.supplier_invoice.country_list,
 		universal_currency_list: state.common.universal_currency_list,
+		currency_convert_list: state.currencyConvert.currency_convert_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -52,11 +57,16 @@ const mapDispatchToProps = (dispatch) => {
 			SupplierInvoiceActions,
 			dispatch,
 		),
+		customerInvoiceActions: bindActionCreators(
+			CustomerInvoiceActions,
+			dispatch,
+		),
 		ProductActions: bindActionCreators(ProductActions, dispatch),
 		supplierInvoiceCreateActions: bindActionCreators(
 			SupplierInvoiceCreateActions,
 			dispatch,
 		),
+		currencyConvertActions: bindActionCreators(CurrencyConvertActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
@@ -107,6 +117,7 @@ class CreateSupplierInvoice extends React.Component {
 				invoiceDate: new Date(),
 				contactId: '',
 				project: '',
+				exchangeRate:'',
 				lineItemsString: [
 					{
 						id: 0,
@@ -133,6 +144,7 @@ class CreateSupplierInvoice extends React.Component {
 			contactType: 1,
 			openSupplierModal: false,
 			openProductModal: false,
+			openInvoiceNumberModel: false,
 			selectedContact: '',
 			createMore: false,
 			fileName: '',
@@ -141,7 +153,8 @@ class CreateSupplierInvoice extends React.Component {
 			discountPercentage: '',
 			discountAmount: 0,
 			purchaseCategory: [],
-			prefix: 'SUP-',
+			exchangeRate:'',	
+			prefixData: [],
 		};
 
 		this.formRef = React.createRef();
@@ -353,7 +366,7 @@ class CreateSupplierInvoice extends React.Component {
 	getInitialData = () => {
 		this.getInvoiceNo();
 		this.props.supplierInvoiceActions.getSupplierList(this.state.contactType);
-		this.props.supplierInvoiceActions.getCurrencyList().then((response) => {
+		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
 			this.setState({
 				initValue: {
 					...this.state.initValue,
@@ -369,6 +382,11 @@ class CreateSupplierInvoice extends React.Component {
 				response.data[0].currencyCode,
 				true,
 			);
+		});
+		this.props.supplierInvoiceActions.getInvoicePrefix().then((response) => {
+			this.setState({prefixData:response.data
+			
+			});
 		});
 		this.props.supplierInvoiceActions.getVatList();
 		this.props.supplierInvoiceActions.getCountryList();
@@ -821,6 +839,16 @@ class CreateSupplierInvoice extends React.Component {
 		}
 	};
 
+	setExchange = (value) => {
+		let result = this.props.currency_convert_list.filter((obj) => {
+		return obj.currencyCode === value;
+		});
+		console.log( this.props.currency_convert_list)
+		console.log(result)
+this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
+		};
+
+
 	updateAmount = (data, props) => {
 		const { vat_list } = this.props;
 		const { discountPercentage, discountAmount } = this.state;
@@ -892,6 +920,7 @@ class CreateSupplierInvoice extends React.Component {
 			invoiceDate,
 			contactId,
 			project,
+			exchangeRate,
 			invoice_number,
 			discount,
 			discountType,
@@ -925,6 +954,7 @@ class CreateSupplierInvoice extends React.Component {
 		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
 		formData.append('discount', discount);
+		formData.append('exchangeRate', exchangeRate);
 
 		if (discountType && discountType.value) {
 			formData.append('discountType', discountType.value);
@@ -940,7 +970,7 @@ class CreateSupplierInvoice extends React.Component {
 			formData.append('contactId', contactId.value);
 		}
 		if (currency !== null && currency) {
-			formData.append('currencyCode', currency);
+			formData.append('currencyCode', currency.value);
 		}
 		if (project !== null && project.value) {
 			formData.append('projectId', project.value);
@@ -1009,6 +1039,9 @@ class CreateSupplierInvoice extends React.Component {
 				);
 			});
 	};
+	openInvoiceNumberModel = (props) => {
+		this.setState({ openInvoiceNumberModel : true });
+	};
 
 	openSupplierModal = (e) => {
 		this.setState({ openSupplierModal: true });
@@ -1055,6 +1088,9 @@ class CreateSupplierInvoice extends React.Component {
 
 	closeProductModal = (res) => {
 		this.setState({ openProductModal: false });
+	};
+	closeInvoiceNumberModel = (res) => {
+		this.setState({ openInvoiceNumberModel: false });
 	};
 
 	getCurrentProduct = () => {
@@ -1114,6 +1150,9 @@ class CreateSupplierInvoice extends React.Component {
 			);
 		});
 	};
+	getCurrentNumber = (data) => {
+		this.getInvoiceNo();
+	};
 
 	getInvoiceNo = () => {
 		this.props.supplierInvoiceCreateActions.getInvoiceNo().then((res) => {
@@ -1163,6 +1202,7 @@ class CreateSupplierInvoice extends React.Component {
 			currency_list,
 			supplier_list,
 			universal_currency_list,
+			currency_convert_list,
 		} = this.props;
 		return (
 			<div className="create-supplier-invoice-screen">
@@ -1306,7 +1346,7 @@ class CreateSupplierInvoice extends React.Component {
 												{(props) => (
 													<Form onSubmit={props.handleSubmit}>
 														<Row>
-															<Col lg={4}>
+															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="invoice_number">
 																		<span className="text-danger">*</span>
@@ -1333,7 +1373,7 @@ class CreateSupplierInvoice extends React.Component {
 																				this.validationCheck(e.target.value);
 																			}
 																		}}
-																		value={prefix + props.values.invoice_number}
+																		value={props.values.invoice_number}
 																		className={
 																			props.errors.invoice_number &&
 																			props.touched.invoice_number
@@ -1349,7 +1389,19 @@ class CreateSupplierInvoice extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
-															<Col lg={4}>
+															<Col lg={1}>
+																<Button
+																	type="button"
+																	color="primary"
+																	className="btn-square1"
+																	onClick={(e, props) => {
+																		this.openInvoiceNumberModel(props);
+																	}}
+																>
+																	<i className="fas fa-cog"></i> 
+																</Button>
+															</Col>
+															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="contactId">
 																		<span className="text-danger">*</span>
@@ -1393,7 +1445,7 @@ class CreateSupplierInvoice extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
-															<Col lg={4}>
+															<Col lg={3}>
 																<Label
 																	htmlFor="contactId"
 																	style={{ display: 'block' }}
@@ -1576,11 +1628,11 @@ class CreateSupplierInvoice extends React.Component {
 																	<Select
 																		styles={customStyles}
 																		options={
-																			currency_list
+																			currency_convert_list
 																				? selectCurrencyFactory.renderOptions(
 																						'currencyName',
 																						'currencyCode',
-																						currency_list,
+																						currency_convert_list,
 																						'Currency',
 																				  )
 																				: []
@@ -1588,12 +1640,12 @@ class CreateSupplierInvoice extends React.Component {
 																		id="currency"
 																		name="currency"
 																		value={
-																			currency_list &&
+																			currency_convert_list &&
 																			selectCurrencyFactory
 																				.renderOptions(
 																					'currencyName',
 																					'currencyCode',
-																					currency_list,
+																					currency_convert_list,
 																					'Currency',
 																				)
 																				.find(
@@ -1602,9 +1654,10 @@ class CreateSupplierInvoice extends React.Component {
 																						+props.values.currency,
 																				)
 																		}
-																		onChange={(option) =>
-																			props.handleChange('currency')(option)
-																		}
+																		onChange={(option) => {
+																			props.handleChange('currency')(option);
+																			this.setExchange(option.value);
+																		   }}
 																		className={`${
 																			props.errors.currency &&
 																			props.touched.currency
@@ -1618,6 +1671,27 @@ class CreateSupplierInvoice extends React.Component {
 																				{props.errors.currency}
 																			</div>
 																		)}
+																</FormGroup>
+															</Col>
+															<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="exchangeRate">
+																		Exchange rate
+																	</Label>
+																	<div>
+																		<Input
+																			className="form-control"
+																			id="exchangeRate"
+																			name="exchangeRate"
+																			
+																			value={props.values.exchangeRate}
+																			onChange={(value) => {
+																				props.handleChange('exchangeRate')(
+																					value,
+																				);
+																			}}
+																		/>
+																	</div>
 																</FormGroup>
 															</Col>
 														</Row>
@@ -2203,7 +2277,7 @@ class CreateSupplierInvoice extends React.Component {
 					getCurrentUser={(e) => this.getCurrentUser(e)}
 					createSupplier={this.props.supplierInvoiceActions.createSupplier}
 					getStateList={this.props.supplierInvoiceActions.getStateList}
-					currency_list={this.props.currency_list}
+					currency_list={this.props.currency_convert_list}
 					country_list={this.props.country_list}
 				/>
 				<ProductModal
@@ -2217,6 +2291,16 @@ class CreateSupplierInvoice extends React.Component {
 					product_category_list={this.props.product_category_list}
 					salesCategory={this.state.salesCategory}
 					purchaseCategory={this.state.purchaseCategory}
+				/>
+					<InvoiceNumberModel
+					openInvoiceNumberModel={this.state.openInvoiceNumberModel}
+					closeInvoiceNumberModel={(e) => {
+						this.closeInvoiceNumberModel(e);
+					}}
+					getCurrentNumber={(e) => this.getCurrentNumber(e)}
+					prefix ={this.state.prefixData}
+					updatePrefix={this.props.customerInvoiceActions.updateInvoicePrefix}
+					
 				/>
 			</div>
 		);

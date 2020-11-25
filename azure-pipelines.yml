@@ -33,7 +33,6 @@ stages:
           Dockerfile: '**/Dockerfile'
           tags: |
             0.0.3-alpha-$(Build.BuildId)
-            latest
 
 
 

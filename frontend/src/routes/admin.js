@@ -159,7 +159,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/banking/bank-account/transaction/reconcile',
-		name: 'Reconcile',
+		name: 'ViewReconcile',
 		component: ReconcileTransaction.screen,
 	},
 	{

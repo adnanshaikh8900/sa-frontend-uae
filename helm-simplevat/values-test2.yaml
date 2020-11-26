@@ -12,8 +12,8 @@ image:
   tag: "0.0.3-alpha-0"
 
 simpleVatRelease: "0.0.3-alpha-0"
-simpleVatHost: k8s.test.simplevat.com
-simpleVatDB: simplevat_test_db
+simpleVatHost: k8s2.test.simplevat.com
+simpleVatDB: simplevat_test2_db
 
 ports:
   containerPort: 8080
@@ -55,9 +55,9 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: k8s.test.simplevat.com
+    - host: k8s2.test.simplevat.com
       paths: [/*]
-    - host: www.k8s.test.simplevat.com
+    - host: www.k8s2.test.simplevat.com
       paths: [/*]
   tls: []
   #  - secretName: chart-example-tls

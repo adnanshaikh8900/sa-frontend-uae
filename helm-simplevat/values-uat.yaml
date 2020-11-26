@@ -58,7 +58,7 @@ ingress:
     - host: k8s.test.simplevat.com
       paths: [/*]
     - host: www.k8s.test.simplevat.com
-      paths: [/*]
+      paths: [ /* ]
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:

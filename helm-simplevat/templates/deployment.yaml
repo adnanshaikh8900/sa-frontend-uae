@@ -64,20 +64,14 @@ spec:
             - name: SIMPLEVAT_RELEASE
               value: {{ .Values.simpleVatRelease }}
             - name: SIMPLEVAT_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: cloudsql-db-credentials
-                  key: simplevat-host
+              value: {{ .Values.simpleVatHost }}
             - name: SIMPLEVAT_DB_HOST
               valueFrom:
                 secretKeyRef:
                   name: cloudsql-db-credentials
                   key: db-host
             - name: SIMPLEVAT_DB
-              valueFrom:
-                secretKeyRef:
-                  name: cloudsql-db-credentials
-                  key: database
+              value: {{ .Values.simpleVatDB }}
             - name: SIMPLEVAT_DB_USER
               valueFrom:
                 secretKeyRef:

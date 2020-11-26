@@ -12,6 +12,9 @@ image:
   tag: "0.0.3-alpha-0"
 
 simpleVatRelease: "0.0.3-alpha-0"
+simpleVatHost: k8s.test.simplevat.com
+simpleVatDB: simplevat_test_db
+
 ports:
   containerPort: 8080
 imagePullSecrets:

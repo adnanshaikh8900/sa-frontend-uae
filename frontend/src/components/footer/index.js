@@ -13,7 +13,7 @@ const propTypes = {
 const defaultProps = {}
 
 class Footer extends Component {
-  
+
   render() {
 
     const {  version } = this.props
@@ -23,14 +23,14 @@ class Footer extends Component {
         <div className="d-flex align-items-center justify-content-between w-100">
           <img src={logo} className="m-2 footer-logo" alt="logo"/>
           <span>
-            <Link to="/admin">Simple Vat</Link>&nbsp;
+            <Link to="/admin">SimpleVAT Version </Link>&nbsp;
             {
               version !== '' ?
                 <label className="mb-0 text-primary">v. {version}</label>
               :
                 ''
             }
-            &nbsp;&copy; 2019 All Rights Reserved.
+            &nbsp;&copy; 2020 All Rights Reserved.
           </span>
         </div>
       </React.Fragment>

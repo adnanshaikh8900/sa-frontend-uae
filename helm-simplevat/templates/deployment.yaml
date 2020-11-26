@@ -62,7 +62,7 @@ spec:
             - name: SIMPLEVAT_SMTP_STARTTLS_ENABLE
               value: "true"
             - name: SIMPLEVAT_RELEASE
-              value: latest
+              value: {{ .Values.simpleVatRelease }}
             - name: SIMPLEVAT_HOST
               valueFrom:
                 secretKeyRef:

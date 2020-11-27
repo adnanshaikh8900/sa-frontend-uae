@@ -3,11 +3,13 @@ package com.simplevat.rest.expensescontroller;
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.FileTypeEnum;
 import com.simplevat.constant.dbfilter.ExpenseFIlterEnum;
+import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import com.simplevat.helper.ExpenseRestHelper;
 import com.simplevat.rest.AbstractDoubleEntryRestController;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.entity.Expense;
 import com.simplevat.security.JwtTokenUtil;
+import com.simplevat.service.CurrencyService;
 import com.simplevat.service.ExpenseService;
 import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.utils.FileHelper;
@@ -62,6 +64,9 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 	@Autowired
 	private TransactionCategoryService expenseTransactionCategoryService;
 
+	@Autowired
+	private CurrencyService currencyService;
+
 	@ApiOperation(value = "Get Expense List")
 	@GetMapping(value = "/getList")
 	public ResponseEntity<PaginationResponseModel> getExpenseList(ExpenseRequestFilterModel expenseRequestFilterModel) {
@@ -80,6 +85,9 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 			if (expenseRequestFilterModel.getTransactionCategoryId() != null) {
 				filterDataMap.put(ExpenseFIlterEnum.TRANSACTION_CATEGORY,
 						expenseTransactionCategoryService.findByPK(expenseRequestFilterModel.getTransactionCategoryId()));
+			}
+			if(expenseRequestFilterModel.getCurrencyCode()!=null){
+				filterDataMap.put(ExpenseFIlterEnum.CURRECY, currencyService.findByPK(expenseRequestFilterModel.getCurrencyCode()));
 			}
 			filterDataMap.put(ExpenseFIlterEnum.PAYEE, expenseRequestFilterModel.getPayee());
 			filterDataMap.put(ExpenseFIlterEnum.DELETE_FLAG, false);

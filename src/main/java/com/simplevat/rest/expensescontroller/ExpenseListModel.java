@@ -18,5 +18,6 @@ public class ExpenseListModel {
 	private Integer chartOfAccountId;
 	private String expenseStatus;
 	private Integer bankAccountId;
+	private String currencyName;
 
 }

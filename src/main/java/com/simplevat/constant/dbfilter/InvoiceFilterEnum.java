@@ -21,7 +21,9 @@ public enum InvoiceFilterEnum {
     USER_ID("createdBy", " = :createdBy "),
     TYPE("type", " = :type "),
     DELETE_FLAG("deleteFlag", " = :deleteFlag "),
-    ORDER_BY("id"," =:id");
+    ORDER_BY("id"," =:id"),
+    CURRECY("currency"," = :currency");
+
 
     @Getter
     String dbColumnName;

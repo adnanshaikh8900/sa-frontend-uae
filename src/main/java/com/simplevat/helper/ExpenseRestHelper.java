@@ -177,7 +177,7 @@ public class ExpenseRestHelper {
 			BigDecimal vatPercent =  vatCategory.getVat();
 			BigDecimal vatAmount = calculateActualVatAmount(vatPercent,expense.getExpenseAmount());
 			BigDecimal actualDebitAmount = BigDecimal.valueOf(expense.getExpenseAmount().floatValue()-vatAmount.floatValue());
-			journalLineItem2.setDebitAmount(actualDebitAmount);
+			journalLineItem2.setDebitAmount(actualDebitAmount.multiply(expense.getExchangeRate()));
 			JournalLineItem journalLineItem = new JournalLineItem();
 			TransactionCategory inputVatCategory = transactionCategoryService
 					.findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.INPUT_VAT.getCode());

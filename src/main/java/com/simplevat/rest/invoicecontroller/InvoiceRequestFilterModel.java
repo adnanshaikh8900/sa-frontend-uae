@@ -23,4 +23,5 @@ public class InvoiceRequestFilterModel extends PaginationModel {
     private BigDecimal amount;
     private Integer status;
     private Integer type;
+    private Integer currencyCode;
 }

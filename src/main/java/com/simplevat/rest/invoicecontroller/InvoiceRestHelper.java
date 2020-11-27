@@ -332,12 +332,14 @@ public class InvoiceRestHelper {
 				InvoiceListModel model = new InvoiceListModel();
 				model.setId(invoice.getId());
 				contact(invoice, model);
+//				currency(invoice,model);
+				model.setCurrencyName(
+						invoice.getCurrency() != null ? invoice.getCurrency().getCurrencyIsoCode() : "-");
 				model.setReferenceNumber(invoice.getReferenceNumber());
 				invoiceDate(invoice, model);
 				invoiceDueDate(invoice, model);
 				model.setTotalAmount(invoice.getTotalAmount());
 				model.setTotalVatAmount(invoice.getTotalVatAmount());
-
 				if (invoice.getStatus() != null) {
 					model.setStatus(getInvoiceStatus(invoice.getStatus(), invoice.getInvoiceDueDate()));
 				}
@@ -371,6 +373,13 @@ public class InvoiceRestHelper {
 			}
 		}
 	}
+//	private void currency(Invoice invoice, InvoiceListModel model) {
+//		if (invoice.getCurrency() != null) {
+//			if (invoice.getCurrency().getCurrencyName() != null || invoice.getCurrency().getCurrencyIsoCode() != null) {
+//				model.setName(invoice.getCurrency().getCurrencyIsoCode());
+//			}
+//		}
+//	}
 
 	private String getFullName(Contact contact) {
 		StringBuilder sb = new StringBuilder();
@@ -789,9 +798,9 @@ public class InvoiceRestHelper {
 			JournalLineItem journalLineItem = new JournalLineItem();
 			journalLineItem.setTransactionCategory(tnxcatMap.get(categoryId));
 			if (isCustomerInvoice)
-				journalLineItem.setCreditAmount(totalAmount);
+				journalLineItem.setCreditAmount(totalAmount.multiply(invoice.getExchangeRate()));
 			else
-				journalLineItem.setDebitAmount(totalAmount);
+				journalLineItem.setDebitAmount(totalAmount.multiply(invoice.getExchangeRate()));
 			journalLineItem.setReferenceType(PostingReferenceTypeEnum.INVOICE);
 			journalLineItem.setReferenceId(postingRequestModel.getPostingRefId());
 			journalLineItem.setCreatedBy(userId);

@@ -20,4 +20,5 @@ public class InvoiceListModel {
 	private String statusEnum;
 	private Integer contactId;
 	private BigDecimal dueAmount;
+	private String currencyName;
 }

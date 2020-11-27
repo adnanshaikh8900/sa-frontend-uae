@@ -19,6 +19,7 @@ import com.simplevat.rest.InviceSingleLevelDropdownModel;
 import com.simplevat.rest.currencyconversioncontroller.CurrencyConversionRequestModel;
 import com.simplevat.rest.currencyconversioncontroller.CurrencyConversionResponseModel;
 import com.simplevat.rest.rolecontroller.ModuleResponseModel;
+import com.simplevat.service.CurrencyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,6 +87,9 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	@Autowired
 	private ExpenseService expenseService;
 
+	@Autowired
+	private CurrencyService currencyService;
+
 	@ApiOperation(value = "Get Invoice List")
 	@GetMapping(value = "/getList")
 	public ResponseEntity<PaginationResponseModel> getInvoiceList(InvoiceRequestFilterModel filterModel,
@@ -95,6 +99,9 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			Map<InvoiceFilterEnum, Object> filterDataMap = new EnumMap<>(InvoiceFilterEnum.class);
 			if (filterModel.getContact() != null) {
 				filterDataMap.put(InvoiceFilterEnum.CONTACT, contactService.findByPK(filterModel.getContact()));
+			}
+			if(filterModel.getCurrencyCode()!=null){
+				filterDataMap.put(InvoiceFilterEnum.CURRECY, currencyService.findByPK(filterModel.getCurrencyCode()));
 			}
 			filterDataMap.put(InvoiceFilterEnum.INVOICE_NUMBER, filterModel.getReferenceNumber());
 			if (filterModel.getAmount() != null) {

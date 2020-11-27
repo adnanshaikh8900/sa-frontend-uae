@@ -282,6 +282,8 @@ public class ExpenseRestHelper {
 				else {
 					expenseModel.setPayee("Company Expense");
 				}
+				expenseModel.setCurrencyName(
+						expense.getCurrency() != null ? expense.getCurrency().getCurrencyIsoCode() : "-");
 				expenseModel.setExpenseDescription(expense.getExpenseDescription());
 				if (expense.getBankAccount()!=null){
 					expenseModel.setBankAccountId(expense.getBankAccount().getBankAccountId());

@@ -8,7 +8,8 @@ public enum ExpenseFIlterEnum {
 	    PAYEE("payee", " like CONCAT(:payee,'%')"),
 	    DELETE_FLAG("deleteFlag","= :deleteFlag"),
 		ORDER_BY("expenseId"," =:expenseId"),
-	    TRANSACTION_CATEGORY("transactionCategory", " = :transactionCategory");
+	    TRANSACTION_CATEGORY("transactionCategory", " = :transactionCategory"),
+	    CURRECY("currency"," = :currency");
 
 	    @Getter
 	    String dbColumnName;

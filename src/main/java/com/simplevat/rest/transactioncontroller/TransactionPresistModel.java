@@ -65,5 +65,7 @@ public class TransactionPresistModel implements Serializable {
 
 	private BigDecimal oldTransactionAmount;
 
+	private BigDecimal exchangeRate;
+
 
 }

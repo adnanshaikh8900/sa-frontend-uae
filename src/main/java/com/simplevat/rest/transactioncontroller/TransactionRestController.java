@@ -674,7 +674,6 @@ public class TransactionRestController {
 			createTransactionStatus(userId, trnx, explainParam, invoiceEntity);
 		}
 	}
-
 	/**
 	 *
 	 * @param userId
@@ -847,6 +846,9 @@ public class TransactionRestController {
 			expenseBuilder.expenseDate(dateFormatUtil.getDateStrAsLocalDateTime(model.getDate(),
 					model.getDATE_FORMAT()));
 		}
+		if (model.getExchangeRate()!=null){
+			expenseBuilder.exchangeRate(model.getExchangeRate());
+		}
 		expenseBuilder.expenseDescription(model.getDescription());
 		if (model.getCurrencyCode() != null) {
 			expenseBuilder.currency(currencyService.findByPK(model.getCurrencyCode()));
@@ -896,6 +898,9 @@ public class TransactionRestController {
 					transactionPresistModel.getAttachmentFile().getOriginalFilename());
 			trnx.setExplainedTransactionAttachmentPath(filePath);
 		}
+		if (transactionPresistModel.getExchangeRate()!=null){
+			trnx.setExchangeRate(transactionPresistModel.getExchangeRate());
+		}
 		transactionService.persist(trnx);
 	}
 	private void updateTransactionForMoneyReceived(Transaction trnx, TransactionPresistModel transactionPresistModel) {
@@ -922,12 +927,18 @@ public class TransactionRestController {
 				&& !transactionPresistModel.getReference().isEmpty()) {
 			trnx.setReferenceStr(transactionPresistModel.getReference());
 		}
+		if (transactionPresistModel.getExchangeRate()!=null){
+			trnx.setExchangeRate(transactionPresistModel.getExchangeRate());
+		}
 	}
 
 	private void updateTransactionForSupplierInvoices(Transaction trnx, TransactionPresistModel transactionPresistModel) {
 		trnx.setDebitCreditFlag('D');
 		if (transactionPresistModel.getDescription() != null) {
 			trnx.setExplainedTransactionDescription(transactionPresistModel.getDescription());
+		}
+		if (transactionPresistModel.getExchangeRate()!=null){
+			trnx.setExchangeRate(transactionPresistModel.getExchangeRate());
 		}
 		if (transactionPresistModel.getBankId() != null) {
 			trnx.setBankAccount(bankService.findByPK(transactionPresistModel.getBankId()));

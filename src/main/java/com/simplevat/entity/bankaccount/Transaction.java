@@ -74,6 +74,10 @@ public class Transaction implements Serializable {
 	private BigDecimal transactionAmount;
 
 	@Basic
+	@Column(name = "EXCHANGE_RATE", precision = 19, scale = 9)
+	private BigDecimal exchangeRate;
+
+	@Basic
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "TRANSACTION_TYPE_CODE")
 	private ChartOfAccount chartOfAccount;

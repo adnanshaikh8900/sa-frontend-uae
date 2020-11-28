@@ -335,6 +335,8 @@ public class InvoiceRestHelper {
 //				currency(invoice,model);
 				model.setCurrencyName(
 						invoice.getCurrency() != null ? invoice.getCurrency().getCurrencyIsoCode() : "-");
+				model.setCurrencySymbol(
+						invoice.getCurrency() != null ? invoice.getCurrency().getCurrencySymbol() : "-");
 				model.setReferenceNumber(invoice.getReferenceNumber());
 				invoiceDate(invoice, model);
 				invoiceDueDate(invoice, model);

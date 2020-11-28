@@ -180,9 +180,9 @@ public class ReconsilationRestHelper {
 		JournalLineItem journalLineItem1 = new JournalLineItem();
 		journalLineItem1.setTransactionCategory(transaction.getExplainedTransactionCategory());
 		if (!isdebitFromBank) {
-			journalLineItem1.setDebitAmount(amount.multiply(exchangeRate.getExchangeRate()));
+			journalLineItem1.setDebitAmount(amount.multiply(transaction.getExchangeRate()));
 		} else {
-			journalLineItem1.setCreditAmount(amount.multiply(exchangeRate.getExchangeRate()));
+			journalLineItem1.setCreditAmount(amount.multiply(transaction.getExchangeRate()));
 		}
 		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.EXPENSE);
 		journalLineItem1.setReferenceId(expense.getExpenseId());
@@ -193,9 +193,9 @@ public class ReconsilationRestHelper {
 		JournalLineItem journalLineItem2 = new JournalLineItem();
 		journalLineItem2.setTransactionCategory(transaction.getBankAccount().getTransactionCategory());
 		if (isdebitFromBank) {
-			journalLineItem2.setDebitAmount(transaction.getTransactionAmount());
+			journalLineItem2.setDebitAmount(transaction.getTransactionAmount().multiply(transaction.getExchangeRate()));
 		} else {
-			journalLineItem2.setCreditAmount(transaction.getTransactionAmount());
+			journalLineItem2.setCreditAmount(transaction.getTransactionAmount().multiply(transaction.getExchangeRate()));
 		}
 		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.EXPENSE);
 		journalLineItem2.setReferenceId(expense.getExpenseId());
@@ -207,7 +207,7 @@ public class ReconsilationRestHelper {
 			BigDecimal vatPercent =  vatCategory.getVat();
 			BigDecimal vatAmount = calculateActualVatAmount(vatPercent,amount);
 			BigDecimal actualDebitAmount = BigDecimal.valueOf(amount.floatValue()-vatAmount.floatValue());
-			journalLineItem1.setDebitAmount(actualDebitAmount);
+			journalLineItem1.setDebitAmount(actualDebitAmount.multiply(transaction.getExchangeRate()));
 			JournalLineItem journalLineItem = new JournalLineItem();
 			TransactionCategory inputVatCategory = transactionCategoryService
 					.findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.INPUT_VAT.getCode());
@@ -295,9 +295,9 @@ public class ReconsilationRestHelper {
 		journalLineItem1.setTransactionCategory(transactionCategory);
 		// Reverse flow as invoice creation
 		if (!isCustomerInvoice)
-			journalLineItem1.setDebitAmount(transaction.getTransactionAmount().multiply(exchangeRate.getExchangeRate()));
+			journalLineItem1.setDebitAmount(transaction.getTransactionAmount().multiply(transaction.getExchangeRate()));
 		else
-			journalLineItem1.setCreditAmount(transaction.getTransactionAmount().multiply(exchangeRate.getExchangeRate()));
+			journalLineItem1.setCreditAmount(transaction.getTransactionAmount().multiply(transaction.getExchangeRate()));
 
 		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.TRANSACTION_RECONSILE_INVOICE);
 		journalLineItem1.setReferenceId(transaction.getTransactionId());
@@ -308,9 +308,9 @@ public class ReconsilationRestHelper {
 		JournalLineItem journalLineItem2 = new JournalLineItem();
 		journalLineItem2.setTransactionCategory(transaction.getBankAccount().getTransactionCategory());
 		if (isCustomerInvoice)
-			journalLineItem2.setDebitAmount(totalAmount.multiply(exchangeRate.getExchangeRate()));
+			journalLineItem2.setDebitAmount(totalAmount.multiply(transaction.getExchangeRate()));
 		else
-			journalLineItem2.setCreditAmount(totalAmount.multiply(exchangeRate.getExchangeRate()));
+			journalLineItem2.setCreditAmount(totalAmount.multiply(transaction.getExchangeRate()));
 		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.TRANSACTION_RECONSILE_INVOICE);
 		journalLineItem2.setReferenceId(transaction.getTransactionId());
 		journalLineItem2.setCreatedBy(userId);

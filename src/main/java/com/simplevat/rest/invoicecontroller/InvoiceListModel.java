@@ -21,4 +21,5 @@ public class InvoiceListModel {
 	private Integer contactId;
 	private BigDecimal dueAmount;
 	private String currencyName;
+	private String currencySymbol;
 }

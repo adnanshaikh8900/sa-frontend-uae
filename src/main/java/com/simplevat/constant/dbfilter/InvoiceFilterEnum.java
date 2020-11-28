@@ -22,7 +22,8 @@ public enum InvoiceFilterEnum {
     TYPE("type", " = :type "),
     DELETE_FLAG("deleteFlag", " = :deleteFlag "),
     ORDER_BY("id"," =:id"),
-    CURRECY("currency"," = :currency");
+    CURRECY("currency"," = :currency"),
+    CURRECY_SYMBOL("currency"," = :currency");
 
 
     @Getter

@@ -147,6 +147,7 @@ class CreateCustomerInvoice extends React.Component {
 			salesCategory: [],	
 			exchangeRate:'',		
 			prefixData: [],
+			basecurrency:[],
 		};
 
 		this.formRef = React.createRef();
@@ -340,17 +341,18 @@ class CreateCustomerInvoice extends React.Component {
 	};
 
 	renderSubTotal = (cell, row,extraData) => {
-return row.subTotal === 0 ? (
-	<Currency
-		value={row.subTotal}
-		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-	/>
-) : (
-	<Currency
-		value={row.subTotal}
-		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-	/>
-);
+// return row.subTotal === 0 ? (
+// 	<Currency
+// 		value={row.subTotal}
+// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+// 	/>
+// ) : (
+// 	<Currency
+// 		value={row.subTotal}
+// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+// 	/>
+// );
+return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 }
 	setDate = (props, value) => {
 		const { term } = this.state;
@@ -375,6 +377,15 @@ return row.subTotal === 0 ? (
 		console.log(result)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 		};
+
+		setCurrency = (value) => {
+			let result = this.props.currency_convert_list.filter((obj) => {
+			return obj.currencyCode === value;
+			});
+			console.log( this.props.currency_convert_list)
+			console.log(result)
+			this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
+			};
 
 	validationCheck = (value) => {
 		const data = {
@@ -432,10 +443,27 @@ return row.subTotal === 0 ? (
 			
 			});
 		});
+		this.getCompanyCurrency();
 		this.salesCategory();
 		this.purchaseCategory();
 	};
 
+	getCompanyCurrency = (basecurrency) => {
+		this.props.currencyConvertActions
+			.getCompanyCurrency()
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({ basecurrency: res.data });
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+				this.setState({ loading: false });
+			});
+	};	
 	salesCategory = () => {
 		try {
 			this.props.productActions
@@ -1563,6 +1591,7 @@ return row.subTotal === 0 ? (
 																		 onChange={(option) => {
 																		 props.handleChange('currency')(option);
 																		 this.setExchange(option.value);
+																		 this.setCurrency(option.value)
 																		}}
 																		className={`${
 																			props.errors.currency &&
@@ -1579,11 +1608,55 @@ return row.subTotal === 0 ? (
 																		)}
 																</FormGroup>
 															</Col>
-															<Col lg={3}>
+														</Row>
+														<hr />
+																<Row>
+																<Col>
+																<Label htmlFor="currency">
+																		Currency Exchange Rate
+																	</Label>	
+																</Col>
+																</Row>
+																
+																<Row>
+																<Col lg={1}>
+																<Input
+																		disabled
+																				id="1"
+																				name="1"
+																				value=	{
+																					1 }
+																				
+																			/>
+																</Col>
+																<Col lg={1}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="exchangeRate">
+																	{/* <Label htmlFor="exchangeRate">
 																		Exchange rate
-																	</Label>
+																	</Label> */}
+																	<div>
+																		<Input
+																		disabled	
+																			className="form-control"
+																			id="curreancyname"
+																			name="curreancyname"
+																			
+																			value={props.values.curreancyname}
+																			onChange={(value) => {
+																				props.handleChange('curreancyname')(
+																					value,
+																				);
+																			}}
+																		/>
+																	</div>
+																</FormGroup>
+															</Col>
+															<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
+															<Col lg={1}>
+																<FormGroup className="mb-3">
+																	{/* <Label htmlFor="exchangeRate">
+																		Exchange rate
+																	</Label> */}
 																	<div>
 																		<Input
 																			className="form-control"
@@ -1600,8 +1673,18 @@ return row.subTotal === 0 ? (
 																	</div>
 																</FormGroup>
 															</Col>
+														
+															<Col lg={1}>
+															<Input
+																		disabled
+																				id="currencyName"
+																				name="currencyName"
+																				value=	{
+																					this.state.basecurrency.currencyName }
+																				
+																			/>
+														</Col>
 														</Row>
-
 														<hr />
 														<Col lg={8} className="mb-3">
 															<Button
@@ -1997,7 +2080,7 @@ return row.subTotal === 0 ? (
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																					{universal_currency_list[0] && (
+																					{/* {universal_currency_list[0] && (
 																						<Currency
 																					value={initValue.total_net.toFixed(
 																							2,
@@ -2008,7 +2091,10 @@ return row.subTotal === 0 ? (
 																						: 'USD'
 																							}
 																							/>
-																							)}
+																							)} */}
+																							{initValue.total_net.toFixed(
+																							2,
+																						)}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2022,7 +2108,7 @@ return row.subTotal === 0 ? (
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																					{universal_currency_list[0] && (
+																					{/* {universal_currency_list[0] && (
 																						<Currency
 																						value={initValue.invoiceVATAmount.toFixed(
 																									2,
@@ -2033,6 +2119,9 @@ return row.subTotal === 0 ? (
 																						: 'USD'
 																							}
 																							/>
+																							)} */}
+																							{initValue.invoiceVATAmount.toFixed(
+																									2,
 																							)}
 																					</label>
 																				</Col>
@@ -2047,7 +2136,7 @@ return row.subTotal === 0 ? (
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																					{universal_currency_list[0] && (
+																					{/* {universal_currency_list[0] && (
 																						<Currency
 																						value={this.state.initValue.discount.toFixed(
 																							2,
@@ -2058,7 +2147,10 @@ return row.subTotal === 0 ? (
 																						: 'USD'
 																							}
 																							/>
-																							)}
+																							)} */}
+																							{this.state.initValue.discount.toFixed(
+																							2,
+																						)}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2072,7 +2164,7 @@ return row.subTotal === 0 ? (
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																					{universal_currency_list[0] && (
+																					{/* {universal_currency_list[0] && (
 																						<Currency
 																						value={initValue.totalAmount}
 																						currencySymbol={
@@ -2081,7 +2173,8 @@ return row.subTotal === 0 ? (
 																						: 'USD'
 																							}
 																							/>
-																							)}
+																							)} */}
+																							{initValue.totalAmount.toFixed(2)}
 																					</label>
 																				</Col>
 																			</Row>

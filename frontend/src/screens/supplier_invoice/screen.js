@@ -220,30 +220,41 @@ class SupplierInvoice extends React.Component {
 	};
 
 	renderInvoiceAmount = (cell, row, extraData) => {
-		return row.invoiceAmount ? (
-			<Currency
-				value={row.invoiceAmount}
-				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-			/>
-		) : (
-			''
-		);
+		// return row.invoiceAmount ? (
+		// 	<Currency
+		// 		value={row.invoiceAmount}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// ) : (
+		// 	''
+		// );
+
+	return row.invoiceAmount ? row.invoiceAmount.toFixed(2):'';
 	};
 
 	renderVatAmount = (cell, row, extraData) => {
-		return row.vatAmount === 0 ? (
-			<Currency
-				value={row.vatAmount}
-				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-			/>
-		) : (
-			<Currency
-				value={row.vatAmount}
-				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-			/>
-		);
+		// return row.vatAmount === 0 ? (
+		// 	<Currency
+		// 		value={row.vatAmount}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// ) : (
+		// 	<Currency
+		// 		value={row.vatAmount}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// );
+		return row.vatAmount === 0 ? row.vatAmount.toFixed(2) : row.vatAmount.toFixed(2);
 	};
-
+	renderCurrency = (cell, row) => {
+		if (row.currencyName) {
+			return (
+				<label className="badge label-info mb-0">{row.currencyName}</label>
+			);
+		} else {
+			return <label className="badge badge-danger mb-0">No Specified</label>;
+		}
+	};
 	sendCustomEmail = (id) => {
 		this.setState({ openEmailModal: true });
 	};
@@ -727,6 +738,7 @@ class SupplierInvoice extends React.Component {
 							: '',
 						invoiceAmount: supplier.totalAmount,
 						vatAmount: supplier.totalVatAmount,
+						currencyName:supplier.currencyName ? supplier.currencyName:'',
 						contactId: supplier.contactId,
 				  }))
 				: '';
@@ -1111,6 +1123,14 @@ class SupplierInvoice extends React.Component {
 												Due Date
 											</TableHeaderColumn>
 											<TableHeaderColumn
+													thStyle={{ whiteSpace: 'normal' }}
+													dataSort
+													dataField="currencyName"
+													dataFormat={this.renderCurrency}
+												>
+													Currency
+												</TableHeaderColumn>
+											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}
 												dataField="totalVatAmount"
 												dataSort
@@ -1124,7 +1144,7 @@ class SupplierInvoice extends React.Component {
 												dataField="totalAmount"
 												dataSort
 												dataFormat={this.renderInvoiceAmount}
-												formatExtraData={universal_currency_list}
+												
 											>
 												Invoice Amount
 											</TableHeaderColumn>

@@ -24,6 +24,9 @@ public class InvoiceRequestModel {
 
 
     private Integer currencyCode;
+    private String currencyName;
+    private String currencyIsoCode;
+    private  String currencySymbol;
     private BigDecimal exchangeRate;
     private String contactPoNumber;    
     private MultipartFile attachmentFile;

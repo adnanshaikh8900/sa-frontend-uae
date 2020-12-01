@@ -149,12 +149,14 @@ class CreateSupplierInvoice extends React.Component {
 			createMore: false,
 			fileName: '',
 			term: '',
+			prefix: '',
 			selectedType: { value: 'FIXED', label: 'Fixed' },
 			discountPercentage: '',
 			discountAmount: 0,
 			purchaseCategory: [],
 			exchangeRate:'',	
 			prefixData: [],
+			basecurrency:[],
 		};
 
 		this.formRef = React.createRef();
@@ -346,17 +348,18 @@ class CreateSupplierInvoice extends React.Component {
 	};
 
 	renderSubTotal = (cell, row, extraData) => {
-		return row.subTotal === 0 ? (
-			<Currency
-				value={row.subTotal.toFixed(2)}
-				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-			/>
-		) : (
-			<Currency
-				value={row.subTotal.toFixed(2)}
-				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-			/>
-		);
+		// return row.subTotal === 0 ? (
+		// 	<Currency
+		// 		value={row.subTotal.toFixed(2)}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// ) : (
+		// 	<Currency
+		// 		value={row.subTotal.toFixed(2)}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// );
+		return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 	};
 
 	componentDidMount = () => {
@@ -393,6 +396,7 @@ class CreateSupplierInvoice extends React.Component {
 		this.props.supplierInvoiceActions.getProductList();
 		this.purchaseCategory();
 		this.salesCategory();
+		this.getCompanyCurrency();
 	};
 
 	salesCategory = () => {
@@ -847,7 +851,14 @@ class CreateSupplierInvoice extends React.Component {
 		console.log(result)
 this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 		};
-
+		setCurrency = (value) => {
+			let result = this.props.currency_convert_list.filter((obj) => {
+			return obj.currencyCode === value;
+			});
+			console.log( this.props.currency_convert_list)
+			console.log(result)
+			this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
+			};
 
 	updateAmount = (data, props) => {
 		const { vat_list } = this.props;
@@ -1093,6 +1104,22 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 		this.setState({ openInvoiceNumberModel: false });
 	};
 
+	getCompanyCurrency = (basecurrency) => {
+		this.props.currencyConvertActions
+			.getCompanyCurrency()
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({ basecurrency: res.data });
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+				this.setState({ loading: false });
+			});
+	};	
 	getCurrentProduct = () => {
 		this.props.supplierInvoiceActions.getProductList().then((res) => {
 			this.setState(
@@ -1657,6 +1684,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		onChange={(option) => {
 																			props.handleChange('currency')(option);
 																			this.setExchange(option.value);
+																			this.setCurrency(option.value)
 																		   }}
 																		className={`${
 																			props.errors.currency &&
@@ -1673,11 +1701,55 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		)}
 																</FormGroup>
 															</Col>
-															<Col lg={3}>
+														</Row>
+														<hr />
+																<Row>
+																<Col>
+																<Label htmlFor="currency">
+																		Currency Exchange Rate
+																	</Label>	
+																</Col>
+																</Row>
+																
+																<Row>
+																<Col lg={1}>
+																<Input
+																		disabled
+																				id="1"
+																				name="1"
+																				value=	{
+																					1 }
+																				
+																			/>
+																</Col>
+																<Col lg={1}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="exchangeRate">
+																	{/* <Label htmlFor="exchangeRate">
 																		Exchange rate
-																	</Label>
+																	</Label> */}
+																	<div>
+																		<Input
+																		disabled	
+																			className="form-control"
+																			id="curreancyname"
+																			name="curreancyname"
+																			
+																			value={props.values.curreancyname}
+																			onChange={(value) => {
+																				props.handleChange('curreancyname')(
+																					value,
+																				);
+																			}}
+																		/>
+																	</div>
+																</FormGroup>
+															</Col>
+															<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
+															<Col lg={1}>
+																<FormGroup className="mb-3">
+																	{/* <Label htmlFor="exchangeRate">
+																		Exchange rate
+																	</Label> */}
 																	<div>
 																		<Input
 																			className="form-control"
@@ -1694,6 +1766,17 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	</div>
 																</FormGroup>
 															</Col>
+														
+															<Col lg={1}>
+															<Input
+																		disabled
+																				id="currencyName"
+																				name="currencyName"
+																				value=	{
+																					this.state.basecurrency.currencyName }
+																				
+																			/>
+														</Col>
 														</Row>
 														<hr />
 														<Row>
@@ -2104,7 +2187,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																						{universal_currency_list[0] && (
+																						{/* {universal_currency_list[0] && (
 																							<Currency
 																								value={initValue.total_net.toFixed(
 																									2,
@@ -2116,7 +2199,10 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																										: 'USD'
 																								}
 																							/>
-																						)}
+																						)} */}
+																						{initValue.total_net.toFixed(
+																									2,
+																								)}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2130,7 +2216,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																						{universal_currency_list[0] && (
+																						{/* {universal_currency_list[0] && (
 																							<Currency
 																								value={initValue.invoiceVATAmount.toFixed(
 																									2,
@@ -2142,7 +2228,10 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																										: 'USD'
 																								}
 																							/>
-																						)}
+																						)} */}
+																						{initValue.invoiceVATAmount.toFixed(
+																									2,
+																								)}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2156,7 +2245,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																						{universal_currency_list[0] && (
+																						{/* {universal_currency_list[0] && (
 																							<Currency
 																								value={this.state.initValue.discount.toFixed(
 																									2,
@@ -2168,7 +2257,10 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																										: 'USD'
 																								}
 																							/>
-																						)}
+																						)} */}
+																						{this.state.initValue.discount.toFixed(
+																									2,
+																								)}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2182,7 +2274,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																						{universal_currency_list[0] && (
+																						{/* {universal_currency_list[0] && (
 																							<Currency
 																								value={initValue.totalAmount.toFixed(
 																									2,
@@ -2194,7 +2286,10 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																										: 'USD'
 																								}
 																							/>
-																						)}
+																						)} */}
+																						{initValue.totalAmount.toFixed(
+																									2,
+																								)}
 																					</label>
 																				</Col>
 																			</Row>

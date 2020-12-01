@@ -306,14 +306,24 @@ class CustomerInvoice extends React.Component {
 	};
 
 	renderInvoiceAmount = (cell, row, extraData) => {
-		return row.invoiceAmount ? (
-			<Currency
-				value={row.invoiceAmount}
-				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-			/>
-		) : (
-			''
-		);
+		// return row.invoiceAmount ? (
+		// 	<Currency
+		// 		value={row.invoiceAmount}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'AED'}
+		// 	/>
+		// ) : (
+		// 	''
+		// );
+		return row.invoiceAmount ? row.invoiceAmount.toFixed(2) : row.invoiceAmount.toFixed(2);
+	};
+	renderCurrency = (cell, row) => {
+		if (row.currencyName) {
+			return (
+				<label className="badge label-info mb-0">{row.currencyName}</label>
+			);
+		} else {
+			return <label className="badge badge-danger mb-0">No Specified</label>;
+		}
 	};
 	invoiceDueDate = (cell, row) => {
 		return row.invoiceDueDate ? row.invoiceDueDate : '';
@@ -323,17 +333,18 @@ class CustomerInvoice extends React.Component {
 	};
 
 	renderVatAmount = (cell, row, extraData) => {
-		return row.vatAmount === 0 ? (
-			<Currency
-				value={row.vatAmount}
-				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-			/>
-		) : (
-			<Currency
-				value={row.vatAmount}
-				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-			/>
-		);
+		// return row.vatAmount === 0 ? (
+		// 	<Currency
+		// 		value={row.vatAmount}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// ) : (
+		// 	<Currency
+		// 		value={row.vatAmount}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// );
+		return row.vatAmount === 0  ? row.vatAmount.toFixed(2) : row.vatAmount.toFixed(2);
 	};
 
 	renderActions = (cell, row) => {
@@ -699,6 +710,7 @@ class CustomerInvoice extends React.Component {
 						invoiceDueDate: customer.invoiceDueDate
 							? customer.invoiceDueDate
 							: '',
+						currencyName:customer.currencyName ? customer.currencyName:'',
 						invoiceAmount: customer.totalAmount,
 						vatAmount: customer.totalVatAmount,
 				  }))
@@ -1078,6 +1090,14 @@ class CustomerInvoice extends React.Component {
 											>
 												Due Date
 											</TableHeaderColumn>
+											<TableHeaderColumn
+													thStyle={{ whiteSpace: 'normal' }}
+													dataSort
+													dataField="currencyName"
+													dataFormat={this.renderCurrency}
+												>
+													Currency
+												</TableHeaderColumn>
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}
 												dataField="totalVatAmount"

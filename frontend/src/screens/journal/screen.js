@@ -262,7 +262,7 @@ class Journal extends React.Component {
 		const listItems = temp.map((number, index) => (
 			<li key={index} style={{ listStyleType: 'none', paddingBottom: '5px' }}>
 				<Currency
-					value={number.toFixed(2)}
+					value={number.toFixed(6)}
 					currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 				/>
 			</li>
@@ -280,7 +280,7 @@ class Journal extends React.Component {
 		const listItems = temp.map((number, index) => (
 			<li key={index} style={{ listStyleType: 'none', paddingBottom: '5px' }}>
 				<Currency
-					value={number.toFixed(2)}
+					value={number.toFixed(6)}
 					currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 				/>
 			</li>

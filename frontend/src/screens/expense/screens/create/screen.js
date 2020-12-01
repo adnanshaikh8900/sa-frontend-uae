@@ -83,6 +83,8 @@ class CreateExpense extends React.Component {
 			fileName: '',
 			payMode: '',
 			exchangeRate:'',
+			basecurrency:[],
+
 		};
 		this.formRef = React.createRef();
 		this.options = {
@@ -148,6 +150,8 @@ class CreateExpense extends React.Component {
 		this.props.expenseActions.getBankList();
 		this.props.expenseActions.getPaymentMode();
 		this.props.expenseActions.getUserForDropdown();
+		this.getCompanyCurrency();
+
 	};
 
 	handleSubmit = (data, resetForm) => {
@@ -235,6 +239,22 @@ class CreateExpense extends React.Component {
 			});
 	};
 	
+	getCompanyCurrency = (basecurrency) => {
+		this.props.currencyConvertActions
+			.getCompanyCurrency()
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({ basecurrency: res.data });
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+				this.setState({ loading: false });
+			});
+	};	
 	setExchange = (value) => {
 		let result = this.props.currency_convert_list.filter((obj) => {
 		return obj.currencyCode === value;
@@ -243,6 +263,15 @@ class CreateExpense extends React.Component {
 		console.log(result)
 this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 		};
+
+		setCurrency = (value) => {
+			let result = this.props.currency_convert_list.filter((obj) => {
+			return obj.currencyCode === value;
+			});
+			console.log( this.props.currency_convert_list)
+			console.log(result)
+			this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
+			};
 
 	handleFileChange = (e, props) => {
 		e.preventDefault();
@@ -543,6 +572,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		onChange={(option) => {
 																			props.handleChange('currency')(option);
 																			this.setExchange(option.value);
+																			this.setCurrency(option.value);
 																		   }}
 																		className={
 																			props.errors.currency &&
@@ -557,27 +587,6 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																				{props.errors.currency}
 																			</div>
 																		)}
-																</FormGroup>
-															</Col>
-															<Col lg={3}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="exchangeRate">
-																		Exchange rate
-																	</Label>
-																	<div>
-																		<Input
-																			className="form-control"
-																			id="exchangeRate"
-																			name="exchangeRate"
-																			
-																			value={props.values.exchangeRate}
-																			onChange={(value) => {
-																				props.handleChange('exchangeRate')(
-																					value,
-																				);
-																			}}
-																		/>
-																	</div>
 																</FormGroup>
 															</Col>
 														</Row>
@@ -740,7 +749,82 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																</Col>
 															)}
 														</Row>
-
+														<hr />
+																<Row>
+																<Col>
+																<Label htmlFor="currency">
+																		Currency Exchange Rate
+																	</Label>	
+																</Col>
+																</Row>
+																
+																<Row>
+																<Col lg={1}>
+																<Input
+																		disabled
+																				id="1"
+																				name="1"
+																				value=	{
+																					1 }
+																				
+																			/>
+																</Col>
+																<Col lg={1}>
+																<FormGroup className="mb-3">
+																	{/* <Label htmlFor="exchangeRate">
+																		Exchange rate
+																	</Label> */}
+																	<div>
+																		<Input
+																		disabled	
+																			className="form-control"
+																			id="curreancyname"
+																			name="curreancyname"
+																			
+																			value={props.values.curreancyname}
+																			onChange={(value) => {
+																				props.handleChange('curreancyname')(
+																					value,
+																				);
+																			}}
+																		/>
+																	</div>
+																</FormGroup>
+															</Col>
+															<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
+															<Col lg={1}>
+																<FormGroup className="mb-3">
+																	{/* <Label htmlFor="exchangeRate">
+																		Exchange rate
+																	</Label> */}
+																	<div>
+																		<Input
+																			className="form-control"
+																			id="exchangeRate"
+																			name="exchangeRate"
+																			
+																			value={props.values.exchangeRate}
+																			onChange={(value) => {
+																				props.handleChange('exchangeRate')(
+																					value,
+																				);
+																			}}
+																		/>
+																	</div>
+																</FormGroup>
+															</Col>
+														
+															<Col lg={1}>
+															<Input
+																		disabled
+																				id="currencyName"
+																				name="currencyName"
+																				value=	{
+																					this.state.basecurrency.currencyName }
+																				
+																			/>
+														</Col>
+														</Row>
 														<Row>
 															<Col lg={8}>
 																<FormGroup className="mb-3">

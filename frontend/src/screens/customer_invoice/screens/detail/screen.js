@@ -99,6 +99,7 @@ class DetailCustomerInvoice extends React.Component {
 			discountPercentage: '',
 			discountAmount: 0,
 			fileName: '',
+			basecurrency:[],
 		};
 
 		// this.options = {
@@ -158,6 +159,7 @@ class DetailCustomerInvoice extends React.Component {
 				.getInvoiceById(this.props.location.state.id)
 				.then((res) => {
 					if (res.status === 200) {
+						this.getCompanyCurrency();
 						this.props.customerInvoiceActions.getVatList();
 						this.props.customerInvoiceActions.getCustomerList(
 							this.state.contactType,
@@ -182,6 +184,7 @@ class DetailCustomerInvoice extends React.Component {
 										: '',
 									currency: res.data.currencyCode ? res.data.currencyCode : '',
 									exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
+									currencyName:res.data.currencyName ? res.data.currencyName : '',
 									invoiceDueDate: res.data.invoiceDueDate
 										? moment(res.data.invoiceDueDate).format('DD/MM/YYYY')
 										: '',
@@ -418,14 +421,15 @@ class DetailCustomerInvoice extends React.Component {
 	};
 
 	renderSubTotal = (cell, row,extraData) => {
-		return row.subTotal ? (
-			<Currency
-				value={row.subTotal.toFixed(2)}
-				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-			/>
-		) : (
-			''
-		);
+		// return row.subTotal ? (
+		// 	<Currency
+		// 		value={row.subTotal.toFixed(2)}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// ) : (
+		// 	''
+		// );
+		row.subTotal ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 	};
 	addRow = () => {
 		const data = [...this.state.data];
@@ -817,7 +821,7 @@ class DetailCustomerInvoice extends React.Component {
 				: invoiceDueDate,
 		);
 	
-		formData.append('exchangeRate', exchangeRate.value);
+		formData.append('exchangeRate',  this.state.initValue.exchangeRate);
 		
 		formData.append(
 			'receiptNumber',
@@ -845,7 +849,7 @@ class DetailCustomerInvoice extends React.Component {
 			formData.append('contactId', contactId);
 		}
 		if (currency) {
-			formData.append('currencyCode', currency);
+			formData.append('currencyCode', currency.value);
 		}
 		if (project) {
 			formData.append('projectId', project);
@@ -953,6 +957,22 @@ class DetailCustomerInvoice extends React.Component {
 		});
 	};
 
+	getCompanyCurrency = (basecurrency) => {
+		this.props.currencyConvertActions
+			.getCompanyCurrency()
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({ basecurrency: res.data });
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+				this.setState({ loading: false });
+			});
+	};	
 	deleteInvoice = () => {
 		const message1 =
 			<text>
@@ -1433,11 +1453,55 @@ class DetailCustomerInvoice extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																<Col lg={3}>
+																</Row>
+																<hr />
+																<Row>
+																<Col>
+																<Label htmlFor="currency">
+																		Currency Exchange Rate
+																	</Label>	
+																</Col>
+																</Row>
+																
+																<Row>
+																<Col lg={1}>
+																<Input
+																		disabled
+																				id="1"
+																				name="1"
+																				value=	{
+																					1 }
+																				
+																			/>
+																</Col>
+																<Col lg={1}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="exchangeRate">
+																	{/* <Label htmlFor="exchangeRate">
 																		Exchange rate
-																	</Label>
+																	</Label> */}
+																	<div>
+																		<Input
+																		disabled	
+																			className="form-control"
+																			id="currencyName"
+																			name="currencyName"
+																			
+																			value={props.values.currencyName}
+																			onChange={(value) => {
+																				props.handleChange('currencyName')(
+																					value,
+																				);
+																			}}
+																		/>
+																	</div>
+																</FormGroup>
+															</Col>
+															<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
+															<Col lg={1}>
+																<FormGroup className="mb-3">
+																	{/* <Label htmlFor="exchangeRate">
+																		Exchange rate
+																	</Label> */}
 																	<div>
 																		<Input
 																			className="form-control"
@@ -1454,33 +1518,18 @@ class DetailCustomerInvoice extends React.Component {
 																	</div>
 																</FormGroup>
 															</Col>
-																{/* <Col lg={4}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="contact_po_number">
-																			Contact PO Number
-																		</Label>
-																		<Input
-																			type="text"
-																			id="contact_po_number"
-																			name="contact_po_number"
-																			placeholder=""
-																			value={props.values.contact_po_number}
-																			onChange={(option) => {
-																				if (
-																					option.target.value === '' ||
-																					this.regExBoth.test(
-																						option.target.value,
-																					)
-																				) {
-																					props.handleChange(
-																						'contact_po_number',
-																					)(option);
-																				}
-																			}}
-																		/>
-																	</FormGroup>
-																</Col> */}
-															</Row>
+														
+															<Col lg={1}>
+															<Input
+																		disabled
+																				id="currencyName"
+																				name="currencyName"
+																				value=	{
+																					this.state.basecurrency.currencyName }
+																				
+																			/>
+														</Col>
+														</Row>
 															<hr />
 															<Row>
 																<Col lg={12} className="mb-3">
@@ -1878,16 +1927,17 @@ class DetailCustomerInvoice extends React.Component {
 																					</Col>
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
-																						{universal_currency_list[0] && (
+																						{/* {universal_currency_list[0] && (
 																						<Currency
 																						value=	{initValue.total_net.toFixed(2)}
 																						currencySymbol={
-																						universal_currency_list[0]
+																							universal_currency_list[0]
 																						? universal_currency_list[0].currencyIsoCode
 																						: 'USD'
 																							}
 																							/>
-																							)}
+																							)} */}
+																							{initValue.total_net.toFixed(2)}
 																						</label>
 																					</Col>
 																				</Row>
@@ -1901,18 +1951,21 @@ class DetailCustomerInvoice extends React.Component {
 																					</Col>
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
-																						{universal_currency_list[0] && (
+																						{/* {universal_currency_list[0] && (
 																						<Currency
 																						value={initValue.invoiceVATAmount.toFixed(
 																							2,
 																						)}
 																						currencySymbol={
-																						universal_currency_list[0]
+																							universal_currency_list[0]
 																						? universal_currency_list[0].currencyIsoCode
 																						: 'USD'
 																							}
 																							/>
-																							)}
+																							)} */}
+																							{initValue.invoiceVATAmount.toFixed(
+																							2,
+																						)}
 																						</label>
 																					</Col>
 																				</Row>
@@ -1926,18 +1979,21 @@ class DetailCustomerInvoice extends React.Component {
 																					</Col>
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
-																							{universal_currency_list[0] && (
+																							{/* {universal_currency_list[0] && (
 																						<Currency
 																						value=		{this.state.initValue.discount.toFixed(
 																							2,
 																						)}
 																						currencySymbol={
-																						universal_currency_list[0]
+																							universal_currency_list[0]
 																						? universal_currency_list[0].currencyIsoCode
 																						: 'USD'
 																							}
 																							/>
-																							)}
+																							)} */}
+																								{this.state.initValue.discount.toFixed(
+																							2,
+																						)}
 																						</label>
 																					</Col>
 																				</Row>
@@ -1951,16 +2007,17 @@ class DetailCustomerInvoice extends React.Component {
 																					</Col>
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
-																						{universal_currency_list[0] && (
+																						{/* {universal_currency_list[0] && (
 																						<Currency
 																						value=	{initValue.totalAmount.toFixed(2)}
 																						currencySymbol={
-																						universal_currency_list[0]
+																							universal_currency_list[0]
 																						? universal_currency_list[0].currencyIsoCode
 																						: 'USD'
 																							}
 																							/>
-																							)}
+																							)} */}
+																								{initValue.totalAmount.toFixed(2)}
 																						</label>
 																					</Col>
 																				</Row>

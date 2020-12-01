@@ -78,6 +78,7 @@ class DetailExpense extends React.Component {
 			fileName: '',
 			payMode: '',
 			view: false,
+			basecurrency:[],
 		};
 
 		this.file_size = 1024000;
@@ -108,6 +109,7 @@ class DetailExpense extends React.Component {
 				.getExpenseDetail(this.props.location.state.expenseId)
 				.then((res) => {
 					if (res.status === 200) {
+						this.getCompanyCurrency();
 						this.props.currencyConvertActions.getCurrencyConversionList();
 						this.props.expenseActions.getExpenseCategoriesList();
 						this.props.expenseActions.getBankList();
@@ -121,6 +123,7 @@ class DetailExpense extends React.Component {
 									payee: res.data.payee,
 									expenseDate: res.data.expenseDate ? res.data.expenseDate : '',
 									currency: res.data.currencyCode ? res.data.currencyCode : '',
+									currencyName:res.data.currencyName ? res.data.currencyName : '',
 									expenseCategory: res.data.expenseCategory
 										? res.data.expenseCategory
 										: '',
@@ -262,6 +265,22 @@ class DetailExpense extends React.Component {
 		});
 	};
 
+	getCompanyCurrency = (basecurrency) => {
+		this.props.currencyConvertActions
+			.getCompanyCurrency()
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({ basecurrency: res.data });
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+				this.setState({ loading: false });
+			});
+	};	
 	removeExpense = () => {
 		const { current_expense_id } = this.state;
 		this.props.expenseDetailActions
@@ -841,6 +860,82 @@ class DetailExpense extends React.Component {
 																		</Col>
 																	)}
 															</Row>
+															<hr />
+																<Row>
+																<Col>
+																<Label htmlFor="currency">
+																		Currency Exchange Rate
+																	</Label>	
+																</Col>
+																</Row>
+																
+																<Row>
+																<Col lg={1}>
+																<Input
+																		disabled
+																				id="1"
+																				name="1"
+																				value=	{
+																					1 }
+																				
+																			/>
+																</Col>
+																<Col lg={1}>
+																<FormGroup className="mb-3">
+																	{/* <Label htmlFor="exchangeRate">
+																		Exchange rate
+																	</Label> */}
+																	<div>
+																		<Input
+																		disabled	
+																			className="form-control"
+																			id="currencyName"
+																			name="currencyName"
+																			
+																			value={props.values.currencyName}
+																			onChange={(value) => {
+																				props.handleChange('currencyName')(
+																					value,
+																				);
+																			}}
+																		/>
+																	</div>
+																</FormGroup>
+															</Col>
+															<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
+															<Col lg={1}>
+																<FormGroup className="mb-3">
+																	{/* <Label htmlFor="exchangeRate">
+																		Exchange rate
+																	</Label> */}
+																	<div>
+																		<Input
+																			className="form-control"
+																			id="exchangeRate"
+																			name="exchangeRate"
+																			
+																			value={props.values.exchangeRate}
+																			onChange={(value) => {
+																				props.handleChange('exchangeRate')(
+																					value,
+																				);
+																			}}
+																		/>
+																	</div>
+																</FormGroup>
+															</Col>
+														
+															<Col lg={1}>
+															<Input
+																		disabled
+																				id="currencyName"
+																				name="currencyName"
+																				value=	{
+																					this.state.basecurrency.currencyName }
+																				
+																			/>
+														</Col>
+														</Row>
 															<Row>
 																<Col lg={8}>
 																	<FormGroup className="mb-3">

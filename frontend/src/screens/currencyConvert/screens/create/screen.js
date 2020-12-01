@@ -181,8 +181,23 @@ class CreateCurrencyConvert extends React.Component {
 													return (
 														<form onSubmit={handleSubmit}>
 																<Row>
-																	<Col lg={6}>
-																					<FormGroup>
+																	<Col lg={1}>
+																	<FormGroup className="mt-2">
+																	<Label>
+																							Value
+																						</Label>
+																	<Input
+																			disabled
+																				id="1"
+																				name="1"
+																				value=	{
+																					1 }
+																				
+																			/>
+																			</FormGroup>
+																	</Col>
+																					<Col lg={4}>
+																						<FormGroup className="mt-2">
 																						<Label htmlFor="exchangecurrencyCode">
 																							Exchange Currency
 																						</Label>
@@ -240,10 +255,11 @@ class CreateCurrencyConvert extends React.Component {
 																									{props.errors.currencyCode}
 																								</div>
 																							)}
-																					</FormGroup>
+																			</FormGroup>
 																				</Col>
-																	<Col lg={6}>
-																	<FormGroup>
+																				<FormGroup className="mt-5"><label><b>=</b></label>	</FormGroup>
+																	<Col lg={4}>
+																	<FormGroup className="mt-2">
 																	<Label htmlFor="Exchange rate">
 																	Exchange rate
 																	{/* <i
@@ -281,20 +297,17 @@ class CreateCurrencyConvert extends React.Component {
 																			: ''
 																	}
 																	/>
-																 <i> Exchange rate = Exchange Currency X 1 Base currency</i>
+															
 																	{errors.exchangeRate &&
 																	touched.exchangeRate && (
 																		<div className="invalid-feedback">
 																			{errors.exchangeRate}
 																		</div>
 																	)}
-																	
-																	</FormGroup>
+																	</FormGroup >
 																	</Col>
-																	
-																	</Row>
-																	<Row>
-																	<Col lg={6}><FormGroup>
+																	<Col lg={2}>
+																		<FormGroup className="mt-2">
 																		<Label htmlFor="currencyName">
 																			{' '}
 																			Base Currency 
@@ -305,26 +318,11 @@ class CreateCurrencyConvert extends React.Component {
 																				id="currencyName"
 																				name="currencyName"
 																				value=	{
-																					this.state.basecurrency.description }
-																				
+																					this.state.basecurrency.currencyName }
 																			/>
-																	</FormGroup>
-																				</Col>
-																	<Col lg={2}>
-																<FormGroup>
-																<Label htmlFor="baseCurrencyValue">
-																	Base Currency 
-																</Label>
-																<Input
-																disabled
-																	id="baseCurrencyValue"
-																	name="baseCurrencyValue"
-																	placeholder = " 1"
-																
-																/>
-																</FormGroup>
-																</Col>
-																</Row>
+																		</FormGroup>
+																			</Col>
+															</Row>
 														
 																<FormGroup className="text-right mt-5">
 																<Button

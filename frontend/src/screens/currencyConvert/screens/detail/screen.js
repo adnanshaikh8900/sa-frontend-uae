@@ -28,6 +28,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import './style.scss'
 
 import * as DetailCurrencyConvertAction from './actions'
+import * as CurrencyConvertActions from '../../actions';
 
 import { Formik } from 'formik';
 
@@ -43,6 +44,7 @@ const mapDispatchToProps = (dispatch) => {
     commonActions: bindActionCreators(CommonActions, dispatch),
     detailCurrencyConvertAction: bindActionCreators(DetailCurrencyConvertAction, dispatch),
     authActions: bindActionCreators(AuthActions, dispatch),
+    currencyConvertActions: bindActionCreators(CurrencyConvertActions, dispatch),
 
   })
 }
@@ -67,6 +69,7 @@ class DetailCurrencyConvert extends React.Component {
   componentDidMount = () => {
     if (this.props.location.state && this.props.location.state.id) {
       this.props.authActions.getCurrencylist();
+      this.getCompanyCurrency();
       this.props.detailCurrencyConvertAction.getCurrencyConvertById(this.props.location.state.id).then((res) => {
         if (res.status === 200) {
           this.setState({
@@ -76,7 +79,7 @@ class DetailCurrencyConvert extends React.Component {
               id:res.data.current_currency_convert_id ? res.data.current_currency_convert_id : '',
               currencyCode: res.data.currencyCode && res.data.currencyCode !== null ? res.data.currencyCode : '',
               exchangeRate: res.data.exchangeRate && res.data.exchangeRate !== null ? res.data.exchangeRate : '',
-              description: res.data.description && res.data.description !== null ? res.data.description : '',
+             
             }
           })
           
@@ -137,6 +140,23 @@ class DetailCurrencyConvert extends React.Component {
     })
   }
 
+  getCompanyCurrency = (basecurrency) => {
+		this.props.currencyConvertActions
+			.getCompanyCurrency()
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({ basecurrency: res.data });
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+				this.setState({ loading: false });
+			});
+	};	
+
   removeCurrencyConvert = () => {
     const {current_currency_convert_id} = this.state
     this.props.detailCurrencyConvertAction.deleteCurrencyConvert(current_currency_convert_id).then((res) => {
@@ -194,8 +214,23 @@ class DetailCurrencyConvert extends React.Component {
                               
                               <Form onSubmit={props.handleSubmit} name="simpleForm">
                                 <Row>
-																<Col lg={6}>
-                                <FormGroup>
+                                <Col lg={1}>
+																	<FormGroup className="mt-2">
+																	<Label>
+																							Value
+																						</Label>
+																	<Input
+																			disabled
+																				id="1"
+																				name="1"
+																				value=	{
+																					1 }
+																				
+																			/>
+																			</FormGroup>
+                                      </Col>
+																<Col lg={4}>
+                                <FormGroup className="mt-2">
 																						<Label htmlFor="currencyCode">
 																							Exchange Currency
 																						</Label>
@@ -255,8 +290,8 @@ class DetailCurrencyConvert extends React.Component {
 																							)}
 																					</FormGroup>
                                           </Col>
-                                          <Col lg={6}>
-															        	<FormGroup>
+                                          <Col lg={4}>
+															        	<FormGroup className="mt-2">
 															        	<Label htmlFor="productCategoryCode">
 																	Exchange rate
 																	{/* <i
@@ -294,15 +329,13 @@ class DetailCurrencyConvert extends React.Component {
 																			: ''
 																	}
 																/>
-                               <i> Exchange rate = Exchange Currency X 1 Base currency</i>
 															{props.errors.exchangeRate && props.touched.exchangeRate && (
                                     <div className="invalid-feedback">{props.errors.exchangeRate}</div>
                                   )}
 																</FormGroup>
 															</Col>
-                               </Row>
-                               <Row>
-                                 <Col lg={6}><FormGroup>
+                              <Col lg={2}>
+																		<FormGroup className="mt-2">
 																		<Label htmlFor="currencyName">
 																			{' '}
 																			Base Currency 
@@ -310,27 +343,14 @@ class DetailCurrencyConvert extends React.Component {
 																		<Input
 																		disabled
 																				type="text"
-																				id="description"
-																				name="description"
+																				id="currencyName"
+																				name="currencyName"
 																				value=	{
-                                          props.values.description
-																				}
+																					this.state.basecurrency.currencyName }
 																			/>
-																				</FormGroup>
-																				</Col>
-																				<Col lg={2}>
-																				<FormGroup>
-																<Label htmlFor="baseCurrencyValue">
-																	Base Currency 
-																</Label>
-																<Input
-																disabled
-																	id="baseCurrencyValue"
-																	name="baseCurrencyValue"
-																	placeholder = " 1"
-																/>
-																</FormGroup>
-																</Col>
+																		</FormGroup>
+																			</Col>
+																			
 															</Row>
                                 <Row>
                                   <Col lg={12} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">

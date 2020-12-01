@@ -236,6 +236,15 @@ public class InvoiceRestHelper {
 		if (invoice.getCurrency() != null) {
 			requestModel.setCurrencyCode(invoice.getCurrency().getCurrencyCode());
 		}
+		if (invoice.getCurrency() != null) {
+			requestModel.setCurrencyName(invoice.getCurrency().getCurrencyName());
+		}
+		if (invoice.getCurrency() != null) {
+			requestModel.setCurrencyIsoCode(invoice.getCurrency().getCurrencyIsoCode());
+		}
+		if (invoice.getCurrency() != null) {
+			requestModel.setCurrencySymbol(invoice.getCurrency().getCurrencySymbol());
+		}
 		if (invoice.getInvoiceDate() != null) {
 			Date date = Date.from(invoice.getInvoiceDate().atZone(ZoneId.systemDefault()).toInstant());
 			requestModel.setInvoiceDate(date);

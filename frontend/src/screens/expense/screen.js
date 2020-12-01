@@ -307,14 +307,24 @@ class Expense extends React.Component {
 	};
 
 	renderAmount = (cell, row, extraData) => {
-		return row.expenseAmount ? (
-			<Currency
-				value={row.expenseAmount.toFixed(2)}
-				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-			/>
-		) : (
-			''
-		);
+		// return row.expenseAmount ? (
+		// 	<Currency
+		// 		value={row.expenseAmount.toFixed(2)}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// ) : (
+		// 	''
+		// );
+		return row.expenseAmount ? row.expenseAmount.toFixed(2) :'';
+	};
+	renderCurrency = (cell, row) => {
+		if (row.currencyName) {
+			return (
+				<label className="badge label-info mb-0">{row.currencyName}</label>
+			);
+		} else {
+			return <label className="badge badge-danger mb-0">No Specified</label>;
+		}
 	};
 
 	handleSearch = () => {
@@ -796,30 +806,29 @@ class Expense extends React.Component {
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}
-												width="20%"
+												
 												dataField="expenseStatus"
 												dataFormat={this.renderInvoiceStatus}
 												dataSort
 											>
 												Status
 											</TableHeaderColumn>
-											{/* <TableHeaderColumn
-												dataField="expenseDescription"
-												dataSort
-											>
-												Description
-											</TableHeaderColumn>
-											<TableHeaderColumn dataField="receiptNumber" dataSort>
-												Receipt No
-											</TableHeaderColumn> */}
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}
 												dataField="transactionCategoryName"
 												dataSort
-												width="20%"
+												width="30%"
 											>
 												Expense Category
 											</TableHeaderColumn>
+											<TableHeaderColumn
+													thStyle={{ whiteSpace: 'normal' }}
+													dataSort
+													dataField="currencyName"
+													dataFormat={this.renderCurrency}
+												>
+													Currency
+												</TableHeaderColumn>
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}
 												dataField="expenseAmount"

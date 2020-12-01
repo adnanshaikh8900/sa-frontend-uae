@@ -100,6 +100,7 @@ class DetailSupplierInvoice extends React.Component {
 			discountAmount: 0,
 			fileName: '',
 			purchaseCategory: [],
+			basecurrency:[],
 		};
 
 		// this.options = {
@@ -149,6 +150,7 @@ class DetailSupplierInvoice extends React.Component {
 				.getInvoiceById(this.props.location.state.id)
 				.then((res) => {
 					if (res.status === 200) {
+						this.getCompanyCurrency();
 						this.props.supplierInvoiceActions.getVatList();
 						this.props.supplierInvoiceActions.getSupplierList(
 							this.state.contactType,
@@ -173,6 +175,7 @@ class DetailSupplierInvoice extends React.Component {
 										: '',
 									currency: res.data.currencyCode ? res.data.currencyCode : '',
 									exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
+									currencyName:res.data.currencyName ? res.data.currencyName : '',
 									invoiceDueDate: res.data.invoiceDueDate
 										? moment(res.data.invoiceDueDate).format('DD/MM/YYYY')
 										: '',
@@ -489,14 +492,15 @@ class DetailSupplierInvoice extends React.Component {
 		);
 	};
 	renderSubTotal = (cell, row,extraData) => {
-		return row.subTotal ? (
-			<Currency
-				value={row.subTotal.toFixed(2)}
-				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-			/>
-		) : (
-			''
-		);
+		// return row.subTotal ? (
+		// 	<Currency
+		// 		value={row.subTotal.toFixed(2)}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// ) : (
+		// 	''
+		// );
+		return row.subTotal ? row.subTotal.toFixed(2) : '';
 	};
 	addRow = () => {
 		const data = [...this.state.data];
@@ -1092,6 +1096,22 @@ class DetailSupplierInvoice extends React.Component {
 			);
 		});
 	};
+	getCompanyCurrency = (basecurrency) => {
+		this.props.currencyConvertActions
+			.getCompanyCurrency()
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({ basecurrency: res.data });
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+				this.setState({ loading: false });
+			});
+	};	
 
 
 	getCurrentUser = (data) => {
@@ -1479,11 +1499,11 @@ class DetailSupplierInvoice extends React.Component {
 																	<Select
 																		styles={customStyles}
 																		options={
-																			currency_list
+																			currency_convert_list
 																				? selectCurrencyFactory.renderOptions(
 																						'currencyName',
 																						'currencyCode',
-																						currency_list,
+																						currency_convert_list,
 																						'Currency',
 																				  )
 																				: []
@@ -1491,12 +1511,12 @@ class DetailSupplierInvoice extends React.Component {
 																		id="currency"
 																		name="currency"
 																		value={
-																			currency_list &&
+																			currency_convert_list &&
 																			selectCurrencyFactory
 																				.renderOptions(
 																					'currencyName',
 																					'currencyCode',
-																					currency_list,
+																					currency_convert_list,
 																					'Currency',
 																				)
 																				.find(
@@ -1523,11 +1543,55 @@ class DetailSupplierInvoice extends React.Component {
 																		)}
 																</FormGroup>
 																</Col>
-																<Col lg={3}>
+																</Row>
+																<hr />
+																<Row>
+																<Col>
+																<Label htmlFor="currency">
+																		Currency Exchange Rate
+																	</Label>	
+																</Col>
+																</Row>
+																
+																<Row>
+																<Col lg={1}>
+																<Input
+																		disabled
+																				id="1"
+																				name="1"
+																				value=	{
+																					1 }
+																				
+																			/>
+																</Col>
+																<Col lg={1}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="exchangeRate">
+																	{/* <Label htmlFor="exchangeRate">
 																		Exchange rate
-																	</Label>
+																	</Label> */}
+																	<div>
+																		<Input
+																		disabled	
+																			className="form-control"
+																			id="currencyName"
+																			name="currencyName"
+																			
+																			value={props.values.currencyName}
+																			onChange={(value) => {
+																				props.handleChange('currencyName')(
+																					value,
+																				);
+																			}}
+																		/>
+																	</div>
+																</FormGroup>
+															</Col>
+															<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
+															<Col lg={1}>
+																<FormGroup className="mb-3">
+																	{/* <Label htmlFor="exchangeRate">
+																		Exchange rate
+																	</Label> */}
 																	<div>
 																		<Input
 																			className="form-control"
@@ -1544,27 +1608,18 @@ class DetailSupplierInvoice extends React.Component {
 																	</div>
 																</FormGroup>
 															</Col>
-																{/* <Col lg={4}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="contact_po_number">
-																			Contact PO Number
-																		</Label>
-																		<Input
-																			type="text"
-																			id="contact_po_number"
-																			name="contact_po_number"
-																			placeholder=""
-																			value={props.values.contact_po_number}
-																			onChange={(value) => {
-																				props.handleChange('contact_po_number')(
-																					value,
-																				);
-																			}}
-																		/>
-																	</FormGroup>
-																</Col> */}
-															</Row>
-
+														
+															<Col lg={1}>
+															<Input
+																		disabled
+																				id="currencyName"
+																				name="currencyName"
+																				value=	{
+																					this.state.basecurrency.currencyName }
+																				
+																			/>
+														</Col>
+														</Row>
 															<hr />
 															<hr />
 															<Row>
@@ -1975,7 +2030,7 @@ class DetailSupplierInvoice extends React.Component {
 																					</Col>
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
-																						{universal_currency_list[0] && (
+																						{/* {universal_currency_list[0] && (
 																						<Currency
 																						value=	{initValue.total_net.toFixed(2)}
 																						currencySymbol={
@@ -1984,8 +2039,8 @@ class DetailSupplierInvoice extends React.Component {
 																						: 'USD'
 																							}
 																							/>
-																							)}
-																						
+																							)} */}
+																							{initValue.total_net.toFixed(2)}
 																						</label>
 																					</Col>
 																				</Row>
@@ -1999,7 +2054,7 @@ class DetailSupplierInvoice extends React.Component {
 																					</Col>
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
-																						{universal_currency_list[0] && (
+																						{/* {universal_currency_list[0] && (
 																						<Currency
 																						value=	{initValue.invoiceVATAmount.toFixed(
 																							2,
@@ -2010,7 +2065,10 @@ class DetailSupplierInvoice extends React.Component {
 																						: 'USD'
 																							}
 																							/>
-																							)}
+																							)} */}
+																							{initValue.invoiceVATAmount.toFixed(
+																							2,
+																						)}
 																						</label>
 																					</Col>
 																				</Row>
@@ -2024,18 +2082,10 @@ class DetailSupplierInvoice extends React.Component {
 																					</Col>
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
-																						{universal_currency_list[0] && (
-																						<Currency
-																						value=		{this.state.initValue.discount.toFixed(
+																							{this.state.initValue.discount.toFixed(
 																							2,
 																						)}
-																						currencySymbol={
-																						universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
-																							/>
-																							)}
+																						
 																						</label>
 																					</Col>
 																				</Row>
@@ -2049,7 +2099,7 @@ class DetailSupplierInvoice extends React.Component {
 																					</Col>
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
-																						{universal_currency_list[0] && (
+																						{/* {universal_currency_list[0] && (
 																						<Currency
 																						value=	{initValue.totalAmount.toFixed(2)}
 																						currencySymbol={
@@ -2058,7 +2108,8 @@ class DetailSupplierInvoice extends React.Component {
 																						: 'USD'
 																							}
 																							/>
-																							)}
+																							)} */}
+																							{initValue.totalAmount.toFixed(2)}
 																						</label>
 																					</Col>
 																				</Row>

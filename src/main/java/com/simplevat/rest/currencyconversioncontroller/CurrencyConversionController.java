@@ -104,6 +104,7 @@ public class CurrencyConversionController{
            currencyConversionResponseModel.setCurrencyCode(currencyConversion.getCurrencyCode().getCurrencyCode());
            currencyConversionResponseModel.setCurrencyCodeConvertedTo(currencyConversion.getCurrencyCodeConvertedTo().getCurrencyCode());
            currencyConversionResponseModel.setDescription(currencyConversion.getCurrencyCodeConvertedTo().getDescription());
+           currencyConversionResponseModel.setCurrencyName(currencyConversion.getCurrencyCode().getCurrencyName());
            currencyConversionResponseModel.setExchangeRate(currencyConversion.getExchangeRate());
            return new ResponseEntity (currencyConversionResponseModel, HttpStatus.OK);
         }

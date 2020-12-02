@@ -180,9 +180,9 @@ public class ReconsilationRestHelper {
 		JournalLineItem journalLineItem1 = new JournalLineItem();
 		journalLineItem1.setTransactionCategory(transaction.getExplainedTransactionCategory());
 		if (!isdebitFromBank) {
-			journalLineItem1.setDebitAmount(amount.multiply(transaction.getExchangeRate()));
+			journalLineItem1.setDebitAmount(amount.multiply(transactionPresistModel.getExchangeRate()));
 		} else {
-			journalLineItem1.setCreditAmount(amount.multiply(transaction.getExchangeRate()));
+			journalLineItem1.setCreditAmount(amount.multiply(transactionPresistModel.getExchangeRate()));
 		}
 		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.EXPENSE);
 		journalLineItem1.setReferenceId(expense.getExpenseId());
@@ -193,9 +193,9 @@ public class ReconsilationRestHelper {
 		JournalLineItem journalLineItem2 = new JournalLineItem();
 		journalLineItem2.setTransactionCategory(transaction.getBankAccount().getTransactionCategory());
 		if (isdebitFromBank) {
-			journalLineItem2.setDebitAmount(transaction.getTransactionAmount().multiply(transaction.getExchangeRate()));
+			journalLineItem2.setDebitAmount(transaction.getTransactionAmount().multiply(transactionPresistModel.getExchangeRate()));
 		} else {
-			journalLineItem2.setCreditAmount(transaction.getTransactionAmount().multiply(transaction.getExchangeRate()));
+			journalLineItem2.setCreditAmount(transaction.getTransactionAmount().multiply(transactionPresistModel.getExchangeRate()));
 		}
 		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.EXPENSE);
 		journalLineItem2.setReferenceId(expense.getExpenseId());

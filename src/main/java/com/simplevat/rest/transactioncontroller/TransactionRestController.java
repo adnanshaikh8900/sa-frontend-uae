@@ -661,7 +661,7 @@ public class TransactionRestController {
 
 				// POST JOURNAL FOR RECCEPT
 				Journal journalForReceipt = receiptRestHelper.receiptPosting(
-						new PostingRequestModel(receipt.getId(), receipt.getAmount()), userId,
+						new PostingRequestModel(receipt.getId(), receipt.getAmount().multiply(trnx.getExchangeRate())), userId,
 						receipt.getDepositeToTransactionCategory());
 				journalService.persist(journalForReceipt);
 
@@ -710,7 +710,7 @@ public class TransactionRestController {
 
 				// POST JOURNAL FOR PAYMENT
 				Journal journalForReceipt = receiptRestHelper.paymentPosting(
-						new PostingRequestModel(payment.getPaymentId(), payment.getInvoiceAmount()),
+						new PostingRequestModel(payment.getPaymentId(), payment.getInvoiceAmount().multiply(trnx.getExchangeRate())),
 						userId, payment.getDepositeToTransactionCategory());
 				journalService.persist(journalForReceipt);
 
@@ -1003,6 +1003,10 @@ public class TransactionRestController {
 					&& oldTransactionAmount.compareTo(newTransactionAmount) != 0) {
 				transactionPresistModel.setIsValidForCurrentBalance(true);
 				transactionPresistModel.setOldTransactionAmount(oldTransactionAmount);
+			}
+
+			if (transactionPresistModel.getExchangeRate()!=null){
+				trnx.setExchangeRate(transactionPresistModel.getExchangeRate());
 			}
 
 		trnx.setLastUpdateBy(userId);

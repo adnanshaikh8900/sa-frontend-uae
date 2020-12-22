@@ -566,7 +566,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																				.find(
 																					(option) =>
 																						option.value ===
-																						+props.values.currency,
+																						+props.values.currencyCode,
 																				)
 																		}
 																		onChange={(option) => {

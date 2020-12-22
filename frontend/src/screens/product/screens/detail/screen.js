@@ -313,7 +313,7 @@ class DetailProduct extends React.Component {
 				if (res.data > 0) {
 					this.props.commonActions.tostifyAlert(
 						'error',
-						'You need to delete invoices to delete the contact',
+						'You need to delete invoices to delete the Product',
 					);
 				} else {
 					const message1 =

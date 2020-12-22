@@ -149,6 +149,7 @@ class CreateSupplierInvoice extends React.Component {
 			createMore: false,
 			fileName: '',
 			term: '',
+			placeOfSupply: '',
 			prefix: '',
 			selectedType: { value: 'FIXED', label: 'Fixed' },
 			discountPercentage: '',
@@ -179,7 +180,15 @@ class CreateSupplierInvoice extends React.Component {
 			{ label: 'Net 30', value: 'NET_30' },
 			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
 		];
-
+		this.placelist = [
+			{ label: 'Abu Dhabi', value: '1' },
+			{ label: 'Dubai', value: '2' },
+			{ label: 'Sharjah', value: '3' },
+			{ label: 'Ajman', value: '4' },
+			{ label: 'Umm Al Quwain', value: '5' },
+			{ label: 'Ras Al Khalmah', value: '6' },
+			{ label: 'Fujairah', value: '7' },
+		];
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
@@ -930,6 +939,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 			invoiceDueDate,
 			invoiceDate,
 			contactId,
+			placeOfSupply,
 			project,
 			exchangeRate,
 			invoice_number,
@@ -959,6 +969,9 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 			'receiptAttachmentDescription',
 			receiptAttachmentDescription ? receiptAttachmentDescription : '',
 		);
+		if (placeOfSupply && placeOfSupply.value) {
+			formData.append('placeOfSupply', placeOfSupply.label);
+		}
 		formData.append('notes', notes ? notes : '');
 		formData.append('type', 1);
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
@@ -1285,6 +1298,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 														'Supplier is Required',
 													),
 													term: Yup.string().required('Term is Required'),
+													placeOfSupply: Yup.string().required('Place of supply is Required'),
 													invoiceDate: Yup.string().required(
 														'Invoice Date is Required',
 													),
@@ -1472,7 +1486,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		)}
 																</FormGroup>
 															</Col>
-															<Col lg={3}>
+															<Col>
 																<Label
 																	htmlFor="contactId"
 																	style={{ display: 'block' }}
@@ -1482,11 +1496,54 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																<Button
 																	type="button"
 																	color="primary"
-																	className="btn-square mr-3 mb-3"
+																	className="btn-square"
 																	onClick={this.openSupplierModal}
 																>
 																	<i className="fa fa-plus"></i> Add a Supplier
 																</Button>
+															</Col>
+															<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="placeofsupplyId">
+																		<span className="text-danger">*</span>
+																		Place of Supply
+																	</Label>
+																	<Select
+																		styles={customStyles}
+																		id="placeofsupply"
+																		name="placeofsupply"
+																		placeholder="Select Place of Supply"
+																		options={
+																			this.placelist
+																				? selectOptionsFactory.renderOptions(
+																						'label',
+																						'value',
+																						this.placelist,
+																						'Place of Supply',
+																						
+																				  )
+																				: []
+																		}
+																		value={this.state.placelist}
+																		className={
+																			props.errors.placeOfSupply &&
+																			props.touched.placeOfSupply
+																				? 'is-invalid'
+																				: ''
+																		}
+																		onChange={(option) =>
+																			props.handleChange('placeOfSupply')(
+																				option,
+																			)
+																		}
+																	/>
+																{props.errors.placeOfSupply && props.touched.placeOfSupply && (
+																		<div className="invalid-feedback">
+																			{props.errors.placeOfSupply}
+																		</div>
+																	)}
+																</FormGroup>
+															
 															</Col>
 														</Row>
 														<hr />
@@ -1678,7 +1735,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																				.find(
 																					(option) =>
 																						option.value ===
-																						+props.values.currency,
+																						+props.values.currencyCode,
 																				)
 																		}
 																		onChange={(option) => {
@@ -1710,9 +1767,8 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	</Label>	
 																</Col>
 																</Row>
-																
 																<Row>
-																<Col lg={1}>
+																<Col md={1}>
 																<Input
 																		disabled
 																				id="1"
@@ -1722,7 +1778,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																				
 																			/>
 																</Col>
-																<Col lg={1}>
+																<Col md={2}>
 																<FormGroup className="mb-3">
 																	{/* <Label htmlFor="exchangeRate">
 																		Exchange rate
@@ -1745,7 +1801,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																</FormGroup>
 															</Col>
 															<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
-															<Col lg={1}>
+															<Col lg={2}>
 																<FormGroup className="mb-3">
 																	{/* <Label htmlFor="exchangeRate">
 																		Exchange rate
@@ -1767,7 +1823,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																</FormGroup>
 															</Col>
 														
-															<Col lg={1}>
+															<Col md={2}>
 															<Input
 																		disabled
 																				id="currencyName"
@@ -1823,13 +1879,14 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	className="invoice-create-table"
 																>
 																	<TableHeaderColumn
-																		width="55"
+																		width="5%"
 																		dataAlign="center"
 																		dataFormat={(cell, rows) =>
 																			this.renderActions(cell, rows, props)
 																		}
 																	></TableHeaderColumn>
 																	<TableHeaderColumn
+																	width="12%"
 																		dataField="product"
 																		dataFormat={(cell, rows) =>
 																			this.renderProduct(cell, rows, props)
@@ -1845,7 +1902,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		}
 																	></TableHeaderColumn>
 																	<TableHeaderColumn
-																		width="300"
+																		width="15%"
 																		dataField="account"
 																		dataFormat={(cell, rows) =>
 																			this.renderAccount(cell, rows, props)

@@ -198,7 +198,7 @@ class Profile extends React.Component {
 					// this.props.userActions.getRoleList();
 					this.props.profileActions.getCurrencyList();
 					this.props.profileActions.getCountryList();
-					this.props.profileActions.getIndustryTypeList();
+					//this.props.profileActions.getIndustryTypeList();
 					this.props.profileActions.getCompanyTypeList();
 					this.props.profileActions.getRoleList();
 
@@ -261,7 +261,7 @@ class Profile extends React.Component {
 		formData.append('email', email ? email : '');
 		formData.append('dob', dob ? moment(dob).format('DD-MM-YYYY') : '');
 		formData.append('active', this.state.selectedStatus);
-		formData.append('timeZone', timezone ? timezone.value : '');
+		formData.append('timeZone', timezone ? timezone : '');
 		formData.append('roleId', roleId ? roleId : '');
 
 		if (password.length > 0) {
@@ -1001,7 +1001,7 @@ class Profile extends React.Component {
 																									)('');
 																								}
 																							}}
-																							placeholder="Select Role"
+																							placeholder="Select TimeZOne"
 																							id="timezone"
 																							name="timezone"
 																							className={
@@ -1547,6 +1547,7 @@ class Profile extends React.Component {
 																							Currency Code
 																						</Label>
 																						<Select
+																						isDisabled
 																							options={
 																								currency_list
 																									? selectCurrencyFactory.renderOptions(

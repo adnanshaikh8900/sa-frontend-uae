@@ -236,9 +236,7 @@ class DetailJournal extends React.Component {
 										.find(
 											(item) =>
 												item.label === row.journalTransactionCategoryLabel,
-										)
-										.options.find(
-											(item) => item.value === +row.transactionCategoryId,
+												(item) => item.value === +row.transactionCategoryId,
 										)
 								: row.transactionCategoryId
 						}

@@ -147,12 +147,12 @@ class CreateCurrencyConvert extends React.Component {
 								<CardHeader>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="nav-icon icon-briefcase" />
-										<span className="ml-2">New Currency Converstion</span>
+										<span>New Currency Converstion</span>
 									</div>
 								</CardHeader>
 								<CardBody>
 									<Row>
-										<Col lg={6}>
+										<Col lg={10}>
 											<Formik
 												initialValues={initValue}
 												ref={this.formRef}
@@ -193,8 +193,8 @@ class CreateCurrencyConvert extends React.Component {
 																				value=	{
 																					1 }
 																				
-																			/>
-																			</FormGroup>
+																	/>
+																	</FormGroup>
 																	</Col>
 																					<Col lg={4}>
 																						<FormGroup className="mt-2">
@@ -258,7 +258,7 @@ class CreateCurrencyConvert extends React.Component {
 																			</FormGroup>
 																				</Col>
 																				<FormGroup className="mt-5"><label><b>=</b></label>	</FormGroup>
-																	<Col lg={4}>
+																	<Col lg={3}>
 																	<FormGroup className="mt-2">
 																	<Label htmlFor="Exchange rate">
 																	Exchange rate
@@ -306,10 +306,9 @@ class CreateCurrencyConvert extends React.Component {
 																	)}
 																	</FormGroup >
 																	</Col>
-																	<Col lg={2}>
+																	<Col lg={3}>
 																		<FormGroup className="mt-2">
 																		<Label htmlFor="currencyName">
-																			{' '}
 																			Base Currency 
 																		</Label>
 																		<Input
@@ -361,7 +360,7 @@ class CreateCurrencyConvert extends React.Component {
 																	<i className="fa fa-ban"></i> Cancel
 																</Button>
 																</FormGroup>
-															</form>
+																</form>
 													);
 												}}
 											</Formik>

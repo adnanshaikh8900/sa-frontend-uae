@@ -1087,6 +1087,7 @@ class SupplierInvoice extends React.Component {
 												dataField="invoiceNumber"
 												// dataFormat={this.renderInvoiceNumber}
 												dataSort
+												width="10%"
 											>
 												Invoice Number
 											</TableHeaderColumn>
@@ -1094,12 +1095,13 @@ class SupplierInvoice extends React.Component {
 												thStyle={{ whiteSpace: 'normal' }}
 												dataField="customerName"
 												dataSort
+												width="12%"
 											>
 												Supplier Name
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}
-												width="230"
+												width="7%"
 												dataField="status"
 												dataFormat={this.renderInvoiceStatus}
 												dataSort
@@ -1110,6 +1112,7 @@ class SupplierInvoice extends React.Component {
 												thStyle={{ whiteSpace: 'normal' }}
 												dataField="invoiceDate"
 												dataSort
+												width="7%"
 												dataFormat={this.invoiceDate}
 											>
 												Invoice Date
@@ -1118,6 +1121,7 @@ class SupplierInvoice extends React.Component {
 												thStyle={{ whiteSpace: 'normal' }}
 												dataField="invoiceDueDate"
 												dataSort
+												width="7%"
 												dataFormat={this.invoiceDueDate}
 											>
 												Due Date
@@ -1125,6 +1129,7 @@ class SupplierInvoice extends React.Component {
 											<TableHeaderColumn
 													thStyle={{ whiteSpace: 'normal' }}
 													dataSort
+													width="5%"
 													dataField="currencyName"
 													dataFormat={this.renderCurrency}
 												>
@@ -1134,6 +1139,7 @@ class SupplierInvoice extends React.Component {
 												thStyle={{ whiteSpace: 'normal' }}
 												dataField="totalVatAmount"
 												dataSort
+												width="5%"
 												dataFormat={this.renderVatAmount}
 												formatExtraData={universal_currency_list}
 											>
@@ -1143,6 +1149,7 @@ class SupplierInvoice extends React.Component {
 												thStyle={{ whiteSpace: 'normal' }}
 												dataField="totalAmount"
 												dataSort
+												width="5%"
 												dataFormat={this.renderInvoiceAmount}
 												
 											>
@@ -1152,6 +1159,7 @@ class SupplierInvoice extends React.Component {
 												thStyle={{ whiteSpace: 'normal' }}
 												className="text-right"
 												columnClassName="text-right"
+												width="5%"
 												dataFormat={this.renderActions}
 											></TableHeaderColumn>
 										</BootstrapTable>

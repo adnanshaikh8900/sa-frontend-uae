@@ -264,7 +264,7 @@ class DetailUser extends React.Component {
 	};
 
 	render() {
-		const { loading, dialog, timezone } = this.state;
+		const { loading, dialog, timezone,current_user_id } = this.state;
 		const { role_list } = this.props;
 
 		return (
@@ -824,16 +824,18 @@ class DetailUser extends React.Component {
 																	lg={12}
 																	className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
 																>
+																	{this.state.current_user_id && current_user_id.roleName === 'Admin' (
 																	<FormGroup>
-																		{/* <Button
+																		<Button
 																			type="button"
 																			color="danger"
 																			className="btn-square"
 																			onClick={this.deleteUser}
 																		>
 																			<i className="fa fa-trash"></i> Delete
-																		</Button> */}
-																	</FormGroup>
+																		</Button>
+																	</FormGroup>)}
+													
 																	<FormGroup className="text-right">
 																		<Button
 																			type="submit"

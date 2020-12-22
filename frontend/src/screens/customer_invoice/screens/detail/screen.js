@@ -95,6 +95,7 @@ class DetailCustomerInvoice extends React.Component {
 			openProductModal: false,
 			selectedContact: '',
 			term: '',
+			placeOfSupplyId: '',
 			selectedType: '',
 			discountPercentage: '',
 			discountAmount: 0,
@@ -111,6 +112,15 @@ class DetailCustomerInvoice extends React.Component {
 			{ label: 'Net 10', value: 'NET_10' },
 			{ label: 'Net 30', value: 'NET_30' },
 			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
+		];
+		this.placelist = [
+			{ label: 'Abu Dhabi', value: '1' },
+			{ label: 'Dubai', value: '2' },
+			{ label: 'Sharjah', value: '3' },
+			{ label: 'Ajman', value: '4' },
+			{ label: 'Umm Al Quwain', value: '5' },
+			{ label: 'Ras Al Khalmah', value: '6' },
+			{ label: 'Fujairah', value: '7' },
 		];
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
@@ -213,6 +223,7 @@ class DetailCustomerInvoice extends React.Component {
 										? res.data.discountType
 										: '',
 									term: res.data.term ? res.data.term : '',
+									placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 									fileName: res.data.fileName ? res.data.fileName : '',
 									filePath: res.data.filePath ? res.data.filePath : '',
 								},
@@ -225,6 +236,7 @@ class DetailCustomerInvoice extends React.Component {
 									: [],
 								selectedContact: res.data.contactId ? res.data.contactId : '',
 								term: res.data.term ? res.data.term : '',
+								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 								loading: false,
 							},
 							() => {
@@ -429,7 +441,7 @@ class DetailCustomerInvoice extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		row.subTotal ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
+		return row.subTotal ? row.subTotal.toFixed(2) : '';
 	};
 	addRow = () => {
 		const data = [...this.state.data];
@@ -793,6 +805,7 @@ class DetailCustomerInvoice extends React.Component {
 			invoiceDate,
 			contactId,
 			project,
+			placeOfSupplyId,
 			exchangeRate,
 			invoice_number,
 			notes,
@@ -842,13 +855,14 @@ class DetailCustomerInvoice extends React.Component {
 		formData.append('discount', discount);
 		formData.append('discountType', discountType);
 		formData.append('term', term);
+		formData.append('placeOfSupplyId',placeOfSupplyId.value);
 		if (discountType === 'PERCENTAGE') {
 			formData.append('discountPercentage', discountPercentage);
 		}
 		if (contactId) {
 			formData.append('contactId', contactId);
 		}
-		if (currency) {
+		if (currency && currency.value) {
 			formData.append('currencyCode', currency.value);
 		}
 		if (project) {
@@ -1060,6 +1074,7 @@ class DetailCustomerInvoice extends React.Component {
 															'Supplier is Required',
 														),
 														term: Yup.string().required('term is Required'),
+														placeOfSupplyId: Yup.string().required('Place of supply is Required'),
 														invoiceDate: Yup.string().required(
 															'Invoice Date is Required',
 														),
@@ -1153,7 +1168,7 @@ class DetailCustomerInvoice extends React.Component {
 													{(props) => (
 														<Form onSubmit={props.handleSubmit}>
 															<Row>
-																<Col lg={4}>
+																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="invoice_number">
 																			<span className="text-danger">*</span>
@@ -1186,7 +1201,7 @@ class DetailCustomerInvoice extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																<Col lg={4}>
+																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="contactId">
 																			<span className="text-danger">*</span>
@@ -1255,6 +1270,53 @@ class DetailCustomerInvoice extends React.Component {
 																		<i className="fa fa-plus"></i> Add a
 																		Customer
 																	</Button>
+																</Col>
+																<Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="placeOfSupplyId">
+																			<span className="text-danger">*</span>
+																			Place of Supply
+																		</Label>
+																		<Select
+																			styles={customStyles}
+																			options={
+																				this.placelist
+																					? selectOptionsFactory.renderOptions(
+																							'label',
+																							'value',
+																							this.placelist,
+																							'Place of Supply',
+																					  )
+																					: []
+																			}
+																			id="placeOfSupplyId"
+																			name="placeOfSupplyId"
+																			value={
+																				this.placelist &&
+																				this.placelist.find(
+																					(option) =>
+																						option.label === props.values.placeOfSupplyId,
+																				)
+																			}
+																			onChange={(option) =>
+																				props.handleChange('placeOfSupplyId')(
+																					option,
+																				)
+																			}
+																			className={`${
+																				props.errors.placeOfSupplyId &&
+																				props.touched.placeOfSupplyId
+																					? 'is-invalid'
+																					: ''
+																			}`}
+																		/>
+																		{props.errors.placeOfSupplyId &&
+																			props.touched.placeOfSupplyId && (
+																				<div className="invalid-feedback">
+																					{props.errors.placeOfSupplyId}
+																				</div>
+																			)}
+																	</FormGroup>
 																</Col>
 															</Row>
 															<hr />
@@ -1464,7 +1526,7 @@ class DetailCustomerInvoice extends React.Component {
 																</Row>
 																
 																<Row>
-																<Col lg={1}>
+																<Col md={1}>
 																<Input
 																		disabled
 																				id="1"
@@ -1474,7 +1536,7 @@ class DetailCustomerInvoice extends React.Component {
 																				
 																			/>
 																</Col>
-																<Col lg={1}>
+																<Col md={2}>
 																<FormGroup className="mb-3">
 																	{/* <Label htmlFor="exchangeRate">
 																		Exchange rate
@@ -1497,7 +1559,7 @@ class DetailCustomerInvoice extends React.Component {
 																</FormGroup>
 															</Col>
 															<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
-															<Col lg={1}>
+															<Col lg={2}>
 																<FormGroup className="mb-3">
 																	{/* <Label htmlFor="exchangeRate">
 																		Exchange rate
@@ -1519,7 +1581,7 @@ class DetailCustomerInvoice extends React.Component {
 																</FormGroup>
 															</Col>
 														
-															<Col lg={1}>
+															<Col md={2}>
 															<Input
 																		disabled
 																				id="currencyName"

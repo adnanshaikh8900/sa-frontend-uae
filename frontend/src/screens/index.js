@@ -6,6 +6,7 @@ import ResetPassword from './reset_password';
 import Dashboard from './dashboard';
 import DashboardTwo from './dashboard/screen-two';
 
+
 import Journal from './journal';
 import CreateJournal from './journal/screens/create';
 import DetailJournal from './journal/screens/detail';
@@ -107,6 +108,7 @@ export {
 	ResetPassword,
 	Dashboard,
 	DashboardTwo,
+
 	Journal,
 	CreateJournal,
 	DetailJournal,

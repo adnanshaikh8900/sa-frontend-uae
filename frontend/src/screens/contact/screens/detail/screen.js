@@ -797,7 +797,6 @@ class DetailContact extends React.Component {
 																<Col md="4">
 																	<FormGroup>
 																		<Label htmlFor="countryId">
-																			<span className="text-danger">*</span>
 																			Country
 																		</Label>
 																		<Select

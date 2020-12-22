@@ -693,7 +693,7 @@ class Expense extends React.Component {
 												/>
 											</Col>
 
-											<Col lg={2} className="mb-1">
+											<Col lg={3} className="mb-1">
 												<FormGroup className="mb-3">
 													<Select
 														styles={customStyles}

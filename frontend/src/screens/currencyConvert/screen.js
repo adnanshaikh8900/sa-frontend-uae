@@ -161,7 +161,7 @@ class ProductCategory extends React.Component {
 	renderBaseCurrency = (cell, row) => {
 		if (row.description) {
 			return (
-				<label className="badge label-info mb-0">{row.description}</label>
+				<label className="badge label-info mb-0">{row.currencyName}</label>
 			);
 		} else {
 			return <label className="badge badge-danger mb-0">No Specified</label>;

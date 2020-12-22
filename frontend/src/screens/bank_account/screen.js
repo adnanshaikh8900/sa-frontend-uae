@@ -257,6 +257,9 @@ class BankAccount extends React.Component {
 		return (
 			<label
 				className="mb-0 label-danger"
+				style={{
+					cursor: 'pointer',
+					}}
 				onClick={() =>
 					this.props.history.push('/admin/banking/bank-account/transaction', {
 						bankAccountId: row.bankAccountId,
@@ -602,7 +605,7 @@ class BankAccount extends React.Component {
 					<Card>
 						<CardHeader>
 							<Row>
-								<Col lg={12}>
+								<Col lg={8}>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="fas fa-university" />
 										<span className="ml-2">Bank Accounts</span>
@@ -786,12 +789,11 @@ class BankAccount extends React.Component {
 												}}
 											>
 												<TableHeaderColumn
-													thStyle={{ whiteSpace: 'normal' }}
 													dataField="bankAccountNo"
 													dataFormat={this.renderAccountNumber}
 													dataSort
 													width="150"
-													thStyle={{ whiteSpace: 'normal' }}
+													
 												>
 													Account Number
 												</TableHeaderColumn>
@@ -800,7 +802,6 @@ class BankAccount extends React.Component {
 													dataField="name"
 													dataSort
 													width="150"
-													thStyle={{ whiteSpace: 'normal' }}
 												>
 													Bank
 												</TableHeaderColumn>
@@ -809,7 +810,7 @@ class BankAccount extends React.Component {
 													dataField="accounName"
 													dataSort
 													width="150"
-													thStyle={{ whiteSpace: 'normal' }}
+												
 												>
 													Account Name
 												</TableHeaderColumn>
@@ -819,8 +820,9 @@ class BankAccount extends React.Component {
 													dataField="bankAccountTypeName"
 													dataSort
 													width="150"
-													thStyle={{ whiteSpace: 'normal' }}
+													
 												>
+													Account Type
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													thStyle={{ whiteSpace: 'normal' }}
@@ -828,7 +830,7 @@ class BankAccount extends React.Component {
 													dataSort
 													dataField="currancyName"
 													width="150"
-													thStyle={{ whiteSpace: 'normal' }}
+													
 												>
 													Currency
 												</TableHeaderColumn>
@@ -838,7 +840,7 @@ class BankAccount extends React.Component {
 													dataSort
 													width="150"
 													dataFormat={this.renderBalance}
-													thStyle={{ whiteSpace: 'normal' }}
+													
 													formatExtraData={universal_currency_list}
 												>
 													Bank Balance
@@ -851,7 +853,7 @@ class BankAccount extends React.Component {
 													dataFormat={this.renderLastReconciled}
 													formatExtraData={universal_currency_list}
 													width="150"
-													thStyle={{ whiteSpace: 'normal' }}
+												
 												>
 													Last Reconciled
 												</TableHeaderColumn>

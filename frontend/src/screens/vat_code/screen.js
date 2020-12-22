@@ -174,6 +174,16 @@ class VatCode extends React.Component {
 	// Delete Vat By ID
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
+		console.log(selectedRows);
+		this.props.vatActions
+			.getVatCount(selectedRows)
+			.then((res) => {
+				if (res.data > 0) {
+					this.props.commonActions.tostifyAlert(
+						'error',
+						'You need to delete invoices to delete the product',
+					);
+				} else {
 		const message1 =
         <text>
         <b>Delete Vat Code?</b>
@@ -197,6 +207,8 @@ class VatCode extends React.Component {
 				'Please select the rows of the table and try again.',
 			);
 		}
+	}
+});
 	};
 
 	removeBulk = () => {

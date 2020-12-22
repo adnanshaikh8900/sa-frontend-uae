@@ -38,6 +38,7 @@ const mapStateToProps = (state) => {
 	return {
 		currency_list: state.customer_invoice.currency_list,
 		vat_list: state.customer_invoice.vat_list,
+		place_of_supply: state.customer_invoice.place_of_supply,
 		product_list: state.customer_invoice.product_list,
 		customer_list: state.customer_invoice.customer_list,
 		country_list: state.customer_invoice.country_list,
@@ -106,6 +107,7 @@ class CreateCustomerInvoice extends React.Component {
 				invoiceDueDate: '',
 				invoiceDate: new Date(),
 				contactId: '',
+				placeOfSupplyId: '',
 				project: '',
 				term: '',
 				exchangeRate:'',
@@ -168,6 +170,15 @@ class CreateCustomerInvoice extends React.Component {
 			{ label: 'Net 10', value: 'NET_10' },
 			{ label: 'Net 30', value: 'NET_30' },
 			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
+		];
+		this.placelist = [
+			{ label: 'Abu Dhabi', value: '1' },
+			{ label: 'Dubai', value: '2' },
+			{ label: 'Sharjah', value: '3' },
+			{ label: 'Ajman', value: '4' },
+			{ label: 'Umm Al Quwain', value: '5' },
+			{ label: 'Ras Al Khalmah', value: '6' },
+			{ label: 'Fujairah', value: '7' },
 		];
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
@@ -419,6 +430,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 		this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
 		this.props.customerInvoiceActions.getCountryList();
 		this.props.customerInvoiceActions.getVatList();
+		this.props.customerInvoiceActions.getPlaceOfSuppliyList();
 		this.props.customerInvoiceActions.getProductList();
 		this.props.productActions.getProductCategoryList();
 		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
@@ -887,7 +899,6 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 			},
 		);
 	};
-
 	handleFileChange = (e, props) => {
 		e.preventDefault();
 		let reader = new FileReader();
@@ -910,6 +921,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 			invoiceDueDate,
 			invoiceDate,
 			contactId,
+			placeOfSupplyId,
 			project,
 			invoice_number,
 			discount,
@@ -969,6 +981,9 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 		}
 		if (contactId && contactId.value) {
 			formData.append('contactId', contactId.value);
+		}
+		if (placeOfSupplyId && placeOfSupplyId.value) {
+			formData.append('placeOfSupplyId', placeOfSupplyId.value);
 		}
 		if (currency !== null && currency) {
 			formData.append('currencyCode', currency.value);
@@ -1151,6 +1166,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 			customer_list,
 			universal_currency_list,
 			currency_convert_list,
+			place_of_supply,
 		} = this.props;
 		return (
 			<div className="create-customer-invoice-screen">
@@ -1197,6 +1213,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 														'Customer is Required',
 													),
 													term: Yup.string().required('Term is Required'),
+													placeOfSupplyId: Yup.string().required('Place of supply is Required'),
 													currency: Yup.string().required(
 														'Currency is Required',
 													),
@@ -1399,6 +1416,48 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																	<i className="fa fa-plus"></i> Add a Customer
 																</Button>
 															</Col>
+																<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="placeofsupplyId">
+																		<span className="text-danger">*</span>
+																		Place of Supply
+																	</Label>
+																	<Select
+																		styles={customStyles}
+																		id="placeOfSupplyId"
+																		name="placeOfSupplyId"
+																		placeholder="Select Place of Supply"
+																		options={
+																			this.placelist
+																				? selectOptionsFactory.renderOptions(
+																						'label',
+																						'value',
+																						this.placelist,
+																						'Place of Supply',
+																						
+																				  )
+																				: []
+																		}
+																		value={this.state.placelist}
+																		className={
+																			props.errors.placeOfSupplyId &&
+																			props.touched.placeOfSupplyId
+																				? 'is-invalid'
+																				: ''
+																		}
+																		onChange={(option) =>
+																			props.handleChange('placeOfSupplyId')(
+																				option,
+																			)
+																		}
+																	/>
+																{props.errors.placeOfSupplyId && props.touched.placeOfSupplyId && (
+																		<div className="invalid-feedback">
+																			{props.errors.placeOfSupplyId}
+																		</div>
+																	)}
+																</FormGroup>
+															</Col>
 														</Row>
 														<hr />
 														<Row>
@@ -1585,7 +1644,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																		 		.find(
 																					(option) =>
 																		 				option.value ===
-																	 				+props.values.currency,
+																	 				+props.values.currencyCode,
 																	 		)
 																		 }
 																		 onChange={(option) => {
@@ -1600,12 +1659,11 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																				: ''
 																		}`}
 																	/>
-																	{props.errors.currency &&
-																		props.touched.currency && (
-																			<div className="invalid-feedback">
-																				{props.errors.currency}
-																			</div>
-																		)}
+																	{props.errors.currency && props.touched.currency && (
+																		<div className="invalid-feedback">
+																			{props.errors.currency}
+																		</div>
+																	)}
 																</FormGroup>
 															</Col>
 														</Row>
@@ -1619,7 +1677,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																</Row>
 																
 																<Row>
-																<Col lg={1}>
+																<Col md={1}>
 																<Input
 																		disabled
 																				id="1"
@@ -1629,7 +1687,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																				
 																			/>
 																</Col>
-																<Col lg={1}>
+																<Col md={2}>
 																<FormGroup className="mb-3">
 																	{/* <Label htmlFor="exchangeRate">
 																		Exchange rate
@@ -1652,7 +1710,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																</FormGroup>
 															</Col>
 															<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
-															<Col lg={1}>
+															<Col lg={2}>
 																<FormGroup className="mb-3">
 																	{/* <Label htmlFor="exchangeRate">
 																		Exchange rate
@@ -1673,8 +1731,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																	</div>
 																</FormGroup>
 															</Col>
-														
-															<Col lg={1}>
+															<Col md={2}>
 															<Input
 																		disabled
 																				id="currencyName"

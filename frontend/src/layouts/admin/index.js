@@ -95,6 +95,7 @@ class AdminLayout extends React.Component {
 			zIndex: 1999,
 		};
 		const { user_role_list, user_list } = this.props;
+		console.log(user_role_list)
 
 		var arr = [];
 

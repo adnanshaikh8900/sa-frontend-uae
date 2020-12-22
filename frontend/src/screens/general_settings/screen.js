@@ -763,11 +763,16 @@ class GeneralSettings extends React.Component {
 																	<i className="fa fa-dot-circle-o"></i> Save
 																</Button>
 																<Button
-																	color="secondary"
-																	className="btn-square"
-																>
-																	<i className="fa fa-ban"></i> Cancel
-																</Button>
+																					color="secondary"
+																					className="btn-square"
+																					onClick={() => {
+																						this.props.history.push(
+																							'/admin/dashboard',
+																						);
+																					}}
+																				>
+																					<i className="fa fa-ban"></i> Cancel
+																				</Button>
 															</FormGroup>
 														</Form>
 													)}

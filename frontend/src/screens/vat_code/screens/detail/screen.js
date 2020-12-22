@@ -21,6 +21,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import './style.scss';
 
 import * as VatDetailActions from './actions';
+import * as VatActions from '../../actions'
 
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -33,7 +34,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		commonActions: bindActionCreators(CommonActions, dispatch),
-		vatDetailActions: bindActionCreators(VatDetailActions, dispatch),
+		vatDetailActions: bindActionCreators(VatDetailActions, dispatch), 
+		vatActions: bindActionCreators(VatActions, dispatch),
 	};
 };
 
@@ -93,7 +95,16 @@ class DetailVatCode extends React.Component {
 	};
 
 	deleteVat = () => {
-		const { selectedRows } = this.state;
+		const { current_vat_id } = this.state;
+		this.props.vatActions
+		.getVatCount(current_vat_id)
+		.then((res) => {
+			if (res.data > 0) {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					'You need to delete invoices to delete the Vat category',
+				);
+			} else {
 		const message1 =
         <text>
         <b>Delete Vat Code?</b>
@@ -110,6 +121,8 @@ class DetailVatCode extends React.Component {
 				/>
 			),
 		});
+	}
+});
 	};
 
 	removeVat = () => {

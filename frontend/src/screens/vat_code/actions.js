@@ -97,3 +97,22 @@ export const deleteVat = (obj) => {
 			});
 	};
 };
+
+export const getVatCount = (id) => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: `/rest/vat/getProductCountsForVat/?vatId=${id}`,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+

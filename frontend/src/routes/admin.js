@@ -119,7 +119,6 @@ const adminRoutes = [
 		name: 'DashboardTwo',
 		component: DashboardTwo,
 	},
-
 	{
 		path: '/admin/accountant/journal/create',
 		name: 'AddJournal',
@@ -501,7 +500,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/settings/user',
-		name: 'AddUser',
+		name: 'User',
 		component: User.screen,
 	},
 	{

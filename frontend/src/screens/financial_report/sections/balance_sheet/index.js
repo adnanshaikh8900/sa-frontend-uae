@@ -200,6 +200,9 @@ class BalanceSheet extends React.Component {
 												<div
 													className="mr-2 print-btn-cont"
 													onClick={() => window.print()}
+													style={{
+														cursor: 'pointer',
+														}}
 												>
 													<i className="fa fa-print"></i>
 												</div>

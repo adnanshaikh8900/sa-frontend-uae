@@ -198,7 +198,7 @@ class DetailCurrencyConvert extends React.Component {
                     <Loader></Loader>
                   ) : (
                       <Row>
-                        <Col lg={6}>
+                        <Col lg={10}>
                           <Formik
                             initialValues={initValue}
                             onSubmit={(values, { resetForm }) => {
@@ -334,7 +334,7 @@ class DetailCurrencyConvert extends React.Component {
                                   )}
 																</FormGroup>
 															</Col>
-                              <Col lg={2}>
+                              <Col lg={3}>
 																		<FormGroup className="mt-2">
 																		<Label htmlFor="currencyName">
 																			{' '}
@@ -353,7 +353,7 @@ class DetailCurrencyConvert extends React.Component {
 																			
 															</Row>
                                 <Row>
-                                  <Col lg={12} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">
+                                  <Col lg={10} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">
                                   <FormGroup className="text-right">
                                   <Button
 																			type="button"

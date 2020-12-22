@@ -1,6 +1,0 @@
-{
-  "MAILGUN_API_KEY":"7a033b7ea4317ba3b2fdf7c7aa855189-c27bf672-f0bb6998",
-  "MAILGUN_DOMAIN":"build.simplevat.com",
-  "MAILGUN_FROM":"google_cloud_build@build.simplevat.com",
-  "MAILGUN_TO":"simplevat-builds@simplevat.com"
-}

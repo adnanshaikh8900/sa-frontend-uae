@@ -1,5 +1,0 @@
-FROM maven:3.6.3-jdk-8-slim as target
-WORKDIR /build
-COPY ./maven/settings.xml $MAVEN_HOME/conf/settings.xml
-COPY ./pom.xml ./
-RUN mvn dependency:go-offline

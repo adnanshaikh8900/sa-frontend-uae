@@ -1,0 +1,51 @@
+import { JOURNAL } from 'constants/types'
+
+const initState = {
+  journal_list: [],
+  transaction_category_list: [],
+  currency_list: [],
+  contact_list: [],
+  vat_list: []
+}
+
+const JournalReducer = (state = initState, action) => {
+  const { type, payload } = action
+
+  switch (type) {
+
+    case JOURNAL.JOURNAL_LIST:
+      return {
+        ...state,
+        journal_list: Object.assign([], payload.data)
+      }
+
+    case JOURNAL.TRANSACTION_CATEGORY_LIST:
+      return {
+        ...state,
+        transaction_category_list: Object.assign([], payload.data)
+      }
+
+    case JOURNAL.CONTACT_LIST:
+      return {
+        ...state,
+        contact_list: Object.assign([], payload.data)
+      }
+
+    case JOURNAL.CURRENCY_LIST:
+      return {
+        ...state,
+        currency_list: Object.assign([], payload.data)
+      }
+
+    case JOURNAL.VAT_LIST:
+      return {
+        ...state,
+        vat_list: Object.assign([], payload.data)
+      }
+
+    default:
+      return state
+  }
+}
+
+export default JournalReducer

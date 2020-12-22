@@ -1,0 +1,417 @@
+import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import {
+	Card,
+	CardHeader,
+	CardBody,
+	Button,
+	Row,
+	Col,
+	FormGroup,
+	Form,
+	ButtonGroup,
+	Input,
+} from 'reactstrap';
+
+import Select from 'react-select';
+import { DateRangePicker2, Currency } from 'components';
+import moment from 'moment';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import * as VatTransactionActions from './actions';
+import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
+import 'react-toastify/dist/ReactToastify.css';
+import { CommonActions } from 'services/global';
+import './style.scss';
+import DatePicker from 'react-datepicker';
+
+const mapStateToProps = (state) => {
+	return {
+		vat_transaction_list: state.vat_transactions.vat_transaction_list,
+		universal_currency_list: state.common.universal_currency_list,
+	};
+};
+const mapDispatchToProps = (dispatch) => {
+	return {
+		vatTransactionActions: bindActionCreators(VatTransactionActions, dispatch),
+		commonActions: bindActionCreators(CommonActions, dispatch),
+	};
+};
+
+const vatOptions = [
+	{ value: 'input', label: 'Input' },
+	{ value: 'output', label: 'Output' },
+	{ value: 'all', label: 'All' },
+];
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
+
+const tempdata = [
+	{
+		transactionDate: '10/15/2019',
+		transactionCategoryId: 2,
+		transactionCategoryCode: 2,
+		transactionCategoryName: 'temp',
+		transactionCategoryDescription: 'temp',
+		parentTransactionCategory: 'Loream Ipsume',
+		transactionType: 'TEMP',
+	},
+	{
+		transactionDate: '10/15/2019',
+		transactionCategoryId: 1,
+		transactionCategoryCode: 4,
+		transactionCategoryName: 'temp',
+		transactionCategoryDescription: 'temp',
+		parentTransactionCategory: 'Loream Ipsume',
+		transactionType: 'TEMP',
+	},
+	{
+		transactionDate: '10/15/2019',
+		transactionCategoryId: 1,
+		transactionCategoryCode: 4,
+		transactionCategoryName: 'temp',
+		transactionCategoryDescription: 'temp',
+		parentTransactionCategory: 'Loream Ipsume',
+		transactionType: 'TEMP',
+	},
+	{
+		transactionDate: '10/15/2019',
+		transactionCategoryId: 1,
+		transactionCategoryCode: 4,
+		transactionCategoryName: 'temp',
+		transactionCategoryDescription: 'temp',
+		parentTransactionCategory: 'Loream Ipsume',
+		transactionType: 'TEMP',
+	},
+	{
+		transactionDate: '10/15/2019',
+		transactionCategoryId: 1,
+		transactionCategoryCode: 4,
+		transactionCategoryName: 'temp',
+		transactionCategoryDescription: 'temp',
+		parentTransactionCategory: 'Loream Ipsume',
+		transactionType: 'TEMP',
+	},
+	{
+		transactionDate: '10/15/2019',
+		transactionCategoryId: 1,
+		transactionCategoryCode: 4,
+		transactionCategoryName: 'temp',
+		transactionCategoryDescription: 'temp',
+		parentTransactionCategory: 'Loream Ipsume',
+		transactionType: 'TEMP',
+	},
+	{
+		transactionDate: '10/15/2019',
+		transactionCategoryId: 1,
+		transactionCategoryCode: 4,
+		transactionCategoryName: 'temp',
+		transactionCategoryDescription: 'temp',
+		parentTransactionCategory: 'Loream Ipsume',
+		transactionType: 'TEMP',
+	},
+];
+
+const ranges = {
+	'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+	'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+	'This Week': [moment().startOf('week'), moment().endOf('week')],
+	'This Month': [moment().startOf('month'), moment().endOf('month')],
+	'Last Month': [
+		moment().subtract(1, 'month').startOf('month'),
+		moment().subtract(1, 'month').endOf('month'),
+	],
+};
+
+class VatTransactions extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			selectedVat: '',
+			selectedStatus: '',
+			filterData: {
+				vat_type: '',
+				reference_type: '',
+				date: '',
+			},
+		};
+		this.options = {
+			paginationPosition: 'bottom',
+			page: 1,
+			sizePerPage: 10,
+			onSizePerPageList: this.onSizePerPageList,
+			onPageChange: this.onPageChange,
+			sortName: '',
+			sortOrder: '',
+			onSortChange: this.sortColumn,
+		};
+
+		this.selectRowProp = {
+			mode: 'checkbox',
+			bgColor: 'rgba(0,0,0, 0.05)',
+			clickToSelect: false,
+			onSelect: this.onRowSelect,
+			onSelectAll: this.onSelectAll,
+		};
+	}
+
+	componentDidMount = () => {
+		this.initializeData();
+	};
+
+	initializeData = (search) => {
+		let { filterData } = this.state;
+		const paginationData = {
+			pageNo: this.options.page ? this.options.page - 1 : 0,
+			pageSize: this.options.sizePerPage,
+		};
+		const sortingData = {
+			order: this.options.sortOrder ? this.options.sortOrder : '',
+			sortingCol: this.options.sortName ? this.options.sortName : '',
+		};
+		const postData = { ...filterData, ...paginationData, ...sortingData };
+		this.props.vatTransactionActions
+			.vatTransactionList(postData)
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({ loading: false }, () => {
+						if (this.props.location.state && this.props.location.state.id) {
+							this.openInvoicePreviewModal(this.props.location.state.id);
+						}
+					});
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
+	};
+
+	changeVat = (selectedVat) => {
+		this.setState({ selectedVat });
+	};
+
+	changeStatus = (selectedStatus) => {
+		this.setState({ selectedStatus });
+	};
+
+	getAction = (cell, row) => {
+		return <button className="btn">Detail</button>;
+	};
+
+	renderAmount(cell, row, extraData) {
+		return row.amount ? (
+			<Currency
+				value={row.amount}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			row.amount
+		);
+	}
+
+	renderVatAmount(cell, row, extraData) {
+		return row.vatAmount ? (
+			<Currency
+				value={row.vatAmount}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			row.vatAmount
+		);
+	}
+
+	handleChange = (val, name) => {
+		this.setState({
+			filterData: Object.assign(this.state.filterData, {
+				[name]: val,
+			}),
+		});
+	};
+
+	render() {
+		const vat_transaction_data =
+			this.props.vat_transaction_list && this.props.vat_transaction_list.data
+				? this.props.vat_transaction_list.data.map((data) => ({
+						id: data.id,
+						amount: data.amount,
+						date: data.date ? moment(data.date).format('DD/MM/YYYY') : '',
+						referenceType: data.referenceType,
+						vatAmount: data.vatAmount,
+						vatType: data.vatType,
+				  }))
+				: '';
+		const { universal_currency_list } = this.props;
+		const { filterData } = this.state;
+		return (
+			<div className="vat-transactions-screen ">
+				<div className="animated fadeIn">
+					<Card>
+						<CardHeader>
+							<Row>
+								<Col lg={12}>
+									<div className="h4 mb-0 d-flex align-items-center">
+										<i className="fas fa-exchange-alt" />
+										<span className="ml-2">VAT Transactions</span>
+									</div>
+								</Col>
+							</Row>
+						</CardHeader>
+						<CardBody>
+							<Form onSubmit={this.handleSubmit} name="simpleForm">
+								<div className="flex-wrap d-flex justify-content-end">
+									<FormGroup>
+										<ButtonGroup className="mr-3">
+											{/* <Button
+												color="primary"
+												className="btn-square"
+												onClick={() => this.table.handleExportCSV()}
+											>
+												<i className="fa glyphicon glyphicon-export fa-download mr-1" />
+												Export to CSV
+											</Button> */}
+										</ButtonGroup>
+									</FormGroup>
+									{/* <FormGroup>
+										<div className="date-range">
+											<DateRangePicker2 ranges={ranges} opens={'left'} />
+										</div>
+									</FormGroup> */}
+								</div>
+							</Form>
+							<div className="py-3">
+								<h5>Filter : </h5>
+								<Row>
+									<Col lg={2} className="mb-1">
+										<DatePicker
+											className="form-control"
+											id="date"
+											name="date"
+											placeholderText="Date"
+											showMonthDropdown
+											showYearDropdown
+											autoComplete="off"
+											dropdownMode="select"
+											dateFormat="dd/MM/yyyy"
+											selected={filterData.date}
+											onChange={(value) => {
+												this.handleChange(value, 'date');
+											}}
+										/>
+									</Col>
+									<Col lg={2} className="mb-1">
+										<Select
+											styles={customStyles}
+											className=""
+											options={vatOptions}
+											value={filterData.vat_type}
+											placeholder="Vat Type"
+											onChange={(option) => {
+												if (option && option.value) {
+													this.handleChange(option, 'vat_type');
+												} else {
+													this.handleChange('', 'vat_type');
+												}
+											}}
+										/>
+									</Col>
+									<Col lg={2} className="mb-1">
+										<Select
+											styles={customStyles}
+											className=""
+											options={vatOptions}
+											value={filterData.reference_type}
+											value={this.state.selectedType}
+											placeholder="Reference Type"
+											onChange={(option) => {
+												if (option && option.value) {
+													this.handleChange(option, 'reference_type');
+												} else {
+													this.handleChange('', 'reference_type');
+												}
+											}}
+										/>
+									</Col>
+									<Col lg={3} className="mb-1">
+										<Button
+											type="button"
+											color="primary"
+											className="btn-square mr-1"
+											onClick={this.handleSearch}
+										>
+											<i className="fa fa-search"></i>
+										</Button>
+										<Button
+											type="button"
+											color="primary"
+											className="btn-square"
+											onClick={this.clearAll}
+										>
+											<i className="fa fa-refresh"></i>
+										</Button>
+									</Col>
+								</Row>
+							</div>
+							<div className="table-wrapper">
+								<BootstrapTable
+									data={vat_transaction_data ? vat_transaction_data : []}
+									hover
+									remote
+									keyField="id"
+									pagination={
+										vat_transaction_data && vat_transaction_data.length > 0
+											? true
+											: false
+									}
+									fetchInfo={{
+										dataTotalSize: vat_transaction_data.count
+											? vat_transaction_data.count
+											: 0,
+									}}
+									csvFileName="VatTransactionReport.csv"
+									ref={(node) => {
+										this.table = node;
+									}}
+								>
+									<TableHeaderColumn dataField="date">Date</TableHeaderColumn>
+									<TableHeaderColumn dataField="referenceType">
+										Reference Type
+									</TableHeaderColumn>
+									<TableHeaderColumn dataField="vatType">
+										Vat Type
+									</TableHeaderColumn>
+									<TableHeaderColumn
+										dataField="amount"
+										dataFormat={this.renderAmount}
+										formatExtraData={universal_currency_list}
+									>
+										Amount
+									</TableHeaderColumn>
+									<TableHeaderColumn
+										dataField="vatAmount"
+										dataFormat={this.renderVatAmount}
+										formatExtraData={universal_currency_list}
+									>
+										Vat Amount
+									</TableHeaderColumn>
+								</BootstrapTable>
+							</div>
+						</CardBody>
+					</Card>
+				</div>
+			</div>
+		);
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(VatTransactions);

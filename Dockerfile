@@ -1,4 +1,4 @@
-FROM node:12-alpine as builder
+FROM node:lts-buster-slim as builder
 
 # install and cache app dependencies
 COPY package*.json ./
@@ -14,7 +14,7 @@ RUN npm run build
 # ------------------------------------------------------
 # Production Build
 # ------------------------------------------------------
-FROM nginx:latest
+FROM nginx:stable-alpine-perl
 COPY --from=builder /react-frontend/build /usr/share/nginx/html
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx/nginx.conf /etc/nginx/conf.d

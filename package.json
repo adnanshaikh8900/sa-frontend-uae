@@ -1,6 +1,5 @@
 {
   "name": "simplevat-frontend",
-
   "private": true,
   "dependencies": {
     "@coreui/coreui-plugin-chartjs-custom-tooltips": "^1.3.1",

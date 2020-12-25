@@ -17,6 +17,6 @@ RUN npm run build
 FROM nginx:stable-alpine-perl
 COPY --from=builder /react-frontend/build /usr/share/nginx/html
 RUN rm /etc/nginx/conf.d/default.conf
-COPY nginx/nginx.conf /etc/nginx/conf.d
+COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

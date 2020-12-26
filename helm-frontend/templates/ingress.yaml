@@ -1,17 +1,17 @@
 {{- if .Values.ingress.enabled -}}
-{{- $fullName := include "helm-simplevat.fullname" . -}}
-{{- $svcPort := .Values.service.port -}}
-{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+  {{- $fullName := include "helm-frontend.fullname" . -}}
+  {{- $svcPort := .Values.service.port -}}
+  {{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1beta1
-{{- else -}}
+  {{- else -}}
 apiVersion: extensions/v1beta1
-{{- end }}
+  {{- end }}
 kind: Ingress
 metadata:
-  name: {{ $fullName }}-frontend
+  name: {{ $fullName }}
 
   labels:
-    {{- include "helm-simplevat.labels" . | nindent 4 }}-frontend
+    {{- include "helm-frontend.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -35,7 +35,7 @@ spec:
           {{- range .paths }}
           - path: {{ . }}
             backend:
-              serviceName: {{ $fullName }}-frontend
+              serviceName: {{ $fullName }}
               servicePort: {{ $svcPort }}
           {{- end }}
     {{- end }}

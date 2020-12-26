@@ -52,13 +52,11 @@ subdomain="test2"
 helmDir="helm-simplevat"
 SVrelease="0.0.3-alpha-138"
 
-helm install $nameserver ./$helmDir --values ./$helmDir/values-"$subdomain".yaml --set simpleVatRelease=$SVrelease --set image.tag=$SVrelease -n $nameserver --dry-run --debug
+helm install $nameserver-frontend ./$helmDir --values ./$helmDir/values-"$subdomain".yaml --set simpleVatBackendRelease=$SVrelease --set image.repository.backend.tag=$SVrelease -n $nameserver --dry-run --debug
 
-appgwName="k8sApplicationGateway"
-resgp="MC_DataInn_Kubernetes_RG_k8s_eastus"
-vaultName="kv-k8s-cert-eac2"
-mycert="wildcard-dev-simplevat-com"
-nameserver="simplevat-dev"
-subdomain="dev"
-helmDir="helm-simplevat-sidecar"
-SVrelease="0.0.3-alpha-138"
+
+
+nameserver="simplevat-test2"
+subdomain="test2"
+helmDir="helm-frontend"
+SVrelease="0.0.3-alpha-171"

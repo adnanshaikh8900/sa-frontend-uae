@@ -52,11 +52,11 @@ subdomain="test2"
 helmDir="helm-simplevat"
 SVrelease="0.0.3-alpha-138"
 
-helm install $nameserver-frontend ./$helmDir --values ./$helmDir/values-"$subdomain".yaml --set simpleVatBackendRelease=$SVrelease --set image.repository.backend.tag=$SVrelease -n $nameserver --dry-run --debug
+helm install $nameserver-frontend ./$helmDir --values ./$helmDir/values-"$subdomain".yaml --set simpleVatFrontendRelease=$SVrelease --set image.repository.frontend.tag=$SVrelease -n $nameserver --dry-run --debug
 
 
 
-nameserver="simplevat-test2"
-subdomain="test2"
+nameserver="simplevat-test"
+subdomain="test"
 helmDir="helm-frontend"
 SVrelease="0.0.3-alpha-171"

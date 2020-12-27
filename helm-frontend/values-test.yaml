@@ -17,7 +17,7 @@ azureACRServicePrinciple:
   enabled: false
 
 simpleVatFrontendRelease: "Unknown"
-simpleVatHost: https://k8s.test.simplevat.com
+simpleVatHost: https://k8s-api.test.simplevat.com
 simpleVatDB: simplevat_test_db
 
 ports:
@@ -70,6 +70,7 @@ ingress:
       hosts:
         - k8s.test.simplevat.com
         - www.k8s.test.simplevat.com
+        - k8s-api.test.simplevat.com
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

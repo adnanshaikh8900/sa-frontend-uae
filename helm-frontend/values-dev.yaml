@@ -70,6 +70,7 @@ ingress:
       hosts:
         - k8s.dev.simplevat.com
         - www.k8s.dev.simplevat.com
+        - k8s-api.dev.simplevat.com
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

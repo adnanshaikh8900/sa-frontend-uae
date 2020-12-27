@@ -56,9 +56,9 @@ helm install $nameserver-frontend ./$helmDir --values ./$helmDir/values-"$subdom
 
 
 
-nameserver="simplevat-test"
-subdomain="test"
+nameserver="simplevat-test2"
+subdomain="test2"
 helmDir="helm-frontend"
-SVrelease="0.0.3-alpha-179"
+SVrelease="0.0.3-alpha-180"
 
-helm upgrade $nameserver-frontend ./$helmDir --values ./$helmDir/values-"$subdomain".yaml --set simpleVatFrontendRelease=$SVrelease --set image.repository.frontend.tag=$SVrelease -n $nameserver --dry-run --debug
+helm install $nameserver-frontend ./$helmDir --values ./$helmDir/values-"$subdomain".yaml --set simpleVatFrontendRelease=$SVrelease --set image.repository.frontend.tag=$SVrelease -n $nameserver --dry-run --debug

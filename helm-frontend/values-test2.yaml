@@ -17,7 +17,7 @@ azureACRServicePrinciple:
   enabled: false
 
 simpleVatFrontendRelease: "Unknown"
-simpleVatHost: https://k8s2.test.simplevat.com
+simpleVatHost: https://k8s2-api.test.simplevat.com
 simpleVatDB: simplevat_test2_db
 
 ports:

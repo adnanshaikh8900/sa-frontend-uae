@@ -56,8 +56,8 @@ helm install $nameserver-frontend ./$helmDir --values ./$helmDir/values-"$subdom
 
 
 
-nameserver="simplevat-test2"
-subdomain="test2"
+nameserver="simplevat-test"
+subdomain="test"
 helmDir="helm-frontend"
 SVrelease="0.0.3-alpha-180"
 

@@ -352,7 +352,7 @@ class DetailReceipt extends React.Component {
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="amount"><span className="text-danger">*</span>Amount</Label>
                                       <Input
-                                        type="text"
+                                      type="number"
                                         id="amount"
                                         name="amount"
                                         placeholder="Amount"
@@ -370,7 +370,7 @@ class DetailReceipt extends React.Component {
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="unusedAmount">Unused Amount</Label>
                                       <Input
-                                        type="text"
+                                       type="number"
                                         id="unusedAmount"
                                         name="unusedAmount"
                                         placeholder="Unused Amount"

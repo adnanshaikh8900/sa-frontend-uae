@@ -674,7 +674,7 @@ class DetailExpense extends React.Component {
 																			Amount
 																		</Label>
 																		<Input
-																			type="text"
+																			type="number"
 																			name="expenseAmount"
 																			id="expenseAmount"
 																			rows="5"
@@ -880,7 +880,7 @@ class DetailExpense extends React.Component {
 																				
 																			/>
 																</Col>
-																<Col lg={1}>
+																<Col lg={2}>
 																<FormGroup className="mb-3">
 																	{/* <Label htmlFor="exchangeRate">
 																		Exchange rate
@@ -903,13 +903,14 @@ class DetailExpense extends React.Component {
 																</FormGroup>
 															</Col>
 															<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
-															<Col lg={1}>
+															<Col lg={2}>
 																<FormGroup className="mb-3">
 																	{/* <Label htmlFor="exchangeRate">
 																		Exchange rate
 																	</Label> */}
 																	<div>
 																		<Input
+																			type="number"
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"
@@ -925,7 +926,7 @@ class DetailExpense extends React.Component {
 																</FormGroup>
 															</Col>
 														
-															<Col lg={1}>
+															<Col lg={2}>
 															<Input
 																		disabled
 																				id="currencyName"

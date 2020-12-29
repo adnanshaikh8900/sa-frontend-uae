@@ -750,7 +750,7 @@ class CreateBankTransaction extends React.Component {
 																		Amount
 																	</Label>
 																	<Input
-																		type="text"
+																		type="number"
 																		maxLength="10"
 																		id="transactionAmount"
 																		name="transactionAmount"

@@ -597,7 +597,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		<span className="text-danger">*</span>Amount
 																	</Label>
 																	<Input
-																		type="text"
+																		type="number"
 																		maxLength="10"
 																		name="expenseAmount"
 																		id="expenseAmount"
@@ -769,7 +769,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																				
 																			/>
 																</Col>
-																<Col lg={1}>
+																<Col lg={2}>
 																<FormGroup className="mb-3">
 																	{/* <Label htmlFor="exchangeRate">
 																		Exchange rate
@@ -792,13 +792,14 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																</FormGroup>
 															</Col>
 															<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
-															<Col lg={1}>
+															<Col lg={2}>
 																<FormGroup className="mb-3">
 																	{/* <Label htmlFor="exchangeRate">
 																		Exchange rate
 																	</Label> */}
 																	<div>
 																		<Input
+																			type="number"
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"
@@ -814,7 +815,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																</FormGroup>
 															</Col>
 														
-															<Col lg={1}>
+															<Col lg={2}>
 															<Input
 																		disabled
 																				id="currencyName"

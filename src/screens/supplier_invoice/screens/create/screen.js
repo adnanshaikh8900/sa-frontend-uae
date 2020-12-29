@@ -47,6 +47,7 @@ const mapStateToProps = (state) => {
 		product_list: state.supplier_invoice.product_list,
 		supplier_list: state.supplier_invoice.supplier_list,
 		country_list: state.supplier_invoice.country_list,
+		product_category_list: state.product.product_category_list,
 		universal_currency_list: state.common.universal_currency_list,
 		currency_convert_list: state.currencyConvert.currency_convert_list,
 		place_of_supply: state.customer_invoice.place_of_supply,
@@ -1301,7 +1302,8 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 														'Supplier is Required',
 													),
 													term: Yup.string().required('Term is Required'),
-													placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+													placeofsupplyId: Yup.string().required(
+														'Place of supply is Required'),
 													invoiceDate: Yup.string().required(
 														'Invoice Date is Required',
 													),
@@ -1513,7 +1515,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	</Label>
 																	<Select
 																		styles={customStyles}
-																		id="placeOfSupplyId"
+																		id="placeofsupplyId"
 																		name="placeOfSupplyId"
 																		placeholder="Select Place of Supply"
 																		options={

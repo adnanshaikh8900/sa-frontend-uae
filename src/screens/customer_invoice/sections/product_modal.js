@@ -665,7 +665,7 @@ class ProductModal extends React.Component {
 														</UncontrolledTooltip>
 													</Label>
 													<Input
-														type="text"
+													type="number"
 														maxLength="10"
 														id="salesUnitPrice"
 														name="salesUnitPrice"
@@ -833,7 +833,7 @@ class ProductModal extends React.Component {
 														</UncontrolledTooltip>
 													</Label>
 													<Input
-														type="text"
+														type="number"
 														maxLength="10"
 														id="purchaseUnitPrice"
 														name="purchaseUnitPrice"

@@ -49,6 +49,8 @@ const mapStateToProps = (state) => {
 		country_list: state.supplier_invoice.country_list,
 		universal_currency_list: state.common.universal_currency_list,
 		currency_convert_list: state.currencyConvert.currency_convert_list,
+		place_of_supply: state.customer_invoice.place_of_supply,
+
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -149,7 +151,7 @@ class CreateSupplierInvoice extends React.Component {
 			createMore: false,
 			fileName: '',
 			term: '',
-			placeOfSupply: '',
+			placeOfSupplyId:'',
 			prefix: '',
 			selectedType: { value: 'FIXED', label: 'Fixed' },
 			discountPercentage: '',
@@ -262,7 +264,7 @@ class CreateSupplierInvoice extends React.Component {
 				render={({ field, form }) => (
 					<div>
 						<Input
-							type="text"
+							type="number"
 							maxLength="10"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
@@ -322,7 +324,7 @@ class CreateSupplierInvoice extends React.Component {
 				name={`lineItemsString.${idx}.unitPrice`}
 				render={({ field, form }) => (
 					<Input
-						type="text"
+					type="number"
 						maxLength="10"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
@@ -377,6 +379,7 @@ class CreateSupplierInvoice extends React.Component {
 
 	getInitialData = () => {
 		this.getInvoiceNo();
+		this.props.customerInvoiceActions.getPlaceOfSuppliyList();
 		this.props.supplierInvoiceActions.getSupplierList(this.state.contactType);
 		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
 			this.setState({
@@ -939,7 +942,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 			invoiceDueDate,
 			invoiceDate,
 			contactId,
-			placeOfSupply,
+			placeOfSupplyId,
 			project,
 			exchangeRate,
 			invoice_number,
@@ -969,8 +972,8 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 			'receiptAttachmentDescription',
 			receiptAttachmentDescription ? receiptAttachmentDescription : '',
 		);
-		if (placeOfSupply && placeOfSupply.value) {
-			formData.append('placeOfSupply', placeOfSupply.label);
+		if (placeOfSupplyId && placeOfSupplyId.value) {
+			formData.append('placeOfSupplyId', placeOfSupplyId.value);
 		}
 		formData.append('notes', notes ? notes : '');
 		formData.append('type', 1);
@@ -1298,7 +1301,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 														'Supplier is Required',
 													),
 													term: Yup.string().required('Term is Required'),
-													placeOfSupply: Yup.string().required('Place of supply is Required'),
+													placeOfSupplyId: Yup.string().required('Place of supply is Required'),
 													invoiceDate: Yup.string().required(
 														'Invoice Date is Required',
 													),
@@ -1510,8 +1513,8 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	</Label>
 																	<Select
 																		styles={customStyles}
-																		id="placeofsupply"
-																		name="placeofsupply"
+																		id="placeOfSupplyId"
+																		name="placeOfSupplyId"
 																		placeholder="Select Place of Supply"
 																		options={
 																			this.placelist
@@ -1526,20 +1529,20 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		}
 																		value={this.state.placelist}
 																		className={
-																			props.errors.placeOfSupply &&
-																			props.touched.placeOfSupply
+																			props.errors.placeOfSupplyId &&
+																			props.touched.placeOfSupplyId
 																				? 'is-invalid'
 																				: ''
 																		}
 																		onChange={(option) =>
-																			props.handleChange('placeOfSupply')(
+																			props.handleChange('placeOfSupplyId')(
 																				option,
 																			)
 																		}
 																	/>
-																{props.errors.placeOfSupply && props.touched.placeOfSupply && (
+																{props.errors.placeOfSupplyId && props.touched.placeOfSupplyId && (
 																		<div className="invalid-feedback">
-																			{props.errors.placeOfSupply}
+																			{props.errors.placeOfSupplyId}
 																		</div>
 																	)}
 																</FormGroup>
@@ -1808,6 +1811,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	</Label> */}
 																	<div>
 																		<Input
+																			type="number"
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"
@@ -2151,7 +2155,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																								id="discountPercentage"
 																								name="discountPercentage"
 																								placeholder="Discount Percentage"
-																								type="text"
+																								type="number"
 																								maxLength="5"
 																								value={
 																									props.values
@@ -2195,7 +2199,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																						<Input
 																							id="discount"
 																							name="discount"
-																							type="text"
+																							type="number"
 																							maxLength="7"
 																							disabled={
 																								props.values.discountType &&

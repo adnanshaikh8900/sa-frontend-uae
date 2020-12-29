@@ -824,7 +824,7 @@ class DetailUser extends React.Component {
 																	lg={12}
 																	className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
 																>
-																	{this.state.current_user_id && current_user_id.roleName === 'Admin' (
+																	{this.state.current_user_id && current_user_id.roleName === 'Admin' && (
 																	<FormGroup>
 																		<Button
 																			type="button"

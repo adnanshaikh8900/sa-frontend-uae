@@ -467,7 +467,7 @@ class DetailBankTransaction extends React.Component {
                                       Total Amount
                                     </Label>
                                     <Input
-                                      type="text"
+                                      type="number"
                                       id="transactionAmount"
                                       name="transactionAmount"
                                       placeholder="Amount"

@@ -413,7 +413,7 @@ class DetailPayment extends React.Component {
                                     </Label>
                                       <Input
                                         // className="form-control"
-                                        type="text"
+                                        type="number"
                                         id="invoiceAmount"
                                         name="invoiceAmount"
                                         placeholder="Enter Amount"

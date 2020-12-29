@@ -868,7 +868,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			Amount
 																		</Label>
 																		<Input
-																			type="text"
+																			type="number"
 																			id="amount"
 																			name="amount"
 																			placeholder="Amount"

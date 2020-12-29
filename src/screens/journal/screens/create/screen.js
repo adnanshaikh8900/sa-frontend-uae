@@ -382,7 +382,7 @@ class CreateJournal extends React.Component {
 				name={`journalLineItems.${idx}.debitAmount`}
 				render={({ field, form }) => (
 					<Input
-						type="text"
+					type="number"
 						value={row['debitAmount'] !== 0 ? row['debitAmount'] : 0}
 						onChange={(e) => {
 							if (
@@ -431,7 +431,7 @@ class CreateJournal extends React.Component {
 				name={`journalLineItems.${idx}.creditAmount`}
 				render={({ field, form }) => (
 					<Input
-						type="text"
+					type="number"
 						value={row['creditAmount'] !== 0 ? row['creditAmount'] : 0}
 						onChange={(e) => {
 							if (

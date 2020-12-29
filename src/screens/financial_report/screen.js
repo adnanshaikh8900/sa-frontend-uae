@@ -92,7 +92,7 @@ class FinancialReport extends React.Component {
 										Trial Balance
 									</NavLink>
 								</NavItem>
-								{/* <NavItem>
+								<NavItem>
 									<NavLink
 										active={this.state.activeTab[0] === '4'}
 										onClick={() => {
@@ -101,7 +101,7 @@ class FinancialReport extends React.Component {
 									>
 										Vat Returns Report
 									</NavLink>
-								</NavItem> */}
+								</NavItem>
 							</Nav>
 							<TabContent activeTab={this.state.activeTab[0]}>
 								<TabPane tabId="1">
@@ -119,11 +119,11 @@ class FinancialReport extends React.Component {
 										<CashFlowStatement />
 									</div>
 								</TabPane>
-								{/* <TabPane tabId="4">
+								<TabPane tabId="4">
 									<div className="table-wrapper">
 										<VatReturnsReport />
 									</div>
-								</TabPane> */}
+								</TabPane>
 							</TabContent>
 						</CardBody>
 					</Card>

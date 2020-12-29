@@ -257,7 +257,7 @@ class CreateCustomerInvoice extends React.Component {
 				render={({ field, form }) => (
 					<div>
 						<Input
-							type="text"
+							type="number"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regEx.test(e.target.value)) {
@@ -315,7 +315,7 @@ class CreateCustomerInvoice extends React.Component {
 				name={`lineItemsString.${idx}.unitPrice`}
 				render={({ field, form }) => (
 					<Input
-						type="text"
+					type="number"
 						maxLength="10"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
@@ -1717,6 +1717,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																	</Label> */}
 																	<div>
 																		<Input
+																			type="number"
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"
@@ -2044,7 +2045,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																								id="discountPercentage"
 																								name="discountPercentage"
 																								placeholder="Discount Percentage"
-																								type="text"
+																								type="number"
 																								maxLength="5"
 																								value={
 																									props.values
@@ -2087,8 +2088,8 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																						</Label>
 																						<Input
 																							id="discount"
+																							type="number"
 																							name="discount"
-																							type="text"
 																							maxLength="10"
 																							disabled={
 																								props.values.discountType &&

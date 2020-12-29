@@ -291,11 +291,11 @@ class CreatePayment extends React.Component {
 	};
 
 	renderQuantity = (cell, row) => {
-		return <Input type="text" value="0" />;
+		return <Input type="number" value="0" />;
 	};
 
 	renderUnitPrice = (cell, row) => {
-		return <Input type="text" value="0.00" />;
+		return <Input type="number" value="0.00" />;
 	};
 
 	renderVat = (cell, row) => {
@@ -346,7 +346,7 @@ class CreatePayment extends React.Component {
 				name="paidAmount"
 				render={({ field, form }) => (
 					<Input
-						type="text"
+					type="number"
 						readOnly
 						value={rows.totalAount}
 						// onChange={(e) => {
@@ -504,7 +504,7 @@ class CreatePayment extends React.Component {
 																					Amount Paid
 																				</Label>
 																				<Input
-																					type="text"
+																					type="number"
 																					id="amount"
 																					name="amount"
 																					readOnly

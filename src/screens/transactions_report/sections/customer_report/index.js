@@ -194,7 +194,7 @@ class CustomerReport extends React.Component {
 									<Col lg={2} className="mb-1">
 										{/* <DateRangePicker> */}
 										<Input
-											type="text"
+											type="number"
 											value={this.state.endDate}
 											selected={this.state.endDate}
 											placeholder="End Date"

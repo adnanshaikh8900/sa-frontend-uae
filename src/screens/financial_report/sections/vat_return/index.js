@@ -28,6 +28,7 @@ import { CSVLink } from 'react-csv';
 import { Loader, Currency } from 'components';
 import * as FinancialReportActions from '../../actions';
 import FilterComponent from '../filterComponent';
+import FilterComponent2 from '../filterComponet2';
 
 const mapStateToProps = (state) => {
 	return {
@@ -52,12 +53,12 @@ class VatReturnsReport extends React.Component {
 			loading: false,
 			dropdownOpen: false,
 			view: false,
-			// initValue: {
-			// 	startDate: moment().startOf('month').format('DD/MM/YYYY'),
-			// 	endDate: moment().endOf('month').format('DD/MM/YYYY'),
-			// 	reportBasis: 'ACCRUAL',
-			// 	chartOfAccountId: '',
-			// },
+			initValue: {
+				startDate: moment().startOf('month').format('DD/MM/YYYY'),
+				endDate: moment().endOf('month').format('DD/MM/YYYY'),
+				reportBasis: 'ACCRUAL',
+				chartOfAccountId: '',
+			},
 			csvData: [],
 			activePage: 1,
 			sizePerPage: 10,
@@ -66,106 +67,32 @@ class VatReturnsReport extends React.Component {
 				column: null,
 				direction: 'desc',
 			},
-			data: [
-				{
-					Box: '1a',
-					Description: 'Standard rated supplies in Abu Dhabi',
-					Amount: 0.0,
-					VATAmount: 0.0,
-					Adjustment: 0.0,
-				 },
-				{
-					Box: '1b',
-					Description: 'Standard rated supplies in Dubai',
-					Amount: 0.0,
-					VATAmount: 0.0,
-					Adjustment: 0.0,
-				 },
-				{
-					Box: '1c',
-					Description: 'Standard rated supplies in Sharjah',
-					Amount: 0.0,
-					VATAmount: 0.0,
-					Adjustment: 0.0,
-				 },
-				 {
-					Box: '1d',
-					Description: 'Standard rated supplies in Ajman',
-					Amount: 0.0,
-					VATAmount: 0.0,
-					Adjustment: 0.0,
-				 },
-				{
-					Box: '1e',
-					Description: 'Standard rated supplies in Umm Al Quwain',
-					Amount: 0.0,
-					VATAmount: 0.0,
-					Adjustment: 0.0,
-				 },
-				{
-					Box: '1f',
-					Description: 'Standard rated supplies in Ras Al Khaimah',
-					Amount: 0.0,
-					VATAmount: 0.0,
-					Adjustment: 0.0,
-				 },
-				 {
-					Box: "1g",
-					Description: 'Standard rated supplies in Fujairah',
-					Amount: 0.0,
-					VATAmount: 0.0,
-					Adjustment: 0.0,
-				 },
-				{
-					Box: 2,
-					Description: 'Tax Refunds provided to Tourists under the Tax Refundsfor Tourists Scheme',
-					Amount: 0.0,
-					VATAmount: 0.0,
-					Adjustment: 0.0,
-				 },
-				{
-					Box: 3,
-					Description: 'Supplies subject to the reverse charge provisions',
-					Amount: 0.0,
-					VATAmount: 0.0,
-					Adjustment: 0.0,
-				 },
-				 {
-					Box: 4,
-					Description: 'Zero rated supplies',
-					Amount: 0.0,
-					VATAmount: 0.0,
-					Adjustment: 0.0,
-				 },
-				 {
-					Box: 5,
-					Description: 'Exempt supplies',
-					Amount: 0.0,
-					VATAmount: 0.0,
-					Adjustment: 0.0,
-				 },
-				{
-					Box: 6,
-					Description: 'Goods imported into the UAE',
-					Amount: 0.0,
-					VATAmount: 0.0,
-					Adjustment: 0.0,
-				 },
-				{
-					Box: 7,
-					Description: 'Adjustments and additions to goods imported into theUAE',
-					Amount: 0.0,
-					VATAmount: 0.0,
-					Adjustment: 0.0,
-				 },
-				 {
-					Box: 8,
-					Description: 'TOTAL',
-					Amount:'',
-					VATAmount: 0.0,
-					Adjustment: 0.0,
-				 }
-			],
+		data:{
+			totalAmount: '',
+			totalVatAmount: '',
+			totalAmountForDubai: '',
+			nameForDubai: '',
+			totalVatForDubai: '',
+			totalAmountForAbuDhabi: 0,
+			nameForAbuDhabi: '',
+			totalVatForAbuDhabi: '',
+			totalAmountForFujairah: '',
+			nameForFujairah: '',
+			totalVatForFujairah: '',
+			totalAmountForSharjah: '',
+			nameForSharjah: '',
+			totalVatForSharjah: '',
+			totalAmountForAjman: '',
+			nameForAjman: '',
+			totalVatForAjman:'',
+			totalAmountForUmmAlQuwain: '',
+			nameForUmmAlQuwain: '',
+			totalVatForUmmAlQuwain: '',
+			totalAmountForRasAlKhalmah: '',
+			nameForRasAlKhalmah: '',
+			totalVatForRasAlKhalmah: '',
+		},
+			
 			data1: [
 				{
 					Box: 9,
@@ -244,9 +171,9 @@ class VatReturnsReport extends React.Component {
 	generateReport = (value) => {
 		this.setState(
 			{
-				// initValue: {
-				// 	endDate: moment(value.endDate).format('DD/MM/YYYY'),
-				// },
+				initValue: {
+					endDate: moment(value.endDate).format('DD/MM/YYYY'),
+				},
 				loading: true,
 				view: !this.state.view,
 			},
@@ -262,12 +189,24 @@ class VatReturnsReport extends React.Component {
 
 	initializeData = () => {
 		const { initValue } = this.state;
-		// const postData = {
-		// 	startDate: initValue.startDate,
-		// 	endDate: initValue.endDate,
-		// };
-		
-	};
+		const postData = {
+			startDate:initValue.startDate,
+			endDate: initValue.endDate,
+		};
+		this.props.financialReportActions
+			.getVatReturnsReport(postData)
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({
+						data: res.data,
+						loading: false,
+					});
+				}
+			})
+			.catch((err) => {
+				this.setState({ loading: false });
+			});
+	 };
 
 	exportFile = (csvData, fileName, type) => {
 		const fileType =
@@ -341,14 +280,14 @@ class VatReturnsReport extends React.Component {
 															<CSVLink
 																data={csvData}
 																className="csv-btn"
-																filename={'balancesheet.csv'}
+																filename={'Vat Return Report.csv'}
 															>
 																CSV (Comma Separated Value)
 															</CSVLink>
 														</DropdownItem>
 														<DropdownItem
 															onClick={() => {
-																this.exportFile(csvData, 'balancesheet', 'xls');
+																this.exportFile(csvData, 'Vat Return Report', 'xls');
 															}}
 														>
 															XLS (Microsoft Excel 1997-2004 Compatible)
@@ -357,7 +296,7 @@ class VatReturnsReport extends React.Component {
 															onClick={() => {
 																this.exportFile(
 																	csvData,
-																	'balancesheet',
+																	'Vat Return Report',
 																	'xlsx',
 																);
 															}}
@@ -372,7 +311,7 @@ class VatReturnsReport extends React.Component {
 								</Row>
 							</CardHeader>
 							<div className={`panel ${view ? 'view-panel' : ''}`}>
-								<FilterComponent
+								<FilterComponent2
 									viewFilter={this.viewFilter}
 									generateReport={(value) => {
 										this.generateReport(value);
@@ -395,7 +334,7 @@ class VatReturnsReport extends React.Component {
 											<br style={{ marginBottom: '5px' }} />
 											Vat Returns
 											<br style={{ marginBottom: '5px' }} />
-											{/* From {initValue.startDate} to {initValue.endDate} */}
+											From {initValue.startDate} to {initValue.endDate}
 										</p>
 									</div>
 									{loading ? (
@@ -421,19 +360,329 @@ class VatReturnsReport extends React.Component {
 												</thead>
 												<tbody className="data-column">
 												
-													{(this.state.data).map(
-																(item) => (
-																	<tr className="mainLable">
-																		<td className="mainLable">{item.Box}</td>
-																		<td className="pt-0 pb-0">{item.Description}</td>
-																		<td className="pt-0 pb-0">{item.Amount}</td>
-																		<td className="pt-0 pb-0">{item.VATAmount}</td>
-																		<td className="pt-0 pb-0">{item.Adjustment}</td>
-																	</tr>
-																),
-															)}
+												{Object.keys(this.state.data).length > 0 ? (
+														<>
+														{/* Abu Dhabi */}
+															<tr className="mainLable">
+																<td className="mainLable ">1a</td>
+																<td className="pt-0 pb-0">Standard rated supplies in Abu Dhabi</td>
+																<td className="pt-0 pb-0 ">
+																		{this.state.data[
+																				'totalAmountForAbuDhabi'
+																			] 
+																			}
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{this.state.data[
+																				'totalVatForAbuDhabi'
+																			]}
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalVatForDubai'
+																			]} */}
+																			0.00
+																</td>
+															</tr>
+
+																{/* Ajman */}
+																<tr className="mainLable">
+																<td className="mainLable">1b</td>
+																<td className="pt-0 pb-0">Standard rated supplies in Ajman</td>
+																<td className="pt-0 pb-0 ">
+																			{this.state.data[
+																				'totalAmountForAjman'
+																			] }
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{this.state.data[
+																				'totalVatForAjman'
+																			]}
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalVatForDubai'
+																			]} */}
+																			0.00
+																</td>
+															</tr>
+
+																{/* Dubai */}
+																<tr className="mainLable">
+																<td className="mainLable ">1c</td>
+																<td className="pt-0 pb-0">Standard rated supplies in Dubai</td>
+																<td className="pt-0 pb-0 ">
+																			{this.state.data[
+																				'totalAmountForDubai'
+																			] }
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{this.state.data[
+																				'totalVatForDubai'
+																			]}
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalVatForDubai'
+																			]} */}
+																			0.00
+																</td>
+															</tr>
+
+																{/* Fujairah */}
+																<tr className="mainLable">
+																<td className="mainLable ">1d</td>
+																<td className="pt-0 pb-0">Standard rated supplies in Fujairah</td>
+																<td className="pt-0 pb-0 ">
+																			{this.state.data[
+																				'totalAmountForFujairah'
+																			] }
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{this.state.data[
+																				'totalVatForFujairah'
+																			]}
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalVatForDubai'
+																			]} */}
+																			0.00
+																</td>
+															</tr>
+
+																{/* RasAlKhalmah */}
+																<tr className="mainLable">
+																<td className="mainLable ">1e</td>
+																<td className="pt-0 pb-0">Standard rated supplies in Ras Al Khalmah</td>
+																<td className="pt-0 pb-0 ">
+																			{this.state.data[
+																				'totalAmountForRasAlKhalmah'
+																			] }
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{this.state.data[
+																				'totalVatForRasAlKhalmah'
+																			]}
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalVatForDubai'
+																			]} */}
+																			0.00
+																</td>
+															</tr>
+
+																{/* Sharjah */}
+																<tr className="mainLable">
+																<td className="mainLable ">1f</td>
+																<td className="pt-0 pb-0">Standard rated supplies in Sharjah</td>
+																<td className="pt-0 pb-0 ">
+																			{this.state.data[
+																				'totalAmountForSharjah'
+																			] }
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{this.state.data[
+																				'totalVatForSharjah'
+																			]}
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalVatForDubai'
+																			]} */}
+																			0.00
+																</td>
+															</tr>
+
+																{/* Abu Dhabi */}
+																<tr className="mainLable">
+																<td className="mainLable ">1g</td>
+																<td className="pt-0 pb-0">Standard rated supplies in Umm Al Quwain</td>
+																<td className="pt-0 pb-0 ">
+																			{this.state.data[
+																				'totalAmountForUmmAlQuwain'
+																			] }
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{this.state.data[
+																				'totalVatForUmmAlQuwain'
+																			]}
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalVatForDubai'
+																			]} */}
+																			0.00
+																</td>
+															</tr>
+																<tr className="mainLable">
+																<td className="mainLable ">2</td>
+																<td className="pt-0 pb-0">Tax Refunds provided to Tourists under the Tax Refundsfor Tourists Scheme</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalAmountForDubai'
+																			] } */}
+																			0.00
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalVatForDubai'
+																			]} */}
+																			0.00
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalVatForDubai'
+																			]} */}
+																			0.00
+																</td>
+															</tr>
+
+															<tr className="mainLable">
+																<td className="mainLable ">3</td>
+																<td className="pt-0 pb-0">Supplies subject to the reverse charge provisions</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalAmountForDubai'
+																			] } */}
+																			0.00
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalVatForDubai'
+																			]} */}
+																			0.00
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalVatForDubai'
+																			]} */}
+																			0.00
+																</td>
+															</tr>
+
+															<tr className="mainLable">
+																<td className="mainLable ">4</td>
+																<td className="pt-0 pb-0">Zero rated supplies</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalAmountForDubai'
+																			] } */}
+																			0.00
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalVatForDubai'
+																			]} */}
+																			0.00
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalVatForDubai'
+																			]} */}
+																			0.00
+																</td>
+															</tr>
+															<tr className="mainLable">
+																<td className="mainLable ">5</td>
+																<td className="pt-0 pb-0">Exempt supplies</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalAmountForDubai'
+																			] } */}
+																			0.00
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalVatForDubai'
+																			]} */}
+																			0.00
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalVatForDubai'
+																			]} */}
+																			0.00
+																</td>
+															</tr>
+															<tr className="mainLable">
+																<td className="mainLable ">6</td>
+																<td className="pt-0 pb-0">Goods imported into the UAE</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalAmountForDubai'
+																			] } */}
+																			0.00
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalVatForDubai'
+																			]} */}
+																			0.00
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalVatForDubai'
+																			]} */}
+																			0.00
+																</td>
+															</tr>
+															<tr className="mainLable">
+																<td className="mainLable ">7</td>
+																<td className="pt-0 pb-0">Adjustments and additions to goods imported into theUAE</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalAmountForDubai'
+																			] } */}
+																			0.00
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalVatForDubai'
+																			]} */}
+																			0.00
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalVatForDubai'
+																			]} */}
+																			0.00
+																</td>
+															</tr>
+															<tr className="mainLable">
+																<td className="mainLable ">8</td>
+																<td className="pt-0 pb-0">TOTAL</td>
+																<td className="pt-0 pb-0 ">
+																			{this.state.data[
+																				'totalAmount'
+																			] }
+																			0.00
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{this.state.data[
+																				'totalVatAmount'
+																			]}
+																			0.00
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalVatForDubai'
+																			]} */}
+																			0.00
+																</td>
+															</tr>
 															
-															
+
+														</>
+
+											) : (
+														<tr className="mainLable">
+															<td style={{ textAlign: 'center' }} colSpan="9">
+																There is no data to display
+															</td>
+														</tr>
+													)}
 												</tbody>
 											</Table>
 												<p><b>VAT on Expenses and all other Inputs</b></p>

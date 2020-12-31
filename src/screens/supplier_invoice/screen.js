@@ -361,7 +361,7 @@ class SupplierInvoice extends React.Component {
 								<i className="fa fa-trash-o" /> Delete
 							</DropdownItem>
 						)}
-						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
+						{/* {row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
 							<DropdownItem
 								onClick={() => {
 									this.sendCustomEmail(row.id);
@@ -369,7 +369,7 @@ class SupplierInvoice extends React.Component {
 							>
 								<i className="fa fa-send" /> Send Custom Email
 							</DropdownItem>
-						)}
+						)} */}
 					</DropdownMenu>
 				</ButtonDropdown>
 			</div>

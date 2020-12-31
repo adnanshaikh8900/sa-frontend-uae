@@ -427,7 +427,7 @@ class CustomerInvoice extends React.Component {
 								<i className="fa fa-trash-o" /> Delete
 							</DropdownItem>
 						)}
-						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
+						{/* {row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
 							<DropdownItem
 								onClick={() => {
 									this.sendCustomEmail(row.id);
@@ -435,7 +435,7 @@ class CustomerInvoice extends React.Component {
 							>
 								<i className="fa fa-send" /> Send Custom Email
 							</DropdownItem>
-						)}
+						)} */}
 					</DropdownMenu>
 				</ButtonDropdown>
 			</div>
@@ -1059,16 +1059,16 @@ class CustomerInvoice extends React.Component {
 												dataField="invoiceNumber"
 												// dataFormat={this.renderInvoiceNumber}
 												dataSort
-												width="10%"
+												width="7%"
 											>
 												Invoice Number
 											</TableHeaderColumn>
-											<TableHeaderColumn dataField="customerName" dataSort width="12%">
+											<TableHeaderColumn dataField="customerName" dataSort width="10%">
 												Customer Name
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}
-												width="7%"
+												width="10%"
 												dataField="status"
 												dataFormat={this.renderInvoiceStatus}
 												dataSort

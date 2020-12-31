@@ -347,6 +347,9 @@ class CustomerInvoice extends React.Component {
 		return row.vatAmount === 0  ? row.vatAmount.toFixed(2) : row.vatAmount.toFixed(2);
 	};
 
+	renderDueAmount =(cell,row,extraData) => {
+		return row.dueAmount === 0  ? row.dueAmount.toFixed(2) : row.dueAmount.toFixed(2);
+	}
 	renderActions = (cell, row) => {
 		return (
 			<div>
@@ -704,6 +707,7 @@ class CustomerInvoice extends React.Component {
 						status: customer.status,
 						statusEnum: customer.statusEnum,
 						customerName: customer.name,
+						dueAmount:customer.dueAmount,
 						contactId: customer.contactId,
 						invoiceNumber: customer.referenceNumber,
 						invoiceDate: customer.invoiceDate ? customer.invoiceDate : '',
@@ -1121,6 +1125,16 @@ class CustomerInvoice extends React.Component {
 												formatExtraData={universal_currency_list}
 											>
 												Invoice Amount
+											</TableHeaderColumn>
+											<TableHeaderColumn
+												thStyle={{ whiteSpace: 'normal' }}
+												dataField="dueamount"
+												dataSort
+												width="5%"
+												dataFormat={this.renderDueAmount}
+												formatExtraData={universal_currency_list}
+											>
+												Due Amount
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}

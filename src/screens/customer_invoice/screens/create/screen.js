@@ -1418,7 +1418,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 															</Col>
 																<Col lg={3}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="placeofsupplyId">
+																	<Label htmlFor="placeOfSupplyId">
 																		<span className="text-danger">*</span>
 																		Place of Supply
 																	</Label>
@@ -1451,11 +1451,12 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																			)
 																		}
 																	/>
-																{props.errors.placeOfSupplyId && props.touched.placeOfSupplyId && (
-																		<div className="invalid-feedback">
-																			{props.errors.placeOfSupplyId}
-																		</div>
-																	)}
+																	{props.errors.placeOfSupplyId &&
+																		props.touched.placeOfSupplyId && (
+																			<div className="invalid-feedback">
+																				{props.errors.placeOfSupplyId}
+																			</div>
+																		)}
 																</FormGroup>
 															</Col>
 														</Row>
@@ -1647,30 +1648,32 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																	 				+props.values.currencyCode,
 																	 		)
 																		 }
+																		 className={
+																			props.errors.currency &&
+																			props.touched.currency
+																				? 'is-invalid'
+																				: ''
+																		}
 																		 onChange={(option) => {
 																		 props.handleChange('currency')(option);
 																		 this.setExchange(option.value);
 																		 this.setCurrency(option.value)
 																		}}
-																		className={`${
-																			props.errors.currency &&
-																			props.touched.currency
-																				? 'is-invalid'
-																				: ''
-																		}`}
+																	
 																	/>
-																	{props.errors.currency && props.touched.currency && (
-																		<div className="invalid-feedback">
-																			{props.errors.currency}
-																		</div>
-																	)}
+																	{props.errors.currency &&
+																		props.touched.currency && (
+																			<div className="invalid-feedback">
+																				{props.errors.currency}
+																			</div>
+																		)}
 																</FormGroup>
 															</Col>
 														</Row>
 														<hr />
 																<Row>
 																<Col>
-																<Label htmlFor="currency">
+																<Label >
 																		Currency Exchange Rate
 																	</Label>	
 																</Col>

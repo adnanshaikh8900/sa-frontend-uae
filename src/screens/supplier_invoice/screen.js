@@ -232,6 +232,10 @@ class SupplierInvoice extends React.Component {
 	return row.invoiceAmount ? row.invoiceAmount.toFixed(2):'';
 	};
 
+	renderDueAmount = (cell,row,extraData) => {
+		return row.dueAmount ? row.dueAmount.toFixed(2):'';
+	};
+
 	renderVatAmount = (cell, row, extraData) => {
 		// return row.vatAmount === 0 ? (
 		// 	<Currency
@@ -731,6 +735,7 @@ class SupplierInvoice extends React.Component {
 						status: supplier.status,
 						statusEnum: supplier.statusEnum,
 						customerName: supplier.name,
+						dueAmount:supplier.dueAmount,
 						invoiceNumber: supplier.referenceNumber,
 						invoiceDate: supplier.invoiceDate ? supplier.invoiceDate : '',
 						invoiceDueDate: supplier.invoiceDueDate
@@ -1152,6 +1157,15 @@ class SupplierInvoice extends React.Component {
 												width="5%"
 												dataFormat={this.renderInvoiceAmount}
 												
+											>
+												Invoice Amount
+											</TableHeaderColumn>
+											<TableHeaderColumn
+												thStyle={{ whiteSpace: 'normal' }}
+												dataField="dueAmount"
+												dataSort
+												width="5%"
+												dataFormat={this.renderDueAmount}
 											>
 												Invoice Amount
 											</TableHeaderColumn>

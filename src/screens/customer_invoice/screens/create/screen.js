@@ -487,7 +487,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 								salesCategory: res.data,
 							},
 							() => {
-								console.log(this.state.salesCategory);
+								
 							},
 						);
 					}
@@ -1261,6 +1261,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 															}),
 														),
 													attachmentFile: Yup.mixed()
+													.required('File type not supported')
 														.test(
 															'fileType',
 															'*Unsupported File Format',

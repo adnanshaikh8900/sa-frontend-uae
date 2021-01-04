@@ -50,8 +50,6 @@ const mapStateToProps = (state) => {
 		product_category_list: state.product.product_category_list,
 		universal_currency_list: state.common.universal_currency_list,
 		currency_convert_list: state.currencyConvert.currency_convert_list,
-		place_of_supply: state.customer_invoice.place_of_supply,
-
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -119,6 +117,7 @@ class CreateSupplierInvoice extends React.Component {
 				invoiceDueDate: '',
 				invoiceDate: new Date(),
 				contactId: '',
+				placeOfSupplyId: '',
 				project: '',
 				exchangeRate:'',
 				lineItemsString: [
@@ -139,7 +138,6 @@ class CreateSupplierInvoice extends React.Component {
 				term: '',
 				totalAmount: 0,
 				notes: '',
-				placeOfSupplyId:'',
 				discount: 0,
 				discountPercentage: 0,
 				discountType: { value: 'FIXED', label: 'Fixed' },
@@ -380,7 +378,6 @@ class CreateSupplierInvoice extends React.Component {
 
 	getInitialData = () => {
 		this.getInvoiceNo();
-		this.props.customerInvoiceActions.getPlaceOfSuppliyList();
 		this.props.supplierInvoiceActions.getSupplierList(this.state.contactType);
 		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
 			this.setState({
@@ -973,9 +970,6 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 			'receiptAttachmentDescription',
 			receiptAttachmentDescription ? receiptAttachmentDescription : '',
 		);
-		if (placeOfSupplyId && placeOfSupplyId.value) {
-			formData.append('placeOfSupplyId', placeOfSupplyId.value);
-		}
 		formData.append('notes', notes ? notes : '');
 		formData.append('type', 1);
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
@@ -993,6 +987,9 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 
 		if (discountType.value === 'PERCENTAGE') {
 			formData.append('discountPercentage', discountPercentage);
+		}
+		if (placeOfSupplyId && placeOfSupplyId.value) {
+			formData.append('placeOfSupplyId', placeOfSupplyId.value);
 		}
 		if (contactId && contactId.value) {
 			formData.append('contactId', contactId.value);
@@ -1301,9 +1298,8 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 													contactId: Yup.string().required(
 														'Supplier is Required',
 													),
+													placeOfSupplyId: Yup.string().required('Place of supply is Required'),
 													term: Yup.string().required('Term is Required'),
-													placeofsupplyId: Yup.string().required(
-														'Place of supply is Required'),
 													invoiceDate: Yup.string().required(
 														'Invoice Date is Required',
 													),
@@ -1509,13 +1505,13 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 															</Col>
 															<Col lg={3}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="placeofsupplyId">
+																	<Label htmlFor="placeOfSupplyId">
 																		<span className="text-danger">*</span>
 																		Place of Supply
 																	</Label>
 																	<Select
 																		styles={customStyles}
-																		id="placeofsupplyId"
+																		id="placeOfSupplyId"
 																		name="placeOfSupplyId"
 																		placeholder="Select Place of Supply"
 																		options={
@@ -1542,13 +1538,13 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																			)
 																		}
 																	/>
-																{props.errors.placeOfSupplyId && props.touched.placeOfSupplyId && (
-																		<div className="invalid-feedback">
-																			{props.errors.placeOfSupplyId}
-																		</div>
-																	)}
+																	{props.errors.placeOfSupplyId &&
+																		props.touched.placeOfSupplyId && (
+																			<div className="invalid-feedback">
+																				{props.errors.placeOfSupplyId}
+																			</div>
+																		)}
 																</FormGroup>
-															
 															</Col>
 														</Row>
 														<hr />
@@ -2390,7 +2386,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		disabled={this.state.disabled}
 																		onClick={() => {
 																			this.setState(
-																				{ createMore: false },
+																				{ createMore: true },
 																				() => {
 																					props.handleSubmit();
 																				},

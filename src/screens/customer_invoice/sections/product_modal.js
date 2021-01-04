@@ -211,10 +211,10 @@ class ProductModal extends React.Component {
 						validate={(values) => {
 							let errors = {};
 							if (!values.productName) {
-								errors.productName = 'Product Category Name is  required';
+								errors.productName = 'Product Name is  required';
 							}
 							if (this.state.exist === true) {
-								errors.productName = 'Product Category Name is already exist';
+								errors.productName = 'Product  Name is already exist';
 							}
 							return errors;
 						}}

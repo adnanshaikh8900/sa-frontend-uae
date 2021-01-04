@@ -575,7 +575,7 @@ class CreateBankAccount extends React.Component {
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regExBoth.test(option.target.value)
+																				this.regExAlpha.test(option.target.value)
 																			) {
 																				props.handleChange('bank_name')(option);
 																			}

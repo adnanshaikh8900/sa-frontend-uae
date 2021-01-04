@@ -96,7 +96,7 @@ class DetailSupplierInvoice extends React.Component {
 			selectedContact: '',
 			current_supplier_id: null,
 			term: '',
-			placeOfSupply: '',
+			placeOfSupplyid: '',
 			selectedType: '',
 			discountPercentage: '',
 			discountAmount: 0,
@@ -228,7 +228,7 @@ class DetailSupplierInvoice extends React.Component {
 									: [],
 								selectedContact: res.data.contactId ? res.data.contactId : '',
 								term: res.data.term ? res.data.term : '',
-								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+							//	placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 
 								loading: false,
 							},
@@ -963,7 +963,7 @@ class DetailSupplierInvoice extends React.Component {
 		formData.append('discount', discount);
 		formData.append('discountType', discountType);
 		formData.append('term', term);
-		formData.append('placeOfSupplyId',placeOfSupplyId.value);
+		//formData.append('placeOfSupplyId',placeOfSupplyId.value);
 		formData.append('exchangeRate',  this.state.initValue.exchangeRate);
 
 		if (discountType === 'PERCENTAGE') {
@@ -974,6 +974,9 @@ class DetailSupplierInvoice extends React.Component {
 		}
 		if (currency && currency.value) {
 			formData.append('currencyCode', currency.value);
+		}
+		if (placeOfSupplyId && placeOfSupplyId.value) {
+			formData.append('placeOfSupplyId', placeOfSupplyId.value);
 		}
 		if (project) {
 			formData.append('projectId', project);
@@ -1389,14 +1392,18 @@ class DetailSupplierInvoice extends React.Component {
 																				this.placelist &&
 																				this.placelist.find(
 																					(option) =>
-																						option.label === props.values.placeOfSupplyId,
+																						option.value === props.values.placeOfSupplyId,
 																					)
 																			}
-																			onChange={(option) =>
-																				props.handleChange('placeOfSupplyId')(
-																					option,
-																				)
-																			}
+																			onChange={(option) => {
+																				if (option && option.value) {
+																					props.handleChange('placeOfSupplyId')(
+																						option.value,
+																					);
+																				} else {
+																					props.handleChange('placeOfSupplyId')('');
+																				}
+																			}}
 																			className={`${
 																				props.errors.placeOfSupplyId &&
 																				props.touched.placeOfSupplyId

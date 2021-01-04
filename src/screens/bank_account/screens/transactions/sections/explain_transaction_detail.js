@@ -1195,7 +1195,7 @@ class ExplainTrasactionDetail extends React.Component {
 																									{props.errors.invoiceIdList}
 																								</div>
 																							)}
-																						{this.state.initValue
+																						{/* {this.state.initValue
 																							.invoiceIdList &&
 																							this.state.initValue.invoiceIdList.reduce(
 																								(totalAmount, invoice) =>
@@ -1225,7 +1225,7 @@ class ExplainTrasactionDetail extends React.Component {
 																										Amount please create invoice
 																									</div>
 																								</div>
-																							)}
+																							)} */}
 																					</FormGroup>
 																				</Col>
 																			)}
@@ -1342,7 +1342,7 @@ class ExplainTrasactionDetail extends React.Component {
 																							{props.errors.invoiceIdList}
 																						</div>
 																					)}
-																				{this.state.initValue.invoiceIdList &&
+																				{/* {this.state.initValue.invoiceIdList &&
 																					this.state.initValue.invoiceIdList.reduce(
 																						(totalAmount, invoice) =>
 																							parseInt(
@@ -1372,7 +1372,7 @@ class ExplainTrasactionDetail extends React.Component {
 																								please create invoice
 																							</div>
 																						</div>
-																					)}
+																					)} */}
 																			</FormGroup>
 																		</Col>
 																	)}
@@ -1523,20 +1523,19 @@ class ExplainTrasactionDetail extends React.Component {
 																							}
 																							value={
 																								currency_convert_list &&
-																								selectCurrencyFactory
-																									.renderOptions(
-																										'currencyName',
-																										'currencyCode',
-																										currency_convert_list,
-																										'Currency',
+																								   selectCurrencyFactory
+																								   .renderOptions(
+																										   'currencyName',
+																											'currencyCode',
+																										   currency_convert_list,
+																											'Currency',
+																									   )
+																										.find(
+																										   (option) =>
+																												option.value ===
+																											+props.values.currencyCode,
 																									)
-																									.find(
-																										(option) =>
-																											option.value ===
-																											+props.values
-																												.currencyCode,
-																									)
-																							}
+																								}
 																							onChange={(option) => {
 																								props.handleChange('currency')(option);
 																								this.setExchange(option.value);
@@ -1559,11 +1558,11 @@ class ExplainTrasactionDetail extends React.Component {
 																				</Col>
 																		</Row>
 																	)}
-																				{props.values.coaCategoryId &&
+															{props.values.coaCategoryId &&
 															props.values.coaCategoryId.label ===
 															'Expense' && (
 																	<Row>
-																	<Col lg={1}>
+																	<Col lg={2}>
 																<Input
 																		disabled
 																				id="1"
@@ -1573,7 +1572,7 @@ class ExplainTrasactionDetail extends React.Component {
 																				
 																			/>
 																</Col>
-																<Col lg={1}>
+																<Col lg={2}>
 																<FormGroup className="mb-3">
 																	{/* <Label htmlFor="exchangeRate">
 																		Exchange rate
@@ -1596,7 +1595,7 @@ class ExplainTrasactionDetail extends React.Component {
 																</FormGroup>
 															</Col>
 															<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
-															<Col lg={1}>
+															<Col lg={2}>
 																<FormGroup className="mb-3">
 																	{/* <Label htmlFor="exchangeRate">
 																		Exchange rate
@@ -1618,7 +1617,7 @@ class ExplainTrasactionDetail extends React.Component {
 																</FormGroup>
 															</Col>
 														
-															<Col lg={1}>
+															<Col lg={2}>
 															<Input
 																		disabled
 																				id="currencyName"
@@ -1656,20 +1655,19 @@ class ExplainTrasactionDetail extends React.Component {
 																							}
 																							value={
 																								currency_convert_list &&
-																								selectCurrencyFactory
-																									.renderOptions(
-																										'currencyName',
-																										'currencyCode',
-																										currency_convert_list,
-																										'Currency',
+																								   selectCurrencyFactory
+																								   .renderOptions(
+																										   'currencyName',
+																											'currencyCode',
+																										   currency_convert_list,
+																											'Currency',
+																									   )
+																										.find(
+																										   (option) =>
+																												option.value ===
+																											+props.values.currencyCode,
 																									)
-																									.find(
-																										(option) =>
-																											option.value ===
-																											+props.values
-																												.currencyCode,
-																									)
-																							}
+																								}
 																							onChange={(option) => {
 																								if (option && option.value) {
 																									props.handleChange(
@@ -1704,7 +1702,7 @@ class ExplainTrasactionDetail extends React.Component {
 															props.values.coaCategoryId.label ===
 															'Sales'  && (
 																	<Row>
-																	<Col lg={1}>
+																	<Col lg={2}>
 																<Input
 																		disabled
 																				id="1"
@@ -1714,7 +1712,7 @@ class ExplainTrasactionDetail extends React.Component {
 																				
 																			/>
 																</Col>
-																<Col lg={1}>
+																<Col lg={2}>
 																<FormGroup className="mb-3">
 																	{/* <Label htmlFor="exchangeRate">
 																		Exchange rate
@@ -1737,7 +1735,7 @@ class ExplainTrasactionDetail extends React.Component {
 																</FormGroup>
 															</Col>
 															<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
-															<Col lg={1}>
+															<Col lg={2}>
 																<FormGroup className="mb-3">
 																	{/* <Label htmlFor="exchangeRate">
 																		Exchange rate
@@ -1759,7 +1757,7 @@ class ExplainTrasactionDetail extends React.Component {
 																</FormGroup>
 															</Col>
 														
-															<Col lg={1}>
+															<Col lg={2}>
 															<Input
 																		disabled
 																				id="currencyName"
@@ -1797,39 +1795,24 @@ class ExplainTrasactionDetail extends React.Component {
 																							}
 																							value={
 																								currency_convert_list &&
-																								selectCurrencyFactory
-																									.renderOptions(
-																										'currencyName',
-																										'currencyCode',
-																										currency_convert_list,
-																										'Currency',
+																								   selectCurrencyFactory
+																								   .renderOptions(
+																										   'currencyName',
+																											'currencyCode',
+																										   currency_convert_list,
+																											'Currency',
+																									   )
+																										.find(
+																										   (option) =>
+																												option.value ===
+																											+props.values.currencyCode,
 																									)
-																									.find(
-																										(option) =>
-																											option.value ===
-																											+props.values
-																												.currencyCode,
-																									)
-																							}
-																							onChange={(option) => {
-																								if (option && option.value) {
-																									props.handleChange(
-																										'currencyCode',
-																									)(option.value);
-																								} else {
-																									props.handleChange(
-																										'currencyCode',
-																									)('');
 																								}
+																							onChange={(option) => {
+																								props.handleChange('currency')(option);
 																								this.setExchange(option.value);
 																								this.setCurrency(option.value)
-																							}}
-																							className={
-																								props.errors.currencyCode &&
-																								props.touched.currencyCode
-																									? 'is-invalid'
-																									: ''
-																							}
+																							   }}
 																						/>
 																						{props.errors.currencyCode &&
 																							props.touched.currencyCode && (
@@ -1845,7 +1828,7 @@ class ExplainTrasactionDetail extends React.Component {
 															props.values.coaCategoryId.label ===
 															'Supplier Invoice' && (
 																	<Row>
-																	<Col lg={1}>
+																	<Col lg={2}>
 																<Input
 																		disabled
 																				id="1"
@@ -1855,7 +1838,7 @@ class ExplainTrasactionDetail extends React.Component {
 																				
 																			/>
 																</Col>
-																<Col lg={1}>
+																<Col lg={2}>
 																<FormGroup className="mb-3">
 																	{/* <Label htmlFor="exchangeRate">
 																		Exchange rate
@@ -1878,7 +1861,7 @@ class ExplainTrasactionDetail extends React.Component {
 																</FormGroup>
 															</Col>
 															<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
-															<Col lg={1}>
+															<Col lg={2}>
 																<FormGroup className="mb-3">
 																	{/* <Label htmlFor="exchangeRate">
 																		Exchange rate
@@ -1900,7 +1883,7 @@ class ExplainTrasactionDetail extends React.Component {
 																</FormGroup>
 															</Col>
 														
-															<Col lg={1}>
+															<Col lg={2}>
 															<Input
 																		disabled
 																				id="currencyName"
@@ -2113,7 +2096,7 @@ class ExplainTrasactionDetail extends React.Component {
 																								)('');
 																							}
 																						}}
-																						placeholder="Select Type"
+																						placeholder="Select Contact"
 																						id="employeeId"
 																						name="employeeId"
 																						className={

@@ -344,7 +344,7 @@ class SupplierInvoice extends React.Component {
 								<i className="fas fa-file" /> Draft
 							</DropdownItem>
 						)}
-						{/* {row.statusEnum === 'Sent' && (
+						{row.statusEnum === 'Sent' && (
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
@@ -355,7 +355,7 @@ class SupplierInvoice extends React.Component {
 							>
 								<i className="fas fa-university" /> Record Payment
 							</DropdownItem>
-						)} */}
+						)}
 						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
 							<DropdownItem
 								onClick={() => {

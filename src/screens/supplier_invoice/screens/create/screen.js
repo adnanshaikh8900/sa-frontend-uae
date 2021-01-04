@@ -139,6 +139,7 @@ class CreateSupplierInvoice extends React.Component {
 				term: '',
 				totalAmount: 0,
 				notes: '',
+				placeOfSupplyId:'',
 				discount: 0,
 				discountPercentage: 0,
 				discountType: { value: 'FIXED', label: 'Fixed' },
@@ -152,7 +153,6 @@ class CreateSupplierInvoice extends React.Component {
 			createMore: false,
 			fileName: '',
 			term: '',
-			placeOfSupplyId:'',
 			prefix: '',
 			selectedType: { value: 'FIXED', label: 'Fixed' },
 			discountPercentage: '',
@@ -2364,7 +2364,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 														<Row>
 															<Col lg={12} className="mt-5">
 																<FormGroup className="text-right">
-																	<Button
+																<Button
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
@@ -2390,7 +2390,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		disabled={this.state.disabled}
 																		onClick={() => {
 																			this.setState(
-																				{ createMore: true },
+																				{ createMore: false },
 																				() => {
 																					props.handleSubmit();
 																				},

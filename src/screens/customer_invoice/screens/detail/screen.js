@@ -865,6 +865,9 @@ class DetailCustomerInvoice extends React.Component {
 		if (currency && currency.value) {
 			formData.append('currencyCode', currency.value);
 		}
+		if (placeOfSupplyId && placeOfSupplyId.value) {
+			formData.append('placeOfSupplyId', placeOfSupplyId.value);
+		}
 		if (project) {
 			formData.append('projectId', project);
 		}
@@ -1066,104 +1069,104 @@ class DetailCustomerInvoice extends React.Component {
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values);
 													}}
-													validationSchema={Yup.object().shape({
-														invoice_number: Yup.string().required(
-															'Invoice Number is Required',
-														),
-														contactId: Yup.string().required(
-															'Supplier is Required',
-														),
-														term: Yup.string().required('term is Required'),
-														placeOfSupplyId: Yup.string().required('Place of supply is Required'),
-														invoiceDate: Yup.string().required(
-															'Invoice Date is Required',
-														),
-														invoiceDueDate: Yup.string().required(
-															'Invoice Due Date is Required',
-														),
-														currency: Yup.string().required(
-															'Currency is Required',
-														),
-														lineItemsString: Yup.array()
-															.required(
-																'Atleast one invoice sub detail is mandatory',
-															)
-															.of(
-																Yup.object().shape({
-																	// description: Yup.string().required(
-																	// 	'Value is Required',
-																	// ),
-																	quantity: Yup.string()
-																		.required('Value is Required')
-																		.test(
-																			'quantity',
-																			'Quantity Should be Greater than 1',
-																			(value) => {
-																				if (value > 0) {
-																					return true;
-																				} else {
-																					return false;
-																				}
-																			},
-																		),
-																	unitPrice: Yup.string()
-																		.required('Value is Required')
-																		.test(
-																			'Unit Price',
-																			'Unit Price Should be Greater than 1',
-																			(value) => {
-																				if (value > 0) {
-																					return true;
-																				} else {
-																					return false;
-																				}
-																			},
-																		),
-																	vatCategoryId: Yup.string().required(
-																		'Value is Required',
-																	),
-																	productId: Yup.string().required(
-																		'Product is Required',
-																	),
-																}),
-															),
-														attachmentFile: Yup.mixed()
-															.test(
-																'fileType',
-																'*Unsupported File Format',
-																(value) => {
-																	value &&
-																		this.setState({
-																			fileName: value.name,
-																		});
-																	if (
-																		!value ||
-																		(value &&
-																			this.supported_format.includes(
-																				value.type,
-																			))
-																	) {
-																		return true;
-																	} else {
-																		return false;
-																	}
-																},
-															)
-															.test(
-																'fileSize',
-																'*File Size is too large',
-																(value) => {
-																	if (
-																		!value ||
-																		(value && value.size <= this.file_size)
-																	) {
-																		return true;
-																	} else {
-																		return false;
-																	}
-																},
-															),
-													})}
+													// validationSchema={Yup.object().shape({
+													// 	invoice_number: Yup.string().required(
+													// 		'Invoice Number is Required',
+													// 	),
+													// 	contactId: Yup.string().required(
+													// 		'Supplier is Required',
+													// 	),
+													// 	term: Yup.string().required('term is Required'),
+													// //	placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+													// 	invoiceDate: Yup.string().required(
+													// 		'Invoice Date is Required',
+													// 	),
+													// 	invoiceDueDate: Yup.string().required(
+													// 		'Invoice Due Date is Required',
+													// 	),
+													// 	currency: Yup.string().required(
+													// 		'Currency is Required',
+													// 	),
+													// 	lineItemsString: Yup.array()
+													// 		.required(
+													// 			'Atleast one invoice sub detail is mandatory',
+													// 		)
+													// 		.of(
+													// 			Yup.object().shape({
+													// 				// description: Yup.string().required(
+													// 				// 	'Value is Required',
+													// 				// ),
+													// 				quantity: Yup.string()
+													// 					.required('Value is Required')
+													// 					.test(
+													// 						'quantity',
+													// 						'Quantity Should be Greater than 1',
+													// 						(value) => {
+													// 							if (value > 0) {
+													// 								return true;
+													// 							} else {
+													// 								return false;
+													// 							}
+													// 						},
+													// 					),
+													// 				unitPrice: Yup.string()
+													// 					.required('Value is Required')
+													// 					.test(
+													// 						'Unit Price',
+													// 						'Unit Price Should be Greater than 1',
+													// 						(value) => {
+													// 							if (value > 0) {
+													// 								return true;
+													// 							} else {
+													// 								return false;
+													// 							}
+													// 						},
+													// 					),
+													// 				vatCategoryId: Yup.string().required(
+													// 					'Value is Required',
+													// 				),
+													// 				productId: Yup.string().required(
+													// 					'Product is Required',
+													// 				),
+													// 			}),
+													// 		),
+													// 	attachmentFile: Yup.mixed()
+													// 		.test(
+													// 			'fileType',
+													// 			'*Unsupported File Format',
+													// 			(value) => {
+													// 				value &&
+													// 					this.setState({
+													// 						fileName: value.name,
+													// 					});
+													// 				if (
+													// 					!value ||
+													// 					(value &&
+													// 						this.supported_format.includes(
+													// 							value.type,
+													// 						))
+													// 				) {
+													// 					return true;
+													// 				} else {
+													// 					return false;
+													// 				}
+													// 			},
+													// 		)
+													// 		.test(
+													// 			'fileSize',
+													// 			'*File Size is too large',
+													// 			(value) => {
+													// 				if (
+													// 					!value ||
+													// 					(value && value.size <= this.file_size)
+													// 				) {
+													// 					return true;
+													// 				} else {
+													// 					return false;
+													// 				}
+													// 			},
+													// 		),
+													// })}
 												>
 													{(props) => (
 														<Form onSubmit={props.handleSubmit}>
@@ -1294,15 +1297,30 @@ class DetailCustomerInvoice extends React.Component {
 																			value={
 																				this.placelist &&
 																				selectOptionsFactory
-																					.renderOptions('label', 'value', this.placelist,'Place of Supply')
-																					.find((option) => option.value === +props.values.placeOfSupplyId)
-																			}
-																		
-																			onChange={(option) =>
-																				props.handleChange('placeOfSupplyId')(
-																					option,
-																				)
-																			}
+																									.renderOptions(
+																										'label',
+																										'value',
+																										this.placelist,
+																										'Place of Supply',
+																									)
+																									.find(
+																										(option) =>
+																											option.label ===
+																											+props.values
+																												.placeOfSupplyId,
+																									)
+																							}
+																							onChange={(options) => {
+																								if (options && options.value) {
+																									props.handleChange(
+																										'placeOfSupplyId',
+																									)(options.value);
+																								} else {
+																									props.handleChange(
+																										'placeOfSupplyId',
+																									)('');
+																								}
+																							}}
 																			className={`${
 																				props.errors.placeOfSupplyId &&
 																				props.touched.placeOfSupplyId

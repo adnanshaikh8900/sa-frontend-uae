@@ -1296,16 +1296,9 @@ class DetailCustomerInvoice extends React.Component {
 																			name="placeOfSupplyId"
 																			value={
 																				this.placelist &&
-																				selectOptionsFactory
-																									.renderOptions(
-																										'label',
-																										'value',
-																										this.placelist,
-																										'Place of Supply',
-																									)
-																									.find(
+																				this.placelist.find(
 																										(option) =>
-																											option.label ===
+																											option.value ===
 																											+props.values
 																												.placeOfSupplyId,
 																									)

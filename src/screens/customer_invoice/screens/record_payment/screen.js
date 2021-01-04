@@ -520,7 +520,6 @@ class RecordCustomerPayment extends React.Component {
 																			type="number"
 																			id="amount"
 																			name="amount"
-																			readOnly
 																			value={props.values.amount}
 																			onChange={(option) => {
 																				if (

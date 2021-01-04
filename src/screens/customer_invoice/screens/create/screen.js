@@ -38,7 +38,6 @@ const mapStateToProps = (state) => {
 	return {
 		currency_list: state.customer_invoice.currency_list,
 		vat_list: state.customer_invoice.vat_list,
-		place_of_supply: state.customer_invoice.place_of_supply,
 		product_list: state.customer_invoice.product_list,
 		customer_list: state.customer_invoice.customer_list,
 		country_list: state.customer_invoice.country_list,
@@ -430,7 +429,6 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 		this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
 		this.props.customerInvoiceActions.getCountryList();
 		this.props.customerInvoiceActions.getVatList();
-		this.props.customerInvoiceActions.getPlaceOfSuppliyList();
 		this.props.customerInvoiceActions.getProductList();
 		this.props.productActions.getProductCategoryList();
 		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
@@ -487,7 +485,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 								salesCategory: res.data,
 							},
 							() => {
-								
+
 							},
 						);
 					}
@@ -1166,7 +1164,6 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 			customer_list,
 			universal_currency_list,
 			currency_convert_list,
-			place_of_supply,
 		} = this.props;
 		return (
 			<div className="create-customer-invoice-screen">
@@ -1212,8 +1209,8 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 													contactId: Yup.string().required(
 														'Customer is Required',
 													),
-													term: Yup.string().required('Term is Required'),
 													placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+													term: Yup.string().required('Term is Required'),
 													currency: Yup.string().required(
 														'Currency is Required',
 													),
@@ -1261,7 +1258,6 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 															}),
 														),
 													attachmentFile: Yup.mixed()
-													.required('File type not supported')
 														.test(
 															'fileType',
 															'*Unsupported File Format',
@@ -1417,7 +1413,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																	<i className="fa fa-plus"></i> Add a Customer
 																</Button>
 															</Col>
-																<Col lg={3}>
+															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
 																		<span className="text-danger">*</span>
@@ -1660,7 +1656,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																		 this.setExchange(option.value);
 																		 this.setCurrency(option.value)
 																		}}
-																	
+
 																	/>
 																	{props.errors.currency &&
 																		props.touched.currency && (

@@ -228,7 +228,7 @@ class DetailSupplierInvoice extends React.Component {
 									: [],
 								selectedContact: res.data.contactId ? res.data.contactId : '',
 								term: res.data.term ? res.data.term : '',
-							//	placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 
 								loading: false,
 							},

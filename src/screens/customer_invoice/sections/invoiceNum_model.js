@@ -78,7 +78,6 @@ class InvoiceNumberModel extends React.Component {
     
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        console.log(nextProps.prefix)
         if (prevState.prefix !== nextProps.prefix) {
           return {initValue: {
             id: nextProps.prefix.invoiceId,
@@ -126,7 +125,6 @@ class InvoiceNumberModel extends React.Component {
 			closeInvoiceNumberModel,
 			prefix,
         } = this.props;
-        console.log(prefix)
 		const { initValue } = this.state;
 		return (
 			<div className="contact-modal-screen">

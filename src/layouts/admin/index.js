@@ -116,7 +116,6 @@ class AdminLayout extends React.Component {
 			 			if (existingPath) {
 			 				existingPath['children'].push(childPath);
 			 			} else {
-							console.log("Hello here")
 			 				arr.items.push({
 			 					name: item.name,
 			 					url: item.url,

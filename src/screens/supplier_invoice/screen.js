@@ -1167,7 +1167,7 @@ class SupplierInvoice extends React.Component {
 												width="5%"
 												dataFormat={this.renderDueAmount}
 											>
-												Invoice Amount
+												Due Amount
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}

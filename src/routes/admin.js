@@ -215,7 +215,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/income/customer-invoice/record-payment',
-		name: 'Record Payment',
+		name: 'RecordCustomerPayment',
 		component: RecordCustomerPayment.screen,
 	},
 	{
@@ -262,7 +262,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/expense/supplier-invoice/record-payment',
-		name: 'Record Payment',
+		name: 'RecordSupplierPayment',
 		component: RecordSupplierPayment.screen,
 	},
 	{

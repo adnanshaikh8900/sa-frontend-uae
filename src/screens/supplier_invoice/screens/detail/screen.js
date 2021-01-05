@@ -96,7 +96,7 @@ class DetailSupplierInvoice extends React.Component {
 			selectedContact: '',
 			current_supplier_id: null,
 			term: '',
-			placeOfSupplyid: '',
+			placeOfSupply: '',
 			selectedType: '',
 			discountPercentage: '',
 			discountAmount: 0,
@@ -963,7 +963,7 @@ class DetailSupplierInvoice extends React.Component {
 		formData.append('discount', discount);
 		formData.append('discountType', discountType);
 		formData.append('term', term);
-		//formData.append('placeOfSupplyId',placeOfSupplyId.value);
+		formData.append('placeOfSupplyId',placeOfSupplyId.value);
 		formData.append('exchangeRate',  this.state.initValue.exchangeRate);
 
 		if (discountType === 'PERCENTAGE') {
@@ -974,9 +974,6 @@ class DetailSupplierInvoice extends React.Component {
 		}
 		if (currency && currency.value) {
 			formData.append('currencyCode', currency.value);
-		}
-		if (placeOfSupplyId && placeOfSupplyId.value) {
-			formData.append('placeOfSupplyId', placeOfSupplyId.value);
 		}
 		if (project) {
 			formData.append('projectId', project);
@@ -1392,18 +1389,14 @@ class DetailSupplierInvoice extends React.Component {
 																				this.placelist &&
 																				this.placelist.find(
 																					(option) =>
-																						option.value === props.values.placeOfSupplyId,
+																						option.label === props.values.placeOfSupplyId.toString(),
 																					)
 																			}
-																			onChange={(option) => {
-																				if (option && option.value) {
-																					props.handleChange('placeOfSupplyId')(
-																						option.value,
-																					);
-																				} else {
-																					props.handleChange('placeOfSupplyId')('');
-																				}
-																			}}
+																			onChange={(option) =>
+																				props.handleChange('placeOfSupplyId')(
+																					option,
+																				)
+																			}
 																			className={`${
 																				props.errors.placeOfSupplyId &&
 																				props.touched.placeOfSupplyId

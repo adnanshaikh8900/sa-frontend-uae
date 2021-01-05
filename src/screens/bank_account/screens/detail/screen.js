@@ -212,23 +212,40 @@ class DetailBankAccount extends React.Component {
 			});
 	};
 
-	closeBankAccount = () => {
-		const message1 =
-		<text>
-		<b>Delete Bank Account?</b>
-		</text>
-		const message ='This Bank Account will be deleted permanently and cannot be recovered.';
-		this.setState({
-			dialog: (
-				<ConfirmDeleteModal
-					isOpen={true}
-					okHandler={this.removeBankAccount}
-					cancelHandler={this.removeDialog}
-					message={message}
-					message1={message1}
-				/>
-			),
-		});
+	closeBankAccount = (current_bank_account_id) => {
+		this.props.bankAccountActions
+			.getExplainCount(current_bank_account_id)
+			.then((res) => {
+				if (res.data > 0) {
+					this.props.commonActions.tostifyAlert(
+						'error',
+						'You need to unexplain all the transaction to delete this bank',
+					);
+				} else {
+					const message1 =
+					<text>
+					<b>Delete Bank Account?</b>
+					</text>
+					const message ='This Bank Account will be deleted permanently and cannot be recovered.';
+					this.setState({
+						dialog: (
+							<ConfirmDeleteModal
+								isOpen={true}
+								okHandler={() => this.removeBankAccount(current_bank_account_id)}
+								cancelHandler={this.removeDialog}
+								message1={message1}
+								message={message}
+							/>
+						),
+					});
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
 	};
 
 	removeBankAccount = () => {
@@ -274,7 +291,7 @@ class DetailBankAccount extends React.Component {
 	render() {
 		const { account_type_list, currency_list, country_list } = this.props;
 
-		const { initialVals, current_bank_account, dialog } = this.state;
+		const { initialVals, current_bank_account, dialog,current_bank_account_id } = this.state;
 
 		return (
 			<div className="detail-bank-account-screen">
@@ -846,7 +863,7 @@ class DetailBankAccount extends React.Component {
 																	name="button"
 																	color="danger"
 																	className="btn-square"
-																	onClick={this.closeBankAccount}
+																	onClick={() => this.closeBankAccount(current_bank_account_id)}
 																>
 																	<i className="fa fa-trash"></i> Delete
 																</Button>

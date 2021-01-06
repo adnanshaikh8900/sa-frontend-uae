@@ -157,7 +157,6 @@ class CreateSupplierInvoice extends React.Component {
 			discountAmount: 0,
 			purchaseCategory: [],
 			exchangeRate:'',	
-			prefixData: [],
 			basecurrency:[],
 		};
 
@@ -1399,23 +1398,13 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		id="invoice_number"
 																		name="invoice_number"
 																		placeholder="Invoice Number"
-																		onBlur={props.handleBlur('invoice_number')}
-																		onChange={(e) => {
-																			const input = e.target.value;
-																			const string = input.substr(
-																				prefix.length,
-																			);
-																			if (
-																				input === '' ||
-																				this.regEx.test(string)
-																			) {
-																				props.handleChange('invoice_number')(
-																					string,
-																				);
-																				this.validationCheck(e.target.value);
-																			}
-																		}}
 																		value={props.values.invoice_number}
+																		onBlur={props.handleBlur('invoice_number')}
+																		onChange={(value) => {
+																			props.handleChange('invoice_number')(
+																				value,
+																			);
+																		}}
 																		className={
 																			props.errors.invoice_number &&
 																			props.touched.invoice_number
@@ -1431,7 +1420,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		)}
 																</FormGroup>
 															</Col>
-															<Col lg={1}>
+															{/* <Col lg={1}>
 																<Button
 																	type="button"
 																	color="primary"
@@ -1442,7 +1431,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																>
 																	<i className="fas fa-cog"></i> 
 																</Button>
-															</Col>
+															</Col> */}
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="contactId">
@@ -2446,7 +2435,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 					salesCategory={this.state.salesCategory}
 					purchaseCategory={this.state.purchaseCategory}
 				/>
-					<InvoiceNumberModel
+					{/* <InvoiceNumberModel
 					openInvoiceNumberModel={this.state.openInvoiceNumberModel}
 					closeInvoiceNumberModel={(e) => {
 						this.closeInvoiceNumberModel(e);
@@ -2455,7 +2444,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 					prefix ={this.state.prefixData}
 					updatePrefix={this.props.customerInvoiceActions.updateInvoicePrefix}
 					
-				/>
+				/> */}
 			</div>
 		);
 	}

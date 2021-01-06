@@ -147,7 +147,6 @@ class CreateCustomerInvoice extends React.Component {
 			purchaseCategory: [],
 			salesCategory: [],	
 			exchangeRate:'',		
-			prefixData: [],
 			basecurrency:[],
 		};
 
@@ -182,6 +181,7 @@ class CreateCustomerInvoice extends React.Component {
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
+		this.regDecimalP = /(^100(\.0{1,2})?$)|(^([1-9]([0-9])?|0)(\.[0-9]{1,2})?$)/;
 	}
 
 	// renderActions (cell, row) {
@@ -383,8 +383,6 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 		let result = this.props.currency_convert_list.filter((obj) => {
 		return obj.currencyCode === value;
 		});
-		console.log( this.props.currency_convert_list)
-		console.log(result)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 		};
 
@@ -1307,22 +1305,12 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																		id="invoice_number"
 																		name="invoice_number"
 																		placeholder="Invoice Number"
-																		value={prefix + props.values.invoice_number}
+																		value={props.values.invoice_number}
 																		onBlur={props.handleBlur('invoice_number')}
-																		onChange={(e) => {
-																			const input = e.target.value;
-																			const string = input.substr(
-																				prefix.length,
+																		onChange={(value) => {
+																			props.handleChange('invoice_number')(
+																				value,
 																			);
-																			if (
-																				input === '' ||
-																				this.regEx.test(string)
-																			) {
-																				props.handleChange('invoice_number')(
-																					string,
-																				);
-																				this.validationCheck(e.target.value);
-																			}
 																		}}
 																		className={
 																			props.errors.invoice_number &&
@@ -2054,7 +2042,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																								onChange={(e) => {
 																									if (
 																										e.target.value === '' ||
-																										this.regEx.test(
+																										this.regDecimal.test(
 																											e.target.value,
 																										)
 																									) {
@@ -2335,7 +2323,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 					salesCategory={this.state.salesCategory}
 					purchaseCategory={this.state.purchaseCategory}
 				/>
-				<InvoiceNumberModel
+				{/* <InvoiceNumberModel
 					openInvoiceNumberModel={this.state.openInvoiceNumberModel}
 					closeInvoiceNumberModel={(e) => {
 						this.closeInvoiceNumberModel(e);
@@ -2344,7 +2332,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 						prefix ={this.state.prefixData}
 						updatePrefix={this.props.customerInvoiceActions.updateInvoicePrefix}
 					
-				/>
+				/> */}
 			</div>
 		);
 	}

@@ -157,7 +157,7 @@ class ImportBankStatement extends React.Component {
 					this.setState({ selectedTemplate: [], tableData: [] });
 				} else {
 					this.props.commonActions.tostifyAlert('success', res.data);
-					this.props.history.push('/admin/banking/bank-account');
+					this.props.history.push('/admin/banking/bank-account/transaction');
 				}
 			})
 			.catch((err) => {

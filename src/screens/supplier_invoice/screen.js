@@ -232,22 +232,11 @@ class SupplierInvoice extends React.Component {
 	return row.invoiceAmount ? row.invoiceAmount.toFixed(2):'';
 	};
 
-	renderDueAmount = (cell,row,extraData) => {
-		return row.dueAmount ? row.dueAmount.toFixed(2):'';
-	};
+	renderDueAmount =(cell,row,extraData) => {
+		return row.dueAmount === 0  ? row.dueAmount.toFixed(2) : row.dueAmount.toFixed(2);
+	}
 
 	renderVatAmount = (cell, row, extraData) => {
-		// return row.vatAmount === 0 ? (
-		// 	<Currency
-		// 		value={row.vatAmount}
-		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-		// 	/>
-		// ) : (
-		// 	<Currency
-		// 		value={row.vatAmount}
-		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-		// 	/>
-		// );
 		return row.vatAmount === 0 ? row.vatAmount.toFixed(2) : row.vatAmount.toFixed(2);
 	};
 	renderCurrency = (cell, row) => {
@@ -1088,7 +1077,6 @@ class SupplierInvoice extends React.Component {
 											ref={(node) => (this.table = node)}
 										>
 											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
 												dataField="invoiceNumber"
 												// dataFormat={this.renderInvoiceNumber}
 												dataSort
@@ -1097,7 +1085,6 @@ class SupplierInvoice extends React.Component {
 												Invoice Number
 											</TableHeaderColumn>
 											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
 												dataField="customerName"
 												dataSort
 												width="12%"
@@ -1105,7 +1092,6 @@ class SupplierInvoice extends React.Component {
 												Supplier Name
 											</TableHeaderColumn>
 											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
 												width="7%"
 												dataField="status"
 												dataFormat={this.renderInvoiceStatus}
@@ -1114,7 +1100,6 @@ class SupplierInvoice extends React.Component {
 												Status
 											</TableHeaderColumn>
 											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
 												dataField="invoiceDate"
 												dataSort
 												width="7%"
@@ -1123,7 +1108,6 @@ class SupplierInvoice extends React.Component {
 												Invoice Date
 											</TableHeaderColumn>
 											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
 												dataField="invoiceDueDate"
 												dataSort
 												width="7%"
@@ -1132,7 +1116,6 @@ class SupplierInvoice extends React.Component {
 												Due Date
 											</TableHeaderColumn>
 											<TableHeaderColumn
-													thStyle={{ whiteSpace: 'normal' }}
 													dataSort
 													width="5%"
 													dataField="currencyName"
@@ -1141,8 +1124,6 @@ class SupplierInvoice extends React.Component {
 													Currency
 												</TableHeaderColumn>
 											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
-												dataField="totalVatAmount"
 												dataSort
 												width="5%"
 												dataFormat={this.renderVatAmount}
@@ -1151,7 +1132,6 @@ class SupplierInvoice extends React.Component {
 												VAT Amount
 											</TableHeaderColumn>
 											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
 												dataField="totalAmount"
 												dataSort
 												width="5%"
@@ -1161,7 +1141,6 @@ class SupplierInvoice extends React.Component {
 												Invoice Amount
 											</TableHeaderColumn>
 											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
 												dataField="dueAmount"
 												dataSort
 												width="5%"
@@ -1170,7 +1149,6 @@ class SupplierInvoice extends React.Component {
 												Due Amount
 											</TableHeaderColumn>
 											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
 												className="text-right"
 												columnClassName="text-right"
 												width="5%"

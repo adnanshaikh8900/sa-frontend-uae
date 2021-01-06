@@ -22,11 +22,14 @@ import { toast } from 'react-toastify';
 import 'react-phone-number-input/style.css';
 import PhoneInput from 'react-phone-number-input';
 import { isValidPhoneNumber } from 'react-phone-number-input';
+import IconButton from '@material-ui/core/IconButton';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 
 class SupplierModal extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			showDetails : false,
 			loading: false,
 			initValue: {
 				contactType: 1,
@@ -94,6 +97,11 @@ class SupplierModal extends React.Component {
 			position: toast.POSITION.TOP_RIGHT,
 		});
 	};
+	_showDetails = (bool) => {
+		this.setState({
+		  showDetails: bool
+		});
+	  }
 
 	getStateList = (countryCode) => {
 		if (countryCode) {
@@ -197,75 +205,7 @@ class SupplierModal extends React.Component {
 										</Row>
 									</CardHeader>
 									<ModalBody>
-										{/* <Row>
-                    <Col>
-                      <FormGroup>
-                        <Label htmlFor="firstName"><span className="text-danger">*</span>First Name</Label>
-                        <Input
-                          type="text"
-                          id="firstName"
-                          name="firstName"
-                          onChange={props.handleChange}
-                          placeholder="Enter FirstName "
-                          value={props.values.firstName}
-                          className={
-                            props.errors.firstName && props.touched.firstName
-                              ? "is-invalid"
-                              : ""
-                          }
-                        />
-                        {props.errors.firstName && props.touched.firstName && (
-                          <div className="invalid-feedback">{props.errors.firstName}</div>
-                        )}
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col>
-                      <FormGroup>
-                        <Label htmlFor="lastName"><span className="text-danger">*</span>Middle Name</Label>
-                        <Input
-                          type="text"
-                          id="middleName"
-                          name="middleName"
-                          onChange={props.handleChange}
-                          placeholder="Enter Middle Name "
-                          value={props.values.middleName}
-                          className={
-                            props.errors.middleName && props.touched.middleName
-                              ? "is-invalid"
-                              : ""
-                          }
-                        />
-                        {props.errors.middleName && props.touched.middleName && (
-                          <div className="invalid-feedback">{props.errors.middleName}</div>
-                        )}
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col>
-                      <FormGroup>
-                        <Label htmlFor="lastName"><span className="text-danger">*</span>Last Name</Label>
-                        <Input
-                          type="text"
-                          id="lastName"
-                          name="lastName"
-                          onChange={props.handleChange}
-                          placeholder="Enter Last Name "
-                          value={props.values.lastName}
-                          className={
-                            props.errors.lastName && props.touched.lastName
-                              ? "is-invalid"
-                              : ""
-                          }
-                        />
-                        {props.errors.lastName && props.touched.lastName && (
-                          <div className="invalid-feedback">{props.errors.lastName}</div>
-                        )}
-                      </FormGroup>
-                    </Col>
-                  </Row> */}
+									<h4 className="mb-3 mt-3">Contact Details</h4>
 										<Row className="row-wrapper">
 											<Col md="4">
 												<FormGroup>
@@ -366,8 +306,131 @@ class SupplierModal extends React.Component {
 												</FormGroup>
 											</Col>
 										</Row>
-										<hr />
-										<h4 className="mb-3 mt-3">Contact Details</h4>
+										<Row>
+										<Col md="4">
+												<FormGroup>
+													<Label htmlFor="email">
+														<span className="text-danger">*</span>Email
+													</Label>
+													<Input
+														type="text"
+														maxLength="80"
+														id="email"
+														name="email"
+														onChange={(value) => {
+															props.handleChange('email')(value);
+														}}
+														value={props.values.email}
+														className={
+															props.errors.email && props.touched.email
+																? 'is-invalid'
+																: ''
+														}
+														placeholder="Enter Email"
+													/>
+													{props.errors.email && props.touched.email && (
+														<div className="invalid-feedback">
+															{props.errors.email}
+														</div>
+													)}
+												</FormGroup>
+											</Col>
+											<Col md="4">
+												<FormGroup>
+													<Label htmlFor="mobileNumber">
+														{' '}
+														<span className="text-danger">*</span>Mobile Number
+													</Label>
+													<PhoneInput
+														defaultCountry="AE"
+														international
+														value={props.values.mobileNumber}
+														onChange={(option) => {
+															props.handleChange('mobileNumber')(option);
+														}}
+														className={
+															props.errors.mobileNumber &&
+															props.touched.mobileNumber
+																? 'is-invalid'
+																: ''
+														}
+													/>
+													{props.errors.mobileNumber &&
+														props.touched.mobileNumber && (
+															<div className="invalid-feedback">
+																{props.errors.mobileNumber}
+															</div>
+														)}
+												</FormGroup>
+											</Col>
+											<Col md="4">
+												<FormGroup>
+													<Label htmlFor="currencyCode">
+														Currency Code
+													</Label>
+													<Select
+														options={
+															currency_list
+																? selectCurrencyFactory.renderOptions(
+																		'currencyName',
+																		'currencyCode',
+																		currency_list,
+																		'Currency',
+																  )
+																: []
+														}
+														value={
+															currency_list &&
+															selectCurrencyFactory
+																.renderOptions(
+																	'currencyName',
+																	'currencyCode',
+																	currency_list,
+																	'Currency',
+																)
+																.find(
+																	(option) =>
+																		option.value === +props.values.currencyCode,
+																)
+														}
+														onChange={(option) => {
+															if (option && option.value) {
+																props.handleChange('currencyCode')(option);
+															} else {
+																props.handleChange('currencyCode')('');
+															}
+														}}
+														placeholder="Select Currency"
+														id="currencyCode"
+														name="currencyCode"
+														className={
+															props.errors.currencyCode &&
+															props.touched.currencyCode
+																? 'is-invalid'
+																: ''
+														}
+													/>
+													{props.errors.currencyCode &&
+														props.touched.currencyCode && (
+															<div className="invalid-feedback">
+																{props.errors.currencyCode}
+															</div>
+														)}
+												</FormGroup>
+											</Col>
+										</Row>
+										<Row> 
+											<Button
+											className="mb-3 ml-2"
+											 onClick={this._showDetails.bind(null, true)}
+											 disabled={
+												this._showDetails === true
+											}
+										 >	More Details
+											 </Button>
+											 </Row> 	
+											 {this.state.showDetails &&
+										(<div id="moreDetails">
 										<Row className="row-wrapper">
 											<Col md="4">
 												<FormGroup>
@@ -427,36 +490,6 @@ class SupplierModal extends React.Component {
 														)}
 												</FormGroup>
 											</Col>
-										</Row>
-										<Row className="row-wrapper">
-											<Col md="4">
-												<FormGroup>
-													<Label htmlFor="email">
-														<span className="text-danger">*</span>Email
-													</Label>
-													<Input
-														type="text"
-														maxLength="80"
-														id="email"
-														name="email"
-														onChange={(value) => {
-															props.handleChange('email')(value);
-														}}
-														value={props.values.email}
-														className={
-															props.errors.email && props.touched.email
-																? 'is-invalid'
-																: ''
-														}
-														placeholder="Enter Email"
-													/>
-													{props.errors.email && props.touched.email && (
-														<div className="invalid-feedback">
-															{props.errors.email}
-														</div>
-													)}
-												</FormGroup>
-											</Col>
 											<Col md="4">
 												<FormGroup>
 													<Label htmlFor="telephone">Telephone</Label>
@@ -488,54 +521,7 @@ class SupplierModal extends React.Component {
 														)}
 												</FormGroup>
 											</Col>
-											<Col md="4">
-												<FormGroup>
-													<Label htmlFor="mobileNumber">
-														{' '}
-														<span className="text-danger">*</span>Mobile Number
-													</Label>
-													<PhoneInput
-														defaultCountry="AE"
-														international
-														value={props.values.mobileNumber}
-														onChange={(option) => {
-															props.handleChange('mobileNumber')(option);
-														}}
-														className={
-															props.errors.mobileNumber &&
-															props.touched.mobileNumber
-																? 'is-invalid'
-																: ''
-														}
-													/>
-													{props.errors.mobileNumber &&
-														props.touched.mobileNumber && (
-															<div className="invalid-feedback">
-																{props.errors.mobileNumber}
-															</div>
-														)}
-													{/* <Input
-                            type="text"
-                            id="mobileNumber"
-                            name="mobileNumber"
-                            onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('mobileNumber')(option) }}
-
-                            value={props.values.mobileNumber}
-                            className={
-                              props.errors.mobileNumber &&
-                                props.touched.mobileNumber
-                                ? "is-invalid"
-                                : ""
-                            }
-                          />
-                          {props.errors.mobileNumber &&
-                            props.touched.mobileNumber && (
-                              <div className="invalid-feedback">
-                                {props.errors.mobileNumber}
-                              </div>
-                            )} */}
-												</FormGroup>
-											</Col>
+											
 										</Row>
 										<Row className="row-wrapper">
 											<Col md="4">
@@ -841,62 +827,17 @@ class SupplierModal extends React.Component {
 														)}
 												</FormGroup>
 											</Col>
-											<Col md="4">
-												<FormGroup>
-													<Label htmlFor="currencyCode">
-														<span className="text-danger">*</span>Currency Code
-													</Label>
-													<Select
-														options={
-															currency_list
-																? selectCurrencyFactory.renderOptions(
-																		'currencyName',
-																		'currencyCode',
-																		currency_list,
-																		'Currency',
-																  )
-																: []
-														}
-														value={
-															currency_list &&
-															selectCurrencyFactory
-																.renderOptions(
-																	'currencyName',
-																	'currencyCode',
-																	currency_list,
-																	'Currency',
-																)
-																.find(
-																	(option) =>
-																		option.value === +props.values.currencyCode,
-																)
-														}
-														onChange={(option) => {
-															if (option && option.value) {
-																props.handleChange('currencyCode')(option);
-															} else {
-																props.handleChange('currencyCode')('');
-															}
-														}}
-														placeholder="Select Currency"
-														id="currencyCode"
-														name="currencyCode"
-														className={
-															props.errors.currencyCode &&
-															props.touched.currencyCode
-																? 'is-invalid'
-																: ''
-														}
-													/>
-													{props.errors.currencyCode &&
-														props.touched.currencyCode && (
-															<div className="invalid-feedback">
-																{props.errors.currencyCode}
-															</div>
-														)}
-												</FormGroup>
-											</Col>
 										</Row>
+										<Row>
+										<IconButton 
+										aria-label="delete"
+										size="medium" 
+										 onClick={this._showDetails.bind(null, false)}>
+          									<ArrowUpwardIcon fontSize="inherit" />
+       										 </IconButton>
+										 </Row>
+										</div>
+											)}
 									</ModalBody>
 									<ModalFooter>
 										<Button

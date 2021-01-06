@@ -38,7 +38,6 @@ const mapStateToProps = (state) => {
 	return {
 		currency_list: state.customer_invoice.currency_list,
 		vat_list: state.customer_invoice.vat_list,
-		place_of_supply: state.customer_invoice.place_of_supply,
 		product_list: state.customer_invoice.product_list,
 		customer_list: state.customer_invoice.customer_list,
 		country_list: state.customer_invoice.country_list,
@@ -148,7 +147,6 @@ class CreateCustomerInvoice extends React.Component {
 			purchaseCategory: [],
 			salesCategory: [],	
 			exchangeRate:'',		
-			prefixData: [],
 			basecurrency:[],
 		};
 
@@ -183,6 +181,7 @@ class CreateCustomerInvoice extends React.Component {
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
+		this.regDecimalP = /(^100(\.0{1,2})?$)|(^([1-9]([0-9])?|0)(\.[0-9]{1,2})?$)/;
 	}
 
 	// renderActions (cell, row) {
@@ -257,10 +256,10 @@ class CreateCustomerInvoice extends React.Component {
 				render={({ field, form }) => (
 					<div>
 						<Input
-							type="text"
+							type="number"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regEx.test(e.target.value)) {
+								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
 									this.selectItem(
 										e.target.value,
 										row,
@@ -315,7 +314,7 @@ class CreateCustomerInvoice extends React.Component {
 				name={`lineItemsString.${idx}.unitPrice`}
 				render={({ field, form }) => (
 					<Input
-						type="text"
+					type="number"
 						maxLength="10"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
@@ -384,8 +383,6 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 		let result = this.props.currency_convert_list.filter((obj) => {
 		return obj.currencyCode === value;
 		});
-		console.log( this.props.currency_convert_list)
-		console.log(result)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 		};
 
@@ -430,7 +427,6 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 		this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
 		this.props.customerInvoiceActions.getCountryList();
 		this.props.customerInvoiceActions.getVatList();
-		this.props.customerInvoiceActions.getPlaceOfSuppliyList();
 		this.props.customerInvoiceActions.getProductList();
 		this.props.productActions.getProductCategoryList();
 		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
@@ -487,7 +483,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 								salesCategory: res.data,
 							},
 							() => {
-								console.log(this.state.salesCategory);
+
 							},
 						);
 					}
@@ -1166,7 +1162,6 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 			customer_list,
 			universal_currency_list,
 			currency_convert_list,
-			place_of_supply,
 		} = this.props;
 		return (
 			<div className="create-customer-invoice-screen">
@@ -1212,8 +1207,8 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 													contactId: Yup.string().required(
 														'Customer is Required',
 													),
-													term: Yup.string().required('Term is Required'),
 													placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+													term: Yup.string().required('Term is Required'),
 													currency: Yup.string().required(
 														'Currency is Required',
 													),
@@ -1310,22 +1305,12 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																		id="invoice_number"
 																		name="invoice_number"
 																		placeholder="Invoice Number"
-																		value={prefix + props.values.invoice_number}
+																		value={props.values.invoice_number}
 																		onBlur={props.handleBlur('invoice_number')}
-																		onChange={(e) => {
-																			const input = e.target.value;
-																			const string = input.substr(
-																				prefix.length,
+																		onChange={(value) => {
+																			props.handleChange('invoice_number')(
+																				value,
 																			);
-																			if (
-																				input === '' ||
-																				this.regEx.test(string)
-																			) {
-																				props.handleChange('invoice_number')(
-																					string,
-																				);
-																				this.validationCheck(e.target.value);
-																			}
 																		}}
 																		className={
 																			props.errors.invoice_number &&
@@ -1416,9 +1401,9 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																	<i className="fa fa-plus"></i> Add a Customer
 																</Button>
 															</Col>
-																<Col lg={3}>
+															<Col lg={3}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="placeofsupplyId">
+																	<Label htmlFor="placeOfSupplyId">
 																		<span className="text-danger">*</span>
 																		Place of Supply
 																	</Label>
@@ -1451,11 +1436,12 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																			)
 																		}
 																	/>
-																{props.errors.placeOfSupplyId && props.touched.placeOfSupplyId && (
-																		<div className="invalid-feedback">
-																			{props.errors.placeOfSupplyId}
-																		</div>
-																	)}
+																	{props.errors.placeOfSupplyId &&
+																		props.touched.placeOfSupplyId && (
+																			<div className="invalid-feedback">
+																				{props.errors.placeOfSupplyId}
+																			</div>
+																		)}
 																</FormGroup>
 															</Col>
 														</Row>
@@ -1647,30 +1633,32 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																	 				+props.values.currencyCode,
 																	 		)
 																		 }
+																		 className={
+																			props.errors.currency &&
+																			props.touched.currency
+																				? 'is-invalid'
+																				: ''
+																		}
 																		 onChange={(option) => {
 																		 props.handleChange('currency')(option);
 																		 this.setExchange(option.value);
 																		 this.setCurrency(option.value)
 																		}}
-																		className={`${
-																			props.errors.currency &&
-																			props.touched.currency
-																				? 'is-invalid'
-																				: ''
-																		}`}
+
 																	/>
-																	{props.errors.currency && props.touched.currency && (
-																		<div className="invalid-feedback">
-																			{props.errors.currency}
-																		</div>
-																	)}
+																	{props.errors.currency &&
+																		props.touched.currency && (
+																			<div className="invalid-feedback">
+																				{props.errors.currency}
+																			</div>
+																		)}
 																</FormGroup>
 															</Col>
 														</Row>
 														<hr />
 																<Row>
 																<Col>
-																<Label htmlFor="currency">
+																<Label >
 																		Currency Exchange Rate
 																	</Label>	
 																</Col>
@@ -1717,6 +1705,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																	</Label> */}
 																	<div>
 																		<Input
+																			type="number"
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"
@@ -2044,7 +2033,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																								id="discountPercentage"
 																								name="discountPercentage"
 																								placeholder="Discount Percentage"
-																								type="text"
+																								type="number"
 																								maxLength="5"
 																								value={
 																									props.values
@@ -2053,7 +2042,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																								onChange={(e) => {
 																									if (
 																										e.target.value === '' ||
-																										this.regEx.test(
+																										this.regDecimal.test(
 																											e.target.value,
 																										)
 																									) {
@@ -2087,8 +2076,8 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																						</Label>
 																						<Input
 																							id="discount"
+																							type="number"
 																							name="discount"
-																							type="text"
 																							maxLength="10"
 																							disabled={
 																								props.values.discountType &&
@@ -2334,7 +2323,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 					salesCategory={this.state.salesCategory}
 					purchaseCategory={this.state.purchaseCategory}
 				/>
-				<InvoiceNumberModel
+				{/* <InvoiceNumberModel
 					openInvoiceNumberModel={this.state.openInvoiceNumberModel}
 					closeInvoiceNumberModel={(e) => {
 						this.closeInvoiceNumberModel(e);
@@ -2343,7 +2332,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 						prefix ={this.state.prefixData}
 						updatePrefix={this.props.customerInvoiceActions.updateInvoicePrefix}
 					
-				/>
+				/> */}
 			</div>
 		);
 	}

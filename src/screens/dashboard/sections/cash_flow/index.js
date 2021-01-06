@@ -65,14 +65,14 @@ class CashFlow extends Component {
 			datasets: [
 				{
 					label: (this.props.cash_flow_graph.inflow || {})['label'],
-					backgroundColor: 'rgba(75,192,192,0.7)',
-					hoverBackgroundColor: 'rgba(75,192,192,1)',
+					backgroundColor: 'rgba(244, 119, 46, 0.85)',
+					hoverBackgroundColor: 'rgba(244, 119, 46, 0.85)',
 					data: (this.props.cash_flow_graph.inflow || {})['data'],
 				},
 				{
 					label: (this.props.cash_flow_graph.outflow || {})['label'],
-					backgroundColor: 'rgba(255,99,132,0.7)',
-					hoverBackgroundColor: 'rgba(255,99,132,1)',
+					backgroundColor: 'rgba(65, 145, 255, 0.85)',
+					hoverBackgroundColor: 'rgba(65, 145, 255, 0.85',
 					data: (this.props.cash_flow_graph.outflow || {})['data'],
 				},
 			],
@@ -167,7 +167,7 @@ class CashFlow extends Component {
 							<Bar
 								data={cashFlowBar}
 								options={cashBarOption}
-								style={{ height: 300 }}
+								style={{ height: 200 }}
 								datasetKeyProvider={() => {
 									return Math.random();
 								}}

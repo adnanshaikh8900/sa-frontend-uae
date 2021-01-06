@@ -80,7 +80,7 @@ const CustomerInvoiceReducer = (state = initState, action) => {
 			case CUSTOMER_INVOICE.PLACE_OF_SUPPLY:
 				return {
 					...state,
-					country_list: Object.assign([], payload),
+					place_of_supply: Object.assign([], payload),
 				};	
 
 		default:

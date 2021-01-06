@@ -794,7 +794,7 @@ class DetailProduct extends React.Component {
 																			Selling Price
 																		</Label>
 																		<Input
-																			type="text"
+																			type="number"
 																			id="salesUnitPrice"
 																			name="salesUnitPrice"
 																			placeholder="Enter Selling Price"
@@ -985,7 +985,7 @@ class DetailProduct extends React.Component {
 																			Purchase Price
 																		</Label>
 																		<Input
-																			type="text"
+																			type="number"
 																			id="purchaseUnitPrice"
 																			name="purchaseUnitPrice"
 																			placeholder="Enter Purchase Price"

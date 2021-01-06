@@ -333,10 +333,10 @@ class DetailCustomerInvoice extends React.Component {
 				render={({ field, form }) => (
 					<div>
 						<Input
-							type="text"
+							type="number"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regEx.test(e.target.value)) {
+								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
 									this.selectItem(
 										e.target.value,
 										row,
@@ -394,7 +394,7 @@ class DetailCustomerInvoice extends React.Component {
 				name={`lineItemsString.${idx}.unitPrice`}
 				render={({ field, form }) => (
 					<Input
-						type="text"
+					type="number"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (
@@ -833,7 +833,7 @@ class DetailCustomerInvoice extends React.Component {
 				? moment(invoiceDueDate, 'DD/MM/YYYY').toDate()
 				: invoiceDueDate,
 		);
-	
+
 		formData.append('exchangeRate',  this.state.initValue.exchangeRate);
 		
 		formData.append(
@@ -855,7 +855,7 @@ class DetailCustomerInvoice extends React.Component {
 		formData.append('discount', discount);
 		formData.append('discountType', discountType);
 		formData.append('term', term);
-		formData.append('placeOfSupplyId',placeOfSupplyId.value);
+		//formData.append('placeOfSupplyId',placeOfSupplyId.value);
 		if (discountType === 'PERCENTAGE') {
 			formData.append('discountPercentage', discountPercentage);
 		}
@@ -864,6 +864,9 @@ class DetailCustomerInvoice extends React.Component {
 		}
 		if (currency && currency.value) {
 			formData.append('currencyCode', currency.value);
+		}
+		if (placeOfSupplyId && placeOfSupplyId.value) {
+			formData.append('placeOfSupplyId', placeOfSupplyId.value);
 		}
 		if (project) {
 			formData.append('projectId', project);
@@ -1074,7 +1077,7 @@ class DetailCustomerInvoice extends React.Component {
 															'Supplier is Required',
 														),
 														term: Yup.string().required('term is Required'),
-														placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+													//	placeOfSupplyId: Yup.string().required('Place of supply is Required'),
 														invoiceDate: Yup.string().required(
 															'Invoice Date is Required',
 														),
@@ -1254,7 +1257,7 @@ class DetailCustomerInvoice extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																<Col>
+																{/* <Col>
 																	<Label
 																		htmlFor="contactId"
 																		style={{ display: 'block' }}
@@ -1270,7 +1273,7 @@ class DetailCustomerInvoice extends React.Component {
 																		<i className="fa fa-plus"></i> Add a
 																		Customer
 																	</Button>
-																</Col>
+																</Col> */}
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
@@ -1293,16 +1296,29 @@ class DetailCustomerInvoice extends React.Component {
 																			name="placeOfSupplyId"
 																			value={
 																				this.placelist &&
-																				this.placelist.find(
-																					(option) =>
-																						option.label === props.values.placeOfSupplyId,
-																				)
-																			}
-																			onChange={(option) =>
-																				props.handleChange('placeOfSupplyId')(
-																					option,
-																				)
-																			}
+																				selectOptionsFactory.renderOptions(
+																					'label',
+																					'value',
+																					this.placelist,
+																					'Place of Supply',
+																			  ).find(
+																										(option) =>
+																											option.value ===
+																											props.values
+																												.placeOfSupplyId.toString(),
+																									)
+																							}
+																							onChange={(options) => {
+																								if (options && options.value) {
+																									props.handleChange(
+																										'placeOfSupplyId',
+																									)(options.value);
+																								} else {
+																									props.handleChange(
+																										'placeOfSupplyId',
+																									)('');
+																								}
+																							}}
 																			className={`${
 																				props.errors.placeOfSupplyId &&
 																				props.touched.placeOfSupplyId
@@ -1566,6 +1582,7 @@ class DetailCustomerInvoice extends React.Component {
 																	</Label> */}
 																	<div>
 																		<Input
+																			type="number"
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"
@@ -1897,7 +1914,7 @@ class DetailCustomerInvoice extends React.Component {
 																									id="discountPercentage"
 																									name="discountPercentage"
 																									placeholder="Discount Percentage"
-																									type="text"
+																									type="number"
 																									value={
 																										props.values
 																											.discountPercentage

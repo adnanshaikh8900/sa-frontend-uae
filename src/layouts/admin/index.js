@@ -104,32 +104,35 @@ class AdminLayout extends React.Component {
 		}
 
 		function filterPaths(arr, moduleName) {
+
 			navigation.items.forEach((item) => {
-				if (item.children) {
-					var childPath = item.children.find((child) => {
-						return child.path == moduleName;
-					});
-					if (childPath) {
-						var existingPath = parentPathPresent(arr, item.name);
-						if (existingPath) {
-							existingPath['children'].push(childPath);
-						} else {
-							arr.items.push({
-								name: item.name,
-								url: item.url,
-								icon: item.icon,
-								children: [childPath],
-							});
-						}
-					}
-				}
-				if (moduleName === 'Dashboard' && item.name === 'Dashboard') {
+			 	if (item.children) {
+			 		var childPath = item.children.find((child) => {
+			 			return child.path == moduleName;
+					 });
+					 
+			 		if (childPath) {
+			 			var existingPath = parentPathPresent(arr, item.name);
+			 			if (existingPath) {
+			 				existingPath['children'].push(childPath);
+			 			} else {
+			 				arr.items.push({
+			 					name: item.name,
+			 					url: item.url,
+			 					icon: item.icon,
+			 					children: [childPath],
+			 				});
+			 			}
+			 		}
+			 	}
+			 	if (moduleName === 'Dashboard' && item.name === 'Dashboard') {
+					console.log("Hello there")
 					arr.items.push({
-						name: item.name,
-						url: item.url,
-						icon: item.icon,
-					});
-				}
+			 			name: item.name,
+			 			url: item.url,
+			 			icon: item.icon,
+			 		});
+			 	}
 			});
 		}
 
@@ -138,6 +141,17 @@ class AdminLayout extends React.Component {
 		user_role_list.forEach((p) => {
 			filterPaths(finalArray, p.moduleName);
 		});
+
+		var correctSequence = navigation.items.map(item => item.name)
+
+		finalArray.items = correctSequence.reduce((arr, name) => {
+			let ele = finalArray.items.find(item => item.name == name)
+			if (ele) arr.push(ele);
+			return arr;
+		}, [])
+	
+
+
 		//console.log(user_list && user_list?.data && user_list.data[0].roleId === 1);
 		return (
 			<div className="admin-container">

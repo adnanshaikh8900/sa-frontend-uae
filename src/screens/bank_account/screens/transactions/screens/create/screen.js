@@ -418,7 +418,7 @@ class CreateBankTransaction extends React.Component {
 				},
 			});
 			this.formRef.current.setFieldValue(
-				'currencyCode',
+				'currency',
 				response.data[0].currencyCode,
 				true,
 			);
@@ -750,7 +750,7 @@ class CreateBankTransaction extends React.Component {
 																		Amount
 																	</Label>
 																	<Input
-																		type="text"
+																		type="number"
 																		maxLength="10"
 																		id="transactionAmount"
 																		name="transactionAmount"
@@ -906,19 +906,19 @@ class CreateBankTransaction extends React.Component {
 																						}
 																						value={
 																							currency_convert_list &&
-																							selectCurrencyFactory
-																								.renderOptions(
-																									'currencyName',
-																									'currencyCode',
-																									currency_convert_list,
-																									'Currency',
-																								)
-																								.find(
-																									(option) =>
-																										option.value ===
+																							   selectCurrencyFactory
+																							   .renderOptions(
+																									   'currencyName',
+																										'currencyCode',
+																									   currency_convert_list,
+																										'Currency',
+																								   )
+																									.find(
+																									   (option) =>
+																											option.value ===
 																										+props.values.currencyCode,
 																								)
-																						}
+																							}
 																						onChange={(option) => {
 																							props.handleChange('currency')(option);
 																							this.setExchange(option.value);

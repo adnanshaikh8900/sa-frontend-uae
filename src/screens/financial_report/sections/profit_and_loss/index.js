@@ -22,7 +22,7 @@ import { CSVLink } from 'react-csv';
 import { Loader, Currency } from 'components';
 import * as FinancialReportActions from '../../actions';
 import FilterComponent from '../filterComponent';
-
+import FilterComponent2 from '../filterComponet2';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 
@@ -231,7 +231,7 @@ class ProfitAndLossReport extends React.Component {
 								</Row>
 							</CardHeader>
 							<div className={`panel ${view ? 'view-panel' : ''}`}>
-								<FilterComponent
+								<FilterComponent2
 									viewFilter={this.viewFilter}
 									generateReport={(value) => {
 										this.generateReport(value);

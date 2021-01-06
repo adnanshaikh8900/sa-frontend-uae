@@ -232,6 +232,10 @@ class SupplierInvoice extends React.Component {
 	return row.invoiceAmount ? row.invoiceAmount.toFixed(2):'';
 	};
 
+	renderDueAmount = (cell,row,extraData) => {
+		return row.dueAmount ? row.dueAmount.toFixed(2):'';
+	};
+
 	renderVatAmount = (cell, row, extraData) => {
 		// return row.vatAmount === 0 ? (
 		// 	<Currency
@@ -340,7 +344,7 @@ class SupplierInvoice extends React.Component {
 								<i className="fas fa-file" /> Draft
 							</DropdownItem>
 						)}
-						{/* {row.statusEnum === 'Sent' && (
+						{row.statusEnum === 'Sent' && (
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
@@ -351,7 +355,7 @@ class SupplierInvoice extends React.Component {
 							>
 								<i className="fas fa-university" /> Record Payment
 							</DropdownItem>
-						)} */}
+						)}
 						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
 							<DropdownItem
 								onClick={() => {
@@ -361,7 +365,7 @@ class SupplierInvoice extends React.Component {
 								<i className="fa fa-trash-o" /> Delete
 							</DropdownItem>
 						)}
-						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
+						{/* {row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
 							<DropdownItem
 								onClick={() => {
 									this.sendCustomEmail(row.id);
@@ -369,7 +373,7 @@ class SupplierInvoice extends React.Component {
 							>
 								<i className="fa fa-send" /> Send Custom Email
 							</DropdownItem>
-						)}
+						)} */}
 					</DropdownMenu>
 				</ButtonDropdown>
 			</div>
@@ -731,6 +735,7 @@ class SupplierInvoice extends React.Component {
 						status: supplier.status,
 						statusEnum: supplier.statusEnum,
 						customerName: supplier.name,
+						dueAmount:supplier.dueAmount,
 						invoiceNumber: supplier.referenceNumber,
 						invoiceDate: supplier.invoiceDate ? supplier.invoiceDate : '',
 						invoiceDueDate: supplier.invoiceDueDate
@@ -989,7 +994,7 @@ class SupplierInvoice extends React.Component {
 											</Col>
 											<Col lg={2} className="mb-1">
 												<Input
-													type="text"
+													type="number"
 													value={filterData.amount}
 													placeholder="Amount"
 													onChange={(e) => {
@@ -1154,6 +1159,15 @@ class SupplierInvoice extends React.Component {
 												
 											>
 												Invoice Amount
+											</TableHeaderColumn>
+											<TableHeaderColumn
+												thStyle={{ whiteSpace: 'normal' }}
+												dataField="dueAmount"
+												dataSort
+												width="5%"
+												dataFormat={this.renderDueAmount}
+											>
+												Due Amount
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}

@@ -211,10 +211,10 @@ class ProductModal extends React.Component {
 						validate={(values) => {
 							let errors = {};
 							if (!values.productName) {
-								errors.productName = 'Product Category Name is  required';
+								errors.productName = 'Product Name is  required';
 							}
 							if (this.state.exist === true) {
-								errors.productName = 'Product Category Name is already exist';
+								errors.productName = 'Product  Name is already exist';
 							}
 							return errors;
 						}}
@@ -665,7 +665,7 @@ class ProductModal extends React.Component {
 														</UncontrolledTooltip>
 													</Label>
 													<Input
-														type="text"
+													type="number"
 														maxLength="10"
 														id="salesUnitPrice"
 														name="salesUnitPrice"
@@ -833,7 +833,7 @@ class ProductModal extends React.Component {
 														</UncontrolledTooltip>
 													</Label>
 													<Input
-														type="text"
+														type="number"
 														maxLength="10"
 														id="purchaseUnitPrice"
 														name="purchaseUnitPrice"

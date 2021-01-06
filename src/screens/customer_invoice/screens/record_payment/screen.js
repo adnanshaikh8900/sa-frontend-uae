@@ -517,10 +517,9 @@ class RecordCustomerPayment extends React.Component {
 																			Amount Received
 																		</Label>
 																		<Input
-																			type="text"
+																			type="number"
 																			id="amount"
 																			name="amount"
-																			readOnly
 																			value={props.values.amount}
 																			onChange={(option) => {
 																				if (

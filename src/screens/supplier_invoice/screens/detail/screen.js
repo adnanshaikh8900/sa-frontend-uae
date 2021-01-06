@@ -46,6 +46,7 @@ const mapStateToProps = (state) => {
 		product_list: state.customer_invoice.product_list,
 		supplier_list: state.supplier_invoice.supplier_list,
 		country_list: state.supplier_invoice.country_list,
+		product_category_list: state.product.product_category_list,
 		universal_currency_list: state.common.universal_currency_list,
 		currency_convert_list: state.currencyConvert.currency_convert_list,
 	};
@@ -214,7 +215,7 @@ class DetailSupplierInvoice extends React.Component {
 										? res.data.discountType
 										: '',
 									term: res.data.term ? res.data.term : '',
-									placeOfSupply: res.data.placeOfSupply ? res.data.placeOfSupply : '',
+									placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 									fileName: res.data.fileName ? res.data.fileName : '',
 									filePath: res.data.filePath ? res.data.filePath : '',
 								},
@@ -227,7 +228,7 @@ class DetailSupplierInvoice extends React.Component {
 									: [],
 								selectedContact: res.data.contactId ? res.data.contactId : '',
 								term: res.data.term ? res.data.term : '',
-								placeOfSupply: res.data.placeOfSupply ? res.data.placeOfSupply : '',
+								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 
 								loading: false,
 							},
@@ -359,7 +360,7 @@ class DetailSupplierInvoice extends React.Component {
 				name={`lineItemsString.${idx}.description`}
 				render={({ field, form }) => (
 					<Input
-						type="text"
+					type="text"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(
@@ -405,10 +406,10 @@ class DetailSupplierInvoice extends React.Component {
 				render={({ field, form }) => (
 					<div>
 						<Input
-							type="text"
+							type="number"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
-								if (e.target.value === '' || this.regEx.test(e.target.value)) {
+								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
 									this.selectItem(
 										e.target.value,
 										row,
@@ -466,7 +467,7 @@ class DetailSupplierInvoice extends React.Component {
 				name={`lineItemsString.${idx}.unitPrice`}
 				render={({ field, form }) => (
 					<Input
-						type="text"
+					type="number"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (
@@ -920,7 +921,7 @@ class DetailSupplierInvoice extends React.Component {
 			invoiceDueDate,
 			invoiceDate,
 			contactId,
-			placeOfSupply,
+			placeOfSupplyId,
 			project,
 			exchangeRate,
 			invoice_number,
@@ -962,7 +963,7 @@ class DetailSupplierInvoice extends React.Component {
 		formData.append('discount', discount);
 		formData.append('discountType', discountType);
 		formData.append('term', term);
-		formData.append('placeOfSupply',placeOfSupply.label);
+		formData.append('placeOfSupplyId',placeOfSupplyId.value);
 		formData.append('exchangeRate',  this.state.initValue.exchangeRate);
 
 		if (discountType === 'PERCENTAGE') {
@@ -1200,7 +1201,7 @@ class DetailSupplierInvoice extends React.Component {
 															'Supplier is Required',
 														),
 														term: Yup.string().required('Term is Required'),
-														placeOfSupply: Yup.string().required('Place of supply is Required'),
+														placeOfSupplyId: Yup.string().required('Place of supply is Required'),
 														invoiceDate: Yup.string().required(
 															'Invoice Date is Required',
 														),
@@ -1366,7 +1367,7 @@ class DetailSupplierInvoice extends React.Component {
 																</Col>
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
-																		<Label htmlFor="placeOfSupply">
+																		<Label htmlFor="placeOfSupplyId">
 																			<span className="text-danger">*</span>
 																			Place of Supply
 																		</Label>
@@ -1382,31 +1383,31 @@ class DetailSupplierInvoice extends React.Component {
 																					  )
 																					: []
 																			}
-																			id="placeOfSupply"
-																			name="placeOfSupply"
+																			id="placeOfSupplyId"
+																			name="placeOfSupplyId"
 																			value={
 																				this.placelist &&
 																				this.placelist.find(
 																					(option) =>
-																						option.label === props.values.placeOfSupply,
-																				)
+																						option.label === props.values.placeOfSupplyId.toString(),
+																					)
 																			}
 																			onChange={(option) =>
-																				props.handleChange('placeOfSupply')(
+																				props.handleChange('placeOfSupplyId')(
 																					option,
 																				)
 																			}
 																			className={`${
-																				props.errors.placeOfSupply &&
-																				props.touched.placeOfSupply
+																				props.errors.placeOfSupplyId &&
+																				props.touched.placeOfSupplyId
 																					? 'is-invalid'
 																					: ''
 																			}`}
 																		/>
-																		{props.errors.placeOfSupply &&
-																			props.touched.placeOfSupply && (
+																		{props.errors.placeOfSupplyId &&
+																			props.touched.placeOfSupplyId && (
 																				<div className="invalid-feedback">
-																					{props.errors.placeOfSupply}
+																					{props.errors.placeOfSupplyId}
 																				</div>
 																			)}
 																	</FormGroup>
@@ -1656,6 +1657,7 @@ class DetailSupplierInvoice extends React.Component {
 																	</Label> */}
 																	<div>
 																		<Input
+																			type="number"
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"
@@ -2001,7 +2003,7 @@ class DetailSupplierInvoice extends React.Component {
 																									id="discountPercentage"
 																									name="discountPercentage"
 																									placeholder="Discount Percentage"
-																									type="text"
+																									type="number"
 																									value={
 																										props.values
 																											.discountPercentage
@@ -2044,7 +2046,7 @@ class DetailSupplierInvoice extends React.Component {
 																							<Input
 																								id="discount"
 																								name="discount"
-																								type="text"
+																								type="number"
 																								disabled={
 																									props.values.discountType &&
 																									props.values.discountType ===

@@ -256,7 +256,7 @@ class BankAccount extends React.Component {
 	renderAccountNumber = (cell, row) => {
 		return (
 			<label
-				className="mb-0 label-danger"
+				className="mb-0 label-bank"
 				style={{
 					cursor: 'pointer',
 					}}
@@ -431,8 +431,8 @@ class BankAccount extends React.Component {
 		return (
 			<div>
 				<div>
-					<label className="font-weight-bold mr-2">Reconciled Balance : </label>
-					<label className="badge label-danger mb-0">
+					<label className="font-weight-bold ">Reconciled <br />Balance : </label>
+					<label className="badge label-bank ">
 						<Currency
 							value={row.closingBalance}
 							currencySymbol={
@@ -740,6 +740,7 @@ class BankAccount extends React.Component {
 												</Col>
 											</Row>
 										</div> */}
+										<div>
 										<Button
 											color="primary"
 											className="btn-square"
@@ -753,6 +754,7 @@ class BankAccount extends React.Component {
 											<i className="fas fa-plus mr-1" />
 											Add New Account
 										</Button>
+										</div>
 										<div>
 											<BootstrapTable
 												selectRow={this.selectRowProp}
@@ -792,76 +794,64 @@ class BankAccount extends React.Component {
 													dataField="bankAccountNo"
 													dataFormat={this.renderAccountNumber}
 													dataSort
-													width="150"
-													
+													width="5%"
 												>
 													Account Number
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													thStyle={{ whiteSpace: 'normal' }}
 													dataField="name"
 													dataSort
-													width="150"
+													width="5%"
 												>
 													Bank
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													thStyle={{ whiteSpace: 'normal' }}
 													dataField="accounName"
 													dataSort
-													width="150"
-												
+													width="5%"
 												>
 													Account Name
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													thStyle={{ whiteSpace: 'normal' }}
 													dataFormat={this.renderAccountType}
 													dataField="bankAccountTypeName"
 													dataSort
-													width="150"
-													
+													width="5%"
 												>
 													Account Type
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													thStyle={{ whiteSpace: 'normal' }}
 													dataFormat={this.renderCurrency}
 													dataSort
 													dataField="currancyName"
-													width="150"
-													
+													width="5%"
 												>
 													Currency
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													thStyle={{ whiteSpace: 'normal' }}
 													dataField="openingBalance"
 													dataSort
-													width="150"
+													width="5%"
 													dataFormat={this.renderBalance}
-													
 													formatExtraData={universal_currency_list}
 												>
 													Bank Balance
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													thStyle={{ whiteSpace: 'normal' }}
 													dataField="swift_code"
 													export={false}
 													dataSort={false}
 													dataFormat={this.renderLastReconciled}
 													formatExtraData={universal_currency_list}
-													width="150"
+													width="5%"
 												
 												>
 													Last Reconciled
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													thStyle={{ whiteSpace: 'normal' }}
 													className="text-right"
 													columnClassName="text-right"
-													width="150"
+													width="5%"
 													dataSort={false}
 													export={false}
 													dataFormat={this.renderActions}

@@ -419,7 +419,7 @@ class Payment extends React.Component {
 												</Col>
 												<Col lg={2} className="mb-1">
 													<Input
-														type="text"
+														type="number"
 														placeholder="Invoice Amount"
 														value={filterData.invoiceAmount}
 														onChange={(e) =>

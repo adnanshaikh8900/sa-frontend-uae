@@ -3,10 +3,10 @@ appgwName="k8sApplicationGateway"
 resgp="MC_DataInn_Kubernetes_RG_k8s_eastus"
 vaultName="kv-k8s-cert-eac2"
 mycert="wildcard-app-simplevat-com"
-nameserver="simplevat-test1"
-subdomain="test1"
-helmDir="helm-simplevat"
-SVrelease="0.0.3-alpha-116"
+nameserver="simplevat-datainn-services"
+subdomain="datainn-services"
+helmDir="helm-frontend"
+SVrelease="0.0.3-alpha-180"
 
 
 versionedSecretId=$(az keyvault certificate show -n $mycert --vault-name $vaultName --query "sid" -o tsv)
@@ -39,7 +39,7 @@ rm "$mycert"-keyfile-encrypted.key
 rm "$mycert"-keyfile-decrypted.key
 rm "$mycert"-certificate.crt
 
-helm upgrade $nameserver ./$helmDir --values ./$helmDir/values-"$subdomain".yaml --set simpleVatRelease=0.0.3-alpha-116 --set image.tag=0.0.3-alpha-116 -n $nameserver
+helm upgrade $nameserver-frontend ./$helmDir --values ./$helmDir/values-"$subdomain".yaml --set simpleVatFrontendRelease=$SVrelease --set image.repository.frontend.tag=$SVrelease -n $nameserver --dry-run --debug
 
 az network application-gateway ssl-cert list --gateway-name $appgwName --resource-group $resgp
 
@@ -56,8 +56,8 @@ helm install $nameserver-frontend ./$helmDir --values ./$helmDir/values-"$subdom
 
 
 
-nameserver="simplevat-moma"
-subdomain="moma"
+nameserver="simplevat-datainn-services"
+subdomain="datainn-services"
 helmDir="helm-frontend"
 SVrelease="0.0.3-alpha-180"
 

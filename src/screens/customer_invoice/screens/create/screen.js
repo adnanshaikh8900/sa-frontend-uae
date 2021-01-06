@@ -164,9 +164,9 @@ class CreateCustomerInvoice extends React.Component {
 		];
 
 		this.termList = [
-			{ label: 'Net 7', value: 'NET_7' },
-			{ label: 'Net 10', value: 'NET_10' },
-			{ label: 'Net 30', value: 'NET_30' },
+			{ label: 'Net 7 Days', value: 'NET_7' },
+			{ label: 'Net 10 Days', value: 'NET_10' },
+			{ label: 'Net 30 Days', value: 'NET_30' },
 			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
 		];
 		this.placelist = [
@@ -1326,18 +1326,6 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>
-															<Col lg={1}>
-																<Button
-																	type="button"
-																	color="primary"
-																	className="btn-square1"
-																	onClick={(e, props) => {
-																		this.openInvoiceNumberModel(props);
-																	}}
-																>
-																	<i className="fas fa-cog"></i> 
-																</Button>
 															</Col>
 															<Col lg={3}>
 																<FormGroup className="mb-3">

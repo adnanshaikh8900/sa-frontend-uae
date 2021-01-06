@@ -2,7 +2,7 @@
 appgwName="k8sApplicationGateway"
 resgp="MC_DataInn_Kubernetes_RG_k8s_eastus"
 vaultName="kv-k8s-cert-eac2"
-mycert="wildcard-test-simplevat-com"
+mycert="wildcard-app-simplevat-com"
 nameserver="simplevat-test1"
 subdomain="test1"
 helmDir="helm-simplevat"
@@ -56,8 +56,8 @@ helm install $nameserver-frontend ./$helmDir --values ./$helmDir/values-"$subdom
 
 
 
-nameserver="simplevat-test1"
-subdomain="test1"
+nameserver="simplevat-moma"
+subdomain="moma"
 helmDir="helm-frontend"
 SVrelease="0.0.3-alpha-180"
 

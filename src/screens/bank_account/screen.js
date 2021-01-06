@@ -256,7 +256,7 @@ class BankAccount extends React.Component {
 	renderAccountNumber = (cell, row) => {
 		return (
 			<label
-				className="mb-0 label-danger"
+				className="mb-0 label-bank"
 				style={{
 					cursor: 'pointer',
 					}}
@@ -432,7 +432,7 @@ class BankAccount extends React.Component {
 			<div>
 				<div>
 					<label className="font-weight-bold ">Reconciled <br />Balance : </label>
-					<label className="badge label-danger ">
+					<label className="badge label-bank ">
 						<Currency
 							value={row.closingBalance}
 							currencySymbol={
@@ -795,12 +795,10 @@ class BankAccount extends React.Component {
 													dataFormat={this.renderAccountNumber}
 													dataSort
 													width="5%"
-													
 												>
 													Account Number
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													thStyle={{ whiteSpace: 'normal' }}
 													dataField="name"
 													dataSort
 													width="5%"
@@ -808,47 +806,38 @@ class BankAccount extends React.Component {
 													Bank
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													thStyle={{ whiteSpace: 'normal' }}
 													dataField="accounName"
 													dataSort
 													width="5%"
-												
 												>
 													Account Name
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													thStyle={{ whiteSpace: 'normal' }}
 													dataFormat={this.renderAccountType}
 													dataField="bankAccountTypeName"
 													dataSort
 													width="5%"
-													
 												>
 													Account Type
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													thStyle={{ whiteSpace: 'normal' }}
 													dataFormat={this.renderCurrency}
 													dataSort
 													dataField="currancyName"
 													width="5%"
-													
 												>
 													Currency
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													thStyle={{ whiteSpace: 'normal' }}
 													dataField="openingBalance"
 													dataSort
 													width="5%"
 													dataFormat={this.renderBalance}
-													
 													formatExtraData={universal_currency_list}
 												>
 													Bank Balance
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													thStyle={{ whiteSpace: 'normal' }}
 													dataField="swift_code"
 													export={false}
 													dataSort={false}
@@ -860,7 +849,6 @@ class BankAccount extends React.Component {
 													Last Reconciled
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													thStyle={{ whiteSpace: 'normal' }}
 													className="text-right"
 													columnClassName="text-right"
 													width="5%"

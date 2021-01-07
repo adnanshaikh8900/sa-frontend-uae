@@ -1,4 +1,4 @@
-# Configure your resources.
+# Configure your resources
 appgwName="k8sApplicationGateway"
 resgp="MC_DataInn_Kubernetes_RG_k8s_eastus"
 vaultName="kv-k8s-cert-eac2"

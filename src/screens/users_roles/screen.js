@@ -76,12 +76,7 @@ class UsersRoles extends React.Component {
 			onRowClick: this.goToDetail,
 		};
 
-		this.selectRowProp = {
-			mode: 'checkbox',
-			bgColor: 'rgba(0,0,0, 0.05)',
-			onSelect: this.onRowSelect,
-			onSelectAll: this.onSelectAll,
-		};
+		
 	}
 
 	componentDidMount = () => {
@@ -107,17 +102,9 @@ class UsersRoles extends React.Component {
 	};
 
 	getUserName = (cell, row) => {
-		const avatar = require('assets/images/avatars/6.jpg');
 		return (
 			<div className="d-flex">
-				<img
-					src={avatar}
-					width="50"
-					height="50"
-					className="img-avatar"
-					alt="logo"
-				></img>
-				<div className="ml-2">
+					<div className="ml-2">
 					<div>{row.roleName}</div>
 				</div>
 			</div>
@@ -153,7 +140,7 @@ class UsersRoles extends React.Component {
 								<Row>
 									<Col lg="12">
 										<div className="d-flex justify-content-end"></div>
-										<div className="py-3">
+										{/* <div className="py-3">
 											<h5>Filter : </h5>
 											<Row>
 												<Col lg={2} className="mb-1">
@@ -167,7 +154,7 @@ class UsersRoles extends React.Component {
 													/>
 												</Col>
 											</Row>
-										</div>
+										</div> */}
 										<Button
 											color="primary"
 											style={{ marginBottom: '10px' }}

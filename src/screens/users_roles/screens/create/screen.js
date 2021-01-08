@@ -19,6 +19,7 @@ import { Loader } from 'components';
 import Select from 'react-select';
 import CheckboxTree from 'react-checkbox-tree';
 import 'react-checkbox-tree/lib/react-checkbox-tree.css';
+import * as Yup from 'yup';
 
 import { CommonActions } from 'services/global';
 
@@ -54,11 +55,12 @@ class CreateRole extends React.Component {
 			vat_list: [],
 			checked: [],
 			roleList: [],
+			roleexist: false,
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExDecimal = /^[0-9]*(\.[0-9]{0,2})?$/;
 		this.regEx = /^[0-9\d]+$/;
-		this.vatCode = /[a-zA-Z0-9 ]+$/;
+		this.regCode = /[a-zA-Z0-9 ]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 	}
 
@@ -123,7 +125,7 @@ class CreateRole extends React.Component {
 
 	// Create or Edit Vat
 	handleSubmit = (data, resetForm) => {
-		const obj = {
+			const obj = {
 			roleName: data.name,
 			roleDescription: data.description,
 			moduleListIds: this.state.checked,
@@ -150,10 +152,26 @@ class CreateRole extends React.Component {
 			});
 	};
 
+	validationCheck = (value) => {
+		const data = {
+			moduleType: 8,
+			name: value,
+		};
+		this.props.RoleActions.checkValidation(data).then((response) => {
+			if (response.data === 'Role name already exists') {
+				this.setState({
+					roleexist: true,
+				})
+			} else {
+				this.setState({
+					roleexist: false,
+				});
+			}
+		});
+	};
+
 	onCheck = (checked, targetNode) => {
-		console.log(targetNode);
 		this.setState({ checked }, () => {
-			console.log(this.state.checked);
 		});
 	};
 
@@ -202,11 +220,21 @@ class CreateRole extends React.Component {
 												validate={(values) => {
 													// let status = false
 													let errors = {};
-													if (!values.name) {
-														errors.name = 'Name is  required';
+													if (this.state.roleexist === true) {
+														errors.name =
+															'Role name is already exist';
 													}
 													return errors;
 												}}
+												validationSchema={Yup.object().shape({
+													name: Yup.string().required(
+														'Role Name is required',
+													),
+													RoleList: Yup.string().required(
+														'Modules  should be selected ',
+													),
+
+												})}
 											>
 												{(props) => (
 													<Form onSubmit={props.handleSubmit} name="simpleForm">
@@ -224,24 +252,33 @@ class CreateRole extends React.Component {
 																onChange={(option) => {
 																	if (
 																		option.target.value === '' ||
-																		this.vatCode.test(option.target.value)
+																		this.regCode.test(
+																			option.target.value,
+																		)
 																	) {
-																		props.handleChange('name')(option);
+																		props.handleChange('name')(
+																			option,
+																		);
 																	}
+																	this.validationCheck(
+																		option.target.value,
+																	);
 																}}
 																// validate={this.validateCode}
 																value={props.values.name}
 																className={
-																	props.errors.name && props.touched.name
+																	props.errors.name &&
+																	props.touched.name
 																		? 'is-invalid'
 																		: ''
 																}
 															/>
-															{props.errors.name && props.touched.name && (
-																<div className="invalid-feedback">
-																	{props.errors.name}
-																</div>
-															)}
+															{props.errors.name &&
+																props.touched.name && (
+																	<div className="invalid-feedback">
+																		{props.errors.name}
+																	</div>
+																)}
 														</FormGroup>
 														<FormGroup>
 															<Label htmlFor="name">Description</Label>
@@ -268,8 +305,10 @@ class CreateRole extends React.Component {
 															/>
 														</FormGroup>
 														<FormGroup>
-															<Label htmlFor="name">Modules</Label>
+															<Label ><span className="text-danger">*</span>Modules</Label>
 															<CheckboxTree
+																id="RoleList"
+																name="RoleList"
 																checked={checked}
 																expanded={expanded}
 																iconsClass="fa5"

@@ -403,6 +403,7 @@ class CreateSupplierInvoice extends React.Component {
 		this.props.supplierInvoiceActions.getVatList();
 		this.props.supplierInvoiceActions.getCountryList();
 		this.props.supplierInvoiceActions.getProductList();
+		this.props.ProductActions.getProductCategoryList();
 		this.purchaseCategory();
 		this.salesCategory();
 		this.getCompanyCurrency();

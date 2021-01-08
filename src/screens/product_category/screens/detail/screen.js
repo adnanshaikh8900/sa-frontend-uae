@@ -18,7 +18,7 @@ import { Loader , ConfirmDeleteModal} from 'components'
 import {
   CommonActions
 } from 'services/global'
-
+import * as Yup from 'yup';
 import 'react-toastify/dist/ReactToastify.css'
 import './style.scss'
 
@@ -156,12 +156,12 @@ class DetailProductCategory extends React.Component {
                             onSubmit={(values) => {
                               this.handleSubmit(values)
                             }}
-                          // validationSchema={Yup.object().shape({
-                          //   name: Yup.string()
-                          //     .required("Product Category Name is Required"),
-                          //   code: Yup.string()
-                          //     .required("Code is Required")
-                          // })}
+                          validationSchema={Yup.object().shape({
+                            productCategoryName: Yup.string()
+                              .required("Product Category Name is Required"),
+                              productCategoryCode: Yup.string()
+                              .required("Code is Required")
+                          })}
                           >
                             {(props) => (
                               <Form onSubmit={props.handleSubmit} name="simpleForm">
@@ -185,7 +185,7 @@ class DetailProductCategory extends React.Component {
                                   )}
                                 </FormGroup>
                                 <FormGroup>
-                                  <Label htmlFor="name"><span className="text-danger">*</span>Product Category Name</Label>
+                                  <Label htmlFor="productCategoryName"><span className="text-danger">*</span>Product Category Name</Label>
                                   <Input
                                     type="text"
                                     id="productCategoryName"

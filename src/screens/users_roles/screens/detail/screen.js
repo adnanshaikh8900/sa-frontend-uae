@@ -157,7 +157,7 @@ class UpdateRole extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'New Role Created Successfully!',
+						'Role Updated Successfully!',
 					);
 					resetForm();
 					if (this.state.createMore) {

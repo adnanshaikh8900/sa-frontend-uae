@@ -77,6 +77,7 @@ class CreateUser extends React.Component {
 			userPhoto: [],
 			userPhotoFile: [],
 			showIcon: false,
+			exist: false,
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 	}
@@ -161,6 +162,23 @@ class CreateUser extends React.Component {
 				);
 			});
 	};
+	validationCheck = (value) => {
+		const data = {
+			moduleType: 9,
+			name: value,
+		};
+		this.props.userCreateActions.checkValidation(data).then((response) => {
+			if (response.data === 'User already exists') {
+				this.setState({
+					exist: true,
+				})
+			} else {
+				this.setState({
+					exist: false,
+				});
+			}
+		});
+	};
 
 	render() {
 		const { role_list } = this.props;
@@ -196,6 +214,15 @@ class CreateUser extends React.Component {
 													//   selectedCurrency: null,
 													//   selectedInvoiceLanguage: null
 													// })
+												}}
+												validate={(values) => {
+													// let status = false
+													let errors = {};
+													if (this.state.exist === true) {
+														errors.email =
+															'User already exists';
+													}
+													return errors;
 												}}
 												validationSchema={Yup.object().shape({
 													firstName: Yup.string().required(
@@ -371,8 +398,11 @@ class CreateUser extends React.Component {
 																				name="email"
 																				placeholder="Enter Email ID"
 																				value={props.values.email}
-																				onChange={(value) => {
-																					props.handleChange('email')(value);
+																				onChange={(option) => {
+																					props.handleChange('email')(option);
+																					this.validationCheck(
+																						option.target.value,
+																					);
 																				}}
 																				className={
 																					props.errors.email &&
@@ -506,7 +536,7 @@ class CreateUser extends React.Component {
 																				)}
 																		</FormGroup>
 																	</Col>
-																	<Col lg={6}>
+																	{/* <Col lg={6}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="active">Status</Label>
 																			<div>
@@ -562,7 +592,7 @@ class CreateUser extends React.Component {
 																				</FormGroup>
 																			</div>
 																		</FormGroup>
-																	</Col>
+																	</Col> */}
 																	{/* <Col lg={6}>
                                     <FormGroup>
                                       <Label htmlFor="companyId">Company</Label>
@@ -672,6 +702,72 @@ class CreateUser extends React.Component {
 																		</FormGroup>
 																	</Col>
 																</Row>
+																<Row>
+															<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="active">Status</Label>
+																				<div>
+																					<FormGroup check inline>
+																						<div className="custom-radio custom-control">
+																							<input
+																								className="custom-control-input"
+																								type="radio"
+																								id="inline-radio1"
+																								name="active"
+																								checked={
+																									this.state.selectedStatus
+																								}
+																								value={true}
+																								onChange={(e) => {
+																									if (e.target.value) {
+																										this.setState(
+																											{ selectedStatus: true },
+																											() => {},
+																										);
+																									}
+																								}}
+																							/>
+																							<label
+																								className="custom-control-label"
+																								htmlFor="inline-radio1"
+																							>
+																								Active
+																							</label>
+																						</div>
+																					</FormGroup>
+																					<FormGroup check inline>
+																						<div className="custom-radio custom-control">
+																							<input
+																								className="custom-control-input"
+																								type="radio"
+																								id="inline-radio2"
+																								name="active"
+																								value={false}
+																								checked={
+																									!this.state.selectedStatus
+																								}
+																								onChange={(e) => {
+																									if (
+																										e.target.value === 'false'
+																									) {
+																										this.setState({
+																											selectedStatus: false,
+																										});
+																									}
+																								}}
+																							/>
+																							<label
+																								className="custom-control-label"
+																								htmlFor="inline-radio2"
+																							>
+																								Inactive
+																							</label>
+																						</div>
+																					</FormGroup>
+																				</div>
+																			</FormGroup>
+																		</Col>
+															</Row>
 															</Col>
 														</Row>
 														<Row>

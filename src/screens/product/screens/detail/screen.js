@@ -343,6 +343,7 @@ class DetailProduct extends React.Component {
 			.deleteProduct(current_product_id)
 			.then((res) => {
 				if (res.status === 200) {
+					this.props.commonActions.tostifyAlert('success', 'Product Deleted Successfully')
 					this.props.history.push('/admin/master/product');
 				}
 			})

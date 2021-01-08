@@ -161,7 +161,7 @@ class ProductCategory extends React.Component {
 	renderBaseCurrency = (cell, row) => {
 		if (row.description) {
 			return (
-				<label className="badge label-info mb-0">{row.currencyName}</label>
+				<label className="badge label-info mb-0">{row.description}</label>
 			);
 		} else {
 			return <label className="badge badge-danger mb-0">No Specified</label>;
@@ -474,14 +474,14 @@ class ProductCategory extends React.Component {
 												isKey={true}
 												dataFormat={this.renderCurrency}
 											>
-												Currency Code
+												Currency Name
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="description"
 												dataSort
 												dataFormat={this.renderBaseCurrency}
 											>
-												Currency Code Converted To
+												Currency Name Converted To
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="exchangeRate"

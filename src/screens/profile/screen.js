@@ -1019,74 +1019,7 @@ class Profile extends React.Component {
 																							)}
 																					</FormGroup>
 																				</Col>
-																				<Col lg={6}>
-																					<FormGroup className="mb-3">
-																						<Label htmlFor="active">
-																							Status
-																						</Label>
-																						<div>
-																							<FormGroup check inline>
-																								<div className="custom-radio custom-control">
-																									<input
-																										className="custom-control-input"
-																										type="radio"
-																										id="inline-radio1"
-																										name="active"
-																										checked={
-																											this.state.selectedStatus
-																										}
-																										value={true}
-																										onChange={(e) => {
-																											if (e.target.value) {
-																												this.setState(
-																													{
-																														selectedStatus: true,
-																													},
-																													() => {},
-																												);
-																											}
-																										}}
-																									/>
-																									<label
-																										className="custom-control-label"
-																										htmlFor="inline-radio1"
-																									>
-																										Active
-																									</label>
-																								</div>
-																							</FormGroup>
-																							<FormGroup check inline>
-																								<div className="custom-radio custom-control">
-																									<input
-																										className="custom-control-input"
-																										type="radio"
-																										id="inline-radio2"
-																										name="active"
-																										value={false}
-																										checked={
-																											!this.state.selectedStatus
-																										}
-																										onChange={(e) => {
-																											if (
-																												e.target.value ===
-																												'false'
-																											) {
-																												this.setState({
-																													selectedStatus: false,
-																												});
-																											}
-																										}}
-																									/>
-																									<label
-																										className="custom-control-label"
-																										htmlFor="inline-radio2"
-																									>
-																										Inactive
-																									</label>
-																								</div>
-																							</FormGroup>
-																						</div>
-																					</FormGroup>
+																			
 																					{/* <FormGroup>
                                           <Label htmlFor="companyId">Company</Label>
                                           <Select
@@ -1108,7 +1041,7 @@ class Profile extends React.Component {
                                           )}
       
                                         </FormGroup> */}
-																				</Col>
+																				
 																			</Row>
 																			<Row>
 																				{/* <Col lg={6}>
@@ -1223,6 +1156,77 @@ class Profile extends React.Component {
 																									{props.errors.confirmPassword}
 																								</div>
 																							)}
+																					</FormGroup>
+																				</Col>
+																			</Row>
+																			<Row>
+																			<Col lg={6}>
+																					<FormGroup className="mb-3">
+																						<Label htmlFor="active">
+																							Status
+																						</Label>
+																						<div>
+																							<FormGroup check inline>
+																								<div className="custom-radio custom-control">
+																									<input
+																										className="custom-control-input"
+																										type="radio"
+																										id="inline-radio1"
+																										name="active"
+																										checked={
+																											this.state.selectedStatus
+																										}
+																										value={true}
+																										onChange={(e) => {
+																											if (e.target.value) {
+																												this.setState(
+																													{
+																														selectedStatus: true,
+																													},
+																													() => {},
+																												);
+																											}
+																										}}
+																									/>
+																									<label
+																										className="custom-control-label"
+																										htmlFor="inline-radio1"
+																									>
+																										Active
+																									</label>
+																								</div>
+																							</FormGroup>
+																							<FormGroup check inline>
+																								<div className="custom-radio custom-control">
+																									<input
+																										className="custom-control-input"
+																										type="radio"
+																										id="inline-radio2"
+																										name="active"
+																										value={false}
+																										checked={
+																											!this.state.selectedStatus
+																										}
+																										onChange={(e) => {
+																											if (
+																												e.target.value ===
+																												'false'
+																											) {
+																												this.setState({
+																													selectedStatus: false,
+																												});
+																											}
+																										}}
+																									/>
+																									<label
+																										className="custom-control-label"
+																										htmlFor="inline-radio2"
+																									>
+																										Inactive
+																									</label>
+																								</div>
+																							</FormGroup>
+																						</div>
 																					</FormGroup>
 																				</Col>
 																			</Row>

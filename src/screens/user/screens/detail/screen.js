@@ -105,6 +105,7 @@ class DetailUser extends React.Component {
 								roleId: res.data.roleId ? res.data.roleId : '',
 								companyId: res.data.companyId ? res.data.companyId : '',
 								timeZone: res.data.timeZone ? res.data.timeZone : '',
+								roleName:res.data.roleName ? res.data.roleName : '',
 							},
 							loading: false,
 							selectedStatus: res.data.active ? true : false,
@@ -249,7 +250,7 @@ class DetailUser extends React.Component {
 							'success',
 							'User Updated Successfully',
 						);
-						this.updateRoles(+current_user_id);
+					//	this.updateRoles(+current_user_id);
 						this.props.history.push('/admin/settings/user');
 					}
 				})
@@ -559,28 +560,16 @@ class DetailUser extends React.Component {
 																					}
 																					value={
 																						role_list &&
-																						selectOptionsFactory
-																							.renderOptions(
-																								'roleName',
-																								'roleCode',
-																								role_list,
-																								'Role',
-																							)
+																						role_list
 																							.find(
 																								(option) =>
 																									option.value ===
 																									+props.values.roleId,
 																							)
 																					}
-																					onChange={(option) => {
-																						if (option && option.value) {
-																							props.handleChange('roleId')(
-																								option,
-																							);
-																						} else {
-																							props.handleChange('roleId')('');
-																						}
-																					}}
+																					onChange={(option) =>
+																						props.handleChange('roleId')(option)
+																					}
 																					placeholder="Select Role"
 																					id="roleId"
 																					name="roleId"
@@ -667,72 +656,9 @@ class DetailUser extends React.Component {
 
                                   </FormGroup>
                                 </Col> */}
-																		<Col lg={6}>
-																			<FormGroup className="mb-3">
-																				<Label htmlFor="active">Status</Label>
-																				<div>
-																					<FormGroup check inline>
-																						<div className="custom-radio custom-control">
-																							<input
-																								className="custom-control-input"
-																								type="radio"
-																								id="inline-radio1"
-																								name="active"
-																								checked={
-																									this.state.selectedStatus
-																								}
-																								value={true}
-																								onChange={(e) => {
-																									if (e.target.value) {
-																										this.setState(
-																											{ selectedStatus: true },
-																											() => {},
-																										);
-																									}
-																								}}
-																							/>
-																							<label
-																								className="custom-control-label"
-																								htmlFor="inline-radio1"
-																							>
-																								Active
-																							</label>
-																						</div>
-																					</FormGroup>
-																					<FormGroup check inline>
-																						<div className="custom-radio custom-control">
-																							<input
-																								className="custom-control-input"
-																								type="radio"
-																								id="inline-radio2"
-																								name="active"
-																								value={false}
-																								checked={
-																									!this.state.selectedStatus
-																								}
-																								onChange={(e) => {
-																									if (
-																										e.target.value === 'false'
-																									) {
-																										this.setState({
-																											selectedStatus: false,
-																										});
-																									}
-																								}}
-																							/>
-																							<label
-																								className="custom-control-label"
-																								htmlFor="inline-radio2"
-																							>
-																								Inactive
-																							</label>
-																						</div>
-																					</FormGroup>
-																				</div>
-																			</FormGroup>
-																		</Col>
+							
+																	
 																	</Row>
-																	<Row></Row>
 																	<Row>
 																		<Col lg={6}>
 																			<FormGroup>
@@ -817,6 +743,72 @@ class DetailUser extends React.Component {
 																			</FormGroup>
 																		</Col>
 																	</Row>
+																	<Row>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="active">Status</Label>
+																				<div>
+																					<FormGroup check inline>
+																						<div className="custom-radio custom-control">
+																							<input
+																								className="custom-control-input"
+																								type="radio"
+																								id="inline-radio1"
+																								name="active"
+																								checked={
+																									this.state.selectedStatus
+																								}
+																								value={true}
+																								onChange={(e) => {
+																									if (e.target.value) {
+																										this.setState(
+																											{ selectedStatus: true },
+																											() => {},
+																										);
+																									}
+																								}}
+																							/>
+																							<label
+																								className="custom-control-label"
+																								htmlFor="inline-radio1"
+																							>
+																								Active
+																							</label>
+																						</div>
+																					</FormGroup>
+																					<FormGroup check inline>
+																						<div className="custom-radio custom-control">
+																							<input
+																								className="custom-control-input"
+																								type="radio"
+																								id="inline-radio2"
+																								name="active"
+																								value={false}
+																								checked={
+																									!this.state.selectedStatus
+																								}
+																								onChange={(e) => {
+																									if (
+																										e.target.value === 'false'
+																									) {
+																										this.setState({
+																											selectedStatus: false,
+																										});
+																									}
+																								}}
+																							/>
+																							<label
+																								className="custom-control-label"
+																								htmlFor="inline-radio2"
+																							>
+																								Inactive
+																							</label>
+																						</div>
+																					</FormGroup>
+																				</div>
+																			</FormGroup>
+																		</Col>
+															</Row>
 																</Col>
 															</Row>
 															<Row>
@@ -824,7 +816,8 @@ class DetailUser extends React.Component {
 																	lg={12}
 																	className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
 																>
-																	{this.state.current_user_id && current_user_id.roleName === 'Admin' && (
+																	{this.state.current_user_id &&
+																	 current_user_id.roleName && (
 																	<FormGroup>
 																		<Button
 																			type="button"
@@ -837,7 +830,7 @@ class DetailUser extends React.Component {
 																	</FormGroup>)}
 													
 																	<FormGroup className="text-right">
-																		<Button
+																		{/* <Button
 																			type="submit"
 																			color="primary"
 																			className="btn-square mr-3"
@@ -847,6 +840,14 @@ class DetailUser extends React.Component {
 																			{this.state.disabled
 																				? 'Updating...'
 																				: 'Update'}
+																		</Button> */}
+																		<Button
+																			type="submit"
+																			color="primary"
+																			className="btn-square mr-3"
+																		>
+																			<i className="fa fa-dot-circle-o"></i>{' '}
+																			Update
 																		</Button>
 																		<Button
 																			color="secondary"

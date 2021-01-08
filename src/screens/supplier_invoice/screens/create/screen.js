@@ -157,7 +157,6 @@ class CreateSupplierInvoice extends React.Component {
 			discountAmount: 0,
 			purchaseCategory: [],
 			exchangeRate:'',	
-			prefixData: [],
 			basecurrency:[],
 		};
 
@@ -176,9 +175,9 @@ class CreateSupplierInvoice extends React.Component {
 		//   paginationPosition: 'top'
 		// }
 		this.termList = [
-			{ label: 'Net 7', value: 'NET_7' },
-			{ label: 'Net 10', value: 'NET_10' },
-			{ label: 'Net 30', value: 'NET_30' },
+			{ label: 'Net 7 Days', value: 'NET_7' },
+			{ label: 'Net 10 Days', value: 'NET_10' },
+			{ label: 'Net 30 Days', value: 'NET_30' },
 			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
 		];
 		this.placelist = [
@@ -404,6 +403,7 @@ class CreateSupplierInvoice extends React.Component {
 		this.props.supplierInvoiceActions.getVatList();
 		this.props.supplierInvoiceActions.getCountryList();
 		this.props.supplierInvoiceActions.getProductList();
+		this.props.ProductActions.getProductCategoryList();
 		this.purchaseCategory();
 		this.salesCategory();
 		this.getCompanyCurrency();
@@ -1399,23 +1399,13 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		id="invoice_number"
 																		name="invoice_number"
 																		placeholder="Invoice Number"
-																		onBlur={props.handleBlur('invoice_number')}
-																		onChange={(e) => {
-																			const input = e.target.value;
-																			const string = input.substr(
-																				prefix.length,
-																			);
-																			if (
-																				input === '' ||
-																				this.regEx.test(string)
-																			) {
-																				props.handleChange('invoice_number')(
-																					string,
-																				);
-																				this.validationCheck(e.target.value);
-																			}
-																		}}
 																		value={props.values.invoice_number}
+																		onBlur={props.handleBlur('invoice_number')}
+																		onChange={(value) => {
+																			props.handleChange('invoice_number')(
+																				value,
+																			);
+																		}}
 																		className={
 																			props.errors.invoice_number &&
 																			props.touched.invoice_number
@@ -1430,18 +1420,6 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>
-															<Col lg={1}>
-																<Button
-																	type="button"
-																	color="primary"
-																	className="btn-square1"
-																	onClick={(e, props) => {
-																		this.openInvoiceNumberModel(props);
-																	}}
-																>
-																	<i className="fas fa-cog"></i> 
-																</Button>
 															</Col>
 															<Col lg={3}>
 																<FormGroup className="mb-3">
@@ -2446,7 +2424,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 					salesCategory={this.state.salesCategory}
 					purchaseCategory={this.state.purchaseCategory}
 				/>
-					<InvoiceNumberModel
+					{/* <InvoiceNumberModel
 					openInvoiceNumberModel={this.state.openInvoiceNumberModel}
 					closeInvoiceNumberModel={(e) => {
 						this.closeInvoiceNumberModel(e);
@@ -2455,7 +2433,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 					prefix ={this.state.prefixData}
 					updatePrefix={this.props.customerInvoiceActions.updateInvoicePrefix}
 					
-				/>
+				/> */}
 			</div>
 		);
 	}

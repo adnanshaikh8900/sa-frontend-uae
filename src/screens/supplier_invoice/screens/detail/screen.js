@@ -110,9 +110,9 @@ class DetailSupplierInvoice extends React.Component {
 		// }
 		this.formRef = React.createRef();
 		this.termList = [
-			{ label: 'Net 7', value: 'NET_7' },
-			{ label: 'Net 10', value: 'NET_10' },
-			{ label: 'Net 30', value: 'NET_30' },
+			{ label: 'Net 7 Days', value: 'NET_7' },
+			{ label: 'Net 10 Days', value: 'NET_10' },
+			{ label: 'Net 30 Days', value: 'NET_30' },
 			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
 		];
 		this.placelist = [

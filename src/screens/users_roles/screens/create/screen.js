@@ -230,9 +230,7 @@ class CreateRole extends React.Component {
 													name: Yup.string().required(
 														'Role Name is required',
 													),
-													RoleList: Yup.string().required(
-														'Modules  should be selected ',
-													),
+												
 
 												})}
 											>
@@ -290,7 +288,7 @@ class CreateRole extends React.Component {
 																onChange={(option) => {
 																	if (
 																		option.target.value === '' ||
-																		this.vatCode.test(option.target.value)
+																		this.regCode.test(option.target.value)
 																	) {
 																		props.handleChange('description')(option);
 																	}

@@ -6,7 +6,7 @@ mycert="wildcard-app-simplevat-com"
 nameserver="simplevat-gtt"
 subdomain="gtt"
 helmDir="helm-frontend"
-SVrelease="0.0.3-alpha-180"
+SVrelease="0.0.3-alpha-226"
 
 
 versionedSecretId=$(az keyvault certificate show -n $mycert --vault-name $vaultName --query "sid" -o tsv)
@@ -39,7 +39,7 @@ rm "$mycert"-keyfile-encrypted.key
 rm "$mycert"-keyfile-decrypted.key
 rm "$mycert"-certificate.crt
 
-helm upgrade $nameserver-frontend ./$helmDir --values ./$helmDir/values-"$subdomain".yaml --set simpleVatFrontendRelease=$SVrelease --set image.repository.frontend.tag=$SVrelease -n $nameserver --dry-run --debug
+helm install $nameserver-frontend ./$helmDir --values ./$helmDir/values-"$subdomain".yaml --set simpleVatFrontendRelease=$SVrelease --set image.repository.frontend.tag=$SVrelease -n $nameserver --dry-run --debug
 
 az network application-gateway ssl-cert list --gateway-name $appgwName --resource-group $resgp
 
@@ -56,9 +56,9 @@ helm install $nameserver-frontend ./$helmDir --values ./$helmDir/values-"$subdom
 
 
 
-nameserver="simplevat-datainn-services"
-subdomain="datainn-services"
+nameserver="simplevat-demo"
+subdomain="demo"
 helmDir="helm-frontend"
-SVrelease="0.0.3-alpha-180"
+SVrelease="0.0.3-alpha-233"
 
 helm install $nameserver-frontend ./$helmDir --values ./$helmDir/values-"$subdomain".yaml --set simpleVatFrontendRelease=$SVrelease --set image.repository.frontend.tag=$SVrelease -n $nameserver --dry-run --debug

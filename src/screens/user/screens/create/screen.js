@@ -69,7 +69,7 @@ class CreateUser extends React.Component {
 				email: '',
 				password: '',
 				dob: '',
-				active: 'false',
+				active: 'true',
 				confirmPassword: '',
 				roleId: '',
 				timezone: '',
@@ -127,7 +127,17 @@ class CreateUser extends React.Component {
 		formData.append('firstName', firstName ? firstName : '');
 		formData.append('lastName', lastName ? lastName : '');
 		formData.append('email', email ? email : '');
-		formData.append('dob', dob ? moment(dob).format('DD-MM-YYYY') : '');
+		//formData.append('dob', dob ? moment(dob).format('DD-MM-YYYY') : '');
+		// formData.append(
+		// 	'dob',
+		// 	dob
+		// 		? moment(
+		// 				moment(dob).format('DD/MM/YYYY'),
+		// 				'DD/MM/YYYY',
+		// 		  ).toDate()
+		// 		: null,
+		// );
+		formData.append('dob', dob ? dob : '');
 		formData.append('roleId', roleId ? roleId.value : '');
 		formData.append('active', active ? active : '');
 		formData.append('password', password ? password : '');
@@ -425,26 +435,27 @@ class CreateUser extends React.Component {
 																				Date Of Birth
 																			</Label>
 																			<DatePicker
-																				className={`form-control ${
-																					props.errors.dob && props.touched.dob
-																						? 'is-invalid'
-																						: ''
-																				}`}
-																				id="dob "
-																				name="dob "
+																				id="dob"
+																				name="dob"
 																				showMonthDropdown
 																				showYearDropdown
 																				dateFormat="dd/MM/yyyy"
 																				dropdownMode="select"
 																				placeholderText="Enter Date of Birth"
 																				maxDate={new Date()}
-																				autoComplete="off"
 																				selected={props.values.dob}
+																				//value={props.values.dob}
 																				onChange={(value) => {
 																					props.handleChange('dob')(value);
+																					
 																				}}
+																				className={`form-control ${
+																					props.errors.dob && props.touched.dob
+																						? 'is-invalid'
+																						: ''
+																				}`}
 																			/>
-																			{props.errors.dob &&
+																				{props.errors.dob &&
 																				props.touched.dob && (
 																					<div className="invalid-feedback">
 																						{props.errors.dob}
@@ -719,11 +730,12 @@ class CreateUser extends React.Component {
 																								}
 																								value={true}
 																								onChange={(e) => {
-																									if (e.target.value) {
-																										this.setState(
-																											{ selectedStatus: true },
-																											() => {},
-																										);
+																									if (
+																										e.target.value === 'true'
+																									) {
+																										this.setState({
+																											selectedStatus: true,
+																										});
 																									}
 																								}}
 																							/>

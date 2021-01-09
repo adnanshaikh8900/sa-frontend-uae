@@ -90,13 +90,13 @@ class User extends React.Component {
 			onSortChange: this.sortColumn,
 		};
 
-		this.selectRowProp = {
-			mode: 'checkbox',
-			bgColor: 'rgba(0,0,0, 0.05)',
-			clickToSelect: false,
-			onSelect: this.onRowSelect,
-			onSelectAll: this.onSelectAll,
-		};
+		// this.selectRowProp = {
+		// 	mode: 'checkbox',
+		// 	bgColor: 'rgba(0,0,0, 0.05)',
+		// 	clickToSelect: false,
+		// 	onSelect: this.onRowSelect,
+		// 	onSelectAll: this.onSelectAll,
+		// };
 		this.csvLink = React.createRef();
 	}
 

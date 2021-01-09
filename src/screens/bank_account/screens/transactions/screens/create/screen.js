@@ -270,7 +270,7 @@ class CreateBankTransaction extends React.Component {
 			vendorId,
 			employeeId,
 			expenseCategory,
-			currencyCode,
+			currency,
 			userId,
 		} = data;
 		if (
@@ -315,10 +315,9 @@ class CreateBankTransaction extends React.Component {
 		) {
 			formData.append('vatId', vatId ? vatId.value : '');
 		}
-		if (currencyCode && coaCategoryId.label === 'Expense') {
-			formData.append('currencyCode', currencyCode ? currencyCode : '');
+		if (currency && coaCategoryId.label === 'Expense') {
+			formData.append('currencyCode', currency.value);
 		}
-		console.log(currencyCode);
 		if (
 			(customerId &&
 				coaCategoryId.value &&
@@ -925,14 +924,14 @@ class CreateBankTransaction extends React.Component {
 																							this.setCurrency(option.value)
 																						   }}
 																						className={
-																							props.errors.currencyCode &&
-																							props.touched.currencyCode
+																							props.errors.currency &&
+																							props.touched.currency
 																								? 'is-invalid'
 																								: ''
 																						}
 																					/>
-																					{props.errors.currencyCode &&
-																						props.touched.currencyCode && (
+																					{props.errors.currency &&
+																						props.touched.currency && (
 																							<div className="invalid-feedback">
 																								{props.errors.currencyCode}
 																							</div>

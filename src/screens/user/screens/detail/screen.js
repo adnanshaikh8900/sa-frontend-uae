@@ -62,7 +62,7 @@ class DetailUser extends React.Component {
 			dialog: null,
 			initValue: {},
 			passwordShown: false,
-			selectedStatus: false,
+			selectedStatus: '',
 			userPhoto: [],
 			showIcon: false,
 			userPhotoFile: {},
@@ -170,7 +170,7 @@ class DetailUser extends React.Component {
 
 	removeUser = () => {
 		const { current_user_id } = this.state;
-		this.props.userDetailActions
+			this.props.userDetailActions
 			.deleteUser(current_user_id)
 			.then((res) => {
 				if (res.status === 200) {
@@ -313,7 +313,7 @@ class DetailUser extends React.Component {
 														email: Yup.string()
 															.required('Email is Required')
 															.email('Invalid Email'),
-														roleId: Yup.string().required(
+															roleId: Yup.string().required(
 															'Role Name is Required',
 														),
 														timeZone: Yup.string().required(
@@ -560,7 +560,12 @@ class DetailUser extends React.Component {
 																					}
 																					value={
 																						role_list &&
-																						role_list
+																						 selectOptionsFactory.renderOptions(
+																							'roleName',
+																							'roleCode',
+																							role_list,
+																							'Role',
+																					  )
 																							.find(
 																								(option) =>
 																									option.value ===
@@ -760,11 +765,12 @@ class DetailUser extends React.Component {
 																								}
 																								value={true}
 																								onChange={(e) => {
-																									if (e.target.value) {
-																										this.setState(
-																											{ selectedStatus: true },
-																											() => {},
-																										);
+																									if (
+																										e.target.value === 'true'
+																									) {
+																										this.setState({
+																											selectedStatus: true,
+																										});
 																									}
 																								}}
 																							/>

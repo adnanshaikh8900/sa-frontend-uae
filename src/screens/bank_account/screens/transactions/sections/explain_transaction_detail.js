@@ -412,15 +412,17 @@ class ExplainTrasactionDetail extends React.Component {
 	};
 
 	handleSubmit = (data, resetForm) => {
-		if (
-			data.invoiceIdList &&
-			data.invoiceIdList.reduce(
-				(totalAmount, invoice) => totalAmount + invoice.amount,
-				0,
-			) > data.amount
-		) {
-			return false;
-		} else {
+		console.log('data',data)
+		// if (
+		// 	data.invoiceIdList &&
+		// 	data.invoiceIdList.reduce(
+		// 		(totalAmount, invoice) => totalAmount + invoice.amount,
+		// 		0,
+		// 	) > data.amount
+		// ) {
+		// 	return false;
+		// } 
+		// else {
 			const {
 				bankId,
 				date,
@@ -544,7 +546,7 @@ class ExplainTrasactionDetail extends React.Component {
 						err && err.data ? err.data.message : 'Something Went Wrong',
 					);
 				});
-		}
+		// }
 	};
 	handleFileChange = (e, props) => {
 		e.preventDefault();
@@ -1298,7 +1300,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="invoiceIdList">
 																					<span className="text-danger">*</span>
-																					Invoice
+																					Invoice 
 																				</Label>
 																				<Select
 																					styles={customStyles}
@@ -1320,7 +1322,7 @@ class ExplainTrasactionDetail extends React.Component {
 																							? customer_invoice_list_state.find(
 																									(option) =>
 																										option.value ===
-																										+props.values.explainParamList.map(
+																										 +props.values.explainParamList.map(
 																											(item) => item.id,
 																										),
 																							  )
@@ -1342,7 +1344,7 @@ class ExplainTrasactionDetail extends React.Component {
 																							{props.errors.invoiceIdList}
 																						</div>
 																					)}
-																				{/* {this.state.initValue.invoiceIdList &&
+																				{/* { this.state.initValue.invoiceIdList &&
 																					this.state.initValue.invoiceIdList.reduce(
 																						(totalAmount, invoice) =>
 																							parseInt(
@@ -1372,7 +1374,7 @@ class ExplainTrasactionDetail extends React.Component {
 																								please create invoice
 																							</div>
 																						</div>
-																					)} */}
+																					)}  */}
 																			</FormGroup>
 																		</Col>
 																	)}

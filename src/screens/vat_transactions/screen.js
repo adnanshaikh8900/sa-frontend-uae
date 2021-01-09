@@ -230,6 +230,7 @@ class VatTransactions extends React.Component {
 			row.vatAmount
 		);
 	}
+	
 
 	handleChange = (val, name) => {
 		this.setState({
@@ -240,18 +241,18 @@ class VatTransactions extends React.Component {
 	};
 
 	render() {
-		const vat_transaction_data =
-			this.props.vat_transaction_list && this.props.vat_transaction_list.data
-				? this.props.vat_transaction_list.data.map((data) => ({
-						id: data.id,
-						amount: data.amount,
-						date: data.date ? moment(data.date).format('DD/MM/YYYY') : '',
-						referenceType: data.referenceType,
-						vatAmount: data.vatAmount,
-						vatType: data.vatType,
-				  }))
-				: '';
-		const { universal_currency_list } = this.props;
+		// const vat_transaction_data =
+		// 	this.props.vat_transaction_list && this.props.vat_transaction_list.data
+		// 		? this.props.vat_transaction_list.data.map((data) => ({
+		// 				id: data.id,
+		// 				amount: data.amount,
+		// 				date: data.date ? moment(data.date).format('DD/MM/YYYY') : '',
+		// 				referenceType: data.referenceType,
+		// 				vatAmount: data.vatAmount,
+		// 				vatType: data.vatType,
+		// 		  }))
+		// 		: '';
+		const { universal_currency_list,vat_transaction_list } = this.props;
 		const { filterData } = this.state;
 		return (
 			<div className="vat-transactions-screen ">
@@ -364,18 +365,25 @@ class VatTransactions extends React.Component {
 							</div>
 							<div className="table-wrapper">
 								<BootstrapTable
-									data={vat_transaction_data ? vat_transaction_data : []}
+									data={
+										vat_transaction_list &&
+										vat_transaction_list.data
+											? vat_transaction_list.data
+											: []
+									}
 									hover
 									remote
 									keyField="id"
 									pagination={
-										vat_transaction_data && vat_transaction_data.length > 0
+										vat_transaction_list &&
+										vat_transaction_list.data &&
+										vat_transaction_list.data.length
 											? true
 											: false
 									}
 									fetchInfo={{
-										dataTotalSize: vat_transaction_data.count
-											? vat_transaction_data.count
+										dataTotalSize: vat_transaction_list.count
+											? vat_transaction_list.count
 											: 0,
 									}}
 									csvFileName="VatTransactionReport.csv"

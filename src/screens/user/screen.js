@@ -400,7 +400,7 @@ class User extends React.Component {
 														}}
 													/>
 												</Col>
-												<Col lg={2} className="mb-1">
+												{/* <Col lg={2} className="mb-1">
 													<DatePicker
 														className="form-control"
 														id="date"
@@ -417,7 +417,7 @@ class User extends React.Component {
 															this.handleChange(value, 'dob');
 														}}
 													/>
-												</Col>
+												</Col> */}
 												<Col lg={2} className="mb-1">
 													<Select
 														styles={customStyles}

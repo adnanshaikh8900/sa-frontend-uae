@@ -412,7 +412,6 @@ class ExplainTrasactionDetail extends React.Component {
 	};
 
 	handleSubmit = (data, resetForm) => {
-		console.log('data',data)
 		// if (
 		// 	data.invoiceIdList &&
 		// 	data.invoiceIdList.reduce(

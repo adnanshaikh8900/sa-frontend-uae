@@ -373,7 +373,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/master/contact',
-		name: 'AddContact',
+		name: 'ViewContact',
 		component: Contact.screen,
 	},
 	{
@@ -393,17 +393,17 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/master/product/create',
-		name: 'AddProductCategory',
+		name: 'AddProduct',
 		component: CreateProduct.screen,
 	},
 	{
 		path: '/admin/master/product/detail',
-		name: 'UpdateProductCategory',
+		name: 'UpdateProduct',
 		component: DetailProduct.screen,
 	},
 	{
 		path: '/admin/master/product',
-		name: 'ViewProductCategory',
+		name: 'ViewProduct',
 		component: Product.screen,
 	},
 	{

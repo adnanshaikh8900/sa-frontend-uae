@@ -657,13 +657,13 @@ class VatReturnsReport extends React.Component {
 																			{this.state.data[
 																				'totalAmount'
 																			] }
-																			0.00
+																			
 																</td>
 																<td className="pt-0 pb-0 ">
 																			{this.state.data[
 																				'totalVatAmount'
 																			]}
-																			0.00
+																		
 																</td>
 																<td className="pt-0 pb-0 ">
 																			{/* {this.state.data[

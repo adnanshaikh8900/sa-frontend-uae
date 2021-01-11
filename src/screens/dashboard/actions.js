@@ -42,6 +42,27 @@ export const getInvoiceGraphData = (daterange) => {
 					type: DASHBOARD.INVOICE_GRAPH,
 					payload: res.data,
 				});
+				return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+export const getProfitLossReport = (daterange) => {
+	return (dispatch) => {
+		let data = {
+			method: 'GET',
+			url: '/rest/dashboardReport/profitandloss?monthNo=' + daterange,
+		};
+
+		return authApi(data)
+			.then((res) => {
+				dispatch({
+					type: DASHBOARD.INVOICE_GRAPH,
+					payload: res.data,
+				});
+				return res;
 			})
 			.catch((err) => {
 				throw err;

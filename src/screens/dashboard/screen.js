@@ -46,77 +46,77 @@ const mapDispatchToProps = (dispatch) => {
 		DashboardActions: bindActionCreators(DashboardActions, dispatch),
 	};
 };
-const data4MultipleData = {
-	labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-	datasets: [
-		{
-			backgroundColor: 'rgba(255, 255, 255, 0)',
-			borderCapStyle: 'round',
-			borderDash: [],
-			borderWidth: 4,
-			borderColor: '#7a7b97',
-			borderDashOffset: 0.0,
-			borderJoinStyle: 'round',
-			pointBorderColor: '#7a7b97',
-			pointBackgroundColor: '#ffffff',
-			pointBorderWidth: 3,
-			pointHoverRadius: 6,
-			pointHoverBorderWidth: 3,
-			pointRadius: 4,
-			pointHoverBackgroundColor: '#ffffff',
-			pointHoverBorderColor: '#7a7b97',
-			data: [65, 59, 80, 81, 56, 55, 40],
-			datalabels: {
-				display: false,
-			},
-			label: "Today's Earnings",
-		},
-		{
-			backgroundColor: 'rgba(255, 255, 255, 0)',
-			borderCapStyle: 'round',
-			borderDash: [],
-			borderWidth: 4,
-			borderColor: '#4191ff',
-			borderDashOffset: 0.0,
-			borderJoinStyle: 'round',
-			pointBorderColor: '#4191ff',
-			pointBackgroundColor: '#ffffff',
-			pointBorderWidth: 3,
-			pointHoverRadius: 6,
-			pointHoverBorderWidth: 3,
-			pointRadius: 4,
-			pointHoverBackgroundColor: '#ffffff',
-			pointHoverBorderColor: '#4191ff',
-			data: [65, 81, 56, 59, 80, 55, 40],
-			datalabels: {
-				display: false,
-			},
-			label: 'Current Week',
-		},
-		{
-			backgroundColor: 'rgba(255, 255, 255, 0)',
-			borderCapStyle: 'round',
-			borderDash: [],
-			borderWidth: 4,
-			borderColor: '#f4772e',
-			borderDashOffset: 0.0,
-			borderJoinStyle: 'round',
-			pointBorderColor: '#f4772e',
-			pointBackgroundColor: '#ffffff',
-			pointBorderWidth: 3,
-			pointHoverRadius: 6,
-			pointHoverBorderWidth: 3,
-			pointRadius: 4,
-			pointHoverBackgroundColor: '#ffffff',
-			pointHoverBorderColor: '#f4772e',
-			data: [28, 48, 19, 86, 27, 40, 90],
-			datalabels: {
-				display: false,
-			},
-			label: 'Previous Week',
-		},
-	],
-};
+// const data4MultipleData = {
+// 	labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+// 	datasets: [
+// 		{
+// 			backgroundColor: 'rgba(255, 255, 255, 0)',
+// 			borderCapStyle: 'round',
+// 			borderDash: [],
+// 			borderWidth: 4,
+// 			borderColor: '#7a7b97',
+// 			borderDashOffset: 0.0,
+// 			borderJoinStyle: 'round',
+// 			pointBorderColor: '#7a7b97',
+// 			pointBackgroundColor: '#ffffff',
+// 			pointBorderWidth: 3,
+// 			pointHoverRadius: 6,
+// 			pointHoverBorderWidth: 3,
+// 			pointRadius: 4,
+// 			pointHoverBackgroundColor: '#ffffff',
+// 			pointHoverBorderColor: '#7a7b97',
+// 			data: [65, 59, 80, 81, 56, 55, 40],
+// 			datalabels: {
+// 				display: false,
+// 			},
+// 			label: "Today's Earnings",
+// 		},
+// 		{
+// 			backgroundColor: 'rgba(255, 255, 255, 0)',
+// 			borderCapStyle: 'round',
+// 			borderDash: [],
+// 			borderWidth: 4,
+// 			borderColor: '#4191ff',
+// 			borderDashOffset: 0.0,
+// 			borderJoinStyle: 'round',
+// 			pointBorderColor: '#4191ff',
+// 			pointBackgroundColor: '#ffffff',
+// 			pointBorderWidth: 3,
+// 			pointHoverRadius: 6,
+// 			pointHoverBorderWidth: 3,
+// 			pointRadius: 4,
+// 			pointHoverBackgroundColor: '#ffffff',
+// 			pointHoverBorderColor: '#4191ff',
+// 			data: [65, 81, 56, 59, 80, 55, 40],
+// 			datalabels: {
+// 				display: false,
+// 			},
+// 			label: 'Current Week',
+// 		},
+// 		{
+// 			backgroundColor: 'rgba(255, 255, 255, 0)',
+// 			borderCapStyle: 'round',
+// 			borderDash: [],
+// 			borderWidth: 4,
+// 			borderColor: '#f4772e',
+// 			borderDashOffset: 0.0,
+// 			borderJoinStyle: 'round',
+// 			pointBorderColor: '#f4772e',
+// 			pointBackgroundColor: '#ffffff',
+// 			pointBorderWidth: 3,
+// 			pointHoverRadius: 6,
+// 			pointHoverBorderWidth: 3,
+// 			pointRadius: 4,
+// 			pointHoverBackgroundColor: '#ffffff',
+// 			pointHoverBorderColor: '#f4772e',
+// 			data: [28, 48, 19, 86, 27, 40, 90],
+// 			datalabels: {
+// 				display: false,
+// 			},
+// 			label: 'Previous Week',
+// 		},
+// 	],
+// };
 const data4MultipleOptions = {
 	layout: {
 		padding: {
@@ -214,51 +214,136 @@ const chart55Data = [
 		data: [231, 442, 335, 227, 433, 222, 117, 316, 242, 252, 162, 176],
 	},
 ];
+
 class Dashboard extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			invoice_graph_data: {},
+			profit_loss_report_data: {}
+		};
 	}
-
+	componentDidMount = () => {
+		this.props.DashboardActions.getInvoiceGraphData(12).then((res) => {
+			if (res.status === 200) {
+				this.getInvoiceGraph(res.data);
+			}
+		});
+		// this.props.DashboardActions.getProfitLossReport(12).then((res)=>{
+		// 	if (res.status === 200){
+		// 		this.getProfitLossGraph(res.data);
+		// 	}
+		// });
+	};
+	// getProfitLossGraph =(data) =>{
+	// 	const chart55Data = {
+	// 		labels: data.labelMap.labels,
+	// 		datasets:[
+	// 			{
+	// 				name: 'Income',
+	// 				type: 'column',
+	// 				data: data.incomeMap.data,
+	// 			},
+	// 			{
+	// 				name: 'Expenses',
+	// 				type: 'line',
+	// 				data:data.expenseMap.data,
+	// 			},
+	// 		]
+	// 	};
+	// 	this.setState({ profit_loss_report_data: chart55Data })
+	// }
+	getInvoiceGraph = (data) => {
+		const data4MultipleData = {
+			labels: data.labels,
+			datasets: [
+				{
+					backgroundColor: 'rgba(255, 255, 255, 0)',
+					borderCapStyle: 'round',
+					borderDash: [],
+					borderWidth: 4,
+					borderColor: '#4191ff',
+					borderDashOffset: 0.0,
+					borderJoinStyle: 'round',
+					pointBorderColor: '#4191ff',
+					pointBackgroundColor: '#ffffff',
+					pointBorderWidth: 3,
+					pointHoverRadius: 6,
+					pointHoverBorderWidth: 3,
+					pointRadius: 4,
+					pointHoverBackgroundColor: '#ffffff',
+					pointHoverBorderColor: '#4191ff',
+					data: data.paidCustomerData.data,
+					datalabels: {
+						display: false,
+					},
+					label: data.paidCustomerData.label,
+				},
+				{
+					backgroundColor: 'rgba(255, 255, 255, 0)',
+					borderCapStyle: 'round',
+					borderDash: [],
+					borderWidth: 4,
+					borderColor: '#f4772e',
+					borderDashOffset: 0.0,
+					borderJoinStyle: 'round',
+					pointBorderColor: '#f4772e',
+					pointBackgroundColor: '#ffffff',
+					pointBorderWidth: 3,
+					pointHoverRadius: 6,
+					pointHoverBorderWidth: 3,
+					pointRadius: 4,
+					pointHoverBackgroundColor: '#ffffff',
+					pointHoverBorderColor: '#f4772e',
+					data: data.paidSupplierData.data,
+					datalabels: {
+						display: false,
+					},
+					label: data.paidSupplierData.label,
+				},
+			],
+		};
+		this.setState({ invoice_graph_data: data4MultipleData })
+	}
 	render() {
 		return (
 			<div className="dashboard-screen">
 				<div className="animated fadeIn">
-				<CardColumns className="cols-2 mb-3">
-					<CashFlow {...this.props} />
-					<BankAccount {...this.props} />
+					<CardColumns className="cols-2 mb-3">
+						<CashFlow {...this.props} />
+						<BankAccount {...this.props} />
 					</CardColumns>
 					<Card className="p-4">
-									<CardBody>
-										<h6 className="text-uppercase font-weight-bold mb-1 text-black">
-										Supplier & Customer Paid Invoices
-										</h6>
-										<div className="d-block p-4">
-											<Line
-												data={data4MultipleData}
-												height={255}
-												options={data4MultipleOptions}
-											/>
-										</div>
-									</CardBody>
-								</Card>
+						<CardBody>
+							<h6 className="text-uppercase font-weight-bold mb-1 text-black">
+								Supplier & Customer Paid Invoices {this.props.getInvoiceGraphData}
+							</h6>
+							<div className="d-block p-4">
+								<Line
+									data={this.state.invoice_graph_data}
+									height={255}
+									options={data4MultipleOptions}
+								/>
+							</div>
+						</CardBody>
+					</Card>
 					<CardColumns className="cols-2 mb-3">
 						{/* <RevenueAndExpense {...this.props} /> */}
 						<Card className="cash-card">
-									<CardBody>
-										<h6 className="text-uppercase font-weight-bold mb-1 text-black">
-											Profit & Loss
+							<CardBody>
+								<h6 className="text-uppercase font-weight-bold mb-1 text-black">
+									Profit & Loss
 										</h6>
-										<div className="d-block">
-											<Chart
-												options={chart55Options}
-												series={chart55Data}
-												type="line"
-												height={300}
-											/>
-										</div>
-									</CardBody>
-								</Card>
+								<div className="d-block">
+									<Chart
+										options={this.state.profit_loss_report_data}
+										series={chart55Data}
+										type="line"
+										height={300}
+									/>
+								</div>
+							</CardBody>
+						</Card>
 						<Invoice {...this.props} />
 						{/* <ProfitAndLoss {...this.props} /> */}
 					</CardColumns>

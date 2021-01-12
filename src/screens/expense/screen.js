@@ -232,7 +232,7 @@ class Expense extends React.Component {
 								<i className="fas fa-send" /> Post
 							</DropdownItem>
 						)}
-						{row.expenseStatus === 'Posted' && (
+						{row.expenseStatus === 'Posted' && row.payee !== 'Company Expense' && (
 							<DropdownItem
 								onClick={() => {
 									this.unPostExpense(row);
@@ -253,7 +253,7 @@ class Expense extends React.Component {
             <DropdownItem>
               <i className="fas fa-times" /> Cancel
             </DropdownItem>  */}
-						{row.expenseStatus !== 'Posted' && (
+						{/* {row.expenseStatus !== 'Posted' && (
 							<DropdownItem
 								onClick={() => {
 									this.closeExpense(row.expenseId, row.bankAccountId);
@@ -261,7 +261,7 @@ class Expense extends React.Component {
 							>
 								<i className="fa fa-trash-o" /> Delete
 							</DropdownItem>
-						)}
+						)} */}
 					</DropdownMenu>
 				</ButtonDropdown>
 			</div>
@@ -472,7 +472,6 @@ class Expense extends React.Component {
 	};
 
 	closeExpense = (id, bankId) => {
-		console.log(bankId);
 		if (bankId) {
 			this.setState({
 				dialog: (

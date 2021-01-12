@@ -253,7 +253,7 @@ class Register extends React.Component {
 																					maxLength="50"
 																					id="companyName"
 																					name="companyName"
-																					placeholder="Enter Compnay Name"
+																					placeholder="Enter Company Name"
 																					value={props.values.account_name}
 																					onChange={(option) => {
 																						props.handleChange('companyName')(

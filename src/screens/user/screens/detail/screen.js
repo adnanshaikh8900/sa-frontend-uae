@@ -823,8 +823,8 @@ class DetailUser extends React.Component {
 																	lg={12}
 																	className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
 																>
-																	{this.state.current_user_id &&
-																	 current_user_id.roleName && (
+																	{this.state.current_user_id !== 1 &&
+																	  (
 																	<FormGroup>
 																		<Button
 																			type="button"
@@ -834,7 +834,8 @@ class DetailUser extends React.Component {
 																		>
 																			<i className="fa fa-trash"></i> Delete
 																		</Button>
-																	</FormGroup>)}
+																	</FormGroup>
+																	)}
 													
 																	<FormGroup className="text-right">
 																		{/* <Button

@@ -345,11 +345,11 @@ class BankAccount extends React.Component {
 						>
 							<i className="fas fa-eye" /> View Transactions
 						</DropdownItem>
-						<DropdownItem
+						{/* <DropdownItem
 							onClick={() => this.closeBankAccount(row.bankAccountId)}
 						>
 							<i className="fa fa-trash" /> Delete
-						</DropdownItem>
+						</DropdownItem> */}
 					</DropdownMenu>
 				</ButtonDropdown>
 			</div>

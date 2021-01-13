@@ -146,14 +146,15 @@ class Receipt extends React.Component {
 	};
 
 	renderAmount = (cell, row, extraData) => {
-		return row.amount ? (
-			<Currency
-				value={row.amount.toFixed(2)}
-				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-			/>
-		) : (
-			''
-		);
+		// return row.amount ? (
+		// 	<Currency
+		// 		value={row.amount.toFixed(2)}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// ) : (
+		// 	''
+		// );
+		return row.amount ? row.amount : '';
 	};
 
 	renderUnusedAmount = (cell, row) => {
@@ -409,7 +410,7 @@ class Receipt extends React.Component {
 														}}
 													/>
 												</Col>
-												<Col lg={2} className="mb-1">
+												{/* <Col lg={2} className="mb-1">
 													<Input
 														type="text"
 														placeholder="Reference Number"
@@ -421,7 +422,7 @@ class Receipt extends React.Component {
 															);
 														}}
 													/>
-												</Col>
+												</Col> */}
 												<Col lg={2} className="mb-1">
 													<Select
 														styles={customStyles}
@@ -557,11 +558,14 @@ class Receipt extends React.Component {
                           >
                             Mode
                           </TableHeaderColumn> */}
+						  <TableHeaderColumn dataField="currencyIsoCode" dataSort>
+													Currency
+												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="amount"
 													dataSort
 													dataFormat={this.renderAmount}
-													formatExtraData={universal_currency_list}
+													
 												>
 													Amount
 												</TableHeaderColumn>

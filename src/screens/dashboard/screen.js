@@ -220,7 +220,8 @@ class Dashboard extends React.Component {
 		super(props);
 		this.state = {
 			invoice_graph_data: {},
-			profit_loss_report_data: {}
+			profit_loss_report_data: [],
+			profit_loss_report_data_options: {}
 		};
 	}
 	componentDidMount = () => {
@@ -229,30 +230,30 @@ class Dashboard extends React.Component {
 				this.getInvoiceGraph(res.data);
 			}
 		});
-		// this.props.DashboardActions.getProfitLossReport(12).then((res)=>{
-		// 	if (res.status === 200){
-		// 		this.getProfitLossGraph(res.data);
-		// 	}
-		// });
+		this.props.DashboardActions.getProfitLossReport(12).then((res) => {
+			if (res.status === 200) {
+				this.getProfitLossGraph(res.data);
+			}
+		});
 	};
-	// getProfitLossGraph =(data) =>{
-	// 	const chart55Data = {
-	// 		labels: data.labelMap.labels,
-	// 		datasets:[
-	// 			{
-	// 				name: 'Income',
-	// 				type: 'column',
-	// 				data: data.incomeMap.data,
-	// 			},
-	// 			{
-	// 				name: 'Expenses',
-	// 				type: 'line',
-	// 				data:data.expenseMap.data,
-	// 			},
-	// 		]
-	// 	};
-	// 	this.setState({ profit_loss_report_data: chart55Data })
-	// }
+	getProfitLossGraph = (data) => {
+		const options = {
+			labels: data.label.labels
+		}
+		const series = [
+			{
+				name: 'Income',
+				type: 'column',
+				data: data.income.incomeData,
+			},
+			{
+				name: 'Expenses',
+				type: 'line',
+				data: data.expense.expenseData,
+			},
+		]
+		this.setState({ profit_loss_report_data_options: options, profit_loss_report_data: series })
+	}
 	getInvoiceGraph = (data) => {
 		const data4MultipleData = {
 			labels: data.labels,
@@ -336,8 +337,8 @@ class Dashboard extends React.Component {
 										</h6>
 								<div className="d-block">
 									<Chart
-										options={this.state.profit_loss_report_data}
-										series={chart55Data}
+										options={this.state.profit_loss_report_data_options}
+										series={this.state.profit_loss_report_data}
 										type="line"
 										height={300}
 									/>

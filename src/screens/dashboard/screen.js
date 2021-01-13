@@ -238,7 +238,34 @@ class Dashboard extends React.Component {
 	};
 	getProfitLossGraph = (data) => {
 		const options = {
-			labels: data.label.labels
+			chart: {
+				toolbar: {
+					show: false,
+				},
+				sparkline: {
+					enabled: true,
+				},
+			},
+			labels: data.label.labels,
+			stroke: {
+				curve: 'smooth',
+				width: [0, 4],
+			},
+			grid: {
+				strokeDashArray: '10',
+				borderColor: 'rgba(125, 138, 156, 0.3)',
+			},
+			colors: ['#0abcce', '#060918'],
+			legend: {
+				show: false,
+			},
+			xaxis: {
+				type: 'datetime',
+			},
+			yaxis: {
+				min: 0,
+			},
+			
 		}
 		const series = [
 			{
@@ -310,19 +337,19 @@ class Dashboard extends React.Component {
 		return (
 			<div className="dashboard-screen">
 				<div className="animated fadeIn">
-					<CardColumns className="cols-2 mb-3">
+					<CardColumns className="cols-2 ">
 						<CashFlow {...this.props} />
 						<BankAccount {...this.props} />
 					</CardColumns>
-					<Card className="p-4">
+					<Card className="cash-card">
 						<CardBody>
-							<h6 className="text-uppercase font-weight-bold mb-1 text-black">
-								Supplier & Customer Paid Invoices {this.props.getInvoiceGraphData}
-							</h6>
+							<h1 className="mb-3">
+								SUPPLIER & CUSTOMER PAID INVOICES 
+							</h1>
 							<div className="d-block p-4">
 								<Line
 									data={this.state.invoice_graph_data}
-									height={255}
+									height={300}
 									options={data4MultipleOptions}
 								/>
 							</div>
@@ -330,24 +357,24 @@ class Dashboard extends React.Component {
 					</Card>
 					<CardColumns className="cols-2 mb-3">
 						{/* <RevenueAndExpense {...this.props} /> */}
+						<div>
 						<Card className="cash-card">
 							<CardBody>
-								<h6 className="text-uppercase font-weight-bold mb-1 text-black">
-									Profit & Loss
-										</h6>
+								<h1 className="mb-3">
+									PROFIT & LOSS
+								</h1>
 								<div className="d-block">
 									<Chart
 										options={this.state.profit_loss_report_data_options}
 										series={this.state.profit_loss_report_data}
-										type="line"
-										height={300}
+										height={320}
 									/>
 								</div>
 							</CardBody>
-						</Card>
+						</Card></div>
 						<Invoice {...this.props} />
 						{/* <ProfitAndLoss {...this.props} /> */}
-					</CardColumns>
+						</CardColumns>
 				</div>
 			</div>
 		);

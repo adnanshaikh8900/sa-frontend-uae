@@ -150,16 +150,21 @@ class Header extends Component {
 							>
 								<i className="fas fa-info-circle"></i> Help
 							</DropdownItem>
+							<DropdownItem
+									onClick={this.signOut}
+							>
+								<i className="fa fa-sign-out header-icon mr-1"></i> Log Out
+							</DropdownItem>
 						</DropdownMenu>
 					</UncontrolledDropdown>
-					<NavItem className="px-3">
+					{/* <NavItem className="px-3">
 						<button
 							className="nav-link d-flex align-items-center my-link"
 							onClick={this.signOut}
 						>
 							<i className="fa fa-sign-out header-icon mr-1"></i> Log Out
 						</button>
-					</NavItem>
+					</NavItem> */}
 				</Nav>
 			</React.Fragment>
 		);

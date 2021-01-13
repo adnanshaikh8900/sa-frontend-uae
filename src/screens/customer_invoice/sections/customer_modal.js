@@ -845,7 +845,7 @@ class CustomerModal extends React.Component {
 										aria-label="delete"
 										size="medium" 
 										 onClick={this._showDetails.bind(null, false)}>
-          									<ArrowUpwardIcon fontSize="inherit" />
+          								<i class="fa fa-angle-double-up" aria-hidden="true"></i>
        										 </IconButton>
 										 </Row>
 										</div>

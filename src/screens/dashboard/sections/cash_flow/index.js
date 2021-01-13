@@ -83,7 +83,7 @@ class CashFlow extends Component {
 				<Card className="cash-card">
 					<CardBody>
 						<div className="flex-wrapper">
-							<h1>Cashflow</h1>
+							<h1>CASHFLOW</h1>
 							<div className="card-header-actions">
 								<select
 									className="form-control"

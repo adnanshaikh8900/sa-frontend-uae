@@ -52,7 +52,6 @@ class BankAccount extends Component {
 	};
 
 	componentDidMount = () => {
-		console.log(this.props);
 		this.props.DashboardActions.getBankAccountTypes().then((res) => {
 			if (res.status === 200) {
 				let val =
@@ -128,7 +127,7 @@ class BankAccount extends Component {
 											this.toggle(0, '1');
 										}}
 									>
-										Banking
+										<h1>BANKING</h1>
 									</NavLink>
 								</NavItem>
 							</Nav>

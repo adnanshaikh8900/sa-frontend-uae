@@ -153,6 +153,7 @@ class ImportBankStatement extends React.Component {
 					this.props.commonActions.tostifyAlert(
 						'error',
 						'Imported transaction should not contain any outdated transation',
+						this.props.history.push('/admin/banking/bank-account/transaction')
 					);
 					this.setState({ selectedTemplate: [], tableData: [] });
 				} else {

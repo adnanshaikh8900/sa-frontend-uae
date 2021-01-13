@@ -505,6 +505,9 @@ class Payment extends React.Component {
 												<TableHeaderColumn dataField="paymentId" dataSort>
 													Payment Number
 												</TableHeaderColumn>
+												<TableHeaderColumn dataField="currencyIsoCode" dataSort>
+													Currency
+												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="invoiceAmount"
 													dataSort

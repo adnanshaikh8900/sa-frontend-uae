@@ -57,40 +57,40 @@ class CreateBankAccount extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			country_list: [
-				{
-					countryCode: 229,
-					countryDescription: null,
-					countryFullName: 'United Arab Emirates - (null)',
-					countryName: 'United Arab Emirates',
-					createdBy: 0,
-					createdDate: '2020-03-21T05:55:16.000+0000',
-					currencyCode: null,
-					defaltFlag: 'Y',
-					deleteFlag: false,
-					isoAlpha3Code: null,
-					lastUpdateBy: null,
-					lastUpdateDate: null,
-					orderSequence: null,
-					versionNumber: 1,
-				},
-				{
-					countryCode: 101,
-					countryDescription: null,
-					countryFullName: 'India  - (null)',
-					countryName: 'India',
-					createdBy: 0,
-					createdDate: '2020-03-21T05:55:16.000+0000',
-					currencyCode: null,
-					defaltFlag: 'Y',
-					deleteFlag: false,
-					isoAlpha3Code: null,
-					lastUpdateBy: null,
-					lastUpdateDate: null,
-					orderSequence: null,
-					versionNumber: 1,
-				},
-			],
+			// country_list: [
+			// 	{
+			// 		countryCode: 229,
+			// 		countryDescription: null,
+			// 		countryFullName: 'United Arab Emirates - (null)',
+			// 		countryName: 'United Arab Emirates',
+			// 		createdBy: 0,
+			// 		createdDate: '2020-03-21T05:55:16.000+0000',
+			// 		currencyCode: null,
+			// 		defaltFlag: 'Y',
+			// 		deleteFlag: false,
+			// 		isoAlpha3Code: null,
+			// 		lastUpdateBy: null,
+			// 		lastUpdateDate: null,
+			// 		orderSequence: null,
+			// 		versionNumber: 1,
+			// 	},
+			// 	{
+			// 		countryCode: 101,
+			// 		countryDescription: null,
+			// 		countryFullName: 'India  - (null)',
+			// 		countryName: 'India',
+			// 		createdBy: 0,
+			// 		createdDate: '2020-03-21T05:55:16.000+0000',
+			// 		currencyCode: null,
+			// 		defaltFlag: 'Y',
+			// 		deleteFlag: false,
+			// 		isoAlpha3Code: null,
+			// 		lastUpdateBy: null,
+			// 		lastUpdateDate: null,
+			// 		orderSequence: null,
+			// 		versionNumber: 1,
+			// 	},
+			// ],
 			loading: false,
 			createMore: false,
 			disabled: false,
@@ -646,11 +646,11 @@ class CreateBankAccount extends React.Component {
 																		// 	option.countrycode
 																		// }
 																		options={
-																			this.state.country_list
+																			country_list
 																				? selectOptionsFactory.renderOptions(
 																						'countryName',
 																						'countryCode',
-																						this.state.country_list,
+																						country_list,
 																						'Country',
 																				  )
 																				: []
@@ -665,12 +665,12 @@ class CreateBankAccount extends React.Component {
 																			}
 																		}}
 																		value={
-																			this.state.country_list &&
+																			country_list &&
 																			selectOptionsFactory
 																				.renderOptions(
 																					'countryName',
 																					'countryCode',
-																					this.state.country_list,
+																					country_list,
 																					'Country',
 																				)
 																				.find(

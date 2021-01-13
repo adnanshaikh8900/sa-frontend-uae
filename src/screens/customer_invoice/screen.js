@@ -421,7 +421,7 @@ class CustomerInvoice extends React.Component {
 								<i className="fas fa-university" /> Record Payment
 							</DropdownItem>
 						)}
-						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
+						{/* {row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
 							<DropdownItem
 								onClick={() => {
 									this.closeInvoice(row.id, row.status);
@@ -429,7 +429,7 @@ class CustomerInvoice extends React.Component {
 							>
 								<i className="fa fa-trash-o" /> Delete
 							</DropdownItem>
-						)}
+						)} */}
 						{/* {row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
 							<DropdownItem
 								onClick={() => {

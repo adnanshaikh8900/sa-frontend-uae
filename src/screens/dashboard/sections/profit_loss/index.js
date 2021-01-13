@@ -50,7 +50,6 @@ class ProfitAndLoss extends Component {
 	componentDidMount = () => {
 		this.props.DashboardActions.getProfitAndLossData('12');
 		this.props.DashboardActions.getTaxes('12');
-		console.log(this.props.taxes);
 	};
 
 	handleChange = (e) => {

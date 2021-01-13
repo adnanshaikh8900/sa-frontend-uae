@@ -162,15 +162,14 @@ class LogIn extends React.Component {
 																<Row>
 																	<Col lg={12}>
 																		<FormGroup className="mb-3">
-																			<Label htmlFor="username">
-																				<span className="text-danger">*</span>
-																				User Name
+																			<Label htmlFor="username"><b>
+																				Email</b>
 																			</Label>
 																			<Input
 																				type="text"
 																				id="username"
 																				name="username"
-																				placeholder="Enter User Name"
+																				placeholder="Enter Email Id"
 																				value={props.values.username}
 																				onChange={(option) => {
 																					props.handleChange('username')(
@@ -195,8 +194,7 @@ class LogIn extends React.Component {
 																	<Col lg={12}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="email">
-																				<span className="text-danger">*</span>
-																				Password
+																			<b>	Password</b>
 																			</Label>
 																			<Input
 																				type={

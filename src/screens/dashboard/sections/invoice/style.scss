@@ -1,5 +1,11 @@
  //Invoice Card
 .invoice-card {
+  h1 {
+		font-size: 25px;
+		margin-right: 50px;
+		color: #2064d8;
+		font-weight:bold
+	}
   .data-item:not(:last-child),
   .data-item {
     padding: 0 20px !important;

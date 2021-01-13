@@ -6,6 +6,8 @@ import {
 	CreateJournal,
 	DetailJournal,
 	OpeningBalance,
+	CreateOpeningBalance,
+	DetailOpeningBalance,
 
 	// Bank Screens
 	BankAccount,
@@ -139,6 +141,17 @@ const adminRoutes = [
 		name: 'ViewOpeningBalance',
 		component: OpeningBalance.screen,
 	},
+	// {
+	// 	path: '/admin/accountant/opening-balance/create',
+	// 	name: 'AddOpeningBalance',
+	// 	component: CreateOpeningBalance.screen,
+	// },
+	// {
+	// 	path: '/admin/accountant/opening-balance/detail',
+	// 	name: 'UpdateOpeningBalance',
+	// 	component: DetailOpeningBalance.screen,
+	// },
+
 	{
 		redirect: true,
 		path: '/admin/accountant',
@@ -500,7 +513,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/settings/user',
-		name: 'User',
+		name: 'ViewUser',
 		component: User.screen,
 	},
 	{

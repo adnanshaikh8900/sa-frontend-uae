@@ -1387,16 +1387,29 @@ class DetailSupplierInvoice extends React.Component {
 																			name="placeOfSupplyId"
 																			value={
 																				this.placelist &&
-																				this.placelist.find(
-																					(option) =>
-																						option.label === props.values.placeOfSupplyId.toString(),
-																					)
-																			}
-																			onChange={(option) =>
-																				props.handleChange('placeOfSupplyId')(
-																					option,
-																				)
-																			}
+																				selectOptionsFactory.renderOptions(
+																					'label',
+																					'value',
+																					this.placelist,
+																					'Place of Supply',
+																			  ).find(
+																										(option) =>
+																											option.value ===
+																											props.values
+																												.placeOfSupplyId.toString(),
+																									)
+																							}
+																							onChange={(options) => {
+																								if (options && options.value) {
+																									props.handleChange(
+																										'placeOfSupplyId',
+																									)(options.value);
+																								} else {
+																									props.handleChange(
+																										'placeOfSupplyId',
+																									)('');
+																								}
+																							}}
 																			className={`${
 																				props.errors.placeOfSupplyId &&
 																				props.touched.placeOfSupplyId

@@ -11,10 +11,6 @@ class InvoiceTemplate extends Component {
 		this.state = {};
 	}
 
-	// componentDidMount() {
-	// 	console.log(this.props);
-	// }
-
 	getRibbonColor = (invoiceData) => {
 		if (invoiceData.status == 'Draft') {
 			return 'pending-color';

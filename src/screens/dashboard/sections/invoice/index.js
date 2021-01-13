@@ -130,7 +130,7 @@ class Invoice extends Component {
 											this.toggle(0, '1');
 										}}
 									>
-										Invoices Timeline
+									<h1>CUSTOMER INVOICE TIMELINE</h1>
 									</NavLink>
 								</NavItem>
 							</Nav>

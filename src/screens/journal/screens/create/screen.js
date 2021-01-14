@@ -850,6 +850,12 @@ class CreateJournal extends React.Component {
 																						+props.values.currencyCode,
 																				)
 																		}
+																		isDisabled={
+																			props.values.postingReferenceType ===
+																			'MANUAL'
+																				? false
+																				: true
+																		}
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				props.handleChange('currencyCode')(

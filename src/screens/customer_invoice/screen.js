@@ -365,7 +365,7 @@ class CustomerInvoice extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
+						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && row.statusEnum !== 'Partially Paid' && (
 							<DropdownItem>
 								<div
 									onClick={() => {
@@ -379,7 +379,7 @@ class CustomerInvoice extends React.Component {
 								</div>
 							</DropdownItem>
 						)}
-						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && (
+						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && row.statusEnum !== 'Partially Paid' && (
 							<DropdownItem
 								onClick={() => {
 									this.postInvoice(row);

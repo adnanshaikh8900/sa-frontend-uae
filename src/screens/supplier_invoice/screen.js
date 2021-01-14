@@ -290,7 +290,7 @@ class SupplierInvoice extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
+						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && row.statusEnum !== 'Partially Paid' && (
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
@@ -302,7 +302,7 @@ class SupplierInvoice extends React.Component {
 								<i className="fas fa-edit" /> Edit
 							</DropdownItem>
 						)}
-						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && (
+						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && row.statusEnum !== 'Partially Paid' && (
 							<DropdownItem
 								onClick={() => {
 									this.postInvoice(row);

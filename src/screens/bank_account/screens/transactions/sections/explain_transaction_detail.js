@@ -157,7 +157,7 @@ class ExplainTrasactionDetail extends React.Component {
 								: '',
 							invoiceError: '',
 							expenseCategory: res.data.expenseCategory,
-							currencyCode: parseInt(res.data.currencyCode),
+							//currencyCode: parseInt(res.data.currencyCode),
 						},
 						unexplainValue: {
 							bankId: bankId,
@@ -188,7 +188,7 @@ class ExplainTrasactionDetail extends React.Component {
 							expenseCategory: res.data.expenseCategory
 								? parseInt(res.data.expenseCategory)
 								: '',
-							currencyCode: parseInt(res.data.currencyCode),
+							//currencyCode: parseInt(res.data.currencyCode),
 						},
 					},
 					() => {
@@ -284,19 +284,15 @@ class ExplainTrasactionDetail extends React.Component {
 		let result = this.props.currency_convert_list.filter((obj) => {
 		return obj.currencyCode === value;
 		});
-		console.log( this.props.currency_convert_list)
-		console.log(result)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 		};
 
-		setCurrency = (value) => {
-			let result = this.props.currency_convert_list.filter((obj) => {
-			return obj.currencyCode === value;
-			});
-			console.log( this.props.currency_convert_list)
-			console.log(result)
-			this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
-			};
+	setCurrency = (value) => {
+		let result = this.props.currency_convert_list.filter((obj) => {
+		return obj.currencyCode === value;
+		});
+		this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
+	};
 
 
 	getTransactionCategoryList = (type) => {
@@ -324,7 +320,7 @@ class ExplainTrasactionDetail extends React.Component {
 				});
 		}
 	};
-	getSuggestionInvoicesFotCust = (option, amount) => {
+		getSuggestionInvoicesFotCust = (option, amount) => {
 		const data = {
 			amount: amount,
 			id: option,
@@ -811,7 +807,6 @@ class ExplainTrasactionDetail extends React.Component {
 																				)
 																			}
 																			onChange={(option) => {
-																				console.log(option.label);
 																				if (option && option.value) {
 																					props.handleChange('coaCategoryId')(
 																						option,
@@ -1579,13 +1574,12 @@ class ExplainTrasactionDetail extends React.Component {
 																		Exchange rate
 																	</Label> */}
 																	<div>
-																		<Input
+																	<Input
 																		disabled	
 																			className="form-control"
 																			id="curreancyname"
 																			name="curreancyname"
-																			
-																			value={props.values.currencyName}
+																			value={props.values.curreancyname}
 																			onChange={(value) => {
 																				props.handleChange('curreancyname')(
 																					value,
@@ -1725,7 +1719,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			id="curreancyname"
 																			name="curreancyname"
 																			
-																			value={props.values.currencyName}
+																			value={props.values.curreancyname}
 																			onChange={(value) => {
 																				props.handleChange('curreancyname')(
 																					value,
@@ -1850,8 +1844,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			className="form-control"
 																			id="curreancyname"
 																			name="curreancyname"
-																			
-																			value={props.values.currencyName}
+																			value={props.values.curreancyname}
 																			onChange={(value) => {
 																				props.handleChange('curreancyname')(
 																					value,

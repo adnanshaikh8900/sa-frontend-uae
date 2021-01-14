@@ -554,7 +554,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/settings/user-role',
-		name: 'AddRole',
+		name: 'ViewRole',
 		component: UsersRoles.screen,
 	},
 	{

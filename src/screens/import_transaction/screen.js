@@ -332,7 +332,7 @@ class ImportTransaction extends React.Component {
 						'success',
 						'New Template Created Successfully',
 					);
-					this.props.history.push('admin/banking/upload-statement', {
+					this.props.history.push('/admin/banking/bank-account/transaction', {
 						id: res.data.id,
 						bankAccountId: this.props.location.state.bankAccountId,
 					});

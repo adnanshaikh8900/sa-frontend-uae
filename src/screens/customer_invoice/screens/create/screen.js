@@ -438,11 +438,11 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 					},
 				},
 			});
-			this.formRef.current.setFieldValue(
-				'currency',
-				response.data[0].currencyCode,
-				true,
-			);
+			// this.formRef.current.setFieldValue(
+			// 	'currency',
+			// 	response.data[0].currencyCode,
+			// 	true,
+			// );
 		});
 		this.props.customerInvoiceActions.getInvoicePrefix().then((response) => {
 			this.setState({prefixData:response.data

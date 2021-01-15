@@ -703,56 +703,8 @@ class Profile extends React.Component {
 																	onSubmit={props.handleSubmit}
 																	encType="multipart/form-data"
 																>
+																
 																	<Row>
-																		<Col xs="12" md="4" lg={2}>
-																			<FormGroup className="mb-3 text-center">
-																				{/* <ImagesUploader
-                                          // url="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                                          optimisticPreviews
-                                          multiple={false}
-                                          onLoadEnd={(err) => {
-                                            if (err) {
-                                              console.error(err);
-                                            }
-                                          }}
-                                        /> */}
-																				<ImageUploader
-																					// withIcon={true}
-																					buttonText="Choose images"
-																					onChange={this.uploadUserImage}
-																					imgExtension={[
-																						'jpg',
-																						'gif',
-																						'png',
-																						'jpeg',
-																					]}
-																					maxFileSize={1048576}
-																					withPreview={true}
-																					singleImage={true}
-																					// withIcon={this.state.showIcon}
-																					withIcon={false}
-																					// buttonText="Choose Profile Image"
-																					flipHeight={
-																						this.state.userPhoto.length > 0
-																							? { height: 'inherit' }
-																							: {}
-																					}
-																					label="'Max file size: 1mb"
-																					labelClass={
-																						this.state.userPhoto.length > 0
-																							? 'hideLabel'
-																							: 'showLabel'
-																					}
-																					buttonClassName={
-																						this.state.userPhoto.length > 0
-																							? 'hideButton'
-																							: 'showButton'
-																					}
-																					defaultImages={this.state.userPhoto}
-																					imageState={this.state.imageState}
-																				/>
-																			</FormGroup>
-																		</Col>
 																		<Col lg={10}>
 																			<Row>
 																				<Col lg={6}>
@@ -1230,6 +1182,45 @@ class Profile extends React.Component {
 																					</FormGroup>
 																				</Col>
 																			</Row>
+																		</Col>
+																		<Col xs="12" md="4" lg={2}>
+																			<FormGroup className="mb-3 text-center">
+																				<ImageUploader
+																					// withIcon={true}
+																					buttonText="Choose images"
+																					onChange={this.uploadUserImage}
+																					imgExtension={[
+																						'jpg',
+																						'gif',
+																						'png',
+																						'jpeg',
+																					]}
+																					maxFileSize={1048576}
+																					withPreview={true}
+																					singleImage={true}
+																					// withIcon={this.state.showIcon}
+																					withIcon={false}
+																					// buttonText="Choose Profile Image"
+																					flipHeight={
+																						this.state.userPhoto.length > 0
+																							? { height: 'inherit' }
+																							: {}
+																					}
+																					label="'Max file size: 1mb"
+																					labelClass={
+																						this.state.userPhoto.length > 0
+																							? 'hideLabel'
+																							: 'showLabel'
+																					}
+																					buttonClassName={
+																						this.state.userPhoto.length > 0
+																							? 'hideButton'
+																							: 'showButton'
+																					}
+																					defaultImages={this.state.userPhoto}
+																					imageState={this.state.imageState}
+																				/>
+																			</FormGroup>
 																		</Col>
 																	</Row>
 																	<Row>

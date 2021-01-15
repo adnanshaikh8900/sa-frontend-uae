@@ -2140,7 +2140,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																								onChange={(e) => {
 																									if (
 																										e.target.value === '' ||
-																										this.regEx.test(
+																										this.regDecimal.test(
 																											e.target.value,
 																										)
 																									) {

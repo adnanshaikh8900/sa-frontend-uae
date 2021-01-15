@@ -560,6 +560,9 @@ class DetailUser extends React.Component {
 																										e.target.value === 'true'
 																									) {
 																										this.setState({
+																											initValue:{
+																												active:true
+																											},
 																											selectedStatus: true,
 																										});
 																									}
@@ -589,6 +592,9 @@ class DetailUser extends React.Component {
 																										e.target.value === 'false'
 																									) {
 																										this.setState({
+																											initValue:{
+																												active:false
+																											},
 																											selectedStatus: false,
 																										});
 																									}

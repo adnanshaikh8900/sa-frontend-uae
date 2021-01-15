@@ -963,9 +963,10 @@ class DetailSupplierInvoice extends React.Component {
 		formData.append('discount', discount);
 		formData.append('discountType', discountType);
 		formData.append('term', term);
-		formData.append('placeOfSupplyId',placeOfSupplyId.value);
 		formData.append('exchangeRate',  this.state.initValue.exchangeRate);
-
+		if (placeOfSupplyId && placeOfSupplyId.value) {
+			formData.append('placeOfSupplyId', placeOfSupplyId.value);
+		}		
 		if (discountType === 'PERCENTAGE') {
 			formData.append('discountPercentage', discountPercentage);
 		}

@@ -2014,39 +2014,40 @@ class DetailSupplierInvoice extends React.Component {
 																									Percentage
 																								</Label>
 																								<Input
-																									id="discountPercentage"
-																									name="discountPercentage"
-																									placeholder="Discount Percentage"
-																									type="number"
-																									value={
-																										props.values
-																											.discountPercentage
+																								id="discountPercentage"
+																								name="discountPercentage"
+																								placeholder="Discount Percentage"
+																								type="number"
+																								maxLength="5"
+																								value={
+																									props.values
+																										.discountPercentage
+																								}
+																								onChange={(e) => {
+																									if (
+																										e.target.value === '' ||
+																										this.regDecimal.test(
+																											e.target.value,
+																										)
+																									) {
+																										props.handleChange(
+																											'discountPercentage',
+																										)(e);
+																										this.setState(
+																											{
+																												discountPercentage:
+																													e.target.value,
+																											},
+																											() => {
+																												this.updateAmount(
+																													this.state.data,
+																													props,
+																												);
+																											},
+																										);
 																									}
-																									onChange={(e) => {
-																										if (
-																											e.target.value === '' ||
-																											this.regEx.test(
-																												e.target.value,
-																											)
-																										) {
-																											props.handleChange(
-																												'discountPercentage',
-																											)(e);
-																											this.setState(
-																												{
-																													discountPercentage:
-																														e.target.value,
-																												},
-																												() => {
-																													this.updateAmount(
-																														this.state.data,
-																														props,
-																													);
-																												},
-																											);
-																										}
-																									}}
-																								/>
+																								}}
+																							/>
 																							</FormGroup>
 																						</Col>
 																					)}

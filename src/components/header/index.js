@@ -65,7 +65,7 @@ class Header extends Component {
 			<React.Fragment>
 				<AppSidebarToggler className="d-lg-none" display="md" mobile />
 				<AppNavbarBrand
-					className="p-2"
+					className="p-2 ml-3 mt-1"
 					tag={NavLink}
 					to={'/admin/dashboard'}
 					full={{
@@ -82,7 +82,7 @@ class Header extends Component {
 					}}
 				/>
 				<AppSidebarToggler className="d-md-down-none" display="lg">
-					<i className="fa fa-list-ul header-sidebar-icon"></i>
+					<i className="fa fa-bars header-sidebar-icon"></i>
 				</AppSidebarToggler>
 				<Nav className="ml-auto" navbar>
 					{/* <NavItem>
@@ -90,18 +90,19 @@ class Header extends Component {
 							<i className="fa fa-bell header-icon"></i>
 						</AppAsideToggler>
 					</NavItem> */}
-					<UncontrolledDropdown nav direction="down">
-						<DropdownToggle nav>
-							{/* {profilePic ?  'data:image/jpg;base64,'+avatar : ''} */}
-							<img
+						<img
 								src={
 									profile && profile.profileImageBinary !== null
 										? 'data:image/jpg;base64,' + profile.profileImageBinary
 										: avatar
 								}
-								className="img-avatar"
+								className="img-avatar mr-2"
 								alt=""
 							/>
+					<UncontrolledDropdown nav direction="down">
+						<DropdownToggle nav>
+						Hey	<i>{profile && profile.firstName +" "+ profile.lastName}</i>
+							<i class="fas fa-angle-down ml-2 mr-3"></i>
 						</DropdownToggle>
 						<DropdownMenu right>
 							<DropdownItem

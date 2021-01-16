@@ -50,6 +50,7 @@ class DetailProductCategory extends React.Component {
     }
     this.regExAlpha = /^[a-zA-Z ]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
+    this.regExSpaceBoth = /[a-zA-Z0-9 ]+$/;
   }
 
   componentDidMount = () => {
@@ -191,7 +192,8 @@ class DetailProductCategory extends React.Component {
                                     id="productCategoryName"
                                     name="productCategoryName"
                                     placeholder="Enter Product Category Name"
-                                    onChange={(option) => { if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('productCategoryName')(option) }}}
+                                    onChange={(option) => { if (option.target.value === '' || this.regExSpaceBoth.test(option.target.value)){ 
+                                      props.handleChange('productCategoryName')(option) }}}
                                     value={props.values.productCategoryName}
                                     className={
                                       props.errors.productCategoryName && props.touched.productCategoryName
@@ -199,6 +201,7 @@ class DetailProductCategory extends React.Component {
                                         : ""
                                     }
                                   />
+                                  
                                   {props.errors.productCategoryName && props.touched.productCategoryName && (
                                     <div className="invalid-feedback">{props.errors.productCategoryName}</div>
                                   )}

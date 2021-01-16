@@ -389,11 +389,11 @@ class CreateSupplierInvoice extends React.Component {
 					},
 				},
 			});
-			this.formRef.current.setFieldValue(
-				'currency',
-				response.data[0].currencyCode,
-				true,
-			);
+			// this.formRef.current.setFieldValue(
+			// 	'currency',
+			// 	response.data[0].currencyCode,
+			// 	true,
+			// );
 		});
 		this.props.supplierInvoiceActions.getInvoicePrefix().then((response) => {
 			this.setState({prefixData:response.data

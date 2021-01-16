@@ -439,7 +439,7 @@ class OpeningBalance extends React.Component {
 								<Col lg={12} className="mb-3">
 									<Button
 										color="primary"
-										className={`btn-square mr-3 `}
+										className={`btn-square mr-3 pull-right`}
 										onClick={this.addMore}
 									>
 										<i className="fa fa-plus"></i> Add More
@@ -460,6 +460,7 @@ class OpeningBalance extends React.Component {
 											dataField="accountName"
 											dataFormat={this.renderTransactionCategory}
 											width="25%"
+											className="table-header-bg"
 										>
 											Account
 										</TableHeaderColumn>
@@ -467,6 +468,7 @@ class OpeningBalance extends React.Component {
 											dataField="effectiveDate"
 											dataFormat={this.renderDate}
 											width="20%"
+											className="table-header-bg"
 										>
 											Opening Date
 										</TableHeaderColumn>
@@ -474,6 +476,7 @@ class OpeningBalance extends React.Component {
 											dataField="currency"
 											width="15%"
 											dataFormat={this.renderCurrency}
+											className="table-header-bg"
 										>
 											Currency
 										</TableHeaderColumn>
@@ -482,10 +485,13 @@ class OpeningBalance extends React.Component {
 											dataFormat={this.renderOpeningBalance}
 											width="20%"
 											formatExtraData={universal_currency_list}
+											className="table-header-bg"
 										>
 											Opening Balance
 										</TableHeaderColumn>
-										<TableHeaderColumn dataFormat={this.renderEdit}>
+										<TableHeaderColumn dataFormat={this.renderEdit}
+											className="table-header-bg"
+										>
 											Actions
 										</TableHeaderColumn>
 									</BootstrapTable>

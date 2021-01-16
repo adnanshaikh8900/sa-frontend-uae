@@ -495,23 +495,25 @@ class Payment extends React.Component {
 													dataField="receiptDate"
 													dataSort
 													dataFormat={this.renderDate}
+													className="table-header-bg"
 												>
 													Payment Date
 												</TableHeaderColumn>
-												<TableHeaderColumn dataField="supplierName" dataSort>
+												<TableHeaderColumn dataField="supplierName" dataSort className="table-header-bg">
 													Supplier Name
 												</TableHeaderColumn>
 
-												<TableHeaderColumn dataField="paymentId" dataSort>
+												<TableHeaderColumn dataField="paymentId" dataSort className="table-header-bg">
 													Payment Number
 												</TableHeaderColumn>
-												<TableHeaderColumn dataField="currencyIsoCode" dataSort>
+												<TableHeaderColumn dataField="currencyIsoCode" dataSort className="table-header-bg">
 													Currency
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="invoiceAmount"
 													dataSort
 													dataFormat={this.renderAmount}
+													className="table-header-bg"
 												>
 													Amount
 												</TableHeaderColumn>

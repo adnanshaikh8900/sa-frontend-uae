@@ -37,6 +37,7 @@ import moment from 'moment';
 import { CSVLink } from 'react-csv';
 
 import './style.scss';
+import { DriveEtaOutlined } from '@material-ui/icons';
 
 const mapStateToProps = (state) => {
 	return {
@@ -744,17 +745,20 @@ class Expense extends React.Component {
 											</Col>
 										</Row>
 									</div>
+									<div>
 									<Button
 										color="primary"
 										style={{ marginBottom: '10px' }}
-										className="btn-square"
+										className="btn-square pull-right"
 										onClick={() =>
 											this.props.history.push(`/admin/expense/expense/create`)
 										}
+										
 									>
 										<i className="fas fa-plus mr-1" />
 										Add New Expense
 									</Button>
+									</div>
 									<div>
 										<BootstrapTable
 											selectRow={this.selectRowProp}
@@ -793,6 +797,7 @@ class Expense extends React.Component {
 												dataSort
 												dataFormat={this.renderDate}
 												width="20%"
+												className='table-header-bg'
 											>
 												Expense Date
 											</TableHeaderColumn>
@@ -800,6 +805,7 @@ class Expense extends React.Component {
 												thStyle={{ whiteSpace: 'normal' }}
 												dataField="payee"
 												dataSort
+												className='table-header-bg'
 											>
 												Payee
 											</TableHeaderColumn>
@@ -809,6 +815,7 @@ class Expense extends React.Component {
 												dataField="expenseStatus"
 												dataFormat={this.renderInvoiceStatus}
 												dataSort
+												className='table-header-bg'
 											>
 												Status
 											</TableHeaderColumn>
@@ -817,6 +824,7 @@ class Expense extends React.Component {
 												dataField="transactionCategoryName"
 												dataSort
 												width="30%"
+												className='table-header-bg'
 											>
 												Expense Category
 											</TableHeaderColumn>
@@ -825,6 +833,7 @@ class Expense extends React.Component {
 													dataSort
 													dataField="currencyName"
 													dataFormat={this.renderCurrency}
+													className='table-header-bg'
 												>
 													Currency
 												</TableHeaderColumn>
@@ -835,6 +844,7 @@ class Expense extends React.Component {
 												dataFormat={this.renderAmount}
 												formatExtraData={universal_currency_list}
 												width="15%"
+												className='table-header-bg'
 											>
 												Expense Amount
 											</TableHeaderColumn>
@@ -844,6 +854,7 @@ class Expense extends React.Component {
 												columnClassName="text-right"
 												width="55"
 												dataFormat={this.renderActions}
+												className='table-header-bg'
 											></TableHeaderColumn>
 										</BootstrapTable>
 									</div>

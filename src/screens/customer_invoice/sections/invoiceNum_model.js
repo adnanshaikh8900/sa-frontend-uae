@@ -95,7 +95,6 @@ class InvoiceNumberModel extends React.Component {
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true });
         const postData = this.getData(data);
-        console.log(postData)
 		this.props
 			.updatePrefix(postData)
 			.then((res) => {

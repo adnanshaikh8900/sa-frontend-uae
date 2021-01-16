@@ -95,8 +95,6 @@ class AdminLayout extends React.Component {
 			zIndex: 1999,
 		};
 		const { user_role_list, user_list } = this.props;
-		console.log(user_role_list)
-
 		var arr = [];
 
 		function parentPathPresent(arr, name) {
@@ -126,7 +124,6 @@ class AdminLayout extends React.Component {
 			 		}
 			 	}
 			 	if (moduleName === 'Dashboard' && item.name === 'Dashboard') {
-					console.log("Hello there")
 					arr.items.push({
 			 			name: item.name,
 			 			url: item.url,
@@ -151,8 +148,6 @@ class AdminLayout extends React.Component {
 		}, [])
 	
 
-
-		//console.log(user_list && user_list?.data && user_list.data[0].roleId === 1);
 		return (
 			<div className="admin-container">
 				<div className="app">

@@ -457,7 +457,7 @@ class Product extends React.Component {
 										</div>
 										<Button
 											color="primary"
-											className="btn-square"
+											className="btn-square pull-right"
 											style={{ marginBottom: '10px' }}
 											onClick={() =>
 												this.props.history.push(`/admin/master/product/create`)
@@ -496,12 +496,12 @@ class Product extends React.Component {
 												csvFileName="product_list.csv"
 												ref={(node) => (this.table = node)}
 											>
-												<TableHeaderColumn dataField="productCode" dataSort>
+												<TableHeaderColumn dataField="productCode" dataSort className="table-header-bg">
 													Product Code
 												</TableHeaderColumn>
-												<TableHeaderColumn isKey dataField="name" dataSort>
+												<TableHeaderColumn isKey dataField="name" dataSort className="table-header-bg">
 													Name
-												</TableHeaderColumn>
+												</TableHeaderColumn >
 												{/* <TableHeaderColumn dataField="description" dataSort>
 													Description
 												</TableHeaderColumn> */}
@@ -509,6 +509,7 @@ class Product extends React.Component {
 													dataField="vatPercentage"
 													dataSort
 													// dataFormat={this.vatCategoryFormatter}
+													className="table-header-bg"
 												>
 													Vat Percentage
 												</TableHeaderColumn>
@@ -517,6 +518,7 @@ class Product extends React.Component {
 													dataSort
 													dataFormat={this.unitPrice}
 													formatExtraData={universal_currency_list}
+													className="table-header-bg"
 												>
 													Unit Price
 												</TableHeaderColumn>

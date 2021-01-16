@@ -423,7 +423,7 @@ class ProductCategory extends React.Component {
 										</div>
 										<Button
 											color="primary"
-											className="btn-square"
+											className="btn-square pull-right"
 											style={{ marginBottom: '10px' }}
 											onClick={() =>
 												this.props.history.push(
@@ -467,12 +467,14 @@ class ProductCategory extends React.Component {
 											<TableHeaderColumn
 												dataField="productCategoryCode"
 												dataSort
+												className="table-header-bg"
 											>
 												Code
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="productCategoryName"
 												dataSort
+												className="table-header-bg"
 											>
 												Product Category Name
 											</TableHeaderColumn>

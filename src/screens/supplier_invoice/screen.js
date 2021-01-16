@@ -1042,7 +1042,7 @@ class SupplierInvoice extends React.Component {
 									<Button
 										color="primary"
 										style={{ marginBottom: '10px' }}
-										className="btn-square"
+										className="btn-square pull-right"
 										onClick={() =>
 											this.props.history.push(
 												`/admin/expense/supplier-invoice/create`,
@@ -1081,6 +1081,7 @@ class SupplierInvoice extends React.Component {
 												// dataFormat={this.renderInvoiceNumber}
 												dataSort
 												width="10%"
+												className="table-header-bg"
 											>
 												Invoice Number
 											</TableHeaderColumn>
@@ -1088,6 +1089,7 @@ class SupplierInvoice extends React.Component {
 												dataField="customerName"
 												dataSort
 												width="12%"
+												className="table-header-bg"
 											>
 												Supplier Name
 											</TableHeaderColumn>
@@ -1096,6 +1098,7 @@ class SupplierInvoice extends React.Component {
 												dataField="status"
 												dataFormat={this.renderInvoiceStatus}
 												dataSort
+												className="table-header-bg"
 											>
 												Status
 											</TableHeaderColumn>
@@ -1104,6 +1107,7 @@ class SupplierInvoice extends React.Component {
 												dataSort
 												width="7%"
 												dataFormat={this.invoiceDate}
+												className="table-header-bg"
 											>
 												Invoice Date
 											</TableHeaderColumn>
@@ -1112,6 +1116,7 @@ class SupplierInvoice extends React.Component {
 												dataSort
 												width="7%"
 												dataFormat={this.invoiceDueDate}
+												className="table-header-bg"
 											>
 												Due Date
 											</TableHeaderColumn>
@@ -1120,6 +1125,7 @@ class SupplierInvoice extends React.Component {
 													width="5%"
 													dataField="currencyName"
 													dataFormat={this.renderCurrency}
+													className="table-header-bg"
 												>
 													Currency
 												</TableHeaderColumn>
@@ -1128,6 +1134,7 @@ class SupplierInvoice extends React.Component {
 												width="5%"
 												dataFormat={this.renderVatAmount}
 												formatExtraData={universal_currency_list}
+												className="table-header-bg"
 											>
 												VAT Amount
 											</TableHeaderColumn>
@@ -1136,6 +1143,7 @@ class SupplierInvoice extends React.Component {
 												dataSort
 												width="5%"
 												dataFormat={this.renderInvoiceAmount}
+												className="table-header-bg"
 												
 											>
 												Invoice Amount
@@ -1145,6 +1153,7 @@ class SupplierInvoice extends React.Component {
 												dataSort
 												width="5%"
 												dataFormat={this.renderDueAmount}
+												className="table-header-bg"
 											>
 												Due Amount
 											</TableHeaderColumn>
@@ -1153,6 +1162,7 @@ class SupplierInvoice extends React.Component {
 												columnClassName="text-right"
 												width="5%"
 												dataFormat={this.renderActions}
+												className="table-header-bg"
 											></TableHeaderColumn>
 										</BootstrapTable>
 									</div>

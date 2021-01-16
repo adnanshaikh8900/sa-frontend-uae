@@ -399,7 +399,7 @@ class VatCode extends React.Component {
 										</div>
 										<Button
 											color="primary"
-											className="btn-square"
+											className="btn-square pull-right"
 											style={{ marginBottom: '10px' }}
 											onClick={() =>
 												this.props.history.push(
@@ -436,13 +436,14 @@ class VatCode extends React.Component {
 												this.table = node;
 											}}
 										>
-											<TableHeaderColumn isKey dataField="name" dataSort>
+											<TableHeaderColumn isKey dataField="name" dataSort className="table-header-bg">
 												Vat Name
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="vat"
 												dataFormat={this.vatPercentageFormat}
-												dataSort
+												dataSort			
+												className="table-header-bg"
 											>
 												Vat Percentage
 											</TableHeaderColumn>

@@ -484,7 +484,7 @@ class ChartAccount extends React.Component {
 										</div>
 										<Button
 											color="primary"
-											className="btn-square"
+											className="btn-square pull-right"
 											onClick={this.goToCreatePage}
 											style={{ marginBottom: '10px' }}
 										>
@@ -526,6 +526,7 @@ class ChartAccount extends React.Component {
 												<TableHeaderColumn
 													dataField="transactionCategoryCode"
 													dataSort
+													className="table-header-bg"
 												>
 													Code
 												</TableHeaderColumn>
@@ -533,6 +534,7 @@ class ChartAccount extends React.Component {
 													dataField="transactionCategoryName"
 													dataSort
 													columnTitle={this.customName}
+													className="table-header-bg"
 												>
 													Name
 												</TableHeaderColumn>
@@ -540,12 +542,14 @@ class ChartAccount extends React.Component {
 													dataField="chartOfAccountId"
 													dataSort
 													dataFormat={this.typeFormatter}
+													className="table-header-bg"
 												>
 													Type
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="isEditable"
 													dataFormat={this.editFormatter}
+													className="table-header-bg"
 												>
 													Status
 												</TableHeaderColumn>

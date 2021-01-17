@@ -9,6 +9,7 @@
 			width: 50%;
 		}
 	}
+	background-color: white;
 }
 .forgot-password-modal {
 	max-width: 40%;
@@ -25,4 +26,26 @@
 	color: #54e0c4;
 	font-weight: 700;
 	margin-top: 10px;
+}
+.main-banner_container{
+	position: relative;
+    left: 0;
+    top: 0;
+}
+.login_banckground{
+	position: relative;
+    top: 0px;
+    left: 0;
+	float: left;
+	width: auto;
+  max-width: 1000px;
+  height: auto;
+  max-height: 100%;
+}
+.login_banner{
+	position: absolute;
+    top: 60px;
+    left: 0;
+	float: left;
+	margin-left: 4%;
 }

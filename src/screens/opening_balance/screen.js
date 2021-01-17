@@ -165,11 +165,23 @@ class OpeningBalance extends React.Component {
 	};
 
 	renderCurrency = (cell, rows) => {
-		return this.props.profile &&
+
+		if (this.props.profile &&
 			this.props.profile.company &&
-			this.props.profile.company.currencyCode.currencyIsoCode
-			? this.props.profile.company.currencyCode.currencyIsoCode
-			: '';
+			this.props.profile.company.currencyCode.currencyIsoCode) {
+			return (
+				<label className="badge label-info mb-0">{this.props.profile &&
+					this.props.profile.company &&
+					this.props.profile.company.currencyCode.currencyIsoCode}</label>
+			);
+		} else {
+			return <label className="badge badge-danger mb-0">No Specified</label>;
+		}
+		// return this.props.profile &&
+		// 	this.props.profile.company &&
+		// 	this.props.profile.company.currencyCode.currencyIsoCode
+		// 	? this.props.profile.company.currencyCode.currencyIsoCode
+		// 	: '';
 	};
 
 	addMore = () => {
@@ -467,7 +479,7 @@ class OpeningBalance extends React.Component {
 										</ButtonGroup>
 									</div>
 									<Button
-										color="primary"
+										color="primary pull-right"
 										style={{ marginBottom: '10px' }}
 										className="btn-square"
 										onClick={() =>
@@ -544,6 +556,7 @@ class OpeningBalance extends React.Component {
 												dataField="transactionCategoryName"
 												dataSort
 												width="40%"
+												className="table-header-bg"
 											>
 												Transaction Category Name 
 											</TableHeaderColumn>
@@ -552,6 +565,7 @@ class OpeningBalance extends React.Component {
 												dataField="effectiveDate"
 												dataSort
 												dataFormat={this.renderDate}
+												className="table-header-bg"
 											>
 												Effective Date
 											</TableHeaderColumn>
@@ -561,6 +575,7 @@ class OpeningBalance extends React.Component {
 												dataField="openingBalance"
 												dataFormat={this.renderAmount}
 												dataSort
+												className="table-header-bg"
 											>
 												Opening Balance
 											</TableHeaderColumn>
@@ -569,6 +584,7 @@ class OpeningBalance extends React.Component {
 											width="15%"
 											dataFormat={this.renderCurrency}
 											formatExtraData={universal_currency_list}
+											className="table-header-bg"
 										>
 											Currency
 										</TableHeaderColumn>
@@ -578,6 +594,7 @@ class OpeningBalance extends React.Component {
 												className="text-right"
 												columnClassName="text-right"
 												dataFormat={this.renderActions}
+												className="table-header-bg"
 											></TableHeaderColumn>
 										</BootstrapTable>
 									</div>

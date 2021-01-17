@@ -172,6 +172,7 @@ class VatReturnsReport extends React.Component {
 		this.setState(
 			{
 				initValue: {
+					startDate: moment(value.startDate).format('DD/MM/YYYY'),
 					endDate: moment(value.endDate).format('DD/MM/YYYY'),
 				},
 				loading: true,

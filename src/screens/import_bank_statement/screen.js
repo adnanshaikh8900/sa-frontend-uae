@@ -528,7 +528,7 @@ class ImportBankStatement extends React.Component {
 											<BootstrapTable
 												data={this.state.tableData}
 												keyField={this.state.tableDataKey[0]}
-												pagination
+											//	pagination
 												options={this.options}
 											>
 												{this.state.tableDataKey.map((name, index) => (

@@ -141,16 +141,16 @@ const adminRoutes = [
 		name: 'ViewOpeningBalance',
 		component: OpeningBalance.screen,
 	},
-	// {
-	// 	path: '/admin/accountant/opening-balance/create',
-	// 	name: 'AddOpeningBalance',
-	// 	component: CreateOpeningBalance.screen,
-	// },
-	// {
-	// 	path: '/admin/accountant/opening-balance/detail',
-	// 	name: 'UpdateOpeningBalance',
-	// 	component: DetailOpeningBalance.screen,
-	// },
+	{
+		path: '/admin/accountant/opening-balance/create',
+		name: 'AddOpeningBalance',
+		component: CreateOpeningBalance.screen,
+	},
+	{
+		path: '/admin/accountant/opening-balance/detail',
+		name: 'UpdateOpeningBalance',
+		component: DetailOpeningBalance.screen,
+	},
 
 	{
 		redirect: true,

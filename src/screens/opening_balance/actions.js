@@ -49,36 +49,36 @@ export const getOpeningBalanceList = (obj) => {
   }
 }
 
-export const addOpeningBalance = (obj,save) => {
-  let url = save ? `/rest/transactionCategoryBalance/save` : `/rest/transactionCategoryBalance/update`;
-  return (dispatch) => {
-    let data = {
-      method: 'post',
-      url,
-      data: obj
-    }
-    return authApi(data).then((res) => {
-      return res
-    }).catch((err) => {
-      throw err
-    })
-  }
-}
+// export const addOpeningBalance = (obj,save) => {
+//   let url = save ? `/rest/transactionCategoryBalance/save` : `/rest/transactionCategoryBalance/update`;
+//   return (dispatch) => {
+//     let data = {
+//       method: 'post',
+//       url,
+//       data: obj
+//     }
+//     return authApi(data).then((res) => {
+//       return res
+//     }).catch((err) => {
+//       throw err
+//     })
+//   }
+// }
 
-export const updateOpeningBalance = (obj) => {
-  return (dispatch) => {
-    let data = {
-      method: 'post',
-      url: '/rest/transactionCategoryBalance/update',
-      data: obj
-    }
-    return authApi(data).then((res) => {
-      return res
-    }).catch((err) => {
-      throw err
-    })
-  }
-}
+// export const updateOpeningBalance = (obj) => {
+//   return (dispatch) => {
+//     let data = {
+//       method: 'post',
+//       url: '/rest/transactionCategoryBalance/update',
+//       data: obj
+//     }
+//     return authApi(data).then((res) => {
+//       return res
+//     }).catch((err) => {
+//       throw err
+//     })
+//   }
+// }
 
 export const getOpeningBalanceById = (id) => {
   return (dispatch) => {

@@ -794,7 +794,7 @@ class BankAccount extends React.Component {
 													dataField="bankAccountNo"
 													dataFormat={this.renderAccountNumber}
 													dataSort
-													width="5%"
+													width="8%"
 													className="table-header-bg"
 												>
 													Account Number
@@ -828,7 +828,7 @@ class BankAccount extends React.Component {
 													dataFormat={this.renderCurrency}
 													dataSort
 													dataField="currancyName"
-													width="5%"
+													width="2%"
 													className="table-header-bg"
 												>
 													Currency

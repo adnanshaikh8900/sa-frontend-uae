@@ -11,8 +11,8 @@ import Journal from './journal';
 import CreateJournal from './journal/screens/create';
 import DetailJournal from './journal/screens/detail';
 import OpeningBalance from './opening_balance';
-// import CreateOpeningBalance from './opening_balance/screens/create'
-// import DetailOpeningBalance from './opening_balance/screens/detail'
+import CreateOpeningBalance from './opening_balance/screens/create'
+import DetailOpeningBalance from './opening_balance/screens/detail'
 
 import BankAccount from './bank_account';
 import CreateBankAccount from './bank_account/screens/create';
@@ -115,8 +115,8 @@ export {
 	CreateJournal,
 	DetailJournal,
 	OpeningBalance,
-	// CreateOpeningBalance,
-	// DetailOpeningBalance,
+	CreateOpeningBalance,
+	DetailOpeningBalance,
 	BankAccount,
 	CreateBankAccount,
 	DetailBankAccount,

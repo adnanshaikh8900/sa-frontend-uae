@@ -102,7 +102,7 @@ class DetailVatCode extends React.Component {
 			if (res.data > 0) {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					'You need to delete invoices to delete the Vat category',
+					'This Vat catogery is in use ,Cannot delete this Vat Catogery',
 				);
 			} else {
 		const message1 =

@@ -23,6 +23,8 @@ import { CommonActions } from 'services/global';
 import * as createBankAccountActions from './actions';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
+import * as CurrencyConvertActions from '../../../currencyConvert/actions';
+
 import './style.scss';
 
 const mapStateToProps = (state) => {
@@ -30,6 +32,7 @@ const mapStateToProps = (state) => {
 		account_type_list: state.bank_account.account_type_list,
 		currency_list: state.bank_account.currency_list,
 		country_list: state.bank_account.country_list,
+		currency_convert_list: state.currencyConvert.currency_convert_list,
 	};
 };
 const customStyles = {
@@ -46,6 +49,7 @@ const customStyles = {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		commonActions: bindActionCreators(CommonActions, dispatch),
+		currencyConvertActions: bindActionCreators(CurrencyConvertActions, dispatch),
 		createBankAccountActions: bindActionCreators(
 			createBankAccountActions,
 			dispatch,
@@ -128,6 +132,18 @@ class CreateBankAccount extends React.Component {
 
 	initializeData = () => {
 		this.props.createBankAccountActions.getAccountTypeList();
+		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
+			this.setState({
+				initValue: {
+					...this.state.initValue,
+					...{
+						currency: response.data
+							? parseInt(response.data[0].currencyCode)
+							: '',
+					},
+				},
+			});
+		});
 		this.props.createBankAccountActions.getCurrencyList().then((response) => {
 			this.setState({
 				initValue: {
@@ -142,11 +158,7 @@ class CreateBankAccount extends React.Component {
 					},
 				},
 			});
-			// this.formRef.current.setFieldValue(
-			// 	'currency',
-			// 	response.data[0].currencyCode,
-			// 	true,
-			// );
+		
 			this.formRef.current.setFieldValue('account_is_for', 'Corporate', true);
 		});
 		this.props.createBankAccountActions.getCountryList();
@@ -238,7 +250,7 @@ class CreateBankAccount extends React.Component {
 	};
 
 	render() {
-		const { account_type_list, currency_list, country_list } = this.props;
+		const { account_type_list, currency_list,currency_convert_list, country_list } = this.props;
 
 		const { initialVals } = this.state;
 		return (
@@ -361,28 +373,28 @@ class CreateBankAccount extends React.Component {
 																		id="currency"
 																		name="currency"
 																		options={
-																			currency_list
+																			currency_convert_list
 																				? selectCurrencyFactory.renderOptions(
 																						'currencyName',
 																						'currencyCode',
-																						currency_list,
+																						currency_convert_list,
 																						'Currency',
 																				  )
 																				: []
 																		}
 																		value={
-																			currency_list &&
+																			currency_convert_list &&
 																			selectCurrencyFactory
 																				.renderOptions(
 																					'currencyName',
 																					'currencyCode',
-																					currency_list,
+																					currency_convert_list,
 																					'Currency',
 																				)
 																				.find(
 																					(option) =>
 																						option.value ===
-																						+props.values.currency,
+																						+props.values.currencyCode,
 																				)
 																		}
 																		onChange={(option) => {

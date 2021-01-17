@@ -23,6 +23,8 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
+import login_bg from 'assets/images/brand/login_bg.png';
+import login_banner from 'assets/images/brand/login_banner.png';
 
 const mapStateToProps = (state) => {
 	return {
@@ -123,14 +125,18 @@ class LogIn extends React.Component {
 		return (
 			<div className="log-in-screen">
 				<ToastContainer />
-				<div className="animated fadeIn">
-					<div className="app flex-row align-items-center">
+				<div className="animated fadeIn ">
+				<div className="main-banner_container col-md-8 flex">
+													<img src={login_bg} alt="login_bg" className="login_banckground" />
+													<img src={login_banner} alt="login_banner" className="login_banner"/>
+												</div>
+					<div className="app flex-row align-items-center ">
 						<Container>
 							<Row className="justify-content-center">
 								<Col md="6">{this.state.alert}</Col>
 							</Row>
-							<Row className="justify-content-center">
-								<Col md="6">
+							<Row className="justify-content-center ">
+								<Col md="8">
 									<CardGroup>
 										<Card className="p-4">
 											<CardBody>

@@ -26,6 +26,8 @@ import ResetNewPassword from './sections/reset_new_password'
 import {
   api,
 } from 'utils'
+import login_bg from 'assets/images/brand/login_bg.png';
+import login_banner from 'assets/images/brand/login_banner.png';
 
 class ResetPassword extends React.Component {
   constructor(props) {
@@ -90,6 +92,10 @@ class ResetPassword extends React.Component {
       <div className="reset-password-screen">
         {!token ? (
           <div className="animated fadeIn">
+            	<div className="main-banner_container col-md-8 flex">
+													<img src={login_bg} alt="login_bg" className="login_banckground" />
+													<img src={login_banner} alt="login_banner" className="login_banner"/>
+												</div>
             <div className="app flex-row align-items-center">
               <Container>
                 <Row className="justify-content-center">
@@ -98,7 +104,7 @@ class ResetPassword extends React.Component {
                   </Col>
                 </Row>
                 <Row className="justify-content-center">
-                  <Col md="5">
+                  <Col md="8">
                     <Card>
                       <CardHeader className="register-header d-flex">
                         <i className="fas fa-lock"></i> <h5 className="mb-0">Forgot Password</h5>

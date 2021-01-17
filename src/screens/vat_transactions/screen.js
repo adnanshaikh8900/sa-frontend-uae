@@ -391,17 +391,18 @@ class VatTransactions extends React.Component {
 										this.table = node;
 									}}
 								>
-									<TableHeaderColumn dataField="date">Date</TableHeaderColumn>
-									<TableHeaderColumn dataField="referenceType">
+									<TableHeaderColumn dataField="date" className="table-header-bg">Date</TableHeaderColumn>
+									<TableHeaderColumn dataField="referenceType" className="table-header-bg">
 										Reference Type
 									</TableHeaderColumn>
-									<TableHeaderColumn dataField="vatType">
+									<TableHeaderColumn dataField="vatType" className="table-header-bg">
 										Vat Type
 									</TableHeaderColumn>
 									<TableHeaderColumn
 										dataField="amount"
 										dataFormat={this.renderAmount}
 										formatExtraData={universal_currency_list}
+										className="table-header-bg"
 									>
 										Amount
 									</TableHeaderColumn>
@@ -409,6 +410,7 @@ class VatTransactions extends React.Component {
 										dataField="vatAmount"
 										dataFormat={this.renderVatAmount}
 										formatExtraData={universal_currency_list}
+										className="table-header-bg"
 									>
 										Vat Amount
 									</TableHeaderColumn>

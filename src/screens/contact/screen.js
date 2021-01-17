@@ -463,7 +463,7 @@ class Contact extends React.Component {
 										</div>
 										<Button
 											color="primary"
-											className="btn-square"
+											className="btn-square pull-right"
 											style={{ marginBottom: '10px' }}
 											onClick={() =>
 												this.props.history.push(`/admin/master/contact/create`)
@@ -472,9 +472,7 @@ class Contact extends React.Component {
 											<i className="fas fa-plus mr-1" />
 											Add New Contact
 										</Button>
-										<div>
-											<Row>
-												<Col xs="12" lg="12">
+										
 													<BootstrapTable
 														selectRow={this.selectRowProp}
 														search={false}
@@ -511,6 +509,7 @@ class Contact extends React.Component {
 															dataField="firstName"
 															dataSort
 															columnTitle={this.customName}
+															className="table-header-bg"
 														>
 															Name
 														</TableHeaderColumn>
@@ -518,6 +517,7 @@ class Contact extends React.Component {
 															dataField="email"
 															columnTitle={this.customEmail}
 															dataSort
+															className="table-header-bg"
 														>
 															email
 														</TableHeaderColumn>
@@ -525,6 +525,7 @@ class Contact extends React.Component {
 															dataField="contactTypeString"
 															dataSort
 															// dataFormat={this.typeFormatter}
+															className="table-header-bg"
 														>
 															Type
 														</TableHeaderColumn>
@@ -559,9 +560,7 @@ class Contact extends React.Component {
                             </div>
                           </Col> */}
 											</Row>
-										</div>
-									</Col>
-								</Row>
+									
 							)}
 						</CardBody>
 					</Card>

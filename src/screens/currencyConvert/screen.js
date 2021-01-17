@@ -447,7 +447,7 @@ class ProductCategory extends React.Component {
 										</div> */}
 										<Button
 											color="primary"
-											className="btn-square"
+											className="btn-square pull-right"
 											style={{ marginBottom: '10px' }}
 											onClick={() =>
 												this.props.history.push(
@@ -473,6 +473,7 @@ class ProductCategory extends React.Component {
 												dataSort
 												isKey={true}
 												dataFormat={this.renderCurrency}
+												className="table-header-bg"
 											>
 												Currency Name
 											</TableHeaderColumn>
@@ -480,12 +481,14 @@ class ProductCategory extends React.Component {
 												dataField="description"
 												dataSort
 												dataFormat={this.renderBaseCurrency}
+												className="table-header-bg"
 											>
 												Currency Name Converted To
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="exchangeRate"
 												dataSort
+												className="table-header-bg"
 											>
 												Exchange Rate
 											</TableHeaderColumn>

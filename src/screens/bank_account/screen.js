@@ -743,7 +743,7 @@ class BankAccount extends React.Component {
 										<div>
 										<Button
 											color="primary"
-											className="btn-square"
+											className="btn-square pull-right"
 											style={{ marginBottom: '10px' }}
 											onClick={() =>
 												this.props.history.push(
@@ -795,6 +795,7 @@ class BankAccount extends React.Component {
 													dataFormat={this.renderAccountNumber}
 													dataSort
 													width="5%"
+													className="table-header-bg"
 												>
 													Account Number
 												</TableHeaderColumn>
@@ -802,6 +803,7 @@ class BankAccount extends React.Component {
 													dataField="name"
 													dataSort
 													width="5%"
+													className="table-header-bg"
 												>
 													Bank
 												</TableHeaderColumn>
@@ -809,6 +811,7 @@ class BankAccount extends React.Component {
 													dataField="accounName"
 													dataSort
 													width="5%"
+													className="table-header-bg"
 												>
 													Account Name
 												</TableHeaderColumn>
@@ -817,6 +820,7 @@ class BankAccount extends React.Component {
 													dataField="bankAccountTypeName"
 													dataSort
 													width="5%"
+													className="table-header-bg"
 												>
 													Account Type
 												</TableHeaderColumn>
@@ -825,6 +829,7 @@ class BankAccount extends React.Component {
 													dataSort
 													dataField="currancyName"
 													width="5%"
+													className="table-header-bg"
 												>
 													Currency
 												</TableHeaderColumn>
@@ -834,6 +839,7 @@ class BankAccount extends React.Component {
 													width="5%"
 													dataFormat={this.renderBalance}
 													formatExtraData={universal_currency_list}
+													className="table-header-bg"
 												>
 													Bank Balance
 												</TableHeaderColumn>
@@ -844,7 +850,7 @@ class BankAccount extends React.Component {
 													dataFormat={this.renderLastReconciled}
 													formatExtraData={universal_currency_list}
 													width="5%"
-												
+													className="table-header-bg"
 												>
 													Last Reconciled
 												</TableHeaderColumn>
@@ -855,7 +861,9 @@ class BankAccount extends React.Component {
 													dataSort={false}
 													export={false}
 													dataFormat={this.renderActions}
-												></TableHeaderColumn>
+													className="table-header-bg"
+												>
+												</TableHeaderColumn>
 											</BootstrapTable>
 										</div>
 									</Col>

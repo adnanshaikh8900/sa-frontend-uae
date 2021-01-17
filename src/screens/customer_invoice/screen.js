@@ -1019,7 +1019,7 @@ class CustomerInvoice extends React.Component {
 									</div>
 									<Button
 										color="primary"
-										className="btn-square"
+										className="btn-square pull-right mb-2"
 										style={{ marginBottom: '10px' }}
 										onClick={() =>
 											this.props.history.push(
@@ -1064,18 +1064,24 @@ class CustomerInvoice extends React.Component {
 												// dataFormat={this.renderInvoiceNumber}
 												dataSort
 												width="7%"
+												className="table-header-bg"
 											>
 												Invoice Number
 											</TableHeaderColumn>
-											<TableHeaderColumn dataField="customerName" dataSort width="10%">
+											<TableHeaderColumn 
+												dataField="customerName" 
+												dataSort width="10%"
+												className="table-header-bg"
+											>
 												Customer Name
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}
-												width="10%"
+												width="7%"
 												dataField="status"
 												dataFormat={this.renderInvoiceStatus}
 												dataSort
+												className="table-header-bg"
 											>
 												Status
 											</TableHeaderColumn>
@@ -1083,8 +1089,9 @@ class CustomerInvoice extends React.Component {
 												thStyle={{ whiteSpace: 'normal' }}
 												dataField="invoiceDate"
 												dataSort
-												width="7%"
+												width="6%"
 												dataFormat={this.invoiceDate}
+												className="table-header-bg"
 											>
 												Invoice Date
 											</TableHeaderColumn>
@@ -1092,8 +1099,9 @@ class CustomerInvoice extends React.Component {
 												thStyle={{ whiteSpace: 'normal' }}
 												dataField="invoiceDueDate"
 												dataSort
-												width="7%"
+												width="6%"
 												dataFormat={this.invoiceDueDate}
+												className="table-header-bg"
 											>
 												Due Date
 											</TableHeaderColumn>
@@ -1101,8 +1109,9 @@ class CustomerInvoice extends React.Component {
 													thStyle={{ whiteSpace: 'normal' }}
 													dataSort
 													dataField="currencyName"
-													width="5%"
+													width="4%"
 													dataFormat={this.renderCurrency}
+													className="table-header-bg"
 												>
 													Currency
 												</TableHeaderColumn>
@@ -1113,6 +1122,7 @@ class CustomerInvoice extends React.Component {
 												width="5%"
 												dataFormat={this.renderVatAmount}
 												formatExtraData={universal_currency_list}
+												className="table-header-bg"
 											>
 												VAT Amount
 											</TableHeaderColumn>
@@ -1123,6 +1133,7 @@ class CustomerInvoice extends React.Component {
 												width="5%"
 												dataFormat={this.renderInvoiceAmount}
 												formatExtraData={universal_currency_list}
+												className="table-header-bg"
 											>
 												Invoice Amount
 											</TableHeaderColumn>
@@ -1133,6 +1144,7 @@ class CustomerInvoice extends React.Component {
 												width="5%"
 												dataFormat={this.renderDueAmount}
 												formatExtraData={universal_currency_list}
+												className="table-header-bg"
 											>
 												Due Amount
 											</TableHeaderColumn>
@@ -1142,6 +1154,7 @@ class CustomerInvoice extends React.Component {
 												columnClassName="text-right"
 												width="5%"
 												dataFormat={this.renderActions}
+												className="table-header-bg"
 											></TableHeaderColumn>
 										</BootstrapTable>
 									</div>

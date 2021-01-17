@@ -539,16 +539,26 @@ class Receipt extends React.Component {
 													dataField="receiptDate"
 													dataSort
 													dataFormat={this.renderDate}
+													className="table-header-bg"
+													
 												>
 													Receipt Date
 												</TableHeaderColumn>
 												{/* <TableHeaderColumn dataField="referenceCode" dataSort>
 													Reference Number
 												</TableHeaderColumn> */}
-												<TableHeaderColumn dataField="customerName" dataSort>
+												<TableHeaderColumn 
+													dataField="customerName" 
+													dataSort
+													className="table-header-bg"
+												>
 													Customer Name
 												</TableHeaderColumn>
-												<TableHeaderColumn dataField="receiptId" dataSort>
+												<TableHeaderColumn 
+												dataField="receiptId" 
+												dataSort
+												className="table-header-bg"
+												>
 													Receipt Number
 												</TableHeaderColumn>
 												{/* <TableHeaderColumn
@@ -558,13 +568,18 @@ class Receipt extends React.Component {
                           >
                             Mode
                           </TableHeaderColumn> */}
-						  <TableHeaderColumn dataField="currencyIsoCode" dataSort>
+										  <TableHeaderColumn 
+											  dataField="currencyIsoCode" 
+										 	 dataSort
+										 	 className="table-header-bg"
+										  >
 													Currency
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="amount"
 													dataSort
 													dataFormat={this.renderAmount}
+													className="table-header-bg"
 													
 												>
 													Amount

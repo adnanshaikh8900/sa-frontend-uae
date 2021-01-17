@@ -468,18 +468,7 @@ class Journal extends React.Component {
 														target="_blank"
 													/>
 												)} */}
-												<Button
-													color="primary"
-													className="btn-square mr-1"
-													onClick={() =>
-														this.props.history.push(
-															`/admin/accountant/journal/create`,
-														)
-													}
-												>
-													<i className="fas fa-plus mr-1" />
-													New Journal
-												</Button>
+												
 												{/* <Button
                             color="primary"
                             className="btn-square mr-1"
@@ -553,6 +542,18 @@ class Journal extends React.Component {
 													</Button>
 												</Col>
 											</Row>
+											<Button 
+													color="primary"
+													className="btn-square mr-1 pull-right mb-2"
+													onClick={() =>
+														this.props.history.push(
+															`/admin/accountant/journal/create`,
+														)
+													}
+											>
+													<i className="fas fa-plus mr-1" />
+													New Journal
+												</Button>
 										</div>
 										<div>
 											<BootstrapTable
@@ -593,6 +594,7 @@ class Journal extends React.Component {
 													dataSort
 													dataFormat={this.renderDate}
 													width="12%"
+													className="table-header-bg"
 												>
 													POST DATE
 												</TableHeaderColumn>
@@ -600,6 +602,7 @@ class Journal extends React.Component {
 													dataField="journalReferenceNo"
 													dataSort={true}
 													width="18%"
+													className="table-header-bg"
 												>
 													JOURNAL REFERENCE NO
 												</TableHeaderColumn>
@@ -608,6 +611,7 @@ class Journal extends React.Component {
 													dataSort
 													width="13%"
 													tdStyle={{ whiteSpace: 'unset' }}
+													className="table-header-bg"
 												>
 													Type
 												</TableHeaderColumn>
@@ -615,6 +619,7 @@ class Journal extends React.Component {
 													dataField="description"
 													dataSort
 													width="10%"
+													className="table-header-bg"
 												>
 													Notes
 												</TableHeaderColumn>
@@ -623,6 +628,7 @@ class Journal extends React.Component {
 													dataFormat={this.renderAccount}
 													width="20%"
 													dataAlign="left"
+													className="table-header-bg"
 												>
 													Account
 												</TableHeaderColumn>
@@ -632,6 +638,7 @@ class Journal extends React.Component {
 													formatExtraData={universal_currency_list}
 													dataAlign="right"
 													width="13%"
+													className="table-header-bg"
 												>
 													DEBIT AMOUNT
 												</TableHeaderColumn>
@@ -641,6 +648,7 @@ class Journal extends React.Component {
 													dataAlign="right"
 													width="14%"
 													formatExtraData={universal_currency_list}
+													className="table-header-bg"
 												>
 													CREDIT AMOUNT
 												</TableHeaderColumn>

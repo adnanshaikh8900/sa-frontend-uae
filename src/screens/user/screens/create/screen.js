@@ -514,7 +514,7 @@ class CreateUser extends React.Component {
 																										e.target.value === 'false'
 																									) {
 																										this.setState({
-																											selectedStatus: false,
+																											selectedStatus: true,
 																										});
 																									}
 																								}}

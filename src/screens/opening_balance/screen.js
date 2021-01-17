@@ -7,15 +7,16 @@ import {
 	CardHeader,
 	CardBody,
 	Button,
+	ButtonGroup,
 	Row,
 	Col,
 	Input,
 } from 'reactstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { CommonActions } from 'services/global';
+import { Loader } from 'components';
 import * as OpeningBalanceActions from './actions';
 import './style.scss';
-import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import Select from 'react-select';
 import { selectOptionsFactory } from 'utils';
@@ -25,6 +26,7 @@ const mapStateToProps = (state) => {
 		transaction_category_list: state.opening_balance.transaction_category_list,
 		profile: state.auth.profile,
 		universal_currency_list: state.common.universal_currency_list,
+		opening_balance_list: state.opening_balance.opening_balance_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -57,13 +59,10 @@ class OpeningBalance extends React.Component {
 			submitBtnClick: false,
 		};
 		this.regEx = /^[0-9\d]+$/;
-		this.selectRowProp = {
-			mode: 'checkbox',
-			bgColor: 'rgba(0,0,0, 0.05)',
-			clickToSelect: false,
-			onSelect: this.onRowSelect,
-			onSelectAll: this.onSelectAll,
-		};
+		// this.options = {
+		// 	onRowClick: this.goToDetail,
+			
+		// };
 	}
 
 	componentDidMount = () => {
@@ -72,59 +71,25 @@ class OpeningBalance extends React.Component {
 	};
 
 	initializeData = () => {
-		this.props.openingBalanceActions.getOpeningBalanceList().then((res) => {
+		this.props.openingBalanceActions.getOpeningBalanceList()
+		.then((res) => {
 			if (res.status === 200) {
-				let tempData = [];
-				if (res.data.data.length > 0) {
-					tempData = res.data.data.map((item) => {
-						item['id'] = item.transactionCategoryBalanceId;
-						item['disabled'] = true;
-						item['transactionCategory'] = {
-							label: item.transactionCategoryName,
-							value: item.transactionCategoryId,
-						};
-						return item;
-					});
-				}
-				this.setState(
-					{
-						data: tempData,
-					},
-					() => {
-						let temp = [...this.state.data];
-						temp = JSON.parse(JSON.stringify(temp));
-						const idCount =
-							this.state.data.length > 0
-								? Math.max.apply(
-										Math,
-										this.state.data.map((item) => {
-											return item.id;
-										}),
-								  )
-								: 0;
-						this.setState({
-							idCount,
-							tempArr: temp,
-						});
-					},
-				);
+				this.setState({ loading: false });
 			}
+		})
+		.catch((err) => {
+			this.setState({ loading: false });
+			this.props.commonActions.tostifyAlert(
+				'error',
+				err && err.data ? err.data.message : 'Something Went Wrong',
+			);
 		});
 	};
 
-	renderActions = (cell, rows, props) => {
-		return (
-			<Button
-				size="sm"
-				className="btn-twitter btn-brand icon"
-				disabled={this.state.data.length === 1 ? true : false}
-				onClick={(e) => {
-					this.deleteRow(e, rows, props);
-				}}
-			>
-				<i className="fas fa-trash"></i>
-			</Button>
-		);
+	goToDetail = (row) => {
+		this.props.history.push(`/admin/accountant/opening-balance/detail`, {
+			id: row.transactionCategoryBalanceId,
+		});
 	};
 
 	renderTransactionCategory = (cell, row) => {
@@ -383,31 +348,47 @@ class OpeningBalance extends React.Component {
 		});
 	};
 
-	renderDate = (cell, row) => {
-		return (
-			<DatePicker
-				id={row['id']}
-				name="endDate"
-				className={`form-control`}
-				placeholderText="Select Date"
-				showMonthDropdown
-				autoComplete="off"
-				disabled={row['disabled']}
-				showYearDropdown
-				value={
-					typeof row['effectiveDate'] === 'string'
-						? moment(row['effectiveDate'], 'DD/MM/YYYY').format('DD/MM/YYYY')
-						: moment(row['effectiveDate']).format('DD/MM/YYYY')
-				}
-				dropdownMode="select"
-				dateFormat="dd/MM/yyyy"
-				onChange={(val) => {
-					this.selectItem(val, row, 'effectiveDate');
-				}}
-			/>
-		);
-	};
+	
 
+	renderAmount = (cell, row) => {
+		return row.openingBalance ? row.openingBalance.toFixed(2) :'';
+	};
+	renderDate = (cell, row) => {
+		// return typeof row['effectiveDate'] === 'string'
+		// ? moment(row['effectiveDate'], 'DD/MM/YYYY').format('DD/MM/YYYY')
+		// : moment(row['effectiveDate']).format('DD/MM/YYYY');
+
+		return row.effectiveDate ? row.effectiveDate : '';
+	};
+	// renderDate = (cell, row) => {
+	// 	return (
+	// 		<DatePicker
+	// 			id={row['id']}
+	// 			name="endDate"
+	// 			className={`form-control`}
+	// 			placeholderText="Select Date"
+	// 			showMonthDropdown
+	// 			autoComplete="off"
+	// 			disabled={row['disabled']}
+	// 			showYearDropdown
+	// 			value={
+	// 				typeof row['effectiveDate'] === 'string'
+	// 					? moment(row['effectiveDate'], 'DD/MM/YYYY').format('DD/MM/YYYY')
+	// 					: moment(row['effectiveDate']).format('DD/MM/YYYY')
+	// 			}
+	// 			dropdownMode="select"
+	// 			dateFormat="dd/MM/yyyy"
+	// 			onChange={(val) => {
+	// 				this.selectItem(val, row, 'effectiveDate');
+	// 			}}
+	// 		/>
+	// 	);
+	// };
+	customName(cell, row) {
+		if (row.transactionCategoryName) {
+			return `${cell}`;
+		}
+	}
 	checkCategory = (id) => {
 		const { data } = this.state;
 		let temp = data.filter((item) => item.transactionCategory.value === id);
@@ -418,77 +399,188 @@ class OpeningBalance extends React.Component {
 		}
 	};
 
+	
 	render() {
-		const { universal_currency_list } = this.props;
+		const {
+			loading,
+			dialog,
+		} = this.state;
+		const {
+			opening_balance_list,
+			universal_currency_list,
+		} = this.props;
+		console.log(opening_balance_list)
+
 		return (
-			<div className="opening-balance-screen">
+			<div className="expense-screen">
 				<div className="animated fadeIn">
+					{dialog}
 					<Card>
 						<CardHeader>
 							<Row>
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
-										<i className="nav-icon fas fa-area-chart" />
+										<i className="fab fa-stack-exchange" />
 										<span className="ml-2">Opening Balance</span>
 									</div>
 								</Col>
 							</Row>
 						</CardHeader>
 						<CardBody>
-							<Row>
-								<Col lg={12} className="mb-3">
-									<Button
-										color="primary"
-										className={`btn-square mr-3 `}
-										onClick={this.addMore}
-									>
-										<i className="fa fa-plus"></i> Add More
-									</Button>
-								</Col>
-							</Row>
+							{loading && (
+								<Row>
+									<Col lg={12} className="rounded-loader">
+										<Loader />
+									</Col>
+								</Row>
+							)}
 							<Row>
 								<Col lg={12}>
-									<BootstrapTable
-										options={this.options}
-										data={this.state.data ? this.state.data : []}
-										version="4"
-										hover
-										keyField="id"
-										className="invoice-create-table"
+									<div className="d-flex justify-content-end">
+										<ButtonGroup size="sm">
+											{/* <Button
+												color="primary"
+												className="btn-square mr-1"
+												onClick={() => this.getCsvData()}
+											>
+												<i className="fa glyphicon glyphicon-export fa-download mr-1" />
+												Export To CSV
+											</Button>
+											{view && (
+												<CSVLink
+													data={csvData}
+													filename={'Expense.csv'}
+													className="hidden"
+													ref={this.csvLink}
+													target="_blank"
+												/>
+											)} */}
+											{/* <Button
+												color="primary"
+												className="btn-square mr-1"
+												onClick={this.bulkDeleteExpenses}
+												disabled={selectedRows.length === 0}
+											>
+												<i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
+												Bulk Delete
+											</Button> */}
+										</ButtonGroup>
+									</div>
+									<Button
+										color="primary"
+										style={{ marginBottom: '10px' }}
+										className="btn-square"
+										onClick={() =>
+											this.props.history.push(`/admin/accountant/opening-balance/create`)
+										}
 									>
-										<TableHeaderColumn
-											dataField="accountName"
-											dataFormat={this.renderTransactionCategory}
-											width="25%"
+										<i className="fas fa-plus mr-1" />
+										Add Opening Balance
+									</Button>
+									<div>
+									
+									<BootstrapTable
+											selectRow={this.selectRowProp}
+											search={false}
+											options={this.options}
+											data={opening_balance_list ? opening_balance_list : []}
+											version="4"
+											hover
+											currencyList
+											keyField="id"
+											remote
+											pagination={
+												opening_balance_list &&
+												opening_balance_list.length > 0
+													? true
+													: false
+											}
+											fetchInfo={{
+												dataTotalSize: opening_balance_list.count
+													? opening_balance_list.count
+													: 0,
+											}}
+											className="customer-invoice-table"
+											csvFileName="Customer_Invoice.csv"
+											ref={(node) => {
+												this.table = node;
+											}}
 										>
-											Account
-										</TableHeaderColumn>
-										<TableHeaderColumn
-											dataField="effectiveDate"
-											dataFormat={this.renderDate}
-											width="20%"
-										>
-											Opening Date
-										</TableHeaderColumn>
-										<TableHeaderColumn
+									
+										{/* <BootstrapTable
+											selectRow={this.selectRowProp}
+											search={false}
+											options={this.options}
+											data={
+												opening_balance_list && opening_balance_list.data
+													? opening_balance_list.data
+													: []
+											}
+											version="4"
+											hover
+											keyField="transactionCategoryBalanceId"
+											pagination={
+												opening_balance_list &&
+												opening_balance_list.data &&
+												opening_balance_list.data.length > 0
+													? true
+													: false
+											}
+											remote
+											fetchInfo={{
+												dataTotalSize: opening_balance_list.count
+													? opening_balance_list.count
+													: 0,
+											}}
+											multiColumnSort
+											className="expense-table"
+											trClassName="cursor-pointer"
+											ref={(node) => (this.table = node)}
+											csvFileName="opening_balance_list.csv"
+										> */}
+											
+											<TableHeaderColumn
+												thStyle={{ whiteSpace: 'normal' }}
+												dataField="transactionCategoryName"
+												dataSort
+												width="40%"
+											>
+												Transaction Category Name 
+											</TableHeaderColumn>
+											<TableHeaderColumn
+												thStyle={{ whiteSpace: 'normal' }}
+												dataField="effectiveDate"
+												dataSort
+												dataFormat={this.renderDate}
+											>
+												Effective Date
+											</TableHeaderColumn>
+											<TableHeaderColumn
+												thStyle={{ whiteSpace: 'normal' }}
+												width="20%"
+												dataField="openingBalance"
+												dataFormat={this.renderAmount}
+												dataSort
+											>
+												Opening Balance
+											</TableHeaderColumn>
+											<TableHeaderColumn
 											dataField="currency"
 											width="15%"
 											dataFormat={this.renderCurrency}
+											formatExtraData={universal_currency_list}
 										>
 											Currency
 										</TableHeaderColumn>
-										<TableHeaderColumn
-											dataField="openingBalance"
-											dataFormat={this.renderOpeningBalance}
-											width="20%"
-											formatExtraData={universal_currency_list}
-										>
-											Opening Balance
-										</TableHeaderColumn>
-										<TableHeaderColumn dataFormat={this.renderEdit}>
-											Actions
-										</TableHeaderColumn>
-									</BootstrapTable>
+										
+											<TableHeaderColumn
+												thStyle={{ whiteSpace: 'normal' }}
+												className="text-right"
+												columnClassName="text-right"
+												dataFormat={this.renderActions}
+											></TableHeaderColumn>
+										</BootstrapTable>
+									</div>
 								</Col>
 							</Row>
 						</CardBody>

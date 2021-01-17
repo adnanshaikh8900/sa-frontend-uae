@@ -142,11 +142,11 @@ class CreateBankAccount extends React.Component {
 					},
 				},
 			});
-			this.formRef.current.setFieldValue(
-				'currency',
-				response.data[0].currencyCode,
-				true,
-			);
+			// this.formRef.current.setFieldValue(
+			// 	'currency',
+			// 	response.data[0].currencyCode,
+			// 	true,
+			// );
 			this.formRef.current.setFieldValue('account_is_for', 'Corporate', true);
 		});
 		this.props.createBankAccountActions.getCountryList();

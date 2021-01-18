@@ -552,25 +552,23 @@ class OpeningBalance extends React.Component {
 										> */}
 											
 											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
 												dataField="transactionCategoryName"
 												dataSort
-												width="40%"
+												width="30%"
 												className="table-header-bg"
 											>
 												Transaction Category Name 
 											</TableHeaderColumn>
 											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
 												dataField="effectiveDate"
 												dataSort
 												dataFormat={this.renderDate}
 												className="table-header-bg"
+												width="30%"
 											>
 												Effective Date
 											</TableHeaderColumn>
 											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
 												width="20%"
 												dataField="openingBalance"
 												dataFormat={this.renderAmount}
@@ -585,12 +583,9 @@ class OpeningBalance extends React.Component {
 											dataFormat={this.renderCurrency}
 											formatExtraData={universal_currency_list}
 											className="table-header-bg"
-										>
-											Currency
+										>Currency
 										</TableHeaderColumn>
-										
-											<TableHeaderColumn
-												thStyle={{ whiteSpace: 'normal' }}
+										<TableHeaderColumn
 												className="text-right"
 												columnClassName="text-right"
 												dataFormat={this.renderActions}

@@ -137,9 +137,9 @@ class LogIn extends React.Component {
 							</Row>
 							<Row className="justify-content-center ">
 								<Col md="8">
-									<CardGroup>
-										<Card className="p-4">
-											<CardBody>
+									
+										<div className="p-4">
+											
 												<div className="logo-container">
 													<img src={logo} alt="logo" />
 												</div>
@@ -292,9 +292,9 @@ class LogIn extends React.Component {
 														);
 													}}
 												</Formik>
-											</CardBody>
-										</Card>
-									</CardGroup>
+											
+										</div>
+									
 								</Col>
 							</Row>
 						</Container>

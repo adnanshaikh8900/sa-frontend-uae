@@ -26,6 +26,7 @@ import ResetNewPassword from './sections/reset_new_password'
 import {
   api,
 } from 'utils'
+import logo from 'assets/images/brand/logo.png';
 import login_bg from 'assets/images/brand/login_bg.png';
 import login_banner from 'assets/images/brand/login_banner.png';
 
@@ -105,11 +106,14 @@ class ResetPassword extends React.Component {
                 </Row>
                 <Row className="justify-content-center">
                   <Col md="8">
-                    <Card>
-                      <CardHeader className="register-header d-flex">
-                        <i className="fas fa-lock"></i> <h5 className="mb-0">Forgot Password</h5>
-                      </CardHeader>
-                      <CardBody className="p-4">
+                  <div className="logo-container">
+													<img src={logo} alt="logo" />
+												</div>
+
+                      <div className=" d-flex registerScreen">
+                        {/* <i className="fas fa-lock"></i>*/} <h2 className="mb-0">Forgot Password</h2> 
+                      </div>
+                      <div className="p-4">
                         <Formik
                           ref={this.formikRef}
                           initialValues={initValue}
@@ -127,9 +131,9 @@ class ResetPassword extends React.Component {
                               <Form >
                                 <Row>
                                   <Col lg="12">
-                                    <FormGroup>
+                                    <FormGroup className="mb-3">
                                       <Label htmlFor="username">
-                                        <span className="text-danger">*</span>Email Address
+                                        <span className="text-danger">*</span><b>Email Address</b>
                                      </Label>
                                       <Input
                                         type="text"
@@ -182,8 +186,8 @@ class ResetPassword extends React.Component {
                             );
                           }}
                         </Formik>
-                      </CardBody>
-                    </Card>
+                      </div>
+                  
 
                   </Col>
                 </Row>

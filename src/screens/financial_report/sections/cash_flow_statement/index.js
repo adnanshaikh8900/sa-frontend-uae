@@ -28,6 +28,7 @@ import { CSVLink } from 'react-csv';
 import { Loader, Currency } from 'components';
 import * as FinancialReportActions from '../../actions';
 import FilterComponent from '../filterComponent';
+import logo from 'assets/images/brand/logo.png';
 
 const mapStateToProps = (state) => {
 	return {
@@ -273,15 +274,19 @@ class CashFlowStatement extends React.Component {
 									scale={0.8}
 									paperSize="A3"
 								>
-									<div style={{ textAlign: 'center', margin: '3rem 0' }}>
-										<p>
+									<div className="logo-container">
+													<img src={logo} alt="logo" />
+												</div>
+									<div style={{ textAlign: 'center'}}>
+										<p><h2>
 											{profile &&
 											profile.company &&
 											profile.company['companyName']
 												? profile.company['companyName']
 												: ''}
+											</h2>
 											<br style={{ marginBottom: '5px' }} />
-											Trial Balance Report
+											<b style ={{ fontSize: '18px'}}>Trial Balance Report</b>
 											<br style={{ marginBottom: '5px' }} />
 											As on {initValue.endDate}
 										</p>
@@ -291,7 +296,7 @@ class CashFlowStatement extends React.Component {
 									) : (
 										<div className="table-wrapper">
 											<Table responsive className="table-bordered">
-												<thead className="thead-dark table-custom-head">
+												<thead className="thead-dark ">
 													<tr className="header-row">
 														{this.columnHeader.map((column, index) => {
 															return (
@@ -299,6 +304,7 @@ class CashFlowStatement extends React.Component {
 																	key={index}
 																	style={{ fontWeight: '600' }}
 																	className={column.align ? 'text-right' : ''}
+																	className="table-header-color"
 																>
 																	{column.label}
 																</th>
@@ -310,7 +316,7 @@ class CashFlowStatement extends React.Component {
 													{Object.keys(this.state.data).length > 0 ? (
 														<>
 															<tr>
-																<td className="mainLable">Assets</td>
+																<td className="mainLable table-internal-header">Assets</td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -360,7 +366,7 @@ class CashFlowStatement extends React.Component {
 																),
 															)}
 															<tr>
-																<td className="mainLable">Fixed Assets</td>
+																<td className="mainLable table-internal-header">Fixed Assets</td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -410,7 +416,7 @@ class CashFlowStatement extends React.Component {
 																),
 															)}
 															<tr>
-																<td className="mainLable">Bank </td>
+																<td className="mainLable table-internal-header">Bank </td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -460,7 +466,7 @@ class CashFlowStatement extends React.Component {
 																),
 															)}
 															<tr>
-																<td className="mainLable">Liabilities</td>
+																<td className="mainLable table-internal-header">Liabilities</td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -510,7 +516,7 @@ class CashFlowStatement extends React.Component {
 																),
 															)}
 															<tr>
-																<td className="mainLable">Equities</td>
+																<td className="mainLable table-internal-header">Equities</td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -560,7 +566,7 @@ class CashFlowStatement extends React.Component {
 																),
 															)}
 															<tr>
-																<td className="mainLable">Income</td>
+																<td className="mainLable table-internal-header">Income</td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -610,7 +616,7 @@ class CashFlowStatement extends React.Component {
 																),
 															)}
 															<tr>
-																<td className="mainLable">Expense</td>
+																<td className="mainLable table-internal-header">Expense</td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -660,7 +666,7 @@ class CashFlowStatement extends React.Component {
 																),
 															)}
 															<tr>
-																<td className="mainLable">
+																<td className="mainLable table-internal-header">
 																	Account Receivable
 																</td>
 																<td className="text-right">
@@ -703,7 +709,7 @@ class CashFlowStatement extends React.Component {
 																</td>
 															</tr>
 															<tr>
-																<td className="mainLable">Account Payable</td>
+																<td className="mainLable table-internal-header">Account Payable</td>
 																<td className="text-right">
 																	{' '}
 																	{this.state.data['transactionCategoryMapper'][
@@ -745,7 +751,7 @@ class CashFlowStatement extends React.Component {
 																</td>
 															</tr>
 															<tr>
-																<td className="mainLable text-right">Total</td>
+																<td className="mainLable text-right table-internal-header">Total</td>
 																<td className="text-right">
 																	<Currency
 																		value={this.state.data['totalDebitAmount']}
@@ -771,7 +777,7 @@ class CashFlowStatement extends React.Component {
 															</tr>
 														</>
 													) : (
-														<tr className="mainLable">
+														<tr className="mainLable table-internal-header">
 															<td style={{ textAlign: 'center' }} colSpan="9">
 																There is no data to display
 															</td>

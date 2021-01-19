@@ -1117,6 +1117,8 @@ class Profile extends React.Component {
 																						</FormGroup>
 																					</Col>
 																				</Row>
+																				{/* {this.state.userId !== 1 &&
+																				(
 																				<Row>
 																					<Col lg={6}>
 																						<FormGroup className="mb-3">
@@ -1188,6 +1190,7 @@ class Profile extends React.Component {
 																						</FormGroup>
 																					</Col>
 																				</Row>
+																				)} */}
 																			</Col>
 																			<Col xs="12" md="4" lg={2}>
 																				<FormGroup className="mb-3 text-center">

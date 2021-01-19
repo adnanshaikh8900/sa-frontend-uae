@@ -154,9 +154,18 @@ class Receipt extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		return row.amount ? row.amount : '';
+		return row.amount ? row.amount.toFixed(2) : '';
 	};
 
+	renderCurrency = (cell, row) => {
+		if (row.currencyIsoCode) {
+			return (
+				<label className="badge label-info mb-0">{row.currencyIsoCode}</label>
+			);
+		} else {
+			return <label className="badge badge-danger mb-0">No Specified</label>;
+		}
+	};
 	renderUnusedAmount = (cell, row) => {
 		return row.unusedAmount ? row.unusedAmount.toFixed(2) : '';
 	};
@@ -571,7 +580,8 @@ class Receipt extends React.Component {
 										  <TableHeaderColumn 
 											  dataField="currencyIsoCode" 
 										 	 dataSort
-										 	 className="table-header-bg"
+											  className="table-header-bg"
+											  dataFormat={this.renderCurrency}
 										  >
 													Currency
 												</TableHeaderColumn>

@@ -539,6 +539,8 @@ class DetailUser extends React.Component {
 																			</FormGroup>
 																		</Col>
 																	</Row>
+																	{this.state.current_user_id !== 1 &&
+																	  (
 																	<Row>
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
@@ -611,7 +613,7 @@ class DetailUser extends React.Component {
 																				</div>
 																			</FormGroup>
 																		</Col>
-																	</Row>
+																	</Row>)}
 																	<Row>
 																		<Col lg={6}>
 																			<FormGroup>

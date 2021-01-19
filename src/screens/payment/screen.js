@@ -241,7 +241,15 @@ class Payment extends React.Component {
 			}),
 		});
 	};
-
+	renderCurrency = (cell, row) => {
+		if (row.currencyIsoCode) {
+			return (
+				<label className="badge label-info mb-0">{row.currencyIsoCode}</label>
+			);
+		} else {
+			return <label className="badge badge-danger mb-0">No Specified</label>;
+		}
+	};
 	handleSearch = () => {
 		this.initializeData();
 	};
@@ -506,7 +514,12 @@ class Payment extends React.Component {
 												<TableHeaderColumn dataField="paymentId" dataSort className="table-header-bg">
 													Payment Number
 												</TableHeaderColumn>
-												<TableHeaderColumn dataField="currencyIsoCode" dataSort className="table-header-bg">
+												<TableHeaderColumn 
+												dataField="currencyIsoCode" 
+												dataSort 
+												className="table-header-bg" 
+												dataFormat={this.renderCurrency}
+												>
 													Currency
 												</TableHeaderColumn>
 												<TableHeaderColumn

@@ -29,6 +29,7 @@ import { Loader, Currency } from 'components';
 import * as FinancialReportActions from '../../actions';
 import FilterComponent from '../filterComponent';
 import FilterComponent2 from '../filterComponet2';
+import logo from 'assets/images/brand/logo.png';
 
 const mapStateToProps = (state) => {
 	return {
@@ -325,15 +326,18 @@ class VatReturnsReport extends React.Component {
 									scale={0.8}
 									paperSize="A3"
 								>
-									<div style={{ textAlign: 'center', margin: '3rem 0' }}>
-										<p>
+									<div className="logo-container">
+													<img src={logo} alt="logo" />
+												</div>
+									<div style={{ textAlign: 'center' }}>
+										<p><h2>
 											{profile &&
 											profile.company &&
 											profile.company['companyName']
 												? profile.company['companyName']
-												: ''}
+												: ''}</h2>
 											<br style={{ marginBottom: '5px' }} />
-											Vat Returns
+											<b style ={{ fontSize: '18px'}}>Vat Returns</b>
 											<br style={{ marginBottom: '5px' }} />
 											From {initValue.startDate} to {initValue.endDate}
 										</p>
@@ -344,7 +348,7 @@ class VatReturnsReport extends React.Component {
 										<div className="table-wrapper">
 											<p><b>VAT on Sales and all other Outputs</b></p>
 											<Table responsive className="table-bordered">
-												<thead className="thead-dark table-custom-head">
+												<thead className="thead-dark ">
 													<tr className="header-row">
 														{this.columnHeader1.map((column, index) => {
 															return (
@@ -352,6 +356,7 @@ class VatReturnsReport extends React.Component {
 																	key={index}
 																	style={{ fontWeight: '600' }}
 																	className={column.align ? 'text-right' : ''}
+																	className="table-header-color"
 																>
 																	{column.label}
 																</th>
@@ -688,7 +693,7 @@ class VatReturnsReport extends React.Component {
 											</Table>
 												<p><b>VAT on Expenses and all other Inputs</b></p>
 												<Table responsive className="table-bordered">
-													<thead className="thead-dark table-custom-head">
+													<thead className="thead-dark ">
 													<tr className="header-row">
 														{this.columnHeader2.map((column, index) => {
 															return (
@@ -696,6 +701,7 @@ class VatReturnsReport extends React.Component {
 																	key={index}
 																	style={{ fontWeight: '600' }}
 																	className={column.align ? 'text-right' : ''}
+																	className="table-header-color"
 																>
 																	{column.label}
 																</th>
@@ -721,7 +727,7 @@ class VatReturnsReport extends React.Component {
 											<div >
 												<p><b>Net VAT due</b></p>
 												<Table responsive className="table-bordered">
-												<thead className="thead-dark table-custom-head">
+												<thead className="thead-dark ">
 													<tr className="header-row">
 														{this.columnHeader3.map((column, index) => {
 															return (
@@ -729,6 +735,7 @@ class VatReturnsReport extends React.Component {
 																	key={index}
 																	style={{ fontWeight: '600' }}
 																	className={column.align ? 'text-right' : ''}
+																	className="table-header-color"
 																>
 																	{column.label}
 																</th>

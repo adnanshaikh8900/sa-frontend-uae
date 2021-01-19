@@ -25,6 +25,7 @@ import './style.scss';
 import logo from 'assets/images/brand/logo.png';
 import login_bg from 'assets/images/brand/login_bg.png';
 import login_banner from 'assets/images/brand/login_banner.png';
+import login_image from 'assets/images/brand/login_image.png';
 
 const mapStateToProps = (state) => {
 	return {
@@ -127,8 +128,8 @@ class LogIn extends React.Component {
 				<ToastContainer />
 				<div className="animated fadeIn ">
 				<div className="main-banner_container col-md-8 flex">
-													<img src={login_bg} alt="login_bg" className="login_banckground" />
-													<img src={login_banner} alt="login_banner" className="login_banner"/>
+													<img src={login_image} alt="Login" className="login_banckground" />
+													{/* <img src={login_banner} alt="login_banner" className="login_banner"/> */}
 												</div>
 					<div className="app flex-row align-items-center ">
 						<Container>

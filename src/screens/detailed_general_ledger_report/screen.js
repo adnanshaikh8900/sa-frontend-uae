@@ -26,6 +26,7 @@ import * as DetailGeneralLedgerActions from './actions';
 
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
+import logo from 'assets/images/brand/logo.png';
 
 const mapStateToProps = (state) => {
 	return {
@@ -389,15 +390,19 @@ class DetailedGeneralLedgerReport extends React.Component {
 									paperSize="A3"
 										filename={'detailGeneralLedger.pdf'}
 								>
-									<div style={{ textAlign: 'center', margin: '3rem 0' }}>
-										<p>
+									<div className="logo-container">
+													<img src={logo} alt="logo" />
+												</div>
+									<div style={{ textAlign: 'center'}}>
+										<p><h2>
 											{profile &&
 											profile.company &&
 											profile.company['companyName']
 												? profile.company['companyName']
 												: ''}
+												</h2>
 											<br style={{ marginBottom: '5px' }} />
-											Detailed General Ledger
+											<b style ={{ fontSize: '18px'}}>Detailed General Ledger</b>
 											<br style={{ marginBottom: '5px' }} />
 											From {initValue.startDate} To {initValue.endDate}
 										</p>
@@ -415,6 +420,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 																	key={index}
 																	style={{ fontWeight: '600' }}
 																	className={column.align ? 'text-right' : ''}
+																	className="table-header-color"
 																>
 																	<span>{column.label}</span>
 																	{/* // onClick={() => { column.sort && this.onSort(column.value) }} */}

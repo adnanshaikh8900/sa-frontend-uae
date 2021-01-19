@@ -105,6 +105,7 @@ class BankTransactions extends React.Component {
 			transactionType: 'all',
 			nonexpand: [],
 			selected_id_list: [],
+			transation_data: ''
 		};
 
 		this.options = {
@@ -124,6 +125,8 @@ class BankTransactions extends React.Component {
 	}
 
 	componentDidMount = () => {
+		this.toggle(0, 'all');
+		this.initializeData();
 		if (this.props.location.state !== undefined) {
 			localStorage.setItem(
 				'bankId',
@@ -136,7 +139,6 @@ class BankTransactions extends React.Component {
 			localStorage.setItem('bankId', localStorage.getItem('bankId'));
 		}
 		this.props.transactionsActions.getTransactionTypeList();
-		this.initializeData();
 		this.props.detailBankAccountActions
 			.getBankAccountByID(localStorage.getItem('bankId'))
 			.then((res) => {
@@ -155,7 +157,7 @@ class BankTransactions extends React.Component {
 			});
 	};
 
-	initializeData = (search) => {
+	initializeData = () => {
 		let { filterData } = this.state;
 		const data = {
 			pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -171,15 +173,21 @@ class BankTransactions extends React.Component {
 			this.props.transactionsActions
 				.getTransactionList(postData)
 				.then((res) => {
+					const array = []
 					if (res.status === 200) {
 						this.setState({
 							loading: false,
+							transation_data: res.data.data
 						});
 						res.data.data.map((item) => {
+							console.log(item)
 							if (item.creationMode === 'POTENTIAL_DUPLICATE') {
-								this.state.nonexpand.push(item.id);
+								array.push(item.id)
 							}
 						});
+						this.setState({ nonexpand: array })
+						// this.state.nonexpand.push(item.id);
+
 					}
 				})
 				.catch((err) => {
@@ -256,8 +264,8 @@ class BankTransactions extends React.Component {
 				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 			/>
 		) : (
-			''
-		);
+				''
+			);
 	};
 	renderWithdrawalAmount = (cell, row, rowIndex, extraData) => {
 		return row.withdrawalAmount >= 0 ? (
@@ -266,8 +274,8 @@ class BankTransactions extends React.Component {
 				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 			/>
 		) : (
-			''
-		);
+				''
+			);
 	};
 	renderRunningAmount = (cell, row) => {
 		return row.runningAmount >= 0 ? row.runningAmount.toFixed(2) : '';
@@ -282,6 +290,7 @@ class BankTransactions extends React.Component {
 	// onSelectAll = (isSelected, rows) => {};
 
 	toggle = (tabPane, tab) => {
+		console.log('9999999')
 		const newArray = this.state.activeTab.slice();
 		newArray[parseInt(tabPane, 10)] = tab;
 		this.setState(
@@ -334,10 +343,10 @@ class BankTransactions extends React.Component {
 
 	closeTransaction = (id) => {
 		const message1 =
-					<text>
-					<b>Delete Transaction?</b>
-					</text>
-					const message ='This Transaction will be deleted permanently and cannot be recovered.';
+			<text>
+				<b>Delete Transaction?</b>
+			</text>
+		const message = 'This Transaction will be deleted permanently and cannot be recovered.';
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
@@ -427,6 +436,7 @@ class BankTransactions extends React.Component {
 	};
 
 	closeExplainTransactionModal = (res) => {
+		console.log(res)
 		this.componentDidMount();
 		if (!this.state.expanded.includes(res)) {
 			this.setState(() => ({
@@ -440,12 +450,14 @@ class BankTransactions extends React.Component {
 	};
 
 	handleOnExpand = (row) => {
+		console.log(row)
 		this.setState(() => ({
 			expanded: [...this.state.expanded, row.id],
 		}));
 	};
 
 	isExpandableRow(row) {
+		console.log(row)
 		if (row.id) return true;
 		else return false;
 	}
@@ -540,8 +552,8 @@ class BankTransactions extends React.Component {
 							{this.state.actionButtons[row.id] === true ? (
 								<i className="fas fa-chevron-up" />
 							) : (
-								<i className="fas fa-chevron-down" />
-							)}
+									<i className="fas fa-chevron-down" />
+								)}
 						</DropdownToggle>
 						<DropdownMenu right>
 							<DropdownItem
@@ -566,6 +578,7 @@ class BankTransactions extends React.Component {
 	};
 
 	render() {
+		console.log(this.state)
 		const {
 			loading,
 			statusOptions,
@@ -573,6 +586,7 @@ class BankTransactions extends React.Component {
 			dialog,
 			csvData,
 			view,
+			nonexpand
 		} = this.state;
 		const {
 			bank_transaction_list,
@@ -608,24 +622,26 @@ class BankTransactions extends React.Component {
 			},
 		];
 		const expandRow = {
-			onlyOneExpanding: true,
 			renderer: (row) => (
-				<ExplainTrasactionDetail
-					closeExplainTransactionModal={(e) => {
+				< ExplainTrasactionDetail
+					closeExplainTransactionModroal={(e) => {
+						console.log('ddddd', e)
 						this.closeExplainTransactionModal(e);
-					}}
+					}
+					}
 					bankId={this.props.location.state.bankAccountId}
 					creationMode={row.creationMode}
 					selectedData={row}
 				/>
 			),
-			nonExpandable: this.state.nonexpand,
-			showExpandColumn: true,
+			onlyOneExpanding: true,
 			expanded: [],
+			nonExpandable: nonexpand,
+			showExpandColumn: true,
 		};
-
+		console.log(expandRow, this.state.nonexpand)
 		return (
-			<div className="bank-transaction-screen transaction">
+			<div className="bank-transaction-screen transaction" >
 				<div className="animated fadeIn">
 					<Card className={this.state.sidebarOpen ? `main-table-panel` : ''}>
 						<CardHeader>
@@ -647,49 +663,50 @@ class BankTransactions extends React.Component {
 									</Col>
 								</Row>
 							) : (
-								<Row>
-									<Col lg={12}>
-										<div className="mb-4 status-panel p-3">
-											<Row>
-												<Col lg={3}>
-													<h5>Account Name</h5>
-													<h3>{this.state.accounName}</h3>
-												</Col>
-												<Col lg={3}>
-													<h5>Current Bank Balance</h5>
-													<h3>
-														{universal_currency_list[0] && (
-															<Currency
-																value={this.state.currentBalance}
-																currencySymbol={
-																	universal_currency_list[0]
-																		? universal_currency_list[0].currencyIsoCode
-																		: 'USD'
-																}
-															/>
-														)}
-													</h3>
-												</Col>
-												<Col lg={3}>
-													<h5>SimpleVat Balance</h5>
-													<h3>
-														{universal_currency_list[0] && (
-															<Currency
-																value={this.state.closingBalance}
-																currencySymbol={
-																	universal_currency_list[0]
-																		? universal_currency_list[0].currencyIsoCode
-																		: 'USD'
-																}
-															/>
-														)}
-													</h3>
-												</Col>
-											</Row>
-										</div>
-										<div className="d-flex justify-content-end">
-											<ButtonGroup size="sm">
-												{/* <Button
+									<Row>
+										<Col lg={12}>
+											<div className="mb-4 status-panel p-3">
+												<Row>
+													<Col lg={3}>
+
+														<h5>Account Name </h5>
+														<h3>{this.state.accounName}</h3>
+													</Col>
+													<Col lg={3}>
+														<h5>Current Bank Balance</h5>
+														<h3>
+															{universal_currency_list[0] && (
+																<Currency
+																	value={this.state.currentBalance}
+																	currencySymbol={
+																		universal_currency_list[0]
+																			? universal_currency_list[0].currencyIsoCode
+																			: 'USD'
+																	}
+																/>
+															)}
+														</h3>
+													</Col>
+													<Col lg={3}>
+														<h5>SimpleVat Balance</h5>
+														<h3>
+															{universal_currency_list[0] && (
+																<Currency
+																	value={this.state.closingBalance}
+																	currencySymbol={
+																		universal_currency_list[0]
+																			? universal_currency_list[0].currencyIsoCode
+																			: 'USD'
+																	}
+																/>
+															)}
+														</h3>
+													</Col>
+												</Row>
+											</div>
+											<div className="d-flex justify-content-end">
+												<ButtonGroup size="sm">
+													{/* <Button
 													color="success"
 													className="btn-square mr-1"
 													onClick={() => this.getCsvData()}
@@ -706,69 +723,69 @@ class BankTransactions extends React.Component {
 														target="_blank"
 													/>
 												)} */}
-												<Button
-													color="info"
-													className="btn-square mr-1"
-													onClick={() =>
-														this.props.history.push(
-															'/admin/banking/upload-statement',
-															{
-																bankAccountId:
-																	this.props.location.state &&
-																	this.props.location.state.bankAccountId
-																		? this.props.location.state.bankAccountId
-																		: '',
-															},
-														)
-													}
-												>
-													<i className="fa glyphicon glyphicon-export fa-upload mr-1" />
+													<Button
+														color="info"
+														className="btn-square mr-1"
+														onClick={() =>
+															this.props.history.push(
+																'/admin/banking/upload-statement',
+																{
+																	bankAccountId:
+																		this.props.location.state &&
+																			this.props.location.state.bankAccountId
+																			? this.props.location.state.bankAccountId
+																			: '',
+																},
+															)
+														}
+													>
+														<i className="fa glyphicon glyphicon-export fa-upload mr-1" />
 													Import Statement
 												</Button>
-												<Button
-													color="success"
-													className="btn-square mr-1"
-													onClick={() =>
-														this.props.history.push(
-															'/admin/banking/bank-account/detail',
-															{
-																bankAccountId:
-																	this.props.location.state &&
-																	this.props.location.state.bankAccountId
-																		? this.props.location.state.bankAccountId
-																		: '',
-															},
-														)
-													}
-												>
-													<i className="fas fa-edit mr-1" />
+													<Button
+														color="success"
+														className="btn-square mr-1"
+														onClick={() =>
+															this.props.history.push(
+																'/admin/banking/bank-account/detail',
+																{
+																	bankAccountId:
+																		this.props.location.state &&
+																			this.props.location.state.bankAccountId
+																			? this.props.location.state.bankAccountId
+																			: '',
+																},
+															)
+														}
+													>
+														<i className="fas fa-edit mr-1" />
 													Edit Account
 												</Button>
-												<Button
-													color="info"
-													className="btn-square mr-1"
-													onClick={() =>
-														this.props.history.push(
-															'/admin/banking/bank-account/transaction/reconcile',
-															{
-																bankAccountId:
-																	this.props.location.state &&
-																	this.props.location.state.bankAccountId
-																		? this.props.location.state.bankAccountId
-																		: '',
-															},
-														)
-													}
-												>
-													<i className="fas fa-edit mr-1" />
+													<Button
+														color="info"
+														className="btn-square mr-1"
+														onClick={() =>
+															this.props.history.push(
+																'/admin/banking/bank-account/transaction/reconcile',
+																{
+																	bankAccountId:
+																		this.props.location.state &&
+																			this.props.location.state.bankAccountId
+																			? this.props.location.state.bankAccountId
+																			: '',
+																},
+															)
+														}
+													>
+														<i className="fas fa-edit mr-1" />
 													Reconcile
 												</Button>
-											</ButtonGroup>
-										</div>
-										<div className="py-3">
-											<h6>Filter : </h6>
-											<Row>
-												{/* <Col lg={3} className="mb-1">
+												</ButtonGroup>
+											</div>
+											<div className="py-3">
+												<h6>Filter : </h6>
+												<Row>
+													{/* <Col lg={3} className="mb-1">
 													<Select
 														className=""
 														options={statusOptions}
@@ -806,131 +823,131 @@ class BankTransactions extends React.Component {
 														value={filterData.chartOfAccountId}
 													/>
 												</Col> */}
-												<Col lg={3} className="mb-1">
-													<DatePicker
-														className="form-control"
-														id="date"
-														name="transactionDate"
-														placeholderText="Transaction Date"
-														showMonthDropdown
-														showYearDropdown
-														dropdownMode="select"
-														dateFormat="dd-MM-yyyy"
-														selected={filterData.transactionDate}
-														onChange={(value) => {
-															this.handleChange(value, 'transactionDate');
-														}}
-														autoComplete="off"
-													/>
-												</Col>
-												<Col lg={2} className="pl-0 pr-0">
-													<Button
-														type="button"
-														color="primary"
-														className="btn-square mr-1"
-														onClick={this.handleSearch}
-													>
-														<i className="fa fa-search"></i>
-													</Button>
-													<Button
-														type="button"
-														color="primary"
-														className="btn-square"
-														onClick={this.clearAll}
-													>
-														<i className="fa fa-refresh"></i>
-													</Button>
-												</Col>
-											</Row>
-										</div>
-										<div>
-											<Nav tabs className="pull-left">
-												<NavItem>
-													<NavLink
-														active={this.state.activeTab[0] === 'all'}
-														onClick={() => {
-															this.toggle(0, 'all');
-														}}
-													>
-														All
+													<Col lg={3} className="mb-1">
+														<DatePicker
+															className="form-control"
+															id="date"
+															name="transactionDate"
+															placeholderText="Transaction Date"
+															showMonthDropdown
+															showYearDropdown
+															dropdownMode="select"
+															dateFormat="dd-MM-yyyy"
+															selected={filterData.transactionDate}
+															onChange={(value) => {
+																this.handleChange(value, 'transactionDate');
+															}}
+															autoComplete="off"
+														/>
+													</Col>
+													<Col lg={2} className="pl-0 pr-0">
+														<Button
+															type="button"
+															color="primary"
+															className="btn-square mr-1"
+															onClick={this.handleSearch}
+														>
+															<i className="fa fa-search"></i>
+														</Button>
+														<Button
+															type="button"
+															color="primary"
+															className="btn-square"
+															onClick={this.clearAll}
+														>
+															<i className="fa fa-refresh"></i>
+														</Button>
+													</Col>
+												</Row>
+											</div>
+											<div>
+												<Nav tabs className="pull-left">
+													<NavItem>
+														<NavLink
+															active={this.state.activeTab[0] === 'all'}
+															onClick={() => {
+																this.toggle(0, 'all');
+															}}
+														>
+															All
 													</NavLink>
-												</NavItem>
-												<NavItem>
-													<NavLink
-														active={this.state.activeTab[0] === 'not_explain'}
-														onClick={() => {
-															this.toggle(0, 'not_explain');
-														}}
-													>
-														Not Explained
+													</NavItem>
+													<NavItem>
+														<NavLink
+															active={this.state.activeTab[0] === 'not_explain'}
+															onClick={() => {
+																this.toggle(0, 'not_explain');
+															}}
+														>
+															Not Explained
 													</NavLink>
-												</NavItem>
-												<NavItem>
-													<NavLink
-														active={
-															this.state.activeTab[0] === 'potential_duplicate'
-														}
-														onClick={() => {
-															this.toggle(0, 'potential_duplicate');
-														}}
-													>
-														Potential Duplicate
+													</NavItem>
+													<NavItem>
+														<NavLink
+															active={
+																this.state.activeTab[0] === 'potential_duplicate'
+															}
+															onClick={() => {
+																this.toggle(0, 'potential_duplicate');
+															}}
+														>
+															Potential Duplicate
 													</NavLink>
-												</NavItem>
-											</Nav>
-											<Button
-												color="primary"
-												className="btn-square pull-right"
-												onClick={() =>
-													this.props.history.push(
-														'/admin/banking/bank-account/transaction/create',
-														{
-															bankAccountId:
-																this.props.location.state &&
-																this.props.location.state.bankAccountId
-																	? this.props.location.state.bankAccountId
-																	: '',
-														},
-													)
-												}
-											>
-												<i className="fas fa-plus mr-1" />
-												Add New Transaction
-											</Button>
-										</div>
-										<div>
-											<BootstrapTable
-												keyField="id"
-												data={
-													bank_transaction_list.data
-														? bank_transaction_list.data
-														: []
-												}
-												columns={columns}
-												expandRow={expandRow}
-												noDataIndication="There is no data to display"
-												remote
-												fetchInfo={{
-													dataTotalSize: bank_transaction_list.count
-														? bank_transaction_list.count
-														: 0,
-												}}
-												onTableChange={this.handleTableChange}
-												pagination={paginationFactory({
-													page: this.options.page,
-													sizePerPage: this.options.sizePerPage,
-													totalSize: bank_transaction_list.count,
-												})}
-											/>
-										</div>
-									</Col>
-								</Row>
-							)}
+													</NavItem>
+												</Nav>
+												<Button
+													color="primary"
+													className="btn-square pull-right"
+													onClick={() =>
+														this.props.history.push(
+															'/admin/banking/bank-account/transaction/create',
+															{
+																bankAccountId:
+																	this.props.location.state &&
+																		this.props.location.state.bankAccountId
+																		? this.props.location.state.bankAccountId
+																		: '',
+															},
+														)
+													}
+												>
+													<i className="fas fa-plus mr-1" />
+												</Button>
+											</div>
+
+											<div>
+												<BootstrapTable
+													keyField='id'
+													data={
+														bank_transaction_list.data
+															? bank_transaction_list.data
+															: []
+													}
+													columns={columns}
+													expandRow={expandRow}
+													noDataIndication="There is no data to display"
+													remote
+													fetchInfo={{
+														dataTotalSize: bank_transaction_list.count
+															? bank_transaction_list.count
+															: 0,
+													}}
+													onTableChange={this.handleTableChange}
+													pagination={paginationFactory({
+														page: this.options.page,
+														sizePerPage: this.options.sizePerPage,
+														totalSize: bank_transaction_list.count,
+													})}
+												/>
+											</div>
+										</Col>
+									</Row>
+								)}
 						</CardBody>
 					</Card>
 					<div className="overlay"></div>
 				</div>
-			</div>
+			</div >
 		);
 	}
 }

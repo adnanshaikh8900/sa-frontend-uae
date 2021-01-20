@@ -47,7 +47,7 @@ class ProfitAndLossReport extends Component {
 					show: false,
 				},
 				sparkline: {
-					enabled: true,
+					enabled: false,
 				},
 			},
 			labels: data.label.labels,

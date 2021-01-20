@@ -446,7 +446,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/master/currencyConvert',
-		name: 'CurrencyConvert',
+		name: 'ViewCurrencyConversion',
 		component: CurrencyConvert.screen,
 	},
 	{

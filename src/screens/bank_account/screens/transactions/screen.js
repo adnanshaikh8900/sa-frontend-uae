@@ -548,6 +548,7 @@ class BankTransactions extends React.Component {
 								onClick={() => {
 									this.onRowSelect(row.id);
 								}}
+								className="dropdown-button-margin"
 							>
 								<i className="fas fa-edit" /> Change Status
 							</DropdownItem>
@@ -555,6 +556,7 @@ class BankTransactions extends React.Component {
 								onClick={() => {
 									this.closeTransaction(row.id);
 								}}
+								className="dropdown-button-margin"
 							>
 								<i className="fa fa-trash" /> Delete
 							</DropdownItem>

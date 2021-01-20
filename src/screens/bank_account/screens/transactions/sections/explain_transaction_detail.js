@@ -250,7 +250,7 @@ class ExplainTrasactionDetail extends React.Component {
 						}
 						if (this.state.initValue.expenseCategory) {
 							this.props.transactionsActions.getExpensesCategoriesList();
-							this.props.transactionsActions.getUserForDropdown();
+							//this.props.transactionsActions.getUserForDropdown();
 							this.props.transactionsActions.getVatList();
 						}
 					},
@@ -393,15 +393,14 @@ class ExplainTrasactionDetail extends React.Component {
 					},
 				},
 			});
-			this.formRef.current.setFieldValue(
-				'currency',
-				response.data[0].currencyCode,
-				true,
-			);
+			// this.formRef.current.setFieldValue(
+			// 	'currency',
+			// 	response.data[0].currencyCode,
+			// 	true,
+			// );
 		});
-		this.props.transactionsActions.getUserForDropdown();
-		this.props.transactionsActions.getVatList();
-		// this.props.transactionsActions.getUserForDropdown();
+	// this.props.transactionsActions.getUserForDropdown();
+			this.props.transactionsActions.getVatList();
 	};
 
 	getVendorList = () => {

@@ -105,6 +105,7 @@ class BankTransactions extends React.Component {
 			transactionType: 'all',
 			nonexpand: [],
 			selected_id_list: [],
+			transation_data: '',
 		};
 
 		this.options = {
@@ -124,6 +125,8 @@ class BankTransactions extends React.Component {
 	}
 
 	componentDidMount = () => {
+		this.toggle(0, 'all');
+		this.initializeData();
 		if (this.props.location.state !== undefined) {
 			localStorage.setItem(
 				'bankId',
@@ -136,7 +139,7 @@ class BankTransactions extends React.Component {
 			localStorage.setItem('bankId', localStorage.getItem('bankId'));
 		}
 		this.props.transactionsActions.getTransactionTypeList();
-		this.initializeData();
+		//this.initializeData();
 		this.props.detailBankAccountActions
 			.getBankAccountByID(localStorage.getItem('bankId'))
 			.then((res) => {
@@ -155,7 +158,7 @@ class BankTransactions extends React.Component {
 			});
 	};
 
-	initializeData = (search) => {
+	initializeData = () => {
 		let { filterData } = this.state;
 		const data = {
 			pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -171,14 +174,17 @@ class BankTransactions extends React.Component {
 			this.props.transactionsActions
 				.getTransactionList(postData)
 				.then((res) => {
+					const array = []
 					if (res.status === 200) {
 						this.setState({
 							loading: false,
+							transation_data: res.data.data
 						});
 						res.data.data.map((item) => {
 							if (item.creationMode === 'POTENTIAL_DUPLICATE') {
-								this.state.nonexpand.push(item.id);
+								array.push(item.id)
 							}
+							this.setState({ nonexpand: array })
 						});
 					}
 				})
@@ -575,6 +581,7 @@ class BankTransactions extends React.Component {
 			dialog,
 			csvData,
 			view,
+			nonexpand,
 		} = this.state;
 		const {
 			bank_transaction_list,
@@ -612,18 +619,20 @@ class BankTransactions extends React.Component {
 		const expandRow = {
 			onlyOneExpanding: true,
 			renderer: (row) => (
-				<ExplainTrasactionDetail
-					closeExplainTransactionModal={(e) => {
+				< ExplainTrasactionDetail
+					closeExplainTransactionModroal={(e) => {
 						this.closeExplainTransactionModal(e);
-					}}
+					}
+					}
 					bankId={this.props.location.state.bankAccountId}
 					creationMode={row.creationMode}
 					selectedData={row}
 				/>
 			),
-			nonExpandable: this.state.nonexpand,
-			showExpandColumn: true,
+			onlyOneExpanding: true,
 			expanded: [],
+			nonExpandable: nonexpand,
+			showExpandColumn: true,
 		};
 
 		return (

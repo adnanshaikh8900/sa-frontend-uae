@@ -316,12 +316,12 @@ class BalanceSheet extends React.Component {
 													{Object.keys(this.state.data).length > 0 ? (
 														<>
 															<tr>
-																<td className="mainLable table-internal-header">Assets</td>
+																<td className="mainLable ">Assets</td>
 																<td></td>
 																<td></td>
 															</tr>
 															<tr>
-																<td className="mainLable table-internal-header">Fixed Assets</td>
+																<td className="mainLable ">Fixed Assets</td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -350,7 +350,7 @@ class BalanceSheet extends React.Component {
 																	</tr>
 																),
 															)}
-															<tr className="mainLable table-internal-header">
+															<tr className="mainLable ">
 																<td className="text-right">
 																	Total Fixed Assets
 																</td>
@@ -375,7 +375,7 @@ class BalanceSheet extends React.Component {
 															</tr>
 															<br />
 															<tr>
-																<td className="mainLable table-internal-header">Current Assets</td>
+																<td className="mainLable ">Current Assets</td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -405,7 +405,7 @@ class BalanceSheet extends React.Component {
 																</tr>
 															))}
 															<tr>
-																<td className="mainLable table-internal-header">Bank</td>
+																<td className="mainLable ">Bank</td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -435,7 +435,7 @@ class BalanceSheet extends React.Component {
 																),
 															)}
 															<tr>
-																<td className="mainLable table-internal-header">
+																<td className="mainLable ">
 																	Account Receivable
 																</td>
 																<td></td>
@@ -458,7 +458,7 @@ class BalanceSheet extends React.Component {
 																</td>
 															</tr>
 															<tr>
-																<td className="mainLable table-internal-header">
+																<td className="mainLable ">
 																	Other Current Assets
 																</td>
 																<td></td>
@@ -489,7 +489,7 @@ class BalanceSheet extends React.Component {
 																	</td>
 																</tr>
 															))}
-															<tr className="mainLable table-internal-header">
+															<tr className="mainLable ">
 																<td className="text-right">
 																	Total Current Assets
 																</td>
@@ -538,14 +538,14 @@ class BalanceSheet extends React.Component {
 															</tr>
 															<br />
 															<tr>
-																<td className="mainLable table-internal-header">
+																<td className="mainLable ">
 																	Equities & Liabilities
 																</td>
 																<td></td>
 																<td></td>
 															</tr>
 															<tr>
-																<td className="mainLable table-internal-header">Equities</td>
+																<td className="mainLable ">Equities</td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -574,7 +574,7 @@ class BalanceSheet extends React.Component {
 																	</tr>
 																),
 															)}
-															<tr className="mainLable table-internal-header">
+															<tr className="mainLable ">
 																<td className="mainLable text-right">
 																	Total Equity
 																</td>
@@ -599,7 +599,7 @@ class BalanceSheet extends React.Component {
 															</tr>
 															<br />
 															<tr>
-																<td className="mainLable table-internal-header">Other Liability</td>
+																<td className="mainLable ">Other Liability</td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -628,7 +628,7 @@ class BalanceSheet extends React.Component {
 																	</td>
 																</tr>
 															))}
-															<tr className="mainLable table-internal-header">
+															<tr className="mainLable ">
 																<td className="mainLable text-right">
 																	Total Other Liability
 																</td>
@@ -653,7 +653,7 @@ class BalanceSheet extends React.Component {
 															</tr>
 															<br />
 															<tr>
-																<td className="mainLable table-internal-header">
+																<td className="mainLable ">
 																	Other Current Liability
 																</td>
 																<td></td>
@@ -661,7 +661,7 @@ class BalanceSheet extends React.Component {
 															</tr>
 
 															<tr className="">
-																<td className="mainLable table-internal-header">Accounts Payable</td>
+																<td className="mainLable ">Accounts Payable</td>
 																<td></td>
 																<td className="text-right">
 																	{this.state.data['totalAccountPayable'] ? (
@@ -708,7 +708,7 @@ class BalanceSheet extends React.Component {
 																	</td>
 																</tr>
 															))}
-															<tr className="mainLable table-internal-header">
+															<tr className="mainLable ">
 																<td className="mainLable text-right">
 																	Total Other Current Liability
 																</td>
@@ -734,7 +734,7 @@ class BalanceSheet extends React.Component {
 																</td>
 															</tr>
 															<br />
-															<tr className="mainLable table-internal-header">
+															<tr className="mainLable ">
 																<td className="mainLable text-right">
 																	Total Liability
 																</td>
@@ -783,7 +783,7 @@ class BalanceSheet extends React.Component {
 															</tr>
 														</>
 													) : (
-														<tr className="mainLable table-internal-header">
+														<tr className="mainLable ">
 															<td style={{ textAlign: 'center' }} colSpan="9">
 																There is no data to display
 															</td>

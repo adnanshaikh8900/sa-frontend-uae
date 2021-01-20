@@ -298,7 +298,7 @@ class ProfitAndLossReport extends React.Component {
 													{Object.keys(this.state.data).length > 0 ? (
 														<>
 															<tr>
-																<td className="mainLable table-internal-header">Operating Income</td>
+																<td className="mainLable ">Operating Income</td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -324,7 +324,7 @@ class ProfitAndLossReport extends React.Component {
 																</tr>
 															))}
 															<tr>
-																<td className="mainLable table-internal-header">
+																<td className="mainLable ">
 																	Total Operating Income
 																</td>
 																<td></td>
@@ -348,7 +348,7 @@ class ProfitAndLossReport extends React.Component {
 																</td>
 															</tr>
 															<tr>
-																<td className="mainLable table-internal-header">
+																<td className="mainLable ">
 																	Cost of Goods Sold
 																</td>
 																<td></td>
@@ -376,7 +376,7 @@ class ProfitAndLossReport extends React.Component {
 																</tr>
 															))}
 															<tr>
-																<td className="mainLable table-internal-header">
+																<td className="mainLable ">
 																	Total Cost of Goods Sold
 																</td>
 																<td></td>
@@ -401,7 +401,7 @@ class ProfitAndLossReport extends React.Component {
 															</tr>
 															<tr>
 																<td></td>
-																<td className="mainLable table-internal-header">Gross Profit</td>
+																<td className="mainLable ">Gross Profit</td>
 																<td className="text-right">
 																	{this.state.data['grossProfit'] != null ? (
 																		<Currency
@@ -421,7 +421,7 @@ class ProfitAndLossReport extends React.Component {
 																</td>
 															</tr>
 															<tr>
-																<td className="mainLable table-internal-header">Operating Expense</td>
+																<td className="mainLable ">Operating Expense</td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -447,7 +447,7 @@ class ProfitAndLossReport extends React.Component {
 																</tr>
 															))}
 															<tr>
-																<td className="mainLable table-internal-header">
+																<td className="mainLable ">
 																	Total Operating Expense
 																</td>
 																<td></td>
@@ -472,7 +472,7 @@ class ProfitAndLossReport extends React.Component {
 															</tr>
 															<tr>
 																<td></td>
-																<td className="mainLable table-internal-header">Operating Profit </td>
+																<td className="mainLable ">Operating Profit </td>
 																<td className="text-right">
 																	{this.state.data['operatingProfit'] !=
 																	null ? (
@@ -493,7 +493,7 @@ class ProfitAndLossReport extends React.Component {
 																</td>
 															</tr>
 															<tr>
-																<td className="mainLable table-internal-header">
+																<td className="mainLable ">
 																	Non Operating Income
 																</td>
 																<td></td>
@@ -521,7 +521,7 @@ class ProfitAndLossReport extends React.Component {
 																</tr>
 															))}
 															<tr>
-																<td className="mainLable table-internal-header">
+																<td className="mainLable ">
 																	Total Non Operating Income
 																</td>
 																<td></td>
@@ -545,7 +545,7 @@ class ProfitAndLossReport extends React.Component {
 																</td>
 															</tr>
 															<tr>
-																<td className="mainLable table-internal-header">
+																<td className="mainLable ">
 																	Non Operating Expense
 																</td>
 																<td></td>
@@ -573,7 +573,7 @@ class ProfitAndLossReport extends React.Component {
 																</tr>
 															))}
 															<tr>
-																<td className="mainLable table-internal-header">
+																<td className="mainLable ">
 																	Total Non Operating Expense
 																</td>
 																<td></td>
@@ -599,7 +599,7 @@ class ProfitAndLossReport extends React.Component {
 															</tr>
 															<tr>
 																<td></td>
-																<td className="mainLable table-internal-header">Net Profit/Loss </td>
+																<td className="mainLable ">Net Profit/Loss </td>
 																<td className="text-right">
 																	{this.state.data['netProfitLoss'] != null ? (
 																		<Currency
@@ -620,7 +620,7 @@ class ProfitAndLossReport extends React.Component {
 															</tr>
 														</>
 													) : (
-														<tr className="mainLable table-internal-header">
+														<tr className="mainLable ">
 															<td style={{ textAlign: 'center' }} colSpan="9">
 																There is no data to display
 															</td>

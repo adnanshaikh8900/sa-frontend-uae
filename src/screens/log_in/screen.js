@@ -104,7 +104,7 @@ class LogIn extends React.Component {
 				this.setState({ loading: false });
 				toast.error(
 					err && err.data
-						? 'Log in failed. Please try again'
+						? 'Log in failed. '
 						: 'Something Went Wrong',
 					{
 						position: toast.POSITION.TOP_RIGHT,

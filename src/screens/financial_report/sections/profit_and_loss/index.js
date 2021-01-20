@@ -195,7 +195,18 @@ class ProfitAndLossReport extends React.Component {
 												>
 													<i className="fa fa-print"></i>
 												</div>
-												<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
+												<div
+												className="mr-2 print-btn-cont"
+												onClick={() => {
+													this.exportPDFWithComponent();
+												}}
+												style={{
+													cursor: 'pointer',
+													}}
+												>
+												<i className="fa fa-file-pdf-o"></i>
+											</div>
+												{/* <Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
 														<DropdownItem onClick={this.exportPDFWithComponent}>
@@ -225,7 +236,7 @@ class ProfitAndLossReport extends React.Component {
 															XLSX (Microsoft Excel)
 														</DropdownItem>
 													</DropdownMenu>
-												</Dropdown>
+												</Dropdown> */}
 											</div>
 										</div>
 									</Col>

@@ -273,14 +273,14 @@ class VatTransactions extends React.Component {
 								<div className="flex-wrap d-flex justify-content-end">
 									<FormGroup>
 										<ButtonGroup className="mr-3">
-											{/* <Button
+											<Button
 												color="primary"
 												className="btn-square"
 												onClick={() => this.table.handleExportCSV()}
 											>
 												<i className="fa glyphicon glyphicon-export fa-download mr-1" />
 												Export to CSV
-											</Button> */}
+											</Button>
 										</ButtonGroup>
 									</FormGroup>
 									{/* <FormGroup>
@@ -290,7 +290,7 @@ class VatTransactions extends React.Component {
 									</FormGroup> */}
 								</div>
 							</Form>
-							<div className="py-3">
+							{/* <div className="py-3">
 								<h5>Filter : </h5>
 								<Row>
 									<Col lg={2} className="mb-1">
@@ -362,7 +362,7 @@ class VatTransactions extends React.Component {
 										</Button>
 									</Col>
 								</Row>
-							</div>
+							</div> */}
 							<div className="table-wrapper">
 								<BootstrapTable
 									data={

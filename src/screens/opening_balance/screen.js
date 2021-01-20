@@ -366,11 +366,9 @@ class OpeningBalance extends React.Component {
 		return row.openingBalance ? row.openingBalance.toFixed(2) :'';
 	};
 	renderDate = (cell, row) => {
-		// return typeof row['effectiveDate'] === 'string'
-		// ? moment(row['effectiveDate'], 'DD/MM/YYYY').format('DD/MM/YYYY')
-		// : moment(row['effectiveDate']).format('DD/MM/YYYY');
-
-		return row.effectiveDate ? row.effectiveDate : '';
+		return typeof row['effectiveDate'] === 'string'
+		? moment(row['effectiveDate'], 'DD/MM/YYYY').format('DD/MM/YYYY')
+		: moment(row['effectiveDate']).format('DD/MM/YYYY');
 	};
 	// renderDate = (cell, row) => {
 	// 	return (

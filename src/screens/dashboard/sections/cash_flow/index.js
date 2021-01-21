@@ -79,14 +79,14 @@ class CashFlow extends Component {
 		};
 		const { universal_currency_list } = this.props;
 		return (
-			<div className="animated fadeIn">
-				<Card className="cash-card">
-					<CardBody>
-						<div className="flex-wrapper">
-							<h1>CASHFLOW</h1>
-							<div className="card-header-actions">
+			<div className="animated fadeIn ">
+				<Card className="cash-card card-margin">
+					<CardBody className="tab-card">
+						<div className="flex-wrapper flex-color">
+							<h1 className="card-h1">CASHFLOW</h1>
+							<div className="card-header-actions card-select-alignment">
 								<select
-									className="form-control"
+									className="form-control card-select"
 									onChange={(e) => this.handleChange(e)}
 								>
 									<option value="12">Last 12 Months</option>
@@ -95,7 +95,7 @@ class CashFlow extends Component {
 								</select>
 							</div>
 						</div>
-
+						
 						<div className="data-info">
 							<div className="data-item">
 								<img alt="income" src={incomeIcon} />

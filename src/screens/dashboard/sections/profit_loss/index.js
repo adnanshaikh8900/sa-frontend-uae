@@ -60,7 +60,7 @@ class ProfitAndLoss extends Component {
 	render() {
 		const { universal_currency_list } = this.props;
 		return (
-			<div className="animated fadeIn">
+			<div className="animated fadeIn ">
 				<Card className="profit-card">
 					<CardBody className="tab-card">
 						<div className="flex-wrapper">

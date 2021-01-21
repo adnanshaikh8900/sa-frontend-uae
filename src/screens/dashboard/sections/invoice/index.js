@@ -118,25 +118,15 @@ class Invoice extends Component {
 		}
 		const { universal_currency_list } = this.props;
 		return (
-			<div className="animated fadeIn">
-				<Card className="invoice-card">
+			<div className="animated fadeIn  ">
+				<Card className="invoice-card card-margin">
 					<CardBody className="tab-card">
-						<div className="flex-wrapper">
-							<Nav tabs>
-								<NavItem>
-									<NavLink
-										active={this.state.activeTab[0] === '1'}
-										onClick={() => {
-											this.toggle(0, '1');
-										}}
-									>
-									<h1>CUSTOMER INVOICE TIMELINE</h1>
-									</NavLink>
-								</NavItem>
-							</Nav>
-							<div className="card-header-actions">
+						<div className="flex-wrapper flex-color">
+						<h1 className="card-h1">CUSTOMER INVOICE TIMELINE</h1>
+							
+							<div className="card-header-actions card-select-alignment">
 								<select
-									className="form-control"
+									className="form-control card-select"
 									ref={this.dateRangeSelect}
 									onChange={(e) => this.handleChange(e)}
 								>

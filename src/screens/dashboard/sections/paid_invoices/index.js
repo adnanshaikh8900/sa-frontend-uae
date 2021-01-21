@@ -134,12 +134,14 @@ class PaidInvoices extends Component {
 		};
 	
 		return (
-			<div className="animated fadeIn">
-				<Card className="cash-card">
-					<CardBody>
-					<h1 className="mb-3">
+			<div className="animated fadeIn ">
+				<Card className="cash-card ">
+					<CardBody className="card-body-padding">
+					<div className="flex-wrapper flex-color">
+						<h1 className="mb-3 card-h1">
 								SUPPLIER & CUSTOMER PAID INVOICES 
-							</h1>
+						</h1>
+					</div>
 							<div className="d-block p-4">
 								<Line
 									data={this.state.invoice_graph_data}

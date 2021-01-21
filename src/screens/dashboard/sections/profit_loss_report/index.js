@@ -89,12 +89,14 @@ class ProfitAndLossReport extends Component {
 	render() {
 		
 		return (
-			<div className="animated fadeIn">
-				<Card className="cash-card">
-					<CardBody>
-					<h1 className="mb-3">
+			<div className="animated fadeIn ">
+				<Card className="cash-card card-margin">
+					<CardBody className="card-body-padding">
+				<div className="flex-wrapper flex-color">
+					<h1 className="mb-3 card-h1">
 									PROFIT & LOSS
 								</h1>
+				</div>
 								<div className="d-block">
 									<Chart
 										options={this.state.profit_loss_report_data_options}

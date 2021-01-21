@@ -1866,7 +1866,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		}
 																	></TableHeaderColumn>
 																	<TableHeaderColumn
-																	width="12%"
+																	width="15%"
 																		dataField="product"
 																		dataFormat={(cell, rows) =>
 																			this.renderProduct(cell, rows, props)

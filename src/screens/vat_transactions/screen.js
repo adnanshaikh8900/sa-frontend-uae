@@ -279,7 +279,7 @@ class VatTransactions extends React.Component {
 												onClick={() => this.table.handleExportCSV()}
 											>
 												<i className="fa glyphicon glyphicon-export fa-download mr-1" />
-												Export to CSV
+												Export
 											</Button>
 										</ButtonGroup>
 									</FormGroup>

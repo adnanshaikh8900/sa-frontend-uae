@@ -127,8 +127,8 @@ class LogIn extends React.Component {
 			<div className="log-in-screen">
 				<ToastContainer />
 				<div className="animated fadeIn ">
-				<div className="main-banner_container col-md-8 flex">
-													<img src={login_image} alt="Login" className="login_banckground" />
+				<div className="main-banner_container col-md-12 flex">
+													{/* <img src={login_bg} alt="login_bg" className="login_bg" /> */}
 													{/* <img src={login_banner} alt="login_banner" className="login_banner"/> */}
 												</div>
 					<div className="app flex-row align-items-center ">
@@ -137,9 +137,11 @@ class LogIn extends React.Component {
 								<Col md="6">{this.state.alert}</Col>
 							</Row>
 							<Row className="justify-content-center ">
-								<Col md="8">
-									
-										<div className="p-4">
+								<Col md="6">
+								<CardGroup>
+										<Card className="p-4">
+											<CardBody>
+										<div>
 											
 												<div className="logo-container">
 													<img src={logo} alt="logo" />
@@ -295,7 +297,9 @@ class LogIn extends React.Component {
 												</Formik>
 											
 										</div>
-									
+										</CardBody>
+										</Card>
+									</CardGroup>
 								</Col>
 							</Row>
 						</Container>

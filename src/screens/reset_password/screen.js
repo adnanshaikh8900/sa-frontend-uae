@@ -4,6 +4,7 @@ import {
   Card,
   CardHeader,
   CardBody,
+  CardGroup,
   Col,
   Container,
   Form,
@@ -93,10 +94,10 @@ class ResetPassword extends React.Component {
       <div className="reset-password-screen">
         {!token ? (
           <div className="animated fadeIn">
-            	<div className="main-banner_container col-md-8 flex">
+            	{/* <div className="main-banner_container col-md-8 flex">
 													<img src={login_bg} alt="login_bg" className="login_banckground" />
 													<img src={login_banner} alt="login_banner" className="login_banner"/>
-												</div>
+												</div> */}
             <div className="app flex-row align-items-center">
               <Container>
                 <Row className="justify-content-center">
@@ -105,7 +106,10 @@ class ResetPassword extends React.Component {
                   </Col>
                 </Row>
                 <Row className="justify-content-center">
-                  <Col md="8">
+                  <Col md="6">
+                  <CardGroup>
+										<Card className="p-4">
+											<CardBody>
                   <div className="logo-container">
 													<img src={logo} alt="logo" />
 												</div>
@@ -113,7 +117,7 @@ class ResetPassword extends React.Component {
                       <div className=" d-flex registerScreen">
                         {/* <i className="fas fa-lock"></i>*/} <h2 className="mb-0">Forgot Password</h2> 
                       </div>
-                      <div className="p-4">
+                      <div >
                         <Formik
                           ref={this.formikRef}
                           initialValues={initValue}
@@ -159,7 +163,7 @@ class ResetPassword extends React.Component {
                                   </Col>
                                 </Row>
                                 <Row className="button-group">
-                                  <Col lg="12">
+                                  <Col lg="6 mt-4">
                                     <Button
                                       color="primary"
                                       type="button"
@@ -170,15 +174,15 @@ class ResetPassword extends React.Component {
                                       Send Verification Email
                                </Button>
                                   </Col>
-                                  <Col lg="12 mt-2">
+                                  <Col lg="6 mt-4">
                                     <Button
-                                      color="secondary"
-                                      className="btn-square w-100 close-btn"
+                                      color="primary"
+                                      className="btn-square w-100 submit-btn"
                                       onClick={() => {
                                         this.props.history.push('/login')
                                       }}
                                     >
-                                      BACK TO LOGIN
+                                      Back To Login
                                      </Button>
                                   </Col>
                                 </Row>
@@ -188,7 +192,9 @@ class ResetPassword extends React.Component {
                         </Formik>
                       </div>
                   
-
+                      </CardBody>
+										</Card>
+									</CardGroup>
                   </Col>
                 </Row>
               </Container>

@@ -15,19 +15,48 @@ import {
 import './style.scss';
 
 const backOption = {
-	tooltips: {
-		enabled: false,
-		custom: CustomTooltips,
-	},
-	legend: {
-		display: false,
-		position: 'bottom',
-	},
-	elements: {
-		line: {
-			tension: 0, // disables bezier curves,
-		},
-	},
+	layout: {
+        padding: {
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+        },
+    },
+    scales: {
+        yAxes: [
+            {
+                ticks: {
+                    display: true,
+                    beginAtZero: true,
+                },
+                gridLines: {
+                    display: true,
+                    color: '#eeeff8',
+                    drawBorder: true,
+                },
+            },
+        ],
+        xAxes: [
+            {
+                ticks: {
+                    display: true,
+                    beginAtZero: true,
+                },
+                gridLines: {
+                    display: true,
+                    color: '#eeeff8',
+                    drawBorder: true,
+                },
+            },
+        ],
+    },
+    legend: {
+        display: false,
+    },
+    responsive: true,
+	maintainAspectRatio: false,
+	visibility: true ,
 };
 
 const bankIcon = require('assets/images/dashboard/bank.png');
@@ -43,13 +72,13 @@ class BankAccount extends Component {
 		this.dateRangeSelect = React.createRef();
 	}
 
-	toggle = (tabPane, tab) => {
-		const newArray = this.state.activeTab.slice();
-		newArray[parseInt(tabPane, 10)] = tab;
-		this.setState({
-			activeTab: newArray,
-		});
-	};
+	// toggle = (tabPane, tab) => {
+	// 	const newArray = this.state.activeTab.slice();
+	// 	newArray[parseInt(tabPane, 10)] = tab;
+	// 	this.setState({
+	// 		activeTab: newArray,
+	// 	});
+	// };
 
 	componentDidMount = () => {
 		this.props.DashboardActions.getBankAccountTypes().then((res) => {
@@ -115,25 +144,15 @@ class BankAccount extends Component {
 		};
 		const { universal_currency_list } = this.props;
 		return (
-			<div className="animated fadeIn">
-				<Card className="bank-card">
+			<div className="animated fadeIn  ">
+				<Card className="bank-card card-margin ">
 					<CardBody className="tab-card">
-						<div className="flex-wrapper">
-							<Nav tabs>
-								<NavItem>
-									<NavLink
-										active={this.state.activeTab[0] === '1'}
-										onClick={() => {
-											this.toggle(0, '1');
-										}}
-									>
-										<h1>BANKING</h1>
-									</NavLink>
-								</NavItem>
-							</Nav>
-							<div className="card-header-actions">
+						<div className="flex-wrapper  flex-color">
+						<h1 className="card-h1">BANKING</h1>
+						
+							<div className="card-header-actions card-select-alignment">
 								<select
-									className="form-control"
+									className="form-control  card-select"
 									ref={this.dateRangeSelect}
 									onChange={(e) => this.handleChange(e)}
 								>
@@ -143,9 +162,8 @@ class BankAccount extends Component {
 								</select>
 							</div>
 						</div>
-						<TabContent activeTab={this.state.activeTab[0]}>
-							<TabPane tabId="1">
-								<div className="flex-wrapper">
+						
+								
 									<div className="data-info">
 										<div className="data-item">
 											<img
@@ -174,9 +192,7 @@ class BankAccount extends Component {
 												</p>
 											</div>
 										</div>
-									</div>
-
-									<div className="data-info">
+									
 										<div className="data-item">
 											<div>
 												<h3>
@@ -212,22 +228,23 @@ class BankAccount extends Component {
 														/>
 													)}
 												</h3>
-												<p>ALL BANk ACCOUNTS</p>
+												<p>ALL BANK ACCOUNTS</p>
 											</div>
 										</div>
 									</div>
-								</div>
-								<div className="chart-wrapper">
+								
+								<div className="chart-wrapper card-visibility">
 									<Line
 										data={line}
 										options={backOption}
+										style={{ height: 200 }}
 										datasetKeyProvider={() => {
 											return Math.random();
 										}}
+									
 									/>
 								</div>
-							</TabPane>
-						</TabContent>
+							
 					</CardBody>
 				</Card>
 			</div>

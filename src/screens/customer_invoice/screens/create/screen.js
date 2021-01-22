@@ -1769,6 +1769,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																	></TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="product"
+																		width="15%"
 																		dataFormat={(cell, rows) =>
 																			this.renderProduct(cell, rows, props)
 																		}

@@ -100,7 +100,6 @@ export const getProductVatCategoryList = () => {
 			method: 'GET',
 			url: '/rest/datalist/vatCategory',
 		};
-		if (Object.keys(state.product.vat_list).length === 0) {
 			return authApi(data)
 				.then((res) => {
 					dispatch({
@@ -112,7 +111,6 @@ export const getProductVatCategoryList = () => {
 				.catch((err) => {
 					throw err;
 				});
-		}
 	};
 };
 

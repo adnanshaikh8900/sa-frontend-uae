@@ -40,7 +40,9 @@ class Help extends React.Component {
 												Find detailed answers to the most common questions you
 												might have while using our site
 											</p>
-											<Link to="/admin/settings/help/Faq">Go to FAQ</Link>
+											{/* <Link to="https://www.simplevat.com/faqs/">Go to FAQ</Link> */}
+										<b>	<a target="_blank" href="https://www.simplevat.com/faqs/" style={{ color: '#2266d8' }}>Go to FAQ</a></b>
+
 										</CardBody>
 									</Card>
 								</Col>
@@ -56,12 +58,12 @@ class Help extends React.Component {
 												might have while using our site
 											</p>
 											<div className="d-flex justify-content-center">
-												<button className="btn-pill btn btn-primary btn-lg">
+												{/* <button className="btn-pill btn btn-primary btn-lg">
 													<i className="icon-phone icons font-2xl d-block"></i>
 												</button>
 												<button className="btn-pill btn btn-primary btn-lg">
 													<i className="cui-comment-square icons font-2xl d-block"></i>
-												</button>
+												</button> */}
 												<button className="btn-pill btn btn-primary btn-lg">
 													<i
 														className="cui-envelope-closed icons font-2xl d-block"

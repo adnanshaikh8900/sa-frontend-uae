@@ -433,6 +433,7 @@ class BankTransactions extends React.Component {
 	};
 
 	closeExplainTransactionModal = (res) => {
+		console.log(res)
 		this.componentDidMount();
 		if (!this.state.expanded.includes(res)) {
 			this.setState(() => ({
@@ -461,7 +462,6 @@ class BankTransactions extends React.Component {
 	}
 
 	handleTableChange = (type, { page, sizePerPage }) => {
-		console.log(sizePerPage);
 		this.setState(
 			{
 				page,
@@ -620,7 +620,7 @@ class BankTransactions extends React.Component {
 			onlyOneExpanding: true,
 			renderer: (row) => (
 				< ExplainTrasactionDetail
-					closeExplainTransactionModroal={(e) => {
+				closeExplainTransactionModal={(e) => {
 						this.closeExplainTransactionModal(e);
 					}
 					}

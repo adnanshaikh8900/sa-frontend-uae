@@ -57,12 +57,12 @@ class InvoiceTemplate extends Component {
 										alt=""
 										style={{ width: ' 150px' }}
 									/>
-									<h6 className="mb-0">
+									<br></br><br></br>
+									<h3 style={{ fontWeight: '600' }} className="mb-0">
 										{companyData && companyData.company
-											? companyData.company.emailAddress
+											? companyData.company.companyName
 											: ''}
-									</h6>
-
+									</h3>
 									<h6 className="mb-0">
 										<span>
 											{companyData &&
@@ -284,6 +284,27 @@ class InvoiceTemplate extends Component {
 									})}
 							</tbody>
 						</Table>
+						<div
+							style={{
+								width: '92%',
+								display: 'flex',
+								justifyContent: 'space-between',
+								marginBottom: '1rem',
+							}}
+						>
+								<div
+								style={{
+									width: '50%',
+									display: 'flex',
+									flexDirection: 'column',
+									justifyContent: 'center',
+								}}
+							>
+								<h6 className="mb-0">
+									Notes:
+								</h6>
+								<h6 className="mb-0">{invoiceData.notes}</h6>
+							</div>
 						<Row>
 							<Col lg="8" sm="5"></Col>
 							<Col lg="4" sm="7">
@@ -470,7 +491,8 @@ class InvoiceTemplate extends Component {
 									</tbody>
 								</Table>
 							</Col>
-						</Row>
+							</Row>
+						</div>												
 					</CardBody>
 				</Card>
 			</div>

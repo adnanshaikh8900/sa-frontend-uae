@@ -37,7 +37,7 @@ class SupplierModal extends React.Component {
 				city: '',
 				contractPoNumber: '',
 				countryId: '',
-				currencyCode: 150,
+				currencyCode: '',
 				email: '',
 				firstName: '',
 				addressLine1: '',

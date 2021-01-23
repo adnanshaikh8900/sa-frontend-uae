@@ -102,8 +102,7 @@ class ViewCustomerInvoice extends React.Component {
 
 	exportPDFWithComponent = () => {
 		this.pdfExportComponent.save();
-	};
-
+	};	
 	render() {
 		const { invoiceData, currencyData, id } = this.state;
 		const { profile } = this.props;
@@ -162,7 +161,7 @@ class ViewCustomerInvoice extends React.Component {
 										currencyData={currencyData}
 										ref={(el) => (this.componentRef = el)}
 										totalNet={this.state.totalNet}
-										companyData={profile ? profile : ''}
+										companyData={profile}
 									/>
 								</PDFExport>
 							</div>

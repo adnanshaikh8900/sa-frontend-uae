@@ -64,12 +64,16 @@ class Help extends React.Component {
 												<button className="btn-pill btn btn-primary btn-lg">
 													<i className="cui-comment-square icons font-2xl d-block"></i>
 												</button> */}
-												<button className="btn-pill btn btn-primary btn-lg">
+												<button className="btn-pill btn btn-primary btn-lg"
+												>
+											
 													<i
 														className="cui-envelope-closed icons font-2xl d-block"
 														style={{ marginTop: -5 }}
 													></i>
+												
 												</button>
+												<p>info@simplevat.com</p>
 											</div>
 										</CardBody>
 									</Card>

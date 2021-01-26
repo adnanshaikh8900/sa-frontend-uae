@@ -256,24 +256,26 @@ class BankTransactions extends React.Component {
 	};
 
 	renderDepositAmount = (cell, row, rowIndex, extraData) => {
-		return row.depositeAmount >= 0 ? (
-			<Currency
-				value={row.depositeAmount}
-				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-			/>
-		) : (
-			''
-		);
+		// return row.depositeAmount >= 0 ? (
+		// 	<Currency
+		// 		value={row.depositeAmount}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// ) : (
+		// 	''
+		// );
+		return row.depositeAmount >= 0 ? row.depositeAmount.toFixed(2) : '';
 	};
 	renderWithdrawalAmount = (cell, row, rowIndex, extraData) => {
-		return row.withdrawalAmount >= 0 ? (
-			<Currency
-				value={row.withdrawalAmount}
-				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-			/>
-		) : (
-			''
-		);
+		// return row.withdrawalAmount >= 0 ? (
+		// 	<Currency
+		// 		value={row.withdrawalAmount}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// ) : (
+		// 	''
+		// );
+		return row.withdrawalAmount >= 0 ? row.withdrawalAmount.toFixed(2) : '';
 	};
 	renderRunningAmount = (cell, row) => {
 		return row.runningAmount >= 0 ? row.runningAmount.toFixed(2) : '';
@@ -521,6 +523,8 @@ class BankTransactions extends React.Component {
 			return <div className="label-info">Explained</div>;
 		} else if (row.explinationStatusEnum === 'RECONCILED') {
 			return <div className="label-success">Reconciled</div>;
+		} else if (row.explinationStatusEnum === 'PARTIAL') {
+			return <div className="label-info">Partially Explained</div>;
 		} else if (
 			row.explinationStatusEnum === 'NOT_EXPLAIN' &&
 			row.creationMode !== 'POTENTIAL_DUPLICATE'
@@ -610,6 +614,10 @@ class BankTransactions extends React.Component {
 				formatExtraData: universal_currency_list,
 			},
 			{
+				dataField: 'dueAmount',
+				text:'Due Amount'
+			},
+			{
 				dataField: 'explinationStatusEnum',
 				text: 'Status',
 				formatter: this.statusFormatter,
@@ -629,7 +637,7 @@ class BankTransactions extends React.Component {
 					selectedData={row}
 				/>
 			),
-			onlyOneExpanding: true,
+
 			expanded: [],
 			nonExpandable: nonexpand,
 			showExpandColumn: true,
@@ -736,6 +744,7 @@ class BankTransactions extends React.Component {
 													<i className="fa glyphicon glyphicon-export fa-upload mr-1" />
 													Import Statement
 												</Button>
+												{  this.props.location.state.bankAccountId !== 1001 &&(
 												<Button
 													color="success"
 													className="btn-square mr-1"
@@ -754,7 +763,7 @@ class BankTransactions extends React.Component {
 												>
 													<i className="fas fa-edit mr-1" />
 													Edit Account
-												</Button>
+												</Button>)}
 												<Button
 													color="info"
 													className="btn-square mr-1"

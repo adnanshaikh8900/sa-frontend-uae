@@ -363,7 +363,7 @@ class OpeningBalance extends React.Component {
 	
 
 	renderAmount = (cell, row) => {
-		return row.openingBalance ? row.openingBalance.toFixed(2) :'';
+		return row.openingBalance ? row.openingBalance.toFixed(2) : row.openingBalance.toFixed(2);
 	};
 	renderDate = (cell, row) => {
 		return typeof row['effectiveDate'] === 'string'

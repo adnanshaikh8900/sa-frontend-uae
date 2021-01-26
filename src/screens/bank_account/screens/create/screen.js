@@ -108,7 +108,7 @@ class CreateBankAccount extends React.Component {
 				ifsc_code: '',
 				swift_code: '',
 				countrycode: '',
-				openingDate: '',
+				openingDate: new Date(),
 				account_is_for: '',
 			},
 			currentData: {},

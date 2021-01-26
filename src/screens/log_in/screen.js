@@ -63,7 +63,7 @@ class LogIn extends React.Component {
 
 	getInitialData = () => {
 		this.props.authActions.getCompanyCount().then((response) => {
-			console.log(response.data);
+			//console.log(response.data);
 			if (response.data < 1) {
 				this.props.history.push('/register');
 			}

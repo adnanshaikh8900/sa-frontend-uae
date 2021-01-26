@@ -286,7 +286,7 @@ class InvoiceTemplate extends Component {
 						</Table>
 						<div
 							style={{
-								width: '92%',
+								width: '100%',
 								display: 'flex',
 								justifyContent: 'space-between',
 								marginBottom: '1rem',
@@ -305,9 +305,14 @@ class InvoiceTemplate extends Component {
 								</h6>
 								<h6 className="mb-0">{invoiceData.notes}</h6>
 							</div>
-						<Row>
-							<Col lg="8" sm="5"></Col>
-							<Col lg="4" sm="7">
+							<div
+								style={{
+									width: '100%',
+									display: 'flex',
+									justifyContent: 'space-between',
+								}}
+							>
+								<div style={{ width: '100%' }}>
 								<Table className="table-clear cal-table">
 									<tbody>
 										<tr style={{ textAlign: 'right' }}>
@@ -490,8 +495,8 @@ class InvoiceTemplate extends Component {
 										</tr>
 									</tbody>
 								</Table>
-							</Col>
-							</Row>
+								</div>		
+							</div>
 						</div>												
 					</CardBody>
 				</Card>

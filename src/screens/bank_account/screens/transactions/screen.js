@@ -637,7 +637,7 @@ class BankTransactions extends React.Component {
 					selectedData={row}
 				/>
 			),
-			onlyOneExpanding: true,
+
 			expanded: [],
 			nonExpandable: nonexpand,
 			showExpandColumn: true,

@@ -85,7 +85,7 @@ class CreateJournal extends React.Component {
 			],
 			idCount: 1,
 			initValue: {
-				journalDate: '',
+				journalDate: new Date(),
 				journalReferenceNo: '',
 				description: '',
 				currencyCode: '',

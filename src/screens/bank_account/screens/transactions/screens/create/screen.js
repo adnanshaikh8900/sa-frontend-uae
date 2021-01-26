@@ -474,8 +474,6 @@ class CreateBankTransaction extends React.Component {
 		let result = this.props.currency_convert_list.filter((obj) => {
 		return obj.currencyCode === value;
 		});
-		console.log( this.props.currency_convert_list)
-		console.log(result)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 		};
 
@@ -483,8 +481,6 @@ class CreateBankTransaction extends React.Component {
 			let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === value;
 			});
-			console.log( this.props.currency_convert_list)
-			console.log(result)
 			this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
 			};
 

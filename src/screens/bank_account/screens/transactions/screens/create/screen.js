@@ -80,7 +80,7 @@ class CreateBankTransaction extends React.Component {
 			initValue: {
 				transactionId: '',
 				bankAccountId: '',
-				transactionDate: '',
+				transactionDate: new Date(),
 				description: '',
 				transactionAmount: '',
 				coaCategoryId: '',

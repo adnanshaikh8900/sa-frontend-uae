@@ -170,7 +170,7 @@ class OpeningBalance extends React.Component {
 			this.props.profile.company &&
 			this.props.profile.company.currencyCode.currencyIsoCode) {
 			return (
-				<label className="badge label-info mb-0">{this.props.profile &&
+				<label className="badge label-currency mb-0">{this.props.profile &&
 					this.props.profile.company &&
 					this.props.profile.company.currencyCode.currencyIsoCode}</label>
 			);

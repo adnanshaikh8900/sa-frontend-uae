@@ -242,7 +242,7 @@ class SupplierInvoice extends React.Component {
 	renderCurrency = (cell, row) => {
 		if (row.currencyName) {
 			return (
-				<label className="badge label-info mb-0">{row.currencyName}</label>
+				<label className="badge label-currency mb-0">{row.currencyName}</label>
 			);
 		} else {
 			return <label className="badge badge-danger mb-0">No Specified</label>;

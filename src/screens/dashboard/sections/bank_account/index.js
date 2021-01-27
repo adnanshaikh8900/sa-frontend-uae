@@ -59,7 +59,7 @@ const backOption = {
 	visibility: true ,
 };
 
-const bankIcon = require('assets/images/dashboard/bank.png');
+const bankIcon = require('assets/images/dashboard/bank1.png');
 
 class BankAccount extends Component {
 	constructor(props) {
@@ -167,14 +167,14 @@ class BankAccount extends Component {
 									<div className="data-info">
 										<div className="data-item">
 											<img
-												alt="bankIcon"
+												alt="bankIcon ml-3"
 												className="d-none d-lg-block"
 												src={bankIcon}
 												style={{ width: 40, marginRight: 10 }}
 											/>
 											<div>
 												<select
-													className="form-control bank-type-select card-select"
+													className="form-control1 bank-type-select card-select mb-2"
 													ref={this.bankAccountSelect}
 													onChange={(e) => this.handleChange(e)}
 												>

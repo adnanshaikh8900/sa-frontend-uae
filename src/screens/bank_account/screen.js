@@ -184,7 +184,7 @@ class BankAccount extends React.Component {
 				case 'Saving':
 				case 'saving':
 					data = (
-						<label className="badge label-success text-white mb-0">
+						<label className="badge label-currency text-white mb-0">
 							{row.bankAccountTypeName}
 						</label>
 					);
@@ -192,7 +192,7 @@ class BankAccount extends React.Component {
 				case 'Current':
 				case 'current':
 					data = (
-						<label className="badge label-success text-white mb-0">
+						<label className="badge label-currency text-white mb-0">
 							{row.bankAccountTypeName}
 						</label>
 					);
@@ -200,7 +200,7 @@ class BankAccount extends React.Component {
 				case 'Checking':
 				case 'checking':
 					data = (
-						<label className="badge label-success text-white mb-0">
+						<label className="badge label-currency text-white mb-0">
 							{row.bankAccountTypeName}
 						</label>
 					);
@@ -208,7 +208,7 @@ class BankAccount extends React.Component {
 				case 'Credit Card':
 				case 'credit card':
 					data = (
-						<label className="badge label-danger text-white mb-0">
+						<label className="badge label-currency text-white mb-0">
 							{row.bankAccountTypeName}
 						</label>
 					);
@@ -216,7 +216,7 @@ class BankAccount extends React.Component {
 				case 'Others':
 				case 'others':
 					data = (
-						<label className="badge label-danger text-white mb-0">
+						<label className="badge label-currency text-white mb-0">
 							{row.bankAccountTypeName}
 						</label>
 					);
@@ -224,7 +224,15 @@ class BankAccount extends React.Component {
 				case 'Paypal':
 				case 'paypal':
 					data = (
-						<label className="badge label-danger text-white mb-0">
+						<label className="badge label-currency text-white mb-0">
+							{row.bankAccountTypeName}
+						</label>
+					);
+					break;
+				case 'Cash':
+				case 'Cash':
+					data = (
+						<label className="badge label-currency text-white mb-0">
 							{row.bankAccountTypeName}
 						</label>
 					);
@@ -277,7 +285,7 @@ class BankAccount extends React.Component {
 	renderCurrency = (cell, row) => {
 		if (row.currancyName) {
 			return (
-				<label className="badge label-info mb-0">{row.currancyName}</label>
+				<label className="badge label-currency mb-0">{row.currancyName}</label>
 			);
 		} else {
 			return <label className="badge badge-danger mb-0">No Specified</label>;

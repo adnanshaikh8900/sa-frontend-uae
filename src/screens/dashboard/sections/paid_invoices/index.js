@@ -137,9 +137,9 @@ class PaidInvoices extends Component {
 			<div className="animated fadeIn ">
 				<Card className="cash-card ">
 					<CardBody className="card-body-padding">
-					<div className="flex-wrapper flex-color">
-						<h1 className="mb-3 card-h1">
-								SUPPLIER & CUSTOMER PAID INVOICES 
+					<div className="flex-wrapper title-bottom-border">
+						<h1 className="mb-2 card-h1">
+								Supplier & Customer Paid Invoices 
 						</h1>
 					</div>
 							<div className="d-block p-4">

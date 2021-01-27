@@ -147,10 +147,10 @@ class BankAccount extends Component {
 			<div className="animated fadeIn  ">
 				<Card className="bank-card card-margin ">
 					<CardBody className="tab-card">
-						<div className="flex-wrapper  flex-color">
-						<h1 className="card-h1">BANKING</h1>
+						<div className="flex-wrapper title-bottom-border">
+						<h1 className="card-h1">Banking</h1>
 						
-							<div className="card-header-actions card-select-alignment">
+							<div className="mb-1 card-header-actions card-select-alignment">
 								<select
 									className="form-control  card-select"
 									ref={this.dateRangeSelect}
@@ -174,7 +174,7 @@ class BankAccount extends Component {
 											/>
 											<div>
 												<select
-													className="form-control bank-type-select"
+													className="form-control bank-type-select card-select"
 													ref={this.bankAccountSelect}
 													onChange={(e) => this.handleChange(e)}
 												>

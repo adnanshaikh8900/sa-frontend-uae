@@ -160,7 +160,7 @@ class Receipt extends React.Component {
 	renderCurrency = (cell, row) => {
 		if (row.currencyIsoCode) {
 			return (
-				<label className="badge label-info mb-0">{row.currencyIsoCode}</label>
+				<label className="badge label-currency mb-0">{row.currencyIsoCode}</label>
 			);
 		} else {
 			return <label className="badge badge-danger mb-0">No Specified</label>;

@@ -134,12 +134,13 @@ $spinkit-spinner-color: $body-color;
 	border: 1px solid #2064d8 !important;
 	box-shadow: none !important;
 }
+
 .invoice-detail {
 	font-weight: 600;
 }
 .label-success {
-	background-color: #e5f9ed !important;
-	color: #1bc943 !important;
+	background-color: #e7faed !important;
+	color: #1bc852 !important;
 	display: inline;
 	padding: 4px 10px;
 	font-weight: 600;
@@ -159,8 +160,36 @@ $spinkit-spinner-color: $body-color;
 	font-weight: 600;
 }
 .label-bank {
-	background-color: #fff5f6 !important;
-	color: #0a58e7 !important;
+	background-color: #e8effb !important;
+	color: #2165d8 !important;
+	display: inline;
+	padding: 4px 10px;
+	font-weight: 600;
+}
+.label-overdue {
+	background-color: #f5e5e5 !important;
+	color: #a10808 !important;
+	display: inline;
+	padding: 4px 10px;
+	font-weight: 600;
+}
+.label-due {
+	background-color: #fee5e5 !important;
+	color: #f10101 !important;
+	display: inline;
+	padding: 4px 10px;
+	font-weight: 600;
+}
+.label-PartiallyPaid {
+	background-color: #fff8e7 !important;
+	color: #ffbb17 !important;
+	display: inline;
+	padding: 4px 10px;
+	font-weight: 600;
+}
+.label-currency {
+	background-color: #f1f1f1 !important;
+	color: #727272 !important;
 	display: inline;
 	padding: 4px 10px;
 	font-weight: 600;

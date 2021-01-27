@@ -30,9 +30,9 @@ const cashBarOption = {
 	maintainAspectRatio: false,
 };
 
-const incomeIcon = require('assets/images/dashboard/income.png');
-const outcomeIcon = require('assets/images/dashboard/outcome.png');
-const totalIcon = require('assets/images/dashboard/total.png');
+const incomeIcon = require('assets/images/dashboard/Inflow.png');
+const outcomeIcon = require('assets/images/dashboard/Outflow.png');
+const totalIcon = require('assets/images/dashboard/Net.png');
 
 class CashFlow extends Component {
 	constructor(props) {
@@ -84,7 +84,7 @@ class CashFlow extends Component {
 					<CardBody className="tab-card">
 						<div className="flex-wrapper title-bottom-border" >
 							<h1 className="mb -2 card-h1">Cashflow</h1>
-							<hr></hr>
+							
 							<div className=" mb-1 card-header-actions card-select-alignment">
 								<select
 									className="form-control card-select"
@@ -118,8 +118,8 @@ class CashFlow extends Component {
 									</h3>
 									<p>INFLOW</p>
 								</div>
-							</div>
-							<div className="data-item">
+							</div> 
+							<div className="data-item ml-4">
 								<img alt="outgoing" src={outcomeIcon} />
 								<div>
 									<h3>
@@ -140,7 +140,7 @@ class CashFlow extends Component {
 									<p>OUTFLOW</p>
 								</div>
 							</div>
-							<div className="data-item total">
+							<div className="data-item total ml-4">
 								<img alt="total" src={totalIcon} />
 								<div>
 									<h3>

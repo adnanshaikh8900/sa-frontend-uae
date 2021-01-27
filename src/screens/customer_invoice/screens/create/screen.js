@@ -936,10 +936,9 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 		formData.append(
 			'invoiceDate',
 			invoiceDate
-				? moment(
-						moment(invoiceDate).format('DD/MM/YYYY'),
-						'DD/MM/YYYY',
-				  ).toDate()
+				?
+						moment(invoiceDate,'DD/MM/YYYY')
+						.toDate()
 				: null,
 		);
 		formData.append(

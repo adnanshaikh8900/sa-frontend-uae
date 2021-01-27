@@ -121,10 +121,10 @@ class Invoice extends Component {
 			<div className="animated fadeIn  ">
 				<Card className="invoice-card card-margin">
 					<CardBody className="tab-card">
-						<div className="flex-wrapper flex-color">
-						<h1 className="card-h1">CUSTOMER INVOICE TIMELINE</h1>
+						<div className="flex-wrapper title-bottom-border">
+						<h1 className="mb-2 card-h1">Customer Invoice Timeline</h1>
 							
-							<div className="card-header-actions card-select-alignment">
+							<div className="mb-1 card-header-actions card-select-alignment">
 								<select
 									className="form-control card-select"
 									ref={this.dateRangeSelect}

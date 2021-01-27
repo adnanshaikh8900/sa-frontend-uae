@@ -69,10 +69,13 @@
 }
 .card-select{
 	background: white !important; 
-	border: 2px solid !important;
+	border: 1px solid !important;
 	}
 
 .card-visibility{
 	overflow: inherit !important;
 	visibility: visible !important;
+}
+.title-bottom-border{
+	border-bottom: 1px solid #c8ced3;
 }

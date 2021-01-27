@@ -1,7 +1,7 @@
  //Invoice Card
 .invoice-card {
   h1 {
-		font-size: 25px;
+		font-size: 21px;
 		margin-right: 50px;
 		color: #2064d8;
 		font-weight:bold
@@ -46,4 +46,8 @@
 .card-select{
 	background: white !important; 
 	border: 2px solid !important;
-	}
+  }
+ 
+.title-bottom-border{
+		border-bottom: 1px solid #c8ced3;
+	} 

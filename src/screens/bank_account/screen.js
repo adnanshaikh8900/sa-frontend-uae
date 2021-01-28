@@ -299,18 +299,20 @@ class BankAccount extends React.Component {
 	};
 
 	renderBalance(cell, row, extraData) {
-		return row.openingBalance === 0 ? (
-			<Currency
-				value={row.openingBalance}
-				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-			/>
-		) : (
-			<Currency
-				value={row.openingBalance}
-				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-			/>
-		);
-	}
+		// return row.openingBalance === 0 ? (
+		// 	<Currency
+		// 		value={row.openingBalance}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// ) : (
+		// 	<Currency
+		// 		value={row.openingBalance}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// );
+
+		return row.openingBalance ? row.openingBalance.toFixed(2) : row.openingBalance.toFixed(2);
+	};
 	renderActions = (cell, row) => {
 		return (
 			<div>
@@ -442,12 +444,13 @@ class BankAccount extends React.Component {
 				<div>
 					<label className="font-weight-bold ">Reconciled <br />Balance : </label>
 					<label className="badge label-bank ">
-						<Currency
+						{/* <Currency
 							value={row.closingBalance}
 							currencySymbol={
 								extraData[0] ? extraData[0].currencyIsoCode : 'USD'
 							}
-						/>
+						/> */}
+						{/* {row.closingBalance ? row.closingBalance.toFixed(2) : row.closingBalance.toFixed(2)} */}
 					</label>
 				</div>
 				<div>

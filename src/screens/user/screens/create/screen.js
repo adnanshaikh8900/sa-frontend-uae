@@ -30,7 +30,8 @@ import * as Yup from 'yup';
 
 import './style.scss';
 
-const eye = require('assets/images/invoice/eye-24.png');
+
+const eye = require('assets/images/settings/eye.png');
 const mapStateToProps = (state) => {
 	return {
 		role_list: state.user.role_list,

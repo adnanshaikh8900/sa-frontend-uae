@@ -384,15 +384,42 @@ class VatReturnsReport extends React.Component {
 																<td className="mainLable ">1a</td>
 																<td className="pt-0 pb-0">Standard rated supplies in Abu Dhabi</td>
 																<td className="pt-0 pb-0 ">
-																		{this.state.data[
+																			{this.state.data[
 																				'totalAmountForAbuDhabi'
-																			] 
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'totalAmountForAbuDhabi'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
 																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)}
 																</td>
 																<td className="pt-0 pb-0 ">
 																			{this.state.data[
 																				'totalVatForAbuDhabi'
-																			]}
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'totalVatForAbuDhabi'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)}
 																</td>
 																<td className="pt-0 pb-0 ">
 																			{/* {this.state.data[
@@ -409,12 +436,40 @@ class VatReturnsReport extends React.Component {
 																<td className="pt-0 pb-0 ">
 																			{this.state.data[
 																				'totalAmountForAjman'
-																			] }
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'totalAmountForAjman'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)}
 																</td>
 																<td className="pt-0 pb-0 ">
 																			{this.state.data[
 																				'totalVatForAjman'
-																			]}
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'totalVatForAjman'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)}
 																</td>
 																<td className="pt-0 pb-0 ">
 																			{/* {this.state.data[
@@ -431,12 +486,40 @@ class VatReturnsReport extends React.Component {
 																<td className="pt-0 pb-0 ">
 																			{this.state.data[
 																				'totalAmountForDubai'
-																			] }
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'totalAmountForDubai'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)}
 																</td>
 																<td className="pt-0 pb-0 ">
 																			{this.state.data[
 																				'totalVatForDubai'
-																			]}
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'totalVatForDubai'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)}
 																</td>
 																<td className="pt-0 pb-0 ">
 																			{/* {this.state.data[
@@ -453,12 +536,40 @@ class VatReturnsReport extends React.Component {
 																<td className="pt-0 pb-0 ">
 																			{this.state.data[
 																				'totalAmountForFujairah'
-																			] }
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'totalAmountForFujairah'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)}
 																</td>
 																<td className="pt-0 pb-0 ">
 																			{this.state.data[
 																				'totalVatForFujairah'
-																			]}
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'totalVatForFujairah'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)}
 																</td>
 																<td className="pt-0 pb-0 ">
 																			{/* {this.state.data[
@@ -473,14 +584,43 @@ class VatReturnsReport extends React.Component {
 																<td className="mainLable ">1e</td>
 																<td className="pt-0 pb-0">Standard rated supplies in Ras Al Khalmah</td>
 																<td className="pt-0 pb-0 ">
-																			{this.state.data[
+																				{this.state.data[
 																				'totalAmountForRasAlKhalmah'
-																			] }
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'totalAmountForRasAlKhalmah'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)}
 																</td>
 																<td className="pt-0 pb-0 ">
 																			{this.state.data[
 																				'totalVatForRasAlKhalmah'
-																			]}
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'totalVatForRasAlKhalmah'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)}
+																		
 																</td>
 																<td className="pt-0 pb-0 ">
 																			{/* {this.state.data[
@@ -495,14 +635,42 @@ class VatReturnsReport extends React.Component {
 																<td className="mainLable ">1f</td>
 																<td className="pt-0 pb-0">Standard rated supplies in Sharjah</td>
 																<td className="pt-0 pb-0 ">
-																			{this.state.data[
+																				{this.state.data[
 																				'totalAmountForSharjah'
-																			] }
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'totalAmountForSharjah'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)}
 																</td>
 																<td className="pt-0 pb-0 ">
-																			{this.state.data[
+																				{this.state.data[
 																				'totalVatForSharjah'
-																			]}
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'totalVatForSharjah'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)}
 																</td>
 																<td className="pt-0 pb-0 ">
 																			{/* {this.state.data[
@@ -519,12 +687,40 @@ class VatReturnsReport extends React.Component {
 																<td className="pt-0 pb-0 ">
 																			{this.state.data[
 																				'totalAmountForUmmAlQuwain'
-																			] }
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'totalAmountForUmmAlQuwain'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)}
 																</td>
 																<td className="pt-0 pb-0 ">
 																			{this.state.data[
 																				'totalVatForUmmAlQuwain'
-																			]}
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'totalVatForUmmAlQuwain'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)}
 																</td>
 																<td className="pt-0 pb-0 ">
 																			{/* {this.state.data[
@@ -673,14 +869,41 @@ class VatReturnsReport extends React.Component {
 																<td className="pt-0 pb-0 ">
 																			{this.state.data[
 																				'totalAmount'
-																			] }
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'totalAmount'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)}
 																			
 																</td>
 																<td className="pt-0 pb-0 ">
 																			{this.state.data[
 																				'totalVatAmount'
-																			]}
-																		
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'totalVatAmount'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)}
 																</td>
 																<td className="pt-0 pb-0 ">
 																			{/* {this.state.data[

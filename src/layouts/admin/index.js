@@ -93,6 +93,9 @@ class AdminLayout extends React.Component {
 	render() {
 		const containerStyle = {
 			zIndex: 1999,
+			closeOnClick: true,
+			draggable: true,
+			
 		};
 		const { user_role_list, user_list } = this.props;
 		var arr = [];
@@ -174,8 +177,10 @@ class AdminLayout extends React.Component {
 								<Suspense fallback={Loading()}>
 									<ToastContainer
 										position="top-right"
-										autoClose={5000}
+										autoClose={1700}
 										style={containerStyle}
+										closeOnClick
+            							draggable
 									/>
 									<Switch>
 										{adminRoutes.map((prop, key) => {

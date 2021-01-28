@@ -47,8 +47,10 @@ class DataBackup extends React.Component {
         <div className="animated fadeIn">
           <ToastContainer
             position="top-right"
-            autoClose={5000}
+            autoClose={1700}
             style={containerStyle}
+            closeOnClick
+            draggable
           />
 
           <Card>

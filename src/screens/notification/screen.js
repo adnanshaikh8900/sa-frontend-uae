@@ -42,15 +42,19 @@ class Notification extends React.Component {
   render() {
     const { loading } = this.state;
     const containerStyle = {
-      zIndex: 1999
+      zIndex: 1999,closeOnClick: true,
+      draggable: true
+      
     };
 
     return (
       <div className="notification-screen">
         <div className="animated fadeIn">
           <ToastContainer
+          	closeOnClick
+            draggable
             position="top-right"
-            autoClose={5000}
+            autoClose={1700}
             style={containerStyle}
           />
 

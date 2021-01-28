@@ -8,6 +8,7 @@ const initState = {
 	universal_currency_list: [],
 	currency_list: [],
 	user_role_list: [],
+	company_profile: [],
 };
 
 const CommonReducer = (state = initState, action) => {
@@ -65,7 +66,11 @@ const CommonReducer = (state = initState, action) => {
 				...state,
 				currency_list: Object.assign([], payload.data),
 			};
-
+			case COMMON.COMPANY_PROFILE:
+				return {
+					...state,
+					company_profile: Object.assign([], payload.data),
+				};
 		default:
 			return state;
 	}

@@ -210,24 +210,46 @@ class VatTransactions extends React.Component {
 	};
 
 	renderAmount(cell, row, extraData) {
-		return row.amount ? (
+		// return row.amount ? (
+		// 	<Currency
+		// 		value={row.amount}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// ) : (
+		// 	row.amount
+		// );
+		return row.amount === 0 ? (
 			<Currency
 				value={row.amount}
 				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 			/>
 		) : (
-			row.amount
+			<Currency
+				value={row.amount}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
 		);
 	}
 
 	renderVatAmount(cell, row, extraData) {
-		return row.vatAmount ? (
+		// return row.vatAmount ? (
+		// 	<Currency
+		// 		value={row.vatAmount}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// ) : (
+		// 	row.vatAmount
+		// );
+		return row.vatAmount === 0 ? (
 			<Currency
 				value={row.vatAmount}
 				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 			/>
 		) : (
-			row.vatAmount
+			<Currency
+				value={row.vatAmount}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
 		);
 	}
 	

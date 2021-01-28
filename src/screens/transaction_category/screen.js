@@ -148,7 +148,8 @@ class TransactionCategory extends React.Component {
     const { loading } = this.state;
     const transactionList = this.props.transaction_list
     const containerStyle = {
-      zIndex: 1999
+      zIndex: 1999,closeOnClick: true,
+      draggable: true
     };
 
     return (
@@ -156,8 +157,10 @@ class TransactionCategory extends React.Component {
         <div className="animated fadeIn">
           <ToastContainer
             position="top-right"
-            autoClose={5000}
+            autoClose={1700}
             style={containerStyle}
+            closeOnClick
+            draggable
           />
           <Card>
             <CardHeader>

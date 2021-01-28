@@ -149,7 +149,9 @@ class Organization extends React.Component {
     const { loading } = this.state;
     const { country_list, industry_type_list } = this.props
     const containerStyle = {
-      zIndex: 1999
+      zIndex: 1999,closeOnClick: true,
+      draggable: true
+      
     };
 
     return (
@@ -157,8 +159,10 @@ class Organization extends React.Component {
         <div className="animated fadeIn">
           <ToastContainer
             position="top-right"
-            autoClose={5000}
+            autoClose={1700}
             style={containerStyle}
+            closeOnClick
+            draggable
           />
 
           <Card>

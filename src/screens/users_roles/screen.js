@@ -114,15 +114,18 @@ class UsersRoles extends React.Component {
 	render() {
 		const { loading, openInviteUserModal } = this.state;
 		const containerStyle = {
-			zIndex: 1999,
+			zIndex: 1999,closeOnClick: true,
+			draggable: true
 		};
 		const { role_list } = this.props;
 		return (
 			<div className="transaction-category-screen">
 				<div className="animated fadeIn">
 					<ToastContainer
+						closeOnClick
+            			draggable					
 						position="top-right"
-						autoClose={5000}
+						autoClose={1700}
 						style={containerStyle}
 					/>
 

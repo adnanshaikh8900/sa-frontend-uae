@@ -98,7 +98,10 @@ class Currency extends React.Component {
   render() {
     const { loading, openCurrencyModal } = this.state;
     const containerStyle = {
-      zIndex: 1999
+      zIndex: 1999,
+      closeOnClick: true,
+      draggable: true
+
     };
 
     
@@ -114,8 +117,10 @@ class Currency extends React.Component {
         <div className="animated fadeIn">
           <ToastContainer
             position="top-right"
-            autoClose={5000}
+            autoClose={1700}
             style={containerStyle}
+            closeOnClick
+            draggable
           />
 
           <Card>

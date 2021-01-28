@@ -14,7 +14,7 @@ import {
 } from 'reactstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { CommonActions } from 'services/global';
-import { Loader } from 'components';
+import { Loader, Currency} from 'components';
 import * as OpeningBalanceActions from './actions';
 import './style.scss';
 import moment from 'moment';
@@ -362,8 +362,19 @@ class OpeningBalance extends React.Component {
 
 	
 
-	renderAmount = (cell, row) => {
-		return row.openingBalance ? row.openingBalance.toFixed(2) : row.openingBalance.toFixed(2);
+	renderAmount = (cell, row, extraData) => {
+			return row.openingBalance === 0 ? (
+			<Currency
+				value={row.openingBalance}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			<Currency
+				value={row.openingBalance}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		);
+		//return row.openingBalance ? row.openingBalance.toFixed(2) : row.openingBalance.toFixed(2);
 	};
 	renderDate = (cell, row) => {
 		return typeof row['effectiveDate'] === 'string'
@@ -570,6 +581,7 @@ class OpeningBalance extends React.Component {
 												width="20%"
 												dataField="openingBalance"
 												dataFormat={this.renderAmount}
+												formatExtraData={universal_currency_list}
 												dataSort
 												className="table-header-bg"
 											>

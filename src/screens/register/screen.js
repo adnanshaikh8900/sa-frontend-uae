@@ -178,7 +178,11 @@ class Register extends React.Component {
 		const {universal_currency_list} = this.props;
 		return (
 			<div className="log-in-screen">
-				<ToastContainer autoClose={5000} />
+				<ToastContainer
+				 autoClose={1700} 
+				closeOnClick
+            	draggable				
+				/>
 				<div className="animated fadeIn">
 					<div className="app flex-row align-items-center">
 						<Container>

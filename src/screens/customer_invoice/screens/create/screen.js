@@ -2065,6 +2065,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																							type="number"
 																							name="discount"
 																							maxLength="10"
+																							
 																							disabled={
 																								props.values.discountType &&
 																								props.values.discountType

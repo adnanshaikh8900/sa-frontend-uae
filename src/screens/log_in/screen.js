@@ -23,9 +23,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
-import login_bg from 'assets/images/brand/login_bg.png';
-import login_banner from 'assets/images/brand/login_banner.png';
-import login_image from 'assets/images/brand/login_image.png';
+
 
 const mapStateToProps = (state) => {
 	return {
@@ -33,7 +31,8 @@ const mapStateToProps = (state) => {
 	};
 };
 
-const eye = require('assets/images/invoice/eye-24.png');
+const eye = require('assets/images/settings/eye.png');
+const noteye = require('assets/images/settings/noteye.png')
 const mapDispatchToProps = (dispatch) => {
 	return {
 		authActions: bindActionCreators(AuthActions, dispatch),
@@ -125,7 +124,11 @@ class LogIn extends React.Component {
 		const { initValue } = this.state;
 		return (
 			<div className="log-in-screen">
-				<ToastContainer />
+				<ToastContainer 	
+				 position="top-right"
+				 autoClose={1700}									
+				closeOnClick
+            	draggable/>
 				<div className="animated fadeIn ">
 				<div className="main-banner_container col-md-12 flex">
 													{/* <img src={login_bg} alt="login_bg" className="login_bg" /> */}

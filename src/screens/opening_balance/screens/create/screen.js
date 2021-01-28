@@ -182,7 +182,7 @@ class CreateOpeningBalance extends React.Component {
 													return (
 														<form onSubmit={handleSubmit}>
 																<Row>
-																<Col lg={3}>
+																<Col lg={4}>
 																<FormGroup className="mb-3">
 																<Label htmlFor="transactionCategoryBalanceId">
 																<span className="text-danger">*</span>
@@ -225,7 +225,7 @@ class CreateOpeningBalance extends React.Component {
 																			</FormGroup>
 																				</Col>
 															
-																<Col lg={3}>
+																<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="effectiveDate">
 																		<span className="text-danger">*</span>
@@ -263,7 +263,7 @@ class CreateOpeningBalance extends React.Component {
 																
 															</Row>
 															<Row>
-															<Col lg={3}>
+															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="openingBalance">
 																		<span className="text-danger">*</span>Amount

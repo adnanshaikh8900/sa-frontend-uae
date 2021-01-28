@@ -354,6 +354,8 @@ class DetailCurrencyConvert extends React.Component {
 															</Row>
                                 <Row>
                                   <Col lg={10} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">
+                                  {this.state.current_currency_convert_id !== 1 &&
+																	  (
                                   <FormGroup className="text-right">
                                   <Button
 																			type="button"
@@ -364,11 +366,13 @@ class DetailCurrencyConvert extends React.Component {
 																		>
 																			<i className="fa fa-trash"></i> Delete
 																		</Button>
-																	</FormGroup>
+																	</FormGroup>)}
                                      <FormGroup className="text-right">
+                                     {this.state.current_currency_convert_id !== 1 &&
+																	  (
                                       <Button type="submit" name="submit" color="primary" className="btn-square mr-3">
                                         <i className="fa fa-dot-circle-o"></i> Update
-                                      </Button>
+                                      </Button>)}
                                       <Button type="submit" color="secondary" className="btn-square"
                                         onClick={() => { this.props.history.push('/admin/master/CurrencyConvert') }}>
                                         <i className="fa fa-ban"></i> Cancel

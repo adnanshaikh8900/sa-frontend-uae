@@ -30,11 +30,13 @@ import { Loader, Currency } from 'components';
 import * as FinancialReportActions from '../../actions';
 import FilterComponent from '../filterComponent';
 import logo from 'assets/images/brand/logo.png';
+import { CommonActions } from 'services/global';
 
 const mapStateToProps = (state) => {
 	return {
 		profile: state.auth.profile,
 		universal_currency_list: state.common.universal_currency_list,
+		company_profile: state.common.company_profile,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -43,6 +45,7 @@ const mapDispatchToProps = (dispatch) => {
 			FinancialReportActions,
 			dispatch,
 		),
+		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
 
@@ -120,6 +123,7 @@ class BalanceSheet extends React.Component {
 
 	componentDidMount = () => {
 		this.initializeData();
+		this.props.commonActions.getCompany() 
 	};
 
 	initializeData = () => {
@@ -172,7 +176,7 @@ class BalanceSheet extends React.Component {
 
 	render() {
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
-		const { profile, universal_currency_list } = this.props;
+		const { profile, universal_currency_list,company_profile } = this.props;
 		return (
 			<div className="transactions-report-screen">
 				<div className="animated fadeIn">
@@ -279,10 +283,9 @@ class BalanceSheet extends React.Component {
 												</div>
 									<div style={{ textAlign: 'center'}}>
 										<p><h2>
-											{profile &&
-											profile.company &&
-											profile.company['companyName']
-												? profile.company['companyName']
+										{company_profile &&
+											company_profile['companyName']
+												? company_profile['companyName']
 												: ''}
 											</h2>	
 											<br style={{ marginBottom: '5px' }} />

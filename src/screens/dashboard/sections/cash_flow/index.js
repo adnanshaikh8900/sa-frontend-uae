@@ -80,7 +80,7 @@ class CashFlow extends Component {
 		const { universal_currency_list } = this.props;
 		return (
 			<div className="animated fadeIn ">
-				<Card className="cash-card card-margin">
+				<Card className="cash-card card-margin mt-4">
 					<CardBody className="tab-card">
 						<div className="flex-wrapper title-bottom-border" >
 							<h1 className="mb -2 card-h1">Cashflow</h1>

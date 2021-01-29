@@ -366,7 +366,7 @@ class SupplierModal extends React.Component {
 											<Col md="4">
 												<FormGroup>
 													<Label htmlFor="currencyCode">
-														Currency Code
+													<span className="text-danger">*</span>Currency
 													</Label>
 													<Select
 														options={

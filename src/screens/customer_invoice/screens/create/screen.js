@@ -2015,16 +2015,18 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																							<Label htmlFor="discountPercentage">
 																								Percentage
 																							</Label>
+																							
 																							<Input
+																							
 																								id="discountPercentage"
 																								name="discountPercentage"
-																								placeholder="Discount Percentage"
+																								placeholder="Discount Percentage  %"
 																								type="number"
 																								maxLength="5"
 																								value={
 																									props.values
 																										.discountPercentage
-																								}
+																							}
 																								onChange={(e) => {
 																									if (
 																										e.target.value === '' ||
@@ -2050,6 +2052,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																									}
 																								}}
 																							/>
+																						
 																						</FormGroup>
 																					</Col>
 																				) : null}

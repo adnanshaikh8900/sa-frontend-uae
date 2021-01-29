@@ -61,12 +61,12 @@ class Dashboard extends React.Component {
 		return (
 			<div className="dashboard-screen">
 				<div className="animated fadeIn">
-					<PaidInvoices {...this.props} />
-					<CardColumns className="cols-2 mb-3">
-					<BankAccount {...this.props} />
 					<CashFlow {...this.props} />
-					<Invoice {...this.props} />
-					<ProfitAndLossReport {...this.props}/>
+					<CardColumns className="cols-2 mb-3">
+						<BankAccount {...this.props} />
+						<RevenueAndExpense {...this.props} />
+						<Invoice {...this.props} />
+						<ProfitAndLoss {...this.props} />
 					</CardColumns>
 				</div>
 			</div>

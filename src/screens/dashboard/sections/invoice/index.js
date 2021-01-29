@@ -18,8 +18,8 @@ import './style.scss';
 
 const invoiceOption = {
 	tooltips: {
-		enabled: false,
-		custom: CustomTooltips,
+		enabled: true,
+		//custom: CustomTooltips,
 	},
 	legend: {
 		display: true,
@@ -40,6 +40,7 @@ const invoiceOption = {
 			},
 		],
 	},
+	responsive: true,
 	maintainAspectRatio: false,
 };
 

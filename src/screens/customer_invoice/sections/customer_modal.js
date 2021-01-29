@@ -173,6 +173,7 @@ class CustomerModal extends React.Component {
 							//       currencyCode: Yup.string()
 							//       .required("Please Select Currency")
 							//       .nullable(),
+							currencyCode: Yup.string().required('Please Select Currency'),
 						})}
 					>
 						{(props) => {
@@ -355,7 +356,7 @@ class CustomerModal extends React.Component {
 															<Col md="4">
 												<FormGroup>
 													<Label htmlFor="currrencyCode">
-														 Currency
+													<span className="text-danger">*</span>Currency
 													</Label>
 													<Select
 														options={

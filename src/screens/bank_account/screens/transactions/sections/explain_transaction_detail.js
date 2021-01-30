@@ -130,6 +130,7 @@ class ExplainTrasactionDetail extends React.Component {
 						initValue: {
 							bankId: bankId,
 							amount: res.data.amount ? res.data.amount : '',
+							dueAmount:res.data.dueAmount ? res.data.dueAmount : '',
 							date: res.data.date
 								? moment(res.data.date, 'DD/MM/YYYY').format('DD/MM/YYYY')
 								: '',
@@ -424,6 +425,7 @@ class ExplainTrasactionDetail extends React.Component {
 			reference,
 			description,
 			amount,
+			dueAmount,
 			coaCategoryId,
 			transactionCategoryId,
 			vendorId,
@@ -437,7 +439,6 @@ class ExplainTrasactionDetail extends React.Component {
 			transactionId,
 			expenseCategory,
 		} = data;
-		console.log(expenseCategory);
 		if (
 			(invoiceIdList && coaCategoryId.label === 'Sales') ||
 			(invoiceIdList && coaCategoryId.label === 'Supplier Invoice')
@@ -467,6 +468,7 @@ class ExplainTrasactionDetail extends React.Component {
 		);
 		formData.append('description', description ? description : '');
 		formData.append('amount', amount ? amount : '');
+		formData.append('dueAmount', dueAmount ? dueAmount : '');
 		formData.append('coaCategoryId', coaCategoryId ? id : '');
 		if (transactionCategoryId) {
 			formData.append(

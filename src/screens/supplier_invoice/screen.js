@@ -1094,7 +1094,7 @@ class SupplierInvoice extends React.Component {
 												Supplier Name
 											</TableHeaderColumn>
 											<TableHeaderColumn
-												width="7%"
+												width="10%"
 												dataField="status"
 												dataFormat={this.renderInvoiceStatus}
 												dataSort

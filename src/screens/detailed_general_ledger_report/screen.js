@@ -80,10 +80,10 @@ class DetailedGeneralLedgerReport extends React.Component {
 				sort: true,
 			},
 			{ label: 'Transaction#', value: 'transactonRefNo', sort: true },
-			{ label: 'Reference#', value: 'referenceNo', sort: false },
-			{ label: 'Debit', value: 'debitAmount', sort: false, align: 'right' },
-			{ label: 'Credit', value: 'creditAmount', sort: false, align: 'right' },
-			{ label: 'Amount', value: 'amount', sort: false, align: 'right' },
+			{ label: 'Reference#', value: 'referenceNo', sort: false,align: 'right'  },
+			{ label: 'Debit', value: 'debitAmount', sort: false, align: 'left' },
+			{ label: 'Credit', value: 'creditAmount', sort: false, align: 'left' },
+			{ label: 'Amount', value: 'amount', sort: false, align: 'left' },
 		];
 	}
 
@@ -504,7 +504,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 																						<td style={{ width: '15%' }}>
 																							{row.debitAmount > 0 && (
 																								<p
-																									className="text-right"
+																									className="text-left"
 																									// onClick={() =>
 																									// 	this.getInvoice(
 																									// 		row[
@@ -533,7 +533,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 																						<td>
 																							<p
 																								style={{ color: '#000000' }}
-																								className="text-right"
+																								className="text-left"
 																							>
 																								{row.debitAmount !== null ? (
 																									<Currency
@@ -561,7 +561,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 																						<td style={{ width: '15%' }}>
 																							{row.creditAmount > 0 && (
 																								<p
-																									className="text-right"
+																									className="text-left"
 																									// onClick={() =>
 																									// 	this.getInvoice(
 																									// 		row[
@@ -590,7 +590,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 																						<td>
 																							<p
 																								style={{ color: '#000000' }}
-																								className="text-right"
+																								className="text-left"
 																							>
 																								{row.creditAmount !== null ? (
 																									<Currency
@@ -615,7 +615,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 																					row['postingReferenceTypeEnum'] !==
 																						'Closing Balance' ? (
 																						<td
-																							className="amount-col text-right"
+																							className="amount-col text-left"
 																							style={{ width: '15%' }}
 																							// onClick={() =>
 																							// 	this.getInvoice(

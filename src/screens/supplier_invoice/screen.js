@@ -200,11 +200,13 @@ class SupplierInvoice extends React.Component {
 		if (row.status === 'Paid') {
 			classname = 'label-success';
 		} else if (row.status === 'Draft') {
-			classname = 'label-danger';
-		} else if (row.status === 'Pending') {
-			classname = 'label-danger';
+			classname = 'label-currency';
+		} else if (row.status === 'Partially Paid') {
+			classname = 'label-PartiallyPaid';
+		}else if (row.status === 'Due Today') {
+			classname = 'label-due';
 		} else {
-			classname = 'label-info';
+			classname = 'label-overdue';
 		}
 		return (
 			<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>

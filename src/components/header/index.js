@@ -65,7 +65,7 @@ class Header extends Component {
 			<React.Fragment>
 				<AppSidebarToggler className="d-lg-none" display="md" mobile />
 				<AppNavbarBrand
-					className="p-2 ml-3 mt-1"
+					className="p-2 ml-3 "
 					tag={NavLink}
 					to={'/admin/dashboard'}
 					full={{

@@ -23,7 +23,7 @@ class Footer extends Component {
         <div className="d-flex align-items-center justify-content-between w-100">
           <img src={logo} className="m-2 footer-logo" alt="logo"/>
           <span>
-            <Link to="/admin">SimpleVAT Version </Link>&nbsp;
+            <Link to="/admin">Simple Accounts Version </Link>&nbsp;
             {
               version !== '' ?
                 <label className="mb-0 text-primary">v. {version}</label>

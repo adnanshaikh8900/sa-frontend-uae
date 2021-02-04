@@ -690,7 +690,7 @@ class BankTransactions extends React.Component {
 													</h3>
 												</Col>
 												<Col lg={3}>
-													<h5>SimpleVat Balance</h5>
+													<h5>Simple Accounts Balance</h5>
 													<h3>
 														{universal_currency_list[0] && (
 															<Currency

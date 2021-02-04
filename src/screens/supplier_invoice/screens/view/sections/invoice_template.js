@@ -63,12 +63,6 @@ class InvoiceTemplate extends Component {
 											: ''}
 									</h3>
 									<h6 className="mb-0">
-										{companyData && companyData.company
-											? companyData.company.emailAddress
-											: ''}
-									</h6>
-
-									<h6 className="mb-0">
 										<span>
 											{companyData &&
 												companyData.company &&
@@ -99,7 +93,14 @@ class InvoiceTemplate extends Component {
 									</h6>
 								</div>
 							</div>
-							<div style={{ width: '40%', textAlign: 'right' }}>
+							<div
+								style={{
+									width: '40%',
+									display: 'flex',
+									flexDirection: 'column',
+									justifyContent: 'center',
+								}}
+							>
 								<Table className="table-clear">
 									<tbody>
 										<tr style={{ textAlign: 'right' }}>
@@ -108,19 +109,20 @@ class InvoiceTemplate extends Component {
 													width: '75%',
 													fontSize: '2rem',
 													fontWeight: '700',
-													color: '#6a4bc4',
+													textTransform: 'uppercase',
+													color: '#2165d8',
 												}}
 											>
 												Invoice
 											</td>
 										</tr>
 										<tr style={{ textAlign: 'right' }}>
-											<td style={{ width: '75%' }}>
+											<td style={{ width: '75%' }} className="p-0">
 												# {invoiceData.referenceNumber}
 											</td>
 										</tr>
 										<tr style={{ textAlign: 'right' }}>
-											<td style={{ width: '75%' }}>
+											<td style={{ width: '75%' }} className="p-0">
 												{' '}
 												Balance Due
 												<br />
@@ -129,6 +131,12 @@ class InvoiceTemplate extends Component {
 														fontWeight: '600',
 													}}
 												>
+													<span
+														style={{
+															unicodeBidi: 'embed',
+															paddingRight: '5px',
+														}}
+													></span>
 													{invoiceData.dueAmount ? (
 														<Currency
 															value={invoiceData.dueAmount}
@@ -277,7 +285,7 @@ class InvoiceTemplate extends Component {
 						</Table>
 						<div
 							style={{
-								width: '92%',
+								width: '100%',
 								display: 'flex',
 								justifyContent: 'space-between',
 								marginBottom: '1rem',
@@ -296,9 +304,14 @@ class InvoiceTemplate extends Component {
 								</h6>
 								<h6 className="mb-0">{invoiceData.notes}</h6>
 							</div>
-						<Row>
-							<Col lg="8" sm="5"></Col>
-							<Col lg="4" sm="7">
+							<div
+								style={{
+									width: '100%',
+									display: 'flex',
+									justifyContent: 'space-between',
+								}}
+							>
+								<div style={{ width: '100%' }}>
 								<Table className="table-clear cal-table">
 									<tbody>
 										<tr style={{ textAlign: 'right' }}>
@@ -312,51 +325,27 @@ class InvoiceTemplate extends Component {
 												}}
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
-												{invoiceData.discount ? (
-													<span>
-														{totalNet ? (
-															<Currency
-																value={totalNet - invoiceData.discount}
-																currencySymbol={
-																	currencyData[0]
-																		? currencyData[0].currencyIsoCode
-																		: 'USD'
-																}
-															/>
-														) : (
-															<Currency
-																value={0}
-																currencySymbol={
-																	currencyData[0]
-																		? currencyData[0].currencyIsoCode
-																		: 'USD'
-																}
-															/>
-														)}
-													</span>
-												) : (
-													<span>
-														{totalNet ? (
-															<Currency
-																value={totalNet}
-																currencySymbol={
-																	currencyData[0]
-																		? currencyData[0].currencyIsoCode
-																		: 'USD'
-																}
-															/>
-														) : (
-															<Currency
-																value={0}
-																currencySymbol={
-																	currencyData[0]
-																		? currencyData[0].currencyIsoCode
-																		: 'USD'
-																}
-															/>
-														)}
-													</span>
-												)}
+												<span>
+													{totalNet ? (
+														<Currency
+															value={totalNet.toFixed(2)}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															}
+														/>
+													) : (
+														<Currency
+															value={0}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															}
+														/>
+													)}
+												</span>
 											</td>
 										</tr>
 										<tr style={{ textAlign: 'right' }}>
@@ -505,9 +494,9 @@ class InvoiceTemplate extends Component {
 										</tr>
 									</tbody>
 								</Table>
-							</Col>
-						</Row>
-						</div>	
+								</div>		
+							</div>
+						</div>												
 					</CardBody>
 				</Card>
 			</div>

@@ -111,7 +111,7 @@ class InvoiceTemplate extends Component {
 													fontSize: '2rem',
 													fontWeight: '700',
 													textTransform: 'uppercase',
-													color: '#6a4bc4',
+													color: '#2165d8',
 												}}
 											>
 												Invoice

@@ -32,7 +32,7 @@ const mapStateToProps = (state) => {
 		universal_currency_list :state.common.universal_currency_list,
 	};
 };
-const eye = require('assets/images/invoice/eye-24.png');
+const eye = require('assets/images/settings/eye.png');
 const mapDispatchToProps = (dispatch) => {
 	return {
 		authActions: bindActionCreators(AuthActions, dispatch),
@@ -55,7 +55,7 @@ class Register extends React.Component {
 			success: false,
 			initValue: {
 				companyName: '',
-				currencyCode: '',
+				currencyCode: 150,
 				companyTypeCode: '',
 				industryTypeCode: '',
 				firstName: '',

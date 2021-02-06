@@ -1077,7 +1077,7 @@ class CustomerInvoice extends React.Component {
 												Customer Name
 											</TableHeaderColumn>
 											<TableHeaderColumn
-												width="15%"
+												width="12%"
 												dataField="status"
 												dataFormat={this.renderInvoiceStatus}
 												dataSort

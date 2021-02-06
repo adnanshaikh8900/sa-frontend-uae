@@ -155,7 +155,7 @@ const adminRoutes = [
 	{
 		redirect: true,
 		path: '/admin/accountant',
-		pathTo: '/admin/accountant/journal',
+		pathTo: '/admin/accountant/opening-balance',
 		name: 'Accountant',
 	},
 

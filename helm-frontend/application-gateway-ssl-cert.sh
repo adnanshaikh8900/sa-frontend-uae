@@ -3,10 +3,10 @@ appgwName="k8sApplicationGateway"
 resgp="MC_DataInn_Kubernetes_RG_k8s_eastus"
 vaultName="kv-k8s-cert-eac2"
 mycert="wildcard-app-simplevat-com"
-nameserver="simplevat-gtt"
-subdomain="gtt"
+nameserver="simplevat-bluestreet"
+subdomain="bluestreet"
 helmDir="helm-frontend"
-SVrelease="0.0.3-alpha-226"
+SVrelease="0.0.3-alpha-330"
 
 
 versionedSecretId=$(az keyvault certificate show -n $mycert --vault-name $vaultName --query "sid" -o tsv)

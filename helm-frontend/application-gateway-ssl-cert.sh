@@ -6,7 +6,7 @@ mycert="wildcard-app-simplevat-com"
 nameserver="simplevat-bluestreet"
 subdomain="bluestreet"
 helmDir="helm-frontend"
-SVrelease="0.0.3-alpha-330"
+SVrelease="0.0.3-alpha-341"
 
 
 versionedSecretId=$(az keyvault certificate show -n $mycert --vault-name $vaultName --query "sid" -o tsv)
@@ -52,7 +52,7 @@ subdomain="test2"
 helmDir="helm-simplevat"
 SVrelease="0.0.3-alpha-138"
 
-helm install $nameserver-frontend ./$helmDir --values ./$helmDir/values-"$subdomain".yaml --set simpleVatFrontendRelease=$SVrelease --set image.repository.frontend.tag=$SVrelease -n $nameserver --dry-run --debug
+helm upgrade $nameserver-frontend ./$helmDir --values ./$helmDir/values-"$subdomain".yaml --set simpleVatFrontendRelease=$SVrelease --set image.repository.frontend.tag=$SVrelease -n $nameserver --dry-run --debug
 
 
 

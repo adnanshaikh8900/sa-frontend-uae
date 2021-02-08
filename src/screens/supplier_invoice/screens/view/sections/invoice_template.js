@@ -4,6 +4,8 @@ import moment from 'moment';
 import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { Currency } from 'components';
+import { toInteger } from 'lodash';
+var converter = require('number-to-words');
 class InvoiceTemplate extends Component {
 	constructor(props) {
 		super(props);
@@ -38,10 +40,11 @@ class InvoiceTemplate extends Component {
 							style={{
 								width: '100%',
 								display: 'flex',
-								justifyContent: 'space-between',
+								border:'1px solid',
+								padding:'7px',borderColor:'#c8ced3'
 							}}
 						>
-							<div style={{ width: '60%' }}>
+							<div style={{ width: '150%' }}>
 								<div className="companyDetails">
 									<img
 										src={
@@ -54,15 +57,15 @@ class InvoiceTemplate extends Component {
 										}
 										className=""
 										alt=""
-										style={{ width: ' 150px' }}
+										style={{ width: ' 250px' }}
 									/>
-									<br></br><br></br>
-									<h3 style={{ fontWeight: '600' }} className="mb-0">
+								
+									{/* <h3 style={{ fontWeight: '600' }} className="mb-0">
 										{companyData && companyData.company
 											? companyData.company.companyName
 											: ''}
-									</h3>
-									<h6 className="mb-0">
+									</h3> */}
+									{/* <h6 className="mb-0">
 										<span>
 											{companyData &&
 												companyData.company &&
@@ -90,42 +93,60 @@ class InvoiceTemplate extends Component {
 											? companyData.company.companyCountryCode
 													.countryDescription
 											: ''}
-									</h6>
+									</h6> */}
 								</div>
 							</div>
-							<div
-								style={{
-									width: '40%',
-									display: 'flex',
-									flexDirection: 'column',
-									justifyContent: 'center',
-								}}
-							>
-								<Table className="table-clear">
-									<tbody>
-										<tr style={{ textAlign: 'right' }}>
+							<div style={{ width: '130%',justifyContent:'center' }}>
+							<tr style={{
+									width: '50%',
+									margin:'0.5rem',
+									border:'1px solid',
+									marginTop:'2.5rem',
+									marginLeft:'6rem'
+								}}>
 											<td
 												style={{
-													width: '75%',
+													width: '130%',
 													fontSize: '2rem',
 													fontWeight: '700',
 													textTransform: 'uppercase',
-													color: '#2165d8',
+													color: 'black',
 												}}
 											>
 												Invoice
 											</td>
-										</tr>
-										<tr style={{ textAlign: 'right' }}>
+										</tr></div>
+							<div
+								style={{
+									width: '70%',
+									display: 'flex',
+									flexDirection: 'column',
+									justifyContent: 'right',
+								}}
+							>
+								{/* <div style={{ width: '70%' }}></div> */}
+								{/* <div 	style={{
+									alignContent:'left',
+									justifyContent: 'right',
+								}}> */}
+								{/* <Table className="table-clear mr-3 ">
+									<tbody>
+										<tr  style={{ textAlign: 'left' }}><h4>
+											
+										{companyData && companyData.company
+											? companyData.company.companyName
+											: ''}
+								</h4></tr>
+										<tr style={{ textAlign: 'left' }}>
 											<td style={{ width: '75%' }} className="p-0">
 												# {invoiceData.referenceNumber}
 											</td>
 										</tr>
-										<tr style={{ textAlign: 'right' }}>
+										<tr style={{ textAlign: 'left', }}>
 											<td style={{ width: '75%' }} className="p-0">
 												{' '}
 												Balance Due
-												<br />
+											
 												<b
 													style={{
 														fontWeight: '600',
@@ -160,9 +181,41 @@ class InvoiceTemplate extends Component {
 											</td>
 										</tr>
 									</tbody>
-								</Table>
+								</Table> */}
+								<div 	style={{
+									width: '62%',
+									margin:'0.5rem',
+									// border:'1px solid',
+									marginTop:'2.5rem',
+									marginLeft:'6rem'
+								}}>
+								<h4 className="mb-1 ml-2"><b>{companyData && companyData.company
+											? companyData.company.companyName
+											: ''}</b></h4>
+								<h6 className="mb-1 ml-2">#{invoiceData.referenceNumber}</h6>
+								<h6 className="mb-1 ml-2"><b>Balance Due:{invoiceData.dueAmount ? (
+														<Currency
+															value={invoiceData.dueAmount}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															}
+														/>
+													) : (
+														<Currency
+															value={0}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															}
+														/>
+													)}</b></h6>
+								</div>
+								</div>
 							</div>
-						</div>
+					
 
 						<div
 							style={{
@@ -170,23 +223,31 @@ class InvoiceTemplate extends Component {
 								display: 'flex',
 								justifyContent: 'space-between',
 								marginBottom: '1rem',
+								borderLeft:'1px solid',
+									borderRight:'1px solid',
+									borderBottom:'1px solid',borderColor:'#c8ced3'
 							}}
 						>
+							<div style={{
+									width: '444%',
+									// borderRight:'1px solid',
+									// borderBottom:'1px solid',
+								}}>
 							<div
 								style={{
-									width: '50%',
-									display: 'flex',
-									flexDirection: 'column',
-									justifyContent: 'center',
+									width: '41%',
+									margin:'0.5rem',
+									border:'1px solid',borderColor:'#c8ced3'
 								}}
 							>
-								<h6 style={{ fontWeight: '600' }} className="mb-0">
-									Bill To,
+								<h6 style={{ fontWeight: '600' }} className="mb-1 mt-1 ml-2">
+									<b>Bill To,</b>
 								</h6>
-								<h6 className="mb-0">{invoiceData.name}</h6>
-								<h6 className="mb-0">{invoiceData.organisationName}</h6>
-								<h6 className="mb-0">{invoiceData.email}</h6>
-								<h6 className="mb-0">{invoiceData.address}</h6>
+								<h6 className="mb-1 ml-2"><b>Name:</b> {invoiceData.name}</h6>
+								<h6 className="mb-1 ml-2"><b>Company:</b> {invoiceData.organisationName}</h6>
+								<h6 className="mb-1 ml-2"><b>Email:</b> {invoiceData.email}</h6>
+								<h6 className="mb-3 ml-2"><b>Address:</b> {invoiceData.address}</h6>
+							</div>
 							</div>
 							<div
 								style={{
@@ -195,36 +256,41 @@ class InvoiceTemplate extends Component {
 									justifyContent: 'space-between',
 								}}
 							>
-								<div style={{ width: '100%' }}>
-									<Table className="table-clear">
+								<div style={{ width: '80%' }}>
+									<Table className="table table-bordered" style={{width: '90%',margin:'0.5rem',border:'1px solid',width:'250px', textAlign: 'center' ,border:'1px solid',borderColor:'#c8ced3'}}>
 										<tbody>
 											<tr style={{ textAlign: 'right' }}>
-												<td style={{ width: '75%' }}>Invoice Date :</td>
-												<td style={{ width: '25%' }}>
+											<div>	<td  style={{backgroundColor:'#e3e3e3' ,width:'104px'  }}>Invoice Date</td>
+												<td style={{ width:'143px'  }}>
 													{' '}
 													{moment(invoiceData.invoiceDate).format(
 														'DD MMM YYYY',
 													)}
 												</td>
+												</div>
+											</tr>
+											<tr style={{ textAlign: 'right',width:'143px' }}>
+												<div>
+												<td style={{width:'109px' ,backgroundColor:'#e3e3e3' }}>Term</td>
+												<td style={{width:'143px'}}>{invoiceData.term}</td>
+											</div>
 											</tr>
 											<tr style={{ textAlign: 'right' }}>
-												<td style={{ width: '75%' }}>Term :</td>
-												<td style={{ width: '18%' }}>{invoiceData.term}</td>
-											</tr>
-											<tr style={{ textAlign: 'right' }}>
-												<td style={{ width: '75%' }}>Due Date :</td>
-												<td style={{ width: '25%' }}>
+											<div>
+												<td style={{width:'104px' ,backgroundColor:'#e3e3e3' }}>Due Date</td>
+												<td style={{ width:'143px'  }}>
 													{moment(invoiceData.invoiceDueDate).format(
 														'DD MMM YYYY',
 													)}
 												</td>
+											</div>
 											</tr>
 										</tbody>
 									</Table>
 								</div>
 							</div>
 						</div>
-						<Table striped responsive>
+						<Table  >
 							<thead className="header-row">
 								<tr>
 									<th className="center" style={{ padding: '0.5rem' }}>
@@ -245,7 +311,7 @@ class InvoiceTemplate extends Component {
 									</th>
 								</tr>
 							</thead>
-							<tbody>
+							<tbody className=" table-bordered table-hover">
 								{invoiceData.invoiceLineItems &&
 									invoiceData.invoiceLineItems.length &&
 									invoiceData.invoiceLineItems.map((item, index) => {
@@ -283,26 +349,39 @@ class InvoiceTemplate extends Component {
 									})}
 							</tbody>
 						</Table>
-						<div
+						<div className="pl-5"
 							style={{
 								width: '100%',
 								display: 'flex',
 								justifyContent: 'space-between',
-								marginBottom: '1rem',
+								marginBottom: '1rem',border:'solid 1px',borderColor:'#c8ced3'
 							}}
 						>
 								<div
 								style={{
-									width: '50%',
+									width: '200%',
 									display: 'flex',
 									flexDirection: 'column',
 									justifyContent: 'center',
 								}}
 							>
-								<h6 className="mb-0">
-									Notes:
+								<div className="pb-2">Amount In Words:<br/>
+									<b> {converter.toWords(toInteger(invoiceData.dueAmount))}
+									{/* <b> {parseInt(invoiceData.dueAmount)} */}
+									</b></div>
+								<div className="pb-2">VAT Amount In Words:
+										<br/>
+									<b> {converter.toWords(toInteger(invoiceData.totalVatAmount))}</b>
+									{/* <b> {invoiceData.totalVatAmount}</b> */}
+								</div>
+							<div style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>
+
+								<h6 className="mb-0 pt-2">
+									<b>Notes:</b>
 								</h6>
 								<h6 className="mb-0">{invoiceData.notes}</h6>
+							</div>
+							
 							</div>
 							<div
 								style={{
@@ -314,7 +393,7 @@ class InvoiceTemplate extends Component {
 								<div style={{ width: '100%' }}>
 								<Table className="table-clear cal-table">
 									<tbody>
-										<tr style={{ textAlign: 'right' }}>
+										<tr >
 											<td style={{ width: '60%' }}>
 												<strong>Subtotal</strong>
 											</td>
@@ -348,7 +427,7 @@ class InvoiceTemplate extends Component {
 												</span>
 											</td>
 										</tr>
-										<tr style={{ textAlign: 'right' }}>
+										<tr >
 											<td style={{ width: '60%' }}>
 												<strong>
 													Discount
@@ -387,7 +466,7 @@ class InvoiceTemplate extends Component {
 												</span>
 											</td>
 										</tr>
-										<tr style={{ textAlign: 'right' }}>
+										<tr >
 											<td style={{ width: '60%' }}>
 												<strong>VAT</strong>
 											</td>
@@ -421,7 +500,7 @@ class InvoiceTemplate extends Component {
 												</span>
 											</td>
 										</tr>
-										<tr style={{ textAlign: 'right' }}>
+										<tr >
 											<td style={{ width: '60%' }}>
 												<strong>Total</strong>
 											</td>
@@ -455,7 +534,7 @@ class InvoiceTemplate extends Component {
 												</span>
 											</td>
 										</tr>
-										<tr style={{ textAlign: 'right', background: '#f2f2f2' }}>
+										<tr style={{ background: '#f2f2f2' }}>
 											<td style={{ width: '60%' }}>
 												<strong>Balance Due</strong>
 											</td>

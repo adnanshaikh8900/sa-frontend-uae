@@ -510,12 +510,12 @@ class OpeningBalance extends React.Component {
 											currencyList
 											keyField="id"
 											remote
-											pagination={
-												opening_balance_list &&
-												opening_balance_list.length > 0
-													? true
-													: false
-											}
+											// pagination={
+											// 	opening_balance_list &&
+											// 	opening_balance_list.length > 0
+											// 		? true
+											// 		: false
+											// }
 											fetchInfo={{
 												dataTotalSize: opening_balance_list.count
 													? opening_balance_list.count

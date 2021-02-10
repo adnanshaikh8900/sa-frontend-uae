@@ -57,7 +57,7 @@ class ResetPassword extends React.Component {
   handleSubmit = (obj) => {
     let data = {
       method: 'post',
-      url: window.location.href,
+      url: '/public/forgotPassword',
       data: { "username": obj.username }
     }
     api(data).then((res) => {

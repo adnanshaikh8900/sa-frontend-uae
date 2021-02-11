@@ -46,8 +46,7 @@ class InvoiceTemplate extends Component {
 						>
 							<div style={{ width: '150%' }}>
 								<div className="companyDetails">
-								<img src={logo}  alt="logo"	style={{ width: ' 250px' }}/>
-									{/* <img
+									<img
 										src={
 											companyData &&
 											companyData.company &&
@@ -59,7 +58,7 @@ class InvoiceTemplate extends Component {
 										className=""
 										alt=""
 										style={{ width: ' 250px' }}
-									/> */}
+									/>
 								
 									{/* <h3 style={{ fontWeight: '600' }} className="mb-0">
 										{companyData && companyData.company
@@ -119,7 +118,7 @@ class InvoiceTemplate extends Component {
 										</tr></div>
 							<div
 								style={{
-									width: '65%',
+									width: '70%',
 									display: 'flex',
 									flexDirection: 'column',
 									justifyContent: 'right',
@@ -188,21 +187,8 @@ class InvoiceTemplate extends Component {
 									margin:'0.5rem',
 									// border:'1px solid',
 									marginTop:'2.5rem',
-									marginLeft:'4rem'
+									marginLeft:'6rem'
 								}}>
-										<img
-										src={
-											companyData &&
-											companyData.company &&
-											companyData.company.companyLogo
-												? 'data:image/jpg;base64,' +
-												  companyData.company.companyLogo
-												: logo
-										}
-										className=""
-										alt=""
-										style={{ width: ' 75px' }}
-									/>
 								<h4 className="mb-1 ml-2"><b>{companyData && companyData.company
 											? companyData.company.companyName
 											: ''}</b></h4>

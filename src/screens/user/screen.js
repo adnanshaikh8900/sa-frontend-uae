@@ -8,37 +8,40 @@ import {
 	Button,
 	Row,
 	Col,
-	ButtonGroup,
+	Form,
+	FormGroup,
 	Input,
+	Label,
 } from 'reactstrap';
 import Select from 'react-select';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
-
-import { Loader, ConfirmDeleteModal } from 'components';
-
-import * as UserActions from './actions';
-import { CommonActions } from 'services/global';
-import { selectOptionsFactory } from 'utils';
-import { CSVLink } from 'react-csv';
-
-import moment from 'moment';
-
-import 'react-toastify/dist/ReactToastify.css';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
+
+import { ImageUploader } from 'components';
+
+import * as UserActions from '../../actions';
+import * as UserCreateActions from './actions';
+
+import { CommonActions, AuthActions } from 'services/global';
+import { selectOptionsFactory } from 'utils';
+import moment from 'moment';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 
 import './style.scss';
 
+
+const eye = require('assets/images/settings/eye.png');
 const mapStateToProps = (state) => {
 	return {
-		user_list: state.user.user_list,
 		role_list: state.user.role_list,
 		company_type_list: state.user.company_type_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
+		authActions: bindActionCreators(AuthActions, dispatch),
+		userCreateActions: bindActionCreators(UserCreateActions, dispatch),
 		userActions: bindActionCreators(UserActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
@@ -54,522 +57,740 @@ const customStyles = {
 	}),
 };
 
-class User extends React.Component {
+class CreateUser extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			loading: true,
-			selectedRows: [],
-			dialog: false,
-			filterData: {
-				name: '',
+			loading: false,
+			passwordShown: false,
+			createMore: false,
+			initValue: {
+				firstName: '',
+				lastName: '',
+				email: '',
+				password: '',
 				dob: '',
-				active: '',
-				// companyId: '',
+				active: 'true',
+				confirmPassword: '',
 				roleId: '',
+				timezone: '',
 			},
-			selectedStatus: '',
-			csvData: [],
-			view: false,
+			userPhoto: [],
+			userPhotoFile: [],
+			showIcon: false,
+			exist: false,
+			createDisabled: false,
+			selectedStatus: false,
+			useractive: false,
 		};
-
-		this.statusOption = [
-			{ label: 'Select Status', value: '' },
-			{ label: 'Active', value: '1' },
-			{ label: 'InActive', value: '0' },
-		];
-
-		this.options = {
-			onRowClick: this.goToDetail,
-			page: 1,
-			sizePerPage: 10,
-			onSizePerPageList: this.onSizePerPageList,
-			onPageChange: this.onPageChange,
-			sortName: '',
-			sortOrder: '',
-			onSortChange: this.sortColumn,
-		};
-
-		// this.selectRowProp = {
-		// 	mode: 'checkbox',
-		// 	bgColor: 'rgba(0,0,0, 0.05)',
-		// 	clickToSelect: false,
-		// 	onSelect: this.onRowSelect,
-		// 	onSelectAll: this.onSelectAll,
-		// };
-		this.csvLink = React.createRef();
+		this.regExAlpha = /^[a-zA-Z ]+$/;
 	}
 
 	componentDidMount = () => {
+		this.initializeData();
+	};
+
+	initializeData = () => {
+		this.props.authActions.getTimeZoneList().then((response) => {
+			let output = response.data.map(function (value) {
+				return { label: value, value: value };
+			});
+			this.setState({ timezone: output });
+		});
 		this.props.userActions.getRoleList();
-		this.initializeData();
+		this.props.userActions.getCompanyTypeList();
+		this.setState({ showIcon: false });
 	};
 
-	initializeData = (search) => {
-		let { filterData } = this.state;
-		const paginationData = {
-			pageNo: this.options.page ? this.options.page - 1 : 0,
-			pageSize: this.options.sizePerPage,
-		};
-		const sortingData = {
-			order: this.options.sortOrder ? this.options.sortOrder : '',
-			sortingCol: this.options.sortName ? this.options.sortName : '',
-		};
-		const postData = { ...filterData, ...paginationData, ...sortingData };
+	uploadImage = (picture, file) => {
+		this.setState({
+			userPhoto: picture,
+			userPhotoFile: file,
+		});
+	};
 
-		this.props.userActions
-			.getUserList(postData)
+	togglePasswordVisiblity = () => {
+		this.setState({
+			passwordShown: !this.state.passwordShown,
+		});
+	};
+
+	handleSubmit = (data, resetForm) => {
+		this.setState({
+			createDisabled: true,
+		})
+
+		const {
+			firstName,
+			lastName,
+			email,
+			dob,
+			password,
+			roleId,
+			companyId,
+			active,
+			timezone,
+		} = data;
+		let formData = new FormData();
+		formData.append('firstName', firstName ? firstName : '');
+		formData.append('lastName', lastName ? lastName : '');
+		formData.append('email', email ? email : '');
+		//formData.append('dob', dob ? moment(dob).format('DD-MM-YYYY') : '');
+		// formData.append(
+		// 	'dob',
+		// 	dob
+		// 		? moment(
+		// 				moment(dob).format('DD/MM/YYYY'),
+		// 				'DD/MM/YYYY',
+		// 		  ).toDate()
+		// 		: null,
+		// );
+		formData.append('dob', dob ? dob : '');
+		formData.append('roleId', roleId ? roleId.value : '');
+		formData.append('active', this.state.useractive);
+		formData.append('password', password ? password : '');
+		formData.append('timeZone', timezone ? timezone.value : '');
+		formData.append('companyId', companyId ? companyId : '');
+		if (this.state.userPhotoFile.length > 0) {
+			formData.append('profilePic ', this.state.userPhotoFile[0]);
+		}
+
+		this.props.userCreateActions
+			.createUser(formData)
 			.then((res) => {
 				if (res.status === 200) {
-					// this.props.userActions.getCompanyTypeList()
-					this.setState({ loading: false });
+					this.props.commonActions.tostifyAlert(
+						'success',
+						'New User Created Successfully',
+					);
+					if (this.state.createMore) {
+						this.setState({
+							createMore: false,
+							createDisabled: false
+						});
+						resetForm();
+					} else {
+						this.props.history.push('/admin/settings/user');
+					}
 				}
 			})
 			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
 				this.setState({
-					loading: false,
-				});
-				this.props.commonActions.tostifyAlert(
-					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
-				);
+					createDisabled: false,
+				})
 			});
 	};
-
-	goToDetail = (row) => {
-		this.props.history.push('/admin/settings/user/detail', { id: row.id });
-	};
-
-	onSizePerPageList = (sizePerPage) => {
-		if (this.options.sizePerPage !== sizePerPage) {
-			this.options.sizePerPage = sizePerPage;
-			this.initializeData();
-		}
-	};
-
-	onPageChange = (page, sizePerPage) => {
-		if (this.options.page !== page) {
-			this.options.page = page;
-			this.initializeData();
-		}
-	};
-
-	sortColumn = (sortName, sortOrder) => {
-		this.options.sortName = sortName;
-		this.options.sortOrder = sortOrder;
-		this.initializeData();
-	};
-
-	onRowSelect = (row, isSelected, e) => {
-		let tempList = [];
-		if (isSelected) {
-			tempList = Object.assign([], this.state.selectedRows);
-			tempList.push(row.id);
-		} else {
-			this.state.selectedRows.map((item) => {
-				if (item !== row.id) {
-					tempList.push(item);
-				}
-				return item;
-			});
-		}
-		this.setState({
-			selectedRows: tempList,
-		});
-	};
-
-	onSelectAll = (isSelected, rows) => {
-		let tempList = [];
-		if (isSelected) {
-			rows.map((item) => {
-				tempList.push(item.id);
-				return item;
-			});
-		}
-		this.setState({
-			selectedRows: tempList,
-		});
-	};
-
-	bulkDelete = () => {
-		const { selectedRows } = this.state;
-		const message1 =
-        <text>
-        <b>Delete User?</b>
-        </text>
-        const message = 'This User will be deleted permanently and cannot be recovered. ';
-				if (selectedRows.length > 0) {
-			this.setState({
-				dialog: (
-					<ConfirmDeleteModal
-						isOpen={true}
-						okHandler={this.removeBulk}
-						cancelHandler={this.removeDialog}
-						message={message}
-						message1={message1}
-					/>
-				),
-			});
-		} else {
-			this.props.commonActions.tostifyAlert(
-				'info',
-				'Please select the rows of the table and try again.',
-			);
-		}
-	};
-
-	removeBulk = () => {
-		let { selectedRows } = this.state;
-		const { user_list } = this.props;
-		let obj = {
-			ids: selectedRows,
+	validationCheck = (value) => {
+		const data = {
+			moduleType: 9,
+			name: value,
 		};
-		this.removeDialog();
-		this.props.userActions
-			.removeBulk(obj)
-			.then((res) => {
-				this.initializeData();
-				this.props.commonActions.tostifyAlert(
-					'success',
-					'User Deleted Successfully',
-				);
-				if (user_list && user_list.length > 0) {
-					this.setState({
-						selectedRows: [],
-					});
-				}
-			})
-			.catch((err) => {
-				this.props.commonActions.tostifyAlert(
-					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
-				);
-			});
-	};
-
-	removeDialog = () => {
-		this.setState({
-			dialog: null,
+		this.props.userCreateActions.checkValidation(data).then((response) => {
+			if (response.data === 'User already exists') {
+				this.setState({
+					exist: true,
+					createDisabled: false,
+				})
+			} else {
+				this.setState({
+					exist: false,
+				});
+			}
 		});
-	};
-
-	renderDate = (cell, row) => {
-		return row['dob'] !== null
-			? moment(row['dob'], 'DD-MM-YYYY').format('DD/MM/YYYY')
-			: '';
-	};
-
-	renderRole = (cell, row) => {
-		return row['role'] ? row['role']['roleName'] : '';
-	};
-
-	renderCompany = (cell, row) => {
-		return row['company'] ? row['company']['companyName'] : '';
-	};
-
-	renderStatus = (cell, row) => {
-		return row['active'] !== ''
-			? row['active'] === true
-				? 'Active'
-				: 'InActive'
-			: '';
-	};
-
-	handleChange = (val, name) => {
-		this.setState({
-			filterData: Object.assign(this.state.filterData, {
-				[name]: val,
-			}),
-		});
-	};
-
-	handleSearch = () => {
-		this.initializeData();
-	};
-
-	getCsvData = () => {
-		if (this.state.csvData.length === 0) {
-			let obj = {
-				paginationDisable: true,
-			};
-			this.props.userActions.getUserList(obj).then((res) => {
-				if (res.status === 200) {
-					this.setState({ csvData: res.data.data, view: true }, () => {
-						setTimeout(() => {
-							this.csvLink.current.link.click();
-						}, 0);
-					});
-				}
-			});
-		} else {
-			this.csvLink.current.link.click();
-		}
-	};
-
-	clearAll = () => {
-		this.setState(
-			{
-				filterData: {
-					name: '',
-					dob: '',
-					active: '',
-					roleId: '',
-				},
-			},
-			() => {
-				this.initializeData();
-			},
-		);
 	};
 
 	render() {
-		const {
-			loading,
-			dialog,
-			selectedRows,
-			filterData,
-			csvData,
-			view,
-		} = this.state;
-		const { user_list, role_list } = this.props;
+		const { role_list } = this.props;
+		const { timezone } = this.state;
 
 		return (
-			<div className="user-screen">
+			<div className="create-user-screen">
 				<div className="animated fadeIn">
-					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
-					<Card>
-						<CardHeader>
-							<Row>
-								<Col lg={12}>
-									<div className="h4 mb-0 d-flex align-items-center">
-										<i className="nav-icon fas fa-users" />
-										<span className="ml-2">Users</span>
-									</div>
-								</Col>
-							</Row>
-						</CardHeader>
-						<CardBody>
-							{dialog}
-							{loading ? (
-								<Row>
-									<Col lg={12}>
-										<Loader />
-									</Col>
-								</Row>
-							) : (
-								<Row>
-									<Col lg={12}>
-										<div className="d-flex justify-content-end">
-											<ButtonGroup size="sm">
-												{/* <Button
-                            color="success"
-                            className="btn-square"
-                            onClick={() => this.getCsvData()}
-                          >
-                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
-                          </Button>
-                          {view && <CSVLink
-                            data={csvData}
-                            filename={'User.csv'}
-                            className="hidden"
-                            ref={this.csvLink}
-                            target="_blank"
-                          />} */}
+					<Row>
+						<Col lg={12} className="mx-auto">
+							<Card>
+								<CardHeader>
+									<Row>
+										<Col lg={12}>
+											<div className="h4 mb-0 d-flex align-items-center">
+												<i className="nav-icon fas fa-users" />
+												<span className="ml-2">Create User</span>
+											</div>
+										</Col>
+									</Row>
+								</CardHeader>
+								<CardBody>
+									<Row>
+										<Col lg={12}>
+											<Formik
+												initialValues={this.state.initValue}
+												onSubmit={(values, { resetForm }) => {
+													this.handleSubmit(values, resetForm);
+													// resetForm(this.state.initValue)
 
-												{/* <Button
-                            color="warning"
-                            className="btn-square"
-                            onClick={this.bulkDelete}
-                            disabled={selectedRows.length === 0}
-                          >
-                            <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
-                            Bulk Delete
-                          </Button> */}
-											</ButtonGroup>
-										</div>
-										<div className="py-3">
-											<h5>Filter : </h5>
-											<Row>
-												<Col lg={2} className="mb-1">
-													<Input
-														type="text"
-														value={filterData.name}
-														placeholder="User Name"
-														onChange={(e) => {
-															this.handleChange(e.target.value, 'name');
-														}}
-													/>
-												</Col>
-												{/* <Col lg={2} className="mb-1">
-													<DatePicker
-														className="form-control"
-														id="date"
-														name="dob"
-														placeholderText="Date of Birth"
-														showMonthDropdown
-														showYearDropdown
-														autoComplete="off"
-														dateFormat="dd/MM/yyyy"
-														dropdownMode="select"
-														selected={filterData.dob}
-														value={filterData.dob}
-														onChange={(value) => {
-															this.handleChange(value, 'dob');
-														}}
-													/>
-												</Col> */}
-												<Col lg={2} className="mb-1">
-													<Select
-														styles={customStyles}
-														className="select-default-width"
-														placeholder="Select Role"
-														id="roleId"
-														name="roleId"
-														options={
-															role_list
-																? selectOptionsFactory.renderOptions(
-																		'roleName',
-																		'roleCode',
-																		role_list,
-																		'Role',
-																  )
-																: []
-														}
-														value={filterData.roleId}
-														onChange={(option) => {
-															if (option && option.value) {
-																this.handleChange(option, 'roleId');
-															} else {
-																this.handleChange('', 'roleId');
-															}
-														}}
-													/>
-												</Col>
-												<Col lg={2} className="mb-1">
-													<Select
-														styles={customStyles}
-														className="select-default-width"
-														placeholder="Select Status"
-														id="active"
-														name="active"
-														options={this.statusOption ? this.statusOption : []}
-														// value={filterData.supplierId}
-														value={filterData.active}
-														onChange={(option) => {
-															if (option) {
-																this.handleChange(option, 'active');
-																this.setState({ selectedStatus: option });
-															} else {
-																this.handleChange('1', 'active');
-																this.setState({ selectedStatus: '1' });
-															}
-														}}
-													/>
-												</Col>
-												{/* <Col lg={2} className="mb-1">
-                          <Select
-                              className="select-default-width"
-                              placeholder="Select Company"
-                              id="companyId"
-                              name="companyId"
-                              options={company_type_list ? selectOptionsFactory.renderOptions('label', 'value', company_type_list , 'Company') : []}
-                              value={filterData.companyId}
-                              onChange={(option) => { this.handleChange(option.value, 'companyId') }}
-                            />
-                          </Col> */}
-												<Col lg={3} className="pl-0 pr-0">
-													<Button
-														type="button"
-														color="primary"
-														className="btn-square mr-1"
-														onClick={this.handleSearch}
-													>
-														<i className="fa fa-search"></i>
-													</Button>
-													<Button
-														type="button"
-														color="primary"
-														className="btn-square"
-														onClick={this.clearAll}
-													>
-														<i className="fa fa-refresh"></i>
-													</Button>
-												</Col>
-											</Row>
-										</div>
-										<Button
-											color="primary"
-											style={{ marginBottom: '10px' }}
-											className="btn-square"
-											onClick={() =>
-												this.props.history.push(`/admin/settings/user/create`)
-											}
-										>
-											<i className="fas fa-plus mr-1" />
-											New Users
-										</Button>
-										<div>
-											<BootstrapTable
-												selectRow={this.selectRowProp}
-												search={false}
-												options={this.options}
-												data={user_list && user_list.data ? user_list.data : []}
-												version="4"
-												hover
-												keyField="id"
-												pagination
-												remote
-												fetchInfo={{
-													dataTotalSize: user_list.count ? user_list.count : 0,
+													// this.setState({
+													//   selectedContactCurrency: null,
+													//   selectedCurrency: null,
+													//   selectedInvoiceLanguage: null
+													// })
 												}}
-												className="product-table"
-												trClassName="cursor-pointer"
-												ref={(node) => {
-													this.table = node;
+												validate={(values) => {
+													// let status = false
+													let errors = {};
+													if (this.state.exist === true) {
+														errors.email =
+															'User already exists';
+													}
+
+													if ( errors.length ) {
+														this.setState({
+															createDisabled: false,
+														})
+													}
+
+													return errors;
 												}}
+												validationSchema={Yup.object().shape({
+													firstName: Yup.string().required(
+														'First Name is Required',
+													),
+													lastName: Yup.string().required(
+														'Last Name is Required',
+													),
+													email: Yup.string()
+														.required('Email is Required')
+														.email('Invalid Email'),
+													roleId: Yup.string().required(
+														'Role Name is Required',
+													),
+													timezone: Yup.string().required(
+														'Time Zone is Required',
+													),
+													password: Yup.string()
+														.required('Password is Required')
+														// .min(8, "Password Too Short")
+														.matches(
+															/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+															'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
+														),
+													confirmPassword: Yup.string()
+														.required('Confirm Password is Required')
+														.oneOf(
+															[Yup.ref('password'), null],
+															'Passwords must match',
+														),
+													//	dob: Yup.date().required('DOB is Required'),
+												})}
 											>
-												<TableHeaderColumn dataField="firstName" dataSort>
-													User Name
-												</TableHeaderColumn>
-												<TableHeaderColumn
-													dataField="dob"
-													dataSort
-													dataFormat={this.renderDate}
-												>
-													DOB
-												</TableHeaderColumn>
-												<TableHeaderColumn
-													dataField="roleName"
-													dataSort
-													// dataFormat={this.renderRole}
-												>
-													Role Name
-												</TableHeaderColumn>
-												<TableHeaderColumn
-													dataField="active"
-													dataSort
-													dataFormat={this.renderStatus}
-												>
-													Status
-												</TableHeaderColumn>
-												{/* <TableHeaderColumn
-                            dataField="companyName"
-                            dataSort
-                            // dataFormat={this.renderCompany}
-                          >
-                            Company
-                          </TableHeaderColumn> */}
-											</BootstrapTable>
-										</div>
-									</Col>
-								</Row>
-							)}
-						</CardBody>
-					</Card>
+												{(props) => (
+													<Form onSubmit={props.handleSubmit}>
+														<Row>
+															<Col xs="4" md="4" lg={2}>
+																<FormGroup className="mb-3 text-center">
+																	{/* <ImagesUploader
+                                    // url="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                    optimisticPreviews
+                                    multiple={false}
+                                    onLoadEnd={(err) => {
+                                      if (err) {
+                                        console.error(err);
+                                      }
+                                    }}
+                                    onChange={(e) => {}}
+                                  /> */}
+																	<ImageUploader
+																		// withIcon={true}
+																		buttonText="Choose images"
+																		onChange={this.uploadImage}
+																		imgExtension={['jpg', 'gif', 'png', 'jpeg']}
+																		maxFileSize={11048576}
+																		withPreview={true}
+																		singleImage={true}
+																		withIcon={this.state.showIcon}
+																		// buttonText="Choose Profile Image"
+																		flipHeight={
+																			this.state.userPhoto.length > 0
+																				? { height: 'inherit' }
+																				: {}
+																		}
+																		label="'Max file size: 1mb"
+																		labelClass={
+																			this.state.userPhoto.length > 0
+																				? 'hideLabel'
+																				: 'showLabel'
+																		}
+																		buttonClassName={
+																			this.state.userPhoto.length > 0
+																				? 'hideButton'
+																				: 'showButton'
+																		}
+																	/>
+																</FormGroup>
+															</Col>
+															<Col lg={10}>
+																<Row>
+																	<Col lg={6}>
+																		<FormGroup>
+																			<Label htmlFor="select">
+																				<span className="text-danger">*</span>
+																				First Name
+																			</Label>
+																			<Input
+																				type="text"
+																				maxLength="26"
+																				id="firstName"
+																				name="firstName"
+																				value={props.values.firstName}
+																				placeholder="First Name"
+																				onChange={(option) => {
+																					if (
+																						option.target.value === '' ||
+																						this.regExAlpha.test(
+																							option.target.value,
+																						)
+																					) {
+																						props.handleChange('firstName')(
+																							option,
+																						);
+																					}
+																				}}
+																				className={
+																					props.errors.firstName &&
+																					props.touched.firstName
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.firstName &&
+																				props.touched.firstName && (
+																					<div className="invalid-feedback">
+																						{props.errors.firstName}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																	<Col lg={6}>
+																		<FormGroup>
+																			<Label htmlFor="select">
+																				<span className="text-danger">*</span>
+																				Last Name
+																			</Label>
+																			<Input
+																				type="text"
+																				maxLength="26"
+																				id="lastName"
+																				name="lastName"
+																				placeholder="Last Name"
+																				value={props.values.lastName}
+																				onChange={(option) => {
+																					if (
+																						option.target.value === '' ||
+																						this.regExAlpha.test(
+																							option.target.value,
+																						)
+																					) {
+																						props.handleChange('lastName')(
+																							option,
+																						);
+																					}
+																				}}
+																				className={
+																					props.errors.lastName &&
+																					props.touched.lastName
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.lastName &&
+																				props.touched.lastName && (
+																					<div className="invalid-feedback">
+																						{props.errors.lastName}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																</Row>
+																<Row>
+																	<Col lg={6}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="email">
+																				<span className="text-danger">*</span>
+																				Email ID
+																			</Label>
+																			<Input
+																				type="text"
+																				maxLength="80"
+																				id="email"
+																				name="email"
+																				placeholder="Enter Email ID"
+																				value={props.values.email}
+																				onChange={(option) => {
+																					props.handleChange('email')(option);
+																					this.validationCheck(
+																						option.target.value,
+																					);
+																				}}
+																				className={
+																					props.errors.email &&
+																					props.touched.email
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.email &&
+																				props.touched.email && (
+																					<div className="invalid-feedback">
+																						{props.errors.email}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																	<Col lg={6}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="date">
+																				Date Of Birth
+																			</Label>
+																			<DatePicker
+																				id="dob"
+																				name="dob"
+																				showMonthDropdown
+																				showYearDropdown
+																				dateFormat="dd/MM/yyyy"
+																				dropdownMode="select"
+																				placeholderText="Enter Date of Birth"
+																				maxDate={new Date()}
+																				selected={props.values.dob}
+																				//value={props.values.dob}
+																				onChange={(value) => {
+																					props.handleChange('dob')(value);
+																					
+																				}}
+																				className={`form-control ${
+																					props.errors.dob && props.touched.dob
+																						? 'is-invalid'
+																						: ''
+																				}`}
+																			/>
+																				{props.errors.dob &&
+																				props.touched.dob && (
+																					<div className="invalid-feedback">
+																						{props.errors.dob}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																</Row>
+																<Row>
+															<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="active">Status</Label>
+																				<div>
+																					<FormGroup check inline>
+																						<div className="custom-radio custom-control">
+																							<input
+																								className="custom-control-input"
+																								type="radio"
+																								id="inline-radio1"
+																								name="active"
+																								checked={
+																									this.state.selectedStatus
+																								}
+																								value={true}
+																								onChange={(e) => {
+																									if (
+																										e.target.value === 'true'
+																									) {
+																										this.setState({
+																											selectedStatus: true,
+																											useractive: true
+																										});
+																									}
+																								}}
+																							/>
+																							<label
+																								className="custom-control-label"
+																								htmlFor="inline-radio1"
+																							>
+																								Active
+																							</label>
+																						</div>
+																					</FormGroup>
+																					<FormGroup check inline>
+																						<div className="custom-radio custom-control">
+																							<input
+																								className="custom-control-input"
+																								type="radio"
+																								id="inline-radio2"
+																								name="active"
+																								value={false}
+																								checked={
+																									!this.state.selectedStatus
+																								}
+																								onChange={(e) => {
+																									if (
+																										e.target.value === 'false'
+																									) {
+																										this.setState({
+																											selectedStatus: false,
+																											useractive: false
+																										});
+																									}
+																								}}
+																							/>
+																							<label
+																								className="custom-control-label"
+																								htmlFor="inline-radio2"
+																							>
+																								Inactive
+																							</label>
+																						</div>
+																					</FormGroup>
+																				</div>
+																			</FormGroup>
+																		</Col>
+															</Row>
+																<Row>
+																	<Col lg={6}>
+																		<FormGroup>
+																			<Label htmlFor="roleId">
+																				<span className="text-danger">*</span>
+																				Role
+																			</Label>
+																			<Select
+																				styles={customStyles}
+																				options={
+																					role_list
+																						? selectOptionsFactory.renderOptions(
+																								'roleName',
+																								'roleCode',
+																								role_list,
+																								'Role',
+																						  )
+																						: []
+																				}
+																				value={props.values.roleId}
+																				onChange={(option) => {
+																					if (option && option.value) {
+																						props.handleChange('roleId')(
+																							option,
+																						);
+																					} else {
+																						props.handleChange('roleId')('');
+																					}
+																				}}
+																				placeholder="Select Role"
+																				id="roleId"
+																				name="roleId"
+																				className={
+																					props.errors.roleId &&
+																					props.touched.roleId
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.roleId &&
+																				props.touched.roleId && (
+																					<div className="invalid-feedback">
+																						{props.errors.roleId}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																	<Col lg={6}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="timezone">
+																				<span className="text-danger">*</span>
+																				Time Zone Preference
+																			</Label>
+																			<Select
+																				styles={customStyles}
+																				id="timezone"
+																				name="timezone"
+																				options={timezone ? timezone : []}
+																				value={props.values.timezone}
+																				onChange={(option) => {
+																					if (option && option.value) {
+																						props.handleChange('timezone')(
+																							option,
+																						);
+																					} else {
+																						props.handleChange('timezone')('');
+																					}
+																				}}
+																				className={
+																					props.errors.timezone &&
+																					props.touched.timezone
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.timezone &&
+																				props.touched.timezone && (
+																					<div className="invalid-feedback">
+																						{props.errors.timezone}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																</Row>
+																<Row></Row>
+																<Row>
+																	<Col lg={6}>
+																		<FormGroup>
+																			<Label htmlFor="select">
+																				<span className="text-danger">*</span>
+																				Password
+																			</Label>
+																			<Input
+																				type={
+																					this.state.passwordShown
+																						? 'text'
+																						: 'password'
+																				}
+																				id="password"
+																				name="password"
+																				value={props.values.password}
+																				autoComplete="new-password"
+																				placeholder="Enter the Password"
+																				onChange={(value) => {
+																					props.handleChange('password')(value);
+																				}}
+																				className={
+																					props.errors.password &&
+																					props.touched.password
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			<i
+																				className="inputShow"
+																				onClick={this.togglePasswordVisiblity}
+																			>
+																				<img
+																					src={eye}
+																					style={{ width: '20px' }}
+																				/>
+																			</i>
+																			{props.errors.password &&
+																			props.touched.password ? (
+																				<div className="invalid-feedback">
+																					{props.errors.password}
+																				</div>
+																			) : (
+																				<span className="password-msg">
+																					Must Contain 8 Characters, One
+																					Uppercase, One Lowercase, One Number
+																					and one special case Character.
+																				</span>
+																			)}
+																		</FormGroup>
+																	</Col>
+																	<Col lg={6}>
+																		<FormGroup>
+																			<Label htmlFor="select">
+																				<span className="text-danger">*</span>
+																				Confirm Password
+																			</Label>
+																			<Input
+																				type="password"
+																				id="confirmPassword"
+																				name="confirmPassword"
+																				value={props.values.confirmPassword}
+																				placeholder="Enter the Confirm Password"
+																				onChange={(value) => {
+																					props.handleChange('confirmPassword')(
+																						value,
+																					);
+																				}}
+																				className={
+																					props.errors.confirmPassword &&
+																					props.touched.confirmPassword
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.confirmPassword &&
+																				props.touched.confirmPassword && (
+																					<div className="invalid-feedback">
+																						{props.errors.confirmPassword}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																</Row>
+															
+															</Col>
+														</Row>
+														<Row>
+															<Col lg={12} className="mt-5">
+																<FormGroup className="text-right">
+																	<Button
+																	    ref="btn"
+																		type="button"
+																		color="primary"
+																		className="btn-square mr-3"
+																		disabled={this.state.createDisabled}
+																		onClick={() => {
+																			this.setState(
+																				{ 
+																					createMore: false,
+																				},
+																				() => {
+																					props.handleSubmit();
+																				},
+																			);
+																		}}
+																	>
+																		<i className="fa fa-dot-circle-o"></i>{' '}
+																		Create
+																	</Button>
+																	<Button
+																		name="button"
+																		color="primary"
+																		className="btn-square mr-3"
+																		onClick={() => {
+																			this.setState(
+																				{ createMore: true },
+																				() => {
+																					props.handleSubmit();
+																				},
+																			);
+																		}}
+																	>
+																		<i className="fa fa-refresh"></i> Create and
+																		More
+																	</Button>
+																	<Button
+																		color="secondary"
+																		className="btn-square"
+																		onClick={() => {
+																			this.props.history.push(
+																				'/admin/settings/user',
+																			);
+																		}}
+																	>
+																		<i className="fa fa-ban"></i> Cancel
+																	</Button>
+																</FormGroup>
+															</Col>
+														</Row>
+													</Form>
+												)}
+											</Formik>
+										</Col>
+									</Row>
+								</CardBody>
+							</Card>
+						</Col>
+					</Row>
 				</div>
 			</div>
 		);
 	}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(User);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateUser);

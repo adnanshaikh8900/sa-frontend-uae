@@ -58,7 +58,7 @@ class InvoiceTemplate extends Component {
 										}
 										className=""
 										alt=""
-										style={{ width: ' 250px' }}
+										style={{ width: ' 100px' }}
 									/>
 								
 									{/* <h3 style={{ fontWeight: '600' }} className="mb-0">

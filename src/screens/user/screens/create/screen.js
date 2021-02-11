@@ -79,6 +79,9 @@ class CreateUser extends React.Component {
 			userPhotoFile: [],
 			showIcon: false,
 			exist: false,
+			createDisabled: false,
+			selectedStatus: false,
+			useractive: false,
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 	}
@@ -113,6 +116,10 @@ class CreateUser extends React.Component {
 	};
 
 	handleSubmit = (data, resetForm) => {
+		this.setState({
+			createDisabled: true,
+		})
+
 		const {
 			firstName,
 			lastName,
@@ -140,7 +147,7 @@ class CreateUser extends React.Component {
 		// );
 		formData.append('dob', dob ? dob : '');
 		formData.append('roleId', roleId ? roleId.value : '');
-		formData.append('active', active ? active : '');
+		formData.append('active', this.state.useractive);
 		formData.append('password', password ? password : '');
 		formData.append('timeZone', timezone ? timezone.value : '');
 		formData.append('companyId', companyId ? companyId : '');
@@ -159,6 +166,7 @@ class CreateUser extends React.Component {
 					if (this.state.createMore) {
 						this.setState({
 							createMore: false,
+							createDisabled: false
 						});
 						resetForm();
 					} else {
@@ -171,6 +179,9 @@ class CreateUser extends React.Component {
 					'error',
 					err && err.data ? err.data.message : 'Something Went Wrong',
 				);
+				this.setState({
+					createDisabled: false,
+				})
 			});
 	};
 	validationCheck = (value) => {
@@ -182,6 +193,7 @@ class CreateUser extends React.Component {
 			if (response.data === 'User already exists') {
 				this.setState({
 					exist: true,
+					createDisabled: false,
 				})
 			} else {
 				this.setState({
@@ -233,6 +245,13 @@ class CreateUser extends React.Component {
 														errors.email =
 															'User already exists';
 													}
+
+													if ( errors.length ) {
+														this.setState({
+															createDisabled: false,
+														})
+													}
+
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({
@@ -288,7 +307,7 @@ class CreateUser extends React.Component {
 																		buttonText="Choose images"
 																		onChange={this.uploadImage}
 																		imgExtension={['jpg', 'gif', 'png', 'jpeg']}
-																		maxFileSize={40000}
+																		maxFileSize={11048576}
 																		withPreview={true}
 																		singleImage={true}
 																		withIcon={this.state.showIcon}
@@ -298,7 +317,7 @@ class CreateUser extends React.Component {
 																				? { height: 'inherit' }
 																				: {}
 																		}
-																		label="'Max file size: 40kb"
+																		label="'Max file size: 1mb"
 																		labelClass={
 																			this.state.userPhoto.length > 0
 																				? 'hideLabel'
@@ -487,6 +506,7 @@ class CreateUser extends React.Component {
 																									) {
 																										this.setState({
 																											selectedStatus: true,
+																											useractive: true
 																										});
 																									}
 																								}}
@@ -515,7 +535,8 @@ class CreateUser extends React.Component {
 																										e.target.value === 'false'
 																									) {
 																										this.setState({
-																											selectedStatus: true,
+																											selectedStatus: false,
+																											useractive: false
 																										});
 																									}
 																								}}
@@ -788,12 +809,16 @@ class CreateUser extends React.Component {
 															<Col lg={12} className="mt-5">
 																<FormGroup className="text-right">
 																	<Button
+																	    ref="btn"
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
+																		disabled={this.state.createDisabled}
 																		onClick={() => {
 																			this.setState(
-																				{ createMore: false },
+																				{ 
+																					createMore: false,
+																				},
 																				() => {
 																					props.handleSubmit();
 																				},

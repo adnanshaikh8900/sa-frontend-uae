@@ -249,9 +249,7 @@ class VatReturnsReport extends React.Component {
 							<CardHeader>
 								<Row>
 									<Col lg={12}>
-									
-								
-										{/* <div
+										<div
 											className="h4 mb-0 d-flex align-items-center"
 											style={{ justifyContent: 'space-between' }}
 										>
@@ -286,7 +284,7 @@ class VatReturnsReport extends React.Component {
 												>
 												<i className="fa fa-file-pdf-o"></i>
 											</div>
-												 <Dropdown isOpen={dropdownOpen} toggle={this.toggle}> 
+												{/* <Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
 														<DropdownItem onClick={this.exportPDFWithComponent}>
@@ -320,9 +318,9 @@ class VatReturnsReport extends React.Component {
 															XLSX (Microsoft Excel)
 														</DropdownItem>
 													</DropdownMenu>
-												</Dropdown> 
+												</Dropdown> */}
 											</div>
-										</div>*/}
+										</div>
 									</Col>
 								</Row>
 							</CardHeader>
@@ -340,46 +338,7 @@ class VatReturnsReport extends React.Component {
 									scale={0.8}
 									paperSize="A3"
 								>
-									<div style={{	
-									
-									display: 'flex',
-									justifyContent: 'space-between',
-									marginBottom: '1rem'}}>
-									<div className="logo-container" style={{	
-									width:'150px',}}>
-											<img src={logo} alt="logo" style={{width:'150%'}}/>
-									</div>
-									<div style={{justifyContent:'center'}} >
-								
-										<h2>
-										{company_profile &&
-											company_profile['companyName']
-												? company_profile['companyName']
-												: ''}
-											</h2>	
-											<div style={{marginLeft:'85px'}}>
-											<b style ={{ fontSize: '18px'}}>Balance Sheet</b>
-											<br/>
-											As on {initValue.endDate}
-											</div>	
-									</div>
-									<div>
-									<img
-										src={ 
-											company_profile &&
-											company_profile.companyLogoByteArray
-												? 'data:image/jpg;base64,' +
-											company_profile.companyLogoByteArray
-												: logo
-										}
-										className=""
-										alt=""
-										style={{ width: ' 150px' }}></img>
-								
-									
-									</div>									
-							</div>
-									{/* <div className="logo-container">
+									<div className="logo-container">
 													<img src={logo} alt="logo" />
 												</div>
 									<div style={{ textAlign: 'center' }}>
@@ -393,9 +352,7 @@ class VatReturnsReport extends React.Component {
 											<br style={{ marginBottom: '5px' }} />
 											From {initValue.startDate} to {initValue.endDate}
 										</p>
-									</div> */}
-
-									
+									</div>
 									{loading ? (
 										<Loader />
 									) : (

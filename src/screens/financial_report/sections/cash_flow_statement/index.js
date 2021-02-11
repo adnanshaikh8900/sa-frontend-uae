@@ -286,7 +286,7 @@ class CashFlowStatement extends React.Component {
 									scale={0.8}
 									paperSize="A3"
 								>
-									{/* <div className="logo-container">
+									<div className="logo-container">
 													<img src={logo} alt="logo" />
 												</div>
 									<div style={{ textAlign: 'center'}}>
@@ -301,46 +301,7 @@ class CashFlowStatement extends React.Component {
 											<br style={{ marginBottom: '5px' }} />
 											As on {initValue.endDate}
 										</p>
-									</div> */}
-									<div style={{	
-									
-									display: 'flex',
-									justifyContent: 'space-between',
-									marginBottom: '1rem'}}>
-									<div className="logo-container" style={{	
-									width:'150px',}}>
-											<img src={logo} alt="logo" style={{width:'150%'}}/>
 									</div>
-									<div style={{justifyContent:'center'}} >
-								
-										<h2>
-										{company_profile &&
-											company_profile['companyName']
-												? company_profile['companyName']
-												: ''}
-											</h2>	
-											<div style={{marginLeft:'85px'}}>
-											<b style ={{ fontSize: '18px'}}>Balance Sheet</b>
-											<br/>
-											As on {initValue.endDate}
-											</div>	
-									</div>
-									<div>
-									<img
-										src={ 
-											company_profile &&
-											company_profile.companyLogoByteArray
-												? 'data:image/jpg;base64,' +
-											company_profile.companyLogoByteArray
-												: logo
-										}
-										className=""
-										alt=""
-										style={{ width: ' 150px' }}></img>
-								
-									
-									</div>									
-							</div>
 									{loading ? (
 										<Loader />
 									) : (

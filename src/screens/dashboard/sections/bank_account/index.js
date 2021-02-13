@@ -167,7 +167,7 @@ class BankAccount extends Component {
 									<div className="data-info">
 										<div className="data-item">
 											<img
-												alt="bankIcon ml-3"
+												alt="bankIcon ml-2"
 												className="d-none d-lg-block"
 												src={bankIcon}
 												style={{ width: 40, marginRight: 10 }}
@@ -195,7 +195,7 @@ class BankAccount extends Component {
 									
 										<div className="data-item">
 											<div>
-												<h3>
+												<h4>
 													{universal_currency_list[0] && (
 														<Currency
 															value={
@@ -210,13 +210,13 @@ class BankAccount extends Component {
 															}
 														/>
 													)}
-												</h3>
+												</h4>
 												<p>BALANCE</p>
 											</div>
 										</div>
 										<div className="data-item">
 											<div>
-												<h3>
+												<h4>
 													{universal_currency_list[0] && (
 														<Currency
 															value={this.state.totalBalance}
@@ -227,7 +227,7 @@ class BankAccount extends Component {
 															}
 														/>
 													)}
-												</h3>
+												</h4>
 												<p>ALL BANK ACCOUNTS</p>
 											</div>
 										</div>

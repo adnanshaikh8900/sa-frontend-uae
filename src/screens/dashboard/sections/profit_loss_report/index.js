@@ -90,7 +90,7 @@ class ProfitAndLossReport extends Component {
 		
 		return (
 			<div className="animated fadeIn ">
-				<Card className="cash-card card-margin mt-4">
+				<Card className="cash-card card-margin">
 					<CardBody className="card-body-padding">
 				<div className="flex-wrapper title-bottom-border">
 					<h1 className="mb-2 card-h1">

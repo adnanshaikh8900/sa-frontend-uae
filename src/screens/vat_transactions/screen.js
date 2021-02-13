@@ -46,10 +46,10 @@ const vatOptions = [
 const customStyles = {
 	control: (base, state) => ({
 		...base,
-		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
 		boxShadow: state.isFocused ? null : null,
 		'&:hover': {
-			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+			borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
 		},
 	}),
 };
@@ -145,7 +145,7 @@ class VatTransactions extends React.Component {
 		};
 		this.options = {
 			paginationPosition: 'bottom',
-			page: 1,
+			page: '',
 			sizePerPage: 10,
 			onSizePerPageList: this.onSizePerPageList,
 			onPageChange: this.onPageChange,
@@ -154,13 +154,13 @@ class VatTransactions extends React.Component {
 			onSortChange: this.sortColumn,
 		};
 
-		this.selectRowProp = {
-			mode: 'checkbox',
-			bgColor: 'rgba(0,0,0, 0.05)',
-			clickToSelect: false,
-			onSelect: this.onRowSelect,
-			onSelectAll: this.onSelectAll,
-		};
+		// this.selectRowProp = {
+		// 	mode: 'checkbox',
+		// 	bgColor: 'rgba(0,0,0, 0.05)',
+		// 	clickToSelect: false,
+		// 	onSelect: this.onRowSelect,
+		// 	onSelectAll: this.onSelectAll,
+		// };
 	}
 
 	componentDidMount = () => {
@@ -168,7 +168,7 @@ class VatTransactions extends React.Component {
 	};
 
 	initializeData = (search) => {
-		let { filterData } = this.state;
+		const { filterData } = this.state;
 		const paginationData = {
 			pageNo: this.options.page ? this.options.page - 1 : 0,
 			pageSize: this.options.sizePerPage,
@@ -252,7 +252,24 @@ class VatTransactions extends React.Component {
 			/>
 		);
 	}
-	
+	sortColumn = (sortName, sortOrder) => {
+		this.options.sortName = sortName;
+		this.options.sortOrder = sortOrder;
+		this.initializeData();
+	};
+	onSizePerPageList = (sizePerPage) => {
+		if (this.options.sizePerPage !== sizePerPage) {
+			this.options.sizePerPage = sizePerPage;
+			this.initializeData();
+		}
+	};
+
+	onPageChange = (page, sizePerPage) => {
+		if (this.options.page !== page) {
+			this.options.page = page;
+			this.initializeData();
+		}
+	};
 
 	handleChange = (val, name) => {
 		this.setState({
@@ -260,6 +277,11 @@ class VatTransactions extends React.Component {
 				[name]: val,
 			}),
 		});
+	};
+	renderDate = (cell, row) => {
+		return typeof row['effectiveDate'] === 'string'
+		? moment(row['effectiveDate'], 'DD/MM/YYYY').format('DD/MM/YYYY')
+		: moment(row['effectiveDate']).format('DD/MM/YYYY');
 	};
 
 	render() {
@@ -386,7 +408,7 @@ class VatTransactions extends React.Component {
 								</Row>
 							</div> */}
 							<div className="table-wrapper">
-								<BootstrapTable
+								{/* <BootstrapTable
 									data={
 										vat_transaction_list &&
 										vat_transaction_list.data
@@ -412,15 +434,91 @@ class VatTransactions extends React.Component {
 									ref={(node) => {
 										this.table = node;
 									}}
-								>
-									<TableHeaderColumn dataField="date" className="table-header-bg">Date</TableHeaderColumn>
-									<TableHeaderColumn dataField="referenceType" className="table-header-bg">
+								> */}
+									<BootstrapTable
+												selectRow={this.selectRowProp}
+												search={false}
+												options={this.options}
+												data={
+													vat_transaction_list &&
+													vat_transaction_list.data
+														? vat_transaction_list.data
+														: []
+												}
+												version="4"
+												hover
+												keyField="journalId"
+												pagination={
+													vat_transaction_list &&
+													vat_transaction_list.data &&
+													vat_transaction_list.data.length > 0
+														? true
+														: false
+												}
+												remote
+												fetchInfo={{
+													dataTotalSize: vat_transaction_list.count
+														? vat_transaction_list.count
+														: 0,
+												}}
+												className="journal-table"
+												trClassName="cursor-pointer"
+												csvFileName="VatAuditReport.csv"
+												ref={(node) => {
+													this.table = node;
+												}}
+											>
+									{/* <TableHeaderColumn 
+									dataField="date" 
+									className="table-header-bg"
+									dataSort
+									>
+										Date
+									</TableHeaderColumn> */}
+									<TableHeaderColumn 
+									dataSort
+									dataField='customerName' 
+									className="table-header-bg"
+									>Customer Name
+									</TableHeaderColumn>
+									<TableHeaderColumn
+									dataField='countryName'
+									dataSort
+									className="table-header-bg"
+									>Country
+									</TableHeaderColumn>
+									<TableHeaderColumn
+									dataSort
+									 dataField='invoiceDate'
+									 className="table-header-bg"
+									 >Invoice Date
+									 </TableHeaderColumn>
+									 <TableHeaderColumn
+									dataSort
+									 dataField='invoiceNumber' 
+									 className="table-header-bg"
+									 >Invoice Number
+									 </TableHeaderColumn>
+									 <TableHeaderColumn
+									dataSort
+									 dataField='taxRegistrationNo' 
+									 className="table-header-bg"
+									 >TAX Reg No
+									 </TableHeaderColumn>
+									<TableHeaderColumn 
+									dataSort
+									dataField="referenceType" 
+									className="table-header-bg">
 										Reference Type
 									</TableHeaderColumn>
-									<TableHeaderColumn dataField="vatType" className="table-header-bg">
+									<TableHeaderColumn 
+									dataField="vatType" 
+									className="table-header-bg"
+									>
 										Vat Type
 									</TableHeaderColumn>
 									<TableHeaderColumn
+									dataSort
 										dataField="amount"
 										dataFormat={this.renderAmount}
 										formatExtraData={universal_currency_list}
@@ -429,6 +527,7 @@ class VatTransactions extends React.Component {
 										Amount
 									</TableHeaderColumn>
 									<TableHeaderColumn
+									dataSort
 										dataField="vatAmount"
 										dataFormat={this.renderVatAmount}
 										formatExtraData={universal_currency_list}

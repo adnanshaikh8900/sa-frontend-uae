@@ -120,9 +120,9 @@ class Invoice extends Component {
 		const { universal_currency_list } = this.props;
 		return (
 			<div className="animated fadeIn">
-				<Card className="invoice-card">
+				<Card className="invoice-card card-margin">
 					<CardBody className="tab-card">
-						<div className="flex-wrapper">
+						<div className="flex-wrapper title-bottom-border">
 							<Nav tabs>
 								<NavItem>
 									<NavLink

@@ -167,10 +167,10 @@ class Register extends React.Component {
 			control: (base, state) => ({
 				...base,
 				flex: '1 1 auto',
-				borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+				borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
 				boxShadow: state.isFocused ? null : null,
 				'&:hover': {
-					borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+					borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
 				},
 			}),
 		};

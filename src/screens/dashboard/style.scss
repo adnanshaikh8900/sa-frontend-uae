@@ -48,6 +48,10 @@
 		background: #eee;
 	}
 
+	.card-columns .cash-card, .card-columns .bank-card  {
+		box-shadow: none !important;
+	}
+
 	.flex-wrapper {
 		display: flex;
 		justify-content: space-between;

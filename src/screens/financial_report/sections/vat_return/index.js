@@ -93,60 +93,42 @@ class VatReturnsReport extends React.Component {
 			totalAmountForRasAlKhalmah: '',
 			nameForRasAlKhalmah: '',
 			totalVatForRasAlKhalmah: '',
+			zeroRatedSupplies:'',
+			totalValueOfDueTaxForThePeriod:'',
+			standardRatedExpensesTotalAmount:'',
+			standardRatedExpensesVatAmount:'',
+			totalValueOfDueTaxForThePeriod:'',
+			totalValueOfRecoverableTaxForThePeriod:'',
+			netVatPayableOrReclaimableForThePeriod:'',
 		},
-			
-			data1: [
-				{
-					Box: 9,
-					Description: 'Standard rated expenses',
-					Amount: 0.0,
-					RecoverableVATAmount: 0.0,
-					Adjustment: 0.0,
-				 },
-				{
-					Box: 10,
-					Description: 'Supplies subject to the reverse charge provisions',
-					Amount: 0.0,
-					RecoverableVATAmount: 0.0,
-					Adjustment: 0.0,
-				 },
-				{
-					Box: 11,
-					Description: 'Totals',
-					Amount: 0.0,
-					RecoverableVATAmount: 0.0,
-					Adjustment: 0.0,
-				 }
-				
-			],
 
-			data2: [
-				{
-					Box: 12,
-					Description: 'Total value of due tax for the period',
-					VATAmount: 0.0,
+			// data2: [
+			// 	{
+			// 		Box: 12,
+			// 		Description: 'Total value of due tax for the period',
+			// 		VATAmount: 0.0,
 				
-				 },
-				{
-					Box: 13,
-					Description: 'Total value of recoverable tax for the period',
-					VATAmount: 0.0,
+			// 	 },
+			// 	{
+			// 		Box: 13,
+			// 		Description: 'Total value of recoverable tax for the period',
+			// 		VATAmount: 0.0,
 					
-				 },
-				{
-					Box: 14,
-					Description: 'Net VAT payable (or reclaimable) for the period',
-					VATAmount: 0.0,
+			// 	 },
+			// 	{
+			// 		Box: 14,
+			// 		Description: 'Net VAT payable (or reclaimable) for the period',
+			// 		VATAmount: 0.0,
 					
-				 },
-				 {
-					Box: 15,
-					Description: 'Do you wish to request a refund for the above amount of reclaimable VAT?',
-					VATAmount: '',
+			// 	 },
+			// 	 {
+			// 		Box: 15,
+			// 		Description: 'Do you wish to request a refund for the above amount of reclaimable VAT?',
+			// 		VATAmount: '',
 					
-				 }
+			// 	 }
 				
-			],
+			// ],
 				
 		};
 		this.columnHeader1 = [
@@ -249,6 +231,8 @@ class VatReturnsReport extends React.Component {
 							<CardHeader>
 								<Row>
 									<Col lg={12}>
+									
+									
 										<div
 											className="h4 mb-0 d-flex align-items-center"
 											style={{ justifyContent: 'space-between' }}
@@ -284,7 +268,7 @@ class VatReturnsReport extends React.Component {
 												>
 												<i className="fa fa-file-pdf-o"></i>
 											</div>
-												{/* <Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
+												 {/* <Dropdown isOpen={dropdownOpen} toggle={this.toggle}> 
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
 														<DropdownItem onClick={this.exportPDFWithComponent}>
@@ -318,7 +302,7 @@ class VatReturnsReport extends React.Component {
 															XLSX (Microsoft Excel)
 														</DropdownItem>
 													</DropdownMenu>
-												</Dropdown> */}
+												</Dropdown>  */}
 											</div>
 										</div>
 									</Col>
@@ -332,27 +316,48 @@ class VatReturnsReport extends React.Component {
 									}}
 								/>{' '}
 							</div>
-							<CardBody id="section-to-print">
+								<CardBody id="section-to-print">
 								<PDFExport
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
-									paperSize="A3"
+									paperSize="A4"
 								>
-									<div className="logo-container">
-													<img src={logo} alt="logo" />
-												</div>
-									<div style={{ textAlign: 'center' }}>
-										<p><h2>
+							<div style={{	
+									
+									display: 'flex',
+									justifyContent: 'space-between',
+									marginBottom: '1rem'}}>
+									<div>
+									<img
+										src={ 
+											company_profile &&
+											company_profile.companyLogoByteArray
+												? 'data:image/jpg;base64,' +
+											company_profile.companyLogoByteArray
+												: logo
+										}
+										className=""
+										alt=""
+										style={{ width: ' 150px' }}></img>
+								
+									
+									</div>			
+									<div style={{textAlign:'center'}} >
+								
+										<h2>
 										{company_profile &&
 											company_profile['companyName']
 												? company_profile['companyName']
-												: ''}</h2>
+												: ''}
+											</h2>	
 											<br style={{ marginBottom: '5px' }} />
 											<b style ={{ fontSize: '18px'}}>Vat Returns</b>
 											<br style={{ marginBottom: '5px' }} />
 											From {initValue.startDate} to {initValue.endDate}
-										</p>
 									</div>
+									<div>
+									</div>									
+							</div>
 									{loading ? (
 										<Loader />
 									) : (
@@ -379,7 +384,7 @@ class VatReturnsReport extends React.Component {
 												
 												{Object.keys(this.state.data).length > 0 ? (
 														<>
-														{/* Abu Dhabi */}
+															{/* Abu Dhabi */}
 															<tr className="mainLable">
 																<td className="mainLable ">1a</td>
 																<td className="pt-0 pb-0">Standard rated supplies in Abu Dhabi</td>
@@ -779,10 +784,23 @@ class VatReturnsReport extends React.Component {
 																<td className="mainLable ">4</td>
 																<td className="pt-0 pb-0">Zero rated supplies</td>
 																<td className="pt-0 pb-0 ">
-																			{/* {this.state.data[
-																				'totalAmountForDubai'
-																			] } */}
-																			0.00
+																{this.state.data[
+																				'zeroRatedSupplies'
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'zeroRatedSupplies'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)}
 																</td>
 																<td className="pt-0 pb-0 ">
 																			{/* {this.state.data[
@@ -867,23 +885,7 @@ class VatReturnsReport extends React.Component {
 																<td className="mainLable ">8</td>
 																<td className="pt-0 pb-0">TOTAL</td>
 																<td className="pt-0 pb-0 ">
-																			{this.state.data[
-																				'totalAmount'
-																			] ? (
-																		<Currency
-																			value={this.state.data[
-																				'totalAmount'
-																			].toFixed(2)}
-																			currencySymbol={
-																				universal_currency_list[0]
-																					? universal_currency_list[0]
-																							.currencyIsoCode
-																					: 'USD'
-																			}
-																		/>
-																	) : (
-																		'0.00'
-																	)}
+																	
 																			
 																</td>
 																<td className="pt-0 pb-0 ">
@@ -944,17 +946,150 @@ class VatReturnsReport extends React.Component {
 													</tr>
 													</thead>
 													<tbody className="data-column">
-													{(this.state.data1).map(
-																(item) => (
+													{Object.keys(this.state.data).length > 0 ? (
+														<>
+															<tr className="mainLable">
+																<td className="mainLable ">9</td>
+																<td className="pt-0 pb-0">Standard rated expenses</td>
+																<td className="pt-0 pb-0 ">
+																			{this.state.data[
+																				'standardRatedExpensesTotalAmount'
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'standardRatedExpensesTotalAmount'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)}
+																			
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{this.state.data[
+																				'standardRatedExpensesVatAmount'
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'standardRatedExpensesVatAmount'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)}
+																	
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalVatForDubai'
+																			]} */}
+																			0.00
+																</td>
+															</tr>
+															<tr className="mainLable">
+																<td className="mainLable ">10</td>
+																<td className="pt-0 pb-0">Supplies subject to the reverse charge provisions</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'standardRatedExpensesTotalAmount'
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'standardRatedExpensesTotalAmount'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)} */} 0.00
+																			
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'standardRatedExpensesVatAmount'
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'standardRatedExpensesVatAmount'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)} */}0.00
+																	
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalVatForDubai'
+																			]} */}
+																			0.00
+																</td>
+															</tr>
+															<tr className="mainLable">
+																<td className="mainLable ">11</td>
+																<td className="pt-0 pb-0">Total</td>
+																<td className="pt-0 pb-0 ">
+																		
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{this.state.data[
+																				'totalVatOnExpensesAndAllOtherInputs'
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'totalVatOnExpensesAndAllOtherInputs'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)}
+																	
+																</td>
+																<td className="pt-0 pb-0 ">
+																			{/* {this.state.data[
+																				'totalVatForDubai'
+																			]} */}
+																			0.00
+																</td>
+															</tr>
+														</>	
+														
+																) : (
 																	<tr className="mainLable">
-																		<td className="mainLable">{item.Box}</td>
-																		<td className="pt-0 pb-0">{item.Description}</td>
-																		<td className="pt-0 pb-0">{item.Amount}</td>
-																		<td className="pt-0 pb-0">{item.RecoverableVATAmount}</td>
-																		<td className="pt-0 pb-0">{item.Adjustment}</td>
+																		<td style={{ textAlign: 'center' }} colSpan="9">
+																			There is no data to display
+																		</td>
 																	</tr>
-																),
-															)}
+																)}
 													</tbody>
 												</Table>
 											
@@ -978,15 +1113,93 @@ class VatReturnsReport extends React.Component {
 													</tr>
 												</thead>
 												<tbody className="data-column">
-													{(this.state.data2).map(
-																(item) => (
-																	<tr className="mainLable">
-																		<td className="mainLable">{item.Box}</td>
-																		<td className="pt-0 pb-0">{item.Description}</td>
-																		<td className="pt-0 pb-0">{item.VATAmount}</td>
-																	</tr>
-																),
-															)}
+												{Object.keys(this.state.data).length > 0 ? (
+														<>
+															<tr className="mainLable">
+																<td className="mainLable ">12</td>
+																<td className="pt-0 pb-0">Total value of due tax for the period</td>
+																<td className="pt-0 pb-0 ">
+																			{this.state.data[
+																				'totalValueOfDueTaxForThePeriod'
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'totalValueOfDueTaxForThePeriod'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)}	
+																</td>
+															</tr>
+															<tr className="mainLable">
+																<td className="mainLable ">13</td>
+																<td className="pt-0 pb-0">Total value of recoverable tax for the period</td>
+																<td className="pt-0 pb-0 ">
+																			{this.state.data[
+																				'totalValueOfRecoverableTaxForThePeriod'
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'totalValueOfRecoverableTaxForThePeriod'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)}	
+																</td>
+															</tr>
+															<tr className="mainLable">
+																<td className="mainLable ">14</td>
+																<td className="pt-0 pb-0">Net VAT payable (or reclaimable) for the period</td>
+																<td className="pt-0 pb-0 ">
+																			{this.state.data[
+																				'netVatPayableOrReclaimableForThePeriod'
+																			] ? (
+																		<Currency
+																			value={this.state.data[
+																				'netVatPayableOrReclaimableForThePeriod'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.00'
+																	)}	
+																</td>
+															</tr>
+															<tr className="mainLable">
+																<td className="mainLable ">15</td>
+																<td className="pt-0 pb-0">Do you wish to request a refund for the above amount of reclaimable VAT?</td>
+																<td className="pt-0 pb-0 "></td>
+															</tr>
+
+															</>	
+														
+														) : (
+															<tr className="mainLable">
+																<td style={{ textAlign: 'center' }} colSpan="9">
+																	There is no data to display
+																</td>
+															</tr>
+														)}
+												
 													</tbody>
 												</Table>
 											</div>

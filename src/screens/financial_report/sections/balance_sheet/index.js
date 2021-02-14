@@ -183,7 +183,7 @@ class BalanceSheet extends React.Component {
 					<Card>
 						<div>
 							<CardHeader>
-								<Row>
+							<column>
 									<Col lg={12}>
 										<div
 											className="h4 mb-0 d-flex align-items-center"
@@ -262,7 +262,7 @@ class BalanceSheet extends React.Component {
 											</div>
 										</div>
 									</Col>
-								</Row>
+								</column>
 							</CardHeader>
 							<div className={`panel ${view ? 'view-panel' : ''}`}>
 								<FilterComponent
@@ -276,24 +276,47 @@ class BalanceSheet extends React.Component {
 								<PDFExport
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
-									paperSize="A3"
+									paperSize="A4"
 								>
-									<div className="logo-container">
-													<img src={logo} alt="logo" />
-												</div>
-									<div style={{ textAlign: 'center'}}>
-										<p><h2>
+							<div style={{	
+									
+									display: 'flex',
+									justifyContent: 'space-between',
+									marginBottom: '1rem'}}>
+									<div>
+									<img
+										src={ 
+											company_profile &&
+											company_profile.companyLogoByteArray
+												? 'data:image/jpg;base64,' +
+											company_profile.companyLogoByteArray
+												: logo
+										}
+										className=""
+										alt=""
+										style={{ width: ' 150px' }}></img>
+								
+									
+									</div>			
+									<div style={{textAlign:'center'}} >
+								
+										<h2>
 										{company_profile &&
 											company_profile['companyName']
 												? company_profile['companyName']
 												: ''}
 											</h2>	
-											<br style={{ marginBottom: '5px' }} />
+										
 											<b style ={{ fontSize: '18px'}}>Balance Sheet</b>
-											<br style={{ marginBottom: '5px' }} />
+											<br/>
 											As on {initValue.endDate}
-										</p>
+											
 									</div>
+									<div>
+								
+									
+									</div>									
+							</div>
 									{loading ? (
 										<Loader />
 									) : (

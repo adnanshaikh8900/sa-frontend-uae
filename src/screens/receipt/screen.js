@@ -342,6 +342,13 @@ class Receipt extends React.Component {
 			contact_list,
 			universal_currency_list,
 		} = this.props;
+		
+		let tmpContact_list = []
+
+		contact_list.map(item => {
+			let obj = {label: item.label.contactName, value: item.value}
+			tmpContact_list.push(obj)
+		})
 
 		return (
 			<div className="receipt-screen">
@@ -461,11 +468,11 @@ class Receipt extends React.Component {
 													<Select
 														styles={customStyles}
 														options={
-															contact_list
+															tmpContact_list
 																? selectOptionsFactory.renderOptions(
 																		'label',
 																		'value',
-																		contact_list,
+																		tmpContact_list,
 																		'Customer',
 																  )
 																: []

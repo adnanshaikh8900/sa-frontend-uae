@@ -1160,6 +1160,15 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 			universal_currency_list,
 			currency_convert_list,
 		} = this.props;
+
+		
+		let tmpCustomer_list = []
+
+		customer_list.map(item => {
+			let obj = {label: item.label.contactName, value: item.value}
+			tmpCustomer_list.push(obj)
+		})
+
 		return (
 			<div className="create-customer-invoice-screen">
 				<div className="animated fadeIn">
@@ -1336,11 +1345,11 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																		name="contactId"
 																		placeholder="Select Customer name"
 																		options={
-																			customer_list
+																			tmpCustomer_list
 																				? selectOptionsFactory.renderOptions(
 																						'label',
 																						'value',
-																						customer_list,
+																						tmpCustomer_list,
 																						'Customer',
 																				  )
 																				: []

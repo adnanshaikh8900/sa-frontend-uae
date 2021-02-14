@@ -855,20 +855,19 @@ class CreateSupplierInvoice extends React.Component {
 
 	setExchange = (value) => {
 		let result = this.props.currency_convert_list.filter((obj) => {
-		return obj.currencyCode === value;
+			return obj.currencyCode === value;
 		});
 		console.log( this.props.currency_convert_list)
-		console.log(result)
-this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
+		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 		};
-		setCurrency = (value) => {
-			let result = this.props.currency_convert_list.filter((obj) => {
+
+	setCurrency = (value) => {
+		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === value;
-			});
-			console.log( this.props.currency_convert_list)
-			console.log(result)
-			this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
-			};
+		});
+		
+	    this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
+	};
 
 	updateAmount = (data, props) => {
 		const { vat_list } = this.props;
@@ -1236,6 +1235,23 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 			});
 	};
 
+	getCurrency = (opt) => {
+		let supplier_currencyCode = 0;
+
+		this.props.supplier_list.map(item => {
+			if(item.label.contactId == opt) {
+				this.setState({
+					supplier_currency: item.label.currency.currencyCode,
+					supplier_currency_des: item.label.currency.currencyName
+				});
+
+				supplier_currencyCode = item.label.currency.currencyCode;
+			}
+		})
+
+		return supplier_currencyCode;
+	}
+
 	render() {
 		const { data, discountOptions, initValue, prefix } = this.state;
 
@@ -1245,6 +1261,14 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 			universal_currency_list,
 			currency_convert_list,
 		} = this.props;
+
+		let tmpSupplier_list = []
+
+		supplier_list.map(item => {
+			let obj = {label: item.label.contactName, value: item.value}
+			tmpSupplier_list.push(obj)
+		})
+
 		return (
 			<div className="create-supplier-invoice-screen">
 				<div className=" fadeIn">
@@ -1433,11 +1457,11 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		name="contactId"
 																		placeholder="Select Supplier Name"
 																		options={
-																			supplier_list
+																			tmpSupplier_list
 																				? selectOptionsFactory.renderOptions(
 																						'label',
 																						'value',
-																						supplier_list,
+																						tmpSupplier_list,
 																						'Supplier Name',
 																				  )
 																				: []
@@ -1445,8 +1469,11 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		value={props.values.contactId}
 																		onChange={(option) => {
 																			if (option && option.value) {
+																				this.formRef.current.setFieldValue( this.getCurrency(option.value) );
+																				this.setExchange( this.getCurrency(option.value) );
 																				props.handleChange('contactId')(option);
 																			} else {
+
 																				props.handleChange('contactId')('');
 																			}
 																		}}
@@ -1702,7 +1729,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		}
 																		id="currency"
 																		name="currency"
-																		value={
+																		value={																		
 																			currency_convert_list &&
 																			selectCurrencyFactory
 																				.renderOptions(
@@ -1714,9 +1741,10 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																				.find(
 																					(option) =>
 																						option.value ===
-																						+props.values.currencyCode,
+																						this.state.supplier_currency,
 																				)
 																		}
+																		isDisabled="true"
 																		onChange={(option) => {
 																			props.handleChange('currency')(option);
 																			this.setExchange(option.value);
@@ -1739,14 +1767,14 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 															</Col>
 														</Row>
 														<hr />
-																<Row>
+																<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																<Col>
 																<Label htmlFor="currency">
 																		Currency Exchange Rate
 																	</Label>	
 																</Col>
 																</Row>
-																<Row>
+																<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																<Col md={1}>
 																<Input
 																		disabled
@@ -1769,7 +1797,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																			id="curreancyname"
 																			name="curreancyname"
 																			
-																			value={props.values.curreancyname}
+																			value={this.state.supplier_currency_des}
 																			onChange={(value) => {
 																				props.handleChange('curreancyname')(
 																					value,
@@ -1814,7 +1842,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																			/>
 														</Col>
 														</Row>
-														<hr />
+														<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
 														<Row>
 															<Col lg={12} className="mb-3">
 																<Button

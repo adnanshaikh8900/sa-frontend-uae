@@ -321,6 +321,14 @@ class Payment extends React.Component {
 		// const containerStyle = {
 		//   zIndex: 1999
 		// }
+
+		let tmpSupplier_list = []
+
+		supplier_list.map(item => {
+			let obj = {label: item.label.contactName, value: item.value}
+			tmpSupplier_list.push(obj)
+		})
+
 		return (
 			<div className="payment-screen">
 				<div className="animated fadeIn">
@@ -388,11 +396,11 @@ class Payment extends React.Component {
 														id="supplier"
 														name="supplier"
 														options={
-															supplier_list
+															tmpSupplier_list
 																? selectOptionsFactory.renderOptions(
 																		'label',
 																		'value',
-																		supplier_list,
+																		tmpSupplier_list,
 																		'Supplier Name',
 																  )
 																: []

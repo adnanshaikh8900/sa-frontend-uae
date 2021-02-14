@@ -739,6 +739,14 @@ class SupplierInvoice extends React.Component {
 				  }))
 				: '';
 
+		
+		let tmpSupplier_list = []
+
+		supplier_list.map(item => {
+			let obj = {label: item.label.contactName, value: item.value}
+			tmpSupplier_list.push(obj)
+		})		
+
 		return (
 			<div className="supplier-invoice-screen">
 				<div className="animated fadeIn">
@@ -929,11 +937,11 @@ class SupplierInvoice extends React.Component {
 													id="supplier"
 													name="supplier"
 													options={
-														supplier_list
+														tmpSupplier_list
 															? selectOptionsFactory.renderOptions(
 																	'label',
 																	'value',
-																	supplier_list,
+																	tmpSupplier_list,
 																	'Supplier Name',
 															  )
 															: []

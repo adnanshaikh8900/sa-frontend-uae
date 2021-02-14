@@ -721,6 +721,14 @@ class CustomerInvoice extends React.Component {
 						vatAmount: customer.totalVatAmount,
 				  }))
 				: '';
+
+		let tmpCustomer_list = []
+
+		customer_list.map(item => {
+			let obj = {label: item.label.contactName, value: item.value}
+			tmpCustomer_list.push(obj)
+		})
+
 		return (
 			<div className="customer-invoice-screen">
 				<div className="animated fadeIn">
@@ -911,11 +919,11 @@ class CustomerInvoice extends React.Component {
 													id="customer"
 													name="customer"
 													options={
-														customer_list
+														tmpCustomer_list
 															? selectOptionsFactory.renderOptions(
 																	'label',
 																	'value',
-																	customer_list,
+																	tmpCustomer_list,
 																	'Customer',
 															  )
 															: []

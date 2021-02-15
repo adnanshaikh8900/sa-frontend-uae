@@ -4,7 +4,7 @@ import moment from 'moment';
 import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { Currency } from 'components';
-import { toInteger } from 'lodash';
+import { toInteger, upperCase } from 'lodash';
 var converter = require('number-to-words');
 class InvoiceTemplate extends Component {
 	constructor(props) {
@@ -366,12 +366,12 @@ class InvoiceTemplate extends Component {
 								}}
 							>
 								<div className="pb-2">Amount In Words:<br/>
-									<b> {converter.toWords(toInteger(invoiceData.dueAmount))}
+									<b> {upperCase(converter.toWords(toInteger(invoiceData.dueAmount)))}
 									{/* <b> {parseInt(invoiceData.dueAmount)} */}
 									</b></div>
 								<div className="pb-2">VAT Amount In Words:
 										<br/>
-									<b> {converter.toWords(toInteger(invoiceData.totalVatAmount))}</b>
+									<b> {upperCase(converter.toWords(toInteger(invoiceData.totalVatAmount)))}</b>
 									{/* <b> {invoiceData.totalVatAmount}</b> */}
 								</div>
 							<div style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>

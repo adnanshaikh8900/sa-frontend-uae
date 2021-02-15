@@ -906,12 +906,14 @@ class VatReturnsReport extends React.Component {
 																	) : (
 																		'0.00'
 																	)}
+																	<div>A1</div>
 																</td>
 																<td className="pt-0 pb-0 ">
 																			{/* {this.state.data[
 																				'totalVatForDubai'
 																			]} */}
 																			0.00
+																			<div>A2</div>
 																</td>
 															</tr>
 															
@@ -1072,13 +1074,14 @@ class VatReturnsReport extends React.Component {
 																	) : (
 																		'0.00'
 																	)}
-																	
+																		<div>A3</div>
 																</td>
 																<td className="pt-0 pb-0 ">
 																			{/* {this.state.data[
 																				'totalVatForDubai'
 																			]} */}
 																			0.00
+																			<div>A4</div>
 																</td>
 															</tr>
 														</>	
@@ -1136,6 +1139,7 @@ class VatReturnsReport extends React.Component {
 																	) : (
 																		'0.00'
 																	)}	
+																	<div>A5=A1+A2</div>
 																</td>
 															</tr>
 															<tr className="mainLable">
@@ -1159,6 +1163,7 @@ class VatReturnsReport extends React.Component {
 																	) : (
 																		'0.00'
 																	)}	
+																		<div>A6=A3+A4</div>
 																</td>
 															</tr>
 															<tr className="mainLable">
@@ -1182,6 +1187,7 @@ class VatReturnsReport extends React.Component {
 																	) : (
 																		'0.00'
 																	)}	
+																		<div>A7=A5+A6</div>
 																</td>
 															</tr>
 															<tr className="mainLable">

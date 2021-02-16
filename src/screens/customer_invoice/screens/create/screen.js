@@ -1075,6 +1075,35 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 		this.formRef.current.setFieldValue('contactId', option, true);
 	};
 
+	getCurrentUser = (data) => {
+		let option;
+		if (data.label || data.value) {
+			option = data;
+		} else {
+			option = {
+				label: `${data.fullName}`,
+				value: data.id,
+			};
+		}
+		
+		let result = this.props.currency_convert_list.filter((obj) => {
+			return obj.currencyCode === data.currencyCode;
+		});
+		
+	    this.formRef.current.setFieldValue('currency', result[0].currencyCode, true);
+		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
+
+		this.setState({
+			customer_currency: data.currencyCode,
+			customer_currency_des: result[0].currencyName,
+		})
+
+		// this.setState({
+		//   selectedContact: option
+		// })
+		this.formRef.current.setFieldValue('contactId', option, true);
+	};
+
 	getCurrentNumber = (data) => {
 		this.getInvoiceNo();
 	};
@@ -1152,6 +1181,23 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 			}
 		});
 	};
+
+	getCurrency = (opt) => {
+		let customer_currencyCode = 0;
+
+		this.props.customer_list.map(item => {
+			if(item.label.contactId == opt) {
+				this.setState({
+					customer_currency: item.label.currency.currencyCode,
+					customer_currency_des: item.label.currency.currencyName
+				});
+
+				customer_currencyCode = item.label.currency.currencyCode;
+			}
+		})
+
+		return customer_currencyCode;
+	}
 
 	render() {
 		const { data, discountOptions, initValue, exist, prefix } = this.state;
@@ -1357,6 +1403,8 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																		value={props.values.contactId}
 																		onChange={(option) => {
 																			if (option && option.value) {
+																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
+																				this.setExchange( this.getCurrency(option.value) );
 																				props.handleChange('contactId')(option);
 																			} else {
 																				props.handleChange('contactId')('');
@@ -1611,8 +1659,8 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																				: []
 																		}
 																		id="currency"
-																		 name="currency"
-																		 value={
+																		name="currency"
+																		value={
 																	 	currency_convert_list &&
 																			selectCurrencyFactory
 																			.renderOptions(
@@ -1624,20 +1672,21 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																		 		.find(
 																					(option) =>
 																		 				option.value ===
-																	 				+props.values.currencyCode,
+																	 				this.state.customer_currency,
 																	 		)
-																		 }
-																		 className={
+																		}
+																		className={
 																			props.errors.currency &&
 																			props.touched.currency
 																				? 'is-invalid'
 																				: ''
 																		}
-																		 onChange={(option) => {
-																		 props.handleChange('currency')(option);
-																		 this.setExchange(option.value);
-																		 this.setCurrency(option.value)
-																		}}
+																		isDisabled="true"
+																		onChange={(option) => {
+																		props.handleChange('currency')(option);
+																		this.setExchange(option.value);
+																		this.setCurrency(option.value)
+																	    }}
 
 																	/>
 																	{props.errors.currency &&
@@ -1681,7 +1730,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																			id="curreancyname"
 																			name="curreancyname"
 																			
-																			value={props.values.curreancyname}
+																			value={this.state.customer_currency_des}
 																			onChange={(value) => {
 																				props.handleChange('curreancyname')(
 																					value,

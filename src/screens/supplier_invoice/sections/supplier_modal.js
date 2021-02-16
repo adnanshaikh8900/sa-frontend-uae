@@ -80,10 +80,16 @@ class SupplierModal extends React.Component {
 		this.props
 			.createSupplier(postData)
 			.then((res) => {
+				let resConfig = JSON.parse(res.config.data);
+				
 				if (res.status === 200) {
 					resetForm();
 					this.props.closeSupplierModal(true);
-					this.props.getCurrentUser(res.data);
+
+					let tmpData = res.data;
+					tmpData.currencyCode = resConfig.currencyCode;
+
+					this.props.getCurrentUser(tmpData);
 				}
 			})
 			.catch((err) => {

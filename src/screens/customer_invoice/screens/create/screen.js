@@ -979,7 +979,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 			formData.append('placeOfSupplyId', placeOfSupplyId.value);
 		}
 		if (currency !== null && currency) {
-			formData.append('currencyCode', currency.value);
+			formData.append('currencyCode', this.state.customer_currency);
 		}
 		if (project !== null && project.value) {
 			formData.append('projectId', project.value);
@@ -1090,7 +1090,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 			return obj.currencyCode === data.currencyCode;
 		});
 		
-	    this.formRef.current.setFieldValue('currency', result[0].currencyCode, true);
+	    this.formRef.current.setFieldValue('currencyCode', result[0].currencyCode, true);
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 
 		this.setState({
@@ -1672,7 +1672,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																		 		.find(
 																					(option) =>
 																		 				option.value ===
-																	 				this.state.customer_currency,
+																	 				+this.state.customer_currency,
 																	 		)
 																		}
 																		className={
@@ -1681,7 +1681,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																				? 'is-invalid'
 																				: ''
 																		}
-																		isDisabled="true"
+																		isDisabled={true}
 																		onChange={(option) => {
 																		props.handleChange('currency')(option);
 																		this.setExchange(option.value);

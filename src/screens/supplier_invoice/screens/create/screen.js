@@ -113,7 +113,7 @@ class CreateSupplierInvoice extends React.Component {
 				receiptAttachmentDescription: '',
 				receiptNumber: '',
 				contact_po_number: '',
-				currency: '',
+				currencyCode: '',
 				invoiceDueDate: '',
 				invoiceDate: new Date(),
 				contactId: '',
@@ -383,7 +383,7 @@ class CreateSupplierInvoice extends React.Component {
 				initValue: {
 					...this.state.initValue,
 					...{
-						currency: response.data
+						currencyCode: response.data
 							? parseInt(response.data[0].currencyCode)
 							: '',
 					},
@@ -994,7 +994,7 @@ class CreateSupplierInvoice extends React.Component {
 			formData.append('contactId', contactId.value);
 		}
 		if (currency !== null && currency) {
-			formData.append('currencyCode', currency.value);
+			formData.append('currencyCode', this.state.supplier_currency);
 		}
 		if (project !== null && project.value) {
 			formData.append('projectId', project.value);
@@ -1758,7 +1758,7 @@ class CreateSupplierInvoice extends React.Component {
 																						this.state.supplier_currency,
 																				)
 																		}
-																		isDisabled="true"
+																		isDisabled={true}
 																		onChange={(option) => {
 																			props.handleChange('currency')(option);
 																			this.setExchange(option.value);
@@ -1783,7 +1783,7 @@ class CreateSupplierInvoice extends React.Component {
 														<hr />
 																<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																<Col>
-																<Label htmlFor="currency">
+																<Label>
 																		Currency Exchange Rate
 																	</Label>	
 																</Col>

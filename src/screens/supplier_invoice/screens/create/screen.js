@@ -857,7 +857,7 @@ class CreateSupplierInvoice extends React.Component {
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === value;
 		});
-		console.log( this.props.currency_convert_list)
+
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 		};
 
@@ -1087,6 +1087,7 @@ class CreateSupplierInvoice extends React.Component {
 	};
 
 	getCurrentUser = (data) => {
+		
 		let option;
 		if (data.label || data.value) {
 			option = data;
@@ -1096,6 +1097,19 @@ class CreateSupplierInvoice extends React.Component {
 				value: data.id,
 			};
 		}
+		
+		let result = this.props.currency_convert_list.filter((obj) => {
+			return obj.currencyCode === data.currencyCode;
+		});
+		
+	    this.formRef.current.setFieldValue('currency', result[0].currencyCode, true);
+		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
+
+		this.setState({
+			supplier_currency: data.currencyCode,
+			supplier_currency_des: result[0].currencyName,
+		})
+
 		// this.setState({
 		//   selectedContact: option
 		// })
@@ -1469,7 +1483,7 @@ class CreateSupplierInvoice extends React.Component {
 																		value={props.values.contactId}
 																		onChange={(option) => {
 																			if (option && option.value) {
-																				this.formRef.current.setFieldValue( this.getCurrency(option.value) );
+																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
 																				this.setExchange( this.getCurrency(option.value) );
 																				props.handleChange('contactId')(option);
 																			} else {

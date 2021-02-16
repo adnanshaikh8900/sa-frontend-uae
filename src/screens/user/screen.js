@@ -500,14 +500,14 @@ class User extends React.Component {
 										<Button
 											color="primary"
 											style={{ marginBottom: '10px' }}
-											className="btn-square"
+											className="btn-square pull-right mb-2"
 											onClick={() =>
 												this.props.history.push(`/admin/settings/user/create`)
 											}
 										>
 											<i className="fas fa-plus mr-1" />
 											New Users
-										</Button>
+										</Button>  
 										<div>
 											<BootstrapTable
 												selectRow={this.selectRowProp}

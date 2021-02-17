@@ -2,7 +2,7 @@ nameserver="simpleaccounts-app"
 maindomain="app.simpleaccounts.io"
 subdomain="load-me"
 helmDir="simpleaccounts-frontend"
-SVrelease="0.0.3-alpha-390"
+SVrelease="0.0.3-alpha-392"
 
 helm install $subdomain-frontend ./$helmDir --values ./$helmDir/values.yaml \
 --set simpleVatBackendRelease=$SVrelease \

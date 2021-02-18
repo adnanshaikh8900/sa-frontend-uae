@@ -101,6 +101,7 @@ class DetailCustomerInvoice extends React.Component {
 			discountAmount: 0,
 			fileName: '',
 			basecurrency:[],
+			customer_currency: '',
 		};
 
 		// this.options = {
@@ -990,6 +991,14 @@ class DetailCustomerInvoice extends React.Component {
 				this.setState({ loading: false });
 			});
 	};	
+
+	setExchange = (value) => {
+		let result = this.props.currency_convert_list.filter((obj) => {
+		return obj.currencyCode === value;
+		});
+		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
+		};
+
 	deleteInvoice = () => {
 		const message1 =
 			<text>
@@ -1036,10 +1045,35 @@ class DetailCustomerInvoice extends React.Component {
 		});
 	};
 
+	getCurrency = (opt) => {
+		let customer_currencyCode = 0;
+
+		this.props.customer_list.map(item => {
+			if(item.label.contactId == opt) {
+				this.setState({
+					customer_currency: item.label.currency.currencyCode,
+					customer_currency_des: item.label.currency.currencyName
+				});
+
+				customer_currencyCode = item.label.currency.currencyCode;
+			}
+		})
+
+		return customer_currencyCode;
+	}
+
 	render() {
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
 
 		const { project_list, currency_list,currency_convert_list, customer_list,universal_currency_list } = this.props;
+
+		let tmpCustomer_list = []
+
+		customer_list.map(item => {
+			let obj = {label: item.label.contactName, value: item.value}
+			tmpCustomer_list.push(obj)
+		})
+
 		return (
 			<div className="detail-customer-invoice-screen">
 				<div className="animated fadeIn">
@@ -1215,18 +1249,18 @@ class DetailCustomerInvoice extends React.Component {
 																			id="contactId"
 																			name="contactId"
 																			options={
-																				customer_list
+																				tmpCustomer_list
 																					? selectOptionsFactory.renderOptions(
 																							'label',
 																							'value',
-																							customer_list,
+																							tmpCustomer_list,
 																							'Customer',
 																					  )
 																					: []
 																			}
 																			value={
-																				customer_list &&
-																				customer_list.find(
+																				tmpCustomer_list &&
+																				tmpCustomer_list.find(
 																					(option) =>
 																						option.value ===
 																						+props.values.contactId,
@@ -1234,6 +1268,8 @@ class DetailCustomerInvoice extends React.Component {
 																			}
 																			onChange={(option) => {
 																				if (option && option.value) {
+																					this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
+																					this.setExchange( this.getCurrency(option.value) );
 																					props.handleChange('contactId')(
 																						option.value,
 																					);
@@ -1496,6 +1532,7 @@ class DetailCustomerInvoice extends React.Component {
 																			}
 																			id="currency"
 																			name="currency"
+																			isDisabled={true}
 																			value={
 																				currency_convert_list &&
 																				selectCurrencyFactory
@@ -1508,7 +1545,7 @@ class DetailCustomerInvoice extends React.Component {
 																					.find(
 																						(option) =>
 																							option.value ===
-																							+props.values.currency,
+																							(this.state.customer_currency ? +this.state.customer_currency : +props.values.currency),
 																					)
 																			}
 																			onChange={(option) =>
@@ -1533,7 +1570,7 @@ class DetailCustomerInvoice extends React.Component {
 																</Col>
 																</Row>
 																<hr />
-																<Row>
+																<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																<Col>
 																<Label htmlFor="currency">
 																		Currency Exchange Rate
@@ -1541,7 +1578,7 @@ class DetailCustomerInvoice extends React.Component {
 																</Col>
 																</Row>
 																
-																<Row>
+																<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																<Col md={1}>
 																<Input
 																		disabled
@@ -1564,7 +1601,7 @@ class DetailCustomerInvoice extends React.Component {
 																			id="currencyName"
 																			name="currencyName"
 																			
-																			value={props.values.currencyName}
+																			value={this.state.customer_currency_des ? this.state.customer_currency_des : props.values.currencyName}
 																			onChange={(value) => {
 																				props.handleChange('currencyName')(
 																					value,
@@ -1609,7 +1646,7 @@ class DetailCustomerInvoice extends React.Component {
 																			/>
 														</Col>
 														</Row>
-															<hr />
+															<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
 															<Row>
 																<Col lg={12} className="mb-3">
 																	<Button

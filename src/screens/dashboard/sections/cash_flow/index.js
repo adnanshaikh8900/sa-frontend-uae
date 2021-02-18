@@ -101,7 +101,7 @@ class CashFlow extends Component {
 							<div className="data-item">
 								<img alt="income" src={incomeIcon} />
 								<div>
-									<h4>
+									<h5>
 										{universal_currency_list[0] &&
 											this.props.cash_flow_graph.inflow && (
 												<Currency
@@ -115,14 +115,14 @@ class CashFlow extends Component {
 													}
 												/>
 											)}
-									</h4>
+									</h5>
 									<p>INFLOW</p>
 								</div>
 							</div> 
 							<div className="data-item ml-4">
 								<img alt="outgoing" src={outcomeIcon} />
 								<div>
-									<h4>
+									<h5>
 										{universal_currency_list[0] &&
 											this.props.cash_flow_graph.outflow && (
 												<Currency
@@ -136,14 +136,14 @@ class CashFlow extends Component {
 													}
 												/>
 											)}
-									</h4>
+									</h5>
 									<p>OUTFLOW</p>
 								</div>
 							</div>
 							<div className="data-item total ml-4">
 								<img alt="total" src={totalIcon} />
 								<div>
-									<h4>
+									<h5>
 										{' '}
 										{universal_currency_list[0] &&
 											this.props.cash_flow_graph.outflow && (
@@ -159,7 +159,7 @@ class CashFlow extends Component {
 													}
 												/>
 											)}
-									</h4>
+									</h5>
 									<p>NET</p>
 								</div>
 							</div>

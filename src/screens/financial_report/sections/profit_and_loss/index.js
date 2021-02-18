@@ -651,6 +651,7 @@ class ProfitAndLossReport extends React.Component {
 											</Table>
 										</div>
 									)}
+									<div style={{ textAlignLast:'center'}}> Powered By <b>SimpleAccounts</b></div> 
 								</PDFExport>
 							</CardBody>
 						</div>

@@ -147,6 +147,7 @@ class SupplierModal extends React.Component {
 						}}
 						validationSchema={Yup.object().shape({
 							firstName: Yup.string().required('First Name is Required'),
+							vatRegistrationNumber: Yup.string().required('	Tax Registration Number is Required'),
 							// lastName: Yup.string().required('Last Name is Required'),
 							// middleName: Yup.string().required('Middle Name is Required'),
 							// contactType: Yup.string()
@@ -420,6 +421,46 @@ class SupplierModal extends React.Component {
 														props.touched.currencyCode && (
 															<div className="invalid-feedback">
 																{props.errors.currencyCode}
+															</div>
+														)}
+												</FormGroup>
+											</Col>
+										</Row>
+										<Row className="row-wrapper">
+											<Col md="4">
+												<FormGroup>
+													<Label htmlFor="vatRegistrationNumber">
+													<span className="text-danger">*</span>
+														Tax Registration Number
+													</Label>
+													<Input
+														type="text"
+														maxLength="20"
+														id="vatRegistrationNumber"
+														name="vatRegistrationNumber"
+														onChange={(option) => {
+															if (
+																option.target.value === '' ||
+																this.regExBoth.test(option.target.value)
+															) {
+																props.handleChange('vatRegistrationNumber')(
+																	option,
+																);
+															}
+														}}
+														value={props.values.vatRegistrationNumber}
+														className={
+															props.errors.vatRegistrationNumber &&
+															props.touched.vatRegistrationNumber
+																? 'is-invalid'
+																: ''
+														}
+														placeholder="Enter Tax Registration Number"
+													/>
+													{props.errors.vatRegistrationNumber &&
+														props.touched.vatRegistrationNumber && (
+															<div className="invalid-feedback">
+																{props.errors.vatRegistrationNumber}
 															</div>
 														)}
 												</FormGroup>
@@ -790,45 +831,6 @@ class SupplierModal extends React.Component {
 														props.touched.contractPoNumber && (
 															<div className="invalid-feedback">
 																{props.errors.contractPoNumber}
-															</div>
-														)}
-												</FormGroup>
-											</Col>
-										</Row>
-										<Row className="row-wrapper">
-											<Col md="4">
-												<FormGroup>
-													<Label htmlFor="vatRegistrationNumber">
-														Tax Registration Number
-													</Label>
-													<Input
-														type="text"
-														maxLength="20"
-														id="vatRegistrationNumber"
-														name="vatRegistrationNumber"
-														onChange={(option) => {
-															if (
-																option.target.value === '' ||
-																this.regExBoth.test(option.target.value)
-															) {
-																props.handleChange('vatRegistrationNumber')(
-																	option,
-																);
-															}
-														}}
-														value={props.values.vatRegistrationNumber}
-														className={
-															props.errors.vatRegistrationNumber &&
-															props.touched.vatRegistrationNumber
-																? 'is-invalid'
-																: ''
-														}
-														placeholder="Enter Tax Registration Number"
-													/>
-													{props.errors.vatRegistrationNumber &&
-														props.touched.vatRegistrationNumber && (
-															<div className="invalid-feedback">
-																{props.errors.vatRegistrationNumber}
 															</div>
 														)}
 												</FormGroup>

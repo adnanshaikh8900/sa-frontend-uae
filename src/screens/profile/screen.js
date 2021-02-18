@@ -1650,9 +1650,6 @@ class Profile extends React.Component {
 																					<Col lg={4}>
 																						<FormGroup className="mb-3">
 																							<Label htmlFor="phoneNumber">
-																								<span className="text-danger">
-																									*
-																							</span>
 																							Mobile Number
 																						</Label>
 																							<PhoneInput
@@ -2141,7 +2138,7 @@ class Profile extends React.Component {
 																					/>
 																				</FormGroup>
 																			</Col>
-																			<Col lg={4}>
+																			{/* <Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="dateFormat">
 																						Date Format
@@ -2163,7 +2160,7 @@ class Profile extends React.Component {
 																						}}
 																					/>
 																				</FormGroup>
-																			</Col>
+																			</Col> */}
 																		</Row>
 
 																		<h5 className="mt-3 mb-3">Company Address</h5>

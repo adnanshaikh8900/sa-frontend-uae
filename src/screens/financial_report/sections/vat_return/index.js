@@ -1204,6 +1204,7 @@ class VatReturnsReport extends React.Component {
 											</div>
 										</div>
 									)}
+									<div style={{ textAlignLast:'center'}}> Powered By <b>SimpleAccounts</b></div> 
 								</PDFExport>
 							</CardBody>
 						</div>

@@ -52,7 +52,7 @@ class CreateOpeningBalance extends React.Component {
 		super(props);
 		this.state = {
 			initValue: {
-				effectiveDate :'',
+				effectiveDate : new Date(),
 				openingBalance : '',
 				transactionCategoryId : '',
 			},

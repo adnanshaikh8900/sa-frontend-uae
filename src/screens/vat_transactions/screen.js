@@ -327,11 +327,7 @@ class VatTransactions extends React.Component {
 											</Button>
 										</ButtonGroup>
 									</FormGroup>
-									{/* <FormGroup>
-										<div className="date-range">
-											<DateRangePicker2 ranges={ranges} opens={'left'} />
-										</div>
-									</FormGroup> */}
+									
 								</div>
 							</Form>
 							{/* <div className="py-3">

@@ -186,7 +186,6 @@ class CreateExpense extends React.Component {
 		if (payMode && payMode.value) {
 			formData.append('payMode', payMode.value);
 		}
-		console.log(payee);
 		if (expenseCategory && expenseCategory.value) {
 			formData.append('expenseCategory', expenseCategory.value);
 		}
@@ -542,8 +541,8 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	</Label>
 																	<Select
 																		styles={customStyles}
-																		id="currencyCode"
-																		name="currencyCode"
+																		id="currency"
+																		name="currency"
 																		options={
 																			currency_convert_list
 																				? selectCurrencyFactory.renderOptions(
@@ -750,15 +749,14 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 															)}
 														</Row>
 														<hr />
-																<Row>
+														<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																<Col>
 																<Label htmlFor="currency">
 																		Currency Exchange Rate
 																	</Label>	
 																</Col>
 																</Row>
-																
-																<Row>
+																<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																<Col lg={1}>
 																<Input
 																		disabled

@@ -362,6 +362,13 @@ class RecordCustomerPayment extends React.Component {
 		const { initValue, loading, dialog } = this.state;
 		const { pay_mode, customer_list, deposit_list } = this.props;
 
+		let tmpcustomer_list = []
+
+		customer_list.map(item => {
+			let obj = {label: item.label.contactName, value: item.value}
+			tmpcustomer_list.push(obj)
+		})
+
 		return (
 			<div className="detail-customer-invoice-screen">
 				<div className="animated fadeIn">
@@ -453,8 +460,8 @@ class RecordCustomerPayment extends React.Component {
 																			name="contactId"
 																			isDisabled
 																			value={
-																				customer_list &&
-																				customer_list.find(
+																				tmpcustomer_list &&
+																				tmpcustomer_list.find(
 																					(option) =>
 																						option.value ===
 																						+this.props.location.state.id

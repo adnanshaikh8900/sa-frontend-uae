@@ -507,43 +507,10 @@ class OpeningBalance extends React.Component {
 											data={opening_balance_list ? opening_balance_list : []}
 											version="4"
 											hover
-											currencyList
 											keyField="id"
-											remote
-											// pagination={
-											// 	opening_balance_list &&
-											// 	opening_balance_list.length > 0
-											// 		? true
-											// 		: false
-											// }
-											fetchInfo={{
-												dataTotalSize: opening_balance_list.count
-													? opening_balance_list.count
-													: 0,
-											}}
-											className="customer-invoice-table"
-											csvFileName="Customer_Invoice.csv"
-											ref={(node) => {
-												this.table = node;
-											}}
-										>
-									
-										{/* <BootstrapTable
-											selectRow={this.selectRowProp}
-											search={false}
-											options={this.options}
-											data={
-												opening_balance_list && opening_balance_list.data
-													? opening_balance_list.data
-													: []
-											}
-											version="4"
-											hover
-											keyField="transactionCategoryBalanceId"
 											pagination={
 												opening_balance_list &&
-												opening_balance_list.data &&
-												opening_balance_list.data.length > 0
+												opening_balance_list.length > 0
 													? true
 													: false
 											}
@@ -553,13 +520,9 @@ class OpeningBalance extends React.Component {
 													? opening_balance_list.count
 													: 0,
 											}}
-											multiColumnSort
-											className="expense-table"
-											trClassName="cursor-pointer"
+											className="supplier-invoice-table"
 											ref={(node) => (this.table = node)}
-											csvFileName="opening_balance_list.csv"
-										> */}
-											
+										>
 											<TableHeaderColumn
 												dataField="transactionCategoryName"
 												dataSort
@@ -589,6 +552,7 @@ class OpeningBalance extends React.Component {
 											</TableHeaderColumn>
 											<TableHeaderColumn
 											dataField="currency"
+											dataSort
 											width="15%"
 											dataFormat={this.renderCurrency}
 											formatExtraData={universal_currency_list}
@@ -599,6 +563,7 @@ class OpeningBalance extends React.Component {
 												className="text-right"
 												columnClassName="text-right"
 												dataFormat={this.renderActions}
+												dataSort
 												className="table-header-bg"
 											></TableHeaderColumn>
 										</BootstrapTable>

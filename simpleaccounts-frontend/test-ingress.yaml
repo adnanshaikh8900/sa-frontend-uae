@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: test1-app-frontend
+  name: test3-app-frontend
 
   labels:
     helm.sh/chart: helm-frontend-0.1.0

@@ -195,7 +195,7 @@ class BankAccount extends Component {
 									
 										<div className="data-item">
 											<div>
-												<h4>
+												<h5>
 													{universal_currency_list[0] && (
 														<Currency
 															value={
@@ -210,13 +210,13 @@ class BankAccount extends Component {
 															}
 														/>
 													)}
-												</h4>
+												</h5>
 												<p>BALANCE</p>
 											</div>
 										</div>
 										<div className="data-item">
 											<div>
-												<h4>
+												<h5>
 													{universal_currency_list[0] && (
 														<Currency
 															value={this.state.totalBalance}
@@ -227,7 +227,7 @@ class BankAccount extends Component {
 															}
 														/>
 													)}
-												</h4>
+												</h5>
 												<p>ALL BANK ACCOUNTS</p>
 											</div>
 										</div>

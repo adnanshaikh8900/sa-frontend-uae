@@ -712,6 +712,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 									)}
 								</PDFExport>
 							</CardBody>
+							<div style={{ textAlignLast:'center'}}> Powered By <b>SimpleAccounts</b></div> 
 						</div>
 					</Card>
 				</div>

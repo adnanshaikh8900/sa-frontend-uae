@@ -10,7 +10,7 @@ helm install $subdomain-frontend ./$helmDir --values ./$helmDir/values.yaml \
 --set simpleVatHost=https://$subdomain-api.$maindomain \
 --set fullnameOverride=$subdomain-frontend \
 --set serviceAccount.name=$subdomain-deploy-robot-frontend \
---set ports.containerPort.backendPort=8888 \
+--set ports.containerPort.frontendPort=80 \
 --set service.port=80 \
 --set ingress.hosts[0].host=$subdomain.$maindomain \
 --set ingress.hosts[0].paths[0]="/*" \
@@ -29,7 +29,7 @@ helm upgrade $subdomain-frontend ./$helmDir --values ./$helmDir/values.yaml \
 --set simpleVatHost=https://$subdomain-api.$maindomain \
 --set fullnameOverride=$subdomain-frontend \
 --set serviceAccount.name=$subdomain-deploy-robot-frontend \
---set ports.containerPort.backendPort=8888 \
+--set ports.containerPort.frontendPort=80 \
 --set service.port=80 \
 --set ingress.hosts[0].host=$subdomain.$maindomain \
 --set ingress.hosts[0].paths[0]="/*" \

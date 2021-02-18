@@ -1699,7 +1699,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 															</Col>
 														</Row>
 														<hr />
-																<Row>
+																<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																<Col>
 																<Label >
 																		Currency Exchange Rate
@@ -1707,7 +1707,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																</Col>
 																</Row>
 																
-																<Row>
+																<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																<Col md={1}>
 																<Input
 																		disabled
@@ -1774,7 +1774,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																			/>
 														</Col>
 														</Row>
-														<hr />
+														<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
 														<Col lg={8} className="mb-3">
 															<Button
 																color="primary"

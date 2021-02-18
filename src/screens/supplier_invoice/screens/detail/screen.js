@@ -103,6 +103,7 @@ class DetailSupplierInvoice extends React.Component {
 			fileName: '',
 			purchaseCategory: [],
 			basecurrency:[],
+			supplier_currency: '',
 		};
 
 		// this.options = {
@@ -1129,6 +1130,12 @@ class DetailSupplierInvoice extends React.Component {
 			});
 	};	
 
+	setExchange = (value) => {
+		let result = this.props.currency_convert_list.filter((obj) => {
+		return obj.currencyCode === value;
+		});
+		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
+		};
 
 	getCurrentUser = (data) => {
 		let option;
@@ -1161,10 +1168,35 @@ class DetailSupplierInvoice extends React.Component {
 		}
 	};
 
+	getCurrency = (opt) => {
+		let supplier_currencyCode = 0;
+
+		this.props.supplier_list.map(item => {
+			if(item.label.contactId == opt) {
+				this.setState({
+					supplier_currency: item.label.currency.currencyCode,
+					supplier_currency_des: item.label.currency.currencyName
+				});
+
+				supplier_currencyCode = item.label.currency.currencyCode;
+			}
+		})
+
+		return supplier_currencyCode;
+	}
+
 	render() {
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
 
 		const { project_list, currency_list,currency_convert_list, supplier_list,universal_currency_list } = this.props;
+
+		let tmpSupplier_list = []
+
+		supplier_list.map(item => {
+			let obj = {label: item.label.contactName, value: item.value}
+			tmpSupplier_list.push(obj)
+		})
+
 		return (
 			<div className="detail-supplier-invoice-screen">
 				<div className="animated fadeIn">
@@ -1325,18 +1357,18 @@ class DetailSupplierInvoice extends React.Component {
 																			name="contactId"
 																			onBlur={props.handlerBlur}
 																			options={
-																				supplier_list
+																				tmpSupplier_list
 																					? selectOptionsFactory.renderOptions(
 																							'label',
 																							'value',
-																							supplier_list,
+																							tmpSupplier_list,
 																							'Supplier Name',
 																					  )
 																					: []
 																			}
 																			value={
-																				supplier_list &&
-																				supplier_list.find(
+																				tmpSupplier_list &&
+																				tmpSupplier_list.find(
 																					(option) =>
 																						option.value ===
 																						+props.values.contactId,
@@ -1344,6 +1376,8 @@ class DetailSupplierInvoice extends React.Component {
 																			}
 																			onChange={(option) => {
 																				if (option && option.value) {
+																					this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
+																					this.setExchange( this.getCurrency(option.value) );
 																					props.handleChange('contactId')(
 																						option.value,
 																					);
@@ -1587,6 +1621,7 @@ class DetailSupplierInvoice extends React.Component {
 																		}
 																		id="currency"
 																		name="currency"
+																		isDisabled={true}
 																		value={
 																			currency_convert_list &&
 																			selectCurrencyFactory
@@ -1599,7 +1634,7 @@ class DetailSupplierInvoice extends React.Component {
 																				.find(
 																					(option) =>
 																						option.value ===
-																						+props.values.currency,
+																						(this.state.supplier_currency ? +this.state.supplier_currency : +props.values.currency),
 																				)
 																		}
 																		onChange={(option) =>
@@ -1622,7 +1657,7 @@ class DetailSupplierInvoice extends React.Component {
 																</Col>
 																</Row>
 																<hr />
-																<Row>
+																<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																<Col>
 																<Label htmlFor="currency">
 																		Currency Exchange Rate
@@ -1630,7 +1665,7 @@ class DetailSupplierInvoice extends React.Component {
 																</Col>
 																</Row>
 																
-																<Row>
+																<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																<Col md={1}>
 																<Input
 																		disabled
@@ -1653,7 +1688,7 @@ class DetailSupplierInvoice extends React.Component {
 																			id="currencyName"
 																			name="currencyName"
 																			
-																			value={props.values.currencyName}
+																			value={this.state.supplier_currency_des ? this.state.supplier_currency_des : props.values.currencyName}
 																			onChange={(value) => {
 																				props.handleChange('currencyName')(
 																					value,
@@ -1698,8 +1733,7 @@ class DetailSupplierInvoice extends React.Component {
 																			/>
 														</Col>
 														</Row>
-															<hr />
-															<hr />
+															<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
 															<Row>
 																<Col lg={12} className="mb-3">
 																	<Button

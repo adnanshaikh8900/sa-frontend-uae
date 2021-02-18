@@ -79,6 +79,7 @@ class explainDiv extends React.Component {
 			.getTransactionCategoryListForExplain(type)
 			.then((res) => {
 				if (res.status === 200) {
+					console.log(res.data);
 					this.setState(
 						{
 							transactionCategoryList: res.data,
@@ -318,6 +319,7 @@ class explainDiv extends React.Component {
 			showAlert,
 			transactionCategoryList,
 		} = this.state;
+
 		if (selectedData !== '') {
 			return (
 				<div className="explain-modal-screen">

@@ -2,7 +2,7 @@ nameserver="simpleaccounts-app"
 maindomain="app.simpleaccounts.io"
 subdomain="load-me"
 helmDir="simpleaccounts-frontend"
-SVrelease="0.0.3-alpha-403"
+SVrelease="0.0.3-alpha-408"
 
 helm install $subdomain-frontend ./$helmDir --values ./$helmDir/values.yaml \
 --set simpleVatBackendRelease=$SVrelease \
@@ -10,6 +10,8 @@ helm install $subdomain-frontend ./$helmDir --values ./$helmDir/values.yaml \
 --set simpleVatHost=https://$subdomain-api.$maindomain \
 --set fullnameOverride=$subdomain-frontend \
 --set serviceAccount.name=$subdomain-deploy-robot-frontend \
+--set ports.containerPort.backendPort=8888 \
+--set service.port=80 \
 --set ingress.hosts[0].host=$subdomain.$maindomain \
 --set ingress.hosts[0].paths[0]="/*" \
 --set ingress.tls[0].hosts[0]=$subdomain-api.$maindomain \
@@ -27,6 +29,8 @@ helm upgrade $subdomain-frontend ./$helmDir --values ./$helmDir/values.yaml \
 --set simpleVatHost=https://$subdomain-api.$maindomain \
 --set fullnameOverride=$subdomain-frontend \
 --set serviceAccount.name=$subdomain-deploy-robot-frontend \
+--set ports.containerPort.backendPort=8888 \
+--set service.port=80 \
 --set ingress.hosts[0].host=$subdomain.$maindomain \
 --set ingress.hosts[0].paths[0]="/*" \
 --set ingress.tls[0].hosts[0]=$subdomain-api.$maindomain \

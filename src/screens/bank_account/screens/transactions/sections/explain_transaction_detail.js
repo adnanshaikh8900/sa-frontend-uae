@@ -659,6 +659,8 @@ class ExplainTrasactionDetail extends React.Component {
 			}
 		})
 
+		console.log('supplier_currencyCode' ,supplier_currencyCode)
+
 		return supplier_currencyCode;
 	}
 	handleFileChange = (e, props) => {
@@ -1138,7 +1140,7 @@ class ExplainTrasactionDetail extends React.Component {
 																						onChange={(option) => {
 																							if (option && option.value) {
 																								this.formRef.current.setFieldValue('currencyCode', this.getCurrency(option.value), true);
-																								//this.setExchange( this.getCurrency(option.value) );
+																								this.setExchange( this.getCurrency(option.value) );
 																								props.handleChange('vendorId')(option);
 																							} else {
 				
@@ -1820,22 +1822,15 @@ class ExplainTrasactionDetail extends React.Component {
 																								.find(
 																									(option) =>
 																										option.value ===
-																										 +props.values.currency,
+																										 +this.state.supplier_currency,
 																								)
 																						}
+																						isDisabled={true}
 																						onChange={(option) => {
-																							if (option && option.value) {
-																								props.handleChange(
-																									'currencyCode',
-																								)(option.value);
-																							} else {
-																								props.handleChange(
-																									'currencyCode',
-																								)('');
-																							}
+																							props.handleChange('currency')(option);
 																							this.setExchange(option.value);
 																							this.setCurrency(option.value)
-																						}}
+																						   }}
 																					/>
 																					{props.errors.currencyCode &&
 																						props.touched.currencyCode && (
@@ -1872,7 +1867,7 @@ class ExplainTrasactionDetail extends React.Component {
 																							className="form-control"
 																							id="curreancyname"
 																							name="curreancyname"
-																							value={props.values.curreancyname}
+																							value={this.state.supplier_currency_des}
 																							onChange={(value) => {
 																								props.handleChange('curreancyname')(
 																									value,

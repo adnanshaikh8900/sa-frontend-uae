@@ -24,6 +24,7 @@ subdomain="$2"
 helmDir="simpleaccounts-frontend"
 SVrelease="$3"
 database="sa_${subdomain}_db"
+database=${database//-/_}
 createDatabase="false"
 
 echo "Test deployment script"

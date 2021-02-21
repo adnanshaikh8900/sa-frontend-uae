@@ -316,7 +316,7 @@ class CustomerInvoice extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		return row.invoiceAmount ? row.invoiceAmount.toFixed(2) : row.invoiceAmount.toFixed(2);
+		return row.invoiceAmount ? row.currencySymbol + row.invoiceAmount.toFixed(2) : row.currencySymbol + row.invoiceAmount.toFixed(2);
 	};
 	renderCurrency = (cell, row) => {
 		if (row.currencyName) {
@@ -335,6 +335,7 @@ class CustomerInvoice extends React.Component {
 	};
 
 	renderVatAmount = (cell, row, extraData) => {
+		console.log("row extraData", row, extraData)
 		// return row.vatAmount === 0 ? (
 		// 	<Currency
 		// 		value={row.vatAmount}
@@ -346,11 +347,11 @@ class CustomerInvoice extends React.Component {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.vatAmount === 0  ? row.vatAmount.toFixed(2) : row.vatAmount.toFixed(2);
+		return row.vatAmount === 0  ? row.currencySymbol + row.vatAmount.toFixed(2) : row.currencySymbol + row.vatAmount.toFixed(2);
 	};
 
 	renderDueAmount =(cell,row,extraData) => {
-		return row.dueAmount === 0  ? row.dueAmount.toFixed(2) : row.dueAmount.toFixed(2);
+		return row.dueAmount === 0  ? row.currencySymbol + row.dueAmount.toFixed(2) : row.currencySymbol + row.dueAmount.toFixed(2);
 	}
 	renderActions = (cell, row) => {
 		return (
@@ -717,6 +718,7 @@ class CustomerInvoice extends React.Component {
 							? customer.invoiceDueDate
 							: '',
 						currencyName:customer.currencyName ? customer.currencyName:'',
+						currencySymbol:customer.currencySymbol ? customer.currencySymbol:'',
 						invoiceAmount: customer.totalAmount,
 						vatAmount: customer.totalVatAmount,
 				  }))

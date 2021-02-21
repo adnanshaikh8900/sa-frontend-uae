@@ -24,6 +24,34 @@ import * as VatActions from './actions';
 import { CSVLink } from 'react-csv';
 
 import { CommonActions } from 'services/global';
+import NumberFormat from "react-number-format";
+import PropTypes from "prop-types";
+import TextField from "@material-ui/core/TextField";
+
+function NumberFormatCustom(props) {
+	const { inputRef, onChange, ...other } = props;
+  
+	return (
+	  <NumberFormat
+		{...other}
+		getInputRef={inputRef}
+		onValueChange={values => {
+		  onChange({
+			target: {
+			  value: values.value
+			}
+		  });
+		}}
+		thousandSeparator
+		suffix="%"
+	  />
+	);
+  }
+  
+  NumberFormatCustom.propTypes = {
+	inputRef: PropTypes.func.isRequired,
+	onChange: PropTypes.func.isRequired
+  };
 
 const mapStateToProps = (state) => {
 	return {
@@ -353,18 +381,22 @@ class VatCode extends React.Component {
 											<h5>Filter : </h5>
 											<Row>
 												<Col lg={4} className="mb-1">
-													<Input
+													<TextField
 														type="text"
+														id="outlined-basic"
+														size="small"
+														fullWidth
+												 		variant="outlined"
 														value={filterData.name}
 														placeholder="Name"
 														onChange={(e) => {
-															e.preventDefault();
 															this.handleChange(e.target.value, 'name');
 														}}
 													/>
+													
 												</Col>
 												<Col lg={4} className="mb-1">
-													<Input
+													{/* <Input
 														type="text"
 														value={filterData.vatPercentage}
 														placeholder="Vat Percentage"
@@ -375,6 +407,24 @@ class VatCode extends React.Component {
 																'vatPercentage',
 															);
 														}}
+													/> */}
+													<TextField
+														id="outlined-basic"
+														variant="outlined"
+														fullWidth
+														type="text"
+														value={filterData.vatPercentage}
+														placeholder="Vat Percentage"
+														size="small"
+														onChange={(e) => {
+															this.handleChange(
+																e.target.value,
+																'vatPercentage',
+															);
+														}}
+														InputProps={{
+															inputComponent: NumberFormatCustom
+														  }}
 													/>
 												</Col>
 												<Col lg={3} className="pl-0 pr-0">

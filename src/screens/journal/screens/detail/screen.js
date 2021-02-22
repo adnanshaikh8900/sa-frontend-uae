@@ -304,7 +304,6 @@ class DetailJournal extends React.Component {
 
 	renderContact = (cell, row, props) => {
 		const { contact_list } = this.props;
-		console.log('aaaa', contact_list)
 		let contactList = contact_list.length
 			? [{ value: '', label: 'Select Contact' }, ...contact_list]
 			: contact_list;

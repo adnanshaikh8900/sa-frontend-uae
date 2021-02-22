@@ -144,7 +144,6 @@ export const removeBulkJournal = (obj) => {
 };
 
 export const getSavedPageNum = (payload) => {
-	console.log('savedpagenum', payload)
 	return (dispatch) => {
 		dispatch({
 			type: JOURNAL.PAGE_NUM,

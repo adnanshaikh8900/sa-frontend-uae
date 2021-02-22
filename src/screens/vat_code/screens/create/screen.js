@@ -27,6 +27,35 @@ import * as VatCreateActions from './actions';
 import * as VatActions from '../../actions';
 
 import { Formik } from 'formik';
+import NumberFormat from "react-number-format";
+import PropTypes from "prop-types";
+import TextField from "@material-ui/core/TextField";
+
+function NumberFormatCustom(props) {
+	const { inputRef, onChange, ...other } = props;
+  
+	return (
+	  <NumberFormat
+		{...other}
+		getInputRef={inputRef}
+		onValueChange={values => {
+		  onChange({
+			target: {
+			  value: values.value
+			}
+		  });
+		}}
+		thousandSeparator
+		suffix="%"
+	  />
+	);
+  }
+  
+  NumberFormatCustom.propTypes = {
+	inputRef: PropTypes.func.isRequired,
+	onChange: PropTypes.func.isRequired
+  };
+
 
 const mapStateToProps = (state) => {
 	return {
@@ -226,8 +255,11 @@ class CreateVatCode extends React.Component {
 																	country
 																</UncontrolledTooltip>
 															</Label>
-															<Input
+															<TextField
 																type="text"
+																size="small"
+																fullWidth
+																variant="outlined"
 																maxLength="5"
 																id="vat"
 																name="vat"
@@ -246,6 +278,9 @@ class CreateVatCode extends React.Component {
 																		? 'is-invalid'
 																		: ''
 																}
+																InputProps={{
+																	inputComponent: NumberFormatCustom
+																  }}
 															/>
 															{props.errors.vat && props.touched.vat && (
 																<div className="invalid-feedback">

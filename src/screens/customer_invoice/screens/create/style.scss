@@ -22,4 +22,11 @@
 	.is-invalid {
 		color: #f86c6b;
 	}
+	.percentSymbol{
+		padding-left: 8px;
+	}
+	.discountPercent{
+		display:flex;
+		align-items: center;
+	}
 }

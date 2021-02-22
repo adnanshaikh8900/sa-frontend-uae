@@ -91,10 +91,12 @@ export const getContactList = () => {
 
 		return authApi(data)
 			.then((res) => {
-				dispatch({
-					type: JOURNAL.CONTACT_LIST,
-					payload: res,
-				});
+				if(res.status === 200){
+					dispatch({
+						type: JOURNAL.CONTACT_LIST,
+						payload: res,
+					});					
+				}
 				return res;
 			})
 			.catch((err) => {
@@ -138,5 +140,23 @@ export const removeBulkJournal = (obj) => {
 			.catch((err) => {
 				throw err;
 			});
+	};
+};
+
+export const getSavedPageNum = (payload) => {
+	return (dispatch) => {
+		dispatch({
+			type: JOURNAL.PAGE_NUM,
+			payload: payload,
+		});
+	};
+};
+
+export const setCancelFlag = (payload) => {
+	return (dispatch) => {
+		dispatch({
+			type: JOURNAL.CANCEL_FLAG,
+			payload: payload,
+		});
 	};
 };

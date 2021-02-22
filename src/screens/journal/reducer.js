@@ -5,12 +5,14 @@ const initState = {
   transaction_category_list: [],
   currency_list: [],
   contact_list: [],
-  vat_list: []
+  vat_list: [],
+  page_num: 1,
+  cancel_flag: false
 }
 
 const JournalReducer = (state = initState, action) => {
+  console.log('action', action)
   const { type, payload } = action
-
   switch (type) {
 
     case JOURNAL.JOURNAL_LIST:
@@ -41,6 +43,17 @@ const JournalReducer = (state = initState, action) => {
       return {
         ...state,
         vat_list: Object.assign([], payload.data)
+      }
+
+    case JOURNAL.PAGE_NUM:
+      return {
+        ...state,
+        page_num: payload
+      }
+    case JOURNAL.CANCEL_FLAG:
+      return {
+        ...state,
+        cancel_flag: payload
       }
 
     default:

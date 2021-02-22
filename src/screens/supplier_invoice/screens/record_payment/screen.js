@@ -824,7 +824,7 @@ class RecordSupplierPayment extends React.Component {
 																			className="btn-square"
 																			onClick={() => {
 																				this.props.history.push(
-																					'/admin/revenue/customer-invoice',
+																					'/admin/expense/supplier-invoice',
 																				);
 																			}}
 																		>

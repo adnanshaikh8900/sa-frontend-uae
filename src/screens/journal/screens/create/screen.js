@@ -384,6 +384,7 @@ class CreateJournal extends React.Component {
 				render={({ field, form }) => (
 					<Input
 					type="number"
+					maxLength="9"
 						value={row['debitAmount'] !== 0 ? row['debitAmount'] : 0}
 						onChange={(e) => {
 							if (
@@ -433,6 +434,7 @@ class CreateJournal extends React.Component {
 				render={({ field, form }) => (
 					<Input
 					type="number"
+					maxLength="9"
 						value={row['creditAmount'] !== 0 ? row['creditAmount'] : 0}
 						onChange={(e) => {
 							if (
@@ -981,7 +983,7 @@ class CreateJournal extends React.Component {
 																			this.renderDebits(cell, rows, props)
 																		}
 																	>
-																		Debits
+																		Debit
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="creditAmount"
@@ -989,7 +991,7 @@ class CreateJournal extends React.Component {
 																			this.renderCredits(cell, rows, props)
 																		}
 																	>
-																		Credits
+																		Credit
 																	</TableHeaderColumn>
 																</BootstrapTable>
 															</Col>
@@ -1003,12 +1005,12 @@ class CreateJournal extends React.Component {
 																			<Col xs={4}></Col>
 																			<Col xs={4}>
 																				<h5 className="mb-0 text-right">
-																					Debits
+																					Debit
 																				</h5>
 																			</Col>
 																			<Col xs={4}>
 																				<h5 className="mb-0 text-right">
-																					Credits
+																					Credit
 																				</h5>
 																			</Col>
 																		</Row>

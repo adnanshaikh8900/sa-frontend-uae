@@ -151,3 +151,12 @@ export const getSavedPageNum = (payload) => {
 		});
 	};
 };
+
+export const setCancelFlag = (payload) => {
+	return (dispatch) => {
+		dispatch({
+			type: JOURNAL.CANCEL_FLAG,
+			payload: payload,
+		});
+	};
+};

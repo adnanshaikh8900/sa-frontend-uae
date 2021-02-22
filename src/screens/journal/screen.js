@@ -29,10 +29,12 @@ import moment from 'moment';
 import './style.scss';
 
 const mapStateToProps = (state) => {
+	console.log('state', state.journal.cancel_flag)
 	return {
 		journal_list: state.journal.journal_list,
 		universal_currency_list: state.common.universal_currency_list,
-		page_num: state.journal.page_num
+		page_num: state.journal.page_num,
+		cancel_flag: state.journal.cancel_flag
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -92,6 +94,7 @@ class Journal extends React.Component {
 
 	initializeData = (search) => {
 		const { filterData } = this.state;
+		if(this.props.cancel_flag)
 		this.options.page = this.props.page_num
 		const paginationData = {
 			pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -117,6 +120,7 @@ class Journal extends React.Component {
 					err && err.data ? err.data.message : 'Something Went Wrong',
 				);
 			});
+		this.props.journalActions.setCancelFlag(false)
 	};
 
 	sortColumn = (sortName, sortOrder) => {

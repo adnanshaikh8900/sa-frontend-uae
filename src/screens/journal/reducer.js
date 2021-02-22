@@ -6,10 +6,12 @@ const initState = {
   currency_list: [],
   contact_list: [],
   vat_list: [],
-  page_num: 1
+  page_num: 1,
+  cancel_flag: false
 }
 
 const JournalReducer = (state = initState, action) => {
+  console.log('action', action)
   const { type, payload } = action
   switch (type) {
 
@@ -47,6 +49,11 @@ const JournalReducer = (state = initState, action) => {
       return {
         ...state,
         page_num: payload
+      }
+    case JOURNAL.CANCEL_FLAG:
+      return {
+        ...state,
+        cancel_flag: payload
       }
 
     default:

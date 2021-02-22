@@ -40,7 +40,7 @@ const mapStateToProps = (state) => {
 		contact_list: state.journal.contact_list,
 		vat_list: state.journal.vat_list,
 		universal_currency_list: state.common.universal_currency_list,
-		page_num:state.journal.page_num
+		cancel_flag: state.journal.cancel_flag
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -1169,6 +1169,7 @@ class DetailJournal extends React.Component {
 																			color="secondary"
 																			className="btn-square"
 																			onClick={() => {
+																				this.props.journalActions.setCancelFlag(true);
 																				this.props.history.push(
 																					'/admin/accountant/journal',
 																				);

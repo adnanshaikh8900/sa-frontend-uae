@@ -40,6 +40,7 @@ const mapStateToProps = (state) => {
 		contact_list: state.journal.contact_list,
 		vat_list: state.journal.vat_list,
 		universal_currency_list: state.common.universal_currency_list,
+		page_num:state.journal.page_num
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -303,6 +304,7 @@ class DetailJournal extends React.Component {
 
 	renderContact = (cell, row, props) => {
 		const { contact_list } = this.props;
+		console.log('aaaa', contact_list)
 		let contactList = contact_list.length
 			? [{ value: '', label: 'Select Contact' }, ...contact_list]
 			: contact_list;
@@ -344,7 +346,7 @@ class DetailJournal extends React.Component {
 							? contactList.map((obj) => {
 									return (
 										<option value={obj.value} key={obj.value}>
-											{obj.label}
+											{obj.label.contactName}
 										</option>
 									);
 							  })

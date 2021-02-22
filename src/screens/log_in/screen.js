@@ -44,7 +44,7 @@ class LogIn extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			passwordShown: false,
+			isPasswordShown: false,
 			initValue: {
 				username: '',
 				password: '',
@@ -76,11 +76,16 @@ class LogIn extends React.Component {
 		});
 	};
 
+	// togglePasswordVisiblity = () => {
+	// 	this.setState({
+	// 		passwordShown: !this.state.passwordShown,
+	// 	});
+	// };
+
 	togglePasswordVisiblity = () => {
-		this.setState({
-			passwordShown: !this.state.passwordShown,
-		});
-	};
+		const { isPasswordShown } = this.state;
+		this.setState({ isPasswordShown: !isPasswordShown });
+	  };
 
 	handleSubmit = (data, resetForm) => {
 		this.setState({ loading: true });
@@ -121,6 +126,7 @@ class LogIn extends React.Component {
 	};
 
 	render() {
+		const { isPasswordShown } = this.state;
 		const { initValue } = this.state;
 		return (
 			<div className="log-in-screen">
@@ -169,7 +175,7 @@ class LogIn extends React.Component {
 																{/* <h1>Log In</h1> */}
 																<div className="registerScreen">
 																	<h2 className="">Login</h2>
-																	<p>Enter your details below to continue</p>
+											  						<p>Enter your details below to continue</p>
 																</div>
 																<Row>
 																	<Col lg={12}>
@@ -204,13 +210,16 @@ class LogIn extends React.Component {
 																		</FormGroup>
 																	</Col>
 																	<Col lg={12}>
+																
 																		<FormGroup className="mb-3">
+																	
 																			<Label htmlFor="email">
 																			<b>	Password</b>
 																			</Label>
+																		<div>	
 																			<Input
 																				type={
-																					this.state.passwordShown
+																					this.state.isPasswordShown
 																						? 'text'
 																						: 'password'
 																				}
@@ -230,15 +239,15 @@ class LogIn extends React.Component {
 																						: ''
 																				}
 																			/>
-																			<i
-																				className="inputRShow"
-																				onClick={this.togglePasswordVisiblity}
-																			>
-																				<img
-																					src={eye}
-																					style={{ width: '20px' }}
-																				/>
-																			</i>
+																		<i   className={`fa ${ isPasswordShown ? "fa-eye-slash" : "fa-eye" } password-icon`}
+																		onClick={this.togglePasswordVisiblity}
+																	>
+																		{/* <img 
+																			src={eye}
+																			style={{ width: '20px' }}
+																		/> */}
+																		</i>
+																		</div>	
 																			{props.errors.password &&
 																				props.touched.password && (
 																					<div className="invalid-feedback">

@@ -23,17 +23,19 @@ export const getTransactionCategoryList = () => {
 }
 
 export const getOpeningBalanceList = (obj) => {
-  // let pageNo = obj.pageNo ? obj.pageNo : '';
-  // let pageSize = obj.pageSize ? obj.pageSize : '';
-  // let order = obj.order ? obj.order : '';
-  // let sortingCol = obj.sortingCol ? obj.sortingCol : '';
-  // let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false
-
+  console.log('aadsf', obj)
+  let pageNo = obj.pageNo ? obj.pageNo : '';
+  let pageSize = obj.pageSize ? obj.pageSize : '';
+  let order = obj.order ? obj.order : '';
+  let sortingCol = obj.sortingCol ? obj.sortingCol : '';
+  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false
+  let param = `/rest/transactionCategoryBalance/list?pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`;
+  console.log('param', param)
 
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `/rest/transactionCategoryBalance/list`
+      url: param
     }
     return authApi(data).then((res) => {
       if(true) {

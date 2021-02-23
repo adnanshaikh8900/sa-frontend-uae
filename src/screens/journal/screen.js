@@ -105,7 +105,6 @@ class Journal extends React.Component {
 			sortingCol: this.options.sortName ? this.options.sortName : '',
 		};
 		const postData = { ...filterData, ...paginationData, ...sortingData };
-
 		this.props.journalActions
 			.getJournalList(postData)
 			.then((res) => {

@@ -59,10 +59,16 @@ class OpeningBalance extends React.Component {
 			submitBtnClick: false,
 		};
 		this.regEx = /^[0-9\d]+$/;
-		// this.options = {
-		// 	onRowClick: this.goToDetail,
-			
-		// };
+		this.options = {
+			onRowClick: this.goToDetail,
+			page: 1,
+			sizePerPage: 10,
+			onSizePerPageList: this.onSizePerPageList,
+			onPageChange: this.onPageChange,
+			sortName: '',
+			sortOrder: '',
+			onSortChange: this.sortColumn,
+		};
 	}
 
 	componentDidMount = () => {
@@ -71,7 +77,17 @@ class OpeningBalance extends React.Component {
 	};
 
 	initializeData = () => {
-		this.props.openingBalanceActions.getOpeningBalanceList()
+		const paginationData = {
+			pageNo: this.options.page ? this.options.page - 1 : 0,
+			pageSize: this.options.sizePerPage,
+		};
+		const sortingData = {
+			order: this.options.sortOrder ? this.options.sortOrder : '',
+			sortingCol: this.options.sortName ? this.options.sortName : '',
+		};
+		const postData = { ...paginationData, ...sortingData };
+		console.log('postData', postData)
+		this.props.openingBalanceActions.getOpeningBalanceList(postData)
 		.then((res) => {
 			if (res.status === 200) {
 				this.setState({ loading: false });
@@ -90,6 +106,25 @@ class OpeningBalance extends React.Component {
 		this.props.history.push(`/admin/accountant/opening-balance/detail`, {
 			id: row.transactionCategoryBalanceId,
 		});
+	};
+	onSizePerPageList = (sizePerPage) => {
+		if (this.options.sizePerPage !== sizePerPage) {
+			this.options.sizePerPage = sizePerPage;
+			this.initializeData();
+		}
+	};
+
+	onPageChange = (page, sizePerPage) => {
+		if (this.options.page !== page) {
+			this.options.page = page;
+			this.initializeData();
+		}
+	};
+
+	sortColumn = (sortName, sortOrder) => {
+		this.options.sortName = sortName;
+		this.options.sortOrder = sortOrder;
+		this.initializeData();
 	};
 
 	renderTransactionCategory = (cell, row) => {
@@ -507,7 +542,7 @@ class OpeningBalance extends React.Component {
 											data={opening_balance_list ? opening_balance_list : []}
 											version="4"
 											hover
-											keyField="id"
+											keyField="transactionCategoryBalanceId"
 											pagination={
 												opening_balance_list &&
 												opening_balance_list.length > 0

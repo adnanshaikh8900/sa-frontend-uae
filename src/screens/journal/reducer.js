@@ -11,7 +11,6 @@ const initState = {
 }
 
 const JournalReducer = (state = initState, action) => {
-  console.log('action', action)
   const { type, payload } = action
   switch (type) {
 

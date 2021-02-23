@@ -93,9 +93,9 @@ class CreateProduct extends React.Component {
 			ProductExist: false,
 		};
 		this.regEx = /^[0-9\d]+$/;
-		this.regExBoth = /[0-9!@#$&()-\\`.+,/\"]+$/;
-		this.regExAlpha = /^[a-zA-Z ]+$/;
-		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
+        this.regExBoth = /[a-zA-Z0-9!@#$&()-`.+,/" ]+$/;
+        this.regExAlpha = /^[0-9!@#$&()-\\`.+,/\"]+$/;
+        this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 	}
 
 	componentDidMount = () => {

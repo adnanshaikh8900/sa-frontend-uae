@@ -69,8 +69,9 @@ class DetailProduct extends React.Component {
 		};
 
 		this.regEx = /^[0-9\d]+$/;
-		this.regExBoth = /[a-zA-Z0-9]+$/;
-		this.regExAlpha = /^[a-zA-Z ]+$/;
+        this.regExBoth = /[a-zA-Z0-9!@#$&()-`.+,/" ]+$/;
+        this.regExAlpha = /^[0-9!@#$&()-\\`.+,/\"]+$/;
+        this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 	}
 
 	componentDidMount = () => {

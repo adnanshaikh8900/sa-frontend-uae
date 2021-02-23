@@ -79,6 +79,7 @@ class CreateCustomerInvoice extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			customer_currency_symbol:'',
 			loading: false,
 			disabled: false,
 			discountOptions: [
@@ -362,7 +363,7 @@ class CreateCustomerInvoice extends React.Component {
 // 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 // 	/>
 // );
-return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
+return row.subTotal === 0 ? this.state.customer_currency_symbol + row.subTotal.toFixed(2) : this.state.customer_currency_symbol + row.subTotal.toFixed(2);
 }
 	setDate = (props, value) => {
 		const { term } = this.state;
@@ -383,15 +384,16 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 		let result = this.props.currency_convert_list.filter((obj) => {
 		return obj.currencyCode === value;
 		});
+		console.log('currency result', result)
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
 		};
 
-		setCurrency = (value) => {
-			let result = this.props.currency_convert_list.filter((obj) => {
-			return obj.currencyCode === value;
-			});
-			this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
-			};
+	setCurrency = (value) => {
+		let result = this.props.currency_convert_list.filter((obj) => {
+		return obj.currencyCode === value;
+		});
+		this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
+		};
 
 	validationCheck = (value) => {
 		const data = {
@@ -1184,18 +1186,20 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 
 	getCurrency = (opt) => {
 		let customer_currencyCode = 0;
-
+		let customer_item_currency = ''
 		this.props.customer_list.map(item => {
 			if(item.label.contactId == opt) {
 				this.setState({
 					customer_currency: item.label.currency.currencyCode,
-					customer_currency_des: item.label.currency.currencyName
+					customer_currency_des: item.label.currency.currencyName,
+					customer_currency_symbol: item.label.currency.currencySymbol,
 				});
 
 				customer_currencyCode = item.label.currency.currencyCode;
+				customer_item_currency = item.label.currency
 			}
 		})
-
+		console.log('currency', customer_item_currency)
 		return customer_currencyCode;
 	}
 
@@ -1699,7 +1703,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 															</Col>
 														</Row>
 														<hr />
-																<Row>
+																<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																<Col>
 																<Label >
 																		Currency Exchange Rate
@@ -1707,7 +1711,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																</Col>
 																</Row>
 																
-																<Row>
+																<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																<Col md={1}>
 																<Input
 																		disabled
@@ -1774,7 +1778,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																			/>
 														</Col>
 														</Row>
-														<hr />
+														<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
 														<Col lg={8} className="mb-3">
 															<Button
 																color="primary"
@@ -2073,12 +2077,11 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																							<Label htmlFor="discountPercentage">
 																								Percentage
 																							</Label>
-																							
+																							<div className="discountPercent">
 																							<Input
-																							
 																								id="discountPercentage"
 																								name="discountPercentage"
-																								placeholder="Discount Percentage  %"
+																								placeholder="Discount Percentage"
 																								type="number"
 																								maxLength="5"
 																								value={
@@ -2109,7 +2112,7 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																										);
 																									}
 																								}}
-																							/>
+																							/> <span className = "percentSymbol">%</span></div>
 																						
 																						</FormGroup>
 																					</Col>
@@ -2179,16 +2182,15 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																					value={initValue.total_net.toFixed(
 																							2,
 																						)}
-																						currencySymbol={
-																						universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
+																						currencySymbol={this.state.customer_currency_IsoCode
 																							}
 																							/>
 																							)} */}
+																							{this.state.customer_currency_symbol} &nbsp;
 																							{initValue.total_net.toFixed(
 																							2,
 																						)}
+																					
 																					</label>
 																				</Col>
 																			</Row>
@@ -2207,16 +2209,13 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																						value={initValue.invoiceVATAmount.toFixed(
 																									2,
 																							)}
-																						currencySymbol={
-																						universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
+																							currencySymbol={this.state.customer_currency_IsoCode}
 																							/>
 																							)} */}
-																							{initValue.invoiceVATAmount.toFixed(
-																									2,
-																							)}
+																							{this.state.customer_currency_symbol} &nbsp;
+																							{initValue.total_net.toFixed(
+																							2,
+																						)}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2235,14 +2234,11 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																						value={this.state.initValue.discount.toFixed(
 																							2,
 																						)}
-																						currencySymbol={
-																						universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
+																						currencySymbol={this.state.customer_currency_IsoCode}
 																							/>
 																							)} */}
-																							{this.state.initValue.discount.toFixed(
+																						{this.state.customer_currency_symbol} &nbsp;
+																							{initValue.total_net.toFixed(
 																							2,
 																						)}
 																					</label>
@@ -2261,14 +2257,13 @@ return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																					{/* {universal_currency_list[0] && (
 																						<Currency
 																						value={initValue.totalAmount}
-																						currencySymbol={
-																						universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
+																						currencySymbol={this.state.customer_currency_IsoCode}
 																							/>
 																							)} */}
-																							{initValue.totalAmount.toFixed(2)}
+																							{this.state.customer_currency_symbol} &nbsp;
+																							{initValue.total_net.toFixed(
+																							2,
+																						)}
 																					</label>
 																				</Col>
 																			</Row>

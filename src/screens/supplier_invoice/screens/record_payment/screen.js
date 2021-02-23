@@ -358,6 +358,12 @@ class RecordSupplierPayment extends React.Component {
 	render() {
 		const { initValue, loading, dialog } = this.state;
 		const { pay_mode, supplier_list, deposit_list } = this.props;
+		let tmpSupplier_list = []
+
+		supplier_list.map(item => {
+			let obj = {label: item.label.contactName, value: item.value}
+			tmpSupplier_list.push(obj)
+		})
 
 		return (
 			<div className="detail-customer-invoice-screen">
@@ -450,8 +456,8 @@ class RecordSupplierPayment extends React.Component {
 																			name="contactId"
 																			isDisabled
 																			value={
-																				supplier_list &&
-																				supplier_list.find(
+																				tmpSupplier_list &&
+																				tmpSupplier_list.find(
 																					(option) =>
 																						option.value ===
 																						+this.props.location.state.id
@@ -818,7 +824,7 @@ class RecordSupplierPayment extends React.Component {
 																			className="btn-square"
 																			onClick={() => {
 																				this.props.history.push(
-																					'/admin/revenue/customer-invoice',
+																					'/admin/expense/supplier-invoice',
 																				);
 																			}}
 																		>

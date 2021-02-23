@@ -29,10 +29,13 @@ $spinkit-spinner-color: $body-color;
 	color: #2064d8 !important;
 }
 .btn-primary,
-.page-item.active .page-link,
+.page-item,
+.page-item.active .page-link ,
 .btn-square {
 	background-color: #2064d8;
 	border-color: #2064d8;
+	border-radius: 7px;
+	margin: 0 4px;
 }
 .btn-square1 {
 	background-color: #2064d8;

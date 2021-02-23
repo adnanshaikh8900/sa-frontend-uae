@@ -163,7 +163,7 @@ class AdminLayout extends React.Component {
 						<AppSidebar fixed display="lg">
 							<AppSidebarHeader />
 							<AppSidebarForm />
-							<Suspense>
+							<Suspense fallback={Loading()}>
 								<AppSidebarNav navConfig={finalArray} {...this.props} />
 							</Suspense>
 							<AppSidebarMinimizer />

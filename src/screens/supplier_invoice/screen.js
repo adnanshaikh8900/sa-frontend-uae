@@ -231,15 +231,15 @@ class SupplierInvoice extends React.Component {
 		// 	''
 		// );
 
-	return row.invoiceAmount ? row.invoiceAmount.toFixed(2):'';
+	return row.invoiceAmount ? row.currencySymbol+row.invoiceAmount.toFixed(2):'';
 	};
 
 	renderDueAmount =(cell,row,extraData) => {
-		return row.dueAmount === 0  ? row.dueAmount.toFixed(2) : row.dueAmount.toFixed(2);
+		return row.dueAmount === 0  ? row.currencySymbol+row.dueAmount.toFixed(2) : row.currencySymbol+row.dueAmount.toFixed(2);
 	}
 
 	renderVatAmount = (cell, row, extraData) => {
-		return row.vatAmount === 0 ? row.vatAmount.toFixed(2) : row.vatAmount.toFixed(2);
+		return row.vatAmount === 0 ? row.currencySymbol+row.vatAmount.toFixed(2) : row.currencySymbol+row.vatAmount.toFixed(2);
 	};
 	renderCurrency = (cell, row) => {
 		if (row.currencyName) {
@@ -735,6 +735,7 @@ class SupplierInvoice extends React.Component {
 						invoiceAmount: supplier.totalAmount,
 						vatAmount: supplier.totalVatAmount,
 						currencyName:supplier.currencyName ? supplier.currencyName:'',
+						currencySymbol: supplier.currencySymbol ? supplier.currencySymbol : '',
 						contactId: supplier.contactId,
 				  }))
 				: '';

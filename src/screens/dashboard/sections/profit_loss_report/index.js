@@ -44,7 +44,7 @@ class ProfitAndLossReport extends Component {
 		const options = {
 			chart: {
 				toolbar: {
-					show: false,
+					show: true,
 				},
 				sparkline: {
 					enabled: false,
@@ -59,15 +59,18 @@ class ProfitAndLossReport extends Component {
 				strokeDashArray: '10',
 				borderColor: 'rgba(125, 138, 156, 0.3)',
 			},
-			colors: ['#0abcce', '#060918'],
+			colors: ['#2064d8', '#060918'],
 			legend: {
-				show: false,
+				show: true,
 			},
 			xaxis: {
 				type: 'datetime',
 			},
 			yaxis: {
 				min: 0,
+			},
+			zoom: {
+				enabled: false,
 			},
 			
 		}

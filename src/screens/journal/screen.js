@@ -29,9 +29,12 @@ import moment from 'moment';
 import './style.scss';
 
 const mapStateToProps = (state) => {
+	console.log('state', state.journal.cancel_flag)
 	return {
 		journal_list: state.journal.journal_list,
 		universal_currency_list: state.common.universal_currency_list,
+		page_num: state.journal.page_num,
+		cancel_flag: state.journal.cancel_flag
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -91,6 +94,8 @@ class Journal extends React.Component {
 
 	initializeData = (search) => {
 		const { filterData } = this.state;
+		if(this.props.cancel_flag)
+		this.options.page = this.props.page_num
 		const paginationData = {
 			pageNo: this.options.page ? this.options.page - 1 : 0,
 			pageSize: this.options.sizePerPage,
@@ -100,7 +105,6 @@ class Journal extends React.Component {
 			sortingCol: this.options.sortName ? this.options.sortName : '',
 		};
 		const postData = { ...filterData, ...paginationData, ...sortingData };
-
 		this.props.journalActions
 			.getJournalList(postData)
 			.then((res) => {
@@ -115,6 +119,7 @@ class Journal extends React.Component {
 					err && err.data ? err.data.message : 'Something Went Wrong',
 				);
 			});
+		this.props.journalActions.setCancelFlag(false)
 	};
 
 	sortColumn = (sortName, sortOrder) => {
@@ -372,6 +377,7 @@ class Journal extends React.Component {
 	};
 
 	onPageChange = (page, sizePerPage) => {
+		this.props.journalActions.getSavedPageNum(page)
 		if (this.options.page !== page) {
 			this.options.page = page;
 			this.initializeData();
@@ -421,7 +427,7 @@ class Journal extends React.Component {
 			csvData,
 			view,
 		} = this.state;
-		const { journal_list, universal_currency_list } = this.props;
+		const { journal_list, universal_currency_list, page_num } = this.props;
 
 		return (
 			<div className="journal-screen">
@@ -545,10 +551,11 @@ class Journal extends React.Component {
 											<Button 
 													color="primary"
 													className="btn-square mr-1 pull-right mb-2"
-													onClick={() =>
+													onClick={() => {
+														this.props.journalActions.getSavedPageNum(1);
 														this.props.history.push(
 															`/admin/accountant/journal/create`,
-														)
+														)}
 													}
 											>
 													<i className="fas fa-plus mr-1" />

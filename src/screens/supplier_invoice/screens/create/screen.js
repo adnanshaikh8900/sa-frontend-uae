@@ -88,6 +88,7 @@ class CreateSupplierInvoice extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			supplier_currency_symbol:'',
 			loading: false,
 			discountOptions: [
 				{ value: 'FIXED', label: 'Fixed' },
@@ -368,7 +369,7 @@ class CreateSupplierInvoice extends React.Component {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
+		return row.subTotal === 0 ? this.state.supplier_currency_symbol+row.subTotal.toFixed(2) : this.state.supplier_currency_symbol+row.subTotal.toFixed(2);
 	};
 
 	componentDidMount = () => {
@@ -1256,7 +1257,8 @@ class CreateSupplierInvoice extends React.Component {
 			if(item.label.contactId == opt) {
 				this.setState({
 					supplier_currency: item.label.currency.currencyCode,
-					supplier_currency_des: item.label.currency.currencyName
+					supplier_currency_des: item.label.currency.currencyName,
+					supplier_currency_symbol: item.label.currency.currencySymbol
 				});
 
 				supplier_currencyCode = item.label.currency.currencyCode;
@@ -2169,6 +2171,7 @@ class CreateSupplierInvoice extends React.Component {
 																							<Label htmlFor="discountPercentage">
 																								Percentage
 																							</Label>
+																							<div className="discountPercent">
 																							<Input
 																								id="discountPercentage"
 																								name="discountPercentage"
@@ -2203,7 +2206,7 @@ class CreateSupplierInvoice extends React.Component {
 																										);
 																									}
 																								}}
-																							/>
+																							/><span className="percentSymbol">%</span></div>
 																						</FormGroup>
 																					</Col>
 																				) : null}
@@ -2279,6 +2282,7 @@ class CreateSupplierInvoice extends React.Component {
 																								}
 																							/>
 																						)} */}
+																						{this.state.supplier_currency_symbol}
 																						{initValue.total_net.toFixed(
 																									2,
 																								)}
@@ -2308,6 +2312,7 @@ class CreateSupplierInvoice extends React.Component {
 																								}
 																							/>
 																						)} */}
+																						{this.state.supplier_currency_symbol}
 																						{initValue.invoiceVATAmount.toFixed(
 																									2,
 																								)}
@@ -2337,6 +2342,7 @@ class CreateSupplierInvoice extends React.Component {
 																								}
 																							/>
 																						)} */}
+																						{this.state.supplier_currency_symbol}
 																						{this.state.initValue.discount.toFixed(
 																									2,
 																								)}
@@ -2366,6 +2372,7 @@ class CreateSupplierInvoice extends React.Component {
 																								}
 																							/>
 																						)} */}
+																						{this.state.supplier_currency_symbol}
 																						{initValue.totalAmount.toFixed(
 																									2,
 																								)}

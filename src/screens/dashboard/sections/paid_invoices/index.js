@@ -128,7 +128,7 @@ class PaidInvoices extends Component {
 			},
 			legend: {
 				display: true,
-				position: 'bottom',
+				position: 'bottom'
 			},
 			responsive: true,
 			maintainAspectRatio: false,

@@ -11,7 +11,7 @@ const cashBarOption = {
 		custom: CustomTooltips,
 	},
 	legend: {
-		display: false,
+		display: true,
 		position: 'bottom',
 	},
 	scales: {

@@ -92,9 +92,14 @@ class CreateProduct extends React.Component {
 			exist: false,
 			ProductExist: false,
 		};
-		this.regEx = /^[0-9\d]+$/;
-        this.regExBoth = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
-        this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
+		// this.regEx = /^[0-9\d]+$/;
+        // this.regExBoth = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
+        // this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
+
+
+		 this.regEx = /^[0-9\d]+$/;
+        // this.regExBoth = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
+        // this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 	}
 
 	componentDidMount = () => {
@@ -456,7 +461,7 @@ class CreateProduct extends React.Component {
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
-																					this.regExBoth.test(
+																					this.regEx.test(
 																						option.target.value,
 																					)
 																				) {
@@ -513,7 +518,7 @@ class CreateProduct extends React.Component {
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
-																					this.regExBoth.test(
+																					this.regEx.test(
 																						option.target.value,
 																					)
 																				) {

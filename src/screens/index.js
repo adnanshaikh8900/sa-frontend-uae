@@ -102,6 +102,7 @@ import Notification from './notification';
 import DataBackup from './data_backup';
 import Help from './help';
 import Faq from './help/screens/faq';
+import configData from '../constants/config';	
 
 export {
 	LogIn,
@@ -193,4 +194,5 @@ export {
 	DataBackup,
 	Help,
 	Faq,
+	configData,
 };

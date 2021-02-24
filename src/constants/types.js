@@ -137,6 +137,10 @@ export const PROJECT = {
 	CONTACT_LIST: 'CONTACT_LIST',
 };
 
+export const INVENTORY = {
+	SUMMARY_LIST: 'SUMMMARY_LIST'
+};
+
 export const PAYMENT = {
 	PAYMENT_LIST: 'PAYMENT_LIST',
 	BANK_LIST: 'BANK_LIST',

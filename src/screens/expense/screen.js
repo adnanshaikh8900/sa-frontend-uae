@@ -316,7 +316,7 @@ class Expense extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		return row.expenseAmount ? row.expenseAmount.toFixed(2) :'';
+		return row.expenseAmount ? row.currencySymbol + row.expenseAmount.toFixed(2) :'';
 	};
 	renderCurrency = (cell, row) => {
 		if (row.currencyName) {

@@ -53,6 +53,7 @@ import ReportsFiling from './reports_filing';
 
 import TransactionsReport from './transactions_report';
 import FinancialReport from './financial_report';
+import Inventry from './inventory'
 import DetailedGeneralLedgerReport from './detailed_general_ledger_report';
 
 import ChartAccount from './chart_account';
@@ -102,7 +103,6 @@ import Notification from './notification';
 import DataBackup from './data_backup';
 import Help from './help';
 import Faq from './help/screens/faq';
-import configData from '../constants/config';	
 
 export {
 	LogIn,
@@ -150,6 +150,7 @@ export {
 	ReportsFiling,
 	TransactionsReport,
 	FinancialReport,
+	Inventry,
 	DetailedGeneralLedgerReport,
 	ChartAccount,
 	CreateChartAccount,
@@ -194,5 +195,4 @@ export {
 	DataBackup,
 	Help,
 	Faq,
-	configData,
 };

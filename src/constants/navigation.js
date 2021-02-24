@@ -188,6 +188,13 @@ export default {
 				// },
 			],
 		},
+		{
+			name: 'Inventry',
+			url: '/admin/Inventry',
+			icon: 'icon-speedometer',
+			path: 'Inventry',
+		},
+	
 		// {
 		//   name: 'Settings',
 		//   url: '/admin/settings',

@@ -108,6 +108,8 @@ import {
 	DataBackup,
 	Help,
 	Faq,
+
+	Inventry,
 } from 'screens';
 
 const adminRoutes = [
@@ -151,7 +153,11 @@ const adminRoutes = [
 		name: 'UpdateOpeningBalance',
 		component: DetailOpeningBalance.screen,
 	},
-
+	{
+		path: '/admin/Inventry',
+		name: 'Inventry',
+		component: Inventry.screen,
+	},
 	{
 		redirect: true,
 		path: '/admin/accountant',

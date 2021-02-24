@@ -4,7 +4,8 @@ const initState = {
   product_list: [],
   vat_list: [],
   product_warehouse_list: [],
-  product_category_list: []
+  product_category_list: [],
+  inventory_account_list:[]
 }
 
 const ProductReducer = (state = initState, action) => {
@@ -32,13 +33,16 @@ const ProductReducer = (state = initState, action) => {
         product_warehouse_list: Object.assign([], payload)
       }
 
-
     case PRODUCT.PRODUCT_CATEGORY:
       return {
         ...state,
         product_category_list: Object.assign([], payload)
       }
-
+      case PRODUCT.INVENTORY_ACCOUNT_LIST:
+        return {
+          ...state,
+          inventory_account_list: Object.assign([], payload)
+        }
     default:
       return state
   }

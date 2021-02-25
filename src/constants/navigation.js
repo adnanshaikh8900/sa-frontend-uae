@@ -191,7 +191,7 @@ export default {
 		{
 			name: 'Inventry',
 			url: '/admin/Inventry',
-			icon: 'icon-speedometer',
+			icon: 'fas fa-boxes',
 			path: 'Inventry',
 		},
 	

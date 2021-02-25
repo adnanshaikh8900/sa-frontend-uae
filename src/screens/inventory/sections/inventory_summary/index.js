@@ -27,14 +27,14 @@ import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import { CSVLink } from 'react-csv';
 import { Loader, Currency } from 'components';
-import * as ProductActions from '../../../product/actions';
+import * as InventoryActions from '../../actions';
 
 import logo from 'assets/images/brand/logo.png';
 import { CommonActions } from 'services/global';
 
 const mapStateToProps = (state) => {
 	return {
-		//summary_list: inventory.summary_list,
+		summary_list: state.inventory.summary_list,
 		vat_list: state.product.vat_list,
 		universal_currency_list: state.common.universal_currency_list,
 		company_profile: state.common.company_profile,
@@ -43,7 +43,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
-		productActions: bindActionCreators(ProductActions, dispatch),
+		inventoryActions: bindActionCreators(InventoryActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
@@ -119,20 +119,20 @@ class InventorySummary extends React.Component {
 			sortingCol: this.options.sortName ? this.options.sortName : '',
 		};
 		const postData = { ...filterData, ...paginationData, ...sortingData };
-		// this.props.productActions
-		// 	.getProductList(postData)
-		// 	.then((res) => {
-		// 		if (res.status === 200) {
-		// 			this.setState({ loading: false });
-		// 		}
-		// 	})
-		// 	.catch((err) => {
-		// 		this.setState({ loading: false });
-		// 		this.props.commonActions.tostifyAlert(
-		// 			'error',
-		// 			err && err.data ? err.data.message : 'Something Went Wrong',
-		// 		);
-		// 	});
+		this.props.inventoryActions
+			.getProductInventoryList(postData)
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({ loading: false });
+				}
+			})
+			.catch((err) => {
+				this.setState({ loading: false });
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
 	};
 	
 	exportFile = (csvData, fileName, type) => {
@@ -292,16 +292,16 @@ class InventorySummary extends React.Component {
 												<TableHeaderColumn dataField="productCode" dataSort className="table-header-bg">
 													Product Code
 												</TableHeaderColumn>
-												<TableHeaderColumn isKey dataField="purchaseOrder" dataSort className="table-header-bg">
+												<TableHeaderColumn  dataField="purchaseOrder" dataSort className="table-header-bg">
 												purchaseOrder
 												</TableHeaderColumn >
-												<TableHeaderColumn isKey dataField="quantitySold" dataSort className="table-header-bg">
+												<TableHeaderColumn  dataField="quantitySold" dataSort className="table-header-bg">
 												quantitySold
 												</TableHeaderColumn >
-												<TableHeaderColumn isKey dataField="stockInHand" dataSort className="table-header-bg">
+												<TableHeaderColumn  dataField="stockInHand" dataSort className="table-header-bg">
 												stockInHand
 												</TableHeaderColumn >
-												<TableHeaderColumn isKey dataField="supplierName" dataSort className="table-header-bg">
+												<TableHeaderColumn  dataField="supplierName" dataSort className="table-header-bg">
 												supplierName
 												</TableHeaderColumn >
 											</BootstrapTable>

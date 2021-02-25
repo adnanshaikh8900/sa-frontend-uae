@@ -151,7 +151,6 @@ class AdminLayout extends React.Component {
 		});
 
 		var correctSequence = navigation.items.map(item => item.name)
-		debugger;
 		finalArray.items = correctSequence.reduce((arr, name) => {
 			let ele = finalArray.items.find(item => item.name == name)
 			if (ele) arr.push(ele);

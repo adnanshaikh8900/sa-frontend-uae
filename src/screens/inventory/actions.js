@@ -36,7 +36,7 @@ export const getProductInventoryList = (obj) => {
 	};
 };
 
-export const getAllProduct = (invoiceType) => {
+export const getAllProduct = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',

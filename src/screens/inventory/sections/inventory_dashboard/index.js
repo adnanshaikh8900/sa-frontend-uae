@@ -11,7 +11,7 @@ import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import { CSVLink } from 'react-csv';
 import { Loader, Currency } from 'components';
-import * as FinancialReportActions from '../../actions';
+import * as InventoryActions from '../../actions';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 
@@ -25,8 +25,8 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
-		financialReportActions: bindActionCreators(
-			FinancialReportActions,
+		inventoryActions: bindActionCreators(
+			InventoryActions,
 			dispatch,
 		),
 	};
@@ -53,24 +53,7 @@ class InventoryDashboard extends React.Component {
 				column: null,
 				direction: 'desc',
 			},
-			data: {
-				totalOperatingIncome: 0.0,
-				totalCostOfGoodsSold: 0.0,
-				grossProfit: 0.0,
-				totalOperatingExpense: 0.0,
-				operatingProfit: 0.0,
-				totalNonOperatingIncome: 0.0,
-				totalNonOperatingExpense: 0.0,
-				nonOperatingIncome: {},
-				nonOperatingExpense: {},
-				nonOperatingIncomeExpense: 0.0,
-				netProfitLoss: 0.0,
-				operatingIncome: {},
-				nonOperatingIncome: {},
-				costOfGoodsSold: {},
-				operatingExpense: {},
-				nonOperatingExpense: {},
-			},
+			allProducts:'',
 		};
 		this.columnHeader = [
 			{ label: 'Account', value: 'Account', sort: true },
@@ -101,24 +84,16 @@ class InventoryDashboard extends React.Component {
 	};
 
 	initializeData = () => {
-		const { initValue } = this.state;
-		const postData = {
-			startDate: initValue.startDate,
-			endDate: initValue.endDate,
-		};
-		// this.props.financialReportActions
-		// 	.getProfitAndLossReport(postData)
-		// 	.then((res) => {
-		// 		if (res.status === 200) {
-		// 			this.setState({
-		// 				data: res.data,
-		// 				loading: false,
-		// 			});
-		// 		}
-		// 	})
-		// 	.catch((err) => {
-		// 		this.setState({ loading: false });
-		// 	});
+		this.props.inventoryActions
+			.getAllProduct()
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({ allProducts: res.data });
+				}
+			})
+			.catch((err) => {
+				this.setState({ loading: false });
+			});
 	};
 
 	exportFile = (csvData, fileName, type) => {
@@ -287,7 +262,7 @@ class InventoryDashboard extends React.Component {
 											All Products
 										</h6>
 										<h5 className="d-block mt-4 text-center" >
-										80
+										{this.state.allProducts}
 										</h5>
 						
 							</CardBody>

@@ -4,7 +4,11 @@ import { authApi } from 'utils';
 export const getProductInventoryList = (obj) => {
 	let name = obj.name ? obj.name : '';
 	let productCode = obj.productCode ? obj.productCode : '';
-	let vatPercentage = obj.vatPercentage ? obj.vatPercentage.value : '';
+	let quantityOrdered = obj.quantityOrdered ? obj.quantityOrdered : '';
+	let quantityIn = obj.quantityIn ? obj.quantityIn : '';
+	let quantityOut = obj.quantityOut ? obj.quantityOut : '';
+	let stockInHand = obj.stockInHand ? obj.stockInHand : '';
+	let reOrderLevel = obj.reOrderLevel ? obj.reOrderLevel : '';
 	let pageNo = obj.pageNo ? obj.pageNo : '';
 	let pageSize = obj.pageSize ? obj.pageSize : '';
 	let order = obj.order ? obj.order : '';
@@ -25,6 +29,24 @@ export const getProductInventoryList = (obj) => {
 					});
 				}
 				return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const getAllProduct = (invoiceType) => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/product/getProductCountForInventory',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
 			})
 			.catch((err) => {
 				throw err;

@@ -138,7 +138,7 @@ export const PROJECT = {
 };
 
 export const INVENTORY = {
-	SUMMARY_LIST: 'SUMMMARY_LIST'
+	SUMMARY_LIST: 'SUMMMARY_LIST',
 };
 
 export const PAYMENT = {

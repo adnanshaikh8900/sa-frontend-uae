@@ -61,8 +61,9 @@ class CreateUser extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			isPasswordShown: false,
 			loading: false,
-			passwordShown: false,
+			// passwordShown: false,
 			createMore: false,
 			initValue: {
 				firstName: '',
@@ -109,12 +110,16 @@ class CreateUser extends React.Component {
 		});
 	};
 
-	togglePasswordVisiblity = () => {
-		this.setState({
-			passwordShown: !this.state.passwordShown,
-		});
-	};
+	// togglePasswordVisiblity = () => {
+	// 	this.setState({
+	// 		passwordShown: !this.state.passwordShown,
+	// 	});
+	// };
 
+	togglePasswordVisiblity = () => {
+		const { isPasswordShown } = this.state;
+		this.setState({ isPasswordShown: !isPasswordShown });
+	  };
 	handleSubmit = (data, resetForm) => {
 		this.setState({
 			createDisabled: true,
@@ -206,7 +211,7 @@ class CreateUser extends React.Component {
 	render() {
 		const { role_list } = this.props;
 		const { timezone } = this.state;
-
+		const { isPasswordShown } = this.state;
 		return (
 			<div className="create-user-screen">
 				<div className="animated fadeIn">
@@ -725,19 +730,21 @@ class CreateUser extends React.Component {
 																				<span className="text-danger">*</span>
 																				Password
 																			</Label>
+																			<div>	
 																			<Input
 																				type={
-																					this.state.passwordShown
+																					this.state.isPasswordShown
 																						? 'text'
 																						: 'password'
 																				}
 																				id="password"
 																				name="password"
+																				placeholder="Enter password"
 																				value={props.values.password}
-																				autoComplete="new-password"
-																				placeholder="Enter the Password"
-																				onChange={(value) => {
-																					props.handleChange('password')(value);
+																				onChange={(option) => {
+																					props.handleChange('password')(
+																						option,
+																					);
 																				}}
 																				className={
 																					props.errors.password &&
@@ -746,15 +753,15 @@ class CreateUser extends React.Component {
 																						: ''
 																				}
 																			/>
-																			<i
-																				className="inputShow"
-																				onClick={this.togglePasswordVisiblity}
-																			>
-																				<img
-																					src={eye}
-																					style={{ width: '20px' }}
-																				/>
-																			</i>
+																		<i   className={`fa ${ isPasswordShown ? "fa-eye-slash" : "fa-eye" } password-icon fa-lg`}
+																		onClick={this.togglePasswordVisiblity}
+																	>
+																		{/* <img 
+																			src={eye}
+																			style={{ width: '20px' }}
+																		/> */}
+																		</i>
+																		</div>	
 																			{props.errors.password &&
 																			props.touched.password ? (
 																				<div className="invalid-feedback">

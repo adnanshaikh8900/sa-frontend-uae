@@ -58,10 +58,11 @@ class DetailUser extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			isPasswordShown: false,
 			loading: true,
 			dialog: null,
 			initValue: {},
-			passwordShown: false,
+			// passwordShown: false,
 			selectedStatus: '',
 			userPhoto: [],
 			showIcon: false,
@@ -142,11 +143,16 @@ class DetailUser extends React.Component {
 			userPhotoFile: file,
 		});
 	};
+	// togglePasswordVisiblity = () => {
+	// 	this.setState({
+	// 		passwordShown: !this.state.passwordShown,
+	// 	});
+	// };
+
 	togglePasswordVisiblity = () => {
-		this.setState({
-			passwordShown: !this.state.passwordShown,
-		});
-	};
+		const { isPasswordShown } = this.state;
+		this.setState({ isPasswordShown: !isPasswordShown });
+	  };
 	deleteUser = () => {
 		const message1 = (
 			<text>
@@ -267,7 +273,7 @@ class DetailUser extends React.Component {
 	render() {
 		const { loading, dialog, timezone,current_user_id } = this.state;
 		const { role_list } = this.props;
-
+		const { isPasswordShown } = this.state;
 		return (
 			<div className="create-user-screen">
 				<div className="animated fadeIn">
@@ -740,57 +746,58 @@ class DetailUser extends React.Component {
 																	
 																	</Row>
 																	<Row>
-																		<Col lg={6}>
-																			<FormGroup>
-																				<Label htmlFor="select">
-																					<span className="text-danger">*</span>
-																					Password
-																				</Label>
-																				<Input
-																					type={
-																						this.state.passwordShown
-																							? 'text'
-																							: 'password'
-																					}
-																					id="password"
-																					name="password"
-																					placeholder="Enter the Password"
-																					autoComplete="new-password"
-																					onChange={(value) => {
-																						props.handleChange('password')(
-																							value,
-																						);
-																					}}
-																					className={
-																						props.errors.password &&
-																						props.touched.password
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				<i
-																					className="inputShow"
-																					onClick={this.togglePasswordVisiblity}
-																				>
-																					<img
-																						src={eye}
-																						style={{ width: '20px' }}
-																					/>
-																				</i>
-																				{props.errors.password &&
-																				props.touched.password ? (
-																					<div className="invalid-feedback">
-																						{props.errors.password}
-																					</div>
-																				) : (
-																					<span className="password-msg">
-																						Must Contain 8 Characters, One
-																						Uppercase, One Lowercase, One Number
-																						and one special case Character.
-																					</span>
-																				)}
-																			</FormGroup>
-																		</Col>
+																	<Col lg={6}>
+																		<FormGroup>
+																			<Label htmlFor="select">
+																				<span className="text-danger">*</span>
+																				Password
+																			</Label>
+																			<div>	
+																			<Input
+																				type={
+																					this.state.isPasswordShown
+																						? 'text'
+																						: 'password'
+																				}
+																				id="password"
+																				name="password"
+																				placeholder="Enter password"
+																				value={props.values.password}
+																				onChange={(option) => {
+																					props.handleChange('password')(
+																						option,
+																					);
+																				}}
+																				className={
+																					props.errors.password &&
+																					props.touched.password
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																		<i   className={`fa ${ isPasswordShown ? "fa-eye-slash" : "fa-eye" } password-icon fa-lg`}
+																		onClick={this.togglePasswordVisiblity}
+																		>
+																		{/* <img 
+																			src={eye}
+																			style={{ width: '20px' }}
+																		/> */}
+																		</i>
+																		</div>	
+																			{props.errors.password &&
+																			props.touched.password ? (
+																				<div className="invalid-feedback">
+																					{props.errors.password}
+																				</div>
+																			) : (
+																				<span className="password-msg">
+																					Must Contain 8 Characters, One
+																					Uppercase, One Lowercase, One Number
+																					and one special case Character.
+																				</span>
+																			)}
+																		</FormGroup>
+																	</Col>
 																		<Col lg={6}>
 																			<FormGroup>
 																				<Label htmlFor="select">

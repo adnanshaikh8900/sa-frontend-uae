@@ -48,7 +48,7 @@ class Register extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			passwordShown: false,
+			isPasswordShown: false,
 			alert: null,
 			currencyList: [
 			],
@@ -92,12 +92,15 @@ class Register extends React.Component {
 		});
 	};
 
+	// togglePasswordVisiblity = () => {
+	// 	this.setState({
+	// 		passwordShown: !this.state.passwordShown,
+	// 	});
+	// };
 	togglePasswordVisiblity = () => {
-		this.setState({
-			passwordShown: !this.state.passwordShown,
-		});
-	};
-
+		const { isPasswordShown } = this.state;
+		this.setState({ isPasswordShown: !isPasswordShown });
+	  };
 	handleChange = (key, val) => {
 		this.setState({
 			[key]: val,
@@ -163,6 +166,7 @@ class Register extends React.Component {
 	};
 
 	render() {
+		const { isPasswordShown } = this.state;
 		const customStyles = {
 			control: (base, state) => ({
 				...base,
@@ -480,43 +484,50 @@ class Register extends React.Component {
 																					<span className="text-danger">*</span>
 																					Password
 																				</Label>
-																				<Input
-																					type={
-																						this.state.passwordShown
-																							? 'text'
-																							: 'password'
-																					}
-																					id="password"
-																					name="password"
-																					placeholder="Enter password"
-																					value={props.values.password}
-																					onChange={(option) => {
-																						props.handleChange('password')(
-																							option,
-																						);
-																					}}
-																					className={
-																						props.errors.password &&
-																						props.touched.password
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				<i
-																					className="inputRShow"
-																					onClick={this.togglePasswordVisiblity}
-																				>
-																					<img
-																						src={eye}
-																						style={{ width: '20px' }}
-																					/>
-																				</i>
-																				{props.errors.password &&
-																					props.touched.password && (
-																						<div className="invalid-feedback">
-																							{props.errors.password}
-																						</div>
-																					)}
+																				<div>	
+																			<Input
+																				type={
+																					this.state.isPasswordShown
+																						? 'text'
+																						: 'password'
+																				}
+																				id="password"
+																				name="password"
+																				placeholder="Enter password"
+																				value={props.values.password}
+																				onChange={(option) => {
+																					props.handleChange('password')(
+																						option,
+																					);
+																				}}
+																				className={
+																					props.errors.password &&
+																					props.touched.password
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																		<i   className={`fa ${ isPasswordShown ? "fa-eye-slash" : "fa-eye" } password-icon fa-lg`}
+																		onClick={this.togglePasswordVisiblity}
+																	>
+																		{/* <img 
+																			src={eye}
+																			style={{ width: '20px' }}
+																		/> */}
+																		</i>
+																		</div>
+																		{props.errors.password &&
+																			props.touched.password ? (
+																				<div className="invalid-feedback">
+																					{props.errors.password}
+																				</div>
+																			) : (
+																				<span className="password-msg">
+																					Must Contain 8 Characters, One
+																					Uppercase, One Lowercase, One Number
+																					and one special case Character.
+																				</span>
+																			)}
 																			</FormGroup>
 																		</Col>
 																		<Col lg={6}>

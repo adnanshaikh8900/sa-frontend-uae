@@ -195,7 +195,7 @@ class DetailEmployee extends React.Component {
                                 // .required("Password is Required")
                                 // .min(8,"Password Too Short")
                                 .matches(
-                                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                                  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
                                   "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
                                 ),
                               confirmPassword: Yup.string()

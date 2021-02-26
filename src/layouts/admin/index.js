@@ -132,7 +132,15 @@ class AdminLayout extends React.Component {
 			 			url: item.url,
 			 			icon: item.icon,
 			 		});
-			 	}
+				 }
+				 if (moduleName === 'Inventry' && item.name === 'Inventry') {
+					arr.items.push({
+			 			name: item.name,
+			 			url: item.url,
+			 			icon: item.icon,
+			 		});
+				 }
+				 
 			});
 		}
 
@@ -143,7 +151,6 @@ class AdminLayout extends React.Component {
 		});
 
 		var correctSequence = navigation.items.map(item => item.name)
-
 		finalArray.items = correctSequence.reduce((arr, name) => {
 			let ele = finalArray.items.find(item => item.name == name)
 			if (ele) arr.push(ele);

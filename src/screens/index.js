@@ -53,6 +53,7 @@ import ReportsFiling from './reports_filing';
 
 import TransactionsReport from './transactions_report';
 import FinancialReport from './financial_report';
+import Inventry from './inventory'
 import DetailedGeneralLedgerReport from './detailed_general_ledger_report';
 
 import ChartAccount from './chart_account';
@@ -149,6 +150,7 @@ export {
 	ReportsFiling,
 	TransactionsReport,
 	FinancialReport,
+	Inventry,
 	DetailedGeneralLedgerReport,
 	ChartAccount,
 	CreateChartAccount,

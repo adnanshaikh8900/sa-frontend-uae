@@ -108,6 +108,8 @@ import {
 	DataBackup,
 	Help,
 	Faq,
+
+	Inventry,
 } from 'screens';
 
 const adminRoutes = [
@@ -137,31 +139,25 @@ const adminRoutes = [
 		component: Journal.screen,
 	},
 	{
+		path: '/admin/accountant/opening-balance',
+		name: 'ViewOpeningBalance',
+		component: OpeningBalance.screen,
+	},
+	{
 		path: '/admin/accountant/opening-balance/create',
 		name: 'AddOpeningBalance',
 		component: CreateOpeningBalance.screen,
 	},
 	{
 		path: '/admin/accountant/opening-balance/detail',
-		name: 'ViewOpeningBalance',
+		name: 'UpdateOpeningBalance',
 		component: DetailOpeningBalance.screen,
 	},
 	{
-		path: '/admin/accountant/opening-balance',
-		name: 'OpeningBalance',
-		component: OpeningBalance.screen,
+		path: '/admin/Inventry',
+		name: 'Inventry',
+		component: Inventry.screen,
 	},
-	// {
-	// 	path: '/admin/accountant/opening-balance/create',
-	// 	name: 'AddOpeningBalance',
-	// 	component: CreateOpeningBalance.screen,
-	// },
-	// {
-	// 	path: '/admin/accountant/opening-balance/detail',
-	// 	name: 'UpdateOpeningBalance',
-	// 	component: DetailOpeningBalance.screen,
-	// },
-
 	{
 		redirect: true,
 		path: '/admin/accountant',

@@ -22,6 +22,7 @@ import * as Yup from 'yup';
 import './style.scss';
 
 import * as ProductActions from '../../actions';
+import * as SupplierInvoiceActions from '../../../supplier_invoice/actions';
 import { CommonActions } from 'services/global';
 
 import { WareHouseModal } from '../../sections';
@@ -32,12 +33,19 @@ const mapStateToProps = (state) => {
 		vat_list: state.product.vat_list,
 		product_warehouse_list: state.product.product_warehouse_list,
 		product_category_list: state.product.product_category_list,
+		supplier_list: state.supplier_invoice.supplier_list,
+		inventory_account_list:state.product.inventory_account_list,
+
 	};
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
 		productActions: bindActionCreators(ProductActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
+		supplierInvoiceActions: bindActionCreators(
+			SupplierInvoiceActions,
+			dispatch,
+		),
 	};
 };
 const customStyles = {
@@ -57,11 +65,7 @@ class CreateProduct extends React.Component {
 		this.state = {
 			loading: true,
 			openWarehouseModal: false,
-
-			// selectedParentProduct: null,
-			// selectedVatCategory: null,
-			// selectedWareHouse: null,
-
+			contactType:1,
 			initValue: {
 				productName: '',
 				productDescription: '',
@@ -79,12 +83,16 @@ class CreateProduct extends React.Component {
 					value: 49,
 					label: 'Cost of Goods Sold',
 				},
-
+				inventoryPurchasePrice: '',
+				inventoryQty:'',
+				inventoryReorderLevel:'',
+				contactId:'',
 				salesDescription: '',
 				purchaseDescription: '',
 				productSalesPriceType: '',
 				productPurchasePriceType: '',
 				disabled: false,
+				isInventoryEnabled: false,
 			},
 			purchaseCategory: [],
 			salesCategory: [],
@@ -92,24 +100,23 @@ class CreateProduct extends React.Component {
 			exist: false,
 			ProductExist: false,
 		};
-		// this.regEx = /^[0-9\d]+$/;
-        // this.regExBoth = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
-        // this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
-
-
-		 this.regEx = /^[0-9\d]+$/;
-        // this.regExBoth = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
-        // this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
+		this.regEx = /^[0-9\d]+$/;
+		this.regExBoth = /[a-zA-Z0-9!@#$&()-\\`.+,/\" ]+$/;
+		this.regExAlpha = /^[0-9!@#$&()-\\`.+,/\"]+$/;
+		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 	}
 
 	componentDidMount = () => {
 		this.initializeData();
 		this.salesCategory();
 		this.purchaseCategory();
+		this.inventoryAccount();
 	};
 	initializeData = () => {
 		this.props.productActions.getProductVatCategoryList();
+	//	this.props.productActions.getTransactionCategoryListForInventory();
 		this.props.productActions.getProductCategoryList();
+		this.props.supplierInvoiceActions.getSupplierList(this.state.contactType);
 	};
 
 	salesCategory = () => {
@@ -123,7 +130,6 @@ class CreateProduct extends React.Component {
 								salesCategory: res.data,
 							},
 							() => {
-								console.log(this.state.salesCategory);
 							},
 						);
 					}
@@ -150,7 +156,23 @@ class CreateProduct extends React.Component {
 			console.log(err);
 		}
 	};
-
+inventoryAccount = () => {
+try {
+	this.props.productActions
+		.getTransactionCategoryListForInventory()
+		.then((res) => {
+			if (res.status === 200) {
+				this.setState(
+					{
+						inventoryAccount: res.data,
+					},
+					() => {},
+				);
+			}
+		});
+} catch (err) {
+	console.log(err);
+}};
 	// Show Invite User Modal
 	showWarehouseModal = () => {
 		this.setState({ openWarehouseModal: true });
@@ -160,7 +182,8 @@ class CreateProduct extends React.Component {
 		this.setState({ openWarehouseModal: false });
 		this.props.productActions.getProductWareHouseList();
 	};
-
+	
+	 
 	getData = (data) => {
 		let temp = {};
 		for (let item in data) {
@@ -185,6 +208,13 @@ class CreateProduct extends React.Component {
 		const purchaseUnitPrice = data['purchaseUnitPrice'];
 		const vatCategoryId = data['vatCategoryId'];
 		const vatIncluded = data['vatIncluded'];
+		const inventoryPurchasePrice = data['inventoryPurchasePrice'];
+		const inventoryQty = data['inventoryQty'];
+		const inventoryReorderLevel = data['inventoryReorderLevel'];
+		const contactId = data['contactId'].value;
+		const isInventoryEnabled = data['isInventoryEnabled'];
+		const transactionCategoryId = data['transactionCategoryId'];
+
 		let productPriceType;
 		if (data['productPriceType'].includes('SALES')) {
 			productPriceType = 'SALES';
@@ -207,6 +237,9 @@ class CreateProduct extends React.Component {
 			productPriceType,
 			vatCategoryId,
 			vatIncluded,
+			isInventoryEnabled,
+			contactId,
+			transactionCategoryId,
 
 			...(salesUnitPrice.length !== 0 && {
 				salesUnitPrice,
@@ -225,6 +258,15 @@ class CreateProduct extends React.Component {
 			}),
 			...(purchaseUnitPrice.length !== 0 && {
 				purchaseUnitPrice,
+			}),
+			...(inventoryPurchasePrice.length !== 0 && {
+				inventoryPurchasePrice,
+			}),
+			...(inventoryQty.length !== 0 && {
+				inventoryQty,
+			}),
+			...(inventoryReorderLevel.length !== 0 && {
+				inventoryReorderLevel,
 			}),
 		};
 		const postData = this.getData(dataNew);
@@ -296,8 +338,17 @@ class CreateProduct extends React.Component {
 	};
 
 	render() {
-		const { vat_list, product_category_list } = this.props;
-		const { initValue, purchaseCategory, salesCategory } = this.state;
+		const { vat_list, product_category_list,supplier_list,inventory_account_list} = this.props;
+		const { initValue, purchaseCategory, salesCategory,inventoryAccount } = this.state;
+
+		let tmpSupplier_list = []
+
+		supplier_list.map(item => {
+			let obj = {label: item.label.contactName, value: item.value}
+			tmpSupplier_list.push(obj)
+		})
+
+
 		return (
 			<div className="create-product-screen">
 				<div className="animated fadeIn">
@@ -461,7 +512,7 @@ class CreateProduct extends React.Component {
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
-																					this.regEx.test(
+																					this.regExBoth.test(
 																						option.target.value,
 																					)
 																				) {
@@ -518,7 +569,7 @@ class CreateProduct extends React.Component {
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
-																					this.regEx.test(
+																					this.regExBoth.test(
 																						option.target.value,
 																					)
 																				) {
@@ -663,6 +714,7 @@ class CreateProduct extends React.Component {
 																	</FormGroup>
 																</Col>
 															</Row>
+															<hr></hr>
 															{/* <Row>
 															<Col lg={12}>
 																<FormGroup check inline className="mb-3">
@@ -763,8 +815,8 @@ class CreateProduct extends React.Component {
                                 </FormGroup>
                               </Col>
                             </Row> */}
-															<Row className="secondary-info">
-																<Col lg={4}>
+															<Row>
+																<Col lg={8}>
 																	<FormGroup check inline className="mb-3">
 																		<Label
 																			className="form-check-label"
@@ -807,6 +859,7 @@ class CreateProduct extends React.Component {
 																						? 'is-invalid'
 																						: ''
 																				}
+																				
 																			/>
 																			Sales Information
 																			{props.errors.productPriceType &&
@@ -817,6 +870,8 @@ class CreateProduct extends React.Component {
 																				)}
 																		</Label>
 																	</FormGroup>
+																	<Row>
+																	<Col>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="salesUnitPrice">
 																			<span className="text-danger">*</span>{' '}
@@ -872,7 +927,8 @@ class CreateProduct extends React.Component {
 																					{props.errors.salesUnitPrice}
 																				</div>
 																			)}
-																	</FormGroup>
+																	</FormGroup></Col>
+																	<Col>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="transactionCategoryId">
 																			<span className="text-danger">*</span>{' '}
@@ -927,6 +983,8 @@ class CreateProduct extends React.Component {
 																				</div>
 																			)}
 																	</FormGroup>
+																	</Col>
+																	</Row>
 																	<FormGroup className="">
 																		<Label htmlFor="salesDescription">
 																			Description
@@ -952,9 +1010,11 @@ class CreateProduct extends React.Component {
 																			}}
 																			value={props.values.salesDescription}
 																		/>
-																	</FormGroup>
-																</Col>
-																<Col lg={4}>
+																			</FormGroup>
+																		</Col>
+																</Row>
+															<Row>
+																<Col lg={8}>
 																	<FormGroup check inline className="mb-3">
 																		<Label
 																			className="form-check-label"
@@ -998,6 +1058,7 @@ class CreateProduct extends React.Component {
 																						? 'is-invalid'
 																						: ''
 																				}
+																				
 																			/>
 																			Purchase Information
 																			{props.errors.productPriceType &&
@@ -1008,6 +1069,8 @@ class CreateProduct extends React.Component {
 																				)}
 																		</Label>
 																	</FormGroup>
+																	<Row>
+																	<Col>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="salesUnitPrice">
 																			<span className="text-danger">*</span>{' '}
@@ -1064,7 +1127,8 @@ class CreateProduct extends React.Component {
 																				</div>
 																			)}
 																	</FormGroup>
-
+																	</Col>
+																	<Col>	
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="salesUnitPrice">
 																			<span className="text-danger">*</span>{' '}
@@ -1120,7 +1184,7 @@ class CreateProduct extends React.Component {
 																					}
 																				</div>
 																			)}
-																	</FormGroup>
+																	</FormGroup></Col></Row>
 																	<FormGroup className="">
 																		<Label htmlFor="purchaseDescription">
 																			Description
@@ -1149,6 +1213,294 @@ class CreateProduct extends React.Component {
 																	</FormGroup>
 																</Col>
 															</Row>
+															
+															<hr></hr>
+															
+															<Row style={{display: 
+																				props.values.productPriceType.includes(
+																					'PURCHASE',
+																				)
+																				?'' : 'none'
+																			}}>
+																<Col lg={8}>
+																	<FormGroup check inline className="mb-3">
+																		<Label
+																			className="form-check-label"
+																			check
+																			htmlFor="isInventoryEnabled"
+																		>
+																			<Input
+																			className="form-check-input"
+																			type="checkbox"
+																			id="is"
+																			name="isInventoryEnabled"
+																			onChange={(value) => {
+																				props.handleChange('isInventoryEnabled')(value);
+																			}}
+																			checked={props.values.isInventoryEnabled}
+																				
+																			
+																				className={
+																					props.errors.productPriceType &&
+																					props.touched.productPriceType
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																		Enable Inventory
+																			{props.errors.productPriceType &&
+																				props.touched.productPriceType && (
+																					<div className="invalid-feedback">
+																						{props.errors.productPriceType}
+																					</div>
+																				)}
+																		</Label>
+																	</FormGroup>
+
+																	<Row style={{display: props.values.isInventoryEnabled === false ? 'none' : ''}}>
+																	<Col>	
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="salesUnitPrice">
+																			{/* <span className="text-danger">*</span>{' '} */}
+																		Inventory Account
+																		</Label>
+																		<Select
+																			styles={customStyles}
+																			// isDisabled={
+																			// 	props.values.productPriceType.includes(
+																			// 		'INVENTORY',
+																			// 	)
+																			// 		? false
+																			// 		: true
+																			// }
+																			options={
+																				inventoryAccount ? inventoryAccount : []
+																			}
+																			value={
+																				inventoryAccount
+																					? props.values
+																							.transactionCategoryId
+																					: ''
+																			}
+																			id="transactionCategoryId"
+																			onChange={(option) => {
+																				if (option && option.value) {
+																					props.handleChange(
+																						'transactionCategoryId',
+																					)(option);
+																				} else {
+																					props.handleChange(
+																						'transactionCategoryId',
+																					)('');
+																				}
+																			}}
+																			className={
+																				props.errors
+																					.transactionCategoryId &&
+																				props.touched
+																					.transactionCategoryId
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{props.errors
+																			.transactionCategoryId &&
+																			props.touched
+																				.transactionCategoryId && (
+																				<div className="invalid-feedback">
+																					{
+																						props.errors
+																							.transactionCategoryId
+																					}
+																				</div>
+																			)}
+																	</FormGroup></Col>
+																	<Col>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="inventoryQty">
+																			{/* <span className="text-danger">*</span>{' '} */}
+																			Purchase Quantity
+																			
+																		</Label>
+																		<Input
+																		type="number"
+																			maxLength="10"
+																			id="inventoryQty"
+																			name="inventoryQty"
+																			placeholder="Enter Quantity"
+																			onChange={(option) => {
+																				if (
+																					option.target.value === '' ||
+																					this.regDecimal.test(
+																						option.target.value,
+																					)
+																				) {
+																					props.handleChange(
+																						'inventoryQty',
+																					)(option);
+																				}
+																			}}
+																			// readOnly={
+																			// 	props.values.productPriceType.includes(
+																			// 		'INVENTORY',
+																			// 	)
+																			// 		? false
+																			// 		: true
+																			// }
+																			value={props.values.inventoryQty}
+																			className={
+																				props.errors.inventoryQty &&
+																				props.touched.inventoryQty
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{props.errors.inventoryQty &&
+																			props.touched.inventoryQty && (
+																				<div className="invalid-feedback">
+																					{props.errors.inventoryQty}
+																				</div>
+																			)}
+																	</FormGroup>
+																	</Col>
+																</Row>
+																<Row style={{display: props.values.isInventoryEnabled === false ? 'none' : ''}}>
+																<Col>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="inventoryPurchasePrice">
+																			{/* <span className="text-danger">*</span>{' '} */}
+																			Purchase Price
+																		</Label>
+																		<Input
+																		type="number"
+																			maxLength="10"
+																			id="inventoryPurchasePrice"
+																			name="inventoryPurchasePrice"
+																			placeholder="Enter Purchase Price"
+																			onChange={(option) => {
+																				if (
+																					option.target.value === '' ||
+																					this.regDecimal.test(
+																						option.target.value,
+																					)
+																				) {
+																					props.handleChange(
+																						'inventoryPurchasePrice',
+																					)(option);
+																				}
+																			}}
+																			// readOnly={
+																			// 	props.values.productPriceType.includes(
+																			// 		'INVENTORY',
+																			// 	)
+																			// 		? false
+																			// 		: true
+																			// }
+																			value={props.values.inventoryPurchasePrice}
+																			className={
+																				props.errors.inventoryPurchasePrice &&
+																				props.touched.inventoryPurchasePrice
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{props.errors.inventoryPurchasePrice &&
+																			props.touched.inventoryPurchasePrice && (
+																				<div className="invalid-feedback">
+																					{props.errors.inventoryPurchasePrice}
+																				</div>
+																			)}
+																	</FormGroup>
+																	</Col>
+																	<Col>
+																	<FormGroup className="mb-3">
+																	<Label htmlFor="contactId">
+																		{/* <span className="text-danger">*</span> */}
+																		Supplier Name
+																	</Label>
+																	<Select
+																		// isDisabled={
+																		// 	props.values.productPriceType.includes(
+																		// 		'INVENTORY',
+																		// 	)
+																		// 		? false
+																		// 		: true
+																		// }
+																		styles={customStyles}
+																		id="contactId"
+																		name="contactId"
+																		placeholder="Select Supplier Name"
+																		options={
+																			tmpSupplier_list
+																				? selectOptionsFactory.renderOptions(
+																						'label',
+																						'value',
+																						tmpSupplier_list,
+																						'Supplier Name',
+																				  )
+																				: []
+																		}
+																		value={props.values.contactId}
+																		onChange={(option) => {
+																			if (option && option.value) {
+																				
+																				props.handleChange('contactId')(option);
+																			} else {
+
+																				props.handleChange('contactId')('');
+																			}
+																		}}
+																		className={
+																			props.errors.contactId &&
+																			props.touched.contactId
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.contactId &&
+																		props.touched.contactId && (
+																			<div className="invalid-feedback">
+																				{props.errors.contactId}
+																			</div>
+																		)}
+																</FormGroup>
+														
+																</Col>
+																</Row>
+																<Row style={{display: props.values.isInventoryEnabled === false ? 'none' : ''}}>
+																	<Col lg={6}>
+																	<FormGroup className="">
+																		<Label htmlFor="inventoryReorderLevel">
+																			Re-Order Level
+																		</Label>
+																		<Input
+																			// readOnly={
+																			// 	props.values.productPriceType.includes(
+																			// 		'INVENTORY',
+																			// 	)
+																			// 		? false
+																			// 		: true
+																			// }
+																			type="number"
+																			maxLength="200"
+																			name="inventoryReorderLevel"
+																			id="inventoryReorderLevel"
+																			rows="3"
+																			placeholder="inventoryReorderLevel..."
+																			onChange={(value) => {
+																				props.handleChange(
+																					'inventoryReorderLevel',
+																				)(value);
+																			}}
+																			value={props.values.inventoryReorderLevel}
+																		/>
+																	</FormGroup>
+																	</Col>
+																	
+																	</Row>
+																</Col>
+															</Row>
+															
 															<Row>
 																<Col lg={12} className="mt-5">
 																	<FormGroup className="text-right">

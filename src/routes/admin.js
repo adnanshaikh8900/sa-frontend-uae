@@ -109,7 +109,7 @@ import {
 	Help,
 	Faq,
 
-	Inventry,
+	Inventory,
 } from 'screens';
 
 const adminRoutes = [
@@ -154,9 +154,9 @@ const adminRoutes = [
 		component: DetailOpeningBalance.screen,
 	},
 	{
-		path: '/admin/Inventry',
-		name: 'Inventry',
-		component: Inventry.screen,
+		path: '/admin/Inventory',
+		name: 'Inventory',
+		component: Inventory.screen,
 	},
 	{
 		redirect: true,

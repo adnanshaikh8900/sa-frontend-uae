@@ -79,6 +79,7 @@ class DetailProduct extends React.Component {
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
+		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 	}
 
 	componentDidMount = () => {
@@ -293,6 +294,7 @@ class DetailProduct extends React.Component {
 			vatIncluded,
 			isInventoryEnabled,
 			contactId,
+			transactionCategoryId,
 
 			...(salesUnitPrice.length !== 0 &&
 				data['productPriceType'].includes('SALES') && {
@@ -328,9 +330,7 @@ class DetailProduct extends React.Component {
 					inventoryReorderLevel,
 				}),
 			
-				...(transactionCategoryId.length !== 0 && {
-					transactionCategoryId,
-				}),
+				
 		};
 		const postData = this.getData(dataNew);
 		this.props.detailProductActions

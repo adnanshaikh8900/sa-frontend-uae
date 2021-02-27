@@ -26,7 +26,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {};
 };
 
-class Inventry extends React.Component {
+class Inventory extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -53,7 +53,7 @@ class Inventry extends React.Component {
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="nav-icon fas fa-boxes" />
-										<span className="ml-2">Inventory</span>
+										<span className="ml-2 " >Inventory</span>
 									</div>
 								</Col>
 							</Row>
@@ -101,4 +101,4 @@ class Inventry extends React.Component {
 	}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Inventry);
+export default connect(mapStateToProps, mapDispatchToProps)(Inventory);

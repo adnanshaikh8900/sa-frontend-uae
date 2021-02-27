@@ -36,11 +36,28 @@ export const getProductInventoryList = (obj) => {
 	};
 };
 
-export const getAllProduct = () => {
+export const getAllProductCount = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
 			url: '/rest/product/getProductCountForInventory',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+export const getQuantityAvailable = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/product/getTotalStockOnHand',
 		};
 		return authApi(data)
 			.then((res) => {

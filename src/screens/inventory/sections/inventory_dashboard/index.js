@@ -54,6 +54,7 @@ class InventoryDashboard extends React.Component {
 				direction: 'desc',
 			},
 			allProducts:'',
+			quantityAvailable:'',
 		};
 		this.columnHeader = [
 			{ label: 'Account', value: 'Account', sort: true },
@@ -85,10 +86,20 @@ class InventoryDashboard extends React.Component {
 
 	initializeData = () => {
 		this.props.inventoryActions
-			.getAllProduct()
+			.getAllProductCount()
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState({ allProducts: res.data });
+				}
+			})
+			.catch((err) => {
+				this.setState({ loading: false });
+			});
+			this.props.inventoryActions
+			.getQuantityAvailable()
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({ quantityAvailable: res.data });
 				}
 			})
 			.catch((err) => {
@@ -239,7 +250,7 @@ class InventoryDashboard extends React.Component {
 						'11 Jan 2001',
 						'12 Jan 2001',
 					],
-					backgroundColor: 'rgba(244, 119, 46, 0.85)',
+					backgroundColor: 'rgb(192, 184, 46)',
 					hoverBackgroundColor: 'rgba(244, 119, 46, 0.85)',
 					data:[440, 505, 414, 671, 227, 413, 201, 352, 752, 320, 257, 160],
 				},
@@ -280,7 +291,7 @@ class InventoryDashboard extends React.Component {
 											Quantity Available
 										</h6>
 										<h5 className="d-block mt-4 text-center" >
-										80
+										{this.state.quantityAvailable}
 										</h5>
 						
 							</CardBody>
@@ -292,50 +303,49 @@ class InventoryDashboard extends React.Component {
 				<Card className="mr-2" style={{
 							width:"50%",
 							}}>
-						<div>
-							<div style={{color:"#2064d8",backgroundColor:"#edf2f9" ,height:"24.5%"}}>
-							<span className="font-weight-bold   ml-4 ">
-										PRODUCT LISTING
-										</span>
+						<div  style={{color:"#2064d8",backgroundColor:"#edf2f9" ,height:"9.8%"}}>
+						<h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">	
+									PRODUCT LISTING
+										</h6>
 										</div>
-							<CardBody style={{height:"100%"}}>
 							
-							<div className="row center " style={{height:"337%",margin:"-20"}}>
-
-								<div className="column card"  style={{
+							<CardBody style={{height:"100%",display: 'flex'}}>
+								<div className="column"  
+									 style={{
 											width:"50%",
+											marginBlock:'-20px',
+											borderRight:"1px solid #d5dae1"
 											
 										}} >
 									
 										
-											<CardBody  >
-													<table>
+											
+													<table style={{width:'-webkit-fill-available'}}>
 														<tr>
-														<th>Product Code</th>
-														<th>Product Name</th>
+														<th><b>Product Code</b></th>
+														<th><b>Product Name</b></th>
 														</tr>
 														<tr>
 															<td></td>
 														</tr>
 													</table>
-											</CardBody>
+										
 										
 									</div>
 
-									<div className="column card" style={{
-											width:"50%",
-										
-										}}>
-										
-										
-											<CardBody >
-													content
-											</CardBody>
-
+									<div className="column text-center" 
+											style={{
+												width:"50%",
+												marginBlock:'-20px',
+											
+												
+											}}
+									>
+										content
+											
 									</div>
-								</div>
 							</CardBody>
-						</div>
+					
 					</Card>
 					<Card className="ml-2"  style={{
 							width:"50%",
@@ -344,7 +354,7 @@ class InventoryDashboard extends React.Component {
 						}}>
 						<div>
 							<div  style={{color:"#2064d8",backgroundColor:"#edf2f9" ,height:"9%"}}>
-						<h6 className="text-uppercase font-weight-bold mb-1 text-black ml-4">	
+						<h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">	
 															TOP SELLING PRODUCTS
 										</h6>
 										</div>

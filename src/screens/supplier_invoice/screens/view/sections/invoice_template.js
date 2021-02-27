@@ -97,25 +97,29 @@ class InvoiceTemplate extends Component {
 								</div>
 							</div>
 							<div style={{ width: '130%',justifyContent:'center' }}>
-							<tr style={{
-									width: '50%',
-									margin:'0.5rem',
-									border:'1px solid',
-									marginTop:'2.5rem',
-									marginLeft:'6rem'
-								}}>
-											<td
-												style={{
-													width: '130%',
-													fontSize: '2rem',
-													fontWeight: '700',
-													textTransform: 'uppercase',
-													color: 'black',
-												}}
-											>
-												Invoice
-											</td>
-										</tr></div>
+								<table>
+									<tbody>
+									<tr style={{
+										width: '50%',
+										margin:'0.5rem',
+										marginTop:'2.5rem',
+										marginLeft:'6rem'
+									}}>
+												<td
+													style={{
+														width: '130%',
+														fontSize: '2rem',
+														fontWeight: '700',
+														textTransform: 'uppercase',
+														color: 'black',
+													}}
+												>
+													Invoice
+												</td>
+											</tr>
+									</tbody>
+								</table>
+							</div>
 							<div
 								style={{
 									width: '70%',
@@ -260,30 +264,25 @@ class InvoiceTemplate extends Component {
 									<Table className="table table-bordered" style={{width: '90%',margin:'0.5rem',border:'1px solid',width:'250px', textAlign: 'center' ,border:'1px solid',borderColor:'#c8ced3'}}>
 										<tbody>
 											<tr style={{ textAlign: 'right' }}>
-											<div>	<td  style={{backgroundColor:'#e3e3e3' ,width:'104px'  }}>Invoice Date</td>
+												<td  style={{backgroundColor:'#e3e3e3' ,width:'104px'  }}>Invoice Date</td>
 												<td style={{ width:'143px'  }}>
 													{' '}
 													{moment(invoiceData.invoiceDate).format(
 														'DD MMM YYYY',
 													)}
 												</td>
-												</div>
 											</tr>
 											<tr style={{ textAlign: 'right',width:'143px' }}>
-												<div>
 												<td style={{width:'109px' ,backgroundColor:'#e3e3e3' }}>Term</td>
 												<td style={{width:'143px'}}>{invoiceData.term}</td>
-											</div>
 											</tr>
 											<tr style={{ textAlign: 'right' }}>
-											<div>
 												<td style={{width:'104px' ,backgroundColor:'#e3e3e3' }}>Due Date</td>
 												<td style={{ width:'143px'  }}>
 													{moment(invoiceData.invoiceDueDate).format(
 														'DD MMM YYYY',
 													)}
 												</td>
-											</div>
 											</tr>
 										</tbody>
 									</Table>

@@ -589,7 +589,7 @@ class GeneralSettings extends React.Component {
 																	</Col>
 																)}
 															</Row>
-															{/* <h4>Invoice Mail Configuration</h4>
+															<h4>Invoice Mail Configuration</h4>
 															{this.state.viewEditor && (
 																<Row>
 																	<Col sm="8">
@@ -752,7 +752,7 @@ class GeneralSettings extends React.Component {
 																		</FormGroup>
 																	</Col>
 																</Row>
-															)} */}
+															)}
 															<FormGroup className="text-right mt-5">
 																<Button
 																	type="submit"

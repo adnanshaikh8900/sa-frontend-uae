@@ -335,7 +335,6 @@ class CustomerInvoice extends React.Component {
 	};
 
 	renderVatAmount = (cell, row, extraData) => {
-		console.log("row extraData", row, extraData)
 		// return row.vatAmount === 0 ? (
 		// 	<Currency
 		// 		value={row.vatAmount}

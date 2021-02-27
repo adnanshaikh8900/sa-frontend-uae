@@ -15,14 +15,16 @@ export default {
 					name: 'Opening Balance',
 					url: '/admin/accountant/opening-balance',
 					icon: 'fas fa-balance-scale',
-					path: 'ViewOpeningBalance',
+					path: 'OpeningBalance',
 				},
+			
 				{
 					name: 'Journals',
 					url: '/admin/accountant/journal',
 					icon: 'fa fa-diamond',
 					path: 'ViewJournal',
 				},
+		
 			],
 		},
 		{

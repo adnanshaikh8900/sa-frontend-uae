@@ -189,10 +189,10 @@ export default {
 			],
 		},
 		{
-			name: 'Inventry',
-			url: '/admin/Inventry',
+			name: 'Inventory',
+			url: '/admin/Inventory',
 			icon: 'fas fa-boxes',
-			path: 'Inventry',
+			path: 'Inventory',
 		},
 	
 		// {

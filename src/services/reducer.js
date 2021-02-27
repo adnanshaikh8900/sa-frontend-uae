@@ -33,7 +33,7 @@ import {
 	ImportTransaction,
 	OpeningBalance,
 	VatTransactions,
-	Inventry,
+	Inventory,
 } from 'screens';
 
 const reducer = combineReducers({
@@ -70,7 +70,7 @@ const reducer = combineReducers({
 	profile: Profile.reducer,
 	import_transaction: ImportTransaction.reducer,
 	opening_balance: OpeningBalance.reducer,
-	inventory: Inventry.reducer,
+	inventory: Inventory.reducer,
 });
 
 export default reducer;

@@ -191,7 +191,7 @@ class AdminLayout extends React.Component {
 									/>
 									<Switch>
 										{adminRoutes.map((prop, key) => {
-											if (user_role_list === []) {
+											if (prop.redirect){
 												return (
 													<Redirect
 														from={prop.path}

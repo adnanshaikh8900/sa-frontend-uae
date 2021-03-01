@@ -560,7 +560,6 @@ class OpeningBalance extends React.Component {
 										>
 											<TableHeaderColumn
 												dataField="transactionCategoryName"
-												dataSort
 												width="30%"
 												className="table-header-bg"
 											>
@@ -568,7 +567,6 @@ class OpeningBalance extends React.Component {
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="effectiveDate"
-												dataSort
 												dataFormat={this.renderDate}
 												className="table-header-bg"
 												width="30%"
@@ -580,14 +578,12 @@ class OpeningBalance extends React.Component {
 												dataField="openingBalance"
 												dataFormat={this.renderAmount}
 												formatExtraData={universal_currency_list}
-												dataSort
 												className="table-header-bg"
 											>
 												Opening Balance
 											</TableHeaderColumn>
 											<TableHeaderColumn
 											dataField="currency"
-											dataSort
 											width="15%"
 											dataFormat={this.renderCurrency}
 											formatExtraData={universal_currency_list}
@@ -598,7 +594,6 @@ class OpeningBalance extends React.Component {
 												className="text-right"
 												columnClassName="text-right"
 												dataFormat={this.renderActions}
-												dataSort
 												className="table-header-bg"
 											></TableHeaderColumn>
 										</BootstrapTable>

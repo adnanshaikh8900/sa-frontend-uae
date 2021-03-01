@@ -293,16 +293,16 @@ class InventorySummary extends React.Component {
 													Product Code
 												</TableHeaderColumn>
 												<TableHeaderColumn  dataField="purchaseOrder" dataSort className="table-header-bg">
-												purchaseOrder
+												Purchase Order
 												</TableHeaderColumn >
 												<TableHeaderColumn  dataField="quantitySold" dataSort className="table-header-bg">
-												quantitySold
+												Quantity Sold
 												</TableHeaderColumn >
 												<TableHeaderColumn  dataField="stockInHand" dataSort className="table-header-bg">
-												stockInHand
+												Stock In Hand
 												</TableHeaderColumn >
 												<TableHeaderColumn  dataField="supplierName" dataSort className="table-header-bg">
-												supplierName
+												Supplier Name
 												</TableHeaderColumn >
 											</BootstrapTable>
 										</div>

@@ -311,7 +311,7 @@ class BankAccount extends React.Component {
 		// 	/>
 		// );
 
-		return row.openingBalance ? row.openingBalance.toFixed(2) : row.openingBalance.toFixed(2);
+		return row.openingBalance ? row.curruncySymbol+row.openingBalance.toFixed(2) : row.curruncySymbol+row.openingBalance.toFixed(2);
 	};
 	renderActions = (cell, row) => {
 		return (
@@ -450,7 +450,7 @@ class BankAccount extends React.Component {
 								extraData[0] ? extraData[0].currencyIsoCode : 'USD'
 							}
 						/> */}
-						{/* {row.closingBalance ? row.closingBalance.toFixed(2) : row.closingBalance.toFixed(2)} */}
+						{row.closingBalance ? row.curruncySymbol+row.closingBalance : row.curruncySymbol+row.closingBalance}
 					</label>
 				</div>
 				<div>

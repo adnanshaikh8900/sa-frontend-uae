@@ -154,6 +154,7 @@ const adminRoutes = [
 		component: DetailOpeningBalance.screen,
 	},
 	{
+		redirect: true,
 		path: '/admin/Inventory',
 		name: 'Inventory',
 		component: Inventory.screen,

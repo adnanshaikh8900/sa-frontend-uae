@@ -15,7 +15,7 @@ export default {
 					name: 'Opening Balance',
 					url: '/admin/accountant/opening-balance',
 					icon: 'fas fa-balance-scale',
-					path: 'OpeningBalance',
+					path: 'ViewOpeningBalance',
 				},
 			
 				{

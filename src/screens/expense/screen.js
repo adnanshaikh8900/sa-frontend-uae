@@ -216,7 +216,7 @@ class Expense extends React.Component {
 								<div
 									onClick={() => {
 										this.props.history.push('/admin/expense/expense/detail', {
-											expenseId: row['expenseId'],
+											expenseId: row.expenseId,
 										});
 									}}
 								>
@@ -242,6 +242,15 @@ class Expense extends React.Component {
 								<i className="fas fa-file" /> Draft
 							</DropdownItem>
 						)}
+						<DropdownItem
+							onClick={() => {
+								this.props.history.push('/admin/expense/expense/view', {
+									expenseId: row.expenseId,
+								});
+							}}
+						>
+							<i className="fas fa-eye" /> View
+						</DropdownItem>
 						{/* <DropdownItem  onClick={() => {this.openInvoicePreviewModal(row.expenseId)}}>
               <i className="fas fa-eye" /> View
             </DropdownItem>
@@ -289,7 +298,7 @@ class Expense extends React.Component {
 		});
 	};
 
-	renderInvoiceStatus = (cell, row) => {
+	renderExpenseStatus = (cell, row) => {
 		let classname = '';
 		if (row.expenseStatus === 'Paid') {
 			classname = 'label-success';
@@ -316,7 +325,7 @@ class Expense extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		return row.expenseAmount ? row.currencySymbol + row.expenseAmount.toFixed(2) :'';
+		return row.expenseAmount ? row.expenseAmount.toFixed(2) :'';
 	};
 	renderCurrency = (cell, row) => {
 		if (row.currencyName) {
@@ -813,7 +822,7 @@ class Expense extends React.Component {
 												thStyle={{ whiteSpace: 'normal' }}
 												
 												dataField="expenseStatus"
-												dataFormat={this.renderInvoiceStatus}
+												dataFormat={this.renderExpenseStatus}
 												dataSort
 												className='table-header-bg'
 											>

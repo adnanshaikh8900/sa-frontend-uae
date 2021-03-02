@@ -43,6 +43,7 @@ import RecordSupplierPayment from './supplier_invoice/screens/record_payment';
 import Expense from './expense';
 import CreateExpense from './expense/screens/create';
 import DetailExpense from './expense/screens/detail';
+import ViewExpense from './expense/screens/view';
 
 import Payment from './payment';
 import CreatePayment from './payment/screens/create';
@@ -111,7 +112,7 @@ export {
 	ResetPassword,
 	Dashboard,
 	DashboardTwo,
-
+	ViewExpense,
 	Journal,
 	CreateJournal,
 	DetailJournal,

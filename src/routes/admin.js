@@ -108,6 +108,7 @@ import {
 	DataBackup,
 	Help,
 	Faq,
+	ViewExpense,
 
 	Inventory,
 } from 'screens';
@@ -304,6 +305,11 @@ const adminRoutes = [
 		path: '/admin/expense/expense',
 		name: 'ViewExpenses',
 		component: Expense.screen,
+	},
+	{
+		path: '/admin/expense/expense/view',
+		name: 'ViewExpense',
+		component: ViewExpense.screen,
 	},
 	{
 		path: '/admin/expense/payment/create',

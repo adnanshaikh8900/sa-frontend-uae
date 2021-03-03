@@ -22,16 +22,7 @@ class Footer extends Component {
       <React.Fragment>
         <div className="d-flex align-items-center justify-content-between w-100">
           <img src={logo} className="m-2 footer-logo" alt="logo"/>
-          <span>
-            <Link to="/admin">Simple Accounts Version </Link>&nbsp;
-            {
-              version !== '' ?
-                <label className="mb-0 text-primary">v. {version}</label>
-              :
-                ''
-            }
-            &nbsp;&copy; 2020 All Rights Reserved.
-          </span>
+        
         </div>
       </React.Fragment>
     );

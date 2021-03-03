@@ -104,6 +104,28 @@ class Help extends React.Component {
 										</CardBody>
 									</Card>
 								</Col>
+								<Col md="6">
+									<Card>
+										<CardBody>
+											<div className="text-center">
+												<img src={faqIcon} width="40%" alt=""></img>
+											</div>
+											{/* <h3>Simple Accounts Version Numbers</h3>
+											<p>
+												FrontEnd Verison:  <label className="mb-0 text-primary">{configData.FRONTEND_RELEASE}</label><br></br>
+												BackEnd Version: {
+           																   version !== '' ?
+            														    <label className="mb-0 text-primary">{version}</label>
+           																	   :
+            																    ''
+          																				  }
+											</p> */}
+											{/* <Link to="https://www.simplevat.com/faqs/">Go to FAQ</Link> */}
+							{/* <b>	<a target="_blank" href="https://www.simplevat.com/faqs/" style={{ color: '#2266d8' }}>Go to FAQ</a></b> */}
+
+										</CardBody>
+									</Card>
+								</Col>
 							</Row>
 						</Col>
 					</Row>

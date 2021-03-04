@@ -122,6 +122,7 @@ class OpeningBalance extends React.Component {
 	};
 
 	sortColumn = (sortName, sortOrder) => {
+		console.log("sort", sortName, sortOrder)
 		this.options.sortName = sortName;
 		this.options.sortOrder = sortOrder;
 		this.initializeData();

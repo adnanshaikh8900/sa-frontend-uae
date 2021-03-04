@@ -987,6 +987,7 @@ return row.subTotal === 0 ? this.state.customer_currency_symbol + row.subTotal.t
 			formData.append('projectId', project.value);
 		}
 		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
+			console.log('attachmentFile', this.uploadFile.files[0])
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
 

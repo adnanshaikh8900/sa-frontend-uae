@@ -127,6 +127,7 @@ class BankTransactions extends React.Component {
 	componentDidMount = () => {
 		this.toggle(0, 'all');
 		this.initializeData();
+		console.log('state', this.props)
 		if (this.props.location.state !== undefined) {
 			localStorage.setItem(
 				'bankId',
@@ -137,6 +138,10 @@ class BankTransactions extends React.Component {
 			);
 		} else {
 			localStorage.setItem('bankId', localStorage.getItem('bankId'));
+			this.props.location.state =  {}
+			this.props.location.state.bankAccountId = localStorage.getItem('bankId')
+			console.log('props', this.props.location)
+
 		}
 		this.props.transactionsActions.getTransactionTypeList();
 		//this.initializeData();

@@ -63,6 +63,7 @@ class ImportBankStatement extends React.Component {
 	};
 
 	initializeData = () => {
+		console.log('location', this.props.location)
 		if (this.props.location.state && this.props.location.state.bankAccountId) {
 			console.log(this.props.location.state.bankAccountId);
 			this.props.importBankStatementActions.getTemplateList().then((res) => {
@@ -129,6 +130,7 @@ class ImportBankStatement extends React.Component {
 					tableDataKey: res.data.data[0] ? Object.keys(res.data.data[0]) : [],
 					errorIndexList: res.data.error ? res.data.error : [],
 				});
+				console.log('tableDataKey', this.state.tableDataKey);
 				// })
 			})
 			.catch((err) => {
@@ -146,6 +148,7 @@ class ImportBankStatement extends React.Component {
 			templateId: selectedTemplate ? +selectedTemplate : '',
 			importDataMap: tableData,
 		};
+		console.log('postdata', postData)
 		this.props.importBankStatementActions
 			.importTransaction(postData)
 			.then((res) => {
@@ -153,12 +156,16 @@ class ImportBankStatement extends React.Component {
 					this.props.commonActions.tostifyAlert(
 						'error',
 						'Imported transaction should not contain any outdated transation',
-						this.props.history.push('/admin/banking/bank-account/transaction')
+						this.props.history.push('/admin/banking/bank-account/transaction', {
+							bankAccountId: postData.bankId
+						})
 					);
 					this.setState({ selectedTemplate: [], tableData: [] });
 				} else {
 					this.props.commonActions.tostifyAlert('success', res.data);
-					this.props.history.push('/admin/banking/bank-account/transaction');
+					this.props.history.push('/admin/banking/bank-account/transaction', {
+						bankAccountId: postData.bankId
+					});
 				}
 			})
 			.catch((err) => {
@@ -532,9 +539,11 @@ class ImportBankStatement extends React.Component {
 												options={this.options}
 											>
 												{this.state.tableDataKey.map((name, index) => (
+													
 													<TableHeaderColumn
 														dataField={name}
 														dataAlign="center"
+														key={index}
 														columnClassName={this.columnClassNameFormat}
 													>
 														{name}

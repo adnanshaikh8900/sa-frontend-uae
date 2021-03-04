@@ -133,13 +133,13 @@ class AdminLayout extends React.Component {
 			 			icon: item.icon,
 			 		});
 				 }
-				 if (moduleName === 'Inventory' && item.name === 'Inventory') {
-					arr.items.push({
-			 			name: item.name,
-			 			url: item.url,
-			 			icon: item.icon,
-			 		});
-				 }
+				//  if (moduleName === 'Inventory' && item.name === 'Inventory') {
+				// 	arr.items.push({
+			 	// 		name: item.name,
+			 	// 		url: item.url,
+			 	// 		icon: item.icon,
+			 	// 	});
+				//  }
 				 
 			});
 		}

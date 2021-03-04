@@ -837,10 +837,11 @@ class DetailUser extends React.Component {
 																<Col
 																	lg={12}
 																	className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
-																>
+															>
+																
 																	{this.state.current_user_id !== 1 &&
 																	  (
-																	<FormGroup>
+																		<FormGroup>
 																		<Button
 																			type="button"
 																			color="danger"
@@ -852,7 +853,7 @@ class DetailUser extends React.Component {
 																	</FormGroup>
 																	)}
 													
-																	<FormGroup className="text-right">
+																	<FormGroup className="text-right w-100" >
 																		{/* <Button
 																			type="submit"
 																			color="primary"

@@ -95,9 +95,9 @@ class ExpenseTemplate extends Component {
 	           <td>{expenseData.expenseAmount}</td>
     </tr>
 
-	<tr>      <td className="ml-3" style={{width:'245px'}}>  <b>Expense No</b> : </td>  
+	{/* <tr>      <td className="ml-3" style={{width:'245px'}}>  <b>Expense No</b> : </td>  
 			  <td>{expenseData.expenseId}</td>
-	</tr>
+	</tr> */}
 
 	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>Vat Type</b> : </td>  
 	          <td>{expenseData.vatCategoryName} </td>

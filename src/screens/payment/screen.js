@@ -515,6 +515,14 @@ class Payment extends React.Component {
 												>
 													Payment Date
 												</TableHeaderColumn>
+												<TableHeaderColumn
+													dataField="invoiceNumber"
+													dataSort
+												    className="table-header-bg"
+													
+												>
+													Invoice Number
+												</TableHeaderColumn>
 												<TableHeaderColumn dataField="supplierName" dataSort className="table-header-bg">
 													Supplier Name
 												</TableHeaderColumn>

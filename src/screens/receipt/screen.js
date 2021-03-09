@@ -560,6 +560,15 @@ class Receipt extends React.Component {
 												>
 													Receipt Date
 												</TableHeaderColumn>
+
+												<TableHeaderColumn
+													dataField="invoiceNumber"
+													dataSort
+												    className="table-header-bg"
+													
+												>
+													Invoice Number
+												</TableHeaderColumn>
 												{/* <TableHeaderColumn dataField="referenceCode" dataSort>
 													Reference Number
 												</TableHeaderColumn> */}

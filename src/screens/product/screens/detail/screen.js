@@ -158,7 +158,8 @@ class DetailProduct extends React.Component {
 								inventoryReorderLevel: res.data.inventoryReorderLevel ? res.data.inventoryReorderLevel : '',
 								inventoryPurchasePrice : res.data.inventoryPurchasePrice ? res.data.inventoryPurchasePrice : '',
 								contactId: res.data.contactId ? res.data.contactId : '',
-
+								transactionCategoryId: res.data.transactionCategoryId ? res.data.transactionCategoryId : '',
+								inventoryId: res.data.inventoryId ? res.data.inventoryId : '',
 							},
 						});
 					} else {
@@ -268,6 +269,7 @@ class DetailProduct extends React.Component {
 		const contactId = data['contactId'];
 		const isInventoryEnabled = data['isInventoryEnabled'];
 		const transactionCategoryId = data['transactionCategoryId'];
+		const inventoryId = data['inventoryId'];
 
 		let productPriceType;
 		if (data['productPriceType'].includes('SALES')) {
@@ -295,6 +297,7 @@ class DetailProduct extends React.Component {
 			isInventoryEnabled,
 			contactId,
 			transactionCategoryId,
+			inventoryId,
 
 			...(salesUnitPrice.length !== 0 &&
 				data['productPriceType'].includes('SALES') && {
@@ -426,6 +429,7 @@ class DetailProduct extends React.Component {
 			let obj = {label: item.label.contactName, value: item.value}
 			tmpSupplier_list.push(obj)
 		})
+	
 		return (
 			<div className="detail-product-screen">
 				<div className="animated fadeIn">
@@ -1256,11 +1260,31 @@ class DetailProduct extends React.Component {
 																			options={
 																				inventoryAccount ? inventoryAccount : []
 																			}
+																			// value={
+																			// 	inventoryAccount
+																			// 		? props.values
+																			// 				.transactionCategoryId
+																			// 		: ''
+																			// }
 																			value={
-																				inventoryAccount
-																					? props.values
+																				inventoryAccount &&
+																				props.values
+																					.transactionCategoryName
+																					? inventoryAccount
+																							.find(
+																								(item) =>
+																									item.label ===
+																									props.values
+																										.transactionCategoryName,
+																							)
+																							.options.find(
+																								(item) =>
+																									item.value ===
+																									+props.values
+																										.transactionCategoryId,
+																							)
+																					: props.values
 																							.transactionCategoryId
-																					: ''
 																			}
 																			id="transactionCategoryId"
 																			onChange={(option) => {

@@ -289,8 +289,8 @@ class CreateBankAccount extends React.Component {
 												validationSchema={Yup.object().shape({
 													account_name: Yup.string()
 														.required('Account Name is Required')
-														.min(2, 'Account Name Is Too Short!')
-														.max(30, 'Account Name Is Too Long!'),
+														.min(2, 'Account Name Is Too Short!'),
+														// .max(, 'Account Name Is Too Long!'),
 													opening_balance: Yup.string().required(
 														'Opening Balance is Required',
 													),

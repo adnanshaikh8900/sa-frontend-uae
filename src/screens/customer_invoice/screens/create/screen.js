@@ -1065,19 +1065,20 @@ return row.subTotal === 0 ? this.state.customer_currency_symbol + row.subTotal.t
 		this.setState({ openInvoicePreviewModal: true });
 	};
 
-	getCurrentUser = (data) => {
-		let option;
-		if (data.label || data.value) {
-			option = data;
-		} else {
-			option = {
-				label: `${data.fullName}`,
-				value: data.id,
-			};
-		}
-		this.formRef.current.setFieldValue('contactId', option, true);
-	};
-
+	// getCurrentUser = (data) => {
+	// 	let option;
+	// 	console.log('data', data)
+	// 	if (data.label || data.value) {
+	// 		option = data;
+	// 	} else {
+	// 		option = {
+	// 			label: `${data.fullName}`,
+	// 			value: data.id,
+	// 		};
+	// 	}
+	// 	this.formRef.current.setFieldValue('contactId', option, true);
+	// };
+	
 	getCurrentUser = (data) => {
 		let option;
 		if (data.label || data.value) {
@@ -1093,17 +1094,18 @@ return row.subTotal === 0 ? this.state.customer_currency_symbol + row.subTotal.t
 			return obj.currencyCode === data.currencyCode;
 		});
 		
-	    this.formRef.current.setFieldValue('currencyCode', result[0].currencyCode, true);
+	    this.formRef.current.setFieldValue('currency', result[0].currencyCode, true);
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
-
+		
 		this.setState({
 			customer_currency: data.currencyCode,
 			customer_currency_des: result[0].currencyName,
 		})
-
+		
 		// this.setState({
-		//   selectedContact: option
-		// })
+			//   selectedContact: option
+			// })
+			console.log('data11', option)
 		this.formRef.current.setFieldValue('contactId', option, true);
 	};
 

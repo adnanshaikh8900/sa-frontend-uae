@@ -308,15 +308,24 @@ class CustomerInvoice extends React.Component {
 	};
 
 	renderInvoiceAmount = (cell, row, extraData) => {
-		// return row.invoiceAmount ? (
-		// 	<Currency
-		// 		value={row.invoiceAmount}
-		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'AED'}
-		// 	/>
-		// ) : (
-		// 	''
-		// );
-		return row.invoiceAmount ? row.currencySymbol + row.invoiceAmount.toFixed(2) : row.currencySymbol + row.invoiceAmount.toFixed(2);
+	return(
+		<div>
+		<div>
+					<label className="font-weight-bold mr-2 ">Invoice Amount : </label>
+					<label>
+						{row.invoiceAmount  === 0 ? row.currencySymbol + row.invoiceAmount.toFixed(2) : row.currencySymbol + row.invoiceAmount.toFixed(2)}
+					</label>
+				</div>
+				<div>
+				<label className="font-weight-bold mr-2">Vat Amount : </label>
+				<label>{row.vatAmount === 0  ? row.currencySymbol + row.vatAmount.toFixed(2) : row.currencySymbol + row.vatAmount.toFixed(2)}</label>
+				</div>
+				<div>
+					<label className="font-weight-bold mr-2">Due Amount : </label>
+					<label>{row.dueAmount === 0  ? row.currencySymbol + row.dueAmount.toFixed(2) : row.currencySymbol + row.dueAmount.toFixed(2)}</label>
+				</div>
+				
+		</div>);
 	};
 	renderCurrency = (cell, row) => {
 		if (row.currencyName) {
@@ -1028,6 +1037,8 @@ class CustomerInvoice extends React.Component {
 											</Col>
 										</Row>
 									</div>
+									<Row>
+									<div style={{width:"1650px"}}>
 									<Button
 										color="primary"
 										className="btn-square pull-right mb-2"
@@ -1040,8 +1051,8 @@ class CustomerInvoice extends React.Component {
 									>
 										<i className="fas fa-plus mr-1" />
 										Add New Invoice
-									</Button>
-									<div>
+									</Button></div></Row>
+									<div style={{overflowX:'auto'}}>
 										<BootstrapTable
 											selectRow={this.selectRowProp}
 											search={false}
@@ -1049,6 +1060,7 @@ class CustomerInvoice extends React.Component {
 											data={customer_invoice_data ? customer_invoice_data : []}
 											version="4"
 											hover
+											responsive
 											currencyList
 											keyField="id"
 											remote
@@ -1073,20 +1085,20 @@ class CustomerInvoice extends React.Component {
 												dataField="invoiceNumber"
 												// dataFormat={this.renderInvoiceNumber}
 												dataSort
-												width="7%"
+											//	width="7%"
 												className="table-header-bg"
 											>
 												Invoice Number
 											</TableHeaderColumn>
 											<TableHeaderColumn 
 												dataField="customerName" 
-												dataSort width="10%"
+											//	dataSort width="10%"
 												className="table-header-bg"
 											>
 												Customer Name
 											</TableHeaderColumn>
 											<TableHeaderColumn
-												width="12%"
+												//width="9%"
 												dataField="status"
 												dataFormat={this.renderInvoiceStatus}
 												dataSort
@@ -1097,7 +1109,7 @@ class CustomerInvoice extends React.Component {
 											<TableHeaderColumn
 												dataField="invoiceDate"
 												dataSort
-												width="6%"
+												//width="6%"
 												dataFormat={this.invoiceDate}
 												className="table-header-bg"
 											>
@@ -1106,7 +1118,7 @@ class CustomerInvoice extends React.Component {
 											<TableHeaderColumn
 												dataField="invoiceDueDate"
 												dataSort
-												width="6%"
+												//width="6%"
 												dataFormat={this.invoiceDueDate}
 												className="table-header-bg"
 											>
@@ -1115,13 +1127,13 @@ class CustomerInvoice extends React.Component {
 											<TableHeaderColumn
 													dataSort
 													dataField="currencyName"
-													width="4%"
+												//	width="4%"
 													dataFormat={this.renderCurrency}
 													className="table-header-bg"
 												>
 													Currency
 												</TableHeaderColumn>
-											<TableHeaderColumn
+											{/* <TableHeaderColumn
 												dataField="totalVatAmount"
 												dataSort
 												width="5%"
@@ -1130,18 +1142,18 @@ class CustomerInvoice extends React.Component {
 												className="table-header-bg"
 											>
 												VAT Amount
-											</TableHeaderColumn>
+											</TableHeaderColumn> */}
 											<TableHeaderColumn
 												dataField="totalAmount"
 												dataSort
-												width="5%"
+												//width="5%"
 												dataFormat={this.renderInvoiceAmount}
 												formatExtraData={universal_currency_list}
 												className="table-header-bg"
 											>
-												Invoice Amount
+												Amount
 											</TableHeaderColumn>
-											<TableHeaderColumn
+											{/* <TableHeaderColumn
 												dataField="dueamount"
 												dataSort
 												width="5%"
@@ -1150,11 +1162,11 @@ class CustomerInvoice extends React.Component {
 												className="table-header-bg"
 											>
 												Due Amount
-											</TableHeaderColumn>
+											</TableHeaderColumn> */}
 											<TableHeaderColumn
 												className="text-right"
 												columnClassName="text-right"
-												width="5%"
+											//	width="5%"
 												dataFormat={this.renderActions}
 												className="table-header-bg"
 											></TableHeaderColumn>

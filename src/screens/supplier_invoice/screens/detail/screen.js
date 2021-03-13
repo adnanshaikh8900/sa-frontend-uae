@@ -138,6 +138,7 @@ class DetailSupplierInvoice extends React.Component {
 		];
 		this.regEx = /^[0-9\b]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
+		this.regExBoth = /[a-zA-Z0-9]+$/;
 	}
 
 	// renderActions  = (cell, row) => {

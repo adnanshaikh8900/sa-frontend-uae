@@ -222,17 +222,25 @@ class SupplierInvoice extends React.Component {
 	};
 
 	renderInvoiceAmount = (cell, row, extraData) => {
-		// return row.invoiceAmount ? (
-		// 	<Currency
-		// 		value={row.invoiceAmount}
-		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-		// 	/>
-		// ) : (
-		// 	''
-		// );
-
-	return row.invoiceAmount ? row.currencySymbol+row.invoiceAmount.toFixed(2):'';
-	};
+		return(
+			<div>
+								<div>
+						<label className="font-weight-bold mr-2 ">Invoice Amount : </label>
+						<label>
+							{row.invoiceAmount  === 0 ? row.currencySymbol + row.invoiceAmount.toFixed(2) : row.currencySymbol + row.invoiceAmount.toFixed(2)}
+						</label>
+					</div>
+					<div>
+					<label className="font-weight-bold mr-2">Vat Amount : </label>
+					<label>{row.vatAmount === 0  ? row.currencySymbol + row.vatAmount.toFixed(2) : row.currencySymbol + row.vatAmount.toFixed(2)}</label>
+					</div>
+					<div>
+						<label className="font-weight-bold mr-2">Due Amount : </label>
+						<label>{row.dueAmount === 0  ? row.currencySymbol + row.dueAmount.toFixed(2) : row.currencySymbol + row.dueAmount.toFixed(2)}</label>
+					</div>
+					
+			</div>);
+		};
 
 	renderDueAmount =(cell,row,extraData) => {
 		return row.dueAmount === 0  ? row.currencySymbol+row.dueAmount.toFixed(2) : row.currencySymbol+row.dueAmount.toFixed(2);
@@ -1050,6 +1058,8 @@ class SupplierInvoice extends React.Component {
 											</Col>
 										</Row>
 									</div>
+									<Row>
+									<div style={{width:"1650px"}}>
 									<Button
 										color="primary"
 										style={{ marginBottom: '10px' }}
@@ -1063,7 +1073,9 @@ class SupplierInvoice extends React.Component {
 										<i className="fas fa-plus mr-1" />
 										Add New Invoice
 									</Button>
-									<div>
+									</div>
+									</Row> 
+									<div style={{overflowX:'auto'}}>
 										<BootstrapTable
 											selectRow={this.selectRowProp}
 											search={false}
@@ -1091,7 +1103,7 @@ class SupplierInvoice extends React.Component {
 												dataField="invoiceNumber"
 												// dataFormat={this.renderInvoiceNumber}
 												dataSort
-												width="10%"
+											//	width="10%"
 												className="table-header-bg"
 											>
 												Invoice Number
@@ -1099,13 +1111,13 @@ class SupplierInvoice extends React.Component {
 											<TableHeaderColumn
 												dataField="customerName"
 												dataSort
-												width="12%"
+											//	width="12%"
 												className="table-header-bg"
 											>
 												Supplier Name
 											</TableHeaderColumn>
 											<TableHeaderColumn
-												width="10%"
+											//	width="10%"
 												dataField="status"
 												dataFormat={this.renderInvoiceStatus}
 												dataSort
@@ -1116,7 +1128,7 @@ class SupplierInvoice extends React.Component {
 											<TableHeaderColumn
 												dataField="invoiceDate"
 												dataSort
-												width="7%"
+											//	width="7%"
 												dataFormat={this.invoiceDate}
 												className="table-header-bg"
 											>
@@ -1125,7 +1137,7 @@ class SupplierInvoice extends React.Component {
 											<TableHeaderColumn
 												dataField="invoiceDueDate"
 												dataSort
-												width="7%"
+											//	width="7%"
 												dataFormat={this.invoiceDueDate}
 												className="table-header-bg"
 											>
@@ -1133,14 +1145,14 @@ class SupplierInvoice extends React.Component {
 											</TableHeaderColumn>
 											<TableHeaderColumn
 													dataSort
-													width="5%"
+											//		width="5%"
 													dataField="currencyName"
 													dataFormat={this.renderCurrency}
 													className="table-header-bg"
 												>
 													Currency
 												</TableHeaderColumn>
-											<TableHeaderColumn
+											{/* <TableHeaderColumn
 												dataSort
 												width="5%"
 												dataFormat={this.renderVatAmount}
@@ -1148,18 +1160,18 @@ class SupplierInvoice extends React.Component {
 												className="table-header-bg"
 											>
 												VAT Amount
-											</TableHeaderColumn>
+											</TableHeaderColumn> */}
 											<TableHeaderColumn
 												dataField="totalAmount"
 												dataSort
-												width="5%"
+											//	width="5%"
 												dataFormat={this.renderInvoiceAmount}
 												className="table-header-bg"
 												
 											>
 												Invoice Amount
 											</TableHeaderColumn>
-											<TableHeaderColumn
+											{/* <TableHeaderColumn
 												dataField="dueAmount"
 												dataSort
 												width="5%"
@@ -1167,11 +1179,11 @@ class SupplierInvoice extends React.Component {
 												className="table-header-bg"
 											>
 												Due Amount
-											</TableHeaderColumn>
+											</TableHeaderColumn> */}
 											<TableHeaderColumn
 												className="text-right"
 												columnClassName="text-right"
-												width="5%"
+												//width="5%"
 												dataFormat={this.renderActions}
 												className="table-header-bg"
 											></TableHeaderColumn>

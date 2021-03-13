@@ -60,7 +60,7 @@ class OpeningBalance extends React.Component {
 		};
 		this.regEx = /^[0-9\d]+$/;
 		this.options = {
-			onRowClick: this.goToDetail,
+		//	onRowClick: this.goToDetail,
 			page: 1,
 			sizePerPage: 10,
 			onSizePerPageList: this.onSizePerPageList,

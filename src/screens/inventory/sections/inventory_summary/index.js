@@ -293,7 +293,7 @@ class InventorySummary extends React.Component {
 													Product Code
 												</TableHeaderColumn>
 												<TableHeaderColumn  dataField="purchaseOrder" dataSort className="table-header-bg">
-												Purchase Order
+												 Order Quantity
 												</TableHeaderColumn >
 												<TableHeaderColumn  dataField="quantitySold" dataSort className="table-header-bg">
 												Quantity Sold

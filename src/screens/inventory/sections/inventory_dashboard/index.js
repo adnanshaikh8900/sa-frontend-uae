@@ -60,8 +60,7 @@ class InventoryDashboard extends React.Component {
 			},
 			allProducts:'',
 			quantityAvailable:'',
-			lowStockCount:[],
-
+		//	lowStockCount:[],
 			options: {},
 			
 			
@@ -91,8 +90,8 @@ class InventoryDashboard extends React.Component {
 
 
 	componentDidMount = () => {
-		this.props.inventoryActions.getLowStockList();
-		this.props.inventoryActions.getHighStockList();
+		//this.props.inventoryActions.getLowStockList();
+		//this.props.inventoryActions.getHighStockList();
 		this.initializeData();
 	};
 
@@ -107,7 +106,7 @@ class InventoryDashboard extends React.Component {
 			.catch((err) => {
 				this.setState({ loading: false });
 			});
-			this.props.inventoryActions
+		this.props.inventoryActions
 			.getQuantityAvailable()
 			.then((res) => {
 				if (res.status === 200) {
@@ -117,16 +116,16 @@ class InventoryDashboard extends React.Component {
 			.catch((err) => {
 				this.setState({ loading: false });
 			});
-			this.props.inventoryActions
-			.getlowStockProductCountForInventory()
-			.then((res) => {
-				if (res.status === 200) {
-					this.setState({ lowStockCount: res.data });
-				}
-			})
-			.catch((err) => {
-				this.setState({ loading: false });
-			});
+		// this.props.inventoryActions
+		// 	.getlowStockProductCountForInventory()
+		// 	.then((res) => {
+		// 		if (res.status === 200) {
+		// 			this.setState({ lowStockCount: res.data });
+		// 		}
+		// 	})
+		// 	.catch((err) => {
+		// 		this.setState({ loading: false });
+		// 	});
 	};
 
 	exportFile = (csvData, fileName, type) => {
@@ -159,171 +158,6 @@ class InventoryDashboard extends React.Component {
 	render() {
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
 		const { profile, high_stock_list,low_stock_list } = this.props;
-		const cashBarOption = {
-			tooltips: {
-				enabled: false,
-				custom: CustomTooltips,
-			},
-			legend: {
-				display: true,
-				position: 'bottom',
-			},
-			scales: {
-				yAxes: [
-					{
-						ticks: {
-							// Include a dollar sign in the ticks
-							callback(value, index, values) {
-								return value;
-							},
-							beginAtZero: true,
-						},
-					},
-				],
-			},
-			maintainAspectRatio: false,
-		};
-		const series = {
-			series: [this.state.lowStockCount],
-		}
-		const pie2 = {
-		
-			datasets: [	
-				{
-					data: [this.state.lowStockCount],
-					backgroundColor: [
-						'rgba(237,67,53,1)',
-					],
-					hoverBackgroundColor: [
-						'rgba(240,70,53,1)',
-					],
-				},
-			],
-		};
-		const expenseOption = {
-			
-		};
-		const cashFlowBar = {
-			labels: [
-				'01 Jan 2001',
-				'02 Jan 2001',
-				'03 Jan 2001',
-				'04 Jan 2001',
-				'05 Jan 2001',
-				'06 Jan 2001',
-				'07 Jan 2001',
-				'08 Jan 2001',
-				'09 Jan 2001',
-				'10 Jan 2001',
-				'11 Jan 2001',
-				'12 Jan 2001',
-			],
-			datasets: [
-				{
-					labels: [
-						'01 Jan 2001',
-						'02 Jan 2001',
-						'03 Jan 2001',
-						'04 Jan 2001',
-						'05 Jan 2001',
-						'06 Jan 2001',
-						'07 Jan 2001',
-						'08 Jan 2001',
-						'09 Jan 2001',
-						'10 Jan 2001',
-						'11 Jan 2001',
-						'12 Jan 2001',
-					],
-					backgroundColor: 'rgba(244, 119, 46, 0.85)',
-					hoverBackgroundColor: 'rgba(244, 119, 46, 0.85)',
-					data:[440, 505, 414, 671, 227, 413, 201, 352, 752, 320, 257, 160],
-				},
-				{
-					labels: [
-						'01 Jan 2001',
-						'02 Jan 2001',
-						'03 Jan 2001',
-						'04 Jan 2001',
-						'05 Jan 2001',
-						'06 Jan 2001',
-						'07 Jan 2001',
-						'08 Jan 2001',
-						'09 Jan 2001',
-						'10 Jan 2001',
-						'11 Jan 2001',
-						'12 Jan 2001',
-					],
-					backgroundColor: 'rgba(65, 145, 255, 0.85)',
-					hoverBackgroundColor: 'rgba(65, 145, 255, 0.85',
-					data: [231, 442, 335, 227, 433, 222, 117, 316, 242, 252, 162, 176],
-				},
-				{
-					labels: [
-						'01 Jan 2001',
-						'02 Jan 2001',
-						'03 Jan 2001',
-						'04 Jan 2001',
-						'05 Jan 2001',
-						'06 Jan 2001',
-						'07 Jan 2001',
-						'08 Jan 2001',
-						'09 Jan 2001',
-						'10 Jan 2001',
-						'11 Jan 2001',
-						'12 Jan 2001',
-					],
-					backgroundColor: 'rgba(244, 119, 46, 0.85)',
-					hoverBackgroundColor: 'rgba(244, 119, 46, 0.85)',
-					data:[440, 505, 414, 671, 227, 413, 201, 352, 752, 320, 257, 160],
-				},
-				{
-					labels: [
-						'01 Jan 2001',
-						'02 Jan 2001',
-						'03 Jan 2001',
-						'04 Jan 2001',
-						'05 Jan 2001',
-						'06 Jan 2001',
-						'07 Jan 2001',
-						'08 Jan 2001',
-						'09 Jan 2001',
-						'10 Jan 2001',
-						'11 Jan 2001',
-						'12 Jan 2001',
-					],
-					backgroundColor: 'rgb(192, 184, 46)',
-					hoverBackgroundColor: 'rgba(244, 119, 46, 0.85)',
-					data:[440, 505, 414, 671, 227, 413, 201, 352, 752, 320, 257, 160],
-				},
-			],
-		};
-		const chartOptions = {
-			options: {
-			  dataLabels: {
-				enabled: false
-			  },
-			 // colors: ["#C7F464", "#662E9B", "#E2C044", "#C4BBAF"],
-			  fill: {
-				type: "color"
-			  },
-			 
-			  plotOptions: {
-				pie: {
-					startAngle: -90,
-					endAngle: 90,
-					offsetY: 10
-				  }
-			  },
-			  
-			  chart: {
-				events: {
-				  dataPointMouseEnter: null
-				}
-			  }
-			},
-			series: [44, 55, 41, 17],
-			labels: ["Voice mail", "Recordings", "System", "Free"]
-		  };
 		  const chartOptions1 = {
 			options: {
 			  dataLabels: {
@@ -379,42 +213,42 @@ class InventoryDashboard extends React.Component {
 		return (
 			<div className="transactions-report-screen">
 				<div className="animated fadeIn">
-				<div style={{marginLeft:"250px",marginRight:"250px"}}>
+				<div style={{marginLeft:"220px",marginRight:"250px"}}>
 						<Row>
-							<CardBody  className="mr-3 center mb-3 ml-3"  style={{boxShadow:"0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}}>
+							<CardBody  className="mr-3  mb-3 "  style={{boxShadow:"0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}}>
 										<h6 className="text-center font-weight-bold mb-1 text-black mt-3">
-											All Products Count
+										Number of SKU's
 										</h6>
-										<h5 className="d-block mt-4 text-center" >
+										<h3 className="d-block mt-4 text-center" >
 										{this.state.allProducts}
-										</h5>
+										</h3>
 						
 							</CardBody>
-							<CardBody  className="mr-3 center mb-3"  style={{boxShadow:"0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}}>
+							<CardBody  className="mr-3  mb-3"  style={{boxShadow:"0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}}>
 										<h6 className="text-center font-weight-bold mb-1 text-black mt-3">
-											All Products Count
+										Total Value of SKU's
 										</h6>
-										<h5 className="d-block mt-4 text-center" >
+										<h3 className="d-block mt-4 text-center" >
 										{this.state.allProducts}
-										</h5>
+										</h3>
 						
 							</CardBody>
-							<CardBody  className="mr-3 center mb-3 ml-3"  style={{boxShadow:"0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}}>
+							<CardBody  className="mr-3  mb-3 "  style={{boxShadow:"0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}}>
 										<h6 className="text-center font-weight-bold mb-1 text-black mt-3">
-											All Products Count
+										Total Stock on Hand
 										</h6>
-										<h5 className="d-block mt-4 text-center" >
-										{this.state.allProducts}
-										</h5>
+										<h3 className="d-block mt-4 text-center" >
+										{this.state.quantityAvailable}
+										</h3>
 						
 							</CardBody>
-							<CardBody  className="mr-3 center mb-3"  style={{boxShadow:"0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}}>
+							<CardBody  className=" mb-3 "  style={{boxShadow:"0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}}>
 										<h6 className="text-center font-weight-bold mb-1 text-black mt-3">
-											All Products Count
+										Out of Stock
 										</h6>
-										<h5 className="d-block mt-4 text-center" >
-										{this.state.allProducts}
-										</h5>
+										<h3 className="d-block mt-4 text-center" >
+										{this.state.quantityAvailable}
+										</h3>
 						
 							</CardBody>
 						
@@ -434,6 +268,7 @@ class InventoryDashboard extends React.Component {
 						<h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">	
 									TOP SELLING PRODUCT
 						</h6>
+					
 					</div>
 					<CardBody>
 						<div  style={{	width:"750px" }} >

@@ -131,7 +131,6 @@ class RecordCustomerPayment extends React.Component {
 	};
 
 	initializeData = () => {
-		console.log(this.props.location.state.id);
 		this.setState({
 			initValue: {
 				paidInvoiceListStr: [
@@ -239,8 +238,6 @@ class RecordCustomerPayment extends React.Component {
 			notes,
 			referenceCode,
 		} = data;
-		console.log(data);
-		console.log(JSON.stringify(this.state.initValue.paidInvoiceListStr));
 
 		let formData = new FormData();
 		formData.append('receiptNo', receiptNo !== null ? receiptNo : '');

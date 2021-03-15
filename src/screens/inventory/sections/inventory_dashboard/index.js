@@ -90,8 +90,6 @@ class InventoryDashboard extends React.Component {
 
 
 	componentDidMount = () => {
-		//this.props.inventoryActions.getLowStockList();
-		//this.props.inventoryActions.getHighStockList();
 		this.initializeData();
 	};
 

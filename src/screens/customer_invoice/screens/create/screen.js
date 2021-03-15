@@ -146,7 +146,7 @@ class CreateCustomerInvoice extends React.Component {
 			exist: false,
 			prefix: '',
 			purchaseCategory: [],
-			salesCategory: [],	
+			salesCategory: [],
 			exchangeRate:'',		
 			basecurrency:[],
 		};
@@ -352,18 +352,7 @@ class CreateCustomerInvoice extends React.Component {
 	};
 
 	renderSubTotal = (cell, row,extraData) => {
-// return row.subTotal === 0 ? (
-// 	<Currency
-// 		value={row.subTotal}
-// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-// 	/>
-// ) : (
-// 	<Currency
-// 		value={row.subTotal}
-// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
-// 	/>
-// );
-return row.subTotal === 0 ? this.state.customer_currency_symbol + row.subTotal.toFixed(2) : this.state.customer_currency_symbol + row.subTotal.toFixed(2);
+return row.subTotal === 0 ?  row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 }
 	setDate = (props, value) => {
 		const { term } = this.state;
@@ -2189,7 +2178,7 @@ return row.subTotal === 0 ? this.state.customer_currency_symbol + row.subTotal.t
 																							}
 																							/>
 																							)} */}
-																							{this.state.customer_currency_symbol} &nbsp;
+																							{/* {this.state.customer_currency_symbol} &nbsp; */}
 																							{initValue.total_net.toFixed(
 																							2,
 																						)}
@@ -2215,7 +2204,7 @@ return row.subTotal === 0 ? this.state.customer_currency_symbol + row.subTotal.t
 																							currencySymbol={this.state.customer_currency_IsoCode}
 																							/>
 																							)} */}
-																							{this.state.customer_currency_symbol} &nbsp;
+																							{/* {this.state.customer_currency_symbol} &nbsp; */}
 																							{initValue.total_net.toFixed(
 																							2,
 																						)}
@@ -2240,7 +2229,7 @@ return row.subTotal === 0 ? this.state.customer_currency_symbol + row.subTotal.t
 																						currencySymbol={this.state.customer_currency_IsoCode}
 																							/>
 																							)} */}
-																						{this.state.customer_currency_symbol} &nbsp;
+																						{/* {this.state.customer_currency_symbol} &nbsp; */}
 																							{initValue.total_net.toFixed(
 																							2,
 																						)}
@@ -2263,7 +2252,7 @@ return row.subTotal === 0 ? this.state.customer_currency_symbol + row.subTotal.t
 																						currencySymbol={this.state.customer_currency_IsoCode}
 																							/>
 																							)} */}
-																							{this.state.customer_currency_symbol} &nbsp;
+																							{/* {this.state.customer_currency_symbol} &nbsp; */}
 																							{initValue.total_net.toFixed(
 																							2,
 																						)}

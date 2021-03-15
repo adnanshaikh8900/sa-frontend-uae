@@ -448,7 +448,7 @@ class RecordSupplierPayment extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="contactId">
 																			<span className="text-danger">*</span>
-																			Customer Name
+																			Suppiler Name
 																		</Label>
 																		<Select
 																			styles={customStyles}

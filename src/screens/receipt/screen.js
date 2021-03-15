@@ -586,19 +586,12 @@ class Receipt extends React.Component {
 												>
 													Receipt Number
 												</TableHeaderColumn>
-												{/* <TableHeaderColumn
-                            dataField="transactionType"
-                            dataFormat={this.renderMode}
-                            dataSort
-                          >
-                            Mode
-                          </TableHeaderColumn> */}
-										  <TableHeaderColumn 
+												  <TableHeaderColumn 
 											  dataField="currencyIsoCode" 
 										 	 dataSort
 											  className="table-header-bg"
 											  dataFormat={this.renderCurrency}
-										  >
+												  >
 													Currency
 												</TableHeaderColumn>
 												<TableHeaderColumn

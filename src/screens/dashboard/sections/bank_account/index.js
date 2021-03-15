@@ -10,6 +10,8 @@ import {
 	TabPane,
 	Card,
 	CardBody,
+	Row,
+	Col,
 } from 'reactstrap';
 
 import './style.scss';
@@ -162,18 +164,18 @@ class BankAccount extends Component {
 								</select>
 							</div>
 						</div>
-						
+						{/* main Start */}
 								
-									<div className="data-info">
-										<div className="data-item">
+									<Row className="data-info">
+										<div style={{display:"contents"}}>
 											<img
 												alt="bankIcon ml-2"
 												className="d-none d-lg-block"
 												src={bankIcon}
 												style={{ width: 40, marginRight: 10 }}
 											/>
-											<div>
 												<select
+												style={{width:"45%"}}
 													className="form-control1 bank-type-select card-select mb-2"
 													ref={this.bankAccountSelect}
 													onChange={(e) => this.handleChange(e)}
@@ -186,15 +188,21 @@ class BankAccount extends Component {
 														),
 													)}
 												</select>
-												<p style={{ fontWeight: 500, textIndent: 5 }}>
+												</div>
+												</Row>
+												<Row className="text-center" style={{    display: "block"}}>
+												<p style={{ fontWeight: 500, textIndent: 5 ,marginTop:"-4px" }}>
 													Last updated on{' '}
 													{this.props.bank_account_graph.updatedDate}
 												</p>
-											</div>
-										</div>
 									
-										<div className="data-item">
+									
+									</Row>
+									<Row style={{marginBottom:"10px"}}>
+										
+									<Col className="data-item" style={{width:"50%",textAlign:'right',borderRight: "1px solid rgb(238 238 238)"}}>
 											<div>
+											<p  style={{marginBottom:"6px"}} className="mr-1 data-item">BALANCE</p>
 												<h5>
 													{universal_currency_list[0] && (
 														<Currency
@@ -211,11 +219,12 @@ class BankAccount extends Component {
 														/>
 													)}
 												</h5>
-												<p>BALANCE</p>
+												
 											</div>
-										</div>
-										<div className="data-item">
+										</Col>
+										<Col className="data-item">
 											<div>
+											<p  style={{marginBottom:"6px"}}>ALL BANK ACCOUNTS</p>
 												<h5>
 													{universal_currency_list[0] && (
 														<Currency
@@ -228,10 +237,10 @@ class BankAccount extends Component {
 														/>
 													)}
 												</h5>
-												<p>ALL BANK ACCOUNTS</p>
+												
 											</div>
-										</div>
-									</div>
+										</Col>
+									</Row>
 								
 								<div className="chart-wrapper card-visibility">
 									<Line

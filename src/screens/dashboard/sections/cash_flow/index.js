@@ -140,9 +140,11 @@ class CashFlow extends Component {
 									<p>OUTFLOW</p>
 								</div>
 							</div>
-							<div className="data-item total ml-4">
-								<img alt="total" src={totalIcon} />
-								<div>
+						
+						</div>
+						<div className="row data-item total" >
+							<div className="column" style={{width:'50%' ,textAlign:'right'}}>	<img className=" mr-3" alt="total" src={totalIcon} /> </div>
+							<div className="column" >
 									<h5>
 										{' '}
 										{universal_currency_list[0] &&
@@ -163,7 +165,6 @@ class CashFlow extends Component {
 									<p>NET</p>
 								</div>
 							</div>
-						</div>
 						<div className="chart-wrapper">
 							<Bar
 								data={cashFlowBar}

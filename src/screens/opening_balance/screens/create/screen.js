@@ -97,7 +97,7 @@ class CreateOpeningBalance extends React.Component {
 						resetForm(this.state.initValue);
 						this.props.commonActions.tostifyAlert(
 							'success',
-							'New Expense Created Successfully.',
+							'New Opening balance Created Successfully.',
 						);
 						if (this.state.createMore) {
 							this.setState({
@@ -229,7 +229,7 @@ class CreateOpeningBalance extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="effectiveDate">
 																		<span className="text-danger">*</span>
-																		Expense Date
+																		Opening Date
 																	</Label>
 																	<DatePicker
 																		id="date"

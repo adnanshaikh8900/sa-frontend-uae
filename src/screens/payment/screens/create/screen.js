@@ -137,8 +137,7 @@ class CreatePayment extends React.Component {
 					}, 0),
 					true,
 				);
-				console.log(this.state.paidInvoiceListStr);
-				console.log(this.state.initValue);
+			
 			},
 		);
 	};

@@ -239,7 +239,7 @@ class ExplainTrasactionDetail extends React.Component {
 						loading: false,
 					},
 					() => {
-						//console.log(this.state.chartOfAccountCategoryList);
+						
 						if (
 							this.props.selectedData.explinationStatusEnum === 'FULL' ||
 							this.props.selectedData.explinationStatusEnum === 'RECONCILED'
@@ -251,7 +251,6 @@ class ExplainTrasactionDetail extends React.Component {
 						}
 						if (this.state.initValue.expenseCategory) {
 							this.props.transactionsActions.getExpensesCategoriesList();
-							//this.props.transactionsActions.getUserForDropdown();
 							this.props.transactionsActions.getVatList();
 						}
 					},

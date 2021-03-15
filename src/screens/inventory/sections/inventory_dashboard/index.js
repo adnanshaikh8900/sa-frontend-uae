@@ -2,7 +2,6 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Col, Row, Card, CardBody, CardGroup } from 'reactstrap';
-import { Bar } from 'react-chartjs-2';
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 
 import moment from 'moment';
@@ -14,13 +13,19 @@ import { Loader, Currency } from 'components';
 import * as InventoryActions from '../../actions';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import { Bar, HorizontalBar,Line } from 'react-chartjs-2';
 
 
+
+import Chart from 'react-apexcharts';
 const mapStateToProps = (state) => {
 	return {
 		profile: state.auth.profile,
 		universal_currency_list: state.common.universal_currency_list,
 		company_profile: state.common.company_profile,
+		low_stock_list: state.inventory.low_stock_list,
+		high_stock_list: state.inventory.high_stock_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -55,6 +60,10 @@ class InventoryDashboard extends React.Component {
 			},
 			allProducts:'',
 			quantityAvailable:'',
+		//	lowStockCount:[],
+			options: {},
+			
+			
 		};
 		this.columnHeader = [
 			{ label: 'Account', value: 'Account', sort: true },
@@ -78,7 +87,7 @@ class InventoryDashboard extends React.Component {
 			},
 		);
 	};
-	
+
 
 	componentDidMount = () => {
 		this.initializeData();
@@ -95,7 +104,7 @@ class InventoryDashboard extends React.Component {
 			.catch((err) => {
 				this.setState({ loading: false });
 			});
-			this.props.inventoryActions
+		this.props.inventoryActions
 			.getQuantityAvailable()
 			.then((res) => {
 				if (res.status === 200) {
@@ -105,6 +114,16 @@ class InventoryDashboard extends React.Component {
 			.catch((err) => {
 				this.setState({ loading: false });
 			});
+		// this.props.inventoryActions
+		// 	.getlowStockProductCountForInventory()
+		// 	.then((res) => {
+		// 		if (res.status === 200) {
+		// 			this.setState({ lowStockCount: res.data });
+		// 		}
+		// 	})
+		// 	.catch((err) => {
+		// 		this.setState({ loading: false });
+		// 	});
 	};
 
 	exportFile = (csvData, fileName, type) => {
@@ -136,253 +155,214 @@ class InventoryDashboard extends React.Component {
 
 	render() {
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
-		const { profile, universal_currency_list,company_profile } = this.props;
-		const cashBarOption = {
-			tooltips: {
-				enabled: false,
-				custom: CustomTooltips,
+		const { profile, high_stock_list,low_stock_list } = this.props;
+		  const chartOptions1 = {
+			options: {
+			  dataLabels: {
+				enabled: false
+			  },
+			 // colors: ["#C7F464", "#662E9B", "#E2C044", "#C4BBAF"],
+			  fill: {
+				type: "color"
+			  },
+			 
+			  plotOptions: {
+			
+			  },
+			  
+			  chart: {
+				events: {
+				  dataPointMouseEnter: null
+				}
+			  }
 			},
-			legend: {
-				display: true,
-				position: 'bottom',
+			legend:{
+				position:"bottom",
 			},
-			scales: {
-				yAxes: [
-					{
-						ticks: {
-							// Include a dollar sign in the ticks
-							callback(value, index, values) {
-								return value;
-							},
-							beginAtZero: true,
-						},
-					},
-				],
-			},
-			maintainAspectRatio: false,
-		};
-
-		const cashFlowBar = {
-			labels: [
-				'01 Jan 2001',
-				'02 Jan 2001',
-				'03 Jan 2001',
-				'04 Jan 2001',
-				'05 Jan 2001',
-				'06 Jan 2001',
-				'07 Jan 2001',
-				'08 Jan 2001',
-				'09 Jan 2001',
-				'10 Jan 2001',
-				'11 Jan 2001',
-				'12 Jan 2001',
-			],
+			series: [44, 55, 41, 17],
+			labels: ["Voice mail", "Recordings", "System", "Free"]
+		  };
+		  const dataHorBar = {
+			labels: ['Product ', 'Product', 'Product ', 'Product ', 'Product ', 'Product ', 'Product ','Product ','Product ','Product '],
 			datasets: [
-				{
-					labels: [
-						'01 Jan 2001',
-						'02 Jan 2001',
-						'03 Jan 2001',
-						'04 Jan 2001',
-						'05 Jan 2001',
-						'06 Jan 2001',
-						'07 Jan 2001',
-						'08 Jan 2001',
-						'09 Jan 2001',
-						'10 Jan 2001',
-						'11 Jan 2001',
-						'12 Jan 2001',
-					],
-					backgroundColor: 'rgba(244, 119, 46, 0.85)',
-					hoverBackgroundColor: 'rgba(244, 119, 46, 0.85)',
-					data:[440, 505, 414, 671, 227, 413, 201, 352, 752, 320, 257, 160],
-				},
-				{
-					labels: [
-						'01 Jan 2001',
-						'02 Jan 2001',
-						'03 Jan 2001',
-						'04 Jan 2001',
-						'05 Jan 2001',
-						'06 Jan 2001',
-						'07 Jan 2001',
-						'08 Jan 2001',
-						'09 Jan 2001',
-						'10 Jan 2001',
-						'11 Jan 2001',
-						'12 Jan 2001',
-					],
-					backgroundColor: 'rgba(65, 145, 255, 0.85)',
-					hoverBackgroundColor: 'rgba(65, 145, 255, 0.85',
-					data: [231, 442, 335, 227, 433, 222, 117, 316, 242, 252, 162, 176],
-				},
-				{
-					labels: [
-						'01 Jan 2001',
-						'02 Jan 2001',
-						'03 Jan 2001',
-						'04 Jan 2001',
-						'05 Jan 2001',
-						'06 Jan 2001',
-						'07 Jan 2001',
-						'08 Jan 2001',
-						'09 Jan 2001',
-						'10 Jan 2001',
-						'11 Jan 2001',
-						'12 Jan 2001',
-					],
-					backgroundColor: 'rgba(244, 119, 46, 0.85)',
-					hoverBackgroundColor: 'rgba(244, 119, 46, 0.85)',
-					data:[440, 505, 414, 671, 227, 413, 201, 352, 752, 320, 257, 160],
-				},
-				{
-					labels: [
-						'01 Jan 2001',
-						'02 Jan 2001',
-						'03 Jan 2001',
-						'04 Jan 2001',
-						'05 Jan 2001',
-						'06 Jan 2001',
-						'07 Jan 2001',
-						'08 Jan 2001',
-						'09 Jan 2001',
-						'10 Jan 2001',
-						'11 Jan 2001',
-						'12 Jan 2001',
-					],
-					backgroundColor: 'rgb(192, 184, 46)',
-					hoverBackgroundColor: 'rgba(244, 119, 46, 0.85)',
-					data:[440, 505, 414, 671, 227, 413, 201, 352, 752, 320, 257, 160],
-				},
-			],
-		};
+			  {
+				backgroundColor: '#a1b86d',
+				borderColor: 'rgba(161,184,109,1)',
+				borderWidth: 1,
+				hoverBackgroundColor: 'rgba(161,184,109,0.3)',
+				hoverBorderColor: 'rgba(161,184,109,0.5)',
+				data: [80, 75, 70, 65, 60, 55, 50, 45, 40, 35,30]
+			  },
+			  
+			]
+		  };
+		  const data = {
+			labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+			datasets: [
+			  {
+				label: "First dataset",
+				data: [33, 53, 85, 41, 44, 65],
+				fill: true,
+				backgroundColor: "rgba(225,250,300,0.5)",
+				borderColor: "rgba(0,120,212,1)"
+			  }
+			]
+		  };
 		return (
 			<div className="transactions-report-screen">
 				<div className="animated fadeIn">
-				
-			<div className="row center ml-1 mr-1" style={{height:"175px"}}>
-
-				<div className="column card"  style={{
-							width:"50%",
-						alignItems:"flex-end"
-						}} >
-					
-						
-							<CardBody  className="mr-3 center mb-3" align="right " style={{boxShadow:"0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",float:"right",width:"33%"}}>
+				<div style={{marginLeft:"220px",marginRight:"250px"}}>
+						<Row>
+							<CardBody  className="mr-3  mb-3 "  style={{boxShadow:"0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}}>
 										<h6 className="text-center font-weight-bold mb-1 text-black mt-3">
-											All Products
+										Number of SKU's
 										</h6>
-										<h5 className="d-block mt-4 text-center" >
+										<h3 className="d-block mt-4 text-center" >
 										{this.state.allProducts}
-										</h5>
+										</h3>
 						
 							</CardBody>
-						
-					</div>
-
-					<div className="column card" style={{
-							width:"50%",
-						
-						}}>
-						
-						
-							<CardBody className="ml-3 mb-3" style={{boxShadow:"0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)", float:"left",width:"33%"}}>
-										<h6 className="text-Center font-weight-bold mb-1 text-black mt-3" style={{textAlign:"center"}}>
-											Quantity Available
+							<CardBody  className="mr-3  mb-3"  style={{boxShadow:"0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}}>
+										<h6 className="text-center font-weight-bold mb-1 text-black mt-3">
+										Total Value of SKU's
 										</h6>
-										<h5 className="d-block mt-4 text-center" >
-										{this.state.quantityAvailable}
-										</h5>
+										<h3 className="d-block mt-4 text-center" >
+										{this.state.allProducts}
+										</h3>
 						
 							</CardBody>
-				
-					</div>
-				</div>
-
-				<CardGroup>
+							<CardBody  className="mr-3  mb-3 "  style={{boxShadow:"0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}}>
+										<h6 className="text-center font-weight-bold mb-1 text-black mt-3">
+										Total Stock on Hand
+										</h6>
+										<h3 className="d-block mt-4 text-center" >
+										{this.state.quantityAvailable}
+										</h3>
+						
+							</CardBody>
+							<CardBody  className=" mb-3 "  style={{boxShadow:"0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}}>
+										<h6 className="text-center font-weight-bold mb-1 text-black mt-3">
+										Out of Stock
+										</h6>
+										<h3 className="d-block mt-4 text-center" >
+										{this.state.quantityAvailable}
+										</h3>
+						
+							</CardBody>
+						
+							</Row>
+							</div>
+		
+				<Row>
+				<CardGroup style={{
+							width:"100%",
+							
+							}}>
 				<Card className="mr-2" style={{
 							width:"50%",
+							
 							}}>
 						<div  style={{color:"#2064d8",backgroundColor:"#edf2f9" ,height:"9.8%"}}>
 						<h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">	
-									PRODUCT LISTING
+									TOP SELLING PRODUCT
+						</h6>
+					
+					</div>
+					<CardBody>
+						<div  style={{	width:"750px" }} >
+						<HorizontalBar data={dataHorBar} />
+							</div>
+							</CardBody>
+					</Card>
+					<Card className="ml-2"  style={{
+							width:"50%",
+						}}>
+					<div  style={{color:"#2064d8",backgroundColor:"#edf2f9" ,height:"9.8%"}}>
+						<h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">	
+									LOW SELLING PRODUCT 
 										</h6>
-										</div>
+						</div>
+						<CardBody>
+						<div  style={{	width:"500px" ,marginLeft:"150px"}} >
+						<Chart
+					  options={chartOptions1.options}
+						  series={chartOptions1.series}
+						  type="donut"
+						/>
+							</div>
+							</CardBody>
+					
+							</Card>
+						</CardGroup>
+					</Row>
+
+					<Row className="mt-3">
+				<CardGroup>
+				<Card className="mr-2" style={{
+							width:"50%",
 							
-							<CardBody style={{height:"100%",display: 'flex'}}>
+							}}>
+						<div  style={{color:"#2064d8",backgroundColor:"#edf2f9" ,height:"9.8%"}}>
+						<h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">	
+									Total Revenue 
+						</h6>
+					</div>
+					<CardBody>
+						<div   style={{	width:"750px" }} >
+						<Line data={data} />
+							</div>
+							</CardBody>
+					</Card>
+					<Card className="ml-2"  style={{
+							width:"50%",
+							
+							
+						}}>
+					<div  style={{color:"#2064d8",backgroundColor:"#edf2f9" ,height:"9.8%"}}>
+						<h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">	
+									TOP SELLING PRODUCT 
+										</h6>
+						</div>
+						<CardBody style={{height:"100%",display: 'flex'}}>
 								<div className="column"  
 									 style={{
-											width:"50%",
+											
 											marginBlock:'-20px',
 											borderRight:"1px solid #d5dae1"
 											
 										}} >
-									
-										
-											
-													<table style={{width:'-webkit-fill-available'}}>
-														<tr>
-														<th><b>Product Code</b></th>
-														<th><b>Product Name</b></th>
-														</tr>
-														<tr>
-															<td></td>
-														</tr>
-													</table>
-										
-										
-									</div>
-
-									<div className="column text-center" 
-											style={{
-												width:"50%",
-												marginBlock:'-20px',
-											
-												
-											}}
-									>
-										content
-											
+									<BootstrapTable
+											selectRow={this.selectRowProp}
+											search={false}
+											options={this.options}
+											data={
+												high_stock_list 
+													? high_stock_list
+													: []
+											}
+											version="4"
+											hover
+											remote
+											className="mt-2 mr-2"
+											trClassName="cursor-pointer"
+											ref={(node) => (this.table = node)}
+											>
+												<TableHeaderColumn dataField="productCode" className="table-header-bg">
+													Product	Code
+												</TableHeaderColumn >
+												<TableHeaderColumn isKey dataField="productName" className="table-header-bg">
+													Product	Name
+												</TableHeaderColumn >
+												<TableHeaderColumn  dataField="quantitySold" className="table-header-bg">
+												Quantity Sold
+												</TableHeaderColumn >
+											</BootstrapTable>
 									</div>
 							</CardBody>
 					
-					</Card>
-					<Card className="ml-2"  style={{
-							width:"50%",
-							height:"530px"
-							
-						}}>
-						<div>
-							<div  style={{color:"#2064d8",backgroundColor:"#edf2f9" ,height:"9%"}}>
-						<h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">	
-															TOP SELLING PRODUCTS
-										</h6>
-										</div>
-							<CardBody>
-							
-							
-									
-										<div className="d-block"	style={{
-									
-									height:"435px"
-									
-								}}>
-										<Bar
-								data={cashFlowBar}
-								options={cashBarOption}
-								style={{ height: 200 }}
-								datasetKeyProvider={() => {
-									return Math.random();
-								}}
-
-							
-							/>
-								</div>
-						
-							</CardBody>
-						</div>
-					</Card>
-					</CardGroup>
+							</Card>
+						</CardGroup>
+					</Row>
 				</div>
 			</div>
 		);

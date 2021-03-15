@@ -311,7 +311,7 @@ class BankAccount extends React.Component {
 		// 	/>
 		// );
 
-		return row.openingBalance ? row.curruncySymbol+row.openingBalance.toFixed(2) : row.curruncySymbol+row.openingBalance.toFixed(2);
+		return row.openingBalance ?row.openingBalance.toFixed(2) : row.openingBalance.toFixed(2);
 	};
 	renderActions = (cell, row) => {
 		return (
@@ -450,7 +450,7 @@ class BankAccount extends React.Component {
 								extraData[0] ? extraData[0].currencyIsoCode : 'USD'
 							}
 						/> */}
-						{row.closingBalance ? row.curruncySymbol+row.closingBalance : row.curruncySymbol+row.closingBalance}
+						{row.closingBalance ? row.closingBalance : row.closingBalance}
 					</label>
 				</div>
 				<div>
@@ -752,7 +752,8 @@ class BankAccount extends React.Component {
 												</Col>
 											</Row>
 										</div> */}
-										<div>
+										<Row>
+											<div style={{width:"1650px"}}>
 										<Button
 											color="primary"
 											className="btn-square pull-right"
@@ -767,8 +768,10 @@ class BankAccount extends React.Component {
 											Add New Account
 										</Button>
 										</div>
-										<div>
+										</Row>
+										<div style={{overflow: 'scroll'}}>
 											<BootstrapTable
+											width="100%"
 												selectRow={this.selectRowProp}
 												search={false}
 												options={this.options}
@@ -806,7 +809,7 @@ class BankAccount extends React.Component {
 													dataField="bankAccountNo"
 													dataFormat={this.renderAccountNumber}
 													dataSort
-													width="8%"
+													width="6%"
 													className="table-header-bg"
 												>
 													Account Number
@@ -822,7 +825,7 @@ class BankAccount extends React.Component {
 												<TableHeaderColumn
 													dataField="accounName"
 													dataSort
-													width="5%"
+													width="10%"
 													className="table-header-bg"
 												>
 													Account Name
@@ -840,7 +843,7 @@ class BankAccount extends React.Component {
 													dataFormat={this.renderCurrency}
 													dataSort
 													dataField="currancyName"
-													width="2%"
+													width="5%"
 													className="table-header-bg"
 												>
 													Currency

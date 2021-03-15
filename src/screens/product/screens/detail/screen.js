@@ -158,7 +158,8 @@ class DetailProduct extends React.Component {
 								inventoryReorderLevel: res.data.inventoryReorderLevel ? res.data.inventoryReorderLevel : '',
 								inventoryPurchasePrice : res.data.inventoryPurchasePrice ? res.data.inventoryPurchasePrice : '',
 								contactId: res.data.contactId ? res.data.contactId : '',
-
+								transactionCategoryId: res.data.transactionCategoryId ? res.data.transactionCategoryId : '',
+								inventoryId: res.data.inventoryId ? res.data.inventoryId : '',
 							},
 						});
 					} else {
@@ -268,6 +269,7 @@ class DetailProduct extends React.Component {
 		const contactId = data['contactId'];
 		const isInventoryEnabled = data['isInventoryEnabled'];
 		const transactionCategoryId = data['transactionCategoryId'];
+		const inventoryId = data['inventoryId'];
 
 		let productPriceType;
 		if (data['productPriceType'].includes('SALES')) {
@@ -295,6 +297,7 @@ class DetailProduct extends React.Component {
 			isInventoryEnabled,
 			contactId,
 			transactionCategoryId,
+			inventoryId,
 
 			...(salesUnitPrice.length !== 0 &&
 				data['productPriceType'].includes('SALES') && {
@@ -426,6 +429,7 @@ class DetailProduct extends React.Component {
 			let obj = {label: item.label.contactName, value: item.value}
 			tmpSupplier_list.push(obj)
 		})
+	
 		return (
 			<div className="detail-product-screen">
 				<div className="animated fadeIn">
@@ -1210,9 +1214,10 @@ class DetailProduct extends React.Component {
 																			htmlFor="isInventoryEnabled"
 																		>
 																			<Input
+																			readonly 
 																			className="form-check-input"
 																			type="checkbox"
-																			id="is"
+																			id="isInventoryEnabled"
 																			name="isInventoryEnabled"
 																			onChange={(value) => {
 																				props.handleChange('isInventoryEnabled')(value);
@@ -1237,18 +1242,17 @@ class DetailProduct extends React.Component {
 																		</Label>
 																	</FormGroup>
 
-																	<Row style={{display: props.values.isInventoryEnabled === false ? 'none' : ''}}>
+																	{/* <Row style={{display: props.values.isInventoryEnabled === false ? 'none' : ''}}>
 																	<Col>	
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="salesUnitPrice">
-																			{/* <span className="text-danger">*</span>{' '} */}
 																		Inventory Account
 																		</Label>
 																		<Select
 																			styles={customStyles}
 																			// isDisabled={
 																			// 	props.values.productPriceType.includes(
-																			// 		'INVENTORY',
+								 											// 		'INVENTORY',
 																			// 	)
 																			// 		? false
 																			// 		: true
@@ -1256,11 +1260,31 @@ class DetailProduct extends React.Component {
 																			options={
 																				inventoryAccount ? inventoryAccount : []
 																			}
+																			// value={
+																			// 	inventoryAccount
+																			// 		? props.values
+																			// 				.transactionCategoryId
+																			// 		: ''
+																			// }
 																			value={
-																				inventoryAccount
-																					? props.values
+																				inventoryAccount &&
+																				props.values
+																					.transactionCategoryName
+																					? inventoryAccount
+																							.find(
+																								(item) =>
+																									item.label ===
+																									props.values
+																										.transactionCategoryName,
+																							)
+																							.options.find(
+																								(item) =>
+																									item.value ===
+																									+props.values
+																										.transactionCategoryId,
+																							)
+																					: props.values
 																							.transactionCategoryId
-																					: ''
 																			}
 																			id="transactionCategoryId"
 																			onChange={(option) => {
@@ -1294,11 +1318,11 @@ class DetailProduct extends React.Component {
 																					}
 																				</div>
 																			)}
-																	</FormGroup></Col>
+																	</FormGroup>
+																	</Col>
 																	<Col>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="inventoryQty">
-																			{/* <span className="text-danger">*</span>{' '} */}
 																			Purchase Quantity
 																			
 																		</Label>
@@ -1343,12 +1367,11 @@ class DetailProduct extends React.Component {
 																			)}
 																	</FormGroup>
 																	</Col>
-																</Row>
-																<Row style={{display: props.values.isInventoryEnabled === false ? 'none' : ''}}>
+																</Row> */}
+																{/* <Row style={{display: props.values.isInventoryEnabled === false ? 'none' : ''}}>
 																<Col>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="inventoryPurchasePrice">
-																			{/* <span className="text-danger">*</span>{' '} */}
 																			Purchase Price
 																		</Label>
 																		<Input
@@ -1395,7 +1418,7 @@ class DetailProduct extends React.Component {
 																	<Col>
 																	<FormGroup className="mb-3">
 																	<Label htmlFor="contactId">
-																		{/* <span className="text-danger">*</span> */}
+																	
 																		Supplier Name
 																	</Label>
 																	<Select
@@ -1443,9 +1466,9 @@ class DetailProduct extends React.Component {
 																		)}
 																</FormGroup>
 														
-															</Col>
-																</Row>
-																<Row style={{display: props.values.isInventoryEnabled === false ? 'none' : ''}}>
+																</Col>
+																</Row> */}
+																{/* <Row style={{display: props.values.isInventoryEnabled === false ? 'none' : ''}}>
 																	<Col lg={6}>
 																	<FormGroup className="">
 																		<Label htmlFor="inventoryReorderLevel">
@@ -1475,7 +1498,7 @@ class DetailProduct extends React.Component {
 																	</FormGroup>
 																	</Col>
 																	
-																	</Row>
+																	</Row> */}
 																</Col>
 															</Row>
 															

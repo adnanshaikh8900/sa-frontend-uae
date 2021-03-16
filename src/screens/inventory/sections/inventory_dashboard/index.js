@@ -14,13 +14,10 @@ import * as InventoryActions from '../../actions';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import { Bar, HorizontalBar,Line } from 'react-chartjs-2';
+import { Bar, HorizontalBar, Line  } from 'react-chartjs-2';
 import { selectOptionsFactory } from 'utils';
 import Select from 'react-select';
 
-
-
-import Chart from 'react-apexcharts';
 const mapStateToProps = (state) => {
 	return {
 		profile: state.auth.profile,
@@ -53,20 +50,90 @@ class InventoryDashboard extends React.Component {
 				chartOfAccountId: '',
 				term: 'Yearly'
 			},
-			dataHorBar : {
+			dataHorBar: {
 				labels: [],
 				datasets: [
-				  {
-					backgroundColor: '#a1b86d',
-					borderColor: 'rgba(161,184,109,1)',
-					borderWidth: 1,
-					hoverBackgroundColor: 'rgba(161,184,109,0.3)',
-					hoverBorderColor: 'rgba(161,184,109,0.5)',
-					data: []
-				  }
-				  
+					{
+						backgroundColor: '#a1b86d',
+						borderColor: 'rgba(161,184,109,1)',
+						borderWidth: 1,
+						hoverBackgroundColor: 'rgba(161,184,109,0.3)',
+						hoverBorderColor: 'rgba(161,184,109,0.5)',
+						data: []
+					}
+
 				]
-			  },
+			},
+			dataHorBarOption:{	
+				legend:{
+				display:false
+				},
+				scales:{
+					yAxes:[{
+						barPercentage: 0.4
+					}]
+				}
+		},
+			dataHorBarLeft: {
+				labels: [],
+				datasets: [
+					{
+						backgroundColor: '#f86c6b',
+						borderColor: 'rgba(248,108,107,1)',
+						borderWidth: 1,
+						hoverBackgroundColor: 'rgba(227,168,168,0.7)',
+						hoverBorderColor: 'rgba(227,168,168,0.5)',
+						data: []
+					}
+
+				]
+			},
+			dataHorBarLeftOption:{
+				legend:{
+					display:false
+				},
+				scales:{
+					yAxes:[{
+						barPercentage: 0.4
+					}]
+				}
+			},
+			dataLine:{
+				labels: [],
+				datasets: [
+					{
+						data: [],
+						fill: true,
+						backgroundColor: "rgba(225,250,300,0.5)",
+						borderColor: "rgba(0,120,212,1)"
+					}
+				]
+			},
+			dataLineOption:{
+				legend:{
+					display:false
+				}
+			},
+			databar:{
+				labels: [],
+				datasets: [
+					{
+						backgroundColor: '#3483eb',
+						data: []
+					}
+
+				]
+			},
+			databarOption:{
+				legend:{
+					display:false
+				},
+				scales:{
+					xAxes:[{
+						barPercentage: 0.3
+					}]
+				}
+			},
 			csvData: [],
 			activePage: 1,
 			sizePerPage: 10,
@@ -75,20 +142,20 @@ class InventoryDashboard extends React.Component {
 				column: null,
 				direction: 'desc',
 			},
-			allProducts:'',
+			allProducts: '',
+			inventoryValue:'',
+			outOfStock:'',
 			topSellingProducts: {},
-			quantityAvailable:'',
-		//	lowStockCount:[],
+			lowSellingProducts: {},
+			topProfitGeneratingProducts: {},
+			totalRevenue: {},
+			quantityAvailable: '',
+			//	lowStockCount:[],
 			options: {},
-			
-			
+
+
 		};
 
-		this.columnHeader = [
-			{ label: 'Account', value: 'Account', sort: true },
-			{ label: '', value: 'Account Code', sort: false },
-			{ label: 'Total', value: 'Total', sort: true },
-		];
 
 		this.dropdown = [
 			{ label: 'Monthly', value: 'Monthly' },
@@ -114,7 +181,7 @@ class InventoryDashboard extends React.Component {
 		);
 	};
 
-	handleChange = (val, name, reconcile, row, label) => {
+	handleChange = (val, val1, name, reconcile, row, label) => {
 		const tempTopSelling = {
 			labels: [],
 			datasets: [
@@ -124,64 +191,222 @@ class InventoryDashboard extends React.Component {
 					borderWidth: 1,
 					hoverBackgroundColor: 'rgba(161,184,109,0.3)',
 					hoverBorderColor: 'rgba(161,184,109,0.5)',
-					data: []
+					data: [],
 				},
-				
+
 			]
 		}
-		switch(val.value ){
-			case 'Monthly' :
+
+		switch (val.value) {
+			case 'Monthly':
 				tempTopSelling.labels = Object.keys(this.state.topSellingProducts.topSellingProductsMonthly)
 				tempTopSelling.datasets[0].data = Object.values(this.state.topSellingProducts.topSellingProductsMonthly)
 				this.setState({ dataHorBar: tempTopSelling });
-				console.log('monthly', this.state.dataHorBar)
 				break;
-			case 'Quaterly' :
+			case 'Quaterly':
 				tempTopSelling.labels = Object.keys(this.state.topSellingProducts.topSellingProductsQuarterly)
 				tempTopSelling.datasets[0].data = Object.values(this.state.topSellingProducts.topSellingProductsQuarterly)
 				this.setState({ dataHorBar: tempTopSelling });
-				console.log('quaterly', this.state.dataHorBar)
 				break;
-			case 'Biannually' :
+			case 'Biannually':
 				tempTopSelling.labels = Object.keys(this.state.topSellingProducts.topSellingProductsSixMonthly)
 				tempTopSelling.datasets[0].data = Object.values(this.state.topSellingProducts.topSellingProductsSixMonthly)
 				this.setState({ dataHorBar: tempTopSelling });
-				console.log('biannually', this.state.dataHorBar)
 				break;
-			case 'Yearly' :
+			case 'Yearly':
 				tempTopSelling.labels = Object.keys(this.state.topSellingProducts.topSellingProductsYearly)
 				tempTopSelling.datasets[0].data = Object.values(this.state.topSellingProducts.topSellingProductsYearly)
 				this.setState({ dataHorBar: tempTopSelling });
-				console.log('yearly', this.state.dataHorBar)
+				break;
+		};
+
+	};
+	handleChange1 = (val, val1, name, reconcile, row, label) => {
+		const tempLowSelling = {
+			labels: [],
+			datasets: [
+				{
+					backgroundColor: '#f86c6b',
+					borderColor: 'rgba(248,108,107,1)',
+					borderWidth: 1,
+					hoverBackgroundColor: 'rgba(227,168,168,0.7)',
+					hoverBorderColor: 'rgba(227,168,168,0.5)',
+					data: [],
+				},
+			]
+
+		}
+		switch (val.value) {
+			case 'Monthly':
+				tempLowSelling.labels = Object.keys(this.state.lowSellingProducts.lowSellingProductsMonthly)
+				tempLowSelling.datasets[0].data = Object.values(this.state.lowSellingProducts.lowSellingProductsMonthly)
+				this.setState({ dataHorBarLeft: tempLowSelling });
+				break;
+			case 'Quaterly':
+				tempLowSelling.labels = Object.keys(this.state.lowSellingProducts.lowSellingProductsQuarterly)
+				tempLowSelling.datasets[0].data = Object.values(this.state.lowSellingProducts.lowSellingProductsQuarterly)
+				this.setState({ dataHorBarLeft: tempLowSelling });
+				break;
+			case 'Biannually':
+				tempLowSelling.labels = Object.keys(this.state.lowSellingProducts.lowSellingProductsSixMonthly)
+				tempLowSelling.datasets[0].data = Object.values(this.state.lowSellingProducts.lowSellingProductsSixMonthly)
+				this.setState({ dataHorBarLeft: tempLowSelling });
+				break;
+			case 'Yearly':
+				tempLowSelling.labels = Object.keys(this.state.lowSellingProducts.lowSellingProductsYearly)
+				tempLowSelling.datasets[0].data = Object.values(this.state.lowSellingProducts.lowSellingProductsYearly)
+				this.setState({ dataHorBarLeft: tempLowSelling });
 				break;
 		}
 	};
+	handleChange2 = (val, val1, name, reconcile, row, label) => {
+		const tempRevenue = {
+			labels: [],
+			datasets: [
+				{
+					data: [],
+					fill: true,
+					backgroundColor: "rgba(225,250,300,0.5)",
+					borderColor: "rgba(0,120,212,1)"
+				}
+			]
 
+		}
+		switch (val.value) {
+			case 'Monthly':
+				tempRevenue.labels = Object.keys(this.state.totalRevenue.totalRevenueMonthly)
+				tempRevenue.datasets[0].data = Object.values(this.state.totalRevenue.totalRevenueMonthly)
+				this.setState({ dataLine: tempRevenue });
+				console.log(tempRevenue.labels)
+				break;
+			case 'Quaterly':
+				tempRevenue.labels = Object.keys(this.state.totalRevenue.totalRevenueQuarterly)
+				tempRevenue.datasets[0].data = Object.values(this.state.totalRevenue.totalRevenueQuarterly)
+				this.setState({ dataLine: tempRevenue });
+				break;
+			case 'Biannually':
+				tempRevenue.labels = Object.keys(this.state.totalRevenue.totalRevenueSixMonthly)
+				tempRevenue.datasets[0].data = Object.values(this.state.totalRevenue.totalRevenueSixMonthly)
+				this.setState({ dataLine: tempRevenue });
+				break;
+			case 'Yearly':
+				tempRevenue.labels = Object.keys(this.state.totalRevenue.totalRevenueYearly)
+				tempRevenue.datasets[0].data = Object.values(this.state.totalRevenue.totalRevenueYearly)
+				this.setState({ dataLine: tempRevenue });
+				break;
+		}
+	}
+	handleChange3 = (val, val1, name, reconcile, row, label) => {
+		const tempProfit = {
+			labels: [],
+			datasets: [
+				{
+					backgroundColor: '#3483eb',
+					data: []
+				}
+			]
+
+		}
+		switch (val.value) {
+			case 'Monthly':
+				tempProfit.labels = Object.keys(this.state.topProfitGeneratingProducts.totalProfitMonthly)
+				tempProfit.datasets[0].data = Object.values(this.state.topProfitGeneratingProducts.totalProfitMonthly)
+				this.setState({ databar: tempProfit });
+				console.log(tempProfit.labels)
+				break;
+			case 'Quaterly':
+				tempProfit.labels = Object.keys(this.state.topProfitGeneratingProducts.totalProfitQuarterly)
+				tempProfit.datasets[0].data = Object.values(this.state.topProfitGeneratingProducts.totalProfitQuarterly)
+				this.setState({ databar: tempProfit });
+				break;
+			case 'Biannually':
+				tempProfit.labels = Object.keys(this.state.topProfitGeneratingProducts.totalProfitSixMonthly)
+				tempProfit.datasets[0].data = Object.values(this.state.topProfitGeneratingProducts.totalProfitSixMonthly)
+				this.setState({ databar: tempProfit });
+				break;
+			case 'Yearly':
+				tempProfit.labels = Object.keys(this.state.topProfitGeneratingProducts.totalProfitYearly)
+				tempProfit.datasets[0].data = Object.values(this.state.topProfitGeneratingProducts.totalProfitYearly)
+				this.setState({ databar: tempProfit });
+				break;
+		}
+	}
 
 	componentDidMount = () => {
 		this.initializeData();
 	};
 
 	initializeData = () => {
-		
 		this.props.inventoryActions
 			.getTopSellingProductsForInventory()
 			.then((res) => {
 				if (res.status === 200) {
-					console.log('all', res)
-					this.setState({ topSellingProducts: res.data });
-					this.handleChange({'value':"Monthly"})
+					this.setState({
+						topSellingProducts: res.data
+					});
+					this.handleChange({ 'value': "Yearly" })
 				}
 			})
 			.catch((err) => {
 				this.setState({ loading: false });
 			});
+		this.props.inventoryActions
+			.getLowSellingProductsForInventory()
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({
+						lowSellingProducts: res.data
+					});
 
+					this.handleChange1({ 'value': "Yearly" })
+				}
+			})
+			.catch((err) => {
+				this.setState({ loading: false });
+			});
+			this.props.inventoryActions
+			.getTotalRevenueOfInventory()
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({
+						totalRevenue: res.data
+					});
+
+					this.handleChange2({ 'value': "Yearly" })
+				}
+			})
+			.catch((err) => {
+				this.setState({ loading: false });
+			});
+			this.props.inventoryActions
+			.getTopProfitGeneratingProductsForInventory()
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({
+						topProfitGeneratingProducts: res.data
+					});
+
+					this.handleChange3({ 'value': "Yearly" })
+				}
+			})
+			.catch((err) => {
+				this.setState({ loading: false });
+			});
 		this.props.inventoryActions
 			.getAllProductCount()
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState({ allProducts: res.data });
+				}
+			})
+			.catch((err) => {
+				this.setState({ loading: false });
+			});
+			this.props.inventoryActions
+			.getTotalInventoryValue()
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({ inventoryValue: res.data });
 				}
 			})
 			.catch((err) => {
@@ -197,16 +422,16 @@ class InventoryDashboard extends React.Component {
 			.catch((err) => {
 				this.setState({ loading: false });
 			});
-		// this.props.inventoryActions
-		// 	.getlowStockProductCountForInventory()
-		// 	.then((res) => {
-		// 		if (res.status === 200) {
-		// 			this.setState({ lowStockCount: res.data });
-		// 		}
-		// 	})
-		// 	.catch((err) => {
-		// 		this.setState({ loading: false });
-		// 	});
+			this.props.inventoryActions
+			.getOutOfStockCountOfInventory()
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({ outOfStock: res.data });
+				}
+			})
+			.catch((err) => {
+				this.setState({ loading: false });
+			});
 	};
 
 	exportFile = (csvData, fileName, type) => {
@@ -237,231 +462,243 @@ class InventoryDashboard extends React.Component {
 	};
 
 	render() {
-		const { loading, initValue, dropdownOpen, csvData, view, dataHorBar } = this.state;
-		const { profile, high_stock_list,low_stock_list } = this.props;
-		  const chartOptions1 = {
-			options: {
-			  dataLabels: {
-				enabled: false
-			  },
-			 // colors: ["#C7F464", "#662E9B", "#E2C044", "#C4BBAF"],
-			  fill: {
-				type: "color"
-			  },
-			 
-			  plotOptions: {
-			
-			  },
-			  
-			  chart: {
-				events: {
-				  dataPointMouseEnter: null
-				}
-			  }
-			},
-			legend:{
-				position:"bottom",
-			},
-			series: [44, 55, 41, 17],
-			labels: ["Voice mail", "Recordings", "System", "Free"]
-		  };
-		  const data = {
-			labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-			datasets: [
-			  {
-				label: "First dataset",
-				data: [33, 53, 85, 41, 44, 65],
-				fill: true,
-				backgroundColor: "rgba(225,250,300,0.5)",
-				borderColor: "rgba(0,120,212,1)"
-			  }
-			]
-		  };
+		const { loading, 
+			initValue, 
+			dropdownOpen,
+			 dataHorBar, 
+			 dataHorBarLeft,
+			 dataLine,
+			 dataHorBarLeftOption,
+			 dataHorBarOption,
+			 dataLineOption,
+			 databarOption,
+			 databar } = this.state;
+		const { profile, high_stock_list, low_stock_list } = this.props;
 		return (
 			<div className="transactions-report-screen">
 				<div className="animated fadeIn">
-				<div style={{marginLeft:"220px",marginRight:"250px"}}>
+					<div style={{ marginLeft: "220px", marginRight: "250px" }}>
 						<Row>
-							<CardBody  className="mr-3  mb-3 "  style={{boxShadow:"0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}}>
-										<h6 className="text-center font-weight-bold mb-1 text-black mt-3">
-										Number of SKU's
+							<CardBody className="mr-3  mb-3 " style={{ boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)" }}>
+								<h6 className="text-center font-weight-bold mb-1 text-black mt-3">
+									Number of SKU's
 										</h6>
-										<h3 className="d-block mt-4 text-center" >
-										{this.state.allProducts}
-										</h3>
-						
-							</CardBody>
-							<CardBody  className="mr-3  mb-3"  style={{boxShadow:"0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}}>
-										<h6 className="text-center font-weight-bold mb-1 text-black mt-3">
-										Total Value of SKU's
-										</h6>
-										<h3 className="d-block mt-4 text-center" >
-										{this.state.allProducts}
-										</h3>
-						
-							</CardBody>
-							<CardBody  className="mr-3  mb-3 "  style={{boxShadow:"0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}}>
-										<h6 className="text-center font-weight-bold mb-1 text-black mt-3">
-										Total Stock on Hand
-										</h6>
-										<h3 className="d-block mt-4 text-center" >
-										{this.state.quantityAvailable}
-										</h3>
-						
-							</CardBody>
-							<CardBody  className=" mb-3 "  style={{boxShadow:"0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}}>
-										<h6 className="text-center font-weight-bold mb-1 text-black mt-3">
-										Out of Stock
-										</h6>
-										<h3 className="d-block mt-4 text-center" >
-										{this.state.quantityAvailable}
-										</h3>
-						
-							</CardBody>
-						
-							</Row>
-							</div>
-		
-				<Row>
-				<CardGroup style={{
-							width:"100%",
-							
-							}}>
-				<Card className="mr-2" style={{
-							width:"50%",
-							
-							}}>
-						<div  className="d-flex justify-content-between" style={{color:"#2064d8",backgroundColor:"#edf2f9" ,height:"9.8%"}}>
-						<h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">	
-									TOP SELLING PRODUCT
-						</h6>
-				<div className="w-50 mb-1 card-header-actions card-select-alignment">
-					
-					<Select
-						options={
-							this.dropdown
-								? selectOptionsFactory.renderOptions(
-										'label',
-										'value',
-										this.dropdown,
-										'Terms',
-									)
-								: []
-						}
-						defaultValue={{ label: "Monthly", value: "Monthly" }}
-						// value={props.values.term}
-						// // size="1"
-						onChange={(val) => {
-							// this.handleChange('term')(val);
-							this.handleChange(val, 'term');
-						}}
-						
-						id="term"
-						name="term"
-						placeholder="Select Terms ">
-					</Select>
-					
-					</div>									
-				
-					</div>
-					<CardBody>
-						<div>
-							<HorizontalBar 
-							data={dataHorBar}
-							 />
-							</div>
-							</CardBody>
-					</Card>
+								<h3 className="d-block mt-4 text-center" >
+									{this.state.allProducts}
+								</h3>
 
-					<Card  className="ml-2"  style={{
-							width:"50%",
-						}}>
-					<div  style={{color:"#2064d8",backgroundColor:"#edf2f9" ,height:"9.8%"}}>
-						<h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">	
-									LOW SELLING PRODUCT 
-										</h6>
-						</div>
-						<CardBody>
-						<div  style={{	width:"500px" ,marginLeft:"150px"}} >
-						<Chart
-					  options={chartOptions1.options}
-						  series={chartOptions1.series}
-						  type="donut"
-						/>
-							</div>
 							</CardBody>
-					
-							</Card>
-						</CardGroup>
-					</Row>
+							<CardBody className="mr-3  mb-3" style={{ boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)" }}>
+								<h6 className="text-center font-weight-bold mb-1 text-black mt-3">
+									Total Value of SKU's
+										</h6>
+								<h3 className="d-block mt-4 text-center" >
+									{this.state.inventoryValue}
+								</h3>
 
-					<Row className="mt-3">
-				<CardGroup>
-				<Card className="mr-2" style={{
-							width:"50%",
-							
-							}}>
-						<div  style={{color:"#2064d8",backgroundColor:"#edf2f9" ,height:"9.8%"}}>
-						<h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">	
-									Total Revenue 
-						</h6>
-					</div>
-					<CardBody>
-						<div   style={{	width:"100%" }} >
-						<Line data={data} />
-							</div>
 							</CardBody>
-					</Card>
-					<Card className="ml-2"  style={{
-							width:"50%",
-							
-							
-						}}>
-					<div  style={{color:"#2064d8",backgroundColor:"#edf2f9" ,height:"9.8%"}}>
-						<h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">	
-									TOP SELLING PRODUCT 
+							<CardBody className="mr-3  mb-3 " style={{ boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)" }}>
+								<h6 className="text-center font-weight-bold mb-1 text-black mt-3">
+									Total Stock on Hand
 										</h6>
-						</div>
-						<CardBody style={{height:"100%",display: 'flex'}}>
-								<div className="column"  
-									 style={{
-											
-											marginBlock:'-20px',
-											borderRight:"1px solid #d5dae1"
-											
-										}} >
-									<BootstrapTable
-											selectRow={this.selectRowProp}
-											search={false}
-											options={this.options}
-											data={
-												high_stock_list 
-													? high_stock_list
+								<h3 className="d-block mt-4 text-center" >
+									{this.state.quantityAvailable}
+								</h3>
+
+							</CardBody>
+							<CardBody className=" mb-3 " style={{ boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)" }}>
+								<h6 className="text-center font-weight-bold mb-1 text-black mt-3">
+									Out of Stock
+										</h6>
+								<h3 className="d-block mt-4 text-center" >
+									{this.state.outOfStock}
+								</h3>
+
+							</CardBody>
+
+						</Row>
+					</div>
+
+					<Row>
+						<CardGroup style={{
+							width: "100%",
+
+						}}>
+							<Card className="mr-2" style={{
+								width: "50%",
+
+							}}>
+								<div className="d-flex justify-content-between" style={{ color: "#2064d8", backgroundColor: "#edf2f9", height: "9.8%" }}>
+									<h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">
+										TOP SELLING PRODUCT
+								</h6>
+									<div className="w-25 mb-1 card-header-actions card-select-alignment">
+										<Select
+											options={
+												this.dropdown
+													? selectOptionsFactory.renderOptions(
+														'label',
+														'value',
+														this.dropdown,
+														'Terms',
+													)
 													: []
 											}
-											version="4"
-											hover
-											remote
-											className="mt-2 mr-2"
-											trClassName="cursor-pointer"
-											ref={(node) => (this.table = node)}
-											>
-												<TableHeaderColumn dataField="productCode" className="table-header-bg">
-													Product	Code
-												</TableHeaderColumn >
-												<TableHeaderColumn isKey dataField="productName" className="table-header-bg">
-													Product	Name
-												</TableHeaderColumn >
-												<TableHeaderColumn  dataField="quantitySold" className="table-header-bg">
-												Quantity Sold
-												</TableHeaderColumn >
-											</BootstrapTable>
+											defaultValue={{ label: "Yearly", value: "Yearly" }}
+											onChange={(val) => {
+												this.handleChange(val, 'term');
+											}}
+
+											id="term"
+											name="term"
+											placeholder="Select Terms ">
+										</Select>
 									</div>
-							</CardBody>
-					
+								</div>
+								<CardBody>
+									<div>
+										<HorizontalBar
+											data={dataHorBar}
+											options={dataHorBarOption}
+										/>
+									</div>
+								</CardBody>
+							</Card>
+
+							<Card className="ml-2" style={{
+								width: "50%",
+							}}>
+								<div className="d-flex justify-content-between" style={{ color: "#2064d8", backgroundColor: "#edf2f9", height: "9.8%" }}>
+									<h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">
+										LOW SELLING PRODUCT
+									</h6>
+									<div className="w-25 mb-1 card-header-actions card-select-alignment">
+										<Select
+											options={
+												this.dropdown
+													? selectOptionsFactory.renderOptions(
+														'label',
+														'value',
+														this.dropdown,
+														'Terms',
+													)
+													: []
+											}
+											defaultValue={{ label: "Yearly", value: "Yearly" }}
+											onChange={(val) => {
+												this.handleChange1(val, 'term');
+											}}
+
+											id="term"
+											name="term"
+											placeholder="Select Terms ">
+										</Select>
+
+									</div>
+								</div>
+								<CardBody>
+									<div>
+										<HorizontalBar
+											data={dataHorBarLeft}
+											options={dataHorBarLeftOption}
+										/>
+									</div>
+
+								</CardBody>
+
 							</Card>
 						</CardGroup>
 					</Row>
+
+				<Row className={'mt-2'}> 
+				<CardGroup style={{
+							width: "100%",
+
+						}}>
+							<Card className="mr-2" style={{
+								width: "50%",
+
+							}}>
+									<div className="d-flex justify-content-between" style={{ color: "#2064d8", backgroundColor: "#edf2f9", height: "9.8%" }}>
+									<h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">
+									TOTAL REVENUE GENERATED
+									</h6>
+									<div className="w-25 mb-1 card-header-actions card-select-alignment">
+										<Select
+											options={
+												this.dropdown
+													? selectOptionsFactory.renderOptions(
+														'label',
+														'value',
+														this.dropdown,
+														'Terms',
+													)
+													: []
+											}
+											defaultValue={{ label: "Yearly", value: "Yearly" }}
+											onChange={(val) => {
+												this.handleChange2(val, 'term');
+											}}
+
+											id="term"
+											name="term"
+											placeholder="Select Terms ">
+										</Select>
+									</div>
+									</div>
+									<CardBody>
+										<div>
+											<Line
+											data={dataLine}
+											options={dataLineOption}
+											/>
+											
+										</div>
+									</CardBody>
+							</Card>
+							<Card className="mr-2" style={{
+								width: "50%",
+							}}>
+									<div className="d-flex justify-content-between" style={{ color: "#2064d8", backgroundColor: "#edf2f9", height: "9.8%" }}>
+									<h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">
+										TOTAL PROFIT GENERATED
+								</h6>
+								<div className="w-25 mb-1 card-header-actions card-select-alignment">
+										<Select
+											options={
+												this.dropdown
+													? selectOptionsFactory.renderOptions(
+														'label',
+														'value',
+														this.dropdown,
+														'Terms',
+													)
+													: []
+											}
+											defaultValue={{ label: "Yearly", value: "Yearly" }}
+											onChange={(val) => {
+												this.handleChange3(val, 'term');
+											}}
+
+											id="term"
+											name="term"
+											placeholder="Select Terms ">
+										</Select>
+									</div>
+									</div>
+									<CardBody>
+										<div>
+											<Bar
+											data={databar}
+											options={databarOption}
+											/>
+											
+										</div>
+									</CardBody>
+							</Card>
+
+					</CardGroup>
+				</Row>
 				</div>
 			</div>
 		);

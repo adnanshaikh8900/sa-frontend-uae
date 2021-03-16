@@ -104,7 +104,7 @@ class CreateCurrencyConvert extends React.Component {
 	//   })
 	// }
 
-	// Create or Edit Currency converstion
+	// Create or Edit Currency conversion
 	handleSubmit = (data, resetForm) => {
 		this.props.createCurrencyConvertActions
 			.createCurrencyConvert(data)
@@ -112,7 +112,7 @@ class CreateCurrencyConvert extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'New Currency Converstion is Created Successfully!',
+						'New Currency Conversion is Created Successfully!',
 					);
 
 					if (this.state.createMore) {
@@ -147,7 +147,7 @@ class CreateCurrencyConvert extends React.Component {
 								<CardHeader>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="nav-icon icon-briefcase" />
-										<span>New Currency Converstion</span>
+										<span className="ml-2">New Currency Conversion</span>
 									</div>
 								</CardHeader>
 								<CardBody>

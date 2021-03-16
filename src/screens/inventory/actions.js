@@ -71,3 +71,21 @@ export const getQuantityAvailable = () => {
 	};
 };
 
+export const getTopSellingProductsForInventory = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/inventory/getTopSellingProductsForInventory',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+

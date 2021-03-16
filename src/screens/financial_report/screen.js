@@ -61,7 +61,7 @@ class FinancialReport extends React.Component {
 							</Row>
 						</CardHeader>
 						<CardBody>
-							<Nav tabs>
+							{/* <Nav tabs>
 								<NavItem>
 									<NavLink
 										active={this.state.activeTab[0] === '1'}
@@ -124,7 +124,13 @@ class FinancialReport extends React.Component {
 										<VatReturnsReport />
 									</div>
 								</TabPane>
-							</TabContent>
+							</TabContent> */}
+							<Card className="report-card">
+								<CardHeader>Hight Level</CardHeader>
+								<CardBody>
+									
+								</CardBody>
+							</Card>
 						</CardBody>
 					</Card>
 				</div>

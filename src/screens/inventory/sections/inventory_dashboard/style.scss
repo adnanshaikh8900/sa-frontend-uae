@@ -6,7 +6,19 @@
   .card-title {
     color: #20a8d8;
   }
-
+  .card-select-alignment{
+    margin-top: 0.7% !important;
+      margin-right: 1% !important;
+  }
+  .top-product-card-header{
+    display: flex;
+    justify-content: space-between;
+  }
+  .card-select{
+    background: white !important; 
+    border: 1px solid !important;
+    }
+  
   .filter-box {
     border-radius: 0px;
     border: 1px solid #dad8d8;

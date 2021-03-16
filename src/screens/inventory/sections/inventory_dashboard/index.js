@@ -15,6 +15,8 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { Bar, HorizontalBar,Line } from 'react-chartjs-2';
+import { selectOptionsFactory } from 'utils';
+import Select from 'react-select';
 
 
 
@@ -49,7 +51,22 @@ class InventoryDashboard extends React.Component {
 				endDate: moment().endOf('month').format('DD/MM/YYYY'),
 				reportBasis: 'ACCRUAL',
 				chartOfAccountId: '',
+				term: 'Yearly'
 			},
+			dataHorBar : {
+				labels: [],
+				datasets: [
+				  {
+					backgroundColor: '#a1b86d',
+					borderColor: 'rgba(161,184,109,1)',
+					borderWidth: 1,
+					hoverBackgroundColor: 'rgba(161,184,109,0.3)',
+					hoverBorderColor: 'rgba(161,184,109,0.5)',
+					data: []
+				  }
+				  
+				]
+			  },
 			csvData: [],
 			activePage: 1,
 			sizePerPage: 10,
@@ -59,16 +76,25 @@ class InventoryDashboard extends React.Component {
 				direction: 'desc',
 			},
 			allProducts:'',
+			topSellingProducts: {},
 			quantityAvailable:'',
 		//	lowStockCount:[],
 			options: {},
 			
 			
 		};
+
 		this.columnHeader = [
 			{ label: 'Account', value: 'Account', sort: true },
 			{ label: '', value: 'Account Code', sort: false },
 			{ label: 'Total', value: 'Total', sort: true },
+		];
+
+		this.dropdown = [
+			{ label: 'Monthly', value: 'Monthly' },
+			{ label: 'Quaterly', value: 'Quaterly' },
+			{ label: 'Biannually', value: 'Biannually' },
+			{ label: 'Yearly', value: 'Yearly' },
 		];
 	}
 
@@ -88,12 +114,69 @@ class InventoryDashboard extends React.Component {
 		);
 	};
 
+	handleChange = (val, name, reconcile, row, label) => {
+		const tempTopSelling = {
+			labels: [],
+			datasets: [
+				{
+					backgroundColor: '#a1b86d',
+					borderColor: 'rgba(161,184,109,1)',
+					borderWidth: 1,
+					hoverBackgroundColor: 'rgba(161,184,109,0.3)',
+					hoverBorderColor: 'rgba(161,184,109,0.5)',
+					data: []
+				},
+				
+			]
+		}
+		switch(val.value ){
+			case 'Monthly' :
+				tempTopSelling.labels = Object.keys(this.state.topSellingProducts.topSellingProductsMonthly)
+				tempTopSelling.datasets[0].data = Object.values(this.state.topSellingProducts.topSellingProductsMonthly)
+				this.setState({ dataHorBar: tempTopSelling });
+				console.log('monthly', this.state.dataHorBar)
+				break;
+			case 'Quaterly' :
+				tempTopSelling.labels = Object.keys(this.state.topSellingProducts.topSellingProductsQuarterly)
+				tempTopSelling.datasets[0].data = Object.values(this.state.topSellingProducts.topSellingProductsQuarterly)
+				this.setState({ dataHorBar: tempTopSelling });
+				console.log('quaterly', this.state.dataHorBar)
+				break;
+			case 'Biannually' :
+				tempTopSelling.labels = Object.keys(this.state.topSellingProducts.topSellingProductsSixMonthly)
+				tempTopSelling.datasets[0].data = Object.values(this.state.topSellingProducts.topSellingProductsSixMonthly)
+				this.setState({ dataHorBar: tempTopSelling });
+				console.log('biannually', this.state.dataHorBar)
+				break;
+			case 'Yearly' :
+				tempTopSelling.labels = Object.keys(this.state.topSellingProducts.topSellingProductsYearly)
+				tempTopSelling.datasets[0].data = Object.values(this.state.topSellingProducts.topSellingProductsYearly)
+				this.setState({ dataHorBar: tempTopSelling });
+				console.log('yearly', this.state.dataHorBar)
+				break;
+		}
+	};
+
 
 	componentDidMount = () => {
 		this.initializeData();
 	};
 
 	initializeData = () => {
+		
+		this.props.inventoryActions
+			.getTopSellingProductsForInventory()
+			.then((res) => {
+				if (res.status === 200) {
+					console.log('all', res)
+					this.setState({ topSellingProducts: res.data });
+					this.handleChange({'value':"Monthly"})
+				}
+			})
+			.catch((err) => {
+				this.setState({ loading: false });
+			});
+
 		this.props.inventoryActions
 			.getAllProductCount()
 			.then((res) => {
@@ -154,7 +237,7 @@ class InventoryDashboard extends React.Component {
 	};
 
 	render() {
-		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
+		const { loading, initValue, dropdownOpen, csvData, view, dataHorBar } = this.state;
 		const { profile, high_stock_list,low_stock_list } = this.props;
 		  const chartOptions1 = {
 			options: {
@@ -181,20 +264,6 @@ class InventoryDashboard extends React.Component {
 			},
 			series: [44, 55, 41, 17],
 			labels: ["Voice mail", "Recordings", "System", "Free"]
-		  };
-		  const dataHorBar = {
-			labels: ['Product ', 'Product', 'Product ', 'Product ', 'Product ', 'Product ', 'Product ','Product ','Product ','Product '],
-			datasets: [
-			  {
-				backgroundColor: '#a1b86d',
-				borderColor: 'rgba(161,184,109,1)',
-				borderWidth: 1,
-				hoverBackgroundColor: 'rgba(161,184,109,0.3)',
-				hoverBorderColor: 'rgba(161,184,109,0.5)',
-				data: [80, 75, 70, 65, 60, 55, 50, 45, 40, 35,30]
-			  },
-			  
-			]
 		  };
 		  const data = {
 			labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
@@ -262,19 +331,49 @@ class InventoryDashboard extends React.Component {
 							width:"50%",
 							
 							}}>
-						<div  style={{color:"#2064d8",backgroundColor:"#edf2f9" ,height:"9.8%"}}>
+						<div  className="d-flex justify-content-between" style={{color:"#2064d8",backgroundColor:"#edf2f9" ,height:"9.8%"}}>
 						<h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">	
 									TOP SELLING PRODUCT
 						</h6>
+				<div className="w-50 mb-1 card-header-actions card-select-alignment">
 					
+					<Select
+						options={
+							this.dropdown
+								? selectOptionsFactory.renderOptions(
+										'label',
+										'value',
+										this.dropdown,
+										'Terms',
+									)
+								: []
+						}
+						defaultValue={{ label: "Monthly", value: "Monthly" }}
+						// value={props.values.term}
+						// // size="1"
+						onChange={(val) => {
+							// this.handleChange('term')(val);
+							this.handleChange(val, 'term');
+						}}
+						
+						id="term"
+						name="term"
+						placeholder="Select Terms ">
+					</Select>
+					
+					</div>									
+				
 					</div>
 					<CardBody>
-						<div  style={{	width:"750px" }} >
-						<HorizontalBar data={dataHorBar} />
+						<div>
+							<HorizontalBar 
+							data={dataHorBar}
+							 />
 							</div>
 							</CardBody>
 					</Card>
-					<Card className="ml-2"  style={{
+
+					<Card  className="ml-2"  style={{
 							width:"50%",
 						}}>
 					<div  style={{color:"#2064d8",backgroundColor:"#edf2f9" ,height:"9.8%"}}>
@@ -308,7 +407,7 @@ class InventoryDashboard extends React.Component {
 						</h6>
 					</div>
 					<CardBody>
-						<div   style={{	width:"750px" }} >
+						<div   style={{	width:"100%" }} >
 						<Line data={data} />
 							</div>
 							</CardBody>

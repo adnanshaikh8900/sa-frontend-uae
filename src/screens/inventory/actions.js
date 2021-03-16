@@ -18,7 +18,7 @@ export const getProductInventoryList = (obj) => {
 	return (dispatch) => {
 		let data = {
 			method: 'GET',
-			url: `/rest/product/getInventoryProductList?pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`,
+			url: `/rest/inventory/getInventoryProductList?pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`,
 		};
 		return authApi(data)
 			.then((res) => {
@@ -40,7 +40,25 @@ export const getAllProductCount = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: '/rest/product/getProductCountForInventory',
+			url: '/rest/inventory/getProductCountForInventory',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const getTotalInventoryValue = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/inventory/getTotalInventoryValue',
 		};
 		return authApi(data)
 			.then((res) => {
@@ -57,7 +75,25 @@ export const getQuantityAvailable = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: '/rest/product/getTotalStockOnHand',
+			url: '/rest/inventory/getTotalStockOnHand',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const getOutOfStockCountOfInventory = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/inventory/getOutOfStockCountOfInventory',
 		};
 		return authApi(data)
 			.then((res) => {
@@ -89,3 +125,56 @@ export const getTopSellingProductsForInventory = () => {
 	};
 };
 
+export const getLowSellingProductsForInventory = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/inventory/getLowSellingProductsForInventory',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const getTopProfitGeneratingProductsForInventory = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/inventory/getTopProfitGeneratingProductsForInventory',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const getTotalRevenueOfInventory = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/inventory/getTotalRevenueOfInventory',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

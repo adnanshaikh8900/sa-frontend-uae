@@ -115,7 +115,7 @@ class DetailCurrencyConvert extends React.Component {
       this.props.detailCurrencyConvertAction.updateCurrencyConvert(postData).then((res) => {
       if (res.status === 200) {
         resetForm();
-        this.props.commonActions.tostifyAlert('success', 'Currency Converstion Updated Successfully!')
+        this.props.commonActions.tostifyAlert('success', 'Currency Conversion Updated Successfully!')
         this.props.history.push('/admin/master/CurrencyConvert')
       }
     }).catch((err) => {
@@ -126,9 +126,9 @@ class DetailCurrencyConvert extends React.Component {
   deleteCurrencyConvert = () => {
     const message1 =
 			<text>
-			<b>Delete Currency Converstion?</b>
+			<b>Delete Currency Conversion?</b>
 			</text>
-			const message = 'This Currency Converstion will be deleted permanently and cannot be recovered. ';
+			const message = 'This Currency Conversion will be deleted permanently and cannot be recovered. ';
     this.setState({
       dialog: <ConfirmDeleteModal
         isOpen={true}
@@ -162,7 +162,7 @@ class DetailCurrencyConvert extends React.Component {
     this.props.detailCurrencyConvertAction.deleteCurrencyConvert(current_currency_convert_id).then((res) => {
       if (res.status === 200) {
         // this.success('Chart Account Deleted Successfully');
-        this.props.commonActions.tostifyAlert('success', 'Currency Converstion Deleted Successfully')
+        this.props.commonActions.tostifyAlert('success', 'Currency Conversion Deleted Successfully')
         this.props.history.push('/admin/master/CurrencyConvert')
       }
     }).catch((err) => {
@@ -190,7 +190,7 @@ class DetailCurrencyConvert extends React.Component {
                 <CardHeader>
                   <div className="h4 mb-0 d-flex align-items-center">
                     <i className="nav-icon icon-briefcase" />
-                    <span className="ml-2">Update Currency Converstion</span>
+                    <span className="ml-2">Update Currency Conversion</span>
                   </div>
                 </CardHeader>
                 <CardBody>

@@ -82,7 +82,7 @@ class CreateOpeningBalance extends React.Component {
 		
 	}
 
-	// Create  Currency converstion
+	// Create  Currency conversion
 	handleSubmit = (data,resetForm) =>{
 		const postData = {
 			openingBalance: data.openingBalance,

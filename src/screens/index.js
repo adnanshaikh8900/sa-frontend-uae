@@ -69,6 +69,7 @@ import DetailEmployee from './employee/screens/detail';
 import Product from './product';
 import CreateProduct from './product/screens/create';
 import DetailProduct from './product/screens/detail';
+import InventoryEdit from './product/screens/inventory_edit'
 import CurrencyConvert from './currencyConvert';
 import CreateCurrencyConvert from './currencyConvert/screens/create';
 import DetailCurrencyConvert from './currencyConvert/screens/detail';
@@ -168,6 +169,7 @@ export {
 	Product,
 	CreateProduct,
 	DetailProduct,
+	InventoryEdit,
 	Project,
 	CreateProject,
 	DetailProject,

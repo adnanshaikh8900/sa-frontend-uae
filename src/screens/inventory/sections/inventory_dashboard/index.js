@@ -70,7 +70,7 @@ class InventoryDashboard extends React.Component {
 				},
 				scales:{
 					yAxes:[{
-						barPercentage: 0.4
+						barPercentage: 0.4,
 					}]
 				}
 		},

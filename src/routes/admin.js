@@ -69,6 +69,7 @@ import {
 	Product,
 	CreateProduct,
 	DetailProduct,
+	InventoryEdit,
 	Project,
 	CreateProject,
 	DetailProject,
@@ -155,7 +156,7 @@ const adminRoutes = [
 		component: DetailOpeningBalance.screen,
 	},
 	{
-	
+
 		path: '/admin/Inventory',
 		name: 'Inventory',
 		component: Inventory.screen,
@@ -426,6 +427,11 @@ const adminRoutes = [
 		path: '/admin/master/product/detail',
 		name: 'UpdateProduct',
 		component: DetailProduct.screen,
+	},
+	{
+		path: '/admin/master/product/detail/inventoryedit',
+		name: 'UpdateInventory',
+		component: InventoryEdit.screen,
 	},
 	{
 		path: '/admin/master/product',

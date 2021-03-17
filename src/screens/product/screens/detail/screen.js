@@ -12,6 +12,10 @@ import {
 	FormGroup,
 	Input,
 	Label,
+	ButtonDropdown,
+	DropdownToggle,
+	DropdownMenu,
+	DropdownItem,
 } from 'reactstrap';
 import Select from 'react-select';
 
@@ -31,6 +35,8 @@ import { selectOptionsFactory } from 'utils';
 import * as DetailProductActions from './actions';
 import { CommonActions } from 'services/global';
 import * as SupplierInvoiceActions from '../../../supplier_invoice/actions';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import { InventoryModel} from '../../sections';
 
 
 const mapStateToProps = (state) => {
@@ -39,6 +45,7 @@ const mapStateToProps = (state) => {
 		product_warehouse_list: state.product.product_warehouse_list,
 		product_category_list: state.product.product_category_list,
 		supplier_list: state.supplier_invoice.supplier_list,
+		inventory_list: state.product.inventory_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -71,11 +78,30 @@ class DetailProduct extends React.Component {
 			initValue: {},
 			contactType: 1,
 			currentData: {},
+			selectedRows: [],
 			openWarehouseModal: false,
 			dialog: null,
 			current_product_id: null,
+			openInventoryModel: false,
 		};
 
+		this.selectRowProp = {
+			//mode: 'checkbox',
+			bgColor: 'rgba(0,0,0, 0.05)',
+			clickToSelect: false,
+			onSelect: this.onRowSelect,
+			onSelectAll: this.onSelectAll,
+		};
+		this.options = {
+			onRowClick: this.goToDetail,
+			page: 1,
+			sizePerPage: 10,
+			onSizePerPageList: this.onSizePerPageList,
+			onPageChange: this.onPageChange,
+			sortName: '',
+			sortOrder: '',
+			onSortChange: this.sortColumn,
+		};
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
@@ -85,20 +111,45 @@ class DetailProduct extends React.Component {
 	componentDidMount = () => {
 		this.initializeData();
 	};
+	
+	onRowSelect = (row, isSelected, e) => {
+		let tempList = [];
+		if (isSelected) {
+			tempList = Object.assign([], this.state.selectedRows);
+			tempList.push(row.id);
+		} else {
+			this.state.selectedRows.map((item) => {
+				if (item !== row.id) {
+					tempList.push(item);
+				}
+				return item;
+			});
+		}
+		this.setState({
+			selectedRows: tempList,
+		});
+	};
 
 	initializeData = () => {
 		if (this.props.location.state && this.props.location.state.id) {
 			this.props.supplierInvoiceActions.getSupplierList(this.state.contactType);
 			this.props.productActions.getProductCategoryList();
 			this.props.productActions.getProductVatCategoryList();
-			//this.props.productActions.getProductWareHouseList();
+			
 			this.salesCategory();
 			this.purchaseCategory();
 			this.inventoryAccount();
+			this.props.productActions.getInventoryByProductId(this.props.location.state.id)
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({ loading: false });
+				}
+			})
 			this.props.detailProductActions
 				.getProductById(this.props.location.state.id)
 				.then((res) => {
 					if (res.status === 200) {
+						
 						let productPriceType;
 						if (res.data.productPriceType === 'BOTH') {
 							productPriceType = ['SALES', 'PURCHASE'];
@@ -167,9 +218,7 @@ class DetailProduct extends React.Component {
 						this.props.history.push('/admin/master/product');
 					}
 				});
-		} else {
-			this.props.history.push('/admin/master/product');
-		}
+			}
 	};
 
 	salesCategory = () => {
@@ -363,7 +412,6 @@ class DetailProduct extends React.Component {
 		this.setState({ openWarehouseModal: false });
 		this.props.productActions.getProductWareHouseList();
 	};
-
 	deleteProduct = () => {
 		const { current_product_id } = this.state;
 		this.props.productActions
@@ -395,7 +443,6 @@ class DetailProduct extends React.Component {
 				}
 			});
 	};
-
 	removeProduct = () => {
 		const { current_product_id } = this.state;
 		this.props.detailProductActions
@@ -413,15 +460,36 @@ class DetailProduct extends React.Component {
 				);
 			});
 	};
-
-	removeDialog = () => {
+	toggleActionButton = (index) => {
+		let temp = Object.assign({}, this.state.actionButtons);
+		if (temp[parseInt(index, 10)]) {
+			temp[parseInt(index, 10)] = false;
+		} else {
+			temp[parseInt(index, 10)] = true;
+		}
 		this.setState({
-			dialog: null,
+			actionButtons: temp,
 		});
+	};
+	renderActions = (cell, row) => {
+		return (
+			<div>
+				<Button
+				className="btn btn-sm pdf-btn"
+				onClick={(e, ) => {
+					this.props.history.push('/admin/master/product/detail/inventoryedit', { id: row.inventoryId });
+		}}
+		
+		>
+			<i class="far fa-edit"></i>
+				</Button>
+			
+			</div>
+		);
 	};
 
 	render() {
-		const { vat_list, product_category_list,supplier_list } = this.props;
+		const { vat_list, product_category_list,supplier_list,inventory_list } = this.props;
 		const { loading, dialog, purchaseCategory, salesCategory, inventoryAccount } = this.state;
 		let tmpSupplier_list = []
 
@@ -429,7 +497,7 @@ class DetailProduct extends React.Component {
 			let obj = {label: item.label.contactName, value: item.value}
 			tmpSupplier_list.push(obj)
 		})
-	
+	console.log(inventory_list);
 		return (
 			<div className="detail-product-screen">
 				<div className="animated fadeIn">
@@ -779,7 +847,7 @@ class DetailProduct extends React.Component {
 																	</FormGroup>
 																</Col>
 															</Row>
-															<Row>
+															{/* <Row>
 																<Col lg={12}>
 																	<FormGroup check inline className="mb-3">
 																		<Input
@@ -799,7 +867,7 @@ class DetailProduct extends React.Component {
 																		</Label>
 																	</FormGroup>
 																</Col>
-															</Row>
+															</Row> */}
 
 															<Row className="secondary-info">
 																<Col lg={8}>
@@ -815,7 +883,7 @@ class DetailProduct extends React.Component {
 																				name="productPriceTypeOne"
 																				onChange={(event) => {
 																					if (
-																						props.values.productPriceType.includes(
+																						props.values.productPriceType &&	props.values.productPriceType.includes(
 																							'SALES',
 																						)
 																					) {
@@ -836,7 +904,7 @@ class DetailProduct extends React.Component {
 																						);
 																					}
 																				}}
-																				checked={props.values.productPriceType.includes(
+																				checked={props.values.productPriceType && props.values.productPriceType.includes(
 																					'SALES',
 																				)}
 																				className={
@@ -1011,7 +1079,7 @@ class DetailProduct extends React.Component {
 																				name="productPriceTypetwo"
 																				onChange={(event) => {
 																					if (
-																						props.values.productPriceType.includes(
+																						props.values.productPriceType && props.values.productPriceType.includes(
 																							'PURCHASE',
 																						)
 																					) {
@@ -1032,7 +1100,8 @@ class DetailProduct extends React.Component {
 																						);
 																					}
 																				}}
-																				checked={props.values.productPriceType.includes(
+																				checked={props.values.productPriceType && 
+																					props.values.productPriceType.includes(
 																					'PURCHASE',
 																				)}
 																				className={
@@ -1200,7 +1269,7 @@ class DetailProduct extends React.Component {
 																</Col>
 															</Row>
 															<hr></hr>
-														<Row style={{display: 
+														<Row style={{display: props.values.productPriceType &&
 																				props.values.productPriceType.includes(
 																					'PURCHASE',
 																				)
@@ -1499,6 +1568,65 @@ class DetailProduct extends React.Component {
 																	</Col>
 																	
 																	</Row> */}
+												 <Row style={{display: props.values.isInventoryEnabled === false ? 'none' : ''}}>
+												<div className={"ml-4 mt-2"}>
+											<BootstrapTable
+											selectRow={this.selectRowProp}
+											search={false}
+											options={this.options}
+											data={inventory_list ? inventory_list : []}
+											version="4"
+											hover
+											responsive
+											currencyList
+											keyField="inventoryId"
+											remote
+											className="customer-invoice-table"
+											ref={(node) => {
+												this.table = node;
+											}}
+										>
+											<TableHeaderColumn
+												dataField="supplierName"
+												dataSort
+												className="table-header-bg"
+											>
+												Supplier name
+											</TableHeaderColumn>
+											<TableHeaderColumn 
+												dataField="stockInHand" 
+												className="table-header-bg"
+											>
+											Stock In hand
+											</TableHeaderColumn>
+											<TableHeaderColumn 
+												dataField="reOrderLevel" 
+												className="table-header-bg"
+											>
+											Re-Order Level
+											</TableHeaderColumn>
+											<TableHeaderColumn 
+												dataField="quantitySold" 
+												className="table-header-bg"
+											>
+											Quantity Sold
+											</TableHeaderColumn>
+											<TableHeaderColumn 
+												dataField="purchaseOrder" 
+												className="table-header-bg"
+											>
+											Purchase Order
+											</TableHeaderColumn>
+											<TableHeaderColumn
+												className="text-right"
+												columnClassName="text-right"
+												dataFormat={this.renderActions}
+												className="table-header-bg"
+											></TableHeaderColumn>
+										</BootstrapTable>
+										</div>
+										</Row>
+																	
 																</Col>
 															</Row>
 															
@@ -1557,6 +1685,15 @@ class DetailProduct extends React.Component {
 					openModal={this.state.openWarehouseModal}
 					closeWarehouseModal={this.closeWarehouseModal}
 				/>
+				{/* <InventoryModel
+					openInventoryModel={this.state.openInventoryModel}
+					closeInventoryModel={(e) => {
+						this.closeInventoryModel(e);
+					}}
+						inventoryAccount={this.state.inventoryAccount}
+						//getInventoryId={this.props.ProductActions.getInventoryById}
+						 getInventoryById={(e) => this.getInventoryById(e)}
+				/> */}
 			</div>
 		);
 	}

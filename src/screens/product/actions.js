@@ -173,6 +173,27 @@ export const removeBulk = (obj) => {
 	};
 };
 
+export const getInventoryByProductId = (id) => {
+	return (dispatch) => {
+	  let data = {
+		method: 'GET',
+		url: `/rest/inventory/getInventoryByProductId?id=${id}`
+	  }
+  
+	  return authApi(data)
+			  .then((res) => {
+				  
+					  dispatch({
+						  type: PRODUCT.INVENTORY_LIST,
+						  payload: res.data,
+					  });
+				  return res;
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }
+
 export const getTransactionCategoryListForSalesProduct = (id) => {
 	console.log(id);
 	return (dispatch) => {
@@ -193,7 +214,6 @@ export const getTransactionCategoryListForSalesProduct = (id) => {
 };
 
 export const getTransactionCategoryListForPurchaseProduct = (id) => {
-	console.log(id);
 	return (dispatch) => {
 		let data = {
 			method: 'get',
@@ -264,3 +284,34 @@ export const getInvoicesCountProduct = (id) => {
 			});
 	};
 };
+
+export const getInventoryById = (id) => {
+	return (dispatch) => {
+	  let data = {
+		method: 'GET',
+		url: `/rest/inventory/getInventoryById?id=${id}`
+	  }
+  
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }
+
+  export const updateInventory = (obj) => {
+	return (dispatch) => {
+	  let data = {
+		method: 'POST',
+		url: `/rest/inventory/update`,
+		data: obj
+	  }
+  
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }

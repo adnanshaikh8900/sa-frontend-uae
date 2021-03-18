@@ -522,7 +522,7 @@ class Journal extends React.Component {
 												<Col lg={2} className="mb-1">
 													<Input
 														type="text"
-														placeholder="Description"
+														placeholder="Notes"
 														value={filterData.description}
 														onChange={(e) => {
 															this.handleChange(e.target.value, 'description');

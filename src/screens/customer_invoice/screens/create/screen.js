@@ -1677,7 +1677,6 @@ return row.subTotal === 0 ?  row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																				? 'is-invalid'
 																				: ''
 																		}
-																		isDisabled={true}
 																		onChange={(option) => {
 																		props.handleChange('currency')(option);
 																		this.setExchange(option.value);
@@ -2205,7 +2204,7 @@ return row.subTotal === 0 ?  row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																							/>
 																							)} */}
 																							{/* {this.state.customer_currency_symbol} &nbsp; */}
-																							{initValue.total_net.toFixed(
+																							{initValue.invoiceVATAmount.toFixed(
 																							2,
 																						)}
 																					</label>

@@ -1622,7 +1622,6 @@ class DetailSupplierInvoice extends React.Component {
 																		}
 																		id="currency"
 																		name="currency"
-																		isDisabled={true}
 																		value={
 																			currency_convert_list &&
 																			selectCurrencyFactory

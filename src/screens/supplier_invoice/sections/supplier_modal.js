@@ -60,6 +60,7 @@ class SupplierModal extends React.Component {
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
+		this.regExAddress = /^[a-zA-Z0-9\s,'-]+$/;
 	}
 
 	getData = (data) => {
@@ -579,8 +580,13 @@ class SupplierModal extends React.Component {
 														maxLength="100"
 														id="addressLine1"
 														name="addressLine1"
-														onChange={(value) => {
-															props.handleChange('addressLine1')(value);
+														onChange={(option) => {
+															if (
+																option.target.value === '' ||
+																this.regExAddress.test(option.target.value)
+															) {
+																props.handleChange('addressLine1')(option);
+															}
 														}}
 														value={props.values.addressLine1}
 														className={
@@ -607,8 +613,13 @@ class SupplierModal extends React.Component {
 														maxLength="100"
 														id="addressLine2"
 														name="addressLine2"
-														onChange={(value) => {
-															props.handleChange('addressLine2')(value);
+														onChange={(option) => {
+															if (
+																option.target.value === '' ||
+																this.regExAddress.test(option.target.value)
+															) {
+																props.handleChange('addressLine2')(option);
+															}
 														}}
 														placeholder="Enter AddressLine 2"
 													/>
@@ -622,8 +633,13 @@ class SupplierModal extends React.Component {
 														maxLength="100"
 														id="addressLine3"
 														name="addressLine3"
-														onChange={(value) => {
-															props.handleChange('addressLine3')(value);
+														onChange={(option) => {
+															if (
+																option.target.value === '' ||
+																this.regExAddress.test(option.target.value)
+															) {
+																props.handleChange('addressLine3')(option);
+															}
 														}}
 														placeholder="Enter AddressLine 3"
 													/>

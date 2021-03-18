@@ -711,6 +711,7 @@ class CreateBankTransaction extends React.Component {
 																		id="transactionDate"
 																		name="transactionDate"
 																		placeholderText="Transaction Date"
+																		maxDate={new Date()}
 																		showMonthDropdown
 																		showYearDropdown
 																		dateFormat="dd/MM/yyyy"

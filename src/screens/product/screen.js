@@ -385,17 +385,7 @@ class Product extends React.Component {
 											<h5>Filter : </h5>
 											<form>
 												<Row>
-													<Col lg={3} className="mb-1">
-														<Input
-															type="text"
-															placeholder="Name"
-															value={filterData.name}
-															onChange={(e) => {
-																this.handleChange(e.target.value, 'name');
-															}}
-														/>
-													</Col>
-													<Col lg={3} className="mb-2">
+												<Col lg={3} className="mb-2">
 														<Input
 															type="text"
 															placeholder="Product Code"
@@ -405,6 +395,16 @@ class Product extends React.Component {
 																	e.target.value,
 																	'productCode',
 																);
+															}}
+														/>
+													</Col>
+													<Col lg={3} className="mb-1">
+														<Input
+															type="text"
+															placeholder="Name"
+															value={filterData.name}
+															onChange={(e) => {
+																this.handleChange(e.target.value, 'name');
 															}}
 														/>
 													</Col>

@@ -84,7 +84,7 @@ class CreateContact extends React.Component {
 			createMore: false,
 		};
 		this.regEx = /^[0-9\d]+$/;
-		this.regExBoth = /[a-zA-Z0-9@]+$/;
+		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExAddress = /^[a-zA-Z0-9\s,'-]+$/;
 		this.formRef = React.createRef();

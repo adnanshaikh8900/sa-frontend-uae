@@ -1760,7 +1760,6 @@ class CreateSupplierInvoice extends React.Component {
 																						this.state.supplier_currency,
 																				)
 																		}
-																		isDisabled={true}
 																		onChange={(option) => {
 																			props.handleChange('currency')(option);
 																			this.setExchange(option.value);

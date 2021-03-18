@@ -144,7 +144,7 @@ class DetailProduct extends React.Component {
 				if (res.status === 200) {
 					this.setState({ loading: false });
 				}
-			})
+			})}
 			this.props.detailProductActions
 				.getProductById(this.props.location.state.id)
 				.then((res) => {
@@ -218,7 +218,7 @@ class DetailProduct extends React.Component {
 						this.props.history.push('/admin/master/product');
 					}
 				});
-			}
+			
 	};
 
 	salesCategory = () => {
@@ -895,7 +895,7 @@ class DetailProduct extends React.Component {
 																							nextValue,
 																						);
 																					} else {
-																						const nextValue = props.values.productPriceType.concat(
+																						const nextValue = props.values.productPriceType && props.values.productPriceType.concat(
 																							'SALES',
 																						);
 																						props.setFieldValue(
@@ -1091,7 +1091,7 @@ class DetailProduct extends React.Component {
 																							nextValue,
 																						);
 																					} else {
-																						const nextValue = props.values.productPriceType.concat(
+																						const nextValue = props.values.productPriceType && props.values.productPriceType.concat(
 																							'PURCHASE',
 																						);
 																						props.setFieldValue(
@@ -1269,13 +1269,15 @@ class DetailProduct extends React.Component {
 																</Col>
 															</Row>
 															<hr></hr>
+														
 														<Row style={{display: props.values.productPriceType &&
 																				props.values.productPriceType.includes(
 																					'PURCHASE',
 																				)
 																				?'' : 'none'
 																			}}>
-																<Col lg={8}>
+															
+																	<Col lg={8}>
 																	<FormGroup check inline className="mb-3">
 																		<Label
 																			className="form-check-label"
@@ -1310,7 +1312,7 @@ class DetailProduct extends React.Component {
 																				)}
 																		</Label>
 																	</FormGroup>
-
+															
 																	{/* <Row style={{display: props.values.isInventoryEnabled === false ? 'none' : ''}}>
 																	<Col>	
 																	<FormGroup className="mb-3">
@@ -1568,7 +1570,7 @@ class DetailProduct extends React.Component {
 																	</Col>
 																	
 																	</Row> */}
-												 <Row style={{display: props.values.isInventoryEnabled === false ? 'none' : ''}}>
+												 <Row style={{display: props.values.isInventoryEnabled !== true ? 'none' : ''}}>
 												<div className={"ml-4 mt-2"}>
 											<BootstrapTable
 											selectRow={this.selectRowProp}

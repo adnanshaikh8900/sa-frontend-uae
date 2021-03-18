@@ -146,7 +146,7 @@ class VatReturnsReport extends React.Component {
 			{ label: 'Adjustment', value: 'Adjustment', sort: false },
 		];
 		this.columnHeader3 = [
-			{ label: 'Box#cd froncd ', value: 'Box#', sort: false },
+			{ label: 'Box#', value: 'Box#', sort: false },
 			{ label: 'Description', value: 'Description', sort: false },
 			{ label: 'VAT Amount', value: 'VAT Amount', sort: false },
 		];

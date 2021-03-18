@@ -61,7 +61,7 @@ class FinancialReport extends React.Component {
 							</Row>
 						</CardHeader>
 						<CardBody>
-							<Nav tabs>
+							{/* <Nav tabs>
 								<NavItem>
 									<NavLink
 										active={this.state.activeTab[0] === '1'}
@@ -124,13 +124,74 @@ class FinancialReport extends React.Component {
 										<VatReturnsReport />
 									</div>
 								</TabPane>
-							</TabContent>
-							{/* <Card className="report-card">
-								<CardHeader>Hight Level</CardHeader>
+							</TabContent> */}
+							<Card className="report-card">
+								<CardHeader>High Level</CardHeader>
 								<CardBody>
-									
+									<Row xs="4">
+										<Col  className="report-section">
+											<h5><a href="#">Profit & Loss</a></h5>
+											<p>Your business's income less its day-to-day running costs over a given period of time. You can also compare profit & loss reports.</p>
+										</Col>
+										<Col className="report-section">
+											<h5><a href="#">Balance Sheet</a></h5>
+											<p>What your business owns and owes as at a given point in time.</p>
+										</Col>
+										{/* <Col></Col>
+										<Col></Col>
+										<Col></Col> */}
+									</Row>
 								</CardBody>
-							</Card> */}
+							</Card>
+							<Card className="report-card">
+								<CardHeader>Breakdown</CardHeader>
+								<CardBody>
+									<Row>
+										<Col className="report-section">
+											<h5><a href="#">Aged Debtors</a></h5>
+											<p>Shows you customers who owe you money and how long that money has been outstanding for.</p>
+										</Col>
+										<Col className="report-section">
+											<h5><a href="#">Aged Creditors</a></h5>
+											<p>Shows you supplier bills that you've yet to pay and how long those suppliers have been waiting for payment.</p>
+										</Col>
+										<Col className="report-section">
+											<h5><a href="#">Capital Assets</a></h5>
+											<p>A list of the capital assets owned by your business and how they depreciate over time.</p>
+										</Col>
+										<Col className="report-section">
+											<h5><a href="#">Customer Sales</a></h5>
+											<p>A breakdown of your sales by customer over different time periods.</p>
+										</Col>
+										<Col className="report-section">
+											<h5><a href="#">Spending Categories</a></h5>
+											<p>A breakdown of your expenditure by category over time.</p>
+										</Col>
+										
+									</Row>
+								</CardBody>
+							</Card>
+							<Card className="report-card">
+								<CardHeader>Detailed</CardHeader>
+								<CardBody>
+									<Row>
+										<Col className="report-section">
+											<h5><a href="#">Show Transactions</a></h5>
+											<p>A breakdown of what's in all or any of your FreeAgent categories.</p>
+										</Col>
+										<Col className="report-section">
+											<h5><a href="#">Trial Balance</a></h5>
+											<p>A list of the total amounts in all of your FreeAgent categories at a given point in time. You can also export this report</p>
+										</Col>
+										<Col className="report-section">
+											<h5><a href="#">Audit Trail</a></h5>
+											<p>A record of the changes that have been made to your FreeAgent data, including who made them and when they were made.</p>
+										</Col>
+										<Col></Col>									
+										<Col></Col>									
+									</Row>
+								</CardBody>
+							</Card>
 						</CardBody>
 					</Card>
 				</div>

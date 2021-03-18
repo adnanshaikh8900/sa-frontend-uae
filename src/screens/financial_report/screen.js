@@ -61,7 +61,7 @@ class FinancialReport extends React.Component {
 							</Row>
 						</CardHeader>
 						<CardBody>
-							{/* <Nav tabs>
+							<Nav tabs>
 								<NavItem>
 									<NavLink
 										active={this.state.activeTab[0] === '1'}
@@ -124,8 +124,8 @@ class FinancialReport extends React.Component {
 										<VatReturnsReport />
 									</div>
 								</TabPane>
-							</TabContent> */}
-							<Card className="report-card">
+							</TabContent>
+							{/* <Card className="report-card">
 								<CardHeader>High Level</CardHeader>
 								<CardBody>
 									<Row xs="4">
@@ -137,13 +137,11 @@ class FinancialReport extends React.Component {
 											<h5><a href="#">Balance Sheet</a></h5>
 											<p>What your business owns and owes as at a given point in time.</p>
 										</Col>
-										{/* <Col></Col>
-										<Col></Col>
-										<Col></Col> */}
+									
 									</Row>
 								</CardBody>
-							</Card>
-							<Card className="report-card">
+							</Card> */}
+							{/* <Card className="report-card">
 								<CardHeader>Breakdown</CardHeader>
 								<CardBody>
 									<Row>
@@ -170,8 +168,8 @@ class FinancialReport extends React.Component {
 										
 									</Row>
 								</CardBody>
-							</Card>
-							<Card className="report-card">
+							</Card> */}
+							{/* <Card className="report-card">
 								<CardHeader>Detailed</CardHeader>
 								<CardBody>
 									<Row>
@@ -191,7 +189,7 @@ class FinancialReport extends React.Component {
 										<Col></Col>									
 									</Row>
 								</CardBody>
-							</Card>
+							</Card> */}
 						</CardBody>
 					</Card>
 				</div>

@@ -53,7 +53,7 @@ class FilterComponent extends Component {
 								<Form>
 									<Row>
 										<Col lg={4}>
-											<FormGroup className="mb-3">
+											<FormGroup className="mb-1">
 												<Label htmlFor="endDate">End Date</Label>
 												<DatePicker
 													id="date"
@@ -81,9 +81,8 @@ class FilterComponent extends Component {
 												/>
 											</FormGroup>
 										</Col>
-									</Row>
-									<Row>
-										<Col lg={12} className="mt-5">
+													
+										<Col lg={12} >
 											<FormGroup className="text-right">
 												<Button
 													type="button"

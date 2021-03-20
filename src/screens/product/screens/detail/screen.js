@@ -132,19 +132,6 @@ class DetailProduct extends React.Component {
 
 	initializeData = () => {
 		if (this.props.location.state && this.props.location.state.id) {
-			this.props.supplierInvoiceActions.getSupplierList(this.state.contactType);
-			this.props.productActions.getProductCategoryList();
-			this.props.productActions.getProductVatCategoryList();
-			
-			this.salesCategory();
-			this.purchaseCategory();
-			this.inventoryAccount();
-			this.props.productActions.getInventoryByProductId(this.props.location.state.id)
-			.then((res) => {
-				if (res.status === 200) {
-					this.setState({ loading: false });
-				}
-			})}
 			this.props.detailProductActions
 				.getProductById(this.props.location.state.id)
 				.then((res) => {
@@ -218,7 +205,20 @@ class DetailProduct extends React.Component {
 						this.props.history.push('/admin/master/product');
 					}
 				});
+				this.props.supplierInvoiceActions.getSupplierList(this.state.contactType);
+			this.props.productActions.getProductCategoryList();
+			this.props.productActions.getProductVatCategoryList();
 			
+			this.salesCategory();
+			this.purchaseCategory();
+			this.inventoryAccount();
+			this.props.productActions.getInventoryByProductId(this.props.location.state.id)
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({ loading: false });
+				}
+			})
+		}
 	};
 
 	salesCategory = () => {
@@ -1637,6 +1637,8 @@ class DetailProduct extends React.Component {
 																	lg={12}
 																	className="d-flex align-items-center justify-content-between flex-wrap mt-5"
 																>
+																	{props.values.isInventoryEnabled !== true &&
+																	  (
 																	<FormGroup>
 																		<Button
 																			type="button"
@@ -1647,7 +1649,8 @@ class DetailProduct extends React.Component {
 																		>
 																			<i className="fa fa-trash"></i> Delete
 																		</Button>
-																	</FormGroup>
+																	</FormGroup>)}
+																	<FormGroup></FormGroup>
 																	<FormGroup className="text-right">
 																		<Button
 																			type="submit"

@@ -345,6 +345,19 @@ class DetailedGeneralLedgerReport extends React.Component {
 												>
 												<i className="fa fa-file-pdf-o"></i>
 												</div>
+												
+												<div
+													className="mr-2 print-btn-cont"
+                                                    onClick={() => {
+                                                        this.props.history.push('/admin/report/financial');
+                                                    }}
+													style={{
+														cursor: 'pointer',
+														}}
+												>
+												<span>X</span>
+												</div>
+                                             
 												{/* <Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
@@ -710,9 +723,9 @@ class DetailedGeneralLedgerReport extends React.Component {
 											</Table>
 										</div>
 									)}
+									<div style={{ textAlignLast:'center'}}> Powered By <b>SimpleAccounts</b></div> 
 								</PDFExport>
 							</CardBody>
-							<div style={{ textAlignLast:'center'}}> Powered By <b>SimpleAccounts</b></div> 
 						</div>
 					</Card>
 				</div>

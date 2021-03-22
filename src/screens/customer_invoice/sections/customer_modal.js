@@ -621,8 +621,21 @@ class CustomerModal extends React.Component {
 																props.handleChange('addressLine2')(option);
 															}
 														}}
+														value={props.values.addressLine2}
+														className={
+															props.errors.addressLine2 &&
+															props.touched.addressLine2
+																? 'is-invalid'
+																: ''
+														}
 														placeholder="Enter AddressLine 2"
 													/>
+													{props.errors.addressLine2 &&
+														props.touched.addressLine2 && (
+															<div className="invalid-feedback">
+																{props.errors.addressLine2}
+															</div>
+														)}
 												</FormGroup>
 											</Col>
 											<Col md="4">
@@ -641,8 +654,21 @@ class CustomerModal extends React.Component {
 																props.handleChange('addressLine3')(option);
 															}
 														}}
+														value={props.values.addressLine3}
+														className={
+															props.errors.addressLine3 &&
+															props.touched.addressLine3
+																? 'is-invalid'
+																: ''
+														}
 														placeholder="Enter AddressLine 3"
 													/>
+													{props.errors.addressLine3 &&
+														props.touched.addressLine3 && (
+															<div className="invalid-feedback">
+																{props.errors.addressLine3}
+															</div>
+														)}
 												</FormGroup>
 											</Col>
 										</Row>

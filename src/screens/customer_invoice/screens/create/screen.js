@@ -2229,9 +2229,12 @@ return row.subTotal === 0 ?  row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																							/>
 																							)} */}
 																						{/* {this.state.customer_currency_symbol} &nbsp; */}
-																							{initValue.total_net.toFixed(
+																							{/* {initValue.total_net.toFixed(
 																							2,
-																						)}
+																						)} */}
+																						{this.state.initValue.discount.toFixed(
+																									2,
+																								)}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2252,9 +2255,12 @@ return row.subTotal === 0 ?  row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																							/>
 																							)} */}
 																							{/* {this.state.customer_currency_symbol} &nbsp; */}
-																							{initValue.total_net.toFixed(
+																							{/* {initValue.total_net.toFixed(
 																							2,
-																						)}
+																						)} */}
+																							{initValue.totalAmount.toFixed(
+																									2,
+																								)}
 																					</label>
 																				</Col>
 																			</Row>

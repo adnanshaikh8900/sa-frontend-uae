@@ -112,6 +112,7 @@ import {
 	ViewExpense,
 
 	Inventory,
+	Template
 } from 'screens';
 
 const adminRoutes = [
@@ -160,6 +161,11 @@ const adminRoutes = [
 		path: '/admin/Inventory',
 		name: 'Inventory',
 		component: Inventory.screen,
+	},
+	{
+		path: '/admin/settings/template',
+		name: 'ViewUser',
+		component: Template.screen,
 	},
 	{
 		redirect: true,

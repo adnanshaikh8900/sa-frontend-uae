@@ -2,6 +2,7 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 const permission = require('assets/images/settings/permission-removebg.png');
 const PrivateRoute = ({ component: Component, name, node, ...rest }) => {
+	
 	if(node.length !== 0) {
 		let found = node.some((ele) => ele.moduleName === name);
 		return (

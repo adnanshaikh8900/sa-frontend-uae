@@ -392,6 +392,7 @@ class Contact extends React.Component {
 												<Row>
 													<Col lg={3} className="mb-1">
 														<Input
+													     	maxLength="25"
 															type="text"
 															placeholder="Name"
 															value={filterData.name}
@@ -403,6 +404,7 @@ class Contact extends React.Component {
 
 													<Col lg={3} className="mb-1">
 														<Input
+															maxLength="30"
 															type="text"
 															placeholder="Email"
 															value={filterData.email}
@@ -414,6 +416,7 @@ class Contact extends React.Component {
 
 													<Col lg={3} className="mb-1">
 														<Select
+														// maxLength="20"
 															styles={customStyles}
 															options={
 																contact_type_list

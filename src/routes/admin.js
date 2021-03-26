@@ -162,11 +162,11 @@ const adminRoutes = [
 		name: 'Inventory',
 		component: Inventory.screen,
 	},
-	{
-		path: '/admin/settings/template',
-		name: 'ViewUser',
-		component: Template.screen,
-	},
+	// {
+	// 	path: '/admin/settings/template',
+	// 	name: 'ViewUser',
+	// 	component: Template.screen,
+	// },
 	{
 		redirect: true,
 		path: '/admin/accountant',

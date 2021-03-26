@@ -404,6 +404,7 @@ class ChartAccount extends React.Component {
 												<Row>
 													<Col lg={3} className="mb-1">
 														<Input
+														maxLength="25"
 															type="text"
 															placeholder="Code"
 															value={filterData.transactionCategoryCode}
@@ -417,6 +418,7 @@ class ChartAccount extends React.Component {
 													</Col>
 													<Col lg={3} className="mb-2">
 														<Input
+														maxLength="30"
 															type="text"
 															placeholder="Name"
 															value={filterData.transactionCategoryName}

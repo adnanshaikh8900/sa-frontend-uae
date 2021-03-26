@@ -187,6 +187,8 @@ export const HELP = {};
 
 export const NOTIFICATION = {};
 
+export const TEMPLATE = {};
+
 export const ORGANIZATION = {
 	COUNTRY_LIST: 'COUNTRY_LIST',
 	INDUSTRY_TYPE_LIST: 'INDUSTRY_TYPE_LIST',

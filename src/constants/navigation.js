@@ -196,6 +196,13 @@ export default {
 			icon: 'fas fa-boxes',
 			path: 'Inventory',
 		},
+		{
+			name: 'Template',
+			url: '/admin/settings/template',
+			icon: 'fas fa-boxes',
+			path: 'Template',
+		},
+		
 	
 		// {
 		//   name: 'Settings',

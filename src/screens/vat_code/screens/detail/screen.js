@@ -84,7 +84,7 @@ class DetailVatCode extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Vat code Updated Successfully!',
+						'Vat Category Updated Successfully!',
 					);
 					this.props.history.push('/admin/master/vat-category');
 				}
@@ -107,9 +107,9 @@ class DetailVatCode extends React.Component {
 			} else {
 		const message1 =
         <text>
-        <b>Delete Vat Code?</b>
+        <b>Delete Vat Category?</b>
         </text>
-        const message = 'This Vat Code will be deleted permanently and cannot be recovered. ';
+        const message = 'This Vat Category will be deleted permanently and cannot be recovered. ';
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
@@ -134,7 +134,7 @@ class DetailVatCode extends React.Component {
 					// this.success('Chart Account Deleted Successfully');
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Vat Deleted Successfully',
+						'Vat category Deleted Successfully',
 					);
 					this.props.history.push('/admin/master/vat-category');
 				}
@@ -165,7 +165,7 @@ class DetailVatCode extends React.Component {
 								<CardHeader>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="nav-icon icon-briefcase" />
-										<span className="ml-2">Update Vat Code</span>
+										<span className="ml-2">Update Vat Category</span>
 									</div>
 								</CardHeader>
 								<CardBody>
@@ -182,7 +182,7 @@ class DetailVatCode extends React.Component {
 													}}
 													validationSchema={Yup.object().shape({
 														name: Yup.string().required(
-															'Vat Code Name is Required',
+															'Vat Category Name is Required',
 														),
 														vat: Yup.string().required(
 															'Vat Percentage is Required',
@@ -196,14 +196,14 @@ class DetailVatCode extends React.Component {
 														>
 															<FormGroup>
 																<Label htmlFor="name">
-																	<span className="text-danger">*</span>Vat Code
+																	<span className="text-danger">*</span>Vat Category
 																	Name
 																</Label>
 																<Input
 																	type="text"
 																	id="name"
 																	name="name"
-																	placeholder="Enter Vat Code Name"
+																	placeholder="Enter Vat Category Name"
 																	onChange={(option) => {
 																		if (
 																			option.target.value === '' ||

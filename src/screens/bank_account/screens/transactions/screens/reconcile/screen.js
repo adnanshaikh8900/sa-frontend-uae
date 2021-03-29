@@ -423,13 +423,13 @@ class ReconcileTransaction extends React.Component {
 										<Row>
 											<BootstrapTable
 												data={reconcile_list.data ? reconcile_list.data : []}
-												pagination={
-													reconcile_list &&
-													reconcile_list.data &&
-													reconcile_list.data.length > 0
-														? true
-														: false
-												}
+												// pagination={
+												// 	reconcile_list &&
+												// 	reconcile_list.data &&
+												// 	reconcile_list.data.length > 0
+												// 		? true
+												// 		: false
+												// }
 												fetchInfo={{
 													dataTotalSize: reconcile_list.count
 														? reconcile_list.count

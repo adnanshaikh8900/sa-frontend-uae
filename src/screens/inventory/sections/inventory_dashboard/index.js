@@ -477,7 +477,7 @@ class InventoryDashboard extends React.Component {
 		return (
 			<div className="transactions-report-screen">
 				<div className="animated fadeIn">
-					<div style={{ marginLeft: "220px", marginRight: "250px" }}>
+					<div style={{ marginLeft: "auto", marginRight: "auto" }}>
 						<Row>
 							<CardBody className="mr-3  mb-3 " style={{ boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)" }}>
 								<h6 className="text-center font-weight-bold mb-1 text-black mt-3">

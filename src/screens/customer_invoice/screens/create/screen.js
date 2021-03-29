@@ -25,6 +25,7 @@ import * as CustomerInvoiceActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import { CustomerModal, ProductModal,InvoiceNumberModel} from '../../sections';
+import { MultiSupplierProductModal } from '../../sections';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -133,6 +134,7 @@ class CreateCustomerInvoice extends React.Component {
 			},
 			currentData: {},
 			contactType: 2,
+			openMultiSupplierProductModal: false,
 			openCustomerModal: false,
 			openProductModal: false,
 			openInvoiceNumberModel: false,
@@ -149,6 +151,7 @@ class CreateCustomerInvoice extends React.Component {
 			salesCategory: [],
 			exchangeRate:'',		
 			basecurrency:[],
+			inventoryList:[],
 		};
 
 		this.formRef = React.createRef();
@@ -713,6 +716,15 @@ return row.subTotal === 0 ?  row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 										props,
 									);
 									// this.formRef.current.props.handleChange(field.name)(e.value)
+									this.props.customerInvoiceActions.getInventoryByProductId(e.value).then((response) => {
+										// this.setState({prefixData:response.data
+										
+										// });
+										console.log('aaa', response)
+										this.setState({inventoryList:response.data						
+										});
+										this.openMultiSupplierProductModal(response);
+									});
 								} else {
 									form.setFieldValue(
 										`lineItemsString.${idx}.productId`,
@@ -1048,6 +1060,12 @@ return row.subTotal === 0 ?  row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 	};
 	openProductModal = (props) => {
 		this.setState({ openProductModal: true });
+	};
+	openMultiSupplierProductModal = (props) => {
+		this.setState({ openMultiSupplierProductModal: true });
+	};
+	closeMultiSupplierProductModal = (props) => {
+		this.setState({ openMultiSupplierProductModal: false });
 	};
 
 	openInvoicePreviewModal = (props) => {
@@ -2362,6 +2380,13 @@ return row.subTotal === 0 ?  row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 					product_category_list={this.props.product_category_list}
 					salesCategory={this.state.salesCategory}
 					purchaseCategory={this.state.purchaseCategory}
+				/>
+				<MultiSupplierProductModal
+					openMultiSupplierProductModal={this.state.openMultiSupplierProductModal}
+					closeMultiSupplierProductModal={(e) => {
+						this.closeMultiSupplierProductModal(e);
+					}}
+					inventory_list={this.state.inventoryList}
 				/>
 				{/* <InvoiceNumberModel
 					openInvoiceNumberModel={this.state.openInvoiceNumberModel}

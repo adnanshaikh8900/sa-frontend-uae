@@ -27,6 +27,7 @@ import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import * as CustomerInvoiceActions from '../../../customer_invoice/actions';
 
 import { SupplierModal } from '../../sections';
+// import { MultiSupplierProductModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
 import { InvoiceNumberModel } from '../../../customer_invoice/sections';
 
@@ -148,6 +149,7 @@ class CreateSupplierInvoice extends React.Component {
 			openSupplierModal: false,
 			openProductModal: false,
 			openInvoiceNumberModel: false,
+			openMultiSupplierProductModal: false,
 			selectedContact: '',
 			createMore: false,
 			fileName: '',
@@ -159,6 +161,7 @@ class CreateSupplierInvoice extends React.Component {
 			purchaseCategory: [],
 			exchangeRate:'',	
 			basecurrency:[],
+			inventoryList:[],
 		};
 
 		this.formRef = React.createRef();
@@ -664,6 +667,15 @@ class CreateSupplierInvoice extends React.Component {
 								this.selectItem(e.value, row, 'productId', form, field, props);
 								this.prductValue(e.value, row, 'productId', form, field, props);
 								// this.formRef.current.props.handleChange(field.name)(e.value)
+								this.props.supplierInvoiceActions.getInventoryByProductId(e.value).then((response) => {
+									// this.setState({prefixData:response.data
+									
+									// });
+									console.log('aaa', response)
+									this.setState({inventoryList:response.data						
+									});
+									// this.openMultiSupplierProductModal(response);
+								});
 							} else {
 								form.setFieldValue(
 									`lineItemsString.${idx}.productId`,
@@ -1074,6 +1086,12 @@ class CreateSupplierInvoice extends React.Component {
 
 	openProductModal = (props) => {
 		this.setState({ openProductModal: true });
+	};
+	openMultiSupplierProductModal = (props) => {
+		this.setState({ openMultiSupplierProductModal: true });
+	};
+	closeMultiSupplierProductModal = (props) => {
+		this.setState({ openMultiSupplierProductModal: false });
 	};
 
 	handleFileChange = (e, props) => {
@@ -2472,6 +2490,13 @@ class CreateSupplierInvoice extends React.Component {
 					salesCategory={this.state.salesCategory}
 					purchaseCategory={this.state.purchaseCategory}
 				/>
+				{/* <MultiSupplierProductModal
+					openMultiSupplierProductModal={this.state.openMultiSupplierProductModal}
+					closeMultiSupplierProductModal={(e) => {
+						this.closeMultiSupplierProductModal(e);
+					}}
+					inventory_list={this.state.inventoryList}
+				/> */}
 					{/* <InvoiceNumberModel
 					openInvoiceNumberModel={this.state.openInvoiceNumberModel}
 					closeInvoiceNumberModel={(e) => {

@@ -109,7 +109,7 @@ class CreateVatCode extends React.Component {
 
 	// Show Success Toast
 	success = () => {
-		toast.success('Vat Code Updated successfully... ', {
+		toast.success('Vat category Updated successfully... ', {
 			position: toast.POSITION.TOP_RIGHT,
 		});
 	};
@@ -122,7 +122,7 @@ class CreateVatCode extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'New vat code Created Successfully!',
+						'New vat category Created Successfully!',
 					);
 					resetForm();
 					if (this.state.createMore) {
@@ -157,7 +157,7 @@ class CreateVatCode extends React.Component {
 								<CardHeader>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="nav-icon icon-briefcase" />
-										<span className="ml-2">New Vat Code</span>
+										<span className="ml-2">New Vat Category</span>
 									</div>
 								</CardHeader>
 								<CardBody>
@@ -184,7 +184,7 @@ class CreateVatCode extends React.Component {
 													}
 
 													if (VatList.includes(values.name)) {
-														errors.name = 'Vat Code already Exists';
+														errors.name = 'Vat category already Exists';
 													}
 
 													if (!values.vat) {
@@ -197,7 +197,7 @@ class CreateVatCode extends React.Component {
 													<Form onSubmit={props.handleSubmit} name="simpleForm">
 														<FormGroup>
 															<Label htmlFor="name">
-																<span className="text-danger">*</span>Vat Code
+																<span className="text-danger">*</span>Vat Category
 																Name
 																<i
 																	id="VatCodeTooltip"
@@ -207,7 +207,7 @@ class CreateVatCode extends React.Component {
 																	placement="right"
 																	target="VatCodeTooltip"
 																>
-																	VAT Code Name – Unique identifier VAT code
+																	VAT Category Name – Unique identifier VAT category
 																	name
 																</UncontrolledTooltip>
 															</Label>
@@ -216,7 +216,7 @@ class CreateVatCode extends React.Component {
 																maxLength="30"
 																id="name"
 																name="name"
-																placeholder="Enter Vat Code Name"
+																placeholder="Enter Vat Category Name"
 																onBlur={props.handleBlur}
 																onChange={(option) => {
 																	if (

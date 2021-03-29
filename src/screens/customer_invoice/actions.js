@@ -517,3 +517,20 @@ export const updateInvoicePrefix = (obj) => {
 	  })
 	}
   }
+  export const getInventoryByProductId = (productId) => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/inventory/getInventoryByProductId?id=' + productId,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

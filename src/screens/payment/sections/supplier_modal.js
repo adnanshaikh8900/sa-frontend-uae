@@ -284,8 +284,17 @@ class SupplierModal extends React.Component {
                             type="text"
                             id="poBoxNumber"
                             name="poBoxNumber"
-                            onChange={(value) => {
-                              props.handleChange("poBoxNumber")(value);
+                            onChange={(option) => {
+                              if (
+                                option.target.value === '' ||
+                                this.regExBoth.test(
+                                  option.target.value,
+                                )
+                              ) {
+                                props.handleChange('poBoxNumber')(
+                                  option,
+                                );
+                              }
                             }}
                             value={props.values.poBoxNumber}
                             className={

@@ -66,7 +66,8 @@ class DetailContact extends React.Component {
 			dialog: null,
 			current_contact_id: null,
 		};
-		this.regEx = /^[0-9\d]+$/;
+		// this.regEx = /^[0-9\d]+$/;
+		this.regEx =/[a-zA-Z0-9]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 	}

@@ -518,9 +518,7 @@ class SupplierModal extends React.Component {
 														maxLength="10"
 														id="poBoxNumber"
 														name="poBoxNumber"
-														onChange={(value) => {
-															props.handleChange('poBoxNumber')(value);
-														}}
+													
 														value={props.values.poBoxNumber}
 														className={
 															props.errors.poBoxNumber &&
@@ -528,6 +526,18 @@ class SupplierModal extends React.Component {
 																? 'is-invalid'
 																: ''
 														}
+														onChange={(option) => {
+															if (
+																option.target.value === '' ||
+																this.regExBoth.test(
+																	option.target.value,
+																)
+															) {
+																props.handleChange('poBoxNumber')(
+																	option,
+																);
+															}
+														}}
 														placeholder="Enter PO Box Number"
 													/>
 													{props.errors.poBoxNumber &&

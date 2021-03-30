@@ -771,7 +771,7 @@ class BankAccount extends React.Component {
 										</Row>
 										<div style={{overflow: 'scroll'}}>
 											<BootstrapTable
-											width="100%"
+										//	width="100%"
 												selectRow={this.selectRowProp}
 												search={false}
 												options={this.options}
@@ -809,7 +809,7 @@ class BankAccount extends React.Component {
 													dataField="bankAccountNo"
 													dataFormat={this.renderAccountNumber}
 													dataSort
-													width="6%"
+													width="13%"
 													className="table-header-bg"
 												>
 													Account Number

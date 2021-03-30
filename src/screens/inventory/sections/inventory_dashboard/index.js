@@ -302,7 +302,9 @@ class InventoryDashboard extends React.Component {
 			datasets: [
 				{
 					backgroundColor: '#3483eb',
-					data: []
+					data: [],
+					hoverBackgroundColor: 'rgba(122,163,216,1)',
+					hoverBorderColor: 'rgba(161,184,109,0.5)',
 				}
 			]
 
@@ -528,7 +530,7 @@ class InventoryDashboard extends React.Component {
 								width: "50%",
 
 							}}>
-								<div className="d-flex justify-content-between" style={{ color: "#2064d8", backgroundColor: "#edf2f9", height: "9.8%" }}>
+								<div className="d-flex justify-content-between" style={{ color: "#2064d8", backgroundColor: "#edf2f9", height: "13.8%" }}>
 									<h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">
 										TOP SELLING PRODUCT
 								</h6>
@@ -568,7 +570,7 @@ class InventoryDashboard extends React.Component {
 							<Card className="ml-2" style={{
 								width: "50%",
 							}}>
-								<div className="d-flex justify-content-between" style={{ color: "#2064d8", backgroundColor: "#edf2f9", height: "9.8%" }}>
+								<div className="d-flex justify-content-between" style={{ color: "#2064d8", backgroundColor: "#edf2f9", height: "13.8%" }}>
 									<h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">
 										LOW SELLING PRODUCT
 									</h6>
@@ -619,7 +621,7 @@ class InventoryDashboard extends React.Component {
 								width: "50%",
 
 							}}>
-									<div className="d-flex justify-content-between" style={{ color: "#2064d8", backgroundColor: "#edf2f9", height: "9.8%" }}>
+									<div className="d-flex justify-content-between" style={{ color: "#2064d8", backgroundColor: "#edf2f9", height: "13.8%" }}>
 									<h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">
 									TOTAL REVENUE GENERATED
 									</h6>
@@ -656,10 +658,10 @@ class InventoryDashboard extends React.Component {
 										</div>
 									</CardBody>
 							</Card>
-							<Card className="mr-2" style={{
+							<Card className="ml-2" style={{
 								width: "50%",
 							}}>
-									<div className="d-flex justify-content-between" style={{ color: "#2064d8", backgroundColor: "#edf2f9", height: "9.8%" }}>
+									<div className="d-flex justify-content-between" style={{ color: "#2064d8", backgroundColor: "#edf2f9", height: "13.8%" }}>
 									<h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">
 										TOTAL PROFIT GENERATED
 								</h6>

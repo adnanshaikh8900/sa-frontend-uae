@@ -77,7 +77,8 @@ class ProductModal extends React.Component {
 			exist: false,
 		};
 		this.regEx = /^[0-9\d]+$/;
-		this.regExBoth = /[a-zA-Z0-9 ]+$/;
+		this.regExBoth = /[a-zA-Z0-9-./\\|]+$/;
+		// this.regExBoth = /[a-zA-Z0-9 ]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 	}
 

@@ -103,7 +103,8 @@ class DetailProduct extends React.Component {
 			onSortChange: this.sortColumn,
 		};
 		this.regEx = /^[0-9\d]+$/;
-		this.regExBoth = /[a-zA-Z0-9]+$/;
+		this.regExBoth = /[a-zA-Z0-9-./\\|]+$/;
+		// this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 	}

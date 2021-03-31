@@ -196,7 +196,7 @@ class InvoiceTemplate extends Component {
 						<Table  >
 							<thead className="header-row">
 								<tr>
-									<th className="center" style={{ padding: '0.5rem' }}>
+									<th className="center" style={{ padding: '0.5rem',    width: "40px" }}>
 										#
 									</th>
 									{/* <th style={{ padding: '0.5rem' }}>Item</th> */}
@@ -208,7 +208,7 @@ class InvoiceTemplate extends Component {
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 										Unit Cost
 									</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right' }}>Vat</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right' ,   width: "60px" }}>Vat</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 										Total
 									</th>
@@ -252,12 +252,13 @@ class InvoiceTemplate extends Component {
 									})}
 							</tbody>
 						</Table>
-						<div className="pl-5"
+						<div 
 							style={{
 								width: '100%',
 								display: 'flex',
 								justifyContent: 'space-between',
-								marginBottom: '1rem',border:'solid 1px',borderColor:'#c8ced3'
+								marginBottom: '1rem',border:'solid 1px',borderColor:'#c8ced3',
+								fontSize: "12px"
 							}}
 						>
 								<div
@@ -268,16 +269,16 @@ class InvoiceTemplate extends Component {
 									justifyContent: 'center',
 								}}
 							>
-								<div className="pb-2">Amount In Words:<br/>
+								<div className="pl-5 pb-2">Amount In Words:<br/>
 									<b> {upperCase(converter.toWords(toInteger(invoiceData.totalAmount)))}
 									{/* <b> {parseInt(invoiceData.dueAmount)} */}
 									</b></div>
-								<div className="pb-2">VAT Amount In Words:
+								<div className="pl-5 pb-2">VAT Amount In Words:
 										<br/>
 									<b> {upperCase(converter.toWords(toInteger(invoiceData.totalVatAmount)))}</b>
 									{/* <b> {invoiceData.totalVatAmount}</b> */}
 								</div>
-							<div style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>
+							<div className="pl-5" style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>
 
 								<h6 className="mb-0 pt-2">
 									<b>Notes:</b>
@@ -291,13 +292,14 @@ class InvoiceTemplate extends Component {
 									width: '100%',
 									display: 'flex',
 									justifyContent: 'space-between',
+								
 								}}
 							>
 								<div style={{ width: '100%' }}>
 								<Table className="table-clear cal-table">
 									<tbody>
 										<tr >
-											<td style={{ width: '60%' }}>
+											<td style={{ width: '40%' }}>
 												<strong>Subtotal</strong>
 											</td>
 											<td
@@ -331,7 +333,7 @@ class InvoiceTemplate extends Component {
 											</td>
 										</tr>
 										<tr >
-											<td style={{ width: '60%' }}>
+											<td style={{ width: '40%' }}>
 												<strong>
 													Discount
 													{invoiceData.discountPercentage
@@ -370,7 +372,7 @@ class InvoiceTemplate extends Component {
 											</td>
 										</tr>
 										<tr >
-											<td style={{ width: '60%' }}>
+											<td style={{ width: '40%' }}>
 												<strong>VAT</strong>
 											</td>
 											<td
@@ -404,7 +406,7 @@ class InvoiceTemplate extends Component {
 											</td>
 										</tr>
 										<tr >
-											<td style={{ width: '60%' }}>
+											<td style={{ width: '40%' }}>
 												<strong>Total</strong>
 											</td>
 											<td
@@ -438,7 +440,7 @@ class InvoiceTemplate extends Component {
 											</td>
 										</tr>
 										<tr style={{ background: '#f2f2f2' }}>
-											<td style={{ width: '60%' }}>
+											<td style={{ width: '40%' }}>
 												<strong>Balance Due</strong>
 											</td>
 											<td>

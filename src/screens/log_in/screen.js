@@ -213,10 +213,10 @@ class LogIn extends React.Component {
 																
 																		<FormGroup className="mb-3">
 																	
-																			<Label htmlFor="email">
+																			<Label htmlFor="password">
 																			<b>	Password</b>
 																			</Label>
-																		<div>	
+																		
 																			<Input
 																				type={
 																					this.state.isPasswordShown
@@ -247,7 +247,7 @@ class LogIn extends React.Component {
 																			style={{ width: '20px' }}
 																		/> */}
 																		</i>
-																		</div>	
+																	
 																			{props.errors.password &&
 																				props.touched.password && (
 																					<div className="invalid-feedback">

@@ -366,7 +366,7 @@ class InvoiceTemplate extends Component {
 								}}
 							>
 								<div className="pl-5 pb-2">Amount In Words:<br/>
-									<b> {upperCase(converter.toWords(toInteger(invoiceData.dueAmount)))}
+									<b> {upperCase(converter.toWords(toInteger(invoiceData.totalAmount)))}
 									{/* <b> {parseInt(invoiceData.dueAmount)} */}
 									</b></div>
 								<div className="pl-5 pb-2">VAT Amount In Words:

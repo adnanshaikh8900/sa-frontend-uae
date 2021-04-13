@@ -715,15 +715,11 @@ return row.subTotal === 0 ?  row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 										field,
 										props,
 									);
-									// this.formRef.current.props.handleChange(field.name)(e.value)
 									this.props.customerInvoiceActions.getInventoryByProductId(e.value).then((response) => {
-										// this.setState({prefixData:response.data
-										
-										// });
-										console.log('aaa', response)
 										this.setState({inventoryList:response.data						
 										});
-										this.openMultiSupplierProductModal(response);
+										if(response.data.length !== 0 && response.data.length !== 1){
+										this.openMultiSupplierProductModal(response);}
 									});
 								} else {
 									form.setFieldValue(
@@ -1417,7 +1413,7 @@ return row.subTotal === 0 ?  row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																		value={props.values.contactId}
 																		onChange={(option) => {
 																			if (option && option.value) {
-																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
+																				//sthis.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
 																				this.setExchange( this.getCurrency(option.value) );
 																				props.handleChange('contactId')(option);
 																			} else {
@@ -2381,13 +2377,14 @@ return row.subTotal === 0 ?  row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 					salesCategory={this.state.salesCategory}
 					purchaseCategory={this.state.purchaseCategory}
 				/>
+				{
 				<MultiSupplierProductModal
 					openMultiSupplierProductModal={this.state.openMultiSupplierProductModal}
 					closeMultiSupplierProductModal={(e) => {
 						this.closeMultiSupplierProductModal(e);
 					}}
 					inventory_list={this.state.inventoryList}
-				/>
+				/>}
 				{/* <InvoiceNumberModel
 					openInvoiceNumberModel={this.state.openInvoiceNumberModel}
 					closeInvoiceNumberModel={(e) => {

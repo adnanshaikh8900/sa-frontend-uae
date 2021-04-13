@@ -44,6 +44,7 @@ const mapStateToProps = (state) => {
 		user_list: state.expense.user_list,
 		profile: state.auth.profile,
 		currency_convert_list: state.currencyConvert.currency_convert_list,
+		pay_to_list: state.expense.pay_to_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -117,6 +118,7 @@ class CreateExpense extends React.Component {
 	};
 
 	initializeData = () => {
+		this.props.expenseCreateActions.getPaytoList();
 		this.props.expenseActions.getVatList();
 		this.props.expenseActions.getExpenseCategoriesList();
 		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
@@ -294,6 +296,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 			pay_mode_list,
 			bank_list,
 			currency_convert_list,
+			pay_to_list,
 		} = this.props;
 		const customStyles = {
 			control: (base, state) => ({
@@ -449,28 +452,27 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="payee">
-																		<span className="text-danger">*</span>Payee
+																		<span className="text-danger">*</span>Paid By
 																	</Label>
 																	<Select
 																		styles={customStyles}
 																		options={
-																			user_list
+																			pay_to_list
 																				? selectOptionsFactory.renderOptions(
 																						'label',
 																						'value',
-																						user_list,
+																						pay_to_list,
 																						'Payee',
 																				  )
 																				: []
 																		}
 																		value={
-																			user_list &&
-																			profile &&
+																			pay_to_list &&
 																			selectOptionsFactory
 																				.renderOptions(
 																					'label',
 																					'value',
-																					user_list,
+																					pay_to_list,
 																					'Payee',
 																				)
 																				.find(

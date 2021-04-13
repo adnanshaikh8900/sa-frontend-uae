@@ -133,6 +133,13 @@ class AdminLayout extends React.Component {
 			 			icon: item.icon,
 			 		});
 				 }
+				 if (moduleName === 'Report' && item.name === 'Report') {
+					arr.items.push({
+			 			name: item.name,
+			 			url: item.url,
+			 			icon: item.icon,
+			 		});
+				 }
 				 if (moduleName === 'Inventory' && item.name === 'Inventory') {
 					arr.items.push({
 			 			name: item.name,
@@ -140,13 +147,13 @@ class AdminLayout extends React.Component {
 			 			icon: item.icon,
 			 		});
 				 }
-				 if (moduleName === 'Template' && item.name === 'Template') {
-					arr.items.push({
-			 			name: item.name,
-			 			url: item.url,
-			 			icon: item.icon,
-			 		});
-				 }
+				//  if (moduleName === 'Template' && item.name === 'Template') {
+				// 	arr.items.push({
+			 	// 		name: item.name,
+			 	// 		url: item.url,
+			 	// 		icon: item.icon,
+			 	// 	});
+				//  }
 				 
 			});
 		}

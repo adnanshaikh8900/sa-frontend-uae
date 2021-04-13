@@ -46,7 +46,7 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
-class CashFlowStatement extends React.Component {
+class TrailBalances extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -232,6 +232,17 @@ class CashFlowStatement extends React.Component {
 												>
 												<i className="fa fa-file-pdf-o"></i>
 											</div>
+                                            <div
+													className="mr-2 print-btn-cont"
+                                                    onClick={() => {
+                                                        this.props.history.push('/admin/report/financial');
+                                                    }}
+													style={{
+														cursor: 'pointer',
+														}}
+												>
+												<span>X</span>
+												</div>
 												{/* <Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
@@ -830,4 +841,4 @@ class CashFlowStatement extends React.Component {
 	}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CashFlowStatement);
+export default connect(mapStateToProps, mapDispatchToProps)(TrailBalances);

@@ -769,7 +769,6 @@ class BankAccount extends React.Component {
 										</Button>
 										</div>
 										</Row>
-										<div style={{overflow: 'scroll'}}>
 											<BootstrapTable
 										//	width="100%"
 												selectRow={this.selectRowProp}
@@ -880,7 +879,7 @@ class BankAccount extends React.Component {
 												>
 												</TableHeaderColumn>
 											</BootstrapTable>
-										</div>
+										
 									</Col>
 								</Row>
 							)}

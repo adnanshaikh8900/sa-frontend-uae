@@ -32,6 +32,7 @@ import * as ExpenseDetailsAction from './actions';
 import * as ExpenseActions from '../../actions';
 import { CommonActions } from 'services/global';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
+import * as ExpenseCreateActions from '../create/actions';
 
 import moment from 'moment';
 import './style.scss';
@@ -47,11 +48,13 @@ const mapStateToProps = (state) => {
 		pay_mode_list: state.expense.pay_mode_list,
 		user_list: state.expense.user_list,
 		currency_convert_list: state.currencyConvert.currency_convert_list,
+		pay_to_list: state.expense.pay_to_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
 		expenseDetailActions: bindActionCreators(ExpenseDetailsAction, dispatch),
+		expenseCreateActions: bindActionCreators(ExpenseCreateActions, dispatch),
 		expenseActions: bindActionCreators(ExpenseActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 		currencyConvertActions: bindActionCreators(CurrencyConvertActions, dispatch),
@@ -115,6 +118,7 @@ class DetailExpense extends React.Component {
 						this.props.expenseActions.getBankList();
 						this.props.expenseActions.getPaymentMode();
 						this.props.expenseActions.getUserForDropdown();
+						this.props.expenseCreateActions.getPaytoList();
 						this.setState(
 							{
 								loading: false,
@@ -334,6 +338,7 @@ class DetailExpense extends React.Component {
 			vat_list,
 			expense_categories_list,
 			pay_mode_list,
+			pay_to_list,
 			currency_convert_list,
 		} = this.props;
 		const { initValue, loading, dialog } = this.state;
@@ -509,22 +514,22 @@ class DetailExpense extends React.Component {
 																		<Select
 																			styles={customStyles}
 																			options={
-																				user_list
+																				pay_to_list
 																					? selectOptionsFactory.renderOptions(
 																							'label',
 																							'value',
-																							user_list,
+																							pay_to_list,
 																							'Payee',
 																					  )
 																					: []
 																			}
 																			value={
-																				user_list &&
+																				pay_to_list &&
 																				selectOptionsFactory
 																					.renderOptions(
 																						'label',
 																						'value',
-																						user_list,
+																						pay_to_list,
 																						'Payee',
 																					)
 																					.find(

@@ -34,7 +34,12 @@ import {
 	OpeningBalance,
 	VatTransactions,
 	Inventory,
+	Quotation,
+	RequestForQuotation,
+	PurchaseOrder,
+	GoodsReceivedNote,
 } from 'screens';
+
 
 const reducer = combineReducers({
 	common: CommonReducer,
@@ -51,6 +56,10 @@ const reducer = combineReducers({
 	vat_transactions: VatTransactions.reducer,
 	receipt: Receipt.reducer,
 	supplier_invoice: SupplierInvoice.reducer,
+	request_for_quotation: RequestForQuotation.reducer,
+	purchase_order: PurchaseOrder.reducer,
+	goods_received_note: GoodsReceivedNote .reducer,
+	quotation: Quotation.reducer,
 	product: Product.reducer,
 	project: Project.reducer,
 	payment: Payment.reducer,

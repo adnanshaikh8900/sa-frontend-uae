@@ -227,7 +227,7 @@ class SupplierInvoice extends React.Component {
 								<div>
 						<label className="font-weight-bold mr-2 ">Invoice Amount : </label>
 						<label>
-							{row.invoiceAmount  === 0 ? row.invoiceAmount.toFixed(2) : row.invoiceAmount.toFixed(2)}
+					{row.invoiceAmount  === 0 ? row.invoiceAmount.toFixed(2) : row.invoiceAmount.toFixed(2)}
 						</label>
 					</div>
 					<div>
@@ -1075,7 +1075,6 @@ class SupplierInvoice extends React.Component {
 									</Button>
 									</div>
 									</Row> 
-									<div style={{overflowX:'auto'}}>
 										<BootstrapTable
 											selectRow={this.selectRowProp}
 											search={false}
@@ -1188,7 +1187,6 @@ class SupplierInvoice extends React.Component {
 												className="table-header-bg"
 											></TableHeaderColumn>
 										</BootstrapTable>
-									</div>
 								</Col>
 							</Row>
 						</CardBody>

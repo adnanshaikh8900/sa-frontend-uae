@@ -27,9 +27,7 @@ import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import * as CustomerInvoiceActions from '../../../customer_invoice/actions';
 
 import { SupplierModal } from '../../sections';
-// import { MultiSupplierProductModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
-import { InvoiceNumberModel } from '../../../customer_invoice/sections';
 
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -149,7 +147,6 @@ class CreateSupplierInvoice extends React.Component {
 			openSupplierModal: false,
 			openProductModal: false,
 			openInvoiceNumberModel: false,
-			openMultiSupplierProductModal: false,
 			selectedContact: '',
 			createMore: false,
 			fileName: '',
@@ -161,7 +158,6 @@ class CreateSupplierInvoice extends React.Component {
 			purchaseCategory: [],
 			exchangeRate:'',	
 			basecurrency:[],
-			inventoryList:[],
 		};
 
 		this.formRef = React.createRef();
@@ -666,16 +662,6 @@ class CreateSupplierInvoice extends React.Component {
 							if (e && e.label !== 'Select Product') {
 								this.selectItem(e.value, row, 'productId', form, field, props);
 								this.prductValue(e.value, row, 'productId', form, field, props);
-								// this.formRef.current.props.handleChange(field.name)(e.value)
-								this.props.supplierInvoiceActions.getInventoryByProductId(e.value).then((response) => {
-									// this.setState({prefixData:response.data
-									
-									// });
-									console.log('aaa', response)
-									this.setState({inventoryList:response.data						
-									});
-									// this.openMultiSupplierProductModal(response);
-								});
 							} else {
 								form.setFieldValue(
 									`lineItemsString.${idx}.productId`,
@@ -1087,13 +1073,6 @@ class CreateSupplierInvoice extends React.Component {
 	openProductModal = (props) => {
 		this.setState({ openProductModal: true });
 	};
-	openMultiSupplierProductModal = (props) => {
-		this.setState({ openMultiSupplierProductModal: true });
-	};
-	closeMultiSupplierProductModal = (props) => {
-		this.setState({ openMultiSupplierProductModal: false });
-	};
-
 	handleFileChange = (e, props) => {
 		e.preventDefault();
 		let reader = new FileReader();

@@ -486,7 +486,7 @@ class InventoryEdit extends React.Component {
 																	<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="inventoryQty">
-																			Purchase Quantity
+																		Opening Stock
 																			
 																		</Label>
 																		<Input

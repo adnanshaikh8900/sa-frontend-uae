@@ -193,6 +193,29 @@ export const getInventoryByProductId = (id) => {
 	  })
 	}
   }
+  export const getInventoryHistory = (obj) => {
+	  let pid=obj?.p_id;
+	  let sid=obj?.s_id;
+	return (dispatch) => {
+	  let data = {
+		method: 'GET',
+		url: `/rest/inventory/getInventoryHistoryByProductIdAndSupplierId?productId=${pid}&supplierId=${sid}`
+		
+	  }
+  
+	  return authApi(data)
+			  .then((res) => {
+				  
+					  dispatch({
+						  type: PRODUCT.INVENTORY_HISTORY_LIST,
+						  payload: res.data,
+					  });
+				  return res;
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }
 
 export const getTransactionCategoryListForSalesProduct = (id) => {
 	console.log(id);

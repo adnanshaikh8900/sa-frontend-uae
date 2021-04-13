@@ -229,6 +229,7 @@ class DetailJournal extends React.Component {
 								field,
 							);
 						}}
+						isDisabled={props.values.postingReferenceType === 'MANUAL' ? false : true}
 						value={
 							transactionCategoryList &&
 							transactionCategoryList.length > 0 &&

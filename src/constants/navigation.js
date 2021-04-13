@@ -51,6 +51,12 @@ export default {
 			icon: 'far fa-address-book',
 			children: [
 				{
+					name: 'Quotation',
+					url: '/admin/income/quotation',
+					icon: 'fa fa-file-o',
+					path: 'ViewQuotation',
+				},
+				{
 					name: 'Customer Invoices',
 					url: '/admin/income/customer-invoice',
 					icon: 'far fa-address-card',
@@ -69,6 +75,24 @@ export default {
 			url: '/admin/expense',
 			icon: 'fas fa-receipt',
 			children: [
+				{
+					name: 'Request For Quotation',
+					url: '/admin/expense/request-for-quotation',
+					icon: 'fas fa-file-invoice',
+					path: 'ViewRequestForQuotation',
+				},
+				{
+					name: 'Purchase Order',
+					url: '/admin/expense/purchase-order',
+					icon: 'fas fa-file-invoice',
+					path: 'ViewPurchaseQuotation',
+				},
+				{
+					name: 'Goods Received Note',
+					url: '/admin/expense/goods-received-note',
+					icon: 'fas fa-file-invoice',
+					path: 'ViewGoodsReceiveNotes',
+				},
 				{
 					name: 'Supplier Invoices',
 					url: '/admin/expense/supplier-invoice',
@@ -89,48 +113,54 @@ export default {
 				},
 			],
 		},
-		{
-			name: 'Taxes',
-			url: '/admin/taxes',
-			icon: 'fas fa-chart-line',
-			children: [
-				{
-					name: 'VAT Transactions',
-					url: '/admin/taxes/vat-transactions',
-					icon: 'fas fa-exchange-alt',
-					path: 'vatTransactions',
-				},
-				// {
-				// 	name: 'VAT Filings',
-				// 	url: '/admin/taxes/reports-filing',
-				// 	icon: 'fas fa-file-text',
-				// },
-			],
-		},
+		// {
+		// 	name: 'Taxes',
+		// 	url: '/admin/taxes',
+		// 	icon: 'fas fa-chart-line',
+		// 	children: [
+		// 		{
+		// 			name: 'VAT Transactions',
+		// 			url: '/admin/taxes/vat-transactions',
+		// 			icon: 'fas fa-exchange-alt',
+		// 			path: 'vatTransactions',
+		// 		},
+		// 		// {
+		// 		// 	name: 'VAT Filings',
+		// 		// 	url: '/admin/taxes/reports-filing',
+		// 		// 	icon: 'fas fa-file-text',
+		// 		// },
+		// 	],
+		// },
 		{
 			name: 'Report',
 			url: '/admin/report',
-			icon: 'fas fa-chart-bar',
-			children: [
-				// {
-				// 	name: 'Transactions',
-				// 	url: '/admin/report/transactions',
-				// 	icon: 'fas fa-exchange-alt',
-				// },
-				{
-					name: 'Financial',
-					url: '/admin/report/financial',
-					icon: 'fas fa-usd',
-					path: 'Financial',
-				},
-				{
-					name: 'Detailed General Ledger',
-					url: '/admin/report/detailed-general-ledger',
-					icon: 'fas fa-file-text',
-					path: 'DetailedGeneralLedger',
-				},
-			],
+			icon: 'fas fa-boxes',
+			path: 'Financial',
 		},
+		// {
+		// 	name: 'Report',
+		// 	url: '/admin/report',
+		// 	icon: 'fas fa-chart-bar',
+		// 	children: [
+		// 		// {
+		// 		// 	name: 'Transactions',
+		// 		// 	url: '/admin/report/transactions',
+		// 		// 	icon: 'fas fa-exchange-alt',
+		// 		// },
+		// 		{
+		// 			name: 'Financial',
+		// 			url: '/admin/report/financial',
+		// 			icon: 'fas fa-usd',
+		// 			path: 'Financial',
+		// 		},
+		// 		// {
+		// 		// 	name: 'Detailed General Ledger',
+		// 		// 	url: '/admin/report/detailed-general-ledger',
+		// 		// 	icon: 'fas fa-file-text',
+		// 		// 	path: 'DetailedGeneralLedger',
+		// 		// },
+		// 	],
+		// },
 		{
 			name: 'Master',
 			url: '/admin/master',
@@ -202,8 +232,14 @@ export default {
 			icon: 'fas fa-boxes',
 			path: 'Template',
 		},
-		
-	
+
+
+		{
+			name: 'Payroll',
+			url: '/admin/Payroll',
+			icon: 'fas fa-boxes',
+			path: 'Payroll',
+		},
 		// {
 		//   name: 'Settings',
 		//   url: '/admin/settings',

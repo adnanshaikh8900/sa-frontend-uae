@@ -14,6 +14,7 @@ import {
 	Input,
 } from 'reactstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import * as ProductActions from '../../../product/actions';
 
 import { DateRangePicker2 } from 'components';
 import moment from 'moment';
@@ -43,6 +44,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
+		productActions: bindActionCreators(ProductActions, dispatch),
 		inventoryActions: bindActionCreators(InventoryActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
@@ -179,6 +181,54 @@ class InventorySummary extends React.Component {
 	exportPDFWithComponent = () => {
 		this.pdfExportComponent.save();
 	};
+	param = (row) => {
+		const data = {
+			p_id: row[0].p_id ,
+			s_id: row[1].s_id,
+		};
+		this.props.productActions.getInventoryHistory(data).then((response) => {
+			if (response.status ===200) {
+				this.setState({
+					exist: true,
+				});
+			} else {
+				this.setState({
+					exist: false,
+				});
+			}
+		});
+		this.props.history.push('/admin/master/product/detail/inventoryhistory');
+	};
+	renderActions = (cell, row) => {
+		return (
+			<Row>
+			<div>
+				{/* <Button
+				className="btn btn-sm pdf-btn"
+				onClick={(e, ) => {
+					this.props.history.push('/admin/master/product/detail/inventoryedit', { id: row.inventoryId });
+				}}
+				>
+				<i class="far fa-edit fa-lg"></i>
+				</Button> */}
+			</div>
+			<div>
+			<Button
+				className="btn btn-sm pdf-btn ml-3"
+				
+				onClick={(e) => {		
+						this.param([{p_id:row.productId},{s_id:row.supplierId}]);
+				
+				}}
+				>
+				<i class="fa fa-history fa-lg"></i>
+				</Button>
+			</div>
+			</Row>
+			
+			
+		);
+	};
 
 	render() {
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
@@ -304,6 +354,12 @@ class InventorySummary extends React.Component {
 												<TableHeaderColumn  dataField="supplierName" dataSort className="table-header-bg">
 												Supplier Name
 												</TableHeaderColumn >
+												<TableHeaderColumn
+												className="text-right"
+												columnClassName="text-right"
+												dataFormat={this.renderActions}
+												className="table-header-bg"
+											     ></TableHeaderColumn>
 											</BootstrapTable>
 										</div>
 									)}

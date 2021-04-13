@@ -26,6 +26,7 @@ class Help extends React.Component {
 	render() {
 		const faqIcon = require('assets/images/settings/faq.png');
 		const userIcon = require('assets/images/settings/user.png');
+		const versionimage = require('assets/images/settings/version.png');
 		const {  version } = this.props;
 		return (
 			<div className="help-screen">
@@ -86,7 +87,7 @@ class Help extends React.Component {
 									<Card>
 										<CardBody>
 											<div className="text-center">
-												<img src={faqIcon} width="40%" alt=""></img>
+												<img src={versionimage} width="40%" alt=""></img>
 											</div>
 											<h3>Simple Accounts Version Numbers</h3>
 											<p>

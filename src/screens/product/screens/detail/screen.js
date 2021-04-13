@@ -221,7 +221,21 @@ class DetailProduct extends React.Component {
 			})
 		}
 	};
-
+	
+	getProductId = (p_id, s_id) => {
+		const data = {
+			pid: p_id,
+			sid: s_id,
+		};
+		this.props.supplierInvoiceActions.getSupplierId(data);
+	};
+	getSupplierId = (p_id, s_id) => {
+		const data = {
+			pid: p_id,
+			sid: s_id,
+		};
+		this.props.productActions.getProductId(data);
+	};
 	salesCategory = () => {
 		try {
 			this.props.productActions
@@ -444,6 +458,8 @@ class DetailProduct extends React.Component {
 				}
 			});
 	};
+
+
 	removeProduct = () => {
 		const { current_product_id } = this.state;
 		this.props.detailProductActions
@@ -472,23 +488,94 @@ class DetailProduct extends React.Component {
 			actionButtons: temp,
 		});
 	};
+	param = (row) => {
+		const data = {
+			p_id: row[0].p_id ,
+			s_id: row[1].s_id,
+		};
+		this.props.productActions.getInventoryHistory(data).then((response) => {
+			if (response.status ===200) {
+				this.setState({
+					exist: true,
+				});
+			} else {
+				this.setState({
+					exist: false,
+				});
+			}
+		});
+		this.props.history.push('/admin/master/product/detail/inventoryhistory');
+	};
 	renderActions = (cell, row) => {
 		return (
+			<Row>
 			<div>
 				<Button
 				className="btn btn-sm pdf-btn"
 				onClick={(e, ) => {
 					this.props.history.push('/admin/master/product/detail/inventoryedit', { id: row.inventoryId });
-		}}
-		
-		>
-			<i class="far fa-edit"></i>
+				}}
+				>
+				<i class="far fa-edit fa-lg"></i>
 				</Button>
-			
 			</div>
+			<div>
+			<Button
+				className="btn btn-sm pdf-btn ml-3"
+				
+				onClick={(e) => {		
+						this.param([{p_id:row.productId},{s_id:row.supplierId}]);
+				
+				}}
+				>
+				<i class="fa fa-history fa-lg"></i>
+				</Button>
+			</div>
+			</Row>
+			
+			
 		);
 	};
-
+	// renderActions = (cell, row) => {
+	// 	return (
+	// 		<div>
+	// 			<ButtonDropdown
+	// 				isOpen={this.state.actionButtons[row.id]}
+	// 				toggle={() => this.toggleActionButton(row.id)}
+	// 			>
+	// 				<DropdownToggle size="sm" color="primary" className="btn-brand icon">
+	// 					{this.state.actionButtons[row.id] === true ? (
+	// 						<i className="fas fa-chevron-up" />
+	// 					) : (
+	// 						<i className="fas fa-chevron-down" />
+	// 					)}
+	// 				</DropdownToggle>
+	// 				<DropdownMenu right>
+					
+	// 						<DropdownItem>
+	// 							<div
+	// 							onClick={(e, ) => {
+	// 								this.props.history.push('/admin/master/product/detail/inventoryedit', { id: row.inventoryId });
+	// 					}}
+	// 							>
+	// 								<i className="fas fa-edit" /> Edit
+	// 							</div>
+	// 						</DropdownItem>
+					
+						
+	// 						<DropdownItem
+	// 							onClick={() => {
+	// 								this.postInvoice(row);
+	// 							}}
+	// 						>
+	// 							<i className="fas fa-send" /> Post
+	// 						</DropdownItem>
+					
+	// 				</DropdownMenu>
+	// 			</ButtonDropdown>
+	// 		</div>
+	// 	);
+	// };
 	render() {
 		const { vat_list, product_category_list,supplier_list,inventory_list } = this.props;
 		const { loading, dialog, purchaseCategory, salesCategory, inventoryAccount } = this.state;

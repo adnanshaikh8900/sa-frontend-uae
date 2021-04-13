@@ -34,10 +34,7 @@ import 'bootstrap-daterangepicker/daterangepicker.css';
 import * as TransactionsActions from './actions';
 import * as detailBankAccountActions from './../detail/actions';
 import { CommonActions } from 'services/global';
-import { selectOptionsFactory } from 'utils';
-import { CSVLink } from 'react-csv';
 import { ExplainTrasactionDetail } from './sections';
-
 import './style.scss';
 
 const mapStateToProps = (state) => {

@@ -39,6 +39,30 @@ import {
 	ViewInvoice,
 	RecordSupplierPayment,
 
+	//Request For Quotation
+	CreateRequestForQuotation,
+	ViewRequestForQuotation,
+	DetailRequestForQuotation,
+	RequestForQuotation,
+
+	//Purchase Order
+	PurchaseOrder,
+	CreatePurchaseOrder,
+	DetailPurchaseOrder,
+	ViewPurchaseOrder,
+
+	//Goods Received Notes
+	GoodsReceivedNote,
+	CreateGoodsReceivedNote,
+	DetailGoodsReceivedNote,
+	ViewGoodsReceivedNote,
+
+	//Quotation
+	Quotation,
+	CreateQuotation,
+	DetailQuotation,
+	ViewQuotation,
+
 	// Expense Screens
 	Expense,
 	CreateExpense,
@@ -54,6 +78,11 @@ import {
 	// Report Screens
 	TransactionsReport,
 	FinancialReport,
+	ProfitAndLossReport,
+	BalanceSheet,
+	HorizontalBalanceSheet,
+	TrailBalances,
+	VatReturnsReport,
 	DetailedGeneralLedgerReport,
 
 	// Master Screens
@@ -70,6 +99,7 @@ import {
 	CreateProduct,
 	DetailProduct,
 	InventoryEdit,
+	InventoryHistory,
 	Project,
 	CreateProject,
 	DetailProject,
@@ -162,11 +192,11 @@ const adminRoutes = [
 		name: 'Inventory',
 		component: Inventory.screen,
 	},
-	// {
-	// 	path: '/admin/settings/template',
-	// 	name: 'ViewUser',
-	// 	component: Template.screen,
-	// },
+	{
+		path: '/admin/settings/template',
+		name: 'ViewUser',
+		component: Template.screen,
+	},
 	{
 		redirect: true,
 		path: '/admin/accountant',
@@ -225,6 +255,26 @@ const adminRoutes = [
 		pathTo: '/admin/banking/bank-account',
 		name: 'Banking',
 	},
+	{
+		path: '/admin/income/quotation/create',
+		name: 'AddQuotation',
+		component: CreateQuotation.screen,
+	},
+	{
+		path: '/admin/income/quotation/view',
+		name: 'ViewQuotation',
+		component: ViewQuotation.screen,
+	},
+	{
+		path: '/admin/income/quotation/detail',
+		name: 'UpdateQuotation',
+		component: DetailQuotation.screen,
+	},
+	{
+		path: '/admin/income/quotation',
+		name: 'ViewQuotation',
+		component: Quotation.screen,
+	},
 
 	{
 		path: '/admin/income/customer-invoice/create',
@@ -273,6 +323,66 @@ const adminRoutes = [
 		name: 'Income',
 	},
 
+	{
+		path: '/admin/expense/request-for-quotation/create',
+		name: 'AddRequestForQuotation',
+		component: CreateRequestForQuotation.screen,
+	},
+	{
+		path: '/admin/expense/request-for-quotation/view',
+		name: 'ViewRequestForQuotation',
+		component: ViewRequestForQuotation.screen,
+	},
+	{
+		path: '/admin/expense/request-for-quotation/detail',
+		name: 'UpdateRequestForQuotation',
+		component: DetailRequestForQuotation.screen,
+	},
+	{
+		path: '/admin/expense/request-for-quotation',
+		name: 'ViewRequestForQuotation',
+		component: RequestForQuotation.screen,
+	},
+	{
+		path: '/admin/expense/purchase-order/create',
+		name: 'AddPurchaseQuotation',
+		component: CreatePurchaseOrder.screen,
+	},
+	{
+		path: '/admin/expense/purchase-order/view',
+		name: 'ViewPurchaseQuotation',
+		component: ViewPurchaseOrder.screen,
+	},
+	{
+		path: '/admin/expense/purchase-order/detail',
+		name: 'UpdatePurchaseQuotation',
+		component: DetailPurchaseOrder.screen,
+	},
+	{
+		path: '/admin/expense/purchase-order',
+		name: 'ViewPurchaseQuotation',
+		component: PurchaseOrder.screen,
+	},
+	{
+		path: '/admin/expense/goods-received-note/create',
+		name: 'AddGoodsReceiveNotes',
+		component: CreateGoodsReceivedNote.screen,
+	},
+	{
+		path: '/admin/expense/goods-received-note/view',
+		name: 'ViewGoodsReceiveNotes',
+		component: ViewGoodsReceivedNote.screen,
+	},
+	{
+		path: '/admin/expense/goods-received-note/detail',
+		name: 'UpdateGoodsReceiveNotes',
+		component: DetailGoodsReceivedNote.screen,
+	},
+	{
+		path: '/admin/expense/goods-received-note',
+		name: 'ViewGoodsReceiveNotes',
+		component: GoodsReceivedNote.screen,
+	},
 	{
 		path: '/admin/expense/supplier-invoice/create',
 		name: 'AddSupplierInvoices',
@@ -350,12 +460,12 @@ const adminRoutes = [
 		name: 'Reports Filing',
 		component: ReportsFiling.screen,
 	},
-	{
-		redirect: true,
-		path: '/admin/taxes',
-		pathTo: '/admin/taxes/vat-transactions',
-		name: 'Taxes',
-	},
+	// {
+	// 	redirect: true,
+	// 	path: '/admin/taxes',
+	// 	pathTo: '/admin/taxes/vat-transactions',
+	// 	name: 'Taxes',
+	// },
 
 	{
 		path: '/admin/report/transactions',
@@ -366,6 +476,31 @@ const adminRoutes = [
 		path: '/admin/report/financial',
 		name: 'Financial',
 		component: FinancialReport.screen,
+	},
+	{
+		path: '/admin/report/financial/profitandloss',
+		name: 'ProfitAndLoss',
+		component: ProfitAndLossReport.screen,
+	},
+	{
+		path: '/admin/report/financial/balancesheet',
+		name: 'BalanceSheet',
+		component: BalanceSheet.screen,
+	},
+	{
+		path: '/admin/report/financial/horizontalbalancesheet',
+		name: 'HorizontalBalanceSheet',
+		component: HorizontalBalanceSheet.screen,
+	},
+	{
+		path: '/admin/report/financial/trailbalances',
+		name: 'TrailBalances',
+		component: TrailBalances.screen,
+	},
+	{
+		path: '/admin/report/financial/vatreturns',
+		name: 'VatReturnsReport',
+		component: VatReturnsReport.screen,
 	},
 	{
 		path: '/admin/report/detailed-general-ledger',
@@ -438,6 +573,11 @@ const adminRoutes = [
 		path: '/admin/master/product/detail/inventoryedit',
 		name: 'UpdateInventory',
 		component: InventoryEdit.screen,
+	},
+	{
+		path: '/admin/master/product/detail/inventoryhistory',
+		name: 'UpdateInventory',
+		component: InventoryHistory.screen,
 	},
 	{
 		path: '/admin/master/product',

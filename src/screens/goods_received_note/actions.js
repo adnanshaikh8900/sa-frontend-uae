@@ -490,3 +490,24 @@ export const sendMail = (id) => {
 			});
 	};
 };
+
+export const getPurchaseOrderListForDropdown = (id) => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: `/rest/poquatation/getRfqPoForDropDown?type=4`,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+						type: GOODS_RECEVED_NOTE.PO_LIST,
+						payload: res,
+					});
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

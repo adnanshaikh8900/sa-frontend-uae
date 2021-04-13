@@ -248,7 +248,7 @@ class RequestForQuotation extends React.Component {
 		};
 	renderpoList = (row) => {
 		return row.poList[0] ? row.poList[0] : '';
-	
+
 	};
 
 
@@ -396,21 +396,21 @@ class RequestForQuotation extends React.Component {
 							'success',
 							'Request For Quotation Closed Successfully',
 						);
-					
-						
+
+
 						this.setState({
 							loading: false,
 						});
 					}
 					this.initializeData();
 				})
-				
+
 		.catch((err) => {
 			this.props.commonActions.tostifyAlert(
 				'error',
 			);
 		});
-	
+
 	}
 
 
@@ -457,8 +457,8 @@ class RequestForQuotation extends React.Component {
 	}
 	// CreatePurchaseOrder = (id) => {
 	// 	this.props.requestForQuotationDetailsAction.getRFQeById(id).then((res) => {
-	// 		this.setState({		
-				
+	// 		this.setState({
+
 	// 			openPurchaseOrder : true, rowId : id,
 	// 			selectedData:res.data,
 	// 			rfqReceiveDate:res.data.rfqReceiveDate
@@ -483,22 +483,22 @@ class RequestForQuotation extends React.Component {
 	// 			// 	lineItemsString: res.data.poQuatationLineItemRequestModelList
 	// 			// 		? res.data.poQuatationLineItemRequestModelList
 	// 			// 		: [],
-				
-			
+
+
 	// 			// },
-				
+
 	// 			// data: res.data.poQuatationLineItemRequestModelList
 	// 			// 	? res.data.poQuatationLineItemRequestModelList
 	// 			// 	: [],
 	// 			// selectedContact: res.data.supplierId ? res.data.supplierId : '',
-			
+
 	// 			// loading: false,
 	// 		})
 	// 		console.log('CreatePurchaseOrder selectedData ',this.state.selectedData)
 	// 		console.log('CreatePurchaseOrder ',res.data.supplierId)
-			
+
 	// 	});
-	
+
 	// }
 
 
@@ -1183,24 +1183,23 @@ class RequestForQuotation extends React.Component {
           currency_list={this.props.currency_list}
           history={this.props.history}
         /> */}
-				<CreatePurchaseOrder
-					openPurchaseOrder={this.state.openPurchaseOrder}
-					closePurchaseOrder={(e) => {
-						this.closePurchaseOrder(e);
-					}}
-					id={this.state.rowId}
+			 <CreatePurchaseOrder
+                    openPurchaseOrder={this.state.openPurchaseOrder}
+                    closePurchaseOrder={(e) => {
+                        this.closePurchaseOrder(e);
+                    }}
+                    id={this.state.rowId}
                     selectedData={this.state.selectedData}
-				//getRfqbyid={this.props.requestForQuotationDetailsAction.getRFQeById}
-				//	 getState={this.props.requestForQuotationDetailsAction.renderActionForState}
-				//	getInvoice={this.props.purchaseOrderCreateAction.getPoNo()}
-					prefixData={this.state.prefixData}
-				//	nextprefixData={this.state.nextprefixData}
-					getVat={this.props.purchaseOrderAction.getVatList()}
-					getProductList={this.props.purchaseOrderAction.getProductList()}
-					
-					createPO={this.props.purchaseOrderCreateAction.createPO}
-
-				/>
+                //getRfqbyid={this.props.requestForQuotationDetailsAction.getRFQeById}
+                //   getState={this.props.requestForQuotationDetailsAction.renderActionForState}
+                //  getInvoice={this.props.purchaseOrderCreateAction.getPoNo()}
+                    prefixData={this.state.prefixData}
+                //  nextprefixData={this.state.nextprefixData}
+                    getVat={this.props.purchaseOrderAction.getVatList()}
+                    getProductList={this.props.purchaseOrderAction.getProductList()}
+                    createPO={this.props.purchaseOrderCreateAction.createPO}
+ 
+                />
 			</div>
 		); 
 	}

@@ -12,6 +12,7 @@ const initState = {
 	deposit_list: [],
 	pay_mode: [],
 	goods_received_note_list: [],
+	po_list:[],
 };
 
 const RequestForQuotationReducer = (state = initState, action) => {
@@ -83,6 +84,11 @@ const RequestForQuotationReducer = (state = initState, action) => {
 				...state,
 				goods_received_note_list: Object.assign([], payload),
 			};
+			case GOODS_RECEVED_NOTE.PO_LIST:
+				return {
+					...state,
+					po_list: Object.assign([], payload.data),
+				};
 		default:
 			return state;
 	}

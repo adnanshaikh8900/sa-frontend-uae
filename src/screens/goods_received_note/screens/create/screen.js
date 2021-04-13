@@ -27,12 +27,13 @@ import * as SupplierInvoiceActions from '../../../supplier_invoice/actions'
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import * as CustomerInvoiceActions from '../../../customer_invoice/actions';
-
+import * as PurchaseOrderDetailsAction from '../../../purchase_order/screens/detail/actions'
 import { SupplierModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
 import { InvoiceNumberModel } from '../../../customer_invoice/sections';
 
 
+import * as PurchaseOrderAction from '../../../purchase_order/actions'
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
@@ -52,6 +53,7 @@ const mapStateToProps = (state) => {
 		product_category_list: state.product.product_category_list,
 		universal_currency_list: state.common.universal_currency_list,
 		currency_convert_list: state.currencyConvert.currency_convert_list,
+		po_list: state.goods_received_note.po_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -75,6 +77,15 @@ const mapDispatchToProps = (dispatch) => {
 		goodsReceivedNoteCreateAction: bindActionCreators(GoodsReceivedNoteCreateAction,dispatch),
 		currencyConvertActions: bindActionCreators(CurrencyConvertActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
+		purchaseOrderDetailsAction: bindActionCreators(
+            PurchaseOrderDetailsAction,
+            dispatch,
+        ),
+		purchaseOrderAction: bindActionCreators(
+            PurchaseOrderAction,
+            dispatch,
+        ),
+
 	};
 };
 const customStyles = {
@@ -106,10 +117,13 @@ class CreateGoodsReceivedNote extends React.Component {
 				{
 					id: 0,
 					description: '',
-                    quantity: 1,
-                    poQuantity: 1,
-                    productId: '',	
-                    subTotal:0,
+					quantity: 1,
+					unitPrice: '',
+					vatCategoryId: '',
+					subTotal: 0,
+					productId: '',
+
+
 				},
 			],
 			idCount: 0,
@@ -133,7 +147,7 @@ class CreateGoodsReceivedNote extends React.Component {
 					
 					},
 				],
-				gnr_number: '',
+				grn_Number: '',
 				total_net: 0,
 				totalAmount: 0,
 			
@@ -248,7 +262,7 @@ class CreateGoodsReceivedNote extends React.Component {
 		);
 	};
 
-	renderQuantity = (cell, row, props) => {
+	renderPoQuantity = (cell, row, props) => {
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -308,7 +322,7 @@ class CreateGoodsReceivedNote extends React.Component {
 			/>
 		);
 	};
-	renderPOQuantity = (cell, row, props) => {
+	renderGRNQuantity = (cell, row, props) => {
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -319,48 +333,48 @@ class CreateGoodsReceivedNote extends React.Component {
 
 		return (
 			<Field
-				name={`lineItemsString.${idx}.poQuantity`}
+				name={`lineItemsString.${idx}.grnReceivedQuantity`}
 				render={({ field, form }) => (
 					<div>
 						<Input
 							type="number"
 							maxLength="10"
-							value={row['poQuantity'] !== 0 ? row['poQuantity'] : 0}
+							value={row['grnReceivedQuantity'] !== 0 ? row['grnReceivedQuantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
 									this.selectItem(
 										e.target.value,
 										row,
-										'poQuantity',
+										'grnReceivedQuantity',
 										form,
 										field,
 										props,
 									);
 								}
 							}}
-							placeholder="poQuantity"
+							placeholder="grnReceivedQuantity"
 							className={`form-control 
             ${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].poQuantity &&
+							props.errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity &&
 							Object.keys(props.touched).length > 0 &&
 							props.touched.lineItemsString &&
 							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].poQuantity
+							props.touched.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity
 								? 'is-invalid'
 								: ''
 						}`}
 						/>
 						{props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].poQuantity &&
+							props.errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity &&
 							Object.keys(props.touched).length > 0 &&
 							props.touched.lineItemsString &&
 							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].poQuantity && (
+							props.touched.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity && (
 								<div className="invalid-feedback">
-									{props.errors.lineItemsString[parseInt(idx, 10)].poQuantity}
+									{props.errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity}
 								</div>
 							)}
 					</div>
@@ -498,6 +512,7 @@ class CreateGoodsReceivedNote extends React.Component {
 	getInitialData = () => {
 		this.getInvoiceNo();
 		this.props.goodsReceivedNoteAction.getSupplierList(this.state.contactType);
+		this.props.goodsReceivedNoteAction.getPurchaseOrderListForDropdown();
 		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
 			this.setState({
 				initValue: {
@@ -600,6 +615,27 @@ class CreateGoodsReceivedNote extends React.Component {
 		);
 	};
 
+
+    rfqValue = (e, row, name, form, field, props) => {
+		const { rfq_list } = this.props;
+		let data = this.state.data;
+		const result = rfq_list.find((item) => item.id === parseInt(e));
+		let idx;
+		data.map((obj, index) => {
+			if (obj.id === row.id) {
+				console.log(result);
+				obj['unitPrice'] = result.unitPrice;
+				obj['vatCategoryId'] = result.vatCategoryId;
+				obj['description'] = result.description;
+				idx = index;
+			}
+			return obj;
+		});
+
+		this.updateAmount(data, props);
+	};
+
+
 	selectItem = (e, row, name, form, field, props) => {
 		//e.preventDefault();
 		let data = this.state.data;
@@ -634,6 +670,7 @@ class CreateGoodsReceivedNote extends React.Component {
 			});
 		}
 	};
+
 
 	renderVat = (cell, row, props) => {
 		const { vat_list } = this.props;
@@ -695,6 +732,7 @@ class CreateGoodsReceivedNote extends React.Component {
 			/>
 		);
 	};
+
 
 	prductValue = (e, row, name, form, field, props) => {
 		const { product_list } = this.props;
@@ -937,6 +975,7 @@ class CreateGoodsReceivedNote extends React.Component {
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
+
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 			if (props.values.discountType.value === 'PERCENTAGE') {
 				var val =
@@ -993,8 +1032,7 @@ class CreateGoodsReceivedNote extends React.Component {
 			rfqExpiryDate,
 			grnReceiveDate,
 			supplierId,
-			project,
-			gnr_number,
+			grn_Number,
 			grnRemarks,
 		} = data;
 		const { term } = this.state;
@@ -1002,7 +1040,7 @@ class CreateGoodsReceivedNote extends React.Component {
 		let formData = new FormData();
 		formData.append(
 			'grnNumber',
-			gnr_number !== null ? this.state.prefix + gnr_number : '',
+			grn_Number !== null ? this.state.prefix + grn_Number : '',
 		);
 		formData.append('grnReceiveDate', grnReceiveDate ? grnReceiveDate : '');
 		// formData.append(
@@ -1011,7 +1049,6 @@ class CreateGoodsReceivedNote extends React.Component {
 		// );
 		formData.append('grnRemarks', grnRemarks ? grnRemarks : '');
         formData.append('type', 5);
-        formData.append('grnType', 4);
         formData.append('lineItemsString', JSON.stringify(this.state.data));
         formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
@@ -1199,16 +1236,16 @@ class CreateGoodsReceivedNote extends React.Component {
 				1,
 				true,
 			);
-			this.formRef.current.setFieldValue(
-				`lineItemsString.${0}.receivedquantity`,
-				1,
-				true,
-            );
-            this.formRef.current.setFieldValue(
-				`lineItemsString.${0}.poQuantity`,
-				1,
-				true,
-			);
+			// this.formRef.current.setFieldValue(
+			// 	`lineItemsString.${0}.receivedquantity`,
+			// 	1,
+			// 	true,
+            // );
+            // this.formRef.current.setFieldValue(
+			// 	`lineItemsString.${0}.poQuantity`,
+			// 	1,
+			// 	true,
+			// );
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.vatCategoryId`,
 				res.data[0].vatCategoryId,
@@ -1232,11 +1269,11 @@ class CreateGoodsReceivedNote extends React.Component {
 					initValue: {
 						...this.state.initValue,
 						...{
-							gnr_number: res.data,
+							grn_Number: res.data,
 						},
 					},
 				});
-				this.formRef.current.setFieldValue('gnr_number', res.data, true);
+			this.formRef.current.setFieldValue('grn_Number', res.data, true);
 			}
 		});
 	};
@@ -1266,7 +1303,95 @@ class CreateGoodsReceivedNote extends React.Component {
 			});
 	};
 
+    poValue = (e, row, name, form, field, props) => {
+		const { po_list } = this.props;
+		let data = this.state.data;
+		const result = po_list.find((item) => item.id === parseInt(e));
+		let idx;
+		data.map((obj, index) => {
+			if (obj.id === row.id) {
+				console.log(result,'result');
+				obj['unitPrice'] = result.unitPrice;
+				obj['vatCategoryId'] = result.vatCategoryId;
+				obj['description'] = result.description;
+				idx = index;
+			}
+			return obj;
+		});
+		// form.setFieldValue(
+		// 	`lineItemsString.${idx}.vatCategoryId`,
+		// 	result.vatCategoryId,
+		// 	true,
+		// );
+		// form.setFieldValue(
+		// 	`lineItemsString.${idx}.unitPrice`,
+		// 	result.unitPrice,
+		// 	true,
+		// );
+		// form.setFieldValue(
+		// 	`lineItemsString.${idx}.description`,
+		// 	result.description,
+		// 	true,
+		// );
+		this.updateAmount(data, props);
+	};
 
+	getPoDetails = (e, row, props,form,field) => {
+		let option;
+		const { po_list,selectedData } = this.props;
+			let idx;
+			this.state.data.map((obj, index) => {
+				if (obj.id === row.id) {
+					idx = index;
+				}
+				return obj;
+			});
+		if (e && e.label !== 'Select RFQ') {
+		 
+			this.poValue(
+				e.value,
+				row,
+				'poNumber',
+				form,
+				field,
+				props,
+			);
+			this.props.purchaseOrderDetailsAction
+				.getPOById(e.value).then((response) => {
+				this.setState(
+					{
+						option : {
+							label: response.data.supplierName,
+							value: response.data.supplierId,
+						},
+					data:response.data.poQuatationLineItemRequestModelList ,
+					
+				//	data1:response.data.supplierId,
+				},() => {
+					this.formRef.current.setFieldValue(
+						'lineItemsString',
+						this.state.data,
+						true,
+					);
+					this.formRef.current.setFieldTouched(
+						`lineItemsString[${this.state.data.length - 1}]`,
+						false,
+						true,
+					);
+				},
+				// () => {
+				// 	this.formRef.current.setFieldValue('supplierId',
+				// 	this.state.option.value,
+				// 	true,)
+				// },
+				  
+				);
+				this.formRef.current.setFieldValue('supplierId', this.state.option, true);
+				console.log(this.state.data,"api")
+				console.log("option ",this.state.option)
+			});
+		}
+	}
 
 	render() {
 		const { data, discountOptions, initValue, prefix } = this.state;
@@ -1276,15 +1401,15 @@ class CreateGoodsReceivedNote extends React.Component {
 			supplier_list,
 			universal_currency_list,
 			currency_convert_list,
+			po_list,
 		} = this.props;
-
+console.log(po_list)
 		let tmpSupplier_list = []
 
 		supplier_list.map(item => {
 			let obj = {label: item.label.contactName, value: item.value}
 			tmpSupplier_list.push(obj)
 		})
-
 		return (
 			<div className="create-supplier-invoice-screen">
 				<div className=" fadeIn">
@@ -1319,14 +1444,14 @@ class CreateGoodsReceivedNote extends React.Component {
 													{
 													let errors = {};
 													if (this.state.exist === true) {
-														errors.gnr_number =
+														errors.grn_Number =
 															'Invoice Number cannot be same';
 													}
 													return errors;
 												}}
 												validationSchema={Yup.object().shape(
 													{
-													gnr_number: Yup.string().required(
+													grn_Number: Yup.string().required(
 														'Invoice Number is Required',
 													),
 													supplierId: Yup.string().required(
@@ -1389,38 +1514,98 @@ class CreateGoodsReceivedNote extends React.Component {
 														<Row>
 															<Col lg={3}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="gnr_number">
+																	<Label htmlFor="grn_Number">
 																		<span className="text-danger">*</span>
 																		GRN Number
 																	</Label>
 																	<Input
 																		type="text"
-																		id="gnr_number"
-																		name="gnr_number"
+																		id="grn_Number"
+																		name="grn_Number"
 																		placeholder="Invoice Number"
-																		value={props.values.gnr_number}
-																		onBlur={props.handleBlur('gnr_number')}
+																		value={props.values.grn_Number}
+																		onBlur={props.handleBlur('grn_Number')}
 																		onChange={(value) => {
-																			props.handleChange('gnr_number')(
+																			props.handleChange('grn_Number')(
 																				value,
 																			);
 																		}}
 																		className={
-																			props.errors.gnr_number &&
-																			props.touched.gnr_number
+																			props.errors.grn_Number &&
+																			props.touched.grn_Number
 																				? 'is-invalid'
 																				: ''
 																		}
 																	/>
-																	{props.errors.gnr_number &&
-																		props.touched.gnr_number && (
+																	{props.errors.grn_Number &&
+																		props.touched.grn_Number && (
 																			<div className="invalid-feedback">
-																				{props.errors.gnr_number}
+																				{props.errors.grn_Number}
 																			</div>
 																		)}
 																</FormGroup>
 															</Col>
 															<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="poNumber">
+																		<span className="text-danger">*</span>
+																		PO Number
+																	</Label>
+																	<Select
+																		styles={customStyles}
+																		id="poNumber"
+																		name="poNumber"
+																		placeholder="Select PO Number"
+																		options={
+																			po_list
+																				? selectOptionsFactory.renderOptions(
+																						'label',
+																						'value',
+																						po_list,
+																						'poNumber',
+																				  )
+																				: []
+																		}
+																		value={props.values.poNumber}
+
+																		onChange={(option) => {
+																			if (option && option.value) {
+																				this.getPoDetails(option, option.value, props)
+																				 props.handleChange('poNumber')(option);
+
+																			} else {
+
+																				props.handleChange('poNumber')('');
+																			}
+
+																				// if(!this.state.data1){
+																				// 	this.state.supplierList = this.state.data1
+																				// }else{
+																				// 	this.state.supplierList =	props.values.supplierId
+																				// }
+
+																		}}
+                                                                        // onChange={() => {
+                                                                        //     this.getrfqDetails
+                                                                        // }}
+																		className={
+																			props.errors.poNumber &&
+																			props.touched.poNumber
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.poNumber &&
+																		props.touched.poNumber && (
+																			<div className="invalid-feedback">
+																				{props.errors.poNumber}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+														</Row>
+														<Row>
+														<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="supplierId">
 																		<span className="text-danger">*</span>
@@ -1430,7 +1615,7 @@ class CreateGoodsReceivedNote extends React.Component {
 																		styles={customStyles}
 																		id="supplierId"
 																		name="supplierId"
-																		placeholder="Select Supplier Name"
+																		// placeholder="Select Supplier Name"
 																		options={
 																			tmpSupplier_list
 																				? selectOptionsFactory.renderOptions(
@@ -1441,7 +1626,11 @@ class CreateGoodsReceivedNote extends React.Component {
 																				  )
 																				: []
 																		}
-																		value={props.values.supplierId}
+
+																		value={
+																	props.values.supplierId
+																		//	this.state.supplierList
+																		}
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				props.handleChange('supplierId')(option);
@@ -1465,7 +1654,7 @@ class CreateGoodsReceivedNote extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
-															<Col>
+															<Col lg={3}>
 																<Label
 																	htmlFor="supplierId"
 																	style={{ display: 'block' }}
@@ -1480,6 +1669,39 @@ class CreateGoodsReceivedNote extends React.Component {
 																>
 																	<i className="fa fa-plus"></i> Add a Supplier
 																</Button>
+															</Col>
+															<Col lg={3} style={{    marginLeft: "-200px"}}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="referenceNumber">
+																		Supplier reference Number
+																	</Label>
+																	<Input
+																		type="text"
+																		disabled={true}
+																		id="referenceNumber"
+																		name="referenceNumber"
+																		placeholder="referenceNumber"
+																		value={props.values.referenceNumber}
+																		onBlur={props.handleBlur('referenceNumber')}
+																		onChange={(value) => {
+																			props.handleChange('referenceNumber')(
+																				value,
+																			);
+																		}}
+																		// className={
+																		// 	props.errors.po_number &&
+																		// 	props.touched.po_number
+																		// 		? 'is-invalid'
+																		// 		: ''
+																		// }
+																	/>
+																	{/* {props.errors.po_number &&
+																		props.touched.po_number && (
+																			<div className="invalid-feedback">
+																				{props.errors.po_number}
+																			</div>
+																		)} */}
+																</FormGroup>
 															</Col>
 														</Row>
 														<hr />
@@ -1631,20 +1853,21 @@ class CreateGoodsReceivedNote extends React.Component {
 																	>
 																		Description
 																	</TableHeaderColumn>
+
 																	<TableHeaderColumn
-																		dataField="quantity"
+																		dataField="poQuantity"
 																		width="10%"
 																		dataFormat={(cell, rows) =>
-																			this.renderQuantity(cell, rows, props)
+																			this.renderGRNQuantity(cell, rows, props)
 																		}
 																	>
 																		Quantity
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
-																		dataField="poQuantity"
+																		dataField="quantity"
 																		width="10%"
 																		dataFormat={(cell, rows) =>
-																			this.renderPOQuantity(cell, rows, props)
+																			this.renderPoQuantity(cell, rows, props)
 																		}
 																	>
 																		PO-Quantity

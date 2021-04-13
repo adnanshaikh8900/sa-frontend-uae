@@ -23,7 +23,7 @@ import * as SupplierInvoiceCreateActions from './actions';
 import * as PurchaseOrderCreateAction from './actions'
 
 import * as PurchaseOrderAction from '../../actions';
-import * as RequestForQuotationDetailsAction from '../../../request_for_quotation/screens/create/actions'
+import * as RequestForQuotationDetailsAction from '../../../request_for_quotation/screens/detail/actions'
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 
@@ -113,6 +113,7 @@ class CreatePurchaseOrder extends React.Component {
 			],
 			idCount: 0,
 			initValue: {
+				supplierList:'',
 				contact_po_number: '',
 				currencyCode: '',
 				poApproveDate: new Date(),
@@ -428,21 +429,21 @@ class CreatePurchaseOrder extends React.Component {
 			}
 			return obj;
 		});
-		form.setFieldValue(
-			`lineItemsString.${idx}.vatCategoryId`,
-			result.vatCategoryId,
-			true,
-		);
-		form.setFieldValue(
-			`lineItemsString.${idx}.unitPrice`,
-			result.unitPrice,
-			true,
-		);
-		form.setFieldValue(
-			`lineItemsString.${idx}.description`,
-			result.description,
-			true,
-		);
+		// form.setFieldValue(
+		// 	`lineItemsString.${idx}.vatCategoryId`,
+		// 	result.vatCategoryId,
+		// 	true,
+		// );
+		// form.setFieldValue(
+		// 	`lineItemsString.${idx}.unitPrice`,
+		// 	result.unitPrice,
+		// 	true,
+		// );
+		// form.setFieldValue(
+		// 	`lineItemsString.${idx}.description`,
+		// 	result.description,
+		// 	true,
+		// );
 		this.updateAmount(data, props);
 	};
 
@@ -924,7 +925,6 @@ class CreatePurchaseOrder extends React.Component {
 		);
 		formData.append('notes', notes ? notes : '');
 		formData.append('type', 4);
-		formData.append('poType', 3);
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
@@ -1169,7 +1169,8 @@ class CreatePurchaseOrder extends React.Component {
 			});
 	};
 getrfqDetails = (e, row, props,form,field) => {
-    const { rfq_list } = this.props;
+	let option;
+    const { rfq_list,selectedData } = this.props;
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -1178,15 +1179,7 @@ getrfqDetails = (e, row, props,form,field) => {
 			return obj;
 		});
     if (e && e.label !== 'Select RFQ') {
-        this.selectItem(
-            e.value,
-            row,
-            'rfqNumber',
-            form,
-            field,
-            props,
-            
-        );
+
         this.rfqValue(
             e.value,
             row,
@@ -1198,26 +1191,36 @@ getrfqDetails = (e, row, props,form,field) => {
         this.props.requestForQuotationDetailsAction
             .getRFQeById(e.value).then((response) => {
             this.setState(
-                form.setFieldValue(
-                    `lineItemsString.${idx}.productId`,
-                    e.value,
-                    true,
-                ),
-                this.setState({
-                    data: [
-                        {
-                            id: 0,
-                            description: '',
-                            quantity: '',
-                            unitPrice: '',
-                            vatCategoryId: '',
-                            subTotal: 0,
-                            productId: '',
-                        },
-                    ],
-                })
+				{
+					option : {
+						label: response.data.supplierName,
+						value: response.data.supplierId,
+					},
+				data:response.data.poQuatationLineItemRequestModelList ,
+
+			//	data1:response.data.supplierId,
+			},() => {
+				this.formRef.current.setFieldValue(
+					'lineItemsString',
+					this.state.data,
+					true,
+				);
+				this.formRef.current.setFieldTouched(
+					`lineItemsString[${this.state.data.length - 1}]`,
+					false,
+					true,
+				);
+			},
+			// () => {
+			// 	this.formRef.current.setFieldValue('supplierId',
+			// 	this.state.option.value,
+			// 	true,)
+			// },
+
             );
-            
+			this.formRef.current.setFieldValue('supplierId', this.state.option, true);
+            console.log(this.state.data,"api")
+			console.log("option ",this.state.option)
         });
     }
 }
@@ -1242,7 +1245,7 @@ getrfqDetails = (e, row, props,form,field) => {
 			let obj = {label: item.label.contactName, value: item.value}
 			tmpSupplier_list.push(obj)
 		})
-	console.log(rfq_list.data)
+
 
 		return (
 			<div className="create-supplier-invoice-screen">
@@ -1321,19 +1324,19 @@ getrfqDetails = (e, row, props,form,field) => {
 																			}
 																		},
 																	),
-																unitPrice: Yup.string()
-																	.required('Value is Required')
-																	.test(
-																		'Unit Price',
-																		'Unit Price Should be Greater than 1',
-																		(value) => {
-																			if (value > 0) {
-																				return true;
-																			} else {
-																				return false;
-																			}
-																		},
-																	),
+																// unitPrice: Yup.string()
+																// 	.required('Value is Required')
+																// 	.test(
+																// 		'Unit Price',
+																// 		'Unit Price Should be Greater than 1',
+																// 		(value) => {
+																// 			if (value > 0) {
+																// 				return true;
+																// 			} else {
+																// 				return false;
+																// 			}
+																// 		},
+																// 	),
 																vatCategoryId: Yup.string().required(
 																	'Value is Required',
 																),
@@ -1349,6 +1352,40 @@ getrfqDetails = (e, row, props,form,field) => {
 												{(props) => (
 													<Form onSubmit={props.handleSubmit}>
                                                         <Row>
+
+														<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="po_number">
+																		<span className="text-danger">*</span>
+																		PO Number
+																	</Label>
+																	<Input
+																		type="text"
+																		id="po_number"
+																		name="po_number"
+																		placeholder="Invoice Number"
+																		value={props.values.po_number}
+																		onBlur={props.handleBlur('po_number')}
+																		onChange={(value) => {
+																			props.handleChange('po_number')(
+																				value,
+																			);
+																		}}
+																		className={
+																			props.errors.po_number &&
+																			props.touched.po_number
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.po_number &&
+																		props.touched.po_number && (
+																			<div className="invalid-feedback">
+																				{props.errors.po_number}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
                                                         <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="rfqNumber">
@@ -1371,14 +1408,24 @@ getrfqDetails = (e, row, props,form,field) => {
 																				: []
 																		}
 																		value={props.values.rfqNumber}
-																		// onChange={(option) => {
-																		// 	if (option && option.value) {
-																		// 		props.handleChange('rfqNumber')(option);
-																		// 	} else {
 
-																		// 		props.handleChange('rfqNumber')('');
-																		// 	}
-																		// }}
+																		onChange={(option) => {
+																			if (option && option.value) {
+																				this.getrfqDetails(option, option.value, props)
+																				 props.handleChange('rfqNumber')(option);
+
+																			} else {
+
+																				props.handleChange('rfqNumber')('');
+																			}
+
+																				// if(!this.state.data1){
+																				// 	this.state.supplierList = this.state.data1
+																				// }else{
+																				// 	this.state.supplierList =	props.values.supplierId
+																				// }
+
+																		}}
                                                                         // onChange={() => {
                                                                         //     this.getrfqDetails
                                                                         // }}
@@ -1441,11 +1488,13 @@ getrfqDetails = (e, row, props,form,field) => {
 																		<span className="text-danger">*</span>
 																		Supplier Name
 																	</Label>
+
+
 																	<Select
 																		styles={customStyles}
 																		id="supplierId"
 																		name="supplierId"
-																		placeholder="Select Supplier Name"
+																		// placeholder="Select Supplier Name"
 																		options={
 																			tmpSupplier_list
 																				? selectOptionsFactory.renderOptions(
@@ -1456,7 +1505,11 @@ getrfqDetails = (e, row, props,form,field) => {
 																				  )
 																				: []
 																		}
-																		value={props.values.supplierId}
+
+																		value={
+																	props.values.supplierId
+																		//	this.state.supplierList
+																		}
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				props.handleChange('supplierId')(option);
@@ -1480,7 +1533,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		)}
 																</FormGroup>
 															</Col>
-															<Col>
+															<Col lg={3}>
 																<Label
 																	htmlFor="supplierId"
 																	style={{ display: 'block' }}
@@ -1496,7 +1549,39 @@ getrfqDetails = (e, row, props,form,field) => {
 																	<i className="fa fa-plus"></i> Add a Supplier
 																</Button>
 															</Col>
-															
+															<Col lg={3} style={{    marginLeft: "-200px"}}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="referenceNumber">
+																		Supplier reference Number
+																	</Label>
+																	<Input
+																		type="text"
+																		disabled={true}
+																		id="referenceNumber"
+																		name="referenceNumber"
+																		placeholder="referenceNumber"
+																		value={props.values.referenceNumber}
+																		onBlur={props.handleBlur('referenceNumber')}
+																		onChange={(value) => {
+																			props.handleChange('referenceNumber')(
+																				value,
+																			);
+																		}}
+																		// className={
+																		// 	props.errors.po_number &&
+																		// 	props.touched.po_number
+																		// 		? 'is-invalid'
+																		// 		: ''
+																		// }
+																	/>
+																	{/* {props.errors.po_number &&
+																		props.touched.po_number && (
+																			<div className="invalid-feedback">
+																				{props.errors.po_number}
+																			</div>
+																		)} */}
+																</FormGroup>
+															</Col>
 														</Row>
 														<hr />
 														<Row>
@@ -1555,7 +1640,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd/MM/yyyy"
-																		
+
 																		onChange={(value) => {
 																			props.handleChange('poReceiveDate')(value);
 																		}}

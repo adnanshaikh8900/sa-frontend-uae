@@ -76,7 +76,7 @@ const customStyles = {
 };
 
 
-class CreateGoodsReceivedNotes extends React.Component {
+class CreatePurchaseOrder extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -732,7 +732,7 @@ class CreateGoodsReceivedNotes extends React.Component {
 		formData.append('totalAmount', this.state.selectedData.totalAmount);
         formData.append('totalVatAmount',this.state.selectedData.totalVatAmount);
 	    formData.append('supplierId', this.state.selectedData.supplierId);
-	
+
         if (rfqNumber && rfqNumber.value) {
 			formData.append('rfqNumber', rfqNumber.value);
 		}
@@ -808,15 +808,15 @@ class CreateGoodsReceivedNotes extends React.Component {
 	// 								poQuatationLineItemRequestModelList: res.data.poQuatationLineItemRequestModelList
 	// 									? res.data.poQuatationLineItemRequestModelList
 	// 									: [],
-								
-								
+
+
 	// 							},
-								
+
 	// 							data: res.data.poQuatationLineItemRequestModelList
 	// 								? res.data.poQuatationLineItemRequestModelList
 	// 								: [],
 	// 							selectedContact: res.data.supplierId ? res.data.supplierId : '',
-							
+
 	// 							loading: false,
 	// 						},
 	// 						() => {
@@ -844,7 +844,7 @@ class CreateGoodsReceivedNotes extends React.Component {
 	// 					);
 	// 				}
 	// 			});
-		
+
 	// };
 
 	render() {
@@ -965,10 +965,10 @@ console.log('prefix ',this.state.prefixData,"pppp")
 																		)}
 																</FormGroup>
 															</Col>
-                                                           
+
                                                             </Row>
                                                             <Row>
-                                                           
+
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="supplierName">
@@ -1084,7 +1084,7 @@ console.log('prefix ',this.state.prefixData,"pppp")
 																		)}
 																</FormGroup>
 															</Col>
-														
+
 														</Row>
 														<hr />
 														<Row>
@@ -1143,7 +1143,7 @@ console.log('prefix ',this.state.prefixData,"pppp")
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd/MM/yyyy"
-																		
+
 																		onChange={(value) => {
 																			props.handleChange('poReceiveDate')(value);
 																		}}
@@ -1415,4 +1415,4 @@ console.log('prefix ',this.state.prefixData,"pppp")
 export default connect(
 	mapStateToProps
 	
-)(CreateGoodsReceivedNotes);
+)(CreatePurchaseOrder);

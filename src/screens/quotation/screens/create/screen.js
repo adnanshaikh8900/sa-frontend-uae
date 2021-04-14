@@ -21,7 +21,7 @@ import { Formik, Field } from 'formik';
 import { Currency } from 'components';
 import * as Yup from 'yup';
 import * as SupplierInvoiceCreateActions from './actions';
-import * as RequestForQuotationCreateAction from './actions'
+import * as QuotationCreateAction from './actions'
 import * as RequestForQuotationAction from '../../actions';
 import * as SupplierInvoiceActions from '../../../supplier_invoice/actions'
 import * as ProductActions from '../../../product/actions';
@@ -30,24 +30,25 @@ import * as CustomerInvoiceActions from '../../../customer_invoice/actions';
 
 import { SupplierModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
+import { InvoiceNumberModel } from '../../../customer_invoice/sections';
 
 
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
-import { selectOptionsFactory } from 'utils';
+import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 
 import './style.scss';
 import moment from 'moment';
 
 const mapStateToProps = (state) => {
 	return {
-		contact_list: state.request_for_quotation.contact_list,
-		currency_list: state.request_for_quotation.currency_list,
-		vat_list: state.request_for_quotation.vat_list,
-		product_list: state.request_for_quotation.product_list,
-		supplier_list: state.request_for_quotation.supplier_list,
-		country_list: state.request_for_quotation.country_list,
+		contact_list: state.quotation.contact_list,
+		currency_list: state.quotation.currency_list,
+		vat_list: state.quotation.vat_list,
+		product_list: state.quotation.product_list,
+		supplier_list: state.quotation.supplier_list,
+		country_list: state.quotation.country_list,
 		product_category_list: state.product.product_category_list,
 		universal_currency_list: state.common.universal_currency_list,
 		currency_convert_list: state.currencyConvert.currency_convert_list,
@@ -59,9 +60,19 @@ const mapDispatchToProps = (dispatch) => {
 			RequestForQuotationAction,
 			dispatch,
 		),
-		
+		supplierInvoiceActions : bindActionCreators(
+			SupplierInvoiceActions,dispatch,
+		),
+		customerInvoiceActions: bindActionCreators(
+			CustomerInvoiceActions,
+			dispatch,
+		),
 		ProductActions: bindActionCreators(ProductActions, dispatch),
-		requestForQuotationCreateAction: bindActionCreators(RequestForQuotationCreateAction,dispatch),
+		supplierInvoiceCreateActions: bindActionCreators(
+			SupplierInvoiceCreateActions,
+			dispatch,
+		),
+		quotationCreateAction: bindActionCreators(QuotationCreateAction,dispatch),
 		currencyConvertActions: bindActionCreators(CurrencyConvertActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
@@ -79,7 +90,7 @@ const customStyles = {
 
 const invoiceimage = require('assets/images/invoice/invoice.png');
 
-class CreateRequestForQuotation extends React.Component {
+class CreateQuotation extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -108,9 +119,9 @@ class CreateRequestForQuotation extends React.Component {
 			initValue: {
 				contact_po_number: '',
 				currencyCode: '',
-				rfqReceiveDate: new Date(),
-				rfqExpiryDate: new Date(),
-				supplierId: '',
+				poApproveDate: new Date(),
+				quotaionExpiration: new Date(),
+				customerId: '',
 				placeOfSupplyId: '',
 				project: '',
 				exchangeRate:'',
@@ -126,7 +137,7 @@ class CreateRequestForQuotation extends React.Component {
 					
 					},
 				],
-				rfq_number: '',
+				quotation_Number: '',
 				total_net: 0,
 				invoiceVATAmount: 0,
 				term: '',
@@ -137,7 +148,7 @@ class CreateRequestForQuotation extends React.Component {
 				discountType: { value: 'FIXED', label: 'Fixed' },
 			},
 			currentData: {},
-			contactType: 1,
+			contactType: 2,
 			openSupplierModal: false,
 			openProductModal: false,
 			openInvoiceNumberModel: false,
@@ -388,7 +399,7 @@ class CreateRequestForQuotation extends React.Component {
 			// 	true,
 			// );
 		});
-		this.props.requestForQuotationAction.getInvoicePrefix().then((response) => {
+		this.props.requestForQuotationAction.getPoPrefix().then((response) => {
 			this.setState({prefixData:response.data
 		});
 		});
@@ -855,43 +866,38 @@ class CreateRequestForQuotation extends React.Component {
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true });
 		const {
-			contact_po_number,
-			currency,
-			rfqExpiryDate,
-			rfqReceiveDate,
-			supplierId,
-			project,
-			rfq_number,
+			quotaionExpiration,
+			customerId,
+			quotation_Number,
 			notes,
 		} = data;
 		const { term } = this.state;
 
 		let formData = new FormData();
 		formData.append(
-			'rfqNumber',
-			rfq_number !== null ? this.state.prefix + rfq_number : '',
+			'quotationNumber',
+			quotation_Number !== null ? this.state.prefix + quotation_Number : '',
 		);
-		formData.append('rfqReceiveDate', rfqReceiveDate ? rfqReceiveDate : '');
 		formData.append(
-			'rfqExpiryDate',
-			rfqExpiryDate ? rfqExpiryDate : '',
+			'quotaionExpiration',
+			quotaionExpiration ? quotaionExpiration : '',
 		);
 		formData.append('notes', notes ? notes : '');
-		formData.append('type', 3);
+		formData.append('type', 6);
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
-		if (supplierId && supplierId.value) {
-			formData.append('supplierId', supplierId.value);
+		if (customerId && customerId.value) {
+			formData.append('customerId', customerId.value);
 		}
 		
-		this.props.requestForQuotationCreateAction
-			.createRFQ(formData)
+		this.props.quotationCreateAction
+			.createQuotation(formData)
 			.then((res) => {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Request For Quotation Created Successfully.',
+					'New Quotation Created Successfully.',
 				);
 				if (this.state.createMore) {
 					this.setState(
@@ -934,7 +940,7 @@ class CreateRequestForQuotation extends React.Component {
 						},
 					);
 				} else {
-					this.props.history.push('/admin/expense/request-for-quotation');
+					this.props.history.push('/admin/income/quotation');
 				}
 			})
 			.catch((err) => {
@@ -995,7 +1001,7 @@ class CreateRequestForQuotation extends React.Component {
 		// this.setState({
 		//   selectedContact: option
 		// })
-		this.formRef.current.setFieldValue('supplierId', option, true);
+		this.formRef.current.setFieldValue('customerId', option, true);
 	};
 
 	closeSupplierModal = (res) => {
@@ -1079,17 +1085,17 @@ class CreateRequestForQuotation extends React.Component {
 	};
 
 	getInvoiceNo = () => {
-		this.props.requestForQuotationCreateAction.getInvoiceNo().then((res) => {
+		this.props.quotationCreateAction.getQuotationNo().then((res) => {
 			if (res.status === 200) {
 				this.setState({
 					initValue: {
 						...this.state.initValue,
 						...{
-							rfq_number: res.data,
+							quotation_Number: res.data,
 						},
 					},
 				});
-				this.formRef.current.setFieldValue('rfq_number', res.data, true);
+				this.formRef.current.setFieldValue('quotation_Number', res.data, true);
 			}
 		});
 	};
@@ -1099,10 +1105,10 @@ class CreateRequestForQuotation extends React.Component {
 			moduleType: 6,
 			name: value,
 		};
-		this.props.requestForQuotationCreateAction
+		this.props.quotationCreateAction
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'RFQ Number already exists') {
+				if (response.data === 'Quotation Number already exists') {
 					this.setState(
 						{
 							exist: true,
@@ -1153,7 +1159,7 @@ class CreateRequestForQuotation extends React.Component {
 													src={invoiceimage}
 													style={{ width: '40px' }}
 												/>
-												<span className="ml-2">Create Request For Quotation</span>
+												<span className="ml-2">Create Quotation</span>
 											</div>
 										</Col>
 									</Row>
@@ -1172,25 +1178,25 @@ class CreateRequestForQuotation extends React.Component {
 													{
 													let errors = {};
 													if (this.state.exist === true) {
-														errors.rfq_number =
+														errors.quotation_Number =
 															'Invoice Number cannot be same';
 													}
 													return errors;
 												}}
 												validationSchema={Yup.object().shape(
 													{
-													rfq_number: Yup.string().required(
+														quotation_Number: Yup.string().required(
 														'Invoice Number is Required',
 													),
-													supplierId: Yup.string().required(
+													customerId: Yup.string().required(
 														'Supplier is Required',
 													),
 													// placeOfSupplyId: Yup.string().required('Place of supply is Required'),
 													
-													rfqReceiveDate: Yup.string().required(
-														'Order Date is Required',
-													),
-													rfqExpiryDate: Yup.string().required(
+													// poApproveDate: Yup.string().required(
+													// 	'Order Date is Required',
+													// ),
+													quotaionExpiration: Yup.string().required(
 														'Order Due Date is Required'
 													),
 													lineItemsString: Yup.array()
@@ -1242,47 +1248,47 @@ class CreateRequestForQuotation extends React.Component {
 														<Row>
 															<Col lg={3}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="rfq_number">
+																	<Label htmlFor="quotation_Number">
 																		<span className="text-danger">*</span>
-																		RFQ Number
+																		Quatation Number
 																	</Label>
 																	<Input
 																		type="text"
-																		id="rfq_number"
-																		name="rfq_number"
+																		id="quotation_Number"
+																		name="quotation_Number"
 																		placeholder="Invoice Number"
-																		value={props.values.rfq_number}
-																		onBlur={props.handleBlur('rfq_number')}
+																		value={props.values.quotation_Number}
+																		onBlur={props.handleBlur('quotation_Number')}
 																		onChange={(value) => {
-																			props.handleChange('rfq_number')(
+																			props.handleChange('quotation_Number')(
 																				value,
 																			);
 																		}}
 																		className={
-																			props.errors.rfq_number &&
-																			props.touched.rfq_number
+																			props.errors.quotation_Number &&
+																			props.touched.quotation_Number
 																				? 'is-invalid'
 																				: ''
 																		}
 																	/>
-																	{props.errors.rfq_number &&
-																		props.touched.rfq_number && (
+																	{props.errors.quotation_Number &&
+																		props.touched.quotation_Number && (
 																			<div className="invalid-feedback">
-																				{props.errors.rfq_number}
+																				{props.errors.quotation_Number}
 																			</div>
 																		)}
 																</FormGroup>
 															</Col>
 															<Col lg={3}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="supplierId">
+																	<Label htmlFor="customerId">
 																		<span className="text-danger">*</span>
-																		Supplier Name
+																		Customer Name
 																	</Label>
 																	<Select
 																		styles={customStyles}
-																		id="supplierId"
-																		name="supplierId"
+																		id="customerId"
+																		name="customerId"
 																		placeholder="Select Supplier Name"
 																		options={
 																			tmpSupplier_list
@@ -1294,36 +1300,36 @@ class CreateRequestForQuotation extends React.Component {
 																				  )
 																				: []
 																		}
-																		value={props.values.supplierId}
+																		value={props.values.customerId}
 																		onChange={(option) => {
 																			if (option && option.value) {
-																				props.handleChange('supplierId')(option);
+																				props.handleChange('customerId')(option);
 																			} else {
 
-																				props.handleChange('supplierId')('');
+																				props.handleChange('customerId')('');
 																			}
 																		}}
 																		className={
-																			props.errors.supplierId &&
-																			props.touched.supplierId
+																			props.errors.customerId &&
+																			props.touched.customerId
 																				? 'is-invalid'
 																				: ''
 																		}
 																	/>
-																	{props.errors.supplierId &&
-																		props.touched.supplierId && (
+																	{props.errors.customerId &&
+																		props.touched.customerId && (
 																			<div className="invalid-feedback">
-																				{props.errors.supplierId}
+																				{props.errors.customerId}
 																			</div>
 																		)}
 																</FormGroup>
 															</Col>
 															<Col>
 																<Label
-																	htmlFor="supplierId"
+																	htmlFor="customerId"
 																	style={{ display: 'block' }}
 																>
-																	Add New Supplier
+																	Add New Customer
 																</Label>
 																<Button
 																	type="button"
@@ -1331,76 +1337,76 @@ class CreateRequestForQuotation extends React.Component {
 																	className="btn-square"
 																	onClick={this.openSupplierModal}
 																>
-																	<i className="fa fa-plus"></i> Add a Supplier
+																	<i className="fa fa-plus"></i> Add a Customer
 																</Button>
 															</Col>
 														</Row>
 														<hr />
 														<Row>
-															<Col lg={3}>
+															{/* <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
 																		<span className="text-danger">*</span>
-																		Issue Date
+																		Start Date
 																	</Label>
 																	<DatePicker
 																		id="date"
-																		name="rfqReceiveDate"
+																		name="poApproveDate"
 																		className={`form-control ${
-																			props.errors.rfqReceiveDate &&
-																			props.touched.rfqReceiveDate
+																			props.errors.poApproveDate &&
+																			props.touched.poApproveDate
 																				? 'is-invalid'
 																				: ''
 																		}`}
 																		placeholderText="Order date"
-																		selected={props.values.rfqReceiveDate}
+																		selected={props.values.poApproveDate}
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd/MM/yyyy"
 																		maxDate={new Date()}
 																		onChange={(value) => {
-																			props.handleChange('rfqReceiveDate')(value);
+																			props.handleChange('poApproveDate')(value);
 																		}}
 																	/>
-																	{props.errors.rfqReceiveDate &&
-																		props.touched.rfqReceiveDate && (
+																	{props.errors.poApproveDate &&
+																		props.touched.poApproveDate && (
 																			<div className="invalid-feedback">
-																				{props.errors.rfqReceiveDate}
+																				{props.errors.poApproveDate}
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>
+															</Col> */}
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="due_date">
 																	<span className="text-danger">*</span>
-																		Expiry Date
+																		Expiration Date
 																	</Label>
 																	<DatePicker
 																		id="date"
-																		name="rfqExpiryDate"
+																		name="quotaionExpiration"
 																		className={`form-control ${
-																			props.errors.rfqExpiryDate &&
-																			props.touched.rfqExpiryDate
+																			props.errors.quotaionExpiration &&
+																			props.touched.quotaionExpiration
 																				? 'is-invalid'
 																				: ''
 																		}`}
 																		placeholderText="Order Due date"
-																		selected={props.values.rfqExpiryDate}
+																		selected={props.values.quotaionExpiration}
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd/MM/yyyy"
 																		maxDate={new Date()}
 																		onChange={(value) => {
-																			props.handleChange('rfqExpiryDate')(value);
+																			props.handleChange('quotaionExpiration')(value);
 																		}}
 																	/>
-																	{props.errors.rfqExpiryDate &&
-																		props.touched.rfqExpiryDate && (
+																	{props.errors.quotaionExpiration &&
+																		props.touched.quotaionExpiration && (
 																			<div className="invalid-feedback">
-																				{props.errors.rfqExpiryDate}
+																				{props.errors.quotaionExpiration}
 																			</div>
 																		)}
 																	
@@ -1697,7 +1703,7 @@ class CreateRequestForQuotation extends React.Component {
 																		className="btn-square"
 																		onClick={() => {
 																			this.props.history.push(
-																				'/admin/expense/request-for-quotation',
+																				'/admin/income/quotation',
 																			);
 																		}}
 																	>
@@ -1757,4 +1763,4 @@ class CreateRequestForQuotation extends React.Component {
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps,
-)(CreateRequestForQuotation);
+)(CreateQuotation);

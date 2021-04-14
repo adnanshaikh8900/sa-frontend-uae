@@ -741,6 +741,10 @@ class CreatePurchaseOrder extends React.Component {
 		this.props.createPO(formData)
 			.then((res) => {				
 				if (res.status === 200) {
+                    this.props.commonActions.tostifyAlert(
+                        'success',
+                        'Purchase Order Created Successfully.',
+                    );
 					resetForm();
 					this.props.closePurchaseOrder(true);
 

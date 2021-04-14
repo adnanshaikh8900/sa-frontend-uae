@@ -314,16 +314,7 @@ class PurchaseOrder extends React.Component {
 							>
 								<i className="fas fa-send" /> Send
 							</DropdownItem>)}
-						<DropdownItem
-							onClick={() =>
-								this.props.history.push(
-									'/admin/expense/purchase-order/view',
-									{ id: row.id },
-								)
-							}
-						>
-							<i className="fas fa-eye" /> View
-						</DropdownItem>
+					
 						{row.status === 'Sent' && (
 							<DropdownItem
 							onClick={() => {
@@ -351,7 +342,16 @@ class PurchaseOrder extends React.Component {
 								<i className="fas fa-send" /> Close
 							</DropdownItem>
 							)}
-				
+					<DropdownItem
+							onClick={() =>
+								this.props.history.push(
+									'/admin/expense/purchase-order/view',
+									{ id: row.id },
+								)
+							}
+						>
+							<i className="fas fa-eye" /> View
+						</DropdownItem>
 						{/* {row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
 							<DropdownItem
 								onClick={() => {

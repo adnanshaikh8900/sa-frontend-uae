@@ -14,10 +14,10 @@ class RFQTemplate extends Component {
 		this.state = {};
 	}
 
-	getRibbonColor = (POData) => {
-		if (POData.status == 'Draft') {
+	getRibbonColor = (QuotationData) => {
+		if (QuotationData.status == 'Draft') {
 			return 'pending-color';
-		} else if (POData.status == 'Sent') {
+		} else if (QuotationData.status == 'Sent') {
 			return 'saved-color';
 		} else {
 			return 'saved-color';
@@ -25,16 +25,16 @@ class RFQTemplate extends Component {
 	};
 
 	render() {
-		const { POData, currencyData, totalNet, companyData } = this.props;
+		const { QuotationData, currencyData, totalNet, companyData } = this.props;
 		return (
 			<div>
 				<Card id="singlePage" className="box">
 					<div
 						className={`ribbon ribbon-top-left ${this.getRibbonColor(
-							POData,
+							QuotationData,
 						)}`}
 					>
-						<span>{POData.status}</span>
+						<span>{QuotationData.status}</span>
 					</div>
 
 					<CardBody style={{ marginTop: '7rem' }}>
@@ -46,7 +46,7 @@ class RFQTemplate extends Component {
 								padding:'7px',borderColor:'#c8ced3'
 							}}
 						>
-							<div className="text-center mt-1 "><h4><b> Purchase Order Details</b></h4></div>
+							<div className="text-center mt-1 "><h4><b> Quotation Details</b></h4></div>
 							<div className="text-center">
 									<img
 										src={
@@ -67,8 +67,8 @@ class RFQTemplate extends Component {
 											? companyData.company.companyName
 											: ''}</h5>
 											</div>	
-						<div className="text-center"><h4>{POData.poNumber}</h4></div>		
-						<div className="text-center mt-1">{POData.supplierName}</div>		
+						<div className="text-center"><h4>{QuotationData.poNumber}</h4></div>		
+						<div className="text-center mt-1">{QuotationData.customerName}</div>		
 					</div>
 							
 						
@@ -104,13 +104,13 @@ class RFQTemplate extends Component {
 								<h6
 								style={{textAlign: 'center',marginLeft:'220px'}}
 								className={'mt-3 mb-2'}
-								>	Approve date:{' '}
-								{moment(POData.poApproveDate).format(
+								>	Expiration date:{' '}
+								{moment(QuotationData.quotaionExpiration).format(
 									'DD MMM YYYY',
 								)}
 								</h6>
 								</div>
-								<div
+								{/* <div
 								style={{
 									width: '50%',
 									display: 'flex',
@@ -121,11 +121,11 @@ class RFQTemplate extends Component {
 								style={{textAlign: 'center',marginLeft:'220px'}}
 								className={'mt-3 mb-2'}
 								>	Receive date:{' '}
-								{moment(POData.poReceiveDate).format(
+								{moment(QuotationData.poReceiveDate).format(
 									'DD MMM YYYY',
 								)}
 								</h6>
-								</div>
+								</div> */}
 							</div>
 						</div>
 						<Table  >
@@ -150,9 +150,9 @@ class RFQTemplate extends Component {
 								</tr>
 							</thead>
 							<tbody className=" table-bordered table-hover">
-								{POData.poQuatationLineItemRequestModelList &&
-									POData.poQuatationLineItemRequestModelList.length &&
-									POData.poQuatationLineItemRequestModelList.map((item, index) => {
+								{QuotationData.poQuatationLineItemRequestModelList &&
+									QuotationData.poQuatationLineItemRequestModelList.length &&
+									QuotationData.poQuatationLineItemRequestModelList.map((item, index) => {
 										return (
 											<tr key={index}>
 												<td className="center">{index + 1}</td>
@@ -206,20 +206,20 @@ class RFQTemplate extends Component {
 								}}
 							>
 								<div className="pb-2">Amount In Words:<br/>
-									<b> {upperCase(converter.toWords(toInteger(POData.totalAmount)))}
-									{/* <b> {parseInt(POData.dueAmount)} */}
+									<b> {upperCase(converter.toWords(toInteger(QuotationData.totalAmount)))}
+									{/* <b> {parseInt(QuotationData.dueAmount)} */}
 									</b></div>
 								<div className="pb-2">VAT Amount In Words:
 										<br/>
-									<b> {upperCase(converter.toWords(toInteger(POData.totalVatAmount)))}</b>
-									{/* <b> {POData.totalVatAmount}</b> */}
+									<b> {upperCase(converter.toWords(toInteger(QuotationData.totalVatAmount)))}</b>
+									{/* <b> {QuotationData.totalVatAmount}</b> */}
 								</div>
 							<div style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>
 
 								<h6 className="mb-0 pt-2">
 									<b>Notes:</b>
 								</h6>
-								<h6 className="mb-0">{POData.notes}</h6>
+								<h6 className="mb-0">{QuotationData.notes}</h6>
 							</div>
 							
 							</div>
@@ -280,10 +280,10 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{POData.totalVatAmount }
+													{QuotationData.totalVatAmount }
 													{/* ? (
 														<Currency
-															value={POData.totalVatAmount.toFixed(2)}
+															value={QuotationData.totalVatAmount.toFixed(2)}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode
@@ -315,10 +315,10 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{POData.totalAmount}
+													{QuotationData.totalAmount}
 													 {/* ? (
 														<Currency
-															value={POData.totalAmount.toFixed(2)}
+															value={QuotationData.totalAmount.toFixed(2)}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode

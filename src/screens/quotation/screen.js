@@ -30,9 +30,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
 
-import moment from 'moment';
 
-import * as SupplierInvoiceActions from './actions';
+import * as QuotationAction from './actions';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 
@@ -40,18 +39,19 @@ import './style.scss';
 
 const mapStateToProps = (state) => {
 	return {
-		supplier_invoice_list: state.supplier_invoice.supplier_invoice_list,
-		supplier_list: state.supplier_invoice.supplier_list,
+		supplier_list: state.quotation.supplier_list,
 		status_list: state.supplier_invoice.status_list,
 		universal_currency_list: state.common.universal_currency_list,
+		quotation_list: state.quotation.quotation_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
-		supplierInvoiceActions: bindActionCreators(
-			SupplierInvoiceActions,
+		quotationAction: bindActionCreators(
+			QuotationAction,
 			dispatch,
 		),
+
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
@@ -71,7 +71,7 @@ const overWeekly = require('assets/images/invoice/week1.png');
 const overduemonthly = require('assets/images/invoice/month.png');
 const overdue = require('assets/images/invoice/due1.png');
 
-class SupplierInvoice extends React.Component {
+class Quatation extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -123,28 +123,11 @@ class SupplierInvoice extends React.Component {
 
 	componentDidMount = () => {
 		let { filterData } = this.state;
-		this.props.supplierInvoiceActions.getStatusList();
-		this.props.supplierInvoiceActions.getSupplierList(filterData.contactType);
-		this.initializeData();
-		this.getOverdue();
+		this.props.quotationAction.getStatusList();
+ 		this.initializeData();
 	};
 
-	getOverdue = () => {
-		let { filterData } = this.state;
-		this.props.supplierInvoiceActions
-			.getOverdueAmountDetails(filterData.contactType)
-			.then((res) => {
-				if (res.status === 200) {
-					this.setState({ overDueAmountDetails: res.data });
-				}
-			})
-			.catch((err) => {
-				this.props.commonActions.tostifyAlert(
-					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
-				);
-			});
-	};
+
 
 	initializeData = (search) => {
 		let { filterData } = this.state;
@@ -157,8 +140,8 @@ class SupplierInvoice extends React.Component {
 			sortingCol: this.options.sortName ? this.options.sortName : '',
 		};
 		const postData = { ...filterData, ...paginationData, ...sortingData };
-		this.props.supplierInvoiceActions
-			.getSupplierInvoiceList(postData)
+		this.props.quotationAction
+			.getQuotationList(postData)
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState({ loading: false }, () => {
@@ -195,7 +178,7 @@ class SupplierInvoice extends React.Component {
 		);
 	};
 
-	renderInvoiceStatus = (cell, row) => {
+	renderRFQStatus = (cell, row) => {
 		let classname = '';
 		if (row.status === 'Paid') {
 			classname = 'label-success';
@@ -221,23 +204,20 @@ class SupplierInvoice extends React.Component {
 		this.initializeData();
 	};
 
-	renderInvoiceAmount = (cell, row, extraData) => {
+	renderrfqAmount = (cell, row, extraData) => {
 		return(
 			<div>
 								<div>
-						<label className="font-weight-bold mr-2 ">Invoice Amount : </label>
+						<label className="font-weight-bold mr-2 ">Quotation Amount : </label>
 						<label>
-					{row.invoiceAmount  === 0 ? row.invoiceAmount.toFixed(2) : row.invoiceAmount.toFixed(2)}
+							{row.totalAmount  === 0 ? row.totalAmount.toFixed(2) : row.totalAmount.toFixed(2)}
 						</label>
 					</div>
 					<div>
 					<label className="font-weight-bold mr-2">Vat Amount : </label>
-					<label>{row.vatAmount === 0  ?  row.vatAmount.toFixed(2) :  row.vatAmount.toFixed(2)}</label>
+					<label>{row.totalVatAmount === 0  ?  row.totalVatAmount.toFixed(2) :  row.totalVatAmount.toFixed(2)}</label>
 					</div>
-					<div>
-						<label className="font-weight-bold mr-2">Due Amount : </label>
-						<label>{row.dueAmount === 0  ?  row.dueAmount.toFixed(2) :  row.dueAmount.toFixed(2)}</label>
-					</div>
+					
 					
 			</div>);
 		};
@@ -266,11 +246,11 @@ class SupplierInvoice extends React.Component {
 		this.setState({ openEmailModal: false });
 	};
 
-	invoiceDueDate = (cell, row) => {
-		return row.invoiceDueDate ? row.invoiceDueDate : '';
+	rfqDueDate = (cell, row) => {
+		return row.poReceiveDate ? row.poReceiveDate : '';
 	};
-	invoiceDate = (cell, row) => {
-		return row.invoiceDate ? row.invoiceDate : '';
+	pODate = (cell, row) => {
+		return row.quotaionExpiration ? row.quotaionExpiration : '';
 	};
 
 	toggleActionButton = (index) => {
@@ -300,61 +280,55 @@ class SupplierInvoice extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-						{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && row.statusEnum !== 'Partially Paid' && (
+					{row.status !== 'Sent' && row.status !== "Approved" && (
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
-										'/admin/expense/supplier-invoice/detail',
+										'/admin/income/quotation/detail',
 										{ id: row.id },
 									)
 								}
 							>
 								<i className="fas fa-edit" /> Edit
 							</DropdownItem>
-						)}
-						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && row.statusEnum !== 'Partially Paid' && (
+					)}
+							{row.status !== 'Sent' && row.status !== "Approved" && (
 							<DropdownItem
 								onClick={() => {
-									this.postInvoice(row);
+									this.sendMail(row.id);
 								}}
 							>
-								<i className="fas fa-send" /> Post
+								<i className="fas fa-send" /> Send
+							</DropdownItem>)}
+							{row.status === 'Sent' && (
+							<DropdownItem
+							onClick={() => {
+							this.changeStatus(row.id);
+							}}
+							>
+								<i className="fas fa-send" /> Close
 							</DropdownItem>
-						)}
-						{/* <DropdownItem  onClick={() => {this.openInvoicePreviewModal(row.id)}}>
-              <i className="fas fa-eye" /> View
-            </DropdownItem> */}
+							)}
 						<DropdownItem
 							onClick={() =>
 								this.props.history.push(
-									'/admin/expense/supplier-invoice/view',
+									'/admin/income/quotation/view',
 									{ id: row.id },
 								)
 							}
 						>
 							<i className="fas fa-eye" /> View
 						</DropdownItem>
-						{row.statusEnum === 'Sent' && (
+						{/* {row.status === 'Sent' && (
 							<DropdownItem
-								onClick={() => {
-									this.unPostInvoice(row);
-								}}
+							onClick={() => {
+								this.changeStatus(row.id);
+							}}
 							>
-								<i className="fas fa-file" /> Draft
+								<i className="fas fa-send" /> Approve & Create GRN
 							</DropdownItem>
-						)}
-						{row.statusEnum !== 'Draft' && row.statusEnum !== 'Paid' && (
-							<DropdownItem
-								onClick={() =>
-									this.props.history.push(
-										'/admin/expense/supplier-invoice/record-payment',
-										{ id: row },
-									)
-								}
-							>
-								<i className="fas fa-university" /> Record Payment
-							</DropdownItem>
-						)}
+							)} */}
+				
 						{/* {row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
 							<DropdownItem
 								onClick={() => {
@@ -378,22 +352,51 @@ class SupplierInvoice extends React.Component {
 			</div>
 		);
 	};
+	changeStatus = (id) => {
+		this.props.quotationAction
+		.changeStatus(id)
+		.then((res) => {
+			if (res.status === 200) {
+				this.props.commonActions.tostifyAlert(
+					'success',
+					'Request For Quotation Closed Successfully',
+				);
 
-	sendMail = (id) => {
-		this.props.supplierInvoiceActions
+
+				this.setState({
+					loading: false,
+				});
+			}
+			this.initializeData();
+		})
+
+.catch((err) => {
+	this.props.commonActions.tostifyAlert(
+		'error',
+	);
+});
+
+}
+
+	sendMail = (id,status) => {
+		this.props.quotationAction
 			.sendMail(id)
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Send Successfully',
+						'Purchase Order Send Successfully',
 					);
+					this.setState({
+						loading: false,
+					});
+					this.initializeData();
 				}
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					'Please First fill The Mail Configuration Detail',
+					'Something When Wrong',
 				);
 			});
 	};
@@ -478,7 +481,7 @@ class SupplierInvoice extends React.Component {
 		let obj = {
 			ids: selectedRows,
 		};
-		this.props.supplierInvoiceActions
+		this.props.purchaseOrderAction
 			.removeBulk(obj)
 			.then((res) => {
 				this.initializeData(filterData);
@@ -527,7 +530,7 @@ class SupplierInvoice extends React.Component {
 			postingRefId: row.id,
 			postingRefType: 'INVOICE',
 		};
-		this.props.supplierInvoiceActions
+		this.props.purchaseOrderAction
 			.postInvoice(postingRequestModel)
 			.then((res) => {
 				if (res.status === 200) {
@@ -562,7 +565,7 @@ class SupplierInvoice extends React.Component {
 			postingRefId: row.id,
 			postingRefType: 'INVOICE',
 		};
-		this.props.supplierInvoiceActions
+		this.props.purchaseOrderAction
 			.unPostInvoice(postingRequestModel)
 			.then((res) => {
 				if (res.status === 200) {
@@ -649,7 +652,7 @@ class SupplierInvoice extends React.Component {
 
 	removeInvoice = (id) => {
 		this.removeDialog();
-		this.props.supplierInvoiceActions
+		this.props.purchaseOrderAction
 			.deleteInvoice(id)
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
@@ -671,7 +674,7 @@ class SupplierInvoice extends React.Component {
 			let obj = {
 				paginationDisable: true,
 			};
-			this.props.supplierInvoiceActions
+			this.props.purchaseOrderAction
 				.getSupplierInvoiceList(obj)
 				.then((res) => {
 					if (res.status === 200) {
@@ -720,35 +723,27 @@ class SupplierInvoice extends React.Component {
 		const {
 			status_list,
 			supplier_list,
-			supplier_invoice_list,
-			universal_currency_list,
+			quotation_list,
 		} = this.props;
 		// const containerStyle = {
 		//   zIndex: 1999
 		// }
-
-		const supplier_invoice_data =
-			supplier_invoice_list && supplier_invoice_list.data
-				? this.props.supplier_invoice_list.data.map((supplier) => ({
-						id: supplier.id,
-						status: supplier.status,
-						statusEnum: supplier.statusEnum,
-						customerName: supplier.name,
-						dueAmount:supplier.dueAmount,
-						invoiceNumber: supplier.referenceNumber,
-						invoiceDate: supplier.invoiceDate ? supplier.invoiceDate : '',
-						invoiceDueDate: supplier.invoiceDueDate
-							? supplier.invoiceDueDate
-							: '',
-						invoiceAmount: supplier.totalAmount,
-						vatAmount: supplier.totalVatAmount,
-						currencyName:supplier.currencyName ? supplier.currencyName:'',
-						currencySymbol: supplier.currencySymbol ? supplier.currencySymbol : '',
-						contactId: supplier.contactId,
+console.log(quotation_list)
+		const quotation_data =
+		quotation_list && quotation_list.data
+				? this.props.quotation_list.data.data.map((quotation) => ({
+						id: quotation.id,
+						status: quotation.status,
+						supplierName: quotation.supplierName,
+						quatationNumber: quotation.quatationNumber,
+						quotaionExpiration: quotation.quotaionExpiration ? quotation.quotaionExpiration : '',
+					
+						totalAmount: quotation.totalAmount,
+						totalVatAmount: quotation.totalVatAmount,
+					
 				  }))
 				: '';
 
-		
 		let tmpSupplier_list = []
 
 		supplier_list.map(item => {
@@ -770,7 +765,8 @@ class SupplierInvoice extends React.Component {
 											src={invoiceimage}
 											style={{ width: '40px' }}
 										/>
-										<span className="ml-2">Supplier Invoices</span>
+										<span className="ml-2">Quotation
+										</span>
 									</div>
 								</Col>
 							</Row>
@@ -787,124 +783,6 @@ class SupplierInvoice extends React.Component {
 
 							<Row>
 								<Col lg={12}>
-									<div className="mb-4 status-panel p-3">
-										<Row className="align-items-center justify-content-around">
-											<div className="h4 mb-0 d-flex align-items-center ">
-												<img
-													alt="overdue"
-													src={overdue}
-													style={{ width: '60px' }}
-												/>
-												<div>
-													<h5 className="ml-3">Overdue</h5>
-													<h3 className="invoice-detail ml-3">
-														{universal_currency_list[0] &&
-														this.state.overDueAmountDetails.overDueAmount ? (
-															<Currency
-																value={
-																	this.state.overDueAmountDetails.overDueAmount
-																}
-																currencySymbol={
-																	universal_currency_list[0]
-																		? universal_currency_list[0].currencyIsoCode
-																		: 'USD'
-																}
-															/>
-														) : (
-															<Currency
-																value={
-																	this.state.overDueAmountDetails.overDueAmount
-																}
-																currencySymbol={
-																	universal_currency_list[0]
-																		? universal_currency_list[0].currencyIsoCode
-																		: 'USD'
-																}
-															/>
-														)}
-													</h3>
-												</div>
-											</div>
-											<div className="h4 mb-0 d-flex align-items-center">
-												<img
-													alt="overWeekly"
-													src={overWeekly}
-													style={{ width: '60px' }}
-												/>
-												<div>
-													<h5 className="ml-3">Due Within This Week</h5>
-													<h3 className="invoice-detail ml-3">
-														{universal_currency_list[0] &&
-														this.state.overDueAmountDetails
-															.overDueAmountWeekly ? (
-															<Currency
-																value={
-																	this.state.overDueAmountDetails
-																		.overDueAmountWeekly
-																}
-																currencySymbol={
-																	universal_currency_list[0]
-																		? universal_currency_list[0].currencyIsoCode
-																		: 'USD'
-																}
-															/>
-														) : (
-															<Currency
-																value={
-																	this.state.overDueAmountDetails
-																		.overDueAmountWeekly
-																}
-																currencySymbol={
-																	universal_currency_list[0]
-																		? universal_currency_list[0].currencyIsoCode
-																		: 'USD'
-																}
-															/>
-														)}
-													</h3>
-												</div>
-											</div>
-											<div className="h4 mb-0 d-flex align-items-center">
-												<img
-													alt="overduemonthly"
-													src={overduemonthly}
-													style={{ width: '60px' }}
-												/>
-												<div>
-													<h5 className="ml-3">Due Within 30 Days</h5>
-													<h3 className="invoice-detail ml-3">
-														{universal_currency_list[0] &&
-														this.state.overDueAmountDetails
-															.overDueAmountMonthly ? (
-															<Currency
-																value={
-																	this.state.overDueAmountDetails
-																		.overDueAmountMonthly
-																}
-																currencySymbol={
-																	universal_currency_list[0]
-																		? universal_currency_list[0].currencyIsoCode
-																		: 'USD'
-																}
-															/>
-														) : (
-															<Currency
-																value={
-																	this.state.overDueAmountDetails
-																		.overDueAmountMonthly
-																}
-																currencySymbol={
-																	universal_currency_list[0]
-																		? universal_currency_list[0].currencyIsoCode
-																		: 'USD'
-																}
-															/>
-														)}
-													</h3>
-												</div>
-											</div>
-										</Row>
-									</div>
 									<div className="d-flex justify-content-end">
 										<ButtonGroup size="sm">
 											{/* <Button
@@ -965,7 +843,7 @@ class SupplierInvoice extends React.Component {
 													}}
 												/>
 											</Col>
-											<Col lg={2} className="mb-1">
+											{/* <Col lg={2} className="mb-1">
 												<DatePicker
 													className="form-control"
 													id="date"
@@ -999,17 +877,8 @@ class SupplierInvoice extends React.Component {
 														this.handleChange(value, 'invoiceDueDate');
 													}}
 												/>
-											</Col>
-											<Col lg={2} className="mb-1">
-												<Input
-													type="number"
-													value={filterData.amount}
-													placeholder="Amount"
-													onChange={(e) => {
-														this.handleChange(e.target.value, 'amount');
-													}}
-												/>
-											</Col>
+											</Col> */}
+										
 											<Col lg={2} className="mb-1">
 												<Select
 													styles={customStyles}
@@ -1066,134 +935,85 @@ class SupplierInvoice extends React.Component {
 										className="btn-square pull-right"
 										onClick={() =>
 											this.props.history.push(
-												`/admin/expense/supplier-invoice/create`,
+												`/admin/income/quotation/create`,
 											)
 										}
 									>
 										<i className="fas fa-plus mr-1" />
-										Add New Invoice
+										Add New Request
 									</Button>
 									</div>
 									</Row> 
+									<div style={{overflowX:'auto'}}>
 										<BootstrapTable
 											selectRow={this.selectRowProp}
 											search={false}
 											options={this.options}
-											data={supplier_invoice_data ? supplier_invoice_data : []}
+											data={quotation_data ? quotation_data : []}
 											version="4"
 											hover
 											keyField="id"
 											pagination={
-												supplier_invoice_data &&
-												supplier_invoice_data.length > 0
+												quotation_data &&
+												quotation_data.length > 0
 													? true
 													: false
 											}
 											remote
 											fetchInfo={{
-												dataTotalSize: supplier_invoice_list.count
-													? supplier_invoice_list.count
+												dataTotalSize: quotation_list.count
+													? quotation_list.count
 													: 0,
 											}}
-											className="supplier-invoi
-											
-											
-											
-											
-											
-											
-											
-											
-											
-											
-											
-											
-											
-											
-											ce-table"
+											className="supplier-invoice-table"
 											ref={(node) => (this.table = node)}
 										>
 											<TableHeaderColumn
-												dataField="invoiceNumber"
-												// dataFormat={this.renderInvoiceNumber}
+												dataField="quatationNumber"
+												
 												dataSort
 											//	width="10%"
 												className="table-header-bg"
 											>
-												Invoice Number
+												Quotation Number
 											</TableHeaderColumn>
 											<TableHeaderColumn
-												dataField="customerName"
+												dataField="supplierName"
 												dataSort
 											//	width="12%"
 												className="table-header-bg"
 											>
-												Supplier Name
+												Customer Name
 											</TableHeaderColumn>
 											<TableHeaderColumn
 											//	width="10%"
 												dataField="status"
-												dataFormat={this.renderInvoiceStatus}
+												dataFormat={this.renderRFQStatus}
 												dataSort
 												className="table-header-bg"
 											>
 												Status
 											</TableHeaderColumn>
 											<TableHeaderColumn
-												dataField="invoiceDate"
+												dataField="poApproveDate"
 												dataSort
 											//	width="7%"
-												dataFormat={this.invoiceDate}
+												dataFormat={this.pODate}
 												className="table-header-bg"
 											>
-												Invoice Date
+												Expiration Date
 											</TableHeaderColumn>
-											<TableHeaderColumn
-												dataField="invoiceDueDate"
-												dataSort
-											//	width="7%"
-												dataFormat={this.invoiceDueDate}
-												className="table-header-bg"
-											>
-												Due Date
-											</TableHeaderColumn>
-											<TableHeaderColumn
-													dataSort
-											//		width="5%"
-													dataField="currencyName"
-													dataFormat={this.renderCurrency}
-													className="table-header-bg"
-												>
-													Currency
-												</TableHeaderColumn>
-											{/* <TableHeaderColumn
-												dataSort
-												width="5%"
-												dataFormat={this.renderVatAmount}
-												formatExtraData={universal_currency_list}
-												className="table-header-bg"
-											>
-												VAT Amount
-											</TableHeaderColumn> */}
 											<TableHeaderColumn
 												dataField="totalAmount"
 												dataSort
 											//	width="5%"
-												dataFormat={this.renderInvoiceAmount}
+												dataFormat={this.renderrfqAmount}
 												className="table-header-bg"
 												
 											>
-												Invoice Amount
+												 Amount
 											</TableHeaderColumn>
-											{/* <TableHeaderColumn
-												dataField="dueAmount"
-												dataSort
-												width="5%"
-												dataFormat={this.renderDueAmount}
-												className="table-header-bg"
-											>
-												Due Amount
-											</TableHeaderColumn> */}
+										
 											<TableHeaderColumn
 												className="text-right"
 												columnClassName="text-right"
@@ -1202,6 +1022,7 @@ class SupplierInvoice extends React.Component {
 												className="table-header-bg"
 											></TableHeaderColumn>
 										</BootstrapTable>
+									</div>
 								</Col>
 							</Row>
 						</CardBody>
@@ -1226,4 +1047,4 @@ class SupplierInvoice extends React.Component {
 	}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SupplierInvoice);
+export default connect(mapStateToProps, mapDispatchToProps)(Quatation);

@@ -738,6 +738,10 @@ class CreateGoodsReceivedNote extends React.Component {
 		this.props.createGRN(formData)
 			.then((res) => {				
 				if (res.status === 200) {
+					this.props.commonActions.tostifyAlert(
+						'success',
+						'Goods Received Note Created Successfully.',
+					);
 					resetForm();
 					this.props.closeGoodsReceivedNotes(true);
 

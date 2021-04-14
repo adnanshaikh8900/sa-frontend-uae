@@ -55,10 +55,10 @@ import CreateGoodsReceivedNote from './goods_received_note/screens/create';
 import DetailGoodsReceivedNote from './goods_received_note/screens/detail';
 import ViewGoodsReceivedNote from './goods_received_note/screens/view';
 
-// import Quotation from './quotation';
-// import CreateQuotation from './quotation/screens/create';
-// import DetailQuotation from './quotation/screens/detail';
-// import ViewQuotation from './quotation/screens/view';
+import Quotation from './quotation';
+import CreateQuotation from './quotation/screens/create';
+import DetailQuotation from './quotation/screens/detail';
+import ViewQuotation from './quotation/screens/view';
 
 
 import Expense from './expense';
@@ -182,10 +182,10 @@ export {
 	CreateGoodsReceivedNote,
 	DetailGoodsReceivedNote,
 	ViewGoodsReceivedNote,
-	// DetailQuotation,
-	// Quotation,
-	// CreateQuotation,
-	// ViewQuotation,
+	DetailQuotation,
+	Quotation,
+	CreateQuotation,
+	ViewQuotation,
 	Expense,
 	CreateExpense,
 	DetailExpense,

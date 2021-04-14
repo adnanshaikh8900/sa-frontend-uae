@@ -342,7 +342,7 @@ class PurchaseOrder extends React.Component {
 								<i className="fas fa-send" /> Approve
 							</DropdownItem>
 							)}
-							{row.status === 'Approved' && row.status === 'Sent'(
+							{row.status === 'Approved' && row.status === 'Sent' &&(
 								<DropdownItem
 							onClick={() => {
 							this.changeStatus(row.id);

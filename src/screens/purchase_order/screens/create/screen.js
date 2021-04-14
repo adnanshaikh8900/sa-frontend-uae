@@ -1444,44 +1444,9 @@ getrfqDetails = (e, row, props,form,field) => {
 																		)}
 																</FormGroup>
 															</Col>
-															<Col>Supplier reference Number
-															</Col>
                                                         </Row>
                                                         <hr />
 														<Row>
-															<Col lg={3}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="po_number">
-																		<span className="text-danger">*</span>
-																		PO Number
-																	</Label>
-																	<Input
-																		type="text"
-																		id="po_number"
-																		name="po_number"
-																		placeholder="Invoice Number"
-																		value={props.values.po_number}
-																		onBlur={props.handleBlur('po_number')}
-																		onChange={(value) => {
-																			props.handleChange('po_number')(
-																				value,
-																			);
-																		}}
-																		className={
-																			props.errors.po_number &&
-																			props.touched.po_number
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.po_number &&
-																		props.touched.po_number && (
-																			<div className="invalid-feedback">
-																				{props.errors.po_number}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="supplierId">

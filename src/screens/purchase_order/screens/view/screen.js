@@ -17,7 +17,9 @@ import { PDFExport } from '@progress/kendo-react-pdf';
 
 import './style.scss';
 import { RFQTemplate } from './sections';
-
+import * as RequestForQuotationViewAction from '../../../request_for_quotation/screens/view/actions'
+import { Card, CardBody, Table } from 'reactstrap';
+import moment from 'moment';
 const mapStateToProps = (state) => {
 	return {
 		profile: state.auth.profile,
@@ -40,7 +42,11 @@ const mapDispatchToProps = (dispatch) => {
 		purchaseOrderDetailsAction: bindActionCreators(
 			PurchaseOrderDetailsAction,
 			dispatch,
-		)
+		),
+		requestForQuotationViewAction: bindActionCreators(
+			RequestForQuotationViewAction,
+			dispatch,
+		),
 		//commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
@@ -50,6 +56,7 @@ class ViewPurchaseOrder extends React.Component {
 		super(props);
 		this.state = {
 			POData: {},
+			PoDataList: {},
 			totalNet: 0,
 			currencyData: {},
 			id: '',
@@ -106,6 +113,23 @@ class ViewPurchaseOrder extends React.Component {
 						);
 					}
 				});
+				this.props.requestForQuotationViewAction
+				.getPoGrnById(this.props.location.state.id)
+				.then((res) => {
+					
+					if (res.status === 200) {
+						this.setState(
+							{
+								PoDataList: res.data,
+								
+								id: this.props.location.state.id,
+							},
+							() => {
+								
+							},
+						);
+					}
+				})
 		}
 	};
 
@@ -114,7 +138,7 @@ class ViewPurchaseOrder extends React.Component {
 	};
 
 	render() {
-		const { POData, currencyData, id } = this.state;
+		const { POData, currencyData, id,	PoDataList } = this.state;
 
 		const { profile } = this.props;
 		return (
@@ -170,6 +194,62 @@ class ViewPurchaseOrder extends React.Component {
 							</div>
 						</Col>
 					</Row>
+					<Card>
+
+						
+<div style={{display: this.state.PoDataList.length === 0 ? 'none' : ''}} >
+		<Table  >
+		<thead style={{backgroundColor:'#2165d8',color:'white'}}>
+			<tr>
+				<th className="center" style={{ padding: '0.5rem' }}>
+					#
+				</th>
+				{/* <th style={{ padding: '0.5rem' }}>Item</th> */}
+				<th style={{ padding: '0.5rem' }}>GRN Number</th>
+				<th style={{ padding: '0.5rem' }}>Supplier Name</th>
+				<th style={{ padding: '0.5rem' }}>Status</th>
+				<th className="center" style={{ padding: '0.5rem' }}>
+					Received Date
+				</th>
+				{/* <th className="center" style={{ padding: '0.5rem' }}>
+					Po Expiry Date
+				</th> */}
+				<th style={{ padding: '0.5rem', textAlign: 'left' }}>
+				TOTAL Amount
+				</th>
+				{/* <th style={{ padding: '0.5rem', textAlign: 'left' }}>
+				TOTAL Vat Amount
+				</th> */}
+			
+			</tr>
+		</thead>
+		<tbody className=" table-bordered table-hover">
+			{PoDataList &&
+				PoDataList.length &&
+				PoDataList.map((item, index) => {
+					return (
+						<tr key={index}>
+							<td className="center">{index + 1}</td>
+							<td>{item.grnNumber}</td>
+							<td>{item.supplierName}</td>
+							<td>{item.status}</td>
+							<td>{moment(item.grnReceiveDate).format(
+				'DD MMM YYYY',
+			)}
+			</td>
+				{/* <td>{moment(item.poReceiveDate).format(
+				'DD MMM YYYY',
+			)}</td> */}
+							<td>{item.totalAmount}</td>
+							{/* <td>{item.totalVatAmount}</td> */}
+						
+						</tr>
+					);
+				})}
+		</tbody>
+	</Table>
+		</div>		
+		</Card>
 				</div>
 			</div>
 		);

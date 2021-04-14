@@ -511,3 +511,21 @@ export const getPurchaseOrderListForDropdown = (id) => {
 			});
 	};
 };
+
+export const postGRN = (id) => {
+	return (dispatch) => {
+		let data = {
+			method: 'post',
+			url: `/rest/poquatation/postGRN?id=${id}`,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

@@ -58,10 +58,10 @@ import {
 	ViewGoodsReceivedNote,
 
 	//Quotation
-	Quotation,
-	CreateQuotation,
-	DetailQuotation,
-	ViewQuotation,
+	// Quotation,
+	// CreateQuotation,
+	// DetailQuotation,
+	// ViewQuotation,
 
 	// Expense Screens
 	Expense,
@@ -255,26 +255,26 @@ const adminRoutes = [
 		pathTo: '/admin/banking/bank-account',
 		name: 'Banking',
 	},
-	{
-		path: '/admin/income/quotation/create',
-		name: 'AddQuotation',
-		component: CreateQuotation.screen,
-	},
-	{
-		path: '/admin/income/quotation/view',
-		name: 'ViewQuotation',
-		component: ViewQuotation.screen,
-	},
-	{
-		path: '/admin/income/quotation/detail',
-		name: 'UpdateQuotation',
-		component: DetailQuotation.screen,
-	},
-	{
-		path: '/admin/income/quotation',
-		name: 'ViewQuotation',
-		component: Quotation.screen,
-	},
+	// {
+	// 	path: '/admin/income/quotation/create',
+	// 	name: 'AddQuotation',
+	// 	component: CreateQuotation.screen,
+	// },
+	// {
+	// 	path: '/admin/income/quotation/view',
+	// 	name: 'ViewQuotation',
+	// 	component: ViewQuotation.screen,
+	// },
+	// {
+	// 	path: '/admin/income/quotation/detail',
+	// 	name: 'UpdateQuotation',
+	// 	component: DetailQuotation.screen,
+	// },
+	// {
+	// 	path: '/admin/income/quotation',
+	// 	name: 'ViewQuotation',
+	// 	component: Quotation.screen,
+	// },
 
 	{
 		path: '/admin/income/customer-invoice/create',

@@ -270,7 +270,7 @@ class GoodsReceivedNote extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-					{row.status !== "Approved" && (
+					{row.status !== "post" && row.status !== "Sent" && row.status !== "Closed" && (
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
@@ -283,7 +283,7 @@ class GoodsReceivedNote extends React.Component {
 								<i className="fas fa-edit" /> Edit
 							</DropdownItem>
 					)}
-							{row.status !== 'Sent' && row.status !== "Approved" && (
+							{row.status !== 'Draft' && row.status !== 'Closed' && (
 							<DropdownItem
 								onClick={() => {
 									this.sendMail(row.id);
@@ -301,26 +301,26 @@ class GoodsReceivedNote extends React.Component {
 								<i className="fas fa-send" /> Approve & Create Invoice
 							</DropdownItem>
 							)} */}
+
+						
+						{(row.status === 'Draft' &&
 						<DropdownItem
-							onClick={() =>
-								this.props.history.push(
-									'/admin/expense/goods-received-note/view',
-									{ id: row.id },
-								)
-							}
+							onClick={() => {
+								this.postGrn(row.id);
+							}}
 						>
-							<i className="fas fa-eye" /> View
+								<i className="fas fa-send" />  Post
 						</DropdownItem>
-						{row.statusEnum === 'Sent' && (
-							<DropdownItem
-								onClick={() => {
-									this.unPostInvoice(row);
-								}}
-							>
-								<i className="fas fa-file" /> Draft
-							</DropdownItem>
 						)}
-				
+						{/* {(row.status !== 'Draft' && row.status !== 'post' && row.status !== 'Closed' &&
+						<DropdownItem
+							onClick={() => {
+								this.close(row.id);
+							}}
+						>
+								<i class="fas fa-times-circle"></i> Close
+						</DropdownItem>
+						)} */}
 						{/* {row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
 							<DropdownItem
 								onClick={() => {
@@ -339,6 +339,16 @@ class GoodsReceivedNote extends React.Component {
 								<i className="fa fa-send" /> Send Custom Email
 							</DropdownItem>
 						)} */}
+						<DropdownItem
+							onClick={() =>
+								this.props.history.push(
+									'/admin/expense/goods-received-note/view',
+									{ id: row.id },
+								)
+							}
+						>
+							<i className="fas fa-eye" /> View
+						</DropdownItem>
 					</DropdownMenu>
 				</ButtonDropdown>
 			</div>
@@ -402,7 +412,50 @@ class GoodsReceivedNote extends React.Component {
 				);
 			});
 	};
-
+	postGrn = (id) => {
+		this.props.goodsReceivedNoteAction
+			.postGRN(id)
+			.then((res) => {
+				if (res.status === 200) {
+					this.props.commonActions.tostifyAlert(
+						'success',
+						'Goods Received Note posted Successfully',
+					);
+					this.setState({
+						loading: false,
+					});
+					this.initializeData();
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					'Something Went Wrong',
+				);
+			});
+	};
+	close = (id) => {
+		this.props.goodsReceivedNoteAction
+			.changeStatus(id)
+			.then((res) => {
+				if (res.status === 200) {
+					this.props.commonActions.tostifyAlert(
+						'success',
+						'Goods Received Note Closed Successfully',
+					);
+					this.setState({
+						loading: false,
+					});
+					this.initializeData();
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					'Something Went Wrong',
+				);
+			});
+	};
 
 	onSizePerPageList = (sizePerPage) => {
 		if (this.options.sizePerPage !== sizePerPage) {

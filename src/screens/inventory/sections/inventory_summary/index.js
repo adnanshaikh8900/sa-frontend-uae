@@ -199,36 +199,47 @@ class InventorySummary extends React.Component {
 		});
 		this.props.history.push('/admin/master/product/detail/inventoryhistory');
 	};
-	renderActions = (cell, row) => {
-		return (
-			<Row>
-			<div>
-				{/* <Button
-				className="btn btn-sm pdf-btn"
-				onClick={(e, ) => {
-					this.props.history.push('/admin/master/product/detail/inventoryedit', { id: row.inventoryId });
-				}}
-				>
-				<i class="far fa-edit fa-lg"></i>
-				</Button> */}
-			</div>
-			<div>
-			<Button
-				className="btn btn-sm pdf-btn ml-3"
+	// renderActions = (cell, row) => {
+	// 	return (
+	// 		<Row>
+	// 		<div>
+	// 			<Button
+	// 			className="btn btn-sm pdf-btn"
+	// 			// onClick={(e, ) => {
+	// 			// 	this.props.history.push('/admin/master/product/detail/inventoryedit', { id: row.inventoryId });
+	// 			// }}
+	// 			>
+	// 				<a href ="#"
+	// 										onClick={() =>
+	// 								this.props.history.push('/admin/master/product/detail/inventoryedit'),{ id: row.inventoryId }}
+	// 							>
+	// 								<i class="far fa-edit fa-lg"></i>
+	// 							</a>
 				
-				onClick={(e) => {		
-						this.param([{p_id:row.productId},{s_id:row.supplierId}]);
+	// 			</Button>
+	// 		</div>
+	// 		<div>
+	// 		<Button
+	// 			className="btn btn-sm pdf-btn ml-3"
 				
-				}}
-				>
-				<i class="fa fa-history fa-lg"></i>
-				</Button>
-			</div>
-			</Row>
+				
+	// 			>
+	// 					<a href ="#"
+	// 										onClick={(e) => {		
+	// 											this.param([{p_id:row.productId},{s_id:row.supplierId}]);
+										
+	// 									}}
+	// 							>
+	// 								<i class="fa fa-history fa-lg"></i>
+	// 							</a>
+			
+	// 			</Button>
+	// 		</div>
+	// 		</Row>
 			
 			
-		);
-	};
+	// 	);
+	// };
 
 	render() {
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
@@ -249,8 +260,7 @@ class InventorySummary extends React.Component {
 									scale={0.8}
 									paperSize="A4"
 								>
-							<div style={{	
-									
+							<div style={{										
 									display: 'flex',
 									justifyContent: 'space-between',
 									marginBottom: '1rem'}}>
@@ -354,12 +364,12 @@ class InventorySummary extends React.Component {
 												<TableHeaderColumn  dataField="supplierName" dataSort className="table-header-bg">
 												Supplier Name
 												</TableHeaderColumn >
-												<TableHeaderColumn
+												{/* <TableHeaderColumn
 												className="text-right"
 												columnClassName="text-right"
 												dataFormat={this.renderActions}
 												className="table-header-bg"
-											     ></TableHeaderColumn>
+											     ></TableHeaderColumn> */}
 											</BootstrapTable>
 										</div>
 									)}

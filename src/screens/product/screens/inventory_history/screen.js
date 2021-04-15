@@ -351,11 +351,11 @@ class InventoryHistory extends React.Component {
 	render() {
 		const { vat_list, product_category_list,supplier_list,inventory_history_list,current_inventory_id} = this.props;
 		const { loading, dialog, purchaseCategory, salesCategory, inventoryAccount ,singleObject} = this.state;
-	 	this.state.singleObject=this.props.inventory_history_list[0];
+	 	// this.state.singleObject=this.props.inventory_history_list[0];
 		//const so=singleObject['productCode'];
-		for(let x of Object.keys(this.state.singleObject)){
-			console.log(x);
-		}
+		// for(let x of Object.keys(this.state.singleObject)){
+		// 	console.log(x);
+		// }
 	 console.log(singleObject)
 		return (
 			<div className="detail-product-screen">

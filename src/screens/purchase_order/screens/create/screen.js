@@ -117,9 +117,10 @@ class CreatePurchaseOrder extends React.Component {
 				contact_po_number: '',
 				currencyCode: '',
 				poApproveDate: new Date(),
-				poReceiveDate: new Date(),
+				poReceiveDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
 				supplierId: '',
                 rfqNumber:'',
+				supplierReferenceNumber: '',
 				placeOfSupplyId: '',
 				project: '',
 				exchangeRate:'',
@@ -879,6 +880,7 @@ class CreatePurchaseOrder extends React.Component {
 				: discountAmount;
 		this.setState(
 			{
+
 				data,
 				initValue: {
 					...this.state.initValue,
@@ -909,6 +911,7 @@ class CreatePurchaseOrder extends React.Component {
             rfqNumber,
 			project,
 			po_number,
+			supplierReferenceNumber,
 			notes,
 		} = data;
 		const { term } = this.state;
@@ -923,6 +926,7 @@ class CreatePurchaseOrder extends React.Component {
 			'poReceiveDate',
 			poReceiveDate ? poReceiveDate : '',
 		);
+		formData.append('supplierReferenceNumber', supplierReferenceNumber ? supplierReferenceNumber :'');
 		formData.append('notes', notes ? notes : '');
 		formData.append('type', 4);
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
@@ -940,7 +944,7 @@ class CreatePurchaseOrder extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'New Invoice Created Successfully.',
+					'Purchase Order Created Successfully.',
 				);
 				if (this.state.createMore) {
 					this.setState(
@@ -1324,19 +1328,19 @@ getrfqDetails = (e, row, props,form,field) => {
 																			}
 																		},
 																	),
-																// unitPrice: Yup.string()
-																// 	.required('Value is Required')
-																// 	.test(
-																// 		'Unit Price',
-																// 		'Unit Price Should be Greater than 1',
-																// 		(value) => {
-																// 			if (value > 0) {
-																// 				return true;
-																// 			} else {
-																// 				return false;
-																// 			}
-																// 		},
-																// 	),
+																unitPrice: Yup.string()
+																	.required('Value is Required')
+																	.test(
+																		'Unit Price',
+																		'Unit Price Should be Greater than 1',
+																		(value) => {
+																			if (value > 0) {
+																				return true;
+																			} else {
+																				return false;
+																			}
+																		},
+																	),
 																vatCategoryId: Yup.string().required(
 																	'Value is Required',
 																),
@@ -1352,44 +1356,9 @@ getrfqDetails = (e, row, props,form,field) => {
 												{(props) => (
 													<Form onSubmit={props.handleSubmit}>
                                                         <Row>
-
 														<Col lg={3}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="po_number">
-																		<span className="text-danger">*</span>
-																		PO Number
-																	</Label>
-																	<Input
-																		type="text"
-																		id="po_number"
-																		name="po_number"
-																		placeholder="Invoice Number"
-																		value={props.values.po_number}
-																		onBlur={props.handleBlur('po_number')}
-																		onChange={(value) => {
-																			props.handleChange('po_number')(
-																				value,
-																			);
-																		}}
-																		className={
-																			props.errors.po_number &&
-																			props.touched.po_number
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.po_number &&
-																		props.touched.po_number && (
-																			<div className="invalid-feedback">
-																				{props.errors.po_number}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
-                                                        <Col lg={3}>
-																<FormGroup className="mb-3">
 																	<Label htmlFor="rfqNumber">
-																		<span className="text-danger">*</span>
 																		RFQ Number
 																	</Label>
 																	<Select
@@ -1444,6 +1413,41 @@ getrfqDetails = (e, row, props,form,field) => {
 																		)}
 																</FormGroup>
 															</Col>
+
+															<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="po_number">
+																		<span className="text-danger">*</span>
+																		PO Number
+																	</Label>
+																	<Input
+																		type="text"
+																		id="po_number"
+																		name="po_number"
+																		placeholder="Invoice Number"
+																		value={props.values.po_number}
+																		onBlur={props.handleBlur('po_number')}
+																		onChange={(value) => {
+																			props.handleChange('po_number')(
+																				value,
+																			);
+																		}}
+																		className={
+																			props.errors.po_number &&
+																			props.touched.po_number
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.po_number &&
+																		props.touched.po_number && (
+																			<div className="invalid-feedback">
+																				{props.errors.po_number}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+                                                       	
                                                         </Row>
                                                         <hr />
 														<Row>
@@ -1514,37 +1518,36 @@ getrfqDetails = (e, row, props,form,field) => {
 																	<i className="fa fa-plus"></i> Add a Supplier
 																</Button>
 															</Col>
-															<Col lg={3} style={{    marginLeft: "-200px"}}>
+															<Col lg={3}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="referenceNumber">
-																		Supplier reference Number
+																	<Label htmlFor="supplierReferenceNumber">
+																		Supplier Reference Number
 																	</Label>
 																	<Input
 																		type="text"
-																		disabled={true}
-																		id="referenceNumber"
-																		name="referenceNumber"
-																		placeholder="referenceNumber"
-																		value={props.values.referenceNumber}
-																		onBlur={props.handleBlur('referenceNumber')}
+																		id="supplierReferenceNumber"
+																		name="supplierReferenceNumber"
+																		placeholder="Supplier Reference Number"
+																		value={props.values.supplierReferenceNumber}
+																		onBlur={props.handleBlur('supplierReferenceNumber')}
 																		onChange={(value) => {
-																			props.handleChange('referenceNumber')(
+																			props.handleChange('supplierReferenceNumber')(
 																				value,
 																			);
 																		}}
-																		// className={
-																		// 	props.errors.po_number &&
-																		// 	props.touched.po_number
-																		// 		? 'is-invalid'
-																		// 		: ''
-																		// }
+																		className={
+																			props.errors.supplierReferenceNumber &&
+																			props.touched.supplierReferenceNumber
+																				? 'is-invalid'
+																				: ''
+																		}
 																	/>
-																	{/* {props.errors.po_number &&
-																		props.touched.po_number && (
+																	{props.errors.supplierReferenceNumber &&
+																		props.touched.supplierReferenceNumber && (
 																			<div className="invalid-feedback">
-																				{props.errors.po_number}
+																				{props.errors.supplierReferenceNumber}
 																			</div>
-																		)} */}
+																		)}
 																</FormGroup>
 															</Col>
 														</Row>
@@ -1554,7 +1557,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
 																		<span className="text-danger">*</span>
-																		Start Date
+																		PO Date
 																	</Label>
 																	<DatePicker
 																		id="date"
@@ -1588,7 +1591,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="due_date">
 																	<span className="text-danger">*</span>
-																		End Date
+																		PO Due Date
 																	</Label>
 																	<DatePicker
 																		id="date"

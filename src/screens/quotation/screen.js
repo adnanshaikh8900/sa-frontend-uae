@@ -944,7 +944,7 @@ console.log(quotation_list)
 									</Button>
 									</div>
 									</Row> 
-									<div style={{overflowX:'auto'}}>
+								
 										<BootstrapTable
 											selectRow={this.selectRowProp}
 											search={false}
@@ -1022,7 +1022,7 @@ console.log(quotation_list)
 												className="table-header-bg"
 											></TableHeaderColumn>
 										</BootstrapTable>
-									</div>
+								
 								</Col>
 							</Row>
 						</CardBody>

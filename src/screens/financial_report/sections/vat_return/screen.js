@@ -35,7 +35,7 @@ const mapStateToProps = (state) => {
 	return {
 		profile: state.auth.profile,
 		universal_currency_list: state.common.universal_currency_list,
-		company_profile: state.common.company_profile,
+		company_profile: state.reports.company_profile,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -169,6 +169,7 @@ class VatReturnsReport extends React.Component {
 	};
 
 	componentDidMount = () => {
+		this.props.financialReportActions.getCompany();
 		this.initializeData();
 	};
 

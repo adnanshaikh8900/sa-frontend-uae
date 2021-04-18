@@ -205,7 +205,6 @@ class DetailRequestForQuotation extends React.Component {
 										? res.data.poQuatationLineItemRequestModelList
 										: [],
 								
-								
 								},
 								
 								data: res.data.poQuatationLineItemRequestModelList
@@ -1106,88 +1105,65 @@ class DetailRequestForQuotation extends React.Component {
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values);
 													}}
-													validationSchema={Yup.object().shape({
-														// invoice_number: Yup.string().required(
-														// 	'Invoice Number is Required',
-														// ),
-														// contactId: Yup.string().required(
-														// 	'Supplier is Required',
-														// ),
-														// term: Yup.string().required('Term is Required'),
+													validationSchema={Yup.object().shape(
+														{
+														rfq_number: Yup.string().required(
+															'Invoice Number is Required',
+														),
+														supplierId: Yup.string().required(
+															'Supplier is Required',
+														),
 														// placeOfSupplyId: Yup.string().required('Place of supply is Required'),
-														// invoiceDate: Yup.string().required(
-														// 	'Invoice Date is Required',
-														// ),
-														// invoiceDueDate: Yup.string().required(
-														// 	'Invoice Due Date is Required',
-														// ),
-														// currency: Yup.string().required(
-														// 	'Currency is Requsired',
-														// ),
-														// lineItemsString: Yup.array()
-														// 	.required(
-														// 		'Atleast one invoice sub detail is mandatory',
-														// 	)
-														// 	.of(
-														// 		Yup.object().shape({
-														// 			// description: Yup.string().required(
-														// 			// 	'Value is Required',
-														// 			// ),
-														// 			quantity: Yup.number()
-														// 				.required('Value is Required')
-														// 				.test(
-														// 					'quantity',
-														// 					'Quantity Should be Greater than 1',
-														// 					(value) => value > 0,
-														// 				),
-														// 			unitPrice: Yup.number().required(
-														// 				'Value is Required',
-														// 			),
-														// 			vatCategoryId: Yup.string().required(
-														// 				'Value is Required',
-														// 			),
-														// 			productId: Yup.string().required(
-														// 				'Product is Required',
-														// 			),
-														// 		}),
-														// 	),
-														// attachmentFile: Yup.mixed()
-														// 	.test(
-														// 		'fileType',
-														// 		'*Unsupported File Format',
-														// 		(value) => {
-														// 			value &&
-														// 				this.setState({
-														// 					fileName: value.name,
-														// 				});
-														// 			if (
-														// 				!value ||
-														// 				(value &&
-														// 					this.supported_format.includes(
-														// 						value.type,
-														// 					))
-														// 			) {
-														// 				return true;
-														// 			} else {
-														// 				return false;
-														// 			}
-														// 		},
-														// 	)
-														// 	.test(
-														// 		'fileSize',
-														// 		'*File Size is too large',
-														// 		(value) => {
-														// 			if (
-														// 				!value ||
-														// 				(value && value.size <= this.file_size)
-														// 			) {
-														// 				return true;
-														// 			} else {
-														// 				return false;
-														// 			}
-														// 		},
-														// 	),
-													})}
+														
+														rfqReceiveDate: Yup.string().required(
+															'Order Date is Required',
+														),
+														rfqExpiryDate: Yup.string().required(
+															'Order Due Date is Required'
+														),
+														lineItemsString: Yup.array()
+															.required(
+																'Atleast one invoice sub detail is mandatory',
+															)
+															.of(
+																Yup.object().shape({
+																	quantity: Yup.string()
+																		.required('Value is Required')
+																		.test(
+																			'quantity',
+																			'Quantity Should be Greater than 1',
+																			(value) => {
+																				if (value > 0) {
+																					return true;
+																				} else {
+																					return false;
+																				}
+																			},
+																		),
+																	unitPrice: Yup.string()
+																		.required('Value is Required')
+																		.test(
+																			'Unit Price',
+																			'Unit Price Should be Greater than 1',
+																			(value) => {
+																				if (value > 0) {
+																					return true;
+																				} else {
+																					return false;
+																				}
+																			},
+																		),
+																	vatCategoryId: Yup.string().required(
+																		'Value is Required',
+																	),
+																	productId: Yup.string().required(
+																		'Product is Required',
+																	),
+																}),
+															),
+													}
+													)
+												}
 												>
 													{(props) => (
 														<Form onSubmit={props.handleSubmit}>
@@ -1278,7 +1254,7 @@ class DetailRequestForQuotation extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																				
+															
 															</Row>
 															<hr />
 															<Row>
@@ -1332,7 +1308,6 @@ class DetailRequestForQuotation extends React.Component {
 																				value={props.values.rfqExpiryDate}
 																				showMonthDropdown
 																				showYearDropdown
-																				disabled
 																				dateFormat="dd/MM/yyyy"
 																				dropdownMode="select"
 																				onChange={(value) => {

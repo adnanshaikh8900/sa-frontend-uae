@@ -96,7 +96,7 @@ class CreateGoodsReceivedNote extends React.Component {
 			],
 			initValue: {
 				grnReceiveDate: new Date(),
-				poReceiveDate: new Date(),
+				poReceiveDate:new Date(new Date().setMonth(new Date().getMonth() + 1)),
 				supplierId: '',
 				poQuatationLineItemRequestModelList: [
 					{
@@ -116,7 +116,7 @@ class CreateGoodsReceivedNote extends React.Component {
 				totalAmount: 0,
 				notes: '',
 				type: 4,
-
+				supplierReferenceNumber: '',
 			},
 			prefixData:'',
 			state_list: [],
@@ -246,7 +246,8 @@ class CreateGoodsReceivedNote extends React.Component {
 		if (
 			name === 'unitPrice' ||
 			name === 'vatCategoryId' ||
-			name === 'quantity'
+			name === 'quantity'||
+			name === 'grnReceivedQuantity'
 		) {
 			form.setFieldValue(
 				field.name,
@@ -280,6 +281,7 @@ class CreateGoodsReceivedNote extends React.Component {
 				render={({ field, form }) => (
 					<div>
 						<Input
+						disabled
 							type="number"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
@@ -474,16 +476,34 @@ class CreateGoodsReceivedNote extends React.Component {
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						options={
-							product_list
-								? selectOptionsFactory.renderOptions(
-										'name',
-										'id',
-										product_list,
-										'Product',
-								  )
-								: []
-						}
+						onChange={(e) => {
+							if (e && e.label !== 'Select Product') {
+								this.selectItem(e.value, row, 'productId', form, field, props);
+								this.prductValue(e.value, row, 'productId', form, field, props);
+								// this.formRef.current.props.handleChange(field.name)(e.value)
+							} else {
+								form.setFieldValue(
+									`lineItemsString.${idx}.productId`,
+									e.value,
+									true,
+								);
+								this.setState({
+									data: [
+										{
+											id: 0,
+											description: '',
+											quantity: '',
+                                            grnReceivedQuantity: 0,
+                                            poQuantity:'',
+											unitPrice: '',
+											vatCategoryId: '',
+											subTotal: 0,
+											productId: '',
+										},
+									],
+								});
+							}
+						}}
 						value={
 							product_list &&
 							selectOptionsFactory
@@ -513,6 +533,66 @@ class CreateGoodsReceivedNote extends React.Component {
 			/>
 		);
 	}
+	renderGRNQuantity = (cell, row, props) => {
+		let idx;
+		this.state.data.map((obj, index) => {
+			if (obj.id === row.id) {
+				idx = index;
+			}
+			return obj;
+		});
+
+		return (
+			<Field
+				name={`lineItemsString.${idx}.grnReceivedQuantity`}
+				render={({ field, form }) => (
+					<div>
+						<Input
+							type="number"
+							maxLength="10"
+							value={row['grnReceivedQuantity'] !== 0 ? row['grnReceivedQuantity'] : 0}
+							onChange={(e) => {
+								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+									this.selectItem(
+										e.target.value,
+										row,
+										'grnReceivedQuantity',
+										form,
+										field,
+										props,
+									);
+								}
+							}}
+							placeholder="grnReceivedQuantity"
+							className={`form-control 
+            ${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity
+								? 'is-invalid'
+								: ''
+						}`}
+						/>
+						{props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity && (
+								<div className="invalid-feedback">
+									{props.errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity}
+								</div>
+							)}
+					</div>
+				)}
+			/>
+		);
+	};
 	prductValue = (e, row, name, form, field, props) => {
 		const { product_list } = this.props;
 		let data = this.state.selectedData.poQuatationLineItemRequestModelList;
@@ -613,18 +693,18 @@ class CreateGoodsReceivedNote extends React.Component {
 					((+obj.unitPrice -
 						+((obj.unitPrice * discountPercentage) / 100).toFixed(2)) *
 						vat *
-						obj.quantity) /
+						obj.grnReceivedQuantity) /
 					100;
 			} else if (props.values.discountType === 'FIXED') {
 				var val =
-					(obj.unitPrice * obj.quantity - discountAmount / data.length) *
+					(obj.unitPrice * obj.grnReceivedQuantity - discountAmount / data.length) *
 					(vat / 100);
 			} else {
-				var val = (+obj.unitPrice * vat * obj.quantity) / 100;
+				var val = (+obj.unitPrice * vat * obj.grnReceivedQuantity) / 100;
 			}
 			obj.subTotal =
-				obj.unitPrice && obj.vatCategoryId ? +obj.unitPrice * obj.quantity : 0;
-			total_net = +(total_net + +obj.unitPrice * obj.quantity);
+				obj.unitPrice && obj.vatCategoryId ? +obj.unitPrice * obj.grnReceivedQuantity : 0;
+			total_net = +(total_net + +obj.unitPrice * obj.grnReceivedQuantity);
 			total_vat = +(total_vat + val);
 			total = total_vat + total_net;
 			return obj;
@@ -662,7 +742,8 @@ class CreateGoodsReceivedNote extends React.Component {
 				data: data.concat({
 					id: this.state.idCount + 1,
 					description: '',
-					quantity: 1,
+					quantity: '',
+					grnReceivedQuantity: 0,
 					unitPrice: '',
 					vatCategoryId: '',
 					subTotal: 0,
@@ -709,6 +790,7 @@ class CreateGoodsReceivedNote extends React.Component {
             poNumber,
 			grn_number,
 			notes,
+			supplierReferenceNumber,
 		} = data;
 		const postData = this.getData(data);
 		
@@ -727,21 +809,17 @@ class CreateGoodsReceivedNote extends React.Component {
 		formData.append('notes', notes ? notes : '');
 		formData.append('type', 5);
 		formData.append('lineItemsString', JSON.stringify(this.state.selectedData.poQuatationLineItemRequestModelList));
-		formData.append('totalAmount', this.state.selectedData.totalAmount);
-        formData.append('totalVatAmount',this.state.selectedData.totalVatAmount);
+		formData.append('totalAmount', this.state.initValue.totalAmount);
+        formData.append('totalVatAmount',this.state.initValue.totalVatAmount);
 		formData.append('supplierId', this.state.selectedData.supplierId);
         if (poNumber && poNumber.value) {
 			formData.append('poNumber', poNumber.value);
 		}
-	
+		formData.append('supplierReferenceNumber',this.state.selectedData.supplierReferenceNumber);
 		
 		this.props.createGRN(formData)
 			.then((res) => {				
 				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert(
-						'success',
-						'Goods Received Note Created Successfully.',
-					);
 					resetForm();
 					this.props.closeGoodsReceivedNotes(true);
 
@@ -765,88 +843,7 @@ class CreateGoodsReceivedNote extends React.Component {
 		});
 	  }
 
-	// handleSubmit = (data, resetForm, setSubmitting) => {
-	// 	this.props.createPo(this.props.id);
-	// };
 
-	// componentDidMount = () => {
-	// 	this.getinitializeData();
-	// };
-	// getinitializeData = () => {
-	// 	// if (this.props.location.state && this.props.location.state.id) {
-	// 		this.props.requestForQuotationDetailsAction
-	// 			.getRFQeById(id)
-	// 			.then((res) => {
-	// 				if (res.status === 200) {
-	// 					this.getCompanyCurrency();
-	// 					this.props.requestForQuotationAction.getVatList();
-	// 					this.props.requestForQuotationAction.getSupplierList(
-	// 						this.state.contactType,
-	// 					);
-	// 					this.props.requestForQuotationAction.getCountryList();
-	// 					this.props.requestForQuotationAction.getProductList();
-	// 					this.purchaseCategory();
-	// 					this.setState(
-	// 						{
-	// 							current_rfq_id: this.props.location.state.id,
-	// 							initValue: {
-	// 								rfqReceiveDate: res.data.rfqReceiveDate
-	// 									? moment(res.data.rfqReceiveDate).format('DD/MM/YYYY')
-	// 									: '',
-	// 									rfqExpiryDate: res.data.rfqExpiryDate
-	// 									? moment(res.data.rfqExpiryDate).format('DD/MM/YYYY')
-	// 									: '',
-	// 									supplierId: res.data.supplierId ? res.data.supplierId : '',
-	// 									rfqNumber: res.data.rfqNumber
-	// 									? res.data.rfqNumber
-	// 									: '',
-	// 								totalVatAmount: res.data.totalVatAmount
-	// 									? res.data.totalVatAmount
-	// 									: 0,
-	// 									totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
-	// 									total_net: 0,
-	// 								notes: res.data.notes ? res.data.notes : '',
-	// 								poQuatationLineItemRequestModelList: res.data.poQuatationLineItemRequestModelList
-	// 									? res.data.poQuatationLineItemRequestModelList
-	// 									: [],
-								
-								
-	// 							},
-								
-	// 							data: res.data.poQuatationLineItemRequestModelList
-	// 								? res.data.poQuatationLineItemRequestModelList
-	// 								: [],
-	// 							selectedContact: res.data.supplierId ? res.data.supplierId : '',
-							
-	// 							loading: false,
-	// 						},
-	// 						() => {
-	// 							if (this.state.data.length > 0) {
-	// 								this.calTotalNet(this.state.data);
-	// 								const { data } = this.state;
-	// 								const idCount =
-	// 									data.length > 0
-	// 										? Math.max.apply(
-	// 												Math,
-	// 												data.map((item) => {
-	// 													return item.id;
-	// 												}),
-	// 										  )
-	// 										: 0;
-	// 								this.setState({
-	// 									idCount,
-	// 								});
-	// 							} else {
-	// 								this.setState({
-	// 									idCount: 0,
-	// 								});
-	// 							}
-	// 						},
-	// 					);
-	// 				}
-	// 			});
-		
-	// };
 
 	render() {
 		const { openGoodsReceivedNotes, closeGoodsReceivedNotes, id, supplier_list,rfqReceiveDate } = this.props;
@@ -858,8 +855,8 @@ class CreateGoodsReceivedNote extends React.Component {
 			let obj = {label: item.label.contactName, value: item.value}
 			tmpSupplier_list.push(obj)
 		})
-console.log('prefix ',this.state.prefixData,"pppp")
-		console.log('supplierId ',this.state.selectedData.supplierId)
+			console.log(closeGoodsReceivedNotes)
+	
 
 		return (
 			<div className="contact-modal-screen">
@@ -870,7 +867,10 @@ console.log('prefix ',this.state.prefixData,"pppp")
 						onSubmit={(values, { resetForm ,setSubmitting}) => {
 							this.handleSubmit(values, resetForm);
 						}}
-						validationSchema={Yup.object().shape({})}
+					// 	validationSchema={Yup.object().shape(
+					// 		{
+						
+					// }}
 					>
 						{(props) => {
 							const { isSubmitting } = props;
@@ -1058,18 +1058,17 @@ console.log('prefix ',this.state.prefixData,"pppp")
 																		Supplier Reference Number
 																	</Label>
 																	<Input
-                                                                    disabled={true}
+																		disabled
 																		type="text"
 																		id="supplierReferenceNumber"
 																		name="supplierReferenceNumber"
 																		placeholder="Supplier Reference Number"
 																		value={this.state.selectedData.supplierReferenceNumber}
-																		onBlur={props.handleBlur('supplierReferenceNumber')}
+																	
 																		onChange={(value) => {
 																			props.handleChange('supplierReferenceNumber')(
 																				value,
-																			);
-																		}}
+																			);}}
 																		className={
 																			props.errors.supplierReferenceNumber &&
 																			props.touched.supplierReferenceNumber
@@ -1191,13 +1190,23 @@ console.log('prefix ',this.state.prefixData,"pppp")
 																		Description
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
+																		dataField="poQuantity"
+																		width="10%"
+																		dataFormat={(cell, rows) =>
+																			this.renderGRNQuantity(cell, rows, props)
+																		}
+																	>
+																		Received Quantity
+																	</TableHeaderColumn>
+																
+																	<TableHeaderColumn
 																		dataField="quantity"
 																		width="100"
 																		dataFormat={(cell, rows) =>
 																			this.renderQuantity(cell, rows, props)
 																		}
 																	>
-																		Quantity
+																	PO-Quantity
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="unitPrice"
@@ -1282,7 +1291,7 @@ console.log('prefix ',this.state.prefixData,"pppp")
 																							}
 																							/>
 																							)} */}
-																							{this.state.selectedData.total_net}
+																							{this.state.initValue.total_net}
 																						</label>
 																					</Col>
 																				</Row>
@@ -1308,7 +1317,7 @@ console.log('prefix ',this.state.prefixData,"pppp")
 																							}
 																							/>
 																							)} */}
-																							{this.state.selectedData.totalVatAmount	}
+																							{this.state.initValue.totalVatAmount	}
 																						</label>
 																					</Col>
 																				</Row>
@@ -1332,7 +1341,7 @@ console.log('prefix ',this.state.prefixData,"pppp")
 																							}
 																							/>
 																							)} */}
-																							{this.state.selectedData.totalAmount}
+																							{this.state.initValue.totalAmount}
 																						</label>
 																					</Col>
 																				</Row>

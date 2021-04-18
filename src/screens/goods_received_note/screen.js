@@ -270,7 +270,7 @@ class GoodsReceivedNote extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-					{row.status !== "post" && row.status !== "Sent" && row.status !== "Closed" && (
+					{row.status !== "Posted" && row.status !== "Closed" && (
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
@@ -999,11 +999,11 @@ console.log(request_for_quotation_data)
 										}
 									>
 										<i className="fas fa-plus mr-1" />
-										Add New Request
+										Add New Goods Received Notes
 									</Button>
 									</div>
 									</Row> 
-									<div style={{overflowX:'auto'}}>
+								
 										<BootstrapTable
 											selectRow={this.selectRowProp}
 											search={false}
@@ -1108,7 +1108,7 @@ console.log(request_for_quotation_data)
 												className="table-header-bg"
 											></TableHeaderColumn>
 										</BootstrapTable>
-									</div>
+									
 								</Col>
 							</Row>
 						</CardBody>

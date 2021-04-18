@@ -50,6 +50,7 @@ const mapStateToProps = (state) => {
 		product_category_list: state.product.product_category_list,
 		universal_currency_list: state.common.universal_currency_list,
 		currency_convert_list: state.currencyConvert.currency_convert_list,
+		rfq_list: state.purchase_order.rfq_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -205,6 +206,9 @@ class DetailPurchaseOrder extends React.Component {
 									lineItemsString: res.data.poQuatationLineItemRequestModelList
 										? res.data.poQuatationLineItemRequestModelList
 										: [],
+										supplierReferenceNumber: res.data.supplierReferenceNumber ? 
+										res.data.supplierReferenceNumber : '',
+										rfqNumber: res.data.rfqNumber ? res.data.rfqNumber : '',
 								
 								
 								},
@@ -833,9 +837,11 @@ class DetailPurchaseOrder extends React.Component {
 			poReceiveDate,
 			supplierId,
 			poNumber,
+			supplierReferenceNumber,
 			notes,
 			totalVatAmount,
 			totalAmount,
+			rfqNumber,
 		} = data;
 
 		let formData = new FormData();
@@ -859,7 +865,8 @@ class DetailPurchaseOrder extends React.Component {
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
-	
+		formData.append('supplierReferenceNumber', supplierReferenceNumber ? supplierReferenceNumber : '');
+		formData.append('rfqNumber',rfqNumber ? rfqNumber : '');
 		if (supplierId) {
 			formData.append('supplierId', supplierId);
 		}
@@ -1068,7 +1075,7 @@ class DetailPurchaseOrder extends React.Component {
 	render() {
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
 
-		const { project_list, currency_list,currency_convert_list, supplier_list,universal_currency_list } = this.props;
+		const { project_list, currency_list,currency_convert_list, supplier_list,universal_currency_list,rfq_list } = this.props;
 
 		let tmpSupplier_list = []
 
@@ -1106,92 +1113,105 @@ class DetailPurchaseOrder extends React.Component {
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values);
 													}}
-													validationSchema={Yup.object().shape({
-														// invoice_number: Yup.string().required(
-														// 	'Invoice Number is Required',
-														// ),
-														// contactId: Yup.string().required(
-														// 	'Supplier is Required',
-														// ),
-														// term: Yup.string().required('Term is Required'),
-														// placeOfSupplyId: Yup.string().required('Place of supply is Required'),
-														// invoiceDate: Yup.string().required(
-														// 	'Invoice Date is Required',
-														// ),
-														// invoiceDueDate: Yup.string().required(
-														// 	'Invoice Due Date is Required',
-														// ),
-														// currency: Yup.string().required(
-														// 	'Currency is Requsired',
-														// ),
-														// lineItemsString: Yup.array()
-														// 	.required(
-														// 		'Atleast one invoice sub detail is mandatory',
-														// 	)
-														// 	.of(
-														// 		Yup.object().shape({
-														// 			// description: Yup.string().required(
-														// 			// 	'Value is Required',
-														// 			// ),
-														// 			quantity: Yup.number()
-														// 				.required('Value is Required')
-														// 				.test(
-														// 					'quantity',
-														// 					'Quantity Should be Greater than 1',
-														// 					(value) => value > 0,
-														// 				),
-														// 			unitPrice: Yup.number().required(
-														// 				'Value is Required',
-														// 			),
-														// 			vatCategoryId: Yup.string().required(
-														// 				'Value is Required',
-														// 			),
-														// 			productId: Yup.string().required(
-														// 				'Product is Required',
-														// 			),
-														// 		}),
-														// 	),
-														// attachmentFile: Yup.mixed()
-														// 	.test(
-														// 		'fileType',
-														// 		'*Unsupported File Format',
-														// 		(value) => {
-														// 			value &&
-														// 				this.setState({
-														// 					fileName: value.name,
-														// 				});
-														// 			if (
-														// 				!value ||
-														// 				(value &&
-														// 					this.supported_format.includes(
-														// 						value.type,
-														// 					))
-														// 			) {
-														// 				return true;
-														// 			} else {
-														// 				return false;
-														// 			}
-														// 		},
-														// 	)
-														// 	.test(
-														// 		'fileSize',
-														// 		'*File Size is too large',
-														// 		(value) => {
-														// 			if (
-														// 				!value ||
-														// 				(value && value.size <= this.file_size)
-														// 			) {
-														// 				return true;
-														// 			} else {
-														// 				return false;
-														// 			}
-														// 		},
-														// 	),
-													})}
+												// 	validationSchema={Yup.object().shape(
+												// 		{
+												// 			po_number: Yup.string().required(
+												// 			'PONumber is Required',
+												// 		),
+												// 		supplierId: Yup.string().required(
+												// 			'Supplier is Required',
+												// 		),
+												// 		// rfqNumber: Yup.string().required(
+												// 		// 	'Rfq Number is Required',
+												// 		// ),
+												// 		// placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+														
+												// 		poApproveDate: Yup.string().required(
+												// 			'Order Date is Required',
+												// 		),
+												// 		poReceiveDate: Yup.string().required(
+												// 			'Order Due Date is Required'
+												// 		),
+												// 		lineItemsString: Yup.array()
+												// 			.required(
+												// 				'Atleast one POsub detail is mandatory',
+												// 			)
+												// 			.of(
+												// 				Yup.object().shape({
+												// 					quantity: Yup.string()
+												// 						.required('Value is Required')
+												// 						.test(
+												// 							'quantity',
+												// 							'Quantity Should be Greater than 1',
+												// 							(value) => {
+												// 								if (value > 0) {
+												// 									return true;
+												// 								} else {
+												// 									return false;
+												// 								}
+												// 							},
+												// 						),
+												// 					unitPrice: Yup.string()
+												// 						.required('Value is Required')
+												// 						.test(
+												// 							'Unit Price',
+												// 							'Unit Price Should be Greater than 1',
+												// 							(value) => {
+												// 								if (value > 0) {
+												// 									return true;
+												// 								} else {
+												// 									return false;
+												// 								}
+												// 							},
+												// 						),
+												// 					vatCategoryId: Yup.string().required(
+												// 						'Value is Required',
+												// 					),
+												// 					productId: Yup.string().required(
+												// 						'Product is Required',
+												// 					),
+												// 				}),
+												// 			),
+												// 	}
+												// 	)
+												// }
 												>
 													{(props) => (
 														<Form onSubmit={props.handleSubmit}>
 															<Row>
+															<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="rfqNumber">
+																		RFQ Number
+																	</Label>
+																	<Input
+																			type="text"
+																			id="rfqNumber"
+																			name="rfqNumber"
+																			placeholder=""
+																			disabled
+																			value={props.values.rfqNumber}
+																			onChange={(value) => {
+																				props.handleChange('rfqNumber')(
+																					value,
+																				);
+																			}}
+																			className={
+																				props.errors.rfqNumber &&
+																				props.touched.rfqNumber
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{props.errors.rfqNumber &&
+																			props.touched.rfqNumber && (
+																				<div className="invalid-feedback">
+																					{props.errors.rfqNumber}
+																				</div>
+																			)}
+																
+																</FormGroup>
+															</Col>
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="poNumber">
@@ -1225,13 +1245,17 @@ class DetailPurchaseOrder extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																<Col lg={4}>
+																
+															</Row>
+															<Row>
+																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="supplierId">
 																			<span className="text-danger">*</span>
 																			Supplier Name
 																		</Label>
 																		<Select
+																			isDisabled={true}
 																			styles={customStyles}
 																			id="supplierId"
 																			name="supplierId"
@@ -1278,7 +1302,39 @@ class DetailPurchaseOrder extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																				
+																<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="supplierReferenceNumber">
+																		Supplier reference Number
+																	</Label>
+																	<Input
+																		type="text"
+																		disabled={true}
+																		id="supplierReferenceNumber"
+																		name="supplierReferenceNumber"
+																		placeholder="Supplier Reference Number"
+																		value={props.values.supplierReferenceNumber}
+																		onBlur={props.handleBlur('supplierReferenceNumber')}
+																		onChange={(value) => {
+																			props.handleChange('supplierReferenceNumber')(
+																				value,
+																			);
+																		}}
+																		className={
+																			props.errors.supplierReferenceNumber &&
+																			props.touched.supplierReferenceNumber
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.supplierReferenceNumber &&
+																		props.touched.supplierReferenceNumber && (
+																			<div className="invalid-feedback">
+																				{props.errors.supplierReferenceNumber}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>		
 															</Row>
 															<hr />
 															<Row>
@@ -1287,7 +1343,7 @@ class DetailPurchaseOrder extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">
 																			<span className="text-danger">*</span>
-																			Invoice Date
+																			PO Date
 																		</Label>
 																		<DatePicker
 																			id="poApproveDate"
@@ -1322,7 +1378,8 @@ class DetailPurchaseOrder extends React.Component {
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="due_date">
-																		RFQ Due Date
+																		<span className="text-danger">*</span>
+																		PO Due Date
 																		</Label>
 																		<div>
 																			<DatePicker
@@ -1332,7 +1389,6 @@ class DetailPurchaseOrder extends React.Component {
 																				value={props.values.poReceiveDate}
 																				showMonthDropdown
 																				showYearDropdown
-																				disabled
 																				dateFormat="dd/MM/yyyy"
 																				dropdownMode="select"
 																				onChange={(value) => {

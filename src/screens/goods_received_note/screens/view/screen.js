@@ -142,7 +142,7 @@ class ViewGoodsReceivedNote extends React.Component {
 								<p
 									className="close"
 									onClick={() => {
-										this.props.history.push('/admin/expense/request-for-quotation');
+										this.props.history.push('/admin/expense/goods-received-note');
 									}}
 								>
 									X

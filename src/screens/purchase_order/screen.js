@@ -294,7 +294,7 @@ class PurchaseOrder extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-					{row.status !== 'Sent' && row.status !== "Approved" && (
+					{row.status === 'Draft' &&  (
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
@@ -306,16 +306,7 @@ class PurchaseOrder extends React.Component {
 								<i className="fas fa-edit" /> Edit
 							</DropdownItem>
 					)}
-							{row.status !== 'Sent' && row.status !== "Approved" && (
-							<DropdownItem
-								onClick={() => {
-									this.sendMail(row.id);
-								}}
-							>
-								<i className="fas fa-send" /> Send
-							</DropdownItem>)}
-					
-						{row.status === 'Sent' && (
+					{row.status === "Approved" && (
 							<DropdownItem
 							onClick={() => {
 								this.renderActionForState(row.id);
@@ -324,7 +315,17 @@ class PurchaseOrder extends React.Component {
 								<i className="fas fa-send" />  Create GRN
 							</DropdownItem>
 							)}
-							{row.status === 'Sent' && (
+							{row.status === "Approved" && (
+							<DropdownItem
+								onClick={() => {
+									this.sendMail(row.id);
+								}}
+							>
+								<i className="fas fa-send" /> Send
+							</DropdownItem>)}
+					
+						
+							{row.status === 'Draft' && (
 								<DropdownItem
 							onClick={() => {
 							this.changeStatus(row.id);
@@ -333,7 +334,7 @@ class PurchaseOrder extends React.Component {
 								<i className="fas fa-send" /> Approve
 							</DropdownItem>
 							)}
-							{row.status === 'Approved' && row.status === 'Sent' &&(
+							{row.status === 'Approved' &&(
 								<DropdownItem
 							onClick={() => {
 							this.changeStatus(row.id);
@@ -993,7 +994,7 @@ class PurchaseOrder extends React.Component {
 										}
 									>
 										<i className="fas fa-plus mr-1" />
-										Add New Request
+										Add New Purchase Order
 									</Button>
 									</div>
 									</Row> 

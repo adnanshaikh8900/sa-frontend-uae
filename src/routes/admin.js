@@ -84,6 +84,11 @@ import {
 	TrailBalances,
 	VatReturnsReport,
 	DetailedGeneralLedgerReport,
+	SalesByCustomer,
+	SalesByProduct,
+	PurchaseByitem,
+	PurchaseByVendor,
+	
 
 	// Master Screens
 	ChartAccount,
@@ -494,13 +499,33 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/report/financial/trailbalances',
-		name: 'TrailBalances',
+		name: 'TrialBalance',
 		component: TrailBalances.screen,
 	},
 	{
 		path: '/admin/report/financial/vatreturns',
-		name: 'VatReturnsReport',
+		name: 'VatReturnReport',
 		component: VatReturnsReport.screen,
+	},
+	{
+		path: '/admin/report/financial/salesbycustomer',
+		name: 'SalesByCustomer',
+		component: SalesByCustomer.screen,
+	},
+	{
+		path: '/admin/report/financial/salesbyproduct',
+		name: 'SalesByProduct',
+		component: SalesByProduct.screen,
+	},
+	{
+		path: '/admin/report/financial/purchasebyvendor',
+		name: 'PurchaseByVendor',
+		component: PurchaseByVendor.screen,
+	},
+	{
+		path: '/admin/report/financial/purchasebyitem',
+		name: 'PurchaseByVendor',
+		component: PurchaseByitem.screen,
 	},
 	{
 		path: '/admin/report/detailed-general-ledger',
@@ -576,7 +601,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/master/product/detail/inventoryhistory',
-		name: 'UpdateInventory',
+		name: 'InventoryHistory',
 		component: InventoryHistory.screen,
 	},
 	{

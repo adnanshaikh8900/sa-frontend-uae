@@ -83,6 +83,10 @@ import HorizontalBalanceSheet from './financial_report/sections/horizontal_balan
 import TrailBalances from './financial_report/sections/trail_Balances';
 import VatReturnsReport from './financial_report/sections/vat_return';
 import DetailedGeneralLedgerReport from './detailed_general_ledger_report';
+import SalesByCustomer from './financial_report/sections/sales_by_customer';
+import SalesByProduct from './financial_report/sections/sales_by_product';
+import PurchaseByitem from './financial_report/sections/purchase_by_item';
+import PurchaseByVendor from './financial_report/sections/purchase_by_vendor';
 
 import ChartAccount from './chart_account';
 import CreateChartAccount from './chart_account/screens/create';
@@ -201,6 +205,10 @@ export {
 	HorizontalBalanceSheet,
 	TrailBalances,
 	VatReturnsReport,
+	SalesByCustomer,
+	SalesByProduct,
+	PurchaseByitem,
+	PurchaseByVendor,
 	Inventory,
 	Template,
 	DetailedGeneralLedgerReport,

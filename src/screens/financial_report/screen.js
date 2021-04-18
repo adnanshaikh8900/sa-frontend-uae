@@ -19,6 +19,11 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {};
 };
+const Financial = require('assets/images/reports/Out line.png');
+const Vat = require('assets/images/reports/vat.png');
+const Journal = require('assets/images/reports/journal.png');
+const Sales = require('assets/images/reports/sales.png');
+const Purchase = require('assets/images/reports/pay.png');
 
 class FinancialReport extends React.Component {
 	constructor(props) {
@@ -45,9 +50,9 @@ class FinancialReport extends React.Component {
 						<CardHeader>
 							<Row>
 								<Col lg={12}>
-									<div className="h4 mb-0 d-flex align-items-center">
+									<div className="h6 mb-0 d-flex align-items-center">
 										<i className="nav-icon fas fa-usd" />
-										<span className="ml-2">Financial Report</span>
+										<span className="ml-2"> Reports</span>
 									</div>
 								</Col>
 							</Row>
@@ -117,85 +122,96 @@ class FinancialReport extends React.Component {
 									</div>
 								</TabPane>
 							</TabContent> */}
-							<Card className="report-card">
-								<CardHeader>Financial</CardHeader>
-								<CardBody>
-									<Row xs="4">
-										<Col  className="report-section">
-											<h5><a href ="#"
-											onClick={() =>
-									this.props.history.push('/admin/report/financial/profitandloss')}
-								>
-									Profit & Loss</a></h5>
+
+									<Row xs="3">
+
+
+										<Col  className="report-section ml-4">
+											<div className="d-flex  mb-2 " style={{ backgroundColor: "#e8effb", height: "25%",width:"350px" }}>
+											<img
+											className="ml-2 mr-2 mt-2"
+											src={Financial}
+											style={{height:'35px'}}
+											></img>	<h4 className="mb-3 mt-2">Financial Reports</h4></div>
+											<div className="mt-2 ml-4">
+											<h6><a style={{fontWeight:'400'}} href ="#" onClick={() => 
+											this.props.history.push('/admin/report/financial/profitandloss')}> Profit & Loss</a></h6>
+											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
+											this.props.history.push('/admin/report/financial/balancesheet')}>Balance Sheet</a></h6>
+											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
+											this.props.history.push('/admin/report/financial/horizontalbalancesheet')}>Horizontal Balance Sheet</a></h6>
+											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
+											this.props.history.push('/admin/report/financial/trailbalances')}>Trail Balances</a></h6>
+
+									</div>
+										</Col>
+
+										<Col className="report-section">
+										<div className="d-flex  mb-2 " style={{ backgroundColor: "#e8effb", height: "25%",width:"350px" }}>
+											<img
+											className="ml-2 mr-2 mt-2"
+											src={Vat}
+											style={{height:'35px'}}
+											></img>	<h4  className="mb-3 mt-2">Vat Reports</h4></div>
+										<div className="mt-2 ml-4">
+										<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
+									this.props.history.push('/admin/report/financial/vatreturns')}>Vat Returns Report</a></h6>
+										<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
+									this.props.history.push('/admin/taxes/vat-transactions')}>Vat Transaction Report</a></h6>
+									</div>
 										</Col>
 										<Col className="report-section">
-											<h5><a href="#" onClick={() =>
-									this.props.history.push('/admin/report/financial/balancesheet')}>Balance Sheet</a></h5>
-										</Col>
-										<Col className="report-section">
-											<h5><a href="#" onClick={() =>
-									this.props.history.push('/admin/report/financial/horizontalbalancesheet')}>Horizontal Balance Sheet</a></h5>
-										</Col>
-										<Col className="report-section">
-											<h5><a href="#" onClick={() =>
-									this.props.history.push('/admin/report/financial/trailbalances')}>Trail Balances</a></h5>
+										<div className="d-flex " style={{ backgroundColor: "#e8effb", height: "25%",width:"350px" }}>
+											<img
+											className="ml-2 mr-2 mt-2"
+											src={Journal}
+											style={{height:'35px'}}
+											></img>	<h4 className="mb-3 mt-2">Detailed</h4></div>
+										<div className="mt-2 ml-4">
+										<h6><a   style={{fontWeight:'400'}} href="#"
+										onClick={() =>
+											this.props.history.push('/admin/report/detailed-general-ledger')}
+											>
+										Detailed Journal ledger</a></h6>
+										</div>
 										</Col>
 
 									</Row>
-								</CardBody>
-							</Card>
-							<Card className="report-card">
-								<CardHeader>Vat Report</CardHeader>
-								<CardBody>
-									<Row>
-									<Col className="report-section">
-											<h5><a href="#" onClick={() =>
-									this.props.history.push('/admin/report/financial/vatreturns')}>Vat Returns Report</a></h5>
+									<Row xs="3" className="mt-4">
+									
+									<Col  className="report-section ml-4">
+											<div className="d-flex  mb-2 " style={{ backgroundColor: "#e8effb", height: "38%",width:"350px" }}>
+											<img
+											className="ml-2 mr-2 mt-2"
+											src={Sales}
+											style={{height:'35px'}}
+											></img>	<h4 className="mb-3 mt-2">Sales</h4></div>
+											<div className="mt-2 ml-4">
+											<h6><a  style={{fontWeight:'400'}} href ="#" onClick={() => 
+											this.props.history.push('/admin/report/financial/salesbycustomer')}> Sales By Customer</a></h6>
+											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
+											this.props.history.push('/admin/report/financial/salesbyproduct')}>Sales By Item</a></h6>
+									
+									</div>
 										</Col>
-										<Col className="report-section">
-											<h5><a href="#" onClick={() =>
-									this.props.history.push('/admin/taxes/vat-transactions')}>Vat Transaction Report</a></h5>
+
+										<Col  className="report-section ml-4">
+											<div className="d-flex  mb-2 " style={{ backgroundColor: "#e8effb", height: "38%",width:"350px" }}>
+											<img
+											className="ml-2 mr-2 mt-2"
+											src={Purchase}
+											style={{height:'35px'}}
+											></img>	<h4 className="mb-3 mt-2">Purchase</h4></div>
+											<div className="mt-2 ml-4">
+											<h6><a  style={{fontWeight:'400'}} href ="#" onClick={() => 
+											this.props.history.push('/admin/report/financial/purchasebyvendor')}> Sales By Vendor</a></h6>
+											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
+											this.props.history.push('/admin/report/financial/purchasebyitem')}>Sales By Item</a></h6>
+									
+									</div>
 										</Col>
-										{/* <Col className="report-section">
-											<h5><a href="#">Capital Assets</a></h5>
-											<p>A list of the capital assets owned by your business and how they depreciate over time.</p>
-										</Col>
-										<Col className="report-section">
-											<h5><a href="#">Customer Sales</a></h5>
-											<p>A breakdown of your sales by customer over different time periods.</p>
-										</Col>
-										<Col className="report-section">
-											<h5><a href="#">Spending Categories</a></h5>
-											<p>A breakdown of your expenditure by category over time.</p>
-										</Col>
-										 */}
+										<Col  className="report-section ml-4"></Col>
 									</Row>
-								</CardBody>
-							</Card>
-							<Card className="report-card">
-								<CardHeader>Detailed</CardHeader>
-								<CardBody>
-									<Row>
-										<Col className="report-section">
-											<h5><a href="#"
-												onClick={() =>
-													this.props.history.push('/admin/report/detailed-general-ledger')}
-													>
-														Detailed Journal ledger</a></h5>
-										</Col>
-										{/* <Col className="report-section">
-											<h5><a href="#">Trial Balance</a></h5>
-											<p>A list of the total amounts in all of your FreeAgent categories at a given point in time. You can also export this report</p>
-										</Col>
-										<Col className="report-section">
-											<h5><a href="#">Audit Trail</a></h5>
-											<p>A record of the changes that have been made to your FreeAgent data, including who made them and when they were made.</p>
-										</Col> */}
-										<Col></Col>									
-										<Col></Col>									
-									</Row>
-								</CardBody>
-							</Card>
 						</CardBody>
 					</Card>
 				</div>

@@ -1052,7 +1052,7 @@ class CustomerInvoice extends React.Component {
 										<i className="fas fa-plus mr-1" />
 										Add New Invoice
 									</Button></div></Row>
-									<div style={{overflowX:'auto'}}>
+								
 										<BootstrapTable
 											selectRow={this.selectRowProp}
 											search={false}
@@ -1171,7 +1171,6 @@ class CustomerInvoice extends React.Component {
 												className="table-header-bg"
 											></TableHeaderColumn>
 										</BootstrapTable>
-									</div>
 								</Col>
 							</Row>
 						</CardBody>

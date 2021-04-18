@@ -255,26 +255,6 @@ export const getRFQList = (id) => {
 			});
 	};
 };
-export const getPOList = (id) => {
-	return (dispatch) => {
-		let data = {
-			method: 'get',
-			url: `/rest/poquatation/getRfqPoForDropDown?type=4`,
-		};
-		return authApi(data)
-			.then((res) => {
-				if (res.status === 200) {
-					dispatch({
-						type: PURCHASE_ORDER.PURCHASE_ORDER_LIST,
-						payload: res,
-					});
-				}
-			})
-			.catch((err) => {
-				throw err;
-			});
-	};
-};
 export const createSupplier = (obj) => {
 	return (dispatch) => {
 		let data = {

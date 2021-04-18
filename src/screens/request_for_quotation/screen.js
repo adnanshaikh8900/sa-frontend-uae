@@ -303,7 +303,7 @@ class RequestForQuotation extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-					{row.status !== 'Sent' && row.status !== "Approved" && (
+					{row.status !== 'Sent' && row.status !== "Closed" && (
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
@@ -316,16 +316,7 @@ class RequestForQuotation extends React.Component {
 								<i className="fas fa-edit" /> Edit
 							</DropdownItem>
 								)}
-							{row.status !== 'Sent' && row.status !== "Approved" && (
-							<DropdownItem
-								onClick={() => {
-									this.sendMail(row.id);
-								}}
-							>
-								<i className="fas fa-send" /> Send
-							</DropdownItem>
-							)}
-							{row.status === 'Sent' && (
+								{row.status === 'Sent' && (
 							<DropdownItem
 							onClick={() => {
 							this.renderActionForState(row.id);
@@ -334,6 +325,16 @@ class RequestForQuotation extends React.Component {
 								<i className="fas fa-send" /> Create PO
 							</DropdownItem>
 							)}
+							{ row.status !== "Closed"  && (
+							<DropdownItem
+								onClick={() => {
+									this.sendMail(row.id);
+								}}
+							>
+								<i className="fas fa-send" /> Send
+							</DropdownItem>
+							)}
+							
 							{row.status === 'Sent' && (
 							<DropdownItem
 							onClick={() => {

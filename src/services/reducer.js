@@ -38,6 +38,7 @@ import {
 	RequestForQuotation,
 	PurchaseOrder,
 	GoodsReceivedNote,
+	FinancialReport,
 } from 'screens';
 
 
@@ -69,6 +70,7 @@ const reducer = combineReducers({
 	vat: VatCode.reducer,
 	currency: Currency.reducer,
 	help: Help.reducer,
+	reports: FinancialReport.reducer,
 	notification: Notification.reducer,
 	organization: Organization.reducer,
 	users_roles: UsersRoles.reducer,

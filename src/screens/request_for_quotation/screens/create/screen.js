@@ -105,11 +105,13 @@ class CreateRequestForQuotation extends React.Component {
 				},
 			],
 			idCount: 0,
+			date1:new Date().setMonth(new Date().getMonth() + 1),
+			
 			initValue: {
 				contact_po_number: '',
 				currencyCode: '',
 				rfqReceiveDate: new Date(),
-				rfqExpiryDate: new Date(),
+				rfqExpiryDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
 				supplierId: '',
 				placeOfSupplyId: '',
 				project: '',
@@ -186,6 +188,7 @@ class CreateRequestForQuotation extends React.Component {
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 	}
+	
 
 	renderProductName = (cell, row) => {
 		return (
@@ -1122,7 +1125,7 @@ class CreateRequestForQuotation extends React.Component {
 
 
 	render() {
-		const { data, discountOptions, initValue, prefix } = this.state;
+		const { data, discountOptions, initValue, prefix,data1 } = this.state;
 
 		const {
 			currency_list,
@@ -1137,7 +1140,7 @@ class CreateRequestForQuotation extends React.Component {
 			let obj = {label: item.label.contactName, value: item.value}
 			tmpSupplier_list.push(obj)
 		})
-
+		console.log("date1",new Date(this.state.date1))
 		return (
 			<div className="create-supplier-invoice-screen">
 				<div className=" fadeIn">
@@ -1334,6 +1337,7 @@ class CreateRequestForQuotation extends React.Component {
 																	<i className="fa fa-plus"></i> Add a Supplier
 																</Button>
 															</Col>
+															
 														</Row>
 														<hr />
 														<Row>
@@ -1358,9 +1362,10 @@ class CreateRequestForQuotation extends React.Component {
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd/MM/yyyy"
-																		maxDate={new Date()}
+																		
 																		onChange={(value) => {
 																			props.handleChange('rfqReceiveDate')(value);
+																		
 																		}}
 																	/>
 																	{props.errors.rfqReceiveDate &&
@@ -1392,7 +1397,7 @@ class CreateRequestForQuotation extends React.Component {
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd/MM/yyyy"
-																		maxDate={new Date()}
+																		
 																		onChange={(value) => {
 																			props.handleChange('rfqExpiryDate')(value);
 																		}}

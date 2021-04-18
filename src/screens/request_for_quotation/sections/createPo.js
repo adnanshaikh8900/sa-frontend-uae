@@ -96,7 +96,7 @@ class CreatePurchaseOrder extends React.Component {
 			],
 			initValue: {
 				poApproveDate: new Date(),
-				poReceiveDate: new Date(),
+				poReceiveDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
 				supplierId: '',
 				poQuatationLineItemRequestModelList: [
 					{
@@ -709,6 +709,7 @@ class CreatePurchaseOrder extends React.Component {
             rfqNumber,
 			po_number,
 			notes,
+			supplierReferenceNumber,
 		} = data;
 		const postData = this.getData(data);
 		
@@ -729,22 +730,17 @@ class CreatePurchaseOrder extends React.Component {
 		formData.append('notes', notes ? notes : '');
 		formData.append('type', 4);
 		formData.append('lineItemsString', JSON.stringify(this.state.selectedData.poQuatationLineItemRequestModelList));
-		formData.append('totalAmount', this.state.selectedData.totalAmount);
-        formData.append('totalVatAmount',this.state.selectedData.totalVatAmount);
+		formData.append('totalAmount', this.state.initValue.totalAmount);
+        formData.append('totalVatAmount',this.state.initValue.totalVatAmount);
 	    formData.append('supplierId', this.state.selectedData.supplierId);
+		formData.append('supplierReferenceNumber',supplierReferenceNumber ? supplierReferenceNumber : '');
 
         if (rfqNumber && rfqNumber.value) {
 			formData.append('rfqNumber', rfqNumber.value);
 		}
-	
-		
 		this.props.createPO(formData)
 			.then((res) => {				
 				if (res.status === 200) {
-                    this.props.commonActions.tostifyAlert(
-                        'success',
-                        'Purchase Order Created Successfully.',
-                    );
 					resetForm();
 					this.props.closePurchaseOrder(true);
 
@@ -768,88 +764,7 @@ class CreatePurchaseOrder extends React.Component {
 		});
 	  }
 
-	// handleSubmit = (data, resetForm, setSubmitting) => {
-	// 	this.props.createPo(this.props.id);
-	// };
 
-	// componentDidMount = () => {
-	// 	this.getinitializeData();
-	// };
-	// getinitializeData = () => {
-	// 	// if (this.props.location.state && this.props.location.state.id) {
-	// 		this.props.requestForQuotationDetailsAction
-	// 			.getRFQeById(id)
-	// 			.then((res) => {
-	// 				if (res.status === 200) {
-	// 					this.getCompanyCurrency();
-	// 					this.props.requestForQuotationAction.getVatList();
-	// 					this.props.requestForQuotationAction.getSupplierList(
-	// 						this.state.contactType,
-	// 					);
-	// 					this.props.requestForQuotationAction.getCountryList();
-	// 					this.props.requestForQuotationAction.getProductList();
-	// 					this.purchaseCategory();
-	// 					this.setState(
-	// 						{
-	// 							current_rfq_id: this.props.location.state.id,
-	// 							initValue: {
-	// 								rfqReceiveDate: res.data.rfqReceiveDate
-	// 									? moment(res.data.rfqReceiveDate).format('DD/MM/YYYY')
-	// 									: '',
-	// 									rfqExpiryDate: res.data.rfqExpiryDate
-	// 									? moment(res.data.rfqExpiryDate).format('DD/MM/YYYY')
-	// 									: '',
-	// 									supplierId: res.data.supplierId ? res.data.supplierId : '',
-	// 									rfqNumber: res.data.rfqNumber
-	// 									? res.data.rfqNumber
-	// 									: '',
-	// 								totalVatAmount: res.data.totalVatAmount
-	// 									? res.data.totalVatAmount
-	// 									: 0,
-	// 									totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
-	// 									total_net: 0,
-	// 								notes: res.data.notes ? res.data.notes : '',
-	// 								poQuatationLineItemRequestModelList: res.data.poQuatationLineItemRequestModelList
-	// 									? res.data.poQuatationLineItemRequestModelList
-	// 									: [],
-
-
-	// 							},
-
-	// 							data: res.data.poQuatationLineItemRequestModelList
-	// 								? res.data.poQuatationLineItemRequestModelList
-	// 								: [],
-	// 							selectedContact: res.data.supplierId ? res.data.supplierId : '',
-
-	// 							loading: false,
-	// 						},
-	// 						() => {
-	// 							if (this.state.data.length > 0) {
-	// 								this.calTotalNet(this.state.data);
-	// 								const { data } = this.state;
-	// 								const idCount =
-	// 									data.length > 0
-	// 										? Math.max.apply(
-	// 												Math,
-	// 												data.map((item) => {
-	// 													return item.id;
-	// 												}),
-	// 										  )
-	// 										: 0;
-	// 								this.setState({
-	// 									idCount,
-	// 								});
-	// 							} else {
-	// 								this.setState({
-	// 									idCount: 0,
-	// 								});
-	// 							}
-	// 						},
-	// 					);
-	// 				}
-	// 			});
-
-	// };
 
 	render() {
 		const { openPurchaseOrder, closePurchaseOrder, id, supplier_list,rfqReceiveDate } = this.props;
@@ -861,8 +776,7 @@ class CreatePurchaseOrder extends React.Component {
 			let obj = {label: item.label.contactName, value: item.value}
 			tmpSupplier_list.push(obj)
 		})
-console.log('prefix ',this.state.prefixData,"pppp")
-		console.log('supplierId ',this.state.selectedData.supplierId)
+console.log(closePurchaseOrder)
 
 		return (
 			<div className="contact-modal-screen">
@@ -1057,11 +971,10 @@ console.log('prefix ',this.state.prefixData,"pppp")
                                                              <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="supplierReferenceNumber">
-																		<span className="text-danger">*</span>
+																	
 																		Supplier Reference Number
 																	</Label>
 																	<Input
-                                                                    disabled={true}
 																		type="text"
 																		id="supplierReferenceNumber"
 																		name="supplierReferenceNumber"
@@ -1113,7 +1026,6 @@ console.log('prefix ',this.state.prefixData,"pppp")
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd/MM/yyyy"
-																		maxDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('poApproveDate')(value);
 																		}}
@@ -1147,7 +1059,6 @@ console.log('prefix ',this.state.prefixData,"pppp")
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd/MM/yyyy"
-
 																		onChange={(value) => {
 																			props.handleChange('poReceiveDate')(value);
 																		}}
@@ -1322,7 +1233,7 @@ console.log('prefix ',this.state.prefixData,"pppp")
 																							}
 																							/>
 																							)} */}
-																							{this.state.selectedData.total_net}
+																							{this.state.initValue.total_net}
 																						</label>
 																					</Col>
 																				</Row>
@@ -1348,7 +1259,7 @@ console.log('prefix ',this.state.prefixData,"pppp")
 																							}
 																							/>
 																							)} */}
-																							{this.state.selectedData.totalVatAmount	}
+																							{this.state.initValue.totalVatAmount	}
 																						</label>
 																					</Col>
 																				</Row>
@@ -1372,7 +1283,7 @@ console.log('prefix ',this.state.prefixData,"pppp")
 																							}
 																							/>
 																							)} */}
-																							{this.state.selectedData.totalAmount}
+																							{this.state.initValue.totalAmount}
 																						</label>
 																					</Col>
 																				</Row>

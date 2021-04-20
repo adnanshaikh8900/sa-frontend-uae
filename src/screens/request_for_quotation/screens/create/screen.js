@@ -145,8 +145,7 @@ class CreateRequestForQuotation extends React.Component {
 			openInvoiceNumberModel: false,
 			selectedContact: '',
 			createMore: false,
-			
-			
+			fileName: '',
 			prefix: '',
 			selectedType: { value: 'FIXED', label: 'Fixed' },
 			discountPercentage: '',
@@ -855,6 +854,17 @@ class CreateRequestForQuotation extends React.Component {
 		);
 	};
 
+	handleFileChange = (e, props) => {
+		e.preventDefault();
+		let reader = new FileReader();
+		let file = e.target.files[0];
+		if (file) {
+			reader.onloadend = () => {};
+			reader.readAsDataURL(file);
+			props.setFieldValue('attachmentFile', file, true);
+		}
+	};
+
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true });
 		const {
@@ -887,7 +897,9 @@ class CreateRequestForQuotation extends React.Component {
 		if (supplierId && supplierId.value) {
 			formData.append('supplierId', supplierId.value);
 		}
-		
+		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
+			formData.append('attachmentFile', this.uploadFile.files[0]);
+		}
 		this.props.requestForQuotationCreateAction
 			.createRFQ(formData)
 			.then((res) => {
@@ -960,16 +972,6 @@ class CreateRequestForQuotation extends React.Component {
 		this.setState({ openProductModal: true });
 	};
 
-	handleFileChange = (e, props) => {
-		e.preventDefault();
-		let reader = new FileReader();
-		let file = e.target.files[0];
-		if (file) {
-			reader.onloadend = () => {};
-			reader.readAsDataURL(file);
-			props.setFieldValue('attachmentFile', file, true);
-		}
-	};
 
 	getCurrentUser = (data) => {
 		
@@ -1196,6 +1198,41 @@ class CreateRequestForQuotation extends React.Component {
 													rfqExpiryDate: Yup.string().required(
 														'Order Due Date is Required'
 													),
+													attachmentFile: Yup.mixed()
+													.test(
+														'fileType',
+														'*Unsupported File Format',
+														(value) => {
+															value &&
+																this.setState({
+																	fileName: value.name,
+																});
+															if (
+																!value ||
+																(value &&
+																	this.supported_format.includes(value.type))
+															) {
+																return true;
+															} else {
+																return false;
+															}
+														},
+													)
+													.test(
+														'fileSize',
+														'*File Size is too large',
+														(value) => {
+															if (
+																!value ||
+																(value && value.size <= this.file_size)
+															) {
+																return true;
+															} else {
+																return false;
+															}
+														},
+													),
+											
 													lineItemsString: Yup.array()
 														.required(
 															'Atleast one invoice sub detail is mandatory',
@@ -1238,6 +1275,7 @@ class CreateRequestForQuotation extends React.Component {
 														),
 												}
 												)
+												
 											}
 											>
 												{(props) => (
@@ -1536,10 +1574,10 @@ class CreateRequestForQuotation extends React.Component {
 																</BootstrapTable>
 															</Col>
 														</Row>
-														<hr />
+													
 														{this.state.data.length > 0 ? (
 															<Row>
-																<Col lg={8}>
+																<Col lg={4}>
 																	<FormGroup className="py-2">
 																		<Label htmlFor="notes">Notes</Label>
 																		<Input
@@ -1556,8 +1594,65 @@ class CreateRequestForQuotation extends React.Component {
 																		/>
 																	</FormGroup>
 
-																</Col>
-
+															
+																			<FormGroup className="mb-3">
+																				<Field
+																					name="attachmentFile"
+																					render={({ field, form }) => (
+																						<div>
+																							<Label>Reciept Attachment</Label>{' '}
+																							<br />
+																							<Button
+																								color="primary"
+																								onClick={() => {
+																									document
+																										.getElementById('fileInput')
+																										.click();
+																								}}
+																								className="btn-square mr-3"
+																							>
+																								<i className="fa fa-upload"></i>{' '}
+																								Upload
+																							</Button>
+																							<input
+																								id="fileInput"
+																								ref={(ref) => {
+																									this.uploadFile = ref;
+																								}}
+																								type="file"
+																								style={{ display: 'none' }}
+																								onChange={(e) => {
+																									this.handleFileChange(
+																										e,
+																										props,
+																									);
+																								}}
+																							/>
+																							{this.state.fileName && (
+																								<div>
+																									<i
+																										className="fa fa-close"
+																										onClick={() =>
+																											this.setState({
+																												fileName: '',
+																											})
+																										}
+																									></i>{' '}
+																									{this.state.fileName}
+																								</div>
+																							)}
+																						</div>
+																					)}
+																				/>
+																				{props.errors.attachmentFile &&
+																					props.touched.attachmentFile && (
+																						<div className="invalid-file">
+																							{props.errors.attachmentFile}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+																		<Col lg={4}> </Col>
 																<Col lg={4}>
 																	<div className="">
 																	

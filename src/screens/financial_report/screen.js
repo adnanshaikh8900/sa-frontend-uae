@@ -127,12 +127,12 @@ class FinancialReport extends React.Component {
 
 
 										<Col  className="report-section ml-4">
-											<div className="d-flex  mb-2 " style={{ backgroundColor: "#e8effb", height: "25%",width:"350px" }}>
+										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "35px",width:"350px" }}>
 											<img
-											className="ml-2 mr-2 mt-2"
+											className="ml-2 mr-2 mt-2 mb-2 "
 											src={Financial}
-											style={{height:'35px'}}
-											></img>	<h4 className="mb-3 mt-2">Financial Reports</h4></div>
+											style={{height:'25px'}}
+											></img>	<h5 className="mb-3 mt-2">Financial Reports</h5></div>
 											<div className="mt-2 ml-4">
 											<h6><a style={{fontWeight:'400'}} href ="#" onClick={() => 
 											this.props.history.push('/admin/report/financial/profitandloss')}> Profit & Loss</a></h6>
@@ -147,12 +147,12 @@ class FinancialReport extends React.Component {
 										</Col>
 
 										<Col className="report-section">
-										<div className="d-flex  mb-2 " style={{ backgroundColor: "#e8effb", height: "25%",width:"350px" }}>
+										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "35px",width:"350px" }}>
 											<img
-											className="ml-2 mr-2 mt-2"
+											className="ml-2 mr-2 mt-2 mb-2 "
 											src={Vat}
-											style={{height:'35px'}}
-											></img>	<h4  className="mb-3 mt-2">Vat Reports</h4></div>
+											style={{height:'25px'}}
+											></img>	<h5  className="mb-3 mt-2">Vat Reports</h5></div>
 										<div className="mt-2 ml-4">
 										<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
 									this.props.history.push('/admin/report/financial/vatreturns')}>Vat Returns Report</a></h6>
@@ -161,12 +161,12 @@ class FinancialReport extends React.Component {
 									</div>
 										</Col>
 										<Col className="report-section">
-										<div className="d-flex " style={{ backgroundColor: "#e8effb", height: "25%",width:"350px" }}>
+										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "35px",width:"350px" }}>
 											<img
-											className="ml-2 mr-2 mt-2"
+											className="ml-2 mr-2 mt-2 mb-2 "
 											src={Journal}
-											style={{height:'35px'}}
-											></img>	<h4 className="mb-3 mt-2">Detailed</h4></div>
+											style={{height:'25px'}}
+											></img>	<h5 className="mb-3 mt-2">Detailed</h5></div>
 										<div className="mt-2 ml-4">
 										<h6><a   style={{fontWeight:'400'}} href="#"
 										onClick={() =>
@@ -180,12 +180,12 @@ class FinancialReport extends React.Component {
 									<Row xs="3" className="mt-4">
 									
 									<Col  className="report-section ml-4">
-											<div className="d-flex  mb-2 " style={{ backgroundColor: "#e8effb", height: "38%",width:"350px" }}>
+									<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "35px",width:"350px" }}>
 											<img
-											className="ml-2 mr-2 mt-2"
+												className="ml-2 mr-2 mt-2 mb-2 "
 											src={Sales}
-											style={{height:'35px'}}
-											></img>	<h4 className="mb-3 mt-2">Sales</h4></div>
+											style={{height:'25px'}}
+											></img>	<h5 className="mb-3 mt-2">Sales</h5></div>
 											<div className="mt-2 ml-4">
 											<h6><a  style={{fontWeight:'400'}} href ="#" onClick={() => 
 											this.props.history.push('/admin/report/financial/salesbycustomer')}> Sales By Customer</a></h6>
@@ -196,12 +196,12 @@ class FinancialReport extends React.Component {
 										</Col>
 
 										<Col  className="report-section ml-4">
-											<div className="d-flex  mb-2 " style={{ backgroundColor: "#e8effb", height: "38%",width:"350px" }}>
+										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "35px",width:"350px" }}>
 											<img
-											className="ml-2 mr-2 mt-2"
+												className="ml-2 mr-2 mt-2 mb-2 "
 											src={Purchase}
-											style={{height:'35px'}}
-											></img>	<h4 className="mb-3 mt-2">Purchase</h4></div>
+											style={{height:'25px'}}
+											></img>	<h5 className="mb-3 mt-2">Purchase</h5></div>
 											<div className="mt-2 ml-4">
 											<h6><a  style={{fontWeight:'400'}} href ="#" onClick={() => 
 											this.props.history.push('/admin/report/financial/purchasebyvendor')}> Sales By Vendor</a></h6>

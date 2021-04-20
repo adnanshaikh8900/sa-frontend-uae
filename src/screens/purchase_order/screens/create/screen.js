@@ -138,7 +138,7 @@ class CreatePurchaseOrder extends React.Component {
 				],
 				po_number: '',
 				total_net: 0,
-				invoiceVATAmount: 0,
+				totalVatAmount: 0,
 				term: '',
 				totalAmount: 0,
 				notes: '',
@@ -153,8 +153,7 @@ class CreatePurchaseOrder extends React.Component {
 			openInvoiceNumberModel: false,
 			selectedContact: '',
 			createMore: false,
-			
-			
+			fileName: '',
 			prefix: '',
 			selectedType: { value: 'FIXED', label: 'Fixed' },
 			discountPercentage: '',
@@ -886,7 +885,7 @@ class CreatePurchaseOrder extends React.Component {
 					...this.state.initValue,
 					...{
 						total_net: discount ? total_net - discount : total_net,
-						invoiceVATAmount: total_vat,
+						totalVatAmount: total_vat,
 						discount: total_net > discount ? discount : 0,
 						totalAmount: total_net > discount ? total - discount : total,
 					},
@@ -930,13 +929,16 @@ class CreatePurchaseOrder extends React.Component {
 		formData.append('notes', notes ? notes : '');
 		formData.append('type', 4);
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
-		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
+		formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
 		if (supplierId && supplierId.value) {
 			formData.append('supplierId', supplierId.value);
 		}
         if (rfqNumber && rfqNumber.value) {
 			formData.append('rfqNumber', rfqNumber.value);
+		}
+		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
+			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
 		this.props.purchaseOrderCreateAction
 			.createPO(formData)
@@ -1201,6 +1203,14 @@ getrfqDetails = (e, row, props,form,field) => {
 						value: response.data.supplierId,
 					},
 				data:response.data.poQuatationLineItemRequestModelList ,
+				totalAmount:response.data.totalAmount,
+				initValue: {
+					...this.state.initValue,
+					...{
+						totalVatAmount: response.data.totalVatAmount,
+						totalAmount: response.data.totalAmount,
+					},
+				},
 
 			//	data1:response.data.supplierId,
 			},() => {
@@ -1214,6 +1224,11 @@ getrfqDetails = (e, row, props,form,field) => {
 					false,
 					true,
 				);
+				// this.formRef.current.setFieldValue(
+					
+				// 	totalAmount,
+				// 	true,
+				// );
 			},
 			// () => {
 			// 	this.formRef.current.setFieldValue('supplierId',
@@ -1225,6 +1240,8 @@ getrfqDetails = (e, row, props,form,field) => {
 			this.formRef.current.setFieldValue('supplierId', this.state.option, true);
             console.log(this.state.data,"api")
 			console.log("option ",this.state.option)
+			console.log(this.state.initValue.totalAmount,"this.state.initValue.totalAmount+++++++")
+			console.log(this.state.initValue.totalVatAmount,"this.state.initValue.totalVatAmount+++++++")
         });
     }
 }
@@ -1308,6 +1325,40 @@ getrfqDetails = (e, row, props,form,field) => {
 													),
 													poReceiveDate: Yup.string().required(
 														'Order Due Date is Required'
+													),
+													attachmentFile: Yup.mixed()
+													.test(
+														'fileType',
+														'*Unsupported File Format',
+														(value) => {
+															value &&
+																this.setState({
+																	fileName: value.name,
+																});
+															if (
+																!value ||
+																(value &&
+																	this.supported_format.includes(value.type))
+															) {
+																return true;
+															} else {
+																return false;
+															}
+														},
+													)
+													.test(
+														'fileSize',
+														'*File Size is too large',
+														(value) => {
+															if (
+																!value ||
+																(value && value.size <= this.file_size)
+															) {
+																return true;
+															} else {
+																return false;
+															}
+														},
 													),
 													lineItemsString: Yup.array()
 														.required(
@@ -1765,7 +1816,63 @@ getrfqDetails = (e, row, props,form,field) => {
 																			value={props.values.notes}
 																		/>
 																	</FormGroup>
-
+																			
+																	<FormGroup className="mb-3">
+																				<Field
+																					name="attachmentFile"
+																					render={({ field, form }) => (
+																						<div>
+																							<Label>Reciept Attachment</Label>{' '}
+																							<br />
+																							<Button
+																								color="primary"
+																								onClick={() => {
+																									document
+																										.getElementById('fileInput')
+																										.click();
+																								}}
+																								className="btn-square mr-3"
+																							>
+																								<i className="fa fa-upload"></i>{' '}
+																								Upload
+																							</Button>
+																							<input
+																								id="fileInput"
+																								ref={(ref) => {
+																									this.uploadFile = ref;
+																								}}
+																								type="file"
+																								style={{ display: 'none' }}
+																								onChange={(e) => {
+																									this.handleFileChange(
+																										e,
+																										props,
+																									);
+																								}}
+																							/>
+																							{this.state.fileName && (
+																								<div>
+																									<i
+																										className="fa fa-close"
+																										onClick={() =>
+																											this.setState({
+																												fileName: '',
+																											})
+																										}
+																									></i>{' '}
+																									{this.state.fileName}
+																								</div>
+																							)}
+																						</div>
+																					)}
+																				/>
+																				{props.errors.attachmentFile &&
+																					props.touched.attachmentFile && (
+																						<div className="invalid-file">
+																							{props.errors.attachmentFile}
+																						</div>
+																					)}
+																			</FormGroup>
 																</Col>
 
 																<Col lg={4}>
@@ -1824,7 +1931,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																							/>
 																						)} */}
 																						{/* {this.state.supplier_currency_symbol} */}
-																						{initValue.invoiceVATAmount.toFixed(
+																						{initValue.totalVatAmount.toFixed(
 																									2,
 																								)}
 																					</label>

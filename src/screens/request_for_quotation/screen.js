@@ -322,7 +322,7 @@ class RequestForQuotation extends React.Component {
 							this.renderActionForState(row.id);
 							}}
 							>
-								<i className="fas fa-send" /> Create PO
+								<i className="fas fa-plus" /> Create PO
 							</DropdownItem>
 							)}
 							{ row.status !== "Closed"  && (
@@ -341,7 +341,7 @@ class RequestForQuotation extends React.Component {
 							this.changeStatus(row.id);
 							}}
 							>
-								<i className="fas fa-send" /> Close
+								<i className="far fa-times-circle" /> Close
 							</DropdownItem>
 							)}
 						<DropdownItem
@@ -414,11 +414,6 @@ class RequestForQuotation extends React.Component {
 
 	}
 
-
-	// CreatePurchaseOrder = (id) => {
-	// 	this.setState({ openPurchaseOrder: true, rowId: id });
-	// };
-	
 	renderActionForState = (id) => {
 		this.props.requestForQuotationDetailsAction.getRFQeById(id).then((res) => {
 			this.setState({		
@@ -456,57 +451,18 @@ class RequestForQuotation extends React.Component {
 			console.log('selecteddata ',this.state.selectedData)
 		});
 	}
-	// CreatePurchaseOrder = (id) => {
-	// 	this.props.requestForQuotationDetailsAction.getRFQeById(id).then((res) => {
-	// 		this.setState({		
-				
-	// 			openPurchaseOrder : true, rowId : id,
-	// 			selectedData:res.data,
-	// 			rfqReceiveDate:res.data.rfqReceiveDate
-	// 			// current_rfq_id: this.props.location.state.id,
-	// 			// initValue: {
-	// 			// 	rfqReceiveDate: res.data.rfqReceiveDate
-	// 			// 		? moment(res.data.rfqReceiveDate).format('DD/MM/YYYY')
-	// 			// 		: '',
-	// 			// 		rfqExpiryDate: res.data.rfqExpiryDate
-	// 			// 		? moment(res.data.rfqExpiryDate).format('DD/MM/YYYY')
-	// 			// 		: '',
-	// 			// 		supplierId: res.data.supplierId ? res.data.supplierId : '',
-	// 			// 		rfqNumber: res.data.rfqNumber
-	// 			// 		? res.data.rfqNumber
-	// 			// 		: '',
-	// 			// 	totalVatAmount: res.data.totalVatAmount
-	// 			// 		? res.data.totalVatAmount
-	// 			// 		: 0,
-	// 			// 		totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
-	// 			// 		total_net: 0,
-	// 			// 	notes: res.data.notes ? res.data.notes : '',
-	// 			// 	lineItemsString: res.data.poQuatationLineItemRequestModelList
-	// 			// 		? res.data.poQuatationLineItemRequestModelList
-	// 			// 		: [],
-				
-			
-	// 			// },
-				
-	// 			// data: res.data.poQuatationLineItemRequestModelList
-	// 			// 	? res.data.poQuatationLineItemRequestModelList
-	// 			// 	: [],
-	// 			// selectedContact: res.data.supplierId ? res.data.supplierId : '',
-			
-	// 			// loading: false,
-	// 		})
-	// 		console.log('CreatePurchaseOrder selectedData ',this.state.selectedData)
-	// 		console.log('CreatePurchaseOrder ',res.data.supplierId)
-			
-	// 	});
-	
-	// }
+
 
 
 	closePurchaseOrder = (res) => {
 		this.setState({ openPurchaseOrder: false });
 	};
-	
+	updateParentAmount = (totalAmount,totalVatAmount) => {
+		this.setState({totalAmount:totalAmount,totalVatAmount:totalVatAmount})
+		console.log(totalAmount,"00000000")
+		console.log(totalVatAmount,"00000000")
+	};
+		
 	sendMail = (id) => {
 		this.props.requestForQuotationAction
 			.sendMail(id)
@@ -1189,6 +1145,10 @@ class RequestForQuotation extends React.Component {
 					closePurchaseOrder={(e) => {
 						this.closePurchaseOrder(e);
 					}}
+					updateParentAmount={
+						(e,e1) => {
+							this.updateParentAmount(e,e1);
+					}}
 					id={this.state.rowId}
                     selectedData={this.state.selectedData}
 				//getRfqbyid={this.props.requestForQuotationDetailsAction.getRFQeById}
@@ -1199,7 +1159,8 @@ class RequestForQuotation extends React.Component {
 					getVat={this.props.purchaseOrderAction.getVatList()}
 					getProductList={this.props.purchaseOrderAction.getProductList()}
 					createPO={this.props.purchaseOrderCreateAction.createPO}
-
+                    totalAmount={this.state.totalAmount}
+					totalVatAmount={this.state.totalVatAmount}
 				/>
 			</div>
 		); 

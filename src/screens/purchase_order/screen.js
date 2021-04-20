@@ -340,7 +340,7 @@ class PurchaseOrder extends React.Component {
 							this.changeStatus(row.id);
 							}}
 							>
-								<i className="fas fa-send" /> Close
+							<i className="far fa-times-circle" /> Close
 							</DropdownItem>
 							)}
 					<DropdownItem

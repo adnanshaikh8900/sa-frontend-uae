@@ -121,12 +121,18 @@ class CreatePurchaseOrder extends React.Component {
 			prefixData:'',
 			state_list: [],
 			editorState: EditorState.createEmpty(),
-			selectedData:{},
+			// selectedData:{
+			// 	total_net: 0,
+			
+			// 	totalVatAmount:0,
+			// 	totalAmount: 0,
+			// },
 			contentState: {},
 			viewEditor: false,
 			message: '',
 			productId:'',
 			prefixData:'',
+			fileName: '',
 		};
 	
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
@@ -169,21 +175,29 @@ class CreatePurchaseOrder extends React.Component {
 
 	
     static getDerivedStateFromProps(nextProps, prevState) {
-        if (prevState.selectedData !== nextProps.selectedData ) {
+        if (prevState.selectedData !== nextProps.selectedData || prevState.totalAmount !== nextProps.totalAmount ||
+			prevState.totalVatAmount != nextProps.totalVatAmount ) {
 			console.log('getDerivedStateFromProps state changed',nextProps.selectedData.poQuatationLineItemRequestModelList);
 			console.log('muyts',nextProps.prefixData)
-        //   setState( {
-		// 	poQuatationLineItemRequestModelList:nextProps.selectedData.poQuatationLineItemRequestModelList,
-        //   //   id: nextProps.selectedData.poQuatationLineItemRequestModelList.invoiceId,
-        //  //    productId:nextProps.selectedData.poQuatationLineItemRequestModelList.productId,
-        // //     quantity:nextProps.selectedData.poQuatationLineItemRequestModelList.quantity,
-        //  //   type:nextProps.selectedData.poQuatationLineItemRequestModelList.invoiceType,
-
-		// 	 });
-	//	const { selectedData } = nextProps.selectedData;
-		return { prefixData : nextProps.prefixData,
-			selectedData :nextProps.selectedData };
+		 return { prefixData : nextProps.prefixData,
+		 	selectedData :nextProps.selectedData,
+			 totalAmount :nextProps.totalAmount,
+			 totalVatAmount :nextProps.totalVatAmount };
         }
+		// else if(prevState.totalAmount !== nextProps.totalAmount)
+		// {
+		// 	console.log('+++++++++++++++++',nextProps.totalAmount)
+		// 	return { prefixData : nextProps.prefixData,
+		// 		totalAmount :nextProps.totalAmount };
+		// }
+		// else if(prevState.totalVatAmount != nextProps.totalVatAmount)
+		// {
+		// 	console.log('---------',nextProps.totalVatAmount)
+		// 	return{
+		// 		prefixData : nextProps.prefixData,
+		// 		totalVatAmount :nextProps.totalVatAmount
+		// 	};
+		// }
     }
 
 
@@ -261,6 +275,7 @@ class CreatePurchaseOrder extends React.Component {
 					this.state.selectedData.poQuatationLineItemRequestModelList[parseInt(idx, 10)][`${name}`],
 					true,
 				);
+				this.updateAmount(data, props);
 			});
 		}
 	};
@@ -629,6 +644,9 @@ class CreatePurchaseOrder extends React.Component {
 			total = total_vat + total_net;
 			return obj;
 		});
+		console.log(total_net,"total_net")
+		console.log(total_vat,"total_vat")
+		console.log(total,"total")
 		const discount =
 			props.values.discountType === 'PERCENTAGE'
 				? +((total_net * discountPercentage) / 100).toFixed(2)
@@ -639,20 +657,25 @@ class CreatePurchaseOrder extends React.Component {
 				initValue: {
 					...this.state.initValue,
 					...{
-                        
 						total_net: discount ? total_net - discount : total_net,
 						totalVatAmount: total_vat,
 						discount: total_net > discount ? discount : 0,
 						totalAmount: total_net > discount ? total - discount : total,
 					},
 				},
+				
 			},
-			() => {
+					() => {
 				if (props.values.discountType === 'PERCENTAGE') {
 					this.formRef.current.setFieldValue('discount', discount);
+					
 				}
 			},
 		);
+	
+	this.props.updateParentAmount(total,total_vat)
+	console.log("selectData total_vat ***",total_vat)
+	console.log("selectDa tatotal ***",total)
 	};
 
     addRow = () => {
@@ -684,7 +707,16 @@ class CreatePurchaseOrder extends React.Component {
 			},
 		);
 	};
-
+	handleFileChange = (e, props) => {
+		e.preventDefault();
+		let reader = new FileReader();
+		let file = e.target.files[0];
+		if (file) {
+			reader.onloadend = () => {};
+			reader.readAsDataURL(file);
+			props.setFieldValue('attachmentFile', file, true);
+		}
+	};
 
 	getData = (data) => {
 		let temp = {};
@@ -730,13 +762,15 @@ class CreatePurchaseOrder extends React.Component {
 		formData.append('notes', notes ? notes : '');
 		formData.append('type', 4);
 		formData.append('lineItemsString', JSON.stringify(this.state.selectedData.poQuatationLineItemRequestModelList));
-		formData.append('totalAmount', this.state.initValue.totalAmount);
-        formData.append('totalVatAmount',this.state.initValue.totalVatAmount);
+		formData.append('totalAmount', this.state.totalAmount );
+        formData.append('totalVatAmount',this.state.totalVatAmount );
 	    formData.append('supplierId', this.state.selectedData.supplierId);
 		formData.append('supplierReferenceNumber',supplierReferenceNumber ? supplierReferenceNumber : '');
-
         if (rfqNumber && rfqNumber.value) {
 			formData.append('rfqNumber', rfqNumber.value);
+		}
+		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
+			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
 		this.props.createPO(formData)
 			.then((res) => {				
@@ -776,7 +810,6 @@ class CreatePurchaseOrder extends React.Component {
 			let obj = {label: item.label.contactName, value: item.value}
 			tmpSupplier_list.push(obj)
 		})
-console.log(closePurchaseOrder)
 
 		return (
 			<div className="contact-modal-screen">
@@ -1233,7 +1266,7 @@ console.log(closePurchaseOrder)
 																							}
 																							/>
 																							)} */}
-																							{this.state.initValue.total_net}
+																							{this.state.selectedData.total_net}
 																						</label>
 																					</Col>
 																				</Row>
@@ -1259,7 +1292,7 @@ console.log(closePurchaseOrder)
 																							}
 																							/>
 																							)} */}
-																							{this.state.initValue.totalVatAmount	}
+																							{this.state.totalVatAmount	}
 																						</label>
 																					</Col>
 																				</Row>
@@ -1283,7 +1316,7 @@ console.log(closePurchaseOrder)
 																							}
 																							/>
 																							)} */}
-																							{this.state.initValue.totalAmount}
+																							{this.state.totalAmount}
 																						</label>
 																					</Col>
 																				</Row>

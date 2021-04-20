@@ -1839,6 +1839,7 @@ class DetailCustomerInvoice extends React.Component {
 																										props,
 																									);
 																								}}
+																							
 																							/>
 																							{this.state.fileName && (
 																								<div>

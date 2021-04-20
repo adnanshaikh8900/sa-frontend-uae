@@ -204,7 +204,7 @@ class DetailRequestForQuotation extends React.Component {
 									lineItemsString: res.data.poQuatationLineItemRequestModelList
 										? res.data.poQuatationLineItemRequestModelList
 										: [],
-								
+										fileName: res.data.fileName ? res.data.fileName : '',
 								},
 								
 								data: res.data.poQuatationLineItemRequestModelList
@@ -862,6 +862,9 @@ class DetailRequestForQuotation extends React.Component {
 		if (supplierId) {
 			formData.append('supplierId', supplierId);
 		}
+		if (this.uploadFile.files[0]) {
+			formData.append('attachmentFile', this.uploadFile.files[0]);
+		}
 		this.props.requestForQuotationDetailsAction
 			.updateRFQ(formData)
 			.then((res) => {
@@ -1121,6 +1124,42 @@ class DetailRequestForQuotation extends React.Component {
 														rfqExpiryDate: Yup.string().required(
 															'Order Due Date is Required'
 														),
+														attachmentFile: Yup.mixed()
+															.test(
+																'fileType',
+																'*Unsupported File Format',
+																(value) => {
+																	value &&
+																		this.setState({
+																			fileName: value.name,
+																		});
+																	if (
+																		!value ||
+																		(value &&
+																			this.supported_format.includes(
+																				value.type,
+																			))
+																	) {
+																		return true;
+																	} else {
+																		return false;
+																	}
+																},
+															)
+															.test(
+																'fileSize',
+																'*File Size is too large',
+																(value) => {
+																	if (
+																		!value ||
+																		(value && value.size <= this.file_size)
+																	) {
+																		return true;
+																	} else {
+																		return false;
+																	}
+																},
+															),
 														lineItemsString: Yup.array()
 															.required(
 																'Atleast one invoice sub detail is mandatory',
@@ -1478,7 +1517,63 @@ class DetailRequestForQuotation extends React.Component {
 																			value={props.values.notes}
 																		/>
 																	</FormGroup>
-																
+																	<FormGroup className="mb-3">
+																				<Field
+																					name="attachmentFile"
+																					render={({ field, form }) => (
+																						<div>
+																							<Label>Reciept Attachment</Label>{' '}
+																							<br />
+																							<Button
+																								color="primary"
+																								onClick={() => {
+																									document
+																										.getElementById('fileInput')
+																										.click();
+																								}}
+																								className="btn-square mr-3"
+																							>
+																								<i className="fa fa-upload"></i>{' '}
+																								Upload
+																							</Button>
+																							<input
+																								id="fileInput"
+																								ref={(ref) => {
+																									this.uploadFile = ref;
+																								}}
+																								type="file"
+																								style={{ display: 'none' }}
+																								onChange={(e) => {
+																									this.handleFileChange(
+																										e,
+																										props,
+																									);
+																								}}
+																							
+																							/>
+																							{this.state.fileName && (
+																								<div>
+																									<i
+																										className="fa fa-close"
+																										onClick={() =>
+																											this.setState({
+																												fileName: '',
+																											})
+																										}
+																									></i>{' '}
+																									{this.state.fileName}
+																								</div>
+																							)}
+																						</div>
+																					)}
+																				/>
+																				{props.errors.attachmentFile &&
+																					props.touched.attachmentFile && (
+																						<div className="invalid-file">
+																							{props.errors.attachmentFile}
+																						</div>
+																					)}
+																			</FormGroup>
 																</Col>
 																	<Col lg={4}>
 																		<div className="">

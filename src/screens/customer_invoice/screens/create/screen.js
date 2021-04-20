@@ -984,7 +984,6 @@ return row.subTotal === 0 ?  row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 			formData.append('projectId', project.value);
 		}
 		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
-			console.log('attachmentFile', this.uploadFile.files[0])
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
 

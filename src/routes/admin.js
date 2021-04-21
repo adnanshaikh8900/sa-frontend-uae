@@ -163,7 +163,8 @@ import {
 	SalaryStucture,
 	CreateSalaryStucture,
 	ViewPayroll,
-	SalarySlip
+	SalarySlip,
+	UnderConstruction,
 } from 'screens';
 
 const adminRoutes = [
@@ -483,7 +484,7 @@ const adminRoutes = [
 	{
 		path: '/admin/payroll/employee',
 		name: 'ViewEmployee',
-		component: EmployeePayroll.screen,
+		component: UnderConstruction.screen,
 	},
 	{
 		path: '/admin/payroll/employee/salarySlip',
@@ -508,7 +509,7 @@ const adminRoutes = [
 	{
 		path: '/admin/payroll/employment',
 		name: 'ViewEmployment',
-		component: Employment.screen,
+		component: UnderConstruction.screen,
 	},
 	//
 	{
@@ -521,7 +522,7 @@ const adminRoutes = [
 		name: 'ViewEmployeeFinancialDetails',
 		component: EmployeeFinancial.screen,
 	},
-	//
+
 	{
 		path: '/admin/payroll/salaryRoles/create',
 		name: 'CreateSalaryRole',
@@ -530,9 +531,9 @@ const adminRoutes = [
 	{
 		path: '/admin/payroll/salaryRoles',
 		name: 'ViewSalaryRole',
-		component: SalaryRoles.screen,
+		component: UnderConstruction.screen,
 	},
-	//
+
 		{
 			path: '/admin/payroll/salaryTemplate/create',
 			name: 'CreateSalaryTemplate',
@@ -541,9 +542,9 @@ const adminRoutes = [
 		{
 			path: '/admin/payroll/salaryTemplate',
 			name: 'ViewSalaryTemplate',
-			component: SalaryTemplate.screen,
+			component: UnderConstruction.screen,
 		},
-	//
+
 	{
 		path: '/admin/payroll/salaryStructure/create',
 		name: 'CreateSalaryStructure',
@@ -552,7 +553,7 @@ const adminRoutes = [
 	{
 		path: '/admin/payroll/salaryStructure',
 		name: 'ViewSalaryStructure',
-		component: SalaryStucture.screen,
+		component: UnderConstruction.screen,
 	},
 	{
 		redirect: true,

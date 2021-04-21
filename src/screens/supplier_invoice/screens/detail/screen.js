@@ -21,7 +21,6 @@ import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import * as SupplierInvoiceDetailActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
-import * as transactionCreateActions from '../../../bank_account/screens/transactions/actions';
 import * as ProductActions from '../../../product/actions';
 import { SupplierModal } from '../../sections';
 import { ProductModal } from '../../../customer_invoice/sections';
@@ -35,7 +34,6 @@ import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 
 import './style.scss';
 import moment from 'moment';
-import API_ROOT_URL from '../../../../constants/config';
 
 const mapStateToProps = (state) => {
 	return {
@@ -515,7 +513,7 @@ class DetailSupplierInvoice extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		return row.subTotal ? row.subTotal.toFixed(2) : '';
+		return row.subTotal ? this.state.supplier_currency_symbol + row.subTotal.toFixed(2) : this.state.supplier_currency_symbol + row.subTotal.toFixed(2);
 	};
 	addRow = () => {
 		const data = [...this.state.data];
@@ -1176,7 +1174,8 @@ class DetailSupplierInvoice extends React.Component {
 			if(item.label.contactId == opt) {
 				this.setState({
 					supplier_currency: item.label.currency.currencyCode,
-					supplier_currency_des: item.label.currency.currencyName
+					supplier_currency_des: item.label.currency.currencyName,
+					supplier_currency_symbol: item.label.currency.currencySymbol
 				});
 
 				supplier_currencyCode = item.label.currency.currencyCode;
@@ -1185,7 +1184,6 @@ class DetailSupplierInvoice extends React.Component {
 
 		return supplier_currencyCode;
 	}
-
 	render() {
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
 
@@ -2154,6 +2152,7 @@ class DetailSupplierInvoice extends React.Component {
 																							}
 																							/>
 																							)} */}
+																							{this.state.supplier_currency_symbol}
 																							{initValue.total_net.toFixed(2)}
 																						</label>
 																					</Col>
@@ -2180,6 +2179,7 @@ class DetailSupplierInvoice extends React.Component {
 																							}
 																							/>
 																							)} */}
+																							{this.state.supplier_currency_symbol}
 																							{initValue.invoiceVATAmount.toFixed(
 																							2,
 																						)}
@@ -2196,6 +2196,7 @@ class DetailSupplierInvoice extends React.Component {
 																					</Col>
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
+																						{this.state.supplier_currency_symbol}
 																							{this.state.initValue.discount.toFixed(
 																							2,
 																						)}
@@ -2223,6 +2224,7 @@ class DetailSupplierInvoice extends React.Component {
 																							}
 																							/>
 																							)} */}
+																							{this.state.supplier_currency_symbol}
 																							{initValue.totalAmount.toFixed(2)}
 																						</label>
 																					</Col>

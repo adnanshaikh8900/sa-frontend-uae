@@ -176,7 +176,7 @@ class BankAccount extends Component {
 											/>
 												<select
 												style={{width:"45%"}}
-													className="form-control1 bank-type-select card-select mb-2"
+													className="form-control1 bank-type-select card-select mt-2"
 													ref={this.bankAccountSelect}
 													onChange={(e) => this.handleChange(e)}
 												>
@@ -190,7 +190,7 @@ class BankAccount extends Component {
 												</select>
 												</div>
 												</Row>
-												<Row className="text-center" style={{    display: "block"}}>
+												<Row className="text-center mt-2" style={{    display: "block"}}>
 												<p style={{ fontWeight: 500, textIndent: 5 ,marginTop:"-4px" }}>
 													Last updated on{' '}
 													{this.props.bank_account_graph.updatedDate}

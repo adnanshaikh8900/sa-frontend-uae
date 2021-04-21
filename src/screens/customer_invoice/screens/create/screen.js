@@ -354,8 +354,9 @@ class CreateCustomerInvoice extends React.Component {
 		);
 	};
 
-	renderSubTotal = (cell, row,extraData) => {
-return row.subTotal === 0 ?  row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
+		renderSubTotal = (cell, row,extraData) => {
+			return row.subTotal === 0 ? this.state.customer_currency_symbol + row.subTotal.toFixed(2) : this.state.customer_currency_symbol + row.subTotal.toFixed(2);
+
 }
 	setDate = (props, value) => {
 		const { term } = this.state;
@@ -1204,7 +1205,7 @@ return row.subTotal === 0 ?  row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 				customer_item_currency = item.label.currency
 			}
 		})
-		console.log('currency', customer_item_currency)
+	
 		return customer_currencyCode;
 	}
 
@@ -1412,7 +1413,7 @@ return row.subTotal === 0 ?  row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																		value={props.values.contactId}
 																		onChange={(option) => {
 																			if (option && option.value) {
-																				//sthis.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
+																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
 																				this.setExchange( this.getCurrency(option.value) );
 																				props.handleChange('contactId')(option);
 																			} else {
@@ -2190,7 +2191,7 @@ return row.subTotal === 0 ?  row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																							}
 																							/>
 																							)} */}
-																							{/* {this.state.customer_currency_symbol} &nbsp; */}
+																							{this.state.customer_currency_symbol} &nbsp;
 																							{initValue.total_net.toFixed(
 																							2,
 																						)}
@@ -2216,7 +2217,7 @@ return row.subTotal === 0 ?  row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																							currencySymbol={this.state.customer_currency_IsoCode}
 																							/>
 																							)} */}
-																							{/* {this.state.customer_currency_symbol} &nbsp; */}
+																							{this.state.customer_currency_symbol} &nbsp;
 																							{initValue.invoiceVATAmount.toFixed(
 																							2,
 																						)}
@@ -2241,13 +2242,13 @@ return row.subTotal === 0 ?  row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																						currencySymbol={this.state.customer_currency_IsoCode}
 																							/>
 																							)} */}
-																						{/* {this.state.customer_currency_symbol} &nbsp; */}
-																							{/* {initValue.total_net.toFixed(
+																						{this.state.customer_currency_symbol} &nbsp;
+																							{initValue.total_net.toFixed(
 																							2,
-																						)} */}
-																						{this.state.initValue.discount.toFixed(
+																						)}
+																						{/* {this.state.initValue.discount.toFixed(
 																									2,
-																								)}
+																								)} */}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2261,19 +2262,10 @@ return row.subTotal === 0 ?  row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																					{/* {universal_currency_list[0] && (
-																						<Currency
-																						value={initValue.totalAmount}
-																						currencySymbol={this.state.customer_currency_IsoCode}
-																							/>
-																							)} */}
-																							{/* {this.state.customer_currency_symbol} &nbsp; */}
-																							{/* {initValue.total_net.toFixed(
+																					{this.state.customer_currency_symbol} &nbsp;
+																							{initValue.total_net.toFixed(
 																							2,
-																						)} */}
-																							{initValue.totalAmount.toFixed(
-																									2,
-																								)}
+																						)}
 																					</label>
 																				</Col>
 																			</Row>

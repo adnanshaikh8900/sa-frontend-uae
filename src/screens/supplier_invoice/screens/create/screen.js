@@ -368,7 +368,7 @@ class CreateSupplierInvoice extends React.Component {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
+		return row.subTotal === 0 ? this.state.supplier_currency_symbol + row.subTotal.toFixed(2) : this.state.supplier_currency_symbol + row.subTotal.toFixed(2);
 	};
 
 	componentDidMount = () => {
@@ -2278,7 +2278,7 @@ class CreateSupplierInvoice extends React.Component {
 																								}
 																							/>
 																						)} */}
-																						{/* {this.state.supplier_currency_symbol} */}
+																						{this.state.supplier_currency_symbol}
 																						{initValue.total_net.toFixed(
 																									2,
 																								)}
@@ -2308,7 +2308,7 @@ class CreateSupplierInvoice extends React.Component {
 																								}
 																							/>
 																						)} */}
-																						{/* {this.state.supplier_currency_symbol} */}
+																						{this.state.supplier_currency_symbol}
 																						{initValue.invoiceVATAmount.toFixed(
 																									2,
 																								)}
@@ -2338,7 +2338,7 @@ class CreateSupplierInvoice extends React.Component {
 																								}
 																							/>
 																						)} */}
-																						{/* {this.state.supplier_currency_symbol} */}
+																						{this.state.supplier_currency_symbol}
 																						{this.state.initValue.discount.toFixed(
 																									2,
 																								)}
@@ -2368,7 +2368,7 @@ class CreateSupplierInvoice extends React.Component {
 																								}
 																							/>
 																						)} */}
-																						{/* {this.state.supplier_currency_symbol} */}
+																						{this.state.supplier_currency_symbol}
 																						{initValue.totalAmount.toFixed(
 																									2,
 																								)}

@@ -227,16 +227,16 @@ class SupplierInvoice extends React.Component {
 								<div>
 						<label className="font-weight-bold mr-2 ">Invoice Amount : </label>
 						<label>
-					{row.invoiceAmount  === 0 ? row.invoiceAmount.toFixed(2) : row.invoiceAmount.toFixed(2)}
+					{row.invoiceAmount  === 0 ? row.currencySymbol + row.invoiceAmount.toFixed(2) : row.currencySymbol + row.invoiceAmount.toFixed(2)}
 						</label>
 					</div>
 					<div>
 					<label className="font-weight-bold mr-2">Vat Amount : </label>
-					<label>{row.vatAmount === 0  ?  row.vatAmount.toFixed(2) :  row.vatAmount.toFixed(2)}</label>
+					<label>{row.vatAmount === 0  ?  row.currencySymbol + row.vatAmount.toFixed(2) :  row.currencySymbol + row.vatAmount.toFixed(2)}</label>
 					</div>
 					<div>
 						<label className="font-weight-bold mr-2">Due Amount : </label>
-						<label>{row.dueAmount === 0  ?  row.dueAmount.toFixed(2) :  row.dueAmount.toFixed(2)}</label>
+						<label>{row.dueAmount === 0  ?  row.currencySymbol + row.dueAmount.toFixed(2) :  row.currencySymbol + row.dueAmount.toFixed(2)}</label>
 					</div>
 					
 			</div>);

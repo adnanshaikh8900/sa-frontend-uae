@@ -114,6 +114,11 @@ import {
 	CurrencyConvert,
 	CreateCurrencyConvert,
 	DetailCurrencyConvert,
+	EmployeePayroll,
+	CreateEmployeePayroll,
+	DetailEmployeePayroll,
+	Employment,
+	CreateEmployment,
 
 	// Product Screens
 	ProductCategory,
@@ -147,7 +152,19 @@ import {
 	ViewExpense,
 
 	Inventory,
-	Template
+	Template,
+	CreateEmployeeFinancial,
+	EmployeeFinancial,
+	SalaryRoles,
+	CreateSalaryRoles,
+
+	SalaryTemplate,
+	CreateSalaryTemplate,
+	SalaryStucture,
+	CreateSalaryStucture,
+	ViewPayroll,
+	SalarySlip,
+	UnderConstruction,
 } from 'screens';
 
 const adminRoutes = [
@@ -283,17 +300,17 @@ const adminRoutes = [
 
 	{
 		path: '/admin/income/customer-invoice/create',
-		name: 'AddCustomerInvoices',
+		name: 'AddCustomerInvoice',
 		component: CreateCustomerInvoice.screen,
 	},
 	{
 		path: '/admin/income/customer-invoice/view',
-		name: 'ViewCustomerInvoices',
+		name: 'ViewCustomerInvoice',
 		component: ViewCustomerInvoice.screen,
 	},
 	{
 		path: '/admin/income/customer-invoice/detail',
-		name: 'UpdateCustomerInvoices',
+		name: 'UpdateCustomerInvoice',
 		component: DetailCustomerInvoice.screen,
 	},
 	{
@@ -303,7 +320,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/income/customer-invoice',
-		name: 'ViewCustomerInvoices',
+		name: 'ViewCustomerInvoice',
 		component: CustomerInvoice.screen,
 	},
 	{
@@ -318,7 +335,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/income/receipt',
-		name: 'ViewIncomeReceipts',
+		name: 'CustomerReceipts',
 		component: Receipt.screen,
 	},
 	{
@@ -350,22 +367,22 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/expense/purchase-order/create',
-		name: 'AddPurchaseQuotation',
+		name: 'AddPurchaseOrder',
 		component: CreatePurchaseOrder.screen,
 	},
 	{
 		path: '/admin/expense/purchase-order/view',
-		name: 'ViewPurchaseQuotation',
+		name: 'ViewPurchaseOrder',
 		component: ViewPurchaseOrder.screen,
 	},
 	{
 		path: '/admin/expense/purchase-order/detail',
-		name: 'UpdatePurchaseQuotation',
+		name: 'UpdatePurchaseOrder',
 		component: DetailPurchaseOrder.screen,
 	},
 	{
 		path: '/admin/expense/purchase-order',
-		name: 'ViewPurchaseQuotation',
+		name: 'ViewPurchaseOrder',
 		component: PurchaseOrder.screen,
 	},
 	{
@@ -390,17 +407,17 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/expense/supplier-invoice/create',
-		name: 'AddSupplierInvoices',
+		name: 'AddSupplierInvoice',
 		component: CreateSupplierInvoice.screen,
 	},
 	{
 		path: '/admin/expense/supplier-invoice/view',
-		name: 'ViewSupplierInvoices',
+		name: 'ViewSupplierInvoice',
 		component: ViewInvoice.screen,
 	},
 	{
 		path: '/admin/expense/supplier-invoice/detail',
-		name: 'UpdateSupplierInvoices',
+		name: 'UpdateSupplierInvoice',
 		component: DetailSupplierInvoice.screen,
 	},
 	{
@@ -410,22 +427,22 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/expense/supplier-invoice',
-		name: 'ViewSupplierInvoices',
+		name: 'ViewSupplierInvoice',
 		component: SupplierInvoice.screen,
 	},
 	{
 		path: '/admin/expense/expense/create',
-		name: 'AddExpenses',
+		name: 'AddExpense',
 		component: CreateExpense.screen,
 	},
 	{
 		path: '/admin/expense/expense/detail',
-		name: 'UpdateExpenses',
+		name: 'UpdateExpense',
 		component: DetailExpense.screen,
 	},
 	{
 		path: '/admin/expense/expense',
-		name: 'ViewExpenses',
+		name: 'ViewExpense',
 		component: Expense.screen,
 	},
 	{
@@ -435,17 +452,17 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/expense/payment/create',
-		name: 'AddPaymentReceipts',
+		name: 'AddSupplierReceipt',
 		component: CreatePayment.screen,
 	},
 	{
 		path: '/admin/expense/payment/detail',
-		name: 'UpdatePaymentReceipts',
+		name: 'UpdateSupplierReceipt',
 		component: DetailPayment.screen,
 	},
 	{
 		path: '/admin/expense/purchase',
-		name: 'ViewPaymentReceipts',
+		name: 'ViewSupplierReceipt',
 		component: Payment.screen,
 	},
 	{
@@ -453,6 +470,96 @@ const adminRoutes = [
 		path: '/admin/expense',
 		pathTo: '/admin/expense/expense',
 		name: 'Expense',
+	},
+	{
+		path: '/admin/payroll/employee/detail',
+		name: 'UpdateEmployee',
+		component: DetailEmployeePayroll.screen,
+	},
+	{
+		path: '/admin/payroll/employee/create',
+		name: 'AddEmployee',
+		component: CreateEmployeePayroll.screen,
+	},
+	{
+		path: '/admin/payroll/employee',
+		name: 'ViewEmployee',
+		component: UnderConstruction.screen,
+	},
+	{
+		path: '/admin/payroll/employee/salarySlip',
+		name: 'ViewPaymentReceipts',
+		component: SalarySlip.screen,
+	},
+	{
+		path: '/admin/payroll/employee/viewPayroll',
+		name: 'ViewPaymentReceipts',
+		component: ViewPayroll.screen,
+	},
+	{
+		path: '/admin/payroll/employment/detail',
+		name: 'UpdateEmployment',
+		component: DetailEmployeePayroll.screen,
+	},
+	{
+		path: '/admin/payroll/employment/create',
+		name: 'CreateEmployment',
+		component: CreateEmployment.screen,
+	},
+	{
+		path: '/admin/payroll/employment',
+		name: 'ViewEmployment',
+		component: UnderConstruction.screen,
+	},
+	//
+	{
+		path: '/admin/payroll/financial/create',
+		name: 'CreateEmployeeFinancialDetails',
+		component: CreateEmployeeFinancial.screen,
+	},
+	{
+		path: '/admin/payroll/financial',
+		name: 'ViewEmployeeFinancialDetails',
+		component: EmployeeFinancial.screen,
+	},
+
+	{
+		path: '/admin/payroll/salaryRoles/create',
+		name: 'CreateSalaryRole',
+		component: CreateSalaryRoles.screen,
+	},
+	{
+		path: '/admin/payroll/salaryRoles',
+		name: 'ViewSalaryRole',
+		component: UnderConstruction.screen,
+	},
+
+		{
+			path: '/admin/payroll/salaryTemplate/create',
+			name: 'CreateSalaryTemplate',
+			component: CreateSalaryTemplate.screen,
+		},
+		{
+			path: '/admin/payroll/salaryTemplate',
+			name: 'ViewSalaryTemplate',
+			component: UnderConstruction.screen,
+		},
+
+	{
+		path: '/admin/payroll/salaryStructure/create',
+		name: 'CreateSalaryStructure',
+		component: CreateSalaryStucture.screen,
+	},
+	{
+		path: '/admin/payroll/salaryStructure',
+		name: 'ViewSalaryStructure',
+		component: UnderConstruction.screen,
+	},
+	{
+		redirect: true,
+		path: '/admin/payroll',
+		pathTo: '/admin/payroll/employee',
+		name: 'Employee',
 	},
 
 	{
@@ -524,7 +631,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/report/financial/purchasebyitem',
-		name: 'PurchaseByVendor',
+		name: 'PurchaseByProduct',
 		component: PurchaseByitem.screen,
 	},
 	{
@@ -569,21 +676,21 @@ const adminRoutes = [
 		name: 'ViewContact',
 		component: Contact.screen,
 	},
-	{
-		path: '/admin/master/employee/create',
-		name: 'Create',
-		component: CreateEmployee.screen,
-	},
-	{
-		path: '/admin/master/employee/detail',
-		name: 'Detail',
-		component: DetailEmployee.screen,
-	},
-	{
-		path: '/admin/master/employee',
-		name: 'Employee',
-		component: Employee.screen,
-	},
+	// {
+	// 	path: '/admin/master/employee/create',
+	// 	name: 'Create',
+	// 	component: CreateEmployee.screen,
+	// },
+	// {
+	// 	path: '/admin/master/employee/detail',
+	// 	name: 'Detail',
+	// 	component: DetailEmployee.screen,
+	// },
+	// {
+	// 	path: '/admin/master/employee',
+	// 	name: 'Employee',
+	// 	component: Employee.screen,
+	// },
 	{
 		path: '/admin/master/product/create',
 		name: 'AddProduct',

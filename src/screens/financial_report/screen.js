@@ -190,7 +190,7 @@ class FinancialReport extends React.Component {
 											<h6><a  style={{fontWeight:'400'}} href ="#" onClick={() => 
 											this.props.history.push('/admin/report/financial/salesbycustomer')}> Sales By Customer</a></h6>
 											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
-											this.props.history.push('/admin/report/financial/salesbyproduct')}>Sales By Item</a></h6>
+											this.props.history.push('/admin/report/financial/salesbyproduct')}>Sales By Product</a></h6>
 									
 									</div>
 										</Col>
@@ -204,9 +204,9 @@ class FinancialReport extends React.Component {
 											></img>	<h5 className="mb-3 mt-2">Purchase</h5></div>
 											<div className="mt-2 ml-4">
 											<h6><a  style={{fontWeight:'400'}} href ="#" onClick={() => 
-											this.props.history.push('/admin/report/financial/purchasebyvendor')}> Sales By Vendor</a></h6>
+											this.props.history.push('/admin/report/financial/purchasebyvendor')}> Purhase By Vendor</a></h6>
 											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
-											this.props.history.push('/admin/report/financial/purchasebyitem')}>Sales By Item</a></h6>
+											this.props.history.push('/admin/report/financial/purchasebyitem')}>Purhase By Product</a></h6>
 									
 									</div>
 										</Col>

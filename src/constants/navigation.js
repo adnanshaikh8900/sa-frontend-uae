@@ -7,24 +7,73 @@ export default {
 			path: 'Dashboard',
 		},
 		{
-			name: 'Accountant',
-			url: '/admin/accountant',
-			icon: 'icon-user',
+			name: 'Income',
+			url: '/admin/income',
+			icon: 'far fa-address-book',
 			children: [
-				{
-					name: 'Opening Balance',
-					url: '/admin/accountant/opening-balance',
-					icon: 'fas fa-balance-scale',
-					path: 'ViewOpeningBalance',
-				},
 			
 				{
-					name: 'Journals',
-					url: '/admin/accountant/journal',
-					icon: 'fa fa-diamond',
-					path: 'ViewJournal',
+					name: 'Customer Invoices',
+					url: '/admin/income/customer-invoice',
+					icon: 'far fa-address-card',
+					path: 'ViewCustomerInvoice',
 				},
-		
+				{
+					name: 'Income Receipts',
+					url: '/admin/income/receipt',
+					icon: 'fa fa-file-o',
+					path: 'CustomerReceipts',
+				},
+				{
+					name: 'Quotation',
+					url: '/admin/income/quotation',
+					icon: 'fa fa-file-o',
+					path: 'ViewQuotation',
+				},
+			],
+		},
+		{
+			name: 'Expense',
+			url: '/admin/expense',
+			icon: 'fas fa-receipt',
+			children: [
+				{
+					name: 'Expenses',
+					url: '/admin/expense/expense',
+					icon: 'fab fa-stack-exchange',
+					path: 'ViewExpense',
+				},
+				{
+					name: 'Supplier Invoices',
+					url: '/admin/expense/supplier-invoice',
+					icon: 'far fa-address-card',
+					path: 'ViewSupplierInvoice',
+				},
+				{
+					name: 'Purchase receipts',
+					url: '/admin/expense/purchase',
+					icon: 'fas fa-money-check',
+					path: 'ViewSupplierReceipt',
+				},
+				{
+					name: 'Request For Quotation',
+					url: '/admin/expense/request-for-quotation',
+					icon: 'fas fa-file-invoice',
+					path: 'ViewRequestForQuotation',
+				},
+				{
+					name: 'Purchase Order',
+					url: '/admin/expense/purchase-order',
+					icon: 'fas fa-file-invoice',
+					path: 'ViewPurchaseOrder',
+				},
+				{
+					name: 'Goods Received Note',
+					url: '/admin/expense/goods-received-note',
+					icon: 'fas fa-file-invoice',
+					path: 'ViewGoodsReceiveNotes',
+				},
+				
 			],
 		},
 		{
@@ -45,74 +94,30 @@ export default {
 				// }
 			],
 		},
+		
 		{
-			name: 'Income',
-			url: '/admin/income',
-			icon: 'far fa-address-book',
+			name: 'Accountant',
+			url: '/admin/accountant',
+			icon: 'icon-user',
 			children: [
 				{
-					name: 'Quotation',
-					url: '/admin/income/quotation',
-					icon: 'fa fa-file-o',
-					path: 'ViewQuotation',
+					name: 'Opening Balance',
+					url: '/admin/accountant/opening-balance',
+					icon: 'fas fa-balance-scale',
+					path: 'ViewOpeningBalance',
 				},
+			
 				{
-					name: 'Customer Invoices',
-					url: '/admin/income/customer-invoice',
-					icon: 'far fa-address-card',
-					path: 'ViewCustomerInvoices',
+					name: 'Journals',
+					url: '/admin/accountant/journal',
+					icon: 'fa fa-diamond',
+					path: 'ViewJournal',
 				},
-				{
-					name: 'Income Receipts',
-					url: '/admin/income/receipt',
-					icon: 'fa fa-file-o',
-					path: 'ViewIncomeReceipts',
-				},
+		
 			],
 		},
-		{
-			name: 'Expense',
-			url: '/admin/expense',
-			icon: 'fas fa-receipt',
-			children: [
-				{
-					name: 'Request For Quotation',
-					url: '/admin/expense/request-for-quotation',
-					icon: 'fas fa-file-invoice',
-					path: 'ViewRequestForQuotation',
-				},
-				{
-					name: 'Purchase Order',
-					url: '/admin/expense/purchase-order',
-					icon: 'fas fa-file-invoice',
-					path: 'ViewPurchaseQuotation',
-				},
-				{
-					name: 'Goods Received Note',
-					url: '/admin/expense/goods-received-note',
-					icon: 'fas fa-file-invoice',
-					path: 'ViewGoodsReceiveNotes',
-				},
-				{
-					name: 'Supplier Invoices',
-					url: '/admin/expense/supplier-invoice',
-					icon: 'far fa-address-card',
-					path: 'ViewSupplierInvoices',
-				},
-				{
-					name: 'Expenses',
-					url: '/admin/expense/expense',
-					icon: 'fab fa-stack-exchange',
-					path: 'ViewExpenses',
-				},
-				{
-					name: 'Purchase receipts',
-					url: '/admin/expense/purchase',
-					icon: 'fas fa-money-check',
-					path: 'ViewPaymentReceipts',
-				},
-			],
-		},
+	
+		
 		// {
 		// 	name: 'Taxes',
 		// 	url: '/admin/taxes',
@@ -211,7 +216,7 @@ export default {
 					name: 'Currency Conversion',
 					url: '/admin/master/currencyConvert',
 					icon: 'fas fa-id-card-alt',
-					path: 'CurrencyConvert',
+					path: 'ViewCurrencyConversion',
 				},
 				// {
 				//   name: 'Currencies',
@@ -233,12 +238,56 @@ export default {
 			path: 'Template',
 		},
 
-
 		{
 			name: 'Payroll',
-			url: '/admin/Payroll',
-			icon: 'fas fa-boxes',
-			path: 'Payroll',
+			url: '/admin/payroll',
+			icon: 'icon-user',
+			children: [
+				{
+					name: 'Employee',
+					url: '/admin/payroll/employee',
+					icon: 'fas fa-balance-scale',
+					path: 'ViewEmployee',
+				},
+				{
+					name: 'Employment',
+					url: '/admin/payroll/employment',
+					icon: 'fas fa-balance-scale',
+					path: 'ViewEmployment',
+				},
+				{
+					name: 'Financial Details',
+					url: '/admin/payroll/financial',
+					icon: 'fas fa-balance-scale',
+					path: 'ViewEmployeeBankDetails',
+				},
+				{
+					name: 'Salary Roles',
+					url: '/admin/payroll/salaryRoles',
+					icon: 'fas fa-balance-scale',
+					path: 'ViewSalaryRole',
+				},
+				{
+					name: 'Salary Templates',
+					url: '/admin/payroll/salaryTemplate',
+					icon: 'fas fa-balance-scale',
+					path: 'ViewSalaryTemplate',
+				},
+				{
+					name: 'Salary Structure',
+					url: '/admin/payroll/salaryStructure',
+					icon: 'fas fa-balance-scale',
+					path: 'ViewSalaryStructure',
+				},
+
+				// {
+				// 	name: 'Journals',
+				// 	url: '/admin/accountant/journal',
+				// 	icon: 'fa fa-diamond',
+				// 	path: 'ViewJournal',
+				// },
+		
+			],
 		},
 		// {
 		//   name: 'Settings',

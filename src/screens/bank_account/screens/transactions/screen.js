@@ -266,7 +266,7 @@ class BankTransactions extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		return row.depositeAmount >= 0 ? row.depositeAmount.toFixed(2) : '';
+		return row.depositeAmount >= 0 ? row.currencySymbol + row.depositeAmount.toFixed(2) : '';
 	};
 	renderWithdrawalAmount = (cell, row, rowIndex, extraData) => {
 		// return row.withdrawalAmount >= 0 ? (
@@ -277,10 +277,10 @@ class BankTransactions extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		return row.withdrawalAmount >= 0 ? row.withdrawalAmount.toFixed(2) : '';
+		return row.withdrawalAmount >= 0 ? row.currencySymbol + row.withdrawalAmount.toFixed(2) : '';
 	};
 	renderRunningAmount = (cell, row) => {
-		return row.runningAmount >= 0 ? row.runningAmount.toFixed(2) : '';
+		return row.runningAmount >= 0 ? row.currencySymbol + row.runningAmount.toFixed(2) : '';
 	};
 
 	test(row) {
@@ -705,6 +705,7 @@ class BankTransactions extends React.Component {
 																}
 															/>
 														)} */}
+
 													{this.state.closingBalance}
 													</h3>
 												</Col>

@@ -311,7 +311,7 @@ class BankAccount extends React.Component {
 		// 	/>
 		// );
 
-		return row.openingBalance ?row.openingBalance.toFixed(2) : row.openingBalance.toFixed(2);
+		return row.openingBalance ? row.curruncySymbol + row.openingBalance.toFixed(2) : row.curruncySymbol + row.openingBalance.toFixed(2);
 	};
 	renderActions = (cell, row) => {
 		return (
@@ -450,7 +450,7 @@ class BankAccount extends React.Component {
 								extraData[0] ? extraData[0].currencyIsoCode : 'USD'
 							}
 						/> */}
-						{row.closingBalance ? row.closingBalance : row.closingBalance}
+						{row.closingBalance ? row.curruncySymbol + row.closingBalance.toFixed(2) : row.curruncySymbol + row.closingBalance.toFixed(2)}
 					</label>
 				</div>
 				<div>
@@ -804,15 +804,7 @@ class BankAccount extends React.Component {
 													this.table = node;
 												}}
 											>
-												<TableHeaderColumn
-													dataField="bankAccountNo"
-													dataFormat={this.renderAccountNumber}
-													dataSort
-													width="13%"
-													className="table-header-bg"
-												>
-													Account Number
-												</TableHeaderColumn>
+												
 												<TableHeaderColumn
 													dataField="name"
 													dataSort
@@ -824,10 +816,19 @@ class BankAccount extends React.Component {
 												<TableHeaderColumn
 													dataField="accounName"
 													dataSort
-													width="10%"
+													width="7%"
 													className="table-header-bg"
 												>
 													Account Name
+												</TableHeaderColumn>
+												<TableHeaderColumn
+													dataField="bankAccountNo"
+													dataFormat={this.renderAccountNumber}
+													dataSort
+													width="13%"
+													className="table-header-bg"
+												>
+													Account Number
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataFormat={this.renderAccountType}

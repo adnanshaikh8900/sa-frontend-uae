@@ -142,7 +142,7 @@ class CashFlow extends Component {
 							</div>
 						
 						</div>
-						<div className="row data-item total" >
+						<div className="row data-item total mt-2" >
 							<div className="column" style={{width:'50%' ,textAlign:'right'}}>	<img className=" mr-3" alt="total" src={totalIcon} /> </div>
 							<div className="column" >
 									<h5>

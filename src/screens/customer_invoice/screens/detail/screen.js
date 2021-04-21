@@ -442,7 +442,7 @@ class DetailCustomerInvoice extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		return row.subTotal ? row.subTotal.toFixed(2) : '';
+		return row.subTotal === 0 ? this.state.customer_currency_symbol + row.subTotal.toFixed(2) : this.state.customer_currency_symbol + row.subTotal.toFixed(2);
 	};
 	addRow = () => {
 		const data = [...this.state.data];
@@ -1047,18 +1047,20 @@ class DetailCustomerInvoice extends React.Component {
 
 	getCurrency = (opt) => {
 		let customer_currencyCode = 0;
-
+		let customer_item_currency = ''
 		this.props.customer_list.map(item => {
 			if(item.label.contactId == opt) {
 				this.setState({
 					customer_currency: item.label.currency.currencyCode,
-					customer_currency_des: item.label.currency.currencyName
+					customer_currency_des: item.label.currency.currencyName,
+					customer_currency_symbol: item.label.currency.currencySymbol,
 				});
 
 				customer_currencyCode = item.label.currency.currencyCode;
+				customer_item_currency = item.label.currency
 			}
 		})
-
+	
 		return customer_currencyCode;
 	}
 
@@ -1599,7 +1601,7 @@ class DetailCustomerInvoice extends React.Component {
 																			className="form-control"
 																			id="currencyName"
 																			name="currencyName"
-																			
+																			disabled
 																			value={this.state.customer_currency_des ? this.state.customer_currency_des : props.values.currencyName}
 																			onChange={(value) => {
 																				props.handleChange('currencyName')(
@@ -2054,6 +2056,7 @@ class DetailCustomerInvoice extends React.Component {
 																							}
 																							/>
 																							)} */}
+																							{this.state.customer_currency_symbol} &nbsp;
 																							{initValue.total_net.toFixed(2)}
 																						</label>
 																					</Col>
@@ -2080,6 +2083,7 @@ class DetailCustomerInvoice extends React.Component {
 																							}
 																							/>
 																							)} */}
+																							{this.state.customer_currency_symbol} &nbsp;
 																							{initValue.invoiceVATAmount.toFixed(
 																							2,
 																						)}
@@ -2108,6 +2112,7 @@ class DetailCustomerInvoice extends React.Component {
 																							}
 																							/>
 																							)} */}
+																							{this.state.customer_currency_symbol} &nbsp;
 																								{this.state.initValue.discount.toFixed(
 																							2,
 																						)}
@@ -2134,6 +2139,7 @@ class DetailCustomerInvoice extends React.Component {
 																							}
 																							/>
 																							)} */}
+																							{this.state.customer_currency_symbol} &nbsp;
 																								{initValue.totalAmount.toFixed(2)}
 																						</label>
 																					</Col>

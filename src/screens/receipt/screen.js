@@ -154,7 +154,7 @@ class Receipt extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		return row.amount ? row.amount.toFixed(2) : '';
+		return row.amount ? row.currencySymbol + row.amount.toFixed(2) : '';
 	};
 
 	renderCurrency = (cell, row) => {

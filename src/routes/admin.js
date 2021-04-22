@@ -88,6 +88,8 @@ import {
 	SalesByProduct,
 	PurchaseByitem,
 	PurchaseByVendor,
+	ReceivableInvoiceDetailsReport,
+	ReceivableInvoiceSummary,
 	
 
 	// Master Screens
@@ -511,7 +513,6 @@ const adminRoutes = [
 		name: 'ViewEmployment',
 		component: UnderConstruction.screen,
 	},
-	//
 	{
 		path: '/admin/payroll/financial/create',
 		name: 'CreateEmployeeFinancialDetails',
@@ -533,7 +534,6 @@ const adminRoutes = [
 		name: 'ViewSalaryRole',
 		component: UnderConstruction.screen,
 	},
-
 		{
 			path: '/admin/payroll/salaryTemplate/create',
 			name: 'CreateSalaryTemplate',
@@ -544,7 +544,6 @@ const adminRoutes = [
 			name: 'ViewSalaryTemplate',
 			component: UnderConstruction.screen,
 		},
-
 	{
 		path: '/admin/payroll/salaryStructure/create',
 		name: 'CreateSalaryStructure',
@@ -640,6 +639,16 @@ const adminRoutes = [
 		component: DetailedGeneralLedgerReport.screen,
 	},
 	{
+		path: '/admin/report/receivable-invoice-details',
+		name: 'ReceivableInvoiceDetail',
+		component: ReceivableInvoiceDetailsReport.screen,
+	},
+	{
+		path: '/admin/report/receivable-invoice-summary',
+		name: 'ReceivableInvoiceDetail',
+		component: ReceivableInvoiceSummary.screen,
+	},
+	{
 		redirect: true,
 		path: '/admin/report',
 		pathTo: '/admin/report/financial',
@@ -733,7 +742,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/master/currencyConvert/create',
-		name: 'CreateCurrencyConversion',
+		name: 'AddCurrencyConversion',
 		component: CreateCurrencyConvert.screen,
 	},
 	{

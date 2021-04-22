@@ -87,6 +87,8 @@ import SalesByCustomer from './financial_report/sections/sales_by_customer';
 import SalesByProduct from './financial_report/sections/sales_by_product';
 import PurchaseByitem from './financial_report/sections/purchase_by_item';
 import PurchaseByVendor from './financial_report/sections/purchase_by_vendor';
+import ReceivableInvoiceDetailsReport from './financial_report/sections/receivable_invoice_details';
+import ReceivableInvoiceSummary from './financial_report/sections/receivable_invoice_summary';
 
 import ChartAccount from './chart_account';
 import CreateChartAccount from './chart_account/screens/create';
@@ -138,6 +140,21 @@ import Notification from './notification';
 import DataBackup from './data_backup';
 import Help from './help';
 import Faq from './help/screens/faq';
+import EmployeePayroll from './employeePayroll';
+import CreateEmployeePayroll from './employeePayroll/screens/create';
+import DetailEmployeePayroll from './employeePayroll/screens/detail';
+import Employment from './employment'
+import CreateEmployment from './employment/screens/create'
+import EmployeeFinancial from './employee_Bank_Details'
+import CreateEmployeeFinancial from './employee_Bank_Details/screens/create'
+import SalaryRoles from './salaryRoles'
+import CreateSalaryRoles from './salaryRoles/screens/create'
+import SalaryTemplate from './salaryTemplate'
+import CreateSalaryTemplate from './salaryTemplate/screens/create'
+import CreateSalaryStucture from './salaryStructure/screens/create'
+import SalaryStucture from './salaryStructure'
+import ViewPayroll from './employeePayroll/screens/viewPayroll'
+import SalarySlip from './employeePayroll/screens/salarySlip'
 
 export {
 	LogIn,
@@ -258,5 +275,22 @@ export {
 	DataBackup,
 	Help,
 	Faq,
+	EmployeePayroll,
+	CreateEmployeePayroll,
+	DetailEmployeePayroll,
+	Employment,
+	CreateEmployment,
+	EmployeeFinancial,
+	CreateEmployeeFinancial,
+	CreateSalaryRoles,
+	SalaryRoles,
+	SalaryTemplate,
+	CreateSalaryTemplate,
+	SalaryStucture,
+	CreateSalaryStucture,
+	ViewPayroll,
+	SalarySlip,
 	UnderConstruction,
+	ReceivableInvoiceDetailsReport,
+	ReceivableInvoiceSummary,
 };

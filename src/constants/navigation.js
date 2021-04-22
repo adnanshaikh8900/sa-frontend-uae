@@ -259,7 +259,7 @@ export default {
 					name: 'Financial Details',
 					url: '/admin/payroll/financial',
 					icon: 'fas fa-balance-scale',
-					path: 'ViewEmployeeBankDetails',
+					path: 'ViewEmployeeFinancialDetails',
 				},
 				{
 					name: 'Salary Roles',
@@ -278,6 +278,12 @@ export default {
 					url: '/admin/payroll/salaryStructure',
 					icon: 'fas fa-balance-scale',
 					path: 'ViewSalaryStructure',
+				},
+				{
+					name: 'Employee Designation',
+					url: '/admin/payroll/salaryStructure',
+					icon: 'fas fa-balance-scale',
+					path: 'ViewEmployeeDesignation',
 				},
 
 				// {

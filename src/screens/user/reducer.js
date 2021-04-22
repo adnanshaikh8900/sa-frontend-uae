@@ -4,6 +4,7 @@ const initState = {
 	user_list: [],
 	role_list: [],
 	company_type_list: [],
+	employee_list: [],
 };
 
 const UserReducer = (state = initState, action) => {
@@ -27,7 +28,11 @@ const UserReducer = (state = initState, action) => {
 				...state,
 				company_type_list: Object.assign([], payload),
 			};
-
+			case USER.EMPLOYEE_LIST:
+			return {
+				...state,
+				employee_list: Object.assign([], payload),
+			};
 		default:
 			return state;
 	}

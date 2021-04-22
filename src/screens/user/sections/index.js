@@ -1,5 +1,3 @@
-import Temp from './temp'
+import EmployeeModal from './employee_modal';
 
-export {
-  Temp
-}
+export { EmployeeModal};

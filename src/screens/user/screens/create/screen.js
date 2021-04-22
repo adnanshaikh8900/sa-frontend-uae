@@ -16,7 +16,7 @@ import {
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-
+import { EmployeeModal } from '../../sections';
 import { ImageUploader } from 'components';
 
 import * as UserActions from '../../actions';
@@ -34,6 +34,7 @@ import './style.scss';
 const eye = require('assets/images/settings/eye.png');
 const mapStateToProps = (state) => {
 	return {
+		employee_list: state.user.employee_list,
 		role_list: state.user.role_list,
 		company_type_list: state.user.company_type_list,
 	};
@@ -75,7 +76,10 @@ class CreateUser extends React.Component {
 				confirmPassword: '',
 				roleId: '',
 				timezone: '',
+				designationId: '',employeeId: '',
+				isDesignationEnabled: false,
 			},
+
 			userPhoto: [],
 			userPhotoFile: [],
 			showIcon: false,
@@ -83,11 +87,14 @@ class CreateUser extends React.Component {
 			createDisabled: false,
 			selectedStatus: false,
 			useractive: false,
+			openEmployeeModal: false,
+		
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 	}
 
 	componentDidMount = () => {
+		this.props.userCreateActions.getEmployeeDropdownList();
 		this.initializeData();
 	};
 
@@ -100,6 +107,8 @@ class CreateUser extends React.Component {
 		});
 		this.props.userActions.getRoleList();
 		this.props.userActions.getCompanyTypeList();
+		
+
 		this.setState({ showIcon: false });
 	};
 
@@ -119,7 +128,7 @@ class CreateUser extends React.Component {
 	togglePasswordVisiblity = () => {
 		const { isPasswordShown } = this.state;
 		this.setState({ isPasswordShown: !isPasswordShown });
-	  };
+	};
 	handleSubmit = (data, resetForm) => {
 		this.setState({
 			createDisabled: true,
@@ -135,6 +144,9 @@ class CreateUser extends React.Component {
 			companyId,
 			active,
 			timezone,
+			isDesignationEnabled,
+			designationId,
+			employeeId
 		} = data;
 		let formData = new FormData();
 		formData.append('firstName', firstName ? firstName : '');
@@ -159,6 +171,8 @@ class CreateUser extends React.Component {
 		if (this.state.userPhotoFile.length > 0) {
 			formData.append('profilePic ', this.state.userPhotoFile[0]);
 		}
+		formData.append('isDesignationEnabled' ,isDesignationEnabled ? isDesignationEnabled : '');
+		formData.append('employeeId',employeeId ? employeeId.value : '');
 
 		this.props.userCreateActions
 			.createUser(formData)
@@ -208,10 +222,37 @@ class CreateUser extends React.Component {
 		});
 	};
 
+	getCurrentUser = (data) => {
+		
+		let option;
+		if (data.label || data.value) {
+			option = data;
+		} else {
+			option = {
+				label: `${data.fullName}`,
+				value: data.id,
+			};
+		}
+			console.log("shadyuigsa",option)
+		this.formRef.current.setFieldValue('employeeId', option, true);
+	};
+	openEmployeeModal = (props) => {
+		this.setState({ openEmployeeModal: true });
+	};
+	closeEmployeeModal = (res) => {
+		this.setState({ openEmployeeModal: false });
+	};
 	render() {
-		const { role_list } = this.props;
+		const { role_list, employee_list } = this.props;
 		const { timezone } = this.state;
 		const { isPasswordShown } = this.state;
+
+	console.log(employee_list);
+		// emlpoyee_list.map(item => {
+		// 	let obj = {label: item.label.fullName, value: item.value}
+		// 	tmpEmployee_list.push(obj)
+		// })
+
 		return (
 			<div className="create-user-screen">
 				<div className="animated fadeIn">
@@ -251,7 +292,7 @@ class CreateUser extends React.Component {
 															'User already exists';
 													}
 
-													if ( errors.length ) {
+													if (errors.length) {
 														this.setState({
 															createDisabled: false,
 														})
@@ -296,17 +337,7 @@ class CreateUser extends React.Component {
 														<Row>
 															<Col xs="4" md="4" lg={2}>
 																<FormGroup className="mb-3 text-center">
-																	{/* <ImagesUploader
-                                    // url="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                                    optimisticPreviews
-                                    multiple={false}
-                                    onLoadEnd={(err) => {
-                                      if (err) {
-                                        console.error(err);
-                                      }
-                                    }}
-                                    onChange={(e) => {}}
-                                  /> */}
+																	
 																	<ImageUploader
 																		// withIcon={true}
 																		buttonText="Choose images"
@@ -365,7 +396,7 @@ class CreateUser extends React.Component {
 																				}}
 																				className={
 																					props.errors.firstName &&
-																					props.touched.firstName
+																						props.touched.firstName
 																						? 'is-invalid'
 																						: ''
 																				}
@@ -405,7 +436,7 @@ class CreateUser extends React.Component {
 																				}}
 																				className={
 																					props.errors.lastName &&
-																					props.touched.lastName
+																						props.touched.lastName
 																						? 'is-invalid'
 																						: ''
 																				}
@@ -441,7 +472,7 @@ class CreateUser extends React.Component {
 																				}}
 																				className={
 																					props.errors.email &&
-																					props.touched.email
+																						props.touched.email
 																						? 'is-invalid'
 																						: ''
 																				}
@@ -472,15 +503,14 @@ class CreateUser extends React.Component {
 																				//value={props.values.dob}
 																				onChange={(value) => {
 																					props.handleChange('dob')(value);
-																					
+
 																				}}
-																				className={`form-control ${
-																					props.errors.dob && props.touched.dob
+																				className={`form-control ${props.errors.dob && props.touched.dob
 																						? 'is-invalid'
 																						: ''
-																				}`}
+																					}`}
 																			/>
-																				{props.errors.dob &&
+																			{props.errors.dob &&
 																				props.touched.dob && (
 																					<div className="invalid-feedback">
 																						{props.errors.dob}
@@ -490,74 +520,74 @@ class CreateUser extends React.Component {
 																	</Col>
 																</Row>
 																<Row>
-															<Col lg={6}>
-																			<FormGroup className="mb-3">
-																				<Label htmlFor="active">Status</Label>
-																				<div>
-																					<FormGroup check inline>
-																						<div className="custom-radio custom-control">
-																							<input
-																								className="custom-control-input"
-																								type="radio"
-																								id="inline-radio1"
-																								name="active"
-																								checked={
-																									this.state.selectedStatus
+																	<Col lg={6}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="active">Status</Label>
+																			<div>
+																				<FormGroup check inline>
+																					<div className="custom-radio custom-control">
+																						<input
+																							className="custom-control-input"
+																							type="radio"
+																							id="inline-radio1"
+																							name="active"
+																							checked={
+																								this.state.selectedStatus
+																							}
+																							value={true}
+																							onChange={(e) => {
+																								if (
+																									e.target.value === 'true'
+																								) {
+																									this.setState({
+																										selectedStatus: true,
+																										useractive: true
+																									});
 																								}
-																								value={true}
-																								onChange={(e) => {
-																									if (
-																										e.target.value === 'true'
-																									) {
-																										this.setState({
-																											selectedStatus: true,
-																											useractive: true
-																										});
-																									}
-																								}}
-																							/>
-																							<label
-																								className="custom-control-label"
-																								htmlFor="inline-radio1"
-																							>
-																								Active
+																							}}
+																						/>
+																						<label
+																							className="custom-control-label"
+																							htmlFor="inline-radio1"
+																						>
+																							Active
 																							</label>
-																						</div>
-																					</FormGroup>
-																					<FormGroup check inline>
-																						<div className="custom-radio custom-control">
-																							<input
-																								className="custom-control-input"
-																								type="radio"
-																								id="inline-radio2"
-																								name="active"
-																								value={false}
-																								checked={
-																									!this.state.selectedStatus
+																					</div>
+																				</FormGroup>
+																				<FormGroup check inline>
+																					<div className="custom-radio custom-control">
+																						<input
+																							className="custom-control-input"
+																							type="radio"
+																							id="inline-radio2"
+																							name="active"
+																							value={false}
+																							checked={
+																								!this.state.selectedStatus
+																							}
+																							onChange={(e) => {
+																								if (
+																									e.target.value === 'false'
+																								) {
+																									this.setState({
+																										selectedStatus: false,
+																										useractive: false
+																									});
 																								}
-																								onChange={(e) => {
-																									if (
-																										e.target.value === 'false'
-																									) {
-																										this.setState({
-																											selectedStatus: false,
-																											useractive: false
-																										});
-																									}
-																								}}
-																							/>
-																							<label
-																								className="custom-control-label"
-																								htmlFor="inline-radio2"
-																							>
-																								Inactive
+																							}}
+																						/>
+																						<label
+																							className="custom-control-label"
+																							htmlFor="inline-radio2"
+																						>
+																							Inactive
 																							</label>
-																						</div>
-																					</FormGroup>
-																				</div>
-																			</FormGroup>
-																		</Col>
-															</Row>
+																					</div>
+																				</FormGroup>
+																			</div>
+																		</FormGroup>
+																	</Col>
+																</Row>
 																<Row>
 																	<Col lg={6}>
 																		<FormGroup>
@@ -570,11 +600,11 @@ class CreateUser extends React.Component {
 																				options={
 																					role_list
 																						? selectOptionsFactory.renderOptions(
-																								'roleName',
-																								'roleCode',
-																								role_list,
-																								'Role',
-																						  )
+																							'roleName',
+																							'roleCode',
+																							role_list,
+																							'Role',
+																						)
 																						: []
 																				}
 																				value={props.values.roleId}
@@ -592,7 +622,7 @@ class CreateUser extends React.Component {
 																				name="roleId"
 																				className={
 																					props.errors.roleId &&
-																					props.touched.roleId
+																						props.touched.roleId
 																						? 'is-invalid'
 																						: ''
 																				}
@@ -628,7 +658,7 @@ class CreateUser extends React.Component {
 																				}}
 																				className={
 																					props.errors.timezone &&
-																					props.touched.timezone
+																						props.touched.timezone
 																						? 'is-invalid'
 																						: ''
 																				}
@@ -730,40 +760,40 @@ class CreateUser extends React.Component {
 																				<span className="text-danger">*</span>
 																				Password
 																			</Label>
-																			<div>	
-																			<Input
-																				type={
-																					this.state.isPasswordShown
-																						? 'text'
-																						: 'password'
-																				}
-																				id="password"
-																				name="password"
-																				placeholder="Enter password"
-																				value={props.values.password}
-																				onChange={(option) => {
-																					props.handleChange('password')(
-																						option,
-																					);
-																				}}
-																				className={
-																					props.errors.password &&
-																					props.touched.password
-																						? 'is-invalid'
-																						: ''
-																				}
-																			/>
-																		<i   className={`fa ${ isPasswordShown ? "fa-eye-slash" : "fa-eye" } password-icon fa-lg`}
-																		onClick={this.togglePasswordVisiblity}
-																	>
-																		{/* <img 
+																			<div>
+																				<Input
+																					type={
+																						this.state.isPasswordShown
+																							? 'text'
+																							: 'password'
+																					}
+																					id="password"
+																					name="password"
+																					placeholder="Enter password"
+																					value={props.values.password}
+																					onChange={(option) => {
+																						props.handleChange('password')(
+																							option,
+																						);
+																					}}
+																					className={
+																						props.errors.password &&
+																							props.touched.password
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																				<i className={`fa ${isPasswordShown ? "fa-eye-slash" : "fa-eye"} password-icon fa-lg`}
+																					onClick={this.togglePasswordVisiblity}
+																				>
+																					{/* <img 
 																			src={eye}
 																			style={{ width: '20px' }}
 																		/> */}
-																		</i>
-																		</div>	
+																				</i>
+																			</div>
 																			{props.errors.password &&
-																			props.touched.password ? (
+																				props.touched.password ? (
 																				<div className="invalid-feedback">
 																					{props.errors.password}
 																				</div>
@@ -795,7 +825,7 @@ class CreateUser extends React.Component {
 																				}}
 																				className={
 																					props.errors.confirmPassword &&
-																					props.touched.confirmPassword
+																						props.touched.confirmPassword
 																						? 'is-invalid'
 																						: ''
 																				}
@@ -809,21 +839,120 @@ class CreateUser extends React.Component {
 																		</FormGroup>
 																	</Col>
 																</Row>
-															
+
+																<Row><Col lg={8}>
+																	<FormGroup check inline className="mb-3">
+																		<Label
+																			className="form-check-label"
+																			check
+																			htmlFor="isDesignationEnabled"
+																		>
+																			<Input
+																				className="form-check-input"
+																				type="checkbox"
+																				id="is"
+																				name="isDesignationEnabled"
+																				onChange={(value) => {
+																					props.handleChange('isDesignationEnabled')(value);
+																				}}
+																				checked={props.values.isDesignationEnabled}
+
+
+																				// className={
+																				// 	props.errors.productPriceType &&
+																				// 		props.touched.productPriceType
+																				// 		? 'is-invalid'
+																				// 		: ''
+																				// }
+																			/>
+																		Enable Employee
+																			{props.errors.productPriceType &&
+																				props.touched.productPriceType && (
+																					<div className="invalid-feedback">
+																						{props.errors.productPriceType}
+																					</div>
+																				)}
+																		</Label>
+																	</FormGroup>
+																</Col>
+																</Row>
+																<Row style={{display: props.values.isDesignationEnabled === false ? 'none' : ''}}>
+																	<Col lg={3}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="contactId">
+																				<span className="text-danger">*</span>
+																		Employee
+																	</Label>
+																			<Select
+																				styles={customStyles}
+																				id="employeeId"
+																				name="employeeId"
+																				placeholder="Select employee"
+																				options={
+																					employee_list.data
+																						? selectOptionsFactory.renderOptions(
+																							'label',
+																							'value',
+																							employee_list.data,
+																							'Employee',
+																						)
+																						: []
+																				}
+																				value={props.values.employeeId}
+																				onChange={(option) => {
+																					if (option && option.value) {
+																						props.handleChange('employeeId')(option);
+																					} else {
+																						props.handleChange('employeeId')('');
+																					}
+																				}}
+																				className={
+																					props.errors.employeeId &&
+																						props.touched.employeeId
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.employeeId &&
+																				props.touched.employeeId && (
+																					<div className="invalid-feedback">
+																						{props.errors.employeeId}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col><Col>
+																		<Label
+																			htmlFor="employeeId"
+																			style={{ display: 'block' }}
+																		>
+																			Add New Employee
+																</Label>
+																		<Button
+																			type="button"
+																			color="primary"
+																			className="btn-square mr-3 mb-3"
+																			onClick={(e, props) => {
+																				this.openEmployeeModal(props);
+																			}}
+																		>
+																			<i className="fa fa-plus"></i> Add a Employee
+																</Button>
+																	</Col>
+																</Row>
 															</Col>
 														</Row>
 														<Row>
 															<Col lg={12} className="mt-5">
 																<FormGroup className="text-right">
 																	<Button
-																	    ref="btn"
+																		ref="btn"
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
 																		disabled={this.state.createDisabled}
 																		onClick={() => {
 																			this.setState(
-																				{ 
+																				{
 																					createMore: false,
 																				},
 																				() => {
@@ -875,6 +1004,19 @@ class CreateUser extends React.Component {
 						</Col>
 					</Row>
 				</div>
+
+				<EmployeeModal
+					openEmployeeModal={this.state.openEmployeeModal}
+					closeEmployeeModal={(e) => {
+						this.closeEmployeeModal(e);
+					}}
+					getCurrentUser={(e) => this.getCurrentUser(e)}
+					createEmployee={this.props.userCreateActions.createEmployee}
+				// currency_list={this.props.currency_convert_list}
+				// currency={this.state.currency}
+				// country_list={this.props.country_list}
+				// getStateList={this.props.customerInvoiceActions.getStateList}
+				/>
 			</div>
 		);
 	}

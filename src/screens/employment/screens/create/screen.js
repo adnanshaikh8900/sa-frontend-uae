@@ -510,7 +510,7 @@ class CreateEmployment extends React.Component {
                                     <i className="fa fa-refresh"></i> Create and More
                                       </Button>
                                   <Button color="secondary" className="btn-square"
-                                    onClick={() => { this.props.history.push('/admin/payroll/employee') }}>
+                                    onClick={() => { this.props.history.push('/admin/payroll/employment') }}>
                                     <i className="fa fa-ban"></i> Cancel
                                       </Button>
                                 </FormGroup>

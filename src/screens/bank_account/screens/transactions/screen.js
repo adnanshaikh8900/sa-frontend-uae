@@ -95,6 +95,7 @@ class BankTransactions extends React.Component {
 			openingBalance: '',
 			closingBalance: '',
 			currentBalance: '',
+			bankAccountCurrencySymbol:'',
 			accounName: '',
 			expanded: [],
 			page: 1,
@@ -146,6 +147,7 @@ class BankTransactions extends React.Component {
 			.getBankAccountByID(localStorage.getItem('bankId'))
 			.then((res) => {
 				this.setState({
+					bankAccountCurrencySymbol:res.bankAccountCurrencySymbol,
 					currentBalance: res.currentBalance,
 					closingBalance: res.closingBalance,
 					accounName: res.bankAccountName,
@@ -689,6 +691,7 @@ class BankTransactions extends React.Component {
 																}
 															/>
 														)} */}
+														{this.state.bankAccountCurrencySymbol} &nbsp;
 														{this.state.currentBalance}
 													</h3>
 												</Col>
@@ -705,7 +708,7 @@ class BankTransactions extends React.Component {
 																}
 															/>
 														)} */}
-
+													{this.state.bankAccountCurrencySymbol} &nbsp;
 													{this.state.closingBalance}
 													</h3>
 												</Col>

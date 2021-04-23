@@ -43,6 +43,7 @@ import {
 	SalaryRoles,
 	SalaryStucture,
 	SalaryTemplate,
+	Designation,
 } from 'screens';
 
 
@@ -90,6 +91,7 @@ const reducer = combineReducers({
 	salaryRoles:SalaryRoles.reducer,
 	salaryStructure :SalaryStucture.reducer,
 	salarytemplate: SalaryTemplate.reducer,
+	employeeDesignation:Designation.reducer
 });
 
 export default reducer;

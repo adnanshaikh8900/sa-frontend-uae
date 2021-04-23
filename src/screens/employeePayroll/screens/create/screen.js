@@ -36,6 +36,7 @@ const mapStateToProps = (state) => {
     country_list: state.contact.country_list,
     state_list: state.contact.state_list,
     salary_role_dropdown: state.salarytemplate.salary_role_dropdown,
+    designation_dropdown: state.employeePayroll.designation_dropdown,
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -87,9 +88,13 @@ class CreateEmployeePayroll extends React.Component {
         gender:'',
         pincode: '',
         city: '',
+        designationId:'',
+        active:true,
       },
       userPhoto: [],
 			userPhotoFile: [],
+      useractive: false,
+      showIcon: false,
     }
 
     this.regEx = /^[0-9\d]+$/;
@@ -121,7 +126,10 @@ class CreateEmployeePayroll extends React.Component {
   initializeData = () => {
     this.props.employeeActions.getCountryList();
     this.props.salaryTemplateActions.getSalaryRolesForDropdown();
+    this.props.employeeActions.getEmployeeDesignationForDropdown();
 
+    this.setState({ showIcon: false });
+    
   };
 
   handleSubmit = (data, resetForm) => {
@@ -138,12 +146,15 @@ class CreateEmployeePayroll extends React.Component {
       city,
       pincode,
       salaryRoleId,
+      employeeDesignationId,
+      dob,
+      bloodGroup,
+      gender
 		} = data;
 
-		const { gender } = this.state;
-    const { bloodGroup } = this.state;
-		const formData = new FormData();
 
+		const formData = new FormData();
+		formData.append('isActive', this.state.useractive);
    	formData.append(
 			'firstName',
 			firstName !== null ? firstName : '',
@@ -156,6 +167,10 @@ class CreateEmployeePayroll extends React.Component {
 			'lastName',
 			lastName !== null ? lastName : '',
 		);
+    formData.append(
+      'dob',
+      dob != null ? dob : '',
+    )
     formData.append(
       'mobileNumber',
       mobileNumber !== null ? mobileNumber : '',
@@ -191,7 +206,9 @@ class CreateEmployeePayroll extends React.Component {
     if (stateId && stateId.value) {
 			formData.append('stateId', stateId.value);
 		}
-    
+    if (employeeDesignationId && employeeDesignationId.value) {
+			formData.append('employeeDesignationId', employeeDesignationId.value);
+		}
     this.props.employeeCreateActions
     .createEmployee(formData)
     .then((res) => {
@@ -205,7 +222,7 @@ class CreateEmployeePayroll extends React.Component {
           })
           resetForm(this.state.initValue)
         } else {
-          this.props.history.push('/admin/master/employee')
+          this.props.history.push('/admin/payroll/employee')
         }
       }
     }).catch((err) => {
@@ -216,10 +233,16 @@ class CreateEmployeePayroll extends React.Component {
   getStateList = (countryCode) => {
 		this.props.employeeActions.getStateList(countryCode);
 	};
+  uploadImage = (picture, file) => {
+		this.setState({
+			userPhoto: picture,
+			userPhotoFile: file,
+		});
+	};
 
   render() {
 
-    const { salary_role_dropdown,country_list,state_list } = this.props
+    const { salary_role_dropdown,designation_dropdown,country_list,state_list } = this.props
 
     return (
       <div className="create-employee-screen">
@@ -416,6 +439,42 @@ class CreateEmployeePayroll extends React.Component {
                                 </FormGroup>
                               </Col>
                               <Col md="4">
+                                <FormGroup>
+                                  <Label htmlFor="select">Designation</Label>
+                                  <Select
+																		styles={customStyles}
+																		options={
+                                      designation_dropdown
+																				? selectOptionsFactory.renderOptions(
+																						'label',
+																						'value',
+                                            designation_dropdown,
+																						'employeeDesignationId',
+																				  )
+																				: []
+																		}
+																		id="employeeDesignationId"
+																		name="employeeDesignationId"
+																		placeholder="Select designation "
+																		value={this.state.salaryDesignation}
+                                    onChange={(value) => {
+																			props.handleChange('employeeDesignationId')(value);
+																	
+																		}}
+																		className={`${
+																			props.errors.designationId && props.touched.designationId
+																				? 'is-invalid'
+																				: ''
+																		}`}
+																	/>
+																	{props.errors.designationId && props.touched.designationId && (
+																		<div className="invalid-feedback">
+																			{props.errors.designationId}
+																		</div>
+																	)}
+                                </FormGroup>
+                              </Col>
+                              <Col md="4">
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="date"><span className="text-danger">*</span>Date Of Birth</Label>
                                   <DatePicker
@@ -440,7 +499,126 @@ class CreateEmployeePayroll extends React.Component {
                               </Col>
                             </Row>
                             <hr />
-
+                            <Row className="row-wrapper">
+                            <Col md="4">
+																<FormGroup>
+																	<Label htmlFor="mobileNumber">
+																		<span className="text-danger">*</span>Mobile
+																		Number
+																	</Label>
+																	<PhoneInput
+																		id="mobileNumber"
+																		name="mobileNumber"
+																		defaultCountry="AE"
+																		international
+																		value={props.values.mobileNumber}
+																		placeholder="Enter Mobile Number"
+																		onBlur={props.handleBlur('mobileNumber')}
+																		onChange={(option) => {
+																			props.handleChange('mobileNumber')(
+																				option,
+																			);
+																		}}
+																		className={
+																			props.errors.mobileNumber &&
+																			props.touched.mobileNumber
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.mobileNumber &&
+																		props.touched.mobileNumber && (
+																			<div className="invalid-feedback">
+																				{props.errors.mobileNumber}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+                              <Col md="4">
+                                <FormGroup>
+                                  <Label htmlFor="select"><span className="text-danger">*</span>Email</Label>
+                                  <Input
+                                    type="text"
+                                    id="email"
+                                    name="email"
+                                    value={props.values.email}
+                                    placeholder="Enter Email Address"
+                                    onChange={(value) => { props.handleChange('email')(value) }}
+                                    className={props.errors.email && props.touched.email ? "is-invalid" : ""}
+                                  />
+                                  {props.errors.email && props.touched.email && (
+                                    <div className="invalid-feedback">{props.errors.email}</div>
+                                  )}
+                                </FormGroup>
+                              </Col>
+                              <Col md="4">
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="active">Status</Label>
+																			<div>
+																				<FormGroup check inline>
+																					<div className="custom-radio custom-control">
+																						<input
+																							className="custom-control-input"
+																							type="radio"
+																							id="inline-radio1"
+																							name="active"
+																							checked={
+																								this.state.selectedStatus
+																							}
+																							value={true}
+																							onChange={(e) => {
+																								if (
+																									e.target.value === 'true'
+																								) {
+																									this.setState({
+																										selectedStatus: true,
+																										useractive: true
+																									});
+																								}
+																							}}
+																						/>
+																						<label
+																							className="custom-control-label"
+																							htmlFor="inline-radio1"
+																						>
+																							Active
+																							</label>
+																					</div>
+																				</FormGroup>
+																				<FormGroup check inline>
+																					<div className="custom-radio custom-control">
+																						<input
+																							className="custom-control-input"
+																							type="radio"
+																							id="inline-radio2"
+																							name="active"
+																							value={false}
+																							checked={
+																								!this.state.selectedStatus
+																							}
+																							onChange={(e) => {
+																								if (
+																									e.target.value === 'false'
+																								) {
+																									this.setState({
+																										selectedStatus: false,
+																										useractive: false
+																									});
+																								}
+																							}}
+																						/>
+																						<label
+																							className="custom-control-label"
+																							htmlFor="inline-radio2"
+																						>
+																							Inactive
+																							</label>
+																					</div>
+																				</FormGroup>
+																			</div>
+																		</FormGroup>
+																	</Col>
+                            </Row>
                             <Row className="row-wrapper">
                               <Col md="4">
                                 <FormGroup>
@@ -515,60 +693,10 @@ class CreateEmployeePayroll extends React.Component {
 
                                 </FormGroup>
                               </Col>
+                            
                             </Row>
-                            <Row className="row-wrapper">
-                            <Col md="4">
-																<FormGroup>
-																	<Label htmlFor="mobileNumber">
-																		<span className="text-danger">*</span>Mobile
-																		Number
-																	</Label>
-																	<PhoneInput
-																		id="mobileNumber"
-																		name="mobileNumber"
-																		defaultCountry="AE"
-																		international
-																		value={props.values.mobileNumber}
-																		placeholder="Enter Mobile Number"
-																		onBlur={props.handleBlur('mobileNumber')}
-																		onChange={(option) => {
-																			props.handleChange('mobileNumber')(
-																				option,
-																			);
-																		}}
-																		className={
-																			props.errors.mobileNumber &&
-																			props.touched.mobileNumber
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.mobileNumber &&
-																		props.touched.mobileNumber && (
-																			<div className="invalid-feedback">
-																				{props.errors.mobileNumber}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
-                              <Col md="4">
-                                <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>Email</Label>
-                                  <Input
-                                    type="text"
-                                    id="email"
-                                    name="email"
-                                    value={props.values.email}
-                                    placeholder="Enter Email Address"
-                                    onChange={(value) => { props.handleChange('email')(value) }}
-                                    className={props.errors.email && props.touched.email ? "is-invalid" : ""}
-                                  />
-                                  {props.errors.email && props.touched.email && (
-                                    <div className="invalid-feedback">{props.errors.email}</div>
-                                  )}
-                                </FormGroup>
-                              </Col>
-                            </Row>
+                            <Row>  </Row>
+                           
                             <hr />
                             <Row className="row-wrapper">
                               <Col md="8">
@@ -724,6 +852,7 @@ class CreateEmployeePayroll extends React.Component {
                                 </FormGroup>
                               </Col> */}
                             </Row>
+                            
                             <Row className="row-wrapper">
                               <Col md="4">
                                 <FormGroup>
@@ -769,6 +898,7 @@ class CreateEmployeePayroll extends React.Component {
                               </Col>
                        
                             </Row>
+                            
                             </Col>
                             </Row>
                             <Row>

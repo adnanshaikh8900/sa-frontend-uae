@@ -167,6 +167,8 @@ import {
 	ViewPayroll,
 	SalarySlip,
 	UnderConstruction,
+	CreateDesignation,
+	Designation
 } from 'screens';
 
 const adminRoutes = [
@@ -552,6 +554,16 @@ const adminRoutes = [
 	{
 		path: '/admin/payroll/salaryStructure',
 		name: 'ViewSalaryStructure',
+		component: UnderConstruction.screen,
+	},
+	{
+		path: '/admin/payroll/employeeDesignation/create',
+		name: 'CreateEmployeeDesignation',
+		component: CreateDesignation.screen,
+	},
+	{
+		path: '/admin/payroll/employeeDesignation',
+		name: 'ViewEmployeeDesignation',
 		component: UnderConstruction.screen,
 	},
 	{

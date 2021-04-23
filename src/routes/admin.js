@@ -657,7 +657,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/report/receivable-invoice-summary',
-		name: 'ReceivableInvoiceDetail',
+		name: 'ReceivableInvoiceSummary',
 		component: ReceivableInvoiceSummary.screen,
 	},
 	{

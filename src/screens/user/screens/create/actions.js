@@ -36,12 +36,11 @@ export const checkValidation = (obj) => {
 	};
 };
 
-
-export const getEmployeeDropdownList = () => {
+export const getEmployeesNotInUserForDropdown = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: `/rest/employee/getEmployeesForDropdown`,
+			url: `/rest/employee/getEmployeesNotInUserForDropdown`,
 		};
 		return authApi(data)
 			.then((res) => {
@@ -61,10 +60,7 @@ export const getEmployeeDropdownList = () => {
 	};
 };
 
-
-
-export const createEmployee = (obj) => {
-	
+export const createEmployee = (obj) => {	
 	return (dispatch) => {
 	  let data = {
 		method: 'post',

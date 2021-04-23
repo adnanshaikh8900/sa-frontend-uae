@@ -102,7 +102,7 @@ class DetailEmployeePayroll extends React.Component {
 
   initializeData = () => {
     if (this.props.location.state && this.props.location.state.id) {
-      this.props.employeeActions.getCurrencyList();
+      // this.props.employeeActions.getCurrencyList();
       this.props.salaryTemplateActions.getSalaryRolesForDropdown();
       this.props.employeeActions.getEmployeeDesignationForDropdown();
       this.props.employeeDetailActions.getEmployeeDetail(this.props.location.state.id).then((res) => {

@@ -523,7 +523,7 @@ const adminRoutes = [
 	{
 		path: '/admin/payroll/financial',
 		name: 'ViewEmployeeFinancialDetails',
-		component: EmployeeFinancial.screen,
+		component: UnderConstruction.screen,
 	},
 
 	{

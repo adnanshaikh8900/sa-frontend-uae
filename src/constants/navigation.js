@@ -56,7 +56,7 @@ export default {
 					path: 'ViewSupplierReceipt',
 				},
 				{
-					name: 'Request For Quotation',
+					name: 'RFQ',
 					url: '/admin/expense/request-for-quotation',
 					icon: 'fas fa-file-invoice',
 					path: 'ViewRequestForQuotation',
@@ -68,7 +68,7 @@ export default {
 					path: 'ViewPurchaseOrder',
 				},
 				{
-					name: 'Goods Received Note',
+					name: 'GRN',
 					url: '/admin/expense/goods-received-note',
 					icon: 'fas fa-file-invoice',
 					path: 'ViewGoodsReceiveNotes',

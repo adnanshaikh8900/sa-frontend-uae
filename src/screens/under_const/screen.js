@@ -141,7 +141,7 @@ class LogIn extends React.Component {
 													{/* <img src={login_banner} alt="login_banner" className="login_banner"/> */}
 												</div>
 					<div className="app flex-row align-items-center ">
-						<Container style={{marginLeft:'500px'}}>
+						<Container style={{marginLeft:'700px',marginBottom:'500px'}}>
 					<div>
 							<Row style={{marginLeft:'130px'}}>
   <svg xmlns="http://www.w3.org/2000/svg" width="100" height="70" viewBox="0 0 100 68">

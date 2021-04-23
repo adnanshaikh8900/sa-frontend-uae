@@ -29,7 +29,7 @@ createDatabase="false"
 echo "Test deployment script"
 
 helm $1 $subdomain-frontend ./$helmDir --values ./$helmDir/values.yaml \
---set simpleVatBackendRelease=$SVrelease \
+--set simpleVatFrontendRelease=$SVrelease \
 --set image.repository.frontend.tag=$SVrelease \
 --set simpleVatHost=https://$subdomain-api.$maindomain \
 --set fullnameOverride=$subdomain-frontend \

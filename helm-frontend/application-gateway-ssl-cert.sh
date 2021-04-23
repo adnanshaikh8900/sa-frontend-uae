@@ -2,9 +2,9 @@
 appgwName="k8sApplicationGateway"
 resgp="MC_DataInn_Kubernetes_RG_k8s_eastus"
 vaultName="kv-k8s-cert-eac2"
-mycert="wildcard-app-simplevat-com"
-nameserver="simplevat-bluestreet"
-subdomain="bluestreet"
+mycert="wildcard-test-simplevat-com"
+nameserver="simplevat-test1"
+subdomain="test1"
 helmDir="helm-frontend"
 SVrelease="0.0.3-alpha-341"
 
@@ -31,6 +31,7 @@ openssl rsa -in "$mycert"-keyfile-encrypted.key -out "$mycert"-keyfile-decrypted
 
 openssl pkcs12 -in "$mycert".pfx -clcerts -nokeys -out "$mycert"-certificate.crt
 
+kubectl delete secret "$mycert"-tls -n $nameserver
 
 kubectl create secret tls "$mycert"-tls --key="$mycert-keyfile-decrypted.key" --cert="$mycert-certificate.crt" -n $nameserver
 

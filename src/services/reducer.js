@@ -7,6 +7,7 @@ import {
 	Journal,
 	BankAccount,
 	Employee,
+	EmployeePayroll,
 	Contact,
 	Expense,
 	GeneralSettings,
@@ -39,6 +40,10 @@ import {
 	PurchaseOrder,
 	GoodsReceivedNote,
 	FinancialReport,
+	SalaryRoles,
+	SalaryStucture,
+	SalaryTemplate,
+	Designation,
 } from 'screens';
 
 
@@ -50,6 +55,7 @@ const reducer = combineReducers({
 	journal: Journal.reducer,
 	bank_account: BankAccount.reducer,
 	employee: Employee.reducer,
+	employeePayroll: EmployeePayroll.reducer,
 	contact: Contact.reducer,
 	expense: Expense.reducer,
 	settings: GeneralSettings.reducer,
@@ -82,6 +88,10 @@ const reducer = combineReducers({
 	import_transaction: ImportTransaction.reducer,
 	opening_balance: OpeningBalance.reducer,
 	inventory: Inventory.reducer,
+	salaryRoles:SalaryRoles.reducer,
+	salaryStructure :SalaryStucture.reducer,
+	salarytemplate: SalaryTemplate.reducer,
+	employeeDesignation:Designation.reducer
 });
 
 export default reducer;

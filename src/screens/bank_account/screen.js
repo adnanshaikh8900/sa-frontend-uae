@@ -808,7 +808,7 @@ class BankAccount extends React.Component {
 												<TableHeaderColumn
 													dataField="name"
 													dataSort
-													width="5%"
+													width="8%"
 													className="table-header-bg"
 												>
 													Bank
@@ -816,7 +816,7 @@ class BankAccount extends React.Component {
 												<TableHeaderColumn
 													dataField="accounName"
 													dataSort
-													width="7%"
+													width="10%"
 													className="table-header-bg"
 												>
 													Account Name

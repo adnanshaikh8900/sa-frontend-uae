@@ -697,6 +697,8 @@ class ExplainTrasactionDetail extends React.Component {
 			let obj = {label: item.label.contactName, value: item.value}
 			tmpSupplier_list.push(obj)
 		})
+
+		console.log(transactionCategoryList)
 		return (
 			<div className="detail-bank-transaction-screen">
 				<div className="animated fadeIn">
@@ -1280,6 +1282,8 @@ class ExplainTrasactionDetail extends React.Component {
 																						}
 																						onChange={(option) => {
 																							if (option && option.value) {
+																								this.formRef.current.setFieldValue('currencyCode', this.getCurrency(option.value), true);
+																								//this.setExchange( this.getCurrency(option.value) );
 																								props.handleChange('customerId')(
 																									option.value,
 																								);

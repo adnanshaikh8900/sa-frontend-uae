@@ -586,22 +586,6 @@ class CreateContact extends React.Component {
 																		<span className="text-danger">*</span>Mobile
 																		Number
 																	</Label>
-																	{/* <Input
-                                    type="text"
-                                    id="mobileNumber"
-                                    name="mobileNumber"
-                                    
-                                    onChange={(value) => { props.handleChange("mobileNumber")(value) }}
-                                    value={props.values.mobileNumber}
-                                    className={
-                                      props.errors.mobileNumber && props.touched.mobileNumber
-                                        ? "is-invalid"
-                                        : ""
-                                    }
-                                  />
-                                  {props.errors.mobileNumber && props.touched.mobileNumber && (
-                                    <div className="invalid-feedback">{props.errors.mobileNumber}</div>
-                                  )} */}
 																	<PhoneInput
 																		id="mobileNumber"
 																		name="mobileNumber"

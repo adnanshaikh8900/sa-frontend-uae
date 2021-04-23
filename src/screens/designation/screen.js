@@ -20,7 +20,7 @@ import { Loader, ConfirmDeleteModal } from 'components'
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 
-import * as EmployeeActions from './actions'
+import * as DesignationActions from './actions'
 import {
   CommonActions
 } from 'services/global'
@@ -31,18 +31,17 @@ import './style.scss'
 
 const mapStateToProps = (state) => {
   return ({
-    employee_list: state.employeePayroll.employee_list,
-    vat_list: state.employee.vat_list
+    designation_list: state.employeeDesignation.designation_list,
   })
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
-    employeeActions: bindActionCreators(EmployeeActions, dispatch),
+    designationActions: bindActionCreators(DesignationActions, dispatch),
     commonActions: bindActionCreators(CommonActions, dispatch)
   })
 }
 
-class EmployeePayroll extends React.Component {
+class Designation extends React.Component {
 
   constructor(props) {
     super(props)
@@ -51,8 +50,8 @@ class EmployeePayroll extends React.Component {
       selectedRows: [],
       dialog: null,
       filterData: {
-        name: '',
-        email: ''
+        id: '',
+        salaryRoleName: ''
       },
       csvData: [],
       view: false
@@ -101,7 +100,7 @@ class EmployeePayroll extends React.Component {
       sortingCol: this.options.sortName ? this.options.sortName : ''
     }
     const postData = { ...filterData, ...paginationData, ...sortingData }
-    this.props.employeeActions.getEmployeeList(postData).then((res) => {
+    this.props.designationActions.getEmployeeDesignationList(postData).then((res) => {
       if (res.status === 200) {
         this.setState({ loading: false })
       }
@@ -112,7 +111,7 @@ class EmployeePayroll extends React.Component {
   }
 
   goToDetail = (row) => {
-    this.props.history.push('/admin/payroll/employee/detail', { id: row.id })
+    this.props.history.push('/admin/master/employee/detail', { id: row.id })
   }
 
   sortColumn = (sortName, sortOrder) => {
@@ -178,15 +177,15 @@ class EmployeePayroll extends React.Component {
   removeBulk = () => {
     this.removeDialog()
     let { selectedRows } = this.state;
-    const { employee_list } = this.props
+    const { designation_list } = this.props
     let obj = {
       ids: selectedRows
     }
-    this.props.employeeActions.removeBulkEmployee(obj).then((res) => {
+    this.props.designationActions.removeBulkEmployee(obj).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Employees Deleted Successfully')
         this.initializeData();
-        if (employee_list && employee_list.data && employee_list.data.length > 0) {
+        if (designation_list && designation_list.data && designation_list.data.length > 0) {
           this.setState({
             selectedRows: []
           })
@@ -235,7 +234,7 @@ class EmployeePayroll extends React.Component {
       let obj = {
         paginationDisable: true
       }
-      this.props.employeeActions.getEmployeeList(obj).then((res) => {
+      this.props.designationActions.getEmployeeList(obj).then((res) => {
         if (res.status === 200) {
           this.setState({ csvData: res.data.data, view: true }, () => {
             setTimeout(() => {
@@ -252,8 +251,8 @@ class EmployeePayroll extends React.Component {
   clearAll = () => {
     this.setState({
       filterData: {
-        name: '',
-        email: ''
+        id: '',
+        salaryRoleName: ''
       },
     },() => { this.initializeData() })
   }
@@ -261,8 +260,8 @@ class EmployeePayroll extends React.Component {
   render() {
 
     const { loading, dialog, selectedRows, csvData, view, filterData } = this.state
-    const { employee_list } = this.props
-
+    const { designation_list } = this.props
+console.log("designation_list",designation_list)
 
     return (
       <div className="employee-screen">
@@ -275,7 +274,7 @@ class EmployeePayroll extends React.Component {
                 <Col lg={12}>
                   <div className="h4 mb-0 d-flex align-items-center">
                     <i className="fas fa-object-group" />
-                    <span className="ml-2">Employees</span>
+                    <span className="ml-2">Designations</span>
                   </div>
                 </Col>
               </Row>
@@ -310,18 +309,10 @@ class EmployeePayroll extends React.Component {
                           <Button
                             color="primary"
                             className="btn-square"
-                            onClick={() => this.props.history.push(`/admin/payroll/employee/create`)}
+                            onClick={() => this.props.history.push(`/admin/payroll/employeeDesignation/create`)}
                           >
                             <i className="fas fa-plus mr-1" />
-                            New Employee
-                          </Button>
-                          <Button
-                            color="primary"
-                            className="btn-square"
-                            onClick={() => this.props.history.push(`/admin/payroll/employee/viewPayroll`)}
-                          >
-                            {/* <i className="fas fa- mr-1" /> */}
-                            View Payroll
+                            New Designation
                           </Button>
                           {/* <Button
                             color="warning"
@@ -334,90 +325,38 @@ class EmployeePayroll extends React.Component {
                           </Button> */}
                         </ButtonGroup>
                       </div>
-                      <div className="py-3">
-                        <h5>Filter : </h5>
-                        <form >
-                          <Row>
-                            <Col lg={3} className="mb-1">
-                              <Input type="text" placeholder="Name" value={filterData.name} onChange={(e) => { this.handleChange(e.target.value, 'name') }} />
-                            </Col>
-                            <Col lg={3} className="mb-2">
-                              <Input type="text" placeholder="Email" value={filterData.email} onChange={(e) => { this.handleChange(e.target.value, 'email') }} />
-                            </Col>
-                            <Col lg={1} className="pl-0 pr-0" style={{display: "contents"}}>
-                              <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
-                                <i className="fa fa-search"></i>
-                              </Button>
-                              <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
-                                <i className="fa fa-refresh"></i>
-                              </Button>
-                            </Col>
-                          </Row>
-                        </form>
-                      </div>
+                     
                       <div>
                         <BootstrapTable
                           selectRow={this.selectRowProp}
                           search={false}
                           options={this.options}
-                          data={employee_list && employee_list.data ? employee_list.data : []}
+                          data={designation_list && designation_list.data ? designation_list.data : []}
                           version="4"
                           hover
-                          pagination={employee_list && employee_list.data && employee_list.data.length > 0 ? true : false}
-                          keyField="id"
+                          pagination={designation_list && designation_list.data && designation_list.data.length > 0 ? true : false}
+                           keyField="id"
                           remote
-                          fetchInfo={{ dataTotalSize: employee_list.count ? employee_list.count : 0 }}
+                          fetchInfo={{ dataTotalSize: designation_list.count ? designation_list.count : 0 }}
                           className="employee-table"
                           trClassName="cursor-pointer"
-                          csvFileName="employee_list.csv"
+                          csvFileName="designation_list.csv"
                           ref={(node) => this.table = node}
                         >
                           <TableHeaderColumn
-                            dataField="fullName"
+                            dataField="id"
                             dataSort
                           >
-                            Full Name
+                            Designation Id
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="dob"
+                            dataField="designationName"
                             dataSort
                           // dataFormat={this.vatCategoryFormatter}
                           >
-                           Date Of Birth
+                           Designation Name
                           </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="gender"
-                            dataSort
-                          >
-                           gender
-                          </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="email"
-                            dataSort
-                          >
-                            Email
-                          </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="mobileNumber"
-                            dataSort
-                          // dataFormat={this.vatCategoryFormatter}
-                          >
-                           mobile Number
-                          </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="city"
-                            dataSort
-                          // dataFormat={this.vatCategoryFormatter}
-                          >
-                            city
-                          </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="isActive"
-                            dataSort
-                          // dataFormat={this.vatCategoryFormatter}
-                          >
-                            is-Active
-                          </TableHeaderColumn>
+                        
                         </BootstrapTable>
                       </div>
                     </Col>
@@ -431,4 +370,4 @@ class EmployeePayroll extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(EmployeePayroll)
+export default connect(mapStateToProps, mapDispatchToProps)(Designation)

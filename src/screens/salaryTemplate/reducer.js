@@ -30,6 +30,7 @@ const SalaryTemplateReducer = (state = initState, action) => {
         ...state,
         salary_role_dropdown: Object.assign([],payload.data)
       }
+      
     default:
       return state
   }

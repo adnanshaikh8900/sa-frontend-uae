@@ -1,4 +1,4 @@
-import { EMPLOYEE } from 'constants/types'
+import { EMPLOYEE, EMPLOYEE_DESIGNATION } from 'constants/types'
 import {
   authApi
 } from 'utils'
@@ -31,6 +31,28 @@ export const getEmployeeList = (obj) => {
   }
 }
 
+export const getEmployeeDesignationForDropdown = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/employeeDesignation/getEmployeeDesignationForDropdown',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+            type: EMPLOYEE_DESIGNATION.DESIGNATION_DROPDOWN,
+						payload: {
+							data: res.data,
+						},
+					});
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
 export const getCurrencyList = () => {
   return (dispatch) => {
     let data = {

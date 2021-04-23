@@ -281,7 +281,7 @@ export default {
 				},
 				{
 					name: 'Employee Designation',
-					url: '/admin/payroll/salaryStructure',
+					url: '/admin/payroll/employeeDesignation',
 					icon: 'fas fa-balance-scale',
 					path: 'ViewEmployeeDesignation',
 				},

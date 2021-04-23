@@ -155,7 +155,8 @@ import CreateSalaryStucture from './salaryStructure/screens/create'
 import SalaryStucture from './salaryStructure'
 import ViewPayroll from './employeePayroll/screens/viewPayroll'
 import SalarySlip from './employeePayroll/screens/salarySlip'
-
+import Designation from './designation'
+import CreateDesignation from './designation/screens/create'
 export {
 	LogIn,
 	LogInTwo,
@@ -293,4 +294,6 @@ export {
 	UnderConstruction,
 	ReceivableInvoiceDetailsReport,
 	ReceivableInvoiceSummary,
+	Designation,
+	CreateDesignation,
 };

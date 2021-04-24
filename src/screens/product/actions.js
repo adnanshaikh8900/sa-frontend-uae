@@ -115,7 +115,6 @@ export const getProductVatCategoryList = () => {
 };
 
 export const getTransactionCategoryListForInventory = (id) => {
-	console.log(id);
 	return (dispatch) => {
 		let data = {
 			method: 'get',

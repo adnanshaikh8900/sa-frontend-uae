@@ -101,7 +101,6 @@ class CreateUser extends React.Component {
 	}
 
 	componentDidMount = () => {
-		this.props.userCreateActions.getEmployeeDropdownList();
 		this.props.salaryTemplateActions.getSalaryRolesForDropdown();
 		this.props.employeeActions.getEmployeeDesignationForDropdown();
 		this.initializeData();

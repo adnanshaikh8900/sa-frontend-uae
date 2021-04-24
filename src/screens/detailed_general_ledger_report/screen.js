@@ -425,11 +425,21 @@ class DetailedGeneralLedgerReport extends React.Component {
 									marginBottom: '1rem'}}>
 									<div className="logo-container" style={{	
 									width:'150px',}}>
-											<img src={logo} alt="logo" style={{width:'150%'}}/>
+												<img
+										src={ 
+											company_profile &&
+											company_profile.companyLogoByteArray
+												? 'data:image/jpg;base64,' +
+											company_profile.companyLogoByteArray
+												: logo
+										}
+										className=""
+										alt=""
+										style={{ width: ' 150px' }}></img>
 									</div>
 									<div style={{justifyContent:'center'}} >
 								
-										<h2>
+										<h2 className="ml-4">
 										{company_profile &&
 											company_profile['companyName']
 												? company_profile['companyName']
@@ -443,17 +453,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 											</div>	
 									</div>
 									<div className='mr-3'>
-									<img
-										src={ 
-											company_profile &&
-											company_profile.companyLogoByteArray
-												? 'data:image/jpg;base64,' +
-											company_profile.companyLogoByteArray
-												: logo
-										}
-										className=""
-										alt=""
-										style={{ width: ' 150px' }}></img>
+								
 								
 									
 									</div>									

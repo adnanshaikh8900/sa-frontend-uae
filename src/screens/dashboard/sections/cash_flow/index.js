@@ -65,14 +65,14 @@ class CashFlow extends Component {
 			datasets: [
 				{
 					label: (this.props.cash_flow_graph.inflow || {})['label'],
-					backgroundColor: 'rgba(244, 119, 46, 0.85)',
-					hoverBackgroundColor: 'rgba(244, 119, 46, 0.85)',
+					backgroundColor: 'rgba(65, 145, 255, 0.85)',
+					hoverBackgroundColor: 'rgba(65, 145, 255, 0.85',
 					data: (this.props.cash_flow_graph.inflow || {})['data'],
 				},
 				{
 					label: (this.props.cash_flow_graph.outflow || {})['label'],
-					backgroundColor: 'rgba(65, 145, 255, 0.85)',
-					hoverBackgroundColor: 'rgba(65, 145, 255, 0.85',
+					backgroundColor: 'rgba(244, 119, 46, 0.85)',
+					hoverBackgroundColor: 'rgba(244, 119, 46, 0.85)',
 					data: (this.props.cash_flow_graph.outflow || {})['data'],
 				},
 			],

@@ -213,7 +213,7 @@ export default {
 					path: 'ViewProductCategory',
 				},
 				{
-					name: 'Currency Conversion',
+					name: 'Currency Rate',
 					url: '/admin/master/currencyConvert',
 					icon: 'fas fa-id-card-alt',
 					path: 'ViewCurrencyConversion',

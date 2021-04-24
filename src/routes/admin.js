@@ -90,6 +90,8 @@ import {
 	PurchaseByVendor,
 	ReceivableInvoiceDetailsReport,
 	ReceivableInvoiceSummary,
+	PayablesInvoiceDetailsReport,
+	PayablesInvoiceSummary,
 	
 
 	// Master Screens
@@ -488,7 +490,7 @@ const adminRoutes = [
 	{
 		path: '/admin/payroll/employee',
 		name: 'ViewEmployee',
-		component: UnderConstruction.screen,
+		component: EmployeePayroll.screen,
 	},
 	{
 		path: '/admin/payroll/employee/salarySlip',
@@ -575,7 +577,7 @@ const adminRoutes = [
 
 	{
 		path: '/admin/taxes/vat-transactions',
-		name: 'vatTransactions',
+		name: 'VatTransactions',
 		component: VatTransactions.screen,
 	},
 	{
@@ -659,6 +661,16 @@ const adminRoutes = [
 		path: '/admin/report/receivable-invoice-summary',
 		name: 'ReceivableInvoiceSummary',
 		component: ReceivableInvoiceSummary.screen,
+	},
+	{
+		path: '/admin/report/payable-invoice-details',
+		name: 'PayableInvoiceDetail',
+		component: PayablesInvoiceDetailsReport.screen,
+	},
+	{
+		path: '/admin/report/payable-invoice-summary',
+		name: 'PayableInvoiceSummary',
+		component: PayablesInvoiceSummary.screen,
 	},
 	{
 		redirect: true,

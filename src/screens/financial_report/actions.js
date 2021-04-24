@@ -67,6 +67,30 @@ export const getReceivableInvoiceSummary = (postData) => {
 			});
 	};
 };
+
+export const getPayableInvoiceSummary = (postData) => {
+	const { startDate, endDate } = postData;
+	let url = `/rest/simpleaccountReports/PayableInvoiceSummary?startDate=${startDate}&endDate=${endDate}`;
+
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+						type: REPORTS.PAYABLE_INVOICE,
+						payload: res,
+					});
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
 export const getSalesByProduct = (postData) => {
 	const { startDate, endDate } = postData;
 	let url = `/rest/simpleaccountReports/salesbyproduct?startDate=${startDate}&endDate=${endDate}`;

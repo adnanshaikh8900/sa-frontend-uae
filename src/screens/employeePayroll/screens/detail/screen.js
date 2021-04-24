@@ -132,6 +132,7 @@ class DetailEmployeePayroll extends React.Component {
               employeeDesignationId: res.data.employeeDesignationId ? res.data.employeeDesignationId : '',
               salaryRoleId: res.data.salaryRoleId ? res.data.salaryRoleId : '',
             },
+            selectedStatus: res.data.isActive ? true : false,
             loading: false,
           })
 

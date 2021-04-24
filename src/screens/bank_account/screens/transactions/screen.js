@@ -285,6 +285,18 @@ class BankTransactions extends React.Component {
 		return row.runningAmount >= 0 ? row.currencySymbol + row.runningAmount.toFixed(2) : '';
 	};
 
+	renderDueAmount = (cell, row, rowIndex, extraData) => {
+		// return row.withdrawalAmount >= 0 ? (
+		// 	<Currency
+		// 		value={row.withdrawalAmount}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// ) : (
+		// 	''
+		// );
+		return row.dueAmount >= 0 ? row.currencySymbol + row.dueAmount.toFixed(2) : '';
+	};
+
 	test(row) {
 		this.setState({
 			rowId: row.id,
@@ -619,7 +631,10 @@ class BankTransactions extends React.Component {
 			},
 			{
 				dataField: 'dueAmount',
-				text:'Due Amount'
+				text:'Due Amount',
+				formatter: this.renderDueAmount,
+				formatExtraData: universal_currency_list,
+
 			},
 			{
 				dataField: 'explinationStatusEnum',

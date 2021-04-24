@@ -46,13 +46,13 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
-class ReceivableInvoiceDetailsReport extends React.Component {
+class PayablesInvoiceDetailsReport extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			loading: true,
 			dropdownOpen: false,
-			receivbaleInvoiceDetailsList: {},
+			payableInvoiceDetailsList: {},
 			view: false,
 			initValue: {
 				startDate: moment().startOf('month').format('DD/MM/YYYY'),
@@ -69,10 +69,10 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 			chart_of_account_list: [],
 		};
 		this.columnHeader = [
-			{ label: 'invoiceDate', value: 'invoiceDate' },
-			{ label: 'invoiceNumber', value: 'invoiceNumber' },
+			{ label: 'invoiceDate', value: 'Invoice Date' },
+			{ label: 'invoiceNumber', value: 'Invoice Number' },
 			
-			{ label: 'productCode', value: 'productCode'},
+			{ label: 'productCode', value: 'Product Code'},
 			{
 				label: 'description',
 				value: 'description',
@@ -88,6 +88,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 
 	componentDidMount = () => {
 		this.initializeData();
+		this.props.commonActions.getCompany() 
 	
 	};
 
@@ -98,7 +99,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 			endDate: initValue.endDate,
 		};
 		this.props.receivbaleInvoiceDetailsActions
-			.getReceivableInvoiceDetail(postData)
+			.getPayableInvoiceDetail(postData)
 			.then((res) => {
 			
 				const tempData = [];
@@ -107,7 +108,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 				
 					this.setState(
 						
-						{ receivbaleInvoiceDetailsList: res.data },
+						{ payableInvoiceDetailsList: res.data },
 						() => {
 							this.setState({
 								loading: false,
@@ -156,8 +157,6 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 				initValue: {
 					startDate: moment(value.startDate).format('DD/MM/YYYY'),
 					endDate: moment(value.endDate).format('DD/MM/YYYY'),
-					reportBasis: value.reportBasis.value,
-					chartOfAccountId: value.chartOfAccountId.value,
 				},
 				loading: true,
 				view: !this.state.view,
@@ -176,7 +175,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 				? 'desc'
 				: 'asc'
 			: 'desc';
-		const sortedData = this.state.receivbaleInvoiceDetailsList.map((data) => {
+		const sortedData = this.state.payableInvoiceDetailsList.map((data) => {
 			let nameA, nameB;
 			data.sort((a, b) => {
 				if (column !== 'date') {
@@ -228,7 +227,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 			return item.data;
 		});
 		this.setState({
-			receivbaleInvoiceDetailsList: val,
+			payableInvoiceDetailsList: val,
 			sort: {
 				column,
 				direction,
@@ -287,7 +286,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 		} = this.state;
 		const { profile, universal_currency_list,company_profile } = this.props;
 
-		console.log(this.state.receivbaleInvoiceDetailsList.resultObject)
+		console.log(this.state.payableInvoiceDetailsList.resultObject)
 		return (
 			<div className="transactions-report-screen">
 				<div className="animated fadeIn">
@@ -435,7 +434,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 												: ''}
 											</h2>	
 											<div >
-												<b style ={{ fontSize: '18px'}}>Receivable Invoice Details</b>
+												<b style ={{ fontSize: '18px'}}>Payable Invoice Details</b>
 												<br/>
 												
 												From {initValue.startDate} To {initValue.endDate}
@@ -491,9 +490,9 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 													</tr>
 												</thead>
 												<tbody className="data-column">
-													{this.state.receivbaleInvoiceDetailsList.resultObject && 
-													this.state.receivbaleInvoiceDetailsList.resultObject.length > 0 ? (
-														this.state.receivbaleInvoiceDetailsList.resultObject.map(
+													{this.state.payableInvoiceDetailsList.resultObject && 
+													this.state.payableInvoiceDetailsList.resultObject.length > 0 ? (
+														this.state.payableInvoiceDetailsList.resultObject.map(
 															(item, index) => {
 																return (
 																	<>
@@ -518,11 +517,11 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 																			return (
 																				<tr key={index}>
 																					<td style={{ width: '12%' }}>
-																					{row['invoiceDate']}
+																					{row.invoiceDate}
 																					</td>
-																					<td style={{ width: '18%' }}>
+																					<td style={{ width: '12%' }}>
 																						{/* {row.transactionTypeName} */}
-																						{row['invoiceNumber']}
+																						{row.invoiceNumber}
 																					</td>
 																					<td style={{ width: '13%' }}>
 																						{/* {row['name']} */}
@@ -642,4 +641,4 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps,
-)(ReceivableInvoiceDetailsReport);
+)(PayablesInvoiceDetailsReport);

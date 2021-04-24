@@ -382,7 +382,7 @@ export const sendMail = (id) => {
 	return (dispatch) => {
 		let data = {
 			method: 'post',
-			url: `/rest/poquatation/sendPO?id=${id}`,
+			url: `/rest/poquatation/sendQuotation?id=${id}`,
 		};
 		return authApi(data)
 			.then((res) => {

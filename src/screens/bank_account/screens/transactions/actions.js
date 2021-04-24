@@ -318,6 +318,27 @@ export const getUserForDropdown = () => {
 	};
 };
 
+
+export const getMoneyCategoryList = (id) => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: `/rest/reconsile/getChildrenTransactionCategoryList?id=${id}`,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				alert("error"+err);
+				throw err;
+			});
+	};
+};
+
+
 export const deleteTransactionById = (id) => {
 	return (dispatch) => {
 		let data = {

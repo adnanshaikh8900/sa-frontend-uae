@@ -385,7 +385,7 @@ class Quatation extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Purchase Order Send Successfully',
+						'Quotation Send Successfully',
 					);
 					this.setState({
 						loading: false,

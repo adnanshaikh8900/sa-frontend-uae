@@ -227,7 +227,7 @@ class PurchaseOrder extends React.Component {
 							{row.totalAmount  === 0 ? row.totalAmount.toFixed(2) : row.totalAmount.toFixed(2)}
 						</label>
 					</div>
-					<div>
+					<div style={{display: row.totalVatAmount === 0 ? 'none' : ''}}>
 					<label className="font-weight-bold mr-2">Vat Amount : </label>
 					<label>{row.totalVatAmount === 0  ?  row.totalVatAmount.toFixed(2) :  row.totalVatAmount.toFixed(2)}</label>
 					</div>

@@ -78,7 +78,7 @@ class Help extends React.Component {
 													></i>
 												
 												</button>
-												<p>info@simplevat.com</p>
+												<p>support@simpleaccounts.io</p>
 											</div>
 										</CardBody>
 									</Card>
@@ -87,9 +87,9 @@ class Help extends React.Component {
 									<Card>
 										<CardBody>
 											<div className="text-center">
-												<img src={versionimage} width="40%" alt=""></img>
+												<img src={versionimage} width="40px" height= "50px"alt=""></img>
 											</div>
-											<h3>Simple Accounts Version Numbers</h3>
+											<h3>Simple Accounts Versions</h3>
 											<p>
 												FrontEnd Verison:  <label className="mb-0 text-primary">{configData.FRONTEND_RELEASE}</label><br></br>
 												BackEnd Version: {

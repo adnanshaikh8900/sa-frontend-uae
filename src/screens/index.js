@@ -89,6 +89,8 @@ import PurchaseByitem from './financial_report/sections/purchase_by_item';
 import PurchaseByVendor from './financial_report/sections/purchase_by_vendor';
 import ReceivableInvoiceDetailsReport from './financial_report/sections/receivable_invoice_details';
 import ReceivableInvoiceSummary from './financial_report/sections/receivable_invoice_summary';
+import PayablesInvoiceDetailsReport from './financial_report/sections/payables_invoice_details';
+import PayablesInvoiceSummary from './financial_report/sections/payables_invoice_summary';
 
 import ChartAccount from './chart_account';
 import CreateChartAccount from './chart_account/screens/create';
@@ -296,4 +298,6 @@ export {
 	ReceivableInvoiceSummary,
 	Designation,
 	CreateDesignation,
+	PayablesInvoiceDetailsReport,
+	PayablesInvoiceSummary,
 };

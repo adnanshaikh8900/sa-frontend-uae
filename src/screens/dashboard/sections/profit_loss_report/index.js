@@ -59,7 +59,7 @@ class ProfitAndLossReport extends Component {
 				strokeDashArray: '10',
 				borderColor: 'rgba(125, 138, 156, 0.3)',
 			},
-			colors: ['#2064d8', '#060918'],
+			colors: ['#2064d8', '#f4772e'],
 			legend: {
 				show: true,
 			},

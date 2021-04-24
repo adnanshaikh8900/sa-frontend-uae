@@ -77,6 +77,7 @@ class ExplainTrasactionDetail extends React.Component {
 			unexplainCust: [],
 			customer_invoice_list_state: [],
 			supplier_invoice_list_state: [],
+			moneyCategoryList:[],
 		};
 
 		this.file_size = 1024000;
@@ -380,6 +381,24 @@ class ExplainTrasactionDetail extends React.Component {
 		this.props.transactionsActions.getUserForDropdown();
 	};
 
+	getMoneyPaidToUserlist = (option) => {
+		try {
+			this.props.transactionsActions.getMoneyCategoryList(option.value)
+				.then((res) => {
+					if (res.status === 200) {
+						this.setState(
+							{
+								moneyCategoryList: res.data,
+							},
+							() => {},
+						);
+					}
+				});
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
 	getExpensesCategoriesList = () => {
 		this.props.transactionsActions.getExpensesCategoriesList();
 		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
@@ -472,7 +491,7 @@ class ExplainTrasactionDetail extends React.Component {
 		if (transactionCategoryId) {
 			formData.append(
 				'transactionCategoryId',
-				transactionCategoryId ? transactionCategoryId : '',
+				transactionCategoryId ? transactionCategoryId.value : '',
 			);
 		}
 		if (customerId && coaCategoryId.value === 2) {
@@ -682,6 +701,7 @@ class ExplainTrasactionDetail extends React.Component {
 			dialog,
 			customer_invoice_list_state,
 			supplier_invoice_list_state,
+			moneyCategoryList,
 		} = this.state;
 		const {
 			expense_categories_list,
@@ -1430,37 +1450,92 @@ class ExplainTrasactionDetail extends React.Component {
 																								? transactionCategoryList.categoriesList
 																								: []
 																						}
+																						value={
+																							transactionCategoryList
+																							  ? props.values.transactionCategoryId
+																							  : ''
+																						  }
 																						onChange={(option) => {
+																						
 																							if (option && option.value) {
 																								props.handleChange(
 																									'transactionCategoryId',
-																								)(option.value);
+																								)(option);
 																							} else {
 																								props.handleChange(
 																									'transactionCategoryId',
 																								)('');
 																							}
+																							
+																							if (option.label !== 'Salaries and Employee Wages' &&
+																							 option.label !== 'Owners Drawing' &&  
+																							option.label !== 'Dividend' &&
+																							option.label !== 'Owners Current Account' &&
+																							option.label !== 'Share Premium' &&
+																							option.label !== 'Employee Advance' &&
+																							option.label !== 'Employee Reimbursements' &&
+																							option.label !== 'Director Loan Account' &&
+																							option.label !== 'Owners Equity' 
+																							) {	}
+																						
+																							if ( option.label === 'Salaries and Employee Wages' 
+																							) {
+																								this.getMoneyPaidToUserlist(option);
+																							}
+																							if ( option.label === 'Owners Drawing' 
+																							) {
+																								this.getMoneyPaidToUserlist(option);
+																							}
+																							if (option.label === 'Dividend'
+																							) {
+																								this.getMoneyPaidToUserlist(option);
+																							}
+																							if (option.label === 'Owners Current Account' 
+																							) {
+																								this.getMoneyPaidToUserlist(option);
+																							}
+																							if ( option.label === 'Share Premium'
+																							) {
+																								this.getMoneyPaidToUserlist(option);
+																							}
+																							if ( option.label === 'Employee Advance'
+																							) {
+																								this.getMoneyPaidToUserlist(option);
+																							}
+																							if (option.label === 'Employee Reimbursements'
+																							) {
+																								this.getMoneyPaidToUserlist(option);
+																							}
+																							if ( option.label === 'Director Loan Account'
+																							) {
+																								this.getMoneyPaidToUserlist(option);
+																							}
+																							if ( option.label === 'Owners Equity' 
+																							) {
+																								this.getMoneyPaidToUserlist(option);
+																							}
 																						}}
-																						value={
-																							transactionCategoryList &&
-																								transactionCategoryList.categoriesList &&
-																								props.values
-																									.transactionCategoryLabel
-																								? transactionCategoryList.categoriesList
-																									.find(
-																										(item) =>
-																											item.label ===
-																											props.values
-																												.transactionCategoryLabel,
-																									)
-																									.options.find(
-																										(item) =>
-																											item.value ===
-																											+props.values
-																												.transactionCategoryId,
-																									)
-																								: console.log('')
-																						}
+																						// value={
+																						// 	transactionCategoryList &&
+																						// 		props.values
+																						// 			.transactionCategoryLabel
+																						// 		? transactionCategoryList.categoriesList
+																						// 			.find(
+																						// 				(item) =>
+																						// 					item.label ===
+																						// 					props.values
+																						// 						.transactionCategoryLabel,
+																						// 			)
+																						// 			.options.find(
+																						// 				(item) =>
+																						// 					item.value ===
+																						// 					+props.values
+																						// 						.transactionCategoryId,
+																						// 			)
+																						// 		: console.log('')
+																						// }
+																					
+																						
 																						placeholder="Select Category"
 																						id="transactionCategoryId"
 																						name="transactionCategoryId"
@@ -1472,35 +1547,36 @@ class ExplainTrasactionDetail extends React.Component {
 																								: ''
 																						}
 																					/>
-																					{props.errors.transactionCategoryId &&
-																						props.touched
-																							.transactionCategoryId && (
-																							<div className="invalid-feedback">
-																								{
-																									props.errors
-																										.transactionCategoryId
-																								}
-																							</div>
-																						)}
+																						{props.errors.transactionCategoryId &&
+																							props.touched
+																								.transactionCategoryId && (
+																								<div className="invalid-feedback">
+																									{
+																										props.errors
+																											.transactionCategoryId
+																									}
+																								</div>
+																							)}
 																				</FormGroup>
 																			</Col>
 																		)}
-																	{props.values.coaCategoryId &&
-																		props.values.coaCategoryId.value === 12 && (
+																	{transactionCategoryList.dataList &&
+																		(props.values.coaCategoryId.value === 6 ||
+																		props.values.coaCategoryId.value === 12)
+																		&&   
+																		 (
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="employeeId">User</Label>
 																					<Select
 																						styles={customStyles}
 																						options={
-																							transactionCategoryList.dataList
-																								? transactionCategoryList
-																									.dataList[0].options
-																								: []
+																							moneyCategoryList ?
+																							moneyCategoryList : []
 																						}
 																						value={
-																							transactionCategoryList.dataList &&
-																							transactionCategoryList.dataList[0].options.find(
+																							moneyCategoryList &&
+																							moneyCategoryList.find(
 																								(option) =>
 																									option.value ===
 																									+props.values.employeeId,
@@ -2079,7 +2155,7 @@ class ExplainTrasactionDetail extends React.Component {
 																		</Row>
 																	</Col>
 																</Row>
-																{transactionCategoryList.dataList && (
+																
 																	<Row>
 																		{props.values.coaCategoryId === 12 ||
 																			(props.values.coaCategoryId === 6 && (
@@ -2129,7 +2205,7 @@ class ExplainTrasactionDetail extends React.Component {
 																				</Col>
 																			))}
 																	</Row>
-																)}
+														
 
 																<Row>
 																	{props.values.explinationStatusEnum !==

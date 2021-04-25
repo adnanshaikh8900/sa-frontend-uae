@@ -792,6 +792,9 @@ class ExplainTrasactionDetail extends React.Component {
 															coaCategoryId: Yup.object().required(
 																'Transaction Type is Required',
 															),
+															employeeId: Yup.object().required(
+																'Employee Type is Required',
+															),
 															attachment: Yup.mixed()
 																.test(
 																	'fileType',
@@ -1567,6 +1570,7 @@ class ExplainTrasactionDetail extends React.Component {
 																		 (
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
+																				<span className="text-danger">*</span>
 																					<Label htmlFor="employeeId">User</Label>
 																					<Select
 																						styles={customStyles}

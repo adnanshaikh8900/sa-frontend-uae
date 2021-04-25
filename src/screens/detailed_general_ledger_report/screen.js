@@ -439,13 +439,13 @@ class DetailedGeneralLedgerReport extends React.Component {
 									</div>
 									<div style={{justifyContent:'center'}} >
 								
-										<h2 className="ml-4">
+										<h2>
 										{company_profile &&
 											company_profile['companyName']
 												? company_profile['companyName']
 												: ''}
 											</h2>	
-											<div >
+											<div className="ml-4" >
 												<b style ={{ fontSize: '18px'}}>Detailed General Ledger</b>
 												<br/>
 												

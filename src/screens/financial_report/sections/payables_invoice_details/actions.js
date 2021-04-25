@@ -1,6 +1,7 @@
 import {
   authApi
-} from 'utils'
+} from 'utils';
+import { REPORTS } from 'constants/types';
 
 export const getPayableInvoiceDetail = (postData) => {
   const { startDate, endDate} = postData
@@ -39,3 +40,27 @@ export const getTransactionCategoryList = () => {
     })
   }
 }
+
+export const getCompany = () => {
+  return (dispatch) => {
+    let data = {
+      method: 'get',
+      url: 'rest/company/getById?id=1',
+    };
+    return authApi(data)
+      .then((res) => {
+        if (res.status === 200) {
+          dispatch({
+            type: REPORTS.COMPANY_PROFILE,
+            payload: {
+              data: res.data,
+            },
+          });
+          return res;
+        }
+      })
+      .catch((err) => {
+        throw err;
+      });
+  };
+};

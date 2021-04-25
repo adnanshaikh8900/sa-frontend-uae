@@ -475,7 +475,7 @@ class InventoryDashboard extends React.Component {
 			 dataLineOption,
 			 databarOption,
 			 databar } = this.state;
-		const { profile, high_stock_list, low_stock_list } = this.props;
+		const { profile, high_stock_list, low_stock_list,universal_currency_list } = this.props;
 		return (
 			<div className="transactions-report-screen">
 				<div className="animated fadeIn">
@@ -495,7 +495,19 @@ class InventoryDashboard extends React.Component {
 									Total Value of SKU's
 										</h6>
 								<h3 className="d-block mt-4 text-center" >
-									{this.state.inventoryValue}
+										{this.state.inventoryValue ? (
+																				<Currency
+																					value={this.state.inventoryValue.toFixed(2)}
+																					currencySymbol={
+																						universal_currency_list[0]
+																							? universal_currency_list[0]
+																									.currencyIsoCode
+																							: 'USD'
+																					}
+																				/>
+																			) : (
+																				0
+																			)}
 								</h3>
 
 							</CardBody>

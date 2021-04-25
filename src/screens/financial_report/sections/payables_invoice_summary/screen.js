@@ -89,8 +89,9 @@ class PayablesInvoiceSummary extends React.Component {
 	};
 
 	componentDidMount = () => {
+		this.props.financialReportActions.getCompany() 
 		this.initializeData();
-		this.props.commonActions.getCompany() 
+	
 	};
 
 	initializeData = () => {

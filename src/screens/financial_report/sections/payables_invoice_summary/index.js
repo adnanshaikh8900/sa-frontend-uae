@@ -1,4 +1,4 @@
-import screen from '../payables_invoice_summary/screen'
+import screen from './screen'
 
 
 export default {

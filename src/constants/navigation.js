@@ -250,18 +250,6 @@ export default {
 					path: 'ViewEmployee',
 				},
 				{
-					name: 'Employment',
-					url: '/admin/payroll/employment',
-					icon: 'fas fa-balance-scale',
-					path: 'ViewEmployment',
-				},
-				{
-					name: 'Financial Details',
-					url: '/admin/payroll/financial',
-					icon: 'fas fa-balance-scale',
-					path: 'ViewEmployeeFinancialDetails',
-				},
-				{
 					name: 'Salary Roles',
 					url: '/admin/payroll/salaryRoles',
 					icon: 'fas fa-balance-scale',

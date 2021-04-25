@@ -87,7 +87,7 @@ class Help extends React.Component {
 									<Card>
 										<CardBody>
 											<div className="text-center">
-												<img src={versionimage} width="40px" height= "50px"alt=""></img>
+												<img src={versionimage} width="40%" alt=""></img>
 											</div>
 											<h3>Simple Accounts Versions</h3>
 											<p>
@@ -107,8 +107,8 @@ class Help extends React.Component {
 								</Col>
 								<Col md="6">
 									<Card>
-										<CardBody>
-											<div className="text-center">
+										<CardBody style={{height:'415px'}}>
+											<div className="text-center" >
 												<img src={faqIcon} width="40%" alt=""></img>
 											</div>
 											{/* <h3>Simple Accounts Version Numbers</h3>
@@ -123,7 +123,9 @@ class Help extends React.Component {
 											</p> */}
 											{/* <Link to="https://www.simplevat.com/faqs/">Go to FAQ</Link> */}
 							{/* <b>	<a target="_blank" href="https://www.simplevat.com/faqs/" style={{ color: '#2266d8' }}>Go to FAQ</a></b> */}
+											<div>
 
+											</div>
 										</CardBody>
 									</Card>
 								</Col>

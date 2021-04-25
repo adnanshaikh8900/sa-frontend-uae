@@ -123,6 +123,23 @@ class BankTransactions extends React.Component {
 	}
 
 	componentDidMount = () => {
+		this.props.detailBankAccountActions
+			.getBankAccountByID(localStorage.getItem('bankId'))
+			.then((res) => {
+				this.setState({
+					bankAccountCurrencySymbol:res.bankAccountCurrencySymbol,
+					currentBalance: res.currentBalance,
+					closingBalance: res.closingBalance,
+					accounName: res.bankAccountName,
+				});
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+				this.props.history.push('/admin/banking/bank-account');
+			});
 		this.toggle(0, 'all');
 		this.initializeData();
 		console.log('state', this.props)
@@ -143,23 +160,7 @@ class BankTransactions extends React.Component {
 		}
 		this.props.transactionsActions.getTransactionTypeList();
 		//this.initializeData();
-		this.props.detailBankAccountActions
-			.getBankAccountByID(localStorage.getItem('bankId'))
-			.then((res) => {
-				this.setState({
-					bankAccountCurrencySymbol:res.bankAccountCurrencySymbol,
-					currentBalance: res.currentBalance,
-					closingBalance: res.closingBalance,
-					accounName: res.bankAccountName,
-				});
-			})
-			.catch((err) => {
-				this.props.commonActions.tostifyAlert(
-					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
-				);
-				this.props.history.push('/admin/banking/bank-account');
-			});
+		
 	};
 
 	initializeData = () => {
@@ -697,14 +698,14 @@ class BankTransactions extends React.Component {
 													<h5>Current Bank Balance</h5>
 													<h3>
 														{this.state.bankAccountCurrencySymbol} &nbsp;
-														{(this.state.currentBalance).toFixed(2)}
+														{this.state.currentBalance.toFixed(2)}
 													</h3>
 												</Col>
 												<Col lg={3}>
 													<h5>Ledger Balance</h5>
 													<h3>
 													{this.state.bankAccountCurrencySymbol} &nbsp;
-													{(this.state.closingBalance).toFixed(2)}
+													{this.state.closingBalance.toFixed(2)}
 													</h3>
 												</Col>
 											</Row>

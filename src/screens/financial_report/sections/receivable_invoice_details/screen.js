@@ -33,7 +33,7 @@ const mapStateToProps = (state) => {
 	return {
 		profile: state.auth.profile,
 		universal_currency_list: state.common.universal_currency_list,
-		company_profile: state.common.company_profile,	
+		company_profile: state.reports.company_profile,	
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -87,6 +87,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 	}
 
 	componentDidMount = () => {
+		this.props.receivbaleInvoiceDetailsActions.getCompany() 
 		this.initializeData();
 	
 	};
@@ -428,13 +429,13 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 									</div>
 									<div style={{justifyContent:'center'}} >
 								
-										<h2 className="ml-4">
+										<h2>
 										{company_profile &&
 											company_profile['companyName']
 												? company_profile['companyName']
 												: ''}
 											</h2>	
-											<div >
+											<div  className="ml-4" >
 												<b style ={{ fontSize: '18px'}}>Receivable Invoice Details</b>
 												<br/>
 												

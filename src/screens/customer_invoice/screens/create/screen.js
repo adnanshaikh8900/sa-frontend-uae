@@ -2243,7 +2243,7 @@ class CreateCustomerInvoice extends React.Component {
 																							/>
 																							)} */}
 																						{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.total_net.toFixed(
+																							{initValue.discount.toFixed(
 																							2,
 																						)}
 																						{/* {this.state.initValue.discount.toFixed(

@@ -529,7 +529,7 @@ class ExplainTrasactionDetail extends React.Component {
 		) {
 			formData.append('vatId', vatId ? vatId : '');
 		}
-		if (employeeId) {
+		if (employeeId != null) {
 			formData.append('employeeId', employeeId ? employeeId.value : '');
 		}
 		if (
@@ -776,6 +776,13 @@ class ExplainTrasactionDetail extends React.Component {
 																errors.transactionCategoryId =
 																	'Transaction Category is Required';
 															}
+															if(
+																(values.coaCategoryId.value === 12 ||
+																values.coaCategoryId.value === 6) &&
+																!values.employeeId
+															){
+																errors.employeeId = 'Uxser is required'
+															}
 															return errors;
 														}}
 														validationSchema={Yup.object().shape({
@@ -792,9 +799,9 @@ class ExplainTrasactionDetail extends React.Component {
 															coaCategoryId: Yup.object().required(
 																'Transaction Type is Required',
 															),
-															employeeId: Yup.object().required(
-																'Employee Type is Required',
-															),
+															// employeeId: Yup.object().required(
+															// 	'Employee Type is Required',
+															// ),
 															attachment: Yup.mixed()
 																.test(
 																	'fileType',

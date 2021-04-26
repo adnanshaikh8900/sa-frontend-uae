@@ -28,12 +28,11 @@ import * as EmployeeCreateActions from './actions';
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
 import PhoneInput from 'react-phone-number-input'
+import moment from 'moment'
 
 const mapStateToProps = (state) => {
   return ({
-    currency_list: state.employee.currency_list,
-    country_list: state.contact.country_list,
-    state_list: state.contact.state_list,
+    employee_list: state.employee.employee_list,
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -60,56 +59,21 @@ class ViewPayroll extends React.Component {
     super(props)
     this.state = {
       loading: false,
-      createMore: false,
       initValue: {
-        firstName: '',
-        middleName: '',
-        lastName: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        dob: '',
-        referenceCode: '',
-        title: '',
-        billingEmail: '',
-        countryId: '',
-        permanentAddress:'',
-        presentAddress:'',
-        bloodGroup:'',
-        mobileNumber:'',
-        vatRegestationNo: '',
-        currencyCode: '',
-        poBoxNumber: '',
-        employeeRole:'',
-        stateId: '',
-        gender:'',
-        pincode: '',
-        city: '',
+        employeeIds:'',
+        employeeListIds:[],
+        noOfDays: '',
+        salaryDate:'',
+    
       },
-      userPhoto: [],
-			userPhotoFile: [],
+
     }
 
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
     this.regExAlpha = /^[a-zA-Z ]+$/;
 
-    this.gender = [
-			{ label: 'Male', value: 'Male' },
-			{ label: 'Female', value: 'Female' }
-		];
 
-    this.bloodGroup = [
-			{ label: 'O+', value: 'O+' },
-			{ label: 'O-', value: 'O-' },
-      { label: 'A+', value: 'A+' },
-			{ label: 'A-', value: 'A-' },
-      { label: 'B+', value: 'B+' },
-			{ label: 'B-', value: 'B-' },
-      { label: 'AB+', value: 'AB+' },
-			{ label: 'AB-', value: 'AB-' },
-    
-		];
   }
 
   componentDidMount = () => {
@@ -117,105 +81,72 @@ class ViewPayroll extends React.Component {
   };
 
   initializeData = () => {
-    this.props.employeeActions.getCountryList();
+    this.props.employeeActions.getEmployeesForDropdown();
   };
 
   handleSubmit = (data, resetForm) => {
+    debugger
     this.setState({ disabled: true });
 		const {
-      firstName,
-      middleName,
-      lastName,
-      mobileNumber,
-      email,
-      presentAddress,
-      countryId,
-      stateId,
-      city,
-      pincode,
+      employeeIds,
+      employeeListIds,
+      noOfDays,
+      salaryDate
 		} = data;
-
-		const { gender } = this.state;
-    const { bloodGroup } = this.state;
+    var result = employeeListIds.map((o) => ({
+      employeeIds: o.value,  
+    }));
 		const formData = new FormData();
+   
+    formData.append(
+			'noOfDays',
+			noOfDays !== null ? noOfDays : '',
+		);
+    formData.append('salaryDate', salaryDate ? moment(salaryDate).format('DD-MM-YYYY') : '')
 
-   	formData.append(
-			'firstName',
-			firstName !== null ? firstName : '',
-		);
-    formData.append(
-			'middleName',
-			middleName !== null ? middleName : '',
-		);
-    formData.append(
-			'lastName',
-			lastName !== null ? lastName : '',
-		);
-    formData.append(
-      'mobileNumber',
-      mobileNumber != null ? mobileNumber : '',
-    );
-    formData.append(
-      'email',
-      email != null ? email : '',
-    )
-    formData.append(
-      'presentAddress',
-      presentAddress != null ? presentAddress : '',
-    )
-    formData.append(
-      'countryId',
-      countryId != null ? countryId :'',
-    )
-    formData.append(
-      'stateId',
-      stateId != null ? stateId :'',
-    )
-    formData.append(
-      'city',
-      city != null ? city : '',
-    )
-    formData.append(
-      'pincode',
-      pincode != null ? pincode : '',
-    )
-    if (gender && gender.value) {
-			formData.append('gender', gender.value);
-		}
-    if (bloodGroup && bloodGroup.value) {
-			formData.append('bloodGroup', bloodGroup.value);
-		}
-    
+			// formData.append(
+			// 	'employeeListIds',
+      //   employeeIds.value)
+      employeeIds.forEach(item => {
+          formData.append('employeeListIds', item.value);
+         });
     this.props.employeeCreateActions
-    .createEmployee(formData)
+    .generateSalary(formData)
     .then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert(
           'success',
-           'New Employee Created Successfully')
-        if (this.state.createMore) {
-          this.setState({
-            createMore: false
-          })
+           'salary slip generated Successfully')
           resetForm(this.state.initValue)
-        } else {
-          this.props.history.push('/admin/master/employee')
-        }
+        
       }
     }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
-
+	employeeListIds = (option) => {
+		this.setState(
+			{
+				initValue: {
+					...this.state.initValue,
+					...{
+						employeeListIds: option,
+					},
+				},
+			},
+			() => { },
+		);
+		// this.formRef.current.setFieldValue('employeeListIds', option, true);
+	};
   getStateList = (countryCode) => {
 		this.props.employeeActions.getStateList(countryCode);
 	};
 
   render() {
 
-    const { currency_list,country_list,state_list } = this.props
+    const { currency_list,country_list,state_list,employee_list } = this.props
 
-    console.log(country_list)
+    console.log(employee_list,"employee_list")
     return (
       <div className="create-employee-screen">
         <div className="animated fadeIn">
@@ -227,7 +158,7 @@ class ViewPayroll extends React.Component {
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
                         <i className="nav-icon fas fa-user-tie" />
-                        <span className="ml-2">View Payroll</span>
+                        <span className="ml-2">Generate Salary Slip</span>
                       </div>
                     </Col>
                   </Row>
@@ -236,103 +167,130 @@ class ViewPayroll extends React.Component {
                   <Row>
                     <Col lg={12}>
                       <Formik
-                        // initialValues={this.state.initValue}
-                        // onSubmit={(values, { resetForm }) => {
-                        //   this.handleSubmit(values, resetForm)
-                        //   // resetForm(this.state.initValue)
-
-                        //   // this.setState({
-                        //   //   selectedContactCurrency: null,
-                        //   //   selectedCurrency: null,
-                        //   //   selectedInvoiceLanguage: null
-                        //   // })
-                        // }}
+                         initialValues={this.state.initValue}
+                         onSubmit={(values, { resetForm }) => {
+                           this.handleSubmit(values, resetForm)
+                           // resetForm(this.state.initValue)
+ 
+                           // this.setState({
+                           //   selectedContactCurrency: null,
+                           //   selectedCurrency: null,
+                           //   selectedInvoiceLanguage: null
+                           // })
+                         }}
                         // validationSchema={Yup.object().shape({
-                        //   firstName: Yup.string()
-                        //     .required("First Name is Required"),
-                        //   lastName: Yup.string()
-                        //     .required("Last Name is Required"),
-                        //   middleName: Yup.string()
-                        //     .required("Middle Name is Required"),
-                        //   email: Yup.string().email("Valid Email Required"),
-                        //   billingEmail: Yup.string().email("Valid Email Required"),
-                        //   password: Yup.string()
-                        //     .required("Password is Required")
-                        //     // .min(8, "Password Too Short")
-                        //     .matches(
-                        //       /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-                        //       "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
-                        //     ),
-                        //   confirmPassword: Yup.string()
-                        //     .required('Confirm Password is Required')
-                        //     .oneOf([Yup.ref("password"), null], "Passwords must match"),
-                        //   dob: Yup.date()
-                        //     .required('DOB is Required')
+                        //   noOfDays: Yup.string()
+                        //     .required("Number Of Days is Required"),
+                        //   salaryDate: Yup.string()
+                        //     .required("Salary Date is Required"),
+                        //   employeeId: Yup.string()
+                        //     .required("employee Name is Required"),
                         // })}
                       >
                         {(props) => (
 
-                          <Form onSubmit={props.handleSubmit}>
+                          
+                      <Form onSubmit={props.handleSubmit}>
                           
                        <Row>
                           
                            <Col lg={10}>
                             <Row  className="row-wrapper">
                               
-                              <Col lg={4}>
+                            <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>Employee Name</Label>
-                                  <Input
-                                    type="text"
-                                    id="firstName"
-                                    name="firstName"
-                                    value={props.values.firstName}
-                                    placeholder="Enter First Name"
+                                  <Label htmlFor="employeeListIds"><span className="text-danger">*</span>Employee Name</Label>
+                                  <Select
+																		styles={customStyles}
+                                    isMulti
+																		options={
+                                      // employee_list.data
+																			// 	? selectOptionsFactory.renderOptions(
+																			// 			'label',
+																			// 			'value',
+                                      //       employee_list.data,
+																			// 			'Employee',
+																			// 	  )
+																			// 	: []
+                                      employee_list.data
+                                      ?  employee_list.data
+                                      : []
+																		}
+																		id="employeeListIds"
+																		name="employeeListIds"
+																		placeholder="Select Employee Names "
+																		value={
+                                      employee_list.data &&
+                                      props.values.employeeIds
+                                      ? employee_list.data.find(
+                                        (option) =>
+                                          option.value ===
+                                          +props.values.employeeIds.map(
+                                            (item) => item.id,
+                                          ),
+                                      )
+                                      : props.values
+                                        .employeeIds
+                                    }
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('firstName')(option) }
+                                      props.handleChange(
+                                        'employeeIds',
+                                      )(option);
+                                      this.employeeListIds(option);
                                     }}
-                                    className={props.errors.firstName && props.touched.firstName ? "is-invalid" : ""}
+																		className={`${
+																			props.errors.employeeListIds && props.touched.employeeListIds
+																				? 'is-invalid'
+																				: ''
+																		}`}
+																	/>
+																	{props.errors.employeeListIds && props.touched.employeeListIds && (
+																		<div className="invalid-feedback">
+																			{props.errors.employeeListIds}
+																		</div>
+																	)}
+                                </FormGroup>
+                              </Col>
+                          
+                              <Col lg={4}>                            
+                                <FormGroup className="mb-3">
+                                  <Label htmlFor="date"><span className="text-danger">*</span>Salary Date</Label>
+                                  <DatePicker
+                                    className={`form-control ${props.errors.salaryDate && props.touched.salaryDate ? "is-invalid" : ""}`}
+                                    id="salaryDate"
+                                    name="salaryDate"
+                                    placeholderText="Select Salary Date"
+                                    showMonthDropdown
+                                    showYearDropdown
+                                    dateFormat="dd/MM/yyyy"
+                                    dropdownMode="select"
+                                    selected={props.values.salaryDate}
+                                    value={props.values.salaryDate}
+                                    onChange={(value) => {
+                                      props.handleChange("salaryDate")(value)
+                                    }}
                                   />
-                                  {props.errors.firstName && props.touched.firstName && (
-                                    <div className="invalid-feedback">{props.errors.firstName}</div>
+                                  {props.errors.salaryDate && props.touched.salaryDate && (
+                                    <div className="invalid-feedback">{props.errors.salaryDate}</div>
                                   )}
                                 </FormGroup>
                               </Col>
                               <Col lg={4}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>Salary Date</Label>
+                                  <Label htmlFor="select"><span className="text-danger">*</span>Number Of Days</Label>
                                   <Input
                                     type="text"
-                                    id="middleName"
-                                    name="middleName"
-                                    value={props.values.middleName}
-                                    placeholder="Enter Middle Name"
+                                    id="noOfDays"
+                                    name="noOfDays"
+                                    value={props.values.noOfDays}
+                                    placeholder="Enter nunmber Of Days"
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('middleName')(option) }
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('noOfDays')(option) }
                                     }}
-                                    className={props.errors.middleName && props.touched.middleName ? "is-invalid" : ""}
+                                    className={props.errors.noOfDays && props.touched.noOfDays ? "is-invalid" : ""}
                                   />
-                                  {props.errors.middleName && props.touched.middleName && (
-                                    <div className="invalid-feedback">{props.errors.middleName}</div>
-                                  )}
-                                </FormGroup>
-                              </Col>
-                              <Col lg={4}>
-                                <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>Number Of days</Label>
-                                  <Input
-                                    type="text"
-                                    id="lastName"
-                                    name="lastName"
-                                    value={props.values.lastName}
-                                    placeholder="Enter Last Name"
-                                    onChange={(option) => {
-                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('lastName')(option) }
-                                    }}
-                                    className={props.errors.lastName && props.touched.lastName ? "is-invalid" : ""}
-                                  />
-                                  {props.errors.lastName && props.touched.lastName && (
-                                    <div className="invalid-feedback">{props.errors.lastName}</div>
+                                  {props.errors.noOfDays && props.touched.lastName && (
+                                    <div className="invalid-feedback">{props.errors.noOfDays}</div>
                                   )}
                                 </FormGroup>
                               </Col>
@@ -344,11 +302,11 @@ class ViewPayroll extends React.Component {
                             <Row>
                               <Col lg={12} className="mt-5">
                                 <FormGroup className="text-right">
-                                  <Button type="button" color="primary" className="btn-square mr-3"
-                        
-                                     
-                                   onClick={() => { this.props.history.push('/admin/payroll/employee/salarySlip') }}
-                                  >
+                                <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
+                                    this.setState(() => {
+                                      props.handleSubmit()
+                                    })
+                                  }}>
                                     <i className="fa fa-dot-circle-o"></i> Generate
                                       </Button>
                                   <Button color="secondary" className="btn-square"

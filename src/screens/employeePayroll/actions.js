@@ -53,6 +53,30 @@ export const getEmployeeDesignationForDropdown = () => {
 			});
 	};
 };
+
+export const getEmployeesForDropdown = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: `/rest/employee/getEmployeesForDropdown`,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+						type: EMPLOYEE.EMPLOYEE_LIST,
+						payload: {
+							data: res.data,
+						},
+					});
+				}
+				return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
 export const getCurrencyList = () => {
   return (dispatch) => {
     let data = {

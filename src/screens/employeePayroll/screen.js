@@ -77,7 +77,7 @@ class EmployeePayroll extends React.Component {
     }
 
     this.selectRowProp = {
-      mode: 'checkbox',
+ 
       bgColor: 'rgba(0,0,0, 0.05)',
       clickToSelect: false,
       onSelect: this.onRowSelect,
@@ -157,14 +157,14 @@ class EmployeePayroll extends React.Component {
 								)}
 				
 						<DropdownItem
-							// onClick={() =>
-							// 	this.props.history.push(
-							// 		'/admin/expense/request-for-quotation/view',
-							// 		{ id: row.id },
-							// 	)
-							// }
+							onClick={() =>
+								this.props.history.push(
+									'/admin/payroll/employee/salarySlip',
+									{ id: row.id },
+								)
+							}
 						>
-							<i className="fas fa-eye" /> View
+							<i className="fas fa-eye" /> Salary Slip
 						</DropdownItem>
 					
 					</DropdownMenu>

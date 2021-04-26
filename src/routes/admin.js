@@ -494,12 +494,12 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/payroll/employee/salarySlip',
-		name: 'ViewPaymentReceipts',
+		name: 'ViewEmployment',
 		component: SalarySlip.screen,
 	},
 	{
 		path: '/admin/payroll/employee/viewPayroll',
-		name: 'ViewPaymentReceipts',
+		name: 'GeneratePayroll',
 		component: ViewPayroll.screen,
 	},
 	{
@@ -515,7 +515,7 @@ const adminRoutes = [
 	{
 		path: '/admin/payroll/employment',
 		name: 'ViewEmployment',
-		component: UnderConstruction.screen,
+		component: Employment.screen,
 	},
 	{
 		path: '/admin/payroll/financial/create',
@@ -525,7 +525,7 @@ const adminRoutes = [
 	{
 		path: '/admin/payroll/financial',
 		name: 'ViewEmployeeFinancialDetails',
-		component: UnderConstruction.screen,
+		component: EmployeeFinancial.screen,
 	},
 
 	{
@@ -536,7 +536,7 @@ const adminRoutes = [
 	{
 		path: '/admin/payroll/salaryRoles',
 		name: 'ViewSalaryRole',
-		component: UnderConstruction.screen,
+		component: SalaryRoles.screen,
 	},
 		{
 			path: '/admin/payroll/salaryTemplate/create',
@@ -546,7 +546,7 @@ const adminRoutes = [
 		{
 			path: '/admin/payroll/salaryTemplate',
 			name: 'ViewSalaryTemplate',
-			component: UnderConstruction.screen,
+			component: SalaryTemplate.screen,
 		},
 	{
 		path: '/admin/payroll/salaryStructure/create',
@@ -556,7 +556,7 @@ const adminRoutes = [
 	{
 		path: '/admin/payroll/salaryStructure',
 		name: 'ViewSalaryStructure',
-		component: UnderConstruction.screen,
+		component: SalaryStucture.screen,
 	},
 	{
 		path: '/admin/payroll/employeeDesignation/create',

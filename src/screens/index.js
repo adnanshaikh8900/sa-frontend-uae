@@ -151,6 +151,7 @@ import EmployeeFinancial from './employee_Bank_Details'
 import CreateEmployeeFinancial from './employee_Bank_Details/screens/create'
 import SalaryRoles from './salaryRoles'
 import CreateSalaryRoles from './salaryRoles/screens/create'
+import DetailSalaryRole from './salaryRoles/screens/detail'
 import SalaryTemplate from './salaryTemplate'
 import CreateSalaryTemplate from './salaryTemplate/screens/create'
 import CreateSalaryStucture from './salaryStructure/screens/create'
@@ -159,6 +160,9 @@ import ViewPayroll from './employeePayroll/screens/viewPayroll'
 import SalarySlip from './employeePayroll/screens/salarySlip'
 import Designation from './designation'
 import CreateDesignation from './designation/screens/create'
+import DetailSalaryStructure from './salaryStructure/screens/detail'
+import DetailSalaryTemplate from './salaryTemplate/screens/detail'
+import DetailDesignation from './designation/screens/detail'
 export {
 	LogIn,
 	LogInTwo,
@@ -300,4 +304,8 @@ export {
 	CreateDesignation,
 	PayablesInvoiceDetailsReport,
 	PayablesInvoiceSummary,
+	DetailSalaryRole,
+	DetailSalaryStructure,
+	DetailSalaryTemplate,
+	DetailDesignation
 };

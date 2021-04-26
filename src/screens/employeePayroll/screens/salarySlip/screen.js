@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Button, Row, Col } from 'reactstrap';
 
-import * as SupplierInvoiceDetailActions from './actions';
+import * as SalarySlipActions from './actions';
 import * as EmployeeActions from '../../actions';
 import ReactToPrint from 'react-to-print';
 
@@ -27,10 +27,10 @@ const mapDispatchToProps = (dispatch) => {
 			EmployeeActions,
 			dispatch,
 		),
-		// supplierInvoiceDetailActions: bindActionCreators(
-		// 	SupplierInvoiceDetailActions,
-		// 	dispatch,
-		// ),
+		salarySlipActions: bindActionCreators(
+			SalarySlipActions,
+			dispatch,
+		),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
@@ -39,7 +39,9 @@ class SalarySlip extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			invoiceData: {},
+			DeductionData: {},
+			FixedData: {},
+			VariableData: {},
 			totalNet: 0,
 			currencyData: {},
 			id: '',
@@ -60,51 +62,39 @@ class SalarySlip extends React.Component {
 
 	initializeData = () => {
 		if (this.props.location.state && this.props.location.state.id) {
-			this.props.supplierInvoiceDetailActions
-				.getInvoiceById(this.props.location.state.id)
+			this.props.salarySlipActions
+				.getSalariesByEmployeeId(this.props.location.state.id)
 				.then((res) => {
 					let val = 0;
 					if (res.status === 200) {
-						res.data.invoiceLineItems &&
-							res.data.invoiceLineItems.map((item) => {
-								val = val + item.subTotal;
-								return item;
-							});
+						// res.data.invoiceLineItems &&
+							// res.data.invoiceLineItems.map((item) => {
+							// 	val = val + item.subTotal;
+							// 	return item;
+							// });
 						this.setState(
 							{
-								invoiceData: res.data,
-								totalNet: val,
+								DeductionData: res.data.salarySlipMap.Deduction,
+								FixedData: res.data.salarySlipMap.Fixed,
+								VariableData: res.data.salarySlipMap.Variable,
 								id: this.props.location.state.id,
-							},
-							() => {
-								if (this.state.invoiceData.currencyCode) {
-									this.props.supplierInvoiceActions
-										.getCurrencyList()
-										.then((res) => {
-											if (res.status === 200) {
-												const temp = res.data.filter(
-													(item) =>
-														item.currencyCode ===
-														this.state.invoiceData.currencyCode,
-												);
-												this.setState({
-													currencyData: temp,
-												});
-											}
-										});
-								}
-							},
+							}
+						
 						);
 					}
 				});
 		}
+
+		console.log(this.state.VariableData,"VariableData")
+		console.log(this.state.DeductionData,"DeductionData")
+		console.log(this.state.FixedData,"FixedData")
 	};
 
 	exportPDFWithComponent = () => {
 		this.pdfExportComponent.save();
 	};	
 	render() {
-		const { invoiceData, currencyData, id } = this.state;
+		const { invoiceData,DeductionData,FixedData,VariableData, currencyData, id } = this.state;
 		const { profile } = this.props;
 
 		return (
@@ -155,12 +145,16 @@ class SalarySlip extends React.Component {
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
 									paperSize="A4"
+									landscape
 								>
 									<SalarySlipTemplate
-										invoiceData={invoiceData}
+										DeductionData={DeductionData}
+										FixedData={FixedData}
+										VariableData={VariableData}
+									
 										currencyData={currencyData}
 										ref={(el) => (this.componentRef = el)}
-										totalNet={this.state.totalNet}
+									
 										companyData={profile}
 									/>
 								</PDFExport>

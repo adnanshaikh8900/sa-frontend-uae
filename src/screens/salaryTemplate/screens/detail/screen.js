@@ -26,32 +26,46 @@ import {
 } from 'services/global'
 import {selectCurrencyFactory, selectOptionsFactory} from 'utils'
 import * as EmployeeActions from '../../actions';
-import * as EmployeeDetailActions from './actions';
+import * as SalarayTemplateDetailActions from './actions';
+import * as SalaryTemplateActions from './../../actions';
 
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
 
 const mapStateToProps = (state) => {
   return ({
-    currency_list: state.employee.currency_list
+    currency_list: state.employee.currency_list,
+    salary_structure_dropdown: state.salarytemplate.salary_structure_dropdown,
+    salary_role_dropdown: state.salarytemplate.salary_role_dropdown,
   })
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
     commonActions: bindActionCreators(CommonActions, dispatch),
     employeeActions: bindActionCreators(EmployeeActions, dispatch),
-    employeeDetailActions: bindActionCreators(EmployeeDetailActions, dispatch)
+    salarayTemplateDetailActions: bindActionCreators(SalarayTemplateDetailActions, dispatch),
+    salaryTemplateActions: bindActionCreators(SalaryTemplateActions , dispatch),
   })
 }
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+		},
+	}),
+};
 
-class DetailEmployeePayroll extends React.Component {
+class DetailSalaryTemplate extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
       loading: true,
       initValue: {},
-      current_employee_id: null,
+      current_salary_Template_id: null,
       dialog: false,
     }
 
@@ -61,57 +75,81 @@ class DetailEmployeePayroll extends React.Component {
   }
 
   componentDidMount = () => {
+      this.props.salaryTemplateActions.getSalaryStructureForDropdown();
+      this.props.salaryTemplateActions.getSalaryRolesForDropdown();
     this.initializeData();
   }
 
   initializeData = () => {
     if (this.props.location.state && this.props.location.state.id) {
-      this.props.employeeActions.getCurrencyList()
-      this.props.employeeDetailActions.getEmployeeDetail(this.props.location.state.id).then((res) => {
+      this.props.salarayTemplateDetailActions.getSalaryTemplateById
+      (this.props.location.state.id).then((res) => {
         if (res.status === 200) {
           this.setState({
-            current_employee_id: this.props.location.state.id,
+            current_salary_Template_id: this.props.location.state.id,
             initValue: {
-              id: res.data.id !== '' ? res.data.id : '',
-              firstName: res.data.firstName !== '' ? res.data.firstName : '',
-              middleName: res.data.middleName !== '' ? res.data.middleName : '',
-              lastName: res.data.lastName !== '' ? res.data.lastName : '',
-              email: res.data.email !== '' ? res.data.email : '',
-              password: res.data.password !== '' ? res.data.passowrd : '',
-              dob: res.data.dob !== '' ? res.data.dob : '',
-              referenceCode: res.data.referenceCode !== '' ? res.data.referenceCode : '',
-              title: res.data.title !== '' ? res.data.title : '',
-              billingEmail: res.data.billingEmail !== '' ? res.data.billingEmail : '',
-              vatRegestationNo: res.data.vatRegestationNo !== '' ? res.data.vatRegestationNo : '',
-              currencyCode: res.data.currencyCode !== '' ? res.data.currencyCode : '',
-              poBoxNumber: res.data.poBoxNumber !== '' ? res.data.poBoxNumber : '',
+              description: res.data.description ? res.data.description : '',
+              formula: res.data.formula ? res.data.formula : '',
+              salaryStructureId: res.data.salaryStructureId && res.data.salaryStructureId !== null ? res.data.salaryStructureId : '',
+              salaryRoleId: res.data.salaryRoleId && res.data.salaryRoleId !== null ? res.data.salaryRoleId : '',
             },
             loading: false,
           })
-
         }
       }).catch((err) => {
         this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
       })
     } else {
-      this.props.history.push('/admin/master/employee')
+      this.props.history.push('/admin/payroll/salaryTemplates')
     }
   }
 
+  // handleSubmit = (data) => {
+  //   const postData = Object.assign({},data)
+  //   if(typeof postData.currencyCode === 'object') {
+  //     postData.currencyCode = data.currencyCode.value
+  //   }
+  //   this.props.employeeDetailActions.updateSalaryStructure(postData).then((res) => {
+  //     if (res.status === 200) {
+  //       this.props.commonActions.tostifyAlert('success', 'Employee Updated Successfully')
+  //       this.props.history.push('/admin/master/employee')
+  //     }
+  //   }).catch((err) => {
+  //     this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+  //   })
+  // }
   handleSubmit = (data) => {
-    const postData = Object.assign({},data)
-    if(typeof postData.currencyCode === 'object') {
-      postData.currencyCode = data.currencyCode.value
-    }
-    this.props.employeeDetailActions.updateEmployee(postData).then((res) => {
-      if (res.status === 200) {
-        this.props.commonActions.tostifyAlert('success', 'Employee Updated Successfully')
-        this.props.history.push('/admin/master/employee')
-      }
-    }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
-    })
-  }
+		const { current_salary_Template_id} = this.state;
+		const {
+        salaryRoleId,
+        salaryStructureId,
+        description,
+        formula
+    
+		} = data;
+
+		let formData = new FormData();
+		formData.append('id', current_salary_Template_id);
+    formData.append('formula', formula ? formula : '');
+    formData.append('description', description ? description : '');
+		formData.append('salaryRoleId', salaryRoleId ? salaryRoleId : '');
+    formData.append('salaryStructureId', salaryStructureId ? salaryStructureId : '');
+		this.props.salarayTemplateDetailActions
+			.updateSalaryTemplate(formData)
+			.then((res) => {
+				this.props.commonActions.tostifyAlert(
+					'success',
+					'salary Template Updated Successfully.',
+				);
+				this.props.history.push('/admin/payroll/salaryTemplate');
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
+	};
 
   deleteEmployee = () => {
     const message1 =
@@ -150,7 +188,7 @@ class DetailEmployeePayroll extends React.Component {
 
   render() {
 
-    const { currency_list } = this.props
+    const { currency_list,salary_structure_dropdown,salary_role_dropdown } = this.props
     const { dialog, loading, initValue } = this.state
     return (
       <div className="detail-employee-screen">
@@ -163,7 +201,7 @@ class DetailEmployeePayroll extends React.Component {
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
                         <i className="nav-icon fas fa-user-tie" />
-                        <span className="ml-2">Update Employee</span>
+                        <span className="ml-2">Update Salary Template</span>
                       </div>
                     </Col>
                   </Row>
@@ -184,295 +222,191 @@ class DetailEmployeePayroll extends React.Component {
                               this.handleSubmit(values)
                               // resetForm(this.state.initValue)
                             }}
-                            validationSchema={Yup.object().shape({
-                              firstName: Yup.string()
-                                .required("First Name is Required"),
-                              lastName: Yup.string()
-                                .required("Last Name is Required"),
-                              middleName: Yup.string()
-                                .required("Middle Name is Required"),
-                              password: Yup.string()
-                                // .required("Password is Required")
-                                // .min(8,"Password Too Short")
-                                .matches(
-                                  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-                                  "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
-                                ),
-                              confirmPassword: Yup.string()
-                                // .required('Confirm Password is Required')
-                                .oneOf([Yup.ref("password"), null], "Passwords must match"),
-                              dob: Yup.date()
-                                .required('DOB is Required')
-                            })}
+                            // validationSchema={Yup.object().shape({
+                            //   salaryTemplateName: Yup.string()
+                            //     .required("salary Template Name is Required"),
+                            
+                            // })}
                           >
-                            {(props) => (
-                              <Form onSubmit={props.handleSubmit}>
-                                <h4 className="mb-4">Contact Name</h4>
+                                  {(props) => (
+
+                                  <Form  onSubmit={(values, { resetForm }) => {
+                                    this.handleSubmit(values, resetForm)
+                                    // resetForm(this.state.initValue)
+
+                                  }}>
+                               
                                 <Row>
-                                  <Col md="4">
-                                    <FormGroup>
-                                      <Label htmlFor="select">Reference Code</Label>
-                                      <Input
-                                        type="text"
-                                        id="referenceCode"
-                                        name="referenceCode"
-                                        value={props.values.referenceCode}
-                                        placeholder="Enter Reference Code"
-                                        onChange={(option) => {
-                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('referenceCode')(option)}
-                                        }}
-                                      />
-                                    </FormGroup>
-                                  </Col>
-                                  <Col md="4">
-                                    <FormGroup>
-                                      <Label htmlFor="select">Title</Label>
-                                      <Input
-                                        type="text"
-                                        id="title"
-                                        name="title"
-                                        value={props.values.title}
-                                        placeholder="Enter Title"
-                                        onChange={(option) => {
-                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ props.handleChange('title')(option)}
-                                        }}
-                                      />
-                                    </FormGroup>
-                                  </Col>
-                                  <Col md="4">
-                                    <FormGroup>
-                                      <Label htmlFor="select"><span className="text-danger">*</span>Email</Label>
-                                      <Input
-                                        type="email"
-                                        id="email"
-                                        name="email"
-                                        placeholder="Enter Email Address"
-                                        value={props.values.email}
-                                        onChange={(value) => { props.handleChange('email')(value) }}
-                                      />
-                                    </FormGroup>
-                                  </Col>
-                                </Row>
-                                <Row className="row-wrapper">
-                                  <Col md="4">
-                                    <FormGroup>
-                                      <Label htmlFor="select"><span className="text-danger">*</span>First Name</Label>
-                                      <Input
-                                        type="text"
-                                        id="firstName"
-                                        name="firstName"
-                                        value={props.values.firstName}
-                                        placeholder="Enter First Name"
-                                        onChange={(option) => {
-                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('firstName')(option) }
-                                        }}
-                                        className={props.errors.firstName && props.touched.firstName ? "is-invalid" : ""}
-                                      />
-                                      {props.errors.firstName && props.touched.firstName && (
-                                        <div className="invalid-feedback">{props.errors.firstName}</div>
+                                <Col lg={10}>
+                            <Row  className="row-wrapper">
+                            
+                            <Col lg={4}>
+                                <FormGroup>
+                                  <Label htmlFor="select"><span className="text-danger">*</span>Description</Label>
+                                  <Input
+                                    type="text"
+                                    id="description"
+                                    name="description"
+                                    value={props.values.description}
+                                    placeholder="Enter Slary description"
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('description')(option) }
+                                    }}
+                                    className={props.errors.description && props.touched.description ? "is-invalid" : ""}
+                                  />
+                                  {props.errors.description && props.touched.description && (
+                                    <div className="invalid-feedback">{props.errors.description}</div>
+                                  )}
+                                </FormGroup>
+                              </Col>
+                              <Col lg={4}>
+                                <FormGroup>
+                                  <Label htmlFor="select"><span className="text-danger">*</span>Formula</Label>
+                                  <Input
+                                    type="text"
+                                    id="formula"
+                                    name="formula"
+                                    value={props.values.formula}
+                                    placeholder="Enter Slary formula"
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('formula')(option) }
+                                    }}
+                                    className={props.errors.formula && props.touched.formula ? "is-invalid" : ""}
+                                  />
+                                  {props.errors.firstName && props.touched.firstName && (
+                                    <div className="invalid-feedback">{props.errors.formula}</div>
+                                  )}
+                                </FormGroup>
+                              </Col>
+                          
+                            </Row>                         
+                             <Row  className="row-wrapper">
+                              
+                              <Col lg={4}>
+                                <FormGroup>
+                                  <Label htmlFor="select"><span className="text-danger">*</span>Salary Role</Label>
+                                  <Select
+																		styles={customStyles}
+																		options={
+                                      salary_role_dropdown
+																				? selectOptionsFactory.renderOptions(
+																						'label',
+																						'value',
+                                            salary_role_dropdown,
+																						'SalaryRole',
+																				  )
+																				: []
+																		}
+                                    isDisabled={true}
+																		id="salaryRoleId"
+																		name="salaryRoleId"
+																		placeholder="Select salary Role "
+                                    value={
+                                      salary_role_dropdown &&
+                                     selectOptionsFactory.renderOptions(
+                                        'label',
+                                        'value',
+                                        salary_role_dropdown,
+                                        'SalaryRole',
+                                      ).find(
+                                        (option) =>
+                                          option.value ===
+                                          props.values
+                                            .salaryRoleId,
                                       )}
-                                    </FormGroup>
-                                  </Col>
-                                  <Col md="4">
-                                    <FormGroup>
-                                      <Label htmlFor="select"><span className="text-danger">*</span>Middle Name</Label>
-                                      <Input
-                                        type="text"
-                                        id="middleName"
-                                        name="middleName"
-                                        value={props.values.middleName}
-                                        placeholder="Enter Middle Name"
-                                        onChange={(option) => {
-                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('middleName')(option) }
-                                        }}
-                                        className={props.errors.middleName && props.touched.middleName ? "is-invalid" : ""}
-                                      />
-                                      {props.errors.middleName && props.touched.middleName && (
-                                        <div className="invalid-feedback">{props.errors.middleName}</div>
+                                            onChange={(options) => {
+                                              if (options && options.value) {
+                                                props.handleChange(
+                                                  'salaryRoleId',
+                                                )(options.value);
+                                              } else {
+                                                props.handleChange(
+                                                  'salaryRoleId',
+                                                )('');
+                                              }
+                                            }}
+                                    onChange={(value) => {
+																			props.handleChange('salaryRoleId')(value);
+																	
+																		}}
+																		className={`${
+																			props.errors.salaryRoleId && props.touched.salaryRoleId
+																				? 'is-invalid'
+																				: ''
+																		}`}
+																	/>
+																	{props.errors.salaryRoleId && props.touched.salaryRoleId && (
+																		<div className="invalid-feedback">
+																			{props.errors.salaryRoleId}
+																		</div>
+																	)}
+                                </FormGroup>
+                              </Col>
+                              <Col lg={4}>
+                                <FormGroup>
+                                  <Label htmlFor="select"><span className="text-danger">*</span>Salary Structure</Label>
+                                  <Select
+																		styles={customStyles}
+																		options={
+                                      salary_structure_dropdown
+																				? selectOptionsFactory.renderOptions(
+																						'label',
+																						'value',
+                                            salary_structure_dropdown,
+																						'SalaryStructure',
+																				  )
+																				: []
+																		}
+                                    isDisabled={true}
+																		id="salaryStructureId"
+																		name="salaryStructureId"
+																		placeholder="Select Salary Structure "
+																			value={
+                                      salary_role_dropdown &&
+                                     selectOptionsFactory.renderOptions(
+                                        'label',
+                                        'value',
+                                        salary_role_dropdown,
+                                        'SalaryRole',
+                                      ).find(
+                                        (option) =>
+                                          option.value ===
+                                          props.values
+                                            .salaryStructureId,
                                       )}
-                                    </FormGroup>
-                                  </Col>
-                                  <Col md="4">
-                                    <FormGroup>
-                                      <Label htmlFor="select"><span className="text-danger">*</span>Last Name</Label>
-                                      <Input
-                                        type="text"
-                                        id="lastName"
-                                        name="lastName"
-                                        value={props.values.lastName}
-                                        placeholder="Enter Last Name"
-                                        onChange={(option) => {
-                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('lastName')(option) }
-                                        }}
-                                        className={props.errors.lastName && props.touched.lastName ? "is-invalid" : ""}
-                                      />
-                                      {props.errors.lastName && props.touched.lastName && (
-                                        <div className="invalid-feedback">{props.errors.lastName}</div>
-                                      )}
-                                    </FormGroup>
-                                  </Col>
-                                </Row>
-                                <Row className="row-wrapper">
-                                  <Col md="4">
-                                    <FormGroup>
-                                      <Label htmlFor="select">Password</Label>
-                                      <Input
-                                        type="password"
-                                        id="password"
-                                        name="password"
-                                        placeholder="Enter Password"
-                                        value={props.values.password}
-                                        onChange={(value) => { props.handleChange('password')(value) }}
-                                        className={props.errors.password && props.touched.password ? "is-invalid" : ""}
-                                      />
-                                      {props.errors.password && props.touched.password ? (
-                                        <div className="invalid-feedback">{props.errors.password}</div>
-                                      ) : (<span className="password-msg">Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character.</span>)}
-                                    </FormGroup>
-                                  </Col>
-                                  <Col md="4">
-                                    <FormGroup>
-                                      <Label htmlFor="select">Confirm Password</Label>
-                                      <Input
-                                        type="password"
-                                        id="confirmPassword"
-                                        name="confirmPassword"
-                                        value={props.values.confirmPassword}
-                                        placeholder="Enter Confirm Password"
-                                        onChange={(value) => { props.handleChange('confirmPassword')(value) }}
-                                        className={props.errors.confirmPassword && props.touched.confirmPassword ? "is-invalid" : ""}
-                                      />
-                                      {props.errors.confirmPassword && props.touched.confirmPassword && (
-                                        <div className="invalid-feedback">{props.errors.confirmPassword}</div>
-                                      )}
-                                    </FormGroup>
-                                  </Col>
-                                  <Col md="4">
-                                    <FormGroup className="mb-3">
-                                      <Label htmlFor="date">Date Of Birth</Label>
-                                      <DatePicker
-                                        className={`form-control ${props.errors.dob && props.touched.dob ? "is-invalid" : ""}`}
-                                        id="dob"
-                                        name="dob"
-                                        showMonthDropdown
-                                        showYearDropdown
-                                        dateFormat="dd/MM/yyyy"
-                                        dropdownMode="select"
-                                        placeholderText="Select Date of Birth"
-                                        value={moment(props.values.dob).format('DD-MM-YYYY')}
-                                        maxDate={new Date()}
-                                        onChange={(value) => {
-                                          props.handleChange("dob")(value)
-                                        }}
-                                      />
-                                      {props.errors.dob && props.touched.dob && (
-                                        <div className="invalid-feedback">{props.errors.dob}</div>
-                                      )}
-                                    </FormGroup>
-                                  </Col>
-                                </Row>
-                                <hr />
-                                <h4 className="mb-3 mt-3">Invoicing Details</h4>
-                                <Row className="row-wrapper">
-                                  <Col md="4">
-                                    <FormGroup>
-                                      <Label htmlFor="billingEmail">Billing Email</Label>
-                                      <Input
-                                        type="text"
-                                        id="billingEmail"
-                                        name="billingEmail"
-                                        value={props.values.billingEmail}
-                                        placeholder="Enter Billing Email Address"
-                                        onChange={(value) => { props.handleChange("billingEmail")(value) }}
-                                        className={
-                                          props.errors.billingEmail && props.touched.billingEmail
-                                            ? "is-invalid"
-                                            : ""
-                                        }
-                                      />
-                                      {props.billingEmail && props.touched.billingEmail && (
-                                        <div className="invalid-feedback">{props.errors.billingEmail}</div>
-                                      )}
-                                    </FormGroup>
-                                  </Col>
-                                  <Col md="4">
-                                    <FormGroup>
-                                      <Label htmlFor="poBoxNumber">Contract PO Number</Label>
-                                      <Input
-                                        type="text"
-                                        id="poBoxNumber"
-                                        name="poBoxNumber"
-                                        placeholder="Enter Contract PO Number"
-                                        onChange={(option) => {
-                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('poBoxNumber')(option)}
-                                        }}
-                                        value={props.values.poBoxNumber}
-                                        className={
-                                          props.errors.poBoxNumber && props.touched.poBoxNumber
-                                            ? "is-invalid"
-                                            : ""
-                                        }
-                                      />
-                                      {props.errors.poBoxNumber && props.touched.poBoxNumber && (
-                                        <div className="invalid-feedback">{props.errors.poBoxNumber}</div>
-                                      )}
-
-                                    </FormGroup>
-                                  </Col>
-                                </Row>
-                                <Row className="row-wrapper">
-                                  <Col md="4">
-                                    <FormGroup>
-                                      <Label htmlFor="vatRegestationNo">Tax Registration Number</Label>
-                                      <Input
-                                        type="text"
-                                        id="vatRegestationNo"
-                                        name="vatRegestationNo"
-                                        placeholder="Enter Tax Registration Number"
-                                        onChange={(option) => {
-                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('vatRegestationNo')(option)}
-                                        }}
-                                        value={props.values.vatRegestationNo}
-                                        className={
-                                          props.errors.vatRegestationNo && props.touched.vatRegestationNo
-                                            ? "is-invalid"
-                                            : ""
-                                        }
-                                      />
-                                      {props.errors.vatRegestationNo && props.touched.vatRegestationNo && (
-                                        <div className="invalid-feedback">{props.errors.vatRegestationNo}</div>
-                                      )}
-
-                                    </FormGroup>
-                                  </Col>
-                                  <Col md="4">
-                                    <FormGroup>
-                                      <Label htmlFor="currencyCode">Currency Code</Label>
-                                      <Select
-                                        options={currency_list ? selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
-                                        value={currency_list && selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currencyCode)}
-                                        onChange={(option) => {
-                                          if (option && option.value) {
-                                            props.handleChange('currencyCode')(option)
-                                          } else {
-                                            props.handleChange('currencyCode')('')
-                                          }
-                                        }}
-                                        placeholder="Select Currency"
-                                        id="currencyCode"
-                                        name="currencyCode"
-                                        className={
-                                          props.errors.currencyCode && props.touched.currencyCode
-                                            ? "is-invalid"
-                                            : ""
-                                        }
-                                      />
-                                      {props.errors.currencyCode && props.touched.currencyCode && (
-                                        <div className="invalid-feedback">{props.errors.currencyCode}</div>
-                                      )}
-
-                                    </FormGroup>
-                                  </Col>
+                                     onChange={(options) => {
+                                              if (options && options.value) {
+                                                props.handleChange(
+                                                  'salaryStructureId',
+                                                )(options.value);
+                                              } else {
+                                                props.handleChange(
+                                                  'salaryStructureId',
+                                                )('');
+                                              }
+                                            }}
+                                    onChange={(value) => {
+																			props.handleChange('salaryStructureId')(value);
+																	
+																		}}
+																		className={`${
+																			props.errors.salaryStructureId && props.touched.salaryStructureId
+																				? 'is-invalid'
+																				: ''
+																		}`}
+																	/>
+																	{props.errors.salaryStructureId && props.touched.salaryStructureId && (
+																		<div className="invalid-feedback">
+																			{props.errors.salaryStructureId}
+																		</div>
+																	)}
+                                </FormGroup>
+                              </Col>
+                          
+                            </Row>                 
+                            <hr />
+                           
+                            </Col>
                                 </Row>
                                 <Row>
                                   <Col lg={12} className="d-flex align-items-center justify-content-between flex-wrap mt-5">
@@ -484,11 +418,15 @@ class DetailEmployeePayroll extends React.Component {
                                     </Button>
                                     </FormGroup>
                                     <FormGroup className="text-right">
-                                      <Button type="submit" name="submit" color="primary" className="btn-square mr-3">
+                                    <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
+                                    this.setState({ createMore: false }, () => {
+                                      props.handleSubmit()
+                                    })
+                                  }}>
                                         <i className="fa fa-dot-circle-o"></i> Update
                                     </Button>
                                       <Button type="button" color="secondary" className="btn-square"
-                                        onClick={() => { this.props.history.push('/admin/master/employee') }}>
+                                        onClick={() => { this.props.history.push('/admin/payroll/salaryTemplate') }}>
                                         <i className="fa fa-ban"></i> Cancel
                                     </Button>
                                     </FormGroup>
@@ -512,5 +450,5 @@ class DetailEmployeePayroll extends React.Component {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(DetailEmployeePayroll)
+export default connect(mapStateToProps, mapDispatchToProps)(DetailSalaryTemplate)
 

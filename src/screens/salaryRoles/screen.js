@@ -32,6 +32,7 @@ import './style.scss'
 const mapStateToProps = (state) => {
   return ({
     salaryRole_list: state.salaryRoles.salaryRole_list,
+    salaryStructure_list: state.salaryStructure.salaryStructure_list,
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -70,7 +71,6 @@ class SalaryRoles extends React.Component {
     }
 
     this.selectRowProp = {
-      mode: 'checkbox',
       bgColor: 'rgba(0,0,0, 0.05)',
       clickToSelect: false,
       onSelect: this.onRowSelect,
@@ -260,7 +260,7 @@ class SalaryRoles extends React.Component {
   render() {
 
     const { loading, dialog, selectedRows, csvData, view, filterData } = this.state
-    const { salaryRole_list } = this.props
+    const { salaryRole_list,salaryStructure_list } = this.props
 console.log("salaryRole_list",salaryRole_list)
 
     return (
@@ -274,7 +274,7 @@ console.log("salaryRole_list",salaryRole_list)
                 <Col lg={12}>
                   <div className="h4 mb-0 d-flex align-items-center">
                     <i className="fas fa-object-group" />
-                    <span className="ml-2">Salary Roles</span>
+                    <span className="ml-2">Salary</span>
                   </div>
                 </Col>
               </Row>
@@ -289,7 +289,12 @@ console.log("salaryRole_list",salaryRole_list)
                   </Row>
                   :
                   <Row>
+                  
                     <Col lg={12}>
+                    <div className="h4 mb-0 d-flex align-items-center">
+                    <i className="fas fa-object-group" />
+                    <span className="ml-2"> Roles</span>
+                  </div>
                       <div className="d-flex justify-content-end">
                         <ButtonGroup size="sm">
                           {/* <Button
@@ -334,11 +339,11 @@ console.log("salaryRole_list",salaryRole_list)
                           data={salaryRole_list && salaryRole_list.data ? salaryRole_list.data : []}
                           version="4"
                           hover
-                          pagination={salaryRole_list && salaryRole_list.data && salaryRole_list.data.length > 0 ? true : false}
+                          // pagination={salaryRole_list && salaryRole_list.data && salaryRole_list.data.length > 0 ? true : false}
                            keyField="id"
                           remote
                           fetchInfo={{ dataTotalSize: salaryRole_list.count ? salaryRole_list.count : 0 }}
-                          className="employee-table"
+                        //  className="employee-table"
                           trClassName="cursor-pointer"
                           csvFileName="salaryRole_list.csv"
                           ref={(node) => this.table = node}
@@ -359,7 +364,89 @@ console.log("salaryRole_list",salaryRole_list)
                         </BootstrapTable>
                       </div>
                     </Col>
+                    <br></br> <br></br> <br></br>
+                    
+                    <Row style={{marginTop:'3%'}}>
+                   
+                    <Col lg={12}>
+                    <div className="ml-4 h4 mb-0 d-flex align-items-center">
+                    <i className="fas fa-object-group" />
+                    <span className="ml-2">Structures</span>
+                  </div>
+                      <div className="d-flex justify-content-end">
+                        <ButtonGroup size="sm">
+                          {/* <Button
+                            color="success"
+                            className="btn-square"
+                            onClick={() => this.getCsvData()}
+                          >
+                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
+                          </Button>
+                          {view && <CSVLink
+                            data={csvData}
+                            filename={'Employee.csv'}
+                            className="hidden"
+                            ref={this.csvLink}
+                            target="_blank"
+                          />} */}
+                          <Button
+                            color="primary"
+                            className="btn-square"
+                            onClick={() => this.props.history.push(`/admin/payroll/salaryStructure/create`)}
+                          >
+                            <i className="fas fa-plus mr-1" />
+                            New Salary Structure
+                          </Button>
+                          {/* <Button
+                            color="warning"
+                            className="btn-square"
+                            onClick={this.bulkDelete}
+                            disabled={selectedRows.length === 0}
+                          >
+                            <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
+                            Bulk Delete
+                          </Button> */}
+                        </ButtonGroup>
+                      </div>
+                      
+                      <div>
+                        <BootstrapTable
+                          selectRow={this.selectRowProp}
+                          search={false}
+                          options={this.options}
+                          data={salaryStructure_list && salaryStructure_list.data ? salaryStructure_list.data : []}
+                          version="4"
+                          hover
+                          pagination={salaryStructure_list && salaryStructure_list.data && salaryStructure_list.data.length > 0 ? true : false}
+                          keyField="id"
+                          remote
+                          fetchInfo={{ dataTotalSize: salaryStructure_list.count ? salaryStructure_list.count : 0 }}
+                          className="employee-table"
+                          trClassName="cursor-pointer"
+                          // csvFileName="salaryStructure_list.csv"
+                          ref={(node) => this.table = node}
+                        >
+                          <TableHeaderColumn
+                            dataField="salaryStructureType"
+                        
+                          >
+                          Salary Structure Type
+                          </TableHeaderColumn>
+                          <TableHeaderColumn
+                            dataField="salaryStructureName"
+                          
+                          // dataFormat={this.vatCategoryFormatter}
+                          >
+                           Salary Structure Name
+                          </TableHeaderColumn>
+                      
+                        </BootstrapTable>
+                      </div>
+                    </Col>
                   </Row>
+                  </Row>
+                
+                  
               }
             </CardBody>
           </Card>

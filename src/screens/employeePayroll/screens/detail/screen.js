@@ -99,51 +99,54 @@ class DetailEmployeePayroll extends React.Component {
   componentDidMount = () => {
     this.initializeData();
   }
-
+  
   initializeData = () => {
-    if (this.props.location.state && this.props.location.state.id) {
-      // this.props.employeeActions.getCurrencyList();
-      this.props.salaryTemplateActions.getSalaryRolesForDropdown();
-      this.props.employeeActions.getEmployeeDesignationForDropdown();
-      this.props.employeeDetailActions.getEmployeeDetail(this.props.location.state.id)
-      .then((res) => {
-        if (res.status === 200) {
-          this.setState({
-            current_employee_id: this.props.location.state.id,
-            initValue: {
-              id: res.data.id ? res.data.id : '',
-              firstName: res.data.firstName ? res.data.firstName : '',
-              middleName: res.data.middleName ? res.data.middleName : '',
-              lastName: res.data.lastName ? res.data.lastName : '',
-              email: res.data.email ? res.data.email : '',
-              bloodGroup: res.data.bloodGroup ? res.data.bloodGroup : '',
-              dob: res.data.dob ?  moment(res.data.dob).format('DD/MM/YYYY')
-              : '',
-              mobileNumber: res.data.mobileNumber ? res.data.mobileNumber : '',
-              gender: res.data.gender ? res.data.gender : '',
-              isActive: res.data.isActive ? res.data.isActive : '',
-              permanentAddress: res.data.permanentAddress ? res.data.permanentAddress : '',
-              pincode: res.data.pincode ? res.data.pincode : '',
-              stateId:
-              res.data.stateId && res.data.stateId !== null
-                ? res.data.stateId
+		if (this.props.location.state && this.props.location.state.id) {
+			this.props.employeeDetailActions
+				.getEmployeeDetail(this.props.location.state.id)
+				.then((res) => {
+          this.props.salaryTemplateActions.getSalaryRolesForDropdown();
+          this.props.employeeActions.getEmployeeDesignationForDropdown();
+					if (res.status === 200) {
+						this.setState({
+              loading: false,
+              current_employee_id: this.props.location.state.id,
+						  initValue: {
+                id: res.data.id ? res.data.id : '',
+                firstName: res.data.firstName ? res.data.firstName : '',
+                middleName: res.data.middleName ? res.data.middleName : '',
+                lastName: res.data.lastName ? res.data.lastName : '',
+                email: res.data.email ? res.data.email : '',
+                bloodGroup: res.data.bloodGroup ? res.data.bloodGroup : '',
+                dob: res.data.dob ?  moment(res.data.dob).format('DD/MM/YYYY')
                 : '',
-              city: res.data.city ? res.data.city : '',
-              employeeDesignationId: res.data.employeeDesignationId ? res.data.employeeDesignationId : '',
-              salaryRoleId: res.data.salaryRoleId ? res.data.salaryRoleId : '',
-            },
-            selectedStatus: res.data.isActive ? true : false,
-            loading: false,
-          })
-
-        }
-      }).catch((err) => {
-        this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
-      })
-    } else {
+                mobileNumber: res.data.mobileNumber ? res.data.mobileNumber : '',
+                gender: res.data.gender ? res.data.gender : '',
+                isActive: res.data.isActive ? res.data.isActive : '',
+                permanentAddress: res.data.permanentAddress ? res.data.permanentAddress : '',
+                pincode: res.data.pincode ? res.data.pincode : '',
+                stateId:
+                res.data.stateId && res.data.stateId !== null
+                  ? res.data.stateId
+                  : '',
+                city: res.data.city ? res.data.city : '',
+                employeeDesignationId: res.data.employeeDesignationId ? res.data.employeeDesignationId : '',
+                salaryRoleId: res.data.salaryRoleId ? res.data.salaryRoleId : '',
+              },
+              selectedStatus: res.data.isActive ? true : false,
+							userPhoto: res.data.profilePicByteArray
+								? this.state.userPhoto.concat(res.data.profilePicByteArray)
+								: [],
+						});
+					}
+				})
+        .catch((err) => {
+          this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+        })
+		} else {
       this.props.history.push('/admin/master/employee')
-    }
-  }
+		}
+	};
 
   handleSubmit = (data) => {
     const postData = Object.assign({},data)
@@ -883,7 +886,7 @@ class DetailEmployeePayroll extends React.Component {
                                         <i className="fa fa-dot-circle-o"></i> Update
                                     </Button>
                                       <Button type="button" color="secondary" className="btn-square"
-                                        onClick={() => { this.props.history.push('/admin/master/employee') }}>
+                                        onClick={() => { this.props.history.push('/admin/payroll/employee') }}>
                                         <i className="fa fa-ban"></i> Cancel
                                     </Button>
                                     </FormGroup>

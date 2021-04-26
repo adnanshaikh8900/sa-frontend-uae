@@ -61,6 +61,27 @@ export const getRoleList = (obj) => {
 	};
 };
 
+export const getEmployeesNotInUserForDropdown = (obj) => {
+	return (dispatch) => {
+		let data = {
+			method: 'GET',
+			url: `/rest/employee/getEmployeesNotInUserForDropdown`,
+		};
+
+		return authApi(data)
+			.then((res) => {
+				dispatch({
+					type: USER.ROLE_LIST,
+					payload: res.data,
+				});
+				return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
 export const removeBulk = (obj) => {
 	return (dispatch) => {
 		let data = {

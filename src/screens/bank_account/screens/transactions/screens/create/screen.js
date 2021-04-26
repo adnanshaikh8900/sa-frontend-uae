@@ -612,6 +612,13 @@ class CreateBankTransaction extends React.Component {
 														errors.transactionCategoryId =
 															'Transaction Category is Required';
 													}
+													if(
+														(values.coaCategoryId.value === 12 ||
+														values.coaCategoryId.value === 6) &&
+														!values.employeeId
+													){
+														errors.employeeId = 'User is required'
+													}
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({

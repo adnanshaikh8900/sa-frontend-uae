@@ -103,6 +103,7 @@ class CreateUser extends React.Component {
 	componentDidMount = () => {
 		this.props.salaryTemplateActions.getSalaryRolesForDropdown();
 		this.props.employeeActions.getEmployeeDesignationForDropdown();
+		this.props.userActions.getEmployeesNotInUserForDropdown();
 		this.initializeData();
 	};
 
@@ -260,7 +261,7 @@ class CreateUser extends React.Component {
 		const { timezone } = this.state;
 		const { isPasswordShown } = this.state;
 
-	console.log(salary_role_dropdown);
+	console.log(employee_list);
 	console.log(designation_dropdown);
 
 		// emlpoyee_list.map(item => {

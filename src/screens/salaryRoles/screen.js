@@ -2,16 +2,19 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {
-  Card,
-  CardHeader,
-  CardBody,
-  Button,
-  Row,
-  Col,
-  ButtonGroup,
-  Input,
-} from 'reactstrap'
-
+	Card,
+	CardHeader,
+	CardBody,
+	Button,
+	Row,
+	Col,
+	ButtonGroup,
+	Input,
+	ButtonDropdown,
+	DropdownToggle,
+	DropdownMenu,
+	DropdownItem,
+} from 'reactstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 
 import { Loader, ConfirmDeleteModal } from 'components'
@@ -47,11 +50,12 @@ class SalaryRoles extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      actionButtons: {},
       loading: true,
       selectedRows: [],
       dialog: null,
       filterData: {
-        id: '',
+        salaryRoleId: '',
         salaryRoleName: ''
       },
       csvData: [],
@@ -70,12 +74,12 @@ class SalaryRoles extends React.Component {
       onSortChange: this.sortColumn
     }
 
-    this.selectRowProp = {
-      bgColor: 'rgba(0,0,0, 0.05)',
-      clickToSelect: false,
-      onSelect: this.onRowSelect,
-      onSelectAll: this.onSelectAll
-    }
+    // this.selectRowProp = {
+    //   bgColor: 'rgba(0,0,0, 0.05)',
+    //   clickToSelect: false,
+    //   onSelect: this.onRowSelect,
+    //   onSelectAll: this.onSelectAll
+    // }
     this.csvLink = React.createRef()
   }
 
@@ -111,7 +115,7 @@ class SalaryRoles extends React.Component {
   }
 
   goToDetail = (row) => {
-    this.props.history.push('/admin/master/employee/detail', { id: row.id })
+    this.props.history.push('/admin/payroll/salaryRoles/detail', { id: row.salaryRoleId })
   }
 
   sortColumn = (sortName, sortOrder) => {
@@ -120,35 +124,6 @@ class SalaryRoles extends React.Component {
     this.initializeData()
   }
 
-  onRowSelect = (row, isSelected, e) => {
-    let tempList = []
-    if (isSelected) {
-      tempList = Object.assign([], this.state.selectedRows)
-      tempList.push(row.id);
-    } else {
-      this.state.selectedRows.map((item) => {
-        if (item !== row.id) {
-          tempList.push(item)
-        }
-        return item
-      });
-    }
-    this.setState({
-      selectedRows: tempList
-    })
-  }
-  onSelectAll = (isSelected, rows) => {
-    let tempList = []
-    if (isSelected) {
-      rows.map((item) => {
-        tempList.push(item.id)
-        return item
-      })
-    }
-    this.setState({
-      selectedRows: tempList
-    })
-  }
 
   bulkDelete = () => {
     const {
@@ -256,7 +231,63 @@ class SalaryRoles extends React.Component {
       },
     },() => { this.initializeData() })
   }
+  toggleActionButton = (index) => {
+		let temp = Object.assign({}, this.state.actionButtons);
+		if (temp[parseInt(index, 10)]) {
+			temp[parseInt(index, 10)] = false;
+		} else {
+			temp[parseInt(index, 10)] = true;
+		}
+		this.setState({
+			actionButtons: temp,
+		});
+	};
+	renderActions = (cell, row) => {
+		return (
+  
+			<div>
+				<ButtonDropdown
+					isOpen={this.state.actionButtons[row.id]}
+					toggle={() => this.toggleActionButton(row.id)}
+				>
+					<DropdownToggle size="sm" color="primary" className="btn-brand icon">
+						{this.state.actionButtons[row.id] === true ? (
+							<i className="fas fa-chevron-up" />
+						) : (
+							<i className="fas fa-chevron-down" />
+						)}
+					</DropdownToggle>
+					<DropdownMenu right>
 
+							<DropdownItem
+								onClick={() =>
+									this.props.history.push(
+										'/admin/payroll/employee/detail',
+										{ salaryRoleId: row.id },
+									)
+								}
+							>
+								
+								<i className="fas fa-edit" /> Edit
+							</DropdownItem>
+							
+				
+						{/* <DropdownItem
+							onClick={() =>
+								this.props.history.push(
+									'/admin/payroll/employee/salarySlip',
+									{ id: row.id },
+								)
+							}
+						>
+							<i className="fas fa-eye" /> Salary Slip
+						</DropdownItem> */}
+					
+					</DropdownMenu>
+				</ButtonDropdown>
+			</div>
+		);
+	};
   render() {
 
     const { loading, dialog, selectedRows, csvData, view, filterData } = this.state
@@ -274,7 +305,7 @@ console.log("salaryRole_list",salaryRole_list)
                 <Col lg={12}>
                   <div className="h4 mb-0 d-flex align-items-center">
                     <i className="fas fa-object-group" />
-                    <span className="ml-2">Salary</span>
+                    <span className="ml-2">Salary Role</span>
                   </div>
                 </Col>
               </Row>
@@ -291,10 +322,6 @@ console.log("salaryRole_list",salaryRole_list)
                   <Row>
                   
                     <Col lg={12}>
-                    <div className="h4 mb-0 d-flex align-items-center">
-                    <i className="fas fa-object-group" />
-                    <span className="ml-2"> Roles</span>
-                  </div>
                       <div className="d-flex justify-content-end">
                         <ButtonGroup size="sm">
                           {/* <Button
@@ -350,13 +377,13 @@ console.log("salaryRole_list",salaryRole_list)
                         >
                           <TableHeaderColumn
                             dataField="salaryRoleId"
-                        
+                            className="table-header-bg" 
                           >
                             Salary Role Id
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="salaryRoleName"
-                    
+                            className="table-header-bg"
                           >
                            Salary Role Name
                           </TableHeaderColumn>
@@ -364,86 +391,7 @@ console.log("salaryRole_list",salaryRole_list)
                         </BootstrapTable>
                       </div>
                     </Col>
-                    <br></br> <br></br> <br></br>
-                    
-                    <Row style={{marginTop:'3%'}}>
-                   
-                    <Col lg={12}>
-                    <div className="ml-4 h4 mb-0 d-flex align-items-center">
-                    <i className="fas fa-object-group" />
-                    <span className="ml-2">Structures</span>
-                  </div>
-                      <div className="d-flex justify-content-end">
-                        <ButtonGroup size="sm">
-                          {/* <Button
-                            color="success"
-                            className="btn-square"
-                            onClick={() => this.getCsvData()}
-                          >
-                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
-                          </Button>
-                          {view && <CSVLink
-                            data={csvData}
-                            filename={'Employee.csv'}
-                            className="hidden"
-                            ref={this.csvLink}
-                            target="_blank"
-                          />} */}
-                          <Button
-                            color="primary"
-                            className="btn-square"
-                            onClick={() => this.props.history.push(`/admin/payroll/salaryStructure/create`)}
-                          >
-                            <i className="fas fa-plus mr-1" />
-                            New Salary Structure
-                          </Button>
-                          {/* <Button
-                            color="warning"
-                            className="btn-square"
-                            onClick={this.bulkDelete}
-                            disabled={selectedRows.length === 0}
-                          >
-                            <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
-                            Bulk Delete
-                          </Button> */}
-                        </ButtonGroup>
-                      </div>
-                      
-                      <div>
-                        <BootstrapTable
-                          selectRow={this.selectRowProp}
-                          search={false}
-                          options={this.options}
-                          data={salaryStructure_list && salaryStructure_list.data ? salaryStructure_list.data : []}
-                          version="4"
-                          hover
-                          pagination={salaryStructure_list && salaryStructure_list.data && salaryStructure_list.data.length > 0 ? true : false}
-                          keyField="id"
-                          remote
-                          fetchInfo={{ dataTotalSize: salaryStructure_list.count ? salaryStructure_list.count : 0 }}
-                          className="employee-table"
-                          trClassName="cursor-pointer"
-                          // csvFileName="salaryStructure_list.csv"
-                          ref={(node) => this.table = node}
-                        >
-                          <TableHeaderColumn
-                            dataField="salaryStructureType"
-                        
-                          >
-                          Salary Structure Type
-                          </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="salaryStructureName"
-                          
-                          // dataFormat={this.vatCategoryFormatter}
-                          >
-                           Salary Structure Name
-                          </TableHeaderColumn>
-                      
-                        </BootstrapTable>
-                      </div>
-                    </Col>
-                  </Row>
+                
                   </Row>
                 
                   

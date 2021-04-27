@@ -32,7 +32,7 @@ import moment from 'moment'
 
 const mapStateToProps = (state) => {
   return ({
-    employee_list: state.employee.employee_list,
+    employee_list_dropdown: state.employeePayroll.employee_list_dropdown,
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -144,9 +144,9 @@ class ViewPayroll extends React.Component {
 
   render() {
 
-    const { currency_list,country_list,state_list,employee_list } = this.props
+    const { currency_list,country_list,state_list,employee_list_dropdown } = this.props
 
-    console.log(employee_list,"employee_list")
+   
     return (
       <div className="create-employee-screen">
         <div className="animated fadeIn">
@@ -212,17 +212,17 @@ class ViewPayroll extends React.Component {
 																			// 			'Employee',
 																			// 	  )
 																			// 	: []
-                                      employee_list.data
-                                      ?  employee_list.data
+                                      employee_list_dropdown
+                                      ?  employee_list_dropdown
                                       : []
 																		}
 																		id="employeeListIds"
 																		name="employeeListIds"
 																		placeholder="Select Employee Names "
 																		value={
-                                      employee_list.data &&
+                                      employee_list_dropdown &&
                                       props.values.employeeIds
-                                      ? employee_list.data.find(
+                                      ? employee_list_dropdown.find(
                                         (option) =>
                                           option.value ===
                                           +props.values.employeeIds.map(

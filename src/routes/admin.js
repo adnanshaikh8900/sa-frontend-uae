@@ -159,6 +159,7 @@ import {
 	Template,
 	CreateEmployeeFinancial,
 	EmployeeFinancial,
+	DetailSalaryRole,
 	SalaryRoles,
 	CreateSalaryRoles,
 
@@ -170,7 +171,10 @@ import {
 	SalarySlip,
 	UnderConstruction,
 	CreateDesignation,
-	Designation
+	Designation,
+	DetailSalaryStructure,
+	DetailSalaryTemplate,
+	DetailDesignation
 } from 'screens';
 
 const adminRoutes = [
@@ -480,7 +484,7 @@ const adminRoutes = [
 	{
 		path: '/admin/payroll/employee/detail',
 		name: 'UpdateEmployee',
-		component: DetailEmployeePayroll.screen,
+		component: UnderConstruction.screen,
 	},
 	{
 		path: '/admin/payroll/employee/create',
@@ -495,7 +499,7 @@ const adminRoutes = [
 	{
 		path: '/admin/payroll/employee/salarySlip',
 		name: 'ViewEmployment',
-		component: SalarySlip.screen,
+		component: UnderConstruction.screen,
 	},
 	{
 		path: '/admin/payroll/employee/viewPayroll',
@@ -507,31 +511,46 @@ const adminRoutes = [
 		name: 'UpdateEmployment',
 		component: DetailEmployeePayroll.screen,
 	},
-	{
-		path: '/admin/payroll/employment/create',
-		name: 'CreateEmployment',
-		component: CreateEmployment.screen,
-	},
-	{
-		path: '/admin/payroll/employment',
-		name: 'ViewEmployment',
-		component: Employment.screen,
-	},
-	{
-		path: '/admin/payroll/financial/create',
-		name: 'CreateEmployeeFinancialDetails',
-		component: CreateEmployeeFinancial.screen,
-	},
-	{
-		path: '/admin/payroll/financial',
-		name: 'ViewEmployeeFinancialDetails',
-		component: EmployeeFinancial.screen,
-	},
+	// {
+	// 	path: '/admin/payroll/employment/create',
+	// 	name: 'CreateEmployment',
+	// 	component: CreateEmployment.screen,
+	// },
+	// {
+	// 	path: '/admin/payroll/employment',
+	// 	name: 'ViewEmployment',
+	// 	component: Employment.screen,
+	// },
+	// {
+	// 	path: '/admin/payroll/financial/create',
+	// 	name: 'CreateEmployeeFinancialDetails',
+	// 	component: CreateEmployeeFinancial.screen,
+	// },
+	// {
+	// 	path: '/admin/payroll/financial',
+	// 	name: 'ViewEmployeeFinancialDetails',
+	// 	component: EmployeeFinancial.screen,
+	// },
 
 	{
 		path: '/admin/payroll/salaryRoles/create',
 		name: 'CreateSalaryRole',
 		component: CreateSalaryRoles.screen,
+	},
+	{
+		path: '/admin/payroll/salaryRoles/detail',
+		name: 'UpdateSalaryRole',
+		component: DetailSalaryRole.screen,
+	},
+	{
+		path: '/admin/payroll/salaryStructure/detail',
+		name: 'UpdateSalaryStructure',
+		component: DetailSalaryStructure.screen,
+	},
+	{
+		path: '/admin/payroll/salaryTemplate/detail',
+		name: 'UpdateSalaryTemplate',
+		component: DetailSalaryTemplate.screen,
 	},
 	{
 		path: '/admin/payroll/salaryRoles',
@@ -564,9 +583,14 @@ const adminRoutes = [
 		component: CreateDesignation.screen,
 	},
 	{
+		path: '/admin/payroll/employeeDesignation/detail',
+		name: 'UpdateEmployeeDesignation',
+		component: DetailDesignation.screen,
+	},
+	{
 		path: '/admin/payroll/employeeDesignation',
 		name: 'ViewEmployeeDesignation',
-		component: UnderConstruction.screen,
+		component: Designation.screen,
 	},
 	{
 		redirect: true,

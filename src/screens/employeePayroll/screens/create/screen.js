@@ -36,9 +36,9 @@ const mapStateToProps = (state) => {
     currency_list: state.employee.currency_list,
     country_list: state.contact.country_list,
     state_list: state.contact.state_list,
-    salary_role_dropdown: state.salarytemplate.salary_role_dropdown,
+    salary_role_dropdown: state.employeePayroll.salary_role_dropdown,
     designation_dropdown: state.employeePayroll.designation_dropdown,
-    employee_list: state.employee.employee_list,
+    employee_list_dropdown: state.employeePayroll.employee_list_dropdown,
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -63,7 +63,7 @@ class CreateEmployeePayroll extends React.Component {
 
   constructor(props) {
     super(props)
-    this._handleClick = this._handleClick.bind(this);
+//    this._handleClick = this._handleClick.bind(this);
     this.state = {
       loading: false,
       createMore: false,
@@ -128,7 +128,7 @@ class CreateEmployeePayroll extends React.Component {
 
   initializeData = () => {
     this.props.employeeActions.getCountryList();
-    this.props.salaryTemplateActions.getSalaryRolesForDropdown();
+    this.props.employeeActions.getSalaryRolesForDropdown();
     this.props.employeeActions.getEmployeeDesignationForDropdown();
     this.props.employeeActions.getEmployeesForDropdown();
     this.setState({ showIcon: false });
@@ -288,6 +288,7 @@ class CreateEmployeePayroll extends React.Component {
     .createEmployee(formData)
     .then((res) => {
       if (res.status === 200) {
+        this.setState({ disabled: false });
         this.props.commonActions.tostifyAlert(
           'success',
            'New Employee Created Successfully')
@@ -317,7 +318,9 @@ class CreateEmployeePayroll extends React.Component {
 
   render() {
 
-    const { salary_role_dropdown,designation_dropdown,country_list,state_list,employee_list } = this.props
+    const { salary_role_dropdown,designation_dropdown,country_list,state_list,employee_list_dropdown } = this.props
+
+    console.log(employee_list_dropdown)
 
     return (
       <div className="create-employee-screen">
@@ -404,7 +407,7 @@ class CreateEmployeePayroll extends React.Component {
 																	/>
 																</FormGroup>
 															</Col>
-                           <Col lg={10}>
+                              <Col lg={10}>
                            <hr />
                             <h4>Personal Details</h4>
                             <hr />
@@ -1050,15 +1053,15 @@ class CreateEmployeePayroll extends React.Component {
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="salaryRoleId"><span className="text-danger">*</span>Reports To</Label>
+                                  <Label htmlFor="parentId"><span className="text-danger">*</span>Reports To</Label>
                                   <Select
 																		styles={customStyles}
 																		options={
-                                      employee_list.data
+                                      employee_list_dropdown
 																				? selectOptionsFactory.renderOptions(
 																						'label',
 																						'value',
-                                            employee_list.data,
+                                            employee_list_dropdown,
 																						'Employee',
 																				  )
 																				: []

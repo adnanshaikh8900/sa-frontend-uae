@@ -1,6 +1,7 @@
 import {
   authApi
 } from 'utils'
+import { EMPLOYEEPAYROLL, EMPLOYEE_DESIGNATION } from 'constants/types'
 
 export const getEmployeeDetail = (_id) => {
   return (dispatch) => {

@@ -60,7 +60,7 @@ class SalaryStructure extends React.Component {
 
     this.options = {
       onRowClick: this.goToDetail,
-      paginationPosition: 'top',
+      paginationPosition: 'bottom',
       page: 1,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
@@ -112,7 +112,7 @@ class SalaryStructure extends React.Component {
   }
 
   goToDetail = (row) => {
-    this.props.history.push('/admin/master/employee/detail', { id: row.id })
+    this.props.history.push('/admin/payroll/salaryStructure/detail', { id: row.salaryStructureId })
   }
 
   sortColumn = (sortName, sortOrder) => {
@@ -326,7 +326,7 @@ class SalaryStructure extends React.Component {
                           </Button> */}
                         </ButtonGroup>
                       </div>
-                      <div className="py-3">
+                      {/* <div className="py-3">
                         <h5>Filter : </h5>
                         <form >
                           <Row>
@@ -346,7 +346,7 @@ class SalaryStructure extends React.Component {
                             </Col>
                           </Row>
                         </form>
-                      </div>
+                      </div> */}
                       <div>
                         <BootstrapTable
                           selectRow={this.selectRowProp}

@@ -14,26 +14,25 @@ class SalarySlipTemplate extends Component {
 	}
 
 	getRibbonColor = (invoiceData) => {
-		if (invoiceData.status == 'Draft') {
-			return 'pending-color';
-		} else if (invoiceData.status == 'Sent') {
+	
 			return 'saved-color';
-		} else {
-			return 'saved-color';
-		}
+		
 	};
 
 	render() {
-		const { invoiceData, currencyData, totalNet, companyData } = this.props;
+		const { VariableData,DeductionData, FixedData,currencyData, totalNet, companyData } = this.props;
+		console.log(VariableData,"VariableData")
+		console.log(DeductionData,"DeductionData")
+		console.log(FixedData,"FixedData")
 		return (
 			<div>
 				<Card id="singlePage" className="box">
 					<div
 						className={`ribbon ribbon-top-left ${this.getRibbonColor(
-							invoiceData,
+							VariableData,
 						)}`}
 					>
-						<span>{invoiceData.status}</span>
+						{/* <span>{invoiceData.status}</span> */}
 					</div>
 
 					<CardBody style={{ marginTop: '7rem' }}>
@@ -122,26 +121,8 @@ class SalarySlipTemplate extends Component {
 								<h4 className="mb-1 ml-2"><b>{companyData && companyData.company
 											? companyData.company.companyName
 											: ''}</b></h4>
-								<h6 className="mb-1 ml-2">#{invoiceData.referenceNumber}</h6>
-								<h6 className="mb-1 ml-2"><b>{invoiceData.dueAmount ? (
-														<Currency
-															value={invoiceData.dueAmount}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													) : (
-														<Currency
-															value={0}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													)}</b></h6>
+								<h6 className="mb-1 ml-2">#</h6>
+								<h6 className="mb-1 ml-2"><b></b></h6>
 								</div>
 								</div>
 							</div>
@@ -167,12 +148,12 @@ class SalarySlipTemplate extends Component {
 									}}
 								>
 							
-									<h6 className="mb-1 ml-2"><b>Person Name:</b> {invoiceData.name}</h6>
-									<h6 className="mb-1 ml-2"><b>Designation:</b> {invoiceData.organisationName}</h6>
-									<h6 className="mb-1 ml-2"><b>Address:</b> {invoiceData.email}</h6>
-									<h6 className="mb-1 ml-2"><b>Date of Joining:</b> {invoiceData.address}</h6>
-									<h6 className="mb-1 ml-2"><b>Mobile Number:</b> {invoiceData.email}</h6>
-									<h6 className="mb-1 ml-2"><b>Email :</b> {invoiceData.email}</h6>
+									<h6 className="mb-1 ml-2"><b>Person Name:</b> </h6>
+									<h6 className="mb-1 ml-2"><b>Designation:</b> </h6>
+									<h6 className="mb-1 ml-2"><b>Address:</b> </h6>
+									<h6 className="mb-1 ml-2"><b>Date of Joining:</b></h6>
+									<h6 className="mb-1 ml-2"><b>Mobile Number:</b> </h6>
+									<h6 className="mb-1 ml-2"><b>Email :</b> </h6>
 								</div>
 							</div>
 							<div
@@ -188,15 +169,12 @@ class SalarySlipTemplate extends Component {
 											<tr style={{ textAlign: 'right' }}>
 												<td  style={{backgroundColor:'#e3e3e3' ,width:'104px'  }}>Date</td>
 												<td style={{ width:'143px'  }}>
-													{' '}
-													{moment(invoiceData.invoiceDate).format(
-														'DD MMM YYYY',
-													)}
+												
 												</td>
 											</tr>
 											<tr style={{ textAlign: 'right',width:'143px' }}>
 												<td style={{width:'109px' ,backgroundColor:'#e3e3e3' }}>Worked Days</td>
-												<td style={{width:'143px'}}>{invoiceData.term}</td>
+												<td style={{width:'143px'}}></td>
 											</tr>
 											
 										</tbody>
@@ -220,41 +198,7 @@ class SalarySlipTemplate extends Component {
 								</tr>
 							</thead>
 							<tbody className=" table-bordered table-hover">
-								{invoiceData.invoiceLineItems &&
-									invoiceData.invoiceLineItems.length &&
-									invoiceData.invoiceLineItems.map((item, index) => {
-										return (
-											<tr key={index}>
-												<td className="center">{index + 1}</td>
-												<td>{item.productName}</td>
-												<td>{item.description}</td>
-												<td>{item.quantity}</td>
-												<td style={{ textAlign: 'right', width: '20%' }}>
-													<Currency
-														value={item.unitPrice}
-														currencySymbol={
-															currencyData[0]
-																? currencyData[0].currencyIsoCode
-																: 'USD'
-														}
-													/>
-												</td>
-												<td
-													style={{ textAlign: 'right' }}
-												>{`${item.vatPercentage}%`}</td>
-												<td style={{ textAlign: 'right' }}>
-													<Currency
-														value={item.subTotal}
-														currencySymbol={
-															currencyData[0]
-																? currencyData[0].currencyIsoCode
-																: 'USD'
-														}
-													/>
-												</td>
-											</tr>
-										);
-									})}
+							
 							</tbody>
 						</Table>
 						<div 
@@ -275,12 +219,12 @@ class SalarySlipTemplate extends Component {
 								}}
 							>
 								<div className="pl-5 pb-2">Gross Salary In Words:<br/>
-									<b> {upperCase(converter.toWords(toInteger(invoiceData.totalAmount)))}
+									<b> {upperCase(converter.toWords(toInteger()))}
 									{/* <b> {parseInt(invoiceData.dueAmount)} */}
 									</b></div>
 								<div className="pl-5 pb-2">Gross Salary  In Words:
 										<br/>
-									<b> {upperCase(converter.toWords(toInteger(invoiceData.totalVatAmount)))}</b>
+									<b> {upperCase(converter.toWords(toInteger()))}</b>
 									{/* <b> {invoiceData.totalVatAmount}</b> */}
 								</div>
 							<div className="pl-5" style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>
@@ -288,7 +232,7 @@ class SalarySlipTemplate extends Component {
 								<h6 className="mb-0 pt-2">
 									<b>Notes:</b>
 								</h6>
-								<h6 className="mb-0">{invoiceData.notes}</h6>
+								<h6 className="mb-0">{}</h6>
 							</div>
 							
 							</div>
@@ -315,25 +259,7 @@ class SalarySlipTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{totalNet ? (
-														<Currency
-															value={totalNet.toFixed(2)}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													) : (
-														<Currency
-															value={0}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													)}
+													
 												</span>
 											</td>
 										</tr>
@@ -351,25 +277,7 @@ class SalarySlipTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{invoiceData.totalAmount ? (
-														<Currency
-															value={invoiceData.totalAmount.toFixed(2)}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													) : (
-														<Currency
-															value={0}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													)}
+													
 												</span>
 											</td>
 										</tr>
@@ -387,25 +295,7 @@ class SalarySlipTemplate extends Component {
 												>
 													<span style={{ marginLeft: '2rem' }}></span>
 													<span>
-														{invoiceData.dueAmount ? (
-															<Currency
-																value={invoiceData.dueAmount.toFixed(2)}
-																currencySymbol={
-																	currencyData[0]
-																		? currencyData[0].currencyIsoCode
-																		: 'USD'
-																}
-															/>
-														) : (
-															<Currency
-																value={0}
-																currencySymbol={
-																	currencyData[0]
-																		? currencyData[0].currencyIsoCode
-																		: 'USD'
-																}
-															/>
-														)}
+														
 													</span>
 												</b>
 											</td>

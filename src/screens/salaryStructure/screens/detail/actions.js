@@ -2,11 +2,12 @@ import {
   authApi
 } from 'utils'
 
-export const getEmployeeDetail = (_id) => {
+
+export const getSalaryStructureById = (_id) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `/rest/employee/getById?id=${_id}`
+      url: `/rest/payroll/getSalaryStructureById?id=${_id}`
     }
 
     return authApi(data).then((res) => {
@@ -17,11 +18,11 @@ export const getEmployeeDetail = (_id) => {
   }
 }
 
-export const updateEmployee = (obj) => {
+export const updateSalaryStructure = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'post',
-      url: '/rest/employee/update',
+      url: '/rest/payroll/updateSalaryStructure',
       data: obj
     }
     return authApi(data).then((res) => {

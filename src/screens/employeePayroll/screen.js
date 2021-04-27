@@ -66,7 +66,7 @@ class EmployeePayroll extends React.Component {
 
     this.options = {
       // onRowClick: this.goToDetail,
-      paginationPosition: 'top',
+      paginationPosition: 'bottom',
       page: 1,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
@@ -142,7 +142,7 @@ class EmployeePayroll extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-					{row.status !== 'Sent' && row.status !== "Closed" && (
+					
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
@@ -151,10 +151,9 @@ class EmployeePayroll extends React.Component {
 									)
 								}
 							>
-								
 								<i className="fas fa-edit" /> Edit
 							</DropdownItem>
-								)}
+					
 				
 						<DropdownItem
 							onClick={() =>

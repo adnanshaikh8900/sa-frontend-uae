@@ -33,6 +33,7 @@ import { CSVLink } from "react-csv";
 
 
 import './style.scss'
+import moment from 'moment';
 
 const mapStateToProps = (state) => {
   return ({
@@ -235,6 +236,9 @@ class EmployeePayroll extends React.Component {
       this.props.commonActions.tostifyAlert('info', 'Please select the rows of the table and try again.')
     }
   }
+  renderDOB = (cell, rows) => {
+		return moment(rows.dob).format('DD/MM/YYYY');
+	};
 
   removeBulk = () => {
     this.removeDialog()
@@ -444,7 +448,7 @@ class EmployeePayroll extends React.Component {
                           className="table-header-bg"
                             dataField="dob"
                             dataSort
-                          // dataFormat={this.vatCategoryFormatter}
+                          dataFormat={this.renderDOB}
                           >
                            Date Of Birth
                           </TableHeaderColumn>

@@ -71,7 +71,6 @@ class SalaryStructure extends React.Component {
     }
 
     this.selectRowProp = {
-      mode: 'checkbox',
       bgColor: 'rgba(0,0,0, 0.05)',
       clickToSelect: false,
       onSelect: this.onRowSelect,

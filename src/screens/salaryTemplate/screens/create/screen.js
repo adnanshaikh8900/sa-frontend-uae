@@ -129,7 +129,7 @@ class CreateSalaryTemplate extends React.Component {
           })
           resetForm(this.state.initValue)
         } else {
-          this.props.history.push('/admin/payroll/employee')
+          this.props.history.push('/admin/payroll/salaryTemplate')
         }
       }
     }).catch((err) => {

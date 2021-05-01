@@ -65,12 +65,12 @@ class Header extends Component {
 		this.props.history.push('/login');
 	}
 
-	handleLanguageChange(e) {
+	// handleLanguageChange(e) {
 	
-		let lang = e.target.value;
+	// 	let lang = e.target.value;
 		
-		window['localStorage'].setItem('language', lang);
-	}
+	// 	window['localStorage'].setItem('language', lang);
+	// }
 
 	render() {
 		// const translation = useTranslation();
@@ -107,10 +107,15 @@ class Header extends Component {
 						<option value="it">Fr- French</option>
 					</select> */}
 					<div>
-						Change Language:   <select onChange={this.handleLanguageChange}>
-							<option value="en">En- English</option>
-							<option value="it">fr-french</option>
-							<option value="ar">ar-Arabic</option>
+						<select 
+						style={{color:'#216cd4',width:'100px',border:'outset'}} 
+						onChangeCapture={(e)=>{
+							let lang = e.target.value;
+							localStorage.setItem('language', lang);
+						}}>
+							<option value="en">English</option>
+							<option value="it">French</option>
+							<option value="ar">Arabic</option>
 						</select>
 					</div>
 				</div>

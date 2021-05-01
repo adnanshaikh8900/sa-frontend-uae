@@ -27,11 +27,10 @@ import * as EmployeeActions from './actions'
 import {
   CommonActions
 } from 'services/global'
-import { CSVLink } from "react-csv";
-
 
 import './style.scss'
-
+import LocalizedStrings from 'react-localization';
+import { data } from '../Language/languageData.js';
 const mapStateToProps = (state) => {
   return ({
     salaryRole_list: state.salaryRoles.salaryRole_list,
@@ -44,12 +43,39 @@ const mapDispatchToProps = (dispatch) => {
     commonActions: bindActionCreators(CommonActions, dispatch)
   })
 }
+let strings = new LocalizedStrings(data);
+
+// let strings = new LocalizedStrings({
+//   en:{
+
+//     SalaryRole_Lang : "Salary Role",
+//     SALARYROLEID_Lang:"SALARY ROLE ID",
+//     SALARYROLENAME_Lang:"SALARY ROLE NAME",
+//     NewSalaryRoles_Lang:"New Salary Roles"
+//   },
+//   ar: {
+    
+
+//     SalaryRole_Lang : "دور الراتب",
+//     SALARYROLEID_Lang:"معرّف دور الراتب",
+//     SALARYROLENAME_Lang:"اسم دور الراتب",
+//     NewSalaryRoles_Lang:"أدوار الراتب الجديدة"
+ 
+//   },
+//   it: {
+//     SalaryRole_Lang : "Salaire Rôle",
+//     SALARYROLEID_Lang:"ID DE RÔLE SALAIRE",
+//     SALARYROLENAME_Lang:"NOM DU RÔLE SALAIRE",
+//     NewSalaryRoles_Lang:"Nouveaux rôles salariaux"
+//   }
+//  });
 
 class SalaryRoles extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
+      language: window['localStorage'].getItem('language'),
       actionButtons: {},
       loading: true,
       selectedRows: [],
@@ -59,9 +85,10 @@ class SalaryRoles extends React.Component {
         salaryRoleName: ''
       },
       csvData: [],
-      view: false
+      view: false,
+  
     }
-
+    // this.handleLanguageChange = this.handleLanguageChange.bind(this);
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top',
@@ -74,6 +101,7 @@ class SalaryRoles extends React.Component {
       onSortChange: this.sortColumn
     }
 
+
     // this.selectRowProp = {
     //   bgColor: 'rgba(0,0,0, 0.05)',
     //   clickToSelect: false,
@@ -82,8 +110,15 @@ class SalaryRoles extends React.Component {
     // }
     this.csvLink = React.createRef()
   }
-
+  // handleLanguageChange(e) {
+  //   e.preventDefault();
+  //   let lang = e.target.value;
+  //   this.setState(prevState => ({
+  //     language: lang
+  //   }))
+  // }
   componentDidMount = () => {
+    window['localStorage'].getItem('accessToken')
     this.initializeData()
   }
 
@@ -289,23 +324,32 @@ class SalaryRoles extends React.Component {
 		);
 	};
   render() {
-
+strings.setLanguage(this.state.language);
     const { loading, dialog, selectedRows, csvData, view, filterData } = this.state
     const { salaryRole_list,salaryStructure_list } = this.props
-console.log("salaryRole_list",salaryRole_list)
-
+console.log("strings",strings)
     return (
       <div className="employee-screen">
         <div className="animated fadeIn">
           {dialog}
           {/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
           <Card>
+
+          {/* <div>
+        Change Language:   <select onChange={this.handleLanguageChange}>
+          <option value="en">En- English</option>
+          <option value="it">fr-french</option>
+          <option value="ar">ar-Arabic</option>
+        </select>
+      </div> */}
+          </Card>
+          <Card>
             <CardHeader>
               <Row>
                 <Col lg={12}>
                   <div className="h4 mb-0 d-flex align-items-center">
                     <i className="fas fa-object-group" />
-                    <span className="ml-2">Salary Role</span>
+                    <span className="ml-2"> {strings.SalaryRole_Lang}</span>
                   </div>
                 </Col>
               </Row>
@@ -344,7 +388,7 @@ console.log("salaryRole_list",salaryRole_list)
                             onClick={() => this.props.history.push(`/admin/payroll/salaryRoles/create`)}
                           >
                             <i className="fas fa-plus mr-1" />
-                            New Salary Roles
+                            {strings.NewSalaryRoles_Lang}
                           </Button>
                           {/* <Button
                             color="warning"
@@ -379,13 +423,13 @@ console.log("salaryRole_list",salaryRole_list)
                             dataField="salaryRoleId"
                             className="table-header-bg" 
                           >
-                            Salary Role Id
+                         {strings.SALARYROLEID_Lang}
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="salaryRoleName"
                             className="table-header-bg"
                           >
-                           Salary Role Name
+                       {strings.SALARYROLENAME_Lang}
                           </TableHeaderColumn>
                         
                         </BootstrapTable>

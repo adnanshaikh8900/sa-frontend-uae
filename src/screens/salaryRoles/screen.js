@@ -30,7 +30,11 @@ import {
 
 import './style.scss'
 import LocalizedStrings from 'react-localization';
-import { data } from '../Language/languageData.js';
+//import { data } from '../Language/languageData.js';
+ import {data}  from '../Language/index'
+import {englishData} from '../Language/english'
+import {frenchData} from '../Language/french'
+import {arabicData} from '../Language/arabic'
 const mapStateToProps = (state) => {
   return ({
     salaryRole_list: state.salaryRoles.salaryRole_list,
@@ -43,8 +47,8 @@ const mapDispatchToProps = (dispatch) => {
     commonActions: bindActionCreators(CommonActions, dispatch)
   })
 }
+//let strings = new LocalizedStrings(englishData||frenchData||arabicData);
 let strings = new LocalizedStrings(data);
-
 // let strings = new LocalizedStrings({
 //   en:{
 

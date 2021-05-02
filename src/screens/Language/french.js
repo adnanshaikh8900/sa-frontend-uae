@@ -18,5 +18,18 @@ const fr = {
       Create :"Créer",
       Cancel: "Annuler",
       AddOpeningBalance : "Ajouter un solde d'ouverture",
+
+
+      //Dashoard
+      SupplierCustomerPaidInvoices:"Factures payées par les fournisseurs et les clients",
+      Banking: "activité bancaire",
+      Lastupdatedon: "Dernière mise à jour sur",
+      BALANCE: "Ballance",
+      ALLBANKACCOUNTS: "TOUS LES COMPTES BANCAIRES",
+      Cashflow: "Flux de trésorerie",
+      INFLOW: "afflux",
+      OUTFLOW: "sortie",
+      NET: "filet",
+      ProfitLoss: "Bénéfice et perte",
   }
   export {fr};

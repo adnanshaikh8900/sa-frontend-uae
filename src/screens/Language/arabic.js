@@ -19,5 +19,17 @@ const ar = {
       Cancel: "يلغي",
       AddOpeningBalance : "إضافة رصيد افتتاحي",
 
+       //Dashboard
+       SupplierCustomerPaidInvoices: "فواتير المورد والعميل المدفوعة",
+       Banking: "المصرفيه",
+       Lastupdatedon: "آخر تحديث على",
+       BALANCE: "توازن",
+       ALLBANKACCOUNTS: "جميع الحسابات المصرفية",
+       Cashflow: "التدفق النقدي",
+       INFLOW: " في تدف",
+       OUTFLOW: "تدفق خارج",
+       NET: "صافي",
+       ProfitLoss: "الربح والخسارة",
+
   }
   export {ar};

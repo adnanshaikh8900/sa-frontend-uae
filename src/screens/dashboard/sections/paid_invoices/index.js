@@ -6,13 +6,18 @@ import {
 	Card,
 	CardBody,
 } from 'reactstrap';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 import './style.scss';
+
+let strings = new LocalizedStrings(data);
 
 class PaidInvoices extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			invoice_graph_data: {},
 		};
 		this.bankAccountSelect = React.createRef();
@@ -89,6 +94,7 @@ class PaidInvoices extends Component {
 	}
 	
 	render() {
+		strings.setLanguage(this.state.language);
 		const data4MultipleOptions = {
 			layout: {
 				padding: {
@@ -140,7 +146,7 @@ class PaidInvoices extends Component {
 					<CardBody className="card-body-padding">
 					<div className="flex-wrapper title-bottom-border">
 						<h1 className="mb-2 card-h1">
-								Supplier & Customer Paid Invoices 
+						{strings.SupplierCustomerPaidInvoices} 
 						</h1>
 					</div>
 							<div className="d-block p-4">

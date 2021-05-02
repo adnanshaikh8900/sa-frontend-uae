@@ -29,6 +29,8 @@ import * as CreateOpeningBalancesActions from './actions';
 import { selectOptionsFactory } from 'utils';
 
 import { Formik } from 'formik';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 
 const mapStateToProps = (state) => {
@@ -46,11 +48,13 @@ const mapDispatchToProps = (dispatch) => {
 		authActions: bindActionCreators(AuthActions, dispatch),
 	}
 };
+let strings = new LocalizedStrings(data);
 
 class CreateOpeningBalance extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			initValue: {
 				effectiveDate : new Date(),
 				openingBalance : '',
@@ -119,6 +123,7 @@ class CreateOpeningBalance extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { loading, initValue} = this.state;
 		
 		const{transaction_category_list} =this.props;
@@ -141,7 +146,7 @@ class CreateOpeningBalance extends React.Component {
 								<CardHeader>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="nav-icon icon-briefcase mr-1" />
-										<span>New Opening Balance</span>
+										<span>{strings.NewOpeningBalance}</span>
 									</div>
 								</CardHeader>
 								<CardBody>
@@ -186,7 +191,7 @@ class CreateOpeningBalance extends React.Component {
 																<FormGroup className="mb-3">
 																<Label htmlFor="transactionCategoryBalanceId">
 																<span className="text-danger">*</span>
-																	Transaction Category
+																{strings.TransactionCategory}
 																</Label>
 																		<Select
 																		styles={customStyles}
@@ -229,7 +234,7 @@ class CreateOpeningBalance extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="effectiveDate">
 																		<span className="text-danger">*</span>
-																		Opening Date
+																		{strings.OpeningDate}
 																	</Label>
 																	<DatePicker
 																		id="date"
@@ -266,7 +271,7 @@ class CreateOpeningBalance extends React.Component {
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="openingBalance">
-																		<span className="text-danger">*</span>Amount
+																		<span className="text-danger">*</span>{strings.Amount}
 																	</Label>
 																	<Input
 																		type="number"
@@ -312,7 +317,7 @@ class CreateOpeningBalance extends React.Component {
 																	color="primary"
 																	className="btn-square mr-3"
 																>
-																	<i className="fa fa-dot-circle-o"></i> Create
+																	<i className="fa fa-dot-circle-o"></i> {strings.Create}
 																</Button>
 
 																<Button
@@ -325,7 +330,7 @@ class CreateOpeningBalance extends React.Component {
 																		);
 																	}}
 																>
-																	<i className="fa fa-ban"></i> Cancel
+																	<i className="fa fa-ban"></i>  {strings.Cancel}
 																</Button>
 																</FormGroup>
 																</Row></form>

@@ -4,6 +4,8 @@ import { Bar } from 'react-chartjs-2';
 import { Card, CardBody } from 'reactstrap';
 import { Currency } from 'components';
 import './style.scss';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const cashBarOption = {
 	tooltips: {
@@ -30,6 +32,8 @@ const cashBarOption = {
 	maintainAspectRatio: false,
 };
 
+
+let strings = new LocalizedStrings(data);
 const incomeIcon = require('assets/images/dashboard/Inflow.png');
 const outcomeIcon = require('assets/images/dashboard/Outflow.png');
 const totalIcon = require('assets/images/dashboard/Net.png');
@@ -38,6 +42,7 @@ class CashFlow extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			activeTab: new Array(4).fill('1'),
 		};
 	}
@@ -60,6 +65,7 @@ class CashFlow extends Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const cashFlowBar = {
 			labels: this.props.cash_flow_graph.labels || [],
 			datasets: [
@@ -83,7 +89,7 @@ class CashFlow extends Component {
 				<Card className="cash-card">
 					<CardBody className="tab-card">
 						<div className="flex-wrapper title-bottom-border" >
-							<h1 className="mb -2 card-h1">Cashflow</h1>
+							<h1 className="mb -2 card-h1">{strings.Cashflow}</h1>
 							
 							<div className=" mb-1 card-header-actions card-select-alignment">
 								<select
@@ -116,7 +122,7 @@ class CashFlow extends Component {
 												/>
 											)}
 									</h5>
-									<p>INFLOW</p>
+									<p>{strings.INFLOW}</p>
 								</div>
 							</div> 
 							<div className="data-item ml-4">
@@ -137,7 +143,7 @@ class CashFlow extends Component {
 												/>
 											)}
 									</h5>
-									<p>OUTFLOW</p>
+									<p>{strings.OUTFLOW}</p>
 								</div>
 							</div>
 						
@@ -162,7 +168,7 @@ class CashFlow extends Component {
 												/>
 											)}
 									</h5>
-									<p>NET</p>
+									<p>{strings.NET}</p>
 								</div>
 							</div>
 						<div className="chart-wrapper">

@@ -108,10 +108,12 @@ class Header extends Component {
 					</select> */}
 					<div>
 						<select 
+						defaultValue={window['localStorage'].getItem('language')}
 						style={{color:'#216cd4',width:'100px',border:'outset'}} 
 						onChangeCapture={(e)=>{
 							let lang = e.target.value;
 							localStorage.setItem('language', lang);
+							window.location.reload(false);
 						}}>
 							<option value="en">English</option>
 							<option value="it">French</option>

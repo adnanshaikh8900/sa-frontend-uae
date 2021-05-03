@@ -2,7 +2,7 @@
 
 new_release=$1
 echo "Executing $0 to upgrade helm releases with version $new_release"
-helm list -n simpleaccounts-app | grep 'frontend' > rc.txt
+helm list -n simpleaccounts-app | grep '\-frontend ' > rc.txt
 
 i=0
 while read line

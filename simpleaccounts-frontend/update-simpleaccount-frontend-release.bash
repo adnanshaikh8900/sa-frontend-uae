@@ -7,17 +7,14 @@ helm list --all-namespaces | grep 'frontend' > rc.txt
 i=0
 while read line
 do
-  if [ $i != 0 ]
-  then
-    rc=($line)
+	rc=($line)
 
-		domain="$(sed 's/\(-frontend$\)//' <<< "$rc")"
-    echo "Upgrading Helm Release $domain with version $new_release"
+	domain="$(sed 's/\(-frontend$\)//' <<< "$rc")"
+	echo "Upgrading Helm Release $domain with version $new_release"
 
-		./simpleaccounts-frontend/simpleaccounts-frontend.sh upgrade $domain $new_release
-		echo "Helm Release $domain upgraded"
+	./simpleaccounts-frontend/simpleaccounts-frontend.sh upgrade $domain $new_release
+	echo "Helm Release $domain upgraded"
 
-  fi
   i=$((i+1))
 done < rc.txt
 

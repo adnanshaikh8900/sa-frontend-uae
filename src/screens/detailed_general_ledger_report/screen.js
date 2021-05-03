@@ -425,25 +425,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 									marginBottom: '1rem'}}>
 									<div className="logo-container" style={{	
 									width:'150px',}}>
-											<img src={logo} alt="logo" style={{width:'150%'}}/>
-									</div>
-									<div style={{justifyContent:'center'}} >
-								
-										<h2>
-										{company_profile &&
-											company_profile['companyName']
-												? company_profile['companyName']
-												: ''}
-											</h2>	
-											<div >
-												<b style ={{ fontSize: '18px'}}>Detailed General Ledger</b>
-												<br/>
-												
-												From {initValue.startDate} To {initValue.endDate}
-											</div>	
-									</div>
-									<div className='mr-3'>
-									<img
+												<img
 										src={ 
 											company_profile &&
 											company_profile.companyLogoByteArray
@@ -454,6 +436,24 @@ class DetailedGeneralLedgerReport extends React.Component {
 										className=""
 										alt=""
 										style={{ width: ' 150px' }}></img>
+									</div>
+									<div style={{justifyContent:'center'}} >
+								
+										<h2>
+										{company_profile &&
+											company_profile['companyName']
+												? company_profile['companyName']
+												: ''}
+											</h2>	
+											<div className="ml-4" >
+												<b style ={{ fontSize: '18px'}}>Detailed General Ledger</b>
+												<br/>
+												
+												From {initValue.startDate} To {initValue.endDate}
+											</div>	
+									</div>
+									<div className='mr-3'>
+								
 								
 									
 									</div>									

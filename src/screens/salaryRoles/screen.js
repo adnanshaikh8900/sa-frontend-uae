@@ -2,16 +2,19 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {
-  Card,
-  CardHeader,
-  CardBody,
-  Button,
-  Row,
-  Col,
-  ButtonGroup,
-  Input,
-} from 'reactstrap'
-
+	Card,
+	CardHeader,
+	CardBody,
+	Button,
+	Row,
+	Col,
+	ButtonGroup,
+	Input,
+	ButtonDropdown,
+	DropdownToggle,
+	DropdownMenu,
+	DropdownItem,
+} from 'reactstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 
 import { Loader, ConfirmDeleteModal } from 'components'
@@ -24,14 +27,18 @@ import * as EmployeeActions from './actions'
 import {
   CommonActions
 } from 'services/global'
-import { CSVLink } from "react-csv";
-
 
 import './style.scss'
-
+import LocalizedStrings from 'react-localization';
+//import { data } from '../Language/languageData.js';
+ import {data}  from '../Language/index'
+import {englishData} from '../Language/english'
+import {frenchData} from '../Language/french'
+import {arabicData} from '../Language/arabic'
 const mapStateToProps = (state) => {
   return ({
     salaryRole_list: state.salaryRoles.salaryRole_list,
+    salaryStructure_list: state.salaryStructure.salaryStructure_list,
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -40,23 +47,52 @@ const mapDispatchToProps = (dispatch) => {
     commonActions: bindActionCreators(CommonActions, dispatch)
   })
 }
+//let strings = new LocalizedStrings(englishData||frenchData||arabicData);
+let strings = new LocalizedStrings(data);
+// let strings = new LocalizedStrings({
+//   en:{
+
+//     SalaryRole_Lang : "Salary Role",
+//     SALARYROLEID_Lang:"SALARY ROLE ID",
+//     SALARYROLENAME_Lang:"SALARY ROLE NAME",
+//     NewSalaryRoles_Lang:"New Salary Roles"
+//   },
+//   ar: {
+    
+
+//     SalaryRole_Lang : "دور الراتب",
+//     SALARYROLEID_Lang:"معرّف دور الراتب",
+//     SALARYROLENAME_Lang:"اسم دور الراتب",
+//     NewSalaryRoles_Lang:"أدوار الراتب الجديدة"
+ 
+//   },
+//   it: {
+//     SalaryRole_Lang : "Salaire Rôle",
+//     SALARYROLEID_Lang:"ID DE RÔLE SALAIRE",
+//     SALARYROLENAME_Lang:"NOM DU RÔLE SALAIRE",
+//     NewSalaryRoles_Lang:"Nouveaux rôles salariaux"
+//   }
+//  });
 
 class SalaryRoles extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
+      language: window['localStorage'].getItem('language'),
+      actionButtons: {},
       loading: true,
       selectedRows: [],
       dialog: null,
       filterData: {
-        id: '',
+        salaryRoleId: '',
         salaryRoleName: ''
       },
       csvData: [],
-      view: false
+      view: false,
+  
     }
-
+    // this.handleLanguageChange = this.handleLanguageChange.bind(this);
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top',
@@ -69,17 +105,24 @@ class SalaryRoles extends React.Component {
       onSortChange: this.sortColumn
     }
 
-    this.selectRowProp = {
-      mode: 'checkbox',
-      bgColor: 'rgba(0,0,0, 0.05)',
-      clickToSelect: false,
-      onSelect: this.onRowSelect,
-      onSelectAll: this.onSelectAll
-    }
+
+    // this.selectRowProp = {
+    //   bgColor: 'rgba(0,0,0, 0.05)',
+    //   clickToSelect: false,
+    //   onSelect: this.onRowSelect,
+    //   onSelectAll: this.onSelectAll
+    // }
     this.csvLink = React.createRef()
   }
-
+  // handleLanguageChange(e) {
+  //   e.preventDefault();
+  //   let lang = e.target.value;
+  //   this.setState(prevState => ({
+  //     language: lang
+  //   }))
+  // }
   componentDidMount = () => {
+    window['localStorage'].getItem('accessToken')
     this.initializeData()
   }
 
@@ -111,7 +154,7 @@ class SalaryRoles extends React.Component {
   }
 
   goToDetail = (row) => {
-    this.props.history.push('/admin/master/employee/detail', { id: row.id })
+    this.props.history.push('/admin/payroll/salaryRoles/detail', { id: row.salaryRoleId })
   }
 
   sortColumn = (sortName, sortOrder) => {
@@ -120,35 +163,6 @@ class SalaryRoles extends React.Component {
     this.initializeData()
   }
 
-  onRowSelect = (row, isSelected, e) => {
-    let tempList = []
-    if (isSelected) {
-      tempList = Object.assign([], this.state.selectedRows)
-      tempList.push(row.id);
-    } else {
-      this.state.selectedRows.map((item) => {
-        if (item !== row.id) {
-          tempList.push(item)
-        }
-        return item
-      });
-    }
-    this.setState({
-      selectedRows: tempList
-    })
-  }
-  onSelectAll = (isSelected, rows) => {
-    let tempList = []
-    if (isSelected) {
-      rows.map((item) => {
-        tempList.push(item.id)
-        return item
-      })
-    }
-    this.setState({
-      selectedRows: tempList
-    })
-  }
 
   bulkDelete = () => {
     const {
@@ -256,25 +270,90 @@ class SalaryRoles extends React.Component {
       },
     },() => { this.initializeData() })
   }
+  toggleActionButton = (index) => {
+		let temp = Object.assign({}, this.state.actionButtons);
+		if (temp[parseInt(index, 10)]) {
+			temp[parseInt(index, 10)] = false;
+		} else {
+			temp[parseInt(index, 10)] = true;
+		}
+		this.setState({
+			actionButtons: temp,
+		});
+	};
+	renderActions = (cell, row) => {
+		return (
+  
+			<div>
+				<ButtonDropdown
+					isOpen={this.state.actionButtons[row.id]}
+					toggle={() => this.toggleActionButton(row.id)}
+				>
+					<DropdownToggle size="sm" color="primary" className="btn-brand icon">
+						{this.state.actionButtons[row.id] === true ? (
+							<i className="fas fa-chevron-up" />
+						) : (
+							<i className="fas fa-chevron-down" />
+						)}
+					</DropdownToggle>
+					<DropdownMenu right>
 
+							<DropdownItem
+								onClick={() =>
+									this.props.history.push(
+										'/admin/payroll/employee/detail',
+										{ salaryRoleId: row.id },
+									)
+								}
+							>
+								
+								<i className="fas fa-edit" /> Edit
+							</DropdownItem>
+							
+				
+						{/* <DropdownItem
+							onClick={() =>
+								this.props.history.push(
+									'/admin/payroll/employee/salarySlip',
+									{ id: row.id },
+								)
+							}
+						>
+							<i className="fas fa-eye" /> Salary Slip
+						</DropdownItem> */}
+					
+					</DropdownMenu>
+				</ButtonDropdown>
+			</div>
+		);
+	};
   render() {
-
+strings.setLanguage(this.state.language);
     const { loading, dialog, selectedRows, csvData, view, filterData } = this.state
-    const { salaryRole_list } = this.props
-console.log("salaryRole_list",salaryRole_list)
-
+    const { salaryRole_list,salaryStructure_list } = this.props
+console.log("strings",strings)
     return (
       <div className="employee-screen">
         <div className="animated fadeIn">
           {dialog}
           {/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
           <Card>
+
+          {/* <div>
+        Change Language:   <select onChange={this.handleLanguageChange}>
+          <option value="en">En- English</option>
+          <option value="it">fr-french</option>
+          <option value="ar">ar-Arabic</option>
+        </select>
+      </div> */}
+          </Card>
+          <Card>
             <CardHeader>
               <Row>
                 <Col lg={12}>
                   <div className="h4 mb-0 d-flex align-items-center">
                     <i className="fas fa-object-group" />
-                    <span className="ml-2">Salary Roles</span>
+                    <span className="ml-2"> {strings.SalaryRole_Lang}</span>
                   </div>
                 </Col>
               </Row>
@@ -289,6 +368,7 @@ console.log("salaryRole_list",salaryRole_list)
                   </Row>
                   :
                   <Row>
+                  
                     <Col lg={12}>
                       <div className="d-flex justify-content-end">
                         <ButtonGroup size="sm">
@@ -312,7 +392,7 @@ console.log("salaryRole_list",salaryRole_list)
                             onClick={() => this.props.history.push(`/admin/payroll/salaryRoles/create`)}
                           >
                             <i className="fas fa-plus mr-1" />
-                            New Salary Roles
+                            {strings.NewSalaryRoles_Lang}
                           </Button>
                           {/* <Button
                             color="warning"
@@ -334,32 +414,35 @@ console.log("salaryRole_list",salaryRole_list)
                           data={salaryRole_list && salaryRole_list.data ? salaryRole_list.data : []}
                           version="4"
                           hover
-                          pagination={salaryRole_list && salaryRole_list.data && salaryRole_list.data.length > 0 ? true : false}
+                          // pagination={salaryRole_list && salaryRole_list.data && salaryRole_list.data.length > 0 ? true : false}
                            keyField="id"
                           remote
                           fetchInfo={{ dataTotalSize: salaryRole_list.count ? salaryRole_list.count : 0 }}
-                          className="employee-table"
+                        //  className="employee-table"
                           trClassName="cursor-pointer"
                           csvFileName="salaryRole_list.csv"
                           ref={(node) => this.table = node}
                         >
                           <TableHeaderColumn
                             dataField="salaryRoleId"
-                        
+                            className="table-header-bg" 
                           >
-                            Salary Role Id
+                         {strings.SALARYROLEID_Lang}
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="salaryRoleName"
-                    
+                            className="table-header-bg"
                           >
-                           Salary Role Name
+                       {strings.SALARYROLENAME_Lang}
                           </TableHeaderColumn>
                         
                         </BootstrapTable>
                       </div>
                     </Col>
+                
                   </Row>
+                
+                  
               }
             </CardBody>
           </Card>

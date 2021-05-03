@@ -2,11 +2,12 @@ import {
   authApi
 } from 'utils'
 
-export const createEmployee = (obj) => {
+export const generateSalary = (obj) => {
+  debugger
   return (dispatch) => {
     let data = {
       method: 'post',
-      url: '/rest/employee/save',
+      url: `/rest/Salary/generateSalary`,
       data: obj
     }
     return authApi(data).then((res) => {

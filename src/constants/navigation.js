@@ -27,7 +27,7 @@ export default {
 				{
 					name: 'Quotation',
 					url: '/admin/income/quotation',
-					icon: 'fa fa-file-o',
+					icon: 'fas fa-box-open',
 					path: 'ViewQuotation',
 				},
 			],
@@ -56,21 +56,21 @@ export default {
 					path: 'ViewSupplierReceipt',
 				},
 				{
-					name: 'Request For Quotation',
+					name: 'RFQ',
 					url: '/admin/expense/request-for-quotation',
-					icon: 'fas fa-file-invoice',
+					icon: 'fas fa-shopping-basket',
 					path: 'ViewRequestForQuotation',
 				},
 				{
 					name: 'Purchase Order',
 					url: '/admin/expense/purchase-order',
-					icon: 'fas fa-file-invoice',
+					icon: 'fas fa-cash-register',
 					path: 'ViewPurchaseOrder',
 				},
 				{
-					name: 'Goods Received Note',
+					name: 'GRN',
 					url: '/admin/expense/goods-received-note',
-					icon: 'fas fa-file-invoice',
+					icon: 'fas fa-archive',
 					path: 'ViewGoodsReceiveNotes',
 				},
 				
@@ -213,7 +213,7 @@ export default {
 					path: 'ViewProductCategory',
 				},
 				{
-					name: 'Currency Conversion',
+					name: 'Currency Rate',
 					url: '/admin/master/currencyConvert',
 					icon: 'fas fa-id-card-alt',
 					path: 'ViewCurrencyConversion',
@@ -241,48 +241,36 @@ export default {
 		{
 			name: 'Payroll',
 			url: '/admin/payroll',
-			icon: 'icon-user',
+			icon: 'fas fa-users-cog',
 			children: [
 				{
 					name: 'Employee',
 					url: '/admin/payroll/employee',
-					icon: 'fas fa-balance-scale',
+					icon: 'fas fa-user-plus',
 					path: 'ViewEmployee',
-				},
-				{
-					name: 'Employment',
-					url: '/admin/payroll/employment',
-					icon: 'fas fa-balance-scale',
-					path: 'ViewEmployment',
-				},
-				{
-					name: 'Financial Details',
-					url: '/admin/payroll/financial',
-					icon: 'fas fa-balance-scale',
-					path: 'ViewEmployeeFinancialDetails',
 				},
 				{
 					name: 'Salary Roles',
 					url: '/admin/payroll/salaryRoles',
-					icon: 'fas fa-balance-scale',
+					icon: 'fas fa-user-tie',
 					path: 'ViewSalaryRole',
 				},
 				{
 					name: 'Salary Templates',
 					url: '/admin/payroll/salaryTemplate',
-					icon: 'fas fa-balance-scale',
+					icon: 'fas fa-chalkboard-teacher',
 					path: 'ViewSalaryTemplate',
 				},
 				{
 					name: 'Salary Structure',
 					url: '/admin/payroll/salaryStructure',
-					icon: 'fas fa-balance-scale',
+					icon: 'fas fa-hospital-user',
 					path: 'ViewSalaryStructure',
 				},
 				{
 					name: 'Employee Designation',
 					url: '/admin/payroll/employeeDesignation',
-					icon: 'fas fa-balance-scale',
+					icon: 'fas fa-id-card-alt',
 					path: 'ViewEmployeeDesignation',
 				},
 

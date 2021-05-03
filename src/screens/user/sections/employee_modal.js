@@ -120,9 +120,9 @@ class EmployeeModal extends React.Component {
 			.createEmployee(formData)
 			.then((res) => {
 				//  let resConfig = JSON.parse(res.config.data);
-				debugger
+				
 				if (res.status === 200) {
-					debugger
+				
 					resetForm();
 				
 					this.props.closeEmployeeModal(true);

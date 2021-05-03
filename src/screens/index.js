@@ -89,6 +89,8 @@ import PurchaseByitem from './financial_report/sections/purchase_by_item';
 import PurchaseByVendor from './financial_report/sections/purchase_by_vendor';
 import ReceivableInvoiceDetailsReport from './financial_report/sections/receivable_invoice_details';
 import ReceivableInvoiceSummary from './financial_report/sections/receivable_invoice_summary';
+import PayablesInvoiceDetailsReport from './financial_report/sections/payables_invoice_details';
+import PayablesInvoiceSummary from './financial_report/sections/payables_invoice_summary';
 
 import ChartAccount from './chart_account';
 import CreateChartAccount from './chart_account/screens/create';
@@ -149,6 +151,7 @@ import EmployeeFinancial from './employee_Bank_Details'
 import CreateEmployeeFinancial from './employee_Bank_Details/screens/create'
 import SalaryRoles from './salaryRoles'
 import CreateSalaryRoles from './salaryRoles/screens/create'
+import DetailSalaryRole from './salaryRoles/screens/detail'
 import SalaryTemplate from './salaryTemplate'
 import CreateSalaryTemplate from './salaryTemplate/screens/create'
 import CreateSalaryStucture from './salaryStructure/screens/create'
@@ -157,6 +160,9 @@ import ViewPayroll from './employeePayroll/screens/viewPayroll'
 import SalarySlip from './employeePayroll/screens/salarySlip'
 import Designation from './designation'
 import CreateDesignation from './designation/screens/create'
+import DetailSalaryStructure from './salaryStructure/screens/detail'
+import DetailSalaryTemplate from './salaryTemplate/screens/detail'
+import DetailDesignation from './designation/screens/detail'
 export {
 	LogIn,
 	LogInTwo,
@@ -296,4 +302,10 @@ export {
 	ReceivableInvoiceSummary,
 	Designation,
 	CreateDesignation,
+	PayablesInvoiceDetailsReport,
+	PayablesInvoiceSummary,
+	DetailSalaryRole,
+	DetailSalaryStructure,
+	DetailSalaryTemplate,
+	DetailDesignation
 };

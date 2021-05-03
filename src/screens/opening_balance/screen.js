@@ -20,6 +20,9 @@ import './style.scss';
 import moment from 'moment';
 import Select from 'react-select';
 import { selectOptionsFactory } from 'utils';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
+
 
 const mapStateToProps = (state) => {
 	return {
@@ -35,6 +38,7 @@ const mapDispatchToProps = (dispatch) => {
 		openingBalanceActions: bindActionCreators(OpeningBalanceActions, dispatch),
 	};
 };
+let strings = new LocalizedStrings(data);
 const customStyles = {
 	control: (base, state) => ({
 		...base,
@@ -50,6 +54,7 @@ class OpeningBalance extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			idCount: 0,
 			data: [],
 			create: false,
@@ -458,6 +463,7 @@ class OpeningBalance extends React.Component {
 
 	
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			loading,
 			dialog,
@@ -478,7 +484,7 @@ class OpeningBalance extends React.Component {
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="fab fa-stack-exchange" />
-										<span className="ml-2">Opening Balance</span>
+										<span className="ml-2">{strings.OpeningBalance}</span>
 									</div>
 								</Col>
 							</Row>
@@ -532,7 +538,7 @@ class OpeningBalance extends React.Component {
 										}
 									>
 										<i className="fas fa-plus mr-1" />
-										Add Opening Balance
+										{strings.AddOpeningBalance}
 									</Button>
 									<div>
 									
@@ -564,7 +570,7 @@ class OpeningBalance extends React.Component {
 												width="30%"
 												className="table-header-bg"
 											>
-												Transaction Category Name 
+												{strings.TRANSACTIONCATEGORYNAME}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="effectiveDate"
@@ -572,7 +578,7 @@ class OpeningBalance extends React.Component {
 												className="table-header-bg"
 												width="30%"
 											>
-												Effective Date
+												{strings.EFFECTIVEDATE}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												width="20%"
@@ -581,7 +587,7 @@ class OpeningBalance extends React.Component {
 												formatExtraData={universal_currency_list}
 												className="table-header-bg"
 											>
-												Opening Balance
+												{strings.OPENINGBALANCE}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 											dataField="currency"
@@ -589,7 +595,7 @@ class OpeningBalance extends React.Component {
 											dataFormat={this.renderCurrency}
 											formatExtraData={universal_currency_list}
 											className="table-header-bg"
-										>Currency
+										>{strings.CURRENCY}
 										</TableHeaderColumn>
 										<TableHeaderColumn
 												className="text-right"

@@ -46,6 +46,7 @@ export const logIn = (obj) => {
 				window['localStorage'].setItem('accessToken', res.data.token);
 				// window['sessionStorage'].setItem('userId', res.data.userId);
 
+				window['localStorage'].setItem('language', 'en');
 				return res;
 			})
 			.catch((err) => {

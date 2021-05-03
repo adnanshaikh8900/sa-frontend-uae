@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Line } from 'react-chartjs-2';
-import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import { Currency } from 'components';
 import {
 	Nav,
@@ -13,8 +12,15 @@ import {
 	Row,
 	Col,
 } from 'reactstrap';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
+
+
 
 import './style.scss';
+
+
+let strings = new LocalizedStrings(data);
 
 const backOption = {
 	layout: {
@@ -67,6 +73,7 @@ class BankAccount extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			activeTab: new Array(4).fill('1'),
 			totalBalance: 0,
 		};
@@ -118,6 +125,7 @@ class BankAccount extends Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const line = {
 			labels: this.props.bank_account_graph.labels,
 			datasets: [
@@ -150,7 +158,7 @@ class BankAccount extends Component {
 				<Card className="bank-card card-margin ">
 					<CardBody className="tab-card">
 						<div className="flex-wrapper title-bottom-border">
-						<h1 className="card-h1">Banking</h1>
+						<h1 className="card-h1">{strings.Banking}</h1>
 						
 							<div className="mb-1 card-header-actions card-select-alignment">
 								<select
@@ -192,7 +200,7 @@ class BankAccount extends Component {
 												</Row>
 												<Row className="text-center mt-2" style={{    display: "block"}}>
 												<p style={{ fontWeight: 500, textIndent: 5 ,marginTop:"-4px" }}>
-													Last updated on{' '}
+												{strings.Lastupdatedon}{' '}
 													{this.props.bank_account_graph.updatedDate}
 												</p>
 									
@@ -202,7 +210,7 @@ class BankAccount extends Component {
 										
 									<Col className="data-item" style={{width:"50%",textAlign:'right',borderRight: "1px solid rgb(238 238 238)"}}>
 											<div>
-											<p  style={{marginBottom:"6px"}} className="mr-1 data-item">BALANCE</p>
+											<p  style={{marginBottom:"6px"}} className="mr-1 data-item">{strings.BALANCE}</p>
 												<h5>
 													{universal_currency_list[0] && (
 														<Currency
@@ -224,7 +232,7 @@ class BankAccount extends Component {
 										</Col>
 										<Col className="data-item">
 											<div>
-											<p  style={{marginBottom:"6px"}}>ALL BANK ACCOUNTS</p>
+											<p  style={{marginBottom:"6px"}}>{strings.ALLBANKACCOUNTS}</p>
 												<h5>
 													{universal_currency_list[0] && (
 														<Currency

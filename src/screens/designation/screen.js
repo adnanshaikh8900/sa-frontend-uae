@@ -59,7 +59,7 @@ class Designation extends React.Component {
 
     this.options = {
       onRowClick: this.goToDetail,
-      paginationPosition: 'top',
+      paginationPosition: 'bottom',
       page: 1,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
@@ -70,7 +70,6 @@ class Designation extends React.Component {
     }
 
     this.selectRowProp = {
-      mode: 'checkbox',
       bgColor: 'rgba(0,0,0, 0.05)',
       clickToSelect: false,
       onSelect: this.onRowSelect,
@@ -111,7 +110,7 @@ class Designation extends React.Component {
   }
 
   goToDetail = (row) => {
-    this.props.history.push('/admin/master/employee/detail', { id: row.id })
+    this.props.history.push('/admin/payroll/employeeDesignation/detail', { id: row.id })
   }
 
   sortColumn = (sortName, sortOrder) => {

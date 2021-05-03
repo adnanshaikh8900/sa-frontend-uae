@@ -87,6 +87,7 @@ class SalesByProduct extends React.Component {
 	};
 
 	componentDidMount = () => {
+		this.props.financialReportActions.getCompany() 
 		this.initializeData();
 	};
 

@@ -21,6 +21,8 @@ import { ImageUploader } from 'components';
 
 import * as UserActions from '../../actions';
 import * as UserCreateActions from './actions';
+import * as employeeActions from '../../../employeePayroll/actions';
+import * as SalaryTemplateActions from '../../../salaryTemplate/actions'
 
 import { CommonActions, AuthActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
@@ -37,6 +39,8 @@ const mapStateToProps = (state) => {
 		employee_list: state.user.employee_list,
 		role_list: state.user.role_list,
 		company_type_list: state.user.company_type_list,
+		salary_role_dropdown: state.salarytemplate.salary_role_dropdown,
+		designation_dropdown: state.employeePayroll.designation_dropdown,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -45,6 +49,8 @@ const mapDispatchToProps = (dispatch) => {
 		userCreateActions: bindActionCreators(UserCreateActions, dispatch),
 		userActions: bindActionCreators(UserActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
+		employeeActions: bindActionCreators(employeeActions, dispatch),
+		salaryTemplateActions: bindActionCreators(SalaryTemplateActions,dispatch),
 	};
 };
 const customStyles = {
@@ -77,7 +83,8 @@ class CreateUser extends React.Component {
 				roleId: '',
 				timezone: '',
 				designationId: '',employeeId: '',
-				isDesignationEnabled: false,
+				isAlreadyAvailableEmployee: false,
+				isNewEmployee: false,
 			},
 
 			userPhoto: [],
@@ -94,7 +101,9 @@ class CreateUser extends React.Component {
 	}
 
 	componentDidMount = () => {
-		this.props.userCreateActions.getEmployeeDropdownList();
+		this.props.salaryTemplateActions.getSalaryRolesForDropdown();
+		this.props.employeeActions.getEmployeeDesignationForDropdown();
+		this.props.userActions.getEmployeesNotInUserForDropdown();
 		this.initializeData();
 	};
 
@@ -144,15 +153,17 @@ class CreateUser extends React.Component {
 			companyId,
 			active,
 			timezone,
-			isDesignationEnabled,
+			isAlreadyAvailableEmployee,
+			isNewEmployee,
 			designationId,
+			salaryRoleId,
 			employeeId
 		} = data;
 		let formData = new FormData();
 		formData.append('firstName', firstName ? firstName : '');
 		formData.append('lastName', lastName ? lastName : '');
 		formData.append('email', email ? email : '');
-		//formData.append('dob', dob ? moment(dob).format('DD-MM-YYYY') : '');
+		formData.append('dob', dob ? moment(dob).format('DD-MM-YYYY') : '');
 		// formData.append(
 		// 	'dob',
 		// 	dob
@@ -162,7 +173,7 @@ class CreateUser extends React.Component {
 		// 		  ).toDate()
 		// 		: null,
 		// );
-		formData.append('dob', dob ? dob : '');
+		//formData.append('dob', dob ? dob : '');
 		formData.append('roleId', roleId ? roleId.value : '');
 		formData.append('active', this.state.useractive);
 		formData.append('password', password ? password : '');
@@ -171,7 +182,10 @@ class CreateUser extends React.Component {
 		if (this.state.userPhotoFile.length > 0) {
 			formData.append('profilePic ', this.state.userPhotoFile[0]);
 		}
-		formData.append('isDesignationEnabled' ,isDesignationEnabled ? isDesignationEnabled : '');
+		formData.append('isAlreadyAvailableEmployee' ,isAlreadyAvailableEmployee ? isAlreadyAvailableEmployee : '');
+		formData.append('isNewEmployee',isNewEmployee ? isNewEmployee :'');
+		formData.append('designationId',designationId ? designationId.value :'');
+		formData.append('salaryRoleId',salaryRoleId ? salaryRoleId.value : '');
 		formData.append('employeeId',employeeId ? employeeId.value : '');
 
 		this.props.userCreateActions
@@ -243,11 +257,13 @@ class CreateUser extends React.Component {
 		this.setState({ openEmployeeModal: false });
 	};
 	render() {
-		const { role_list, employee_list } = this.props;
+		const { role_list, employee_list,salary_role_dropdown,designation_dropdown } = this.props;
 		const { timezone } = this.state;
 		const { isPasswordShown } = this.state;
 
 	console.log(employee_list);
+	console.log(designation_dropdown);
+
 		// emlpoyee_list.map(item => {
 		// 	let obj = {label: item.label.fullName, value: item.value}
 		// 	tmpEmployee_list.push(obj)
@@ -840,22 +856,23 @@ class CreateUser extends React.Component {
 																	</Col>
 																</Row>
 
-																<Row><Col lg={8}>
+																<Row>
+																	<Col lg={2}>
 																	<FormGroup check inline className="mb-3">
 																		<Label
 																			className="form-check-label"
 																			check
-																			htmlFor="isDesignationEnabled"
+																			htmlFor="isAlreadyAvailableEmployee"
 																		>
 																			<Input
 																				className="form-check-input"
 																				type="checkbox"
 																				id="is"
-																				name="isDesignationEnabled"
+																				name="isAlreadyAvailableEmployee"
 																				onChange={(value) => {
-																					props.handleChange('isDesignationEnabled')(value);
+																					props.handleChange('isAlreadyAvailableEmployee')(value);
 																				}}
-																				checked={props.values.isDesignationEnabled}
+																				checked={props.values.isAlreadyAvailableEmployee}
 
 
 																				// className={
@@ -865,7 +882,7 @@ class CreateUser extends React.Component {
 																				// 		: ''
 																				// }
 																			/>
-																		Enable Employee
+																		Link Employee
 																			{props.errors.productPriceType &&
 																				props.touched.productPriceType && (
 																					<div className="invalid-feedback">
@@ -875,8 +892,38 @@ class CreateUser extends React.Component {
 																		</Label>
 																	</FormGroup>
 																</Col>
+																<Col>
+																<FormGroup check inline className="mb-3">
+																		<Label
+																			className="form-check-label"
+																			check
+																			htmlFor="isNewEmployee"
+																		>
+																			<Input
+																				className="form-check-input"
+																				type="checkbox"
+																				id="is"
+																				name="isNewEmployee"
+																				onChange={(value) => {
+																					props.handleChange('isNewEmployee')(value);
+																				}}
+																				checked={props.values.isNewEmployee}
+
+
+																				// className={
+																				// 	props.errors.productPriceType &&
+																				// 		props.touched.productPriceType
+																				// 		? 'is-invalid'
+																				// 		: ''
+																				// }
+																			/>
+																		Create Employee
+
+																		</Label>
+																	</FormGroup>
+																</Col>
 																</Row>
-																<Row style={{display: props.values.isDesignationEnabled === false ? 'none' : ''}}>
+																<Row style={{display: props.values.isAlreadyAvailableEmployee === false ? 'none' : ''}}>
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="contactId">
@@ -920,26 +967,100 @@ class CreateUser extends React.Component {
 																					</div>
 																				)}
 																		</FormGroup>
-																	</Col><Col>
-																		<Label
-																			htmlFor="employeeId"
-																			style={{ display: 'block' }}
-																		>
-																			Add New Employee
-																</Label>
-																		<Button
-																			type="button"
-																			color="primary"
-																			className="btn-square mr-3 mb-3"
-																			onClick={(e, props) => {
-																				this.openEmployeeModal(props);
-																			}}
-																		>
-																			<i className="fa fa-plus"></i> Add a Employee
-																</Button>
+																	</Col>
+																</Row>
+																<Row style={{display: props.values.isNewEmployee === false ? 'none' : ''}}>
+																	<Col lg={3}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="contactId">
+																				<span className="text-danger">*</span>
+																		Salary Role
+																	</Label>
+																			<Select
+																				styles={customStyles}
+																				id="salaryRoleId"
+																				name="salaryRoleId"
+																				placeholder="Select employee"
+																				options={
+																					salary_role_dropdown
+																						? selectOptionsFactory.renderOptions(
+																							'label',
+																							'value',
+																							salary_role_dropdown,
+																							'SalaryRole',
+																						)
+																						: []
+																				}
+																				value={props.values.salaryRoleId}
+																				onChange={(option) => {
+																					if (option && option.value) {
+																						props.handleChange('salaryRoleId')(option);
+																					} else {
+																						props.handleChange('salaryRoleId')('');
+																					}
+																				}}
+																				className={
+																					props.errors.salaryRoleId &&
+																						props.touched.salaryRoleId
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.salaryRoleId &&
+																				props.touched.salaryRoleId && (
+																					<div className="invalid-feedback">
+																						{props.errors.salaryRoleId}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																	<Col lg={3}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="contactId">
+																				<span className="text-danger">*</span>
+																		Designation
+																	</Label>
+																			<Select
+																				styles={customStyles}
+																				id="designationId"
+																				name="designationId"
+																				placeholder="Select employee"
+																				options={
+																					designation_dropdown
+																						? selectOptionsFactory.renderOptions(
+																							'label',
+																							'value',
+																							designation_dropdown,
+																							'Designation',
+																						)
+																						: []
+																				}
+																				value={props.values.designationId}
+																				onChange={(option) => {
+																					if (option && option.value) {
+																						props.handleChange('designationId')(option);
+																					} else {
+																						props.handleChange('designationId')('');
+																					}
+																				}}
+																				className={
+																					props.errors.designationId &&
+																						props.touched.designationId
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.designationId &&
+																				props.touched.designationId && (
+																					<div className="invalid-feedback">
+																						{props.errors.designationId}
+																					</div>
+																				)}
+																		</FormGroup>
 																	</Col>
 																</Row>
 															</Col>
+
 														</Row>
 														<Row>
 															<Col lg={12} className="mt-5">

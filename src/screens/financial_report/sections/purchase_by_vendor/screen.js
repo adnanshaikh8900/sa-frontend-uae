@@ -32,7 +32,7 @@ const mapStateToProps = (state) => {
 	return {
 		profile: state.auth.profile,
 		universal_currency_list: state.common.universal_currency_list,
-		company_profile: state.common.company_profile,
+		company_profile: state.reports.company_profile,
 		purchase_by_vendor: state.reports.purchase_by_vendor,
 	};
 };
@@ -87,6 +87,7 @@ class PurchaseByVendor extends React.Component {
 	};
 
 	componentDidMount = () => {
+		this.props.financialReportActions.getCompany() 
 		this.initializeData();
 	};
 

@@ -90,6 +90,8 @@ import {
 	PurchaseByVendor,
 	ReceivableInvoiceDetailsReport,
 	ReceivableInvoiceSummary,
+	PayablesInvoiceDetailsReport,
+	PayablesInvoiceSummary,
 	
 
 	// Master Screens
@@ -157,6 +159,7 @@ import {
 	Template,
 	CreateEmployeeFinancial,
 	EmployeeFinancial,
+	DetailSalaryRole,
 	SalaryRoles,
 	CreateSalaryRoles,
 
@@ -168,7 +171,10 @@ import {
 	SalarySlip,
 	UnderConstruction,
 	CreateDesignation,
-	Designation
+	Designation,
+	DetailSalaryStructure,
+	DetailSalaryTemplate,
+	DetailDesignation
 } from 'screens';
 
 const adminRoutes = [
@@ -478,7 +484,7 @@ const adminRoutes = [
 	{
 		path: '/admin/payroll/employee/detail',
 		name: 'UpdateEmployee',
-		component: DetailEmployeePayroll.screen,
+		component: UnderConstruction.screen,
 	},
 	{
 		path: '/admin/payroll/employee/create',
@@ -488,16 +494,16 @@ const adminRoutes = [
 	{
 		path: '/admin/payroll/employee',
 		name: 'ViewEmployee',
-		component: UnderConstruction.screen,
+		component: EmployeePayroll.screen,
 	},
 	{
 		path: '/admin/payroll/employee/salarySlip',
-		name: 'ViewPaymentReceipts',
-		component: SalarySlip.screen,
+		name: 'ViewEmployment',
+		component: UnderConstruction.screen,
 	},
 	{
 		path: '/admin/payroll/employee/viewPayroll',
-		name: 'ViewPaymentReceipts',
+		name: 'GeneratePayroll',
 		component: ViewPayroll.screen,
 	},
 	{
@@ -505,26 +511,26 @@ const adminRoutes = [
 		name: 'UpdateEmployment',
 		component: DetailEmployeePayroll.screen,
 	},
-	{
-		path: '/admin/payroll/employment/create',
-		name: 'CreateEmployment',
-		component: CreateEmployment.screen,
-	},
-	{
-		path: '/admin/payroll/employment',
-		name: 'ViewEmployment',
-		component: UnderConstruction.screen,
-	},
-	{
-		path: '/admin/payroll/financial/create',
-		name: 'CreateEmployeeFinancialDetails',
-		component: CreateEmployeeFinancial.screen,
-	},
-	{
-		path: '/admin/payroll/financial',
-		name: 'ViewEmployeeFinancialDetails',
-		component: EmployeeFinancial.screen,
-	},
+	// {
+	// 	path: '/admin/payroll/employment/create',
+	// 	name: 'CreateEmployment',
+	// 	component: CreateEmployment.screen,
+	// },
+	// {
+	// 	path: '/admin/payroll/employment',
+	// 	name: 'ViewEmployment',
+	// 	component: Employment.screen,
+	// },
+	// {
+	// 	path: '/admin/payroll/financial/create',
+	// 	name: 'CreateEmployeeFinancialDetails',
+	// 	component: CreateEmployeeFinancial.screen,
+	// },
+	// {
+	// 	path: '/admin/payroll/financial',
+	// 	name: 'ViewEmployeeFinancialDetails',
+	// 	component: EmployeeFinancial.screen,
+	// },
 
 	{
 		path: '/admin/payroll/salaryRoles/create',
@@ -532,9 +538,24 @@ const adminRoutes = [
 		component: CreateSalaryRoles.screen,
 	},
 	{
+		path: '/admin/payroll/salaryRoles/detail',
+		name: 'UpdateSalaryRole',
+		component: DetailSalaryRole.screen,
+	},
+	{
+		path: '/admin/payroll/salaryStructure/detail',
+		name: 'UpdateSalaryStructure',
+		component: DetailSalaryStructure.screen,
+	},
+	{
+		path: '/admin/payroll/salaryTemplate/detail',
+		name: 'UpdateSalaryTemplate',
+		component: DetailSalaryTemplate.screen,
+	},
+	{
 		path: '/admin/payroll/salaryRoles',
 		name: 'ViewSalaryRole',
-		component: UnderConstruction.screen,
+		component: SalaryRoles.screen,
 	},
 		{
 			path: '/admin/payroll/salaryTemplate/create',
@@ -544,7 +565,7 @@ const adminRoutes = [
 		{
 			path: '/admin/payroll/salaryTemplate',
 			name: 'ViewSalaryTemplate',
-			component: UnderConstruction.screen,
+			component: SalaryTemplate.screen,
 		},
 	{
 		path: '/admin/payroll/salaryStructure/create',
@@ -554,7 +575,7 @@ const adminRoutes = [
 	{
 		path: '/admin/payroll/salaryStructure',
 		name: 'ViewSalaryStructure',
-		component: UnderConstruction.screen,
+		component: SalaryStucture.screen,
 	},
 	{
 		path: '/admin/payroll/employeeDesignation/create',
@@ -562,9 +583,14 @@ const adminRoutes = [
 		component: CreateDesignation.screen,
 	},
 	{
+		path: '/admin/payroll/employeeDesignation/detail',
+		name: 'UpdateEmployeeDesignation',
+		component: DetailDesignation.screen,
+	},
+	{
 		path: '/admin/payroll/employeeDesignation',
 		name: 'ViewEmployeeDesignation',
-		component: UnderConstruction.screen,
+		component: Designation.screen,
 	},
 	{
 		redirect: true,
@@ -575,7 +601,7 @@ const adminRoutes = [
 
 	{
 		path: '/admin/taxes/vat-transactions',
-		name: 'vatTransactions',
+		name: 'VatTransactions',
 		component: VatTransactions.screen,
 	},
 	{
@@ -657,8 +683,18 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/report/receivable-invoice-summary',
-		name: 'ReceivableInvoiceDetail',
+		name: 'ReceivableInvoiceSummary',
 		component: ReceivableInvoiceSummary.screen,
+	},
+	{
+		path: '/admin/report/payable-invoice-details',
+		name: 'PayableInvoiceDetail',
+		component: PayablesInvoiceDetailsReport.screen,
+	},
+	{
+		path: '/admin/report/payable-invoice-summary',
+		name: 'PayableInvoiceSummary',
+		component: PayablesInvoiceSummary.screen,
 	},
 	{
 		redirect: true,

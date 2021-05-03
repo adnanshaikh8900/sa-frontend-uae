@@ -2,11 +2,11 @@ import {
   authApi
 } from 'utils'
 
-export const getEmployeeDetail = (_id) => {
+export const getEmployeeDesignationById = (_id) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `/rest/employee/getById?id=${_id}`
+      url: `/rest/employeeDesignation/getEmployeeDesignationById?id=${_id}`
     }
 
     return authApi(data).then((res) => {
@@ -17,11 +17,11 @@ export const getEmployeeDetail = (_id) => {
   }
 }
 
-export const updateEmployee = (obj) => {
+export const updateEmployeeDesignation = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'post',
-      url: '/rest/employee/update',
+      url: '/rest/employeeDesignation/updateEmployeeDesignation',
       data: obj
     }
     return authApi(data).then((res) => {

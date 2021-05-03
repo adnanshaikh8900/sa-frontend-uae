@@ -6,15 +6,19 @@ import {
 	Card,
 	CardBody,
 } from 'reactstrap';
-
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 import './style.scss';
+let strings = new LocalizedStrings(data);
 
 class ProfitAndLossReport extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			profit_loss_report_data: [],
-			profit_loss_report_data_options: {}
+			profit_loss_report_data_options: {},
+			language: window['localStorage'].getItem('language'),
+
 		};
 		this.bankAccountSelect = React.createRef();
 		this.dateRangeSelect = React.createRef();
@@ -59,7 +63,7 @@ class ProfitAndLossReport extends Component {
 				strokeDashArray: '10',
 				borderColor: 'rgba(125, 138, 156, 0.3)',
 			},
-			colors: ['#2064d8', '#060918'],
+			colors: ['#2064d8', '#f4772e'],
 			legend: {
 				show: true,
 			},
@@ -90,14 +94,15 @@ class ProfitAndLossReport extends Component {
 	}
 
 	render() {
-		
+		strings.setLanguage(this.state.language);
+
 		return (
 			<div className="animated fadeIn ">
 				<Card className="cash-card card-margin">
 					<CardBody className="card-body-padding">
 				<div className="flex-wrapper title-bottom-border">
 					<h1 className="mb-2 card-h1">
-									Profit & Loss
+									{strings.ProfitLoss}
 								</h1>
 				</div>
 								<div className="d-block">

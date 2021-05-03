@@ -1,4 +1,4 @@
-import { EMPLOYEE, EMPLOYEE_DESIGNATION } from 'constants/types'
+import { EMPLOYEEPAYROLL, EMPLOYEE_DESIGNATION } from 'constants/types'
 import {
   authApi
 } from 'utils'
@@ -20,7 +20,7 @@ export const getEmployeeList = (obj) => {
     return authApi(data).then((res) => {
       if(!obj.paginationDisable) {
         dispatch({
-          type: EMPLOYEE.EMPLOYEE_LIST,
+          type: EMPLOYEEPAYROLL.EMPLOYEE_LIST,
           payload: res.data
         })
       }
@@ -41,7 +41,55 @@ export const getEmployeeDesignationForDropdown = () => {
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch({
-            type: EMPLOYEE_DESIGNATION.DESIGNATION_DROPDOWN,
+            type: EMPLOYEEPAYROLL.DESIGNATION_DROPDOWN,
+			payload: {
+				data: res.data,
+			},
+			});
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const getEmployeesForDropdown = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/employee/getEmployeesForDropdown',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+            type: EMPLOYEEPAYROLL.EMPLOYEE_LIST_DDROPDOWN,
+			payload: {
+				data: res.data,
+			},
+						
+					});
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+
+export const getSalaryRolesForDropdown = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/payroll/getSalaryRolesForDropdown',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+            type: EMPLOYEEPAYROLL.SALARY_ROLE_DROPDOWN,
 						payload: {
 							data: res.data,
 						},
@@ -62,7 +110,7 @@ export const getCurrencyList = () => {
     return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
-          type: EMPLOYEE.CURRENCY_LIST,
+          type: EMPLOYEEPAYROLL.CURRENCY_LIST,
           payload: res
         })
       }
@@ -98,7 +146,7 @@ export const getCountryList = () => {
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch({
-						type: EMPLOYEE.COUNTRY_LIST,
+						type: EMPLOYEEPAYROLL.COUNTRY_LIST,
 						payload: res.data,
 					});
 				}
@@ -120,7 +168,7 @@ export const getStateList = (countryCode) => {
 				.then((res) => {
 					if (res.status === 200) {
 						dispatch({
-							type: EMPLOYEE.STATE_LIST,
+							type: EMPLOYEEPAYROLL.STATE_LIST,
 							payload: res.data,
 						});
 					}
@@ -130,7 +178,7 @@ export const getStateList = (countryCode) => {
 				});
 		} else {
 			dispatch({
-				type: EMPLOYEE.STATE_LIST,
+				type: EMPLOYEEPAYROLL.STATE_LIST,
 				payload: [],
 			});
 		}

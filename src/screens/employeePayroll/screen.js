@@ -1,16 +1,21 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+
 import {
-  Card,
-  CardHeader,
-  CardBody,
-  Button,
-  Row,
-  Col,
-  ButtonGroup,
-  Input,
-} from 'reactstrap'
+	Card,
+	CardHeader,
+	CardBody,
+	Button,
+	Row,
+	Col,
+	ButtonGroup,
+	Input,
+	ButtonDropdown,
+	DropdownToggle,
+	DropdownMenu,
+	DropdownItem,
+} from 'reactstrap';
 
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 
@@ -28,6 +33,7 @@ import { CSVLink } from "react-csv";
 
 
 import './style.scss'
+import moment from 'moment';
 
 const mapStateToProps = (state) => {
   return ({
@@ -47,6 +53,7 @@ class EmployeePayroll extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      actionButtons: {},
       loading: true,
       selectedRows: [],
       dialog: null,
@@ -59,8 +66,8 @@ class EmployeePayroll extends React.Component {
     }
 
     this.options = {
-      onRowClick: this.goToDetail,
-      paginationPosition: 'top',
+      // onRowClick: this.goToDetail,
+      paginationPosition: 'bottom',
       page: 1,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
@@ -71,7 +78,7 @@ class EmployeePayroll extends React.Component {
     }
 
     this.selectRowProp = {
-      mode: 'checkbox',
+ 
       bgColor: 'rgba(0,0,0, 0.05)',
       clickToSelect: false,
       onSelect: this.onRowSelect,
@@ -110,10 +117,65 @@ class EmployeePayroll extends React.Component {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
+  toggleActionButton = (index) => {
+		let temp = Object.assign({}, this.state.actionButtons);
+		if (temp[parseInt(index, 10)]) {
+			temp[parseInt(index, 10)] = false;
+		} else {
+			temp[parseInt(index, 10)] = true;
+		}
+		this.setState({
+			actionButtons: temp,
+		});
+	};
+	renderActions = (cell, row) => {
+		return (
+			<div>
+				<ButtonDropdown
+					isOpen={this.state.actionButtons[row.id]}
+					toggle={() => this.toggleActionButton(row.id)}
+				>
+					<DropdownToggle size="sm" color="primary" className="btn-brand icon">
+						{this.state.actionButtons[row.id] === true ? (
+							<i className="fas fa-chevron-up" />
+						) : (
+							<i className="fas fa-chevron-down" />
+						)}
+					</DropdownToggle>
+					<DropdownMenu right>
+					
+							<DropdownItem
+								onClick={() =>
+									this.props.history.push(
+										'/admin/payroll/employee/detail',
+										{ id: row.id },
+									)
+								}
+							>
+								<i className="fas fa-edit" /> Edit
+							</DropdownItem>
+					
+				
+						<DropdownItem
+							onClick={() =>
+								this.props.history.push(
+									'/admin/payroll/employee/salarySlip',
+									{ id: row.id },
+								)
+							}
+						>
+							<i className="fas fa-eye" /> Salary Slip
+						</DropdownItem>
+					
+					</DropdownMenu>
+				</ButtonDropdown>
+			</div>
+		);
+	};
 
-  goToDetail = (row) => {
-    this.props.history.push('/admin/payroll/employee/detail', { id: row.id })
-  }
+  // goToDetail = (row) => {
+  //   this.props.history.push('/admin/payroll/employee/detail', { id: row.id })
+  // }
 
   sortColumn = (sortName, sortOrder) => {
     this.options.sortName = sortName;
@@ -174,6 +236,9 @@ class EmployeePayroll extends React.Component {
       this.props.commonActions.tostifyAlert('info', 'Please select the rows of the table and try again.')
     }
   }
+  renderDOB = (cell, rows) => {
+		return moment(rows.dob).format('DD/MM/YYYY');
+	};
 
   removeBulk = () => {
     this.removeDialog()
@@ -321,7 +386,7 @@ class EmployeePayroll extends React.Component {
                             onClick={() => this.props.history.push(`/admin/payroll/employee/viewPayroll`)}
                           >
                             {/* <i className="fas fa- mr-1" /> */}
-                            View Payroll
+                            Generate Payroll
                           </Button>
                           {/* <Button
                             color="warning"
@@ -373,31 +438,36 @@ class EmployeePayroll extends React.Component {
                           ref={(node) => this.table = node}
                         >
                           <TableHeaderColumn
+                          className="table-header-bg"
                             dataField="fullName"
                             dataSort
                           >
                             Full Name
                           </TableHeaderColumn>
                           <TableHeaderColumn
+                          className="table-header-bg"
                             dataField="dob"
                             dataSort
-                          // dataFormat={this.vatCategoryFormatter}
+                          dataFormat={this.renderDOB}
                           >
                            Date Of Birth
                           </TableHeaderColumn>
                           <TableHeaderColumn
+                          className="table-header-bg"
                             dataField="gender"
                             dataSort
                           >
                            gender
                           </TableHeaderColumn>
                           <TableHeaderColumn
+                          className="table-header-bg"
                             dataField="email"
                             dataSort
                           >
                             Email
                           </TableHeaderColumn>
                           <TableHeaderColumn
+                          className="table-header-bg"
                             dataField="mobileNumber"
                             dataSort
                           // dataFormat={this.vatCategoryFormatter}
@@ -405,6 +475,7 @@ class EmployeePayroll extends React.Component {
                            mobile Number
                           </TableHeaderColumn>
                           <TableHeaderColumn
+                          className="table-header-bg"
                             dataField="city"
                             dataSort
                           // dataFormat={this.vatCategoryFormatter}
@@ -412,12 +483,20 @@ class EmployeePayroll extends React.Component {
                             city
                           </TableHeaderColumn>
                           <TableHeaderColumn
+                          className="table-header-bg"
                             dataField="isActive"
                             dataSort
                           // dataFormat={this.vatCategoryFormatter}
                           >
                             is-Active
                           </TableHeaderColumn>
+                      <TableHeaderColumn
+												className="text-right"
+												columnClassName="text-right"
+												//width="5%"
+												dataFormat={this.renderActions}
+												className="table-header-bg"
+											></TableHeaderColumn>
                         </BootstrapTable>
                       </div>
                     </Col>

@@ -98,6 +98,7 @@ class CreateBankTransaction extends React.Component {
 				exchangeRate:'',
 			},
 			transactionCategoryList: [],
+			moneyCategoryList:[],
 			totalAmount: '',
 			categoriesList: [
 				{
@@ -164,6 +165,7 @@ class CreateBankTransaction extends React.Component {
 				},
 			],
 			cat_label: '',
+			cat1_label:'',
 			id: '',
 		};
 
@@ -520,6 +522,23 @@ class CreateBankTransaction extends React.Component {
 			console.log(err);
 		}
 	};
+	getMoneyPaidToUserlist = (option) => {
+		try {
+			this.props.transactionActions.getMoneyCategoryList(option.value)
+				.then((res) => {
+					if (res.status === 200) {
+						this.setState(
+							{
+								moneyCategoryList: res.data,
+							},
+							() => {},
+						);
+					}
+				});
+		} catch (err) {
+			console.log(err);
+		}
+	};
 
 	getInvoices = (option, amount) => {
 		const data = {
@@ -536,6 +555,7 @@ class CreateBankTransaction extends React.Component {
 			id,
 			transactionCategoryList,
 			categoriesList,
+			moneyCategoryList,
 		} = this.state;
 		const {
 			customer_invoice_list,
@@ -591,6 +611,13 @@ class CreateBankTransaction extends React.Component {
 													) {
 														errors.transactionCategoryId =
 															'Transaction Category is Required';
+													}
+													if(
+														(values.coaCategoryId.value === 12 ||
+														values.coaCategoryId.value === 6) &&
+														!values.employeeId
+													){
+														errors.employeeId = 'User is required'
 													}
 													return errors;
 												}}
@@ -1145,11 +1172,11 @@ class CreateBankTransaction extends React.Component {
 																						? transactionCategoryList.categoriesList
 																						: []
 																				}
-																				// value={
-																				//   transactionCategoryList
-																				//     ? props.values.transactionCategoryId
-																				//     : ''
-																				// }
+																				value={
+																				  transactionCategoryList
+																				    ? props.values.transactionCategoryId
+																				    : ''
+																				}
 																				id="transactionCategoryId"
 																				onChange={(option) => {
 																					if (option && option.value) {
@@ -1160,6 +1187,52 @@ class CreateBankTransaction extends React.Component {
 																						props.handleChange(
 																							'transactionCategoryId',
 																						)('');
+																					}
+																					if (option.label !== 'Salaries and Employee Wages' &&
+																				 option.label !== 'Owners Drawing' &&  
+																					option.label !== 'Dividend' &&
+																					option.label !== 'Owners Current Account' &&
+																					option.label !== 'Share Premium' &&
+																					option.label !== 'Employee Advance' &&
+																					option.label !== 'Employee Reimbursements' &&
+																					option.label !== 'Director Loan Account' &&
+																					option.label !== 'Owners Equity' 
+																					) {	}
+																					if ( option.label === 'Salaries and Employee Wages' 
+																					) {
+																						this.getMoneyPaidToUserlist(option);
+																					}
+																					if ( option.label === 'Owners Drawing' 
+																					) {
+																						this.getMoneyPaidToUserlist(option);
+																					}
+																					if (option.label === 'Dividend'
+																					) {
+																						this.getMoneyPaidToUserlist(option);
+																					}
+																					if (option.label === 'Owners Current Account' 
+																					) {
+																						this.getMoneyPaidToUserlist(option);
+																					}
+																					if ( option.label === 'Share Premium'
+																					) {
+																						this.getMoneyPaidToUserlist(option);
+																					}
+																					if ( option.label === 'Employee Advance'
+																					) {
+																						this.getMoneyPaidToUserlist(option);
+																					}
+																					if (option.label === 'Employee Reimbursements'
+																					) {
+																						this.getMoneyPaidToUserlist(option);
+																					}
+																					if ( option.label === 'Director Loan Account'
+																					) {
+																						this.getMoneyPaidToUserlist(option);
+																					}
+																					if ( option.label === 'Owners Equity' 
+																					) {
+																						this.getMoneyPaidToUserlist(option);
 																					}
 																				}}
 																				className={
@@ -1189,10 +1262,8 @@ class CreateBankTransaction extends React.Component {
 																				styles={customStyles}
 																				className="select-default-width"
 																				options={
-																					transactionCategoryList.dataList[0]
-																						? transactionCategoryList
-																								.dataList[0].options
-																						: []
+																					moneyCategoryList ?
+																					moneyCategoryList : []
 																				}
 																				id="employeeId"
 																				value={props.values.employeeId}
@@ -1212,11 +1283,15 @@ class CreateBankTransaction extends React.Component {
 																			<Select
 																				styles={customStyles}
 																				className="select-default-width"
+																				// options={
+																				// 	transactionCategoryList.dataList[0]
+																				// 		? transactionCategoryList
+																				// 				.dataList[0].options
+																				// 		: []
+																				// }
 																				options={
-																					transactionCategoryList.dataList[0]
-																						? transactionCategoryList
-																								.dataList[0].options
-																						: []
+																					moneyCategoryList ?
+																					moneyCategoryList : []
 																				}
 																				id="employeeId"
 																				value={props.values.employeeId}

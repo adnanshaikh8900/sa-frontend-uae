@@ -123,6 +123,23 @@ class BankTransactions extends React.Component {
 	}
 
 	componentDidMount = () => {
+		this.props.detailBankAccountActions
+			.getBankAccountByID(localStorage.getItem('bankId'))
+			.then((res) => {
+				this.setState({
+					bankAccountCurrencySymbol:res.bankAccountCurrencySymbol,
+					currentBalance: res.currentBalance,
+					closingBalance: res.closingBalance,
+					accounName: res.bankAccountName,
+				});
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+				this.props.history.push('/admin/banking/bank-account');
+			});
 		this.toggle(0, 'all');
 		this.initializeData();
 		console.log('state', this.props)
@@ -143,23 +160,7 @@ class BankTransactions extends React.Component {
 		}
 		this.props.transactionsActions.getTransactionTypeList();
 		//this.initializeData();
-		this.props.detailBankAccountActions
-			.getBankAccountByID(localStorage.getItem('bankId'))
-			.then((res) => {
-				this.setState({
-					bankAccountCurrencySymbol:res.bankAccountCurrencySymbol,
-					currentBalance: res.currentBalance,
-					closingBalance: res.closingBalance,
-					accounName: res.bankAccountName,
-				});
-			})
-			.catch((err) => {
-				this.props.commonActions.tostifyAlert(
-					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
-				);
-				this.props.history.push('/admin/banking/bank-account');
-			});
+		
 	};
 
 	initializeData = () => {
@@ -283,6 +284,18 @@ class BankTransactions extends React.Component {
 	};
 	renderRunningAmount = (cell, row) => {
 		return row.runningAmount >= 0 ? row.currencySymbol + row.runningAmount.toFixed(2) : '';
+	};
+
+	renderDueAmount = (cell, row, rowIndex, extraData) => {
+		// return row.withdrawalAmount >= 0 ? (
+		// 	<Currency
+		// 		value={row.withdrawalAmount}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// ) : (
+		// 	''
+		// );
+		return row.dueAmount >= 0 ? row.currencySymbol + row.dueAmount.toFixed(2) : '';
 	};
 
 	test(row) {
@@ -619,7 +632,10 @@ class BankTransactions extends React.Component {
 			},
 			{
 				dataField: 'dueAmount',
-				text:'Due Amount'
+				text:'Due Amount',
+				formatter: this.renderDueAmount,
+				formatExtraData: universal_currency_list,
+
 			},
 			{
 				dataField: 'explinationStatusEnum',
@@ -681,35 +697,15 @@ class BankTransactions extends React.Component {
 												<Col lg={3}>
 													<h5>Current Bank Balance</h5>
 													<h3>
-														{/* {universal_currency_list[0] && (
-															<Currency
-																value={this.state.currentBalance}
-																currencySymbol={
-																	universal_currency_list[0]
-																		? universal_currency_list[0].currencyIsoCode
-																		: 'USD'
-																}
-															/>
-														)} */}
 														{this.state.bankAccountCurrencySymbol} &nbsp;
-														{this.state.currentBalance}
+														{this.state.currentBalance.toFixed(2)}
 													</h3>
 												</Col>
 												<Col lg={3}>
-													<h5>Simple Accounts Balance</h5>
+													<h5>Ledger Balance</h5>
 													<h3>
-														{/* {universal_currency_list[0] && (
-															<Currency
-																value={this.state.closingBalance}
-																currencySymbol={
-																	universal_currency_list[0]
-																		? universal_currency_list[0].currencyIsoCode
-																		: 'USD'
-																}
-															/>
-														)} */}
 													{this.state.bankAccountCurrencySymbol} &nbsp;
-													{this.state.closingBalance}
+													{this.state.closingBalance.toFixed(2)}
 													</h3>
 												</Col>
 											</Row>

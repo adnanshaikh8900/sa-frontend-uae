@@ -2,7 +2,7 @@
 
 new_release=$1
 echo "Executing $0 to upgrade helm releases with version $new_release"
-helm list --all-namespaces | grep 'frontend' > rc.txt
+helm list -n simpleaccounts-app | grep 'frontend' > rc.txt
 
 i=0
 while read line
@@ -12,7 +12,7 @@ do
 	domain="$(sed 's/\(-frontend$\)//' <<< "$rc")"
 	echo "Upgrading Helm Release $domain with version $new_release"
 
-	./simpleaccounts-frontend/simpleaccounts-frontend.sh upgrade $domain $new_release
+	#./simpleaccounts-frontend/simpleaccounts-frontend.sh upgrade $domain $new_release
 	echo "Helm Release $domain upgraded"
 
   i=$((i+1))

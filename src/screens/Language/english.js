@@ -22,7 +22,7 @@ const en = {
 
 
       //Dashboard
-      SupplierCustomerPaidInvoices:"Supplier & Customer Paid Invoices",
+      SupplierCustomerPaidInvoices: "Supplier & Customer Paid Invoices",
       Banking: "Banking",
       Lastupdatedon: "Last updated on",
       BALANCE: "BALANCE",
@@ -32,6 +32,53 @@ const en = {
       OUTFLOW: "OUTFLOW",
       NET: "NET",
       ProfitLoss: "Profit & Loss",
+
+
+      //Customer invoice
+      CustomerInvoices: "Customer Invoices",
+      Overdue: "Overdue",
+      DueWithinThisWeek: "Due Within This Week",
+      DueWithin30Days: "Due Within 30 Days",
+      Filter: "Filter",
+      INVOICENUMBER: "INVOICE NUMBER",
+      CUSTOMERNAME: "CUSTOMER NAME",
+      STATUS: "STATUS",
+      INVOICEDATE: "INVOICE DATE",
+      DUEDATE: "DUE DATE",
+      Addnewinvoice: "Add new invoice",
+      InvoiceAmount: "Invoice Amount",
+      VatAmount: "Vat Amount",
+      DueAmount: "Due Amount",
+
+      CreateInvoice: "Create Invoice",
+      InvoiceNumber: "Invoice Number",
+      CustomerName: "Customer Name",
+      AddNewCustomer: "Add New Customer",
+      PlaceofSupply: "Place of Supply",
+      Terms: "Terms",
+      InvoiceDate: "Invoice Date",
+      InvoiceDueDate: "Invoice Due Date",
+      CurrencyExchangeRate: "Currency Exchange Rate",
+      PRODUCT: "PRODUCT",
+      DESCRIPTION: "DESCRIPTION",
+      QUANTITY: "QUANTITY",
+      UNITPRICE: "UNIT PRICE",
+      VAT: "VAT (%)",
+      SUBTOTAL: "SUB TOTAL",
+      Notes: "Notes",
+      DiscountType: "Discount Type",
+      RecieptNumber: "Reciept Number",
+      RecieptAttachment: "Reciept Attachment",
+      DiscountAmount: "Discount Amount",
+      AttachmentDescription: "Attachment Description",
+      TotalNet: "Total Net",
+      TotalVat: "Total Vat",
+      Discount: "Discount",
+      Total: "Total",
+      CreateandMore: "Create and More",
+      Addacustomer: "Add a customer",
+      Addmore: "Add more",
+      upload: "upload",
 
 }
 export { en };

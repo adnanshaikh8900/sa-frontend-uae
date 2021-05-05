@@ -26,7 +26,11 @@ import {
 	DetailCustomerInvoice,
 	ViewCustomerInvoice,
 	RecordCustomerPayment,
-
+	//CreditNotes
+	CreditNotes,
+	CreateCreditNote,
+	DetailCreditNote,
+	ViewCreditNote,
 	// Receipt Screens
 	Receipt,
 	CreateReceipt,
@@ -92,7 +96,7 @@ import {
 	ReceivableInvoiceSummary,
 	PayablesInvoiceDetailsReport,
 	PayablesInvoiceSummary,
-	
+
 
 	// Master Screens
 	ChartAccount,
@@ -174,7 +178,8 @@ import {
 	Designation,
 	DetailSalaryStructure,
 	DetailSalaryTemplate,
-	DetailDesignation
+	DetailDesignation,
+	ApplyToInvoice,
 } from 'screens';
 
 const adminRoutes = [
@@ -318,6 +323,7 @@ const adminRoutes = [
 		name: 'ViewCustomerInvoice',
 		component: ViewCustomerInvoice.screen,
 	},
+
 	{
 		path: '/admin/income/customer-invoice/detail',
 		name: 'UpdateCustomerInvoice',
@@ -348,6 +354,39 @@ const adminRoutes = [
 		name: 'CustomerReceipts',
 		component: Receipt.screen,
 	},
+	//
+	{
+		path: '/admin/income/credit-notes',
+		name: 'ViewCreditNotes',
+		component: CreditNotes.screen,
+	},
+	{
+		path: '/admin/income/credit-notes/create',
+		name: 'AddCreditNotes',
+		component: CreateCreditNote.screen,
+	},
+	{
+		path: '/admin/income/credit-notes/view',
+		name: 'ViewCreditNotes',
+		component: ViewCreditNote.screen,
+	},
+
+	{
+		path: '/admin/income/credit-notes/detail',
+		name: 'UpdateCreditNotes',
+		component: DetailCreditNote.screen,
+	},
+	{
+		path: '/admin/income/credit-notes/applyToInvoice',
+		name: 'ApplyToInvoice',
+		component: ApplyToInvoice.screen,
+	},
+	
+	// {
+	// 	path: '/admin/income/customer-invoice/record-payment',
+	// 	name: 'RecordCustomerPayment',
+	// 	component: RecordCustomerPayment.screen,
+	// },
 	{
 		redirect: true,
 		path: '/admin/income',
@@ -557,16 +596,16 @@ const adminRoutes = [
 		name: 'ViewSalaryRole',
 		component: SalaryRoles.screen,
 	},
-		{
-			path: '/admin/payroll/salaryTemplate/create',
-			name: 'CreateSalaryTemplate',
-			component: CreateSalaryTemplate.screen,
-		},
-		{
-			path: '/admin/payroll/salaryTemplate',
-			name: 'ViewSalaryTemplate',
-			component: SalaryTemplate.screen,
-		},
+	{
+		path: '/admin/payroll/salaryTemplate/create',
+		name: 'CreateSalaryTemplate',
+		component: CreateSalaryTemplate.screen,
+	},
+	{
+		path: '/admin/payroll/salaryTemplate',
+		name: 'ViewSalaryTemplate',
+		component: SalaryTemplate.screen,
+	},
 	{
 		path: '/admin/payroll/salaryStructure/create',
 		name: 'CreateSalaryStructure',

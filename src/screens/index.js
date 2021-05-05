@@ -163,6 +163,11 @@ import CreateDesignation from './designation/screens/create'
 import DetailSalaryStructure from './salaryStructure/screens/detail'
 import DetailSalaryTemplate from './salaryTemplate/screens/detail'
 import DetailDesignation from './designation/screens/detail'
+import DetailCreditNote from './creditNotes/screens/detail'
+import CreateCreditNote from './creditNotes/screens/create'
+import ViewCreditNote from './creditNotes/screens/view'
+import CreditNotes from './creditNotes'
+import ApplyToInvoice from './creditNotes/screens/applyToInvoice'
 export {
 	LogIn,
 	LogInTwo,
@@ -307,5 +312,10 @@ export {
 	DetailSalaryRole,
 	DetailSalaryStructure,
 	DetailSalaryTemplate,
-	DetailDesignation
+	DetailDesignation,
+	CreditNotes,
+	CreateCreditNote,
+	DetailCreditNote,
+	ViewCreditNote,
+	ApplyToInvoice
 };

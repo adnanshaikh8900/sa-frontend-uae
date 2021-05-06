@@ -337,11 +337,11 @@ export const getPaymentMode = () => {
 	};
 };
 
-export const postInvoice = (obj) => {
+export const creditNoteposting = (obj) => {
 	return (dispatch) => {
 		let data = {
 			method: 'post',
-			url: '/rest/invoice/posting',
+			url: '/rest/creditNote/creditNoteposting',
 			data: obj,
 		};
 		return authApi(data)

@@ -74,9 +74,12 @@ const ar = {
       Discount: "خصم",
       Total: "مجموع",
       CreateandMore: "إنشاء والمزيد",
-      AddACustomer: "أضف زبون",
-      AddMore: "إضافة المزيد",
-      Upload: "تحميل",
+      Addacustomer: "أضف زبون",
+      Addmore: "إضافة المزيد",
+      upload: "تحميل",
+      UpdateInvoice: "تحديث الفاتورة",
+      Delete:"حذف",
+      Update: "تحديث",
 
       CreateContact: "إنشاء جهة اتصال ",
       ContactDetails: "تفاصيل الاتصال",
@@ -112,7 +115,7 @@ const ar = {
       Quotation:"اقتباس",				
       QUOTATIONNUMBER:"رقم عرض الأسعار",						
       EXPIRATIONDATE:"تاريخ انتهاء الصلاحية",				
-      AddNewRequest:"إضافة طلب جديد",		
+      AddNewRequest:"إضافة طلب جديد",
 
       //Create Quotation
       CreateQuotation:"إنشاء عرض أسعار",		
@@ -126,7 +129,7 @@ const ar = {
       PAYEE:"المستفيدون من الدفع",				
       EXPENSECATEGORY:"فئة المصروفات",				
       EXPENSEAMOUNT:"مبلغ المصروفات",		
-      AddNewExpense:"إضافة مصروفات جديدة",		
+      AddNewExpense:"إضافة مصروفات جديدة",
 
 //Add expense		
 CreateExpense:"إنشاء مصروفات",		
@@ -148,7 +151,7 @@ SupplierName:"اسم المورد",
 AddNewSupplier:"إضافة مورد جديد",			
 PlaceofSupply:"مكان التوريد",			
 Terms:"حيث",														
-AddASupplier:"إضافة مورد",								
+AddASupplier:"إضافة مورد",
 
 //Purchase receipts
 Purchasereceipts:"إيصالات الشراء",				
@@ -161,7 +164,7 @@ RequestForQuotation:"طلب عرض أسعار",
 RFQNUMBER:"رقم طلب عرض الأسعار",									
 RFQDATE:"تاريخ طلب عرض الأسعار",			
 RFQDUEDATE:"تاريخ استحقاق طلب عرض الأسعار",						
-AddNewRequest:"إضافة طلب جديد",			
+AddNewRequest:"إضافة طلب جديد",
 											
 //Create RFQ			
 CreateRequestForQuotation:"إنشاء طلب عرض أسعار",			
@@ -174,7 +177,7 @@ PurchaseOrder:"أمر الشراء",
 PONUMBER:"رقم البريد",						
 PODATE:"تاريخ أمر الشراء",		
 POEXPIRYDATE:"تاريخ انتهاء صلاحية أمر الشراء",				
-AddNewPurchaseOrder:"إضافة أمر شراء جديد",		
+AddNewPurchaseOrder:"إضافة أمر شراء جديد",
 
 //create purchase order	
 CreatePurchaseOrder:"إنشاء أمر شراء",		
@@ -189,7 +192,7 @@ GoodsReceivedNotes:"البضائع المستلمة ملاحظات",
 GRNNUMBER:"رقم الملاحظات المستلمة للسلع ",									
 GRNRECEIVEDATE:"تاريخ استلام الملاحظات المستلمة للبضائع ",			
 GRNREMARKS:"ملاحظات ملاحظات الملاحظات المستلمة للسلع",			
-AddNewGoodsReceivedNotes:"إضافة ملاحظات جديدة للبضائع المستلمة",			
+AddNewGoodsReceivedNotes:"إضافة ملاحظات جديدة للبضائع المستلمة",
 
 //AddGoodsReceiveNotes
 CreateGoodsReceivedNote:"إنشاء ملاحظة استلام السلع",					
@@ -197,7 +200,7 @@ GRNNumber:"البضائع التي تم تلقيها رقم الملاحظة",
 SupplierreferenceNumber:"رقم مرجع المورد",			
 ReceivedDate:"تاريخ الاستلام",												
 RECEIVEDQUANTITY:"الكمية المستلمة",			
-POQUANTITY:"كمية أمر الشراء",		
+POQUANTITY:"كمية أمر الشراء",
 
 //Bank Account
 BankAccounts:"الحسابات المصرفية",		
@@ -207,7 +210,7 @@ ACCOUNTNUMBER:"رقم الحساب",
 ACCOUNTTYPE:"نوع الحساب",				
 BANKBALANCE:"الرصيد المصرفي",		
 LASTRECONCILED:"آخر تسوية",				
-Reconciled:"التوفيق بين",		
+Reconciled:"التوفيق بين",
 Balance:"توازن",		
 Date:"تاريخ",		
 AddNewAccount:"إضافة حساب جديد",		
@@ -258,7 +261,7 @@ NewJournal:"مجلة جديدة",
 //ADD Journal
 CreateJournal:"إنشاء دفتر اليومية",		
 JournalDate:" تاريخ دفتر اليومية",		
-JournalReference:"مرجع دفتر اليومية #",										
+JournalReference:"مرجع دفتر اليومية #",
 CONTACT:"الاتصال",		
 DEBIT:"الخصم",		
 CREDIT:"تسليف",		

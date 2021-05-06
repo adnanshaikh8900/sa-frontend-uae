@@ -30,6 +30,12 @@ export default {
 					icon: 'fas fa-box-open',
 					path: 'ViewQuotation',
 				},
+				{
+					name: 'Credit Notes',
+					url: '/admin/income/credit-notes',
+					icon: 'fas fa-donate',
+					path: 'ViewCreditNotes',
+				},
 			],
 		},
 		{

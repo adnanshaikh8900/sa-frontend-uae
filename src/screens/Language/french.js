@@ -78,6 +78,9 @@ const fr = {
       Addacustomer: "Ajouter un client",
       Addmore: "ajouter",
       upload: "télécharger",
+      UpdateInvoice: "mettre à jour la facture",
+      Delete:"Effacer",
+      Update: "Mettre à jour",
 
       CreateContact: "Créer le contact",
       ContactDetails: "Coordonnées",

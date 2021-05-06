@@ -77,6 +77,9 @@ const ar = {
       Addacustomer: "أضف زبون",
       Addmore: "إضافة المزيد",
       upload: "تحميل",
+      UpdateInvoice: "تحديث الفاتورة",
+      Delete:"حذف",
+      Update: "تحديث",
 
       CreateContact: "إنشاء جهة اتصال ",
       ContactDetails: "تفاصيل الاتصال",

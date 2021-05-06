@@ -36,6 +36,8 @@ import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 
 import './style.scss';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -71,6 +73,7 @@ const overWeekly = require('assets/images/invoice/week1.png');
 const overduemonthly = require('assets/images/invoice/month.png');
 const overdue = require('assets/images/invoice/due1.png');
 
+let strings = new LocalizedStrings(data);
 class Quatation extends React.Component {
 	constructor(props) {
 		super(props);
@@ -99,6 +102,7 @@ class Quatation extends React.Component {
 				overDueAmountWeekly: '',
 				overDueAmountMonthly: '',
 			},
+			language: window['localStorage'].getItem('language'),
 		};
 
 		this.options = {
@@ -208,13 +212,13 @@ class Quatation extends React.Component {
 		return(
 			<div>
 								<div>
-						<label className="font-weight-bold mr-2 ">Quotation Amount : </label>
+						<label className="font-weight-bold mr-2 ">{strings.QuotationAmount}: </label>
 						<label>
 							{row.totalAmount  === 0 ? row.totalAmount.toFixed(2) : row.totalAmount.toFixed(2)}
 						</label>
 					</div>
 					<div>
-					<label className="font-weight-bold mr-2">Vat Amount : </label>
+					<label className="font-weight-bold mr-2">{strings.VatAmount}: </label>
 					<label>{row.totalVatAmount === 0  ?  row.totalVatAmount.toFixed(2) :  row.totalVatAmount.toFixed(2)}</label>
 					</div>
 					
@@ -712,6 +716,7 @@ class Quatation extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			loading,
 			filterData,
@@ -765,7 +770,7 @@ console.log(quotation_list)
 											src={invoiceimage}
 											style={{ width: '40px' }}
 										/>
-										<span className="ml-2">Quotation
+										<span className="ml-2">{strings.Quotation}
 										</span>
 									</div>
 								</Col>
@@ -814,7 +819,7 @@ console.log(quotation_list)
 										</ButtonGroup>
 									</div>
 									<div className="py-3">
-										<h5>Filter : </h5>
+										<h5>{strings.Filter} : </h5>
 										<Row>
 											<Col lg={2} className="mb-1">
 												<Select
@@ -940,7 +945,7 @@ console.log(quotation_list)
 										}
 									>
 										<i className="fas fa-plus mr-1" />
-										Add New Request
+										{strings.AddnewRequest}
 									</Button>
 									</div>
 									</Row> 
@@ -975,7 +980,7 @@ console.log(quotation_list)
 											//	width="10%"
 												className="table-header-bg"
 											>
-												Quotation Number
+												{strings.QUOTATIONNUMBER}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="supplierName"
@@ -983,7 +988,7 @@ console.log(quotation_list)
 											//	width="12%"
 												className="table-header-bg"
 											>
-												Customer Name
+												{strings.CUSTOMERNAME}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 											//	width="10%"
@@ -992,7 +997,7 @@ console.log(quotation_list)
 												dataSort
 												className="table-header-bg"
 											>
-												Status
+												{strings.STATUS}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="poApproveDate"
@@ -1001,7 +1006,7 @@ console.log(quotation_list)
 												dataFormat={this.pODate}
 												className="table-header-bg"
 											>
-												Expiration Date
+												{strings.EXPIRATIONDATE}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="totalAmount"
@@ -1011,7 +1016,7 @@ console.log(quotation_list)
 												className="table-header-bg"
 												
 											>
-												 Amount
+											   {strings.AMOUNT}
 											</TableHeaderColumn>
 										
 											<TableHeaderColumn

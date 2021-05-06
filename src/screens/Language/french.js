@@ -117,7 +117,7 @@ const fr = {
 
       //Create Quotation
       CreateQuotation:"Créer une citation",		
-      QuatationNumber:"Numéro de quatation",					
+      QuotationNumber:"Numéro de quatation",					
       ExpirationDate:"échéance",			
       CreateSupplier:"Créer un fournisseur ",		
 
@@ -360,6 +360,10 @@ InventorySummary:"Résumé des stocks ",
 Ason:"Comme sur ",		
 Export:"exportation ",		
 PoweredBy:"Alimenté par",			
+
+QuotationAmount:"Montant du devis ",
+VatAmount:"Montant de la TVA ",
+UpdateQuotation:"mettre à jour le devis",
 
   }
   export {fr};

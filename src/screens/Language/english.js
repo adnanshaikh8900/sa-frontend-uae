@@ -120,7 +120,7 @@ const en = {
 
       //Create Quotation
       CreateQuotation:"Create Quotation",		
-      QuatationNumber:"Quatation Number",					
+      QuotationNumber:"Quotation Number",					
       ExpirationDate:"Expiration Date",			
       CreateSupplier:"Create Supplier",		
 
@@ -364,6 +364,8 @@ Ason:"As on",
 Export:"Export",		
 PoweredBy:"Powered By",			
 
-
+QuotationAmount:"Quotation Amount",
+VatAmount:"Vat Amount",
+UpdateQuotation:"Update Quotation",
 }
 export { en }

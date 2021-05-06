@@ -38,7 +38,8 @@ import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import './style.scss';
 import moment from 'moment';
 import API_ROOT_URL from '../../../../constants/config';
-
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 const mapStateToProps = (state) => {
 	return {
 		project_list: state.request_for_quotation.project_list,
@@ -88,6 +89,7 @@ const customStyles = {
 	}),
 };
 
+let strings = new LocalizedStrings(data);
 class DetailQuotation extends React.Component {
 	constructor(props) {
 		super(props);
@@ -115,6 +117,8 @@ class DetailQuotation extends React.Component {
 			purchaseCategory: [],
 			basecurrency:[],
 			supplier_currency: '',
+
+			language: window['localStorage'].getItem('language'),
 		};
 
 		// this.options = {
@@ -1059,6 +1063,7 @@ class DetailQuotation extends React.Component {
 	}
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
 
 		const { project_list, currency_list,currency_convert_list, supplier_list,universal_currency_list } = this.props;
@@ -1081,7 +1086,7 @@ class DetailQuotation extends React.Component {
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="fas fa-address-book" />
-												<span className="ml-2">Update Quotation</span>
+												<span className="ml-2">{strings.UpdateQuotation}</span>
 											</div>
 										</Col>
 									</Row>
@@ -1189,7 +1194,7 @@ class DetailQuotation extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="quotationNumber">
 																			<span className="text-danger">*</span>
-																			Quotation Number
+																			{strings.QuotationNumber}
 																		</Label>
 																		<Input
 																			type="text"
@@ -1222,7 +1227,7 @@ class DetailQuotation extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="customerId">
 																			<span className="text-danger">*</span>
-																			Supplier Name
+																				{strings.SUPPLIERNAME}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -1280,7 +1285,7 @@ class DetailQuotation extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">
 																			<span className="text-danger">*</span>
-																			Expiration Date
+																			{strings.ExpirationDate}
 																		</Label>
 																		<DatePicker
 																			id="quotaionExpiration"
@@ -1331,7 +1336,7 @@ class DetailQuotation extends React.Component {
 																		}
 																		disabled={this.checkedRow() ? true : false}
 																	>
-																		<i className="fa fa-plus"></i> Add More
+																		<i className="fa fa-plus"></i> {strings.Addmore}
 																	</Button>
 																</Col>
 															</Row>
@@ -1375,7 +1380,7 @@ class DetailQuotation extends React.Component {
 																				this.renderProduct(cell, rows, props)
 																			}
 																		>
-																			Product
+																			{strings.PRODUCT}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																		width="55"
@@ -1403,7 +1408,7 @@ class DetailQuotation extends React.Component {
 																				)
 																			}
 																		>
-																			Description
+																			{strings.DESCRIPTION}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="quantity"
@@ -1412,7 +1417,7 @@ class DetailQuotation extends React.Component {
 																				this.renderQuantity(cell, rows, props)
 																			}
 																		>
-																			Quantity
+																			{strings.QUANTITY}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="unitPrice"
@@ -1420,7 +1425,7 @@ class DetailQuotation extends React.Component {
 																				this.renderUnitPrice(cell, rows, props)
 																			}
 																		>
-																			Unit Price (All)
+																			{strings.UNITPRICE}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="vat"
@@ -1428,7 +1433,7 @@ class DetailQuotation extends React.Component {
 																				this.renderVat(cell, rows, props)
 																			}
 																		>
-																			Vat (%)
+																			{strings.VAT}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="sub_total"
@@ -1437,7 +1442,7 @@ class DetailQuotation extends React.Component {
 																			columnClassName="text-right"
 																			formatExtraData={universal_currency_list}
 																		>
-																			Sub Total (All)
+																			{strings.SubTotal}
 																		</TableHeaderColumn>
 																	</BootstrapTable>
 																</Col>
@@ -1446,7 +1451,7 @@ class DetailQuotation extends React.Component {
 																<Row>
 																		<Col lg={8}>
 																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">Notes</Label>
+																		<Label htmlFor="notes">{strings.Notes}</Label>
 																		<Input
 																			type="textarea"
 																			maxLength="255"
@@ -1469,7 +1474,7 @@ class DetailQuotation extends React.Component {
 																				<Row>
 																					<Col lg={6}>
 																						<h5 className="mb-0 text-right">
-																							Total Net
+																						{strings.TotalNet}
 																						</h5>
 																					</Col>
 																					<Col lg={6} className="text-right">
@@ -1493,7 +1498,7 @@ class DetailQuotation extends React.Component {
 																				<Row>
 																					<Col lg={6}>
 																						<h5 className="mb-0 text-right">
-																							Total Vat
+																						{strings.TotalVat}
 																						</h5>
 																					</Col>
 																					<Col lg={6} className="text-right">
@@ -1521,7 +1526,7 @@ class DetailQuotation extends React.Component {
 																				<Row>
 																					<Col lg={6}>
 																						<h5 className="mb-0 text-right">
-																							Total
+																						{strings.Total}
 																						</h5>
 																					</Col>
 																					<Col lg={6} className="text-right">
@@ -1557,7 +1562,7 @@ class DetailQuotation extends React.Component {
 																			className="btn-square"
 																			onClick={this.deletepo}
 																		>
-																			<i className="fa fa-trash"></i> Delete
+																			<i className="fa fa-trash"></i> {strings.Delete}
 																		</Button>
 																	</FormGroup>
 																	<FormGroup className="text-right">
@@ -1567,7 +1572,7 @@ class DetailQuotation extends React.Component {
 																			className="btn-square mr-3"
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			Update
+																			{strings.Update}
 																		</Button>
 																		<Button
 																			color="secondary"
@@ -1578,7 +1583,7 @@ class DetailQuotation extends React.Component {
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i> Cancel
+																			<i className="fa fa-ban"></i> {strings.Cancel}
 																		</Button>
 																	</FormGroup>
 																</Col>

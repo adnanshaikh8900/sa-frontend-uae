@@ -116,7 +116,7 @@ const ar = {
 
       //Create Quotation
       CreateQuotation:"إنشاء عرض أسعار",		
-      QuatationNumber:"رقم الكواتيشن",					
+      QuotationNumber:"رقم الكواتيشن",					
       ExpirationDate:"تاريخ انتهاء الصلاحية ",			
       CreateSupplier:"إنشاء المورد ",		
 
@@ -360,6 +360,9 @@ Ason:"كما في",
 Export:"تصدير ",		
 PoweredBy:"يعمل بواسطة",	
 
+QuotationAmount:"مبلغ الاقتباس",
+VatAmount:"مبلغ ضريبة القيمة المضافة ",
+UpdateQuotation:"تحديث عرض الأسعار",
 
   }
   export {ar};

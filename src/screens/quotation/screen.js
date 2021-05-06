@@ -945,7 +945,7 @@ console.log(quotation_list)
 										}
 									>
 										<i className="fas fa-plus mr-1" />
-										{strings.AddnewRequest}
+										{strings.AddNewRequest}
 									</Button>
 									</div>
 									</Row> 

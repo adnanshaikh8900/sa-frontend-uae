@@ -37,6 +37,8 @@ import { selectOptionsFactory } from 'utils';
 
 import './style.scss';
 import moment from 'moment';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -86,6 +88,7 @@ const customStyles = {
 
 const invoiceimage = require('assets/images/invoice/invoice.png');
 
+let strings = new LocalizedStrings(data);
 class CreatePurchaseOrder extends React.Component {
 	constructor(props) {
 		super(props);
@@ -159,7 +162,7 @@ class CreatePurchaseOrder extends React.Component {
 			discountPercentage: '',
 			discountAmount: 0,
 			purchaseCategory: [],
-			
+			language: window['localStorage'].getItem('language'),	
 		};
 
 		this.formRef = React.createRef();
@@ -1248,6 +1251,7 @@ getrfqDetails = (e, row, props,form,field) => {
 
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { data, discountOptions, initValue, prefix } = this.state;
 
 		const {
@@ -1283,7 +1287,7 @@ getrfqDetails = (e, row, props,form,field) => {
 													src={invoiceimage}
 													style={{ width: '40px' }}
 												/>
-												<span className="ml-2">Create Purchase Order</span>
+												<span className="ml-2">{strings.CreatePurchaseOrder}</span>
 											</div>
 										</Col>
 									</Row>
@@ -1410,7 +1414,7 @@ getrfqDetails = (e, row, props,form,field) => {
 														<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="rfqNumber">
-																		RFQ Number
+																	{strings.RFQNumber}
 																	</Label>
 																	<Select
 																		styles={customStyles}
@@ -1469,7 +1473,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="po_number">
 																		<span className="text-danger">*</span>
-																		PO Number
+																		{strings.PONumber}
 																	</Label>
 																	<Input
 																		type="text"
@@ -1506,7 +1510,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="supplierId">
 																		<span className="text-danger">*</span>
-																		Supplier Name
+																		{strings.SupplierName}
 																	</Label>
 
 
@@ -1558,7 +1562,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																	htmlFor="supplierId"
 																	style={{ display: 'block' }}
 																>
-																	Add New Supplier
+																	{strings.AddNewSupplier}
 																</Label>
 																<Button
 																	type="button"
@@ -1566,13 +1570,13 @@ getrfqDetails = (e, row, props,form,field) => {
 																	className="btn-square"
 																	onClick={this.openSupplierModal}
 																>
-																	<i className="fa fa-plus"></i> Add a Supplier
+																	<i className="fa fa-plus"></i> {strings.AddASupplier}
 																</Button>
 															</Col>
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="supplierReferenceNumber">
-																		Supplier Reference Number
+																	{strings.SupplierReferenceNumber}
 																	</Label>
 																	<Input
 																		type="text"
@@ -1608,7 +1612,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
 																		<span className="text-danger">*</span>
-																		PO Date
+																		{strings.PODate}
 																	</Label>
 																	<DatePicker
 																		id="date"
@@ -1642,7 +1646,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="due_date">
 																	<span className="text-danger">*</span>
-																		PO Due Date
+																	{strings.PODueDate}
 																	</Label>
 																	<DatePicker
 																		id="date"
@@ -1690,7 +1694,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																	}
 																	disabled={this.checkedRow() ? true : false}
 																>
-																	<i className="fa fa-plus"></i> Add More
+																	<i className="fa fa-plus"></i> {strings.AddMore}
 																</Button>
 															</Col>
 														</Row>
@@ -1732,7 +1736,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																			this.renderProduct(cell, rows, props)
 																		}
 																	>
-																		Product
+																		{strings.PRODUCT}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		width="55"
@@ -1747,7 +1751,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																			this.renderDescription(cell, rows, props)
 																		}
 																	>
-																		Description
+																		{strings.DESCRIPTION}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="quantity"
@@ -1756,7 +1760,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																			this.renderQuantity(cell, rows, props)
 																		}
 																	>
-																		Quantity
+																		{strings.QUANTITY}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="unitPrice"
@@ -1764,7 +1768,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																			this.renderUnitPrice(cell, rows, props)
 																		}
 																	>
-																		Unit Price
+																		{strings.UNITPRICE}
 																		<i
 																			id="UnitPriceToolTip"
 																			className="fa fa-question-circle ml-1"
@@ -1783,7 +1787,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																			this.renderVat(cell, rows, props)
 																		}
 																	>
-																		Vat (%)
+																		{strings.VAT}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="sub_total"
@@ -1792,7 +1796,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		columnClassName="text-right"
 																		formatExtraData={universal_currency_list}
 																	>
-																		Sub Total
+																		{strings.SUBTOTAL}
 																	</TableHeaderColumn>
 																</BootstrapTable>
 															</Col>
@@ -1802,7 +1806,7 @@ getrfqDetails = (e, row, props,form,field) => {
 															<Row>
 																<Col lg={8}>
 																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">Notes</Label>
+																		<Label htmlFor="notes">{strings.Notes}</Label>
 																		<Input
 																			type="textarea"
 																			maxLength="255"
@@ -1822,7 +1826,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																					name="attachmentFile"
 																					render={({ field, form }) => (
 																						<div>
-																							<Label>Reciept Attachment</Label>{' '}
+																							<Label>{strings.RecieptAttachment}</Label>{' '}
 																							<br />
 																							<Button
 																								color="primary"
@@ -1834,7 +1838,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																								className="btn-square mr-3"
 																							>
 																								<i className="fa fa-upload"></i>{' '}
-																								Upload
+																								{strings.Upload}
 																							</Button>
 																							<input
 																								id="fileInput"
@@ -1882,7 +1886,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																						Total Net
+																					{strings.TotalNet}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
@@ -1912,7 +1916,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																						Total Vat
+																					{strings.TotalVat}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
@@ -1942,7 +1946,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																						Total
+																					{strings.Total}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
@@ -1992,7 +1996,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		<i className="fa fa-dot-circle-o"></i>{' '}
 																		{this.state.disabled
 																			? 'Creating...'
-																			: 'Create'}
+																			: strings.Create}
 																	</Button>
 																	<Button
 																		type="button"
@@ -2011,7 +2015,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		<i className="fa fa-repeat mr-1"></i>
 																		{this.state.disabled
 																			? 'Creating...'
-																			: 'Create & More'}
+																			: strings.CreateandMore}
 																	</Button>
 																	<Button
 																		type="button"
@@ -2023,7 +2027,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-ban"></i> Cancel
+																		<i className="fa fa-ban"></i> {strings.Cancel}
 																	</Button>
 																</FormGroup>
 															</Col>

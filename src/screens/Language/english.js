@@ -47,7 +47,7 @@ const en = {
       STATUS: "STATUS",
       INVOICEDATE: "INVOICE DATE",
       DUEDATE: "DUE DATE",
-      Addnewinvoice: "Add new invoice",
+      AddNewInvoice: "Add New Invoice",
       InvoiceAmount: "Invoice Amount",
       VatAmount: "Vat Amount",
       DueAmount: "Due Amount",
@@ -119,7 +119,7 @@ const en = {
       Quotation:"Quotation",				
       QUOTATIONNUMBER:"QUOTATION NUMBER",						
       EXPIRATIONDATE:"EXPIRATION DATE",				
-      Addnewrequest:"Add new request",		
+      AddNewRequest:"Add New Request",
 
       //Create Quotation
       CreateQuotation:"Create Quotation",		
@@ -133,7 +133,7 @@ const en = {
       PAYEE:"PAYEE",				
       EXPENSECATEGORY:"EXPENSE CATEGORY",				
       EXPENSEAMOUNT:"EXPENSE AMOUNT",		
-      Addnewexpense:"Add new expense",		
+      AddNewExpense:"Add New Expense",
 
 //Add expense		
 CreateExpense:"Create Expense",		
@@ -155,7 +155,7 @@ SupplierName:"Supplier Name",
 AddNewSupplier:"Add New Supplier",			
 PlaceofSupply:"Place of Supply",			
 Terms:"Terms",														
-Addasupplier:"Add a supplier",								
+AddASupplier:"Add A Supplier",
 
 //Purchase receipts
 Purchasereceipts:"Purchase receipts",				
@@ -181,7 +181,7 @@ PurchaseOrder:"Purchase Order",
 PONUMBER:"PO NUMBER",						
 PODATE:"PODATE",		
 POEXPIRYDATE:"PO EXPIRY DATE",				
-Addnewpurchaseorder:"Add new purchase order",		
+AddNewPurchaseOrder:"Add New Purchase Order",
 
 //create purchase order	
 CreatePurchaseOrder:"Create Purchase Order",		
@@ -196,7 +196,7 @@ GoodsReceivedNotes:"Goods Received Notes",
 GRNNUMBER:"GRN NUMBER",									
 GRNRECEIVEDATE:"GRN RECEIVE DATE",			
 GRNREMARKS:"GRN REMARKS",			
-AddnewGoodsReceivedNotes:"Add new Goods Received Notes",			
+AddNewGoodsReceivedNotes:"Add New Goods Received Notes",
 
 //AddGoodsReceiveNotes
 CreateGoodsReceivedNote:"Create Goods Received Note",					
@@ -204,7 +204,8 @@ GRNNumber:"GRN Number",
 SupplierreferenceNumber:"Supplier reference Number",			
 ReceivedDate:"Received Date",												
 RECEIVEDQUANTITY:"RECEIVED QUANTITY",			
-PurchaseQUANTITY:"Purchase QUANTITY",			
+POQUANTITY:"PO-QUANTITY",
+
 
 //Bank Account
 BankAccounts:"Bank Accounts",		
@@ -214,7 +215,7 @@ ACCOUNTNUMBER:"ACCOUNT NUMBER",
 ACCOUNTTYPE:"ACCOUNT TYPE",				
 BANKBALANCE:"BANK BALANCE",		
 LASTRECONCILED:"LAST RECONCILED",				
-Reconcile:"Reconcile",		
+Reconciled:"Reconciled",
 Balance:"Balance",		
 Date:"Date",		
 AddNewAccount:"Add New Account",		
@@ -265,7 +266,7 @@ NewJournal:"New Journal",
 //ADD Journal
 CreateJournal:"Create Journal",		
 JournalDate:"Journal Date",		
-JournalReference:"Journal Reference ",										
+JournalReference:"Journal Reference #",
 CONTACT:"CONTACT",		
 DEBIT:"DEBIT",		
 CREDIT:"CREDIT",		
@@ -346,15 +347,16 @@ BaseCurrency:"Base Currency",
 
 //Inventory
 
+Dashboard:"Dashboard",
 Inventory:"Inventory",
 NumberofSKUs:"Number of SKU's",		
 TotalValueofSKUs:"Total Value of SKU's",		
 TotalStockonHand:"Total Stock on Hand",		
-OutofStock:"Out of Stock",				
-TopsellingProduct:"Top selling Product",		
-lowsellingProduct: "low selling Product",		
-TotalRevenuegenerated:"Total Revenue generated",		
-Totalprofitgenerated:"Total profit generated",				
+OutofStock:"Out Of Stock",
+TopsellingProduct:"TOP SELLING PRODUCT",
+lowsellingProduct: "LOW SELLING PRODUCT",
+TotalRevenuegenerated:"TOTAL REVENUE GENERATED",
+Totalprofitgenerated:"TOTAL PROFIT GENERATED",
 Summary:"Summary",				
 PRODUCTNAME:"PRODUCT NAME",		
 PRODUCTCODE:"PRODUCT CODE",		
@@ -363,12 +365,15 @@ QUANTITYSOLD:"QUANTITY SOLD",
 STOCKINHAND:"STOCK IN HAND",		
 SUPPLIERNAME:"SUPPLIER NAME",		
 InventorySummary:"Inventory Summary",	
-Ason:"As on",		
+Ason:"As On",
 Export:"Export",		
 PoweredBy:"Powered By",			
 
 QuotationAmount:"Quotation Amount",
 VatAmount:"Vat Amount",
 UpdateQuotation:"Update Quotation",
+RFQAmount:"RFQ Amount",
+
+
 }
 export { en }

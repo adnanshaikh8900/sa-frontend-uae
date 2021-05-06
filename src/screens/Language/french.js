@@ -34,7 +34,7 @@ const fr = {
       ProfitLoss: "Bénéfice et perte",
 
       //Customer invoice
-      CustomerInvoices: "Customer bills",
+      CustomerInvoices: "Factures clients",
       Overdue: "en retard",
       DueWithinThisWeek: "Dû dans cette semaine",
       DueWithin30Days: "Dû dans les 30 jours",
@@ -44,7 +44,7 @@ const fr = {
       STATUS: "statut",
       INVOICEDATE: "DATE DE LA FACTURE",
       DUEDATE: "DATE D'ÉCHÉANCE",
-      Addnewinvoice: "Ajouter une nouvelle facture",
+      AddNewInvoice: "Ajouter une nouvelle facture",
       InvoiceAmount: "Montant de la facture",
       VatAmount: "Montant de la TVA",
       DueAmount: "Montant dû",
@@ -116,7 +116,7 @@ const fr = {
       Quotation:"citation",				
       QUOTATIONNUMBER:"NUMÉRO DE DEVIS",						
       EXPIRATIONDATE:"échéance",				
-      Addnewrequest:"Ajouter une nouvelle demande",		
+      AddNewRequest:"Ajouter une nouvelle demande",
 
       //Create Quotation
       CreateQuotation:"Créer une citation",		
@@ -130,7 +130,7 @@ const fr = {
       PAYEE:"bénéficiaire",				
       EXPENSECATEGORY:"CATÉGORIE DE DÉPENSES",				
       EXPENSEAMOUNT:"MONTANT DES DÉPENSES",		
-      Addnewexpense:"Ajouter de nouvelles dépenses",		
+      AddNewExpense:"Ajouter de nouvelles dépenses",
 
 //Add expense		
 CreateExpense:"Créer des dépenses",		
@@ -152,7 +152,7 @@ SupplierName:"Nom du fournisseur",
 AddNewSupplier:"Ajouter un nouveau fournisseur",			
 PlaceofSupply:"Lieu d’approvisionnement",			
 Terms:"petits caractères",														
-Addasupplier:"Ajouter un fournisseur",								
+AddASupplier:"Ajouter Un Fournisseur",
 
 //Purchase receipts
 Purchasereceipts:"Reçus d’achat",				
@@ -178,7 +178,7 @@ PurchaseOrder:"bon de commande",
 PONUMBER:"Numéro de commande d’achat ",						
 PODATE:"Date de commande",		
 POEXPIRYDATE:"DATE D’EXPIRATION du bon de commande",				
-Addnewpurchaseorder:"Ajouter un nouveau bon de commande",		
+AddNewPurchaseOrder:"Ajouter un nouveau bon de commande",
 
 //create purchase order	
 CreatePurchaseOrder:"Créer un bon de commande",		
@@ -193,7 +193,7 @@ GoodsReceivedNotes:"Marchandises reçues Notes",
 GRNNUMBER:"Numéro de note reçu marchandises ",									
 GRNRECEIVEDATE:"Les billets reçus reçoivent la date ",			
 GRNREMARKS:"Marchandises reçues Remarques sur les notes ",			
-AddnewGoodsReceivedNotes:"Ajouter de nouvelles notes reçues de marchandises",			
+AddNewGoodsReceivedNotes:"Ajouter de nouvelles notes reçues de marchandises",
 
 //AddGoodsReceiveNotes
 CreateGoodsReceivedNote:"Créer une note reçue de marchandises",					
@@ -201,7 +201,7 @@ GRNNumber:"Numéro de note reçu marchandises ",
 SupplierreferenceNumber:"Numéro de référence fournisseur",			
 ReceivedDate:"Date de recevoir",												
 RECEIVEDQUANTITY:"QUANTITÉ REÇUE",			
-PurchaseQUANTITY:"QUANTITÉ D’achat",			
+POQUANTITY:"Quantité de commande d’achat",
 
 //Bank Account
 BankAccounts:"Comptes bancaires",		
@@ -211,7 +211,7 @@ ACCOUNTNUMBER:"Numéro de compte",
 ACCOUNTTYPE:"TYPE DE COMPTE",				
 BANKBALANCE:"SOLDE BANCAIRE",		
 LASTRECONCILED:"DERNIER RÉCONCILIÉ",				
-Reconcile:"Réconcilier",		
+Reconciled:"Réconcilier",
 Balance:"Ballance",		
 Date:"Date ",		
 AddNewAccount:"Ajouter un nouveau compte",		
@@ -251,7 +251,7 @@ ReferenceNumber:"Numéro de référence",
 
 Journal:"Journal",				
 POSTDATE:"DATE DE PUBLICATION",		
-JOURNALREFERENCENO:"RÉFÉRENCE DE JOURNAL NO",		
+JOURNALREFERENCENO:"RÉFÉRENCE DE JOURNAL NO ",
 TYPE:"TAPER",		
 NOTES:"NOTES",		
 ACCOUNT:"COMPTE ",		
@@ -262,7 +262,7 @@ NewJournal:"Nouveau Journal",
 //ADD Journal
 CreateJournal:"Créer un journal",		
 JournalDate:"Journal Date",		
-JournalReference:"Référence du journal  ",										
+JournalReference:"Référence du journal #",
 CONTACT:"CONTACT",		
 DEBIT:"débit",		
 CREDIT:"crédit",		
@@ -342,12 +342,12 @@ Exchangerate:"taux de change",
 BaseCurrency:"Devise de base",			
 
 //Inventory
-
+Dashboard:"tableau de bord",
 Inventory:"inventaire ",
 NumberofSKUs:"Nombre d’unités de stockage ",		
 TotalValueofSKUs:"Valeur totale des unités de conservation des stocks ",		
 TotalStockonHand:"Stock total en main ",		
-OutofStock:"Rupture de stock ",				
+OutofStock:"Rupture De stock ",
 TopsellingProduct:"Produit le plus vendu ",		
 lowsellingProduct: "produit à faible vente",		
 TotalRevenuegenerated:"Total des revenus générés",		
@@ -360,13 +360,14 @@ QUANTITYSOLD:"QUANTITÉ VENDUE ",
 STOCKINHAND:"STOCK À LA MAIN ",		
 SUPPLIERNAME:"NOM DU FOURNISSEUR ",		
 InventorySummary:"Résumé des stocks ",	
-Ason:"Comme sur ",		
+Ason:"Comme Sur ",
 Export:"exportation ",		
 PoweredBy:"Alimenté par",			
 
 QuotationAmount:"Montant du devis ",
 VatAmount:"Montant de la TVA ",
 UpdateQuotation:"mettre à jour le devis",
+RFQAmount:"Demande de montant de devis",
 
   }
   export {fr};

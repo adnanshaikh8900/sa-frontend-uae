@@ -27,6 +27,8 @@ import { CommonActions } from 'services/global';
 import moment from 'moment';
 
 import './style.scss';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	console.log('state', state.journal.cancel_flag)
@@ -44,6 +46,7 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+let strings = new LocalizedStrings(data);
 class Journal extends React.Component {
 	constructor(props) {
 		super(props);
@@ -59,6 +62,7 @@ class Journal extends React.Component {
 			},
 			csvData: [],
 			view: false,
+			language: window['localStorage'].getItem('language'),
 		};
 
 		this.options = {
@@ -419,6 +423,7 @@ class Journal extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			loading,
 			dialog,
@@ -440,7 +445,7 @@ class Journal extends React.Component {
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="fa fa-diamond" />
-										<span className="ml-2">Journal</span>
+										<span className="ml-2">{strings.Journal}</span>
 									</div>
 								</Col>
 							</Row>
@@ -487,7 +492,7 @@ class Journal extends React.Component {
 											</ButtonGroup>
 										</div>
 										<div className="py-3">
-											<h5>Filter : </h5>
+											<h5>{strings.Filter} : </h5>
 											<Row>
 												<Col lg={2} className="mb-1">
 													<DatePicker
@@ -559,7 +564,7 @@ class Journal extends React.Component {
 													}
 											>
 													<i className="fas fa-plus mr-1" />
-													New Journal
+													{strings.NewJournal}  
 												</Button>
 										</div>
 										<div>
@@ -603,7 +608,7 @@ class Journal extends React.Component {
 													width="12%"
 													className="table-header-bg"
 												>
-													POST DATE
+													{strings.POSTDATE}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="journalReferenceNo"
@@ -611,7 +616,7 @@ class Journal extends React.Component {
 													width="18%"
 													className="table-header-bg"
 												>
-													JOURNAL REFERENCE NO
+													{strings.JOURNALREFERENCENO}  
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="postingReferenceTypeDisplayName"
@@ -620,7 +625,7 @@ class Journal extends React.Component {
 													tdStyle={{ whiteSpace: 'unset' }}
 													className="table-header-bg"
 												>
-													Type
+													{strings.TYPE}  
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="description"
@@ -628,7 +633,7 @@ class Journal extends React.Component {
 													width="10%"
 													className="table-header-bg"
 												>
-													Notes
+													{strings.NOTES}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="journalLineItems"
@@ -637,7 +642,7 @@ class Journal extends React.Component {
 													dataAlign="left"
 													className="table-header-bg"
 												>
-													Account
+													{strings.ACCOUNT}  
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="journalLineItems"
@@ -647,7 +652,7 @@ class Journal extends React.Component {
 													width="13%"
 													className="table-header-bg"
 												>
-													DEBIT AMOUNT
+													{strings.DEBITAMOUNT}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="journalLineItems"
@@ -657,7 +662,7 @@ class Journal extends React.Component {
 													formatExtraData={universal_currency_list}
 													className="table-header-bg"
 												>
-													CREDIT AMOUNT
+													{strings.CREDITAMOUNT}
 												</TableHeaderColumn>
 												{/* <TableHeaderColumn
                             className="text-right"

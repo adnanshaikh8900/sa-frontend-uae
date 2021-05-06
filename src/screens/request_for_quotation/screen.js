@@ -38,6 +38,8 @@ import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 
 import './style.scss';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 import { Create } from '@material-ui/icons';
 import moment from 'moment';
 
@@ -83,6 +85,7 @@ const overWeekly = require('assets/images/invoice/week1.png');
 const overduemonthly = require('assets/images/invoice/month.png');
 const overdue = require('assets/images/invoice/due1.png');
 
+let strings = new LocalizedStrings(data);
 class RequestForQuotation extends React.Component {
 	constructor(props) {
 		super(props);
@@ -119,6 +122,7 @@ class RequestForQuotation extends React.Component {
 			csvData: [],
 			view: false,
 			rowId: '',
+			language: window['localStorage'].getItem('language'),
 		};
 
 		this.options = {
@@ -788,6 +792,7 @@ class RequestForQuotation extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			loading,
 			filterData,
@@ -842,7 +847,7 @@ class RequestForQuotation extends React.Component {
 											src={invoiceimage}
 											style={{ width: '40px' }}
 										/>
-										<span className="ml-2">Request For Quotation</span>
+										<span className="ml-2">{strings.RequestForQuotation}</span>
 									</div>
 								</Col>
 							</Row>
@@ -890,7 +895,7 @@ class RequestForQuotation extends React.Component {
 										</ButtonGroup>
 									</div>
 									<div className="py-3">
-										<h5>Filter : </h5>
+										<h5>{strings.Filter} : </h5>
 										<Row>
 											<Col lg={2} className="mb-1">
 												<Select
@@ -1016,7 +1021,7 @@ class RequestForQuotation extends React.Component {
 										}
 									>
 										<i className="fas fa-plus mr-1" />
-										Add New Request
+										{strings.AddNewRequest}
 									</Button>
 									</div>
 									</Row> 
@@ -1052,7 +1057,7 @@ class RequestForQuotation extends React.Component {
 											//	width="10%"
 												className="table-header-bg"
 											>
-												RFQ Number
+											{strings.RFQNUMBER}
 											</TableHeaderColumn>
 											{/* <TableHeaderColumn
 												dataField="poList"
@@ -1069,7 +1074,7 @@ class RequestForQuotation extends React.Component {
 											//	width="12%"
 												className="table-header-bg"
 											>
-												Supplier Name
+												{strings.SUPPLIERNAME}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 											//	width="10%"
@@ -1078,7 +1083,7 @@ class RequestForQuotation extends React.Component {
 												dataSort
 												className="table-header-bg"
 											>
-												Status
+												{strings.STATUS}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="rfqReceiveDate"
@@ -1087,7 +1092,7 @@ class RequestForQuotation extends React.Component {
 												dataFormat={this.orderDate}
 												className="table-header-bg"
 											>
-												RFQ Date
+												{strings.RFQDATE}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="rfqExpiryDate"
@@ -1096,7 +1101,7 @@ class RequestForQuotation extends React.Component {
 												dataFormat={this.rfqDueDate}
 												className="table-header-bg"
 											>
-												RFQ Due Date
+												{strings.RFQDUEDATE}
 											</TableHeaderColumn>
 											
 											<TableHeaderColumn
@@ -1107,7 +1112,7 @@ class RequestForQuotation extends React.Component {
 												className="table-header-bg"
 												
 											>
-												 Amount
+												 {strings.AMOUNT}
 											</TableHeaderColumn>
 											{/* <TableHeaderColumn
 												dataField="dueAmount"

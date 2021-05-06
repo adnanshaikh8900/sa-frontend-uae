@@ -1342,7 +1342,7 @@ class CreateQuotation extends React.Component {
 																	className="btn-square"
 																	onClick={this.openSupplierModal}
 																>
-																	<i className="fa fa-plus"></i>{strings.Addacustomer} 
+																	<i className="fa fa-plus"></i>{strings.AddACustomer} 
 																</Button>
 															</Col>
 														</Row>
@@ -1435,7 +1435,7 @@ class CreateQuotation extends React.Component {
 																	}
 																	disabled={this.checkedRow() ? true : false}
 																>
-																	<i className="fa fa-plus"></i>{strings.Addmore} 
+																	<i className="fa fa-plus"></i>{strings.AddMore} 
 																</Button>
 															</Col>
 														</Row>

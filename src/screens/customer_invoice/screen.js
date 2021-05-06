@@ -1056,7 +1056,7 @@ class CustomerInvoice extends React.Component {
 										}
 									>
 										<i className="fas fa-plus mr-1" />
-									{strings.Addnewinvoice}
+									{strings.AddNewInvoice}
 									</Button></div></Row>
 								
 										<BootstrapTable

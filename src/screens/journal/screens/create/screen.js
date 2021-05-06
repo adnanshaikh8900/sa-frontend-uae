@@ -31,6 +31,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
 import './style.scss';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -59,6 +61,7 @@ const customStyles = {
 	}),
 };
 
+let strings = new LocalizedStrings(data);
 class CreateJournal extends React.Component {
 	constructor(props) {
 		super(props);
@@ -114,6 +117,7 @@ class CreateJournal extends React.Component {
 				],
 			},
 			submitJournal: false,
+			language: window['localStorage'].getItem('language'),
 		};
 
 		this.formRef = React.createRef();
@@ -685,6 +689,7 @@ class CreateJournal extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { data, initValue } = this.state;
 		const { currency_list,universal_currency_list } = this.props;
 
@@ -699,7 +704,7 @@ class CreateJournal extends React.Component {
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="fa fa-diamond" />
-												<span className="ml-2">Create Journal</span>
+												<span className="ml-2">{strings.CreateJournal}</span>
 											</div>
 										</Col>
 									</Row>
@@ -740,7 +745,7 @@ class CreateJournal extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
 																		<span className="text-danger">*</span>
-																		Journal Date
+																		{strings.JournalDate}
 																	</Label>
 																	<DatePicker
 																		id="journalDate"
@@ -775,7 +780,7 @@ class CreateJournal extends React.Component {
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="journalReferenceNo">
-																		Journal Reference #
+																	{strings.JournalReference}
 																	</Label>
 																	<Input
 																		type="text"
@@ -803,7 +808,7 @@ class CreateJournal extends React.Component {
 														<Row>
 															<Col lg={8}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="description">Notes</Label>
+																	<Label htmlFor="description">{strings.Notes}</Label>
 																	<Input
 																		type="textarea"
 																		maxLength="255"
@@ -822,7 +827,7 @@ class CreateJournal extends React.Component {
 														<Row>
 															<Col lg={4}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="currencyCode">Currency</Label>
+																	<Label htmlFor="currencyCode">{strings.Currency}</Label>
 																	<Select
 																		styles={customStyles}
 																		className="select-default-width"
@@ -880,7 +885,7 @@ class CreateJournal extends React.Component {
 																	className="btn-square mr-3"
 																	onClick={this.addRow}
 																>
-																	<i className="fa fa-plus"></i> Add More
+																	<i className="fa fa-plus"></i> {strings.AddMore} 
 																</Button>
 															</Col>
 														</Row>
@@ -959,7 +964,7 @@ class CreateJournal extends React.Component {
 																			this.renderAccount(cell, rows, props)
 																		}
 																	>
-																		Account
+																		{strings.ACCOUNT} 
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="description"
@@ -967,7 +972,7 @@ class CreateJournal extends React.Component {
 																			this.renderDescription(cell, rows, props)
 																		}
 																	>
-																		Description
+																		{strings.DESCRIPTION}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="contactId"
@@ -975,7 +980,7 @@ class CreateJournal extends React.Component {
 																			this.renderContact(cell, rows, props)
 																		}
 																	>
-																		Contact
+																	   {strings.CONTACT} 
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="debitAmount"
@@ -983,7 +988,7 @@ class CreateJournal extends React.Component {
 																			this.renderDebits(cell, rows, props)
 																		}
 																	>
-																		Debit
+																		{strings.DEBIT} 
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="creditAmount"
@@ -991,7 +996,7 @@ class CreateJournal extends React.Component {
 																			this.renderCredits(cell, rows, props)
 																		}
 																	>
-																		Credit
+																		{strings.CREDIT}
 																	</TableHeaderColumn>
 																</BootstrapTable>
 															</Col>
@@ -1005,12 +1010,12 @@ class CreateJournal extends React.Component {
 																			<Col xs={4}></Col>
 																			<Col xs={4}>
 																				<h5 className="mb-0 text-right">
-																					Debit
+																				{strings.Debit} 
 																				</h5>
 																			</Col>
 																			<Col xs={4}>
 																				<h5 className="mb-0 text-right">
-																					Credit
+																				{strings.Credit} 
 																				</h5>
 																			</Col>
 																		</Row>
@@ -1019,7 +1024,7 @@ class CreateJournal extends React.Component {
 																		<Row>
 																			<Col xs={4}>
 																				<h5 className="mb-0 text-right">
-																					Sub Total
+																				{strings.SubTotal}
 																				</h5>
 																			</Col>
 																			<Col xs={4} className="text-right">
@@ -1062,7 +1067,7 @@ class CreateJournal extends React.Component {
 																		<Row>
 																			<Col xs={4}>
 																				<h5 className="mb-0 text-right">
-																					Total
+																				{strings.Total}
 																				</h5>
 																			</Col>
 																			<Col xs={4} className="text-right">
@@ -1125,7 +1130,7 @@ class CreateJournal extends React.Component {
 																		}}
 																	>
 																		<i className="fa fa-dot-circle-o"></i>{' '}
-																		Create
+																		{strings.Create} 
 																	</Button>
 																	<Button
 																		type="button"
@@ -1143,8 +1148,7 @@ class CreateJournal extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-repeat"></i> Create and
-																		More
+																		<i className="fa fa-repeat"></i> {strings.CreateandMore} 
 																	</Button>
 																	<Button
 																		color="secondary"
@@ -1155,7 +1159,7 @@ class CreateJournal extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-ban"></i> Cancel
+																		<i className="fa fa-ban"></i> {strings.Cancel}
 																	</Button>
 																</FormGroup>
 															</Col>

@@ -37,6 +37,8 @@ import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 
 import './style.scss';
 import moment from 'moment';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -83,6 +85,7 @@ const customStyles = {
 
 const invoiceimage = require('assets/images/invoice/invoice.png');
 
+let strings = new LocalizedStrings(data);
 class CreateSupplierInvoice extends React.Component {
 	constructor(props) {
 		super(props);
@@ -158,6 +161,7 @@ class CreateSupplierInvoice extends React.Component {
 			purchaseCategory: [],
 			exchangeRate:'',	
 			basecurrency:[],
+			language: window['localStorage'].getItem('language'),
 		};
 
 		this.formRef = React.createRef();
@@ -1266,6 +1270,7 @@ class CreateSupplierInvoice extends React.Component {
 	}
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { data, discountOptions, initValue, prefix } = this.state;
 
 		const {
@@ -1297,7 +1302,7 @@ class CreateSupplierInvoice extends React.Component {
 													src={invoiceimage}
 													style={{ width: '40px' }}
 												/>
-												<span className="ml-2">Create Invoice</span>
+												<span className="ml-2">{strings.CreateInvoice}</span>
 											</div>
 										</Col>
 									</Row>
@@ -1429,7 +1434,7 @@ class CreateSupplierInvoice extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="invoice_number">
 																		<span className="text-danger">*</span>
-																		Invoice Number
+																		{strings.InvoiceNumber}
 																	</Label>
 																	<Input
 																		type="text"
@@ -1462,7 +1467,7 @@ class CreateSupplierInvoice extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="contactId">
 																		<span className="text-danger">*</span>
-																		Supplier Name
+																		{strings.SupplierName} 
 																	</Label>
 																	<Select
 																		styles={customStyles}
@@ -1510,7 +1515,7 @@ class CreateSupplierInvoice extends React.Component {
 																	htmlFor="contactId"
 																	style={{ display: 'block' }}
 																>
-																	Add New Supplier
+																	{strings.AddNewSupplier} 
 																</Label>
 																<Button
 																	type="button"
@@ -1518,14 +1523,14 @@ class CreateSupplierInvoice extends React.Component {
 																	className="btn-square"
 																	onClick={this.openSupplierModal}
 																>
-																	<i className="fa fa-plus"></i> Add a Supplier
+																	<i className="fa fa-plus"></i> {strings.AddASupplier}
 																</Button>
 															</Col>
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
 																		<span className="text-danger">*</span>
-																		Place of Supply
+																		{strings.PlaceofSupply} 
 																	</Label>
 																	<Select
 																		styles={customStyles}
@@ -1570,7 +1575,7 @@ class CreateSupplierInvoice extends React.Component {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="term">
-																		<span className="text-danger">*</span>Terms{' '}
+																		<span className="text-danger">*</span>{strings.Terms}{' '}
 																		<i
 																			id="UncontrolledTooltipExample"
 																			className="fa fa-question-circle ml-1"
@@ -1654,7 +1659,7 @@ class CreateSupplierInvoice extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
 																		<span className="text-danger">*</span>
-																		Invoice Date
+																		{strings.InvoiceDate} 
 																	</Label>
 																	<DatePicker
 																		id="invoiceDate"
@@ -1688,7 +1693,7 @@ class CreateSupplierInvoice extends React.Component {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="due_date">
-																		Invoice Due Date
+																	{strings.InvoiceDueDate} 
 																	</Label>
 																	<div>
 																		<DatePicker
@@ -1726,7 +1731,7 @@ class CreateSupplierInvoice extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
 																		<span className="text-danger">*</span>
-																		Currency
+																		{strings.Currency}
 																	</Label>
 																	<Select
 																		styles={customStyles}
@@ -1782,7 +1787,7 @@ class CreateSupplierInvoice extends React.Component {
 																<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																<Col>
 																<Label>
-																		Currency Exchange Rate
+																{strings.CurrencyExchangeRate} 
 																	</Label>	
 																</Col>
 																</Row>
@@ -1870,7 +1875,7 @@ class CreateSupplierInvoice extends React.Component {
 																	}
 																	disabled={this.checkedRow() ? true : false}
 																>
-																	<i className="fa fa-plus"></i> Add More
+																	<i className="fa fa-plus"></i> {strings.AddMore} 
 																</Button>
 															</Col>
 														</Row>
@@ -1912,7 +1917,7 @@ class CreateSupplierInvoice extends React.Component {
 																			this.renderProduct(cell, rows, props)
 																		}
 																	>
-																		Product
+																		{strings.Products}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		width="55"
@@ -1928,7 +1933,7 @@ class CreateSupplierInvoice extends React.Component {
 																			this.renderAccount(cell, rows, props)
 																		}
 																	>
-																		Account
+																		{strings.Account} 
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="description"
@@ -1936,7 +1941,7 @@ class CreateSupplierInvoice extends React.Component {
 																			this.renderDescription(cell, rows, props)
 																		}
 																	>
-																		Description
+																		{strings.DESCRIPTION} 
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="quantity"
@@ -1945,7 +1950,7 @@ class CreateSupplierInvoice extends React.Component {
 																			this.renderQuantity(cell, rows, props)
 																		}
 																	>
-																		Quantity
+																		{strings.QUANTITY} 
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="unitPrice"
@@ -1953,7 +1958,7 @@ class CreateSupplierInvoice extends React.Component {
 																			this.renderUnitPrice(cell, rows, props)
 																		}
 																	>
-																		Unit Price
+																		{strings.UNITPRICE}
 																		<i
 																			id="UnitPriceToolTip"
 																			className="fa fa-question-circle ml-1"
@@ -1972,7 +1977,7 @@ class CreateSupplierInvoice extends React.Component {
 																			this.renderVat(cell, rows, props)
 																		}
 																	>
-																		Vat (%)
+																		{strings.VAT}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="sub_total"
@@ -1981,7 +1986,7 @@ class CreateSupplierInvoice extends React.Component {
 																		columnClassName="text-right"
 																		formatExtraData={universal_currency_list}
 																	>
-																		Sub Total
+																		{strings.SUBTOTAL}
 																	</TableHeaderColumn>
 																</BootstrapTable>
 															</Col>
@@ -1991,7 +1996,7 @@ class CreateSupplierInvoice extends React.Component {
 															<Row>
 																<Col lg={8}>
 																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">Notes</Label>
+																		<Label htmlFor="notes">{strings.Notes}</Label>
 																		<Input
 																			type="textarea"
 																			maxLength="255"
@@ -2010,7 +2015,7 @@ class CreateSupplierInvoice extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="receiptNumber">
-																					Reciept Number
+																				{strings.RecieptNumber}
 																				</Label>
 																				<Input
 																					type="text"
@@ -2040,7 +2045,7 @@ class CreateSupplierInvoice extends React.Component {
 																					name="attachmentFile"
 																					render={({ field, form }) => (
 																						<div>
-																							<Label>Reciept Attachment</Label>{' '}
+																							<Label>{strings.RecieptAttachment} </Label>{' '}
 																							<br />
 																							<Button
 																								color="primary"
@@ -2052,7 +2057,7 @@ class CreateSupplierInvoice extends React.Component {
 																								className="btn-square mr-3"
 																							>
 																								<i className="fa fa-upload"></i>{' '}
-																								Upload
+																								{strings.upload} 
 																							</Button>
 																							<input
 																								id="fileInput"
@@ -2095,7 +2100,7 @@ class CreateSupplierInvoice extends React.Component {
 																	</Row>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="receiptAttachmentDescription">
-																			Attachment Description
+																		{strings.AttachmentDescription}
 																		</Label>
 																		<Input
 																			type="textarea"
@@ -2124,7 +2129,7 @@ class CreateSupplierInvoice extends React.Component {
 																				<Col lg={6}>
 																					<FormGroup>
 																						<Label htmlFor="discountType">
-																							Discount Type
+																						{strings.DiscountType}
 																						</Label>
 																						<Select
 																							styles={customStyles}
@@ -2211,7 +2216,7 @@ class CreateSupplierInvoice extends React.Component {
 																				<Col lg={6} className="mt-4">
 																					<FormGroup>
 																						<Label htmlFor="discount">
-																							Discount Amount
+																						{strings.DiscountAmount} 
 																						</Label>
 																						<Input
 																							id="discount"
@@ -2260,7 +2265,7 @@ class CreateSupplierInvoice extends React.Component {
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																						Total Net
+																					{strings.TotalNet} 
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
@@ -2290,7 +2295,7 @@ class CreateSupplierInvoice extends React.Component {
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																						Total Vat
+																					{strings.TotalVat} 
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
@@ -2320,7 +2325,7 @@ class CreateSupplierInvoice extends React.Component {
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																						Discount
+																					{strings.Discount}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
@@ -2350,7 +2355,7 @@ class CreateSupplierInvoice extends React.Component {
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																						Total
+																					{strings.Total}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
@@ -2400,7 +2405,7 @@ class CreateSupplierInvoice extends React.Component {
 																		<i className="fa fa-dot-circle-o"></i>{' '}
 																		{this.state.disabled
 																			? 'Creating...'
-																			: 'Create'}
+																			: strings.Create}
 																	</Button>
 																	<Button
 																		type="button"
@@ -2419,7 +2424,7 @@ class CreateSupplierInvoice extends React.Component {
 																		<i className="fa fa-repeat mr-1"></i>
 																		{this.state.disabled
 																			? 'Creating...'
-																			: 'Create & More'}
+																			: strings.CreateandMore}
 																	</Button>
 																	<Button
 																		type="button"
@@ -2431,7 +2436,7 @@ class CreateSupplierInvoice extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-ban"></i> Cancel
+																		<i className="fa fa-ban"></i>{strings.Cancel} 
 																	</Button>
 																</FormGroup>
 															</Col>

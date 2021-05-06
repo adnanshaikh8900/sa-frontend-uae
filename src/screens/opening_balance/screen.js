@@ -38,7 +38,7 @@ const mapDispatchToProps = (dispatch) => {
 		openingBalanceActions: bindActionCreators(OpeningBalanceActions, dispatch),
 	};
 };
-let strings = new LocalizedStrings(data);
+
 const customStyles = {
 	control: (base, state) => ({
 		...base,
@@ -50,11 +50,12 @@ const customStyles = {
 	}),
 };
 
+let strings = new LocalizedStrings(data);
 class OpeningBalance extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			language: window['localStorage'].getItem('language'),
+			
 			idCount: 0,
 			data: [],
 			create: false,
@@ -62,6 +63,7 @@ class OpeningBalance extends React.Component {
 			tempArr: [],
 			error: [],
 			submitBtnClick: false,
+			language: window['localStorage'].getItem('language'),
 		};
 		this.regEx = /^[0-9\d]+$/;
 		this.options = {

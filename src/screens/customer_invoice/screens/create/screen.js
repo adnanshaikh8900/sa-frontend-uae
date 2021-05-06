@@ -1456,7 +1456,7 @@ class CreateCustomerInvoice extends React.Component {
 																		this.openCustomerModal(props);
 																	}}
 																>
-																	<i className="fa fa-plus"></i> {strings.AddNewCustomer}
+																	<i className="fa fa-plus"></i> {strings.AddACustomer}
 																</Button>
 															</Col>
 															<Col lg={3}>
@@ -1804,7 +1804,7 @@ class CreateCustomerInvoice extends React.Component {
 																}
 																disabled={this.checkedRow() ? true : false}
 															>
-																<i className="fa fa-plus"></i> {strings.Addmore}
+																<i className="fa fa-plus"></i> {strings.AddMore}
 															</Button>
 														</Col>
 														<Row>
@@ -2300,10 +2300,10 @@ class CreateCustomerInvoice extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-dot-circle-o"></i>{strings.Create}
+																		<i className="fa fa-dot-circle-o"></i>
 																		{this.state.disabled
 																			? 'Creating...'
-																			: 'Create'}
+																			: strings.Create }
 																	</Button>
 																	<Button
 																		type="button"
@@ -2321,10 +2321,10 @@ class CreateCustomerInvoice extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-repeat"></i>{strings.CreateandMore}
+																		<i className="fa fa-repeat"></i>
 																		{this.state.disabled
 																			? 'Creating...'
-																			: 'Create and More'}
+																			: strings.CreateandMore }
 																	</Button>
 																	<Button
 																		color="secondary"

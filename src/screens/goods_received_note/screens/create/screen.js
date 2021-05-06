@@ -41,6 +41,8 @@ import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 
 import './style.scss';
 import moment from 'moment';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -101,6 +103,7 @@ const customStyles = {
 
 const invoiceimage = require('assets/images/invoice/invoice.png');
 
+let strings = new LocalizedStrings(data);
 class CreateGoodsReceivedNote extends React.Component {
 	constructor(props) {
 		super(props);
@@ -173,6 +176,7 @@ class CreateGoodsReceivedNote extends React.Component {
 			discountPercentage: '',
 			discountAmount: 0,
 			purchaseCategory: [],
+			language: window['localStorage'].getItem('language'),
 			
 		};
 
@@ -1342,6 +1346,7 @@ class CreateGoodsReceivedNote extends React.Component {
 	}
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { data, discountOptions, initValue, prefix } = this.state;
 
 		const {
@@ -1373,7 +1378,7 @@ console.log(po_list)
 													src={invoiceimage}
 													style={{ width: '40px' }}
 												/>
-												<span className="ml-2">Create Goods Received Note</span>
+												<span className="ml-2">{strings.CreateGoodsReceivedNote}</span>
 											</div>
 										</Col>
 									</Row>
@@ -1498,7 +1503,7 @@ console.log(po_list)
 																<FormGroup className="mb-3">
 																	<Label htmlFor="poNumber">
 																		
-																		PO Number
+																	{strings.PONumber}
 																	</Label>
 																	<Select
 																		styles={customStyles}
@@ -1556,7 +1561,7 @@ console.log(po_list)
 																<FormGroup className="mb-3">
 																	<Label htmlFor="grn_Number">
 																		<span className="text-danger">*</span>
-																		GRN Number
+																		{strings.GRNNUMBER}
 																	</Label>
 																	<Input
 																		type="text"
@@ -1592,7 +1597,7 @@ console.log(po_list)
 																<FormGroup className="mb-3">
 																	<Label htmlFor="supplierId">
 																		<span className="text-danger">*</span>
-																		Supplier Name
+																		{strings.SupplierName}
 																	</Label>
 																	<Select
 																		styles={customStyles}
@@ -1642,7 +1647,7 @@ console.log(po_list)
 																	htmlFor="supplierId"
 																	style={{ display: 'block' }}
 																>
-																	Add New Supplier
+																	{strings.AddNewSupplier}
 																</Label>
 																<Button
 																	type="button"
@@ -1650,13 +1655,13 @@ console.log(po_list)
 																	className="btn-square"
 																	onClick={this.openSupplierModal}
 																>
-																	<i className="fa fa-plus"></i> Add a Supplier
+																	<i className="fa fa-plus"></i> {strings.AddASupplier}
 																</Button>
 															</Col>
 															<Col lg={3} >
 																<FormGroup className="mb-3">
 																	<Label htmlFor="supplierReferenceNumber">
-																		Supplier reference Number
+																	{strings.SupplierReferenceNumber}
 																	</Label>
 																	<Input
 																		type="text"
@@ -1693,7 +1698,7 @@ console.log(po_list)
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
 																		<span className="text-danger">*</span>
-																		Received Date
+																		{strings.ReceivedDate}
 																	</Label>
 																	<DatePicker
 																		id="date"
@@ -1776,7 +1781,7 @@ console.log(po_list)
 																	}
 																	disabled={this.checkedRow() ? true : false}
 																>
-																	<i className="fa fa-plus"></i> Add More
+																	<i className="fa fa-plus"></i>{strings.AddMore}
 																</Button>
 															</Col>
 														</Row>
@@ -1818,7 +1823,7 @@ console.log(po_list)
 																			this.renderProduct(cell, rows, props)
 																		}
 																	>
-																		Product
+																		{strings.PRODUCT}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		width="10%"
@@ -1834,7 +1839,7 @@ console.log(po_list)
 																		}
 																		width='10%'
 																	>
-																		Description
+																		{strings.DESCRIPTION}
 																	</TableHeaderColumn>
 
 																	<TableHeaderColumn
@@ -1844,7 +1849,7 @@ console.log(po_list)
 																			this.renderGRNQuantity(cell, rows, props)
 																		}
 																	>
-																		Received Quantity
+																		{strings.RECEIVEDQUANTITY}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="quantity"
@@ -1853,7 +1858,7 @@ console.log(po_list)
 																			this.renderPoQuantity(cell, rows, props)
 																		}
 																	>
-																		PO-Quantity
+																		{strings.POQUANTITY}
 																	</TableHeaderColumn>
 																	{/* <TableHeaderColumn
 																		dataField="receivedquantity"
@@ -1870,7 +1875,7 @@ console.log(po_list)
 																			this.renderUnitPrice(cell, rows, props)
 																		}
 																	>
-																		Unit Price
+																		{strings.UNITPRICE}
 																		<i
 																			id="UnitPriceToolTip"
 																			className="fa fa-question-circle ml-1"
@@ -1889,7 +1894,7 @@ console.log(po_list)
 																			this.renderVat(cell, rows, props)
 																		}
 																	>
-																		Vat (%)
+																		{strings.VAT}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="sub_total"
@@ -1898,7 +1903,7 @@ console.log(po_list)
 																		columnClassName="text-right"
 																		formatExtraData={universal_currency_list}
 																	>
-																		Sub Total
+																		{strings.SUBTOTAL}
 																	</TableHeaderColumn>
 																</BootstrapTable>
 															</Col>
@@ -1908,7 +1913,7 @@ console.log(po_list)
 															<Row>
 																<Col lg={8}>
 																	<FormGroup className="py-2">
-																		<Label htmlFor="grnRemarks">Notes</Label>
+																		<Label htmlFor="grnRemarks">{strings.Notes}</Label>
 																		<Input
 																			type="textarea"
 																			maxLength="255"
@@ -1927,7 +1932,7 @@ console.log(po_list)
 																					name="attachmentFile"
 																					render={({ field, form }) => (
 																						<div>
-																							<Label>Reciept Attachment</Label>{' '}
+																							<Label>{strings.RecieptAttachment}</Label>{' '}
 																							<br />
 																							<Button
 																								color="primary"
@@ -1939,7 +1944,7 @@ console.log(po_list)
 																								className="btn-square mr-3"
 																							>
 																								<i className="fa fa-upload"></i>{' '}
-																								Upload
+																								{strings.Upload}
 																							</Button>
 																							<input
 																								id="fileInput"
@@ -1987,7 +1992,7 @@ console.log(po_list)
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																						Total Net
+																					{strings.TotalNet}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
@@ -2017,7 +2022,7 @@ console.log(po_list)
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																						Total Vat
+																					{strings.TotalVat}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
@@ -2047,7 +2052,7 @@ console.log(po_list)
 																		<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																						Total
+																					{strings.Total}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
@@ -2097,7 +2102,7 @@ console.log(po_list)
 																		<i className="fa fa-dot-circle-o"></i>{' '}
 																		{this.state.disabled
 																			? 'Creating...'
-																			: 'Create'}
+																			: strings.Create}
 																	</Button>
 																	<Button
 																		type="button"
@@ -2116,7 +2121,7 @@ console.log(po_list)
 																		<i className="fa fa-repeat mr-1"></i>
 																		{this.state.disabled
 																			? 'Creating...'
-																			: 'Create & More'}
+																			: strings.CreateandMore}
 																	</Button>
 																	<Button
 																		type="button"
@@ -2128,7 +2133,7 @@ console.log(po_list)
 																			);
 																		}}
 																	>
-																		<i className="fa fa-ban"></i> Cancel
+																		<i className="fa fa-ban"></i>{strings.Cancel}
 																	</Button>
 																</FormGroup>
 															</Col>

@@ -29,6 +29,8 @@ import * as BankAccountActions from './actions';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -46,6 +48,7 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+let strings = new LocalizedStrings(data);
 class BankAccount extends React.Component {
 	constructor(props) {
 		super(props);
@@ -64,6 +67,7 @@ class BankAccount extends React.Component {
 			},
 			csvData: [],
 			view: false,
+			language: window['localStorage'].getItem('language'),
 		};
 
 		this.options = {
@@ -442,7 +446,7 @@ class BankAccount extends React.Component {
 		return (
 			<div>
 				<div>
-					<label className="font-weight-bold ">Reconciled <br />Balance : </label>
+					<label className="font-weight-bold ">{strings.Reconciled} <br />{strings.Balance} : </label>
 					<label className="badge label-bank ">
 						{/* <Currency
 							value={row.closingBalance}
@@ -454,7 +458,7 @@ class BankAccount extends React.Component {
 					</label>
 				</div>
 				<div>
-					<label className="font-weight-bold mr-2">Date : </label>
+					<label className="font-weight-bold mr-2">{strings.Date} : </label>
 					<label>{row.reconcileDate}</label>
 				</div>
 			</div>
@@ -607,6 +611,7 @@ class BankAccount extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { loading, dialog, csvData, view } = this.state;
 		const { universal_currency_list, bank_account_list } = this.props;
 
@@ -620,7 +625,7 @@ class BankAccount extends React.Component {
 								<Col lg={8}>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="fas fa-university" />
-										<span className="ml-2">Bank Accounts</span>
+										<span className="ml-2">{strings.BankAccounts} </span>
 									</div>
 								</Col>
 							</Row>
@@ -765,7 +770,7 @@ class BankAccount extends React.Component {
 											}
 										>
 											<i className="fas fa-plus mr-1" />
-											Add New Account
+											{strings.AddNewAccount}
 										</Button>
 										</div>
 										</Row>
@@ -811,7 +816,7 @@ class BankAccount extends React.Component {
 													width="8%"
 													className="table-header-bg"
 												>
-													Bank
+													{strings.BANK}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="accounName"
@@ -819,7 +824,7 @@ class BankAccount extends React.Component {
 													width="10%"
 													className="table-header-bg"
 												>
-													Account Name
+													{strings.ACCOUNTNAME}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="bankAccountNo"
@@ -828,7 +833,7 @@ class BankAccount extends React.Component {
 													width="13%"
 													className="table-header-bg"
 												>
-													Account Number
+													{strings.ACCOUNTNUMBER}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataFormat={this.renderAccountType}
@@ -837,7 +842,7 @@ class BankAccount extends React.Component {
 													width="5%"
 													className="table-header-bg"
 												>
-													Account Type
+													{strings.ACCOUNTTYPE}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataFormat={this.renderCurrency}
@@ -846,7 +851,7 @@ class BankAccount extends React.Component {
 													width="5%"
 													className="table-header-bg"
 												>
-													Currency
+													{strings.CURRENCY}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="openingBalance"
@@ -856,7 +861,7 @@ class BankAccount extends React.Component {
 													formatExtraData={universal_currency_list}
 													className="table-header-bg"
 												>
-													Bank Balance
+													{strings.BANKBALANCE}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="swift_code"
@@ -867,7 +872,7 @@ class BankAccount extends React.Component {
 													width="5%"
 													className="table-header-bg"
 												>
-													Last Reconciled
+													{strings.LASTRECONCILED}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													className="text-right"

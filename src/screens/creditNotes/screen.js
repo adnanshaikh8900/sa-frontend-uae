@@ -194,17 +194,17 @@ class CreditNotes extends React.Component {
 		this.initializeData();
 	};
 
-	postInvoice = (row) => {
+	creditNoteposting = (row) => {
 		this.setState({
 			loading: true,
 		});
 		const postingRequestModel = {
 			amount: row.invoiceAmount,
 			postingRefId: row.id,
-			postingRefType: 'INVOICE',
+			postingRefType: 'CREDIT_NOTE',
 		};
 		this.props.creditNotesActions
-			.postInvoice(postingRequestModel)
+			.creditNoteposting(postingRequestModel)
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
@@ -214,7 +214,6 @@ class CreditNotes extends React.Component {
 					this.setState({
 						loading: false,
 					});
-					this.getOverdue();
 					this.initializeData();
 				}
 			})
@@ -411,7 +410,7 @@ class CreditNotes extends React.Component {
 						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && row.statusEnum !== 'Partially Paid' && (
 							<DropdownItem
 								onClick={() => {
-									this.postInvoice(row);
+									this.creditNoteposting(row);
 								}}
 							>
 								<i className="fas fa-send" /> Post

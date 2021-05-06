@@ -81,6 +81,9 @@ const en = {
       Addacustomer: "Add a customer",
       Addmore: "Add more",
       upload: "upload",
+      UpdateInvoice: "Update Invoice",
+      Delete:"Delete",
+      Update: "Update",
 
       CreateContact: "Create Contact",
       ContactDetails: "Contact Details",

@@ -35,6 +35,7 @@ import {
 	Receipt,
 	CreateReceipt,
 	DetailReceipt,
+	PayrollRun,
 
 	// SupplierInvoice Screens
 	SupplierInvoice,
@@ -122,12 +123,6 @@ import {
 	CurrencyConvert,
 	CreateCurrencyConvert,
 	DetailCurrencyConvert,
-	EmployeePayroll,
-	CreateEmployeePayroll,
-	DetailEmployeePayroll,
-	Employment,
-	CreateEmployment,
-
 	// Product Screens
 	ProductCategory,
 	CreateProductCategory,
@@ -161,7 +156,8 @@ import {
 
 	Inventory,
 	Template,
-	CreateEmployeeFinancial,
+	PayrollEmployee,
+	CreatePayrollEmployee,
 	EmployeeFinancial,
 	DetailSalaryRole,
 	SalaryRoles,
@@ -171,8 +167,6 @@ import {
 	CreateSalaryTemplate,
 	SalaryStucture,
 	CreateSalaryStucture,
-	ViewPayroll,
-	SalarySlip,
 	UnderConstruction,
 	CreateDesignation,
 	Designation,
@@ -520,36 +514,27 @@ const adminRoutes = [
 		pathTo: '/admin/expense/expense',
 		name: 'Expense',
 	},
-	{
-		path: '/admin/payroll/employee/detail',
-		name: 'UpdateEmployee',
-		component: UnderConstruction.screen,
-	},
+	// {
+	// 	path: '/admin/payroll/employee/detail',
+	// 	name: 'UpdateEmployee',
+	// 	component: UnderConstruction.screen,
+	// },
 	{
 		path: '/admin/payroll/employee/create',
 		name: 'AddEmployee',
-		component: CreateEmployeePayroll.screen,
+		component: CreatePayrollEmployee.screen,
 	},
 	{
 		path: '/admin/payroll/employee',
 		name: 'ViewEmployee',
-		component: EmployeePayroll.screen,
+		component: PayrollEmployee.screen,
 	},
 	{
-		path: '/admin/payroll/employee/salarySlip',
+		path: '/admin/payroll/payrollrun',
 		name: 'ViewEmployment',
-		component: UnderConstruction.screen,
+		component: PayrollRun.screen,
 	},
-	{
-		path: '/admin/payroll/employee/viewPayroll',
-		name: 'GeneratePayroll',
-		component: ViewPayroll.screen,
-	},
-	{
-		path: '/admin/payroll/employment/detail',
-		name: 'UpdateEmployment',
-		component: DetailEmployeePayroll.screen,
-	},
+	
 	// {
 	// 	path: '/admin/payroll/employment/create',
 	// 	name: 'CreateEmployment',

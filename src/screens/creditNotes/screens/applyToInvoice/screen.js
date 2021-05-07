@@ -2148,7 +2148,7 @@ class ApplyToInvoice extends React.Component {
 																		</div>
 																	</Col>
 																</Row>
-															)}
+															)} 
 															<Row>
 																<Col
 																	lg={12}

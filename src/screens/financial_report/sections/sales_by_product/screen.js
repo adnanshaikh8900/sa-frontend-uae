@@ -309,7 +309,6 @@ class SalesByProduct extends React.Component {
 										>
 											<TableHeaderColumn
 												dataField="productName"
-												
 												className="table-header-bg"
 											>
 												Product Name
@@ -322,14 +321,12 @@ class SalesByProduct extends React.Component {
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="totalAmountForAProduct"
-												
 												className="table-header-bg"
 											>
 												Amount
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="averageAmount"
-												
 												className="table-header-bg"
 											>
 												Average Amount

@@ -4,7 +4,6 @@ import {
 
 export const createSalaryStructure = (obj) => {
   return (dispatch) => {
-    debugger
     let data = {
       method: 'post',
       url: '/rest/payroll/saveSalaryStructure',

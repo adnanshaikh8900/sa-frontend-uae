@@ -170,8 +170,6 @@ class CreateGoodsReceivedNote extends React.Component {
 	
     static getDerivedStateFromProps(nextProps, prevState) {
         if (prevState.selectedData !== nextProps.selectedData ) {
-			console.log('getDerivedStateFromProps state changed',nextProps.selectedData.poQuatationLineItemRequestModelList);
-			console.log('muyts',nextProps.prefixData)
         //   setState( {
 		// 	poQuatationLineItemRequestModelList:nextProps.selectedData.poQuatationLineItemRequestModelList,
         //   //   id: nextProps.selectedData.poQuatationLineItemRequestModelList.invoiceId,
@@ -855,8 +853,6 @@ class CreateGoodsReceivedNote extends React.Component {
 			let obj = {label: item.label.contactName, value: item.value}
 			tmpSupplier_list.push(obj)
 		})
-			console.log(closeGoodsReceivedNotes)
-	
 
 		return (
 			<div className="contact-modal-screen">

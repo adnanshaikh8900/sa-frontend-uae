@@ -27,6 +27,8 @@ import { CommonActions } from 'services/global';
 import { CSVLink } from 'react-csv';
 
 import './style.scss';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -42,10 +44,12 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+let strings = new LocalizedStrings(data);
 class Product extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: true,
 			selectedRows: [],
 			dialog: null,
@@ -315,6 +319,7 @@ class Product extends React.Component {
 	}
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			loading,
 			dialog,
@@ -336,7 +341,7 @@ class Product extends React.Component {
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="fas fa-object-group" />
-										<span className="ml-2">Products</span>
+										<span className="ml-2">{strings.Products} </span>
 									</div>
 								</Col>
 							</Row>
@@ -382,7 +387,7 @@ class Product extends React.Component {
 											</ButtonGroup>
 										</div>
 										<div className="py-3">
-											<h5>Filter : </h5>
+											<h5>{strings.Filter}: </h5>
 											<form>
 												<Row>
 												<Col lg={3} className="mb-2">
@@ -464,7 +469,7 @@ class Product extends React.Component {
 											}
 										>
 											<i className="fas fa-plus mr-1" />
-											Add New Product
+											{strings.AddnewProduct}
 										</Button>
 										<div>
 											<BootstrapTable
@@ -497,10 +502,10 @@ class Product extends React.Component {
 												ref={(node) => (this.table = node)}
 											>
 												<TableHeaderColumn dataField="productCode" dataSort className="table-header-bg">
-													Product Code
+													     {strings.PRODUCTCODE}
 												</TableHeaderColumn>
 												<TableHeaderColumn isKey dataField="name" dataSort className="table-header-bg">
-													Name
+													{strings.NAME}
 												</TableHeaderColumn >
 												{/* <TableHeaderColumn dataField="description" dataSort>
 													Description
@@ -511,7 +516,7 @@ class Product extends React.Component {
 													// dataFormat={this.vatCategoryFormatter}
 													className="table-header-bg"
 												>
-													Vat Percentage
+													 {strings.VatPercentage}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="unitPrice"
@@ -520,7 +525,7 @@ class Product extends React.Component {
 													formatExtraData={universal_currency_list}
 													className="table-header-bg"
 												>
-													Unit Price
+													 {strings.UNITPRICE}
 												</TableHeaderColumn>
 											</BootstrapTable>
 										</div>

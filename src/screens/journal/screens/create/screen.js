@@ -885,7 +885,7 @@ class CreateJournal extends React.Component {
 																	className="btn-square mr-3"
 																	onClick={this.addRow}
 																>
-																	<i className="fa fa-plus"></i> {strings.AddMore} 
+																	<i className="fa fa-plus"></i> {strings.Addmore} 
 																</Button>
 															</Col>
 														</Row>

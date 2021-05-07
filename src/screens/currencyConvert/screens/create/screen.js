@@ -29,7 +29,8 @@ import * as CreateCurrencyConvertActions from './actions';
 import * as CurrencyConvertActions from '../../actions';
 
 import { Formik } from 'formik';
-
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -46,10 +47,12 @@ const mapDispatchToProps = (dispatch) => {
 	}
 };
 
+let strings = new LocalizedStrings(data);
 class CreateCurrencyConvert extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			initValue: {
 				currencyCode: '',
 				exchangeRate:'',
@@ -135,6 +138,7 @@ class CreateCurrencyConvert extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { loading, initValue} = this.state;
 		
 		const{currencyList,currency_list} =this.props;
@@ -147,7 +151,7 @@ class CreateCurrencyConvert extends React.Component {
 								<CardHeader>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="nav-icon icon-briefcase" />
-										<span className="ml-2">New Currency Conversion</span>
+										<span className="ml-2"> {strings.NewCurrencyConversion}</span>
 									</div>
 								</CardHeader>
 								<CardBody>
@@ -184,7 +188,7 @@ class CreateCurrencyConvert extends React.Component {
 																	<Col lg={1}>
 																	<FormGroup className="mt-2">
 																	<Label>
-																							Value
+																						{strings.Value}
 																						</Label>
 																	<Input
 																			disabled
@@ -199,7 +203,7 @@ class CreateCurrencyConvert extends React.Component {
 																					<Col lg={4}>
 																						<FormGroup className="mt-2">
 																						<Label htmlFor="exchangecurrencyCode">
-																							Exchange Currency
+																							{strings.ExchangeCurrency}
 																						</Label>
 																						<Select
 																							options={
@@ -261,7 +265,7 @@ class CreateCurrencyConvert extends React.Component {
 																	<Col lg={3}>
 																	<FormGroup className="mt-2">
 																	<Label htmlFor="Exchange rate">
-																	Exchange rate
+																	{strings.Exchangerate}
 																	{/* <i
 																		id="ProductcatcodeTooltip"
 																		className="fa fa-question-circle ml-1"
@@ -309,7 +313,7 @@ class CreateCurrencyConvert extends React.Component {
 																	<Col lg={3}>
 																		<FormGroup className="mt-2">
 																		<Label htmlFor="currencyName">
-																			Base Currency 
+																		 {strings.BaseCurrency}
 																		</Label>
 																		<Input
 																		disabled
@@ -330,7 +334,7 @@ class CreateCurrencyConvert extends React.Component {
 																	color="primary"
 																	className="btn-square mr-3"
 																>
-																	<i className="fa fa-dot-circle-o"></i> Create
+																	<i className="fa fa-dot-circle-o"></i> {strings.Create}
 																</Button>
 
 																<Button
@@ -343,8 +347,7 @@ class CreateCurrencyConvert extends React.Component {
 																		});
 																	}}
 																>
-																	<i className="fa fa-refresh"></i> Create and
-																	More
+																	<i className="fa fa-refresh"></i> {strings.CreateandMore}
 																</Button>
 
 																<Button
@@ -357,7 +360,7 @@ class CreateCurrencyConvert extends React.Component {
 																		);
 																	}}
 																>
-																	<i className="fa fa-ban"></i> Cancel
+																	<i className="fa fa-ban"></i> {strings.Cancel}
 																</Button>
 																</FormGroup>
 																</form>

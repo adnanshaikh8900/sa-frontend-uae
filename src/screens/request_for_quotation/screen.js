@@ -237,13 +237,13 @@ class RequestForQuotation extends React.Component {
 		return(
 			<div>
 								<div>
-						<label className="font-weight-bold mr-2 ">RFQ Amount : </label>
+						<label className="font-weight-bold mr-2 ">{strings.RFQAmount}: </label>
 						<label>
 							{row.totalAmount  === 0 ? row.totalAmount.toFixed(2) : row.totalAmount.toFixed(2)}
 						</label>
 					</div>
 					<div style={{display: row.totalVatAmount === 0 ? 'none' : ''}}>
-					<label className="font-weight-bold mr-2">Vat Amount : </label>
+					<label className="font-weight-bold mr-2">{strings.VatAmount} : </label>
 					<label>{row.totalVatAmount === 0  ?  row.totalVatAmount.toFixed(2) :  row.totalVatAmount.toFixed(2)}</label>
 					</div>
 					

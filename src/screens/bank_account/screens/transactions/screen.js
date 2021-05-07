@@ -36,6 +36,8 @@ import * as detailBankAccountActions from './../detail/actions';
 import { CommonActions } from 'services/global';
 import { ExplainTrasactionDetail } from './sections';
 import './style.scss';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -55,10 +57,12 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+let strings = new LocalizedStrings(data);
 class BankTransactions extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: true,
 			openDeleteModal: false,
 			typeOptions: [
@@ -595,6 +599,7 @@ class BankTransactions extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			loading,
 			statusOptions,
@@ -672,7 +677,7 @@ class BankTransactions extends React.Component {
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="icon-doc" />
-										<span className="ml-2">Bank Transactions</span>
+										<span className="ml-2">{strings.BankTransactions}</span>
 									</div>
 								</Col>
 							</Row>
@@ -691,18 +696,18 @@ class BankTransactions extends React.Component {
 										<div className="mb-4 status-panel p-3">
 											<Row>
 												<Col lg={3}>
-													<h5>Account Name</h5>
+													<h5>{strings.AccountName}</h5>
 													<h3>{this.state.accounName}</h3>
 												</Col>
 												<Col lg={3}>
-													<h5>Current Bank Balance</h5>
+													<h5>{strings.CurrentBankBalance}</h5>
 													<h3>
 														{this.state.bankAccountCurrencySymbol} &nbsp;
 														{this.state.currentBalance.toFixed(2)}
 													</h3>
 												</Col>
 												<Col lg={3}>
-													<h5>Ledger Balance</h5>
+													<h5>{strings.LedgerBalance}</h5>
 													<h3>
 													{this.state.bankAccountCurrencySymbol} &nbsp;
 													{this.state.closingBalance.toFixed(2)}
@@ -746,7 +751,7 @@ class BankTransactions extends React.Component {
 													}
 												>
 													<i className="fa glyphicon glyphicon-export fa-upload mr-1" />
-													Import Statement
+													{strings.Importstatement}
 												</Button>
 												{  this.props.location.state.bankAccountId !== 1001 &&(
 												<Button
@@ -766,7 +771,7 @@ class BankTransactions extends React.Component {
 													}
 												>
 													<i className="fas fa-edit mr-1" />
-													Edit Account
+													{strings.EditAccount}
 												</Button>)}
 												<Button
 													color="info"
@@ -785,12 +790,12 @@ class BankTransactions extends React.Component {
 													}
 												>
 													<i className="fas fa-edit mr-1" />
-													Reconcile
+													{strings.reconcile}
 												</Button>
 											</ButtonGroup>
 										</div>
 										<div className="py-3">
-											<h6>Filter : </h6>
+											<h6>{strings.Filter} : </h6>
 											<Row>
 												{/* <Col lg={3} className="mb-1">
 													<Select
@@ -876,7 +881,7 @@ class BankTransactions extends React.Component {
 															this.toggle(0, 'all');
 														}}
 													>
-														All
+														{strings.All}
 													</NavLink>
 												</NavItem>
 												<NavItem>
@@ -886,7 +891,7 @@ class BankTransactions extends React.Component {
 															this.toggle(0, 'not_explain');
 														}}
 													>
-														Not Explained
+														{strings.NotExplained}
 													</NavLink>
 												</NavItem>
 												<NavItem>
@@ -898,7 +903,7 @@ class BankTransactions extends React.Component {
 															this.toggle(0, 'potential_duplicate');
 														}}
 													>
-														Potential Duplicate
+														{strings.PotentialDuplicate}
 													</NavLink>
 												</NavItem>
 											</Nav>
@@ -919,7 +924,7 @@ class BankTransactions extends React.Component {
 												}
 											>
 												<i className="fas fa-plus mr-1" />
-												Add New Transaction
+												{strings.AddnewTransaction}
 											</Button>
 										</div>
 										<div>

@@ -1804,7 +1804,7 @@ class CreateCustomerInvoice extends React.Component {
 																}
 																disabled={this.checkedRow() ? true : false}
 															>
-																<i className="fa fa-plus"></i> {strings.AddMore}
+																<i className="fa fa-plus"></i> {strings.Addmore}
 															</Button>
 														</Col>
 														<Row>

@@ -27,6 +27,8 @@ import { CommonActions } from 'services/global';
 import NumberFormat from "react-number-format";
 import PropTypes from "prop-types";
 import TextField from "@material-ui/core/TextField";
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 function NumberFormatCustom(props) {
 	const { inputRef, onChange, ...other } = props;
@@ -65,11 +67,13 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+let strings = new LocalizedStrings(data);
 class VatCode extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			openDeleteModal: false,
 			loading: true,
 			selectedRows: [],
@@ -320,6 +324,7 @@ class VatCode extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			loading,
 			selectedRows,
@@ -337,7 +342,7 @@ class VatCode extends React.Component {
 						<CardHeader>
 							<div className="h4 mb-0 d-flex align-items-center">
 								<i className="nav-icon icon-briefcase" />
-								<span className="ml-2">Vat Categories</span>
+								<span className="ml-2">{strings.VatCategories}</span>
 							</div>
 						</CardHeader>
 						<CardBody>
@@ -378,7 +383,7 @@ class VatCode extends React.Component {
 											</ButtonGroup>
 										</div>
 										<div className="py-3">
-											<h5>Filter : </h5>
+											<h5>{strings.Filter} : </h5>
 											<Row>
 												<Col lg={4} className="mb-1">
 													<TextField
@@ -458,7 +463,7 @@ class VatCode extends React.Component {
 											}
 										>
 											<i className="fas fa-plus mr-1" />
-											Add New Vat
+											{strings.AddNewVat}
 										</Button>
 										<BootstrapTable
 											data={
@@ -487,7 +492,7 @@ class VatCode extends React.Component {
 											}}
 										>
 											<TableHeaderColumn isKey dataField="name" dataSort className="table-header-bg">
-												Vat Name
+												{strings.VATNAME}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="vat"
@@ -495,7 +500,7 @@ class VatCode extends React.Component {
 												dataSort			
 												className="table-header-bg"
 											>
-												Vat Percentage
+												{strings.VATPERCENTAGE}
 											</TableHeaderColumn>
 										</BootstrapTable>
 									</Col>

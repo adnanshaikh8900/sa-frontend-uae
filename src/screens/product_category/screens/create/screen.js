@@ -22,6 +22,8 @@ import { CommonActions } from 'services/global';
 
 import 'react-toastify/dist/ReactToastify.css';
 import './style.scss';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 import * as CreateProductCategoryActions from './actions';
 import * as ProductCategoryActions from '../../actions';
@@ -47,10 +49,12 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+let strings = new LocalizedStrings(data);
 class CreateProductCategory extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			initValue: {
 				productCategoryCode: '',
 				productCategoryName: '',
@@ -121,6 +125,7 @@ class CreateProductCategory extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { loading, initValue, product_category_list } = this.state;
 		if (product_category_list) {
 			var ProductCategoryList = product_category_list.map((item) => {
@@ -136,7 +141,7 @@ class CreateProductCategory extends React.Component {
 								<CardHeader>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="nav-icon icon-briefcase" />
-										<span className="ml-2">New Product Category</span>
+										<span className="ml-2">{strings.NewProductCategory}</span>
 									</div>
 								</CardHeader>
 								<CardBody>
@@ -184,8 +189,8 @@ class CreateProductCategory extends React.Component {
 														<form onSubmit={handleSubmit}>
 															<FormGroup>
 																<Label htmlFor="productCategoryCode">
-																	<span className="text-danger">*</span>Product
-																	Category Code
+																	<span className="text-danger">*</span>
+																	 {strings.ProductCategoryCode}
 																	<i
 																		id="ProductcatcodeTooltip"
 																		className="fa fa-question-circle ml-1"
@@ -230,8 +235,8 @@ class CreateProductCategory extends React.Component {
 															</FormGroup>
 															<FormGroup>
 																<Label htmlFor="name">
-																	<span className="text-danger">*</span>Product
-																	Category Name
+																	<span className="text-danger">*</span>
+																	{strings.ProductCategoryName}
 																</Label>
 																<Input
 																	type="text" maxLength='50'
@@ -271,7 +276,7 @@ class CreateProductCategory extends React.Component {
 																	color="primary"
 																	className="btn-square mr-3"
 																>
-																	<i className="fa fa-dot-circle-o"></i> Create
+																	<i className="fa fa-dot-circle-o"></i> {strings.Create}
 																</Button>
 
 																<Button
@@ -284,8 +289,8 @@ class CreateProductCategory extends React.Component {
 																		});
 																	}}
 																>
-																	<i className="fa fa-refresh"></i> Create and
-																	More
+																	<i className="fa fa-refresh"></i> 
+																	{strings.CreateandMore}
 																</Button>
 
 																<Button
@@ -298,7 +303,7 @@ class CreateProductCategory extends React.Component {
 																		);
 																	}}
 																>
-																	<i className="fa fa-ban"></i> Cancel
+																	<i className="fa fa-ban"></i>{strings.Cancel}
 																</Button>
 															</FormGroup>
 														</form>

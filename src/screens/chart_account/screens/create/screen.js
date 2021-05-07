@@ -17,6 +17,8 @@ import { Loader } from 'components';
 
 import 'react-toastify/dist/ReactToastify.css';
 import './style.scss';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 import { CommonActions } from 'services/global';
 
 import * as ChartOfAccontActions from '../../actions';
@@ -51,10 +53,13 @@ const customStyles = {
 		},
 	}),
 };
+
+let strings = new LocalizedStrings(data);
 class CreateChartAccount extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			initValue: {
 				// transactionCategoryCode: '',
 				transactionCategoryName: '',
@@ -139,6 +144,7 @@ class CreateChartAccount extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { loading } = this.state;
 		// const { sub_transaction_type_list } = this.props
 		return (
@@ -150,7 +156,7 @@ class CreateChartAccount extends React.Component {
 								<CardHeader>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="nav-icon fas fa-area-chart" />
-										<span className="ml-2">New Chart Account</span>
+										<span className="ml-2">{strings.NewChartAccount}</span>
 									</div>
 								</CardHeader>
 								<CardBody>
@@ -196,7 +202,7 @@ class CreateChartAccount extends React.Component {
                             </FormGroup> */}
 														<FormGroup>
 															<Label htmlFor="name">
-																<span className="text-danger">*</span>Name
+																<span className="text-danger">*</span>{strings.Name}
 															</Label>
 															<Input
 																type="text" maxLength='50'
@@ -230,7 +236,7 @@ class CreateChartAccount extends React.Component {
 														</FormGroup>
 														<FormGroup>
 															<Label htmlFor="name">
-																<span className="text-danger">*</span>Type
+																<span className="text-danger">*</span>{strings.Type}
 															</Label>
 															{/* <Select
                                 className="select-default-width"
@@ -292,7 +298,7 @@ class CreateChartAccount extends React.Component {
 																	props.handleSubmit();
 																}}
 															>
-																<i className="fa fa-dot-circle-o"></i> Create
+																<i className="fa fa-dot-circle-o"></i> {strings.Create}
 															</Button>
 															<Button
 																name="button"
@@ -303,8 +309,7 @@ class CreateChartAccount extends React.Component {
 																	props.handleSubmit();
 																}}
 															>
-																<i className="fa fa-refresh"></i> Create and
-																More
+																<i className="fa fa-refresh"></i> {strings.CreateandMore}
 															</Button>
 															<Button
 																type="submit"
@@ -316,7 +321,7 @@ class CreateChartAccount extends React.Component {
 																	);
 																}}
 															>
-																<i className="fa fa-ban"></i> Cancel
+																<i className="fa fa-ban"></i>{strings.Cancel}
 															</Button>
 														</FormGroup>
 													</Form>

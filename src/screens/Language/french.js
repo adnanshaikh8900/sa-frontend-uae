@@ -75,7 +75,7 @@ const fr = {
       Discount: "rabais",
       Total: "Total",
       CreateandMore: "Créer et plus",
-      Addacustomer: "Ajouter un client",
+      AddACustomer: "Ajouter un client",
       Addmore: "ajouter",
       upload: "télécharger",
       UpdateInvoice: "mettre à jour la facture",
@@ -83,6 +83,7 @@ const fr = {
       Update: "Mettre à jour",
 
       CreateContact: "Créer le contact",
+      ContactName:"Nom du contact",
       ContactDetails: "Coordonnées",
       FirstName:"prénom",
       MiddleName:"Deuxième prénom",
@@ -230,7 +231,7 @@ BankTransactions:"Transactions bancaires",
 CurrentBankBalance:"Solde bancaire actuel",		
 LedgerBalance:"Équilibre du grand livre",				
 Importstatement:"Déclaration d’importation",		
-reconcile:"réconcilier",		
+reconcile:"Réconcilier",		
 EditAccount:"Modifier le compte",		
 AddnewTransaction:"Ajouter une nouvelle transaction",		
 All:"tout",		
@@ -243,7 +244,7 @@ Status:"Statut",
 
 //Add Transaction
 CreateBankTransaction:"Créer une transaction bancaire",			
-TransactionType:"Transaction Type",			
+TransactionType:"Transaction Taper",			
 TransactionDate:"Transaction Date",								
 ReferenceNumber:"Numéro de référence",			
 
@@ -305,7 +306,12 @@ SalesInformation:"Informations sur les ventes",
 SellingPrice:"prix de vente",	
 Account:"compte",	
 PurchaseInformation:"Informations d’achat",	
-PurchasePrice:"Prix d’achat",	
+PurchasePrice:"Prix d’achat",
+
+EnableInventory:"Activer l’inventaire",
+InventoryAccount:"Compte d’inventaire",
+PurchaseQuantity:"Quantité d’achat",
+ReOrderLevel:"Niveau de ré-ordre",
 	
 //Product Category										
 PRODUCTCATEGORYNAME:"NOM DE LA CATÉGORIE DE PRODUIT",			

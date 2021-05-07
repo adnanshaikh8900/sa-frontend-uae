@@ -25,6 +25,7 @@ import { CommonActions } from 'services/global';
 import './style.scss';
 import DatePicker from 'react-datepicker';
 
+
 const mapStateToProps = (state) => {
 	return {
 		vat_transaction_list: state.vat_transactions.vat_transaction_list,

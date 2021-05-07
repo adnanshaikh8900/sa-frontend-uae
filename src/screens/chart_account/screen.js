@@ -26,6 +26,9 @@ import { CommonActions } from 'services/global';
 import { CSVLink } from 'react-csv';
 
 import './style.scss';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
+import { string } from 'prop-types';
 
 const mapStateToProps = (state) => {
 	return {
@@ -40,10 +43,12 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+let strings = new LocalizedStrings(data);
 class ChartAccount extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: true,
 			selectedRows: [],
 			dialog: null,
@@ -324,6 +329,7 @@ class ChartAccount extends React.Component {
 	}
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			loading,
 			dialog,
@@ -353,7 +359,7 @@ class ChartAccount extends React.Component {
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="nav-icon fas fa-area-chart" />
-										<span className="ml-2">Chart of Accounts</span>
+										<span className="ml-2">{strings.ChartofAccounts}</span>
 									</div>
 								</Col>
 							</Row>
@@ -399,7 +405,7 @@ class ChartAccount extends React.Component {
 											</ButtonGroup>
 										</div>
 										<div className="py-3">
-											<h5>Filter : </h5>
+											<h5>{strings.Filter}: </h5>
 											<form>
 												<Row>
 													<Col lg={3} className="mb-1">
@@ -491,7 +497,7 @@ class ChartAccount extends React.Component {
 											style={{ marginBottom: '10px' }}
 										>
 											<i className="fas fa-plus mr-1" />
-											Add New Account
+										{strings.AddNewAccount}
 										</Button>
 										<div>
 											<BootstrapTable
@@ -530,7 +536,7 @@ class ChartAccount extends React.Component {
 													dataSort
 													className="table-header-bg"
 												>
-													Code
+													 {strings.CODE}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="transactionCategoryName"
@@ -538,7 +544,7 @@ class ChartAccount extends React.Component {
 													columnTitle={this.customName}
 													className="table-header-bg"
 												>
-													Name
+													{strings.NAME}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="chartOfAccountId"
@@ -546,14 +552,14 @@ class ChartAccount extends React.Component {
 													dataFormat={this.typeFormatter}
 													className="table-header-bg"
 												>
-													Type
+												    {strings.TYPE}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="isEditable"
 													dataFormat={this.editFormatter}
 													className="table-header-bg"
 												>
-													Status
+													{strings.STATUS}
 												</TableHeaderColumn>
 											</BootstrapTable>
 										</div>

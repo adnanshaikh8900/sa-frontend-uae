@@ -74,7 +74,7 @@ const ar = {
       Discount: "خصم",
       Total: "مجموع",
       CreateandMore: "إنشاء والمزيد",
-      Addacustomer: "أضف زبون",
+      AddACustomer: "أضف زبون",
       Addmore: "إضافة المزيد",
       upload: "تحميل",
       UpdateInvoice: "تحديث الفاتورة",
@@ -82,6 +82,7 @@ const ar = {
       Update: "تحديث",
 
       CreateContact: "إنشاء جهة اتصال ",
+      ContactName:"اسم جهة الاتصال",
       ContactDetails: "تفاصيل الاتصال",
       FirstName:"الاسم الأول ",
       MiddleName:"الاسم الأوسط ",
@@ -305,6 +306,11 @@ SellingPrice:"سعر البيع",
 Account:"حساب",	
 PurchaseInformation:"معلومات الشراء",	
 PurchasePrice:"سعر الشراء",	
+
+EnableInventory:"تمكين المخزون",
+InventoryAccount:"حساب المخزون",
+PurchaseQuantity:"كمية الشراء",
+ReOrderLevel:"مستوى إعادة الطلب",
 	
 //Product Category										
 PRODUCTCATEGORYNAME:"اسم فئة المنتج",			

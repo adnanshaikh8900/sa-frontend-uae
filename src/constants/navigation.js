@@ -85,7 +85,7 @@ export default {
 		{
 			name: 'Banking',
 			url: '/admin/banking',
-			icon: 'fas fa-file',
+			icon: 'fas fa-university',
 			children: [
 				{
 					name: 'Bank Account',
@@ -234,7 +234,7 @@ export default {
 		{
 			name: 'Inventory',
 			url: '/admin/Inventory',
-			icon: 'fas fa-boxes',
+			icon: 'fas fa-warehouse',
 			path: 'Inventory',
 		},
 		{
@@ -252,6 +252,12 @@ export default {
 				{
 					name: 'Employee',
 					url: '/admin/payroll/employee',
+					icon: 'fas fa-user-plus',
+					path: 'ViewEmployee',
+				},
+				{
+					name: 'Payroll Run',
+					url: '/admin/payroll/payrollrun',
 					icon: 'fas fa-user-plus',
 					path: 'ViewEmployee',
 				},

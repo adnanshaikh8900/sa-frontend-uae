@@ -80,7 +80,7 @@ class InvoiceTemplate extends Component {
 											color: 'black',
 										}}
 									>
-										Invoice
+										Tax Invoice
 									</td>
 								</tr>
 								</tbody>

@@ -142,9 +142,8 @@ import Notification from './notification';
 import DataBackup from './data_backup';
 import Help from './help';
 import Faq from './help/screens/faq';
-import EmployeePayroll from './employeePayroll';
-import CreateEmployeePayroll from './employeePayroll/screens/create';
-import DetailEmployeePayroll from './employeePayroll/screens/detail';
+import PayrollEmployee from './payrollemp';
+import CreatePayrollEmployee from './payrollemp/screens/create';
 import Employment from './employment'
 import CreateEmployment from './employment/screens/create'
 import EmployeeFinancial from './employee_Bank_Details'
@@ -156,8 +155,8 @@ import SalaryTemplate from './salaryTemplate'
 import CreateSalaryTemplate from './salaryTemplate/screens/create'
 import CreateSalaryStucture from './salaryStructure/screens/create'
 import SalaryStucture from './salaryStructure'
-import ViewPayroll from './employeePayroll/screens/viewPayroll'
-import SalarySlip from './employeePayroll/screens/salarySlip'
+import PayrollRun from './payroll_run'
+// import SalarySlip from './employeePayroll/screens/salarySlip'
 import Designation from './designation'
 import CreateDesignation from './designation/screens/create'
 import DetailSalaryStructure from './salaryStructure/screens/detail'
@@ -287,9 +286,6 @@ export {
 	DataBackup,
 	Help,
 	Faq,
-	EmployeePayroll,
-	CreateEmployeePayroll,
-	DetailEmployeePayroll,
 	Employment,
 	CreateEmployment,
 	EmployeeFinancial,
@@ -300,8 +296,8 @@ export {
 	CreateSalaryTemplate,
 	SalaryStucture,
 	CreateSalaryStucture,
-	ViewPayroll,
-	SalarySlip,
+	PayrollRun,
+	//SalarySlip,
 	UnderConstruction,
 	ReceivableInvoiceDetailsReport,
 	ReceivableInvoiceSummary,
@@ -317,5 +313,8 @@ export {
 	CreateCreditNote,
 	DetailCreditNote,
 	ViewCreditNote,
-	ApplyToInvoice
+	ApplyToInvoice,
+	CreatePayrollEmployee,
+	PayrollEmployee,
+
 };

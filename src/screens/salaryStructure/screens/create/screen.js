@@ -99,7 +99,6 @@ class CreateSalaryStructure extends React.Component {
       'name',
       name != null ? name : '',
     )
-   debugger
     this.props.salaryStructureCreateActions
     .createSalaryStructure(formData)
     .then((res) => {

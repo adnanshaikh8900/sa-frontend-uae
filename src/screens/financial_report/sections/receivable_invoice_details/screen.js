@@ -121,7 +121,6 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 			.catch((err) => {
 				this.setState({ loading: false });
 			});
-			debugger
 	};
 
 	exportFile = (csvData, fileName, type) => {

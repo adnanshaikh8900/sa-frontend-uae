@@ -19,7 +19,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-import * as CustomerInvoiceDetailActions from './actions';
+import * as CreditNotesDetailActions from './actions';
 import * as ProductActions from '../../../product/actions';
 import * as CustomerInvoiceActions from '../../actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
@@ -56,8 +56,8 @@ const mapDispatchToProps = (dispatch) => {
 			CustomerInvoiceActions,
 			dispatch,
 		),
-		customerInvoiceDetailActions: bindActionCreators(
-			CustomerInvoiceDetailActions,
+		creditNotesDetailActions: bindActionCreators(
+			CreditNotesDetailActions,
 			dispatch,
 		),
 		productActions: bindActionCreators(ProductActions, dispatch),
@@ -165,10 +165,9 @@ class DetailCreditNote extends React.Component {
 	
 
 	initializeData = () => {
-		debugger
 		if (this.props.location.state && this.props.location.state.id) {
-			this.props.customerInvoiceDetailActions
-				.getInvoiceById(this.props.location.state.id)
+			this.props.creditNotesDetailActions
+				.getCreditNoteById(this.props.location.state.id)
 				.then((res) => {
 					if (res.status === 200) {
 						this.getCompanyCurrency();
@@ -1088,7 +1087,7 @@ class DetailCreditNote extends React.Component {
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="fas fa-address-book" />
-												<span className="ml-2">Apply To Invoice</span>
+												<span className="ml-2">Update Credit Note</span>
 											</div>
 										</Col>
 									</Row>

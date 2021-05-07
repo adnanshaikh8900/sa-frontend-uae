@@ -8,6 +8,8 @@ import {
   Button,
   Row,
   Col,
+	Table,
+
   ButtonGroup,
   Input,
 } from 'reactstrap'
@@ -54,6 +56,9 @@ class SalaryTemplate extends React.Component {
         name: '',
         email: ''
       },
+      data:{
+        Fixed : [],
+      },
       csvData: [],
       view: false
     }
@@ -77,6 +82,19 @@ class SalaryTemplate extends React.Component {
       onSelectAll: this.onSelectAll
     }
     this.csvLink = React.createRef()
+
+    this.columnHeader1 = [
+			{ label: 'Sr.No', value: 'Sr.No', sort: false },
+			{ label: 'Component Name', value: 'Component Name', sort: false },
+			{ label: 'Type', value: 'Type', sort: false },
+			{ label: 'Options', value: 'Options', sort: false },
+		];
+
+    this.columnHeader2 = [
+			{ label: 'Sr.No', value: 'Sr.No', sort: false },
+			{ label: 'Component Name', value: 'Component Name', sort: false },
+			{ label: 'Options', value: 'Options', sort: false },
+		];
   }
 
   componentDidMount = () => {
@@ -90,20 +108,15 @@ class SalaryTemplate extends React.Component {
   }
 
   initializeData = (search) => {
-    const { filterData } = this.state
-    const paginationData = {
-      pageNo: this.options.page ? this.options.page - 1 : 0,
-      pageSize: this.options.sizePerPage
-    }
-    const sortingData = {
-      order: this.options.sortOrder ? this.options.sortOrder : '',
-      sortingCol: this.options.sortName ? this.options.sortName : ''
-    }
-    const postData = { ...filterData, ...paginationData, ...sortingData }
-    this.props.salaryTemplateActions.getSalaryTemplateList(postData).then((res) => {
+    this.props.salaryTemplateActions.getSalaryTemplateList().then((res) => {
       if (res.status === 200) {
-        this.setState({ loading: false })
+        this.setState({ 
+          Fixed:res.data.salaryComponentResult.Fixed,
+          Variable:res.data.salaryComponentResult.Variable,
+          Deduction:res.data.salaryComponentResult.Deduction,
+          loading: false })
       }
+      console.log(this.state.Fixed, "Fixed")
     }).catch((err) => {
       this.setState({ loading: false })
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
@@ -288,96 +301,128 @@ class SalaryTemplate extends React.Component {
                     </Col>
                   </Row>
                   :
+               
+
                   <Row>
-                    <Col lg={12}>
-                      <div className="d-flex justify-content-end">
-                        <ButtonGroup size="sm">
-                          {/* <Button
-                            color="success"
-                            className="btn-square"
-                            onClick={() => this.getCsvData()}
-                          >
-                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
-                          </Button>
-                          {view && <CSVLink
-                            data={csvData}
-                            filename={'Employee.csv'}
-                            className="hidden"
-                            ref={this.csvLink}
-                            target="_blank"
-                          />} */}
-                          <Button
-                            color="primary"
-                            className="btn-square"
-                            onClick={() => this.props.history.push(`/admin/payroll/salaryTemplate/create`)}
-                          >
-                            <i className="fas fa-plus mr-1" />
-                            New Salary Template
-                          </Button>
-                          {/* <Button
-                            color="warning"
-                            className="btn-square"
-                            onClick={this.bulkDelete}
-                            disabled={selectedRows.length === 0}
-                          >
-                            <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
-                            Bulk Delete
-                          </Button> */}
-                        </ButtonGroup>
-                      </div>
-                    
-                      <div>
-                        <BootstrapTable
-                          selectRow={this.selectRowProp}
-                          search={false}
-                          options={this.options}
-                          data={template_list && template_list.data ? template_list.data : []}
-                          version="4"
-                          hover
-                          pagination={template_list && template_list.data && template_list.data.length > 0 ? true : false}
-                          keyField="id"
-                          remote
-                          fetchInfo={{ dataTotalSize: template_list.count ? template_list.count : 0 }}
-                          className="employee-table"
-                          trClassName="cursor-pointer"
-                          // csvFileName="template_list.csv"
-                          // ref={(node) => this.table = node}
-                        >
-                          <TableHeaderColumn
-                            dataField="salaryStructureName"
-                          
-                          >
-                            Salary Structure Name
-                          </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="description"
-                         
-                          // dataFormat={this.vatCategoryFormatter}
-                          >
-                            Description
-                          </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="formula"
-                          
-                          >
-                            Formula
-                          </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="salaryRoleId"
-                        
-                          >
-                           Salary Role Id
-                          </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="salaryRoleName"
-                       
-                          // dataFormat={this.vatCategoryFormatter}
-                          >
-                           Salary Role Name
-                          </TableHeaderColumn>
-                        </BootstrapTable>
-                      </div>
+                    <Row>
+                    <Col lg={8}>
+                      <h4>Fixed Earnings</h4>
+                      <Table>
+                    <thead >
+													<tr >
+														{this.columnHeader1.map((column, index) => {
+															return (
+																<th>
+																	{column.label}
+																</th>
+															);
+														})}
+													</tr>
+												</thead>
+                        <tbody>
+                        {Object.values(
+																this.state.Fixed,
+															).map((item) => (
+																<tr>
+																	<td className="pt-0 pb-0">{item.id}</td>
+																	<td className="pt-0 pb-0">{item.description}</td>
+                                  <td className="pt-0 pb-0">{item.formula}</td>
+																	<td className="pt-0 pb-0">{item.flatAmount}</td>
+																{console.log(item)}
+																</tr>
+															))}
+                        </tbody>
+                    </Table>
+                    <Button
+																	type="button"
+																	color="primary"
+																	className="btn-square mr-3 mb-3"
+																	onClick={(e, props) => {
+																		this.openCustomerModal(props);
+																	}}
+																>
+																	<i className="fa fa-plus"></i> Add a Customer
+																</Button>
                     </Col>
+                    <Col lg={8}>
+                      <h4>Variable Earnings</h4>
+                      <Table>
+                    <thead >
+													<tr >
+														{this.columnHeader1.map((column, index) => {
+															return (
+																<th>
+																	{column.label}
+																</th>
+															);
+														})}
+													</tr>
+												</thead>
+                        <tbody>
+                        {Object.values(
+																this.state.Variable,
+															).map((item) => (
+																<tr>
+																	<td className="pt-0 pb-0">{item.id}</td>
+																	<td className="pt-0 pb-0">{item.description}</td>
+                                  <td className="pt-0 pb-0">{item.formula}</td>
+																	<td className="pt-0 pb-0">{item.flatAmount}</td>
+																{console.log(item)}
+																</tr>
+															))}
+                        </tbody>
+                    </Table>
+                    <Button
+																	type="button"
+																	color="primary"
+																	className="btn-square mr-3 mb-3"
+																	onClick={(e, props) => {
+																		this.openCustomerModal(props);
+																	}}
+																>
+																	<i className="fa fa-plus"></i> Add a Customer
+																</Button>
+                    </Col>
+                    <Col lg={8}>
+                      <h4>Deductions</h4>
+                      <Table>
+                    <thead >
+													<tr >
+														{this.columnHeader1.map((column, index) => {
+															return (
+																<th>
+																	{column.label}
+																</th>
+															);
+														})}
+													</tr>
+												</thead>
+                        <tbody>
+                        {Object.values(
+																this.state.Deduction,
+															).map((item) => (
+																<tr>
+																	<td className="pt-0 pb-0">{item.id}</td>
+																	<td className="pt-0 pb-0">{item.description}</td>
+                                  <td className="pt-0 pb-0">{item.formula}</td>
+																	<td className="pt-0 pb-0">{item.flatAmount}</td>
+																{console.log(item)}
+																</tr>
+															))}
+                        </tbody>
+                    </Table>
+                    <Button
+																	type="button"
+																	color="primary"
+																	className="btn-square mr-3 mb-3"
+																	onClick={(e, props) => {
+																		this.openCustomerModal(props);
+																	}}
+																>
+																	<i className="fa fa-plus"></i> Add a Customer
+																</Button>
+                    </Col>
+                    </Row>
                   </Row>
               }
             </CardBody>

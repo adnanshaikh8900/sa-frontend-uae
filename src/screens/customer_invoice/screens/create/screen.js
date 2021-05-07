@@ -2263,15 +2263,15 @@ class CreateCustomerInvoice extends React.Component {
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																						{strings.TotalNet}
+																						{strings.Total}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																					{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.total_net.toFixed(
-																							2,
-																						)}
+																					{this.state.customer_currency_symbol}
+																						{initValue.totalAmount.toFixed(
+																									2,
+																								)}
 																					</label>
 																				</Col>
 																			</Row>

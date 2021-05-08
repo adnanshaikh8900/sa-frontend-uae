@@ -426,7 +426,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 										alt=""
 										style={{ width: ' 150px' }}></img>
 									</div>
-									<div style={{justifyContent:'center'}} >
+									<div className="text-center" style={{justifyContent:'center'}} >
 								
 										<h2>
 										{company_profile &&

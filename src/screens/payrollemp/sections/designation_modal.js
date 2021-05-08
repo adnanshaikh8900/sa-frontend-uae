@@ -246,7 +246,7 @@ class DesignationModal extends React.Component {
                                     id="designationName"
                                     name="designationName"
                                     value={props.values.designationName}
-                                    placeholder="Enter Slary Role Name"
+                                    placeholder="Enter Designation Name"
                                     onChange={(option) => {
                                       if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('designationName')(option) }
                                     }}

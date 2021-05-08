@@ -288,7 +288,7 @@ class SalaryComponentVariable extends React.Component {
 														id="description"
 														name="description"
 														value={props.values.description}
-														placeholder="Enter Slary Role Name"
+														placeholder="Enter Salary component Name"
 														onChange={(option) => {
 															if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('description')(option) }
 														}}
@@ -350,7 +350,7 @@ class SalaryComponentVariable extends React.Component {
 														id="formula"
 														name="formula"
 														value={props.values.formula}
-														placeholder="Enter Slary Role Name"
+														placeholder="Enter Percentage"
 														onChange={(option) => {
 															if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('formula')(option) }
 														}}

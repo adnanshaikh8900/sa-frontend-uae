@@ -223,7 +223,7 @@ class DetailSalaryRole extends React.Component {
                                     id="salaryRoleName"
                                     name="salaryRoleName"
                                     value={props.values.salaryRoleName}
-                                    placeholder="Enter Slary Role Name"
+                                    placeholder="Enter Salary Role Name"
                                     onChange={(option) => {
                                       if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('salaryRoleName')(option) }
                                     }}

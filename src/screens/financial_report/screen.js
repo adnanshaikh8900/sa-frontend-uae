@@ -173,7 +173,7 @@ class FinancialReport extends React.Component {
 										onClick={() =>
 											this.props.history.push('/admin/report/detailed-general-ledger')}
 											>
-										Detailed Journal ledger</a></h6>
+										Detailed General ledger</a></h6>
 										</div>
 										</Col>
 

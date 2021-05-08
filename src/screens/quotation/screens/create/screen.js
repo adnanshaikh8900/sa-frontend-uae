@@ -124,7 +124,8 @@ class CreateQuotation extends React.Component {
 				contact_po_number: '',
 				currencyCode: '',
 				poApproveDate: new Date(),
-				quotaionExpiration: new Date(),
+				quotaionExpiration: new Date(new Date().setMonth(new Date().getMonth() + 1)),
+				// quotaionExpiration: new Date(),
 				customerId: '',
 				placeOfSupplyId: '',
 				project: '',
@@ -1294,14 +1295,14 @@ class CreateQuotation extends React.Component {
 																		styles={customStyles}
 																		id="customerId"
 																		name="customerId"
-																		placeholder="Select Supplier Name"
+																		placeholder="Select Customer Name"
 																		options={
 																			tmpSupplier_list
 																				? selectOptionsFactory.renderOptions(
 																						'label',
 																						'value',
 																						tmpSupplier_list,
-																						'Supplier Name',
+																						'Customer Name',
 																				  )
 																				: []
 																		}

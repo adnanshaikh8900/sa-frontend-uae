@@ -818,14 +818,14 @@ class DetailCreditNote extends React.Component {
 		} = data;
 
 		let formData = new FormData();
-		formData.append('type', 2);
-		formData.append('invoiceId', current_customer_id);
+		formData.append('type', 7);
+		formData.append('creditNoteId', current_customer_id);
 		formData.append(
 			'creditNoteNumber',
 			invoice_number !== null ? invoice_number : '',
 		);
 		formData.append(
-			'invoiceDate',
+			'creditNoteDate',
 			typeof invoiceDate === 'string'
 				? moment(invoiceDate, 'DD/MM/YYYY').toDate()
 				: invoiceDate,
@@ -883,7 +883,7 @@ class DetailCreditNote extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Invoice Updated Successfully.',
+					'Credit Note Updated Successfully.',
 				);
 				this.props.history.push('/admin/income/credit-notes');
 			})

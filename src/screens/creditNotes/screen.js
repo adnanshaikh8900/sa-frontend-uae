@@ -437,18 +437,18 @@ class CreditNotes extends React.Component {
 								<i className="fas fa-file" /> Draft
 							</DropdownItem>
 						)}
-						{row.statusEnum !== 'Draft' && row.statusEnum !== 'Paid' && (
+						
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
-										'/admin/income/customer-invoice/record-payment',
+										'/admin/income/credit-notes/refund',
 										{ id: row },
 									)
 								}
 							>
-								<i className="fas fa-university" /> Record Payment
+								<i className="fas fa-university" /> Refund
 							</DropdownItem>
-						)}
+						
 						{/* {row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
 							<DropdownItem
 								onClick={() => {

@@ -313,12 +313,12 @@ class CreditNotes extends React.Component {
 	return(
 		<div>
 		<div>
-					<label className="font-weight-bold mr-2 ">Invoice Amount : </label>
+					{/* <label className="font-weight-bold mr-2 ">Invoice Amount : </label> */}
 					<label>
-						{row.invoiceAmount  === 0 ? row.currencySymbol + row.invoiceAmount.toFixed(2) : row.currencySymbol + row.invoiceAmount.toFixed(2)}
+						{row.invoiceAmount}
 					</label>
 				</div>
-				<div style={{display: row.vatAmount === 0 ? 'none' : ''}}>
+				{/* <div style={{display: row.vatAmount === 0 ? 'none' : ''}}>
 				<label className="font-weight-bold mr-2">Vat Amount : </label>
 				<label>{row.vatAmount === 0  ? row.currencySymbol + row.vatAmount.toFixed(2) : row.currencySymbol + row.vatAmount.toFixed(2)}</label>
 				</div>
@@ -326,7 +326,7 @@ class CreditNotes extends React.Component {
 					<label className="font-weight-bold mr-2">Due Amount : </label>
 					<label>{row.dueAmount === 0  ? row.currencySymbol + row.dueAmount.toFixed(2) : row.currencySymbol + row.dueAmount.toFixed(2)}</label>
 				</div>
-				
+				 */}
 		</div>);
 	};
 	renderCurrency = (cell, row) => {
@@ -437,18 +437,18 @@ class CreditNotes extends React.Component {
 								<i className="fas fa-file" /> Draft
 							</DropdownItem>
 						)}
-						{row.statusEnum !== 'Draft' && row.statusEnum !== 'Paid' && (
+						
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
-										'/admin/income/customer-invoice/record-payment',
+										'/admin/income/credit-notes/refund',
 										{ id: row },
 									)
 								}
 							>
-								<i className="fas fa-university" /> Record Payment
+								<i className="fas fa-university" /> Refund
 							</DropdownItem>
-						)}
+						
 						{/* {row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
 							<DropdownItem
 								onClick={() => {
@@ -1133,7 +1133,7 @@ class CreditNotes extends React.Component {
 											>
 											Date
 											</TableHeaderColumn>
-											<TableHeaderColumn
+											{/* <TableHeaderColumn
 												dataField="regferenceNumber"
 												// dataFormat={this.renderInvoiceNumber}
 												dataSort
@@ -1142,7 +1142,7 @@ class CreditNotes extends React.Component {
 											>
 													
 											Reference Number 
-											</TableHeaderColumn>
+											</TableHeaderColumn> */}
 											{/* <TableHeaderColumn
 												dataField="invoiceDueDate"
 												dataSort

@@ -47,3 +47,31 @@ export const deleteInvoice = (id) => {
     })
   }
 }
+
+export const getCreditNoteById = (_id) => {
+  return (dispatch) => {
+    let data = {
+      method: 'GET',
+      url: `/rest/creditNote/getCreditNoteById?id=${_id}`
+    }
+    return authApi(data).then((res) => {
+      return res
+    }).catch((err) => {
+      throw err
+    })
+  }
+}
+export const UpdateCreditNotes = (obj) => {
+  return (dispatch) => {
+    let data = {
+      method: 'post',
+      url: '/rest/creditNote/update',
+      data: obj
+    }
+    return authFileUploadApi(data).then((res) => {
+      return res
+    }).catch((err) => {
+      throw err
+    })
+  }
+}

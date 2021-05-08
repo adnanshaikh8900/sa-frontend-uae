@@ -105,24 +105,9 @@ class InvoiceTemplate extends Component {
 											? companyData.company.companyName
 											: ''}</b></h4>
 								<h6 className="mb-1 ml-2">#{invoiceData.referenceNumber}</h6>
-								<h6 className="mb-1 ml-2"><b>Balance Due:{invoiceData.dueAmount ? (
-														<Currency
-															value={invoiceData.dueAmount}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													) : (
-														<Currency
-															value={0}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
+								<h6 className="mb-1 ml-2"><b>Date:{' '}
+													{moment(invoiceData.invoiceDate).format(
+														'DD MMM YYYY',
 													)}</b></h6>
 								</div>
 								</div>
@@ -164,7 +149,7 @@ class InvoiceTemplate extends Component {
 									justifyContent: 'space-between',
 								}}
 							>
-								<div style={{ width: '80%' }}>
+								{/* <div style={{ width: '80%' }}>
 									<Table className="table table-bordered" style={{width: '90%',margin:'0.5rem',border:'1px solid',width:'250px', textAlign: 'center' ,border:'1px solid',borderColor:'#c8ced3'}}>
 										<tbody>
 											<tr style={{ textAlign: 'right' }}>
@@ -190,7 +175,7 @@ class InvoiceTemplate extends Component {
 											</tr>
 										</tbody>
 									</Table>
-								</div>
+								</div> */}
 							</div>
 						</div>
 						<Table  >
@@ -441,7 +426,7 @@ class InvoiceTemplate extends Component {
 										</tr>
 										<tr style={{ background: '#f2f2f2' }}>
 											<td style={{ width: '40%' }}>
-												<strong>Balance Due</strong>
+												<strong>CREDITS REMAINING</strong>
 											</td>
 											<td>
 												<b
@@ -453,25 +438,25 @@ class InvoiceTemplate extends Component {
 												>
 													<span style={{ marginLeft: '2rem' }}></span>
 													<span>
-														{invoiceData.dueAmount ? (
-															<Currency
-																value={invoiceData.dueAmount.toFixed(2)}
-																currencySymbol={
-																	currencyData[0]
-																		? currencyData[0].currencyIsoCode
-																		: 'USD'
-																}
-															/>
-														) : (
-															<Currency
-																value={0}
-																currencySymbol={
-																	currencyData[0]
-																		? currencyData[0].currencyIsoCode
-																		: 'USD'
-																}
-															/>
-														)}
+													{invoiceData.totalAmount ? (
+														<Currency
+															value={invoiceData.totalAmount.toFixed(2)}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															}
+														/>
+													) : (
+														<Currency
+															value={0}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															}
+														/>
+													)}
 													</span>
 												</b>
 											</td>

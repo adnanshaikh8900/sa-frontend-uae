@@ -219,6 +219,7 @@ try {
 		const contactId = data['contactId'].value;
 		const isInventoryEnabled = data['isInventoryEnabled'];
 		const transactionCategoryId = data['transactionCategoryId'];
+		const productCategoryId = data['productCategoryId'];
 
 		let productPriceType;
 		if (data['productPriceType'].includes('SALES')) {
@@ -245,7 +246,7 @@ try {
 			isInventoryEnabled,
 			contactId,
 			transactionCategoryId,
-
+			productCategoryId,
 			...(salesUnitPrice.length !== 0 && {
 				salesUnitPrice,
 			}),

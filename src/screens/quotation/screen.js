@@ -825,7 +825,7 @@ console.log(quotation_list)
 												<Select
 													styles={customStyles}
 													className="select-default-width"
-													placeholder="Select Supplier"
+													placeholder="Select Customer"
 													id="supplier"
 													name="supplier"
 													options={
@@ -834,7 +834,7 @@ console.log(quotation_list)
 																	'label',
 																	'value',
 																	tmpSupplier_list,
-																	'Supplier Name',
+																	'Customer Name',
 															  )
 															: []
 													}

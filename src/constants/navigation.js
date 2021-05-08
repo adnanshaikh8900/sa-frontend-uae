@@ -145,7 +145,7 @@ export default {
 		{
 			name: 'Report',
 			url: '/admin/report',
-			icon: 'fas fa-boxes',
+			icon: 'fas fa-file-contract',
 			path: 'Financial',
 		},
 		// {

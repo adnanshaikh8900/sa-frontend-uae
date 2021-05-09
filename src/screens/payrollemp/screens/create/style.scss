@@ -1,10 +1,9 @@
-
+.salary{
 Table, td, th {
-  border:1px solid #0ba1de;
+  border:3px solid #0ba1de;
   }
-  Table {
+  table {
     width: 100%;
-   
+    border-collapse: collapse;
   }
-
-
+}

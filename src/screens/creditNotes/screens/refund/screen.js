@@ -65,7 +65,7 @@ const customStyles = {
 	}),
 };
 
-class RecordCustomerPayment extends React.Component {
+class Refund extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -271,7 +271,7 @@ class RecordCustomerPayment extends React.Component {
 					'success',
 					'Invoice Updated Successfully.',
 				);
-				this.props.history.push('/admin/income/customer-invoice');
+				this.props.history.push('/admin/income/credit-notes');
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
@@ -338,7 +338,7 @@ class RecordCustomerPayment extends React.Component {
 						'success',
 						'Data Deleted Successfully',
 					);
-					this.props.history.push('/admin/income/customer-invoice');
+					this.props.history.push('/admin/income/credit-notes');
 				}
 			})
 			.catch((err) => {
@@ -378,7 +378,7 @@ class RecordCustomerPayment extends React.Component {
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="fas fa-address-book" />
 												<span className="ml-2">
-													Payment for Customer Invoice
+												Refund for Credit Note
 												</span>
 											</div>
 										</Col>
@@ -818,14 +818,14 @@ class RecordCustomerPayment extends React.Component {
 																			className="btn-square mr-3"
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			Record Payment
+																			Refund Payment
 																		</Button>
 																		<Button
 																			color="secondary"
 																			className="btn-square"
 																			onClick={() => {
 																				this.props.history.push(
-																					'/admin/income/customer-invoice',
+																					'/admin/income/credit-notes',
 																				);
 																			}}
 																		>
@@ -864,4 +864,4 @@ class RecordCustomerPayment extends React.Component {
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps,
-)(RecordCustomerPayment);
+)(Refund);

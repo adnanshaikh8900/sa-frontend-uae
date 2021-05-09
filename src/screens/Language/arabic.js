@@ -373,7 +373,9 @@ QuotationAmount:"مبلغ الاقتباس",
 VatAmount:"مبلغ ضريبة القيمة المضافة ",
 UpdateQuotation:"تحديث عرض الأسعار",
 RFQAmount:"طلب عرض أسعار مبلغ",
-
-
+StartDate:"تاريخ البدء",
+EndDate:"تاريخ الانتهاء",
+ReceiveDate:"تاريخ الإستلام",
+UpdateGoodsReceivedNote:"تحديث السلع المستلمة ملاحظة",
   }
   export {ar};

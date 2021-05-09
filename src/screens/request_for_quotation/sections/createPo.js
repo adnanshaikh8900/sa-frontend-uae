@@ -30,6 +30,10 @@ import * as RequestForQuotationAction from '../screens/detail/actions';
 import { CommonActions } from 'services/global';
 import * as CurrencyConvertActions from '../../currencyConvert/actions';
 import { toast } from 'react-toastify';
+import {data}  from '../../Language/index'
+import LocalizedStrings from 'react-localization';
+
+
 const mapStateToProps = (state) => {
 
 	return {
@@ -75,11 +79,12 @@ const customStyles = {
 	}),
 };
 
-
+let strings = new LocalizedStrings(data);
 class CreatePurchaseOrder extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: false,
             data: [
 				{
@@ -801,6 +806,7 @@ class CreatePurchaseOrder extends React.Component {
 
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { openPurchaseOrder, closePurchaseOrder, id, supplier_list,rfqReceiveDate } = this.props;
 		const { initValue, contentState,data,supplierId } = this.state;
  
@@ -853,7 +859,7 @@ class CreatePurchaseOrder extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="rfqNumber">
 																		<span className="text-danger">*</span>
-																		RFQ Number
+																		 {strings.RFQNumber}
 																	</Label>
 																	<Input
                                                                     disabled={true}
@@ -887,7 +893,7 @@ class CreatePurchaseOrder extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="po_number">
 																		<span className="text-danger">*</span>
-																		PO Number
+																		 {strings.PONumber}
 																	</Label>
 																	<Input
 																		type="text"
@@ -924,7 +930,7 @@ class CreatePurchaseOrder extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="supplierName">
 																		<span className="text-danger">*</span>
-																		Supplier Name
+																		 {strings.SupplierName}
 																	</Label>
                                                                     <Input
 																		type="text"
@@ -1005,7 +1011,7 @@ class CreatePurchaseOrder extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="supplierReferenceNumber">
 																	
-																		Supplier Reference Number
+																		{strings.SupplierReferenceNumber}
 																	</Label>
 																	<Input
 																		type="text"
@@ -1042,7 +1048,7 @@ class CreatePurchaseOrder extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
 																		<span className="text-danger">*</span>
-																		Start Date
+																		{strings.StartDate}
 																	</Label>
 																	<DatePicker
 																		id="date"
@@ -1075,7 +1081,7 @@ class CreatePurchaseOrder extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="due_date">
 																	<span className="text-danger">*</span>
-																		End Date
+																		 {strings.EndDate}
 																	</Label>
 																	<DatePicker
 																		id="date"
@@ -1122,7 +1128,7 @@ class CreatePurchaseOrder extends React.Component {
 																	}
 																	disabled={this.checkedRow() ? true : false}
 																>
-																	<i className="fa fa-plus"></i> Add More
+																	<i className="fa fa-plus"></i> {strings.Addmore}
 																</Button>
 															</Col>
 														</Row>
@@ -1164,7 +1170,7 @@ class CreatePurchaseOrder extends React.Component {
 																			this.renderProduct(cell, rows, props)
 																		}
 																	>
-																		Product
+																		 {strings.PRODUCT}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="description"
@@ -1172,7 +1178,7 @@ class CreatePurchaseOrder extends React.Component {
 																			this.renderDescription(cell, rows, props)
 																		}
 																	>
-																		Description
+																		{strings.DESCRIPTION}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="quantity"
@@ -1181,7 +1187,7 @@ class CreatePurchaseOrder extends React.Component {
 																			this.renderQuantity(cell, rows, props)
 																		}
 																	>
-																		Quantity
+																		 {strings.QUANTITY}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="unitPrice"
@@ -1189,7 +1195,7 @@ class CreatePurchaseOrder extends React.Component {
 																			this.renderUnitPrice(cell, rows, props)
 																		}
 																	>
-																		Unit Price
+																		 {strings.UNITPRICE}
 																		<i
 																			id="UnitPriceToolTip"
 																			className="fa fa-question-circle ml-1"
@@ -1208,7 +1214,7 @@ class CreatePurchaseOrder extends React.Component {
 																			this.renderVat(cell, rows, props)
 																		}
 																	>
-																		Vat (%)
+																		{strings.VAT}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="sub_total"
@@ -1217,7 +1223,7 @@ class CreatePurchaseOrder extends React.Component {
 																		columnClassName="text-right"
 																	
 																	>
-																		Sub Total
+																		{strings.SUBTOTAL}
 																	</TableHeaderColumn>
 																</BootstrapTable>
 															</Col>
@@ -1228,7 +1234,7 @@ class CreatePurchaseOrder extends React.Component {
 																<Row>
 																		<Col lg={8}>
 																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">Notes</Label>
+																		<Label htmlFor="notes">{strings.Notes}</Label>
 																		<Input
 																			type="textarea"
 																			maxLength="255"
@@ -1251,7 +1257,7 @@ class CreatePurchaseOrder extends React.Component {
 																				<Row>
 																					<Col lg={6}>
 																						<h5 className="mb-0 text-right">
-																							Total Net
+																							 {strings.TotalNet}
 																						</h5>
 																					</Col>
 																					<Col lg={6} className="text-right">
@@ -1275,7 +1281,7 @@ class CreatePurchaseOrder extends React.Component {
 																				<Row>
 																					<Col lg={6}>
 																						<h5 className="mb-0 text-right">
-																							Total Vat
+																							 {strings.TotalVat}
 																						</h5>
 																					</Col>
 																					<Col lg={6} className="text-right">
@@ -1301,7 +1307,7 @@ class CreatePurchaseOrder extends React.Component {
 																				<Row>
 																					<Col lg={6}>
 																						<h5 className="mb-0 text-right">
-																							Total
+																							{strings.Total}
 																						</h5>
 																					</Col>
 																					<Col lg={6} className="text-right">
@@ -1334,7 +1340,7 @@ class CreatePurchaseOrder extends React.Component {
 											disabled={isSubmitting}
 											
 										>
-											<i className="fa fa-dot-circle-o"></i> Create
+											<i className="fa fa-dot-circle-o"></i>{strings.Create}
 										</Button>
 										&nbsp;
 										<Button
@@ -1344,7 +1350,7 @@ class CreatePurchaseOrder extends React.Component {
 												closePurchaseOrder(false);
 											}}
 										>
-											<i className="fa fa-ban"></i> Cancel
+											<i className="fa fa-ban"></i> {strings.Cancel}
 										</Button>
 									</ModalFooter>
 								</Form>

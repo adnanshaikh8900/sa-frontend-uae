@@ -374,6 +374,9 @@ QuotationAmount:"Montant du devis ",
 VatAmount:"Montant de la TVA ",
 UpdateQuotation:"mettre à jour le devis",
 RFQAmount:"Demande de montant de devis",
-
+StartDate:"Date de début",
+EndDate:"Date de fin",
+ReceiveDate:"Recevoir Date",
+UpdateGoodsReceivedNote:"Mise à jour des marchandises reçues Note",
   }
   export {fr};

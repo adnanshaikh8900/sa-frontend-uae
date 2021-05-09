@@ -116,6 +116,16 @@ class CreateEmployeePayroll extends React.Component {
                     yearlyAmount: ''
                 },
             ],
+            FixedAllowance: [
+                {
+                    description: '',
+                    flatAmount: '',
+                    formula: '',
+                    id: '',
+                    monthlyAmount: '',
+                    yearlyAmount: ''
+                },
+            ],
             list: [],
 
             loading: false,
@@ -248,11 +258,12 @@ class CreateEmployeePayroll extends React.Component {
                         Fixed: res.data.salaryComponentResult.Fixed,
                         Variable: res.data.salaryComponentResult.Variable,
                         Deduction: res.data.salaryComponentResult.Deduction,
+                         FixedAllowance : res.data.salaryComponentResult.Fixed_Allowance,
                         loading: false
                     })
                     
                 }
-               
+               console.log(res.data.salaryComponentResult,"Fixed Allowance")
             }).catch((err) => {
                 this.setState({ loading: false })
                 this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
@@ -274,12 +285,14 @@ class CreateEmployeePayroll extends React.Component {
     handleSubmitForSalary = (data, resetForm) => {
         this.setState({ disabled: true });
         const {
-            employee
+            employee,
+            CTC
         } = data;
 
 
         const formData = new FormData();
         formData.append('employee', this.state.employeeid)
+        formData.append('grossSalary', CTC != null ? CTC : '')
 
         formData.append('salaryComponentString', JSON.stringify(this.state.list));
         this.props.createPayrollEmployeeActions
@@ -584,13 +597,14 @@ class CreateEmployeePayroll extends React.Component {
         const Fixed = this.state.Fixed
         const Variable = this.state.Variable
         const Deduction = this.state.Deduction
-        const list = this.state.list
-
+        const FixedAllowance = this.state.FixedAllowance
+     
+        var locallist = []
         var basicSalaryAnnulay = 0;
         var basicSalaryMonthy = 0;
         var totalFixedSalary = 0;
         Fixed.map((obj) => {
-            list.push(obj);
+            locallist.push(obj);
             if (obj.formula != null && obj.description === "Basic SALARY") {
                 basicSalaryAnnulay = (CTC1 * (obj.formula / 100));
                 basicSalaryMonthy = (basicSalaryAnnulay) / 12;
@@ -614,8 +628,9 @@ class CreateEmployeePayroll extends React.Component {
 
             return obj;
         });
+        if(Variable != null){
         Variable.map((obj) => {
-            list.push(obj);
+            locallist.push(obj);
             if (obj.formula != null && obj.description != "Basic SALARY" && obj.formula.length > 0) {
                 var salaryMonthy = basicSalaryMonthy * (obj.formula / 100);
                 var salaryAnnulay = salaryMonthy * 12;
@@ -631,9 +646,10 @@ class CreateEmployeePayroll extends React.Component {
             }
 
             return obj;
-        });
+        });}
+        if(Deduction != null){
         Deduction.map((obj) => {
-            list.push(obj);
+            locallist.push(obj);
             if (obj.formula != null && obj.description != "Basic SALARY" && obj.formula.length > 0) {
                 var salaryMonthy = basicSalaryMonthy * (obj.formula / 100);
                 var salaryAnnulay = salaryMonthy * 12;
@@ -649,15 +665,32 @@ class CreateEmployeePayroll extends React.Component {
             }
 
             return obj;
-        });
+        });}
+
+
 
         const monthlySalary = CTC1 / 12
         const componentTotal1 = monthlySalary - totalFixedSalary;
         console.log(componentTotal1, "%$componentTotal")
+
+        if(FixedAllowance != null){
+            FixedAllowance.map((obj) => {
+                locallist.push(obj);
+            if (obj.flatAmount != null) {
+                 
+                    obj.monthlyAmount = componentTotal1;
+                    obj.yearlyAmount = componentTotal1 * 12;
+               
+                }
+    
+                return obj;
+            });}
+
         this.setState(
             {
                 componentTotal: componentTotal1,
-                CTC: CTC1
+                CTC: CTC1,
+                list: locallist
 
             })
         console.log(this.state.componentTotal, "componentTotal")
@@ -2099,19 +2132,9 @@ class CreateEmployeePayroll extends React.Component {
                                                         <Col lg={8}>
                                                             <h4>Variable Earnings</h4>
                                                             <Table>
-                                                                <thead >
-                                                                    <tr >
-                                                                        {this.columnHeader1.map((column, index) => {
-                                                                            return (
-                                                                                <th>
-                                                                                    {column.label}
-                                                                                </th>
-                                                                            );
-                                                                        })}
-                                                                    </tr>
-                                                                </thead>
                                                                 <tbody>
-                                                                    {Object.values(
+                                                                {this.state.Variable  ? (
+                                                                    Object.values(
                                                                         this.state.Variable,
                                                                     ).map((item) => (
                                                                         <tr>
@@ -2170,7 +2193,11 @@ class CreateEmployeePayroll extends React.Component {
 
 
                                                                         </tr>
-                                                                    ))}
+                                                                    ))): (
+                                                                        <tr></tr>
+                                                                    )}
+                                       
+                                                                  
                                                                 </tbody>
                                                             </Table>
                                                             <Button
@@ -2188,19 +2215,10 @@ class CreateEmployeePayroll extends React.Component {
                                                         <Col lg={8}>
                                                             <h4>Deductions</h4>
                                                             <Table>
-                                                                <thead >
-                                                                    <tr >
-                                                                        {this.columnHeader1.map((column, index) => {
-                                                                            return (
-                                                                                <th>
-                                                                                    {column.label}
-                                                                                </th>
-                                                                            );
-                                                                        })}
-                                                                    </tr>
-                                                                </thead>
+                                                             
                                                                 <tbody>
-                                                                    {Object.values(
+                                                                {this.state.Deduction  ? (
+                                                                    Object.values(
                                                                         this.state.Deduction,
                                                                     ).map((item) => (
                                                                         <tr>
@@ -2261,7 +2279,9 @@ class CreateEmployeePayroll extends React.Component {
                                                                                     </td>
                                                                                 )}
                                                                         </tr>
-                                                                    ))}
+                                                                    ))) : (
+                                                                        <tr></tr>
+                                                                    )}
                                                                 </tbody>
                                                             </Table>
                                                             <Button
@@ -2278,16 +2298,39 @@ class CreateEmployeePayroll extends React.Component {
                                                         </Col>
                                                         <Col lg={8}>
                                                             <Table>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td className="pt-0 pb-0">Fixed Allowance</td>
-                                                                        <td
-                                                                            id='Fixed Allowance'
-                                                                            className="pt-0 pb-0">
-                                                                            {(this.state.componentTotal)}
-                                                                        </td>
-                                                                        <td className="pt-0 pb-0">{props.values.CTC}</td>
+                                                                <tbody> 
+                                                                    {this.state.FixedAllowance  ? (
+                                                                    Object.values(
+                                                                        this.state.FixedAllowance,
+                                                                    ).map((item) => (
+                                                                        <tr>
+                                                                       
+                                                                        <td className="pt-0 pb-0">{item.description}</td>
+                                                                       
+                                                                                <td>
+                                                                                   
+                                                                                </td>
+                                                                         
+                                                                        <td className="pt-0 pb-0">
+                                                                        {item.monthlyAmount}
+                                                                            </td>
+
+                                                                            <td className="pt-0 pb-0">
+                                                                            {/* {props.values.CTC} */}
+                                                                            {item.yearlyAmount}
+                                                                            </td>
                                                                     </tr>
+                                                                      ))) : (
+                                                                        <tr></tr>
+                                                                    )}
+                                                                </tbody>
+                                                            </Table>
+                                                          
+                                                        </Col>
+                                                        <Col lg={8}>
+                                                            <Table>
+                                                                <tbody>
+                                                                  
                                                                     <tr>
                                                                         <td className="pt-0 pb-0">Company  cost</td>
                                                                         <td className="pt-0 pb-0">{(props.values.CTC / 12).toFixed(2)}</td>

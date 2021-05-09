@@ -800,9 +800,9 @@ class Expense extends React.Component {
 													: 0,
 											}}
 											multiColumnSort
-											className="expense-table"
-											trClassName="cursor-pointer"
-											ref={(node) => (this.table = node)}
+											//className="expense-table"
+											// trClassName="cursor-pointer"
+											//ref={(node) => (this.table = node)}
 											csvFileName="expense_list.csv"
 										>
 											<TableHeaderColumn

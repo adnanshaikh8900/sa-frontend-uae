@@ -10,6 +10,10 @@ import {
 	Col,
 	ButtonGroup,
 	Input,
+    ButtonDropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem,
 } from 'reactstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import Select from 'react-select';
@@ -24,24 +28,22 @@ import 'bootstrap-daterangepicker/daterangepicker.css';
 import { CommonActions } from 'services/global';
 import { CSVLink } from 'react-csv';
 
-import * as ReceiptActions from './actions';
+import * as PayRollActions from './actions';
 import moment from 'moment';
 
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
+import { PayrollModal } from './sections';
 
 const mapStateToProps = (state) => {
 	return {
-		receipt_list: state.receipt.receipt_list,
-		invoice_list: state.receipt.invoice_list,
-		contact_list: state.receipt.contact_list,
-		universal_currency_list: state.common.universal_currency_list,
+		payroll_employee_list: state.payrollEmployee.payroll_employee_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
-		receiptActions: bindActionCreators(ReceiptActions, dispatch),
+		payRollActions: bindActionCreators(PayRollActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
@@ -61,6 +63,7 @@ class PayrollRun extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+            actionButtons: {},
 			loading: true,
 			selectedRows: [],
 			dialog: false,
@@ -74,6 +77,7 @@ class PayrollRun extends React.Component {
 			csvData: [],
 			view: false,
 			language: window['localStorage'].getItem('language'),
+            openPayrollModal : false,
 		};
 
 		this.options = {
@@ -99,9 +103,7 @@ class PayrollRun extends React.Component {
 	}
 
 	componentDidMount = () => {
-		let { filterData } = this.state;
-		this.props.receiptActions.getContactList(filterData.contactType);
-		this.props.receiptActions.getInvoiceList();
+	
 		this.initializeData();
 	};
 
@@ -117,8 +119,8 @@ class PayrollRun extends React.Component {
 		};
 		const postData = { ...filterData, ...paginationData, ...sortingData };
 
-		this.props.receiptActions
-			.getReceiptList(postData)
+		this.props.payRollActions
+			.getPayrollEmployeeList(postData)
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState({ loading: false });
@@ -330,6 +332,68 @@ class PayrollRun extends React.Component {
 			},
 		);
 	};
+    toggleActionButton = (index) => {
+        let temp = Object.assign({}, this.state.actionButtons);
+        if (temp[parseInt(index, 10)]) {
+            temp[parseInt(index, 10)] = false;
+        } else {
+            temp[parseInt(index, 10)] = true;
+        }
+        this.setState({
+            actionButtons: temp,
+        });
+    };
+    renderActions = (cell, row) => {
+        return (
+            <div>
+                <ButtonDropdown
+                    isOpen={this.state.actionButtons[row.id]}
+                    toggle={() => this.toggleActionButton(row.id)}
+                >
+                    <DropdownToggle size="sm" color="primary" className="btn-brand icon">
+                        {this.state.actionButtons[row.id] === true ? (
+                            <i className="fas fa-chevron-up" />
+                        ) : (
+                            <i className="fas fa-chevron-down" />
+                        )}
+                    </DropdownToggle>
+                    <DropdownMenu right>
+
+                        <DropdownItem
+                            onClick={() =>
+                                this.props.history.push(
+                                    '/admin/payroll/employee/detail',
+                                    { id: row.id },
+                                )
+                            }
+                        >
+                            <i className="fas fa-edit" /> Edit
+							</DropdownItem>
+
+
+                        <DropdownItem
+                            onClick={() =>
+                                this.props.history.push(
+                                    '/admin/payroll/employee/salarySlip',
+                                    { id: row.id, monthNo: 4 },
+                                )
+                            }
+                        >
+                            <i className="fas fa-eye" /> Salary Slip
+						</DropdownItem>
+
+                    </DropdownMenu>
+                </ButtonDropdown>
+            </div>
+        );
+    };
+
+    openPayrollModal = (props) => {
+        this.setState({ openPayrollModal: true });
+    };
+    closePayrollModal = (res) => {
+        this.setState({ openPayrollModal: false });
+    };
 
 	render() {
 		strings.setLanguage(this.state.language);
@@ -342,18 +406,12 @@ class PayrollRun extends React.Component {
 			view,
 		} = this.state;
 		const {
-			receipt_list,
+			payroll_employee_list,
 			invoice_list,
 			contact_list,
 			universal_currency_list,
 		} = this.props;
 		
-		let tmpContact_list = []
-
-		contact_list.map(item => {
-			let obj = {label: item.label.contactName, value: item.value}
-			tmpContact_list.push(obj)
-		})
 
 		return (
 			<div className="receipt-screen">
@@ -411,109 +469,7 @@ class PayrollRun extends React.Component {
 												</Button> */}
 											</ButtonGroup>
 										</div>
-										<div className="py-3">
-											<h5>{strings.Filter}: </h5>
-											<Row>
-												<Col lg={2} className="mb-1">
-													<DatePicker
-														className="form-control"
-														id="date"
-														name="receiptDate"
-														placeholderText="Receipt Date"
-														selected={filterData.receiptDate}
-														autoComplete="off"
-														showMonthDropdown
-														showYearDropdown
-														dateFormat="dd/MM/yyyy"
-														dropdownMode="select"
-														onChange={(value) => {
-															this.handleChange(value, 'receiptDate');
-														}}
-													/>
-												</Col>
-												{/* <Col lg={2} className="mb-1">
-													<Input
-														type="text"
-														placeholder="Reference Number"
-														value={filterData.receiptReferenceCode}
-														onChange={(e) => {
-															this.handleChange(
-																e.target.value,
-																'receiptReferenceCode',
-															);
-														}}
-													/>
-												</Col> */}
-												<Col lg={2} className="mb-1">
-													<Select
-														styles={customStyles}
-														options={
-															invoice_list
-																? selectOptionsFactory.renderOptions(
-																		'label',
-																		'value',
-																		invoice_list,
-																		'Invoice Number',
-																  )
-																: []
-														}
-														className="select-default-width"
-														placeholder="Invoice Number"
-														value={filterData.invoiceId}
-														onChange={(option) => {
-															if (option && option.value) {
-																this.handleChange(option, 'invoiceId');
-															} else {
-																this.handleChange('', 'invoiceId');
-															}
-														}}
-													/>
-												</Col>
-												<Col lg={3} className="mb-1">
-													<Select
-														styles={customStyles}
-														options={
-															tmpContact_list
-																? selectOptionsFactory.renderOptions(
-																		'label',
-																		'value',
-																		tmpContact_list,
-																		'Customer',
-																  )
-																: []
-														}
-														className="select-default-width"
-														placeholder="Customer Name"
-														value={filterData.contactId}
-														onChange={(option) => {
-															if (option && option.value) {
-																this.handleChange(option, 'contactId');
-															} else {
-																this.handleChange('', 'contactId');
-															}
-														}}
-													/>
-												</Col>
-												<Col lg={3} className="pl-0 pr-0">
-													<Button
-														type="button"
-														color="primary"
-														className="btn-square mr-1"
-														onClick={this.handleSearch}
-													>
-														<i className="fa fa-search"></i>
-													</Button>
-													<Button
-														type="button"
-														color="primary"
-														className="btn-square"
-														onClick={this.clearAll}
-													>
-														<i className="fa fa-refresh"></i>
-													</Button>
-												</Col>
-											</Row>
-										</div>
+										
 										{/* <Button
 											color="primary"
 											style={{ marginBottom: '10px' }}
@@ -526,97 +482,93 @@ class PayrollRun extends React.Component {
 											Add New Receipt
 										</Button> */}
 										<div>
-											<BootstrapTable
-												selectRow={this.selectRowProp}
-												search={false}
-												options={this.options}
-												data={
-													receipt_list && receipt_list.data
-														? receipt_list.data
-														: []
-												}
-												version="4"
-												keyField="receiptId"
-												hover
-												pagination={
-													receipt_list &&
-													receipt_list.data &&
-													receipt_list.data.length > 0
-														? true
-														: false
-												}
-												remote
-												fetchInfo={{
-													dataTotalSize: receipt_list.count
-														? receipt_list.count
-														: 0,
-												}}
-												className="receipt-table"
-												trClassName="cursor-pointer"
-												csvFileName="Receipt.csv"
-												ref={(node) => (this.table = node)}
-											>
-												<TableHeaderColumn
-													dataField="receiptDate"
-													dataSort
-													dataFormat={this.renderDate}
-													className="table-header-bg"
-													
-												>
-													{strings.ReceivedDate}
-												</TableHeaderColumn>
-
-												<TableHeaderColumn
-													dataField="invoiceNumber"
-													dataSort
-												    className="table-header-bg"
-													
-												>
-													{strings.InvoiceNumber}
-												</TableHeaderColumn>
-												{/* <TableHeaderColumn dataField="referenceCode" dataSort>
-													Reference Number
-												</TableHeaderColumn> */}
-												<TableHeaderColumn 
-													dataField="customerName" 
-													dataSort
-													className="table-header-bg"
-												>
-													{strings.CustomerName}
-												</TableHeaderColumn>
-												<TableHeaderColumn 
-												dataField="receiptId" 
-												dataSort
-												className="table-header-bg"
-												>
-													{strings.RecieptNumber}
-												</TableHeaderColumn>
-												  <TableHeaderColumn 
-											  dataField="currencyIsoCode" 
-										 	 dataSort
-											  className="table-header-bg"
-											  dataFormat={this.renderCurrency}
-												  >
-												{strings.Currency}
-												</TableHeaderColumn>
-												<TableHeaderColumn
-													dataField="amount"
-													dataSort
-													dataFormat={this.renderAmount}
-													className="table-header-bg"
-													
-												>
-													{strings.AMOUNT}
-												</TableHeaderColumn>
-												{/* <TableHeaderColumn
-													dataField="unusedAmount"
-													dataSort
-													dataAlign="right"
-													dataFormat={this.renderUnusedAmount}
-												>
-													Unused Amount
-												</TableHeaderColumn> */}
-											</BootstrapTable>
+                                        <BootstrapTable
+                                                    selectRow={this.selectRowProp}
+                                                    search={false}
+                                                    options={this.options}
+                                                    data={payroll_employee_list &&
+                                                         payroll_employee_list.data ? payroll_employee_list.data : []}
+                                                    version="4"
+                                                    hover
+                                                    pagination={payroll_employee_list && payroll_employee_list.data 
+                                                        && payroll_employee_list.data.length > 0 ? true : false}
+                                                    keyField="id"
+                                                    remote
+                                                    fetchInfo={{ dataTotalSize: payroll_employee_list.count ? payroll_employee_list.count : 0 }}
+                                                    className="employee-table"
+                                                    trClassName="cursor-pointer"
+                                                    csvFileName="payroll_employee_list.csv"
+                                                    ref={(node) => this.table = node}
+                                                >
+                                                    <TableHeaderColumn
+                                                        className="table-header-bg"
+                                                        dataField="fullName"
+                                                        dataSort
+                                                        width="15%"
+                                                    >
+                                                        Full Name
+                          </TableHeaderColumn>
+                          <TableHeaderColumn
+                                                        className="table-header-bg"
+                                                        dataField="email"
+                                                        dataSort
+                                                        width="15%"
+                                                    >
+                                                        Email
+                          </TableHeaderColumn>
+                                                    <TableHeaderColumn
+                                                        className="table-header-bg"
+                                                        dataField="mobileNumber"
+                                                        dataSort
+                                                    // dataFormat={this.vatCategoryFormatter}
+                                                    width="12%"
+                                                    >
+                                                        mobile Number
+                          </TableHeaderColumn>
+                                                    <TableHeaderColumn
+                                                        className="table-header-bg"
+                                                        dataField="dob"
+                                                        dataSort
+                                                        dataFormat={this.renderDOB}
+                                                        width="12%"
+                                                    >
+                                                        Date Of Birth
+                          </TableHeaderColumn>
+                                                    <TableHeaderColumn
+                                                        className="table-header-bg"
+                                                        dataField="gender"
+                                                        dataSort
+                                                        width="12%"
+                                                    >
+                                                        gender
+                          </TableHeaderColumn>
+                                                  
+                                                    <TableHeaderColumn
+                                                        className="table-header-bg"
+                                                        dataField="city"
+                                                        dataSort
+                                                    // dataFormat={this.vatCategoryFormatter}
+                                                    width="10%"
+                                                    >
+                                                        city
+                          </TableHeaderColumn>
+                                                    <TableHeaderColumn
+                                                        className="table-header-bg"
+                                                        dataField="isActive"
+                                                        dataSort
+                                                    // dataFormat={this.vatCategoryFormatter}
+                                                    width="10%"
+                                                    >
+                                                        is-Active
+                          </TableHeaderColumn>
+                                                    <TableHeaderColumn
+                                                        className="text-right"
+                                                        columnClassName="text-right"
+                                                        //width="5%"
+                                                        dataFormat={this.renderActions}
+                                                        className="table-header-bg"
+                                                    ></TableHeaderColumn>
+                                                </BootstrapTable>
 										</div>
 									</Col>
 								</Row>
@@ -624,6 +576,14 @@ class PayrollRun extends React.Component {
 						</CardBody>
 					</Card>
 				</div>
+                <PayrollModal
+                    openPayrollModal={this.state.openPayrollModal}
+                    closePayrollModal={(e) => {
+                        this.closePayrollModal(e);
+                    }}
+                  
+
+                />
 			</div>
 		);
 	}

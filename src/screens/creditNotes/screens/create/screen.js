@@ -24,7 +24,7 @@ import * as CreditNotesCreateActions from './actions';
 import * as CreditNotesActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
-import { CustomerModal, ProductModal,InvoiceNumberModel} from '../../sections';
+import { CustomerModal, ProductModal, InvoiceNumberModel } from '../../sections';
 import { MultiSupplierProductModal } from '../../sections';
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -80,7 +80,7 @@ class CreateCreditNote extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			customer_currency_symbol:'',
+			customer_currency_symbol: '',
 			loading: false,
 			disabled: false,
 			discountOptions: [
@@ -128,7 +128,7 @@ class CreateCreditNote extends React.Component {
 				invoiceVATAmount: 0,
 				totalAmount: 0,
 				notes: '',
-				email:'',
+				email: '',
 				discount: 0,
 				discountPercentage: '',
 				discountType: { value: 'FIXED', label: 'Fixed' },
@@ -151,8 +151,8 @@ class CreateCreditNote extends React.Component {
 			purchaseCategory: [],
 			salesCategory: [],
 			// exchangeRate:'',		
-			basecurrency:[],
-			inventoryList:[],
+			basecurrency: [],
+			inventoryList: [],
 		};
 
 		this.formRef = React.createRef();
@@ -229,17 +229,16 @@ class CreateCreditNote extends React.Component {
 							this.selectItem(e.target.value, row, 'description', form, field);
 						}}
 						placeholder="Description"
-						className={`form-control ${
-							props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].description &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].description
+						className={`form-control ${props.errors.lineItemsString &&
+								props.errors.lineItemsString[parseInt(idx, 10)] &&
+								props.errors.lineItemsString[parseInt(idx, 10)].description &&
+								Object.keys(props.touched).length > 0 &&
+								props.touched.lineItemsString &&
+								props.touched.lineItemsString[parseInt(idx, 10)] &&
+								props.touched.lineItemsString[parseInt(idx, 10)].description
 								? 'is-invalid'
 								: ''
-						}`}
+							}`}
 					/>
 				)}
 			/>
@@ -276,17 +275,16 @@ class CreateCreditNote extends React.Component {
 								}
 							}}
 							placeholder="Quantity"
-							className={`form-control  ${
-								props.errors.lineItemsString &&
-								props.errors.lineItemsString[parseInt(idx, 10)] &&
-								props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
-								Object.keys(props.touched).length > 0 &&
-								props.touched.lineItemsString &&
-								props.touched.lineItemsString[parseInt(idx, 10)] &&
-								props.touched.lineItemsString[parseInt(idx, 10)].quantity
+							className={`form-control  ${props.errors.lineItemsString &&
+									props.errors.lineItemsString[parseInt(idx, 10)] &&
+									props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
+									Object.keys(props.touched).length > 0 &&
+									props.touched.lineItemsString &&
+									props.touched.lineItemsString[parseInt(idx, 10)] &&
+									props.touched.lineItemsString[parseInt(idx, 10)].quantity
 									? 'is-invalid'
 									: ''
-							}`}
+								}`}
 						/>
 						{props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -319,7 +317,7 @@ class CreateCreditNote extends React.Component {
 				name={`lineItemsString.${idx}.unitPrice`}
 				render={({ field, form }) => (
 					<Input
-					type="number"
+						type="number"
 						maxLength="10"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
@@ -338,27 +336,26 @@ class CreateCreditNote extends React.Component {
 							}
 						}}
 						placeholder="Unit Price"
-						className={`form-control ${
-							props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].unitPrice &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].unitPrice
+						className={`form-control ${props.errors.lineItemsString &&
+								props.errors.lineItemsString[parseInt(idx, 10)] &&
+								props.errors.lineItemsString[parseInt(idx, 10)].unitPrice &&
+								Object.keys(props.touched).length > 0 &&
+								props.touched.lineItemsString &&
+								props.touched.lineItemsString[parseInt(idx, 10)] &&
+								props.touched.lineItemsString[parseInt(idx, 10)].unitPrice
 								? 'is-invalid'
 								: ''
-						}`}
+							}`}
 					/>
 				)}
 			/>
 		);
 	};
 
-		renderSubTotal = (cell, row,extraData) => {
-			return row.subTotal === 0 ? this.state.customer_currency_symbol + row.subTotal.toFixed(2) : this.state.customer_currency_symbol + row.subTotal.toFixed(2);
+	renderSubTotal = (cell, row, extraData) => {
+		return row.subTotal === 0 ? this.state.customer_currency_symbol + row.subTotal.toFixed(2) : this.state.customer_currency_symbol + row.subTotal.toFixed(2);
 
-}
+	}
 	setDate = (props, value) => {
 		const { term } = this.state;
 		const val = term ? term.value.split('_') : '';
@@ -384,10 +381,10 @@ class CreateCreditNote extends React.Component {
 
 	setCurrency = (value) => {
 		let result = this.props.currency_convert_list.filter((obj) => {
-		return obj.currencyCode === value;
+			return obj.currencyCode === value;
 		});
 		this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
-		};
+	};
 
 	validationCheck = (value) => {
 		const data = {
@@ -402,7 +399,7 @@ class CreateCreditNote extends React.Component {
 						{
 							exist: true,
 						},
-						() => {},
+						() => { },
 					);
 				} else {
 					this.setState({
@@ -441,8 +438,9 @@ class CreateCreditNote extends React.Component {
 			// );
 		});
 		this.props.creditNotesActions.getInvoicePrefix().then((response) => {
-			this.setState({prefixData:response.data
-			
+			this.setState({
+				prefixData: response.data
+
 			});
 		});
 		this.getCompanyCurrency();
@@ -465,7 +463,7 @@ class CreateCreditNote extends React.Component {
 				);
 				this.setState({ loading: false });
 			});
-	};	
+	};
 	salesCategory = () => {
 		try {
 			this.props.productActions
@@ -496,7 +494,7 @@ class CreateCreditNote extends React.Component {
 							{
 								purchaseCategory: res.data,
 							},
-							() => {},
+							() => { },
 						);
 					}
 				});
@@ -590,11 +588,11 @@ class CreateCreditNote extends React.Component {
 						options={
 							vat_list
 								? selectOptionsFactory.renderOptions(
-										'name',
-										'id',
-										vat_list,
-										'Vat',
-								  )
+									'name',
+									'id',
+									vat_list,
+									'Vat',
+								)
 								: []
 						}
 						value={
@@ -615,17 +613,16 @@ class CreateCreditNote extends React.Component {
 								props,
 							);
 						}}
-						className={`${
-							props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].vatCategoryId
+						className={`${props.errors.lineItemsString &&
+								props.errors.lineItemsString[parseInt(idx, 10)] &&
+								props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
+								Object.keys(props.touched).length > 0 &&
+								props.touched.lineItemsString &&
+								props.touched.lineItemsString[parseInt(idx, 10)] &&
+								props.touched.lineItemsString[parseInt(idx, 10)].vatCategoryId
 								? 'is-invalid'
 								: ''
-						}`}
+							}`}
 					/>
 				)}
 			/>
@@ -680,92 +677,93 @@ class CreateCreditNote extends React.Component {
 			}
 			return obj;
 		});
-	//	if (product_list.length > 0) {
-			return (
-				<Field
-					name={`lineItemsString.${idx}.productId`}
-					render={({ field, form }) => (
-						<Select
-							styles={customStyles}
-							options={
-								product_list
-									? selectOptionsFactory.renderOptions(
-											'name',
-											'id',
-											product_list,
-											'Product',
-									  )
-									: []
-							}
-							id="productId"
-							placeholder="Select Product"
-							onChange={(e) => {
-								if (e && e.label !== 'Select Product') {
-									this.selectItem(
-										e.value,
-										row,
-										'productId',
-										form,
-										field,
-										props,
-									);
-									this.prductValue(
-										e.value,
-										row,
-										'productId',
-										form,
-										field,
-										props,
-									);
-									this.props.creditNotesActions.getInventoryByProductId(e.value).then((response) => {
-										this.setState({inventoryList:response.data						
-										});
-										if(response.data.length !== 0 && response.data.length !== 1){
-										this.openMultiSupplierProductModal(response);}
-									});
-								} else {
-									form.setFieldValue(
-										`lineItemsString.${idx}.productId`,
-										e.value,
-										true,
-									);
+		//	if (product_list.length > 0) {
+		return (
+			<Field
+				name={`lineItemsString.${idx}.productId`}
+				render={({ field, form }) => (
+					<Select
+						styles={customStyles}
+						options={
+							product_list
+								? selectOptionsFactory.renderOptions(
+									'name',
+									'id',
+									product_list,
+									'Product',
+								)
+								: []
+						}
+						id="productId"
+						placeholder="Select Product"
+						onChange={(e) => {
+							if (e && e.label !== 'Select Product') {
+								this.selectItem(
+									e.value,
+									row,
+									'productId',
+									form,
+									field,
+									props,
+								);
+								this.prductValue(
+									e.value,
+									row,
+									'productId',
+									form,
+									field,
+									props,
+								);
+								this.props.creditNotesActions.getInventoryByProductId(e.value).then((response) => {
 									this.setState({
-										data: [
-											{
-												id: 0,
-												description: '',
-												quantity: 1,
-												unitPrice: '',
-												vatCategoryId: '',
-												subTotal: 0,
-												productId: '',
-											},
-										],
+										inventoryList: response.data
 									});
-								}
-							}}
-							value={
-								product_list && row.productId
-									? selectOptionsFactory
-											.renderOptions('name', 'id', product_list, 'Product')
-											.find((option) => option.value === +row.productId)
-									: []
+									if (response.data.length !== 0 && response.data.length !== 1) {
+										this.openMultiSupplierProductModal(response);
+									}
+								});
+							} else {
+								form.setFieldValue(
+									`lineItemsString.${idx}.productId`,
+									e.value,
+									true,
+								);
+								this.setState({
+									data: [
+										{
+											id: 0,
+											description: '',
+											quantity: 1,
+											unitPrice: '',
+											vatCategoryId: '',
+											subTotal: 0,
+											productId: '',
+										},
+									],
+								});
 							}
-							className={`${
-								props.errors.lineItemsString &&
+						}}
+						value={
+							product_list && row.productId
+								? selectOptionsFactory
+									.renderOptions('name', 'id', product_list, 'Product')
+									.find((option) => option.value === +row.productId)
+								: []
+						}
+						className={`${props.errors.lineItemsString &&
 								props.errors.lineItemsString[parseInt(idx, 10)] &&
 								props.errors.lineItemsString[parseInt(idx, 10)].productId &&
 								Object.keys(props.touched).length > 0 &&
 								props.touched.lineItemsString &&
 								props.touched.lineItemsString[parseInt(idx, 10)] &&
 								props.touched.lineItemsString[parseInt(idx, 10)].productId
-									? 'is-invalid'
-									: ''
+								? 'is-invalid'
+								: ''
 							}`}
-						/>
-					)}
-				/>
-			);
+					/>
+				)}
+			/>
+		);
 		// } else {
 		// 	return (
 		// 		<Button
@@ -813,7 +811,7 @@ class CreateCreditNote extends React.Component {
 				color="primary"
 				className="btn-twitter btn-brand icon"
 				onClick={(e, props) => {
-				this.openProductModal(props);
+					this.openProductModal(props);
 				}}
 			>
 				<i className="fas fa-plus"></i>
@@ -899,7 +897,7 @@ class CreateCreditNote extends React.Component {
 		let reader = new FileReader();
 		let file = e.target.files[0];
 		if (file) {
-			reader.onloadend = () => {};
+			reader.onloadend = () => { };
 			reader.readAsDataURL(file);
 			props.setFieldValue('attachmentFile', file, true);
 		}
@@ -916,7 +914,7 @@ class CreateCreditNote extends React.Component {
 			// exchangeRate,
 			// invoiceDueDate,
 			creditNoteDate,
-			contactId,	
+			contactId,
 			creditNoteNumber,
 			discount,
 			discountType,
@@ -942,8 +940,8 @@ class CreateCreditNote extends React.Component {
 			'creditNoteDate',
 			creditNoteDate
 				?
-						moment(creditNoteDate,'DD/MM/YYYY')
-						.toDate()
+				moment(creditNoteDate, 'DD/MM/YYYY')
+					.toDate()
 				: null,
 		);
 		formData.append(
@@ -1008,7 +1006,7 @@ class CreateCreditNote extends React.Component {
 							createMore: false,
 							selectedContact: '',
 							term: '',
-							exchangeRate:'',
+							exchangeRate: '',
 							data: [
 								{
 									id: 0,
@@ -1055,7 +1053,7 @@ class CreateCreditNote extends React.Component {
 			});
 	};
 	openInvoiceNumberModel = (props) => {
-		this.setState({ openInvoiceNumberModel : true });
+		this.setState({ openInvoiceNumberModel: true });
 	};
 	openCustomerModal = (props) => {
 		this.setState({ openCustomerModal: true });
@@ -1087,7 +1085,7 @@ class CreateCreditNote extends React.Component {
 	// 	}
 	// 	this.formRef.current.setFieldValue('contactId', option, true);
 	// };
-	
+
 	getCurrentUser = (data) => {
 		let option;
 		if (data.label || data.value) {
@@ -1098,23 +1096,23 @@ class CreateCreditNote extends React.Component {
 				value: data.id,
 			};
 		}
-		
+
 		let result = this.props.currency_convert_list.filter((obj) => {
 			return obj.currencyCode === data.currencyCode;
 		});
-		
-	    this.formRef.current.setFieldValue('currency', result[0].currencyCode, true);
+
+		this.formRef.current.setFieldValue('currency', result[0].currencyCode, true);
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
-		
+
 		this.setState({
 			customer_currency: data.currencyCode,
 			customer_currency_des: result[0].currencyName,
 		})
-		
+
 		// this.setState({
-			//   selectedContact: option
-			// })
-			console.log('data11', option)
+		//   selectedContact: option
+		// })
+		console.log('data11', option)
 		this.formRef.current.setFieldValue('contactId', option, true);
 	};
 
@@ -1200,7 +1198,7 @@ class CreateCreditNote extends React.Component {
 		let customer_currencyCode = 0;
 		let customer_item_currency = ''
 		this.props.customer_list.map(item => {
-			if(item.label.contactId == opt) {
+			if (item.label.contactId == opt) {
 				this.setState({
 					customer_currency: item.label.currency.currencyCode,
 					customer_currency_des: item.label.currency.currencyName,
@@ -1211,7 +1209,7 @@ class CreateCreditNote extends React.Component {
 				customer_item_currency = item.label.currency
 			}
 		})
-	
+
 		return customer_currencyCode;
 	}
 
@@ -1223,11 +1221,11 @@ class CreateCreditNote extends React.Component {
 			currency_convert_list,
 		} = this.props;
 
-		
+
 		let tmpCustomer_list = []
 
 		customer_list.map(item => {
-			let obj = {label: item.label.contactName, value: item.value}
+			let obj = { label: item.label.contactName, value: item.value }
 			tmpCustomer_list.push(obj)
 		})
 
@@ -1240,12 +1238,16 @@ class CreateCreditNote extends React.Component {
 								<CardHeader>
 									<Row>
 										<Col lg={12}>
-											<div className="h4 mb-0 d-flex align-items-center">
+											{/* <div className="h4 mb-0 d-flex align-items-center">
 												<img
 													alt="invoiceimage"
 													src={invoiceimage}
 													style={{ width: '40px' }}
 												/>
+												<span className="ml-2">Create Credit Note</span>
+											</div> */}
+											<div className="h4 mb-0 d-flex align-items-center">
+												<i className="fas fa-donate" />
 												<span className="ml-2">Create Credit Note</span>
 											</div>
 										</Col>
@@ -1260,104 +1262,104 @@ class CreateCreditNote extends React.Component {
 												onSubmit={(values, { resetForm }) => {
 													this.handleSubmit(values, resetForm);
 												}}
-												// validate={(values) => {
-												// 	let errors = {};
-												// 	if (exist === true) {
-												// 		errors.creditNoteNumber =
-												// 			'Credit Note Number cannot be same';
-												// 	}
-												// 	return errors;
-												// }}
-												// validationSchema={Yup.object().shape({
-												// 	creditNoteNumber: Yup.string().required(
-												// 		'Credit Note Number is Required',
-												// 	),
-												// 	contactId: Yup.string().required(
-												// 		'Customer is Required',
-												// 	),
-												// 	// placeOfSupplyId: Yup.string().required('Place of supply is Required'),
-												// 	term: Yup.string().required('Term is Required'),
-												// 	currency: Yup.string().required(
-												// 		'Currency is Required',
-												// 	),
-												// 	creditNoteDate: Yup.string().required(
-												// 		'Credit Note Date is Required',
-												// 	),
-												// 	lineItemsString: Yup.array()
-												// 		.required(
-												// 			'Atleast one Credit Note sub detail is mandatory',
-												// 		)
-												// 		.of(
-												// 			Yup.object().shape({
-												// 				quantity: Yup.string()
-												// 					.required('Value is Required')
-												// 					.test(
-												// 						'quantity',
-												// 						'Quantity Should be Greater than 1',
-												// 						(value) => {
-												// 							if (value > 0) {
-												// 								return true;
-												// 							} else {
-												// 								return false;
-												// 							}
-												// 						},
-												// 					),
-												// 				unitPrice: Yup.string()
-												// 					.required('Value is Required')
-												// 					.test(
-												// 						'Unit Price',
-												// 						'Unit Price Should be Greater than 1',
-												// 						(value) => {
-												// 							if (value > 0) {
-												// 								return true;
-												// 							} else {
-												// 								return false;
-												// 							}
-												// 						},
-												// 					),
-												// 				vatCategoryId: Yup.string().required(
-												// 					'Value is Required',
-												// 				),
-												// 				productId: Yup.string().required(
-												// 					'Product is Required',
-												// 				),
-												// 			}),
-												// 		),
-												// 	// attachmentFile: Yup.mixed()
-												// 	// 	.test(
-												// 	// 		'fileType',
-												// 	// 		'*Unsupported File Format',
-												// 	// 		(value) => {
-												// 	// 			value &&
-												// 	// 				this.setState({
-												// 	// 					fileName: value.name,
-												// 	// 				});
-												// 	// 			if (
-												// 	// 				!value ||
-												// 	// 				(value &&
-												// 	// 					this.supported_format.includes(value.type))
-												// 	// 			) {
-												// 	// 				return true;
-												// 	// 			} else {
-												// 	// 				return false;
-												// 	// 			}
-												// 	// 		},
-												// 	// 	)
-												// 	// 	.test(
-												// 	// 		'fileSize',
-												// 	// 		'*File Size is too large',
-												// 	// 		(value) => {
-												// 	// 			if (
-												// 	// 				!value ||
-												// 	// 				(value && value.size <= this.file_size)
-												// 	// 			) {
-												// 	// 				return true;
-												// 	// 			} else {
-												// 	// 				return false;
-												// 	// 			}
-												// 	// 		},
-												// 	// 	),
-												// })}
+											// validate={(values) => {
+											// 	let errors = {};
+											// 	if (exist === true) {
+											// 		errors.creditNoteNumber =
+											// 			'Credit Note Number cannot be same';
+											// 	}
+											// 	return errors;
+											// }}
+											// validationSchema={Yup.object().shape({
+											// 	creditNoteNumber: Yup.string().required(
+											// 		'Credit Note Number is Required',
+											// 	),
+											// 	contactId: Yup.string().required(
+											// 		'Customer is Required',
+											// 	),
+											// 	// placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+											// 	term: Yup.string().required('Term is Required'),
+											// 	currency: Yup.string().required(
+											// 		'Currency is Required',
+											// 	),
+											// 	creditNoteDate: Yup.string().required(
+											// 		'Credit Note Date is Required',
+											// 	),
+											// 	lineItemsString: Yup.array()
+											// 		.required(
+											// 			'Atleast one Credit Note sub detail is mandatory',
+											// 		)
+											// 		.of(
+											// 			Yup.object().shape({
+											// 				quantity: Yup.string()
+											// 					.required('Value is Required')
+											// 					.test(
+											// 						'quantity',
+											// 						'Quantity Should be Greater than 1',
+											// 						(value) => {
+											// 							if (value > 0) {
+											// 								return true;
+											// 							} else {
+											// 								return false;
+											// 							}
+											// 						},
+											// 					),
+											// 				unitPrice: Yup.string()
+											// 					.required('Value is Required')
+											// 					.test(
+											// 						'Unit Price',
+											// 						'Unit Price Should be Greater than 1',
+											// 						(value) => {
+											// 							if (value > 0) {
+											// 								return true;
+											// 							} else {
+											// 								return false;
+											// 							}
+											// 						},
+											// 					),
+											// 				vatCategoryId: Yup.string().required(
+											// 					'Value is Required',
+											// 				),
+											// 				productId: Yup.string().required(
+											// 					'Product is Required',
+											// 				),
+											// 			}),
+											// 		),
+											// 	// attachmentFile: Yup.mixed()
+											// 	// 	.test(
+											// 	// 		'fileType',
+											// 	// 		'*Unsupported File Format',
+											// 	// 		(value) => {
+											// 	// 			value &&
+											// 	// 				this.setState({
+											// 	// 					fileName: value.name,
+											// 	// 				});
+											// 	// 			if (
+											// 	// 				!value ||
+											// 	// 				(value &&
+											// 	// 					this.supported_format.includes(value.type))
+											// 	// 			) {
+											// 	// 				return true;
+											// 	// 			} else {
+											// 	// 				return false;
+											// 	// 			}
+											// 	// 		},
+											// 	// 	)
+											// 	// 	.test(
+											// 	// 		'fileSize',
+											// 	// 		'*File Size is too large',
+											// 	// 		(value) => {
+											// 	// 			if (
+											// 	// 				!value ||
+											// 	// 				(value && value.size <= this.file_size)
+											// 	// 			) {
+											// 	// 				return true;
+											// 	// 			} else {
+											// 	// 				return false;
+											// 	// 			}
+											// 	// 		},
+											// 	// 	),
+											// })}
 											>
 												{(props) => (
 													<Form onSubmit={props.handleSubmit}>
@@ -1382,7 +1384,7 @@ class CreateCreditNote extends React.Component {
 																		}}
 																		className={
 																			props.errors.creditNoteNumber &&
-																			props.touched.creditNoteNumber
+																				props.touched.creditNoteNumber
 																				? 'is-invalid'
 																				: ''
 																		}
@@ -1409,11 +1411,11 @@ class CreateCreditNote extends React.Component {
 																		options={
 																			tmpCustomer_list
 																				? selectOptionsFactory.renderOptions(
-																						'label',
-																						'value',
-																						tmpCustomer_list,
-																						'Customer',
-																				  )
+																					'label',
+																					'value',
+																					tmpCustomer_list,
+																					'Customer',
+																				)
 																				: []
 																		}
 																		value={props.values.contactId}
@@ -1428,7 +1430,7 @@ class CreateCreditNote extends React.Component {
 																		}}
 																		className={
 																			props.errors.contactId &&
-																			props.touched.contactId
+																				props.touched.contactId
 																				? 'is-invalid'
 																				: ''
 																		}
@@ -1611,12 +1613,11 @@ class CreateCreditNote extends React.Component {
 																			props.handleChange('creditNoteDate')(value);
 																			this.setDate(props, value);
 																		}}
-																		className={`form-control ${
-																			props.errors.creditNoteDate &&
-																			props.touched.creditNoteDate
+																		className={`form-control ${props.errors.creditNoteDate &&
+																				props.touched.creditNoteDate
 																				? 'is-invalid'
 																				: ''
-																		}`}
+																			}`}
 																	/>
 																	{props.errors.creditNoteDate &&
 																		props.touched.creditNoteDate && (
@@ -1665,41 +1666,41 @@ class CreateCreditNote extends React.Component {
 																		options={
 																			currency_convert_list
 																				? selectCurrencyFactory.renderOptions(
-																						'currencyName',
-																						'currencyCode',
-																						currency_convert_list,
-																						'Currency',
-																				  )
+																					'currencyName',
+																					'currencyCode',
+																					currency_convert_list,
+																					'Currency',
+																				)
 																				: []
 																		}
 																		id="currency"
 																		name="currency"
 																		value={
-																	 	currency_convert_list &&
+																			currency_convert_list &&
 																			selectCurrencyFactory
-																			.renderOptions(
+																				.renderOptions(
 																					'currencyName',
-																		 			'currencyCode',
+																					'currencyCode',
 																					currency_convert_list,
-																		 			'Currency',
+																					'Currency',
 																				)
-																		 		.find(
+																				.find(
 																					(option) =>
-																		 				option.value ===
-																	 				+this.state.customer_currency,
-																	 		)
+																						option.value ===
+																						+this.state.customer_currency,
+																				)
 																		}
 																		className={
 																			props.errors.currency &&
-																			props.touched.currency
+																				props.touched.currency
 																				? 'is-invalid'
 																				: ''
 																		}
 																		onChange={(option) => {
-																		props.handleChange('currency')(option);
-																		// this.setExchange(option.value);
-																		this.setCurrency(option.value)
-																	    }}
+																			props.handleChange('currency')(option);
+																			// this.setExchange(option.value);
+																			this.setCurrency(option.value)
+																		}}
 
 																	/>
 																	{props.errors.currency &&
@@ -1711,36 +1712,36 @@ class CreateCreditNote extends React.Component {
 																</FormGroup>
 															</Col>
 															<Col lg={3}>
-												<FormGroup>
-													<Label htmlFor="email">
-														Sales Person
+																<FormGroup>
+																	<Label htmlFor="email">
+																		Sales Person
 													</Label>
-													<Input
-														type="text"
-														maxLength="80"
-														id="email"
-														name="email"
-														onChange={(value) => {
-															props.handleChange('email')(value);
-														}}
-														value={props.values.email}
-														className={
-															props.errors.email && props.touched.email
-																? 'is-invalid'
-																: ''
-														}
-														placeholder="Enter email"
-													/>
-													{props.errors.email && props.touched.email && (
-														<div className="invalid-feedback">
-															{props.errors.email}
-														</div>
-													)}
-												</FormGroup>
-											</Col>
+																	<Input
+																		type="text"
+																		maxLength="80"
+																		id="email"
+																		name="email"
+																		onChange={(value) => {
+																			props.handleChange('email')(value);
+																		}}
+																		value={props.values.email}
+																		className={
+																			props.errors.email && props.touched.email
+																				? 'is-invalid'
+																				: ''
+																		}
+																		placeholder="Enter email"
+																	/>
+																	{props.errors.email && props.touched.email && (
+																		<div className="invalid-feedback">
+																			{props.errors.email}
+																		</div>
+																	)}
+																</FormGroup>
+															</Col>
 														</Row>
 														<hr />
-																{/* <Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
+														{/* <Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																<Col>
 																<Label >
 																		Currency Exchange Rate
@@ -1811,13 +1812,12 @@ class CreateCreditNote extends React.Component {
 																			/>
 														</Col>
 														</Row> */}
-														<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
+														<hr style={{ display: props.values.exchangeRate === 1 ? 'none' : '' }} />
 														<Col lg={8} className="mb-3">
 															<Button
 																color="primary"
-																className={`btn-square mr-3 ${
-																	this.checkedRow() ? `disabled-cursor` : ``
-																} `}
+																className={`btn-square mr-3 ${this.checkedRow() ? `disabled-cursor` : ``
+																	} `}
 																onClick={this.addRow}
 																title={
 																	this.checkedRow()
@@ -1832,7 +1832,7 @@ class CreateCreditNote extends React.Component {
 														<Row>
 															{props.errors.lineItemsString &&
 																typeof props.errors.lineItemsString ===
-																	'string' && (
+																'string' && (
 																	<div
 																		className={
 																			props.errors.lineItemsString
@@ -2104,49 +2104,49 @@ class CreateCreditNote extends React.Component {
 																					</FormGroup>
 																				</Col>
 																				{props.values.discountType.value ===
-																				'PERCENTAGE' ? (
+																					'PERCENTAGE' ? (
 																					<Col lg={6}>
 																						<FormGroup>
 																							<Label htmlFor="discountPercentage">
 																								Percentage
 																							</Label>
 																							<div className="discountPercent">
-																							<Input
-																								id="discountPercentage"
-																								name="discountPercentage"
-																								placeholder="Discount Percentage"
-																								type="number"
-																								maxLength="5"
-																								value={
-																									props.values
-																										.discountPercentage
-																							}
-																								onChange={(e) => {
-																									if (
-																										e.target.value === '' ||
-																										this.regDecimal.test(
-																											e.target.value,
-																										)
-																									) {
-																										props.handleChange(
-																											'discountPercentage',
-																										)(e);
-																										this.setState(
-																											{
-																												discountPercentage:
-																													e.target.value,
-																											},
-																											() => {
-																												this.updateAmount(
-																													this.state.data,
-																													props,
-																												);
-																											},
-																										);
+																								<Input
+																									id="discountPercentage"
+																									name="discountPercentage"
+																									placeholder="Discount Percentage"
+																									type="number"
+																									maxLength="5"
+																									value={
+																										props.values
+																											.discountPercentage
 																									}
-																								}}
-																							/> <span className = "percentSymbol">%</span></div>
-																						
+																									onChange={(e) => {
+																										if (
+																											e.target.value === '' ||
+																											this.regDecimal.test(
+																												e.target.value,
+																											)
+																										) {
+																											props.handleChange(
+																												'discountPercentage',
+																											)(e);
+																											this.setState(
+																												{
+																													discountPercentage:
+																														e.target.value,
+																												},
+																												() => {
+																													this.updateAmount(
+																														this.state.data,
+																														props,
+																													);
+																												},
+																											);
+																										}
+																									}}
+																								/> <span className="percentSymbol">%</span></div>
+
 																						</FormGroup>
 																					</Col>
 																				) : null}
@@ -2162,11 +2162,11 @@ class CreateCreditNote extends React.Component {
 																							type="number"
 																							name="discount"
 																							maxLength="10"
-																							
+
 																							disabled={
 																								props.values.discountType &&
-																								props.values.discountType
-																									.value === 'Percentage'
+																									props.values.discountType
+																										.value === 'Percentage'
 																									? true
 																									: false
 																							}
@@ -2210,7 +2210,7 @@ class CreateCreditNote extends React.Component {
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																					{/* {universal_currency_list[0] && (
+																						{/* {universal_currency_list[0] && (
 																						<Currency
 																					value={initValue.total_net.toFixed(
 																							2,
@@ -2219,11 +2219,11 @@ class CreateCreditNote extends React.Component {
 																							}
 																							/>
 																							)} */}
-																							{this.state.customer_currency_symbol} &nbsp;
+																						{this.state.customer_currency_symbol} &nbsp;
 																							{initValue.total_net.toFixed(
 																							2,
 																						)}
-																					
+
 																					</label>
 																				</Col>
 																			</Row>
@@ -2237,7 +2237,7 @@ class CreateCreditNote extends React.Component {
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																					{/* {universal_currency_list[0] && (
+																						{/* {universal_currency_list[0] && (
 																						<Currency
 																						value={initValue.invoiceVATAmount.toFixed(
 																									2,
@@ -2245,7 +2245,7 @@ class CreateCreditNote extends React.Component {
 																							currencySymbol={this.state.customer_currency_IsoCode}
 																							/>
 																							)} */}
-																							{this.state.customer_currency_symbol} &nbsp;
+																						{this.state.customer_currency_symbol} &nbsp;
 																							{initValue.invoiceVATAmount.toFixed(
 																							2,
 																						)}
@@ -2262,7 +2262,7 @@ class CreateCreditNote extends React.Component {
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																					{/* {universal_currency_list[0] && (
+																						{/* {universal_currency_list[0] && (
 																						<Currency
 																						value={this.state.initValue.discount.toFixed(
 																							2,
@@ -2290,7 +2290,7 @@ class CreateCreditNote extends React.Component {
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																					{this.state.customer_currency_symbol} &nbsp;
+																						{this.state.customer_currency_symbol} &nbsp;
 																							{initValue.total_net.toFixed(
 																							2,
 																						)}
@@ -2397,13 +2397,13 @@ class CreateCreditNote extends React.Component {
 					purchaseCategory={this.state.purchaseCategory}
 				/>
 				{
-				<MultiSupplierProductModal
-					openMultiSupplierProductModal={this.state.openMultiSupplierProductModal}
-					closeMultiSupplierProductModal={(e) => {
-						this.closeMultiSupplierProductModal(e);
-					}}
-					inventory_list={this.state.inventoryList}
-				/>}
+					<MultiSupplierProductModal
+						openMultiSupplierProductModal={this.state.openMultiSupplierProductModal}
+						closeMultiSupplierProductModal={(e) => {
+							this.closeMultiSupplierProductModal(e);
+						}}
+						inventory_list={this.state.inventoryList}
+					/>}
 				{/* <InvoiceNumberModel
 					openInvoiceNumberModel={this.state.openInvoiceNumberModel}
 					closeInvoiceNumberModel={(e) => {

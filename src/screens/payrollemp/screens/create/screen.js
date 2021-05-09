@@ -746,9 +746,9 @@ class CreateEmployeePayroll extends React.Component {
                                 <NavItem>
                                     <NavLink
                                         active={this.state.activeTab[0] === '4'}
-                                    // onClick={() => {
-                                    // 	this.toggle(0, '4');
-                                    // }}
+                                    onClick={() => {
+                                    	this.toggle(0, '4');
+                                    }}
                                     >
                                         Salary Setup
 									</NavLink>
@@ -2014,7 +2014,7 @@ class CreateEmployeePayroll extends React.Component {
                                                 <Row>
                                                     <Col lg={4}>
                                                         <FormGroup>
-                                                            <Label htmlFor="CTC">CTC</Label>
+                                                         <Label>  CTC : </Label>
                                                             <Input
                                                                 type="text"
                                                                 id="CTC"
@@ -2038,9 +2038,9 @@ class CreateEmployeePayroll extends React.Component {
                                                     <Row>
                                                         <Col lg={8}>
                                                             <h4>Fixed Earnings</h4>
-                                                            <Table>
+                                                            <Table style={{border:"6px solid #0ba1de"}} >
                                                                 <thead >
-                                                                    <tr >
+                                                                    <tr style={{border:"6px solid #0ba1de"}}>
                                                                         {this.columnHeader1.map((column, index) => {
                                                                             return (
                                                                                 <th>
@@ -2055,8 +2055,8 @@ class CreateEmployeePayroll extends React.Component {
                                                                         this.state.Fixed,
                                                                     ).map((item) => (
                                                                         <tr>
-                                                                            {/* <td className="pt-0 pb-0">{item.id}</td> */}
-                                                                            <td className="pt-0 pb-0">{item.description}</td>
+                                                                            {/* <td className="pt-1 pb-1">{item.id}</td> */}
+                                                                            <td className="pt-1 pb-1">{item.description}</td>
                                                                             {item.formula ?
                                                                                 (
                                                                                     <td>
@@ -2074,10 +2074,10 @@ class CreateEmployeePayroll extends React.Component {
                                                                                         />% of CTC
                                                                                     </td>
                                                                                 ) : (
-                                                                                    <label>Fixed amount</label>)
+                                                                                    <td>Fixed amount</td>)
                                                                             }
                                                                             {item.formula ?
-                                                                                (<td className="pt-0 pb-0">
+                                                                                (<td className="pt-1 pb-1">
                                                                                     <input
                                                                                         type="text"
                                                                                         size="30"
@@ -2086,7 +2086,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                 </td>
 
                                                                                 ) : (
-                                                                                    <td className="pt-0 pb-0">
+                                                                                    <td className="pt-1 pb-1">
                                                                                         <input
                                                                                             type="text"
                                                                                             size="30"
@@ -2096,7 +2096,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                 )}
 
                                                                             {item.formula ?
-                                                                                (<td className="pt-0 pb-0">
+                                                                                (<td className="pt-1 pb-1">
                                                                                     <input
                                                                                         type="text"
                                                                                         size="30"
@@ -2105,7 +2105,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                 </td>
 
                                                                                 ) : (
-                                                                                    <td className="pt-0 pb-0">
+                                                                                    <td className="pt-1 pb-1">
                                                                                         <input
                                                                                             type="text"
                                                                                             size="30"
@@ -2131,15 +2131,15 @@ class CreateEmployeePayroll extends React.Component {
                                                         </Col>
                                                         <Col lg={8}>
                                                             <h4>Variable Earnings</h4>
-                                                            <Table>
+                                                            <Table style={{border:"6px solid #0ba1de"}}>
                                                                 <tbody>
                                                                 {this.state.Variable  ? (
                                                                     Object.values(
                                                                         this.state.Variable,
                                                                     ).map((item) => (
                                                                         <tr>
-                                                                            {/* <td className="pt-0 pb-0">{item.id}</td> */}
-                                                                            <td className="pt-0 pb-0">{item.description}</td>
+                                                                            {/* <td className="pt-1 pb-1">{item.id}</td> */}
+                                                                            <td className="pt-1 pb-1">{item.description}</td>
                                                                             {item.formula ?
                                                                                 (
                                                                                     <td>
@@ -2154,7 +2154,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                     <label>Fixed amount</label>)
                                                                             }
                                                                             {item.formula ?
-                                                                                (<td className="pt-0 pb-0">
+                                                                                (<td className="pt-1 pb-1">
                                                                                     <input
                                                                                         type="text"
                                                                                         size="30"
@@ -2163,7 +2163,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                 </td>
 
                                                                                 ) : (
-                                                                                    <td className="pt-0 pb-0">
+                                                                                    <td className="pt-1 pb-1">
                                                                                         <input
                                                                                             type="text"
                                                                                             size="30"
@@ -2173,7 +2173,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                 )}
 
                                                                             {item.formula ?
-                                                                                (<td className="pt-0 pb-0">
+                                                                                (<td className="pt-1 pb-1">
                                                                                     <input
                                                                                         type="text"
                                                                                         size="30"
@@ -2182,7 +2182,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                 </td>
 
                                                                                 ) : (
-                                                                                    <td className="pt-0 pb-0">
+                                                                                    <td className="pt-1 pb-1">
                                                                                         <input
                                                                                             type="text"
                                                                                             size="30"
@@ -2214,7 +2214,7 @@ class CreateEmployeePayroll extends React.Component {
                                                         </Col>
                                                         <Col lg={8}>
                                                             <h4>Deductions</h4>
-                                                            <Table>
+                                                            <Table style={{border:"6px solid #0ba1de"}}>
                                                              
                                                                 <tbody>
                                                                 {this.state.Deduction  ? (
@@ -2222,8 +2222,8 @@ class CreateEmployeePayroll extends React.Component {
                                                                         this.state.Deduction,
                                                                     ).map((item) => (
                                                                         <tr>
-                                                                            {/* <td className="pt-0 pb-0">{item.id}</td> */}
-                                                                            <td className="pt-0 pb-0">{item.description}</td>
+                                                                            {/* <td className="pt-1 pb-1">{item.id}</td> */}
+                                                                            <td className="pt-1 pb-1">{item.description}</td>
                                                                             {item.formula ?
                                                                                 (
                                                                                     <td>
@@ -2242,7 +2242,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                     <label>Fixed amount</label>)
                                                                             }
                                                                             {item.formula ?
-                                                                                (<td className="pt-0 pb-0">
+                                                                                (<td className="pt-1 pb-1">
                                                                                     <input
                                                                                         type="text"
                                                                                         size="30"
@@ -2251,7 +2251,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                 </td>
 
                                                                                 ) : (
-                                                                                    <td className="pt-0 pb-0">
+                                                                                    <td className="pt-1 pb-1">
                                                                                         <input
                                                                                             type="text"
                                                                                             size="30"
@@ -2261,7 +2261,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                 )}
 
                                                                             {item.formula ?
-                                                                                (<td className="pt-0 pb-0">
+                                                                                (<td className="pt-1 pb-1">
                                                                                     <input
                                                                                         type="text"
                                                                                         size="30"
@@ -2270,7 +2270,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                 </td>
 
                                                                                 ) : (
-                                                                                    <td className="pt-0 pb-0">
+                                                                                    <td className="pt-1 pb-1">
                                                                                         <input
                                                                                             type="text"
                                                                                             size="30"
@@ -2297,7 +2297,7 @@ class CreateEmployeePayroll extends React.Component {
 																</Button>
                                                         </Col>
                                                         <Col lg={8}>
-                                                            <Table>
+                                                            <Table style={{border:"6px solid #0ba1de"}}>
                                                                 <tbody> 
                                                                     {this.state.FixedAllowance  ? (
                                                                     Object.values(
@@ -2305,17 +2305,17 @@ class CreateEmployeePayroll extends React.Component {
                                                                     ).map((item) => (
                                                                         <tr>
                                                                        
-                                                                        <td className="pt-0 pb-0">{item.description}</td>
+                                                                        <td className="pt-1 pb-1">{item.description}</td>
                                                                        
                                                                                 <td>
                                                                                    
                                                                                 </td>
                                                                          
-                                                                        <td className="pt-0 pb-0">
+                                                                        <td className="pt-1 pb-1">
                                                                         {item.monthlyAmount}
                                                                             </td>
 
-                                                                            <td className="pt-0 pb-0">
+                                                                            <td className="pt-1 pb-1">
                                                                             {/* {props.values.CTC} */}
                                                                             {item.yearlyAmount}
                                                                             </td>
@@ -2328,13 +2328,13 @@ class CreateEmployeePayroll extends React.Component {
                                                           
                                                         </Col>
                                                         <Col lg={8}>
-                                                            <Table>
+                                                            <Table  style={{border:"6px solid #0ba1de"}}>
                                                                 <tbody>
                                                                   
                                                                     <tr>
-                                                                        <td className="pt-0 pb-0">Company  cost</td>
-                                                                        <td className="pt-0 pb-0">{(props.values.CTC / 12).toFixed(2)}</td>
-                                                                        <td className="pt-0 pb-0">{props.values.CTC}</td>
+                                                                        <td className="pt-1 pb-1">Company  cost</td>
+                                                                        <td className="pt-1 pb-1">{(props.values.CTC / 12).toFixed(2)}</td>
+                                                                        <td className="pt-1 pb-1">{props.values.CTC}</td>
                                                                     </tr>
                                                                 </tbody>
                                                             </Table>

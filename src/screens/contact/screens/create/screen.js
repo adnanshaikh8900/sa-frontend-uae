@@ -89,6 +89,7 @@ class CreateContact extends React.Component {
 			createMore: false,
 		};
 		this.regEx = /[a-zA-Z0-9]+$/;
+		this.regExTelephone = /^[0-9-]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExAddress = /^[a-zA-Z0-9\s,'-]+$/;
@@ -564,7 +565,7 @@ class CreateContact extends React.Component {
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regEx.test(option.target.value)
+																				this.regExTelephone.test(option.target.value)
 																			) {
 																				props.handleChange('telephone')(option);
 																			}

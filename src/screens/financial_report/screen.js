@@ -161,7 +161,7 @@ class FinancialReport extends React.Component {
 									this.props.history.push('/admin/taxes/vat-transactions')}>Vat Transaction Report</a></h6>
 									</div>
 										</Col>
-										<Col className="report-section">
+										<Col className="report-section ml-4">
 										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "35px",width:"350px" }}>
 											<img
 											className="ml-2 mr-2 mt-2 mb-2 "

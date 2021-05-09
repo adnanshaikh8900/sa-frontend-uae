@@ -1658,39 +1658,43 @@ console.log(po_list)
 																	<i className="fa fa-plus"></i> {strings.AddASupplier}
 																</Button>
 															</Col>
-															<Col lg={3} >
-																<FormGroup className="mb-3">
-																	<Label htmlFor="supplierReferenceNumber">
-																	{strings.SupplierReferenceNumber}
-																	</Label>
-																	<Input
-																		type="text"
-																		disabled={true}
-																		id="supplierReferenceNumber"
-																		name="supplierReferenceNumber"
-																		placeholder="Supplier Reference Number"
-																		value={props.values.supplierReferenceNumber}
-																		onBlur={props.handleBlur('supplierReferenceNumber')}
-																		onChange={(value) => {
-																			props.handleChange('supplierReferenceNumber')(
-																				value,
-																			);
-																		}}
-																		className={
-																			props.errors.supplierReferenceNumber &&
-																			props.touched.supplierReferenceNumber
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.supplierReferenceNumber &&
-																		props.touched.supplierReferenceNumber && (
-																			<div className="invalid-feedback">
-																				{props.errors.supplierReferenceNumber}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
+															{props.values.supplierReferenceNumber ? (				
+					  	<Col lg={3} >
+						  <FormGroup className="mb-3">
+							  <Label htmlFor="supplierReferenceNumber">
+							  {strings.SupplierReferenceNumber}
+							  </Label>
+							  <Input
+								  type="text"
+								  disabled={true}
+								  id="supplierReferenceNumber"
+								  name="supplierReferenceNumber"
+								  placeholder="Supplier Reference Number"
+								  value={props.values.supplierReferenceNumber}
+								  onBlur={props.handleBlur('supplierReferenceNumber')}
+								  onChange={(value) => {
+									  props.handleChange('supplierReferenceNumber')(
+										  value,
+									  );
+								  }}
+								  className={
+									  props.errors.supplierReferenceNumber &&
+									  props.touched.supplierReferenceNumber
+										  ? 'is-invalid'
+										  : ''
+								  }
+							  />
+							  {props.errors.supplierReferenceNumber &&
+								  props.touched.supplierReferenceNumber && (
+									  <div className="invalid-feedback">
+										  {props.errors.supplierReferenceNumber}
+									  </div>
+								  )}
+						  </FormGroup>
+					  </Col>
+					):(" ")}	
+															
+														
 														</Row>
 														<hr />
 														<Row>

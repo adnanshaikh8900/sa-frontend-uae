@@ -126,9 +126,91 @@ class BankTransactions extends React.Component {
 		this.csvLink = React.createRef();
 	}
 
+	// componentDidMount = () => {
+	// 	this.props.detailBankAccountActions
+	// 		.getBankAccountByID(localStorage.getItem('bankId'))
+	// 		.then((res) => {
+	// 			this.setState({
+	// 				bankAccountCurrencySymbol:res.bankAccountCurrencySymbol,
+	// 				currentBalance: res.currentBalance,
+	// 				closingBalance: res.closingBalance,
+	// 				accounName: res.bankAccountName,
+	// 			});
+	// 		})
+	// 		.catch((err) => {
+	// 			this.props.commonActions.tostifyAlert(
+	// 				'error',
+	// 				err && err.data ? err.data.message : 'Something Went Wrong',
+	// 			);
+	// 			this.props.history.push('/admin/banking/bank-account');
+	// 		});
+	// 	this.toggle(0, 'all');
+	// 	this.initializeData();
+	// 	console.log('state', this.props)
+	// 	if (this.props.location.state !== undefined) {
+	// 		localStorage.setItem(
+	// 			'bankId',
+	// 			localStorage.getItem('bankId') !==
+	// 				this.props.location.state.bankAccountId
+	// 				? this.props.location.state.bankAccountId
+	// 				: localStorage.getItem('bankId'),
+	// 		);
+	// 	} else {
+	// 		localStorage.setItem('bankId', localStorage.getItem('bankId'));
+	// 		this.props.location.state =  {}
+	// 		this.props.location.state.bankAccountId = localStorage.getItem('bankId')
+	// 		console.log('props', this.props.location)
+
+	// 	}
+	// 	this.props.transactionsActions.getTransactionTypeList();
+	// 	//this.initializeData();
+		
+	// };
+
+	// initializeData = () => {
+	// 	let { filterData } = this.state;
+	// 	const data = {
+	// 		pageNo: this.options.page ? this.options.page - 1 : 0,
+	// 		pageSize: this.options.sizePerPage,
+	// 	};
+	// 	if (localStorage.getItem('bankId')) {
+	// 		const postData = {
+	// 			...filterData,
+	// 			...data,
+	// 			id: localStorage.getItem('bankId'),
+	// 			transactionType: this.state.transactionType,
+	// 		};
+	// 		this.props.transactionsActions
+	// 			.getTransactionList(postData)
+	// 			.then((res) => {
+	// 				const array = []
+	// 				if (res.status === 200) {
+	// 					this.setState({
+	// 						loading: false,
+	// 						transation_data: res.data.data
+	// 					});
+	// 					res.data.data.map((item) => {
+	// 						if (item.creationMode === 'POTENTIAL_DUPLICATE') {
+	// 							array.push(item.id)
+	// 						}
+	// 						this.setState({ nonexpand: array })
+	// 					});
+	// 				}
+	// 			})
+	// 			.catch((err) => {
+	// 				this.props.commonActions.tostifyAlert(
+	// 					'error',
+	// 					err && err.data ? err.data.message : 'Something Went Wrong',
+	// 				);
+	// 				this.setState({ loading: false });
+	// 			});
+	// 	} else {
+	// 		this.props.history.push('/admin/banking/bank-account');
+	// 	}
+	// };
 	componentDidMount = () => {
 		this.props.detailBankAccountActions
-			.getBankAccountByID(localStorage.getItem('bankId'))
+			.getBankAccountByID(this.props.location.state.bankAccountId)
 			.then((res) => {
 				this.setState({
 					bankAccountCurrencySymbol:res.bankAccountCurrencySymbol,
@@ -146,22 +228,7 @@ class BankTransactions extends React.Component {
 			});
 		this.toggle(0, 'all');
 		this.initializeData();
-		console.log('state', this.props)
-		if (this.props.location.state !== undefined) {
-			localStorage.setItem(
-				'bankId',
-				localStorage.getItem('bankId') !==
-					this.props.location.state.bankAccountId
-					? this.props.location.state.bankAccountId
-					: localStorage.getItem('bankId'),
-			);
-		} else {
-			localStorage.setItem('bankId', localStorage.getItem('bankId'));
-			this.props.location.state =  {}
-			this.props.location.state.bankAccountId = localStorage.getItem('bankId')
-			console.log('props', this.props.location)
-
-		}
+	
 		this.props.transactionsActions.getTransactionTypeList();
 		//this.initializeData();
 		
@@ -173,11 +240,11 @@ class BankTransactions extends React.Component {
 			pageNo: this.options.page ? this.options.page - 1 : 0,
 			pageSize: this.options.sizePerPage,
 		};
-		if (localStorage.getItem('bankId')) {
+		if (this.props.location.state.bankAccountId) {
 			const postData = {
 				...filterData,
 				...data,
-				id: localStorage.getItem('bankId'),
+				id: this.props.location.state.bankAccountId,
 				transactionType: this.state.transactionType,
 			};
 			this.props.transactionsActions
@@ -703,7 +770,10 @@ class BankTransactions extends React.Component {
 													<h5>{strings.CurrentBankBalance}</h5>
 													<h3>
 														{this.state.bankAccountCurrencySymbol} &nbsp;
-														{this.state.currentBalance.toFixed(2)}
+														{this.state.currentBalance ? (				
+															this.state.currentBalance.toFixed(2)
+															):(" ")}	
+																						
 													</h3>
 												</Col>
 												<Col lg={3}>

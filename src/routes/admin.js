@@ -174,6 +174,7 @@ import {
 	DetailSalaryTemplate,
 	DetailDesignation,
 	ApplyToInvoice,
+	Refund
 } from 'screens';
 
 const adminRoutes = [
@@ -376,11 +377,11 @@ const adminRoutes = [
 		component: ApplyToInvoice.screen,
 	},
 	
-	// {
-	// 	path: '/admin/income/customer-invoice/record-payment',
-	// 	name: 'RecordCustomerPayment',
-	// 	component: RecordCustomerPayment.screen,
-	// },
+	{
+		path: '/admin/income/credit-notes/refund',
+		name: 'Refund',
+		component: Refund.screen,
+	},
 	{
 		redirect: true,
 		path: '/admin/income',
@@ -534,7 +535,7 @@ const adminRoutes = [
 		name: 'ViewEmployment',
 		component: PayrollRun.screen,
 	},
-	
+
 	// {
 	// 	path: '/admin/payroll/employment/create',
 	// 	name: 'CreateEmployment',

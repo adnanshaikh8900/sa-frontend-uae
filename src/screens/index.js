@@ -167,6 +167,7 @@ import CreateCreditNote from './creditNotes/screens/create'
 import ViewCreditNote from './creditNotes/screens/view'
 import CreditNotes from './creditNotes'
 import ApplyToInvoice from './creditNotes/screens/applyToInvoice'
+import Refund from './creditNotes/screens/refund'
 export {
 	LogIn,
 	LogInTwo,
@@ -316,5 +317,5 @@ export {
 	ApplyToInvoice,
 	CreatePayrollEmployee,
 	PayrollEmployee,
-
+	Refund
 };

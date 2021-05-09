@@ -764,14 +764,18 @@ class CreditNotes extends React.Component {
 						<CardHeader>
 							<Row>
 								<Col lg={12}>
-									<div className="h4 mb-0 d-flex align-items-center">
+									{/* <div className="h4 mb-0 d-flex align-items-center">
 										<img
 											alt="invoiceimage"
 											src={invoiceimage}
 											style={{ width: '40px' }}
 										/>
 										<span className="ml-2">Credit Notes</span>
-									</div>
+									</div> */}
+									<div className="h4 mb-0 d-flex align-items-center">
+												<i className="fas fa-donate" />
+												<span className="ml-2">Credit Notes</span>
+											</div>
 								</Col>
 							</Row>
 						</CardHeader>
@@ -788,8 +792,8 @@ class CreditNotes extends React.Component {
 							)}
 							<Row>
 								<Col lg={12}>
-									<div className="mb-4 status-panel p-3">
-										{/* <Row className="align-items-center justify-content-around">
+									{/* <div className="mb-4 status-panel p-3">
+										<Row className="align-items-center justify-content-around">
 											<div className="h4 mb-0 d-flex align-items-center ">
 												<img
 													alt="overdue"
@@ -904,8 +908,8 @@ class CreditNotes extends React.Component {
 													</h3>
 												</div>
 											</div>
-										</Row> */}
-									</div>
+										</Row>
+									</div> */}
 									<div className="d-flex justify-content-end">
 										<ButtonGroup size="sm">
 											{/* <Button
@@ -970,7 +974,7 @@ class CreditNotes extends React.Component {
 													className="form-control"
 													id="date"
 													name="invoiceDate"
-													placeholderText="Invoice Date"
+													placeholderText="Credit Note Date"
 													selected={filterData.invoiceDate}
 													autoComplete="off"
 													showMonthDropdown
@@ -983,23 +987,7 @@ class CreditNotes extends React.Component {
 													}}
 												/>
 											</Col>
-											<Col lg={2} className="mb-1">
-												<DatePicker
-													className="form-control"
-													id="date"
-													name="invoiceDueDate"
-													placeholderText="Invoice Due Date"
-													showMonthDropdown
-													showYearDropdown
-													dropdownMode="select"
-													dateFormat="dd/MM/yyyy"
-													autoComplete="off"
-													selected={filterData.invoiceDueDate}
-													onChange={(value) => {
-														this.handleChange(value, 'invoiceDueDate');
-													}}
-												/>
-											</Col>
+										
 											<Col lg={2} className="mb-1">
 												<Input
 													type="number"
@@ -1152,7 +1140,7 @@ class CreditNotes extends React.Component {
 											>
 												Due Date
 											</TableHeaderColumn> */}
-											<TableHeaderColumn
+											{/* <TableHeaderColumn
 													dataSort
 													dataField="currencyName"
 												//	width="4%"
@@ -1160,7 +1148,7 @@ class CreditNotes extends React.Component {
 													className="table-header-bg"
 												>
 													Currency
-												</TableHeaderColumn>
+												</TableHeaderColumn> */}
 											{/* <TableHeaderColumn
 												dataField="totalVatAmount"
 												dataSort

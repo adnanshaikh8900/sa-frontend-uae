@@ -373,7 +373,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/income/credit-notes/applyToInvoice',
-		name: 'ApplyToInvoice',
+		name: 'Apply To Invoice',
 		component: ApplyToInvoice.screen,
 	},
 	

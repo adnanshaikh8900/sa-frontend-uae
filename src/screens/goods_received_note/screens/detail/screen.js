@@ -38,6 +38,8 @@ import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import './style.scss';
 import moment from 'moment';
 import API_ROOT_URL from '../../../../constants/config';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -87,10 +89,12 @@ const customStyles = {
 	}),
 };
 
+let strings = new LocalizedStrings(data);
 class DetailGoodsReceivedNote extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: true,
 			dialog: false,
 			discountOptions: [
@@ -1138,6 +1142,7 @@ class DetailGoodsReceivedNote extends React.Component {
 	}
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
 
 		const { project_list, currency_list,currency_convert_list, supplier_list,universal_currency_list } = this.props;
@@ -1160,7 +1165,7 @@ class DetailGoodsReceivedNote extends React.Component {
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="fas fa-address-book" />
-												<span className="ml-2">Update Goods Received Note</span>
+												<span className="ml-2">{strings.UpdateGoodsReceivedNote}</span>
 											</div>
 										</Col>
 									</Row>
@@ -1267,7 +1272,7 @@ class DetailGoodsReceivedNote extends React.Component {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="poNumber">
-																		Po Number
+																	 {strings.PONumber}
 																	</Label>
 																	<Input
 																			type="text"
@@ -1301,7 +1306,7 @@ class DetailGoodsReceivedNote extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="grnNumber">
 																			<span className="text-danger">*</span>
-																			GNR Number
+																			 {strings.GRNNumber}
 																		</Label>
 																		<Input
 																			type="text"
@@ -1337,7 +1342,7 @@ class DetailGoodsReceivedNote extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="supplierId">
 																			<span className="text-danger">*</span>
-																			Supplier Name
+																			{strings.SupplierName}
 																		</Label>
 																		<Select
 																		isDisabled={true}
@@ -1390,7 +1395,7 @@ class DetailGoodsReceivedNote extends React.Component {
 																<Col lg={3} >
 																<FormGroup className="mb-3">
 																	<Label htmlFor="supplierReferenceNumber">
-																		Supplier reference Number
+																		 {strings.SupplierReferenceNumber}
 																	</Label>
 																	<Input
 																		type="text"
@@ -1428,7 +1433,7 @@ class DetailGoodsReceivedNote extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">
 																			<span className="text-danger">*</span>
-																			Receive Date
+																		     {strings.ReceiveDate}
 																		</Label>
 																		<DatePicker
 																			id="grnReceiveDate"
@@ -1477,7 +1482,7 @@ class DetailGoodsReceivedNote extends React.Component {
 																		}
 																		disabled={this.checkedRow() ? true : false}
 																	>
-																		<i className="fa fa-plus"></i> Add More
+																		<i className="fa fa-plus"></i> {strings.Addmore}
 																	</Button>
 																</Col>
 															</Row>
@@ -1521,7 +1526,7 @@ class DetailGoodsReceivedNote extends React.Component {
 																				this.renderProduct(cell, rows, props)
 																			}
 																		>
-																			Product
+																			{strings.PRODUCT}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																		width="55"
@@ -1550,7 +1555,7 @@ class DetailGoodsReceivedNote extends React.Component {
 																			}
 																			width="10%"
 																		>
-																			Description
+																			{strings.DESCRIPTION}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="grnReceivedQuantity"
@@ -1559,7 +1564,7 @@ class DetailGoodsReceivedNote extends React.Component {
 																				this.renderGRNQuantity(cell, rows, props)
 																			}
 																		>
-																			Received Quantity
+																			{strings.RECEIVEDQUANTITY}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="quantity"
@@ -1568,7 +1573,7 @@ class DetailGoodsReceivedNote extends React.Component {
 																				this.renderQuantity(cell, rows, props)
 																			}
 																		>
-																			PO-Quantity
+																			{strings.POQUANTITY}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="unitPrice"
@@ -1576,7 +1581,7 @@ class DetailGoodsReceivedNote extends React.Component {
 																				this.renderUnitPrice(cell, rows, props)
 																			}
 																		>
-																			Unit Price (All)
+																		{strings.UNITPRICE}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="vat"
@@ -1584,7 +1589,7 @@ class DetailGoodsReceivedNote extends React.Component {
 																				this.renderVat(cell, rows, props)
 																			}
 																		>
-																			Vat (%)
+																			{strings.VAT}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="sub_total"
@@ -1593,7 +1598,7 @@ class DetailGoodsReceivedNote extends React.Component {
 																			columnClassName="text-right"
 																			formatExtraData={universal_currency_list}
 																		>
-																			Sub Total (All)
+																			{strings.SUBTOTAL}
 																		</TableHeaderColumn>
 																	</BootstrapTable>
 																</Col>
@@ -1602,7 +1607,7 @@ class DetailGoodsReceivedNote extends React.Component {
 																<Row>
 																		<Col lg={8}>
 																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">Notes</Label>
+																		<Label htmlFor="notes">{strings.Notes}</Label>
 																		<Input
 																			type="textarea"
 																			maxLength="255"
@@ -1625,7 +1630,7 @@ class DetailGoodsReceivedNote extends React.Component {
 																				<Row>
 																					<Col lg={6}>
 																						<h5 className="mb-0 text-right">
-																							Total Net
+																							 {strings.TotalNet}
 																						</h5>
 																					</Col>
 																					<Col lg={6} className="text-right">
@@ -1649,7 +1654,7 @@ class DetailGoodsReceivedNote extends React.Component {
 																				<Row>
 																					<Col lg={6}>
 																						<h5 className="mb-0 text-right">
-																							Total Vat
+																							{strings.TotalVat}
 																						</h5>
 																					</Col>
 																					<Col lg={6} className="text-right">
@@ -1677,7 +1682,7 @@ class DetailGoodsReceivedNote extends React.Component {
 																				<Row>
 																					<Col lg={6}>
 																						<h5 className="mb-0 text-right">
-																							Total
+																							 {strings.Total}
 																						</h5>
 																					</Col>
 																					<Col lg={6} className="text-right">
@@ -1713,7 +1718,7 @@ class DetailGoodsReceivedNote extends React.Component {
 																			className="btn-square"
 																			onClick={this.deleterfq}
 																		>
-																			<i className="fa fa-trash"></i> Delete
+																			<i className="fa fa-trash"></i> {strings.Delete}
 																		</Button>
 																	</FormGroup>
 																	<FormGroup className="text-right">
@@ -1723,7 +1728,7 @@ class DetailGoodsReceivedNote extends React.Component {
 																			className="btn-square mr-3"
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			Update
+																			{strings.Update}
 																		</Button>
 																		<Button
 																			color="secondary"
@@ -1734,7 +1739,7 @@ class DetailGoodsReceivedNote extends React.Component {
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i> Cancel
+																			<i className="fa fa-ban"></i> {strings.Cancel}
 																		</Button>
 																	</FormGroup>
 																</Col>

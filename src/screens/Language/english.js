@@ -379,7 +379,10 @@ QuotationAmount:"Quotation Amount",
 VatAmount:"Vat Amount",
 UpdateQuotation:"Update Quotation",
 RFQAmount:"RFQ Amount",
-
+StartDate:"Start Date",
+EndDate:"End Date",
+ReceiveDate:"Receive Date",
+UpdateGoodsReceivedNote:"Update Goods Received Note",
 
 }
 export { en }

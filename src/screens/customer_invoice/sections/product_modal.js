@@ -23,6 +23,8 @@ import * as Yup from 'yup';
 import '../../product/screens/create/style.scss';
 import { toast } from 'react-toastify';
 import { selectOptionsFactory } from 'utils';
+import {data}  from '../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const customStyles = {
 	control: (base, state) => ({
@@ -41,10 +43,12 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+let strings = new LocalizedStrings(data);
 class ProductModal extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: true,
 			openWarehouseModal: false,
 			initValue: {
@@ -189,6 +193,7 @@ class ProductModal extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			openProductModal,
 			closeProductModal,
@@ -264,7 +269,7 @@ class ProductModal extends React.Component {
 											<Col lg={12}>
 												<div className="h4 mb-0 d-flex align-items-center">
 													<i className="nav-icon fas fa-id-card-alt" />
-													<span className="ml-2">Create Product</span>
+													<span className="ml-2">{strings.CreateProduct}</span>
 												</div>
 											</Col>
 										</Row>
@@ -273,7 +278,7 @@ class ProductModal extends React.Component {
 										<Row>
 											<Col lg={12}>
 												<FormGroup check inline className="mb-3">
-													<Label className="productlabel mb-0 mr-1">Type</Label>
+													<Label className="productlabel mb-0 mr-1">{strings.Type}</Label>
 													<div className="wrapper">
 														<Label
 															className="form-check-label mr-1"
@@ -291,7 +296,7 @@ class ProductModal extends React.Component {
 																}}
 																checked={props.values.productType === 'GOODS'}
 															/>
-															Goods
+															{strings.Goods}
 														</Label>
 														<Label
 															className="form-check-label"
@@ -309,7 +314,7 @@ class ProductModal extends React.Component {
 																}}
 																checked={props.values.productType === 'SERVICE'}
 															/>
-															Service
+															{strings.Service}
 														</Label>
 													</div>
 												</FormGroup>
@@ -319,7 +324,7 @@ class ProductModal extends React.Component {
 											<Col lg={4}>
 												<FormGroup className="mb-3">
 													<Label htmlFor="productName">
-														<span className="text-danger">*</span>Name
+														<span className="text-danger">*</span>{strings.Name}
 													</Label>
 													<Input
 														type="text"
@@ -358,7 +363,7 @@ class ProductModal extends React.Component {
 												<FormGroup className="mb-3">
 													<Label htmlFor="productCode">
 														<span className="text-danger">*</span>
-														Product Code
+														{strings.ProductCode}
 														<i
 															id="ProductCodeTooltip"
 															className="fa fa-question-circle ml-1"
@@ -394,7 +399,7 @@ class ProductModal extends React.Component {
 											<Col lg={4}>
 												<FormGroup className="mb-3">
 													<Label htmlFor="productCategoryId">
-														Product Category
+														{strings.ProductCategory}
 													</Label>
 													<Select
 														styles={customStyles}
@@ -452,7 +457,7 @@ class ProductModal extends React.Component {
 											<Col lg={4}>
 												<FormGroup className="mb-3">
 													<Label htmlFor="vatCategoryId">
-														<span className="text-danger">*</span>Vat Percentage
+														<span className="text-danger">*</span>{strings.VatPercentage}
 													</Label>
 													<Select
 														styles={customStyles}
@@ -641,7 +646,7 @@ class ProductModal extends React.Component {
 																	: ''
 															}
 														/>
-														Sales Information
+														{strings.SalesInformation}
 														{props.errors.productPriceType &&
 															props.touched.productPriceType && (
 																<div className="invalid-feedback">
@@ -652,7 +657,7 @@ class ProductModal extends React.Component {
 												</FormGroup>
 												<FormGroup className="mb-3">
 													<Label htmlFor="salesUnitPrice">
-														<span className="text-danger">*</span> Selling Price
+														<span className="text-danger">*</span> {strings.SellingPrice}
 														<i
 															id="SalesTooltip"
 															className="fa fa-question-circle ml-1"
@@ -701,7 +706,7 @@ class ProductModal extends React.Component {
 												</FormGroup>
 												<FormGroup className="mb-3">
 													<Label htmlFor="transactionCategoryId">
-														<span className="text-danger">*</span> Account
+														<span className="text-danger">*</span>{strings.Account}
 													</Label>
 													<Select
 														styles={customStyles}
@@ -743,7 +748,7 @@ class ProductModal extends React.Component {
 														)}
 												</FormGroup>
 												<FormGroup className="">
-													<Label htmlFor="salesDescription">Description</Label>
+													<Label htmlFor="salesDescription">{strings.Description}</Label>
 													<Input
 														readOnly={
 															props.values.productPriceType.includes('SALES')
@@ -808,7 +813,7 @@ class ProductModal extends React.Component {
 																	: ''
 															}
 														/>
-														Purchase Information
+														{strings.PurchaseInformation}
 														{props.errors.productPriceType &&
 															props.touched.productPriceType && (
 																<div className="invalid-feedback">
@@ -819,8 +824,7 @@ class ProductModal extends React.Component {
 												</FormGroup>
 												<FormGroup className="mb-3">
 													<Label htmlFor="salesUnitPrice">
-														<span className="text-danger">*</span> Purchase
-														Price
+														<span className="text-danger">*</span> {strings.PurchasePrice}
 														<i
 															id="PurchaseTooltip"
 															className="fa fa-question-circle ml-1"
@@ -870,7 +874,7 @@ class ProductModal extends React.Component {
 
 												<FormGroup className="mb-3">
 													<Label htmlFor="salesUnitPrice">
-														<span className="text-danger">*</span> Account
+														<span className="text-danger">*</span> {strings.Account}
 													</Label>
 													<Select
 														styles={customStyles}
@@ -913,7 +917,7 @@ class ProductModal extends React.Component {
 												</FormGroup>
 												<FormGroup className="">
 													<Label htmlFor="purchaseDescription">
-														Description
+													{strings.Description} 
 													</Label>
 													<Input
 														readOnly={
@@ -947,7 +951,7 @@ class ProductModal extends React.Component {
 												});
 											}}
 										>
-											<i className="fa fa-dot-circle-o"></i> Create
+											<i className="fa fa-dot-circle-o"></i>{strings.Create}
 										</Button>
 										<Button
 											color="secondary"
@@ -956,7 +960,7 @@ class ProductModal extends React.Component {
 												closeProductModal(false);
 											}}
 										>
-											<i className="fa fa-ban"></i> Cancel
+											<i className="fa fa-ban"></i> {strings.Cancel}
 										</Button>
 									</ModalFooter>
 								</Form>

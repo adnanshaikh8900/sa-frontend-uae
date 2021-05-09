@@ -746,9 +746,9 @@ class CreateEmployeePayroll extends React.Component {
                                 <NavItem>
                                     <NavLink
                                         active={this.state.activeTab[0] === '4'}
-                                    onClick={() => {
-                                    	this.toggle(0, '4');
-                                    }}
+                                    // onClick={() => {
+                                    // 	this.toggle(0, '4');
+                                    // }}
                                     >
                                         Salary Setup
 									</NavLink>
@@ -2038,9 +2038,9 @@ class CreateEmployeePayroll extends React.Component {
                                                     <Row>
                                                         <Col lg={8}>
                                                             <h4>Fixed Earnings</h4>
-                                                            <Table style={{border:"6px solid #0ba1de"}} >
+                                                            <Table style={{border:"3px solid #0ba1de"}} >
                                                                 <thead >
-                                                                    <tr style={{border:"6px solid #0ba1de"}}>
+                                                                    <tr style={{border:"3px solid #0ba1de"}}>
                                                                         {this.columnHeader1.map((column, index) => {
                                                                             return (
                                                                                 <th>
@@ -2131,7 +2131,7 @@ class CreateEmployeePayroll extends React.Component {
                                                         </Col>
                                                         <Col lg={8}>
                                                             <h4>Variable Earnings</h4>
-                                                            <Table style={{border:"6px solid #0ba1de"}}>
+                                                            <Table style={{border:"3px solid #0ba1de"}}>
                                                                 <tbody>
                                                                 {this.state.Variable  ? (
                                                                     Object.values(
@@ -2214,7 +2214,7 @@ class CreateEmployeePayroll extends React.Component {
                                                         </Col>
                                                         <Col lg={8}>
                                                             <h4>Deductions</h4>
-                                                            <Table style={{border:"6px solid #0ba1de"}}>
+                                                            <Table style={{border:"3px solid #0ba1de"}}>
                                                              
                                                                 <tbody>
                                                                 {this.state.Deduction  ? (
@@ -2297,7 +2297,7 @@ class CreateEmployeePayroll extends React.Component {
 																</Button>
                                                         </Col>
                                                         <Col lg={8}>
-                                                            <Table style={{border:"6px solid #0ba1de"}}>
+                                                            <Table style={{border:"3px solid #0ba1de"}}>
                                                                 <tbody> 
                                                                     {this.state.FixedAllowance  ? (
                                                                     Object.values(
@@ -2328,7 +2328,7 @@ class CreateEmployeePayroll extends React.Component {
                                                           
                                                         </Col>
                                                         <Col lg={8}>
-                                                            <Table  style={{border:"6px solid #0ba1de"}}>
+                                                            <Table  style={{border:"3px solid #0ba1de"}}>
                                                                 <tbody>
                                                                   
                                                                     <tr>

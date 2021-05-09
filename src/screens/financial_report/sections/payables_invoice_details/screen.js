@@ -516,7 +516,9 @@ class PayablesInvoiceDetailsReport extends React.Component {
 																			return (
 																				<tr key={index}>
 																					<td style={{ width: '12%' }}>
-																					{row.invoiceDate}
+																						{row.invoiceDate ? (
+																								moment(row.invoiceDate).format('DD/MM/YYYY')
+																						):(" ")}												
 																					</td>
 																					<td style={{ width: '12%' }}>
 																						{/* {row.transactionTypeName} */}

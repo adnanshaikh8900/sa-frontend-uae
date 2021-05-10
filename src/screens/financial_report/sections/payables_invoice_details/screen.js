@@ -33,7 +33,7 @@ const mapStateToProps = (state) => {
 	return {
 		profile: state.auth.profile,
 		universal_currency_list: state.common.universal_currency_list,
-		company_profile: state.reports.company_profile,	
+		company_profile: state.reports.company_profile,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -71,15 +71,15 @@ class PayablesInvoiceDetailsReport extends React.Component {
 		this.columnHeader = [
 			{ label: 'invoiceDate', value: 'Invoice Date' },
 			{ label: 'invoiceNumber', value: 'Invoice Number' },
-			
-			{ label: 'productCode', value: 'Product Code'},
+
+			{ label: 'productCode', value: 'Product Code' },
 			{
 				label: 'description',
 				value: 'description',
 				sort: true,
 			},
 			{ label: 'quantity', value: 'quantity', sort: true },
-			{ label: 'unitPrice', value: 'unitPrice', sort: false,align: 'right'  },
+			{ label: 'unitPrice', value: 'unitPrice', sort: false, align: 'right' },
 			{ label: 'discount', value: 'discount', sort: false, align: 'left' },
 			{ label: 'vatAmount', value: 'vatAmount', sort: false, align: 'left' },
 			{ label: 'totalAmount', value: 'totalAmount', sort: false, align: 'left' },
@@ -87,7 +87,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 	}
 
 	componentDidMount = () => {
-		this.props.receivbaleInvoiceDetailsActions.getCompany() 
+		this.props.receivbaleInvoiceDetailsActions.getCompany()
 		this.initializeData();
 	};
 
@@ -100,13 +100,13 @@ class PayablesInvoiceDetailsReport extends React.Component {
 		this.props.receivbaleInvoiceDetailsActions
 			.getPayableInvoiceDetail(postData)
 			.then((res) => {
-			
+
 				const tempData = [];
 				if (res.status === 200) {
-				
-				
+
+
 					this.setState(
-						
+
 						{ payableInvoiceDetailsList: res.data },
 						() => {
 							this.setState({
@@ -116,11 +116,11 @@ class PayablesInvoiceDetailsReport extends React.Component {
 					);
 				}
 			})
-			
+
 			.catch((err) => {
 				this.setState({ loading: false });
 			});
-	
+
 	};
 
 	exportFile = (csvData, fileName, type) => {
@@ -283,7 +283,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 			view,
 			chart_of_account_list,
 		} = this.state;
-		const { profile, universal_currency_list,company_profile } = this.props;
+		const { profile, universal_currency_list, company_profile } = this.props;
 
 		console.log(this.state.payableInvoiceDetailsList.resultObject)
 		return (
@@ -317,34 +317,34 @@ class PayablesInvoiceDetailsReport extends React.Component {
 													onClick={() => window.print()}
 													style={{
 														cursor: 'pointer',
-														}}
+													}}
 												>
 													<i className="fa fa-print"></i>
 												</div>
 												<div
-												className="mr-2 print-btn-cont"
-												onClick={() => {
-													this.exportPDFWithComponent();
-												}}
-												style={{
-													cursor: 'pointer',
-													}}
-												>
-												<i className="fa fa-file-pdf-o"></i>
-												</div>
-												
-												<div
 													className="mr-2 print-btn-cont"
-                                                    onClick={() => {
-                                                        this.props.history.push('/admin/report/financial');
-                                                    }}
+													onClick={() => {
+														this.exportPDFWithComponent();
+													}}
 													style={{
 														cursor: 'pointer',
-														}}
+													}}
 												>
-												<span>X</span>
+													<i className="fa fa-file-pdf-o"></i>
 												</div>
-                                             
+
+												<div
+													className="mr-2 print-btn-cont"
+													onClick={() => {
+														this.props.history.push('/admin/report/financial');
+													}}
+													style={{
+														cursor: 'pointer',
+													}}
+												>
+													<span>X</span>
+												</div>
+
 												{/* <Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
@@ -403,48 +403,50 @@ class PayablesInvoiceDetailsReport extends React.Component {
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
 									paperSize="A3"
-										filename={'detailGeneralLedger.pdf'}
+									filename={'detailGeneralLedger.pdf'}
 								>
 
-<div style={{										
-									display: 'flex',
-									justifyContent: 'space-between',
-									marginBottom: '1rem'}}>
-									<div className="logo-container" style={{	
-									width:'150px',}}>
-												<img
-										src={ 
-											company_profile &&
-											company_profile.companyLogoByteArray
-												? 'data:image/jpg;base64,' +
-											company_profile.companyLogoByteArray
-												: logo
-										}
-										className=""
-										alt=""
-										style={{ width: ' 150px' }}></img>
-									</div>
-									<div style={{justifyContent:'center'}} >
-								
-										<h2>
-										{company_profile &&
-											company_profile['companyName']
-												? company_profile['companyName']
-												: ''}
-											</h2>	
-											<div  className="ml-4">
-												<b style ={{ fontSize: '18px'}}>Payable Invoice Details</b>
-												<br/>
-												
+									<div className="text-center" style={{
+										display: 'flex',
+										justifyContent: 'space-between',
+										marginBottom: '1rem'
+									}}>
+										<div className="logo-container" style={{
+											width: '150px',
+										}}>
+											<img
+												src={
+													company_profile &&
+														company_profile.companyLogoByteArray
+														? 'data:image/jpg;base64,' +
+														company_profile.companyLogoByteArray
+														: logo
+												}
+												className=""
+												alt=""
+												style={{ width: ' 150px' }}></img>
+										</div>
+										<div style={{ justifyContent: 'center' }} >
+
+											<h2>
+												{company_profile &&
+													company_profile['companyName']
+													? company_profile['companyName']
+													: ''}
+											</h2>
+											<div className="ml-4">
+												<b style={{ fontSize: '18px' }}>Payable Invoice Details</b>
+												<br />
+
 												From {initValue.startDate} To {initValue.endDate}
-											</div>	
+											</div>
+										</div>
+										<div className='mr-3'>
+
+
+
+										</div>
 									</div>
-									<div className='mr-3'>
-								
-								
-									
-									</div>									
-							</div>
 									{/* <div className="logo-container">
 													<img src={logo} alt="logo" />
 												</div>
@@ -462,7 +464,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 										</p>
 									</div> */}
 
-									
+
 									{loading ? (
 										<Loader />
 									) : (
@@ -489,8 +491,8 @@ class PayablesInvoiceDetailsReport extends React.Component {
 													</tr>
 												</thead>
 												<tbody className="data-column">
-													{this.state.payableInvoiceDetailsList.resultObject && 
-													this.state.payableInvoiceDetailsList.resultObject.length > 0 ? (
+													{this.state.payableInvoiceDetailsList.resultObject &&
+														this.state.payableInvoiceDetailsList.resultObject.length > 0 ? (
 														this.state.payableInvoiceDetailsList.resultObject.map(
 															(item, index) => {
 																return (
@@ -517,92 +519,92 @@ class PayablesInvoiceDetailsReport extends React.Component {
 																				<tr key={index}>
 																					<td style={{ width: '12%' }}>
 																						{row.invoiceDate ? (
-																								moment(row.invoiceDate).format('DD/MM/YYYY')
-																						):(" ")}												
+																							moment(row.invoiceDate).format('DD/MM/YYYY')
+																						) : (" ")}
 																					</td>
 																					<td style={{ width: '12%' }}>
 																						{/* {row.transactionTypeName} */}
 																						{row.invoiceNumber}
 																					</td>
-																					<td style={{ width: '13%' }}>
+																					<td style={{ width: '12%' }}>
 																						{/* {row['name']} */}
 																						{row['productCode']}
 																					</td>
-																					<td style={{ width: '13%' }}>
+																					<td style={{ width: '12%' }}>
 																						{/* {row['postingReferenceTypeEnum']} */}
 																						{row['description']}
 																					</td>
 																					<td style={{ width: '12%' }}>
 																						{row['quantity']}
 																					</td>
-																					<td style={{ width: '8%' }}>
+																					<td style={{ width: '12%' }}>
 																						{row['unitPrice']}
 																					</td>
-																					<td style={{ width: '8%' }}>
+																					<td style={{ width: '12%' }}>
 																						{row['discount']}
 																					</td>
-																					
-																						<td style={{ width: '15%' }}>
-																							{row.vatAmount > 0 && (
-																								<p
-																									className="text-left"
-																									// onClick={() =>
-																									// 	this.getInvoice(
-																									// 		row[
-																									// 			'postingReferenceType'
-																									// 		],
-																									// 		row['invoiceType'],
-																									// 		row['referenceId'],
-																									// 	)
-																									// }
-																								>
-																									<Currency
-																										value={row.vatAmount.toFixed(
-																											2,
-																										)}
-																										currencySymbol={
-																											universal_currency_list[0]
-																												? universal_currency_list[0]
-																														.currencyIsoCode
-																												: 'INR'
-																										}
-																									/>
-																								</p>
-																							)}
-																						</td>
-																						<td style={{ width: '15%' }}>
-																							{row.totalAmount > 0 && (
-																								<p
-																									className="text-left"
-																									// onClick={() =>
-																									// 	this.getInvoice(
-																									// 		row[
-																									// 			'postingReferenceType'
-																									// 		],
-																									// 		row['invoiceType'],
-																									// 		row['referenceId'],
-																									// 	)
-																									// }
-																								>
-																									<Currency
-																										value={row.totalAmount.toFixed(
-																											2,
-																										)}
-																										currencySymbol={
-																											universal_currency_list[0]
-																												? universal_currency_list[0]
-																														.currencyIsoCode
-																												: 'INR'
-																										}
-																									/>
-																								</p>
-																							)}
-																						</td>
-																						
-																					
 
-																				
-																				
+																					<td style={{ width: '12%' }}>
+																						{row.vatAmount > 0 && (
+																							<p
+																								className="text-left"
+																							// onClick={() =>
+																							// 	this.getInvoice(
+																							// 		row[
+																							// 			'postingReferenceType'
+																							// 		],
+																							// 		row['invoiceType'],
+																							// 		row['referenceId'],
+																							// 	)
+																							// }
+																							>
+																								<Currency
+																									value={row.vatAmount.toFixed(
+																										2,
+																									)}
+																									currencySymbol={
+																										universal_currency_list[0]
+																											? universal_currency_list[0]
+																												.currencyIsoCode
+																											: 'INR'
+																									}
+																								/>
+																							</p>
+																						)}
+																					</td>
+																					<td style={{ width: '12%' }}>
+																						{row.totalAmount > 0 && (
+																							<p
+																								className="text-left"
+																							// onClick={() =>
+																							// 	this.getInvoice(
+																							// 		row[
+																							// 			'postingReferenceType'
+																							// 		],
+																							// 		row['invoiceType'],
+																							// 		row['referenceId'],
+																							// 	)
+																							// }
+																							>
+																								<Currency
+																									value={row.totalAmount.toFixed(
+																										2,
+																									)}
+																									currencySymbol={
+																										universal_currency_list[0]
+																											? universal_currency_list[0]
+																												.currencyIsoCode
+																											: 'INR'
+																									}
+																								/>
+																							</p>
+																						)}
+																					</td>
+
+
+
+
+
 																				</tr>
 																			);
 																		})}
@@ -628,7 +630,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 											</Table>
 										</div>
 									)}
-									<div style={{ textAlignLast:'center'}}> Powered By <b>SimpleAccounts</b></div> 
+									<div style={{ textAlignLast: 'center' }}> Powered By <b>SimpleAccounts</b></div>
 								</PDFExport>
 							</CardBody>
 						</div>

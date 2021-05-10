@@ -532,7 +532,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/payroll/payrollrun',
-		name: 'ViewEmployment',
+		name: 'ViewPayrollRun',
 		component: PayrollRun.screen,
 	},
 

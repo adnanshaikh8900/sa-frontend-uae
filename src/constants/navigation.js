@@ -259,7 +259,7 @@ export default {
 					name: 'Payroll Run',
 					url: '/admin/payroll/payrollrun',
 					icon: 'fas fa-user-plus',
-					path: 'ViewEmployee',
+					path: 'ViewPayrollRun',
 				},
 				{
 					name: 'Salary Roles',

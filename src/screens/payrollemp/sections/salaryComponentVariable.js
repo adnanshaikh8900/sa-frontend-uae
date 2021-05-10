@@ -93,7 +93,7 @@ class SalaryComponentVariable extends React.Component {
 
 
 		const formData = new FormData();
-		formData.append('id',id.value)
+		formData.append('id',id != null ? id.value : '');
 		formData.append('employeeId',this.state.selectedData.id )
 	
 

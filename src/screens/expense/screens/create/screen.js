@@ -141,17 +141,17 @@ class CreateExpense extends React.Component {
 				true,
 			);
 		});
-		this.props.expenseCreateActions.checkAuthStatus().then((response) => {
-			this.setState({
-				initValue: {
-					...this.state.initValue,
-					...{
-						payee: response.data ? parseInt(response.data.userId) : '',
-					},
-				},
-			});
-			this.formRef.current.setFieldValue('payee', response.data.userId, true);
-		});
+		// this.props.expenseCreateActions.checkAuthStatus().then((response) => {
+		// 	this.setState({
+		// 		initValue: {
+		// 			...this.state.initValue,
+		// 			...{
+		// 				payee: response.data ? parseInt(response.data.userId) : '',
+		// 			},
+		// 		},
+		// 	});
+		// 	this.formRef.current.setFieldValue('payee', response.data.userId, true);
+		// });
 		this.props.expenseActions.getBankList();
 		this.props.expenseActions.getPaymentMode();
 		this.props.expenseActions.getUserForDropdown();
@@ -365,7 +365,9 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 													currency: Yup.string().required(
 														'Currency is required',
 													),
-													//payee: Yup.string().required('Payee is required'),
+													payee: Yup.string().required(
+														'payee Category is required',
+													),
 													expenseAmount: Yup.string()
 														.required('Amount is Required')
 														.matches(
@@ -503,6 +505,12 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																				: ''
 																		}
 																	/>
+																		{props.errors.payee &&
+																		props.touched.payee && (
+																			<div className="invalid-feedback">
+																				{props.errors.payee}
+																			</div>
+																		)}
 																</FormGroup>
 															</Col>
 															<Col lg={3}>

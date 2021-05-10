@@ -5,31 +5,73 @@ import {
   } from 'utils'
 
 
+    export const getPayrollEmployeeList = (presentDate) => {
+    
+        let url = `/rest/Salary/getSalaryPerMonthList?presentDate=${presentDate}`;
+    
+        return (dispatch) => {
+            let data = {
+                method: 'get',
+                url,
+            };
+            return authApi(data)
+                .then((res) => {
+                    if (res.status === 200) {
+                        dispatch({
+                            type:EMPLOYEEPAYROLL.PAYROLL_EMPLOYEE_LIST,
+                            payload: res.data,
+                        });
+                    }
+                })
+                .catch((err) => {
+                    throw err;
+                });
+        };
+    };
 
-export const getPayrollEmployeeList = (obj) => {
-    let name = obj.name ? obj.name : '';
-    let email = obj.email ? obj.email : '';
-    let pageNo = obj.pageNo ? obj.pageNo : '';
-    let pageSize = obj.pageSize ? obj.pageSize : '';
-    let order = obj.order ? obj.order : '';
-    let sortingCol = obj.sortingCol ? obj.sortingCol : '';
-    let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false
+    export const getSalaryDetailByEmployeeIdNoOfDays = (_id) => {
+        return (dispatch) => {
+            let data = {
+                method: 'GET',
+                url: `/rest/payroll/getSalaryDetailByEmployeeIdNoOfDays?id=${_id}`,
+            };
+    
+            return authApi(data)
+                .then((res) => {
+                    return res;
+                })
+                .catch((err) => {
+                    throw err;
+                });
+        };
+    };
 
-    return (dispatch) => {
-      let data = {
-        method: 'GET',
-        url: `/rest/employee/getList?name=${name}&email=${email}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
-      }
-      return authApi(data).then((res) => {
-        if(!obj.paginationDisable) {
-          dispatch({
-            type: EMPLOYEEPAYROLL.PAYROLL_EMPLOYEE_LIST,
-            payload: res.data
+    export const updateSalaryComponentAsNoOfDays = (obj) => {
+        return (dispatch) => {
+          let data = {
+            method: 'post',
+            url: '/rest/payroll/updateSalaryComponentAsNoOfDays',
+            data: obj
+          }
+          return authApi(data).then((res) => {
+            return res
+          }).catch((err) => {
+            throw err
           })
         }
-        return res
-      }).catch((err) => {
-        throw err
-      })
-    }
-  }
+      }
+     
+      export const generateSalary = (obj) => {
+        return (dispatch) => {
+          let data = {
+            method: 'post',
+            url: '/rest/Salary/generateSalary',
+            data: obj
+          }
+          return authApi(data).then((res) => {
+            return res
+          }).catch((err) => {
+            throw err
+          })
+        }
+      }

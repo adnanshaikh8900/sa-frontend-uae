@@ -237,6 +237,8 @@ class CreateEmployeePayroll extends React.Component {
         this.props.createPayrollEmployeeActions.getCountryList();
         this.props.createPayrollEmployeeActions.getStateList();
         this.props.createPayrollEmployeeActions.getSalaryComponentForDropdownFixed();
+        this.props.createPayrollEmployeeActions.getSalaryComponentForDropdownDeduction();
+        this.props.createPayrollEmployeeActions.getSalaryComponentForDropdownVariable();
         this.props.createPayrollEmployeeActions.getEmployeeDesignationForDropdown();
         this.props.createPayrollEmployeeActions.getEmployeesForDropdown();
         this.props.createPayrollEmployeeActions.getSalaryRolesForDropdown();

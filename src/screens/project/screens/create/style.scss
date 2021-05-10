@@ -7,3 +7,19 @@
 .designation-model{
     max-width: 40% !important;
 }
+.payroll-modal{
+    position: fixed;
+    margin: auto;
+    max-width: 30% !important;
+    height: auto !important;
+    right: -570px;
+  
+	.Table, td, th {
+        // border:4px solid #0ba1de;
+        }
+        Table {
+          width: 100%;
+         
+        }
+      
+}

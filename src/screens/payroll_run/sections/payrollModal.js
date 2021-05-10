@@ -11,6 +11,7 @@ import {
 	CardHeader,
 	ModalBody,
 	ModalFooter,
+    Table,
 } from 'reactstrap';
 
 import DatePicker from 'react-datepicker'
@@ -30,19 +31,29 @@ class PayrollModal extends React.Component {
 			showDetails : false,
 			loading: false,
 			initValue: {
-			firstName: '',
-			lastName: '',
-			middleName: '',
-			email: '',
-			dob: new Date(),
+                noOfDays:'',
+                lop:0
 			},
-			state_list: [],
+           state_list: [],
+          
 		};
 		this.formikRef = React.createRef();
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExAddress = /^[a-zA-Z0-9\s,'-]+$/;
+
+
+        this.columnHeader1 = [
+            { label: '(+) EARNINGS', value: '(+) EARNINGS', sort: false },
+            { label: 'AMOUNT', value: 'AMOUNT', sort: false },
+      
+        ];
+        this.columnHeader2 = [
+            { label: '(-) DEDUCTIONS', value: '(-) DEDUCTIONS', sort: false },
+            { label: 'AMOUNT', value: 'AMOUNT', sort: false },
+      
+        ];
 	}
 
 
@@ -58,68 +69,54 @@ class PayrollModal extends React.Component {
 		return temp;
 	};
 
-	// Create or Contact
-	// handleSubmit = (data, resetForm) => {
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (prevState.selectedData !== nextProps.selectedData || prevState.employeename !== nextProps.employeename ||
+			prevState.salaryDetailAsNoOfDaysMap != nextProps.salaryDetailAsNoOfDaysMap || prevState.netPay !== nextProps.netPay
+            || prevState.noOfDays !== nextProps.noOfDays  || prevState.current_employee !== nextProps.current_employee
+            || prevState.lop !== nextProps.lop  )
+            
+            
+            {
+			console.log('getDerivedStateFromProps state changed',nextProps.selectedData.salaryDetailAsNoOfDaysMap);
+			console.log('muyts',nextProps.lop)
+		           return {
+		 	selectedData :nextProps.selectedData,
+			 employeename :nextProps.employeename,
+             noOfDays :nextProps.noOfDays,
+             netPay :nextProps.netPay,
+             current_employee: nextProps.current_employee,
+             lop: nextProps.lop,
+			 salaryDetailAsNoOfDaysMap :nextProps.salaryDetailAsNoOfDaysMap,
+            
+            };
+           
+        }
+		
+    }
 
-
-	// 	this.setState({ disabled: true });
-	// 	// const employeeId = data['employeeId'];
-	// 	const firstName = data['firstName'];
-	// 	const lastName = data['lastName'];
-	// 	const middleName = data['middleName'];
-	
-	// 	const email = data['email'];
-	// 	const dob = data['dob'];
-
-	// 	const dataNew = {
-	// 		firstName,
-	// 		lastName,
-	// 		middleName,
-	// 		email,
-	// 		dob,
-	// 	};
-	// 	const postData = this.getData(dataNew);
-	// 	this.props
-	// 		.createEmployee(postData)
-	// 		.then((res) => {
-				
-	// 			if (res.status === 200) {
-	// 				resetForm();
-	// 				this.props.closeEmployeeModal(true);
-	// 				this.props.getCurrentUser(res);
-	// 			}
-	// 		})
-	// 		.catch((err) => {
-	// 			this.displayMsg(err);
-	// 			this.formikRef.current.setSubmitting(false);
-	// 		});
-	// };
     handleSubmit = (data, resetForm) => {
         this.setState({ disabled: true });
             const {
-          designationName
+                id
             } = data;
     
     
             const formData = new FormData();
     
-      
+       formData.append('id',this.state.current_employee)
         formData.append(
-          'designationName',
-          designationName != null ? designationName : '',
+          'noOfDays',
+          this.state.noOfDays ,
         )
        
         this.props
-        .createDesignation(formData)
+        .updateEmployeeSalary(formData)
         .then((res) => {
             //  let resConfig = JSON.parse(res.config.data);
             
             if (res.status === 200) {
-            
-                resetForm();
-            
-                this.props.closeDesignationModal(true);
-                this.props.getCurrentUser(res.data);
+                this.props.closePayrollModal(true);
+           
             }
         })
         .catch((err) => {
@@ -140,30 +137,27 @@ class PayrollModal extends React.Component {
 		  showDetails: bool
 		});
 	  }
+      handleLopChange = (option) => {
 
-	// getStateList = (countryCode) => {
-	// 	if (countryCode) {
-	// 		this.props.getStateList(countryCode).then((res) => {
-	// 			if (res.status === 200) {
-	// 				this.setState({
-	// 					state_list: res.data,
-	// 				});
-	// 			}
-	// 		});
-	// 	} else {
-	// 		this.setState({
-	// 			state_list: [],
-	// 		});
-	// 	}
-	// };
-	// .contact-modal {
-	// 	max-width: 70% !important;
-	// }
+        let noOfDays = 0;
+        noOfDays = 30-option;
+        this.props.updateParentLop(option,noOfDays)
+        console.log(option,"option.value")
+        console.log(this.state.lop,"lop.value")
+      }
+
+  updateDays = (lop1) => {
+      const noOfDay = 30 - lop1
+
+      this.setState(
+        {  
+                    noOfDays: noOfDay,
+        })
+  }
 	render() {
 		const {
 			openPayrollModal,
 			closePayrollModal,
-			
 		} = this.props;
 		const { initValue} = this.state;
 		return (
@@ -224,40 +218,158 @@ class PayrollModal extends React.Component {
 									onSubmit={props.handleSubmit}
 									className="create-contact-screen"
 								>
-									<CardHeader toggle={this.toggleDanger}>
+									<CardHeader>
 										<Row>
-											<Col lg={12}>
-												<div className="h4 mb-0 d-flex align-items-center">
-													<i className="nav-icon fas fa-id-card-alt" />
-													<span className="ml-2">Create Designation</span>
+											<Col >
+												<div >
+													
+													<span className="ml-2">Employee Name:</span>
+                                                    <h4>{this.state.employeename}</h4>
 												</div>
-											</Col>
+                                                </Col>
+                                               
 										</Row>
 									</CardHeader>
 									<ModalBody>
-								
-										<Row className="row-wrapper">
-                                        <Col lg={8}>
-                                <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>Employee Designation Name</Label>
-                                  <Input
-                                    type="text"
-                                    id="designationName"
-                                    name="designationName"
-                                    value={props.values.designationName}
-                                    placeholder="Enter Slary Role Name"
-                                    onChange={(option) => {
-                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('designationName')(option) }
-                                    }}
-                                    className={props.errors.designationName && props.touched.designationName ? "is-invalid" : ""}
-                                  />
-                                  {props.errors.designationName && props.touched.designationName && (
-                                    <div className="invalid-feedback">{props.errors.designationName}</div>
-                                  )}
-                                </FormGroup>
-                              </Col>	
-                              
-										</Row>		
+                                                                             <Row>
+																				<Col>
+																					<h5 className="mb-2 text-left">
+																					Payable Days
+																					</h5>
+																				</Col>
+																				<Col className="text-left">
+																					<label className="mb-2">
+																				
+																						30
+																					</label>
+																				</Col>
+																			</Row>
+									
+                                                                            <Row>
+																				<Col>
+																					<h5 className="mt-2 text-left">
+                                                                                    LOP Days
+																					</h5>
+																				</Col>
+																				<Col  className="text-left">
+																				<Input
+																		type="number"
+																		maxLength="3"
+																		name="lop"
+																		id="lop"
+																		className={
+																			props.errors.lop &&
+																			props.touched.lop
+																				? 'is-invalid'
+																				: ''
+																		}
+																		onChange={(option) => {
+																			if (
+																				option.target.value === '' ||
+																				this.regEx.test(
+																					option.target.value,
+																				)
+																			) {
+																				props.handleChange('lop')(
+																					option,
+																				);
+																			}
+                                                                            this.handleLopChange(option.target.value);
+																		}}
+                                                                        
+                                                                        // onChange={(value) => {
+																		// 	props.handleChange('lop')(value);
+                                                                        //     this.handleLopChange(value);
+																		// }}
+																		value={this.state.lop}
+																		
+																	/>
+																				</Col>
+																			</Row>
+                                                                            <hr></hr>
+                                                                            <Row>
+																				<Col>
+																					<h5 className="mt-2 text-left">
+																					Actual Payable Days	
+																					</h5>
+																				</Col>
+																				<Col className="text-left">
+																					<label className="mt-2">
+																				
+																						{this.state.noOfDays}
+																					</label>
+																				</Col>
+																			</Row>
+
+                                                                           < hr></hr>   
+                                                                    <Table style={{width:'514px'}} >
+                                                                <thead style={{backgroundColor:'#dfe9f7'}}>
+                                                                    <tr >
+                                                                        {this.columnHeader1.map((column, index) => {
+                                                                            return (
+                                                                                <th>
+                                                                                    {column.label}
+                                                                                </th>
+                                                                            );
+                                                                        })}
+                                                                    </tr>
+                                                                </thead>
+                                                                {Object.values(
+                                                                        this.state.selectedData.salaryDetailAsNoOfDaysMap.Earnings,
+                                                                    ).map((item) => ( 
+                                                                        <tr>
+                                                                            <td>{item.name}</td>
+                                                                            <td>{item.value ? (
+                                                                                item.value.toFixed (2)) : ( " ")
+                                                                            }</td>
+                                                                        </tr>
+
+                                                                    ))}
+                                                                    
+                                                                <tbody>
+                                                                    </tbody>
+                                                                    </Table>
+                                                                    <Table style={{width:'514px'}} >
+                                                                    <thead style={{backgroundColor:'#dfe9f7'}}>
+                                                                    <tr >
+                                                                        {this.columnHeader2.map((column, index) => {
+                                                                            return (
+                                                                                <th>
+                                                                                    {column.label}
+                                                                                </th>
+                                                                            );
+                                                                        })}
+                                                                    </tr>
+                                                                </thead>
+                                                              
+                                                                    <tbody>
+                                                                    {Object.values(
+                                                                        this.state.selectedData.salaryDetailAsNoOfDaysMap.Deductions,
+                                                                    ).map((item) => ( 
+                                                                        <tr>
+                                                                            <td>{item.name}</td>
+                                                                            <td>{item.value ? (
+                                                                                item.value.toFixed (2)) : ( " ")
+                                                                            }</td>
+                                                                        </tr>
+
+                                                                    ))}
+                                                                    </tbody>
+                                                                    </Table>
+<hr></hr>                                                                    <Row style={{backgroundColor:'#dfe9f7'}}>
+																				<Col lg={6}>
+																					<h5 className="mt-2 text-left">
+																					Net Pay
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-left">
+																					<h4 className="mt-2">
+																				
+																						{this.state.netPay.toFixed(2)}
+																					</h4>
+																				</Col>
+																			</Row>
+                                  	
 									</ModalBody>
 									<ModalFooter>
 									<Button

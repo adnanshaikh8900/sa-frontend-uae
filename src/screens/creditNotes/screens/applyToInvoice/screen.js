@@ -881,7 +881,7 @@ class ApplyToInvoice extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Invoice Updated Successfully.',
+					'Credits have been applied to the invoice(s) Successfully.',
 				);
 				this.props.history.push('/admin/income/credit-notes');
 			})
@@ -1087,7 +1087,9 @@ class ApplyToInvoice extends React.Component {
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="fas fa-address-book" />
-												<span className="ml-2">Apply To Invoice</span>
+	<span className="ml-2">
+		{/* Apply To Invoice  */}
+	Apply credits from <u>{this.state.initValue.invoice_number}</u></span>
 											</div>
 										</Col>
 									</Row>
@@ -1105,550 +1107,109 @@ class ApplyToInvoice extends React.Component {
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values);
 													}}
-													validationSchema={Yup.object().shape({
-														invoice_number: Yup.string().required(
-															'Credit Note Number is Required',
-														),
-														contactId: Yup.string().required(
-															'Supplier is Required',
-														),
-														term: Yup.string().required('term is Required'),
-													//	placeOfSupplyId: Yup.string().required('Place of supply is Required'),
-														invoiceDate: Yup.string().required(
-															'Credit Note Date is Required',
-														),
-														invoiceDueDate: Yup.string().required(
-															'Credit Note Due Date is Required',
-														),
-														currency: Yup.string().required(
-															'Currency is Required',
-														),
-														lineItemsString: Yup.array()
-															.required(
-																'Atleast one invoice sub detail is mandatory',
-															)
-															.of(
-																Yup.object().shape({
-																	// description: Yup.string().required(
-																	// 	'Value is Required',
-																	// ),
-																	quantity: Yup.string()
-																		.required('Value is Required')
-																		.test(
-																			'quantity',
-																			'Quantity Should be Greater than 1',
-																			(value) => {
-																				if (value > 0) {
-																					return true;
-																				} else {
-																					return false;
-																				}
-																			},
-																		),
-																	unitPrice: Yup.string()
-																		.required('Value is Required')
-																		.test(
-																			'Unit Price',
-																			'Unit Price Should be Greater than 1',
-																			(value) => {
-																				if (value > 0) {
-																					return true;
-																				} else {
-																					return false;
-																				}
-																			},
-																		),
-																	vatCategoryId: Yup.string().required(
-																		'Value is Required',
-																	),
-																	productId: Yup.string().required(
-																		'Product is Required',
-																	),
-																}),
-															),
-														attachmentFile: Yup.mixed()
-															.test(
-																'fileType',
-																'*Unsupported File Format',
-																(value) => {
-																	value &&
-																		this.setState({
-																			fileName: value.name,
-																		});
-																	if (
-																		!value ||
-																		(value &&
-																			this.supported_format.includes(
-																				value.type,
-																			))
-																	) {
-																		return true;
-																	} else {
-																		return false;
-																	}
-																},
-															)
-															.test(
-																'fileSize',
-																'*File Size is too large',
-																(value) => {
-																	if (
-																		!value ||
-																		(value && value.size <= this.file_size)
-																	) {
-																		return true;
-																	} else {
-																		return false;
-																	}
-																},
-															),
-													})}
+													// validationSchema={Yup.object().shape({
+													// 	invoice_number: Yup.string().required(
+													// 		'Credit Note Number is Required',
+													// 	),
+													// 	contactId: Yup.string().required(
+													// 		'Supplier is Required',
+													// 	),
+													// 	term: Yup.string().required('term is Required'),
+													// //	placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+													// 	invoiceDate: Yup.string().required(
+													// 		'Credit Note Date is Required',
+													// 	),
+													// 	invoiceDueDate: Yup.string().required(
+													// 		'Credit Note Due Date is Required',
+													// 	),
+													// 	currency: Yup.string().required(
+													// 		'Currency is Required',
+													// 	),
+													// 	lineItemsString: Yup.array()
+													// 		.required(
+													// 			'Atleast one invoice sub detail is mandatory',
+													// 		)
+													// 		.of(
+													// 			Yup.object().shape({
+													// 				// description: Yup.string().required(
+													// 				// 	'Value is Required',
+													// 				// ),
+													// 				quantity: Yup.string()
+													// 					.required('Value is Required')
+													// 					.test(
+													// 						'quantity',
+													// 						'Quantity Should be Greater than 1',
+													// 						(value) => {
+													// 							if (value > 0) {
+													// 								return true;
+													// 							} else {
+													// 								return false;
+													// 							}
+													// 						},
+													// 					),
+													// 				unitPrice: Yup.string()
+													// 					.required('Value is Required')
+													// 					.test(
+													// 						'Unit Price',
+													// 						'Unit Price Should be Greater than 1',
+													// 						(value) => {
+													// 							if (value > 0) {
+													// 								return true;
+													// 							} else {
+													// 								return false;
+													// 							}
+													// 						},
+													// 					),
+													// 				vatCategoryId: Yup.string().required(
+													// 					'Value is Required',
+													// 				),
+													// 				productId: Yup.string().required(
+													// 					'Product is Required',
+													// 				),
+													// 			}),
+													// 		),
+													// 	attachmentFile: Yup.mixed()
+													// 		.test(
+													// 			'fileType',
+													// 			'*Unsupported File Format',
+													// 			(value) => {
+													// 				value &&
+													// 					this.setState({
+													// 						fileName: value.name,
+													// 					});
+													// 				if (
+													// 					!value ||
+													// 					(value &&
+													// 						this.supported_format.includes(
+													// 							value.type,
+													// 						))
+													// 				) {
+													// 					return true;
+													// 				} else {
+													// 					return false;
+													// 				}
+													// 			},
+													// 		)
+													// 		.test(
+													// 			'fileSize',
+													// 			'*File Size is too large',
+													// 			(value) => {
+													// 				if (
+													// 					!value ||
+													// 					(value && value.size <= this.file_size)
+													// 				) {
+													// 					return true;
+													// 				} else {
+													// 					return false;
+													// 				}
+													// 			},
+													// 		),
+													// })}
 												>
 													{(props) => (
 														<Form onSubmit={props.handleSubmit}>
-															<Row>
-																<Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="invoice_number">
-																			<span className="text-danger">*</span>
-															       Credit Note Number
-																		</Label>
-																		<Input
-																			type="text"
-																			id="invoice_number"
-																			name="invoice_number"
-																			placeholder=""
-																			disabled
-																			value={props.values.invoice_number}
-																			onChange={(value) => {
-																				props.handleChange('invoice_number')(
-																					value,
-																				);
-																			}}
-																			className={
-																				props.errors.invoice_number &&
-																				props.touched.invoice_number
-																					? 'is-invalid'
-																					: ''
-																			}
-																		/>
-																		{props.errors.invoice_number &&
-																			props.touched.invoice_number && (
-																				<div className="invalid-feedback">
-																					{props.errors.invoice_number}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col>
-																<Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="contactId">
-																			<span className="text-danger">*</span>
-																			Customer Name
-																		</Label>
-																		<Select
-																			styles={customStyles}
-																			id="contactId"
-																			name="contactId"
-																			options={
-																				tmpCustomer_list
-																					? selectOptionsFactory.renderOptions(
-																							'label',
-																							'value',
-																							tmpCustomer_list,
-																							'Customer',
-																					  )
-																					: []
-																			}
-																			value={
-																				tmpCustomer_list &&
-																				tmpCustomer_list.find(
-																					(option) =>
-																						option.value ===
-																						+props.values.contactId,
-																				)
-																			}
-																			onChange={(option) => {
-																				if (option && option.value) {
-																					this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
-																					this.setExchange( this.getCurrency(option.value) );
-																					props.handleChange('contactId')(
-																						option.value,
-																					);
-																				} else {
-																					props.handleChange('contactId')('');
-																				}
-																				// this.getCurrentUser(option)
-																			}}
-																			className={
-																				props.errors.contactId &&
-																				props.touched.contactId
-																					? 'is-invalid'
-																					: ''
-																			}
-																		/>
-																		{props.errors.contactId &&
-																			props.touched.contactId && (
-																				<div className="invalid-feedback">
-																					{props.errors.contactId}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col>
-																{/* <Col>
-																	<Label
-																		htmlFor="contactId"
-																		style={{ display: 'block' }}
-																	>
-																		Add New Customer
-																	</Label>
-																	<Button
-																		type="button"
-																		color="primary"
-																		className="btn-square mr-3 mb-3"
-																		onClick={this.openCustomerModal}
-																	>
-																		<i className="fa fa-plus"></i> Add a
-																		Customer
-																	</Button>
-																</Col> */}
-																<Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="placeOfSupplyId">
-																			<span className="text-danger">*</span>
-																			Place of Supply
-																		</Label>
-																		<Select
-																			styles={customStyles}
-																			options={
-																				this.placelist
-																					? selectOptionsFactory.renderOptions(
-																							'label',
-																							'value',
-																							this.placelist,
-																							'Place of Supply',
-																					  )
-																					: []
-																			}
-																			id="placeOfSupplyId"
-																			name="placeOfSupplyId"
-																			value={
-																				this.placelist &&
-																				selectOptionsFactory.renderOptions(
-																					'label',
-																					'value',
-																					this.placelist,
-																					'Place of Supply',
-																			  ).find(
-																										(option) =>
-																											option.value ===
-																											props.values
-																												.placeOfSupplyId.toString(),
-																									)
-																							}
-																							onChange={(options) => {
-																								if (options && options.value) {
-																									props.handleChange(
-																										'placeOfSupplyId',
-																									)(options.value);
-																								} else {
-																									props.handleChange(
-																										'placeOfSupplyId',
-																									)('');
-																								}
-																							}}
-																			className={`${
-																				props.errors.placeOfSupplyId &&
-																				props.touched.placeOfSupplyId
-																					? 'is-invalid'
-																					: ''
-																			}`}
-																		/>
-																		{props.errors.placeOfSupplyId &&
-																			props.touched.placeOfSupplyId && (
-																				<div className="invalid-feedback">
-																					{props.errors.placeOfSupplyId}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col>
-															</Row>
-															<hr />
-															<Row>
-																<Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="term">
-																			<span className="text-danger">*</span>
-																			Terms{' '}
-																			<i className="fa fa-question-circle"></i>
-																		</Label>
-																		<Select
-																			styles={customStyles}
-																			options={
-																				this.termList
-																					? selectOptionsFactory.renderOptions(
-																							'label',
-																							'value',
-																							this.termList,
-																							'Terms',
-																					  )
-																					: []
-																			}
-																			id="term"
-																			name="term"
-																			value={
-																				this.termList &&
-																				this.termList.find(
-																					(option) =>
-																						option.value === props.values.term,
-																				)
-																			}
-																			onChange={(option) => {
-																				props.handleChange('term')(
-																					option.value,
-																				);
-																				if (option.value === '') {
-																					this.setState({
-																						term: option.value,
-																					});
-																					props.setFieldValue(
-																						'invoiceDueDate',
-																						'',
-																					);
-																				} else {
-																					this.setState(
-																						{
-																							term: option.value,
-																						},
-																						() => {
-																							this.setDate(props, '');
-																						},
-																					);
-																				}
-																			}}
-																			className={`${
-																				props.errors.term && props.touched.term
-																					? 'is-invalid'
-																					: ''
-																			}`}
-																		/>
-																		{props.errors.term &&
-																			props.touched.term && (
-																				<div className="invalid-feedback">
-																					{props.errors.term}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col>
-																<Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="date">
-																			<span className="text-danger">*</span>
-																			Credit Note Date
-																		</Label>
-																		<DatePicker
-																			id="invoiceDate"
-																			name="invoiceDate"
-																			placeholderText="Invoice Date"
-																			showMonthDropdown
-																			showYearDropdown
-																			dateFormat="dd/MM/yyyy"
-																			dropdownMode="select"
-																			value={props.values.invoiceDate}
-																			onChange={(value) => {
-																				props.handleChange('invoiceDate')(
-																					moment(value).format('DD/MM/YYYY'),
-																				);
-																				this.setDate(props, value);
-																			}}
-																			className={`form-control ${
-																				props.errors.invoiceDate &&
-																				props.touched.invoiceDate
-																					? 'is-invalid'
-																					: ''
-																			}`}
-																		/>
-																		{props.errors.invoiceDate &&
-																			props.touched.invoiceDate && (
-																				<div className="invalid-feedback">
-																					{props.errors.invoiceDate}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col>
-																{/* <Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="due_date">
-																		Credit Note Due Date
-																		</Label>
-																		<div>
-																			<DatePicker
-																				id="invoiceDueDate"
-																				name="invoiceDueDate"
-																				placeholderText="Invoice Due Date"
-																				// selected={props.values.invoiceDueDate}
-																				showMonthDropdown
-																				showYearDropdown
-																				disabled
-																				dateFormat="dd/MM/yyyy"
-																				dropdownMode="select"
-																				value={props.values.invoiceDueDate}
-																				onChange={(value) => {
-																					props.handleChange('invoiceDueDate')(
-																						value,
-																					);
-																				}}
-																				className={`form-control ${
-																					props.errors.invoiceDueDate &&
-																					props.touched.invoiceDueDate
-																						? 'is-invalid'
-																						: ''
-																				}`}
-																			/>
-																			{props.errors.invoiceDueDate &&
-																				props.touched.invoiceDueDate && (
-																					<div className="invalid-feedback">
-																						{props.errors.invoiceDueDate}
-																					</div>
-																				)}
-																		</div>
-																	</FormGroup>
-																</Col> */}
-																<Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="currency">
-																			<span className="text-danger">*</span>
-																			Currency
-																		</Label>
-																		<Select
-																			styles={customStyles}
-																			options={
-																				currency_convert_list
-																					? selectCurrencyFactory.renderOptions(
-																							'currencyName',
-																							'currencyCode',
-																							currency_convert_list,
-																							'Currency',
-																					  )
-																					: []
-																			}
-																			id="currency"
-																			name="currency"
-																			value={
-																				currency_convert_list &&
-																				selectCurrencyFactory
-																					.renderOptions(
-																						'currencyName',
-																						'currencyCode',
-																						currency_convert_list,
-																						'Currency',
-																					)
-																					.find(
-																						(option) =>
-																							option.value ===
-																							(this.state.customer_currency ? +this.state.customer_currency : +props.values.currency),
-																					)
-																			}
-																			onChange={(option) =>
-																				props.handleChange('currency')(
-																					option.value,
-																				)
-																			}
-																			className={`${
-																				props.errors.currency &&
-																				props.touched.currency
-																					? 'is-invalid'
-																					: ''
-																			}`}
-																		/>
-																		{props.errors.currency &&
-																			props.touched.currency && (
-																				<div className="invalid-feedback">
-																					{props.errors.currency}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col>
-																</Row>
-																<hr />
-																<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
-																<Col>
-																<Label htmlFor="currency">
-																		Currency Exchange Rate
-																	</Label>	
-																</Col>
-																</Row>
-																
-																<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
-																<Col md={1}>
-																<Input
-																		disabled
-																				id="1"
-																				name="1"
-																				value=	{
-																					1 }
-																				
-																			/>
-																</Col>
-																<Col md={2}>
-																<FormGroup className="mb-3">
-																	{/* <Label htmlFor="exchangeRate">
-																		Exchange rate
-																	</Label> */}
-																	<div>
-																		<Input
-																		disabled	
-																			className="form-control"
-																			id="currencyName"
-																			name="currencyName"
-																			disabled
-																			value={this.state.customer_currency_des ? this.state.customer_currency_des : props.values.currencyName}
-																			onChange={(value) => {
-																				props.handleChange('currencyName')(
-																					value,
-																				);
-																			}}
-																		/>
-																	</div>
-																</FormGroup>
-															</Col>
-															<FormGroup className="mt-2"><label><b>=</b></label>	</FormGroup>
-															<Col lg={2}>
-																<FormGroup className="mb-3">
-																	{/* <Label htmlFor="exchangeRate">
-																		Exchange rate
-																	</Label> */}
-																	<div>
-																		<Input
-																			type="number"
-																			className="form-control"
-																			id="exchangeRate"
-																			name="exchangeRate"
-																			
-																			value={props.values.exchangeRate}
-																			onChange={(value) => {
-																				props.handleChange('exchangeRate')(
-																					value,
-																				);
-																			}}
-																		/>
-																	</div>
-																</FormGroup>
-															</Col>
-														
-															<Col md={2}>
-															<Input
-																		disabled
-																				id="currencyName"
-																				name="currencyName"
-																				value=	{
-																					this.state.basecurrency.currencyName }
-																				
-																			/>
-														</Col>
-														</Row>
-															<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
-															<Row>
+															
+															{/* <Row>
 																<Col lg={12} className="mb-3">
 																	<Button
 																		color="primary"
@@ -1666,7 +1227,7 @@ class ApplyToInvoice extends React.Component {
 																		<i className="fa fa-plus"></i> Add More
 																	</Button>
 																</Col>
-															</Row>
+															</Row> */}
 															<Row>
 																{props.errors.lineItemsString &&
 																	typeof props.errors.lineItemsString ===
@@ -1699,7 +1260,7 @@ class ApplyToInvoice extends React.Component {
 																				this.renderActions(cell, rows, props)
 																			}
 																		></TableHeaderColumn>
-																		<TableHeaderColumn
+																		{/* <TableHeaderColumn
 																			dataField="product"
 																			dataFormat={(cell, rows) =>
 																				this.renderProduct(cell, rows, props)
@@ -1713,7 +1274,7 @@ class ApplyToInvoice extends React.Component {
 																		dataFormat={(cell, rows) =>
 																			this.renderAddProduct(cell, rows, props)
 																		}
-																	></TableHeaderColumn>
+																	></TableHeaderColumn> */}
 																		<TableHeaderColumn
 																			dataField="description"
 																			dataFormat={(cell, rows) =>
@@ -1724,7 +1285,7 @@ class ApplyToInvoice extends React.Component {
 																				)
 																			}
 																		>
-																			Description
+																			Invoice #
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="quantity"
@@ -1732,7 +1293,7 @@ class ApplyToInvoice extends React.Component {
 																				this.renderQuantity(cell, rows, props)
 																			}
 																		>
-																			Quantity
+																			Invoice Date
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="unitPrice"
@@ -1740,308 +1301,31 @@ class ApplyToInvoice extends React.Component {
 																				this.renderUnitPrice(cell, rows, props)
 																			}
 																		>
-																			Unit Price (All)
+																			 Invoice Amount
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
-																			dataField="vat"
+																			dataField="unitPrice"
 																			dataFormat={(cell, rows) =>
-																				this.renderVat(cell, rows, props)
+																				this.renderUnitPrice(cell, rows, props)
 																			}
 																		>
-																			Vat (%)
+																			 Amount To Credit
 																		</TableHeaderColumn>
-																		<TableHeaderColumn
-																			dataField="sub_total"
-																			dataFormat={this.renderSubTotal}
-																			className="text-right"
-																			columnClassName="text-right"
-																			formatExtraData={universal_currency_list}
-																		>
-																			Sub Total (All)
-																		</TableHeaderColumn>
+																		
 																	</BootstrapTable>
 																</Col>
 															</Row>
 															{data.length > 0 && (
-																<Row>
-																	<Col lg={8}>
-																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">Notes</Label>
-																		<Input
-																			type="textarea"
-																			maxLength="255"
-																			name="notes"
-																			id="notes"
-																			rows="6"
-																			placeholder="Notes"
-																			onChange={(option) =>
-																				props.handleChange('notes')(option)
-																			}
-																			value={props.values.notes}
-																		/>
-																	</FormGroup>
-																	<Row>
-																		<Col lg={6}>
-																			<FormGroup className="mb-3">
-																				<Label htmlFor="receiptNumber">
-																					Reciept Number
-																				</Label>
-																				<Input
-																					type="text"
-																					maxLength="100"
-																					id="receiptNumber"
-																					name="receiptNumber"
-																					placeholder="Reciept Number"
-																					onChange={(option) => {
-																						if (
-																							option.target.value === '' ||
-																							this.regExBoth.test(
-																								option.target.value,
-																							)
-																						) {
-																							props.handleChange(
-																								'receiptNumber',
-																							)(option);
-																						}
-																					}}
-																					value={props.values.receiptNumber}
-																				/>
-																			</FormGroup>
-																		</Col>
-																		<Col lg={6}>
-																			<FormGroup className="mb-3">
-																				<Field
-																					name="attachmentFile"
-																					render={({ field, form }) => (
-																						<div>
-																							<Label>Reciept Attachment</Label>{' '}
-																							<br />
-																							<Button
-																								color="primary"
-																								onClick={() => {
-																									document
-																										.getElementById('fileInput')
-																										.click();
-																								}}
-																								className="btn-square mr-3"
-																							>
-																								<i className="fa fa-upload"></i>{' '}
-																								Upload
-																							</Button>
-																							<input
-																								id="fileInput"
-																								ref={(ref) => {
-																									this.uploadFile = ref;
-																								}}
-																								type="file"
-																								style={{ display: 'none' }}
-																								onChange={(e) => {
-																									this.handleFileChange(
-																										e,
-																										props,
-																									);
-																								}}
-																							
-																							/>
-																							{this.state.fileName && (
-																								<div>
-																									<i
-																										className="fa fa-close"
-																										onClick={() =>
-																											this.setState({
-																												fileName: '',
-																											})
-																										}
-																									></i>{' '}
-																									{this.state.fileName}
-																								</div>
-																							)}
-																						</div>
-																					)}
-																				/>
-																				{props.errors.attachmentFile &&
-																					props.touched.attachmentFile && (
-																						<div className="invalid-file">
-																							{props.errors.attachmentFile}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
-																	</Row>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="receiptAttachmentDescription">
-																			Attachment Description
-																		</Label>
-																		<Input
-																			type="textarea"
-																			maxLength="255"
-																			name="receiptAttachmentDescription"
-																			id="receiptAttachmentDescription"
-																			rows="5"
-																			placeholder="Receipt Attachment Description"
-																			onChange={(option) =>
-																				props.handleChange(
-																					'receiptAttachmentDescription',
-																				)(option)
-																			}
-																			value={
-																				props.values
-																					.receiptAttachmentDescription
-																			}
-																		/>
-																	</FormGroup>
-																</Col>
-																	<Col lg={4}>
+																<Row style={{direction:'rtl'}}>
+																	
+																	<Col lg={4} style={{direction:'ltr'}}>
 																		<div className="">
-																			<div className="total-item p-2">
-																				<Row>
-																					<Col lg={6}>
-																						<FormGroup>
-																							<Label htmlFor="discountType">
-																								Discount Type
-																							</Label>
-																							<Select
-																								styles={customStyles}
-																								className="select-default-width"
-																								options={discountOptions}
-																								id="discountType"
-																								name="discountType"
-																								value={
-																									discountOptions &&
-																									discountOptions.find(
-																										(option) =>
-																											option.value ===
-																											props.values.discountType,
-																									)
-																								}
-																								onChange={(item) => {
-																									props.handleChange(
-																										'discountPercentage',
-																									)('');
-																									props.handleChange(
-																										'discountType',
-																									)(item.value);
-																									props.setFieldValue(
-																										'discount',
-																										0,
-																									);
-
-																									this.setState(
-																										{
-																											discountPercentage: 0,
-																											discountAmount: 0,
-																										},
-																										() => {
-																											this.updateAmount(
-																												this.state.data,
-																												props,
-																											);
-																										},
-																									);
-																								}}
-																							/>
-																						</FormGroup>
-																					</Col>
-																					{props.values.discountType ===
-																						'PERCENTAGE' && (
-																						<Col lg={6}>
-																							<FormGroup>
-																								<Label htmlFor="discountPercentage">
-																									Percentage
-																								</Label>
-																								<Input
-																								id="discountPercentage"
-																								name="discountPercentage"
-																								placeholder="Discount Percentage"
-																								type="number"
-																								maxLength="5"
-																								value={
-																									props.values
-																										.discountPercentage
-																								}
-																								onChange={(e) => {
-																									if (
-																										e.target.value === '' ||
-																										this.regDecimal.test(
-																											e.target.value,
-																										)
-																									) {
-																										props.handleChange(
-																											'discountPercentage',
-																										)(e);
-																										this.setState(
-																											{
-																												discountPercentage:
-																													e.target.value,
-																											},
-																											() => {
-																												this.updateAmount(
-																													this.state.data,
-																													props,
-																												);
-																											},
-																										);
-																									}
-																								}}
-																							/>
-																							</FormGroup>
-																						</Col>
-																					)}
-																				</Row>
-																				<Row>
-																					<Col lg={6} className="mt-4">
-																						<FormGroup>
-																							<Label htmlFor="discount">
-																								Discount Amount
-																							</Label>
-																							<Input
-																								id="discount"
-																								name="discount"
-																								type="text"
-																								disabled={
-																									props.values.discountType &&
-																									props.values.discountType ===
-																										'Percentage'
-																										? true
-																										: false
-																								}
-																								placeholder="Discount Amounts"
-																								value={props.values.discount}
-																								onChange={(option) => {
-																									if (
-																										option.target.value ===
-																											'' ||
-																										this.regDecimal.test(
-																											option.target.value,
-																										)
-																									) {
-																										props.handleChange(
-																											'discount',
-																										)(option);
-																										this.setState(
-																											{
-																												discountAmount: +option
-																													.target.value,
-																											},
-																											() => {
-																												this.updateAmount(
-																													this.state.data,
-																													props,
-																												);
-																											},
-																										);
-																									}
-																								}}
-																							/>
-																						</FormGroup>
-																					</Col>
-																				</Row>
-																			</div>
+																			
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
 																						<h5 className="mb-0 text-right">
-																							Total Net
+																						Amount to Credit
 																						</h5>
 																					</Col>
 																					<Col lg={6} className="text-right">
@@ -2062,69 +1346,13 @@ class ApplyToInvoice extends React.Component {
 																					</Col>
 																				</Row>
 																			</div>
+																			
+																	
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
 																						<h5 className="mb-0 text-right">
-																							Total Vat
-																						</h5>
-																					</Col>
-																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
-																						{/* {universal_currency_list[0] && (
-																						<Currency
-																						value={initValue.invoiceVATAmount.toFixed(
-																							2,
-																						)}
-																						currencySymbol={
-																							universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
-																							/>
-																							)} */}
-																							{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.invoiceVATAmount.toFixed(
-																							2,
-																						)}
-																						</label>
-																					</Col>
-																				</Row>
-																			</div>
-																			<div className="total-item p-2">
-																				<Row>
-																					<Col lg={6}>
-																						<h5 className="mb-0 text-right">
-																							Discount
-																						</h5>
-																					</Col>
-																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
-																							{/* {universal_currency_list[0] && (
-																						<Currency
-																						value=		{this.state.initValue.discount.toFixed(
-																							2,
-																						)}
-																						currencySymbol={
-																							universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
-																							/>
-																							)} */}
-																							{this.state.customer_currency_symbol} &nbsp;
-																								{this.state.initValue.discount.toFixed(
-																							2,
-																						)}
-																						</label>
-																					</Col>
-																				</Row>
-																			</div>
-																			<div className="total-item p-2">
-																				<Row>
-																					<Col lg={6}>
-																						<h5 className="mb-0 text-right">
-																							Total
+																						Remaining Credits
 																						</h5>
 																					</Col>
 																					<Col lg={6} className="text-right">
@@ -2155,14 +1383,14 @@ class ApplyToInvoice extends React.Component {
 																	className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
 																>
 																	<FormGroup>
-																		<Button
+																		{/* <Button
 																			type="button"
 																			color="danger"
 																			className="btn-square"
 																			onClick={this.deleteInvoice}
 																		>
 																			<i className="fa fa-trash"></i> Delete
-																		</Button>
+																		</Button> */}
 																	</FormGroup>
 																	<FormGroup className="text-right">
 																		<Button
@@ -2174,7 +1402,7 @@ class ApplyToInvoice extends React.Component {
 																			<i className="fa fa-dot-circle-o"></i>{' '}
 																			{this.state.disabled
 																				? 'Updating...'
-																				: 'Update'}
+																				: 'save'}
 																		</Button>
 																		<Button
 																			color="secondary"

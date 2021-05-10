@@ -307,7 +307,7 @@ class ReceivableInvoiceSummary extends React.Component {
 												? company_profile['companyName']
 												: ''}
 											</h2>	
-											<br style={{ marginBottom: '5px' }} />
+											
 											<b style ={{ fontSize: '18px'}}>Receivable Invoice Summary</b>
 											<br style={{ marginBottom: '5px' }} />
 											From {initValue.startDate} To {initValue.endDate}
@@ -361,7 +361,7 @@ class ReceivableInvoiceSummary extends React.Component {
 												className="table-header-bg"
 												dataFormat={this.renderinvoiceDueDate}
 											>
-												Invoice Due Date
+												Due Date
 											</TableHeaderColumn>
 											
 											<TableHeaderColumn

@@ -209,8 +209,9 @@ class BankTransactions extends React.Component {
 	// 	}
 	// };
 	componentDidMount = () => {
+		if (this.props.location.state && this.props.location.state.bankAccountId) {
 		this.props.detailBankAccountActions
-			.getBankAccountByID(this.props.location.state.bankAccountId)
+			.getBankAccountByID(this.props.location.state.bankAccountId ||  localStorage.getItem('bankId'))
 			.then((res) => {
 				this.setState({
 					bankAccountCurrencySymbol:res.bankAccountCurrencySymbol,
@@ -227,24 +228,38 @@ class BankTransactions extends React.Component {
 				this.props.history.push('/admin/banking/bank-account');
 			});
 		this.toggle(0, 'all');
-		this.initializeData();
-	
-		this.props.transactionsActions.getTransactionTypeList();
-		//this.initializeData();
+		//.this.initializeData();
+		if (this.props.location.state !== undefined) {
+					localStorage.setItem(
+						'bankId',
+						localStorage.getItem('bankId') !==
+							this.props.location.state.bankAccountId
+							? this.props.location.state.bankAccountId
+							: localStorage.getItem('bankId'),
+					);
+				} else {
+					localStorage.setItem('bankId', localStorage.getItem('bankId'));
+					this.props.location.state =  {}
+					this.props.location.state.bankAccountId = localStorage.getItem('bankId')
+					console.log('props', this.props.location)
 		
-	};
-
+				}
+		this.props.transactionsActions.getTransactionTypeList();
+		this.initializeData();
+		
+	}};
+		
 	initializeData = () => {
 		let { filterData } = this.state;
 		const data = {
 			pageNo: this.options.page ? this.options.page - 1 : 0,
 			pageSize: this.options.sizePerPage,
 		};
-		if (this.props.location.state.bankAccountId) {
+		if (this.props.location.state.bankAccountId ||  localStorage.getItem('bankId')) {
 			const postData = {
 				...filterData,
 				...data,
-				id: this.props.location.state.bankAccountId,
+				id: this.props.location.state.bankAccountId ||  localStorage.getItem('bankId'),
 				transactionType: this.state.transactionType,
 			};
 			this.props.transactionsActions
@@ -780,7 +795,9 @@ class BankTransactions extends React.Component {
 													<h5>{strings.LedgerBalance}</h5>
 													<h3>
 													{this.state.bankAccountCurrencySymbol} &nbsp;
-													{this.state.closingBalance.toFixed(2)}
+
+													{this.state.closingBalance ? (
+														this.state.closingBalance.toFixed(2)): ( " ")}
 													</h3>
 												</Col>
 											</Row>

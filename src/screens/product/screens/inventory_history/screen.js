@@ -377,9 +377,46 @@ class InventoryHistory extends React.Component {
 
 									</CardHeader>
 									<CardBody>
-										
-								<div><h5>Product Code :{} </h5></div>
-								<div><h5>Product Name :{} </h5></div>
+									{inventory_history_list &&
+                                                        inventory_history_list.length > 0 ? (
+                                                            inventory_history_list.map(
+                                                            (item, index) => {
+                                                            return(
+                                                                      <table><tr
+																	  style={{ background: '#f7f7f7' }}
+																	  key={index}
+																  >
+																	  <td colSpan="9">
+																		  <b style={{ fontWeight: '600' }}>
+																			  {console.log(Object.values(item['productCode']),"itemsss")}
+																			  <div><h5><u>Product Code :</u> </h5></div>
+																		  </b>
+																	  </td>
+																	  <td colSpan="9">
+																		  <b style={{ fontWeight: '600' }}>
+																			  {console.log(Object.values(item['productCode']),"itemsss")}
+																			  <div><h5>{Object.values(item['productCode'])} </h5></div>
+																		  </b>
+																	  </td>
+																  </tr> 
+																  <tr
+																	  style={{ background: '#f7f7f7' }}
+																	  key={index}
+																  >  <td colSpan="9">
+																  <b style={{ fontWeight: '600' }}>
+																  <div><h5><u>Product Name :</u> </h5></div>
+																	  {console.log(Object.values(item['productname']),"productname")}
+																  </b>
+															  </td>
+															  <td colSpan="9">
+																  <b style={{ fontWeight: '600' }}>
+																  <div><h5>{Object.values(item['productname'])} </h5></div>
+																	  {console.log(Object.values(item['productname']),"productname")}
+																  </b>
+															  </td></tr></table>  );})):" "}
+															 
+															  <br></br>
+															  <br></br>
 										<div>
 											<BootstrapTable
 												selectRow={this.selectRowProp}
@@ -396,13 +433,13 @@ class InventoryHistory extends React.Component {
 												className="product-table"
 												trClassName="cursor-pointer"	
 											>
-											    <TableHeaderColumn dataField="productCode" dataSort className="table-header-bg">
+											    {/* <TableHeaderColumn dataField="productCode" dataSort className="table-header-bg">
 												Product Code
 												</TableHeaderColumn>
 												<TableHeaderColumn isKey dataField="productname" dataSort className="table-header-bg">
 												Product	Name
-												</TableHeaderColumn >
-												<TableHeaderColumn  dataField="supplierName" dataSort className="table-header-bg">
+												</TableHeaderColumn > */}
+												<TableHeaderColumn isKey  dataField="supplierName" dataSort className="table-header-bg">
 												Supplier / Customer 
 												</TableHeaderColumn >
 												<TableHeaderColumn  dataField="date" 

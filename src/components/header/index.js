@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
-
-// import useTranslation from "./customHooks/translations";
-
 // import { bindActionCreators } from 'redux'
 import {
 	DropdownItem,
@@ -29,7 +26,6 @@ import sygnet from 'assets/images/brand/sygnet.png';
 import avatar from 'assets/images/avatars/default-avatar.jpg';
 // import avatar from 'assets/images/avatars/6.jpg'
 
-
 const propTypes = {
 	children: PropTypes.node,
 };
@@ -50,32 +46,20 @@ class Header extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			language: 'en',
 			profilePic: [],
 		};
-		this.signOut = this.signOut.bind(this);
 
+		this.signOut = this.signOut.bind(this);
 	}
 
-	componentDidMount() {
-	 }
+	componentDidMount() {}
 
 	signOut() {
 		this.props.authActions.logOut();
 		this.props.history.push('/login');
 	}
 
-	// handleLanguageChange(e) {
-	
-	// 	let lang = e.target.value;
-		
-	// 	window['localStorage'].setItem('language', lang);
-	// }
-
 	render() {
-		// const translation = useTranslation();
-		// const [ language, changeLanguage ] = useLanguageContext();
-
 		const { profile } = this.props;
 		return (
 			<React.Fragment>
@@ -100,45 +84,24 @@ class Header extends Component {
 				<AppSidebarToggler className="d-md-down-none" display="lg">
 					<i className="fa fa-bars header-sidebar-icon"></i>
 				</AppSidebarToggler>
-				<div className="pull-right" style={{ marginLeft: '830px', borderBlockColor: '#20a8d8' }}>
-					{/* <select style={{ borderBlockColor: '#20a8d8' }}
-						onChange={this.renderHandleLanguageChange}>
-						<option value="en">En- English</option>
-						<option value="it">Fr- French</option>
-					</select> */}
-					<div>
-						<select 
-						defaultValue={window['localStorage'].getItem('language')}
-						style={{color:'#216cd4',width:'100px',border:'outset'}} 
-						onChangeCapture={(e)=>{
-							let lang = e.target.value;
-							localStorage.setItem('language', lang);
-							window.location.reload(false);
-						}}>
-							<option value="en">English</option>
-							<option value="it">French</option>
-							<option value="ar">Arabic</option>
-						</select>
-					</div>
-				</div>
-				<Nav navbar>
+				<Nav className="ml-auto" navbar>
 					{/* <NavItem>
 						<AppAsideToggler className="d-md-down-none">
 							<i className="fa fa-bell header-icon"></i>
 						</AppAsideToggler>
 					</NavItem> */}
-					<img
-						src={
-							profile && profile.profileImageBinary !== null
-								? 'data:image/jpg;base64,' + profile.profileImageBinary
-								: avatar
-						}
-						className="img-avatar mr-2"
-						alt=""
-					/>
+						<img
+								src={
+									profile && profile.profileImageBinary !== null
+										? 'data:image/jpg;base64,' + profile.profileImageBinary
+										: avatar
+								}
+								className="img-avatar mr-2"
+								alt=""
+							/>
 					<UncontrolledDropdown nav direction="down">
 						<DropdownToggle nav>
-							Hey	<i>{profile && profile.firstName + " " + profile.lastName}</i>
+						Hey	<i>{profile && profile.firstName +" "+ profile.lastName}</i>
 							<i class="fas fa-angle-down ml-2 mr-3"></i>
 						</DropdownToggle>
 						<DropdownMenu right>
@@ -196,7 +159,7 @@ class Header extends Component {
 								<i className="fas fa-info-circle"></i> Help
 							</DropdownItem>
 							<DropdownItem
-								onClick={this.signOut}
+									onClick={this.signOut}
 							>
 								<i className="fa fa-sign-out header-icon mr-1"></i> Log Out
 							</DropdownItem>

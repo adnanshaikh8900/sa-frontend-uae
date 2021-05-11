@@ -407,7 +407,7 @@ class CreateContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="countryId">
 																		<span className="text-danger">*</span>
-																		{strings.contactType}
+																		{strings.ContactType}
 																	</Label>
 																	<Select
 																		styles={customStyles}

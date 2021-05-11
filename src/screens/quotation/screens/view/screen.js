@@ -147,7 +147,7 @@ class ViewQuotation extends React.Component {
 								<p
 									className="close"
 									onClick={() => {
-										this.props.history.push('/admin/expense/purchase-order');
+										this.props.history.push('/admin/income/quotation');
 									}}
 								>
 									X

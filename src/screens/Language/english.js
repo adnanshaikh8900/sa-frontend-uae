@@ -87,6 +87,7 @@ const en = {
 
       CreateContact: "Create Contact",
       ContactDetails: "Contact Details",
+      ContactType :"Contact Type",
       ContactName:"Contact Name",
       FirstName:"First Name",
       MiddleName:"Middle Name",
@@ -180,7 +181,7 @@ ExpiryDate:"Expiry Date",
 //Purchase Order
 PurchaseOrder:"Purchase Order",				
 PONUMBER:"PO NUMBER",						
-PODATE:"PODATE",		
+PODATE:"PO DATE",		
 POEXPIRYDATE:"PO EXPIRY DATE",				
 AddNewPurchaseOrder:"Add New Purchase Order",
 

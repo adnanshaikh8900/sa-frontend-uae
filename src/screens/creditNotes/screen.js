@@ -34,7 +34,8 @@ import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 
 import './style.scss';
-
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -59,11 +60,12 @@ const overWeekly = require('assets/images/invoice/week1.png');
 const overduemonthly = require('assets/images/invoice/month.png');
 const overdue = require('assets/images/invoice/due1.png');
 
+let strings = new LocalizedStrings(data);
 class CreditNotes extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-		
+			language: window['localStorage'].getItem('language'),
 			loading: true,
 			dialog: false,
 			openEmailModal: false,
@@ -388,7 +390,7 @@ class CreditNotes extends React.Component {
 										);
 									}}
 								>
-									<i className="fas fa-edit" /> Edit
+									<i className="fas fa-edit" /> {strings.Edit}
 								</div>
 							</DropdownItem>
 						)}	{row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && row.statusEnum !== 'Partially Paid' && (
@@ -402,7 +404,7 @@ class CreditNotes extends React.Component {
 										);
 									}}
 								>
-									<i className="fas fa-edit" /> Apply To Invoice
+									<i className="fas fa-edit" />{strings.ApplyToInvoice}
 								</div>
 							</DropdownItem>
 						)}
@@ -413,7 +415,7 @@ class CreditNotes extends React.Component {
 									this.creditNoteposting(row);
 								}}
 							>
-								<i className="fas fa-send" /> Post
+								<i className="fas fa-send" />  {strings.Post}
 							</DropdownItem>
 						)}
 						{/* <DropdownItem onClick={() => { this.openInvoicePreviewModal(row.id) }}>
@@ -426,7 +428,7 @@ class CreditNotes extends React.Component {
 								})
 							}
 						>
-							<i className="fas fa-eye" /> View
+							<i className="fas fa-eye" />  {strings.View}
 						</DropdownItem>
 						{row.statusEnum === 'Sent' && (
 							<DropdownItem
@@ -434,7 +436,7 @@ class CreditNotes extends React.Component {
 									this.unPostInvoice(row);
 								}}
 							>
-								<i className="fas fa-file" /> Draft
+								<i className="fas fa-file" />  {strings.Draft}
 							</DropdownItem>
 						)}
 						
@@ -446,7 +448,7 @@ class CreditNotes extends React.Component {
 									)
 								}
 							>
-								<i className="fas fa-university" /> Refund
+								<i className="fas fa-university" /> {strings.Refund}
 							</DropdownItem>
 						
 						{/* {row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
@@ -714,6 +716,7 @@ class CreditNotes extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			loading,
 			filterData,
@@ -764,18 +767,14 @@ class CreditNotes extends React.Component {
 						<CardHeader>
 							<Row>
 								<Col lg={12}>
-									{/* <div className="h4 mb-0 d-flex align-items-center">
+									<div className="h4 mb-0 d-flex align-items-center">
 										<img
 											alt="invoiceimage"
 											src={invoiceimage}
 											style={{ width: '40px' }}
 										/>
-										<span className="ml-2">Credit Notes</span>
-									</div> */}
-									<div className="h4 mb-0 d-flex align-items-center">
-												<i className="fas fa-donate" />
-												<span className="ml-2">Credit Notes</span>
-											</div>
+										<span className="ml-2"> {strings.CreditNotes}</span>
+									</div>
 								</Col>
 							</Row>
 						</CardHeader>
@@ -792,8 +791,8 @@ class CreditNotes extends React.Component {
 							)}
 							<Row>
 								<Col lg={12}>
-									{/* <div className="mb-4 status-panel p-3">
-										<Row className="align-items-center justify-content-around">
+									<div className="mb-4 status-panel p-3">
+										{/* <Row className="align-items-center justify-content-around">
 											<div className="h4 mb-0 d-flex align-items-center ">
 												<img
 													alt="overdue"
@@ -908,8 +907,8 @@ class CreditNotes extends React.Component {
 													</h3>
 												</div>
 											</div>
-										</Row>
-									</div> */}
+										</Row> */}
+									</div>
 									<div className="d-flex justify-content-end">
 										<ButtonGroup size="sm">
 											{/* <Button
@@ -941,7 +940,7 @@ class CreditNotes extends React.Component {
 										</ButtonGroup>
 									</div>
 									<div className="py-3">
-										<h5>Filter : </h5>
+										<h5>{strings.Filter} : </h5>
 										<Row>
 											<Col lg={2} className="mb-1">
 												<Select
@@ -987,7 +986,7 @@ class CreditNotes extends React.Component {
 													}}
 												/>
 											</Col>
-										
+
 											<Col lg={2} className="mb-1">
 												<Input
 													type="number"
@@ -1055,7 +1054,7 @@ class CreditNotes extends React.Component {
 										}
 									>
 										<i className="fas fa-plus mr-1" />
-										Add Credit Note
+									        {strings.AddCreditNote}
 									</Button></div></Row>
 								
 										<BootstrapTable
@@ -1094,14 +1093,14 @@ class CreditNotes extends React.Component {
 												className="table-header-bg"
 											>
 													
-												CREDIT NOTE#
+													{strings.CREDITNOTE}
 											</TableHeaderColumn>
 											<TableHeaderColumn 
 												dataField="customerName" 
 											//	dataSort width="10%"
 												className="table-header-bg"
 											>
-												Customer Name
+												{strings.CUSTOMERNAME}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												//width="9%"
@@ -1110,7 +1109,7 @@ class CreditNotes extends React.Component {
 												dataSort
 												className="table-header-bg"
 											>
-												Status
+												 {strings.STATUS}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="invoiceDate"
@@ -1119,7 +1118,7 @@ class CreditNotes extends React.Component {
 												dataFormat={this.invoiceDate}
 												className="table-header-bg"
 											>
-											Date
+											 {strings.DATE}
 											</TableHeaderColumn>
 											{/* <TableHeaderColumn
 												dataField="regferenceNumber"
@@ -1140,15 +1139,15 @@ class CreditNotes extends React.Component {
 											>
 												Due Date
 											</TableHeaderColumn> */}
-											{/* <TableHeaderColumn
+											<TableHeaderColumn
 													dataSort
 													dataField="currencyName"
 												//	width="4%"
 													dataFormat={this.renderCurrency}
 													className="table-header-bg"
 												>
-													Currency
-												</TableHeaderColumn> */}
+													 {strings.CURRENCY}
+												</TableHeaderColumn>
 											{/* <TableHeaderColumn
 												dataField="totalVatAmount"
 												dataSort
@@ -1167,7 +1166,7 @@ class CreditNotes extends React.Component {
 												formatExtraData={universal_currency_list}
 												className="table-header-bg"
 											>
-												Amount
+												 {strings.AMOUNT}
 											</TableHeaderColumn>
 											{/* <TableHeaderColumn
 												dataField="dueamount"

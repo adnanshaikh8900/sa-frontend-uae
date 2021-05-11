@@ -551,7 +551,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
 																		<span className="text-danger">*</span>
-																		{strings.CURRENCY}  
+																		{strings.Currency}  
 																	</Label>
 																	<Select
 																		styles={customStyles}

@@ -391,7 +391,7 @@ class CustomerInvoice extends React.Component {
 										);
 									}}
 								>
-									<i className="fas fa-edit" /> Edit
+									<i className="fas fa-edit" /> {strings.Edit}
 								</div>
 							</DropdownItem>
 						)}
@@ -401,7 +401,7 @@ class CustomerInvoice extends React.Component {
 									this.postInvoice(row);
 								}}
 							>
-								<i className="fas fa-send" /> Post
+								<i className="fas fa-send" /> {strings.Post}
 							</DropdownItem>
 						)}
 						{/* <DropdownItem onClick={() => { this.openInvoicePreviewModal(row.id) }}>
@@ -414,7 +414,7 @@ class CustomerInvoice extends React.Component {
 								})
 							}
 						>
-							<i className="fas fa-eye" /> View
+							<i className="fas fa-eye" />  {strings.View}
 						</DropdownItem>
 						{row.statusEnum === 'Sent' && (
 							<DropdownItem
@@ -422,7 +422,7 @@ class CustomerInvoice extends React.Component {
 									this.unPostInvoice(row);
 								}}
 							>
-								<i className="fas fa-file" /> Draft
+								<i className="fas fa-file" /> {strings.Draft}
 							</DropdownItem>
 						)}
 						{row.statusEnum !== 'Draft' && row.statusEnum !== 'Paid' && (
@@ -434,7 +434,7 @@ class CustomerInvoice extends React.Component {
 									)
 								}
 							>
-								<i className="fas fa-university" /> Record Payment
+								<i className="fas fa-university" /> {strings.RecordPayment}
 							</DropdownItem>
 						)}
 						{/* {row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (

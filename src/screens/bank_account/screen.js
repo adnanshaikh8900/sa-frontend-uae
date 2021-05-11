@@ -343,7 +343,7 @@ class BankAccount extends React.Component {
 								})
 							}
 						>
-							<i className="fas fa-edit" /> Edit
+							<i className="fas fa-edit" />{strings.Edit}
 						</DropdownItem>)}
 						<DropdownItem
 							onClick={() => {
@@ -358,7 +358,7 @@ class BankAccount extends React.Component {
 								);
 							}}
 						>
-							<i className="fas fa-eye" /> View Transactions
+							<i className="fas fa-eye" />  {strings.ViewTransactions}
 						</DropdownItem>
 						{/* <DropdownItem
 							onClick={() => this.closeBankAccount(row.bankAccountId)}

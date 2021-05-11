@@ -307,7 +307,7 @@ class PurchaseOrder extends React.Component {
 									)
 								}
 							>
-								<i className="fas fa-edit" /> Edit
+								<i className="fas fa-edit" /> {strings.Edit}
 							</DropdownItem>
 					)}
 					{row.status === "Approved" && (
@@ -316,7 +316,7 @@ class PurchaseOrder extends React.Component {
 								this.renderActionForState(row.id);
 							}}
 							>
-								<i className="fas fa-send" />  Create GRN
+								<i className="fas fa-send" />   {strings.CreateGRN}
 							</DropdownItem>
 							)}
 							{row.status === "Approved" && (
@@ -325,7 +325,7 @@ class PurchaseOrder extends React.Component {
 									this.sendMail(row.id);
 								}}
 							>
-								<i className="fas fa-send" /> Send
+								<i className="fas fa-send" /> {strings.Send}
 							</DropdownItem>)}
 					
 						
@@ -335,7 +335,7 @@ class PurchaseOrder extends React.Component {
 							this.changeStatus(row.id);
 							}}
 							>
-								<i className="fas fa-send" /> Approve
+								<i className="fas fa-send" />  {strings.Approve}
 							</DropdownItem>
 							)}
 							{row.status === 'Approved' &&(
@@ -344,7 +344,7 @@ class PurchaseOrder extends React.Component {
 							this.changeStatus(row.id);
 							}}
 							>
-							<i className="far fa-times-circle" /> Close
+							<i className="far fa-times-circle" />  {strings.Close}
 							</DropdownItem>
 							)}
 					<DropdownItem
@@ -355,7 +355,7 @@ class PurchaseOrder extends React.Component {
 								)
 							}
 						>
-							<i className="fas fa-eye" /> View
+							<i className="fas fa-eye" />  {strings.View}
 						</DropdownItem>
 						{/* {row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
 							<DropdownItem

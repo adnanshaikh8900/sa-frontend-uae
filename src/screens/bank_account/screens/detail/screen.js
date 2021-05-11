@@ -27,6 +27,8 @@ import * as detailBankAccountActions from './actions';
 import * as BankAccountActions from '../../actions';
 
 import './style.scss';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -56,10 +58,12 @@ const customStyles = {
 	}),
 };
 
+let strings = new LocalizedStrings(data);
 class DetailBankAccount extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),	
 			country_list: [
 				{
 					countryCode: 229,
@@ -289,6 +293,7 @@ class DetailBankAccount extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { account_type_list, currency_list, country_list } = this.props;
 
 		const { initialVals, current_bank_account, dialog,current_bank_account_id } = this.state;
@@ -304,7 +309,7 @@ class DetailBankAccount extends React.Component {
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="fas fa-university" />
 										<span className="ml-2">
-											Update Bank Account{' '}
+											{strings.UpdateBankAccount}{' '}
 											{current_bank_account
 												? ` - ${current_bank_account.bankAccountName}`
 												: ''}
@@ -353,8 +358,7 @@ class DetailBankAccount extends React.Component {
 														<Col lg={4}>
 															<FormGroup className="mb-3">
 																<Label htmlFor="account_name">
-																	<span className="text-danger">*</span>Account
-																	Name
+																	<span className="text-danger">*</span>{strings.AccountName}
 																</Label>
 																<Input
 																	type="text"
@@ -394,7 +398,7 @@ class DetailBankAccount extends React.Component {
 														<Col lg={4}>
 															<FormGroup className="mb-3">
 																<Label htmlFor="currency">
-																	<span className="text-danger">*</span>Currency
+																	<span className="text-danger">*</span>{strings.Currency}
 																</Label>
 																<Select
 																	styles={customStyles}
@@ -452,8 +456,7 @@ class DetailBankAccount extends React.Component {
 														<Col lg={4}>
 															<FormGroup className="mb-3">
 																<Label htmlFor="opening_balance">
-																	<span className="text-danger">*</span>Opening
-																	Balance
+																	<span className="text-danger">*</span>{strings.OpeningBalance}
 																</Label>
 																<Input
 																	type="text"
@@ -501,7 +504,7 @@ class DetailBankAccount extends React.Component {
 															<FormGroup className="mb-3">
 																<Label htmlFor="opening_date">
 																	<span className="text-danger">*</span>
-																	Opening Date
+																	 {strings.OpeningDate}
 																</Label>
 																<DatePicker
 																	id="date"
@@ -536,7 +539,7 @@ class DetailBankAccount extends React.Component {
 															<FormGroup className="">
 																<Label htmlFor="account_type">
 																	<span className="text-danger">*</span>
-																	Account Type
+																	 {strings.AccountType}
 																</Label>
 																<Select
 																	styles={customStyles}
@@ -597,8 +600,7 @@ class DetailBankAccount extends React.Component {
 														<Col lg={4}>
 															<FormGroup className="mb-3">
 																<Label htmlFor="bank_name">
-																	<span className="text-danger">*</span>Bank
-																	Name
+																	<span className="text-danger">*</span>{strings.BankName}
 																</Label>
 																<Input
 																	type="text"
@@ -635,8 +637,7 @@ class DetailBankAccount extends React.Component {
 														<Col lg={4}>
 															<FormGroup className="mb-3">
 																<Label htmlFor="account_number">
-																	<span className="text-danger">*</span>Account
-																	Number
+																	<span className="text-danger">*</span>{strings.AccountNumber}
 																</Label>
 																<Input
 																	type="text"
@@ -677,7 +678,7 @@ class DetailBankAccount extends React.Component {
 														</Col>
 														<Col lg={4}>
 															<FormGroup className="mb-3">
-																<Label htmlFor="countrycode">Country</Label>
+																<Label htmlFor="countrycode">{strings.Country}</Label>
 																<Select
 																	styles={customStyles}
 																	id="countrycode"
@@ -802,8 +803,7 @@ class DetailBankAccount extends React.Component {
 														<Col lg={4}>
 															<FormGroup className="mb-3">
 																<Label htmlFor="account_is_for">
-																	<span className="text-danger">*</span>Account
-																	is for
+																	<span className="text-danger">*</span>{strings.Accountisfor}
 																</Label>
 																<Select
 																	styles={customStyles}
@@ -865,7 +865,7 @@ class DetailBankAccount extends React.Component {
 																	className="btn-square"
 																	onClick={() => this.closeBankAccount(current_bank_account_id)}
 																>
-																	<i className="fa fa-trash"></i> Delete
+																	<i className="fa fa-trash"></i> {strings.Delete}
 																</Button>
 															</FormGroup>
 															<FormGroup className="text-right">
@@ -875,7 +875,7 @@ class DetailBankAccount extends React.Component {
 																	color="primary"
 																	className="btn-square mr-3"
 																>
-																	<i className="fa fa-dot-circle-o"></i> Update
+																	<i className="fa fa-dot-circle-o"></i> {strings.Update}
 																</Button>
 																<Button
 																	type="button"
@@ -888,7 +888,7 @@ class DetailBankAccount extends React.Component {
 																		);
 																	}}
 																>
-																	<i className="fa fa-ban"></i> Cancel
+																	<i className="fa fa-ban"></i> {strings.Cancel}
 																</Button>
 															</FormGroup>
 														</Col>

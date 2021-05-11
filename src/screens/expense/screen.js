@@ -224,7 +224,7 @@ class Expense extends React.Component {
 										});
 									}}
 								>
-									<i className="fas fa-edit" /> Edit
+									<i className="fas fa-edit" /> {strings.Edit}
 								</div>
 							</DropdownItem>
 						)}
@@ -234,7 +234,7 @@ class Expense extends React.Component {
 									this.postExpense(row);
 								}}
 							>
-								<i className="fas fa-send" /> Post
+								<i className="fas fa-send" /> {strings.Post}
 							</DropdownItem>
 						)}
 						{row.expenseStatus === 'Posted' && row.payee !== 'Company Expense' && (
@@ -243,7 +243,7 @@ class Expense extends React.Component {
 									this.unPostExpense(row);
 								}}
 							>
-								<i className="fas fa-file" /> Draft
+								<i className="fas fa-file" />  {strings.Draft}
 							</DropdownItem>
 						)}
 						<DropdownItem
@@ -253,7 +253,7 @@ class Expense extends React.Component {
 								});
 							}}
 						>
-							<i className="fas fa-eye" /> View
+							<i className="fas fa-eye" /> {strings.View}
 						</DropdownItem>
 						{/* <DropdownItem  onClick={() => {this.openInvoicePreviewModal(row.expenseId)}}>
               <i className="fas fa-eye" /> View

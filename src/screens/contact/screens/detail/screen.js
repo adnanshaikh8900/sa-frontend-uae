@@ -29,6 +29,8 @@ import * as DetailContactActions from './actions';
 import 'react-phone-number-input/style.css';
 import PhoneInput from 'react-phone-number-input';
 import { isValidPhoneNumber } from 'react-phone-number-input';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -55,11 +57,12 @@ const customStyles = {
 		},
 	}),
 };
-
+let strings = new LocalizedStrings(data);
 class DetailContact extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: true,
 			initValue: {},
 			currentData: {},
@@ -289,6 +292,7 @@ class DetailContact extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			currency_list,
 			country_list,
@@ -311,7 +315,7 @@ class DetailContact extends React.Component {
 											<Col lg={12}>
 												<div className="h4 mb-0 d-flex align-items-center">
 													<i className="nav-icon fas fa-id-card-alt" />
-													<span className="ml-2">Update Contact</span>
+													<span className="ml-2"> {strings.UpdateContact} </span>
 												</div>
 											</Col>
 										</Row>
@@ -358,13 +362,13 @@ class DetailContact extends React.Component {
 												>
 													{(props) => (
 														<Form onSubmit={props.handleSubmit}>
-															<h4 className="mb-4">Contact Name</h4>
+															<h4 className="mb-4">{strings.ContactName}</h4>
 															<Row className="row-wrapper">
 																<Col md="4">
 																	<FormGroup>
 																		<Label htmlFor="select">
 																			<span className="text-danger">*</span>
-																			First Name
+																		{strings.FirstName}
 																		</Label>
 																		<Input
 																			type="text"
@@ -402,7 +406,7 @@ class DetailContact extends React.Component {
 																<Col md="4">
 																	<FormGroup>
 																		<Label htmlFor="middleName">
-																			Middle Name
+																			 {strings.MiddleName}
 																		</Label>
 																		<Input
 																			type="text"
@@ -439,7 +443,7 @@ class DetailContact extends React.Component {
 																</Col>
 																<Col md="4">
 																	<FormGroup>
-																		<Label htmlFor="lastName">Last Name</Label>
+																		<Label htmlFor="lastName">{strings.LastName}</Label>
 																		<Input
 																			type="text"
 																			id="lastName"
@@ -475,13 +479,13 @@ class DetailContact extends React.Component {
 																</Col>
 															</Row>
 															<hr />
-															<h4 className="mb-3 mt-3">Contact Details</h4>
+															<h4 className="mb-3 mt-3"> {strings.ContactDetails}</h4>
 															<Row className="row-wrapper">
 																<Col md="4">
 																	<FormGroup>
 																		<Label htmlFor="contactType">
 																			<span className="text-danger">*</span>
-																			Contact Type
+																			 {strings.ContactType}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -533,7 +537,7 @@ class DetailContact extends React.Component {
 																<Col md="4">
 																	<FormGroup>
 																		<Label htmlFor="organization ">
-																			Organization Name
+																			 {strings.OrganizationName}
 																		</Label>
 																		<Input
 																			type="text"
@@ -571,7 +575,7 @@ class DetailContact extends React.Component {
 																<Col md="4">
 																	<FormGroup>
 																		<Label htmlFor="select">
-																			PO Box Number
+																			{strings.POBoxNumber}
 																		</Label>
 																		<Input
 																			type="text"
@@ -612,7 +616,7 @@ class DetailContact extends React.Component {
 																	<FormGroup>
 																		<Label htmlFor="email">
 																			<span className="text-danger">*</span>
-																			Email
+																			 {strings.Email}
 																		</Label>
 																		<Input
 																			type="text"
@@ -640,7 +644,7 @@ class DetailContact extends React.Component {
 																</Col>
 																<Col md="4">
 																	<FormGroup>
-																		<Label htmlFor="telephone">Telephone</Label>
+																		<Label htmlFor="telephone">{strings.Telephone}</Label>
 																		<Input
 																			type="text"
 																			id="telephone"
@@ -676,7 +680,7 @@ class DetailContact extends React.Component {
 																	<FormGroup>
 																		<Label htmlFor="mobileNumber">
 																			<span className="text-danger">*</span>
-																			Mobile Number
+																			 {strings.MobileNumber}
 																		</Label>
 																		{/* <Input
                                         type="text"
@@ -727,7 +731,7 @@ class DetailContact extends React.Component {
 																<Col md="4">
 																	<FormGroup>
 																		<Label htmlFor="addressLine1">
-																			Address Line1
+																			{strings.AddressLine1}
 																		</Label>
 																		<Input
 																			type="text"
@@ -758,7 +762,7 @@ class DetailContact extends React.Component {
 																<Col md="4">
 																	<FormGroup>
 																		<Label htmlFor="addressLine2">
-																			Address Line2
+																			{strings.AddressLine2}
 																		</Label>
 																		<Input
 																			type="text"
@@ -777,7 +781,7 @@ class DetailContact extends React.Component {
 																<Col md="4">
 																	<FormGroup>
 																		<Label htmlFor="addressLine3">
-																			Address Line3
+																			{strings.AddressLine3}
 																		</Label>
 																		<Input
 																			type="text"
@@ -798,7 +802,7 @@ class DetailContact extends React.Component {
 																<Col md="4">
 																	<FormGroup>
 																		<Label htmlFor="countryId">
-																			Country
+																			 {strings.Country}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -860,7 +864,7 @@ class DetailContact extends React.Component {
 																<Col md="4">
 																	<FormGroup>
 																		<Label htmlFor="stateId">
-																			State Region
+																			 {strings.StateRegion}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -918,7 +922,7 @@ class DetailContact extends React.Component {
 																</Col>
 																<Col md="4">
 																	<FormGroup>
-																		<Label htmlFor="city">City</Label>
+																		<Label htmlFor="city">{strings.City}</Label>
 																		<Input
 																			// options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
 																			value={props.values.city}
@@ -954,7 +958,7 @@ class DetailContact extends React.Component {
 																<Col md="4">
 																	<FormGroup>
 																		<Label htmlFor="postZipCode">
-																			Post Zip Code
+																		{strings.PostZipCode}
 																		</Label>
 																		<Input
 																			type="text"
@@ -992,12 +996,12 @@ class DetailContact extends React.Component {
 															</Row>
 
 															<hr />
-															<h4 className="mb-3 mt-3">Invoicing Details</h4>
+															<h4 className="mb-3 mt-3">{strings.InvoicingDetails}</h4>
 															<Row className="row-wrapper">
 																<Col md="4">
 																	<FormGroup>
 																		<Label htmlFor="billingEmail">
-																			Billing Email
+																			 {strings.BillingEmail}
 																		</Label>
 																		<Input
 																			type="text"
@@ -1028,7 +1032,7 @@ class DetailContact extends React.Component {
 																<Col md="4">
 																	<FormGroup>
 																		<Label htmlFor="contractPoNumber">
-																			Contract PO Number
+																			 {strings.ContractPONumber}
 																		</Label>
 																		<Input
 																			type="text"
@@ -1068,7 +1072,7 @@ class DetailContact extends React.Component {
 																<Col md="4">
 																	<FormGroup>
 																		<Label htmlFor="vatRegistrationNumber">
-																			Tax Registration Number
+																			 {strings.TaxRegistrationNumber}
 																		</Label>
 																		<Input
 																			type="text"
@@ -1107,7 +1111,7 @@ class DetailContact extends React.Component {
 																	<FormGroup>
 																		<Label htmlFor="currencyCode">
 																			<span className="text-danger">*</span>
-																			Currency Code
+																			 {strings.CurrencyCode}
 																		</Label>
 																		<Select
 																			isDisabled={true}
@@ -1180,7 +1184,7 @@ class DetailContact extends React.Component {
 																			className="btn-square"
 																			onClick={this.deleteContact}
 																		>
-																			<i className="fa fa-trash"></i> Delete
+																			<i className="fa fa-trash"></i> {strings.Delete}
 																		</Button>
 																	</FormGroup>
 																	<FormGroup className="text-right">
@@ -1191,7 +1195,7 @@ class DetailContact extends React.Component {
 																			className="btn-square mr-3"
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			Update
+																			 {strings.Update}
 																		</Button>
 																		<Button
 																			type="button"
@@ -1204,7 +1208,7 @@ class DetailContact extends React.Component {
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i> Cancel
+																			<i className="fa fa-ban"></i> {strings.Cancel}
 																		</Button>
 																	</FormGroup>
 																</Col>

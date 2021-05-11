@@ -2210,7 +2210,7 @@ class CreateCustomerInvoice extends React.Component {
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																					{strings.TotalNet}
+																					{strings.TotalVat}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">

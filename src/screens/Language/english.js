@@ -206,7 +206,7 @@ AddNewGoodsReceivedNotes:"Add New Goods Received Notes",
 CreateGoodsReceivedNote:"Create Goods Received Note",					
 GRNNumber:"GRN Number",						
 SupplierreferenceNumber:"Supplier reference Number",			
-ReceivedDate:"Received Date",												
+ReceivedDate:"Receipt Date",												
 RECEIVEDQUANTITY:"RECEIVED QUANTITY",			
 POQUANTITY:"PO-QUANTITY",
 

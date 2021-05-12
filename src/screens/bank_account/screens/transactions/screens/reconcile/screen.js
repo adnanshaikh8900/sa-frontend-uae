@@ -35,6 +35,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 import API_ROOT_URL from '../../../../../../constants/config';
 import { ViewBankAccount } from './sections';
+import {data}  from '../../../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -55,10 +57,12 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+let strings = new LocalizedStrings(data);
 class ReconcileTransaction extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			createMore: false,
 			loading: true,
 			actionButtons: {},
@@ -252,7 +256,7 @@ class ReconcileTransaction extends React.Component {
 					</DropdownToggle>
 					<DropdownMenu right>
 						<DropdownItem onClick={() => this.closeReconciled(row.reconcileId)}>
-							<i className="fa fa-trash" /> Delete
+							<i className="fa fa-trash" />  {strings.Delete}
 						</DropdownItem>
 					</DropdownMenu>
 				</ButtonDropdown>
@@ -261,6 +265,7 @@ class ReconcileTransaction extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { reconcile_list } = this.props;
 		const { initValue, loading, dialog } = this.state;
 		return (
@@ -285,7 +290,7 @@ class ReconcileTransaction extends React.Component {
 											<Col lg={12}>
 												<div className="h4 mb-0 d-flex align-items-center">
 													<i className="icon-doc" />
-													<span className="ml-2">Reconcile Transaction</span>
+													<span className="ml-2">{strings.ReconcileTransaction} </span>
 												</div>
 											</Col>
 										</Row>
@@ -311,7 +316,7 @@ class ReconcileTransaction extends React.Component {
 															<Row>
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
-																		<Label htmlFor="date">Date</Label>
+																		<Label htmlFor="date">{strings.Date}</Label>
 																		<DatePicker
 																			id="date"
 																			name="date"
@@ -348,7 +353,7 @@ class ReconcileTransaction extends React.Component {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="closingBalance">
-																			Closing Balance
+																			 {strings.ClosingBalance} 
 																		</Label>
 																		<Input
 																			type="number"
@@ -394,7 +399,7 @@ class ReconcileTransaction extends React.Component {
 																			onClick={props.handleSubmit}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			Reconcile
+																			{strings.reconcile}
 																		</Button>
 																		<Button
 																			color="secondary"
@@ -409,7 +414,7 @@ class ReconcileTransaction extends React.Component {
 																				)
 																			}
 																		>
-																			<i className="fa fa-ban"></i> Cancel
+																			<i className="fa fa-ban"></i> {strings.Cancel}
 																		</Button>
 																	</FormGroup>
 																</Col>
@@ -454,21 +459,21 @@ class ReconcileTransaction extends React.Component {
 													dataSort
 													width="10%"
 												>
-													Reconcile Date
+													{strings.RECONCILEDATE}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="reconciledDuration"
 													dataSort
 													width="15%"
 												>
-													Reconcile Duration
+													 {strings.RECONCILEDURATION}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="closingBalance"
 													dataSort
 													width="15%"
 												>
-													Closing Balance
+												 {strings.CLOSINGBALANCE}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													className="text-right"

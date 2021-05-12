@@ -32,6 +32,8 @@ import { selectOptionsFactory } from 'utils';
 import './style.scss';
 import moment from 'moment';
 import API_ROOT_URL from '../../../../constants/config';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -65,10 +67,12 @@ const customStyles = {
 	}),
 };
 
+let strings = new LocalizedStrings(data);
 class RecordCustomerPayment extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: false,
 			dialog: false,
 			discountOptions: [
@@ -356,6 +360,7 @@ class RecordCustomerPayment extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { initValue, loading, dialog } = this.state;
 		const { pay_mode, customer_list, deposit_list } = this.props;
 
@@ -378,7 +383,7 @@ class RecordCustomerPayment extends React.Component {
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="fas fa-address-book" />
 												<span className="ml-2">
-													Payment for Customer Invoice
+												{strings.PaymentforCustomerInvoice}
 												</span>
 											</div>
 										</Col>
@@ -449,7 +454,7 @@ class RecordCustomerPayment extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="contactId">
 																			<span className="text-danger">*</span>
-																			Customer Name
+																		{strings.CustomerName}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -518,7 +523,7 @@ class RecordCustomerPayment extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="project">
 																			<span className="text-danger">*</span>{' '}
-																			Amount Received
+																			{strings.AmountReceived}
 																		</Label>
 																		<Input
 																			type="number"
@@ -555,7 +560,7 @@ class RecordCustomerPayment extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">
 																			<span className="text-danger">*</span>
-																			Payment Date
+																			 {strings.PAYMENTDATE}
 																		</Label>
 																		<DatePicker
 																			id="receiptDate"
@@ -593,7 +598,7 @@ class RecordCustomerPayment extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="payMode">
 																			<span className="text-danger">*</span>{' '}
-																			Payment Mode
+																			 {strings.PaymentMode}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -637,7 +642,7 @@ class RecordCustomerPayment extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="depositeTo">
 																			<span className="text-danger">*</span>{' '}
-																			Deposit To
+																			 {strings.DepositTo}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -678,7 +683,7 @@ class RecordCustomerPayment extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="referenceCode">
-																					Reference Number
+																					{strings.ReferenceNumber}
 																				</Label>
 																				<Input
 																					type="text"
@@ -705,7 +710,7 @@ class RecordCustomerPayment extends React.Component {
 																	<Row>
 																		<Col lg={12}>
 																			<FormGroup className="mb-3">
-																				<Label htmlFor="notes">Notes</Label>
+																				<Label htmlFor="notes">{strings.Notes}</Label>
 																				<Input
 																					type="textarea"
 																					name="notes"
@@ -729,7 +734,7 @@ class RecordCustomerPayment extends React.Component {
 																					name="attachmentFile"
 																					render={({ field, form }) => (
 																						<div>
-																							<Label>Attachment</Label> <br />
+																							<Label>{strings.Attachment}</Label> <br />
 																							<div className="file-upload-cont">
 																								<Button
 																									color="primary"
@@ -743,7 +748,7 @@ class RecordCustomerPayment extends React.Component {
 																									className="btn-square mr-3"
 																								>
 																									<i className="fa fa-upload"></i>{' '}
-																									Upload
+																									{strings.upload}
 																								</Button>
 																								<input
 																									id="fileInput"
@@ -818,7 +823,7 @@ class RecordCustomerPayment extends React.Component {
 																			className="btn-square mr-3"
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			Record Payment
+																			 {strings.RecordPayment}
 																		</Button>
 																		<Button
 																			color="secondary"
@@ -829,7 +834,7 @@ class RecordCustomerPayment extends React.Component {
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i> Cancel
+																			<i className="fa fa-ban"></i> {strings.Cancel}
 																		</Button>
 																	</FormGroup>
 																</Col>

@@ -96,9 +96,9 @@ class CashFlow extends Component {
 									className="form-control card-select"
 									onChange={(e) => this.handleChange(e)}
 								>
-									<option value="12">Last 12 Months</option>
-									<option value="6">Last 6 Months</option>
-									<option value="3">Last 3 Months</option>
+									<option value="12">{strings.Last12Months}</option>
+									<option value="6"> {strings.Last6Months}</option>
+									<option value="3">{strings.Last3Months}</option>
 								</select>
 							</div>
 						</div>

@@ -37,6 +37,8 @@ import * as ExpenseCreateActions from '../create/actions';
 import moment from 'moment';
 import './style.scss';
 import API_ROOT_URL from '../../../../constants/config';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -71,10 +73,12 @@ const customStyles = {
 	}),
 };
 
+let strings = new LocalizedStrings(data);
 class DetailExpense extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: true,
 			initValue: null,
 			current_expense_id: null,
@@ -331,6 +335,7 @@ class DetailExpense extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			currency_list,
 			user_list,
@@ -365,7 +370,7 @@ class DetailExpense extends React.Component {
 											<Col lg={12}>
 												<div className="h4 mb-0 d-flex align-items-center">
 													<i className="fab fa-stack-exchange" />
-													<span className="ml-2">Update Expense</span>
+													<span className="ml-2">{strings.UpdateExpense} </span>
 												</div>
 											</Col>
 										</Row>
@@ -457,7 +462,7 @@ class DetailExpense extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="expenseCategoryId">
 																			<span className="text-danger">*</span>
-																			Expense Category
+																			 {strings.ExpenseCategory}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -510,7 +515,7 @@ class DetailExpense extends React.Component {
 																</Col>
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
-																		<Label htmlFor="payee">Payee</Label>
+																		<Label htmlFor="payee">{strings.Payee}</Label>
 																		<Select
 																			styles={customStyles}
 																			options={
@@ -562,7 +567,7 @@ class DetailExpense extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="expense_date">
 																			<span className="text-danger">*</span>
-																			Expense Date
+																			 {strings.ExpenseDate}
 																		</Label>
 																		<DatePicker
 																			id="date"
@@ -600,7 +605,7 @@ class DetailExpense extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="currency">
 																			<span className="text-danger">*</span>
-																			Currency
+																			{strings.Currency}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -652,7 +657,7 @@ class DetailExpense extends React.Component {
 																	<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="exchangeRate">
-																		Exchange rate
+																	{strings.Exchangerate}
 																	</Label>
 																	<div>
 																		<Input
@@ -676,7 +681,7 @@ class DetailExpense extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="expenseAmount">
 																			<span className="text-danger">*</span>
-																			Amount
+																			{strings.Amount}
 																		</Label>
 																		<Input
 																			type="number"
@@ -713,7 +718,7 @@ class DetailExpense extends React.Component {
 																</Col>
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
-																		<Label htmlFor="vatCategoryId">Tax</Label>
+																		<Label htmlFor="vatCategoryId">{strings.Tax}</Label>
 																		<Select
 																			styles={customStyles}
 																			className="select-default-width"
@@ -756,7 +761,7 @@ class DetailExpense extends React.Component {
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="pay_through">
-																				Pay Through
+																				Pay Through 
 																			</Label>
 																			<Select
 																				id="pay_through"
@@ -812,7 +817,7 @@ class DetailExpense extends React.Component {
 																		<Col lg={3}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="bankAccountId">
-																					Bank
+																					Bank 
 																				</Label>
 																				<Select
 																					id="bankAccountId"
@@ -869,7 +874,7 @@ class DetailExpense extends React.Component {
 																<Row>
 																<Col>
 																<Label htmlFor="currency">
-																		Currency Exchange Rate
+																		{strings.CurrencyExchangeRate}
 																	</Label>	
 																</Col>
 																</Row>
@@ -946,7 +951,7 @@ class DetailExpense extends React.Component {
 																<Col lg={8}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="expenseDescription">
-																			Description
+																			 {strings.Description}
 																		</Label>
 																		<Input
 																			type="textarea"
@@ -971,7 +976,7 @@ class DetailExpense extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="receiptNumber">
-																					Reciept Number
+																					 {strings.RecieptNumber}
 																				</Label>
 																				<Input
 																					type="text"
@@ -992,7 +997,7 @@ class DetailExpense extends React.Component {
 																		<Col lg={12}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="receiptAttachmentDescription">
-																					Attachment Description
+																					 {strings.AttachmentDescription}
 																				</Label>
 																				<Input
 																					type="textarea"
@@ -1022,7 +1027,7 @@ class DetailExpense extends React.Component {
 																					name="attachmentFile"
 																					render={({ field, form }) => (
 																						<div>
-																							<Label>Reciept Attachment</Label>{' '}
+																							<Label>{strings.RecieptAttachment}</Label>{' '}
 																							<br />
 																							<div className="file-upload-cont">
 																								<Button
@@ -1037,7 +1042,7 @@ class DetailExpense extends React.Component {
 																									className="btn-square mr-3"
 																								>
 																									<i className="fa fa-upload"></i>{' '}
-																									Upload
+																									 {strings.upload}
 																								</Button>
 																								<input
 																									id="fileInput"
@@ -1110,7 +1115,7 @@ class DetailExpense extends React.Component {
 																			className="btn-square"
 																			onClick={this.deleteExpense}
 																		>
-																			<i className="fa fa-trash"></i> Delete
+																			<i className="fa fa-trash"></i> {strings.Delete}
 																		</Button>
 																	</FormGroup>
 																	<FormGroup className="text-right">
@@ -1121,7 +1126,7 @@ class DetailExpense extends React.Component {
 																			className="btn-square mr-3"
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			Update
+																			   {strings.Update}
 																		</Button>
 																		<Button
 																			type="button"
@@ -1134,7 +1139,7 @@ class DetailExpense extends React.Component {
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i> Cancel
+																			<i className="fa fa-ban"></i> {strings.Cancel}
 																		</Button>
 																	</FormGroup>
 																</Col>

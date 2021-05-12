@@ -26,6 +26,8 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 import { CommonActions } from 'services/global';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -52,11 +54,12 @@ const customStyles = {
 		},
 	}),
 };
-
+let strings = new LocalizedStrings(data);
 class DetailChartAccount extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			initValue: null,
 			loading: true,
 			createMore: false,
@@ -241,6 +244,7 @@ class DetailChartAccount extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { loading, dialog } = this.state;
 		// const { sub_transaction_type_list } = this.props
 
@@ -257,7 +261,7 @@ class DetailChartAccount extends React.Component {
 									<CardHeader>
 										<div className="h4 mb-0 d-flex align-items-center">
 											<i className="nav-icon fas fa-area-chart" />
-											<span className="ml-2">Update Chart Account</span>
+											<span className="ml-2"> {strings.UpdateChartAccount}  </span>
 										</div>
 									</CardHeader>
 									<CardBody>
@@ -305,7 +309,7 @@ class DetailChartAccount extends React.Component {
                                 </FormGroup> */}
 															<FormGroup>
 																<Label htmlFor="transactionCategoryName">
-																	<span className="text-danger">*</span>Name
+																	<span className="text-danger">*</span> {strings.Name}
 																</Label>
 																<Input
 																	type="text"
@@ -339,7 +343,7 @@ class DetailChartAccount extends React.Component {
 															</FormGroup>
 															<FormGroup>
 																<Label htmlFor="chartOfAccount">
-																	<span className="text-danger">*</span>Type
+																	<span className="text-danger">*</span>{strings.Type}
 																</Label>
 																{/* <Select
                                     className="select-default-width"
@@ -400,7 +404,7 @@ class DetailChartAccount extends React.Component {
 																			className="btn-square"
 																			onClick={this.deleteChartAccount}
 																		>
-																			<i className="fa fa-trash"></i> Delete
+																			<i className="fa fa-trash"></i>  {strings.Delete}
 																		</Button>
 																	</FormGroup>
 																	<FormGroup className="text-right">
@@ -411,7 +415,7 @@ class DetailChartAccount extends React.Component {
 																			className="btn-square mr-3"
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			Update
+																			 {strings.Update}
 																		</Button>
 																		<Button
 																			type="button"
@@ -424,7 +428,7 @@ class DetailChartAccount extends React.Component {
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i> Cancel
+																			<i className="fa fa-ban"></i>  {strings.Cancel}
 																		</Button>
 																	</FormGroup>
 																</Col>

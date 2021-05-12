@@ -284,7 +284,7 @@ class GoodsReceivedNote extends React.Component {
 								}
 							>
 								
-								<i className="fas fa-edit" /> Edit
+								<i className="fas fa-edit" />  {strings.Edit}
 							</DropdownItem>
 					)}
 							{row.status !== 'Draft' && row.status !== 'Closed' && (
@@ -293,7 +293,7 @@ class GoodsReceivedNote extends React.Component {
 									this.sendMail(row.id);
 								}}
 							>
-								<i className="fas fa-send" /> Send
+								<i className="fas fa-send" />{strings.Send}
 							</DropdownItem>
 							)}
 							{/* {row.status === 'Sent' && (
@@ -313,7 +313,7 @@ class GoodsReceivedNote extends React.Component {
 								this.postGrn(row.id);
 							}}
 						>
-								<i className="fas fa-send" />  Post
+								<i className="fas fa-send" />  {strings.Post}
 						</DropdownItem>
 						)}
 						{/* {(row.status !== 'Draft' && row.status !== 'post' && row.status !== 'Closed' &&
@@ -351,7 +351,7 @@ class GoodsReceivedNote extends React.Component {
 								)
 							}
 						>
-							<i className="fas fa-eye" /> View
+							<i className="fas fa-eye" /> {strings.View}
 						</DropdownItem>
 					</DropdownMenu>
 				</ButtonDropdown>

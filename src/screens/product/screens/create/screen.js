@@ -1019,7 +1019,9 @@ try {
 																			</FormGroup>
 																		</Col>
 																</Row>
-															<Row>
+															<Row 
+													
+																					>
 																<Col lg={8}>
 																	<FormGroup check inline className="mb-3">
 																		<Label
@@ -1098,7 +1100,9 @@ try {
 																			maxLength="10"
 																			id="purchaseUnitPrice"
 																			name="purchaseUnitPrice"
+																			
 																			placeholder="Enter Purchase Price"
+																			disabled={props.values.isInventoryEnabled===true }
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
@@ -1222,12 +1226,19 @@ try {
 															
 															<hr></hr>
 															
-															<Row style={{display: 
+															<Row 
+															style={{display: 
 																				props.values.productPriceType.includes(
-																					'PURCHASE',
-																				)
-																				?'' : 'none'
-																			}}>
+																					'PURCHASE' 
+																				
+																				)&& props.values.productType !=
+																				'SERVICE'
+																		
+																			?'' : 'none'
+																
+																			}}
+																		
+																			>
 																<Col lg={8}>
 																	<FormGroup check inline className="mb-3">
 																		<Label

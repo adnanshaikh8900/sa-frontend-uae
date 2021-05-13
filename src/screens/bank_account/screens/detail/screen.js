@@ -64,40 +64,40 @@ class DetailBankAccount extends React.Component {
 		super(props);
 		this.state = {
 			language: window['localStorage'].getItem('language'),	
-			country_list: [
-				{
-					countryCode: 229,
-					countryDescription: null,
-					countryFullName: 'United Arab Emirates - (null)',
-					countryName: 'United Arab Emirates',
-					createdBy: 0,
-					createdDate: '2020-03-21T05:55:16.000+0000',
-					currencyCode: null,
-					defaltFlag: 'Y',
-					deleteFlag: false,
-					isoAlpha3Code: null,
-					lastUpdateBy: null,
-					lastUpdateDate: null,
-					orderSequence: null,
-					versionNumber: 1,
-				},
-				{
-					countryCode: 101,
-					countryDescription: null,
-					countryFullName: 'India  - (null)',
-					countryName: 'India',
-					createdBy: 0,
-					createdDate: '2020-03-21T05:55:16.000+0000',
-					currencyCode: null,
-					defaltFlag: 'Y',
-					deleteFlag: false,
-					isoAlpha3Code: null,
-					lastUpdateBy: null,
-					lastUpdateDate: null,
-					orderSequence: null,
-					versionNumber: 1,
-				},
-			],
+			// country_list: [
+			// 	{
+			// 		countryCode: 229,
+			// 		countryDescription: null,
+			// 		countryFullName: 'United Arab Emirates - (null)',
+			// 		countryName: 'United Arab Emirates',
+			// 		createdBy: 0,
+			// 		createdDate: '2020-03-21T05:55:16.000+0000',
+			// 		currencyCode: null,
+			// 		defaltFlag: 'Y',
+			// 		deleteFlag: false,
+			// 		isoAlpha3Code: null,
+			// 		lastUpdateBy: null,
+			// 		lastUpdateDate: null,
+			// 		orderSequence: null,
+			// 		versionNumber: 1,
+			// 	},
+			// 	{
+			// 		countryCode: 101,
+			// 		countryDescription: null,
+			// 		countryFullName: 'India  - (null)',
+			// 		countryName: 'India',
+			// 		createdBy: 0,
+			// 		createdDate: '2020-03-21T05:55:16.000+0000',
+			// 		currencyCode: null,
+			// 		defaltFlag: 'Y',
+			// 		deleteFlag: false,
+			// 		isoAlpha3Code: null,
+			// 		lastUpdateBy: null,
+			// 		lastUpdateDate: null,
+			// 		orderSequence: null,
+			// 		versionNumber: 1,
+			// 	},
+			// ],
 			dialog: null,
 
 			current_bank_account_id: null,
@@ -144,7 +144,7 @@ class DetailBankAccount extends React.Component {
 									account_number: res.accountNumber,
 									ifsc_code: res.ifscCode,
 									swift_code: res.swiftCode,
-									country: res.bankCountry ? res.bankCountry : '',
+									countryId: res.bankCountry ? res.bankCountry : '',
 									account_is_for: res.personalCorporateAccountInd
 										? res.personalCorporateAccountInd
 										: '',
@@ -676,62 +676,68 @@ class DetailBankAccount extends React.Component {
 																	)}
 															</FormGroup>
 														</Col>
-														<Col lg={4}>
+														<Col md="4">
 															<FormGroup className="mb-3">
-																<Label htmlFor="countrycode">{strings.Country}</Label>
-																<Select
-																	styles={customStyles}
-																	id="countrycode"
-																	name="countrycode"
-																	options={
-																		this.state.country_list
-																			? selectOptionsFactory.renderOptions(
-																					'countryName',
-																					'countryCode',
-																					this.state.country_list,
-																					'Country',
-																			  )
-																			: []
-																	}
-																	onChange={(option) => {
-																		if (option && option.value) {
-																			props.handleChange('country')(
-																				option.value,
-																			);
-																		} else {
-																			props.handleChange('country')('');
-																		}
-																	}}
-																	value={
-																		this.state.country_list &&
-																		selectOptionsFactory
-																			.renderOptions(
-																				'countryName',
-																				'countryCode',
-																				this.state.country_list,
-																				'Country',
-																			)
-																			.find(
-																				(option) =>
-																					option.value ===
-																					+props.values.country,
-																			)
-																	}
-																	className={
-																		props.errors.countrycode &&
-																		props.touched.countrycode
-																			? 'is-invalid'
-																			: ''
-																	}
-																/>
-																{props.errors.countrycode &&
-																	props.touched.countrycode && (
-																		<div className="invalid-feedback">
-																			{props.errors.countrycode}
-																		</div>
-																	)}
-															</FormGroup>
-														</Col>
+																		<Label htmlFor="countryId">
+																			 {strings.Country}
+																		</Label>
+																		<Select
+																			styles={customStyles}
+																			options={
+																				country_list
+																					? selectOptionsFactory.renderOptions(
+																							'countryName',
+																							'countryCode',
+																							country_list,
+																							'Country',
+																					  )
+																					: []
+																			}
+																			value={
+																				country_list &&
+																				selectOptionsFactory
+																					.renderOptions(
+																						'countryName',
+																						'countryCode',
+																						country_list,
+																						'Country',
+																					)
+																					.find(
+																						(option) =>
+																							option.value ===
+																							+props.values.countryId,
+																					)
+																			}
+																			onChange={(option) => {
+																				if (option && option.value) {
+																					props.handleChange('countryId')(
+																						option,
+																					);
+																					this.getStateList(option.value);
+																				} else {
+																					props.handleChange('countryId')('');
+																					this.getStateList(option.value);
+																				}
+																				props.handleChange('stateId')('');
+																			}}
+																			placeholder="Select Country"
+																			id="countryId"
+																			name="countryId"
+																			className={
+																				props.errors.countryId &&
+																				props.touched.countryId
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{props.errors.countryId &&
+																			props.touched.countryId && (
+																				<div className="invalid-feedback">
+																					{props.errors.countryId}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
 													</Row>
 													<Row>
 														{/* <Col lg={4}>

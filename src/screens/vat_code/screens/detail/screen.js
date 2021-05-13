@@ -56,6 +56,7 @@ class DetailVatCode extends React.Component {
 		this.saveAndContinue = false;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regEx = /^[0-9\d]+$/;
+		this.vatCode = /[a-zA-Z0-9 ]+$/;
 	}
 
 	componentDidMount = () => {
@@ -212,7 +213,7 @@ class DetailVatCode extends React.Component {
 																	onChange={(option) => {
 																		if (
 																			option.target.value === '' ||
-																			this.regExAlpha.test(option.target.value)
+																			this.vatCode.test(option.target.value)
 																		) {
 																			props.handleChange('name')(option);
 																		}

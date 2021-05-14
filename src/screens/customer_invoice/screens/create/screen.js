@@ -2300,7 +2300,7 @@ class CreateCustomerInvoice extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-dot-circle-o"></i>
+																		<i className="fa fa-dot-circle-o"></i>{' '}
 																		{this.state.disabled
 																			? 'Creating...'
 																			: strings.Create }
@@ -2321,7 +2321,7 @@ class CreateCustomerInvoice extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-repeat"></i>
+																		<i className="fa fa-repeat mr-1"></i>
 																		{this.state.disabled
 																			? 'Creating...'
 																			: strings.CreateandMore }
@@ -2335,7 +2335,7 @@ class CreateCustomerInvoice extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-ban"></i>{strings.Cancel}
+																		<i className="fa fa-ban mr-1"></i>{strings.Cancel}
 																	</Button>
 																</FormGroup>
 															</Col>

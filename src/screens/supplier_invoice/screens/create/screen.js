@@ -2436,7 +2436,7 @@ class CreateSupplierInvoice extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-ban"></i>{strings.Cancel} 
+																		<i className="fa fa-ban mr-1"></i>{strings.Cancel} 
 																	</Button>
 																</FormGroup>
 															</Col>

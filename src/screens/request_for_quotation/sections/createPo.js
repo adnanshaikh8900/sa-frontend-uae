@@ -1340,7 +1340,7 @@ class CreatePurchaseOrder extends React.Component {
 											disabled={isSubmitting}
 											
 										>
-											<i className="fa fa-dot-circle-o"></i>{strings.Create}
+											<i className="fa fa-dot-circle-o mr-1"></i>{strings.Create}
 										</Button>
 										&nbsp;
 										<Button

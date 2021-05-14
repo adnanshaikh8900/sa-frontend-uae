@@ -276,7 +276,7 @@ class CreateProductCategory extends React.Component {
 																	color="primary"
 																	className="btn-square mr-3"
 																>
-																	<i className="fa fa-dot-circle-o"></i> {strings.Create}
+																	<i className="fa fa-dot-circle-o"></i>{' '} {strings.Create}
 																</Button>
 
 																<Button
@@ -289,7 +289,7 @@ class CreateProductCategory extends React.Component {
 																		});
 																	}}
 																>
-																	<i className="fa fa-refresh"></i> 
+																	<i className="fa fa-refresh"></i> {' '}
 																	{strings.CreateandMore}
 																</Button>
 
@@ -303,7 +303,7 @@ class CreateProductCategory extends React.Component {
 																		);
 																	}}
 																>
-																	<i className="fa fa-ban"></i>{strings.Cancel}
+																	<i className="fa fa-ban mr-1"></i>{strings.Cancel}
 																</Button>
 															</FormGroup>
 														</form>

@@ -1,37 +1,47 @@
+import {data}  from '../screens/Language/index'
+import LocalizedStrings from 'react-localization';
+import { Dashboard } from '@material-ui/icons';
+let strings = new LocalizedStrings(data);
+var language= window['localStorage'].getItem('language');
+strings.setLanguage(language);
+
 export default {
+
 	items: [
+	
+
 		{
-			name: 'Dashboard',
+			name: strings.Dashboard,
 			url: '/admin/dashboard',
 			icon: 'icon-speedometer',
 			path: 'Dashboard',
 		},
 		{
-			name: 'Income',
+			name: strings.Income,
 			url: '/admin/income',
 			icon: 'far fa-address-book',
 			children: [
 			
 				{
-					name: 'Customer Invoices',
+					name: strings.CustomerInvoices,
 					url: '/admin/income/customer-invoice',
 					icon: 'far fa-address-card',
 					path: 'ViewCustomerInvoice',
 				},
 				{
-					name: 'Income Receipts',
+					name: strings.IncomeReceipts,
 					url: '/admin/income/receipt',
 					icon: 'fa fa-file-o',
 					path: 'CustomerReceipts',
 				},
 				{
-					name: 'Quotation',
+					name: strings.Quotation,
 					url: '/admin/income/quotation',
 					icon: 'fas fa-box-open',
 					path: 'ViewQuotation',
 				},
 				{
-					name: 'Credit Notes',
+					name: strings.CreditNotes,
 					url: '/admin/income/credit-notes',
 					icon: 'fas fa-donate',
 					path: 'ViewCreditNotes',
@@ -39,42 +49,42 @@ export default {
 			],
 		},
 		{
-			name: 'Expense',
+			name: strings.Expense,
 			url: '/admin/expense',
 			icon: 'fas fa-receipt',
 			children: [
 				{
-					name: 'Expenses',
+					name: strings.Expenses,
 					url: '/admin/expense/expense',
 					icon: 'fab fa-stack-exchange',
 					path: 'ViewExpense',
 				},
 				{
-					name: 'Supplier Invoices',
+					name: strings.SupplierInvoices,
 					url: '/admin/expense/supplier-invoice',
 					icon: 'far fa-address-card',
 					path: 'ViewSupplierInvoice',
 				},
 				{
-					name: 'Purchase receipts',
+					name: strings.Purchasereceipts,
 					url: '/admin/expense/purchase',
 					icon: 'fas fa-money-check',
 					path: 'ViewSupplierReceipt',
 				},
 				{
-					name: 'RFQ',
+					name: strings.RFQ,
 					url: '/admin/expense/request-for-quotation',
 					icon: 'fas fa-shopping-basket',
 					path: 'ViewRequestForQuotation',
 				},
 				{
-					name: 'Purchase Order',
+					name: strings.PurchaseOrder,
 					url: '/admin/expense/purchase-order',
 					icon: 'fas fa-cash-register',
 					path: 'ViewPurchaseOrder',
 				},
 				{
-					name: 'GRN',
+					name: strings.GRN,
 					url: '/admin/expense/goods-received-note',
 					icon: 'fas fa-archive',
 					path: 'ViewGoodsReceiveNotes',
@@ -83,12 +93,12 @@ export default {
 			],
 		},
 		{
-			name: 'Banking',
+			name: strings.Banking,
 			url: '/admin/banking',
 			icon: 'fas fa-university',
 			children: [
 				{
-					name: 'Bank Account',
+					name: strings.BankAccount,
 					url: '/admin/banking/bank-account',
 					icon: 'fas fa-university',
 					path: 'ViewBankAccount',
@@ -102,19 +112,19 @@ export default {
 		},
 		
 		{
-			name: 'Accountant',
+			name: strings.Accountant,
 			url: '/admin/accountant',
 			icon: 'icon-user',
 			children: [
 				{
-					name: 'Opening Balance',
+					name: strings.OpeningBalance,
 					url: '/admin/accountant/opening-balance',
 					icon: 'fas fa-balance-scale',
 					path: 'ViewOpeningBalance',
 				},
 			
 				{
-					name: 'Journals',
+					name: strings.Journals,
 					url: '/admin/accountant/journal',
 					icon: 'fa fa-diamond',
 					path: 'ViewJournal',
@@ -143,7 +153,7 @@ export default {
 		// 	],
 		// },
 		{
-			name: 'Report',
+			name: strings.Report,
 			url: '/admin/report',
 			icon: 'fas fa-file-contract',
 			path: 'Financial',
@@ -173,19 +183,19 @@ export default {
 		// 	],
 		// },
 		{
-			name: 'Master',
+			name: strings.Master,
 			url: '/admin/master',
 			icon: 'fas fa-database',
 			path: 'ViewChartOfAccounts',
 			children: [
 				{
-					name: 'Chart of Accounts',
+					name: strings.ChartofAccounts,
 					url: '/admin/master/chart-account',
 					icon: 'fas fa-area-chart',
 					path: 'ViewChartOfAccounts',
 				},
 				{
-					name: 'Contact',
+					name: strings.Contact,
 					url: '/admin/master/contact',
 					icon: 'fas fa-id-card-alt',
 					path: 'ViewContact',
@@ -196,7 +206,7 @@ export default {
 				// 	icon: 'fas fa-user-tie',
 				// },
 				{
-					name: 'Product',
+					name: strings.Product,
 					url: '/admin/master/product',
 					icon: 'fas fa-object-group',
 					path: 'ViewProduct',
@@ -207,19 +217,19 @@ export default {
 				//   icon: 'fas fa-project-diagram',
 				// },
 				{
-					name: 'VAT Category',
+					name: strings.VATCategory,
 					url: '/admin/master/vat-category',
 					icon: 'icon-briefcase',
 					path: 'ViewVatCategory',
 				},
 				{
-					name: 'Product Category',
+					name: strings.ProductCategory,
 					url: '/admin/master/product-category',
 					icon: 'fas fa-money',
 					path: 'ViewProductCategory',
 				},
 				{
-					name: 'Currency Rate',
+					name: strings.CurrencyRate,
 					url: '/admin/master/currencyConvert',
 					icon: 'fas fa-id-card-alt',
 					path: 'ViewCurrencyConversion',
@@ -232,55 +242,55 @@ export default {
 			],
 		},
 		{
-			name: 'Inventory',
+			name: strings.Inventory,
 			url: '/admin/Inventory',
 			icon: 'fas fa-warehouse',
 			path: 'Inventory',
 		},
 		{
-			name: 'Template',
+			name: strings.Template,
 			url: '/admin/settings/template',
 			icon: 'fas fa-boxes',
 			path: 'Template',
 		},
 
 		{
-			name: 'Payroll',
+			name: strings.Payroll,
 			url: '/admin/payroll',
 			icon: 'fas fa-users-cog',
 			children: [
 				{
-					name: 'Employee',
+					name: strings.Employee,
 					url: '/admin/payroll/employee',
 					icon: 'fas fa-user-plus',
 					path: 'ViewEmployee',
 				},
 				{
-					name: 'Payroll Run',
+					name: strings.PayrollRun,
 					url: '/admin/payroll/payrollrun',
 					icon: 'fas fa-user-plus',
 					path: 'ViewPayrollRun',
 				},
 				{
-					name: 'Salary Roles',
+					name: strings.SalaryRoles,
 					url: '/admin/payroll/salaryRoles',
 					icon: 'fas fa-user-tie',
 					path: 'ViewSalaryRole',
 				},
 				{
-					name: 'Salary Templates',
+					name: strings.SalaryTemplates,
 					url: '/admin/payroll/salaryTemplate',
 					icon: 'fas fa-chalkboard-teacher',
 					path: 'ViewSalaryTemplate',
 				},
 				{
-					name: 'Salary Structure',
+					name: strings.SalaryStructure,
 					url: '/admin/payroll/salaryStructure',
 					icon: 'fas fa-hospital-user',
 					path: 'ViewSalaryStructure',
 				},
 				{
-					name: 'Employee Designation',
+					name: strings.EmployeeDesignation,
 					url: '/admin/payroll/employeeDesignation',
 					icon: 'fas fa-id-card-alt',
 					path: 'ViewEmployeeDesignation',

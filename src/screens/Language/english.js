@@ -3,6 +3,32 @@ const en = {
       SALARYROLEID_Lang: "SALARY ROLE ID",
       SALARYROLENAME_Lang: "SALARY ROLE NAME",
       NewSalaryRoles_Lang: "New Salary Roles",
+//sideBar
+Dashboard:"Dashboard",
+Report:"Report",
+Inventory:"Inventory",
+Income:"Income",
+Expense:"Expense",
+RFQ:"RFQ",
+GRN:"GRN",
+Accountant:"Accountant",
+Journals:"Journals",
+IncomeReceipts:"Income Receipts",
+BankAccount:"Bank Account",
+Master:"Master",
+Product:"Product",
+VATCategory:"VAT Category",
+CurrencyRate:"Currency Rate",
+Template:"Template",
+Payroll:"Payroll",
+Employee:"Employee",
+PayrollRun:"Payroll Run",
+SalaryRoles:"Salary Roles",
+SalaryTemplates:"Salary Templates",
+SalaryStructure:"Salary Structure",
+EmployeeDesignation:"Employee Designation",
+
+
 
 
       //Opening Balances

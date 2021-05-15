@@ -46,11 +46,18 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 let strings = new LocalizedStrings(data);
+if(localStorage.getItem('language')==null)
+	{
+		strings.setLanguage('en');
+}
+else{
+	strings.setLanguage(localStorage.getItem('language'));
+}
 class AdminLayout extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			language: window['localStorage'].getItem('language'),
+			// language: window['localStorage'].getItem('language'),
 		};
 	}
 
@@ -96,7 +103,7 @@ class AdminLayout extends React.Component {
 	}
 
 	render() {
-		strings.setLanguage(this.state.language);
+		// strings.setLanguage(this.state.language);
 		const containerStyle = {
 			zIndex: 1999,
 			closeOnClick: true,

@@ -106,8 +106,8 @@ class Help extends React.Component {
 									</Card>
 								</Col>
 								<Col md="6">
-									<Card>
-										<CardBody style={{height:'415px'}}>
+									<Card  style={{height:'370px'}}>
+										<CardBody>
 											<div className="text-center" >
 												<img src={faqIcon} width="40%" alt=""></img>
 											</div>

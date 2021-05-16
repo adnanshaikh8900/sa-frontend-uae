@@ -3,7 +3,7 @@ import LocalizedStrings from 'react-localization';
 import { Dashboard } from '@material-ui/icons';
 let strings = new LocalizedStrings(data);
 // var language= window['localStorage'].getItem('language');
-debugger
+
 if(localStorage.getItem('language')==null)
 	{
 		strings.setLanguage('en');

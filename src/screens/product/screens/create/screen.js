@@ -1503,7 +1503,7 @@ try {
 																			name="inventoryReorderLevel"
 																			id="inventoryReorderLevel"
 																			rows="3"
-																			placeholder="inventoryReorderLevel..."
+																			placeholder="Enter Inventory Reorder Level..."
 																			onChange={(value) => {
 																				props.handleChange(
 																					'inventoryReorderLevel',

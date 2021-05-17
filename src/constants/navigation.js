@@ -285,16 +285,16 @@ export default {
 					icon: 'fas fa-user-tie',
 					path: 'ViewSalaryRole',
 				},
-				{
-					name: strings.SalaryTemplates,
-					url: '/admin/payroll/salaryTemplate',
-					icon: 'fas fa-chalkboard-teacher',
-					path: 'ViewSalaryTemplate',
-				},
+				// {
+				// 	name: strings.SalaryTemplates,
+				// 	url: '/admin/payroll/salaryTemplate',
+				// 	icon: 'fas fa-chalkboard-teacher',
+				// 	path: 'ViewSalaryTemplate',
+				// },
 				{
 					name: strings.SalaryStructure,
 					url: '/admin/payroll/salaryStructure',
-					icon: 'fas fa-hospital-user',
+					icon: 'fas fa-chalkboard-teacher',
 					path: 'ViewSalaryStructure',
 				},
 				{

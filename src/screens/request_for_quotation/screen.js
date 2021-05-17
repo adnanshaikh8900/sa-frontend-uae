@@ -419,6 +419,8 @@ class RequestForQuotation extends React.Component {
 	}
 
 	renderActionForState = (id) => {
+		this.props.purchaseOrderAction.getVatList();
+		this.props.purchaseOrderAction.getProductList();
 		this.props.requestForQuotationDetailsAction.getRFQeById(id).then((res) => {
 			this.setState({		
 				// current_rfq_id: this.props.location.state.id,
@@ -1161,8 +1163,8 @@ class RequestForQuotation extends React.Component {
 				//	getInvoice={this.props.purchaseOrderCreateAction.getPoNo()}
 					prefixData={this.state.prefixData}
 				//	nextprefixData={this.state.nextprefixData}
-					getVat={this.props.purchaseOrderAction.getVatList()}
-					getProductList={this.props.purchaseOrderAction.getProductList()}
+				//	getVat={this.props.purchaseOrderAction.getVatList()}
+				//	getProductList={this.props.purchaseOrderAction.getProductList()}
 					createPO={this.props.purchaseOrderCreateAction.createPO}
                     totalAmount={this.state.totalAmount}
 					totalVatAmount={this.state.totalVatAmount}

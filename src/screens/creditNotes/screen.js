@@ -791,8 +791,8 @@ class CreditNotes extends React.Component {
 							)}
 							<Row>
 								<Col lg={12}>
-									<div className="mb-4 status-panel p-3">
-										{/* <Row className="align-items-center justify-content-around">
+									{/* <div className="mb-4 status-panel p-3">
+										<Row className="align-items-center justify-content-around">
 											<div className="h4 mb-0 d-flex align-items-center ">
 												<img
 													alt="overdue"
@@ -907,8 +907,8 @@ class CreditNotes extends React.Component {
 													</h3>
 												</div>
 											</div>
-										</Row> */}
-									</div>
+										</Row>
+									</div> */}
 									<div className="d-flex justify-content-end">
 										<ButtonGroup size="sm">
 											{/* <Button

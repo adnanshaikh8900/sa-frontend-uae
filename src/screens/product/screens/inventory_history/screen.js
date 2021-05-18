@@ -381,6 +381,7 @@ class InventoryHistory extends React.Component {
                                                         inventory_history_list.length > 0 ? (
                                                             inventory_history_list.map(
                                                             (item, index) => {
+																if(index==0){
                                                             return(
                                                                       <table><tr
 																	  style={{ background: '#f7f7f7' }}
@@ -413,7 +414,9 @@ class InventoryHistory extends React.Component {
 																  <div><h5>{Object.values(item['productname'])} </h5></div>
 																	  {console.log(Object.values(item['productname']),"productname")}
 																  </b>
-															  </td></tr></table>  );})):" "}
+															  </td></tr></table>  )
+															  }
+															  ;})):" "}
 															 
 															  <br></br>
 															  <br></br>

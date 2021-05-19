@@ -140,15 +140,16 @@ class ViewCustomerInvoice extends React.Component {
 									)}
 									content={() => this.componentRef}
 								/>
-
-								<p
-									className="close"
-									onClick={() => {
-										this.props.history.push('/admin/income/customer-invoice');
-									}}
-								>
-									X
-								</p>
+										<Button
+											type="button"
+											className="btn btn-sm print-btn"
+											style={{color: "black"}}
+											onClick={() => {
+												this.props.history.push('/admin/income/customer-invoice');
+											}}
+										>
+										X
+										</Button>
 							</div>
 							<div>
 							<PDFExport

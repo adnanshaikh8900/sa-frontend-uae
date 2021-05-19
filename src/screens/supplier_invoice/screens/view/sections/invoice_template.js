@@ -196,7 +196,7 @@ class InvoiceTemplate extends Component {
 								<h4 className="mb-1 ml-2"><b>{companyData && companyData.company
 											? companyData.company.companyName
 											: ''}</b></h4>
-								<h6 className="mb-1 ml-2">#{invoiceData.referenceNumber}</h6>
+								<h6 className="mb-1 ml-2">Invoice  # {invoiceData.referenceNumber}</h6>
 								<h6 className="mb-1 ml-2"><b>Balance Due:{invoiceData.dueAmount ? (
 														<Currency
 															value={invoiceData.dueAmount}

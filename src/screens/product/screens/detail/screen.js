@@ -588,7 +588,6 @@ class DetailProduct extends React.Component {
 			let obj = {label: item.label.contactName, value: item.value}
 			tmpSupplier_list.push(obj)
 		})
-	console.log(inventory_list);
 		return (
 			<div className="detail-product-screen">
 				<div className="animated fadeIn">
@@ -1061,7 +1060,7 @@ class DetailProduct extends React.Component {
 																	</Col><Col>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="transactionCategoryId">
-																			 {strings.Category}
+																		{strings.Account}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -1260,7 +1259,7 @@ class DetailProduct extends React.Component {
 																	<Col>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="transactionCategoryId">
-																			 {strings.Category}
+																		{strings.Account}
 																		</Label>
 																		<Select
 																			styles={customStyles}

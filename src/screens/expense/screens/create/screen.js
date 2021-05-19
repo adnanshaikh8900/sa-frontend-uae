@@ -672,7 +672,6 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	/>
 																</FormGroup>
 															</Col>
-															{!props.values.payee && (
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="payMode">Pay Through</Label>
@@ -718,7 +717,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																			)}
 																	</FormGroup>
 																</Col>
-															)}
+															
 															{!props.values.payee && payMode.value === 'BANK' && (
 																<Col lg={3}>
 																	<FormGroup className="mb-3">

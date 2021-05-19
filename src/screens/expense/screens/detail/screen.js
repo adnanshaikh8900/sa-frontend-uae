@@ -757,7 +757,7 @@ class DetailExpense extends React.Component {
 																		/>
 																	</FormGroup>
 																</Col>
-																{!props.values.payee && (
+																
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="pay_through">
@@ -811,7 +811,6 @@ class DetailExpense extends React.Component {
 																				)}
 																		</FormGroup>
 																	</Col>
-																)}
 																{!props.values.payee &&
 																	props.values.payMode === 'BANK' && (
 																		<Col lg={3}>
@@ -871,15 +870,14 @@ class DetailExpense extends React.Component {
 																	)}
 															</Row>
 															<hr />
-																<Row>
+															<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																<Col>
 																<Label htmlFor="currency">
-																		{strings.CurrencyExchangeRate}
+																{strings.CurrencyExchangeRate}  
 																	</Label>	
 																</Col>
 																</Row>
-																
-																<Row>
+																<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																<Col lg={1}>
 																<Input
 																		disabled
@@ -899,12 +897,12 @@ class DetailExpense extends React.Component {
 																		<Input
 																		disabled	
 																			className="form-control"
-																			id="currencyName"
-																			name="currencyName"
+																			id="curreancyname"
+																			name="curreancyname"
 																			
-																			value={props.values.currencyName}
+																			value={props.values.curreancyname}
 																			onChange={(value) => {
-																				props.handleChange('currencyName')(
+																				props.handleChange('curreancyname')(
 																					value,
 																				);
 																			}}

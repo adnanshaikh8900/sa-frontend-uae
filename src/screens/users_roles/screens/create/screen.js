@@ -56,6 +56,7 @@ class CreateRole extends React.Component {
 			checked: [],
 			roleList: [],
 			roleexist: false,
+			disabled: false
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExDecimal = /^[0-9]*(\.[0-9]{0,2})?$/;
@@ -367,7 +368,11 @@ class CreateRole extends React.Component {
 																		props.handleSubmit();
 																	});
 																}}
+																
 															>
+																		{this.state.disabled
+																			? 'Creating...'
+																			: '' }
 																<i className="fa fa-dot-circle-o"></i> Create
 															</Button>
 															<Button
@@ -380,6 +385,9 @@ class CreateRole extends React.Component {
 																	});
 																}}
 															>
+																		{this.state.disabled
+																			? 'Creating...'
+																			: '' }
 																<i className="fa fa-refresh"></i> Create and
 																More
 															</Button>

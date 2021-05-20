@@ -1948,7 +1948,7 @@ console.log(po_list)
 																								className="btn-square mr-3"
 																							>
 																								<i className="fa fa-upload"></i>{' '}
-																								{strings.Upload}
+																								{strings.upload}
 																							</Button>
 																							<input
 																								id="fileInput"

@@ -172,6 +172,27 @@ class PayrollEmployee extends React.Component {
         );
     };
 
+    fullname = (cell, row) => {
+		return (
+			<label
+				className="mb-0 label-bank"
+				style={{
+					cursor: 'pointer',
+					}}
+				// onClick={() =>
+				// 	this.props.history.push('/admin/banking/bank-account/transaction', {
+				// 		bankAccountId: row.bankAccountId,
+				// 		closingBalance: row.closingBalance,
+				// 		openingBalance: row.openingBalance,
+				// 		accounName: row.accounName,
+				// 	})
+				// }
+			>
+				{row.fullName}
+			</label>
+		);
+	};
+
     // goToDetail = (row) => {
     //   this.props.history.push('/admin/payroll/employee/detail', { id: row.id })
     // }
@@ -442,6 +463,7 @@ class PayrollEmployee extends React.Component {
                                                         dataField="fullName"
                                                         dataSort
                                                         width="15%"
+                                                        dataFormat={this.fullname}
                                                     >
                                                         Full Name
                           </TableHeaderColumn>

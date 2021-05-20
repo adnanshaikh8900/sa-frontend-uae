@@ -884,7 +884,7 @@ console.log(quotation_list)
 												/>
 											</Col> */}
 										
-											<Col lg={2} className="mb-1">
+											{/* <Col lg={2} className="mb-1">
 												<Select
 													styles={customStyles}
 													className=""
@@ -911,7 +911,7 @@ console.log(quotation_list)
 													}}
 													placeholder="Status"
 												/>
-											</Col>
+											</Col> */}
 											<Col lg={2} className="pl-0 pr-0">
 												<Button
 													type="button"

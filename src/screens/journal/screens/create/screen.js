@@ -806,7 +806,7 @@ class CreateJournal extends React.Component {
 															</Col>
 														</Row>
 														<Row>
-															<Col lg={8}>
+															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="description">{strings.Notes}</Label>
 																	<Input

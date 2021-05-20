@@ -320,7 +320,7 @@ class PayrollModal extends React.Component {
                                                                         <tr>
                                                                             <td>{item.name}</td>
                                                                             <td>{item.value ? (
-                                                                                item.value.toFixed (2)) : ( " ")
+                                                                                item.value.toFixed (2)) : (" ")
                                                                             }</td>
                                                                         </tr>
 
@@ -343,17 +343,18 @@ class PayrollModal extends React.Component {
                                                                 </thead>
                                                               
                                                                     <tbody>
-                                                                    {Object.values(
+                                                                    {this.state.selectedData.salaryDetailAsNoOfDaysMap.Deductions ? (
+																	Object.values(
                                                                         this.state.selectedData.salaryDetailAsNoOfDaysMap.Deductions,
                                                                     ).map((item) => ( 
                                                                         <tr>
                                                                             <td>{item.name}</td>
                                                                             <td>{item.value ? (
-                                                                                item.value.toFixed (2)) : ( " ")
+                                                                                item.value.toFixed (2)) : (" ")
                                                                             }</td>
                                                                         </tr>
 
-                                                                    ))}
+                                                                    )) ):(   <tr></tr>)}
                                                                     </tbody>
                                                                     </Table>
 <hr></hr>                                                                    <Row style={{backgroundColor:'#dfe9f7'}}>

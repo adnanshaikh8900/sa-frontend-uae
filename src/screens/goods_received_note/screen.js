@@ -943,7 +943,7 @@ console.log(request_for_quotation_data)
 												/>
 											</Col> */}
 										
-											<Col lg={2} className="mb-1">
+											{/* <Col lg={2} className="mb-1">
 												<Select
 													styles={customStyles}
 													className=""
@@ -970,7 +970,7 @@ console.log(request_for_quotation_data)
 													}}
 													placeholder="Status"
 												/>
-											</Col>
+											</Col> */}
 											<Col lg={2} className="pl-0 pr-0">
 												<Button
 													type="button"

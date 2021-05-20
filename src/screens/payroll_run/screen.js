@@ -519,17 +519,18 @@ class PayrollRun extends React.Component {
 														}}
 													/>
 												</Col>
-                                                </Row>
-									<Button
+												<Col>
+												<Button
 													color="primary"
-													className="btn-square mr-1"
+													className="btn-square mt-4"
 													onClick={this.generateSalary}
 													disabled={selectedRows.length === 0}
 												>
 													<i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
-													Bulk Delete
+												Generate Salary
 												</Button>
-
+												</Col>
+                                                </Row>
 										<div >
                                         <BootstrapTable
                                                     selectRow={this.selectRowProp}
@@ -542,7 +543,7 @@ class PayrollRun extends React.Component {
                                                     keyField="employeeId"
                                                     remote
                                                     fetchInfo={{ dataTotalSize: payroll_employee_list.count ? payroll_employee_list.count : 0 }}
-                                                    className="employee-table"
+                                                    className="employee-table mt-4"
                                                     trClassName="cursor-pointer"
                                                     csvFileName="payroll_employee_list.csv"
                                                     ref={(node) => this.table = node}

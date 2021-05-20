@@ -485,5 +485,7 @@ UpdateCurrencyConversion:"Update Currency Conversion",
 ContactType:"Contact Type",
 PaymentForSupplierInvoice:"Payment For Supplier Invoice",
 Approve:"Approve",
+ReceiptNumber: "Receipt Number",
+ReceiptAttachment: "Receipt Attachment",
 }
 export { en }

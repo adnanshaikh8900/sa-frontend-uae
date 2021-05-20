@@ -211,11 +211,11 @@ class RequestForQuotation extends React.Component {
 
 	renderRFQStatus = (cell, row) => {
 		let classname = '';
-		if (row.status === 'Send') {
+		if (row.status === 'Closed') {
 			classname = 'label-success';
 		} else if (row.status === 'Draft') {
 			classname = 'label-currency';
-		} else if (row.status === 'Closed') {
+		} else if (row.status === 'Sent') {
 			classname = 'label-PartiallyPaid';
 		} else {
 			classname = 'label-overdue';
@@ -962,7 +962,7 @@ class RequestForQuotation extends React.Component {
 												/>
 											</Col> */}
 										
-											<Col lg={2} className="mb-1">
+											{/* <Col lg={2} className="mb-1">
 												<Select
 													styles={customStyles}
 													className=""
@@ -989,7 +989,7 @@ class RequestForQuotation extends React.Component {
 													}}
 													placeholder="Status"
 												/>
-											</Col>
+											</Col> */}
 											<Col lg={2} className="pl-0 pr-0">
 												<Button
 													type="button"

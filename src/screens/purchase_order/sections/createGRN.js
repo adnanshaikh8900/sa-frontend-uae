@@ -118,6 +118,7 @@ class CreateGoodsReceivedNote extends React.Component {
 				total_net: 0,
 				term: '',
 				totalAmount: 0,
+				totalVatAmount: 0,
 				notes: '',
 				type: 4,
 				supplierReferenceNumber: '',

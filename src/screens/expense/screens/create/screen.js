@@ -567,6 +567,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																				  )
 																				: []
 																		}
+																		placeholder="Select Currency"
 																		value={
 																			currency_convert_list &&
 																			selectCurrencyFactory

@@ -748,9 +748,9 @@ class CreateEmployeePayroll extends React.Component {
                                 <NavItem>
                                     <NavLink
                                         active={this.state.activeTab[0] === '4'}
-                                    onClick={() => {
-                                    	this.toggle(0, '4');
-                                    }}
+                                    // onClick={() => {
+                                    // 	this.toggle(0, '4');
+                                    // }}
                                     >
                                         Salary Setup
 									</NavLink>

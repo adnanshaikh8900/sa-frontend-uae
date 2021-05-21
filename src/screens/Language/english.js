@@ -168,7 +168,7 @@ EmployeeDesignation:"Employee Designation",
 //Add expense		
 CreateExpense:"Create Expense",		
 ExpenseCategory:"Expense Category",		
-PaidBy:"Paid To",		
+PaidBy:"Paid By",		
 ExpenseDate:"Expense Date",						
 Tax:"Tax",		
 CurrencyExchangeRate:"Currency Exchange Rate",		

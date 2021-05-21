@@ -515,7 +515,7 @@ class DetailExpense extends React.Component {
 																</Col>
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
-																		<Label htmlFor="payee">{strings.Payee}</Label>
+																		<Label htmlFor="payee">{strings.PaidBy}</Label>
 																		<Select
 																			styles={customStyles}
 																			options={

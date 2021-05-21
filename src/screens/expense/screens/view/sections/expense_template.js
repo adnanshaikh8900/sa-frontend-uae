@@ -83,7 +83,7 @@ class ExpenseTemplate extends Component {
 
 <Table  striped>
 <tbody  >
-    <tr>      <td className="ml-3" style={{width:'245px'}}>	<b>Paid To</b> :</td> 
+    <tr>      <td className="ml-3" style={{width:'245px'}}>	<b>Paid By</b> :</td> 
 	           <td> {expenseData.payee}</td>
 	</tr>
 

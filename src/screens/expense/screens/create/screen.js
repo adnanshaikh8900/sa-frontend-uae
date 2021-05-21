@@ -463,22 +463,22 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	<Select
 																		styles={customStyles}
 																		options={
-																			pay_to_list
+																			user_list
 																				? selectOptionsFactory.renderOptions(
 																						'label',
 																						'value',
-																						pay_to_list,
+																						user_list,
 																						'Payee',
 																				  )
 																				: []
 																		}
 																		value={
-																			pay_to_list &&
+																			user_list &&
 																			selectOptionsFactory
 																				.renderOptions(
 																					'label',
 																					'value',
-																					pay_to_list,
+																					user_list,
 																					'Payee',
 																				)
 																				.find(
@@ -487,6 +487,31 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																						+props.values.payee,
 																				)
 																		}
+																		// options={
+																		// 	pay_to_list
+																		// 		? selectOptionsFactory.renderOptions(
+																		// 				'label',
+																		// 				'value',
+																		// 				pay_to_list,
+																		// 				'Payee',
+																		// 		  )
+																		// 		: []
+																		// }
+																		// value={
+																		// 	pay_to_list &&
+																		// 	selectOptionsFactory
+																		// 		.renderOptions(
+																		// 			'label',
+																		// 			'value',
+																		// 			pay_to_list,
+																		// 			'Payee',
+																		// 		)
+																		// 		.find(
+																		// 			(option) =>
+																		// 				option.value ===
+																		// 				+props.values.payee,
+																		// 		)
+																		// }
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				props.handleChange('payee')(

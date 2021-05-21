@@ -127,7 +127,7 @@ class CreateEmployeePayroll extends React.Component {
                 },
             ],
             list: [],
-
+            isDisabled:false,
             loading: false,
             createMore: false,
             initValue: {
@@ -780,16 +780,20 @@ class CreateEmployeePayroll extends React.Component {
                                                                         validationSchema={Yup.object().shape({
                                                                             firstName: Yup.string()
                                                                                 .required("first Name is Required"),
-                                                                            // lastName: Yup.string()
-                                                                            // .required("Last Name is Required"),
-                                                                            // email: Yup.string()
-                                                                            // .email("Valid Email Required"),
-                                                                            // employeeDesignationId : Yup.string()
-                                                                            // .required("Designation is required"),
+                                                                            lastName: Yup.string()
+                                                                            .required("Last Name is Required"),
+                                                                            email: Yup.string()
+                                                                            .required("Valid Email Required"),
                                                                             // salaryRoleId :  Yup.string()
                                                                             // .required(" Employee Role is required"),
-                                                                            // dob: Yup.date()
-                                                                            //     .required('DOB is Required')                   
+                                                                            dob: Yup.date()
+                                                                            .required('DOB is Required') ,
+                                                                            // mobileNumber : Yup.date()
+                                                                            // .required('Mobile Number is Required') ,  
+                                                                            // active : Yup.date()
+                                                                            // .required('status is Required') ,  
+                                                                            // employeeDesignationId : Yup.date()
+                                                                            // .required('Designation is Required') ,
                                                                         })}
                                                                     >
                                                                         {(props) => (
@@ -853,7 +857,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                             </Col>
                                                                                             <Col lg={4}>
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span>Middle Name</Label>
+                                                                                                    <Label htmlFor="select">Middle Name</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="middleName"
@@ -912,7 +916,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
                                                                                                     <Label htmlFor="mobileNumber">
-                                                                                                        <span className="text-danger">*</span>Mobile
+                                                                                                        Mobile
 																		Number
 																	</Label>
                                                                                                     <PhoneInput
@@ -935,17 +939,15 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                                 : ''
                                                                                                         }
                                                                                                     />
-                                                                                                    {props.errors.mobileNumber &&
-                                                                                                        props.touched.mobileNumber && (
-                                                                                                            <div className="invalid-feedback">
-                                                                                                                {props.errors.mobileNumber}
-                                                                                                            </div>
-                                                                                                        )}
+                                                                                                     {props.errors.mobileNumber && props.touched.mobileNumber && (
+                                                                                                        <div className="invalid-feedback">{props.errors.mobileNumber}</div>
+                                                                                                    )}
+                                                                                                   
                                                                                                 </FormGroup>
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup className="mb-3">
-                                                                                                    <Label htmlFor="active">Status</Label>
+                                                                                                    <Label htmlFor="active"><span className="text-danger">*</span>Status</Label>
                                                                                                     <div>
                                                                                                         <FormGroup check inline>
                                                                                                             <div className="custom-radio custom-control">
@@ -1111,7 +1113,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                         <Row>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="parentId"><span className="text-danger">*</span>Reports To</Label>
+                                                                                                    <Label htmlFor="parentId">Reports To</Label>
                                                                                                     <Select
 
                                                                                                         options={
@@ -1167,14 +1169,14 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                             props.handleChange('employeeDesignationId')(value);
 
                                                                                                         }}
-                                                                                                        className={`${props.errors.designationId && props.touched.designationId
+                                                                                                        className={`${props.errors.employeeDesignationId && props.touched.employeeDesignationId
                                                                                                             ? 'is-invalid'
                                                                                                             : ''
                                                                                                             }`}
                                                                                                     />
-                                                                                                    {props.errors.designationId && props.touched.designationId && (
+                                                                                                    {props.errors.employeeDesignationId && props.touched.employeeDesignationId && (
                                                                                                         <div className="invalid-feedback">
-                                                                                                            {props.errors.designationId}
+                                                                                                            {props.errors.employeeDesignationId}
                                                                                                         </div>
                                                                                                     )}
                                                                                                 </FormGroup>
@@ -1423,18 +1425,13 @@ class CreateEmployeePayroll extends React.Component {
                                                                             this.handleSubmitForEmployement(values, resetForm)
                                                                         }}
                                                                         validationSchema={Yup.object().shape({
-                                                                            // firstName: Yup.string()
-                                                                            //     .required("first Name is Required"),
-                                                                            // lastName: Yup.string()
-                                                                            // .required("Last Name is Required"),
-                                                                            // email: Yup.string()
-                                                                            // .email("Valid Email Required"),
-                                                                            // employeeDesignationId : Yup.string()
-                                                                            // .required("Designation is required"),
-                                                                            // salaryRoleId :  Yup.string()
-                                                                            // .required(" Employee Role is required"),
-                                                                            // dob: Yup.date()
-                                                                            //     .required('DOB is Required')                   
+                                                                            employeeCode: Yup.string()
+                                                                                .required("employee Code is Required"),
+                                                                                salaryRoleId: Yup.string()
+                                                                            .required("salary Role is Required"),
+                                                                
+                                                                            dateOfJoining: Yup.date()
+                                                                                .required('date Of Joining is Required')                   
                                                                         })}
                                                                     >
                                                                         {(props) => (
@@ -1448,7 +1445,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                         <Row>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select">Employee Code </Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span>Employee Code </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="employeeCode"
@@ -1584,7 +1581,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                             props.handleChange("dateOfJoining")(value)
                                                                                                         }}
                                                                                                     />
-                                                                                                    {props.errors.dob && props.touched.dateOfJoining && (
+                                                                                                    {props.errors.dateOfJoining && props.touched.dateOfJoining && (
                                                                                                         <div className="invalid-feedback">{props.errors.dateOfJoining}</div>
                                                                                                     )}
                                                                                                 </FormGroup>
@@ -1770,18 +1767,12 @@ class CreateEmployeePayroll extends React.Component {
                                                                             this.handleSubmitForFinancial(values, resetForm)
                                                                         }}
                                                                         validationSchema={Yup.object().shape({
-                                                                            // firstName: Yup.string()
-                                                                            //     .required("first Name is Required"),
-                                                                            // lastName: Yup.string()
-                                                                            // .required("Last Name is Required"),
-                                                                            // email: Yup.string()
-                                                                            // .email("Valid Email Required"),
-                                                                            // employeeDesignationId : Yup.string()
-                                                                            // .required("Designation is required"),
-                                                                            // salaryRoleId :  Yup.string()
-                                                                            // .required(" Employee Role is required"),
-                                                                            // dob: Yup.date()
-                                                                            //     .required('DOB is Required')                   
+                                                                            accountHolderName: Yup.string()
+                                                                                .required("Account Holder Name is Required"),
+                                                                            accountNumber: Yup.string()
+                                                                            .required("Account Number is Required"),
+                                                                            
+                                                                                           
                                                                         })}
                                                                     >
                                                                         {(props) => (
@@ -1798,7 +1789,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                         <Row  >
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select">Account Holder Name </Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span>Account Holder Name </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="accountHolderName"
@@ -1818,7 +1809,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select">Account Number</Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span>Account Number</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="accountNumber"
@@ -1838,7 +1829,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="labourCard">Bank Name</Label>
+                                                                                                    <Label htmlFor="select">Bank Name </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="bankName"
@@ -1852,11 +1843,8 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                         className={props.errors.bankName && props.touched.bankName ? "is-invalid" : ""}
                                                                                                     />
                                                                                                     {props.errors.bankName && props.touched.bankName && (
-                                                                                                        <div className="invalid-feedback">
-                                                                                                            {props.errors.bankName}
-                                                                                                        </div>
+                                                                                                        <div className="invalid-feedback">{props.errors.bankName}</div>
                                                                                                     )}
-
                                                                                                 </FormGroup>
                                                                                             </Col>
                                                                                         </Row>
@@ -1996,8 +1984,8 @@ class CreateEmployeePayroll extends React.Component {
                                             this.handleSubmitForSalary(values, resetForm)
                                         }}
                                         validationSchema={Yup.object().shape({
-                                            // firstName: Yup.string()
-                                            //     .required("first Name is Required"),
+                                            CTC: Yup.string()
+                                                .required("CTC is Required"),
                                             // lastName: Yup.string()
                                             // .required("Last Name is Required"),
                                             // email: Yup.string()
@@ -2013,16 +2001,18 @@ class CreateEmployeePayroll extends React.Component {
                                         {(props) => (
 
                                             <Form onSubmit={props.handleSubmit}>
-                                                <Row>
-                                                    <Col lg={4}>
-                                                        <FormGroup>
-                                                         <Label>  CTC : </Label>
+                                                <Card  >
+                                                <div style={{textAlign:"center"}}>
+                                                        <FormGroup className="mt-3"   style={{textAlign:"center",display: "inline-grid"}} >
+                                                         <Label><span className="text-danger">*</span>  CTC : </Label>
                                                             <Input
                                                                 type="text"
                                                                 id="CTC"
+                                                                size="30"
                                                                 name="CTC"
+                                                                style={{textAlign:"center"}}
                                                                 value={props.values.CTC}
-                                                                placeholder="Enter CTC"
+                                                                placeholder="Enter CTC here"
                                                                 onChange={(option) => {
                                                                     if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('CTC')(option) }
                                                                     this.updateSalary(option.target.value);
@@ -2030,19 +2020,19 @@ class CreateEmployeePayroll extends React.Component {
                                                                 }}
                                                                 className={props.errors.CTC && props.touched.CTC ? "is-invalid" : ""}
                                                             />
-                                                            {props.errors.swiftCTCCode && props.touched.CTC && (
+                                                            {props.errors.CTC && props.touched.CTC && (
                                                                 <div className="invalid-feedback">{props.errors.CTC}</div>
                                                             )}
                                                         </FormGroup>
-                                                    </Col>
-                                                </Row>
+                                                        </div>
+                                                </Card>
                                                 <Row>
                                                     <Row>
                                                         <Col lg={8}>
                                                             <h4>Fixed Earnings</h4>
-                                                            <Table style={{border:"3px solid #0ba1de"}} >
-                                                                <thead >
-                                                                    <tr style={{border:"3px solid #0ba1de"}}>
+                                                            <Table className="text-center" style={{border:"3px solid #2165d8",    width: '133%'}} >
+                                                                <thead style={{border:"3px solid #2165d8"}}>
+                                                                      <tr style={{border:"3px solid #2165d8",    background: '#2266d8',color:"white"}}>
                                                                         {this.columnHeader1.map((column, index) => {
                                                                             return (
                                                                                 <th>
@@ -2054,17 +2044,18 @@ class CreateEmployeePayroll extends React.Component {
                                                                 </thead>
                                                                 <tbody>
                                                                     {Object.values(
-                                                                        this.state.Fixed,
+                                                                     this.state.Fixed,
                                                                     ).map((item) => (
                                                                         <tr>
-                                                                            {/* <td className="pt-1 pb-1">{item.id}</td> */}
-                                                                            <td className="pt-1 pb-1">{item.description}</td>
+                                                                            {/* <td >{item.id}</td> */}
+                                                                            <td style={{border:"3px solid #2165d8"}} >{item.description}</td>
                                                                             {item.formula ?
                                                                                 (
-                                                                                    <td>
+                                                                                    <td style={{border:"3px solid #2165d8"}}>
                                                                                         <input
                                                                                             type="number"
                                                                                             size="30"
+                                                                                            style={{textAlign:"center"}}
                                                                                             id="formula"
                                                                                             name="formula"
                                                                                             value={item.formula}
@@ -2073,44 +2064,50 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                 this.updateSalary(this.state.CTC);
 
                                                                                             }}
-                                                                                        />% of CTC
+                                                                                        />{' '}% of CTC
                                                                                     </td>
                                                                                 ) : (
-                                                                                    <td>Fixed amount</td>)
+                                                                                    <td style={{border:"3px solid #2165d8"}}>Fixed amount</td>)
                                                                             }
                                                                             {item.formula ?
-                                                                                (<td className="pt-1 pb-1">
-                                                                                    <input
+                                                                                (<td style={{border:"3px solid #2165d8"}}
+                                                                                 >
+                                                                                      <input
                                                                                         type="text"
                                                                                         size="30"
+                                                                                        style={{textAlign:"center"}}
                                                                                         value={item.monthlyAmount}
                                                                                         id='' />
                                                                                 </td>
 
                                                                                 ) : (
-                                                                                    <td className="pt-1 pb-1">
+                                                                                    <td style={{border:"3px solid #2165d8"}} >
                                                                                         <input
                                                                                             type="text"
                                                                                             size="30"
+                                                                                            style={{textAlign:"center"}}
                                                                                             value={item.flatAmount}
                                                                                             id='' />
                                                                                     </td>
                                                                                 )}
 
                                                                             {item.formula ?
-                                                                                (<td className="pt-1 pb-1">
-                                                                                    <input
+                                                                                (<td style={{border:"3px solid #2165d8"}} >
+                                                                                      <input
                                                                                         type="text"
                                                                                         size="30"
+                                                                                        style={{textAlign:"center"}}
+                                                                                        
                                                                                         value={item.yearlyAmount}
                                                                                         id='' />
                                                                                 </td>
 
                                                                                 ) : (
-                                                                                    <td className="pt-1 pb-1">
+                                                                                    <td style={{border:"3px solid #2165d8"}} >
                                                                                         <input
                                                                                             type="text"
                                                                                             size="30"
+                                                                                            style={{textAlign:"center"}}
                                                                                             value={item.flatAmount * 12}
                                                                                             id='' />
                                                                                     </td>
@@ -2133,61 +2130,78 @@ class CreateEmployeePayroll extends React.Component {
                                                         </Col>
                                                         <Col lg={8}>
                                                             <h4>Variable Earnings</h4>
-                                                            <Table style={{border:"3px solid #0ba1de"}}>
+                                                            <Table className="text-center" style={{border:"3px solid #2165d8",    width: '133%'}}>
+                                                            <thead style={{border:"3px solid #2165d8"}}>
+                                                                      <tr style={{border:"3px solid #2165d8",    background: '#2266d8',color:"white"}}>
+                                                                        {this.columnHeader1.map((column, index) => {
+                                                                            return (
+                                                                                <th>
+                                                                                    {column.label}
+                                                                                </th>
+                                                                            );
+                                                                        })}
+                                                                    </tr>
+                                                                </thead>
                                                                 <tbody>
                                                                 {this.state.Variable  ? (
                                                                     Object.values(
                                                                         this.state.Variable,
                                                                     ).map((item) => (
                                                                         <tr>
-                                                                            {/* <td className="pt-1 pb-1">{item.id}</td> */}
-                                                                            <td className="pt-1 pb-1">{item.description}</td>
+                                                                            {/* <td >{item.id}</td> */}
+                                                                            <td style={{border:"3px solid #2165d8"}} >{item.description}</td>
                                                                             {item.formula ?
                                                                                 (
-                                                                                    <td>
+                                                                                    <td style={{border:"3px solid #2165d8"}}>
                                                                                         <input
                                                                                             type="number"
+                                                                                            style={{textAlign:"center"}}
                                                                                             size="30"
+                                                                                            
                                                                                             value={item.formula}
                                                                                             id=''
-                                                                                        />% of CTC
+                                                                                        />{' '}% of CTC
                                                                                     </td>
                                                                                 ) : (
-                                                                                    <label>Fixed amount</label>)
+                                                                                    <td style={{border:"3px solid #2165d8"}}>Fixed amount</td>)
                                                                             }
                                                                             {item.formula ?
-                                                                                (<td className="pt-1 pb-1">
-                                                                                    <input
+                                                                                (<td style={{border:"3px solid #2165d8"}} >
+                                                                                      <input
                                                                                         type="text"
                                                                                         size="30"
+                                                                                        style={{textAlign:"center"}}
                                                                                         value={item.monthlyAmount}
                                                                                         id='' />
                                                                                 </td>
 
                                                                                 ) : (
-                                                                                    <td className="pt-1 pb-1">
+                                                                                    <td style={{border:"3px solid #2165d8"}} >
                                                                                         <input
                                                                                             type="text"
                                                                                             size="30"
+                                                                                            style={{textAlign:"center"}}
                                                                                             value={item.flatAmount}
                                                                                             id='' />
                                                                                     </td>
                                                                                 )}
 
                                                                             {item.formula ?
-                                                                                (<td className="pt-1 pb-1">
-                                                                                    <input
+                                                                                (<td style={{border:"3px solid #2165d8"}} >
+                                                                                      <input
                                                                                         type="text"
                                                                                         size="30"
+                                                                                        style={{textAlign:"center"}}
                                                                                         value={item.yearlyAmount}
                                                                                         id='' />
                                                                                 </td>
 
                                                                                 ) : (
-                                                                                    <td className="pt-1 pb-1">
+                                                                                    <td style={{border:"3px solid #2165d8"}} >
                                                                                         <input
                                                                                             type="text"
                                                                                             size="30"
+                                                                                            style={{textAlign:"center"}}
                                                                                             value={item.flatAmount * 12}
                                                                                             id='' />
                                                                                     </td>
@@ -2196,7 +2210,7 @@ class CreateEmployeePayroll extends React.Component {
 
                                                                         </tr>
                                                                     ))): (
-                                                                        <tr></tr>
+                                                                        <tr style={{border:"3px solid #2165d8"}}></tr>
                                                                     )}
                                        
                                                                   
@@ -2216,73 +2230,89 @@ class CreateEmployeePayroll extends React.Component {
                                                         </Col>
                                                         <Col lg={8}>
                                                             <h4>Deductions</h4>
-                                                            <Table style={{border:"3px solid #0ba1de"}}>
-                                                             
+                                                            <Table className="text-center" style={{border:"3px solid #2165d8",    width: '133%'}}>
+                                                            <thead style={{border:"3px solid #2165d8"}}>
+                                                                      <tr style={{border:"3px solid #2165d8",    background: '#2266d8',color:"white"}}>
+                                                                        {this.columnHeader1.map((column, index) => {
+                                                                            return (
+                                                                                <th>
+                                                                                    {column.label}
+                                                                                </th>
+                                                                            );
+                                                                        })}
+                                                                    </tr>
+                                                                </thead>
                                                                 <tbody>
                                                                 {this.state.Deduction  ? (
                                                                     Object.values(
                                                                         this.state.Deduction,
                                                                     ).map((item) => (
                                                                         <tr>
-                                                                            {/* <td className="pt-1 pb-1">{item.id}</td> */}
-                                                                            <td className="pt-1 pb-1">{item.description}</td>
+                                                                            {/* <td >{item.id}</td> */}
+                                                                            <td style={{border:"3px solid #2165d8"}} >{item.description}</td>
                                                                             {item.formula ?
                                                                                 (
-                                                                                    <td>
+                                                                                    <td style={{border:"3px solid #2165d8"}}>
                                                                                         <input
                                                                                             type="number"
                                                                                             size="30"
+                                                                                            className="text-center"
                                                                                             value={item.formula}
                                                                                         // onChange={(option) => {
                                                                                         //     if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
                                                                                         //     this.updateSalary();
 
                                                                                         // }}
-                                                                                        />% of CTC
-                                                                                    </td>
+                                                                                        />{' '}% of CTC
+                                                                                    </td >
                                                                                 ) : (
-                                                                                    <label>Fixed amount</label>)
+                                                                                    <td style={{border:"3px solid #2165d8"}}>Fixed amount</td>)
                                                                             }
                                                                             {item.formula ?
-                                                                                (<td className="pt-1 pb-1">
+                                                                                (<td style={{border:"3px solid #2165d8"}} >
                                                                                     <input
+                                                                                    isDisabled={true}
                                                                                         type="text"
                                                                                         size="30"
+                                                                                        style={{textAlign:"center"}}
                                                                                         value={item.monthlyAmount}
                                                                                     />
                                                                                 </td>
 
                                                                                 ) : (
-                                                                                    <td className="pt-1 pb-1">
+                                                                                    <td style={{border:"3px solid #2165d8"}} >
                                                                                         <input
                                                                                             type="text"
                                                                                             size="30"
+                                                                                            style={{textAlign:"center"}}
                                                                                             value={item.flatAmount}
                                                                                             id='' />
                                                                                     </td>
                                                                                 )}
 
                                                                             {item.formula ?
-                                                                                (<td className="pt-1 pb-1">
-                                                                                    <input
+                                                                                (<td style={{border:"3px solid #2165d8"}} >
+                                                                                      <input
                                                                                         type="text"
                                                                                         size="30"
+                                                                                        style={{textAlign:"center"}}
                                                                                         value={item.yearlyAmount}
                                                                                         id='' />
                                                                                 </td>
 
                                                                                 ) : (
-                                                                                    <td className="pt-1 pb-1">
+                                                                                    <td style={{border:"3px solid #2165d8"}} >
                                                                                         <input
                                                                                             type="text"
                                                                                             size="30"
+                                                                                            style={{textAlign:"center"}}
                                                                                             value={item.flatAmount * 12}
                                                                                             id='' />
                                                                                     </td>
                                                                                 )}
                                                                         </tr>
                                                                     ))) : (
-                                                                        <tr></tr>
+                                                                        " "
                                                                     )}
                                                                 </tbody>
                                                             </Table>
@@ -2299,44 +2329,63 @@ class CreateEmployeePayroll extends React.Component {
 																</Button>
                                                         </Col>
                                                         <Col lg={8}>
-                                                            <Table style={{border:"3px solid #0ba1de"}}>
+                                                            <Table className="text-center" style={{border:"3px solid #2165d8" ,    width: '133%'}}>
+                                                            {/* <thead style={{border:"3px solid #2165d8"}}>
+                                                                      <tr style={{border:"3px solid #2165d8",    background: '#2266d8',color:"white"}}>
+                                                                        {this.columnHeader1.map((column, index) => {
+                                                                            return (
+                                                                                <th>
+                                                                                    {column.label}
+                                                                                </th>
+                                                                            );
+                                                                        })}
+                                                                    </tr>
+                                                                </thead> */}
                                                                 <tbody> 
                                                                     {this.state.FixedAllowance  ? (
                                                                     Object.values(
                                                                         this.state.FixedAllowance,
                                                                     ).map((item) => (
-                                                                        <tr>
+                                                                    <tr style={{border:"3px solid #2165d8"}}>
                                                                        
-                                                                        <td className="pt-1 pb-1">{item.description}</td>
+                                                                        <td style={{border:"3px solid #2165d8"}} >{item.description}</td>
                                                                        
-                                                                                <td>
-                                                                                   
-                                                                                </td>
-                                                                         
-                                                                        <td className="pt-1 pb-1">
+                                                                        <td style={{border:"3px solid #2165d8"}} >
                                                                         {item.monthlyAmount}
                                                                             </td>
 
-                                                                            <td className="pt-1 pb-1">
+                                                                            <td style={{border:"3px solid #2165d8"}} >
                                                                             {/* {props.values.CTC} */}
                                                                             {item.yearlyAmount}
                                                                             </td>
                                                                     </tr>
                                                                       ))) : (
-                                                                        <tr></tr>
+                                                                       " "
                                                                     )}
                                                                 </tbody>
                                                             </Table>
                                                           
                                                         </Col>
                                                         <Col lg={8}>
-                                                            <Table  style={{border:"3px solid #0ba1de"}}>
+                                                            <Table className="text-center"  style={{border:"3px solid #2165d8",    width: '133%'}}>
+                                                            {/* <thead style={{border:"3px solid #2165d8"}}>
+                                                                      <tr style={{border:"3px solid #2165d8",    background: '#2266d8',color:"white"}}>
+                                                                        {this.columnHeader1.map((column, index) => {
+                                                                            return (
+                                                                                <th>
+                                                                                    {column.label}
+                                                                                </th>
+                                                                            );
+                                                                        })}
+                                                                    </tr>
+                                                                </thead>  */}
                                                                 <tbody>
                                                                   
-                                                                    <tr>
-                                                                        <td className="pt-1 pb-1">Company  cost</td>
-                                                                        <td className="pt-1 pb-1">{(props.values.CTC / 12).toFixed(2)}</td>
-                                                                        <td className="pt-1 pb-1">{props.values.CTC}</td>
+                                                                    <tr style={{border:"3px solid #2165d8"}}>
+                                                                        <td style={{border:"3px solid #2165d8"}} >Company  cost</td>
+                                                                      
+                                                                        <td style={{border:"3px solid #2165d8"}} >{(props.values.CTC / 12).toFixed(2)}</td>
+                                                                        <td style={{border:"3px solid #2165d8"}} >{props.values.CTC}</td>
                                                                     </tr>
                                                                 </tbody>
                                                             </Table>

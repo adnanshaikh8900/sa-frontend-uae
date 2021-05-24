@@ -352,7 +352,7 @@ class SalaryComponentVariable extends React.Component {
 														value={props.values.formula}
 														placeholder="Enter Percentage"
 														onChange={(option) => {
-															if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('formula')(option) }
+															if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
 														}}
 														className={props.errors.formula && props.touched.formula ? "is-invalid" : ""}
 													/>

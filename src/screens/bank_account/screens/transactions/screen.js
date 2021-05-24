@@ -787,7 +787,7 @@ class BankTransactions extends React.Component {
 														{this.state.bankAccountCurrencySymbol} &nbsp;
 														{this.state.currentBalance ? (				
 															this.state.currentBalance.toFixed(2)
-															):(" ")}	
+															):(0)}	
 																						
 													</h3>
 												</Col>
@@ -797,7 +797,7 @@ class BankTransactions extends React.Component {
 													{this.state.bankAccountCurrencySymbol} &nbsp;
 
 													{this.state.closingBalance ? (
-														this.state.closingBalance.toFixed(2)): ( " ")}
+														this.state.closingBalance.toFixed(2)): ( 0)}
 													</h3>
 												</Col>
 											</Row>

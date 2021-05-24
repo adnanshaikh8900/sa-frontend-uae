@@ -377,6 +377,7 @@ class CreateBankAccount extends React.Component {
 																		styles={customStyles}
 																		id="currency"
 																		name="currency"
+																		placeholder="Select Currency"
 																		options={
 																			currency_convert_list
 																				? selectCurrencyFactory.renderOptions(
@@ -658,6 +659,7 @@ class CreateBankAccount extends React.Component {
 																		styles={customStyles}
 																		id="countrycode"
 																		name="countrycode"
+																		placeholder="Select Country"
 																		// getOptionValue={(option) =>
 																		// 	option.countrycode
 																		// }

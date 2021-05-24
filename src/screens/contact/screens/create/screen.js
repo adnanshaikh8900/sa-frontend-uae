@@ -558,6 +558,7 @@ class CreateContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="telephone">{strings.Telephone}</Label>
 																	<Input
+																	maxLength="15"
 																		type="text"
 																		id="telephone"
 																		name="telephone"

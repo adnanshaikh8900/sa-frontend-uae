@@ -1660,7 +1660,7 @@ class DetailProduct extends React.Component {
 																	</Col>
 																	
 																	</Row> */}
-												 <Row style={{display: props.values.isInventoryEnabled !== true ? 'none' : ''}}>
+												 <Row style={{display: props.values.isInventoryEnabled !== true ? 'none' : '',width:"140%"}}>
 												<div className={"ml-4 mt-2"}>
 											<BootstrapTable
 											selectRow={this.selectRowProp}

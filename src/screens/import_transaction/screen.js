@@ -440,6 +440,7 @@ class ImportTransaction extends React.Component {
 															<Col lg={3} md={7}>
 																<FormGroup>
 																	<Select
+																	placeholder="Select Configuration"
 																		value={
 																			configurationList &&
 																			selectOptionsFactory

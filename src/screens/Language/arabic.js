@@ -57,6 +57,7 @@ const ar = {
        ProfitLoss: "الربح والخسارة",
 
         //Customer invoice
+        Import:"يستورد",
       CustomerInvoices: "فواتير العملاء",
       Overdue: "المتاخره",
       DueWithinThisWeek: "مستحق خلال هذا الأسبوع",

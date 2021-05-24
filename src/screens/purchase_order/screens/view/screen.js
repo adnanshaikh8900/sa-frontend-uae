@@ -199,7 +199,7 @@ class ViewPurchaseOrder extends React.Component {
 						
 <div style={{display: this.state.PoDataList.length === 0 ? 'none' : ''}} >
 		<Table  >
-		<thead style={{backgroundColor:'#2165d8',color:'white'}}>
+		<thead style={{backgroundColor:'#2064d8',color:'white'}}>
 			<tr>
 				<th className="center" style={{ padding: '0.5rem' }}>
 					#

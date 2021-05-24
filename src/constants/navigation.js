@@ -39,7 +39,7 @@ export default {
 				{
 					name: strings.IncomeReceipts,
 					url: '/admin/income/receipt',
-					icon: 'fa fa-file-o',
+					icon: 'fas fa-receipt',
 					path: 'CustomerReceipts',
 				},
 				{
@@ -122,7 +122,7 @@ export default {
 		{
 			name: strings.Accountant,
 			url: '/admin/accountant',
-			icon: 'icon-user',
+			icon: 'fas fa-user',
 			children: [
 				{
 					name: strings.OpeningBalance,
@@ -134,7 +134,7 @@ export default {
 				{
 					name: strings.Journals,
 					url: '/admin/accountant/journal',
-					icon: 'fa fa-diamond',
+					icon: 'fas fa-gem',
 					path: 'ViewJournal',
 				},
 		
@@ -227,7 +227,7 @@ export default {
 				{
 					name: strings.VATCategory,
 					url: '/admin/master/vat-category',
-					icon: 'icon-briefcase',
+					icon: 'fas fa-briefcase',
 					path: 'ViewVatCategory',
 				},
 				{

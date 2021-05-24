@@ -2030,9 +2030,9 @@ class CreateEmployeePayroll extends React.Component {
                                                     <Row>
                                                         <Col lg={8}>
                                                             <h4>Fixed Earnings</h4>
-                                                            <Table className="text-center" style={{border:"3px solid #2165d8",    width: '133%'}} >
-                                                                <thead style={{border:"3px solid #2165d8"}}>
-                                                                      <tr style={{border:"3px solid #2165d8",    background: '#2266d8',color:"white"}}>
+                                                            <Table className="text-center" style={{border:"3px solid #2064d8",    width: '133%'}} >
+                                                                <thead style={{border:"3px solid #2064d8"}}>
+                                                                      <tr style={{border:"3px solid #2064d8",    background: '#2266d8',color:"white"}}>
                                                                         {this.columnHeader1.map((column, index) => {
                                                                             return (
                                                                                 <th>
@@ -2048,10 +2048,10 @@ class CreateEmployeePayroll extends React.Component {
                                                                     ).map((item) => (
                                                                         <tr>
                                                                             {/* <td >{item.id}</td> */}
-                                                                            <td style={{border:"3px solid #2165d8"}} >{item.description}</td>
+                                                                            <td style={{border:"3px solid #2064d8"}} >{item.description}</td>
                                                                             {item.formula ?
                                                                                 (
-                                                                                    <td style={{border:"3px solid #2165d8"}}>
+                                                                                    <td style={{border:"3px solid #2064d8"}}>
                                                                                         <input
                                                                                             type="number"
                                                                                             size="30"
@@ -2064,35 +2064,37 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                 this.updateSalary(this.state.CTC);
 
                                                                                             }}
-                                                                                        />{' '}% of CTC
+                                                                                        />{item.description !== 'Basic SALARY' ? ('' % "of Basic"): ('' % "of CTC")}
                                                                                     </td>
                                                                                 ) : (
-                                                                                    <td style={{border:"3px solid #2165d8"}}>Fixed amount</td>)
+                                                                                    <td style={{border:"3px solid #2064d8"}}>Fixed amount</td>)
                                                                             }
                                                                             {item.formula ?
-                                                                                (<td style={{border:"3px solid #2165d8"}}
+                                                                                (<td style={{border:"3px solid #2064d8"}}
                                                                                  >
                                                                                       <input
                                                                                         type="text"
                                                                                         size="30"
                                                                                         style={{textAlign:"center"}}
                                                                                         value={item.monthlyAmount}
+                                                                                        isDisabled={item.formula !== ''}
                                                                                         id='' />
                                                                                 </td>
 
                                                                                 ) : (
-                                                                                    <td style={{border:"3px solid #2165d8"}} >
+                                                                                    <td style={{border:"3px solid #2064d8"}} >
                                                                                         <input
                                                                                             type="text"
                                                                                             size="30"
                                                                                             style={{textAlign:"center"}}
+                                                                                            
                                                                                             value={item.flatAmount}
                                                                                             id='' />
                                                                                     </td>
                                                                                 )}
 
                                                                             {item.formula ?
-                                                                                (<td style={{border:"3px solid #2165d8"}} >
+                                                                                (<td style={{border:"3px solid #2064d8"}} >
                                                                                       <input
                                                                                         type="text"
                                                                                         size="30"
@@ -2103,7 +2105,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                 </td>
 
                                                                                 ) : (
-                                                                                    <td style={{border:"3px solid #2165d8"}} >
+                                                                                    <td style={{border:"3px solid #2064d8"}} >
                                                                                         <input
                                                                                             type="text"
                                                                                             size="30"
@@ -2130,9 +2132,9 @@ class CreateEmployeePayroll extends React.Component {
                                                         </Col>
                                                         <Col lg={8}>
                                                             <h4>Variable Earnings</h4>
-                                                            <Table className="text-center" style={{border:"3px solid #2165d8",    width: '133%'}}>
-                                                            <thead style={{border:"3px solid #2165d8"}}>
-                                                                      <tr style={{border:"3px solid #2165d8",    background: '#2266d8',color:"white"}}>
+                                                            <Table className="text-center" style={{border:"3px solid #2064d8",    width: '133%'}}>
+                                                            <thead style={{border:"3px solid #2064d8"}}>
+                                                                      <tr style={{border:"3px solid #2064d8",    background: '#2266d8',color:"white"}}>
                                                                         {this.columnHeader1.map((column, index) => {
                                                                             return (
                                                                                 <th>
@@ -2149,10 +2151,10 @@ class CreateEmployeePayroll extends React.Component {
                                                                     ).map((item) => (
                                                                         <tr>
                                                                             {/* <td >{item.id}</td> */}
-                                                                            <td style={{border:"3px solid #2165d8"}} >{item.description}</td>
+                                                                            <td style={{border:"3px solid #2064d8"}} >{item.description}</td>
                                                                             {item.formula ?
                                                                                 (
-                                                                                    <td style={{border:"3px solid #2165d8"}}>
+                                                                                    <td style={{border:"3px solid #2064d8"}}>
                                                                                         <input
                                                                                             type="number"
                                                                                             style={{textAlign:"center"}}
@@ -2163,10 +2165,10 @@ class CreateEmployeePayroll extends React.Component {
                                                                                         />{' '}% of CTC
                                                                                     </td>
                                                                                 ) : (
-                                                                                    <td style={{border:"3px solid #2165d8"}}>Fixed amount</td>)
+                                                                                    <td style={{border:"3px solid #2064d8"}}>Fixed amount</td>)
                                                                             }
                                                                             {item.formula ?
-                                                                                (<td style={{border:"3px solid #2165d8"}} >
+                                                                                (<td style={{border:"3px solid #2064d8"}} >
                                                                                       <input
                                                                                         type="text"
                                                                                         size="30"
@@ -2176,7 +2178,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                 </td>
 
                                                                                 ) : (
-                                                                                    <td style={{border:"3px solid #2165d8"}} >
+                                                                                    <td style={{border:"3px solid #2064d8"}} >
                                                                                         <input
                                                                                             type="text"
                                                                                             size="30"
@@ -2187,7 +2189,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                 )}
 
                                                                             {item.formula ?
-                                                                                (<td style={{border:"3px solid #2165d8"}} >
+                                                                                (<td style={{border:"3px solid #2064d8"}} >
                                                                                       <input
                                                                                         type="text"
                                                                                         size="30"
@@ -2197,7 +2199,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                 </td>
 
                                                                                 ) : (
-                                                                                    <td style={{border:"3px solid #2165d8"}} >
+                                                                                    <td style={{border:"3px solid #2064d8"}} >
                                                                                         <input
                                                                                             type="text"
                                                                                             size="30"
@@ -2210,7 +2212,7 @@ class CreateEmployeePayroll extends React.Component {
 
                                                                         </tr>
                                                                     ))): (
-                                                                        <tr style={{border:"3px solid #2165d8"}}></tr>
+                                                                        <tr style={{border:"3px solid #2064d8"}}></tr>
                                                                     )}
                                        
                                                                   
@@ -2230,9 +2232,9 @@ class CreateEmployeePayroll extends React.Component {
                                                         </Col>
                                                         <Col lg={8}>
                                                             <h4>Deductions</h4>
-                                                            <Table className="text-center" style={{border:"3px solid #2165d8",    width: '133%'}}>
-                                                            <thead style={{border:"3px solid #2165d8"}}>
-                                                                      <tr style={{border:"3px solid #2165d8",    background: '#2266d8',color:"white"}}>
+                                                            <Table className="text-center" style={{border:"3px solid #2064d8",    width: '133%'}}>
+                                                            <thead style={{border:"3px solid #2064d8"}}>
+                                                                      <tr style={{border:"3px solid #2064d8",    background: '#2266d8',color:"white"}}>
                                                                         {this.columnHeader1.map((column, index) => {
                                                                             return (
                                                                                 <th>
@@ -2249,10 +2251,10 @@ class CreateEmployeePayroll extends React.Component {
                                                                     ).map((item) => (
                                                                         <tr>
                                                                             {/* <td >{item.id}</td> */}
-                                                                            <td style={{border:"3px solid #2165d8"}} >{item.description}</td>
+                                                                            <td style={{border:"3px solid #2064d8"}} >{item.description}</td>
                                                                             {item.formula ?
                                                                                 (
-                                                                                    <td style={{border:"3px solid #2165d8"}}>
+                                                                                    <td style={{border:"3px solid #2064d8"}}>
                                                                                         <input
                                                                                             type="number"
                                                                                             size="30"
@@ -2266,10 +2268,10 @@ class CreateEmployeePayroll extends React.Component {
                                                                                         />{' '}% of CTC
                                                                                     </td >
                                                                                 ) : (
-                                                                                    <td style={{border:"3px solid #2165d8"}}>Fixed amount</td>)
+                                                                                    <td style={{border:"3px solid #2064d8"}}>Fixed amount</td>)
                                                                             }
                                                                             {item.formula ?
-                                                                                (<td style={{border:"3px solid #2165d8"}} >
+                                                                                (<td style={{border:"3px solid #2064d8"}} >
                                                                                     <input
                                                                                     isDisabled={true}
                                                                                         type="text"
@@ -2280,7 +2282,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                 </td>
 
                                                                                 ) : (
-                                                                                    <td style={{border:"3px solid #2165d8"}} >
+                                                                                    <td style={{border:"3px solid #2064d8"}} >
                                                                                         <input
                                                                                             type="text"
                                                                                             size="30"
@@ -2291,7 +2293,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                 )}
 
                                                                             {item.formula ?
-                                                                                (<td style={{border:"3px solid #2165d8"}} >
+                                                                                (<td style={{border:"3px solid #2064d8"}} >
                                                                                       <input
                                                                                         type="text"
                                                                                         size="30"
@@ -2301,7 +2303,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                 </td>
 
                                                                                 ) : (
-                                                                                    <td style={{border:"3px solid #2165d8"}} >
+                                                                                    <td style={{border:"3px solid #2064d8"}} >
                                                                                         <input
                                                                                             type="text"
                                                                                             size="30"
@@ -2329,9 +2331,9 @@ class CreateEmployeePayroll extends React.Component {
 																</Button>
                                                         </Col>
                                                         <Col lg={8}>
-                                                            <Table className="text-center" style={{border:"3px solid #2165d8" ,    width: '133%'}}>
-                                                            {/* <thead style={{border:"3px solid #2165d8"}}>
-                                                                      <tr style={{border:"3px solid #2165d8",    background: '#2266d8',color:"white"}}>
+                                                            <Table className="text-center" style={{border:"3px solid #2064d8" ,    width: '133%'}}>
+                                                            {/* <thead style={{border:"3px solid #2064d8"}}>
+                                                                      <tr style={{border:"3px solid #2064d8",    background: '#2266d8',color:"white"}}>
                                                                         {this.columnHeader1.map((column, index) => {
                                                                             return (
                                                                                 <th>
@@ -2346,30 +2348,23 @@ class CreateEmployeePayroll extends React.Component {
                                                                     Object.values(
                                                                         this.state.FixedAllowance,
                                                                     ).map((item) => (
-                                                                    <tr style={{border:"3px solid #2165d8"}}>
+                                                                    <tr style={{border:"3px solid #2064d8"}}>
                                                                        
-                                                                        <td style={{border:"3px solid #2165d8"}} >{item.description}</td>
+                                                                        <td style={{border:"3px solid #2064d8"}} >{item.description}</td>
                                                                        
-                                                                        <td style={{border:"3px solid #2165d8"}} >
-                                                                        {item.monthlyAmount}
-                                                                            </td>
+                                                                        <td style={{border:"3px solid #2064d8"}} >{item.monthlyAmount}</td>
 
-                                                                            <td style={{border:"3px solid #2165d8"}} >
-                                                                            {/* {props.values.CTC} */}
-                                                                            {item.yearlyAmount}
-                                                                            </td>
+                                                                            <td style={{border:"3px solid #2064d8"}} >{item.yearlyAmount}</td>
                                                                     </tr>
-                                                                      ))) : (
-                                                                       " "
-                                                                    )}
+                                                                      ))) : (" ")}
                                                                 </tbody>
                                                             </Table>
                                                           
                                                         </Col>
                                                         <Col lg={8}>
-                                                            <Table className="text-center"  style={{border:"3px solid #2165d8",    width: '133%'}}>
-                                                            {/* <thead style={{border:"3px solid #2165d8"}}>
-                                                                      <tr style={{border:"3px solid #2165d8",    background: '#2266d8',color:"white"}}>
+                                                            <Table className="text-center"  style={{border:"3px solid #2064d8",    width: '133%'}}>
+                                                            {/* <thead style={{border:"3px solid #2064d8"}}>
+                                                                      <tr style={{border:"3px solid #2064d8",    background: '#2266d8',color:"white"}}>
                                                                         {this.columnHeader1.map((column, index) => {
                                                                             return (
                                                                                 <th>
@@ -2381,11 +2376,11 @@ class CreateEmployeePayroll extends React.Component {
                                                                 </thead>  */}
                                                                 <tbody>
                                                                   
-                                                                    <tr style={{border:"3px solid #2165d8"}}>
-                                                                        <td style={{border:"3px solid #2165d8"}} >Company  cost</td>
+                                                                    <tr style={{border:"3px solid #2064d8"}}>
+                                                                        <td style={{border:"3px solid #2064d8"}} >{"Companycost"}</td>
                                                                       
-                                                                        <td style={{border:"3px solid #2165d8"}} >{(props.values.CTC / 12).toFixed(2)}</td>
-                                                                        <td style={{border:"3px solid #2165d8"}} >{props.values.CTC}</td>
+                                                                        <td style={{border:"3px solid #2064d8"}} >{(props.values.CTC / 12).toFixed(2)}</td>
+                                                                        <td style={{border:"3px solid #2064d8"}} >{props.values.CTC}</td>
                                                                     </tr>
                                                                 </tbody>
                                                             </Table>

@@ -181,13 +181,14 @@ class CreatePurchaseOrder extends React.Component {
 	
     static getDerivedStateFromProps(nextProps, prevState) {
         if (prevState.selectedData !== nextProps.selectedData || prevState.totalAmount !== nextProps.totalAmount ||
-			prevState.totalVatAmount != nextProps.totalVatAmount ) {
+			prevState.totalVatAmount != nextProps.totalVatAmount  ) {
 			console.log('getDerivedStateFromProps state changed',nextProps.selectedData.poQuatationLineItemRequestModelList);
-			console.log('muyts',nextProps.prefixData)
+		
 		 return { prefixData : nextProps.prefixData,
 		 	selectedData :nextProps.selectedData,
 			 totalAmount :nextProps.totalAmount,
-			 totalVatAmount :nextProps.totalVatAmount };
+			 totalVatAmount :nextProps.totalVatAmount,
+		};
         }
 		// else if(prevState.totalAmount !== nextProps.totalAmount)
 		// {
@@ -875,46 +876,42 @@ class CreatePurchaseOrder extends React.Component {
 									}
 								},
 							),
-							lineItemsString: Yup.array()
-								.required(
-									'Atleast one invoice sub detail is mandatory',
-								)
-								.of(
-									Yup.object().shape({
-										quantity: Yup.string()
-											.required('Value is Required')
-											.test(
-												'quantity',
-												'Quantity Should be Greater than 1',
-												(value) => {
-													if (value > 0) {
-														return true;
-													} else {
-														return false;
-													}
-												},
-											),
-										unitPrice: Yup.string()
-											.required('Value is Required')
-											.test(
-												'Unit Price',
-												'Unit Price Should be Greater than 1',
-												(value) => {
-													if (value > 0) {
-														return true;
-													} else {
-														return false;
-													}
-												},
-											),
-										vatCategoryId: Yup.string().required(
-											'Value is Required',
-										),
-										productId: Yup.string().required(
-											'Product is Required',
-										),
-									}),
-								),
+							// lineItemsString: Yup.array()
+							// 	.required(
+							// 		'Atleast one invoice sub detail is mandatory',
+							// 	)
+							// 	.of(
+							// 		Yup.object().shape({
+							// 			quantity: Yup.string()
+							// 				.required('Value is Required')
+							// 				.test(
+							// 					'quantity',
+							// 					'Quantity Should be Greater than 1',
+							// 					(value) => {
+							// 						if (value > 0) {
+							// 							return true;
+							// 						} else {
+							// 							return false;
+							// 						}
+							// 					},
+							// 				),
+							// 			unitPrice: Yup.string()
+							// 				.required('Value is Required')
+							// 				.test(
+							// 					'Unit Price',
+							// 					'Unit Price Should be Greater than 1',
+							// 					(value) => {
+							// 						if (value > 0) {
+							// 							return true;
+							// 						} else {
+							// 							return false;
+							// 						}
+							// 					},
+							// 				),
+								
+									
+							// 		}),
+							// 	),
 						}
 						)
 					}
@@ -1363,7 +1360,7 @@ class CreatePurchaseOrder extends React.Component {
 																							}
 																							/>
 																							)} */}
-																							{this.state.selectedData.total_net}
+																							{initValue.total_net}
 																						</label>
 																					</Col>
 																				</Row>

@@ -224,7 +224,8 @@ class CreateContact extends React.Component {
 													//       .required("PO Box Number is Required"),
 													email: Yup.string()
 														.required('Email is Required')
-														.email('Invalid Email'),
+														.email('Invalid Email')
+														,
 													// telephone: Yup.number().required(
 													//   'Telephone Number is Required',
 													// ),
@@ -241,6 +242,7 @@ class CreateContact extends React.Component {
 																}
 															},
 														),
+														billingEmail: Yup.string().email("Invalid Billing  Email ")
 													//     addressLine1: Yup.string()
 													//       .required("Address is required"),
 													// countryId: Yup.string()
@@ -906,7 +908,7 @@ class CreateContact extends React.Component {
 																				: ''
 																		}
 																	/>
-																	{props.billingEmail &&
+																	{props.errors.billingEmail &&
 																		props.touched.billingEmail && (
 																			<div className="invalid-feedback">
 																				{props.errors.billingEmail}

@@ -63,15 +63,8 @@ class InvoiceTemplate extends Component {
 								</div>
 							</div>
 							<div style={{ width: '130%',justifyContent:'center' }}>
-								<table>
-							<tbody>
-								<tr style={{
-									width: '50%',
-									margin:'0.5rem',
-									marginTop:'2.5rem',
-									marginLeft:'6rem'
-								}}>
-									<td
+							
+									<div
 										style={{
 											width: '130%',
 											fontSize: '2rem',
@@ -81,10 +74,8 @@ class InvoiceTemplate extends Component {
 										}}
 									>
 										Tax Invoice
-									</td>
-								</tr>
-								</tbody>
-								</table>
+									</div>
+								
 							</div>
 							<div
 								style={{
@@ -96,16 +87,16 @@ class InvoiceTemplate extends Component {
 							>
 								<div 	style={{
 									width: '62%',
-									margin:'0.5rem',
-									// border:'1px solid',
-									marginTop:'2.5rem',
-									marginLeft:'6rem'
+									margin:'1.5rem 9.0rem 0.5rem 8rem',
+									// // border:'1px solid',
+									// marginTop:'2.5rem',
+									// marginLeft:'6rem'
 								}}>
 								<h4 className="mb-1 ml-2"><b>{companyData && companyData.company
 											? companyData.company.companyName
 											: ''}</b></h4>
 								<h6 className="mb-1 ml-2">Invoice  # {invoiceData.referenceNumber}</h6>
-								<h6 className="mb-1 ml-2"><b>Balance Due:{invoiceData.dueAmount ? (
+								<h6 className="mb-1 ml-2"><b>Balance Due: {invoiceData.dueAmount ? (
 														<Currency
 															value={invoiceData.dueAmount}
 															currencySymbol={
@@ -143,18 +134,18 @@ class InvoiceTemplate extends Component {
 							<div style={{width: '444%'}}>
 								<div
 									style={{
-										width: '41%',
+										width: '70%',
 										margin:'0.5rem',
 										border:'1px solid',borderColor:'#c8ced3'
 									}}
 								>
-									<h6 style={{ fontWeight: '600' }} className="mb-1 mt-1 ml-2">
+									<div style={{ fontWeight: '600' }} className="mb-1 mt-1 ml-2">
 										<b>Bill To,</b>
-									</h6>
-									<h6 className="mb-1 ml-2"><b>Name:</b> {invoiceData.name}</h6>
-									<h6 className="mb-1 ml-2"><b>Company:</b> {invoiceData.organisationName}</h6>
-									<h6 className="mb-1 ml-2"><b>Email:</b> {invoiceData.email}</h6>
-									<h6 className="mb-3 ml-2"><b>Address:</b> {invoiceData.address}</h6>
+									</div>
+									<div className="mb-1 ml-2"><b>Name:</b> {invoiceData.name}</div>
+									<div className="mb-1 ml-2"><b>Company:</b> {invoiceData.organisationName}</div>
+									<div className="mb-1 ml-2"><b>Email:</b> {invoiceData.email}</div>
+									<div className="mb-3 ml-2"><b>Address:</b> {invoiceData.address}</div>
 								</div>
 							</div>
 							<div

@@ -71,7 +71,7 @@ export const getEmployeesNotInUserForDropdown = (obj) => {
 		return authApi(data)
 			.then((res) => {
 				dispatch({
-					type: USER.ROLE_LIST,
+					type: USER.EMPLOYEE_LIST,
 					payload: res.data,
 				});
 				return res;

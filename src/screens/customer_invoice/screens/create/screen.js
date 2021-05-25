@@ -1660,7 +1660,7 @@ class CreateCustomerInvoice extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
 																		<span className="text-danger">*</span>
-																		{strings.CURRENCY}
+																		{strings.Currency}
 																	</Label>
 																	<Select
 																		styles={customStyles}

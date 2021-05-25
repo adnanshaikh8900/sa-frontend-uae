@@ -1518,7 +1518,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		styles={customStyles}
 																		id="supplierId"
 																		name="supplierId"
-																		// placeholder="Select Supplier Name"
+																		placeholder="Select Supplier Name"
 																		options={
 																			tmpSupplier_list
 																				? selectOptionsFactory.renderOptions(

@@ -6,6 +6,7 @@ const fr = {
         NewSalaryRoles_Lang:"Nouveaux rôles salariaux",
 
         //sidebar
+        Import:"Importer",
         Dashboard:"Tableau de bord",
         Report:"Signaler",
         Inventory:"Inventaire",

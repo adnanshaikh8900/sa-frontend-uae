@@ -450,11 +450,12 @@ ApplyToInvoice:"Apply To Invoice",
 Refund:"Refund",
 UpdateCreditNote:"Update Credit Note",
 UpdateBankAccount:"Update Bank Account",
-ReconcileTransaction:"ReconcileTransaction",
+ReconcileTransaction:"Reconcile Transaction",
 ClosingBalance:"Closing Balance",
 RECONCILEDATE:"RECONCILE DATE",
 RECONCILEDURATION:"RECONCILE DURATION",
 CLOSINGBALANCE:"CLOSING BALANCE",
+Import:"Import",
 
 //ImportStatement
 ImportStatement:"Import Statement",	       

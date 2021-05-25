@@ -342,6 +342,7 @@ class ImportBankStatement extends React.Component {
 																	</label>
 																	<FormGroup>
 																		<Select
+																		placeholder="Select Template"
 																			options={templateList ? templateList : []}
 																			value={
 																				templateList &&
@@ -571,7 +572,7 @@ class ImportBankStatement extends React.Component {
 																	: false
 															}
 														>
-															<i className="fa fa-dot-circle-o"></i> Import
+															<i className="fa fa-dot-circle-o"></i> {strings.Import}
 														</Button>
 														<Button
 															color="secondary"
@@ -586,7 +587,7 @@ class ImportBankStatement extends React.Component {
 																);
 															}}
 														>
-															<i className="fa fa-ban"></i> Cancel {strings.Cancel}
+															<i className="fa fa-ban"></i>{strings.Cancel}
 														</Button>
 													</>
 												) : null}

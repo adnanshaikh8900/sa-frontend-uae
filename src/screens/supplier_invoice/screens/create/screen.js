@@ -1734,6 +1734,7 @@ class CreateSupplierInvoice extends React.Component {
 																		{strings.Currency}
 																	</Label>
 																	<Select
+																	placeholder="Select Currency"
 																		styles={customStyles}
 																		options={
 																			currency_convert_list
@@ -2022,7 +2023,7 @@ class CreateSupplierInvoice extends React.Component {
 																					maxLength="50"
 																					id="receiptNumber"
 																					name="receiptNumber"
-																					placeholder="Reciept Number"
+																					placeholder="Receipt Number"
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||

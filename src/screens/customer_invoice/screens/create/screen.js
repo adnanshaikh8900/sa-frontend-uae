@@ -1660,10 +1660,11 @@ class CreateCustomerInvoice extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
 																		<span className="text-danger">*</span>
-																		{strings.CURRENCY}
+																		{strings.Currency}
 																	</Label>
 																	<Select
 																		styles={customStyles}
+																		placeholder="Select Currency"
 																		options={
 																			currency_convert_list
 																				? selectCurrencyFactory.renderOptions(
@@ -1939,7 +1940,7 @@ class CreateCustomerInvoice extends React.Component {
 																					maxLength="100"
 																					id="receiptNumber"
 																					name="receiptNumber"
-																					placeholder="Reciept Number"
+																					placeholder="Receipt Number"
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||

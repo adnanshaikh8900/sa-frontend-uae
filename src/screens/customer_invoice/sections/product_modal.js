@@ -951,7 +951,7 @@ class ProductModal extends React.Component {
 												});
 											}}
 										>
-											<i className="fa fa-dot-circle-o"></i>{strings.Create}
+											<i className="fa fa-dot-circle-o"></i>{" "}{strings.Create}
 										</Button>
 										<Button
 											color="secondary"

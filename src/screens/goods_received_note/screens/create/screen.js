@@ -1603,7 +1603,7 @@ console.log(po_list)
 																		styles={customStyles}
 																		id="supplierId"
 																		name="supplierId"
-																		// placeholder="Select Supplier Name"
+																		placeholder="Select Supplier Name"
 																		options={
 																			tmpSupplier_list
 																				? selectOptionsFactory.renderOptions(

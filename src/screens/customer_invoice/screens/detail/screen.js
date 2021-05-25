@@ -1797,7 +1797,7 @@ class DetailCustomerInvoice extends React.Component {
 																					maxLength="100"
 																					id="receiptNumber"
 																					name="receiptNumber"
-																					placeholder="Reciept Number"
+																					placeholder="Receipt Number"
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||

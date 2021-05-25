@@ -1100,22 +1100,7 @@ class SupplierInvoice extends React.Component {
 													? supplier_invoice_list.count
 													: 0,
 											}}
-											className="supplier-invoi
-											
-											
-											
-											
-											
-											
-											
-											
-											
-											
-											
-											
-											
-											
-											ce-table"
+											className="supplier-invoice-table"
 											ref={(node) => (this.table = node)}
 										>
 											<TableHeaderColumn

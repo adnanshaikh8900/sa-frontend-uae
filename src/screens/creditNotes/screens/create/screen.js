@@ -2293,7 +2293,7 @@ class CreateCreditNote extends React.Component {
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
 																					{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.total_net.toFixed(
+																							{initValue.totalAmount.toFixed(
 																							2,
 																						)}
 																					</label>

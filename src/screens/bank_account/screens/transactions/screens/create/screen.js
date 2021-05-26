@@ -1262,7 +1262,8 @@ class CreateBankTransaction extends React.Component {
 																{props.values.coaCategoryId.value === 6 && (
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
-																			<Label htmlFor="employeeId">User</Label>
+																			<Label htmlFor="employeeId"><span className="text-danger">*</span>User
+																			</Label>
 																			<Select
 																				styles={customStyles}
 																				className="select-default-width"
@@ -1284,7 +1285,7 @@ class CreateBankTransaction extends React.Component {
 																{props.values.coaCategoryId.value === 12 && (
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
-																			<Label htmlFor="employeeId">User</Label>
+																			<Label htmlFor="employeeId"><span className="text-danger">*</span>User</Label>
 																			<Select
 																				styles={customStyles}
 																				className="select-default-width"
@@ -1524,7 +1525,7 @@ class CreateBankTransaction extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-repeat"></i> {strings.CreateandMore}
+																		<i className="fa fa-repeat"></i>{' '} {strings.CreateandMore}
 																	</Button>
 																	<Button
 																		color="secondary"
@@ -1536,7 +1537,7 @@ class CreateBankTransaction extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-ban"></i>{strings.Cancel}
+																		<i className="fa fa-ban"></i>{' '}{strings.Cancel}
 																	</Button>
 																</FormGroup>
 															</Col>

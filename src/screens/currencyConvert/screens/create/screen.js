@@ -31,6 +31,7 @@ import * as CurrencyConvertActions from '../../actions';
 import { Formik } from 'formik';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import * as Yup from 'yup';
 
 const mapStateToProps = (state) => {
 	return {
@@ -57,6 +58,8 @@ class CreateCurrencyConvert extends React.Component {
 				currencyCode: '',
 				exchangeRate:'',
 			},
+			exist: false,
+			createDisabled: false,
 			data: '',
 			basecurrency:[],
 			loading: false,
@@ -67,9 +70,11 @@ class CreateCurrencyConvert extends React.Component {
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 		this.formRef = React.createRef();
 	}
-
-	componentDidMount = () => {
+	componentWillMount = () => {
 		this.props.authActions.getCurrencylist() ;
+	}
+	componentDidMount = () => {
+	
 		this.getCompanyCurrency();
 	};
 
@@ -109,6 +114,9 @@ class CreateCurrencyConvert extends React.Component {
 
 	// Create or Edit Currency conversion
 	handleSubmit = (data, resetForm) => {
+		this.setState({
+			createDisabled: true,
+		})
 		this.props.createCurrencyConvertActions
 			.createCurrencyConvert(data)
 			.then((res) => {
@@ -137,11 +145,36 @@ class CreateCurrencyConvert extends React.Component {
 			
 	};
 
+	validationCheck = (value) => {
+		console.log(value)
+		const data = {
+			moduleType: 10,
+			currencyCode: value,
+		};
+		this.props.createCurrencyConvertActions.checkValidation(data).then((response) => {
+			if (response.data === 'Currency Conversions already exists') {
+				this.setState({
+					exist: true,
+					createDisabled: false,
+				})
+				this.props.commonActions.tostifyAlert(
+					'error',
+				 'Currency Already exists',
+				);
+			} else {
+				this.setState({
+					exist: false,
+				});
+			}
+		});
+	};
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const { loading, initValue} = this.state;
 		
 		const{currencyList,currency_list} =this.props;
+		console.log(this.state.exist)
 		return (
 			<div className="vat-code-create-screen">
 				<div className="animated fadeIn">
@@ -165,13 +198,22 @@ class CreateCurrencyConvert extends React.Component {
 												}}
 												validate={(values) => {
 													let errors = {};
-													if (!values.exchangeRate) {
-														errors.exchangeRate =
-															'Exchange Rate is  required';
+													if (this.state.exist === true) {
+														errors.currencyCode =
+															'Currency already exists';
 													}
-
 													return errors;
 												}}
+												validationSchema={Yup.object().shape({
+													currencyCode: Yup.string().required(
+														'Currency is required',
+													),
+													exchangeRate: Yup.date().required(
+														'Exchange Rate is Required',
+													),
+												
+												
+												})}
 											>
 												{(props) => {
 													const {
@@ -202,7 +244,7 @@ class CreateCurrencyConvert extends React.Component {
 																	</Col>
 																					<Col lg={4}>
 																						<FormGroup className="mt-2">
-																						<Label htmlFor="exchangecurrencyCode">
+																						<Label htmlFor="currencyCode">
 																							{strings.ExchangeCurrency}
 																						</Label>
 																						<Select
@@ -242,6 +284,9 @@ class CreateCurrencyConvert extends React.Component {
 																										'currencyCode',
 																									)('');
 																								}
+																								this.validationCheck(
+																									options.value,
+																								);
 																							}}
 																							placeholder="Select Currency"
 																							id="currencyCode"
@@ -253,10 +298,10 @@ class CreateCurrencyConvert extends React.Component {
 																									: ''
 																							}
 																						/>
-																						{props.errors.currencyCode &&
-																							props.touched.currencyCode && (
+																						{props.errors.exchangecurrencyCode &&
+																							props.touched.exchangecurrencyCode && (
 																								<div className="invalid-feedback">
-																									{props.errors.currencyCode}
+																									{props.errors.exchangecurrencyCode}
 																								</div>
 																							)}
 																			</FormGroup>
@@ -333,6 +378,7 @@ class CreateCurrencyConvert extends React.Component {
 																	name="submit"
 																	color="primary"
 																	className="btn-square mr-3"
+																	disabled={this.state.createDisabled}
 																>
 																	<i className="fa fa-dot-circle-o"></i> {strings.Create}
 																</Button>

@@ -71,7 +71,6 @@ const reducer = combineReducers({
 	payment: Payment.reducer,
 	transaction: TransactionCategory.reducer,
 	currencyConvert:CurrencyConvert.reducer,
-	user: User.reducer,
 	vat: VatCode.reducer,
 	currency: Currency.reducer,
 	help: Help.reducer,
@@ -92,6 +91,7 @@ const reducer = combineReducers({
 	salarytemplate: SalaryTemplate.reducer,
 	employeeDesignation:Designation.reducer,
 	payrollEmployee : PayrollEmployee.reducer,
+	user: User.reducer,
 });
 
 export default reducer;

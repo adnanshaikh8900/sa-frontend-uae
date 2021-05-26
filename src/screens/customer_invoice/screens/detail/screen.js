@@ -2167,7 +2167,7 @@ class DetailCustomerInvoice extends React.Component {
 																			className="btn-square"
 																			onClick={this.deleteInvoice}
 																		>
-																			<i className="fa fa-trash"></i>{strings.Delete}
+																			<i className="fa fa-trash"></i>{' '}{strings.Delete}
 																		</Button>
 																	</FormGroup>
 																	<FormGroup className="text-right">
@@ -2177,7 +2177,7 @@ class DetailCustomerInvoice extends React.Component {
 																			className="btn-square mr-3"
 																			disabled={this.state.disabled}
 																		>
-																			<i className="fa fa-dot-circle-o"></i>{''}
+																			<i className="fa fa-dot-circle-o"></i>{' '}
 																			{this.state.disabled
 																				? 'Updating...'
 																				: strings.Update}

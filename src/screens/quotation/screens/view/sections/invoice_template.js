@@ -74,35 +74,11 @@ class RFQTemplate extends Component {
 						
 							
 
-						<div
-							style={{
-								width: '100%',
-								display: 'flex',
-								justifyContent: 'space-between',
-								marginBottom: '1rem',
-								borderLeft:'1px solid',
-									borderRight:'1px solid',
-									borderBottom:'1px solid',borderColor:'#c8ced3'
-							}}
-						>
+						<div className="text-center">
 						
-							<div
-								style={{
-									width: '100%',
-									display: 'flex',
-									justifyContent: 'space-between',
-									height: '50px'
-								}}
-							>
-								<div
-								style={{
-									width: '50%',
-									display: 'flex',
-									justifyContent: 'space-between',
-									
-								}}>
+						<div className="text-center"			>
 								<h6
-								style={{textAlign: 'center',marginLeft:'220px'}}
+								style={{textAlign: 'center'}}
 								className={'mt-3 mb-2'}
 								>	Expiration date:{' '}
 								{moment(QuotationData.quotaionExpiration).format(
@@ -110,23 +86,8 @@ class RFQTemplate extends Component {
 								)}
 								</h6>
 								</div>
-								{/* <div
-								style={{
-									width: '50%',
-									display: 'flex',
-									justifyContent: 'space-between',
-									
-								}}>
-								<h6
-								style={{textAlign: 'center',marginLeft:'220px'}}
-								className={'mt-3 mb-2'}
-								>	Receive date:{' '}
-								{moment(QuotationData.poReceiveDate).format(
-									'DD MMM YYYY',
-								)}
-								</h6>
-								</div> */}
-							</div>
+						
+							
 						</div>
 						<Table  >
 							<thead className="header-row">

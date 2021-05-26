@@ -259,7 +259,7 @@ class CreateUser extends React.Component {
 		const { role_list, employee_list,salary_role_dropdown,designation_dropdown } = this.props;
 		const { timezone } = this.state;
 		const { isPasswordShown } = this.state;
-		console.log(role_list)
+		console.log(employee_list,"employee_list")
 
 		// emlpoyee_list.map(item => {
 		// 	let obj = {label: item.label.fullName, value: item.value}
@@ -852,7 +852,11 @@ class CreateUser extends React.Component {
 																		</FormGroup>
 																	</Col>
 																</Row>
-
+															<Row>
+																<Col>
+																<Label>	<span className="text-danger">*</span> Select Link Or Create Employee </Label>
+																</Col>
+															</Row>
 																<Row>
 																	<Col lg={2} style={{display: props.values.isNewEmployee === true ? 'none' : ''}}>
 																	<FormGroup check inline className="mb-3">
@@ -933,11 +937,11 @@ class CreateUser extends React.Component {
 																				name="employeeId"
 																				placeholder="Select employee"
 																				options={
-																					employee_list.data
+																					employee_list
 																						? selectOptionsFactory.renderOptions(
 																							'label',
 																							'value',
-																							employee_list.data,
+																							employee_list,
 																							'Employee',
 																						)
 																						: []

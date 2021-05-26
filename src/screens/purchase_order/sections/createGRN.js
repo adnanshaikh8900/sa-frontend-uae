@@ -566,7 +566,7 @@ class CreateGoodsReceivedNote extends React.Component {
 									);
 								}
 							}}
-							placeholder="grnReceivedQuantity"
+							placeholder="Grn Received Quantity"
 							className={`form-control 
             ${
 							props.errors.lineItemsString &&

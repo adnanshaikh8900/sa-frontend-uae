@@ -397,7 +397,7 @@ class CreditNotes extends React.Component {
 							<DropdownItem>
 								<div
 									onClick={() => {
-										debugger
+										
 										this.props.history.push(
 											'/admin/income/credit-notes/applyToInvoice',
 											{ contactId: row.contactId , creditNoteId: row.id ,referenceNumber:row.invoiceNumber},

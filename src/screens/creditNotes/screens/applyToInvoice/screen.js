@@ -901,13 +901,12 @@ class ApplyToInvoice extends React.Component {
 
 
 handleSubmit=(data)=>{
-
+	this.setState({ disabled: true });
 	const { payroll_employee_list } = this.props;
 	const {
 		invoiceIds,
 		creditNoteId
 	} = data;
-debugger
 
 	const formData = new FormData();
 	formData.append('invoiceIds',(this.state.selectedRows))

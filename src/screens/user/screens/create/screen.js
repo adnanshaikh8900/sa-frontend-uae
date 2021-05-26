@@ -97,12 +97,15 @@ class CreateUser extends React.Component {
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 	}
+	componentWillMount = () => {
+		this.props.userActions.getRoleList();
+	}
 
 	componentDidMount = () => {
 		this.props.salaryTemplateActions.getSalaryRolesForDropdown();
 		this.props.userActions.getEmployeeDesignationForDropdown();
 		this.props.userActions.getEmployeesNotInUserForDropdown();
-		this.props.userActions.getRoleList();
+	
 		this.initializeData();
 	};
 
@@ -259,7 +262,7 @@ class CreateUser extends React.Component {
 		const { role_list, employee_list,salary_role_dropdown,designation_dropdown } = this.props;
 		const { timezone } = this.state;
 		const { isPasswordShown } = this.state;
-		console.log(employee_list,"employee_list")
+		console.log(role_list,"role_list")
 
 		// emlpoyee_list.map(item => {
 		// 	let obj = {label: item.label.fullName, value: item.value}

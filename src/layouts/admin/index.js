@@ -172,7 +172,6 @@ class AdminLayout extends React.Component {
 		}
 
 		var finalArray = { items: [] };
-console.log("user_role_list",user_role_list)
 		user_role_list.forEach((p) => {
 			filterPaths(finalArray, p.moduleName);
 		});

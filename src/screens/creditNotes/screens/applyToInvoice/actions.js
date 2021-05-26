@@ -47,3 +47,35 @@ export const deleteInvoice = (id) => {
     })
   }
 }
+
+export const getInvoicesListForCN = (id) => {
+	return (dispatch) => {
+		let data = {
+			method: 'GET',
+			url: `/rest/invoice/getDueInvoices?id=${id}&type=CUSTOMER`,
+		};
+
+		return authApi(data)
+			.then((res) => {
+				return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const refundAgainstInvoices = (obj) => {
+  return (dispatch) => {
+    let data = {
+      method: 'post',
+      url: '/rest/creditNote/refundAgainstInvoices',
+      data: obj
+    }
+    return authApi(data).then((res) => {
+      return res
+    }).catch((err) => {
+      throw err
+    })
+  }
+}

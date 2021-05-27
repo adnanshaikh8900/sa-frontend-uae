@@ -160,6 +160,8 @@ import {
 	DetailSalaryRole,
 	SalaryRoles,
 	CreateSalaryRoles,
+	UpdateEmployeePersonal,
+	UpdateEmployeeBank,
 
 	SalaryTemplate,
 	CreateSalaryTemplate,
@@ -172,7 +174,8 @@ import {
 	DetailSalaryTemplate,
 	DetailDesignation,
 	ApplyToInvoice,
-	Refund
+	Refund,
+	UpdateEmployeeEmployment
 } from 'screens';
 
 const adminRoutes = [
@@ -515,8 +518,23 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/payroll/employee/viewEmployee',
-		name: 'UpdateEmployee',
+		name: 'OverviewEmployee',
 		component: ViewEmployee.screen,
+	},
+	{
+		path: '/admin/payroll/employee/updateEmployeePersonal',
+		name: 'UpdateEmployee',
+		component: UpdateEmployeePersonal.screen,
+	},
+	{
+		path: '/admin/payroll/employee/updateEmployeeBank',
+		name: 'UpdateEmployee',
+		component: UpdateEmployeeBank.screen,
+	},
+	{
+		path: '/admin/payroll/employee/updateEmployeeEmployement',
+		name: 'UpdateEmployee',
+		component: UpdateEmployeeEmployment.screen,
 	},
 	{
 		path: '/admin/payroll/employee/create',

@@ -158,6 +158,9 @@ import SalaryStucture from './salaryStructure'
 import PayrollRun from './payroll_run'
 import ViewEmployee from './payrollemp/screens/view'
 // import SalarySlip from './employeePayroll/screens/salarySlip'
+import UpdateEmployeePersonal from './payrollemp/screens/update_emp_personal'
+import UpdateEmployeeBank from './payrollemp/screens/update_emp_bank'
+import UpdateEmployeeEmployment from './payrollemp/screens/update_emp_employement'
 import Designation from './designation'
 import CreateDesignation from './designation/screens/create'
 import DetailSalaryStructure from './salaryStructure/screens/detail'
@@ -319,5 +322,8 @@ export {
 	CreatePayrollEmployee,
 	PayrollEmployee,
 	Refund,
-	ViewEmployee
+	ViewEmployee,
+	UpdateEmployeePersonal,
+	UpdateEmployeeBank,
+	UpdateEmployeeEmployment
 };

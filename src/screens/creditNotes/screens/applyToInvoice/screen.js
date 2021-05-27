@@ -79,6 +79,7 @@ class ApplyToInvoice extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			selectedRows: [],
 			loading: true,
 			dialog: false,
 			disabled: false,
@@ -102,8 +103,29 @@ class ApplyToInvoice extends React.Component {
 			fileName: '',
 			basecurrency:[],
 			customer_currency: '',
+			invoice_list:[]
+		};
+		
+		this.options = {
+			onRowClick: this.goToDetail,
+			paginationPosition: 'bottom',
+			page: 1,
+			sizePerPage: 10,
+			onSizePerPageList: this.onSizePerPageList,
+			onPageChange: this.onPageChange,
+			sortName: '',
+			sortOrder: '',
+			onSortChange: this.sortColumn,
 		};
 
+        this.selectRowProp = {
+            mode: 'checkbox',
+            bgColor: 'rgba(223,233,47,1)',
+            clickToSelect: false,
+            onSelect: this.onRowSelect,
+            onSelectAll: this.onSelectAll
+          }
+	
 		// this.options = {
 		//   paginationPosition: 'top'
 		// }
@@ -142,6 +164,11 @@ class ApplyToInvoice extends React.Component {
 	componentDidMount = () => {
 		this.initializeData();
 	};
+	componentWillUnmount = () => {
+		this.setState({
+			selectedRows: [],
+		});
+	};
 	salesCategory = () => {
 		try {
 			this.props.productActions
@@ -165,69 +192,17 @@ class ApplyToInvoice extends React.Component {
 	
 
 	initializeData = () => {
-		if (this.props.location.state && this.props.location.state.id) {
+		if (this.props.location.state && this.props.location.state.contactId) {
 			this.props.customerInvoiceDetailActions
-				.getInvoiceById(this.props.location.state.id)
+				.getInvoicesListForCN(this.props.location.state.contactId)
 				.then((res) => {
 					if (res.status === 200) {
-						this.getCompanyCurrency();
-						this.props.customerInvoiceActions.getVatList();
-						this.props.customerInvoiceActions.getCustomerList(
-							this.state.contactType,
-						);
-						this.props.currencyConvertActions.getCurrencyConversionList();
-						this.props.customerInvoiceActions.getCountryList();
-						this.props.customerInvoiceActions.getProductList();
-
 						this.setState(
 							{
-								current_customer_id: this.props.location.state.id,
-								initValue: {
-									receiptAttachmentDescription: res.data
-										.receiptAttachmentDescription
-										? res.data.receiptAttachmentDescription
-										: '',
-									receiptNumber: res.data.receiptNumber
-										? res.data.receiptNumber
-										: '',
-									contact_po_number: res.data.contactPoNumber
-										? res.data.contactPoNumber
-										: '',
-									currency: res.data.currencyCode ? res.data.currencyCode : '',
-									exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
-									currencyName:res.data.currencyName ? res.data.currencyName : '',
-									invoiceDueDate: res.data.invoiceDueDate
-										? moment(res.data.invoiceDueDate).format('DD/MM/YYYY')
-										: '',
-									invoiceDate: res.data.invoiceDate
-										? moment(res.data.invoiceDate).format('DD/MM/YYYY')
-										: '',
-									contactId: res.data.contactId ? res.data.contactId : '',
-									project: res.data.projectId ? res.data.projectId : '',
-									invoice_number: res.data.referenceNumber
-										? res.data.referenceNumber
-										: '',
-									total_net: 0,
-									invoiceVATAmount: res.data.totalVatAmount
-										? res.data.totalVatAmount
-										: 0,
-									totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
-									notes: res.data.notes ? res.data.notes : '',
-									lineItemsString: res.data.invoiceLineItems
-										? res.data.invoiceLineItems
-										: [],
-									discount: res.data.discount ? res.data.discount : 0,
-									discountPercentage: res.data.discountPercentage
-										? res.data.discountPercentage
-										: '',
-									discountType: res.data.discountType
-										? res.data.discountType
-										: '',
-									term: res.data.term ? res.data.term : '',
-									placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
-									fileName: res.data.fileName ? res.data.fileName : '',
-									filePath: res.data.filePath ? res.data.filePath : '',
-								},
+								invoice_list: res.data,
+								invoice_number: this.props.location.state.referenceNumber,
+								creditNoteId: this.props.location.state.creditNoteId,
+								
 								discountAmount: res.data.discount ? res.data.discount : 0,
 								discountPercentage: res.data.discountPercentage
 									? res.data.discountPercentage
@@ -379,6 +354,10 @@ class ApplyToInvoice extends React.Component {
 				)}
 			/>
 		);
+	};
+
+	renderDate = (cell, rows) => {
+		return moment(rows.date).format('DD/MM/YYYY');
 	};
 
 	renderUnitPrice = (cell, row, props) => {
@@ -782,6 +761,32 @@ class ApplyToInvoice extends React.Component {
 			props.setFieldValue('invoiceDueDate', date, true);
 		}
 	};
+	onRowSelect = (row, isSelected, e) => {
+		let tempList = [];
+		if (isSelected) {
+			tempList = Object.assign([], this.state.selectedRows);
+			tempList.push(row.id);
+		} else {
+			this.state.selectedRows.map((item) => {
+				if (item !== row.id) {
+					tempList.push(item);
+				}
+				return item;
+			});
+		}
+		this.setState({
+			selectedRows: tempList,
+		});
+	};
+	onSelectAll = (isSelected, rows) => {
+		let tempList = [];
+		if (isSelected) {
+			rows.map((item) => tempList.push(item.id));
+		}
+		this.setState({
+			selectedRows: tempList,
+		});
+	};
 
 	handleFileChange = (e, props) => {
 		e.preventDefault();
@@ -794,106 +799,144 @@ class ApplyToInvoice extends React.Component {
 		}
 	};
 
-	handleSubmit = (data) => {
-		this.setState({ disabled: true });
-		const { current_customer_id, term } = this.state;
-		const {
-			receiptAttachmentDescription,
-			receiptNumber,
-			contact_po_number,
-			currency,
-			invoiceDueDate,
-			invoiceDate,
-			contactId,
-			project,
-			placeOfSupplyId,
-			exchangeRate,
-			invoice_number,
-			notes,
-			discount,
-			discountType,
-			discountPercentage,
-		} = data;
+	// handleSubmit = (data) => {
+	// 	this.setState({ disabled: true });
+	// 	const { current_customer_id, term } = this.state;
+	// 	const {
+	// 		receiptAttachmentDescription,
+	// 		receiptNumber,
+	// 		contact_po_number,
+	// 		currency,
+	// 		invoiceDueDate,
+	// 		invoiceDate,
+	// 		contactId,
+	// 		project,
+	// 		placeOfSupplyId,
+	// 		exchangeRate,
+	// 		invoice_number,
+	// 		notes,
+	// 		discount,
+	// 		discountType,
+	// 		discountPercentage,
+	// 	} = data;
 
-		let formData = new FormData();
-		formData.append('type', 2);
-		formData.append('invoiceId', current_customer_id);
-		formData.append(
-			'referenceNumber',
-			invoice_number !== null ? invoice_number : '',
-		);
-		formData.append(
-			'invoiceDate',
-			typeof invoiceDate === 'string'
-				? moment(invoiceDate, 'DD/MM/YYYY').toDate()
-				: invoiceDate,
-		);
-		formData.append(
-			'invoiceDueDate',
-			typeof invoiceDueDate === 'string'
-				? moment(invoiceDueDate, 'DD/MM/YYYY').toDate()
-				: invoiceDueDate,
-		);
+	// 	let formData = new FormData();
+	// 	formData.append('type', 2);
+	// 	formData.append('invoiceId', current_customer_id);
+	// 	formData.append(
+	// 		'referenceNumber',
+	// 		invoice_number !== null ? invoice_number : '',
+	// 	);
+	// 	formData.append(
+	// 		'invoiceDate',
+	// 		typeof invoiceDate === 'string'
+	// 			? moment(invoiceDate, 'DD/MM/YYYY').toDate()
+	// 			: invoiceDate,
+	// 	);
+	// 	formData.append(
+	// 		'invoiceDueDate',
+	// 		typeof invoiceDueDate === 'string'
+	// 			? moment(invoiceDueDate, 'DD/MM/YYYY').toDate()
+	// 			: invoiceDueDate,
+	// 	);
 
-		formData.append('exchangeRate',  this.state.initValue.exchangeRate);
+	// 	formData.append('exchangeRate',  this.state.initValue.exchangeRate);
 		
-		formData.append(
-			'receiptNumber',
-			receiptNumber !== null ? receiptNumber : '',
-		);
-		formData.append(
-			'contactPoNumber',
-			contact_po_number !== null ? contact_po_number : '',
-		);
-		formData.append(
-			'receiptAttachmentDescription',
-			receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',
-		);
-		formData.append('notes', notes !== null ? notes : '');
-		formData.append('lineItemsString', JSON.stringify(this.state.data));
-		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
-		formData.append('totalAmount', this.state.initValue.totalAmount);
-		formData.append('discount', discount);
-		formData.append('discountType', discountType);
-		formData.append('term', term);
-		//formData.append('placeOfSupplyId',placeOfSupplyId.value);
-		if (discountType === 'PERCENTAGE') {
-			formData.append('discountPercentage', discountPercentage);
-		}
-		if (contactId) {
-			formData.append('contactId', contactId);
-		}
-		if (currency && currency.value) {
-			formData.append('currencyCode', currency.value);
-		}
-		if (placeOfSupplyId && placeOfSupplyId.value) {
-			formData.append('placeOfSupplyId', placeOfSupplyId.value);
-		}
-		if (project) {
-			formData.append('projectId', project);
-		}
-		if (this.uploadFile.files[0]) {
-			formData.append('attachmentFile', this.uploadFile.files[0]);
-		}
-		this.props.customerInvoiceDetailActions
-			.updateInvoice(formData)
-			.then((res) => {
-				this.setState({ disabled: false });
-				this.props.commonActions.tostifyAlert(
-					'success',
-					'Credits have been applied to the invoice(s) Successfully.',
-				);
-				this.props.history.push('/admin/income/credit-notes');
-			})
-			.catch((err) => {
-				this.setState({ disabled: false });
-				this.props.commonActions.tostifyAlert(
-					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
-				);
-			});
-	};
+	// 	formData.append(
+	// 		'receiptNumber',
+	// 		receiptNumber !== null ? receiptNumber : '',
+	// 	);
+	// 	formData.append(
+	// 		'contactPoNumber',
+	// 		contact_po_number !== null ? contact_po_number : '',
+	// 	);
+	// 	formData.append(
+	// 		'receiptAttachmentDescription',
+	// 		receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',
+	// 	);
+	// 	formData.append('notes', notes !== null ? notes : '');
+	// 	formData.append('lineItemsString', JSON.stringify(this.state.data));
+	// 	formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
+	// 	formData.append('totalAmount', this.state.initValue.totalAmount);
+	// 	formData.append('discount', discount);
+	// 	formData.append('discountType', discountType);
+	// 	formData.append('term', term);
+	// 	//formData.append('placeOfSupplyId',placeOfSupplyId.value);
+	// 	if (discountType === 'PERCENTAGE') {
+	// 		formData.append('discountPercentage', discountPercentage);
+	// 	}
+	// 	if (contactId) {
+	// 		formData.append('contactId', contactId);
+	// 	}
+	// 	if (currency && currency.value) {
+	// 		formData.append('currencyCode', currency.value);
+	// 	}
+	// 	if (placeOfSupplyId && placeOfSupplyId.value) {
+	// 		formData.append('placeOfSupplyId', placeOfSupplyId.value);
+	// 	}
+	// 	if (project) {
+	// 		formData.append('projectId', project);
+	// 	}
+	// 	if (this.uploadFile.files[0]) {
+	// 		formData.append('attachmentFile', this.uploadFile.files[0]);
+	// 	}
+	// 	this.props.customerInvoiceDetailActions
+	// 		.updateInvoice(formData)
+	// 		.then((res) => {
+	// 			this.setState({ disabled: false });
+	// 			this.props.commonActions.tostifyAlert(
+	// 				'success',
+	// 				'Credits have been applied to the invoice(s) Successfully.',
+	// 			);
+	// 			this.props.history.push('/admin/income/credit-notes');
+	// 		})
+	// 		.catch((err) => {
+	// 			this.setState({ disabled: false });
+	// 			this.props.commonActions.tostifyAlert(
+	// 				'error',
+	// 				err && err.data ? err.data.message : 'Something Went Wrong',
+	// 			);
+	// 		});
+	// };
 
+
+handleSubmit=(data)=>{
+	this.setState({ disabled: true });
+	const { payroll_employee_list } = this.props;
+	const {
+		invoiceIds,
+		creditNoteId
+	} = data;
+
+	const formData = new FormData();
+	formData.append('invoiceIds',(this.state.selectedRows))
+	formData.append('creditNoteId', this.state.creditNoteId)
+
+   
+
+	this.props.customerInvoiceDetailActions
+		.refundAgainstInvoices(formData)
+		.then((res) => {
+			if (res.status === 200) {
+			this.initializeData();
+			this.props.commonActions.tostifyAlert(
+				'success',
+				'Credit Note Applied to Invoices Successfully',
+			);
+			if (this.state.invoice_list && this.state.invoice_list.length > 0) {
+				this.setState({
+					selectedRows: [],
+				});
+				this.props.history.push('/admin/income/credit-notes');
+			}
+		}})
+		.catch((err) => {
+			this.props.commonActions.tostifyAlert(
+				'error',
+				err && err.data ? err.data.message : 'Something Went Wrong',
+			);
+		});
+};
 	openCustomerModal = (e) => {
 		e.preventDefault();
 		this.setState({ openCustomerModal: true });
@@ -1068,7 +1111,8 @@ class ApplyToInvoice extends React.Component {
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
 
 		const { project_list, currency_list,currency_convert_list, customer_list,universal_currency_list } = this.props;
-
+console.log(this.state.invoice_list ,"this.state.invoice_list")
+console.log(this.state.selectedRows)
 		let tmpCustomer_list = []
 
 		customer_list.map(item => {
@@ -1089,7 +1133,7 @@ class ApplyToInvoice extends React.Component {
 												<i className="fas fa-address-book" />
 	<span className="ml-2">
 		{/* Apply To Invoice  */}
-	Apply credits from <u>{this.state.initValue.invoice_number}</u></span>
+	Apply credits from <u>{this.state.invoice_number}</u></span>
 											</div>
 										</Col>
 									</Row>
@@ -1107,104 +1151,7 @@ class ApplyToInvoice extends React.Component {
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values);
 													}}
-													// validationSchema={Yup.object().shape({
-													// 	invoice_number: Yup.string().required(
-													// 		'Credit Note Number is Required',
-													// 	),
-													// 	contactId: Yup.string().required(
-													// 		'Supplier is Required',
-													// 	),
-													// 	term: Yup.string().required('term is Required'),
-													// //	placeOfSupplyId: Yup.string().required('Place of supply is Required'),
-													// 	invoiceDate: Yup.string().required(
-													// 		'Credit Note Date is Required',
-													// 	),
-													// 	invoiceDueDate: Yup.string().required(
-													// 		'Credit Note Due Date is Required',
-													// 	),
-													// 	currency: Yup.string().required(
-													// 		'Currency is Required',
-													// 	),
-													// 	lineItemsString: Yup.array()
-													// 		.required(
-													// 			'Atleast one invoice sub detail is mandatory',
-													// 		)
-													// 		.of(
-													// 			Yup.object().shape({
-													// 				// description: Yup.string().required(
-													// 				// 	'Value is Required',
-													// 				// ),
-													// 				quantity: Yup.string()
-													// 					.required('Value is Required')
-													// 					.test(
-													// 						'quantity',
-													// 						'Quantity Should be Greater than 1',
-													// 						(value) => {
-													// 							if (value > 0) {
-													// 								return true;
-													// 							} else {
-													// 								return false;
-													// 							}
-													// 						},
-													// 					),
-													// 				unitPrice: Yup.string()
-													// 					.required('Value is Required')
-													// 					.test(
-													// 						'Unit Price',
-													// 						'Unit Price Should be Greater than 1',
-													// 						(value) => {
-													// 							if (value > 0) {
-													// 								return true;
-													// 							} else {
-													// 								return false;
-													// 							}
-													// 						},
-													// 					),
-													// 				vatCategoryId: Yup.string().required(
-													// 					'Value is Required',
-													// 				),
-													// 				productId: Yup.string().required(
-													// 					'Product is Required',
-													// 				),
-													// 			}),
-													// 		),
-													// 	attachmentFile: Yup.mixed()
-													// 		.test(
-													// 			'fileType',
-													// 			'*Unsupported File Format',
-													// 			(value) => {
-													// 				value &&
-													// 					this.setState({
-													// 						fileName: value.name,
-													// 					});
-													// 				if (
-													// 					!value ||
-													// 					(value &&
-													// 						this.supported_format.includes(
-													// 							value.type,
-													// 						))
-													// 				) {
-													// 					return true;
-													// 				} else {
-													// 					return false;
-													// 				}
-													// 			},
-													// 		)
-													// 		.test(
-													// 			'fileSize',
-													// 			'*File Size is too large',
-													// 			(value) => {
-													// 				if (
-													// 					!value ||
-													// 					(value && value.size <= this.file_size)
-													// 				) {
-													// 					return true;
-													// 				} else {
-													// 					return false;
-													// 				}
-													// 			},
-													// 		),
-													// })}
+											
 												>
 													{(props) => (
 														<Form onSubmit={props.handleSubmit}>
@@ -1245,9 +1192,16 @@ class ApplyToInvoice extends React.Component {
 																		</div>
 																	)}
 																<Col lg={12}>
+																	
 																	<BootstrapTable
 																		options={this.options}
-																		data={data}
+																		selectRow={this.selectRowProp}
+																		data={
+																			this.state.invoice_list 
+																				? this.state.invoice_list
+																				: []
+																		}
+																	
 																		version="4"
 																		hover
 																		keyField="id"
@@ -1256,58 +1210,49 @@ class ApplyToInvoice extends React.Component {
 																		<TableHeaderColumn
 																			width="55"
 																			dataAlign="center"
-																			dataFormat={(cell, rows) =>
-																				this.renderActions(cell, rows, props)
-																			}
+																			dataSort className="table-header-bg"
+																			// dataFormat={(cell, rows) =>
+																			// 	this.renderActions(cell, rows, props)
+																			// }
 																		></TableHeaderColumn>
-																		{/* <TableHeaderColumn
-																			dataField="product"
-																			dataFormat={(cell, rows) =>
-																				this.renderProduct(cell, rows, props)
-																			}
-																		>
-																			Product
-																		</TableHeaderColumn>
 																		<TableHeaderColumn
-																		width="55"
-																		dataAlign="center"
-																		dataFormat={(cell, rows) =>
-																			this.renderAddProduct(cell, rows, props)
-																		}
-																	></TableHeaderColumn> */}
-																		<TableHeaderColumn
-																			dataField="description"
-																			dataFormat={(cell, rows) =>
-																				this.renderDescription(
-																					cell,
-																					rows,
-																					props,
-																				)
-																			}
+																			dataField="referenceNo"
+																			dataSort className="table-header-bg"
+																			// dataFormat={(cell, rows) =>
+																			// 	this.renderDescription(
+																			// 		cell,
+																			// 		rows,
+																			// 		props,
+																			// 	)
+																			// }
 																		>
 																			Invoice #
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
-																			dataField="quantity"
-																			dataFormat={(cell, rows) =>
-																				this.renderQuantity(cell, rows, props)
-																			}
+																			dataField='date'
+																			dataFormat={this.renderDate}
+																			dataSort className="table-header-bg"
+																			// dataFormat={(cell, rows) =>
+																			// 	this.renderQuantity(cell, rows, props)
+																			// }
 																		>
 																			Invoice Date
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
-																			dataField="unitPrice"
-																			dataFormat={(cell, rows) =>
-																				this.renderUnitPrice(cell, rows, props)
-																			}
+																			dataField="totalAount"
+																			dataSort className="table-header-bg"
+																			// dataFormat={(cell, rows) =>
+																			// 	this.renderUnitPrice(cell, rows, props)
+																			// }
 																		>
 																			 Invoice Amount
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="unitPrice"
-																			dataFormat={(cell, rows) =>
-																				this.renderUnitPrice(cell, rows, props)
-																			}
+																			dataSort className="table-header-bg"
+																			// dataFormat={(cell, rows) =>
+																			// 	this.renderUnitPrice(cell, rows, props)
+																			// }
 																		>
 																			 Amount To Credit
 																		</TableHeaderColumn>
@@ -1315,7 +1260,7 @@ class ApplyToInvoice extends React.Component {
 																	</BootstrapTable>
 																</Col>
 															</Row>
-															{data.length > 0 && (
+{/* 													
 																<Row style={{direction:'rtl'}}>
 																	
 																	<Col lg={4} style={{direction:'ltr'}}>
@@ -1330,16 +1275,7 @@ class ApplyToInvoice extends React.Component {
 																					</Col>
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
-																						{/* {universal_currency_list[0] && (
-																						<Currency
-																						value=	{initValue.total_net.toFixed(2)}
-																						currencySymbol={
-																							universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
-																							/>
-																							)} */}
+																						
 																							{this.state.customer_currency_symbol} &nbsp;
 																							{initValue.total_net.toFixed(2)}
 																						</label>
@@ -1357,16 +1293,7 @@ class ApplyToInvoice extends React.Component {
 																					</Col>
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
-																						{/* {universal_currency_list[0] && (
-																						<Currency
-																						value=	{initValue.totalAmount.toFixed(2)}
-																						currencySymbol={
-																							universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
-																							/>
-																							)} */}
+																						
 																							{this.state.customer_currency_symbol} &nbsp;
 																								{initValue.totalAmount.toFixed(2)}
 																						</label>
@@ -1376,7 +1303,7 @@ class ApplyToInvoice extends React.Component {
 																		</div>
 																	</Col>
 																</Row>
-															)} 
+															 */}
 															<Row>
 																<Col
 																	lg={12}
@@ -1398,6 +1325,7 @@ class ApplyToInvoice extends React.Component {
 																			color="primary"
 																			className="btn-square mr-3"
 																			disabled={this.state.disabled}
+																			onClick={this.handleSubmit}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
 																			{this.state.disabled
@@ -1429,29 +1357,7 @@ class ApplyToInvoice extends React.Component {
 						</Col>
 					</Row>
 				</div>
-				<CustomerModal
-					openCustomerModal={this.state.openCustomerModal}
-					closeCustomerModal={(e) => {
-						this.closeCustomerModal(e);
-					}}
-					getCurrentUser={(e) => this.getCurrentUser(e)}
-					createCustomer={this.props.customerInvoiceActions.createCustomer}
-					currency_list={this.props.currency_list}
-					country_list={this.props.country_list}
-					getStateList={this.props.customerInvoiceActions.getStateList}
-				/>
-				<ProductModal
-					openProductModal={this.state.openProductModal}
-					closeProductModal={(e) => {
-						this.closeProductModal(e);
-					}}
-					getCurrentProduct={(e) => this.getCurrentProduct(e)}
-					createProduct={this.props.productActions.createAndSaveProduct}
-					vat_list={this.props.vat_list}
-					product_category_list={this.props.product_category_list}
-					salesCategory={this.state.salesCategory}
-					purchaseCategory={this.state.purchaseCategory}
-				/>
+			
 			</div>
 		);
 	}

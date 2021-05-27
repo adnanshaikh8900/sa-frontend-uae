@@ -908,7 +908,7 @@ class CreateCreditNote extends React.Component {
 	};
 
 	handleSubmit = (data, resetForm) => {
-		debugger
+		
 		this.setState({ disabled: true });
 		const {
 			receiptAttachmentDescription,

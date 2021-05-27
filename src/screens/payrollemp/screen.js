@@ -520,13 +520,13 @@ class PayrollEmployee extends React.Component {
                                                     >
                                                         is-Active
                           </TableHeaderColumn>
-                                                    <TableHeaderColumn
+                                                    {/* <TableHeaderColumn
                                                         className="text-right"
                                                         columnClassName="text-right"
                                                         //width="5%"
                                                         dataFormat={this.renderActions}
                                                         className="table-header-bg"
-                                                    ></TableHeaderColumn>
+                                                    ></TableHeaderColumn> */}
                                                 </BootstrapTable>
                                             </div>
                                         </Col>

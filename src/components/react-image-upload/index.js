@@ -226,7 +226,7 @@ class ImageUploader extends React.Component {
             {this.renderErrors()}
           </div>
           {loadFile ? (
-            <Loader type="Circles" color="#20a8d8" height={50} width={50}/>
+            <Loader type="Circles" color="#2064d8" height={50} width={50}/>
           ) 
            :
           null

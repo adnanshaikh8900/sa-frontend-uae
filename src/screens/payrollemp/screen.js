@@ -65,7 +65,7 @@ class PayrollEmployee extends React.Component {
         }
 
         this.options = {
-            // onRowClick: this.goToDetail,
+            onRowClick: this.goToDetail,
             paginationPosition: 'bottom',
             page: 1,
             sizePerPage: 10,
@@ -179,23 +179,23 @@ class PayrollEmployee extends React.Component {
 				style={{
 					cursor: 'pointer',
 					}}
-				// onClick={() =>
-				// 	this.props.history.push('/admin/banking/bank-account/transaction', {
-				// 		bankAccountId: row.bankAccountId,
-				// 		closingBalance: row.closingBalance,
-				// 		openingBalance: row.openingBalance,
-				// 		accounName: row.accounName,
-				// 	})
-				// }
+				onClick={
+                    () =>{ debugger
+					this.props.history.push('/admin/payroll/employee/viewEmployee',
+                    { id: row.id })}
+				}
+                
+
 			>
 				{row.fullName}
 			</label>
 		);
 	};
 
-    // goToDetail = (row) => {
-    //   this.props.history.push('/admin/payroll/employee/detail', { id: row.id })
-    // }
+    goToDetail = (row) => {
+        this.props.history.push('/admin/payroll/employee/viewEmployee',
+        { id: row.id })
+    }
 
     sortColumn = (sortName, sortOrder) => {
         this.options.sortName = sortName;

@@ -106,9 +106,7 @@ import {
 	Contact,
 	CreateContact,
 	DetailContact,
-	Employee,
-	CreateEmployee,
-	DetailEmployee,
+	ViewEmployee,
 	Product,
 	CreateProduct,
 	DetailProduct,
@@ -515,11 +513,11 @@ const adminRoutes = [
 		pathTo: '/admin/expense/expense',
 		name: 'Expense',
 	},
-	// {
-	// 	path: '/admin/payroll/employee/detail',
-	// 	name: 'UpdateEmployee',
-	// 	component: UnderConstruction.screen,
-	// },
+	{
+		path: '/admin/payroll/employee/viewEmployee',
+		name: 'UpdateEmployee',
+		component: ViewEmployee.screen,
+	},
 	{
 		path: '/admin/payroll/employee/create',
 		name: 'AddEmployee',
@@ -790,7 +788,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/master/product/detail/inventoryhistory',
-		name: 'InventoryHistory',
+		name: 'ViewInventoryHistory',
 		component: InventoryHistory.screen,
 	},
 	{

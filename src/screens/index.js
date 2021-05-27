@@ -156,6 +156,7 @@ import CreateSalaryTemplate from './salaryTemplate/screens/create'
 import CreateSalaryStucture from './salaryStructure/screens/create'
 import SalaryStucture from './salaryStructure'
 import PayrollRun from './payroll_run'
+import ViewEmployee from './payrollemp/screens/view'
 // import SalarySlip from './employeePayroll/screens/salarySlip'
 import Designation from './designation'
 import CreateDesignation from './designation/screens/create'
@@ -317,5 +318,6 @@ export {
 	ApplyToInvoice,
 	CreatePayrollEmployee,
 	PayrollEmployee,
-	Refund
+	Refund,
+	ViewEmployee
 };

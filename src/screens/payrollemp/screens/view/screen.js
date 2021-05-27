@@ -13,6 +13,7 @@ import {
 	TabPane,
 	CardGroup,
 	Table,
+	Button
 } from 'reactstrap';
 import * as EmployeeViewActions from "./actions"
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -49,6 +50,7 @@ class ViewEmployee extends React.Component {
 			Variable:[],
 			FixedAllowance:[],
 			CTC: '',
+			current_employee_id: '',
 		};
 
 
@@ -193,6 +195,21 @@ class ViewEmployee extends React.Component {
 											<Card style={{ height: '600px' }}>
 												<div >
 													<CardBody className='m-4'>
+														<div>
+														<Row className='pull-right'>
+															
+															<Button
+                                                                color="primary"
+                                                                className="btn-square pull-right mb-2"
+                                                                style={{ marginBottom: '10px' }}
+                                                                onClick={() => this.props.history.push(`/admin/payroll/employee/updateEmployeeEmployement`,
+																{id : this.state.current_employee_id } )}
+                                                            >
+                                                                <i class="far fa-edit"></i>
+																</Button>
+															
+															</Row>
+														</div>
 														<div className='text-center'>
 
 															<img
@@ -206,7 +223,7 @@ class ViewEmployee extends React.Component {
 														</div>
 														<div className='text-center' >
 															<h3>{upperFirst(this.state.EmployeeDetails.fullName)} {' '}
-								({this.state.EmployeeDetails.employeeCode !== '' ? '-' : this.state.EmployeeDetails.employeeCode}{ })</h3>
+															({this.state.EmployeeDetails.employeeCode !== '' ? '-' : this.state.EmployeeDetails.employeeCode}{ })</h3>
 
 															<h4>
 																{upperFirst(this.state.EmployeeDetails.employeeDsignationName)}
@@ -234,9 +251,24 @@ class ViewEmployee extends React.Component {
 											<div style={{ width: '60%' }} className='ml-4'>
 												<Card style={{ width: '650px' }}>
 													<div>
-														<CardBody className='m-4' style={{ height: '250px', width: '450px' }}>
+														<CardBody className='m-4' style={{ height: '250px', width: '600px' }}>
 															<div>
+															<Row>
+															<Col>
 															<label> Personal Information</label>
+															</Col>
+															<Col>
+															<Button
+                                                                color="primary"
+                                                                className="btn-square pull-right mb-2"
+                                                                style={{ marginBottom: '10px' }}
+                                                                onClick={() => this.props.history.push(`/admin/payroll/employee/updateEmployeePersonal`,
+																{id : this.state.current_employee_id } )}
+                                                            >
+                                                                <i class="far fa-edit"></i>
+																</Button>
+															</Col>
+															</Row>
 															<Row> <div className='mt-2 mb-2'>Father's Name : {this.state.EmployeeDetails.middleName !== '' && this.state.EmployeeDetails.lastName !== '' ?
 																this.state.EmployeeDetails.middleName + this.state.EmployeeDetails.lastName :  ('-') }</div></Row>
 															<Row> <div className='mt-2 mb-2'> Date Of Birth: {this.state.EmployeeDetails.dob !== '' ?  moment(this.state.EmployeeDetails.dob).format('DD-MM-YYYY') : ('-')}</div></Row>
@@ -247,12 +279,28 @@ class ViewEmployee extends React.Component {
 														</CardBody>
 													</div>
 												</Card>
-
+												
 												<Card style={{ width: '650px' }}>
 													<div>
-														<CardBody className='m-4' style={{ height: '250px', width: '450px' }}>
+														<CardBody className='m-4' style={{ height: '250px', width: '600px' }}>
 															<div>
+															<Row>
+															<Col>
 															<label> Bank Information</label>
+															</Col>
+															<Col>
+															<Button
+                                                                color="primary"
+                                                                className="btn-square pull-right mb-2"
+                                                                style={{ marginBottom: '10px' }}
+                                                                onClick={() => this.props.history.push(`/admin/payroll/employee/updateEmployeeBank`,
+																{id : this.state.current_employee_id } )}
+                                                            >
+                                                                <i class="far fa-edit"></i>
+																</Button>
+															</Col>
+															</Row>
+														
 															<Row> <div className='mt-2 mb-2'>Bank Holder Name : {this.state.EmployeeDetails.accountHolderName !== '' ?
 																this.state.EmployeeDetails.accountHolderName :  ('-') }</div></Row>
 															<Row> <div className='mt-2 mb-2'>Account Number : {this.state.EmployeeDetails.accountNumber !== '' ?  this.state.EmployeeDetails.accountNumber : ('-')}</div></Row>

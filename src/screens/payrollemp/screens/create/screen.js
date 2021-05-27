@@ -2076,8 +2076,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                         type="text"
                                                                                         size="30"
                                                                                         style={{textAlign:"center"}}
-                                                                                        value={item.monthlyAmount}
-                                                                                        isDisabled={item.formula !== ''}
+                                                                                        value={item.monthlyAmount.toFixed(2)}
                                                                                         id='' />
                                                                                 </td>
 
@@ -2087,31 +2086,31 @@ class CreateEmployeePayroll extends React.Component {
                                                                                             type="text"
                                                                                             size="30"
                                                                                             style={{textAlign:"center"}}
-                                                                                            
                                                                                             value={item.flatAmount}
                                                                                             id='' />
                                                                                     </td>
                                                                                 )}
 
                                                                             {item.formula ?
-                                                                                (<td style={{border:"3px solid #2064d8"}} >
-                                                                                      <input
+                                                                                (<td style={{border:"3px solid  #2064d8"}} >
+                                                                                      <span
                                                                                         type="text"
                                                                                         size="30"
                                                                                         style={{textAlign:"center"}}
                                                                                         
-                                                                                        value={item.yearlyAmount}
-                                                                                        id='' />
+                                                                                       
+                                                                                        id='' >
+                                                                                        {item.yearlyAmount.toFixed(2)}</span>
                                                                                 </td>
 
                                                                                 ) : (
-                                                                                    <td style={{border:"3px solid #2064d8"}} >
-                                                                                        <input
+                                                                                    <td style={{border:"3px solid  #2064d8"}} >
+                                                                                        <span
                                                                                             type="text"
                                                                                             size="30"
                                                                                             style={{textAlign:"center"}}
-                                                                                            value={item.flatAmount * 12}
-                                                                                            id='' />
+                                                                                            
+                                                                                            id='' >{item.flatAmount * 12}</span>
                                                                                     </td>
                                                                                 )}
                                                                         </tr>
@@ -2151,10 +2150,10 @@ class CreateEmployeePayroll extends React.Component {
                                                                     ).map((item) => (
                                                                         <tr>
                                                                             {/* <td >{item.id}</td> */}
-                                                                            <td style={{border:"3px solid #2064d8"}} >{item.description}</td>
+                                                                            <td style={{border:"3px solid  #2064d8"}} >{item.description}</td>
                                                                             {item.formula ?
                                                                                 (
-                                                                                    <td style={{border:"3px solid #2064d8"}}>
+                                                                                    <td style={{border:"3px solid  #2064d8"}}>
                                                                                         <input
                                                                                             type="number"
                                                                                             style={{textAlign:"center"}}
@@ -2165,7 +2164,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                         />{' '}% of CTC
                                                                                     </td>
                                                                                 ) : (
-                                                                                    <td style={{border:"3px solid #2064d8"}}>Fixed amount</td>)
+                                                                                    <td style={{border:"3px solid # #2064d8"}}>Fixed amount</td>)
                                                                             }
                                                                             {item.formula ?
                                                                                 (<td style={{border:"3px solid #2064d8"}} >
@@ -2173,12 +2172,12 @@ class CreateEmployeePayroll extends React.Component {
                                                                                         type="text"
                                                                                         size="30"
                                                                                         style={{textAlign:"center"}}
-                                                                                        value={item.monthlyAmount}
+                                                                                        value={item.monthlyAmount.toFixed(2)}
                                                                                         id='' />
                                                                                 </td>
 
                                                                                 ) : (
-                                                                                    <td style={{border:"3px solid #2064d8"}} >
+                                                                                    <td style={{border:"3px solid  #2064d8"}} >
                                                                                         <input
                                                                                             type="text"
                                                                                             size="30"
@@ -2188,24 +2187,26 @@ class CreateEmployeePayroll extends React.Component {
                                                                                     </td>
                                                                                 )}
 
-                                                                            {item.formula ?
-                                                                                (<td style={{border:"3px solid #2064d8"}} >
-                                                                                      <input
+                                                                        {item.formula ?
+                                                                                (<td style={{border:"3px solid  #2064d8"}} >
+                                                                                      <span
                                                                                         type="text"
                                                                                         size="30"
                                                                                         style={{textAlign:"center"}}
-                                                                                        value={item.yearlyAmount}
-                                                                                        id='' />
+                                                                                        
+                                                                                       
+                                                                                        id='' >
+                                                                                        {(item.yearlyAmount.toFixed(2))}</span>
                                                                                 </td>
 
                                                                                 ) : (
-                                                                                    <td style={{border:"3px solid #2064d8"}} >
-                                                                                        <input
+                                                                                    <td style={{border:"3px solid  #2064d8"}} >
+                                                                                        <span
                                                                                             type="text"
                                                                                             size="30"
                                                                                             style={{textAlign:"center"}}
-                                                                                            value={item.flatAmount * 12}
-                                                                                            id='' />
+                                                                                            
+                                                                                            id='' >{item.flatAmount * 12}</span>
                                                                                     </td>
                                                                                 )}
 
@@ -2277,7 +2278,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                         type="text"
                                                                                         size="30"
                                                                                         style={{textAlign:"center"}}
-                                                                                        value={item.monthlyAmount}
+                                                                                        value={item.monthlyAmount.toFixed(2)}
                                                                                     />
                                                                                 </td>
 
@@ -2292,24 +2293,26 @@ class CreateEmployeePayroll extends React.Component {
                                                                                     </td>
                                                                                 )}
 
-                                                                            {item.formula ?
-                                                                                (<td style={{border:"3px solid #2064d8"}} >
-                                                                                      <input
+                                                                        {item.formula ?
+                                                                                (<td style={{border:"3px solid  #2064d8"}} >
+                                                                                      <span
                                                                                         type="text"
                                                                                         size="30"
                                                                                         style={{textAlign:"center"}}
-                                                                                        value={item.yearlyAmount}
-                                                                                        id='' />
+                                                                                        
+                                                                                       
+                                                                                        id='' >
+                                                                                        {item.yearlyAmount.toFixed(2)}</span>
                                                                                 </td>
 
                                                                                 ) : (
-                                                                                    <td style={{border:"3px solid #2064d8"}} >
-                                                                                        <input
+                                                                                    <td style={{border:"3px solid  #2064d8"}} >
+                                                                                        <span
                                                                                             type="text"
                                                                                             size="30"
                                                                                             style={{textAlign:"center"}}
-                                                                                            value={item.flatAmount * 12}
-                                                                                            id='' />
+                                                                                            
+                                                                                            id='' >{item.flatAmount * 12}</span>
                                                                                     </td>
                                                                                 )}
                                                                         </tr>
@@ -2352,11 +2355,18 @@ class CreateEmployeePayroll extends React.Component {
                                                                        
                                                                         <td style={{border:"3px solid #2064d8"}} >{item.description}</td>
                                                                        
-                                                                        <td style={{border:"3px solid #2064d8"}} >{item.monthlyAmount}</td>
+                                                                        <td style={{border:"3px solid  #2064d8"}} >
+                                                                        {item.monthlyAmount ? item.monthlyAmount.toFixed(2) :item.monthlyAmount}
+                                                                            </td>
 
-                                                                            <td style={{border:"3px solid #2064d8"}} >{item.yearlyAmount}</td>
+                                                                            <td style={{border:"3px solid  #2064d8"}} >
+                                                                            {/* {props.values.CTC} */}
+                                                                            {item.yearlyAmount ? item.yearlyAmount.toFixed(2) : item.yearlyAmount}
+                                                                            </td>
                                                                     </tr>
-                                                                      ))) : (" ")}
+                                                                      ))) : (
+                                                                       " "
+                                                                    )}
                                                                 </tbody>
                                                             </Table>
                                                           
@@ -2376,10 +2386,10 @@ class CreateEmployeePayroll extends React.Component {
                                                                 </thead>  */}
                                                                 <tbody>
                                                                   
-                                                                    <tr style={{border:"3px solid #2064d8"}}>
-                                                                        <td style={{border:"3px solid #2064d8"}} >{"Companycost"}</td>
+                                                                    <tr style={{border:"3px solid  #2064d8"}}>
+                                                                        <td style={{border:"3px solid  #2064d8"}} >Company  cost</td>
                                                                       
-                                                                        <td style={{border:"3px solid #2064d8"}} >{(props.values.CTC / 12).toFixed(2)}</td>
+                                                                        <td style={{border:"3px solid  #2064d8"}} >{(props.values.CTC / 12).toFixed(2)}</td>
                                                                         <td style={{border:"3px solid #2064d8"}} >{props.values.CTC}</td>
                                                                     </tr>
                                                                 </tbody>

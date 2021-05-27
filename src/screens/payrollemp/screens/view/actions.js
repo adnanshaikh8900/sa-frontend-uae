@@ -47,3 +47,36 @@ import {
 	  })
 	}
   }
+
+  export const getSalarySlip = (obj) => {
+	return (dispatch) => {
+		debugger
+		let id=obj.id;
+		let salaryDate=obj.salaryDate;
+	  let data = {
+		method: 'GET',
+		url: `/rest/Salary/getSalariesByEmployeeId?id=${id}&salaryDate=${salaryDate}`
+	  }
+  
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }
+    
+//   export const getSalarySlip= (obj) => {
+// 	return (dispatch) => {
+// 	  let data = {
+// 		method: 'GET',
+// 		url: '/rest/Salary/getSalariesByEmployeeId',
+// 		data: obj
+// 	  }
+// 	  return authApi(data).then((res) => {
+// 		return res
+// 	  }).catch((err) => {
+// 		throw err
+// 	  })
+// 	}
+//   }

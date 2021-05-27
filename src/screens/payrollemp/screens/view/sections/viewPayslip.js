@@ -14,6 +14,7 @@ import {
 	ModalBody,
 	ModalFooter,
 	UncontrolledTooltip,
+	CardBody,
 } from 'reactstrap';
 import { Formik, Field } from 'formik';
 import Select from 'react-select';
@@ -28,10 +29,10 @@ import { bindActionCreators } from 'redux';
 import { CommonActions } from 'services/global';
 
 import { toast } from 'react-toastify';
-import {data}  from '../../../../Language/index'
+import { data } from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
-// import './style.scss';
+import '../style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import ReactToPrint from 'react-to-print';
 
@@ -42,13 +43,13 @@ const mapStateToProps = (state) => {
 		contact_list: state.request_for_quotation.contact_list,
 
 	};
-	
+
 };
 
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		
+
 	};
 };
 const customStyles = {
@@ -69,20 +70,20 @@ class PaySlipModal extends React.Component {
 		this.state = {
 			language: window['localStorage'].getItem('language'),
 			loading: false,
-         
+
 		};
-	
-		
-	
+
+
+
 	}
- 
+
 
 
     static getDerivedStateFromProps(nextProps, prevState) {
         if (prevState.selectedData !== nextProps.selectedData || prevState.totalAmount !== nextProps.totalAmount ||
 			prevState.totalVatAmount != nextProps.totalVatAmount  ) {
 			console.log('getDerivedStateFromProps state changed',nextProps.selectedData.poQuatationLineItemRequestModelList);
-		
+
 		 return { prefixData : nextProps.prefixData,
 		 	selectedData :nextProps.selectedData,
 			 totalAmount :nextProps.totalAmount,
@@ -115,32 +116,32 @@ class PaySlipModal extends React.Component {
 	};
 	_showDetails = (bool) => {
 		this.setState({
-		  showDetails: bool
+			showDetails: bool
 		});
-	  }
+	}
 
-	  exportPDFWithComponent = () => {
+	exportPDFWithComponent = () => {
 		this.pdfExportComponent.save();
-	};	
+	};
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { openModal, closeModal, id} = this.props;
-		const { initValue, contentState,data,supplierId } = this.state;
- 
+		const { openModal, closeModal, id } = this.props;
+		const { initValue, contentState, data, supplierId } = this.state;
+
 		let tmpSupplier_list = []
 
 
 		return (
 			<div className="contact-modal-screen">
 				<Modal isOpen={openModal} className="modal-success contact-modal">
-				<ModalBody>
-				<div className="view-invoice-screen">
-				<div className="animated fadeIn">
-					<Row>
-						<Col lg={12} className="mx-auto">
-							<div className="pull-right">
-								{/* <Button
+					<ModalBody>
+						<div className="view-invoice-screen">
+							<div className="animated fadeIn">
+								<Row>
+									<Col lg={12} className="mx-auto">
+										<div className="pull-right" style={{display:"inline-flex"}}>
+											{/* <Button
 									className="btn btn-sm edit-btn"
 									onClick={() => {
 										this.props.history.push(
@@ -151,66 +152,77 @@ class PaySlipModal extends React.Component {
 								>
 									<i className="fa fa-pencil"></i>
 								</Button> */}
-								<Button
-									className=" print-btn-cont"
-									onClick={() => {
-										this.exportPDFWithComponent();
-									}}
-								>
-									<i className="fa fa-file-pdf-o"></i>
-								</Button>
-								<ReactToPrint
-									trigger={() => (
-										<Button type="button" className=" print-btn-cont">
-											<i className="fa fa-print"></i>
+											<Button
+												className="mr-2 print-btn-cont"
+												onClick={() => {
+													this.exportPDFWithComponent();
+												}}
+											>
+												<i className="fa fa-file-pdf-o"></i>
+											</Button>
+											{/* <ReactToPrint
+												trigger={() => (
+													<Button type="button" className=" print-btn-cont">
+														<i className="fa fa-print"></i>
+													</Button>
+												)}
+												content={() => this.componentRef}
+											/> */}
+												<div
+													className="mr-2 print-btn-cont"
+													onClick={() => window.print()}
+													style={{
+														cursor: 'pointer',
+														}}
+												>
+													<i className="fa fa-print"></i>
+												</div>
+											<Button
+												type="button"
+												className=" print-btn-cont"
+												style={{ color: "black" }}
+												onClick={() => {
+													closeModal(false);
+												}}
+											>
+												X
 										</Button>
-									)}
-									content={() => this.componentRef}
-								/>
-										<Button
-											type="button"
-											className=" print-btn-cont"
-											style={{color: "black"}}
-											onClick={() => {
-												this.props.history.push('/admin/income/customer-invoice');
-											}}
-										>
-										X
-										</Button>
-							</div>
-							<div>
-							<PDFExport
-									ref={(component) => (this.pdfExportComponent = component)}
-									scale={0.8}
-									paperSize="A4"
-								>
-									{/* <InvoiceTemplate
+										</div>
+										<div>
+											<PDFExport
+												ref={(component) => (this.pdfExportComponent = component)}
+												scale={0.8}
+												paperSize="A4"
+												
+											>
+												<CardBody id="section-to-print"><div> helooww </div></CardBody>	
+												{/* <InvoiceTemplate
 										invoiceData={invoiceData}
 										currencyData={currencyData}
 										ref={(el) => (this.componentRef = el)}
 										totalNet={this.state.totalNet}
 										companyData={profile}
 									/> */}
-								</PDFExport>
+											</PDFExport>
+										</div>
+									</Col>
+								</Row>
 							</div>
-						</Col>
-					</Row>
-				</div>
-			</div>
-														</ModalBody>
-														<ModalFooter>														
-															<Button
-																color="secondary"
-																className="btn-square"
-																onClick={() => {
-																	closeModal(false);
-																}}
-															>
-																<i className="fa fa-ban"></i> {strings.Cancel}
-															</Button>
-														</ModalFooter>
+						</div>
+					</ModalBody>
+					<ModalFooter>
+						<Button
+							color="secondary"
+							className="btn-square"
+							onClick={() => {
+								closeModal(false);
+							}}
+						>
+							<i className="fa fa-ban"></i> {strings.Cancel}
+						</Button>
+					</ModalFooter>
 				</Modal>
-				
+
 			</div>
 		);
 	}
@@ -219,5 +231,5 @@ class PaySlipModal extends React.Component {
 
 export default connect(
 	mapStateToProps
-	
+
 )(PaySlipModal);

@@ -13,7 +13,7 @@ import {
 	TabPane,
 	CardGroup,
 	Table,
-	Button
+	Button,
 } from 'reactstrap';
 import * as EmployeeViewActions from "./actions"
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -23,12 +23,16 @@ import './style.scss';
 import { bindActionCreators } from 'redux';
 import { upperFirst } from 'lodash-es';
 import moment from 'moment';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import { ViewPaySlip } from './sections';
 
 const mapStateToProps = (state) => {
 	return {
 
 	};
 };
+
+
 const mapDispatchToProps = (dispatch) => {
 	return {
 		employeeViewActions: bindActionCreators(EmployeeViewActions, dispatch),
@@ -41,10 +45,11 @@ class ViewEmployee extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			openModal:false ,
 			activeTab: new Array(4).fill('1'),
 			EmployeeDetails: '',
 			userPhoto: [],
-			SalarySlipList:[],
+			salarySlipList:[],
 			Fixed:[],
 			Deduction:[],
 			Variable:[],
@@ -72,7 +77,48 @@ class ViewEmployee extends React.Component {
 	componentDidMount = () => {
 		this.initializeData();
 	};
+	renderActionsForTds = (cell, row) => {
+		return (
+			<div>
+					<Button
+							onClick={() =>
+								this.props.history.push(
+									'/admin/payroll/employee/salarySlip',
+									{ id: row.id},
+								)
+							}
+						>
+							<i className="fas fa-eye" /> View
+						</Button>
 
+			</div>
+		);
+	};
+	viewPaySlip=(id)=>{
+		this.setState({
+			openModal : true})
+	}
+	renderActions = (cell, row) => {
+		return (
+			<div>
+					<Button
+							onClick={() =>
+								{
+									this.viewPaySlip(row.id);
+								}
+
+							}
+						>
+							<i className="fas fa-eye" /> View
+						</Button>
+
+			</div>
+		);
+	};
+
+	closeModal = (res) => {
+		this.setState({ openModal: false });
+	};
 
 	initializeData = () => {
 		if (this.props.location.state && this.props.location.state.id) {
@@ -95,14 +141,16 @@ class ViewEmployee extends React.Component {
 						);
 					}
 				})
+
 				this.props.employeeViewActions
 				.getSalarySlipList(this.props.location.state.id)
 				.then((res) => {
+
 					if (res.status === 200) {
 						this.setState(
 							{
 								current_employee_id: this.props.location.state.id,
-								salarySlipList: res.data,
+								salarySlipList: res.data.resultSalarySlipList,
 								loading: false,
 							},
 							() => {
@@ -115,6 +163,7 @@ class ViewEmployee extends React.Component {
 				this.props.employeeViewActions
 				.getSalaryComponentByEmployeeId(this.props.location.state.id)
 				.then((res) => {
+
 					if (res.status === 200) {
 						this.setState(
 							{
@@ -151,7 +200,7 @@ class ViewEmployee extends React.Component {
 								<Col lg={12}>
 									<div className="h6 mb-4 d-flex align-items-center">
 
-										<h3>{this.state.EmployeeDetails.fullName}</h3>
+										<h3>{upperFirst(this.state.EmployeeDetails.fullName)}</h3>
 									</div>
 								</Col>
 							</Row>
@@ -192,12 +241,12 @@ class ViewEmployee extends React.Component {
 								<TabPane tabId="1">
 									<div className="table-wrapper">
 										<CardGroup>
-											<Card style={{ height: '600px' }}>
+											<Card style={{ height: '621px' }}>
 												<div >
 													<CardBody className='m-4'>
 														<div>
 														<Row className='pull-right'>
-															
+
 															<Button
                                                                 color="primary"
                                                                 className="btn-square pull-right mb-2"
@@ -207,7 +256,7 @@ class ViewEmployee extends React.Component {
                                                             >
                                                                 <i class="far fa-edit"></i>
 																</Button>
-															
+
 															</Row>
 														</div>
 														<div className='text-center'>
@@ -253,40 +302,46 @@ class ViewEmployee extends React.Component {
 													<div>
 														<CardBody className='m-4' style={{ height: '250px', width: '600px' }}>
 															<div>
-															<Row>
-															<Col>
-															<label> Personal Information</label>
-															</Col>
-															<Col>
-															<Button
-                                                                color="primary"
-                                                                className="btn-square pull-right mb-2"
-                                                                style={{ marginBottom: '10px' }}
-                                                                onClick={() => this.props.history.push(`/admin/payroll/employee/updateEmployeePersonal`,
-																{id : this.state.current_employee_id } )}
-                                                            >
-                                                                <i class="far fa-edit"></i>
-																</Button>
-															</Col>
-															</Row>
-															<Row> <div className='mt-2 mb-2'>Father's Name : {this.state.EmployeeDetails.middleName !== '' && this.state.EmployeeDetails.lastName !== '' ?
-																this.state.EmployeeDetails.middleName + this.state.EmployeeDetails.lastName :  ('-') }</div></Row>
-															<Row> <div className='mt-2 mb-2'> Date Of Birth: {this.state.EmployeeDetails.dob !== '' ?  moment(this.state.EmployeeDetails.dob).format('DD-MM-YYYY') : ('-')}</div></Row>
-															<Row> <div className='mt-2 mb-2'>Personal Email : {this.state.EmployeeDetails.email !== '' ?  this.state.EmployeeDetails.email : ('-')}</div></Row>
-															<Row> <div className='mt-2 mb-2'>Mobile Number  : {this.state.EmployeeDetails.mobileNumber !== '' ? this.state.EmployeeDetails.mobileNumber : ('-')}</div></Row>
-															<Row> <div className='mt-2 mb-2'>Address : {this.state.EmployeeDetails.presentAddress +' '+ this.state.EmployeeDetails.city +' '+ this.state.EmployeeDetails.pincode +' '+  this.state.EmployeeDetails.stateName +' '+  this.state.EmployeeDetails.countryName}</div></Row>
+																<Row>
+																	<Col>
+																		<label> <b>Personal Information</b></label>
+																	</Col>
+																	<Col>
+																		<Button
+																			color="primary"
+																			className="btn-square pull-right mb-2"
+																			style={{ marginBottom: '10px' }}
+																			onClick={() => this.props.history.push(`/admin/payroll/employee/updateEmployeePersonal`,
+																				{id : this.state.current_employee_id } )}
+																		>
+																			<i class="far fa-edit"></i>
+																		</Button>
+																	</Col>
+																</Row>
+															<Row> <Col className='mt-2 mb-2'>Father's Name </Col>
+															<Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.middleName !== '' && this.state.EmployeeDetails.lastName !== '' ?
+																this.state.EmployeeDetails.middleName +" "+ this.state.EmployeeDetails.lastName :  ('-') }</Col></Row>
+
+															<Row> <Col className='mt-2 mb-2'>Date Of Birth </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.dob !== '' ?  moment(this.state.EmployeeDetails.dob).format('DD-MM-YYYY') : ('-')}</Col></Row>
+
+															{/* <Row> <Col className='mt-2 mb-2'>Personal Email  </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.email ? this.state.EmployeeDetails.email : ('-')}</Col></Row>				 */}
+
+															<Row> <Col className='mt-2 mb-2'>Mobile Number </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.mobileNumber !== '' ? this.state.EmployeeDetails.mobileNumber : ('-')}</Col></Row>
+
+															<Row> <Col className='mt-2 mb-2'>Address </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.presentAddress +' '+ this.state.EmployeeDetails.city +' '+ this.state.EmployeeDetails.pincode +' '+  this.state.EmployeeDetails.stateName +' '+  this.state.EmployeeDetails.countryName}</Col></Row>
+
 															</div>
 														</CardBody>
 													</div>
 												</Card>
-												
+
 												<Card style={{ width: '650px' }}>
 													<div>
 														<CardBody className='m-4' style={{ height: '250px', width: '600px' }}>
 															<div>
 															<Row>
 															<Col>
-															<label> Bank Information</label>
+															<label><b> Bank Information</b></label>
 															</Col>
 															<Col>
 															<Button
@@ -300,13 +355,18 @@ class ViewEmployee extends React.Component {
 																</Button>
 															</Col>
 															</Row>
-														
-															<Row> <div className='mt-2 mb-2'>Bank Holder Name : {this.state.EmployeeDetails.accountHolderName !== '' ?
-																this.state.EmployeeDetails.accountHolderName :  ('-') }</div></Row>
-															<Row> <div className='mt-2 mb-2'>Account Number : {this.state.EmployeeDetails.accountNumber !== '' ?  this.state.EmployeeDetails.accountNumber : ('-')}</div></Row>
-															<Row> <div className='mt-2 mb-2'>Bank Name : {this.state.EmployeeDetails.bankName !== '' ?  this.state.EmployeeDetails.bankName : ('-')}</div></Row>
-															<Row> <div className='mt-2 mb-2'>Branch  : {this.state.EmployeeDetails.branch !== '' ? this.state.EmployeeDetails.branch : ('-')}</div></Row>
-															<Row> <div className='mt-2 mb-2'>iban : {this.state.EmployeeDetails.iban ? this.state.EmployeeDetails.iban  : ('-') }</div></Row>
+															<Row> <Col className='mt-2 mb-2'>Bank Holder Name </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.accountHolderName !== '' ?
+																this.state.EmployeeDetails.accountHolderName :  ('-') }</Col></Row>
+
+	
+															<Row> <Col className='mt-2 mb-2'>Account Number </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.accountNumber !== '' ?  this.state.EmployeeDetails.accountNumber : ('-')}</Col></Row>
+
+															<Row> <Col className='mt-2 mb-2'>Bank Name</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.bankName !== '' ?  this.state.EmployeeDetails.bankName : ('-')}</Col></Row>
+
+															<Row> <Col className='mt-2 mb-2'>Branch</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.branch !== '' ? this.state.EmployeeDetails.branch : ('-')}</Col></Row>
+
+															<Row> <Col className='mt-2 mb-2'>iban</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.iban ? this.state.EmployeeDetails.iban  : ('-') }</Col></Row>
+
 															</div>
 														</CardBody>
 													</div>
@@ -411,7 +471,64 @@ class ViewEmployee extends React.Component {
 
 								<TabPane tabId="3">
 									<div className="table-wrapper">
-																		
+										<Card>
+										<BootstrapTable
+                                                    selectRow={this.selectRowProp}
+                                                    search={false}
+                                                    options={this.options}
+                                                    data={this.state.salarySlipList &&
+														this.state.salarySlipList ? this.state.salarySlipList : []}
+                                                    version="4"
+                                                    hover
+                                                    // pagination={salarySlipList && salarySlipList.data
+                                                    //     && salarySlipList.data.length > 0 ? true : false}
+                                                    keyField="id"
+                                                    remote
+                                                    // fetchInfo={{ dataTotalSize: salarySlipList.count ? salarySlipList.count : 0 }}
+                                                    className="employee-table"
+                                                    trClassName="cursor-pointer"
+                                                    // csvFileName="payroll_employee_list.csv"
+                                                    ref={(node) => this.table = node}
+                                                >
+                                                    <TableHeaderColumn
+                                                        className="table-header-bg"
+                                                        dataField="salaryDate"
+                                                        dataSort
+
+
+                                                    >
+                                                        Salary Date
+													</TableHeaderColumn>
+													<TableHeaderColumn
+                                                        className="table-header-bg"
+                                                        dataField="monthYear"
+                                                        dataSort
+
+                                                    >
+                                                       Month Year
+													</TableHeaderColumn>
+													<TableHeaderColumn
+                                                        className="table-header-bg"
+
+														dataFormat={this.renderActions}
+                                                        dataSort
+
+
+                                                    >
+                                                        	PAY-SLIPS
+													</TableHeaderColumn>
+													{/* <TableHeaderColumn
+                                                        className="table-header-bg"
+														dataFormat={this.renderActions}
+                                                        dataSort
+
+                                                    >
+                                                      TDS SHEET
+                       						   </TableHeaderColumn> */}
+                                                </BootstrapTable>
+
+
+										</Card>
 
 									</div>
 								</TabPane>
@@ -421,6 +538,14 @@ class ViewEmployee extends React.Component {
 						</CardBody>
 					</Card>
 				</div>
+				<ViewPaySlip
+					openModal={this.state.openModal}
+					closeModal={(e) => {
+						this.closeModal(e);
+					}}
+					// id={this.state.rowId}
+                    // selectedData={this.state.selectedData}
+				/>
 			</div>
 		);
 	}

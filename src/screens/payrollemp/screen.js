@@ -180,7 +180,7 @@ class PayrollEmployee extends React.Component {
 					cursor: 'pointer',
 					}}
 				onClick={
-                    () =>{ debugger
+                    () =>{ 
 					this.props.history.push('/admin/payroll/employee/viewEmployee',
                     { id: row.id })}
 				}

@@ -146,7 +146,7 @@ class ViewEmployee extends React.Component {
 										Deduction:res.data.salarySlipResult.Deduction,
 									});
 
-								}debugger
+								}
 							})
 							.catch((err) => {
 								this.props.commonActions.tostifyAlert(
@@ -222,7 +222,7 @@ class ViewEmployee extends React.Component {
 								Variable: res.data.salaryComponentResult.Variable,
 								Deduction: res.data.salaryComponentResult.Deduction,
 								FixedAllowance: res.data.salaryComponentResult.Fixed_Allowance,
-								CTC: res.data.CTC,
+								CTC: res.data.ctc,
 								loading: false,
 							},
 							() => {
@@ -435,9 +435,9 @@ class ViewEmployee extends React.Component {
 												<div className='m-4'>
 													<Row style={{ width: '50%' }}>
 														<Col><h5>Annual CTC  </h5>
-															<div> {this.state.CTC}</div></Col>
+															<div><h3>  {this.state.CTC}</h3></div></Col>
 														<Col><h5>Monthly Income  </h5>
-															<div> {this.state.CTC / 12}</div></Col>
+															<div> <h3>{this.state.CTC ? (this.state.CTC /12).toFixed(2) : ''}</h3></div></Col>
 													</Row>
 												</div>
 												<Card style={{ height: '520px', width: '1000px' }} >
@@ -505,7 +505,7 @@ class ViewEmployee extends React.Component {
 																		))) : (<tr></tr>)}
 																	<tr>
 																		<td className="text-left"><b>Cost to Company</b></td>
-																		<td className="text-right">{this.state.CTC / 12}</td>
+																		<td className="text-right">{this.state.CTC ? (this.state.CTC / 12).toFixed(2) : ''}</td>
 																		<td className="text-right">{this.state.CTC}</td>
 																	</tr>
 																</tfoot>

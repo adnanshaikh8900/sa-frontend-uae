@@ -87,7 +87,6 @@ class PaySlipModal extends React.Component {
 	static getDerivedStateFromProps(nextProps, prevState) {
 		if (prevState.selectedData !== nextProps.selectedData) {
 			console.log('getDerivedStateFromProps state changed', nextProps.selectedData);
-			debugger
 			return {
 				prefixData: nextProps.prefixData,
 				selectedData: nextProps.selectedData,

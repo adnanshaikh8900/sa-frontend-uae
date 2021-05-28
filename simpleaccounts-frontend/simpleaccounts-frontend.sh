@@ -43,7 +43,7 @@ helm $1 $subdomain-frontend simplevat-frontend-reactjs/$helmDir --values simplev
 --set ingress.tls[0].secretName=wildcard-app-simpleaccounts-io-tls \
 --set database.enabled=$createDatabase \
 -n $nameserver \
---dry-run --debug
+--dry-run --debug --wait
 
 echo "Deploying the scripts"
 
@@ -61,6 +61,7 @@ helm $1 $subdomain-frontend simplevat-frontend-reactjs/$helmDir --values simplev
 --set ingress.tls[0].hosts[1]=$subdomain.$maindomain \
 --set ingress.tls[0].secretName=wildcard-app-simpleaccounts-io-tls \
 --set database.enabled=$createDatabase \
--n $nameserver
+-n $nameserver \
+--wait
 
 echo "Deployment done"

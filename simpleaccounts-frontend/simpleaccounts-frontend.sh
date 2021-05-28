@@ -28,7 +28,7 @@ createDatabase="false"
 
 echo "Test deployment script"
 
-helm $1 $subdomain-frontend ./$helmDir --values ./$helmDir/values.yaml \
+helm $1 $subdomain-frontend simplevat-frontend-reactjs/$helmDir --values simplevat-frontend-reactjs/$helmDir/values.yaml \
 --set simpleVatFrontendRelease=$SVrelease \
 --set image.repository.frontend.tag=$SVrelease \
 --set simpleVatHost=https://$subdomain-api.$maindomain \
@@ -47,7 +47,7 @@ helm $1 $subdomain-frontend ./$helmDir --values ./$helmDir/values.yaml \
 
 echo "Deploying the scripts"
 
-helm $1 $subdomain-frontend ./$helmDir --values ./$helmDir/values.yaml \
+helm $1 $subdomain-frontend simplevat-frontend-reactjs/$helmDir --values simplevat-frontend-reactjs/$helmDir/values.yaml \
 --set simpleVatFrontendRelease=$SVrelease \
 --set image.repository.frontend.tag=$SVrelease \
 --set simpleVatHost=https://$subdomain-api.$maindomain \

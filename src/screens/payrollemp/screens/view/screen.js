@@ -31,7 +31,7 @@ import {
 
 const mapStateToProps = (state) => {
 	return {
-
+		profile: state.auth.profile,
 	};
 };
 
@@ -50,6 +50,7 @@ class ViewEmployee extends React.Component {
 		super(props);
 		this.state = {
 			openModal: false,
+			selectedData:{},
 			activeTab: new Array(4).fill('1'),
 			EmployeeDetails: '',
 			userPhoto: [],
@@ -128,19 +129,24 @@ class ViewEmployee extends React.Component {
 			<div>
 				<Button
 					onClick={() => {
-						debugger
+						
 						this.props.employeeViewActions
 							.getSalarySlip({id: this.props.location.state.id, salaryDate: row.salaryDate})
 							.then((res) => {
 								if (res.status === 200) {
 									// this.initializeData();
-
-
+									let v ="Fixed Allowance"
 									this.setState({
-
+										
+										employeename:res.data.employeename,
+										selectedData:res.data,
+										Fixed:res.data.salarySlipResult.Fixed,
+										FixedAllowance:res.data.salarySlipResult.Fixed_Allowance ,
+										Variable: res.data.salarySlipResult.Variable,
+										Deduction:res.data.salarySlipResult.Deduction,
 									});
 
-								}
+								}debugger
 							})
 							.catch((err) => {
 								this.props.commonActions.tostifyAlert(
@@ -234,6 +240,7 @@ class ViewEmployee extends React.Component {
 
 	render() {
 		console.log(this.state.Fixed)
+		const {profile} = this.props;
 		return (
 			<div className="financial-report-screen">
 				<div className="animated fadeIn">
@@ -587,8 +594,14 @@ class ViewEmployee extends React.Component {
 					closeModal={(e) => {
 						this.closeModal(e);
 					}}
+					employeename={this.state.employeename}
 				// id={this.state.rowId}
-				// selectedData={this.state.selectedData}
+				Fixed={this.state.Fixed}
+				 FixedAllowance={this.state.FixedAllowance}
+				 selectedData={this.state.selectedData}
+				 Deduction={this.state.Deduction}
+				 Variable={this.state.Variable}
+				 companyData={profile}
 				/>
 			</div>
 		);

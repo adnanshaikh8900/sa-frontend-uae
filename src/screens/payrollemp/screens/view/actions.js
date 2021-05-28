@@ -55,7 +55,9 @@ import {
 		let salaryDate=obj.salaryDate;
 	  let data = {
 		method: 'GET',
+		// url: `/rest/Salary/getSalariesByEmployeeId?id=${id}&salaryDate=${salaryDate}`
 		url: `/rest/Salary/getSalariesByEmployeeId?id=${id}&salaryDate=${salaryDate}`
+		
 	  }
   
 	  return authApi(data).then((res) => {

@@ -65,7 +65,7 @@ class PayrollEmployee extends React.Component {
         }
 
         this.options = {
-            onRowClick: this.goToDetail,
+           // onRowClick: this.goToDetail,
             paginationPosition: 'bottom',
             page: 1,
             sizePerPage: 10,
@@ -258,6 +258,13 @@ class PayrollEmployee extends React.Component {
     }
     renderDOB = (cell, rows) => {
         return moment(rows.dob).format('DD/MM/YYYY');
+    };
+
+    renderStatus = (cell, row) => {
+        if(row.isActive === true )
+        { return "Active"
+       }   else{
+        return " InActive"};
     };
 
     removeBulk = () => {
@@ -462,7 +469,7 @@ class PayrollEmployee extends React.Component {
                                                         className="table-header-bg"
                                                         dataField="fullName"
                                                         dataSort
-                                                        width="15%"
+                                                        width="20%"
                                                         dataFormat={this.fullname}
                                                     >
                                                         Full Name
@@ -471,7 +478,7 @@ class PayrollEmployee extends React.Component {
                                                         className="table-header-bg"
                                                         dataField="email"
                                                         dataSort
-                                                        width="15%"
+                                                        width="20%"
                                                     >
                                                         Email
                           </TableHeaderColumn>
@@ -515,10 +522,10 @@ class PayrollEmployee extends React.Component {
                                                         className="table-header-bg"
                                                         dataField="isActive"
                                                         dataSort
-                                                    // dataFormat={this.vatCategoryFormatter}
-                                                    width="10%"
+                                                    dataFormat={this.renderStatus}
+                                                         width="10%"
                                                     >
-                                                        is-Active
+                                                       Status
                           </TableHeaderColumn>
                                                     {/* <TableHeaderColumn
                                                         className="text-right"

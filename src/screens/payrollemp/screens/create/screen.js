@@ -30,7 +30,6 @@ import './style.scss'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 
-import './style.scss';
 
 import {
     FormGroup,
@@ -48,7 +47,6 @@ import { selectCurrencyFactory, selectOptionsFactory } from 'utils'
 
 
 import 'react-datepicker/dist/react-datepicker.css'
-import './style.scss'
 import PhoneInput from 'react-phone-number-input'
 import moment from 'moment'
 
@@ -2064,7 +2062,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                 this.updateSalary(this.state.CTC);
 
                                                                                             }}
-                                                                                        />{item.description !== 'Basic SALARY' ? ('' % "of Basic"): ('' % "of CTC")}
+                                                                                        />{item.description !== 'Basic SALARY' ? ( ' % of Basic') : ( ' % of CTC')}
                                                                                     </td>
                                                                                 ) : (
                                                                                     <td style={{border:"3px solid #2064d8"}}>Fixed amount</td>)
@@ -2161,7 +2159,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                             
                                                                                             value={item.formula}
                                                                                             id=''
-                                                                                        />{' '}% of CTC
+                                                                                        />{' '}% of Basic
                                                                                     </td>
                                                                                 ) : (
                                                                                     <td style={{border:"3px solid # #2064d8"}}>Fixed amount</td>)

@@ -206,7 +206,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                         <Loader></Loader>
                                     ) : (
                                         <Row>
-                                            <Col lg={6}>
+                                            <Col lg={8}>
                                                 <Formik
                                                     initialValues={initValue}
                                                     ref={this.formRef}
@@ -220,7 +220,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                             <Row>
 
 
-                                                                <Col xs="4" md="4" lg={10}>
+                                                                <Col lg={12}>
                                                                     <Row>
                                                                     <Col md="4">
                                                                             <FormGroup>
@@ -467,7 +467,7 @@ class UpdateEmployeeEmployment extends React.Component {
 
 
                                                             </Row>
-                                                            <Row>
+                                                            <Row className='pull-right'>
                                                                 <FormGroup className="text-right">
                                                                     <Button
                                                                         type="submit"

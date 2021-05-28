@@ -292,7 +292,7 @@ class UpdateEmployeePersonal extends React.Component {
                                         <Loader></Loader>
                                     ) : (
                                         <Row>
-                                            <Col lg={6}>
+                                            <Col lg={8}>
                                                 <Formik
                                                     initialValues={initValue}
                                                     ref={this.formRef}
@@ -336,7 +336,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                         </FormGroup>
                                                                                     </Col> */}
 
-                                                                <Col xs="4" md="4" lg={10}>
+                                                                <Col  lg={12}>
                                                                     <Row className="row-wrapper">
 
                                                                         <Col lg={4}>
@@ -917,15 +917,10 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                 )}
                                                                             </FormGroup>
                                                                         </Col>
-
                                                                     </Row>
-
-
                                                                 </Col>
-
-
                                                             </Row>
-                                                            <Row>
+                                                            <Row className='pull-right'>
                                                             <FormGroup className="text-right">
 																		<Button
 																			type="submit"

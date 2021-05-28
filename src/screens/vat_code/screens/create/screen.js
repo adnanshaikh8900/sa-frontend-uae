@@ -30,6 +30,8 @@ import { Formik } from 'formik';
 import NumberFormat from "react-number-format";
 import PropTypes from "prop-types";
 import TextField from "@material-ui/core/TextField";
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 function NumberFormatCustom(props) {
 	const { inputRef, onChange, ...other } = props;
@@ -70,10 +72,12 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+let strings = new LocalizedStrings(data);
 class CreateVatCode extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			initValue: { name: '', vat: '' },
 			loading: false,
 			createMore: false,
@@ -140,6 +144,7 @@ class CreateVatCode extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { loading, vat_list } = this.state;
 
 		if (vat_list) {
@@ -157,7 +162,7 @@ class CreateVatCode extends React.Component {
 								<CardHeader>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="nav-icon icon-briefcase" />
-										<span className="ml-2">New Vat Category</span>
+										<span className="ml-2">{strings.NewVatCategory}</span>
 									</div>
 								</CardHeader>
 								<CardBody>
@@ -197,8 +202,8 @@ class CreateVatCode extends React.Component {
 													<Form onSubmit={props.handleSubmit} name="simpleForm">
 														<FormGroup>
 															<Label htmlFor="name">
-																<span className="text-danger">*</span>Vat Category
-																Name
+																<span className="text-danger">*</span>
+																 {strings.VatCategoryName}
 																<i
 																	id="VatCodeTooltip"
 																	className="fa fa-question-circle ml-1"
@@ -242,7 +247,7 @@ class CreateVatCode extends React.Component {
 														</FormGroup>
 														<FormGroup>
 															<Label htmlFor="name">
-																<span className="text-danger">*</span>Percentage
+																<span className="text-danger">*</span>{strings.Percentage}
 																<i
 																	id="VatPercentTooltip"
 																	className="fa fa-question-circle ml-1"
@@ -300,7 +305,7 @@ class CreateVatCode extends React.Component {
 																	});
 																}}
 															>
-																<i className="fa fa-dot-circle-o"></i> Create
+																<i className="fa fa-dot-circle-o"></i> {strings.Create}
 															</Button>
 															<Button
 																name="button"
@@ -312,8 +317,7 @@ class CreateVatCode extends React.Component {
 																	});
 																}}
 															>
-																<i className="fa fa-refresh"></i> Create and
-																More
+																<i className="fa fa-refresh"></i> {strings.CreateandMore}
 															</Button>
 															<Button
 																type="submit"
@@ -325,7 +329,7 @@ class CreateVatCode extends React.Component {
 																	);
 																}}
 															>
-																<i className="fa fa-ban"></i> Cancel
+																<i className="fa fa-ban"></i> {strings.Cancel}
 															</Button>
 														</FormGroup>
 													</Form>

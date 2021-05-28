@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import configData from '../../constants/config';
 
 // import { bindActionCreators } from 'redux'
-import { Card, CardBody, Col, Row } from 'reactstrap';
+import { Card, CardBody, Col, Row ,CardGroup} from 'reactstrap';
 
 import './style.scss';
 const mapStateToProps = (state) => {
@@ -34,30 +34,37 @@ class Help extends React.Component {
 					<Row>
 						<Col lg="8" className="mx-auto my-auto">
 							<Row>
-								<Col md="6">
-									<Card>
+								<CardGroup style={{
+							width: "100%",
+
+						}}>
+									<Card style={{
+							width: "50%",
+
+						}}>
 										<CardBody>
+										<div>
 											<div className="text-center">
 												<img src={faqIcon} width="40%" alt=""></img>
 											</div>
-											<h3>Have a question?</h3>
+											<div><h4>Have a question?</h4></div>
 											<p>
 												Find detailed answers to the most common questions you
 												might have while using our site
 											</p>
 											{/* <Link to="https://www.simplevat.com/faqs/">Go to FAQ</Link> */}
 										<b>	<a target="_blank" href="https://www.simplevat.com/faqs/" style={{ color: '#2266d8' }}>Go to FAQ</a></b>
-
+										</div>
 										</CardBody>
 									</Card>
-								</Col>
-								<Col md="6">
-									<Card>
+							
+									<Card className="ml-2">
 										<CardBody>
+										<div>
 											<div className="text-center">
 												<img src={userIcon} width="40%" alt=""></img>
 											</div>
-											<h3>Customer Support</h3>
+											<div><h4>Customer Support</h4></div>
 											<p>
 												Find detailed answers to the most common questions you
 												might have while using our site
@@ -80,16 +87,26 @@ class Help extends React.Component {
 												</button>
 												<p>support@simpleaccounts.io</p>
 											</div>
+											</div>
 										</CardBody>
 									</Card>
-								</Col>
-								<Col md="6">
-									<Card>
+								</CardGroup>
+								</Row>
+								<Row>
+								<CardGroup className="mt-2" style={{
+							width: "100%",
+
+						}}>
+									<Card style={{
+							width: "50%",
+
+						}}>
 										<CardBody>
+										<div>
 											<div className="text-center">
 												<img src={versionimage} width="40%" alt=""></img>
 											</div>
-											<h3>Simple Accounts Versions</h3>
+											<h4>Simple Accounts Versions</h4>
 											<p>
 												FrontEnd Verison:  <label className="mb-0 text-primary">{configData.FRONTEND_RELEASE}</label><br></br>
 												BackEnd Version: {
@@ -101,17 +118,17 @@ class Help extends React.Component {
 											</p>
 											{/* <Link to="https://www.simplevat.com/faqs/">Go to FAQ</Link> */}
 							{/* <b>	<a target="_blank" href="https://www.simplevat.com/faqs/" style={{ color: '#2266d8' }}>Go to FAQ</a></b> */}
-
+							</div>
 										</CardBody>
 									</Card>
-								</Col>
-								<Col md="6">
-									<Card>
-										<CardBody style={{height:'415px'}}>
+								
+									<Card className="ml-2">
+										<CardBody>
+										<div>
 											<div className="text-center" >
 												<img src={faqIcon} width="40%" alt=""></img>
 											</div>
-											{/* <h3>Simple Accounts Version Numbers</h3>
+											{/* <h4>Simple Accounts Version Numbers</h4>
 											<p>
 												FrontEnd Verison:  <label className="mb-0 text-primary">{configData.FRONTEND_RELEASE}</label><br></br>
 												BackEnd Version: {
@@ -123,12 +140,11 @@ class Help extends React.Component {
 											</p> */}
 											{/* <Link to="https://www.simplevat.com/faqs/">Go to FAQ</Link> */}
 							{/* <b>	<a target="_blank" href="https://www.simplevat.com/faqs/" style={{ color: '#2266d8' }}>Go to FAQ</a></b> */}
-											<div>
-
+										
 											</div>
 										</CardBody>
 									</Card>
-								</Col>
+								</CardGroup>
 							</Row>
 						</Col>
 					</Row>

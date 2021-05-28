@@ -38,6 +38,8 @@ import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 
 import './style.scss';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 import { Create } from '@material-ui/icons';
 import moment from 'moment';
 
@@ -83,6 +85,7 @@ const overWeekly = require('assets/images/invoice/week1.png');
 const overduemonthly = require('assets/images/invoice/month.png');
 const overdue = require('assets/images/invoice/due1.png');
 
+let strings = new LocalizedStrings(data);
 class RequestForQuotation extends React.Component {
 	constructor(props) {
 		super(props);
@@ -119,6 +122,7 @@ class RequestForQuotation extends React.Component {
 			csvData: [],
 			view: false,
 			rowId: '',
+			language: window['localStorage'].getItem('language'),
 		};
 
 		this.options = {
@@ -207,11 +211,11 @@ class RequestForQuotation extends React.Component {
 
 	renderRFQStatus = (cell, row) => {
 		let classname = '';
-		if (row.status === 'Send') {
+		if (row.status === 'Closed') {
 			classname = 'label-success';
 		} else if (row.status === 'Draft') {
 			classname = 'label-currency';
-		} else if (row.status === 'Closed') {
+		} else if (row.status === 'Sent') {
 			classname = 'label-PartiallyPaid';
 		} else {
 			classname = 'label-overdue';
@@ -233,13 +237,13 @@ class RequestForQuotation extends React.Component {
 		return(
 			<div>
 								<div>
-						<label className="font-weight-bold mr-2 ">RFQ Amount : </label>
+						<label className="font-weight-bold mr-2 ">{strings.RFQAmount}: </label>
 						<label>
 							{row.totalAmount  === 0 ? row.totalAmount.toFixed(2) : row.totalAmount.toFixed(2)}
 						</label>
 					</div>
 					<div style={{display: row.totalVatAmount === 0 ? 'none' : ''}}>
-					<label className="font-weight-bold mr-2">Vat Amount : </label>
+					<label className="font-weight-bold mr-2">{strings.VatAmount} : </label>
 					<label>{row.totalVatAmount === 0  ?  row.totalVatAmount.toFixed(2) :  row.totalVatAmount.toFixed(2)}</label>
 					</div>
 					
@@ -313,7 +317,7 @@ class RequestForQuotation extends React.Component {
 								}
 							>
 								
-								<i className="fas fa-edit" /> Edit
+								<i className="fas fa-edit" /> {strings.Edit}
 							</DropdownItem>
 								)}
 								{row.status === 'Sent' && (
@@ -322,7 +326,7 @@ class RequestForQuotation extends React.Component {
 							this.renderActionForState(row.id);
 							}}
 							>
-								<i className="fas fa-plus" /> Create PO
+								<i className="fas fa-plus" /> {strings.CreatePO}
 							</DropdownItem>
 							)}
 							{ row.status !== "Closed"  && (
@@ -331,7 +335,7 @@ class RequestForQuotation extends React.Component {
 									this.sendMail(row.id);
 								}}
 							>
-								<i className="fas fa-send" /> Send
+								<i className="fas fa-send" /> {strings.Send}
 							</DropdownItem>
 							)}
 							
@@ -341,7 +345,7 @@ class RequestForQuotation extends React.Component {
 							this.changeStatus(row.id);
 							}}
 							>
-								<i className="far fa-times-circle" /> Close
+								<i className="far fa-times-circle" /> {strings. Close}
 							</DropdownItem>
 							)}
 						<DropdownItem
@@ -352,7 +356,7 @@ class RequestForQuotation extends React.Component {
 								)
 							}
 						>
-							<i className="fas fa-eye" /> View
+							<i className="fas fa-eye" /> {strings. View}
 						</DropdownItem>
 						{/* {row.statusEnum === 'Sent' && (
 							<DropdownItem
@@ -415,6 +419,8 @@ class RequestForQuotation extends React.Component {
 	}
 
 	renderActionForState = (id) => {
+		this.props.purchaseOrderAction.getVatList();
+		this.props.purchaseOrderAction.getProductList();
 		this.props.requestForQuotationDetailsAction.getRFQeById(id).then((res) => {
 			this.setState({		
 				// current_rfq_id: this.props.location.state.id,
@@ -788,6 +794,7 @@ class RequestForQuotation extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			loading,
 			filterData,
@@ -842,7 +849,7 @@ class RequestForQuotation extends React.Component {
 											src={invoiceimage}
 											style={{ width: '40px' }}
 										/>
-										<span className="ml-2">Request For Quotation</span>
+										<span className="ml-2">{strings.RequestForQuotation}</span>
 									</div>
 								</Col>
 							</Row>
@@ -890,7 +897,7 @@ class RequestForQuotation extends React.Component {
 										</ButtonGroup>
 									</div>
 									<div className="py-3">
-										<h5>Filter : </h5>
+										<h5>{strings.Filter} : </h5>
 										<Row>
 											<Col lg={2} className="mb-1">
 												<Select
@@ -955,7 +962,7 @@ class RequestForQuotation extends React.Component {
 												/>
 											</Col> */}
 										
-											<Col lg={2} className="mb-1">
+											{/* <Col lg={2} className="mb-1">
 												<Select
 													styles={customStyles}
 													className=""
@@ -982,7 +989,7 @@ class RequestForQuotation extends React.Component {
 													}}
 													placeholder="Status"
 												/>
-											</Col>
+											</Col> */}
 											<Col lg={2} className="pl-0 pr-0">
 												<Button
 													type="button"
@@ -1016,7 +1023,7 @@ class RequestForQuotation extends React.Component {
 										}
 									>
 										<i className="fas fa-plus mr-1" />
-										Add New Request
+										{strings.AddNewRequest}
 									</Button>
 									</div>
 									</Row> 
@@ -1052,7 +1059,7 @@ class RequestForQuotation extends React.Component {
 											//	width="10%"
 												className="table-header-bg"
 											>
-												RFQ Number
+											{strings.RFQNUMBER}
 											</TableHeaderColumn>
 											{/* <TableHeaderColumn
 												dataField="poList"
@@ -1069,7 +1076,7 @@ class RequestForQuotation extends React.Component {
 											//	width="12%"
 												className="table-header-bg"
 											>
-												Supplier Name
+												{strings.SUPPLIERNAME}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 											//	width="10%"
@@ -1078,7 +1085,7 @@ class RequestForQuotation extends React.Component {
 												dataSort
 												className="table-header-bg"
 											>
-												Status
+												{strings.STATUS}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="rfqReceiveDate"
@@ -1087,7 +1094,7 @@ class RequestForQuotation extends React.Component {
 												dataFormat={this.orderDate}
 												className="table-header-bg"
 											>
-												RFQ Date
+												{strings.RFQDATE}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="rfqExpiryDate"
@@ -1096,7 +1103,7 @@ class RequestForQuotation extends React.Component {
 												dataFormat={this.rfqDueDate}
 												className="table-header-bg"
 											>
-												RFQ Due Date
+												{strings.RFQDUEDATE}
 											</TableHeaderColumn>
 											
 											<TableHeaderColumn
@@ -1107,7 +1114,7 @@ class RequestForQuotation extends React.Component {
 												className="table-header-bg"
 												
 											>
-												 Amount
+												 {strings.AMOUNT}
 											</TableHeaderColumn>
 											{/* <TableHeaderColumn
 												dataField="dueAmount"
@@ -1156,8 +1163,8 @@ class RequestForQuotation extends React.Component {
 				//	getInvoice={this.props.purchaseOrderCreateAction.getPoNo()}
 					prefixData={this.state.prefixData}
 				//	nextprefixData={this.state.nextprefixData}
-					getVat={this.props.purchaseOrderAction.getVatList()}
-					getProductList={this.props.purchaseOrderAction.getProductList()}
+				//	getVat={this.props.purchaseOrderAction.getVatList()}
+				//	getProductList={this.props.purchaseOrderAction.getProductList()}
 					createPO={this.props.purchaseOrderCreateAction.createPO}
                     totalAmount={this.state.totalAmount}
 					totalVatAmount={this.state.totalVatAmount}

@@ -248,7 +248,7 @@ class DetailSalaryTemplate extends React.Component {
                                     id="description"
                                     name="description"
                                     value={props.values.description}
-                                    placeholder="Enter Slary description"
+                                    placeholder="Enter Salary description"
                                     onChange={(option) => {
                                       if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('description')(option) }
                                     }}
@@ -267,7 +267,7 @@ class DetailSalaryTemplate extends React.Component {
                                     id="formula"
                                     name="formula"
                                     value={props.values.formula}
-                                    placeholder="Enter Slary formula"
+                                    placeholder="Enter Salary formula"
                                     onChange={(option) => {
                                       if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('formula')(option) }
                                     }}

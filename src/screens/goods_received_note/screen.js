@@ -37,6 +37,8 @@ import { selectOptionsFactory } from 'utils';
 
 import './style.scss';
 import { Create } from '@material-ui/icons';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -71,6 +73,7 @@ const overWeekly = require('assets/images/invoice/week1.png');
 const overduemonthly = require('assets/images/invoice/month.png');
 const overdue = require('assets/images/invoice/due1.png');
 
+let strings = new LocalizedStrings(data);
 class GoodsReceivedNote extends React.Component {
 	constructor(props) {
 		super(props);
@@ -99,6 +102,7 @@ class GoodsReceivedNote extends React.Component {
 				overDueAmountWeekly: '',
 				overDueAmountMonthly: '',
 			},
+			language: window['localStorage'].getItem('language'),
 		};
 
 		this.options = {
@@ -280,7 +284,7 @@ class GoodsReceivedNote extends React.Component {
 								}
 							>
 								
-								<i className="fas fa-edit" /> Edit
+								<i className="fas fa-edit" />  {strings.Edit}
 							</DropdownItem>
 					)}
 							{row.status !== 'Draft' && row.status !== 'Closed' && (
@@ -289,7 +293,7 @@ class GoodsReceivedNote extends React.Component {
 									this.sendMail(row.id);
 								}}
 							>
-								<i className="fas fa-send" /> Send
+								<i className="fas fa-send" />{strings.Send}
 							</DropdownItem>
 							)}
 							{/* {row.status === 'Sent' && (
@@ -309,7 +313,7 @@ class GoodsReceivedNote extends React.Component {
 								this.postGrn(row.id);
 							}}
 						>
-								<i className="fas fa-send" />  Post
+								<i className="fas fa-send" />  {strings.Post}
 						</DropdownItem>
 						)}
 						{/* {(row.status !== 'Draft' && row.status !== 'post' && row.status !== 'Closed' &&
@@ -347,7 +351,7 @@ class GoodsReceivedNote extends React.Component {
 								)
 							}
 						>
-							<i className="fas fa-eye" /> View
+							<i className="fas fa-eye" /> {strings.View}
 						</DropdownItem>
 					</DropdownMenu>
 				</ButtonDropdown>
@@ -768,6 +772,7 @@ class GoodsReceivedNote extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			loading,
 			filterData,
@@ -825,7 +830,7 @@ console.log(request_for_quotation_data)
 											src={invoiceimage}
 											style={{ width: '40px' }}
 										/>
-										<span className="ml-2">Goods Received Notes</span>
+										<span className="ml-2">{strings.GoodsReceivedNotes}</span>
 									</div>
 								</Col>
 							</Row>
@@ -873,7 +878,7 @@ console.log(request_for_quotation_data)
 										</ButtonGroup>
 									</div>
 									<div className="py-3">
-										<h5>Filter : </h5>
+										<h5>{strings.Filter} : </h5>
 										<Row>
 											<Col lg={2} className="mb-1">
 												<Select
@@ -938,7 +943,7 @@ console.log(request_for_quotation_data)
 												/>
 											</Col> */}
 										
-											<Col lg={2} className="mb-1">
+											{/* <Col lg={2} className="mb-1">
 												<Select
 													styles={customStyles}
 													className=""
@@ -965,7 +970,7 @@ console.log(request_for_quotation_data)
 													}}
 													placeholder="Status"
 												/>
-											</Col>
+											</Col> */}
 											<Col lg={2} className="pl-0 pr-0">
 												<Button
 													type="button"
@@ -999,7 +1004,7 @@ console.log(request_for_quotation_data)
 										}
 									>
 										<i className="fas fa-plus mr-1" />
-										Add New Goods Received Notes
+										{strings.AddNewGoodsReceivedNotes}
 									</Button>
 									</div>
 									</Row> 
@@ -1034,7 +1039,7 @@ console.log(request_for_quotation_data)
 											//	width="10%"
 												className="table-header-bg"
 											>
-												GRN Number
+												{strings.GRNNUMBER}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="supplierName"
@@ -1042,7 +1047,7 @@ console.log(request_for_quotation_data)
 											//	width="12%"
 												className="table-header-bg"
 											>
-												Supplier Name
+												{strings.SUPPLIERNAME}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 											//	width="10%"
@@ -1051,7 +1056,7 @@ console.log(request_for_quotation_data)
 												dataSort
 												className="table-header-bg"
 											>
-												Status
+												{strings.STATUS}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="grnReceiveDate"
@@ -1060,7 +1065,7 @@ console.log(request_for_quotation_data)
 												//dataFormat={this.grnReceiveDate}
 												className="table-header-bg"
 											>
-												GRN Receive Date
+												{strings.GRNRECEIVEDATE}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="grnRemarks"
@@ -1069,7 +1074,7 @@ console.log(request_for_quotation_data)
 												//dataFormat={this.grnReceiveDate}
 												className="table-header-bg"
 											>
-												GRN Remarks
+												{strings.GRNREMARKS}
 											</TableHeaderColumn>
 											{/* <TableHeaderColumn
 												dataField="grnReceiveDate"

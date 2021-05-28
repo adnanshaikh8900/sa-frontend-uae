@@ -24,6 +24,8 @@ import './style.scss';
 import * as CurrencyConvertActions from './actions';
 import { CSVLink } from 'react-csv';
 import { stubArray } from 'lodash';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -38,11 +40,13 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+let strings = new LocalizedStrings(data);
 class ProductCategory extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			// openDeleteModal: true,
 			loading: true,
 			selectedRows: [],
@@ -329,6 +333,7 @@ class ProductCategory extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			loading,
 			selectedRows,
@@ -348,7 +353,7 @@ class ProductCategory extends React.Component {
 						<CardHeader>
 							<div className="h4 mb-0 d-flex align-items-center">
 								<i className="nav-icon icon-briefcase" />
-								<span className="ml-2">Currency Conversion</span>
+								<span className="ml-2"> {strings.CurrencyConversion}</span>
 							</div>
 						</CardHeader>
 						<CardBody>
@@ -456,7 +461,7 @@ class ProductCategory extends React.Component {
 											}
 										>
 											<i className="fas fa-plus mr-1" />
-											Add New Currency Conversion
+											 {strings.AddNewCurrencyConversion}
 										</Button>
 										<BootstrapTable
 											data={currency_convert_list}
@@ -475,7 +480,7 @@ class ProductCategory extends React.Component {
 												dataFormat={this.renderCurrency}
 												className="table-header-bg"
 											>
-												Currency Name
+												{strings. CURRENCYNAME}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="description"
@@ -483,14 +488,14 @@ class ProductCategory extends React.Component {
 												dataFormat={this.renderBaseCurrency}
 												className="table-header-bg"
 											>
-												Currency Name Converted To
+												 {strings.CURRENCYNAMECONVERTEDTO}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="exchangeRate"
 												dataSort
 												className="table-header-bg"
 											>
-												Exchange Rate
+												{strings.EXCHANGERATE}
 											</TableHeaderColumn>
 										</BootstrapTable>
 									</Col>

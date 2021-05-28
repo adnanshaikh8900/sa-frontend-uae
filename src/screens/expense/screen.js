@@ -38,6 +38,8 @@ import { CSVLink } from 'react-csv';
 
 import './style.scss';
 import { DriveEtaOutlined } from '@material-ui/icons';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -64,6 +66,7 @@ const customStyles = {
 	}),
 };
 
+let strings = new LocalizedStrings(data);
 class Expense extends React.Component {
 	constructor(props) {
 		super(props);
@@ -81,6 +84,7 @@ class Expense extends React.Component {
 			sortOrder: '',
 			csvData: [],
 			view: false,
+			language: window['localStorage'].getItem('language'),
 		};
 
 		this.options = {
@@ -220,7 +224,7 @@ class Expense extends React.Component {
 										});
 									}}
 								>
-									<i className="fas fa-edit" /> Edit
+									<i className="fas fa-edit" /> {strings.Edit}
 								</div>
 							</DropdownItem>
 						)}
@@ -230,7 +234,7 @@ class Expense extends React.Component {
 									this.postExpense(row);
 								}}
 							>
-								<i className="fas fa-send" /> Post
+								<i className="fas fa-send" /> {strings.Post}
 							</DropdownItem>
 						)}
 						{row.expenseStatus === 'Posted' && row.payee !== 'Company Expense' && (
@@ -239,7 +243,7 @@ class Expense extends React.Component {
 									this.unPostExpense(row);
 								}}
 							>
-								<i className="fas fa-file" /> Draft
+								<i className="fas fa-file" />  {strings.Draft}
 							</DropdownItem>
 						)}
 						<DropdownItem
@@ -249,7 +253,7 @@ class Expense extends React.Component {
 								});
 							}}
 						>
-							<i className="fas fa-eye" /> View
+							<i className="fas fa-eye" /> {strings.View}
 						</DropdownItem>
 						{/* <DropdownItem  onClick={() => {this.openInvoicePreviewModal(row.expenseId)}}>
               <i className="fas fa-eye" /> View
@@ -575,6 +579,7 @@ class Expense extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			loading,
 			dialog,
@@ -604,7 +609,7 @@ class Expense extends React.Component {
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="fab fa-stack-exchange" />
-										<span className="ml-2">Expenses</span>
+										<span className="ml-2">{strings.Expenses}</span>
 									</div>
 								</Col>
 							</Row>
@@ -650,7 +655,7 @@ class Expense extends React.Component {
 										</ButtonGroup>
 									</div>
 									<div className="py-3">
-										<h5>Filter : </h5>
+										<h5>{strings.Filter}: </h5>
 										<Row>
 											<Col lg={2} className="mb-1">
 												<FormGroup className="mb-3">
@@ -765,7 +770,7 @@ class Expense extends React.Component {
 										
 									>
 										<i className="fas fa-plus mr-1" />
-										Add New Expense
+										{strings.AddNewExpense}
 									</Button>
 									</div>
 									<div>
@@ -795,9 +800,9 @@ class Expense extends React.Component {
 													: 0,
 											}}
 											multiColumnSort
-											className="expense-table"
-											trClassName="cursor-pointer"
-											ref={(node) => (this.table = node)}
+											//className="expense-table"
+											// trClassName="cursor-pointer"
+											//ref={(node) => (this.table = node)}
 											csvFileName="expense_list.csv"
 										>
 											<TableHeaderColumn
@@ -808,7 +813,7 @@ class Expense extends React.Component {
 												width="20%"
 												className='table-header-bg'
 											>
-												Expense Date
+												{strings.EXPENSEDATE}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}
@@ -816,7 +821,7 @@ class Expense extends React.Component {
 												dataSort
 												className='table-header-bg'
 											>
-												Payee
+												{strings.PAYEE}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}
@@ -826,7 +831,7 @@ class Expense extends React.Component {
 												dataSort
 												className='table-header-bg'
 											>
-												Status
+												{strings.STATUS}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}
@@ -835,7 +840,7 @@ class Expense extends React.Component {
 												width="30%"
 												className='table-header-bg'
 											>
-												Expense Category
+												{strings.EXPENSECATEGORY}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 													thStyle={{ whiteSpace: 'normal' }}
@@ -844,7 +849,7 @@ class Expense extends React.Component {
 													dataFormat={this.renderCurrency}
 													className='table-header-bg'
 												>
-													Currency
+													{strings.CURRENCY}
 												</TableHeaderColumn>
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}
@@ -855,7 +860,7 @@ class Expense extends React.Component {
 												width="15%"
 												className='table-header-bg'
 											>
-												Expense Amount
+												{strings.EXPENSEAMOUNT}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}

@@ -31,6 +31,8 @@ import * as DetailCurrencyConvertAction from './actions'
 import * as CurrencyConvertActions from '../../actions';
 
 import { Formik } from 'formik';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 
 const mapStateToProps = (state) => {
@@ -48,11 +50,12 @@ const mapDispatchToProps = (dispatch) => {
 
   })
 }
-
+let strings = new LocalizedStrings(data);
 class DetailCurrencyConvert extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      language: window['localStorage'].getItem('language'),
       initValue: {
       },
       basecurrency:[],
@@ -177,6 +180,7 @@ class DetailCurrencyConvert extends React.Component {
   }
 
   render() {
+    strings.setLanguage(this.state.language);
     const { loading, initValue,dialog} = this.state
 
     const{currencyList,currency_list} =this.props;
@@ -190,7 +194,7 @@ class DetailCurrencyConvert extends React.Component {
                 <CardHeader>
                   <div className="h4 mb-0 d-flex align-items-center">
                     <i className="nav-icon icon-briefcase" />
-                    <span className="ml-2">Update Currency Conversion</span>
+                    <span className="ml-2"> {strings.UpdateCurrencyConversion} </span>
                   </div>
                 </CardHeader>
                 <CardBody>
@@ -217,7 +221,7 @@ class DetailCurrencyConvert extends React.Component {
                                 <Col lg={1}>
 																	<FormGroup className="mt-2">
 																	<Label>
-																							Value
+																							 {strings.Value}
 																						</Label>
 																	<Input
 																			disabled
@@ -232,7 +236,7 @@ class DetailCurrencyConvert extends React.Component {
 																<Col lg={4}>
                                 <FormGroup className="mt-2">
 																						<Label htmlFor="currencyCode">
-																							Exchange Currency
+																							 {strings.ExchangeCurrency}
 																						</Label>
 																						<Select
 																							options={
@@ -293,7 +297,7 @@ class DetailCurrencyConvert extends React.Component {
                                           <Col lg={4}>
 															        	<FormGroup className="mt-2">
 															        	<Label htmlFor="productCategoryCode">
-																	Exchange rate
+																	 {strings.Exchangerate}
 																	{/* <i
 																		id="ProductcatcodeTooltip"
 																		className="fa fa-question-circle ml-1"
@@ -338,7 +342,7 @@ class DetailCurrencyConvert extends React.Component {
 																		<FormGroup className="mt-2">
 																		<Label htmlFor="currencyName">
 																			{' '}
-																			Base Currency 
+																			 {strings.BaseCurrency}
 																		</Label>
 																		<Input
 																		disabled
@@ -364,18 +368,18 @@ class DetailCurrencyConvert extends React.Component {
 																			className="btn-square"
 																			onClick={this.deleteCurrencyConvert}
 																		>
-																			<i className="fa fa-trash"></i> Delete
+																			<i className="fa fa-trash"></i>  {strings.Delete}
 																		</Button>
 																	</FormGroup>)}
                                      <FormGroup className="text-right">
                                      {this.state.current_currency_convert_id !== 1 &&
 																	  (
                                       <Button type="submit" name="submit" color="primary" className="btn-square mr-3">
-                                        <i className="fa fa-dot-circle-o"></i> Update
+                                        <i className="fa fa-dot-circle-o"></i>  {strings.Update}
                                       </Button>)}
                                       <Button type="submit" color="secondary" className="btn-square"
                                         onClick={() => { this.props.history.push('/admin/master/CurrencyConvert') }}>
-                                        <i className="fa fa-ban"></i> Cancel
+                                        <i className="fa fa-ban"></i>  {strings.Cancel}
                                       </Button>
                                     </FormGroup>
                                   </Col>

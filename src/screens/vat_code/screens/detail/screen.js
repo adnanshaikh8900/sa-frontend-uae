@@ -25,6 +25,8 @@ import * as VatActions from '../../actions'
 
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -39,10 +41,12 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+let strings = new LocalizedStrings(data);
 class DetailVatCode extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			vatData: {},
 			loading: false,
 			dialog: false,
@@ -52,6 +56,7 @@ class DetailVatCode extends React.Component {
 		this.saveAndContinue = false;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regEx = /^[0-9\d]+$/;
+		this.vatCode = /[a-zA-Z0-9 ]+$/;
 	}
 
 	componentDidMount = () => {
@@ -154,6 +159,7 @@ class DetailVatCode extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { loading, dialog } = this.state;
 
 		return (
@@ -165,7 +171,7 @@ class DetailVatCode extends React.Component {
 								<CardHeader>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="nav-icon icon-briefcase" />
-										<span className="ml-2">Update Vat Category</span>
+										<span className="ml-2"> {strings.UpdateVatCategory} </span>
 									</div>
 								</CardHeader>
 								<CardBody>
@@ -196,8 +202,8 @@ class DetailVatCode extends React.Component {
 														>
 															<FormGroup>
 																<Label htmlFor="name">
-																	<span className="text-danger">*</span>Vat Category
-																	Name
+																	<span className="text-danger">*</span>
+																	{strings.VatCategoryName}
 																</Label>
 																<Input
 																	type="text"
@@ -207,7 +213,7 @@ class DetailVatCode extends React.Component {
 																	onChange={(option) => {
 																		if (
 																			option.target.value === '' ||
-																			this.regExAlpha.test(option.target.value)
+																			this.vatCode.test(option.target.value)
 																		) {
 																			props.handleChange('name')(option);
 																		}
@@ -228,7 +234,7 @@ class DetailVatCode extends React.Component {
 															<FormGroup>
 																<Label htmlFor="name">
 																	<span className="text-danger">*</span>
-																	Percentage
+																 {strings.Percentage}
 																</Label>
 																<Input
 																	type="text"
@@ -268,7 +274,7 @@ class DetailVatCode extends React.Component {
 																			className="btn-square"
 																			onClick={this.deleteVat}
 																		>
-																			<i className="fa fa-trash"></i> Delete
+																			<i className="fa fa-trash"></i> {strings.Delete}
 																		</Button>
 																	</FormGroup>
 																	<FormGroup className="text-right">
@@ -279,7 +285,7 @@ class DetailVatCode extends React.Component {
 																			className="btn-square mr-3"
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			Update
+																			 {strings.Update}
 																		</Button>
 																		<Button
 																			type="submit"
@@ -291,7 +297,7 @@ class DetailVatCode extends React.Component {
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i> Cancel
+																			<i className="fa fa-ban"></i> {strings.Cancel}
 																		</Button>
 																	</FormGroup>
 																</Col>

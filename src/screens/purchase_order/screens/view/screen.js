@@ -146,9 +146,20 @@ class ViewPurchaseOrder extends React.Component {
 				<div className="animated fadeIn">
 					<Row>
 						<Col lg={12} className="mx-auto">
-							<div className="action-btn-container">
+						<div className="pull-right">
+								{/* <Button
+									className="btn btn-sm edit-btn"
+									onClick={() => {
+										this.props.history.push(
+											'/admin/revenue/customer-invoice/detail',
+											{ id },
+										);
+									}}
+								>
+									<i className="fa fa-pencil"></i>
+								</Button> */}
 								<Button
-									className="btn btn-sm pdf-btn"
+									className=" print-btn-cont"
 									onClick={() => {
 										this.exportPDFWithComponent();
 									}}
@@ -157,25 +168,22 @@ class ViewPurchaseOrder extends React.Component {
 								</Button>
 								<ReactToPrint
 									trigger={() => (
-										<Button
-											type="button"
-											className="btn btn-sm print-btn"
-											onClick={() => window.print()}
-										>
+										<Button type="button" className=" print-btn-cont">
 											<i className="fa fa-print"></i>
 										</Button>
 									)}
 									content={() => this.componentRef}
 								/>
-
-								<p
-									className="close"
-									onClick={() => {
-										this.props.history.push('/admin/expense/purchase-order');
-									}}
-								>
-									X
-								</p>
+										<Button
+											type="button"
+											className=" print-btn-cont"
+											style={{color: "black"}}
+											onClick={() => {
+												this.props.history.push('/admin/income/customer-invoice');
+											}}
+										>
+										X
+										</Button>
 							</div>
 							<div>
 								<PDFExport
@@ -199,7 +207,7 @@ class ViewPurchaseOrder extends React.Component {
 						
 <div style={{display: this.state.PoDataList.length === 0 ? 'none' : ''}} >
 		<Table  >
-		<thead style={{backgroundColor:'#2165d8',color:'white'}}>
+		<thead style={{backgroundColor:'#2064d8',color:'white'}}>
 			<tr>
 				<th className="center" style={{ padding: '0.5rem' }}>
 					#

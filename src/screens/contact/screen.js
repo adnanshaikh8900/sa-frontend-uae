@@ -24,6 +24,8 @@ import { selectOptionsFactory } from 'utils';
 import { CSVLink } from 'react-csv';
 
 import './style.scss';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -48,10 +50,12 @@ const customStyles = {
 	}),
 };
 
+let strings = new LocalizedStrings(data);
 class Contact extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: true,
 			selectedRows: [],
 			dialog: null,
@@ -319,6 +323,7 @@ class Contact extends React.Component {
 	}
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			loading,
 			dialog,
@@ -340,7 +345,7 @@ class Contact extends React.Component {
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="nav-icon fas fa-id-card-alt" />
-										<span className="ml-2">Contact</span>
+										<span className="ml-2">{strings.Contact}</span>
 									</div>
 								</Col>
 							</Row>
@@ -387,7 +392,7 @@ class Contact extends React.Component {
 											</ButtonGroup>
 										</div>
 										<div className="py-3">
-											<h5>Filter : </h5>
+											<h5>{strings.Filter}: </h5>
 											<form>
 												<Row>
 													<Col lg={3} className="mb-1">
@@ -473,7 +478,7 @@ class Contact extends React.Component {
 											}
 										>
 											<i className="fas fa-plus mr-1" />
-											Add New Contact
+											{strings.Addnewcontact}
 										</Button>
 										
 													<BootstrapTable
@@ -514,7 +519,7 @@ class Contact extends React.Component {
 															columnTitle={this.customName}
 															className="table-header-bg"
 														>
-															Name
+															{strings.NAME}
 														</TableHeaderColumn>
 														<TableHeaderColumn
 															dataField="email"
@@ -522,7 +527,7 @@ class Contact extends React.Component {
 															dataSort
 															className="table-header-bg"
 														>
-															email
+															{strings.Email}
 														</TableHeaderColumn>
 														<TableHeaderColumn
 															dataField="contactTypeString"
@@ -530,7 +535,7 @@ class Contact extends React.Component {
 															// dataFormat={this.typeFormatter}
 															className="table-header-bg"
 														>
-															Type
+														    {strings.TYPE}
 														</TableHeaderColumn>
 													</BootstrapTable>
 												</Col>

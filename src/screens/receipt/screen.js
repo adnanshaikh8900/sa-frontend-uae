@@ -28,6 +28,8 @@ import * as ReceiptActions from './actions';
 import moment from 'moment';
 
 import './style.scss';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -53,6 +55,7 @@ const customStyles = {
 		},
 	}),
 };
+let strings = new LocalizedStrings(data);
 
 class Receipt extends React.Component {
 	constructor(props) {
@@ -70,6 +73,7 @@ class Receipt extends React.Component {
 			},
 			csvData: [],
 			view: false,
+			language: window['localStorage'].getItem('language'),
 		};
 
 		this.options = {
@@ -328,6 +332,7 @@ class Receipt extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			loading,
 			dialog,
@@ -361,7 +366,7 @@ class Receipt extends React.Component {
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="nav-icon fa fa-file-o" />
-										<span className="ml-2">Receipts</span>
+										<span className="ml-2">{strings.Receipts}</span>
 									</div>
 								</Col>
 							</Row>
@@ -407,7 +412,7 @@ class Receipt extends React.Component {
 											</ButtonGroup>
 										</div>
 										<div className="py-3">
-											<h5>Filter : </h5>
+											<h5>{strings.Filter}: </h5>
 											<Row>
 												<Col lg={2} className="mb-1">
 													<DatePicker
@@ -558,7 +563,7 @@ class Receipt extends React.Component {
 													className="table-header-bg"
 													
 												>
-													Receipt Date
+													{strings.ReceivedDate}
 												</TableHeaderColumn>
 
 												<TableHeaderColumn
@@ -567,7 +572,7 @@ class Receipt extends React.Component {
 												    className="table-header-bg"
 													
 												>
-													Invoice Number
+													{strings.InvoiceNumber}
 												</TableHeaderColumn>
 												{/* <TableHeaderColumn dataField="referenceCode" dataSort>
 													Reference Number
@@ -577,14 +582,14 @@ class Receipt extends React.Component {
 													dataSort
 													className="table-header-bg"
 												>
-													Customer Name
+													{strings.CustomerName}
 												</TableHeaderColumn>
 												<TableHeaderColumn 
 												dataField="receiptId" 
 												dataSort
 												className="table-header-bg"
 												>
-													Receipt Number
+													{strings.RecieptNumber}
 												</TableHeaderColumn>
 												  <TableHeaderColumn 
 											  dataField="currencyIsoCode" 
@@ -592,7 +597,7 @@ class Receipt extends React.Component {
 											  className="table-header-bg"
 											  dataFormat={this.renderCurrency}
 												  >
-													Currency
+												{strings.Currency}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="amount"
@@ -601,7 +606,7 @@ class Receipt extends React.Component {
 													className="table-header-bg"
 													
 												>
-													Amount
+													{strings.AMOUNT}
 												</TableHeaderColumn>
 												{/* <TableHeaderColumn
 													dataField="unusedAmount"

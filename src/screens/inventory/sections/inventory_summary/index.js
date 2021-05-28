@@ -32,6 +32,8 @@ import * as InventoryActions from '../../actions';
 
 import logo from 'assets/images/brand/logo.png';
 import { CommonActions } from 'services/global';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -50,16 +52,19 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+let strings = new LocalizedStrings(data);
 class InventorySummary extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: true,
 			dropdownOpen: false,
 			view: false,
 			initValue: {
 				startDate: moment().startOf('month').format('DD/MM/YYYY'),
-				endDate: moment().endOf('month').format('DD/MM/YYYY'),
+				// endDate: moment().endOf('month').format('DD/MM/YYYY'),
+				endDate: moment().local().format('DD/MM/YYYY'),
 				
 			},
 			csvData: [],
@@ -242,6 +247,7 @@ class InventorySummary extends React.Component {
 	// };
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
 		const { summary_list, vat_list, universal_currency_list,company_profile} = this.props;
 
@@ -288,7 +294,7 @@ class InventorySummary extends React.Component {
 												: ''}
 											</h2>	
 										
-											<b style ={{ fontSize: '18px'}}>Inventory Summary</b>
+											<b style ={{ fontSize: '18px'}}>{strings.InventorySummary}</b>
 											<br/>
 											As on {initValue.endDate}
 											
@@ -305,7 +311,7 @@ class InventorySummary extends React.Component {
 												onClick={() => this.table.handleExportCSV()}
 											>
 												<i className="fa glyphicon glyphicon-export fa-download mr-1" />
-												Export
+												{strings.Export}
 											</Button>
 										</ButtonGroup>
 									</FormGroup>
@@ -347,22 +353,22 @@ class InventorySummary extends React.Component {
 												ref={(node) => (this.table = node)}
 											>
 												<TableHeaderColumn isKey dataField="productName" dataSort className="table-header-bg">
-													Product	Name
+												{strings.PRODUCTNAME}
 												</TableHeaderColumn >
 												<TableHeaderColumn dataField="productCode" dataSort className="table-header-bg">
-													Product Code
+												{strings.PRODUCTCODE}
 												</TableHeaderColumn>
 												<TableHeaderColumn  dataField="purchaseOrder" dataSort className="table-header-bg">
-												 Order Quantity
+												{strings.ORDERQUANTITY}
 												</TableHeaderColumn >
 												<TableHeaderColumn  dataField="quantitySold" dataSort className="table-header-bg">
-												Quantity Sold
+												{strings.QUANTITYSOLD}
 												</TableHeaderColumn >
 												<TableHeaderColumn  dataField="stockInHand" dataSort className="table-header-bg">
-												Stock In Hand
+												{strings.STOCKINHAND}
 												</TableHeaderColumn >
 												<TableHeaderColumn  dataField="supplierName" dataSort className="table-header-bg">
-												Supplier Name
+												{strings.SUPPLIERNAME}
 												</TableHeaderColumn >
 												{/* <TableHeaderColumn
 												className="text-right"
@@ -373,7 +379,7 @@ class InventorySummary extends React.Component {
 											</BootstrapTable>
 										</div>
 									)}
-									<div style={{ textAlignLast:'center'}}> Powered By <b>SimpleAccounts</b></div> 
+									<div style={{ textAlignLast:'center'}}> {strings.PoweredBy} <b>SimpleAccounts</b></div> 
 								</PDFExport>
 							</CardBody>
 						</div>

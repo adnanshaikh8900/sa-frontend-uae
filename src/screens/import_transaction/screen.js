@@ -21,6 +21,8 @@ import { CommonActions } from 'services/global';
 
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 import { Loader } from 'components';
 
@@ -39,10 +41,12 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+let strings = new LocalizedStrings(data);
 class ImportTransaction extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			initialloading: true,
 			initValue: {
 				name: '',
@@ -351,6 +355,7 @@ class ImportTransaction extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			loading,
 			tableData,
@@ -370,7 +375,7 @@ class ImportTransaction extends React.Component {
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="fa glyphicon glyphicon-export fa-upload" />
-												<span className="ml-2">Import Transaction</span>
+												<span className="ml-2">{strings.ImportTransaction}</span>
 											</div>
 										</Col>
 									</Row>
@@ -395,7 +400,7 @@ class ImportTransaction extends React.Component {
 														<Row>
 															<Col lg={3}>
 																<Label>
-																	<span className="text-danger">*</span>Name
+																	<span className="text-danger">*</span>{strings.Name}
 																</Label>
 															</Col>
 															<Col lg={3}>
@@ -430,11 +435,12 @@ class ImportTransaction extends React.Component {
 														</Row>
 														<Row>
 															<Col lg={3} md={5}>
-																<Label>Copy Saved Configuration</Label>
+																<Label>{strings.CopySavedConfiguration} </Label>
 															</Col>
 															<Col lg={3} md={7}>
 																<FormGroup>
 																	<Select
+																	placeholder="Select Configuration"
 																		value={
 																			configurationList &&
 																			selectOptionsFactory
@@ -499,7 +505,7 @@ class ImportTransaction extends React.Component {
 														<Row>
 															<Col lg={12}>
 																<fieldset>
-																	<legend>Parameters</legend>
+																	<legend> {strings.Parameters}</legend>
 																	<Row>
 																		<Col lg={3}>
 																			{this.state.delimiterList &&
@@ -582,7 +588,7 @@ class ImportTransaction extends React.Component {
 																						<span className="text-danger">
 																							*
 																						</span>
-																						Provide Sample
+																						 {strings.ProvideSample}
 																					</label>
 																				</Col>
 																				<Col md="7">
@@ -597,7 +603,7 @@ class ImportTransaction extends React.Component {
 																							className="btn-square mr-3"
 																						>
 																							<i className="fa fa-upload"></i>{' '}
-																							Upload
+																							{strings.upload}
 																						</Button>
 																						<input
 																							id="fileInput"
@@ -643,7 +649,7 @@ class ImportTransaction extends React.Component {
 																			<Row className="mt-3">
 																				<Col md={5}>
 																					<Label htmlFor="skip_rows">
-																						Skip Rows
+																						{strings.SkipRows}
 																					</Label>
 																				</Col>
 																				<Col md={7}>
@@ -672,7 +678,7 @@ class ImportTransaction extends React.Component {
 																				<Col md={5}>
 																					{' '}
 																					<Label htmlFor="description">
-																						Header Rows Number
+																						 {strings.HeaderRowsNumber}
 																					</Label>
 																				</Col>
 																				<Col md={7}>
@@ -700,7 +706,7 @@ class ImportTransaction extends React.Component {
 																			<Row>
 																				<Col md={5}>
 																					<Label htmlFor="description">
-																						Text Qualifier
+																						 {strings.TextQualifier}
 																					</Label>
 																				</Col>
 																				<Col md={7}>
@@ -731,7 +737,7 @@ class ImportTransaction extends React.Component {
 																						<span className="text-danger">
 																							*
 																						</span>
-																						Date Format
+																						 {strings.DateFormat}
 																					</Label>
 																				</Col>
 																				<Col md={7}>
@@ -824,7 +830,7 @@ class ImportTransaction extends React.Component {
 																					}}
 																				>
 																					<i className="fa fa-dot-circle-o"></i>{' '}
-																					Apply
+																					{strings.Apply}
 																				</Button>
 																			</FormGroup>
 																		</Col>

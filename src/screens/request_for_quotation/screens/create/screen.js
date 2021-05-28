@@ -39,6 +39,8 @@ import { selectOptionsFactory } from 'utils';
 
 import './style.scss';
 import moment from 'moment';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -79,6 +81,7 @@ const customStyles = {
 
 const invoiceimage = require('assets/images/invoice/invoice.png');
 
+let strings = new LocalizedStrings(data);
 class CreateRequestForQuotation extends React.Component {
 	constructor(props) {
 		super(props);
@@ -151,7 +154,7 @@ class CreateRequestForQuotation extends React.Component {
 			discountPercentage: '',
 			discountAmount: 0,
 			purchaseCategory: [],
-			
+			language: window['localStorage'].getItem('language'),	
 		};
 
 		this.formRef = React.createRef();
@@ -1127,6 +1130,7 @@ class CreateRequestForQuotation extends React.Component {
 
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { data, discountOptions, initValue, prefix,data1 } = this.state;
 
 		const {
@@ -1158,7 +1162,7 @@ class CreateRequestForQuotation extends React.Component {
 													src={invoiceimage}
 													style={{ width: '40px' }}
 												/>
-												<span className="ml-2">Create Request For Quotation</span>
+												<span className="ml-2">{strings.CreateRequestForQuotation}</span>
 											</div>
 										</Col>
 									</Row>
@@ -1285,7 +1289,7 @@ class CreateRequestForQuotation extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="rfq_number">
 																		<span className="text-danger">*</span>
-																		RFQ Number
+																		{strings.RFQNUMBER} 
 																	</Label>
 																	<Input
 																		type="text"
@@ -1318,7 +1322,7 @@ class CreateRequestForQuotation extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="supplierId">
 																		<span className="text-danger">*</span>
-																		Supplier Name
+																		{strings.SupplierName}
 																	</Label>
 																	<Select
 																		styles={customStyles}
@@ -1364,7 +1368,7 @@ class CreateRequestForQuotation extends React.Component {
 																	htmlFor="supplierId"
 																	style={{ display: 'block' }}
 																>
-																	Add New Supplier
+																	{strings.AddNewSupplier}
 																</Label>
 																<Button
 																	type="button"
@@ -1372,7 +1376,7 @@ class CreateRequestForQuotation extends React.Component {
 																	className="btn-square"
 																	onClick={this.openSupplierModal}
 																>
-																	<i className="fa fa-plus"></i> Add a Supplier
+																	<i className="fa fa-plus"></i> {strings.AddASupplier} 
 																</Button>
 															</Col>
 															
@@ -1383,7 +1387,7 @@ class CreateRequestForQuotation extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
 																		<span className="text-danger">*</span>
-																		Issue Date
+																		{strings.IssueDate}
 																	</Label>
 																	<DatePicker
 																		id="date"
@@ -1418,7 +1422,7 @@ class CreateRequestForQuotation extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="due_date">
 																	<span className="text-danger">*</span>
-																		Expiry Date
+																	{strings.ExpiryDate}
 																	</Label>
 																	<DatePicker
 																		id="date"
@@ -1467,7 +1471,7 @@ class CreateRequestForQuotation extends React.Component {
 																	}
 																	disabled={this.checkedRow() ? true : false}
 																>
-																	<i className="fa fa-plus"></i> Add More
+																	<i className="fa fa-plus"></i> {strings.Addmore} 
 																</Button>
 															</Col>
 														</Row>
@@ -1509,7 +1513,7 @@ class CreateRequestForQuotation extends React.Component {
 																			this.renderProduct(cell, rows, props)
 																		}
 																	>
-																		Product
+																		{strings.PRODUCT}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		width="55"
@@ -1524,7 +1528,7 @@ class CreateRequestForQuotation extends React.Component {
 																			this.renderDescription(cell, rows, props)
 																		}
 																	>
-																		Description
+																		{strings.DESCRIPTION}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="quantity"
@@ -1533,7 +1537,7 @@ class CreateRequestForQuotation extends React.Component {
 																			this.renderQuantity(cell, rows, props)
 																		}
 																	>
-																		Quantity
+																		{strings.QUANTITY}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="unitPrice"
@@ -1541,7 +1545,7 @@ class CreateRequestForQuotation extends React.Component {
 																			this.renderUnitPrice(cell, rows, props)
 																		}
 																	>
-																		Unit Price
+																		{strings.UNITPRICE} 
 																		<i
 																			id="UnitPriceToolTip"
 																			className="fa fa-question-circle ml-1"
@@ -1560,7 +1564,7 @@ class CreateRequestForQuotation extends React.Component {
 																			this.renderVat(cell, rows, props)
 																		}
 																	>
-																		Vat (%)
+																	{strings.VAT}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="sub_total"
@@ -1569,7 +1573,7 @@ class CreateRequestForQuotation extends React.Component {
 																		columnClassName="text-right"
 																		formatExtraData={universal_currency_list}
 																	>
-																		Sub Total
+																		{strings.SUBTOTAL}
 																	</TableHeaderColumn>
 																</BootstrapTable>
 															</Col>
@@ -1579,7 +1583,7 @@ class CreateRequestForQuotation extends React.Component {
 															<Row>
 																<Col lg={4}>
 																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">Notes</Label>
+																		<Label htmlFor="notes">{strings.Notes}</Label>
 																		<Input
 																			type="textarea"
 																			maxLength="255"
@@ -1600,7 +1604,7 @@ class CreateRequestForQuotation extends React.Component {
 																					name="attachmentFile"
 																					render={({ field, form }) => (
 																						<div>
-																							<Label>Reciept Attachment</Label>{' '}
+																							<Label>{strings.RecieptAttachment}</Label>{' '}
 																							<br />
 																							<Button
 																								color="primary"
@@ -1612,7 +1616,7 @@ class CreateRequestForQuotation extends React.Component {
 																								className="btn-square mr-3"
 																							>
 																								<i className="fa fa-upload"></i>{' '}
-																								Upload
+																								{strings.upload}
 																							</Button>
 																							<input
 																								id="fileInput"
@@ -1660,7 +1664,7 @@ class CreateRequestForQuotation extends React.Component {
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																						Total Net
+																					{strings.TotalNet} 
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
@@ -1690,7 +1694,7 @@ class CreateRequestForQuotation extends React.Component {
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																						Total Vat
+																					{strings.TotalVat} 
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
@@ -1720,7 +1724,7 @@ class CreateRequestForQuotation extends React.Component {
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																						Total
+																					{strings.Total} 
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
@@ -1770,7 +1774,7 @@ class CreateRequestForQuotation extends React.Component {
 																		<i className="fa fa-dot-circle-o"></i>{' '}
 																		{this.state.disabled
 																			? 'Creating...'
-																			: 'Create'}
+																			: strings.Create }
 																	</Button>
 																	<Button
 																		type="button"
@@ -1789,7 +1793,7 @@ class CreateRequestForQuotation extends React.Component {
 																		<i className="fa fa-repeat mr-1"></i>
 																		{this.state.disabled
 																			? 'Creating...'
-																			: 'Create & More'}
+																			: strings.CreateandMore }
 																	</Button>
 																	<Button
 																		type="button"
@@ -1801,7 +1805,7 @@ class CreateRequestForQuotation extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-ban"></i> Cancel
+																		<i className="fa fa-ban"></i> {strings.Cancel} 
 																	</Button>
 																</FormGroup>
 															</Col>

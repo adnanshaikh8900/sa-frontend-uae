@@ -121,7 +121,6 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 			.catch((err) => {
 				this.setState({ loading: false });
 			});
-			debugger
 	};
 
 	exportFile = (csvData, fileName, type) => {
@@ -427,7 +426,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 										alt=""
 										style={{ width: ' 150px' }}></img>
 									</div>
-									<div style={{justifyContent:'center'}} >
+									<div className="text-center" style={{justifyContent:'center'}} >
 								
 										<h2>
 										{company_profile &&
@@ -519,31 +518,33 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 																			return (
 																				<tr key={index}>
 																					<td style={{ width: '12%' }}>
-																					{row['invoiceDate']}
+																					{row.invoiceDate ? (
+																							moment(row.invoiceDate).format('DD/MM/YYYY')
+																						) : (" ")}
 																					</td>
-																					<td style={{ width: '18%' }}>
+																					<td style={{ width: '12%' }}>
 																						{/* {row.transactionTypeName} */}
 																						{row['invoiceNumber']}
 																					</td>
-																					<td style={{ width: '13%' }}>
+																					<td style={{ width: '12%' }}>
 																						{/* {row['name']} */}
 																						{row['productCode']}
 																					</td>
-																					<td style={{ width: '13%' }}>
+																					<td style={{ width: '12%' }}>
 																						{/* {row['postingReferenceTypeEnum']} */}
 																						{row['description']}
 																					</td>
 																					<td style={{ width: '12%' }}>
 																						{row['quantity']}
 																					</td>
-																					<td style={{ width: '8%' }}>
+																					<td style={{ width: '12%' }}>
 																						{row['unitPrice']}
 																					</td>
-																					<td style={{ width: '8%' }}>
+																					<td style={{ width: '12%' }}>
 																						{row['discount']}
 																					</td>
 																					
-																						<td style={{ width: '15%' }}>
+																						<td style={{ width: '12%' }}>
 																							{row.vatAmount > 0 && (
 																								<p
 																									className="text-left"
@@ -571,7 +572,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 																								</p>
 																							)}
 																						</td>
-																						<td style={{ width: '15%' }}>
+																						<td style={{ width: '12%' }}>
 																							{row.totalAmount > 0 && (
 																								<p
 																									className="text-left"

@@ -17,6 +17,8 @@ import Select from 'react-select';
 import { selectOptionsFactory, selectCurrencyFactory } from 'utils';
 
 import './style.scss';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -52,10 +54,13 @@ const customStyles = {
 		},
 	}),
 };
+
+let strings = new LocalizedStrings(data);
 class CreateContact extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: true,
 			initValue: {
 				billingEmail: '',
@@ -84,6 +89,7 @@ class CreateContact extends React.Component {
 			createMore: false,
 		};
 		this.regEx = /[a-zA-Z0-9]+$/;
+		this.regExTelephone = /^[0-9-]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExAddress = /^[a-zA-Z0-9\s,'-]+$/;
@@ -163,6 +169,7 @@ class CreateContact extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			currency_list,
 			country_list,
@@ -181,7 +188,7 @@ class CreateContact extends React.Component {
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="nav-icon fas fa-id-card-alt" />
-												<span className="ml-2">Create Contact</span>
+												<span className="ml-2">{strings.CreateContact}</span>
 											</div>
 										</Col>
 									</Row>
@@ -217,7 +224,8 @@ class CreateContact extends React.Component {
 													//       .required("PO Box Number is Required"),
 													email: Yup.string()
 														.required('Email is Required')
-														.email('Invalid Email'),
+														.email('Invalid Email')
+														,
 													// telephone: Yup.number().required(
 													//   'Telephone Number is Required',
 													// ),
@@ -234,6 +242,7 @@ class CreateContact extends React.Component {
 																}
 															},
 														),
+														billingEmail: Yup.string().email("Invalid Billing  Email ")
 													//     addressLine1: Yup.string()
 													//       .required("Address is required"),
 													// countryId: Yup.string()
@@ -279,13 +288,12 @@ class CreateContact extends React.Component {
 											>
 												{(props) => (
 													<Form onSubmit={props.handleSubmit}>
-														<h4 className="mb-4">Contact Name</h4>
+														<h4 className="mb-4">{strings.ContactName}</h4>
 														<Row className="row-wrapper">
 															<Col md="4">
 																<FormGroup>
 																	<Label htmlFor="select">
-																		<span className="text-danger">*</span>First
-																		Name
+																		<span className="text-danger">*</span>{strings.FirstName}
 																	</Label>
 																	<Input
 																		type="text"
@@ -322,7 +330,7 @@ class CreateContact extends React.Component {
 															<Col md="4">
 																<FormGroup>
 																	<Label htmlFor="middleName ">
-																		Middle Name
+																	{strings.MiddleName}
 																	</Label>
 																	<Input
 																		type="text"
@@ -360,7 +368,7 @@ class CreateContact extends React.Component {
 															</Col>
 															<Col md="4">
 																<FormGroup>
-																	<Label htmlFor="lastName">Last Name</Label>
+																	<Label htmlFor="lastName">{strings.LastName}</Label>
 																	<Input
 																		type="text"
 																		maxLength="26"
@@ -395,13 +403,13 @@ class CreateContact extends React.Component {
 															</Col>
 														</Row>
 														<hr />
-														<h4 className="mb-3 mt-3">Contact Details</h4>
+														<h4 className="mb-3 mt-3">{strings.ContactDetails}</h4>
 														<Row className="row-wrapper">
 															<Col md="4">
 																<FormGroup>
 																	<Label htmlFor="countryId">
 																		<span className="text-danger">*</span>
-																		Contact Type
+																		{strings.ContactType}
 																	</Label>
 																	<Select
 																		styles={customStyles}
@@ -446,7 +454,7 @@ class CreateContact extends React.Component {
 															<Col md="4">
 																<FormGroup>
 																	<Label htmlFor="organization ">
-																		Organization Name
+																	{strings.OrganizationName}
 																	</Label>
 																	<Input
 																		type="text"
@@ -484,7 +492,7 @@ class CreateContact extends React.Component {
 															</Col>
 															<Col md="4">
 																<FormGroup>
-																	<Label htmlFor="select">PO Box Number</Label>
+																	<Label htmlFor="select">{strings.POBoxNumber}</Label>
 																	<Input
 																		type="text"
 																		maxLength="8"
@@ -522,7 +530,7 @@ class CreateContact extends React.Component {
 															<Col md="4">
 																<FormGroup>
 																	<Label htmlFor="email">
-																		<span className="text-danger">*</span>Email
+																		<span className="text-danger">*</span>{strings.Email}
 																	</Label>
 																	<Input
 																		type="text"
@@ -550,8 +558,9 @@ class CreateContact extends React.Component {
 															</Col>
 															<Col md="4">
 																<FormGroup>
-																	<Label htmlFor="telephone">Telephone</Label>
+																	<Label htmlFor="telephone">{strings.Telephone}</Label>
 																	<Input
+																	maxLength="15"
 																		type="text"
 																		id="telephone"
 																		name="telephone"
@@ -559,7 +568,7 @@ class CreateContact extends React.Component {
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regEx.test(option.target.value)
+																				this.regExTelephone.test(option.target.value)
 																			) {
 																				props.handleChange('telephone')(option);
 																			}
@@ -583,8 +592,8 @@ class CreateContact extends React.Component {
 															<Col md="4">
 																<FormGroup>
 																	<Label htmlFor="mobileNumber">
-																		<span className="text-danger">*</span>Mobile
-																		Number
+																		<span className="text-danger">*</span>
+																	{strings.MobileNumber}
 																	</Label>
 																	<PhoneInput
 																		id="mobileNumber"
@@ -619,7 +628,7 @@ class CreateContact extends React.Component {
 															<Col md="4">
 																<FormGroup>
 																	<Label htmlFor="addressLine1">
-																		Address Line1
+																	{strings.AddressLine1}
 																	</Label>
 																	<Input
 																		type="text"
@@ -658,7 +667,7 @@ class CreateContact extends React.Component {
 															<Col md="4">
 																<FormGroup>
 																	<Label htmlFor="addressLine2">
-																		Address Line2
+																	{strings.AddressLine2}
 																	</Label>
 																	<Input
 																		type="text"
@@ -685,7 +694,7 @@ class CreateContact extends React.Component {
 															<Col md="4">
 																<FormGroup>
 																	<Label htmlFor="addressLine3">
-																		Address Line3
+																	{strings.AddressLine3}
 																	</Label>
 																	<Input
 																		type="text"
@@ -713,7 +722,7 @@ class CreateContact extends React.Component {
 														<Row className="row-wrapper">
 															<Col md="4">
 																<FormGroup>
-																	<Label htmlFor="countryId">Country</Label>
+																	<Label htmlFor="countryId">{strings. Country}</Label>
 																	<Select
 																		styles={customStyles}
 																		options={
@@ -760,7 +769,7 @@ class CreateContact extends React.Component {
 															</Col>
 															<Col md="4">
 																<FormGroup>
-																	<Label htmlFor="stateId">State Region</Label>
+																	<Label htmlFor="stateId">{strings.StateRegion}</Label>
 																	<Select
 																		styles={customStyles}
 																		options={
@@ -801,7 +810,7 @@ class CreateContact extends React.Component {
 															</Col>
 															<Col md="4">
 																<FormGroup>
-																	<Label htmlFor="city">City</Label>
+																	<Label htmlFor="city">{strings.City}</Label>
 																	<Input
 																		// options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
 																		value={props.values.city}
@@ -838,7 +847,7 @@ class CreateContact extends React.Component {
 															<Col md="4">
 																<FormGroup>
 																	<Label htmlFor="postZipCode">
-																		Post Zip Code
+																	{strings.PostZipCode}
 																	</Label>
 																	<Input
 																		type="text"
@@ -875,12 +884,12 @@ class CreateContact extends React.Component {
 														</Row>
 
 														<hr />
-														<h4 className="mb-3 mt-3">Invoicing Details</h4>
+														<h4 className="mb-3 mt-3">{strings.InvoicingDetails} </h4>
 														<Row className="row-wrapper">
 															<Col md="4">
 																<FormGroup>
 																	<Label htmlFor="billingEmail">
-																		Billing Email
+																	{strings.BillingEmail}
 																	</Label>
 																	<Input
 																		type="text"
@@ -899,7 +908,7 @@ class CreateContact extends React.Component {
 																				: ''
 																		}
 																	/>
-																	{props.billingEmail &&
+																	{props.errors.billingEmail &&
 																		props.touched.billingEmail && (
 																			<div className="invalid-feedback">
 																				{props.errors.billingEmail}
@@ -910,7 +919,7 @@ class CreateContact extends React.Component {
 															<Col md="4">
 																<FormGroup>
 																	<Label htmlFor="contractPoNumber">
-																		Contract PO Number
+																	{strings.ContractPONumber}
 																	</Label>
 																	<Input
 																		type="text"
@@ -948,8 +957,8 @@ class CreateContact extends React.Component {
 														<Row className="row-wrapper">
 															<Col md="4">
 																<FormGroup>
-																	<Label htmlFor="vatRegistrationNumber">
-																		Tax Registration Number
+																	<Label htmlFor="vatRegistrationNumber">								
+																		{strings.TaxRegistrationNumber}
 																	</Label>
 																	<Input
 																		type="text"
@@ -987,7 +996,7 @@ class CreateContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="currencyCode">
 																		<span className="text-danger">*</span>
-																		Currency
+																		{strings.Currency}
 																	</Label>
 																	<Select
 																		styles={customStyles}
@@ -1061,7 +1070,7 @@ class CreateContact extends React.Component {
 																		}}
 																	>
 																		<i className="fa fa-dot-circle-o"></i>{' '}
-																		Create
+																		{strings.Create}
 																	</Button>
 																	<Button
 																		name="button"
@@ -1076,8 +1085,7 @@ class CreateContact extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-refresh"></i> Create and
-																		More
+																		<i className="fa fa-refresh"></i> {strings.CreateandMore}
 																	</Button>
 																	<Button
 																		color="secondary"
@@ -1088,7 +1096,7 @@ class CreateContact extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-ban"></i> Cancel
+																		<i className="fa fa-ban mr-1"></i>{strings.Cancel}
 																	</Button>
 																</FormGroup>
 															</Col>

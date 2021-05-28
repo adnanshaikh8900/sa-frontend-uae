@@ -31,6 +31,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
 import './style.scss';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -56,6 +58,7 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+let strings = new LocalizedStrings(data);
 class CreateExpense extends React.Component {
 	constructor(props) {
 		super(props);
@@ -85,7 +88,7 @@ class CreateExpense extends React.Component {
 			payMode: '',
 			exchangeRate:'',
 			basecurrency:[],
-
+			language: window['localStorage'].getItem('language'),
 		};
 		this.formRef = React.createRef();
 		this.options = {
@@ -138,17 +141,17 @@ class CreateExpense extends React.Component {
 				true,
 			);
 		});
-		this.props.expenseCreateActions.checkAuthStatus().then((response) => {
-			this.setState({
-				initValue: {
-					...this.state.initValue,
-					...{
-						payee: response.data ? parseInt(response.data.userId) : '',
-					},
-				},
-			});
-			this.formRef.current.setFieldValue('payee', response.data.userId, true);
-		});
+		// this.props.expenseCreateActions.checkAuthStatus().then((response) => {
+		// 	this.setState({
+		// 		initValue: {
+		// 			...this.state.initValue,
+		// 			...{
+		// 				payee: response.data ? parseInt(response.data.userId) : '',
+		// 			},
+		// 		},
+		// 	});
+		// 	this.formRef.current.setFieldValue('payee', response.data.userId, true);
+		// });
 		this.props.expenseActions.getBankList();
 		this.props.expenseActions.getPaymentMode();
 		this.props.expenseActions.getUserForDropdown();
@@ -286,6 +289,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { initValue, payMode } = this.state;
 		const {
 			currency_list,
@@ -319,7 +323,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="fab fa-stack-exchange" />
-												<span className="ml-2">Create Expense</span>
+												<span className="ml-2">{strings.CreateExpense}  </span>
 											</div>
 										</Col>
 									</Row>
@@ -361,7 +365,9 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 													currency: Yup.string().required(
 														'Currency is required',
 													),
-													//payee: Yup.string().required('Payee is required'),
+													payee: Yup.string().required(
+														'payee Category is required',
+													),
 													expenseAmount: Yup.string()
 														.required('Amount is Required')
 														.matches(
@@ -411,7 +417,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																<FormGroup className="mb-3">
 																	<Label htmlFor="expenseCategoryId">
 																		<span className="text-danger">*</span>
-																		Expense Category
+																		{strings.ExpenseCategory}
 																	</Label>
 																	<Select
 																		styles={customStyles}
@@ -452,7 +458,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="payee">
-																		<span className="text-danger">*</span>Paid By
+																		<span className="text-danger">*</span>{strings.PaidBy}  
 																	</Label>
 																	<Select
 																		styles={customStyles}
@@ -499,13 +505,19 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																				: ''
 																		}
 																	/>
+																		{props.errors.payee &&
+																		props.touched.payee && (
+																			<div className="invalid-feedback">
+																				{props.errors.payee}
+																			</div>
+																		)}
 																</FormGroup>
 															</Col>
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="expense_date">
 																		<span className="text-danger">*</span>
-																		Expense Date
+																		{strings.ExpenseDate}  
 																	</Label>
 																	<DatePicker
 																		id="date"
@@ -539,7 +551,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
 																		<span className="text-danger">*</span>
-																		Currency
+																		{strings.Currency}  
 																	</Label>
 																	<Select
 																		styles={customStyles}
@@ -555,6 +567,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																				  )
 																				: []
 																		}
+																		placeholder="Select Currency"
 																		value={
 																			currency_convert_list &&
 																			selectCurrencyFactory
@@ -595,7 +608,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="expenseAmount">
-																		<span className="text-danger">*</span>Amount
+																		<span className="text-danger">*</span>{strings.Amount}
 																	</Label>
 																	<Input
 																		type="number"
@@ -634,7 +647,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 															</Col>
 															<Col lg={3}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="vatCategoryId">Tax</Label>
+																	<Label htmlFor="vatCategoryId">{strings.Tax}</Label>
 																	<Select
 																		styles={customStyles}
 																		className="select-default-width"
@@ -660,7 +673,6 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	/>
 																</FormGroup>
 															</Col>
-															{!props.values.payee && (
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="payMode">Pay Through</Label>
@@ -706,7 +718,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																			)}
 																	</FormGroup>
 																</Col>
-															)}
+															
 															{!props.values.payee && payMode.value === 'BANK' && (
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
@@ -754,7 +766,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 														<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																<Col>
 																<Label htmlFor="currency">
-																		Currency Exchange Rate
+																{strings.CurrencyExchangeRate}  
 																	</Label>	
 																</Col>
 																</Row>
@@ -830,7 +842,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 															<Col lg={8}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="expenseDescription">
-																		Description
+																	{strings.Description}  
 																	</Label>
 																	<Input
 																		type="textarea"
@@ -856,7 +868,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	<Col lg={6}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="receiptNumber">
-																				Reciept Number
+																			{strings.RecieptNumber}  
 																			</Label>
 																			<Input
 																				type="text"
@@ -885,7 +897,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	<Col lg={12}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="receiptAttachmentDescription">
-																				Attachment Description
+																			{strings.AttachmentDescription}  
 																			</Label>
 																			<Input
 																				type="textarea"
@@ -916,7 +928,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																				name="attachment"
 																				render={({ field, form }) => (
 																					<div>
-																						<Label>Attachment</Label> <br />
+																						<Label>{strings.Attachment}</Label> <br />
 																						<Button
 																							color="primary"
 																							onClick={() => {
@@ -927,7 +939,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																							className="btn-square mr-3"
 																						>
 																							<i className="fa fa-upload"></i>{' '}
-																							Upload
+																							{strings.upload}  
 																						</Button>
 																						<input
 																							id="fileInput"
@@ -984,7 +996,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		}}
 																	>
 																		<i className="fa fa-dot-circle-o"></i>{' '}
-																		Create
+																		{strings.Create}  
 																	</Button>
 																	<Button
 																		name="button"
@@ -999,8 +1011,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																			);
 																		}}
 																	>
-																		<i className="fa fa-refresh"></i> Create and
-																		More
+																		<i className="fa fa-refresh"></i> {strings.CreateandMore}  
 																	</Button>
 																	<Button
 																		color="secondary"
@@ -1011,7 +1022,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																			);
 																		}}
 																	>
-																		<i className="fa fa-ban"></i> Cancel
+																		<i className="fa fa-ban"></i> {strings.Cancel}  
 																	</Button>
 																</FormGroup>
 															</Col>

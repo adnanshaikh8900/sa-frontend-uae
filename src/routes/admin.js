@@ -26,11 +26,16 @@ import {
 	DetailCustomerInvoice,
 	ViewCustomerInvoice,
 	RecordCustomerPayment,
-
+	//CreditNotes
+	CreditNotes,
+	CreateCreditNote,
+	DetailCreditNote,
+	ViewCreditNote,
 	// Receipt Screens
 	Receipt,
 	CreateReceipt,
 	DetailReceipt,
+	PayrollRun,
 
 	// SupplierInvoice Screens
 	SupplierInvoice,
@@ -92,7 +97,7 @@ import {
 	ReceivableInvoiceSummary,
 	PayablesInvoiceDetailsReport,
 	PayablesInvoiceSummary,
-	
+
 
 	// Master Screens
 	ChartAccount,
@@ -101,9 +106,7 @@ import {
 	Contact,
 	CreateContact,
 	DetailContact,
-	Employee,
-	CreateEmployee,
-	DetailEmployee,
+	ViewEmployee,
 	Product,
 	CreateProduct,
 	DetailProduct,
@@ -118,12 +121,6 @@ import {
 	CurrencyConvert,
 	CreateCurrencyConvert,
 	DetailCurrencyConvert,
-	EmployeePayroll,
-	CreateEmployeePayroll,
-	DetailEmployeePayroll,
-	Employment,
-	CreateEmployment,
-
 	// Product Screens
 	ProductCategory,
 	CreateProductCategory,
@@ -157,24 +154,28 @@ import {
 
 	Inventory,
 	Template,
-	CreateEmployeeFinancial,
+	PayrollEmployee,
+	CreatePayrollEmployee,
 	EmployeeFinancial,
 	DetailSalaryRole,
 	SalaryRoles,
 	CreateSalaryRoles,
+	UpdateEmployeePersonal,
+	UpdateEmployeeBank,
 
 	SalaryTemplate,
 	CreateSalaryTemplate,
 	SalaryStucture,
 	CreateSalaryStucture,
-	ViewPayroll,
-	SalarySlip,
 	UnderConstruction,
 	CreateDesignation,
 	Designation,
 	DetailSalaryStructure,
 	DetailSalaryTemplate,
-	DetailDesignation
+	DetailDesignation,
+	ApplyToInvoice,
+	Refund,
+	UpdateEmployeeEmployment
 } from 'screens';
 
 const adminRoutes = [
@@ -318,6 +319,7 @@ const adminRoutes = [
 		name: 'ViewCustomerInvoice',
 		component: ViewCustomerInvoice.screen,
 	},
+
 	{
 		path: '/admin/income/customer-invoice/detail',
 		name: 'UpdateCustomerInvoice',
@@ -347,6 +349,39 @@ const adminRoutes = [
 		path: '/admin/income/receipt',
 		name: 'CustomerReceipts',
 		component: Receipt.screen,
+	},
+	//
+	{
+		path: '/admin/income/credit-notes',
+		name: 'ViewCreditNotes',
+		component: CreditNotes.screen,
+	},
+	{
+		path: '/admin/income/credit-notes/create',
+		name: 'AddCreditNotes',
+		component: CreateCreditNote.screen,
+	},
+	{
+		path: '/admin/income/credit-notes/view',
+		name: 'ViewCreditNotes',
+		component: ViewCreditNote.screen,
+	},
+
+	{
+		path: '/admin/income/credit-notes/detail',
+		name: 'UpdateCreditNotes',
+		component: DetailCreditNote.screen,
+	},
+	{
+		path: '/admin/income/credit-notes/applyToInvoice',
+		name: 'Apply To Invoice',
+		component: ApplyToInvoice.screen,
+	},
+	
+	{
+		path: '/admin/income/credit-notes/refund',
+		name: 'Refund',
+		component: Refund.screen,
 	},
 	{
 		redirect: true,
@@ -482,35 +517,41 @@ const adminRoutes = [
 		name: 'Expense',
 	},
 	{
-		path: '/admin/payroll/employee/detail',
+		path: '/admin/payroll/employee/viewEmployee',
+		name: 'OverviewEmployee',
+		component: ViewEmployee.screen,
+	},
+	{
+		path: '/admin/payroll/employee/updateEmployeePersonal',
 		name: 'UpdateEmployee',
-		component: UnderConstruction.screen,
+		component: UpdateEmployeePersonal.screen,
+	},
+	{
+		path: '/admin/payroll/employee/updateEmployeeBank',
+		name: 'UpdateEmployee',
+		component: UpdateEmployeeBank.screen,
+	},
+	{
+		path: '/admin/payroll/employee/updateEmployeeEmployement',
+		name: 'UpdateEmployee',
+		component: UpdateEmployeeEmployment.screen,
 	},
 	{
 		path: '/admin/payroll/employee/create',
 		name: 'AddEmployee',
-		component: CreateEmployeePayroll.screen,
+		component: CreatePayrollEmployee.screen,
 	},
 	{
 		path: '/admin/payroll/employee',
 		name: 'ViewEmployee',
-		component: EmployeePayroll.screen,
+		component: PayrollEmployee.screen,
 	},
 	{
-		path: '/admin/payroll/employee/salarySlip',
-		name: 'ViewEmployment',
-		component: UnderConstruction.screen,
+		path: '/admin/payroll/payrollrun',
+		name: 'ViewPayrollRun',
+		component: PayrollRun.screen,
 	},
-	{
-		path: '/admin/payroll/employee/viewPayroll',
-		name: 'GeneratePayroll',
-		component: ViewPayroll.screen,
-	},
-	{
-		path: '/admin/payroll/employment/detail',
-		name: 'UpdateEmployment',
-		component: DetailEmployeePayroll.screen,
-	},
+
 	// {
 	// 	path: '/admin/payroll/employment/create',
 	// 	name: 'CreateEmployment',
@@ -557,16 +598,16 @@ const adminRoutes = [
 		name: 'ViewSalaryRole',
 		component: SalaryRoles.screen,
 	},
-		{
-			path: '/admin/payroll/salaryTemplate/create',
-			name: 'CreateSalaryTemplate',
-			component: CreateSalaryTemplate.screen,
-		},
-		{
-			path: '/admin/payroll/salaryTemplate',
-			name: 'ViewSalaryTemplate',
-			component: SalaryTemplate.screen,
-		},
+	{
+		path: '/admin/payroll/salaryTemplate/create',
+		name: 'CreateSalaryTemplate',
+		component: CreateSalaryTemplate.screen,
+	},
+	{
+		path: '/admin/payroll/salaryTemplate',
+		name: 'ViewSalaryTemplate',
+		component: SalaryTemplate.screen,
+	},
 	{
 		path: '/admin/payroll/salaryStructure/create',
 		name: 'CreateSalaryStructure',
@@ -627,47 +668,47 @@ const adminRoutes = [
 		component: FinancialReport.screen,
 	},
 	{
-		path: '/admin/report/financial/profitandloss',
+		path: '/admin/report/profitandloss',
 		name: 'ProfitAndLoss',
 		component: ProfitAndLossReport.screen,
 	},
 	{
-		path: '/admin/report/financial/balancesheet',
+		path: '/admin/report/balancesheet',
 		name: 'BalanceSheet',
 		component: BalanceSheet.screen,
 	},
 	{
-		path: '/admin/report/financial/horizontalbalancesheet',
+		path: '/admin/report/horizontalbalancesheet',
 		name: 'HorizontalBalanceSheet',
 		component: HorizontalBalanceSheet.screen,
 	},
 	{
-		path: '/admin/report/financial/trailbalances',
+		path: '/admin/report/trailbalances',
 		name: 'TrialBalance',
 		component: TrailBalances.screen,
 	},
 	{
-		path: '/admin/report/financial/vatreturns',
+		path: '/admin/report/vatreturns',
 		name: 'VatReturnReport',
 		component: VatReturnsReport.screen,
 	},
 	{
-		path: '/admin/report/financial/salesbycustomer',
+		path: '/admin/report/salesbycustomer',
 		name: 'SalesByCustomer',
 		component: SalesByCustomer.screen,
 	},
 	{
-		path: '/admin/report/financial/salesbyproduct',
+		path: '/admin/report/salesbyproduct',
 		name: 'SalesByProduct',
 		component: SalesByProduct.screen,
 	},
 	{
-		path: '/admin/report/financial/purchasebyvendor',
+		path: '/admin/report/purchasebyvendor',
 		name: 'PurchaseByVendor',
 		component: PurchaseByVendor.screen,
 	},
 	{
-		path: '/admin/report/financial/purchasebyitem',
+		path: '/admin/report/purchasebyitem',
 		name: 'PurchaseByProduct',
 		component: PurchaseByitem.screen,
 	},
@@ -765,7 +806,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/master/product/detail/inventoryhistory',
-		name: 'InventoryHistory',
+		name: 'ViewInventoryHistory',
 		component: InventoryHistory.screen,
 	},
 	{

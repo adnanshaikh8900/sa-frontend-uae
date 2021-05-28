@@ -18,6 +18,8 @@ import { InventoryDashboard, InventorySummary } from './sections';
 
 // import 'react-select/dist/react-select.css'
 import './style.scss';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {};
@@ -26,11 +28,13 @@ const mapDispatchToProps = (dispatch) => {
 	return {};
 };
 
+let strings = new LocalizedStrings(data);
 class Inventory extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			activeTab: new Array(2).fill('1'),
+			language: window['localStorage'].getItem('language'),
 		};
 	}
 
@@ -44,6 +48,7 @@ class Inventory extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		return (
 			<div className="financial-report-screen">
 				<div className="animated fadeIn">
@@ -53,7 +58,7 @@ class Inventory extends React.Component {
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="nav-icon fas fa-boxes" />
-										<span className="ml-2 " >Inventory</span>
+										<span className="ml-2 " >{strings.Inventory}</span>
 									</div>
 								</Col>
 							</Row>
@@ -67,7 +72,7 @@ class Inventory extends React.Component {
 											this.toggle(0, '1');
 										}}
 									>
-										Dashboard
+										{strings.Dashboard}
 									</NavLink>
 								</NavItem>
 								<NavItem>
@@ -77,7 +82,7 @@ class Inventory extends React.Component {
 											this.toggle(0, '2');
 										}}
 									>
-										Summary
+										{strings.Summary}
 									</NavLink>
 								</NavItem>
 							</Nav>

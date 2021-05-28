@@ -26,6 +26,8 @@ import moment from 'moment';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 
 import './style.scss';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -57,6 +59,7 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+let strings = new LocalizedStrings(data)
 class CreateBankAccount extends React.Component {
 	constructor(props) {
 		super(props);
@@ -112,6 +115,7 @@ class CreateBankAccount extends React.Component {
 				account_is_for: '',
 			},
 			currentData: {},
+			language: window['localStorage'].getItem('language'),
 		};
 		this.formRef = React.createRef();
 		this.regExAlpha = /^[a-zA-Z_ ]+$/;
@@ -250,6 +254,7 @@ class CreateBankAccount extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { account_type_list, currency_list,currency_convert_list, country_list } = this.props;
 
 		const { initialVals } = this.state;
@@ -264,7 +269,7 @@ class CreateBankAccount extends React.Component {
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="fas fa-university" />
-												<span className="ml-2">Create Bank Account</span>
+												<span className="ml-2">{strings.CreateBankAccount}</span>
 											</div>
 										</Col>
 									</Row>
@@ -326,7 +331,7 @@ class CreateBankAccount extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="account_name">
 																		<span className="text-danger">*</span>
-																		Account Name
+																		{strings.AccountName}
 																	</Label>
 																	<Input
 																		type="text"
@@ -366,12 +371,13 @@ class CreateBankAccount extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
 																		<span className="text-danger">*</span>
-																		Currency
+																		{strings.Currency}
 																	</Label>
 																	<Select
 																		styles={customStyles}
 																		id="currency"
 																		name="currency"
+																		placeholder="Select Currency"
 																		options={
 																			currency_convert_list
 																				? selectCurrencyFactory.renderOptions(
@@ -425,7 +431,7 @@ class CreateBankAccount extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="opening_balance">
 																		<span className="text-danger">*</span>
-																		Opening Balance
+																		{strings.OpeningBalance}
 																	</Label>
 																	<Input
 																		type="type"
@@ -466,7 +472,7 @@ class CreateBankAccount extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="expense_date">
 																		<span className="text-danger">*</span>
-																		Opening Date
+																		{strings.OpeningDate}
 																	</Label>
 																	<DatePicker
 																		id="date"
@@ -513,7 +519,7 @@ class CreateBankAccount extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="account_type">
 																		<span className="text-danger">*</span>
-																		Account Type
+																		{strings.AccountType}
 																	</Label>
 																	<Select
 																		styles={customStyles}
@@ -574,8 +580,7 @@ class CreateBankAccount extends React.Component {
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="bank_name">
-																		<span className="text-danger">*</span>Bank
-																		Name
+																		<span className="text-danger">*</span>{strings.BankName}
 																	</Label>
 																	<Input
 																		type="text"
@@ -611,7 +616,7 @@ class CreateBankAccount extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="account_number">
 																		<span className="text-danger">*</span>
-																		Account Number
+																		{strings.AccountNumber}
 																	</Label>
 																	<Input
 																		type="text"
@@ -649,11 +654,12 @@ class CreateBankAccount extends React.Component {
 															</Col>
 															<Col lg={4}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="countrycode">Country</Label>
+																	<Label htmlFor="countrycode">{strings.Country}</Label>
 																	<Select
 																		styles={customStyles}
 																		id="countrycode"
 																		name="countrycode"
+																		placeholder="Select Country"
 																		// getOptionValue={(option) =>
 																		// 	option.countrycode
 																		// }
@@ -805,7 +811,7 @@ class CreateBankAccount extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="account_is_for">
 																		<span className="text-danger">*</span>
-																		Account is for
+																		{strings.Accountisfor}
 																	</Label>
 																	<Select
 																		styles={customStyles}
@@ -876,7 +882,7 @@ class CreateBankAccount extends React.Component {
 																		<i className="fa fa-dot-circle-o"></i>{' '}
 																		{this.state.disabled
 																			? 'Creating...'
-																			: 'Create'}
+																			: strings.Create}
 																	</Button>
 																	<Button
 																		type="button"
@@ -896,7 +902,7 @@ class CreateBankAccount extends React.Component {
 																		<i className="fa fa-repeat"></i>
 																		{this.state.disabled
 																			? ' Creating...'
-																			: ' Create and More'}
+																			: strings.CreateandMore}
 																	</Button>
 																	<Button
 																		type="button"
@@ -909,7 +915,7 @@ class CreateBankAccount extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-ban"></i> Cancel
+																		<i className="fa fa-ban"></i> {strings.Cancel}
 																	</Button>
 																</FormGroup>
 															</Col>

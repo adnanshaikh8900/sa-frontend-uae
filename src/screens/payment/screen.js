@@ -30,6 +30,8 @@ import moment from 'moment';
 import { CSVLink } from 'react-csv';
 
 import './style.scss';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -54,6 +56,7 @@ const customStyles = {
 	}),
 };
 
+let strings = new LocalizedStrings(data);
 class Payment extends React.Component {
 	constructor(props) {
 		super(props);
@@ -69,6 +72,7 @@ class Payment extends React.Component {
 			},
 			csvData: [],
 			view: false,
+			language: window['localStorage'].getItem('language'),
 		};
 
 		this.options = {
@@ -231,7 +235,7 @@ class Payment extends React.Component {
 	};
 
 	renderAmount = (cell, row) => {
-	return row.invoiceAmount ? row.invoiceAmount.toFixed(2) : '';
+	return row.invoiceAmount ? row.currencySymbol + row.invoiceAmount.toFixed(2) : '';
 	};
 
 	handleChange = (val, name) => {
@@ -309,6 +313,7 @@ class Payment extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			loading,
 			dialog,
@@ -340,7 +345,7 @@ class Payment extends React.Component {
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="fas fa-money-check" />
-										<span className="ml-2">Purchase receipts</span>
+										<span className="ml-2">{strings.Purchasereceipts}</span>
 									</div>
 								</Col>
 							</Row>
@@ -386,7 +391,7 @@ class Payment extends React.Component {
 											</ButtonGroup>
 										</div>
 										<div className="py-3">
-											<h5>Filter : </h5>
+											<h5>{strings.Filter} : </h5>
 											<Row>
 												<Col lg={3} className="mb-1">
 													<Select
@@ -513,7 +518,7 @@ class Payment extends React.Component {
 													dataFormat={this.renderDate}
 													className="table-header-bg"
 												>
-													Payment Date
+													{strings.PAYMENTDATE}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="invoiceNumber"
@@ -521,14 +526,14 @@ class Payment extends React.Component {
 												    className="table-header-bg"
 													
 												>
-													Invoice Number
+													{strings.INVOICENUMBER}
 												</TableHeaderColumn>
 												<TableHeaderColumn dataField="supplierName" dataSort className="table-header-bg">
-													Supplier Name
+												{strings.SUPPLIERNAME}
 												</TableHeaderColumn>
 
 												<TableHeaderColumn dataField="paymentId" dataSort className="table-header-bg">
-													Payment Number
+												{strings.PAYMENTNUMBER}
 												</TableHeaderColumn>
 												<TableHeaderColumn 
 												dataField="currencyIsoCode" 
@@ -536,7 +541,7 @@ class Payment extends React.Component {
 												className="table-header-bg" 
 												dataFormat={this.renderCurrency}
 												>
-													Currency
+													{strings.CURRENCY}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="invoiceAmount"
@@ -544,7 +549,7 @@ class Payment extends React.Component {
 													dataFormat={this.renderAmount}
 													className="table-header-bg"
 												>
-													Amount
+													{strings.AMOUNT}
 												</TableHeaderColumn>
 											</BootstrapTable>
 										</div>

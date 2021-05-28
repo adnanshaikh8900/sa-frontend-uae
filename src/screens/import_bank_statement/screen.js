@@ -21,6 +21,8 @@ import { CommonActions } from 'services/global';
 
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -36,11 +38,12 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
-
+let strings = new LocalizedStrings(data);
 class ImportBankStatement extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			templateList: [],
 			loading: false,
 			initValue: {
@@ -177,6 +180,7 @@ class ImportBankStatement extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { templateList, initValue } = this.state;
 		return (
 			<div className="import-bank-statement-screen">
@@ -189,7 +193,7 @@ class ImportBankStatement extends React.Component {
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="fa glyphicon glyphicon-export fa-upload" />
-												<span className="ml-2">Import Statement</span>
+												<span className="ml-2">{strings.ImportStatement}</span>
 											</div>
 										</Col>
 									</Row>
@@ -295,8 +299,7 @@ class ImportBankStatement extends React.Component {
 															<Row>
 																<Col md="2">
 																	<label htmlFor="Other">
-																		<span className="text-danger">*</span>Select
-																		File to Upload
+																		<span className="text-danger">*</span> {strings.SelectFileToUpload}
 																	</label>
 																</Col>
 																<Col md="3">
@@ -310,7 +313,7 @@ class ImportBankStatement extends React.Component {
 																			}}
 																			className="btn-square mr-3"
 																		>
-																			<i className="fa fa-upload"></i> Upload
+																			<i className="fa fa-upload"></i>  {strings.upload}
 																		</Button>
 																		<input
 																			id="fileInput"
@@ -335,10 +338,11 @@ class ImportBankStatement extends React.Component {
 																<Col lg={2}>
 																	<label>
 																		<span className="text-danger">*</span>
-																		Parsing Template
+																		 {strings.ParsingTemplate}
 																	</label>
 																	<FormGroup>
 																		<Select
+																		placeholder="Select Template"
 																			options={templateList ? templateList : []}
 																			value={
 																				templateList &&
@@ -393,7 +397,7 @@ class ImportBankStatement extends React.Component {
 																		}
 																	>
 																		<i className="fas fa-plus mr-1" />
-																		Create New Template
+																		 {strings.CreateNewTemplate}
 																	</Button>
 																</Col>
 															</Row>
@@ -413,7 +417,7 @@ class ImportBankStatement extends React.Component {
 																		}
 																	>
 																		<i className="fa fa-dot-circle-o mr-1"></i>
-																		Parse File
+																		 {strings.ParseFile}
 																	</Button>
 																</Col>
 															</Row>
@@ -568,7 +572,7 @@ class ImportBankStatement extends React.Component {
 																	: false
 															}
 														>
-															<i className="fa fa-dot-circle-o"></i> Import
+															<i className="fa fa-dot-circle-o"></i> {strings.Import}
 														</Button>
 														<Button
 															color="secondary"
@@ -583,7 +587,7 @@ class ImportBankStatement extends React.Component {
 																);
 															}}
 														>
-															<i className="fa fa-ban"></i> Cancel
+															<i className="fa fa-ban"></i>{strings.Cancel}
 														</Button>
 													</>
 												) : null}

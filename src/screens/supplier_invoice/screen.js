@@ -37,6 +37,8 @@ import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 
 import './style.scss';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -71,6 +73,7 @@ const overWeekly = require('assets/images/invoice/week1.png');
 const overduemonthly = require('assets/images/invoice/month.png');
 const overdue = require('assets/images/invoice/due1.png');
 
+let strings = new LocalizedStrings(data);
 class SupplierInvoice extends React.Component {
 	constructor(props) {
 		super(props);
@@ -99,6 +102,7 @@ class SupplierInvoice extends React.Component {
 				overDueAmountWeekly: '',
 				overDueAmountMonthly: '',
 			},
+			language: window['localStorage'].getItem('language'),
 		};
 
 		this.options = {
@@ -225,17 +229,17 @@ class SupplierInvoice extends React.Component {
 		return(
 			<div>
 								<div>
-						<label className="font-weight-bold mr-2 ">Invoice Amount : </label>
+						<label className="font-weight-bold mr-2 ">{strings.InvoiceAmount} : </label>
 						<label>
 					{row.invoiceAmount  === 0 ? row.currencySymbol + row.invoiceAmount.toFixed(2) : row.currencySymbol + row.invoiceAmount.toFixed(2)}
 						</label>
 					</div>
 					<div style={{display: row.vatAmount === 0 ? 'none' : ''}}>
-					<label className="font-weight-bold mr-2">Vat Amount : </label>
+					<label className="font-weight-bold mr-2">{strings.VatAmount} : </label>
 					<label>{row.vatAmount === 0  ?  row.currencySymbol + row.vatAmount.toFixed(2) :  row.currencySymbol + row.vatAmount.toFixed(2)}</label>
 					</div>
 					<div style={{display: row.dueAmount === 0 ? 'none' : ''}}>
-						<label className="font-weight-bold mr-2">Due Amount : </label>
+						<label className="font-weight-bold mr-2">{strings.DueAmount} : </label>
 						<label>{row.dueAmount === 0  ?  row.currencySymbol + row.dueAmount.toFixed(2) :  row.currencySymbol + row.dueAmount.toFixed(2)}</label>
 					</div>
 					
@@ -709,6 +713,7 @@ class SupplierInvoice extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			loading,
 			filterData,
@@ -770,7 +775,7 @@ class SupplierInvoice extends React.Component {
 											src={invoiceimage}
 											style={{ width: '40px' }}
 										/>
-										<span className="ml-2">Supplier Invoices</span>
+										<span className="ml-2">{strings.SupplierInvoices}</span>
 									</div>
 								</Col>
 							</Row>
@@ -796,7 +801,7 @@ class SupplierInvoice extends React.Component {
 													style={{ width: '60px' }}
 												/>
 												<div>
-													<h5 className="ml-3">Overdue</h5>
+													<h5 className="ml-3">{strings.Overdue}</h5>
 													<h3 className="invoice-detail ml-3">
 														{universal_currency_list[0] &&
 														this.state.overDueAmountDetails.overDueAmount ? (
@@ -832,7 +837,7 @@ class SupplierInvoice extends React.Component {
 													style={{ width: '60px' }}
 												/>
 												<div>
-													<h5 className="ml-3">Due Within This Week</h5>
+													<h5 className="ml-3">{strings.DueWithinThisWeek}</h5>
 													<h3 className="invoice-detail ml-3">
 														{universal_currency_list[0] &&
 														this.state.overDueAmountDetails
@@ -871,7 +876,7 @@ class SupplierInvoice extends React.Component {
 													style={{ width: '60px' }}
 												/>
 												<div>
-													<h5 className="ml-3">Due Within 30 Days</h5>
+													<h5 className="ml-3">{strings.DueWithin30Days}</h5>
 													<h3 className="invoice-detail ml-3">
 														{universal_currency_list[0] &&
 														this.state.overDueAmountDetails
@@ -936,7 +941,7 @@ class SupplierInvoice extends React.Component {
 										</ButtonGroup>
 									</div>
 									<div className="py-3">
-										<h5>Filter : </h5>
+										<h5>{strings.Filter} : </h5>
 										<Row>
 											<Col lg={2} className="mb-1">
 												<Select
@@ -1071,7 +1076,7 @@ class SupplierInvoice extends React.Component {
 										}
 									>
 										<i className="fas fa-plus mr-1" />
-										Add New Invoice
+										{strings.AddNewInvoice}
 									</Button>
 									</div>
 									</Row> 
@@ -1095,22 +1100,7 @@ class SupplierInvoice extends React.Component {
 													? supplier_invoice_list.count
 													: 0,
 											}}
-											className="supplier-invoi
-											
-											
-											
-											
-											
-											
-											
-											
-											
-											
-											
-											
-											
-											
-											ce-table"
+											className="supplier-invoice-table"
 											ref={(node) => (this.table = node)}
 										>
 											<TableHeaderColumn
@@ -1120,7 +1110,7 @@ class SupplierInvoice extends React.Component {
 											//	width="10%"
 												className="table-header-bg"
 											>
-												Invoice Number
+													{strings.INVOICENUMBER}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="customerName"
@@ -1128,7 +1118,7 @@ class SupplierInvoice extends React.Component {
 											//	width="12%"
 												className="table-header-bg"
 											>
-												Supplier Name
+												{strings.SUPPLIERNAME}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 											//	width="10%"
@@ -1137,7 +1127,7 @@ class SupplierInvoice extends React.Component {
 												dataSort
 												className="table-header-bg"
 											>
-												Status
+												{strings.STATUS}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="invoiceDate"
@@ -1146,7 +1136,7 @@ class SupplierInvoice extends React.Component {
 												dataFormat={this.invoiceDate}
 												className="table-header-bg"
 											>
-												Invoice Date
+												{strings.INVOICEDATE}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="invoiceDueDate"
@@ -1155,7 +1145,7 @@ class SupplierInvoice extends React.Component {
 												dataFormat={this.invoiceDueDate}
 												className="table-header-bg"
 											>
-												Due Date
+												{strings.DUEDATE}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 													dataSort
@@ -1164,7 +1154,7 @@ class SupplierInvoice extends React.Component {
 													dataFormat={this.renderCurrency}
 													className="table-header-bg"
 												>
-													Currency
+													{strings.CURRENCY}
 												</TableHeaderColumn>
 											{/* <TableHeaderColumn
 												dataSort
@@ -1183,7 +1173,7 @@ class SupplierInvoice extends React.Component {
 												className="table-header-bg"
 												
 											>
-												Invoice Amount
+												{strings.INVOICEAMOUNT}
 											</TableHeaderColumn>
 											{/* <TableHeaderColumn
 												dataField="dueAmount"

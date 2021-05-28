@@ -28,6 +28,8 @@ import navigation from 'constants/navigation';
 import { Aside, Header, Footer, Loading } from 'components';
 
 import './style.scss';
+import {data}  from '../../screens/Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -43,10 +45,20 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+let strings = new LocalizedStrings(data);
+if(localStorage.getItem('language')==null)
+	{
+		strings.setLanguage('en');
+}
+else{
+	strings.setLanguage(localStorage.getItem('language'));
+}
 class AdminLayout extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			// language: window['localStorage'].getItem('language'),
+		};
 	}
 
 	componentDidMount() {
@@ -91,6 +103,7 @@ class AdminLayout extends React.Component {
 	}
 
 	render() {
+		// strings.setLanguage(this.state.language);
 		const containerStyle = {
 			zIndex: 1999,
 			closeOnClick: true,
@@ -126,21 +139,21 @@ class AdminLayout extends React.Component {
 			 			}
 			 		}
 			 	}
-			 	if (moduleName === 'Dashboard' && item.name === 'Dashboard') {
+			 	if (moduleName === 'Dashboard' && item.name === strings.Dashboard) {
 					arr.items.push({
 			 			name: item.name,
 			 			url: item.url,
 			 			icon: item.icon,
 			 		});
 				 }
-				 if (moduleName === 'Report' && item.name === 'Report') {
+				 if (moduleName === 'Report' && item.name === strings.Report) {
 					arr.items.push({
 			 			name: item.name,
 			 			url: item.url,
 			 			icon: item.icon,
 			 		});
 				 }
-				 if (moduleName === 'Inventory' && item.name === 'Inventory') {
+				 if (moduleName === 'Inventory' && item.name === strings.Inventory) {
 					arr.items.push({
 			 			name: item.name,
 			 			url: item.url,
@@ -159,7 +172,6 @@ class AdminLayout extends React.Component {
 		}
 
 		var finalArray = { items: [] };
-
 		user_role_list.forEach((p) => {
 			filterPaths(finalArray, p.moduleName);
 		});

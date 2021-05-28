@@ -37,7 +37,8 @@ import { CommonActions } from 'services/global';
 import * as SupplierInvoiceActions from '../../../supplier_invoice/actions';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { InventoryModel} from '../../sections';
-
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -69,11 +70,12 @@ const customStyles = {
 		},
 	}),
 };
-
+let strings = new LocalizedStrings(data);
 class DetailProduct extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
+		this.state = { 
+			language: window['localStorage'].getItem('language'),
 			loading: true,
 			initValue: {},
 			contactType: 1,
@@ -577,6 +579,7 @@ class DetailProduct extends React.Component {
 	// 	);
 	// };
 	render() {
+		strings.setLanguage(this.state.language);
 		const { vat_list, product_category_list,supplier_list,inventory_list } = this.props;
 		const { loading, dialog, purchaseCategory, salesCategory, inventoryAccount } = this.state;
 		let tmpSupplier_list = []
@@ -585,7 +588,6 @@ class DetailProduct extends React.Component {
 			let obj = {label: item.label.contactName, value: item.value}
 			tmpSupplier_list.push(obj)
 		})
-	console.log(inventory_list);
 		return (
 			<div className="detail-product-screen">
 				<div className="animated fadeIn">
@@ -601,7 +603,7 @@ class DetailProduct extends React.Component {
 											<Col lg={12}>
 												<div className="h4 mb-0 d-flex align-items-center">
 													<i className="fas fa-object-group" />
-													<span className="ml-2">Update Product</span>
+													<span className="ml-2"> {strings.UpdateProduct}  </span>
 												</div>
 											</Col>
 										</Row>
@@ -681,7 +683,7 @@ class DetailProduct extends React.Component {
 															<Row>
 																<Col lg={12}>
 																	<FormGroup check inline className="mb-3">
-																		<Label className="productlabel">Type</Label>
+																		<Label className="productlabel"> {strings.Type}</Label>
 																		<div className="wrapper">
 																			<Label
 																				className="form-check-label"
@@ -704,7 +706,7 @@ class DetailProduct extends React.Component {
 																							'GOODS' || ''
 																					}
 																				/>
-																				Goods
+																				 {strings.Goods}
 																			</Label>
 																			<Label
 																				className="form-check-label"
@@ -727,7 +729,7 @@ class DetailProduct extends React.Component {
 																							'SERVICE' || ''
 																					}
 																				/>
-																				Service
+																				 {strings.Service}
 																			</Label>
 																		</div>
 																	</FormGroup>
@@ -737,7 +739,7 @@ class DetailProduct extends React.Component {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="productName">
-																			<span className="text-danger">*</span>Name
+																			<span className="text-danger">*</span> {strings.Name}
 																		</Label>
 																		<Input
 																			type="text"
@@ -777,7 +779,7 @@ class DetailProduct extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="productCode">
 																			<span className="text-danger">*</span>
-																			Product Code
+																			 {strings.ProductCode}
 																		</Label>
 																		<Input
 																			type="text"
@@ -817,7 +819,7 @@ class DetailProduct extends React.Component {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="productCategoryId">
-																			Product Category
+																			 {strings.ProductCategory}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -872,8 +874,8 @@ class DetailProduct extends React.Component {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="vatCategoryId">
-																			<span className="text-danger">*</span>Vat
-																			Percentage
+																			<span className="text-danger">*</span>
+																			 {strings.VatPercentage}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -1002,7 +1004,7 @@ class DetailProduct extends React.Component {
 																						: ''
 																				}
 																			/>
-																			Sales Information
+																			 {strings.SalesInformation}
 																			{props.errors.productPriceType &&
 																				props.touched.productPriceType && (
 																					<div className="invalid-feedback">
@@ -1015,7 +1017,7 @@ class DetailProduct extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="salesUnitPrice">
 																			<span className="text-danger">*</span>{' '}
-																			Selling Price
+																			 {strings.SellingPrice}
 																		</Label>
 																		<Input
 																			type="number"
@@ -1058,7 +1060,7 @@ class DetailProduct extends React.Component {
 																	</Col><Col>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="transactionCategoryId">
-																			Category
+																		{strings.Account}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -1127,7 +1129,7 @@ class DetailProduct extends React.Component {
 																	</Col></Row>
 																	<FormGroup className="">
 																		<Label htmlFor="salesDescription">
-																			Description
+																			 {strings.Description}
 																		</Label>
 																		<Input
 																			readOnly={
@@ -1199,7 +1201,7 @@ class DetailProduct extends React.Component {
 																						: ''
 																				}
 																			/>
-																			Purchase Information
+																			 {strings.PurchaseInformation}
 																			{props.errors.productPriceType &&
 																				props.touched.productPriceType && (
 																					<div className="invalid-feedback">
@@ -1212,7 +1214,7 @@ class DetailProduct extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="salesUnitPrice">
 																			<span className="text-danger">*</span>{' '}
-																			Purchase Price
+																			 {strings.PurchasePrice}
 																		</Label>
 																		<Input
 																			type="number"
@@ -1257,7 +1259,7 @@ class DetailProduct extends React.Component {
 																	<Col>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="transactionCategoryId">
-																			Category
+																		{strings.Account}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -1328,7 +1330,7 @@ class DetailProduct extends React.Component {
 																	</Col></Row>
 																	<FormGroup className="">
 																		<Label htmlFor="purchaseDescription">
-																			Description
+																			 {strings.Description}
 																		</Label>
 																		<Input
 																			readOnly={
@@ -1391,7 +1393,7 @@ class DetailProduct extends React.Component {
 																						: ''
 																				}
 																			/>
-																		Enable Inventory
+																		 {strings.EnableInventory}
 																			{props.errors.productPriceType &&
 																				props.touched.productPriceType && (
 																					<div className="invalid-feedback">
@@ -1658,7 +1660,7 @@ class DetailProduct extends React.Component {
 																	</Col>
 																	
 																	</Row> */}
-												 <Row style={{display: props.values.isInventoryEnabled !== true ? 'none' : ''}}>
+												 <Row style={{display: props.values.isInventoryEnabled !== true ? 'none' : '',width:"140%"}}>
 												<div className={"ml-4 mt-2"}>
 											<BootstrapTable
 											selectRow={this.selectRowProp}
@@ -1681,31 +1683,31 @@ class DetailProduct extends React.Component {
 												dataSort
 												className="table-header-bg"
 											>
-												Supplier name
+												 {strings.SupplierName}
 											</TableHeaderColumn>
 											<TableHeaderColumn 
 												dataField="stockInHand" 
 												className="table-header-bg"
 											>
-											Stock In hand
+											 {strings.StockInHand}
 											</TableHeaderColumn>
 											<TableHeaderColumn 
 												dataField="reOrderLevel" 
 												className="table-header-bg"
 											>
-											Re-Order Level
+											 {strings.ReOrderLevel}
 											</TableHeaderColumn>
 											<TableHeaderColumn 
 												dataField="quantitySold" 
 												className="table-header-bg"
 											>
-											Quantity Sold
+											 {strings.QuantitySold}
 											</TableHeaderColumn>
 											<TableHeaderColumn 
 												dataField="purchaseOrder" 
 												className="table-header-bg"
 											>
-											Purchase Order
+											 {strings.PurchaseOrder}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												className="text-right"
@@ -1735,7 +1737,7 @@ class DetailProduct extends React.Component {
 																			className="btn-square"
 																			onClick={this.deleteProduct}
 																		>
-																			<i className="fa fa-trash"></i> Delete
+																			<i className="fa fa-trash"></i> {strings.Delete}
 																		</Button>
 																	</FormGroup>)}
 																	<FormGroup></FormGroup>
@@ -1747,7 +1749,7 @@ class DetailProduct extends React.Component {
 																			className="btn-square mr-3"
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			Update
+																			{strings.Update}
 																		</Button>
 																		<Button
 																			color="secondary"
@@ -1758,7 +1760,7 @@ class DetailProduct extends React.Component {
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i> Cancel
+																			<i className="fa fa-ban"></i>  {strings.Cancel}
 																		</Button>
 																	</FormGroup>
 																</Col>

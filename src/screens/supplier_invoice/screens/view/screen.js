@@ -111,13 +111,13 @@ class ViewInvoice extends React.Component {
 			<div className="view-invoice-screen">
 				<div className="animated fadeIn">
 					<Row>
-						<Col lg={12} className="mx-auto">
-							<div className="action-btn-container">
+						<Col lg={12} className="mx-auto">							
+							<div className="pull-right">
 								{/* <Button
 									className="btn btn-sm edit-btn"
 									onClick={() => {
 										this.props.history.push(
-											'/admin/expense/supplier-invoice/detail',
+											'/admin/revenue/customer-invoice/detail',
 											{ id },
 										);
 									}}
@@ -125,7 +125,7 @@ class ViewInvoice extends React.Component {
 									<i className="fa fa-pencil"></i>
 								</Button> */}
 								<Button
-									className="btn btn-sm pdf-btn"
+									className=" print-btn-cont"
 									onClick={() => {
 										this.exportPDFWithComponent();
 									}}
@@ -134,25 +134,22 @@ class ViewInvoice extends React.Component {
 								</Button>
 								<ReactToPrint
 									trigger={() => (
-										<Button
-											type="button"
-											className="btn btn-sm print-btn"
-											onClick={() => window.print()}
-										>
+										<Button type="button" className=" print-btn-cont">
 											<i className="fa fa-print"></i>
 										</Button>
 									)}
 									content={() => this.componentRef}
 								/>
-
-								<p
-									className="close"
-									onClick={() => {
-										this.props.history.push('/admin/expense/supplier-invoice');
-									}}
-								>
-									X
-								</p>
+										<Button
+											type="button"
+											className=" print-btn-cont"
+											style={{color: "black"}}
+											onClick={() => {
+												this.props.history.push('/admin/expense/supplier-invoice');
+											}}
+										>
+										X
+										</Button>
 							</div>
 							<div>
 								<PDFExport

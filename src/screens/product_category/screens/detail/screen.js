@@ -25,6 +25,8 @@ import './style.scss'
 import * as DetailProductCategoryAction from './actions'
 
 import { Formik } from 'formik';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 
 // const mapStateToProps = (state) => {
@@ -38,11 +40,12 @@ const mapDispatchToProps = (dispatch) => {
     detailProductCategoryAction: bindActionCreators(DetailProductCategoryAction, dispatch)
   })
 }
-
+let strings = new LocalizedStrings(data);
 class DetailProductCategory extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      language: window['localStorage'].getItem('language'),
       initValue: {},
       loading: true,
       dialog: null,
@@ -131,6 +134,7 @@ class DetailProductCategory extends React.Component {
   }
 
   render() {
+    strings.setLanguage(this.state.language);
     const { loading, initValue,dialog} = this.state
 
     return (
@@ -143,7 +147,7 @@ class DetailProductCategory extends React.Component {
                 <CardHeader>
                   <div className="h4 mb-0 d-flex align-items-center">
                     <i className="nav-icon icon-briefcase" />
-                    <span className="ml-2">Update Product Category</span>
+                    <span className="ml-2"> {strings.UpdateProductCategory}</span>
                   </div>
                 </CardHeader>
                 <CardBody>
@@ -167,7 +171,7 @@ class DetailProductCategory extends React.Component {
                             {(props) => (
                               <Form onSubmit={props.handleSubmit} name="simpleForm">
                                 <FormGroup>
-                                  <Label htmlFor="productCategoryCode"><span className="text-danger">*</span>Product Category Code</Label>
+                                  <Label htmlFor="productCategoryCode"><span className="text-danger">*</span>{strings.ProductCategoryCode}</Label>
                                   <Input
                                     type="text"
                                     id="productCategoryCode"
@@ -186,7 +190,7 @@ class DetailProductCategory extends React.Component {
                                   )}
                                 </FormGroup>
                                 <FormGroup>
-                                  <Label htmlFor="productCategoryName"><span className="text-danger">*</span>Product Category Name</Label>
+                                  <Label htmlFor="productCategoryName"><span className="text-danger">*</span>{strings.ProductCategoryName}</Label>
                                   <Input
                                     type="text"
                                     id="productCategoryName"
@@ -210,16 +214,16 @@ class DetailProductCategory extends React.Component {
                                   <Col lg={12} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">
                                     <FormGroup>
                                       <Button type="button" color="danger" className="btn-square" onClick={this.deleteProductCategory}>
-                                        <i className="fa fa-trash"></i> Delete
+                                        <i className="fa fa-trash"></i> {strings.Delete}
                                       </Button>
                                     </FormGroup>
                                     <FormGroup className="text-right">
                                       <Button type="submit" name="submit" color="primary" className="btn-square mr-3">
-                                        <i className="fa fa-dot-circle-o"></i> Update
+                                        <i className="fa fa-dot-circle-o"></i>  {strings.Update}
                                       </Button>
                                       <Button type="submit" color="secondary" className="btn-square"
                                         onClick={() => { this.props.history.push('/admin/master/product-category') }}>
-                                        <i className="fa fa-ban"></i> Cancel
+                                          <i className="fa fa-ban"></i> {strings.Cancel}
                                       </Button>
                                     </FormGroup>
                                   </Col>

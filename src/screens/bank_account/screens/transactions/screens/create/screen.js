@@ -29,6 +29,8 @@ import * as CurrencyConvertActions from '../../../../../currencyConvert/actions'
 
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
+import {data}  from '../../../../../Language/index'
+import LocalizedStrings from 'react-localization';
 import { selectOptionsFactory, selectCurrencyFactory } from 'utils';
 const mapStateToProps = (state) => {
 	return {
@@ -71,10 +73,12 @@ const customStyles = {
 	}),
 };
 
+let strings = new LocalizedStrings(data);
 class CreateBankTransaction extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			createMore: false,
 			fileName: '',
 			initValue: {
@@ -550,6 +554,7 @@ class CreateBankTransaction extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			initValue,
 			id,
@@ -577,7 +582,7 @@ class CreateBankTransaction extends React.Component {
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="icon-doc" />
-												<span className="ml-2">Create Bank Transaction</span>
+												<span className="ml-2">{strings.CreateBankTransaction}</span>
 											</div>
 										</Col>
 									</Row>
@@ -682,7 +687,7 @@ class CreateBankTransaction extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="coaCategoryId">
 																		<span className="text-danger">*</span>
-																		Transaction Type
+																		 {strings.TransactionType}
 																	</Label>
 																	<Select
 																		styles={customStyles}
@@ -731,7 +736,7 @@ class CreateBankTransaction extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
 																		<span className="text-danger">*</span>
-																		Transaction Date
+																		{strings.TransactionDate}
 																	</Label>
 																	<DatePicker
 																		autoComplete="off"
@@ -770,7 +775,7 @@ class CreateBankTransaction extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="transactionAmount">
 																		<span className="text-danger">*</span>
-																		Amount
+																		{strings.Amount}
 																	</Label>
 																	<Input
 																		type="number"
@@ -1257,7 +1262,8 @@ class CreateBankTransaction extends React.Component {
 																{props.values.coaCategoryId.value === 6 && (
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
-																			<Label htmlFor="employeeId">User</Label>
+																			<Label htmlFor="employeeId"><span className="text-danger">*</span>User
+																			</Label>
 																			<Select
 																				styles={customStyles}
 																				className="select-default-width"
@@ -1279,7 +1285,7 @@ class CreateBankTransaction extends React.Component {
 																{props.values.coaCategoryId.value === 12 && (
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
-																			<Label htmlFor="employeeId">User</Label>
+																			<Label htmlFor="employeeId"><span className="text-danger">*</span>User</Label>
 																			<Select
 																				styles={customStyles}
 																				className="select-default-width"
@@ -1381,7 +1387,7 @@ class CreateBankTransaction extends React.Component {
 															<Col lg={8}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="description">
-																		Description
+																	{strings.Description}
 																	</Label>
 																	<Input
 																		type="textarea"
@@ -1403,7 +1409,7 @@ class CreateBankTransaction extends React.Component {
 																	<Col lg={6}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="reference">
-																				Reference Number
+																			 {strings.ReferenceNumber}
 																			</Label>
 																			<Input
 																				type="text"
@@ -1436,7 +1442,7 @@ class CreateBankTransaction extends React.Component {
 																				name="attachment"
 																				render={({ field, form }) => (
 																					<div>
-																						<Label>Attachment</Label> <br />
+																						<Label>{strings.Attachment}</Label> <br />
 																						<Button
 																							color="primary"
 																							onClick={() => {
@@ -1447,7 +1453,7 @@ class CreateBankTransaction extends React.Component {
 																							className="btn-square mr-3"
 																						>
 																							<i className="fa fa-upload"></i>{' '}
-																							Upload
+																							{strings.upload}
 																						</Button>
 																						<input
 																							id="fileInput"
@@ -1504,7 +1510,7 @@ class CreateBankTransaction extends React.Component {
 																		}}
 																	>
 																		<i className="fa fa-dot-circle-o"></i>{' '}
-																		Create
+																		{strings.Create}
 																	</Button>
 																	<Button
 																		type="button"
@@ -1519,8 +1525,7 @@ class CreateBankTransaction extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-repeat"></i> Create and
-																		More
+																		<i className="fa fa-repeat"></i>{' '} {strings.CreateandMore}
 																	</Button>
 																	<Button
 																		color="secondary"
@@ -1532,7 +1537,7 @@ class CreateBankTransaction extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-ban"></i> Cancel
+																		<i className="fa fa-ban"></i>{' '}{strings.Cancel}
 																	</Button>
 																</FormGroup>
 															</Col>

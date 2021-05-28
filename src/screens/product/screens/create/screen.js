@@ -20,6 +20,8 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 import './style.scss';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 import * as ProductActions from '../../actions';
 import * as SupplierInvoiceActions from '../../../supplier_invoice/actions';
@@ -59,10 +61,12 @@ const customStyles = {
 	}),
 };
 
+let strings = new LocalizedStrings(data);
 class CreateProduct extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: true,
 			openWarehouseModal: false,
 			contactType:1,
@@ -102,7 +106,7 @@ class CreateProduct extends React.Component {
 			ProductExist: false,
 		};
 		this.regEx = /^[0-9\d]+$/;
-		this.regExBoth = /[a-zA-Z0-9-./\\|]+$/;
+		this.regExBoth = /[ +a-zA-Z0-9-./\\|]+$/;
 		this.regExAlpha = /^[0-9!@#$&()-\\`.+,/\"]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 	}
@@ -215,6 +219,7 @@ try {
 		const contactId = data['contactId'].value;
 		const isInventoryEnabled = data['isInventoryEnabled'];
 		const transactionCategoryId = data['transactionCategoryId'];
+		const productCategoryId = data['productCategoryId'];
 
 		let productPriceType;
 		if (data['productPriceType'].includes('SALES')) {
@@ -241,7 +246,7 @@ try {
 			isInventoryEnabled,
 			contactId,
 			transactionCategoryId,
-
+			productCategoryId,
 			...(salesUnitPrice.length !== 0 && {
 				salesUnitPrice,
 			}),
@@ -339,6 +344,7 @@ try {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { vat_list, product_category_list,supplier_list,inventory_account_list} = this.props;
 		const { initValue, purchaseCategory, salesCategory,inventoryAccount } = this.state;
 
@@ -361,7 +367,7 @@ try {
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="fas fa-object-group" />
-												<span className="ml-2">Create Product</span>
+												<span className="ml-2">{strings.CreateProduct}</span>
 											</div>
 										</Col>
 									</Row>
@@ -448,7 +454,7 @@ try {
 															<Row>
 																<Col lg={12}>
 																	<FormGroup check inline className="mb-3">
-																		<Label className="productlabel">Type</Label>
+																		<Label className="productlabel">{strings.Type}</Label>
 																		<div className="wrapper">
 																			<Label
 																				className="form-check-label"
@@ -470,7 +476,7 @@ try {
 																						props.values.productType === 'GOODS'
 																					}
 																				/>
-																				Goods
+																				{strings.Goods}
 																			</Label>
 																			<Label
 																				className="form-check-label"
@@ -493,7 +499,7 @@ try {
 																						'SERVICE'
 																					}
 																				/>
-																				Service
+																				{strings.Service}
 																			</Label>
 																		</div>
 																	</FormGroup>
@@ -503,7 +509,7 @@ try {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="productName">
-																			<span className="text-danger">*</span>Name
+																			<span className="text-danger">*</span>{strings.Name}
 																		</Label>
 																		<Input
 																			type="text"
@@ -548,7 +554,7 @@ try {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="productCode">
 																			<span className="text-danger">*</span>
-																			Product Code
+																			{strings.ProductCode}
 																			<i
 																				id="ProductCodeTooltip"
 																				className="fa fa-question-circle ml-1"
@@ -604,7 +610,7 @@ try {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="productCategoryId">
-																			Product Category
+																			{strings.ProductCategory}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -666,8 +672,7 @@ try {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="vatCategoryId">
-																			<span className="text-danger">*</span>Vat
-																			Percentage
+																			<span className="text-danger">*</span>{strings.VatPercentage}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -862,7 +867,7 @@ try {
 																				}
 																				
 																			/>
-																			Sales Information
+																			{strings.SalesInformation}
 																			{props.errors.productPriceType &&
 																				props.touched.productPriceType && (
 																					<div className="invalid-feedback">
@@ -876,7 +881,7 @@ try {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="salesUnitPrice">
 																			<span className="text-danger">*</span>{' '}
-																			Selling Price
+																			{strings.SellingPrice}
 																			<i
 																				id="SalesTooltip"
 																				className="fa fa-question-circle ml-1"
@@ -933,7 +938,7 @@ try {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="transactionCategoryId">
 																			<span className="text-danger">*</span>{' '}
-																			Account
+																			{strings.Account}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -988,7 +993,7 @@ try {
 																	</Row>
 																	<FormGroup className="">
 																		<Label htmlFor="salesDescription">
-																			Description
+																		{strings.Description}
 																		</Label>
 																		<Input
 																			readOnly={
@@ -1014,7 +1019,9 @@ try {
 																			</FormGroup>
 																		</Col>
 																</Row>
-															<Row>
+															<Row 
+													
+																					>
 																<Col lg={8}>
 																	<FormGroup check inline className="mb-3">
 																		<Label
@@ -1061,7 +1068,7 @@ try {
 																				}
 																				
 																			/>
-																			Purchase Information
+																			{strings.PurchaseInformation}
 																			{props.errors.productPriceType &&
 																				props.touched.productPriceType && (
 																					<div className="invalid-feedback">
@@ -1075,7 +1082,7 @@ try {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="salesUnitPrice">
 																			<span className="text-danger">*</span>{' '}
-																			Purchase Price
+																			{strings.PurchasePrice}
 																			<i
 																				id="PurchaseTooltip"
 																				className="fa fa-question-circle ml-1"
@@ -1093,7 +1100,9 @@ try {
 																			maxLength="10"
 																			id="purchaseUnitPrice"
 																			name="purchaseUnitPrice"
+																			
 																			placeholder="Enter Purchase Price"
+																			disabled={props.values.isInventoryEnabled===true }
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
@@ -1133,7 +1142,7 @@ try {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="salesUnitPrice">
 																			<span className="text-danger">*</span>{' '}
-																			Account
+																			{strings.Account}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -1188,7 +1197,7 @@ try {
 																	</FormGroup></Col></Row>
 																	<FormGroup className="">
 																		<Label htmlFor="purchaseDescription">
-																			Description
+																		{strings.Description}
 																		</Label>
 																		<Input
 																			readOnly={
@@ -1217,12 +1226,19 @@ try {
 															
 															<hr></hr>
 															
-															<Row style={{display: 
+															<Row 
+															style={{display: 
 																				props.values.productPriceType.includes(
-																					'PURCHASE',
-																				)
-																				?'' : 'none'
-																			}}>
+																					'PURCHASE' 
+																				
+																				)&& props.values.productType !=
+																				'SERVICE'
+																		
+																			?'' : 'none'
+																
+																			}}
+																		
+																			>
 																<Col lg={8}>
 																	<FormGroup check inline className="mb-3">
 																		<Label
@@ -1248,7 +1264,7 @@ try {
 																						: ''
 																				}
 																			/>
-																		Enable Inventory
+																		 {strings.EnableInventory}
 																			{props.errors.productPriceType &&
 																				props.touched.productPriceType && (
 																					<div className="invalid-feedback">
@@ -1263,7 +1279,7 @@ try {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="salesUnitPrice">
 																			{/* <span className="text-danger">*</span>{' '} */}
-																		Inventory Account
+																		 {strings.InventoryAccount}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -1320,7 +1336,7 @@ try {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="inventoryQty">
 																			{/* <span className="text-danger">*</span>{' '} */}
-																			Purchase Quantity
+																			 {strings.PurchaseQuantity}
 																			
 																		</Label>
 																		<Input
@@ -1370,7 +1386,7 @@ try {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="inventoryPurchasePrice">
 																			{/* <span className="text-danger">*</span>{' '} */}
-																			Purchase Price
+																			{strings.PurchasePrice}
 																		</Label>
 																		<Input
 																		type="number"
@@ -1417,7 +1433,7 @@ try {
 																	<FormGroup className="mb-3">
 																	<Label htmlFor="contactId">
 																		{/* <span className="text-danger">*</span> */}
-																		Supplier Name
+																		  {strings.SupplierName}
 																	</Label>
 																	<Select
 																		// isDisabled={
@@ -1472,7 +1488,7 @@ try {
 																	<Col lg={6}>
 																	<FormGroup className="">
 																		<Label htmlFor="inventoryReorderLevel">
-																			Re-Order Level
+																		  {strings.ReOrderLevel}
 																		</Label>
 																		<Input
 																			// readOnly={
@@ -1487,7 +1503,7 @@ try {
 																			name="inventoryReorderLevel"
 																			id="inventoryReorderLevel"
 																			rows="3"
-																			placeholder="inventoryReorderLevel..."
+																			placeholder="Enter Inventory Reorder Level..."
 																			onChange={(value) => {
 																				props.handleChange(
 																					'inventoryReorderLevel',
@@ -1519,7 +1535,7 @@ try {
 																			}}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			Create
+																			{strings.Create}
 																		</Button>
 																		<Button
 																			name="button"
@@ -1534,8 +1550,7 @@ try {
 																				);
 																			}}
 																		>
-																			<i className="fa fa-refresh"></i> Create
-																			and More
+																			<i className="fa fa-refresh"></i> {strings.CreateandMore}
 																		</Button>
 																		<Button
 																			color="secondary"
@@ -1546,7 +1561,7 @@ try {
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i> Cancel
+																			<i className="fa fa-ban"></i> {strings.Cancel}
 																		</Button>
 																	</FormGroup>
 																</Col>

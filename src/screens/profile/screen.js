@@ -41,6 +41,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 import './style.scss';
 import PhoneInput from 'react-phone-number-input';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -71,11 +73,12 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
-
+let strings = new LocalizedStrings(data);
 class Profile extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: true,
 			activeTab: new Array(2).fill('1'),
 			userPhotoFile: [],
@@ -604,6 +607,7 @@ class Profile extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { loading, isSame, timezone } = this.state;
 		const {
 			currency_list,
@@ -625,7 +629,7 @@ class Profile extends React.Component {
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="nav-icon fas fa-user" />
-												<span className="ml-2">Profile</span>
+												<span className="ml-2">Profile </span>
 											</div>
 										</Col>
 									</Row>
@@ -639,7 +643,7 @@ class Profile extends React.Component {
 													this.toggle(0, '1');
 												}}
 											>
-												Account
+												 {strings.Account}
 											</NavLink>
 										</NavItem>
 										<NavItem>
@@ -713,7 +717,7 @@ class Profile extends React.Component {
 																								<span className="text-danger">
 																									*
 																							</span>
-																							First Name
+																							{strings.FirstName}
 																						</Label>
 																							<Input
 																								type="text"
@@ -753,7 +757,7 @@ class Profile extends React.Component {
 																								<span className="text-danger">
 																									*
 																							</span>
-																							Last Name
+																							 {strings.LastName}
 																						</Label>
 																							<Input
 																								type="text"
@@ -829,7 +833,7 @@ class Profile extends React.Component {
 																								<span className="text-danger">
 																									*
 																							</span>
-																							Date Of Birth
+																							Date Of Birth 
 																						</Label>
 																							<DatePicker
 																								className={`form-control ${props.errors.dob &&
@@ -935,7 +939,7 @@ class Profile extends React.Component {
 																								<span className="text-danger">
 																									*
 																							</span>
-																							Time Zone Preference
+																							Time Zone Preference 
 																						</Label>
 																							<Select
 																								styles={customStyles}

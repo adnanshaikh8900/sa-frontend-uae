@@ -71,7 +71,28 @@ export const getEmployeesNotInUserForDropdown = (obj) => {
 		return authApi(data)
 			.then((res) => {
 				dispatch({
-					type: USER.ROLE_LIST,
+					type: USER.EMPLOYEE_LIST,
+					payload: res.data,
+				});
+				return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const getEmployeeDesignationForDropdown = (obj) => {
+	return (dispatch) => {
+		let data = {
+			method: 'GET',
+			url: `/rest/employeeDesignation/getEmployeeDesignationForDropdown`,
+		};
+
+		return authApi(data)
+			.then((res) => {
+				dispatch({
+					type: USER.DESIGNATION_DROPDOWN,
 					payload: res.data,
 				});
 				return res;

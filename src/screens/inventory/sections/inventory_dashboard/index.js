@@ -17,6 +17,8 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { Bar, HorizontalBar, Line  } from 'react-chartjs-2';
 import { selectOptionsFactory } from 'utils';
 import Select from 'react-select';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -36,10 +38,12 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+let strings = new LocalizedStrings(data);
 class InventoryDashboard extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: true,
 			dropdownOpen: false,
 			view: false,
@@ -73,6 +77,7 @@ class InventoryDashboard extends React.Component {
 						barPercentage: 0.4,
 					}]
 				}
+				
 		},
 			dataHorBarLeft: {
 				labels: [],
@@ -464,6 +469,7 @@ class InventoryDashboard extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { loading, 
 			initValue, 
 			dropdownOpen,
@@ -483,7 +489,7 @@ class InventoryDashboard extends React.Component {
 						<Row>
 							<CardBody className="mr-3  mb-3 " style={{ boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)" }}>
 								<h6 className="text-center font-weight-bold mb-1 text-black mt-3">
-									Number of SKU's
+								{strings.NumberofSKUs}
 										</h6>
 								<h3 className="d-block mt-4 text-center" >
 									{this.state.allProducts}
@@ -492,7 +498,7 @@ class InventoryDashboard extends React.Component {
 							</CardBody>
 							<CardBody className="mr-3  mb-3" style={{ boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)" }}>
 								<h6 className="text-center font-weight-bold mb-1 text-black mt-3">
-									Total Value of SKU's
+								{strings.TotalValueofSKUs}
 										</h6>
 								<h3 className="d-block mt-4 text-center" >
 										{this.state.inventoryValue ? (
@@ -513,7 +519,7 @@ class InventoryDashboard extends React.Component {
 							</CardBody>
 							<CardBody className="mr-3  mb-3 " style={{ boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)" }}>
 								<h6 className="text-center font-weight-bold mb-1 text-black mt-3">
-									Total Stock on Hand
+								{strings.TotalStockonHand}
 										</h6>
 								<h3 className="d-block mt-4 text-center" >
 									{this.state.quantityAvailable}
@@ -522,7 +528,7 @@ class InventoryDashboard extends React.Component {
 							</CardBody>
 							<CardBody className=" mb-3 " style={{ boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)" }}>
 								<h6 className="text-center font-weight-bold mb-1 text-black mt-3">
-									Out of Stock
+								{strings.OutofStock}
 										</h6>
 								<h3 className="d-block mt-4 text-center" >
 									{this.state.outOfStock}
@@ -544,7 +550,7 @@ class InventoryDashboard extends React.Component {
 							}}>
 								<div className="d-flex justify-content-between" style={{ color: "#2064d8", backgroundColor: "#edf2f9", height: "13.8%" }}>
 									<h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">
-										TOP SELLING PRODUCT
+									{strings.TopsellingProduct}
 								</h6>
 									<div className="w-25 mb-1 card-header-actions card-select-alignment">
 										<Select
@@ -584,7 +590,7 @@ class InventoryDashboard extends React.Component {
 							}}>
 								<div className="d-flex justify-content-between" style={{ color: "#2064d8", backgroundColor: "#edf2f9", height: "13.8%" }}>
 									<h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">
-										LOW SELLING PRODUCT
+									{strings.lowsellingProduct}
 									</h6>
 									<div className="w-25 mb-1 card-header-actions card-select-alignment">
 										<Select
@@ -635,7 +641,7 @@ class InventoryDashboard extends React.Component {
 							}}>
 									<div className="d-flex justify-content-between" style={{ color: "#2064d8", backgroundColor: "#edf2f9", height: "13.8%" }}>
 									<h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">
-									TOTAL REVENUE GENERATED
+									{strings.TotalRevenuegenerated}
 									</h6>
 									<div className="w-25 mb-1 card-header-actions card-select-alignment">
 										<Select
@@ -675,7 +681,7 @@ class InventoryDashboard extends React.Component {
 							}}>
 									<div className="d-flex justify-content-between" style={{ color: "#2064d8", backgroundColor: "#edf2f9", height: "13.8%" }}>
 									<h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">
-										TOTAL PROFIT GENERATED
+									{strings.Totalprofitgenerated}
 								</h6>
 								<div className="w-25 mb-1 card-header-actions card-select-alignment">
 										<Select

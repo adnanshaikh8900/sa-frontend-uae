@@ -20,6 +20,8 @@ import { Loader, ConfirmDeleteModal } from 'components';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 import * as ProductCategoryActions from './actions';
 import { CSVLink } from 'react-csv';
@@ -39,11 +41,13 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+let strings = new LocalizedStrings(data);
 class ProductCategory extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			// openDeleteModal: true,
 			loading: true,
 			selectedRows: [],
@@ -305,6 +309,7 @@ class ProductCategory extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			loading,
 			selectedRows,
@@ -324,7 +329,7 @@ class ProductCategory extends React.Component {
 						<CardHeader>
 							<div className="h4 mb-0 d-flex align-items-center">
 								<i className="nav-icon icon-briefcase" />
-								<span className="ml-2">Product Category</span>
+								<span className="ml-2">{strings.ProductCategory}</span>
 							</div>
 						</CardHeader>
 						<CardBody>
@@ -365,7 +370,7 @@ class ProductCategory extends React.Component {
 											</ButtonGroup>
 										</div>
 										<div className="py-3">
-											<h5>Filter : </h5>
+											<h5>{strings.Filter} : </h5>
 											<form onSubmit={this.handleSubmit}>
 												<Row>
 													<Col lg={4} className="mb-1">
@@ -432,7 +437,7 @@ class ProductCategory extends React.Component {
 											}
 										>
 											<i className="fas fa-plus mr-1" />
-											Add New Product Category
+											 {strings.AddNewProductCategory}
 										</Button>
 										<BootstrapTable
 											selectRow={this.selectRowProp}
@@ -469,14 +474,14 @@ class ProductCategory extends React.Component {
 												dataSort
 												className="table-header-bg"
 											>
-												Code
+												{strings.CODE}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="productCategoryName"
 												dataSort
 												className="table-header-bg"
 											>
-												Product Category Name
+												 {strings.ProductCategoryName}
 											</TableHeaderColumn>
 										</BootstrapTable>
 									</Col>

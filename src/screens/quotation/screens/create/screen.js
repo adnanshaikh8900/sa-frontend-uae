@@ -37,6 +37,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 import './style.scss';
 import moment from 'moment';
@@ -89,11 +91,13 @@ const customStyles = {
 };
 
 const invoiceimage = require('assets/images/invoice/invoice.png');
+let strings = new LocalizedStrings(data);
 
 class CreateQuotation extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			supplier_currency_symbol:'',
 			loading: false,
 			discountOptions: [
@@ -113,14 +117,15 @@ class CreateQuotation extends React.Component {
 					productId: '',
 					
 					
-				},
+				},	
 			],
 			idCount: 0,
 			initValue: {
 				contact_po_number: '',
 				currencyCode: '',
 				poApproveDate: new Date(),
-				quotaionExpiration: new Date(),
+				quotaionExpiration: new Date(new Date().setMonth(new Date().getMonth() + 1)),
+				// quotaionExpiration: new Date(),
 				customerId: '',
 				placeOfSupplyId: '',
 				project: '',
@@ -160,8 +165,7 @@ class CreateQuotation extends React.Component {
 			selectedType: { value: 'FIXED', label: 'Fixed' },
 			discountPercentage: '',
 			discountAmount: 0,
-			purchaseCategory: [],
-			
+			purchaseCategory: [],	
 		};
 
 		this.formRef = React.createRef();
@@ -1128,6 +1132,8 @@ class CreateQuotation extends React.Component {
 
 
 	render() {
+		strings.setLanguage(this.state.language);
+
 		const { data, discountOptions, initValue, prefix } = this.state;
 
 		const {
@@ -1159,7 +1165,7 @@ class CreateQuotation extends React.Component {
 													src={invoiceimage}
 													style={{ width: '40px' }}
 												/>
-												<span className="ml-2">Create Quotation</span>
+												<span className="ml-2">{strings.CreateQuotation}</span>
 											</div>
 										</Col>
 									</Row>
@@ -1250,7 +1256,7 @@ class CreateQuotation extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="quotation_Number">
 																		<span className="text-danger">*</span>
-																		Quatation Number
+																		{strings.QuotationNumber}
 																	</Label>
 																	<Input
 																		type="text"
@@ -1283,20 +1289,20 @@ class CreateQuotation extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="customerId">
 																		<span className="text-danger">*</span>
-																		Customer Name
+																		{strings.CustomerName}
 																	</Label>
 																	<Select
 																		styles={customStyles}
 																		id="customerId"
 																		name="customerId"
-																		placeholder="Select Supplier Name"
+																		placeholder="Select Customer Name"
 																		options={
 																			tmpSupplier_list
 																				? selectOptionsFactory.renderOptions(
 																						'label',
 																						'value',
 																						tmpSupplier_list,
-																						'Supplier Name',
+																						'Customer Name',
 																				  )
 																				: []
 																		}
@@ -1329,7 +1335,7 @@ class CreateQuotation extends React.Component {
 																	htmlFor="customerId"
 																	style={{ display: 'block' }}
 																>
-																	Add New Customer
+																	{strings.AddNewCustomer}
 																</Label>
 																<Button
 																	type="button"
@@ -1337,7 +1343,7 @@ class CreateQuotation extends React.Component {
 																	className="btn-square"
 																	onClick={this.openSupplierModal}
 																>
-																	<i className="fa fa-plus"></i> Add a Customer
+																	<i className="fa fa-plus"></i>{' '}{strings.AddACustomer} 
 																</Button>
 															</Col>
 														</Row>
@@ -1381,7 +1387,7 @@ class CreateQuotation extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="due_date">
 																	<span className="text-danger">*</span>
-																		Expiration Date
+																	{strings.ExpirationDate}
 																	</Label>
 																	<DatePicker
 																		id="date"
@@ -1430,7 +1436,7 @@ class CreateQuotation extends React.Component {
 																	}
 																	disabled={this.checkedRow() ? true : false}
 																>
-																	<i className="fa fa-plus"></i> Add More
+																	<i className="fa fa-plus"></i>{' '}{strings.Addmore} 
 																</Button>
 															</Col>
 														</Row>
@@ -1472,7 +1478,7 @@ class CreateQuotation extends React.Component {
 																			this.renderProduct(cell, rows, props)
 																		}
 																	>
-																		Product
+																		{strings.PRODUCT}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		width="55"
@@ -1487,7 +1493,7 @@ class CreateQuotation extends React.Component {
 																			this.renderDescription(cell, rows, props)
 																		}
 																	>
-																		Description
+																	{strings.DESCRIPTION}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="quantity"
@@ -1496,7 +1502,7 @@ class CreateQuotation extends React.Component {
 																			this.renderQuantity(cell, rows, props)
 																		}
 																	>
-																		Quantity
+																		{strings.QUANTITY}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="unitPrice"
@@ -1504,7 +1510,7 @@ class CreateQuotation extends React.Component {
 																			this.renderUnitPrice(cell, rows, props)
 																		}
 																	>
-																		Unit Price
+																		{strings.UNITPRICE}
 																		<i
 																			id="UnitPriceToolTip"
 																			className="fa fa-question-circle ml-1"
@@ -1523,7 +1529,7 @@ class CreateQuotation extends React.Component {
 																			this.renderVat(cell, rows, props)
 																		}
 																	>
-																		Vat (%)
+																		{strings.VAT}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="sub_total"
@@ -1532,7 +1538,7 @@ class CreateQuotation extends React.Component {
 																		columnClassName="text-right"
 																		formatExtraData={universal_currency_list}
 																	>
-																		Sub Total
+																		{strings.SUBTOTAL}
 																	</TableHeaderColumn>
 																</BootstrapTable>
 															</Col>
@@ -1542,7 +1548,7 @@ class CreateQuotation extends React.Component {
 															<Row>
 																<Col lg={8}>
 																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">Notes</Label>
+																		<Label htmlFor="notes">{strings.Notes}</Label>
 																		<Input
 																			type="textarea"
 																			maxLength="255"
@@ -1566,7 +1572,7 @@ class CreateQuotation extends React.Component {
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																						Total Net
+																					{strings.TotalNet}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
@@ -1596,7 +1602,7 @@ class CreateQuotation extends React.Component {
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																						Total Vat
+																					{strings.TotalVat} 
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
@@ -1626,7 +1632,7 @@ class CreateQuotation extends React.Component {
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																						Total
+																					{strings.Total}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
@@ -1676,7 +1682,7 @@ class CreateQuotation extends React.Component {
 																		<i className="fa fa-dot-circle-o"></i>{' '}
 																		{this.state.disabled
 																			? 'Creating...'
-																			: 'Create'}
+																			: strings.Create }
 																	</Button>
 																	<Button
 																		type="button"
@@ -1695,7 +1701,7 @@ class CreateQuotation extends React.Component {
 																		<i className="fa fa-repeat mr-1"></i>
 																		{this.state.disabled
 																			? 'Creating...'
-																			: 'Create & More'}
+																			: strings.CreateandMore }
 																	</Button>
 																	<Button
 																		type="button"
@@ -1707,7 +1713,7 @@ class CreateQuotation extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-ban"></i> Cancel
+																		<i className="fa fa-ban"></i> {strings.Cancel}
 																	</Button>
 																</FormGroup>
 															</Col>

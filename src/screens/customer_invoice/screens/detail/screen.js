@@ -34,7 +34,8 @@ import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 
 import './style.scss';
 import moment from 'moment';
-import API_ROOT_URL from '../../../../constants/config';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -75,6 +76,8 @@ const customStyles = {
 	}),
 };
 
+let strings = new LocalizedStrings(data);
+
 class DetailCustomerInvoice extends React.Component {
 	constructor(props) {
 		super(props);
@@ -102,6 +105,7 @@ class DetailCustomerInvoice extends React.Component {
 			fileName: '',
 			basecurrency:[],
 			customer_currency: '',
+			language: window['localStorage'].getItem('language'),
 		};
 
 		// this.options = {
@@ -1065,6 +1069,8 @@ class DetailCustomerInvoice extends React.Component {
 	}
 
 	render() {
+		strings.setLanguage(this.state.language);
+
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
 
 		const { project_list, currency_list,currency_convert_list, customer_list,universal_currency_list } = this.props;
@@ -1087,7 +1093,7 @@ class DetailCustomerInvoice extends React.Component {
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="fas fa-address-book" />
-												<span className="ml-2">Update Invoice</span>
+												<span className="ml-2">{strings.UpdateInvoice}</span>
 											</div>
 										</Col>
 									</Row>
@@ -1211,7 +1217,7 @@ class DetailCustomerInvoice extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="invoice_number">
 																			<span className="text-danger">*</span>
-																			Invoice Number
+																			{strings.InvoiceNumber}
 																		</Label>
 																		<Input
 																			type="text"
@@ -1244,7 +1250,7 @@ class DetailCustomerInvoice extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="contactId">
 																			<span className="text-danger">*</span>
-																			Customer Name
+																			{strings.CustomerName}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -1316,7 +1322,7 @@ class DetailCustomerInvoice extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
 																			<span className="text-danger">*</span>
-																			Place of Supply
+																			{strings.PlaceofSupply}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -1379,7 +1385,7 @@ class DetailCustomerInvoice extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="term">
 																			<span className="text-danger">*</span>
-																			Terms{' '}
+																			{strings.Terms}{' '}
 																			<i className="fa fa-question-circle"></i>
 																		</Label>
 																		<Select
@@ -1444,7 +1450,7 @@ class DetailCustomerInvoice extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">
 																			<span className="text-danger">*</span>
-																			Invoice Date
+																		{strings.InvoiceDate}
 																		</Label>
 																		<DatePicker
 																			id="invoiceDate"
@@ -1479,7 +1485,7 @@ class DetailCustomerInvoice extends React.Component {
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="due_date">
-																			Invoice Due Date
+																			{strings.InvoiceDueDate}
 																		</Label>
 																		<div>
 																			<DatePicker
@@ -1518,7 +1524,7 @@ class DetailCustomerInvoice extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="currency">
 																			<span className="text-danger">*</span>
-																			Currency
+																			{strings.Currency}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -1574,7 +1580,7 @@ class DetailCustomerInvoice extends React.Component {
 																<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																<Col>
 																<Label htmlFor="currency">
-																		Currency Exchange Rate
+																		{strings.CurrencyExchangeRate}
 																	</Label>	
 																</Col>
 																</Row>
@@ -1663,7 +1669,7 @@ class DetailCustomerInvoice extends React.Component {
 																		}
 																		disabled={this.checkedRow() ? true : false}
 																	>
-																		<i className="fa fa-plus"></i> Add More
+																		<i className="fa fa-plus"></i> {strings.Addmore}
 																	</Button>
 																</Col>
 															</Row>
@@ -1705,7 +1711,7 @@ class DetailCustomerInvoice extends React.Component {
 																				this.renderProduct(cell, rows, props)
 																			}
 																		>
-																			Product
+																			{strings.PRODUCT}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																		width="55"
@@ -1724,7 +1730,7 @@ class DetailCustomerInvoice extends React.Component {
 																				)
 																			}
 																		>
-																			Description
+																			{strings.DESCRIPTION}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="quantity"
@@ -1732,7 +1738,7 @@ class DetailCustomerInvoice extends React.Component {
 																				this.renderQuantity(cell, rows, props)
 																			}
 																		>
-																			Quantity
+																			{strings.QUANTITY}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="unitPrice"
@@ -1740,7 +1746,7 @@ class DetailCustomerInvoice extends React.Component {
 																				this.renderUnitPrice(cell, rows, props)
 																			}
 																		>
-																			Unit Price (All)
+																			{strings.UNITPRICE}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="vat"
@@ -1748,7 +1754,7 @@ class DetailCustomerInvoice extends React.Component {
 																				this.renderVat(cell, rows, props)
 																			}
 																		>
-																			Vat (%)
+																			{strings.VAT}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="sub_total"
@@ -1757,7 +1763,7 @@ class DetailCustomerInvoice extends React.Component {
 																			columnClassName="text-right"
 																			formatExtraData={universal_currency_list}
 																		>
-																			Sub Total (All)
+																			{strings.SUBTOTAL}
 																		</TableHeaderColumn>
 																	</BootstrapTable>
 																</Col>
@@ -1766,7 +1772,7 @@ class DetailCustomerInvoice extends React.Component {
 																<Row>
 																	<Col lg={8}>
 																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">Notes</Label>
+																		<Label htmlFor="notes">{strings.Notes}</Label>
 																		<Input
 																			type="textarea"
 																			maxLength="255"
@@ -1784,14 +1790,14 @@ class DetailCustomerInvoice extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="receiptNumber">
-																					Reciept Number
+																				{strings.RecieptNumber}
 																				</Label>
 																				<Input
 																					type="text"
 																					maxLength="100"
 																					id="receiptNumber"
 																					name="receiptNumber"
-																					placeholder="Reciept Number"
+																					placeholder="Receipt Number"
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||
@@ -1814,7 +1820,7 @@ class DetailCustomerInvoice extends React.Component {
 																					name="attachmentFile"
 																					render={({ field, form }) => (
 																						<div>
-																							<Label>Reciept Attachment</Label>{' '}
+																							<Label>{strings.RecieptAttachment}</Label>{' '}
 																							<br />
 																							<Button
 																								color="primary"
@@ -1826,7 +1832,7 @@ class DetailCustomerInvoice extends React.Component {
 																								className="btn-square mr-3"
 																							>
 																								<i className="fa fa-upload"></i>{' '}
-																								Upload
+																								{strings.upload}
 																							</Button>
 																							<input
 																								id="fileInput"
@@ -1870,7 +1876,7 @@ class DetailCustomerInvoice extends React.Component {
 																	</Row>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="receiptAttachmentDescription">
-																			Attachment Description
+																			{strings.AttachmentDescription}
 																		</Label>
 																		<Input
 																			type="textarea"
@@ -1898,7 +1904,7 @@ class DetailCustomerInvoice extends React.Component {
 																					<Col lg={6}>
 																						<FormGroup>
 																							<Label htmlFor="discountType">
-																								Discount Type
+																								{strings.DiscountType}
 																							</Label>
 																							<Select
 																								styles={customStyles}
@@ -1947,7 +1953,7 @@ class DetailCustomerInvoice extends React.Component {
 																						<Col lg={6}>
 																							<FormGroup>
 																								<Label htmlFor="discountPercentage">
-																									Percentage
+																									{strings.Percentage}
 																								</Label>
 																								<Input
 																								id="discountPercentage"
@@ -1992,7 +1998,7 @@ class DetailCustomerInvoice extends React.Component {
 																					<Col lg={6} className="mt-4">
 																						<FormGroup>
 																							<Label htmlFor="discount">
-																								Discount Amount
+																								{strings.DiscountAmount}
 																							</Label>
 																							<Input
 																								id="discount"
@@ -2041,7 +2047,7 @@ class DetailCustomerInvoice extends React.Component {
 																				<Row>
 																					<Col lg={6}>
 																						<h5 className="mb-0 text-right">
-																							Total Net
+																							{strings.TotalNet}
 																						</h5>
 																					</Col>
 																					<Col lg={6} className="text-right">
@@ -2066,7 +2072,7 @@ class DetailCustomerInvoice extends React.Component {
 																				<Row>
 																					<Col lg={6}>
 																						<h5 className="mb-0 text-right">
-																							Total Vat
+																						{strings.TotalVat}
 																						</h5>
 																					</Col>
 																					<Col lg={6} className="text-right">
@@ -2095,7 +2101,7 @@ class DetailCustomerInvoice extends React.Component {
 																				<Row>
 																					<Col lg={6}>
 																						<h5 className="mb-0 text-right">
-																							Discount
+																							{strings.Discount}
 																						</h5>
 																					</Col>
 																					<Col lg={6} className="text-right">
@@ -2124,7 +2130,7 @@ class DetailCustomerInvoice extends React.Component {
 																				<Row>
 																					<Col lg={6}>
 																						<h5 className="mb-0 text-right">
-																							Total
+																							{strings.Total}
 																						</h5>
 																					</Col>
 																					<Col lg={6} className="text-right">
@@ -2161,7 +2167,7 @@ class DetailCustomerInvoice extends React.Component {
 																			className="btn-square"
 																			onClick={this.deleteInvoice}
 																		>
-																			<i className="fa fa-trash"></i> Delete
+																			<i className="fa fa-trash"></i>{' '}{strings.Delete}
 																		</Button>
 																	</FormGroup>
 																	<FormGroup className="text-right">
@@ -2174,7 +2180,7 @@ class DetailCustomerInvoice extends React.Component {
 																			<i className="fa fa-dot-circle-o"></i>{' '}
 																			{this.state.disabled
 																				? 'Updating...'
-																				: 'Update'}
+																				: strings.Update}
 																		</Button>
 																		<Button
 																			color="secondary"
@@ -2185,7 +2191,7 @@ class DetailCustomerInvoice extends React.Component {
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i> Cancel
+																			<i className="fa fa-ban"></i> {strings.Cancel}
 																		</Button>
 																	</FormGroup>
 																</Col>

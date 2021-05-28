@@ -21,7 +21,6 @@ import { ImageUploader } from 'components';
 
 import * as UserActions from '../../actions';
 import * as UserCreateActions from './actions';
-import * as employeeActions from '../../../employeePayroll/actions';
 import * as SalaryTemplateActions from '../../../salaryTemplate/actions'
 
 import { CommonActions, AuthActions } from 'services/global';
@@ -40,7 +39,7 @@ const mapStateToProps = (state) => {
 		role_list: state.user.role_list,
 		company_type_list: state.user.company_type_list,
 		salary_role_dropdown: state.salarytemplate.salary_role_dropdown,
-		designation_dropdown: state.employeePayroll.designation_dropdown,
+		designation_dropdown: state.user.designation_dropdown,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -49,7 +48,6 @@ const mapDispatchToProps = (dispatch) => {
 		userCreateActions: bindActionCreators(UserCreateActions, dispatch),
 		userActions: bindActionCreators(UserActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
-		employeeActions: bindActionCreators(employeeActions, dispatch),
 		salaryTemplateActions: bindActionCreators(SalaryTemplateActions,dispatch),
 	};
 };
@@ -99,11 +97,15 @@ class CreateUser extends React.Component {
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 	}
+	componentWillMount = () => {
+		this.props.userActions.getRoleList();
+	}
 
 	componentDidMount = () => {
 		this.props.salaryTemplateActions.getSalaryRolesForDropdown();
-		this.props.employeeActions.getEmployeeDesignationForDropdown();
+		this.props.userActions.getEmployeeDesignationForDropdown();
 		this.props.userActions.getEmployeesNotInUserForDropdown();
+	
 		this.initializeData();
 	};
 
@@ -114,7 +116,7 @@ class CreateUser extends React.Component {
 			});
 			this.setState({ timezone: output });
 		});
-		this.props.userActions.getRoleList();
+	
 		this.props.userActions.getCompanyTypeList();
 		
 
@@ -260,9 +262,7 @@ class CreateUser extends React.Component {
 		const { role_list, employee_list,salary_role_dropdown,designation_dropdown } = this.props;
 		const { timezone } = this.state;
 		const { isPasswordShown } = this.state;
-
-	console.log(employee_list);
-	console.log(designation_dropdown);
+		console.log(role_list,"role_list")
 
 		// emlpoyee_list.map(item => {
 		// 	let obj = {label: item.label.fullName, value: item.value}
@@ -855,9 +855,13 @@ class CreateUser extends React.Component {
 																		</FormGroup>
 																	</Col>
 																</Row>
-
+															<Row>
+																<Col>
+																<Label>	<span className="text-danger">*</span> Select Link Or Create Employee </Label>
+																</Col>
+															</Row>
 																<Row>
-																	<Col lg={2}>
+																	<Col lg={2} style={{display: props.values.isNewEmployee === true ? 'none' : ''}}>
 																	<FormGroup check inline className="mb-3">
 																		<Label
 																			className="form-check-label"
@@ -892,7 +896,7 @@ class CreateUser extends React.Component {
 																		</Label>
 																	</FormGroup>
 																</Col>
-																<Col>
+																<Col style={{display: props.values.isAlreadyAvailableEmployee === true ? 'none' : ''}}>
 																<FormGroup check inline className="mb-3">
 																		<Label
 																			className="form-check-label"
@@ -936,11 +940,11 @@ class CreateUser extends React.Component {
 																				name="employeeId"
 																				placeholder="Select employee"
 																				options={
-																					employee_list.data
+																					employee_list
 																						? selectOptionsFactory.renderOptions(
 																							'label',
 																							'value',
-																							employee_list.data,
+																							employee_list,
 																							'Employee',
 																						)
 																						: []

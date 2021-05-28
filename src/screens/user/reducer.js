@@ -5,6 +5,7 @@ const initState = {
 	role_list: [],
 	company_type_list: [],
 	employee_list: [],
+	designation_dropdown: [],
 };
 
 const UserReducer = (state = initState, action) => {
@@ -33,6 +34,11 @@ const UserReducer = (state = initState, action) => {
 				...state,
 				employee_list: Object.assign([], payload),
 			};
+			case USER.DESIGNATION_DROPDOWN:
+				return {
+					...state,
+					designation_dropdown: Object.assign([], payload),
+				};
 		default:
 			return state;
 	}

@@ -32,6 +32,8 @@ import EmailModal from './sections/email_template';
 import * as CustomerInvoiceActions from './actions';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 import './style.scss';
 
@@ -52,6 +54,8 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
+
+let strings = new LocalizedStrings(data);
 
 const invoiceimage = require('assets/images/invoice/invoice.png');
 const overWeekly = require('assets/images/invoice/week1.png');
@@ -86,6 +90,7 @@ class CustomerInvoice extends React.Component {
 				overDueAmountMonthly: '',
 			},
 			rowId: '',
+			language: window['localStorage'].getItem('language'),
 		};
 
 		this.options = {
@@ -311,17 +316,17 @@ class CustomerInvoice extends React.Component {
 	return(
 		<div>
 		<div>
-					<label className="font-weight-bold mr-2 ">Invoice Amount : </label>
+					<label className="font-weight-bold mr-2 ">{strings.InvoiceAmount} : </label>
 					<label>
 						{row.invoiceAmount  === 0 ? row.currencySymbol + row.invoiceAmount.toFixed(2) : row.currencySymbol + row.invoiceAmount.toFixed(2)}
 					</label>
 				</div>
 				<div style={{display: row.vatAmount === 0 ? 'none' : ''}}>
-				<label className="font-weight-bold mr-2">Vat Amount : </label>
+				<label className="font-weight-bold mr-2">{strings.VatAmount} : </label>
 				<label>{row.vatAmount === 0  ? row.currencySymbol + row.vatAmount.toFixed(2) : row.currencySymbol + row.vatAmount.toFixed(2)}</label>
 				</div>
 				<div style={{display: row.dueAmount === 0 ? 'none' : ''}}>
-					<label className="font-weight-bold mr-2">Due Amount : </label>
+					<label className="font-weight-bold mr-2">{strings.DueAmount} : </label>
 					<label>{row.dueAmount === 0  ? row.currencySymbol + row.dueAmount.toFixed(2) : row.currencySymbol + row.dueAmount.toFixed(2)}</label>
 				</div>
 				
@@ -386,7 +391,7 @@ class CustomerInvoice extends React.Component {
 										);
 									}}
 								>
-									<i className="fas fa-edit" /> Edit
+									<i className="fas fa-edit" /> {strings.Edit}
 								</div>
 							</DropdownItem>
 						)}
@@ -396,7 +401,7 @@ class CustomerInvoice extends React.Component {
 									this.postInvoice(row);
 								}}
 							>
-								<i className="fas fa-send" /> Post
+								<i className="fas fa-send" /> {strings.Post}
 							</DropdownItem>
 						)}
 						{/* <DropdownItem onClick={() => { this.openInvoicePreviewModal(row.id) }}>
@@ -409,7 +414,7 @@ class CustomerInvoice extends React.Component {
 								})
 							}
 						>
-							<i className="fas fa-eye" /> View
+							<i className="fas fa-eye" />  {strings.View}
 						</DropdownItem>
 						{row.statusEnum === 'Sent' && (
 							<DropdownItem
@@ -417,7 +422,7 @@ class CustomerInvoice extends React.Component {
 									this.unPostInvoice(row);
 								}}
 							>
-								<i className="fas fa-file" /> Draft
+								<i className="fas fa-file" /> {strings.Draft}
 							</DropdownItem>
 						)}
 						{row.statusEnum !== 'Draft' && row.statusEnum !== 'Paid' && (
@@ -429,7 +434,7 @@ class CustomerInvoice extends React.Component {
 									)
 								}
 							>
-								<i className="fas fa-university" /> Record Payment
+								<i className="fas fa-university" /> {strings.RecordPayment}
 							</DropdownItem>
 						)}
 						{/* {row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
@@ -697,6 +702,7 @@ class CustomerInvoice extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			loading,
 			filterData,
@@ -753,7 +759,7 @@ class CustomerInvoice extends React.Component {
 											src={invoiceimage}
 											style={{ width: '40px' }}
 										/>
-										<span className="ml-2">Customer Invoices</span>
+										<span className="ml-2">{strings.CustomerInvoices}</span>
 									</div>
 								</Col>
 							</Row>
@@ -780,7 +786,7 @@ class CustomerInvoice extends React.Component {
 													style={{ width: '60px' }}
 												/>
 												<div>
-													<h5 className="ml-3">Overdue</h5>
+													<h5 className="ml-3">{strings.Overdue}</h5>
 													<h3 className="invoice-detail ml-3">
 														{universal_currency_list[0] &&
 														this.state.overDueAmountDetails.overDueAmount ? (
@@ -816,7 +822,7 @@ class CustomerInvoice extends React.Component {
 													style={{ width: '60px' }}
 												/>
 												<div>
-													<h5 className="ml-3">Due Within This Week</h5>
+													<h5 className="ml-3">{strings.DueWithinThisWeek}</h5>
 													<h3 className="invoice-detail ml-3">
 														{universal_currency_list[0] &&
 														this.state.overDueAmountDetails
@@ -855,7 +861,7 @@ class CustomerInvoice extends React.Component {
 													style={{ width: '60px' }}
 												/>
 												<div>
-													<h5 className="ml-3">Due Within 30 Days</h5>
+													<h5 className="ml-3">{strings.DueWithin30Days}</h5>
 													<h3 className="invoice-detail ml-3">
 														{universal_currency_list[0] &&
 														this.state.overDueAmountDetails
@@ -920,7 +926,7 @@ class CustomerInvoice extends React.Component {
 										</ButtonGroup>
 									</div>
 									<div className="py-3">
-										<h5>Filter : </h5>
+										<h5>{strings.Filter} : </h5>
 										<Row>
 											<Col lg={2} className="mb-1">
 												<Select
@@ -1050,7 +1056,7 @@ class CustomerInvoice extends React.Component {
 										}
 									>
 										<i className="fas fa-plus mr-1" />
-										Add New Invoice
+									{strings.AddNewInvoice}
 									</Button></div></Row>
 								
 										<BootstrapTable
@@ -1088,14 +1094,14 @@ class CustomerInvoice extends React.Component {
 											//	width="7%"
 												className="table-header-bg"
 											>
-												Invoice Number
+												{strings.INVOICENUMBER}
 											</TableHeaderColumn>
 											<TableHeaderColumn 
 												dataField="customerName" 
 											//	dataSort width="10%"
 												className="table-header-bg"
 											>
-												Customer Name
+												{strings.CUSTOMERNAME}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												//width="9%"
@@ -1104,7 +1110,7 @@ class CustomerInvoice extends React.Component {
 												dataSort
 												className="table-header-bg"
 											>
-												Status
+												{strings.STATUS}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="invoiceDate"
@@ -1113,7 +1119,7 @@ class CustomerInvoice extends React.Component {
 												dataFormat={this.invoiceDate}
 												className="table-header-bg"
 											>
-												Invoice Date
+											{strings.INVOICEDATE}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="invoiceDueDate"
@@ -1122,7 +1128,7 @@ class CustomerInvoice extends React.Component {
 												dataFormat={this.invoiceDueDate}
 												className="table-header-bg"
 											>
-												Due Date
+											{strings.DUEDATE}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 													dataSort
@@ -1131,7 +1137,7 @@ class CustomerInvoice extends React.Component {
 													dataFormat={this.renderCurrency}
 													className="table-header-bg"
 												>
-													Currency
+													{strings.CURRENCY}
 												</TableHeaderColumn>
 											{/* <TableHeaderColumn
 												dataField="totalVatAmount"
@@ -1151,7 +1157,7 @@ class CustomerInvoice extends React.Component {
 												formatExtraData={universal_currency_list}
 												className="table-header-bg"
 											>
-												Amount
+											{strings.Amount}
 											</TableHeaderColumn>
 											{/* <TableHeaderColumn
 												dataField="dueamount"

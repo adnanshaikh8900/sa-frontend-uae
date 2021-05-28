@@ -822,7 +822,7 @@ class Refund extends React.Component {
 																			className="btn-square mr-3"
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			 {strings.RecordPayment}
+																			 {strings.Refund}
 																		</Button>
 																		<Button
 																			color="secondary"

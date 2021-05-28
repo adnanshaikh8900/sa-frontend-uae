@@ -35,7 +35,9 @@ import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import './style.scss';
 import moment from 'moment';
 import API_ROOT_URL from '../../../../constants/config';
-
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
+let strings = new LocalizedStrings(data);
 const mapStateToProps = (state) => {
 	return {
 		project_list: state.customer_invoice.project_list,
@@ -79,6 +81,7 @@ class ApplyToInvoice extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			selectedRows: [],
 			loading: true,
 			dialog: false,
@@ -1108,6 +1111,7 @@ handleSubmit=(data)=>{
 	}
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
 
 		const { project_list, currency_list,currency_convert_list, customer_list,universal_currency_list } = this.props;
@@ -1133,7 +1137,7 @@ console.log(this.state.selectedRows)
 												<i className="fas fa-address-book" />
 	<span className="ml-2">
 		{/* Apply To Invoice  */}
-	Apply credits from <u>{this.state.invoice_number}</u></span>
+	{strings.Applycreditsfrom} <u>{this.state.invoice_number}</u></span>
 											</div>
 										</Col>
 									</Row>
@@ -1226,7 +1230,7 @@ console.log(this.state.selectedRows)
 																			// 	)
 																			// }
 																		>
-																			Invoice #
+																			{strings.InvoiceNumber}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField='date'
@@ -1236,7 +1240,7 @@ console.log(this.state.selectedRows)
 																			// 	this.renderQuantity(cell, rows, props)
 																			// }
 																		>
-																			Invoice Date
+																			{strings.InvoiceDate}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="totalAount"
@@ -1245,7 +1249,7 @@ console.log(this.state.selectedRows)
 																			// 	this.renderUnitPrice(cell, rows, props)
 																			// }
 																		>
-																			 Invoice Amount
+																			{strings.InvoiceAmount}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="unitPrice"
@@ -1254,7 +1258,7 @@ console.log(this.state.selectedRows)
 																			// 	this.renderUnitPrice(cell, rows, props)
 																			// }
 																		>
-																			 Amount To Credit
+																			 {strings.AmountToCredit}
 																		</TableHeaderColumn>
 																		
 																	</BootstrapTable>
@@ -1329,8 +1333,8 @@ console.log(this.state.selectedRows)
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
 																			{this.state.disabled
-																				? 'Updating...'
-																				: 'save'}
+																				? strings.Saving
+																				: strings.Save}
 																		</Button>
 																		<Button
 																			color="secondary"
@@ -1341,7 +1345,7 @@ console.log(this.state.selectedRows)
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i> Cancel
+																			<i className="fa fa-ban"></i> {strings.Cancel}
 																		</Button>
 																	</FormGroup>
 																</Col>

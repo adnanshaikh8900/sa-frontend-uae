@@ -456,6 +456,10 @@ RECONCILEDATE:"RECONCILE DATE",
 RECONCILEDURATION:"RECONCILE DURATION",
 CLOSINGBALANCE:"CLOSING BALANCE",
 Import:"Import",
+Applycreditsfrom:"Apply credits from",
+AmountToCredit:"Amount To Credit",
+Save:"Save",
+Saving:"Saving",
 
 //ImportStatement
 ImportStatement:"Import Statement",	       

@@ -446,7 +446,10 @@ ClosingBalance:" رصيد الإغلاق",
 RECONCILEDATE:"تاريخ الاستعادة",
 RECONCILEDURATION:"مدة الاستعادة",
 CLOSINGBALANCE:"رصيد الإغلاق ",
-
+Applycreditsfrom:"تطبيق الاعتمادات من",
+AmountToCredit:"مبلغ الائتمان",
+Save:"حفظ",
+Saving:"إنقاذ",
 //ImportStatement
 ImportStatement:"بيان الاستيراد",	       
 SelectFileToUpload:"حدد ملف للتحميل",	

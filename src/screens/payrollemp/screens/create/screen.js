@@ -259,11 +259,12 @@ class CreateEmployeePayroll extends React.Component {
                         Variable: res.data.salaryComponentResult.Variable,
                         Deduction: res.data.salaryComponentResult.Deduction,
                          FixedAllowance : res.data.salaryComponentResult.Fixed_Allowance,
-                        loading: false
+                        loading: false,
+                        CTC:this.state.CTC
                     })
                     
                 }
-               console.log(res.data.salaryComponentResult,"Fixed Allowance")
+                this.updateSalary(this.state.CTC)
             }).catch((err) => {
                 this.setState({ loading: false })
                 this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
@@ -278,7 +279,6 @@ class CreateEmployeePayroll extends React.Component {
 
                     loading: false,
                 })
-                console.log(this.state.selectedData, "sjhfashfsjlaf")
             });
     }
 
@@ -416,7 +416,7 @@ class CreateEmployeePayroll extends React.Component {
             'grossSalary',
             grossSalary != null ? grossSalary : '',
         )
-        console.log(formData)
+
         this.props.createPayrollEmployeeActions
             .saveEmployment(formData)
             .then((res) => {
@@ -534,7 +534,6 @@ class CreateEmployeePayroll extends React.Component {
     toggle = (tabPane, tab) => {
         const newArray = this.state.activeTab.slice();
         newArray[parseInt(tabPane, 10)] = tab;
-        console.log(tab);
         this.setState({
             activeTab: newArray,
         });
@@ -556,7 +555,7 @@ class CreateEmployeePayroll extends React.Component {
     closeSalaryComponentFixed = (res) => {
         this.setState({ openSalaryComponentFixed: false });
         this.getSalaryComponentByEmployeeId();
-        this.updateSalary();
+       // this.updateSalary();
     };
     openSalaryComponentVariable = (props) => {
         this.setState({ openSalaryComponentVariable: true });
@@ -564,7 +563,7 @@ class CreateEmployeePayroll extends React.Component {
     closeSalaryComponentVariable = (res) => {
         this.setState({ openSalaryComponentVariable: false });
         this.getSalaryComponentByEmployeeId();
-        this.updateSalary();
+     //   this.updateSalary();
     };
     openSalaryComponentDeduction = (props) => {
         this.setState({ openSalaryComponentDeduction: true });
@@ -572,7 +571,7 @@ class CreateEmployeePayroll extends React.Component {
     closeSalaryComponentDeduction = (res) => {
         this.setState({ openSalaryComponentDeduction: false });
         this.getSalaryComponentByEmployeeId();
-        this.updateSalary();
+        //this.updateSalary();
     };
 
     getCurrentUser = (data) => {
@@ -593,7 +592,6 @@ class CreateEmployeePayroll extends React.Component {
 
     updateSalary = (CTC1) => {
         const CTC = this.state.CTC
-
         const Fixed = this.state.Fixed
         const Variable = this.state.Variable
         const Deduction = this.state.Deduction
@@ -671,7 +669,6 @@ class CreateEmployeePayroll extends React.Component {
 
         const monthlySalary = CTC1 / 12
         const componentTotal1 = monthlySalary - totalFixedSalary;
-        console.log(componentTotal1, "%$componentTotal")
 
         if(FixedAllowance != null){
             FixedAllowance.map((obj) => {
@@ -693,7 +690,6 @@ class CreateEmployeePayroll extends React.Component {
                 list: locallist
 
             })
-        console.log(this.state.componentTotal, "componentTotal")
     }
 
     render() {
@@ -2443,6 +2439,7 @@ class CreateEmployeePayroll extends React.Component {
                     closeSalaryComponentFixed={(e) => {
                         this.closeSalaryComponentFixed(e);
                     }}
+
                     salary_structure_dropdown={this.props.salary_structure_dropdown}
                     salary_component_dropdown={this.props.salary_component_fixed_dropdown}
                     CreateComponent={this.props.createPayrollEmployeeActions.saveSalaryComponent}

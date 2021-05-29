@@ -661,6 +661,7 @@ class CreateUser extends React.Component {
 																				styles={customStyles}
 																				id="timezone"
 																				name="timezone"
+																				placeholder="Select Time Zone"
 																				options={timezone ? timezone : []}
 																				value={props.values.timezone}
 																				onChange={(option) => {
@@ -984,7 +985,7 @@ class CreateUser extends React.Component {
 																				styles={customStyles}
 																				id="salaryRoleId"
 																				name="salaryRoleId"
-																				placeholder="Select employee"
+																				placeholder="Select Role"
 																				options={
 																					salary_role_dropdown
 																						? selectOptionsFactory.renderOptions(
@@ -1028,7 +1029,7 @@ class CreateUser extends React.Component {
 																				styles={customStyles}
 																				id="designationId"
 																				name="designationId"
-																				placeholder="Select employee"
+																				placeholder="Select Designation"
 																				options={
 																					designation_dropdown
 																						? selectOptionsFactory.renderOptions(

@@ -199,11 +199,11 @@ class PurchaseOrder extends React.Component {
 	renderRFQStatus = (cell, row) => {
 		let classname = '';
 		if (row.status === 'Approved') {
-			classname = 'label-success';
+			classname = 'label-approved';
 		} else if (row.status === 'Draft') {
-			classname = 'label-currency';
+			classname = 'label-draft';
 		} else if (row.status === 'Closed') {
-			classname = 'label-PartiallyPaid';
+			classname = 'label-closed';
 		}else if (row.status === 'Send') {
 			classname = 'label-due';
 		} else {

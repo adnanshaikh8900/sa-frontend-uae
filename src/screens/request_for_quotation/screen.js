@@ -212,11 +212,11 @@ class RequestForQuotation extends React.Component {
 	renderRFQStatus = (cell, row) => {
 		let classname = '';
 		if (row.status === 'Closed') {
-			classname = 'label-success';
+			classname = 'label-closed';
 		} else if (row.status === 'Draft') {
-			classname = 'label-currency';
+			classname = 'label-draft';
 		} else if (row.status === 'Sent') {
-			classname = 'label-PartiallyPaid';
+			classname = 'label-sent';
 		} else {
 			classname = 'label-overdue';
 		}

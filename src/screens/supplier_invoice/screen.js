@@ -202,13 +202,13 @@ class SupplierInvoice extends React.Component {
 	renderInvoiceStatus = (cell, row) => {
 		let classname = '';
 		if (row.status === 'Paid') {
-			classname = 'label-success';
+			classname = 'label-paid';
 		} else if (row.status === 'Draft') {
-			classname = 'label-currency';
+			classname = 'label-draft';
 		} else if (row.status === 'Partially Paid') {
 			classname = 'label-PartiallyPaid';
 		}else if (row.status === 'Due Today') {
-			classname = 'label-due';
+			classname = 'label-overdue';
 		} else {
 			classname = 'label-overdue';
 		}

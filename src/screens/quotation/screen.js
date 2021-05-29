@@ -184,15 +184,13 @@ class Quatation extends React.Component {
 
 	renderRFQStatus = (cell, row) => {
 		let classname = '';
-		if (row.status === 'Paid') {
-			classname = 'label-success';
-		} else if (row.status === 'Draft') {
-			classname = 'label-currency';
-		} else if (row.status === 'Partially Paid') {
-			classname = 'label-PartiallyPaid';
-		}else if (row.status === 'Due Today') {
-			classname = 'label-due';
-		} else {
+		if (row.status === 'Draft') {
+			classname = 'label-draft';
+		} else if (row.status === 'Closed') {
+			classname = 'label-closed';
+		} else if (row.status === 'Sent') {
+			classname = 'label-sent';
+		}else {
 			classname = 'label-overdue';
 		}
 		return (

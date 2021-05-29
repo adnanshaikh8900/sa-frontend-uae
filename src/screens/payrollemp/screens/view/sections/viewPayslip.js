@@ -378,9 +378,9 @@ console.log(this.state.Variable,"Variable")
 															<Table  >
 																<thead className="table-header-bg">
 																	<tr>
-																		<th className="center" style={{ padding: '0.5rem', width: "40px" }}>
+																		{/* <th className="center" style={{ padding: '0.5rem', width: "40px" }}>
 																			#
-									</th>
+									</th> */}
 																		{/* <th style={{ padding: '0.5rem' }}>Item</th> */}
 																		<th style={{ padding: '0.5rem' }}>Deductions</th>
 																		<th style={{ padding: '0.5rem' }}>Amount</th>
@@ -405,7 +405,7 @@ console.log(this.state.Variable,"Variable")
 															<tr>
 																{/* <td></td> */}
 																<td><b>Total Deductions</b></td>
-																<td>{this.state.selectedData.deductions}</td>
+																<td>{this.state.selectedData.deductions ? this.state.selectedData.deductions : 0}</td>
 															</tr>
 														</tfoot>
 															</Table>

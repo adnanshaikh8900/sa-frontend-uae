@@ -141,6 +141,48 @@ $spinkit-spinner-color: $body-color;
 .invoice-detail {
 	font-weight: 600;
 }
+.label-draft {
+	background-color: #f9f9f9 !important;
+	color: #c2c2c2 !important;
+	display: inline;
+	padding: 4px 10px;
+	font-weight: 600;
+}
+.label-paid {
+	background-color: #e6f9e5 !important;
+	color: #0cbf00 !important;
+	display: inline;
+	padding: 4px 10px;
+	font-weight: 600;
+}
+.label-posted {
+	background-color: #e5f7ff !important;
+	color: #00b0ff !important;
+	display: inline;
+	padding: 4px 10px;
+	font-weight: 600;
+}
+.label-sent {
+	background-color: #e8fbf6 !important;
+	color: #28d9ac !important;
+	display: inline;
+	padding: 4px 10px;
+	font-weight: 600;
+}
+.label-approved {
+	background-color: #e8effb !important;
+	color: #2064d8 !important;
+	display: inline;
+	padding: 4px 10px;
+	font-weight: 600;
+}
+.label-closed {
+	background-color: #f5f2fd !important;
+	color: #997ee5 !important;
+	display: inline;
+	padding: 4px 10px;
+	font-weight: 600;
+}
 .label-success {
 	background-color: #e7faed !important;
 	color: #1bc852 !important;
@@ -170,8 +212,8 @@ $spinkit-spinner-color: $body-color;
 	font-weight: 600;
 }
 .label-overdue {
-	background-color: #f5e5e5 !important;
-	color: #a10808 !important;
+	background-color: #fce5e7 !important;
+	color: #e1021a !important;
 	display: inline;
 	padding: 4px 10px;
 	font-weight: 600;
@@ -184,8 +226,8 @@ $spinkit-spinner-color: $body-color;
 	font-weight: 600;
 }
 .label-PartiallyPaid {
-	background-color: #fff8e7 !important;
-	color: #ffbb17 !important;
+	background-color: #fff2e7 !important;
+	color: #fe7c18 !important;
 	display: inline;
 	padding: 4px 10px;
 	font-weight: 600;

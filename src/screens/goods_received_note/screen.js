@@ -174,14 +174,10 @@ class GoodsReceivedNote extends React.Component {
 
 	renderRFQStatus = (cell, row) => {
 		let classname = '';
-		if (row.status === 'Paid') {
-			classname = 'label-success';
+		if (row.status === 'Posted') {
+			classname = 'label-posted';
 		} else if (row.status === 'Draft') {
-			classname = 'label-currency';
-		} else if (row.status === 'Partially Paid') {
-			classname = 'label-PartiallyPaid';
-		}else if (row.status === 'Due Today') {
-			classname = 'label-due';
+			classname = 'label-draft';
 		} else {
 			classname = 'label-overdue';
 		}

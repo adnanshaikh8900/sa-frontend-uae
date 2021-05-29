@@ -281,14 +281,14 @@ class CreditNotes extends React.Component {
 	
 	renderInvoiceStatus = (cell, row) => {
 		let classname = '';
-		if (row.status === 'Paid') {
-			classname = 'label-success';
+		if (row.status === 'Closed') {
+			classname = 'label-closed';
 		} else if (row.status === 'Draft') {
-			classname = 'label-currency';
+			classname = 'label-draft';
 		} else if (row.status === 'Partially Paid') {
 			classname = 'label-PartiallyPaid';
-		}else if (row.status === 'Due Today') {
-			classname = 'label-due';
+		}else if (row.status === 'Open') {
+			classname = 'label-posted';
 		} else {
 			classname = 'label-overdue';
 		}

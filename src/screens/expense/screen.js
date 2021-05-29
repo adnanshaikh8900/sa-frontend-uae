@@ -304,10 +304,10 @@ class Expense extends React.Component {
 
 	renderExpenseStatus = (cell, row) => {
 		let classname = '';
-		if (row.expenseStatus === 'Paid') {
-			classname = 'label-success';
+		if (row.expenseStatus === 'Posted') {
+			classname = 'label-posted';
 		} else if (row.expenseStatus === 'Draft') {
-			classname = 'label-danger';
+			classname = 'label-draft';
 		} else if (row.expenseStatus === 'Pending') {
 			classname = 'label-danger';
 		} else {

@@ -95,18 +95,18 @@ class ViewExpense extends React.Component {
 							<div className="action-btn-container">
 						
 								<Button
-									className="btn btn-sm pdf-btn"
+									className="btn pdf-btn"
 									onClick={() => {
 										this.exportPDFWithComponent();
 									}}
 								>
 									<i className="fa fa-file-pdf-o"></i>
-								</Button>
+									</Button>
 								<ReactToPrint
 									trigger={() => (
 										<Button
 											type="button"
-											className="btn btn-sm print-btn"
+											className="btn  print-btn"
 											onClick={() => window.print()}
 										>
 											<i className="fa fa-print"></i>
@@ -115,14 +115,14 @@ class ViewExpense extends React.Component {
 									content={() => this.componentRef}
 								/>
 
-								<p
-									className="close"
+								<Button
+									className="btn close-btn"
 									onClick={() => {
 										this.props.history.push('/admin/expense');
 									}}
 								>
-									X
-								</p>
+									<i class="fas fa-times"></i>
+								</Button>
 							</div>
 							<div>
 								<PDFExport

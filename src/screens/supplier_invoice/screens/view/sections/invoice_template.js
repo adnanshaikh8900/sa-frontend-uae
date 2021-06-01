@@ -12,6 +12,26 @@ class InvoiceTemplate extends Component {
 		this.state = {};
 	}
 
+	renderInvoiceStatus = (invoiceData) => {
+		let classname = '';
+		if (invoiceData.status === 'Paid') {
+			classname = 'label-success';
+		} else if (invoiceData.status === 'Draft') {
+			classname = 'label-currency';
+		} else if (invoiceData.status === 'Partially Paid') {
+			classname = 'label-PartiallyPaid';
+		} else if (invoiceData.status === 'Due Today') {
+			classname = 'label-due';
+		} else {
+			classname = 'label-overdue';
+		}
+		return (
+			<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
+				{invoiceData.status}
+			</span>
+		);
+	};
+
 	getRibbonColor = (invoiceData) => {
 		if (invoiceData.status == 'Draft') {
 			return 'pending-color';
@@ -21,21 +41,40 @@ class InvoiceTemplate extends Component {
 			return 'saved-color';
 		}
 	};
+	renderInvoiceStatus = (status) => {
+		let classname = '';
+		if (status === 'Paid') {
+			classname = 'label-success';
+		} else if (status === 'Draft') {
+			classname = 'label-currency';
+		} else if (status === 'Partially Paid') {
+			classname = 'label-PartiallyPaid';
+		} else if (status === 'Due Today') {
+			classname = 'label-due';
+		} else {
+			classname = 'label-overdue';
+		}
+		return (
+			<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
+				{status}
+			</span>
+		);
+	};
 
 	render() {
-		const { invoiceData, currencyData, totalNet, companyData } = this.props;
+		const { invoiceData, currencyData, totalNet, companyData,status } = this.props;
 		return (
 			<div>
 				<Card id="singlePage" className="box">
-					<div
+					{/* <div
 						className={`ribbon ribbon-top-left ${this.getRibbonColor(
 							invoiceData,
 						)}`}
 					>
 						<span>{invoiceData.status}</span>
-					</div>
+					</div> */}
 
-					<CardBody style={{ marginTop: '7rem' }}>
+					<CardBody style={{ marginTop: '1rem' }}>
 						<div
 							style={{
 								width: '100%',
@@ -188,10 +227,9 @@ class InvoiceTemplate extends Component {
 								</Table> */}
 								<div 	style={{
 									width: '62%',
-									margin:'0.5rem',
+									margin:'0.5rem 4.5rem 0.5rem 6rem',
 									// border:'1px solid',
-									marginTop:'2.5rem',
-									marginLeft:'6rem'
+									
 								}}>
 								<h4 className="mb-1 ml-2"><b>{companyData && companyData.company
 											? companyData.company.companyName
@@ -216,6 +254,7 @@ class InvoiceTemplate extends Component {
 															}
 														/>
 													)}</b></h6>
+														<span className="mb-1 ml-2">Status :  {this.renderInvoiceStatus(status)}</span>
 								</div>
 								</div>
 							</div>

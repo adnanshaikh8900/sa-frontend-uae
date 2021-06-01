@@ -66,9 +66,12 @@ class CustomerInvoice extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			openModal: false,
 			loading: true,
 			dialog: false,
 			openEmailModal: false,
+			prefixData:'',
+			selectedData:{},
 			actionButtons: {},
 			filterData: {
 				customerId: '',
@@ -283,13 +286,13 @@ class CustomerInvoice extends React.Component {
 	renderInvoiceStatus = (cell, row) => {
 		let classname = '';
 		if (row.status === 'Paid') {
-			classname = 'label-paid';
+			classname = 'label-success';
 		} else if (row.status === 'Draft') {
-			classname = 'label-draft';
+			classname = 'label-currency';
 		} else if (row.status === 'Partially Paid') {
 			classname = 'label-PartiallyPaid';
-		}else if (row.status === 'Due Today') {
-			classname = 'label-overdue';
+		} else if (row.status === 'Due Today') {
+			classname = 'label-due';
 		} else {
 			classname = 'label-overdue';
 		}
@@ -329,7 +332,7 @@ class CustomerInvoice extends React.Component {
 					<label className="font-weight-bold mr-2">{strings.DueAmount} : </label>
 					<label>{row.dueAmount === 0  ? row.currencySymbol + row.dueAmount.toFixed(2) : row.currencySymbol + row.dueAmount.toFixed(2)}</label>
 				</div>
-				
+
 		</div>);
 	};
 	renderCurrency = (cell, row) => {
@@ -407,15 +410,7 @@ class CustomerInvoice extends React.Component {
 						{/* <DropdownItem onClick={() => { this.openInvoicePreviewModal(row.id) }}>
               <i className="fas fa-eye" /> View
             </DropdownItem> */}
-						<DropdownItem
-							onClick={() =>
-								this.props.history.push('/admin/income/customer-invoice/view', {
-									id: row.id,
-								})
-							}
-						>
-							<i className="fas fa-eye" />  {strings.View}
-						</DropdownItem>
+
 						{row.statusEnum === 'Sent' && (
 							<DropdownItem
 								onClick={() => {
@@ -455,6 +450,18 @@ class CustomerInvoice extends React.Component {
 								<i className="fa fa-send" /> Send Custom Email
 							</DropdownItem>
 						)} */}
+
+						<DropdownItem
+
+							onClick={() =>
+								
+								this.props.history.push('/admin/income/customer-invoice/view', {
+									id: row.id, status:row.status
+								})
+							}
+						>
+							<i className="fas fa-eye" />  {strings.View}
+						</DropdownItem>
 					</DropdownMenu>
 				</ButtonDropdown>
 			</div>
@@ -1058,7 +1065,7 @@ class CustomerInvoice extends React.Component {
 										<i className="fas fa-plus mr-1" />
 									{strings.AddNewInvoice}
 									</Button></div></Row>
-								
+
 										<BootstrapTable
 											selectRow={this.selectRowProp}
 											search={false}
@@ -1096,8 +1103,8 @@ class CustomerInvoice extends React.Component {
 											>
 												{strings.INVOICENUMBER}
 											</TableHeaderColumn>
-											<TableHeaderColumn 
-												dataField="customerName" 
+											<TableHeaderColumn
+												dataField="customerName"
 											//	dataSort width="10%"
 												className="table-header-bg"
 											>

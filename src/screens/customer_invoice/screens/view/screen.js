@@ -60,6 +60,7 @@ class ViewCustomerInvoice extends React.Component {
 
 	initializeData = () => {
 		if (this.props.location.state && this.props.location.state.id) {
+
 			this.props.supplierInvoiceDetailActions
 				.getInvoiceById(this.props.location.state.id)
 				.then((res) => {
@@ -124,8 +125,8 @@ class ViewCustomerInvoice extends React.Component {
 								>
 									<i className="fa fa-pencil"></i>
 								</Button> */}
-								<Button
-									className=" print-btn-cont"
+									<Button
+									className="btn-lg mb-1 print-btn-cont"
 									onClick={() => {
 										this.exportPDFWithComponent();
 									}}
@@ -134,7 +135,7 @@ class ViewCustomerInvoice extends React.Component {
 								</Button>
 								<ReactToPrint
 									trigger={() => (
-										<Button type="button" className=" print-btn-cont">
+										<Button type="button" className="ml-1 mb-1 mr-1 print-btn-cont btn-lg">
 											<i className="fa fa-print"></i>
 										</Button>
 									)}
@@ -142,14 +143,15 @@ class ViewCustomerInvoice extends React.Component {
 								/>
 										<Button
 											type="button"
-											className=" print-btn-cont"
-											style={{color: "black"}}
+											className="close-btn mb-1 btn-lg print-btn-cont"
+											
 											onClick={() => {
 												this.props.history.push('/admin/income/customer-invoice');
 											}}
 										>
-										X
+									<i class="fas fa-times"></i>
 										</Button>
+										
 							</div>
 							<div>
 							<PDFExport
@@ -158,7 +160,9 @@ class ViewCustomerInvoice extends React.Component {
 									paperSize="A4"
 								>
 									<InvoiceTemplate
+									
 										invoiceData={invoiceData}
+									    status={this.props.location.state.status}
 										currencyData={currencyData}
 										ref={(el) => (this.componentRef = el)}
 										totalNet={this.state.totalNet}

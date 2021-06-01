@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Card, CardBody, Row, Col, Table } from 'reactstrap';
 import moment from 'moment';
 import '../style.scss';
+import '../../../style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { Currency } from 'components';
 import { toInteger, upperCase } from 'lodash';
@@ -22,21 +23,39 @@ class InvoiceTemplate extends Component {
 			return 'saved-color';
 		}
 	};
-
+	renderInvoiceStatus = (status) => {
+		let classname = '';
+		if (status === 'Paid') {
+			classname = 'label-success';
+		} else if (status === 'Draft') {
+			classname = 'label-currency';
+		} else if (status === 'Partially Paid') {
+			classname = 'label-PartiallyPaid';
+		} else if (status === 'Due Today') {
+			classname = 'label-due';
+		} else {
+			classname = 'label-overdue';
+		}
+		return (
+			<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
+				{status}
+			</span>
+		);
+	};
 	render() {
-		const { invoiceData, currencyData, totalNet, companyData } = this.props;
+		const { invoiceData, currencyData, totalNet, companyData,status } = this.props;
 		return (
 			<div>
 				<Card id="singlePage" className="box">
-					<div
+					{/* <div
 						className={`ribbon ribbon-top-left ${this.getRibbonColor(
 							invoiceData,
 						)}`}
 					>
 						<span>{invoiceData.status}</span>
-					</div>
+					</div> */}
 
-					<CardBody style={{ marginTop: '7rem' }}>
+					<CardBody style={{ marginTop: '1rem' }}>
 						<div
 							style={{
 								width: '100%',
@@ -87,7 +106,7 @@ class InvoiceTemplate extends Component {
 							>
 								<div 	style={{
 									width: '62%',
-									margin:'1.5rem 9.0rem 0.5rem 8rem',
+									margin:'1.5rem 9.0rem 0.5rem 4rem',
 									// // border:'1px solid',
 									// marginTop:'2.5rem',
 									// marginLeft:'6rem'
@@ -115,6 +134,14 @@ class InvoiceTemplate extends Component {
 															}
 														/>
 													)}</b></h6>
+													<span className="mb-1 ml-2">Status :  {this.renderInvoiceStatus(status)}</span>
+													{/* <div
+														className={`ribbon ${this.getRibbonColor(
+															invoiceData,
+														)}`}
+													>
+															<span className="mb-1 ml-2">{invoiceData.status}</span>
+														</div>  */}
 								</div>
 								</div>
 							</div>

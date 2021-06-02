@@ -5,8 +5,11 @@ import configData from '../../constants/config';
 
 // import { bindActionCreators } from 'redux'
 import { Card, CardBody, Col, Row ,CardGroup} from 'reactstrap';
-
+import {data}  from '../../screens//Language/index'
+import LocalizedStrings from 'react-localization';
 import './style.scss';
+
+let strings = new LocalizedStrings(data);
 const mapStateToProps = (state) => {
 	return {
 		version: state.common.version,
@@ -20,10 +23,11 @@ const mapDispatchToProps = (dispatch) => {
 class Help extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {	language: window['localStorage'].getItem('language'),};
 	}
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const faqIcon = require('assets/images/settings/faq.png');
 		const userIcon = require('assets/images/settings/user.png');
 		const versionimage = require('assets/images/settings/version.png');
@@ -47,13 +51,12 @@ class Help extends React.Component {
 											<div className="text-center">
 												<img src={faqIcon} width="40%" alt=""></img>
 											</div>
-											<div><h4>Have a question?</h4></div>
+											<div><h4>{strings.Question}</h4></div>
 											<p>
-												Find detailed answers to the most common questions you
-												might have while using our site
+											{strings.Find}
 											</p>
 											{/* <Link to="https://www.simplevat.com/faqs/">Go to FAQ</Link> */}
-										<b>	<a target="_blank" href="https://www.simplevat.com/faqs/" style={{ color: '#2266d8' }}>Go to FAQ</a></b>
+										<b>	<a target="_blank" href="https://www.simplevat.com/faqs/" style={{ color: '#2266d8' }}>{strings.GotoFAQ}</a></b>
 										</div>
 										</CardBody>
 									</Card>
@@ -64,11 +67,9 @@ class Help extends React.Component {
 											<div className="text-center">
 												<img src={userIcon} width="40%" alt=""></img>
 											</div>
-											<div><h4>Customer Support</h4></div>
+											<div><h4>{strings.CustomerSupport}</h4></div>
 											<p>
-												Find detailed answers to the most common questions you
-												might have while using our site
-											</p>
+											{strings.Find}						</p>
 											<div className="d-flex justify-content-center">
 												{/* <button className="btn-pill btn btn-primary btn-lg">
 													<i className="icon-phone icons font-2xl d-block"></i>
@@ -106,10 +107,10 @@ class Help extends React.Component {
 											<div className="text-center">
 												<img src={versionimage} width="40%" alt=""></img>
 											</div>
-											<h4>Simple Accounts Versions</h4>
+											<h4>{strings.Version}</h4>
 											<p>
-												FrontEnd Verison:  <label className="mb-0 text-primary">{configData.FRONTEND_RELEASE}</label><br></br>
-												BackEnd Version: {
+											{strings.FrontEndVerison}:  <label className="mb-0 text-primary">{configData.FRONTEND_RELEASE}</label><br></br>
+											{strings.BackEndVersion}: {
            																   version !== '' ?
             														    <label className="mb-0 text-primary">{version}</label>
            																	   :

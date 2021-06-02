@@ -44,6 +44,7 @@ import {
 	SalaryTemplate,
 	Designation,
 	PayrollEmployee,
+	CreditNotes,
 } from 'screens';
 
 
@@ -92,6 +93,7 @@ const reducer = combineReducers({
 	employeeDesignation:Designation.reducer,
 	payrollEmployee : PayrollEmployee.reducer,
 	user: User.reducer,
+	creditNote:CreditNotes.reducer,
 });
 
 export default reducer;

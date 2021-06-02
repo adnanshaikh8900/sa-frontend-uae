@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Button, Row, Col } from 'reactstrap';
+import { Button, Row, Col, Table, Card } from 'reactstrap';
 
 import * as SupplierInvoiceDetailActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
@@ -15,6 +15,7 @@ import { PDFExport } from '@progress/kendo-react-pdf';
 
 import './style.scss';
 import { InvoiceTemplate } from './sections';
+import moment from 'moment';
 
 const mapStateToProps = (state) => {
 	return {
@@ -97,6 +98,26 @@ class ViewCreditNote extends React.Component {
 						);
 					}
 				});
+
+//
+this.props.supplierInvoiceDetailActions
+.getInvoicesForCNById(this.props.location.state.id)
+.then((res) => {
+	
+	if (res.status === 200) {
+		this.setState(
+			{
+				InvoiceDataList: res.data,
+				
+				id: this.props.location.state.id,
+			},
+			() => {
+				
+			},
+		);
+	}
+})
+
 		}
 	};
 
@@ -104,7 +125,7 @@ class ViewCreditNote extends React.Component {
 		this.pdfExportComponent.save();
 	};	
 	render() {
-		const { invoiceData, currencyData, id } = this.state;
+		const { invoiceData, currencyData,InvoiceDataList, id } = this.state;
 		const { profile } = this.props;
 
 		return (
@@ -168,6 +189,61 @@ class ViewCreditNote extends React.Component {
 							</div>
 						</Col>
 					</Row>
+					<Card>
+
+						
+					{/* <div style={{display: this.state.InvoiceDataList.length === 0 ? 'none' : ''}} > */}
+							<Table  >
+							<thead style={{backgroundColor:'#2064d8',color:'white'}}>
+								<tr>
+									<th className="center" style={{ padding: '0.5rem' }}>
+										#
+									</th>
+									{/* <th style={{ padding: '0.5rem' }}>Item</th> */}
+									<th style={{ padding: '0.5rem' }}>Invoice Number</th>
+									<th style={{ padding: '0.5rem' }}>Customer Name</th>
+									<th style={{ padding: '0.5rem' }}>Status</th>
+									<th className="center" style={{ padding: '0.5rem' }}>
+										Invoice Date
+									</th>
+									<th className="center" style={{ padding: '0.5rem' }}>
+									Invoice Due Date
+									</th>
+									<th style={{ padding: '0.5rem', textAlign: 'left' }}>
+									TOTAL Amount
+									</th>
+									<th style={{ padding: '0.5rem', textAlign: 'left' }}>
+									TOTAL Vat Amount
+									</th>
+								
+								</tr>
+							</thead>
+							<tbody className=" table-bordered table-hover">
+								{InvoiceDataList &&
+									InvoiceDataList.length   &&
+									InvoiceDataList.map((item, index) => {
+										return (
+											<tr key={index}>
+												<td className="center">{index + 1}</td>
+												<td>{item.poNumber}</td>
+												<td>{item.supplierName}</td>
+												<td>{item.status}</td>
+												<td>{moment(item.poApproveDate).format(
+									'DD MMM YYYY',
+								)}</td>
+									<td>{moment(item.poReceiveDate).format(
+									'DD MMM YYYY',
+								)}</td>
+												<td>{item.totalAmount}</td>
+												<td>{item.totalVatAmount}</td>
+											
+											</tr>
+										);
+									})}
+							</tbody>
+						</Table>
+							{/* </div>		 */}
+							</Card>
 				</div>
 			</div>
 		);

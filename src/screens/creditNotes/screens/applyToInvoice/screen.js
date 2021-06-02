@@ -195,6 +195,7 @@ class ApplyToInvoice extends React.Component {
 	
 
 	initializeData = () => {
+	
 		if (this.props.location.state && this.props.location.state.contactId) {
 			this.props.customerInvoiceDetailActions
 				.getInvoicesListForCN(this.props.location.state.contactId)
@@ -362,7 +363,19 @@ class ApplyToInvoice extends React.Component {
 	renderDate = (cell, rows) => {
 		return moment(rows.date).format('DD/MM/YYYY');
 	};
+	renderCreditAmount = (cell, row, extraData) => {
+		return (
+			<div>
+				<div>
+				
+					<label>
+						{extraData}
+					</label>
+				</div>
+			
 
+			</div>);
+	};
 	renderUnitPrice = (cell, row, props) => {
 		let idx;
 		this.state.data.map((obj, index) => {
@@ -1252,8 +1265,10 @@ console.log(this.state.selectedRows)
 																			{strings.InvoiceAmount}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
-																			dataField="unitPrice"
-																			dataSort className="table-header-bg"
+																	    	dataField="totalAount"
+																			dataFormat={this.renderCreditAmount}
+																			formatExtraData={this.props.location.state.creditAmount}
+																			className="table-header-bg"
 																			// dataFormat={(cell, rows) =>
 																			// 	this.renderUnitPrice(cell, rows, props)
 																			// }

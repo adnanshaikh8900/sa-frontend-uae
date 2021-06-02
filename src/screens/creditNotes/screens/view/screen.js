@@ -40,6 +40,7 @@ class ViewCreditNote extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			InvoiceDataList:[],
 			invoiceData: {},
 			totalNet: 0,
 			currencyData: {},
@@ -193,7 +194,7 @@ this.props.supplierInvoiceDetailActions
 					<Card>
 
 						
-					{/* <div style={{display: this.state.InvoiceDataList.length === 0 ? 'none' : ''}} > */}
+					 <div style={{display: this.state.InvoiceDataList.length === 0 ? 'none' : ''}} > 
 							<Table  >
 							<thead style={{backgroundColor:'#2064d8',color:'white'}}>
 								<tr>
@@ -243,7 +244,7 @@ this.props.supplierInvoiceDetailActions
 									})}
 							</tbody>
 						</Table>
-							{/* </div>		 */}
+							</div>		 
 							</Card>
 				</div>
 			</div>

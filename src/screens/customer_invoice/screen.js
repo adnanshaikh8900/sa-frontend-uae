@@ -474,7 +474,7 @@ class CustomerInvoice extends React.Component {
 							</DropdownItem>
 							)} 
 						<DropdownItem
-						debugger
+					
 							onClick={() =>
 								
 								this.props.history.push('/admin/income/customer-invoice/view', {

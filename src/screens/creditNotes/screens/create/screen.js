@@ -1244,7 +1244,6 @@ class CreateCreditNote extends React.Component {
 	};
 
 	getInvoiceDetails = (e, row, props,form,field) => {
-		debugger
 		let option;
 		const { invoice_list,selectedData } = this.props;
 			let idx;

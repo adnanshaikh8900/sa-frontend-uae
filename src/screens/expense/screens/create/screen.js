@@ -675,7 +675,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 															</Col>
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
-																		<Label htmlFor="payMode">Pay Through</Label>
+																		<Label htmlFor="payMode"> {strings.PayThrough}</Label>
 																		<Select
 																			styles={customStyles}
 																			id="payMode"
@@ -868,14 +868,14 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	<Col lg={6}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="receiptNumber">
-																			{strings.RecieptNumber}  
+																			{strings.ReceiptNumber}  
 																			</Label>
 																			<Input
 																				type="text"
 																				maxLength="50"
 																				id="receiptNumber"
 																				name="receiptNumber"
-																				placeholder="Enter Reciept Number"
+																				placeholder="Enter Receipt Number"
 																				onChange={(option) => {
 																					if (
 																						option.target.value === '' ||

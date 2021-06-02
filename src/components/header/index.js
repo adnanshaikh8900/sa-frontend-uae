@@ -24,6 +24,8 @@ import './style.scss';
 import logo from 'assets/images/brand/logo.png';
 import sygnet from 'assets/images/brand/sygnet.png';
 import avatar from 'assets/images/avatars/default-avatar.jpg';
+import {data}  from '../../screens/Language/index'
+import LocalizedStrings from 'react-localization';
 // import avatar from 'assets/images/avatars/6.jpg'
 
 const propTypes = {
@@ -42,10 +44,12 @@ const mapStateToProps = (state) => {
 //   authAction: BindActionCreators(AuthAction,dispatch)
 // )}
 
+let strings = new LocalizedStrings(data);
 class Header extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			profilePic: [],
 		};
 
@@ -60,6 +64,7 @@ class Header extends Component {
 	}
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { profile } = this.props;
 		return (
 			<React.Fragment>
@@ -108,14 +113,14 @@ class Header extends Component {
 							<DropdownItem
 								onClick={() => this.props.history.push('/admin/profile')}
 							>
-								<i className="fas fa-user"></i> Profile
+								<i className="fas fa-user"></i>  {strings.Profile }
 							</DropdownItem>
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push('/admin/settings/general')
 								}
 							>
-								<i className="icon-wrench"></i> General Settings
+								<i className="icon-wrench"></i>  {strings.GeneralSettings}
 							</DropdownItem>
 							{/* <DropdownItem onClick={() => this.props.history.push('/admin/settings/transaction-category')}>
                 <i className="icon-graph"></i> Transaction Category
@@ -123,14 +128,14 @@ class Header extends Component {
 							<DropdownItem
 								onClick={() => this.props.history.push('/admin/settings/user')}
 							>
-								<i className="fas fa-user-tag"></i> User
+								<i className="fas fa-user-tag"></i>  {strings.User}
 							</DropdownItem>
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push('/admin/settings/user-role')
 								}
 							>
-								<i className="fas fa-users"></i> Role
+								<i className="fas fa-users"></i> {strings.Role}
 							</DropdownItem>
 							{/* <DropdownItem
                                 onClick={() =>
@@ -156,12 +161,12 @@ class Header extends Component {
 							<DropdownItem
 								onClick={() => this.props.history.push('/admin/settings/help')}
 							>
-								<i className="fas fa-info-circle"></i> Help
+								<i className="fas fa-info-circle"></i> {strings.Help}
 							</DropdownItem>
 							<DropdownItem
 									onClick={this.signOut}
 							>
-								<i className="fa fa-sign-out header-icon mr-1"></i> Log Out
+								<i className="fa fa-sign-out header-icon mr-1"></i> {strings.LogOut}
 							</DropdownItem>
 						</DropdownMenu>
 					</UncontrolledDropdown>

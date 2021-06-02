@@ -974,13 +974,13 @@ class DetailExpense extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="receiptNumber">
-																					 {strings.RecieptNumber}
+																					 {strings.ReceiptNumber}
 																				</Label>
 																				<Input
 																					type="text"
 																					id="receiptNumber"
 																					name="receiptNumber"
-																					placeholder="Enter Reciept Number"
+																					placeholder="Enter Receipt Number"
 																					onChange={(option) =>
 																						props.handleChange('receiptNumber')(
 																							option,
@@ -1025,7 +1025,7 @@ class DetailExpense extends React.Component {
 																					name="attachmentFile"
 																					render={({ field, form }) => (
 																						<div>
-																							<Label>{strings.RecieptAttachment}</Label>{' '}
+																							<Label>{strings.ReceiptAttachment}</Label>{' '}
 																							<br />
 																							<div className="file-upload-cont">
 																								<Button

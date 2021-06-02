@@ -26,6 +26,8 @@ import { CommonActions } from 'services/global';
 import './style.scss';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import * as GeneralSettingActions from './actions';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {};
@@ -37,10 +39,12 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+let strings = new LocalizedStrings(data);
 class GeneralSettings extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			editorState: EditorState.createEmpty(),
 			initValue: {
 				id: '',
@@ -195,6 +199,7 @@ class GeneralSettings extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { initValue, contentState, loading } = this.state;
 
 		return (
@@ -206,7 +211,7 @@ class GeneralSettings extends React.Component {
 								<CardHeader>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="nav-icon icon-wrench" />
-										<span className="ml-2">General Settings</span>
+										<span className="ml-2"> {strings.GeneralSettings}</span>
 									</div>
 								</CardHeader>
 								<CardBody>
@@ -240,13 +245,13 @@ class GeneralSettings extends React.Component {
 												>
 													{(props) => (
 														<Form onSubmit={props.handleSubmit}>
-															<h4>General Details</h4>
+															<h4>{strings.GeneralDetails}</h4>
 															<Row>
 																<Col sm="6">
 																	<FormGroup>
 																		<Label htmlFor="invoicingReferencePattern">
 																			{' '}
-																			Invoicing Reference Pattern
+																			 {strings.InvoicingReferencePattern}
 																		</Label>
 																		<Input
 																			type="text"
@@ -297,12 +302,12 @@ class GeneralSettings extends React.Component {
                                                     </FormGroup>
                                                   </Col> */}
 															</Row>
-															<h4>Mail Configuration Detail</h4>
+															<h4> {strings.MailConfigurationDetail}</h4>
 															<Row>
 																<Col sm="6">
 																	<FormGroup>
 																		<Label htmlFor="mailingHost">
-																			Mailing Host
+																			 {strings.MailingHost}
 																		</Label>
 																		<Input
 																			type="text"
@@ -333,7 +338,7 @@ class GeneralSettings extends React.Component {
 																<Col sm="6">
 																	<FormGroup>
 																		<Label htmlFor="mailingPort">
-																			Mailing Port
+																			 {strings.MailingPort}
 																		</Label>
 																		<Input
 																			type="text"
@@ -366,7 +371,7 @@ class GeneralSettings extends React.Component {
 																<Col sm="6">
 																	<FormGroup>
 																		<Label htmlFor="mailingUserName">
-																			Mailing UserName
+																			 {strings.MailingUserName}
 																		</Label>
 																		<Input
 																			type="text"
@@ -398,7 +403,7 @@ class GeneralSettings extends React.Component {
 																<Col sm="6">
 																	<FormGroup>
 																		<Label htmlFor="mailingPassword">
-																			Mailing Password
+																			 {strings.MailingPassword}
 																		</Label>
 																		<Input
 																			type="password"
@@ -432,7 +437,7 @@ class GeneralSettings extends React.Component {
 																<Col sm="6">
 																	<FormGroup>
 																		<Label htmlFor="mailingSmtpAuthorization">
-																			Mailing SMTP Authorization
+																			 {strings.MailingSMTPAuthorization}
 																		</Label>
 																		<div>
 																			<FormGroup check inline>
@@ -458,7 +463,7 @@ class GeneralSettings extends React.Component {
 																						className="custom-control-label"
 																						htmlFor="inline-radio1"
 																					>
-																						Yes
+																						 {strings.Yes}
 																					</label>
 																				</div>
 																			</FormGroup>
@@ -485,7 +490,7 @@ class GeneralSettings extends React.Component {
 																						className="custom-control-label"
 																						htmlFor="inline-radio2"
 																					>
-																						No
+																					{strings.No}
 																					</label>
 																				</div>
 																			</FormGroup>
@@ -495,7 +500,7 @@ class GeneralSettings extends React.Component {
 																<Col sm="6">
 																	<FormGroup>
 																		<Label htmlFor="mailingSmtpStarttlsEnable">
-																			Mailing Smtp Starttls Enable
+																			 {strings.MailingSMTPStartTLSEnable}
 																		</Label>
 																		<div>
 																			<FormGroup check inline>
@@ -521,7 +526,7 @@ class GeneralSettings extends React.Component {
 																						className="custom-control-label"
 																						htmlFor="inline-radio3"
 																					>
-																						Yes
+																						 {strings.Yes}
 																					</label>
 																				</div>
 																			</FormGroup>
@@ -548,7 +553,7 @@ class GeneralSettings extends React.Component {
 																						className="custom-control-label"
 																						htmlFor="inline-radio4"
 																					>
-																						No
+																						 {strings.No}
 																					</label>
 																				</div>
 																			</FormGroup>
@@ -560,7 +565,7 @@ class GeneralSettings extends React.Component {
 																{this.state.selected_smtp_auth === true && (
 																	<Col sm="6">
 																		<FormGroup>
-																			<Label htmlFor="Api key">API Key </Label>
+																			<Label htmlFor="Api key"> {strings.APIKey} </Label>
 																			<Input
 																				type="text"
 																				id="mailingAPIKey"
@@ -589,7 +594,7 @@ class GeneralSettings extends React.Component {
 																	</Col>
 																)}
 															</Row>
-															<h4>Invoice Mail Configuration</h4>
+															{/* <h4>Invoice Mail Configuration</h4>
 															{this.state.viewEditor && (
 																<Row>
 																	<Col sm="8">
@@ -752,7 +757,7 @@ class GeneralSettings extends React.Component {
 																		</FormGroup>
 																	</Col>
 																</Row>
-															)}
+															)} */}
 															<FormGroup className="text-right mt-5">
 																<Button
 																	type="submit"
@@ -760,7 +765,7 @@ class GeneralSettings extends React.Component {
 																	color="primary"
 																	className="btn-square"
 																>
-																	<i className="fa fa-dot-circle-o"></i> Save
+																	<i className="fa fa-dot-circle-o"></i> {strings.Save}
 																</Button>
 																<Button
 																					color="secondary"
@@ -771,7 +776,7 @@ class GeneralSettings extends React.Component {
 																						);
 																					}}
 																				>
-																					<i className="fa fa-ban"></i> Cancel
+																					<i className="fa fa-ban"></i>  {strings.Cancel}
 																				</Button>
 															</FormGroup>
 														</Form>

@@ -29,6 +29,8 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
 
 import './style.scss';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -54,10 +56,12 @@ const customStyles = {
 	}),
 };
 
+let strings = new LocalizedStrings(data);
 class User extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: true,
 			selectedRows: [],
 			dialog: false,
@@ -323,6 +327,7 @@ class User extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			loading,
 			dialog,
@@ -343,7 +348,7 @@ class User extends React.Component {
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="nav-icon fas fa-users" />
-										<span className="ml-2">Users</span>
+										<span className="ml-2"> {strings.User} </span>
 									</div>
 								</Col>
 							</Row>
@@ -388,7 +393,7 @@ class User extends React.Component {
 											</ButtonGroup>
 										</div>
 										<div className="py-3">
-											<h5>Filter : </h5>
+											<h5>{strings.Filter} : </h5>
 											<Row>
 												<Col lg={2} className="mb-1">
 													<Input
@@ -506,7 +511,7 @@ class User extends React.Component {
 											}
 										>
 											<i className="fas fa-plus mr-1" />
-											New Users
+											 {strings.NewUsers}
 										</Button>  
 										<div>
 											<BootstrapTable
@@ -529,7 +534,7 @@ class User extends React.Component {
 												}}
 											>
 												<TableHeaderColumn dataField="firstName" dataSort>
-													User Name
+													  {strings.UserName}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="dob"
@@ -543,14 +548,14 @@ class User extends React.Component {
 													dataSort
 													// dataFormat={this.renderRole}
 												>
-													Role Name
+													 {strings.RoleName}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="active"
 													dataSort
 													dataFormat={this.renderStatus}
 												>
-													Status
+													 {strings.Status}
 												</TableHeaderColumn>
 												{/* <TableHeaderColumn
                             dataField="companyName"

@@ -30,6 +30,8 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 
 import * as RolesActions from './actions';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -42,10 +44,12 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+let strings = new LocalizedStrings(data);
 class UsersRoles extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			openInviteUserModal: false,
 			loading: false,
 			users: [
@@ -112,6 +116,7 @@ class UsersRoles extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { loading, openInviteUserModal } = this.state;
 		const containerStyle = {
 			zIndex: 1999,closeOnClick: true,
@@ -133,7 +138,7 @@ class UsersRoles extends React.Component {
 						<CardHeader>
 							<div className="h4 mb-0 d-flex align-items-center">
 								<i className="nav-icon fas fa-users" />
-								<span className="ml-2">Role</span>
+								<span className="ml-2">{strings.Role}</span>
 							</div>
 						</CardHeader>
 						<CardBody>
@@ -169,7 +174,7 @@ class UsersRoles extends React.Component {
 											}
 										>
 											<i className="fas fa-plus mr-1" />
-											Add New Role
+											 {strings.AddNewRole}
 										</Button>
 										<BootstrapTable
 											data={role_list}
@@ -187,10 +192,10 @@ class UsersRoles extends React.Component {
 												dataFormat={this.getUserName}
 												dataSort
 											>
-												User Detail
+												 {strings.UserDetail} 
 											</TableHeaderColumn>
 											<TableHeaderColumn dataField="roleName" dataSort>
-												Role
+												 {strings.Role}
 											</TableHeaderColumn>
 										</BootstrapTable>
 									</Col>
@@ -203,11 +208,11 @@ class UsersRoles extends React.Component {
 						isOpen={openInviteUserModal}
 						className={'modal-success ' + this.props.className}
 					>
-						<ModalHeader toggle={this.toggleDanger}>Invite User</ModalHeader>
+						<ModalHeader toggle={this.toggleDanger}> {strings.InviteUser} </ModalHeader>
 						<ModalBody>
 							<Form onSubmit={this.handleSubmit} name="simpleForm">
 								<FormGroup>
-									<Label htmlFor="categoryName">*Company Name</Label>
+									<Label htmlFor="categoryName">*{strings.CompanyName}</Label>
 									<Input
 										type="text"
 										id="categoryName"
@@ -217,7 +222,7 @@ class UsersRoles extends React.Component {
 									/>
 								</FormGroup>
 								<FormGroup>
-									<Label htmlFor="categoryCode">*Email</Label>
+									<Label htmlFor="categoryCode">*{strings.Email}</Label>
 									<Input
 										type="text"
 										id="categoryCode"
@@ -227,7 +232,7 @@ class UsersRoles extends React.Component {
 									/>
 								</FormGroup>
 								<FormGroup>
-									<Label htmlFor="categoryCode">Position</Label>
+									<Label htmlFor="categoryCode"> {strings.Position}</Label>
 									<Select
 										className="select-min-width"
 										options={[]}
@@ -242,7 +247,7 @@ class UsersRoles extends React.Component {
 								className="btn-square"
 								onClick={this.closeInviteUserModal}
 							>
-								Send
+							 {strings.Send}
 							</Button>
 							&nbsp;
 							<Button
@@ -250,7 +255,7 @@ class UsersRoles extends React.Component {
 								className="btn-square"
 								onClick={this.closeInviteUserModal}
 							>
-								No
+								 {strings.No}
 							</Button>
 						</ModalFooter>
 					</Modal>

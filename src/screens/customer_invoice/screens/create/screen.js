@@ -1933,7 +1933,7 @@ class CreateCustomerInvoice extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="receiptNumber">
-																					{strings.RecieptNumber}
+																					{strings.ReceiptNumber}
 																				</Label>
 																				<Input
 																					type="text"
@@ -1963,7 +1963,7 @@ class CreateCustomerInvoice extends React.Component {
 																					name="attachmentFile"
 																					render={({ field, form }) => (
 																						<div>
-																							<Label>{strings.RecieptAttachment}</Label>{' '}
+																							<Label>{strings.ReceiptAttachment}</Label>{' '}
 																							<br />
 																							<Button
 																								color="primary"

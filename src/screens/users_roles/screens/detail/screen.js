@@ -25,6 +25,9 @@ import { CommonActions } from 'services/global';
 import 'react-toastify/dist/ReactToastify.css';
 import * as roleActions from '../../screens/create/actions';
 import * as roleCommonActions from '../../actions';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
+
 
 import { Formik } from 'formik';
 const mapStateToProps = (state) => {
@@ -38,10 +41,12 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+let strings = new LocalizedStrings(data);
 class UpdateRole extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			initValue: {},
 			loading: true,
 			createMore: false,
@@ -185,6 +190,7 @@ class UpdateRole extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { loading, initValue } = this.state;
 		const { checked, expanded } = this.state;
 		return (
@@ -196,7 +202,7 @@ class UpdateRole extends React.Component {
 								<CardHeader>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="nav-icon icon-briefcase" />
-										<span className="ml-2">Update New Role</span>
+										<span className="ml-2"> {strings.UpdateNewRole} </span>
 									</div>
 								</CardHeader>
 								<CardBody>
@@ -227,7 +233,7 @@ class UpdateRole extends React.Component {
 														>
 															<FormGroup>
 																<Label htmlFor="name">
-																	<span className="text-danger">*</span>Name
+																	<span className="text-danger">*</span> {strings.Name}
 																</Label>
 																<Input
 																	type="text"
@@ -258,7 +264,7 @@ class UpdateRole extends React.Component {
 																)}
 															</FormGroup>
 															<FormGroup>
-																<Label htmlFor="name">Description</Label>
+																<Label htmlFor="name"> {strings.Description} </Label>
 																<Input
 																	type="text"
 																	id="description"
@@ -282,7 +288,7 @@ class UpdateRole extends React.Component {
 																/>
 															</FormGroup>
 															<FormGroup>
-																<Label htmlFor="name">Modules</Label>
+																<Label htmlFor="name">Modules {strings.Modules  }</Label>
 																<CheckboxTree
 																	checked={checked}
 																	expanded={expanded}
@@ -304,7 +310,7 @@ class UpdateRole extends React.Component {
 																		});
 																	}}
 																>
-																	<i className="fa fa-dot-circle-o"></i> Update
+																	<i className="fa fa-dot-circle-o"></i> {strings.Update}
 																</Button>
 																<Button
 																	type="submit"
@@ -316,7 +322,7 @@ class UpdateRole extends React.Component {
 																		);
 																	}}
 																>
-																	<i className="fa fa-ban"></i> Cancel
+																	<i className="fa fa-ban"></i> {strings.Cancel}
 																</Button>
 															</FormGroup>
 														</Form>

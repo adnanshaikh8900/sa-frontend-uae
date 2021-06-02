@@ -29,7 +29,8 @@ import './style.scss';
 import * as VatCreateActions from '../../../vat_code/screens/create/actions';
 import * as VatActions from '../../../vat_code/actions';
 import * as roleActions from '../../screens/create/actions';
-
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 import { Formik } from 'formik';
 const mapStateToProps = (state) => {
 	return {
@@ -44,11 +45,12 @@ const mapDispatchToProps = (dispatch) => {
 		RoleActions: bindActionCreators(roleActions, dispatch),
 	};
 };
-
+let strings = new LocalizedStrings(data);
 class CreateRole extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			initValue: { name: '', description: '' },
 			loading: false,
 			createMore: false,
@@ -181,6 +183,7 @@ class CreateRole extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { loading, vat_list } = this.state;
 
 		if (vat_list) {
@@ -206,7 +209,7 @@ class CreateRole extends React.Component {
 								<CardHeader>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="nav-icon icon-briefcase" />
-										<span className="ml-2">Add New Role</span>
+										<span className="ml-2"> {strings.AddNewRole}</span>
 									</div>
 								</CardHeader>
 								<CardBody>
@@ -239,7 +242,7 @@ class CreateRole extends React.Component {
 													<Form onSubmit={props.handleSubmit} name="simpleForm">
 														<FormGroup>
 															<Label htmlFor="name">
-																<span className="text-danger">*</span>Name
+																<span className="text-danger">*</span> {strings.Name}
 															</Label>
 															<Input
 																type="text"
@@ -280,7 +283,7 @@ class CreateRole extends React.Component {
 																)}
 														</FormGroup>
 														<FormGroup>
-															<Label htmlFor="name">Description</Label>
+															<Label htmlFor="name">{strings.Description}</Label>
 															<Input
 																type="text"
 																id="description"
@@ -304,7 +307,7 @@ class CreateRole extends React.Component {
 															/>
 														</FormGroup>
 														<FormGroup>
-															<Label ><span className="text-danger">*</span>Modules</Label>
+															<Label ><span className="text-danger">*</span> {strings.Modules}</Label>
 															<CheckboxTree
 																id="RoleList"
 																name="RoleList"
@@ -368,12 +371,8 @@ class CreateRole extends React.Component {
 																		props.handleSubmit();
 																	});
 																}}
-																
 															>
-																		{this.state.disabled
-																			? 'Creating...'
-																			: '' }
-																<i className="fa fa-dot-circle-o"></i> Create
+																<i className="fa fa-dot-circle-o"></i> {strings.Create}
 															</Button>
 															<Button
 																name="button"
@@ -385,11 +384,7 @@ class CreateRole extends React.Component {
 																	});
 																}}
 															>
-																		{this.state.disabled
-																			? 'Creating...'
-																			: '' }
-																<i className="fa fa-refresh"></i> Create and
-																More
+																<i className="fa fa-refresh"></i> {strings.CreateandMore}
 															</Button>
 															<Button
 																type="submit"
@@ -401,7 +396,7 @@ class CreateRole extends React.Component {
 																	);
 																}}
 															>
-																<i className="fa fa-ban"></i> Cancel
+																<i className="fa fa-ban"></i>  {strings.Cancel}
 															</Button>
 														</FormGroup>
 													</Form>

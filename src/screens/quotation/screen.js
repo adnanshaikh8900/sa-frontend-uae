@@ -291,8 +291,7 @@ class Quatation extends React.Component {
 									)
 								}
 							>
-								<i className="fas fa-edit" /> Edit
-							</DropdownItem>
+								<i className="fas fa-edit" />  {strings.Edit} </DropdownItem>
 					)}
 							{row.status !== 'Sent' && row.status !== "Approved" && (
 							<DropdownItem
@@ -300,7 +299,7 @@ class Quatation extends React.Component {
 									this.sendMail(row.id);
 								}}
 							>
-								<i className="fas fa-send" /> Send
+								<i className="fas fa-send" />  {strings.Send}
 							</DropdownItem>)}
 							{row.status === 'Sent' && (
 							<DropdownItem
@@ -308,7 +307,7 @@ class Quatation extends React.Component {
 							this.changeStatus(row.id);
 							}}
 							>
-								<i className="fas fa-send" /> Close
+								<i className="fas fa-send" />  {strings.Close}
 							</DropdownItem>
 							)}
 						<DropdownItem
@@ -319,7 +318,7 @@ class Quatation extends React.Component {
 								)
 							}
 						>
-							<i className="fas fa-eye" /> View
+							<i className="fas fa-eye" />  {strings.View}
 						</DropdownItem>
 						{/* {row.status === 'Sent' && (
 							<DropdownItem

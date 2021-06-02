@@ -28,6 +28,8 @@ import * as Yup from 'yup';
 // import 'react-images-uploader/font.css'
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const eye = require('assets/images/settings/eye.png');
 const mapStateToProps = (state) => {
@@ -54,10 +56,12 @@ const customStyles = {
 	}),
 };
 
+let strings = new LocalizedStrings(data);
 class DetailUser extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			isPasswordShown: false,
 			loading: true,
 			dialog: null,
@@ -271,6 +275,7 @@ class DetailUser extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { loading, dialog, timezone,current_user_id } = this.state;
 		const { role_list } = this.props;
 		const { isPasswordShown } = this.state;
@@ -285,7 +290,7 @@ class DetailUser extends React.Component {
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="nav-icon fas fa-users" />
-												<span className="ml-2">Update User</span>
+												<span className="ml-2">Update User </span>
 											</div>
 										</Col>
 									</Row>
@@ -399,7 +404,7 @@ class DetailUser extends React.Component {
 																			<FormGroup>
 																				<Label htmlFor="select">
 																					<span className="text-danger">*</span>
-																					First Name
+																					 {strings.FirstName}
 																				</Label>
 																				<Input
 																					type="text"
@@ -437,7 +442,7 @@ class DetailUser extends React.Component {
 																			<FormGroup>
 																				<Label htmlFor="select">
 																					<span className="text-danger">*</span>
-																					Last Name
+																					 {strings.LastName}
 																				</Label>
 																				<Input
 																					type="text"
@@ -477,7 +482,7 @@ class DetailUser extends React.Component {
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="email">
 																					<span className="text-danger">*</span>
-																					Email ID
+																					 {strings.EmailID}
 																				</Label>
 																				<Input
 																					type="text"
@@ -506,7 +511,7 @@ class DetailUser extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="date">
-																					Date Of Birth
+																					 {strings.DateOfBirth}
 																				</Label>
 																				<DatePicker
 																					className={`form-control ${
@@ -550,7 +555,7 @@ class DetailUser extends React.Component {
 																	<Row>
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
-																				<Label htmlFor="active">Status</Label>
+																				<Label htmlFor="active">{strings.Status}</Label>
 																				<div>
 																					<FormGroup check inline>
 																						<div className="custom-radio custom-control">
@@ -625,7 +630,7 @@ class DetailUser extends React.Component {
 																			<FormGroup>
 																				<Label htmlFor="roleId">
 																					<span className="text-danger">*</span>
-																					Role
+																					 {strings.Role}
 																				</Label>
 																				<Select
 																					styles={customStyles}
@@ -678,7 +683,7 @@ class DetailUser extends React.Component {
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="timeZone">
 																					<span className="text-danger">*</span>
-																					Time Zone Preference
+																					 {strings.TimeZonePreference}
 																				</Label>
 																				<Select
 																					styles={customStyles}
@@ -750,7 +755,7 @@ class DetailUser extends React.Component {
 																		<FormGroup>
 																			<Label htmlFor="select">
 																				<span className="text-danger">*</span>
-																				Password
+																			 {strings.Password}
 																			</Label>
 																			<div>	
 																			<Input
@@ -802,7 +807,7 @@ class DetailUser extends React.Component {
 																			<FormGroup>
 																				<Label htmlFor="select">
 																					<span className="text-danger">*</span>
-																					Confirm Password
+																					 {strings.ConfirmPassword}
 																				</Label>
 																				<Input
 																					type="password"
@@ -848,7 +853,7 @@ class DetailUser extends React.Component {
 																			className="btn-square"
 																			onClick={this.deleteUser}
 																		>
-																			<i className="fa fa-trash"></i> Delete
+																			<i className="fa fa-trash"></i> {strings.Delete}
 																		</Button>
 																	</FormGroup>
 																	)}
@@ -871,7 +876,7 @@ class DetailUser extends React.Component {
 																			className="btn-square mr-3"
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			Update
+																		   {strings.Update}
 																		</Button>
 																		<Button
 																			color="secondary"
@@ -882,7 +887,7 @@ class DetailUser extends React.Component {
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i> Cancel
+																			<i className="fa fa-ban"></i> {strings.Cancel}
 																		</Button>
 																	</FormGroup>
 																</Col>

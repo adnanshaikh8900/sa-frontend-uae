@@ -30,6 +30,8 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 import './style.scss';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 
 const eye = require('assets/images/settings/eye.png');
@@ -61,11 +63,12 @@ const customStyles = {
 		},
 	}),
 };
-
+let strings = new LocalizedStrings(data);
 class CreateUser extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			isPasswordShown: false,
 			loading: false,
 			// passwordShown: false,
@@ -259,6 +262,7 @@ class CreateUser extends React.Component {
 		this.setState({ openEmployeeModal: false });
 	};
 	render() {
+		strings.setLanguage(this.state.language);
 		const { role_list, employee_list,salary_role_dropdown,designation_dropdown } = this.props;
 		const { timezone } = this.state;
 		const { isPasswordShown } = this.state;
@@ -389,7 +393,7 @@ class CreateUser extends React.Component {
 																		<FormGroup>
 																			<Label htmlFor="select">
 																				<span className="text-danger">*</span>
-																				First Name
+																				 {strings.FirstName}
 																			</Label>
 																			<Input
 																				type="text"
@@ -429,7 +433,7 @@ class CreateUser extends React.Component {
 																		<FormGroup>
 																			<Label htmlFor="select">
 																				<span className="text-danger">*</span>
-																				Last Name
+																				 {strings.LastName}
 																			</Label>
 																			<Input
 																				type="text"
@@ -471,7 +475,7 @@ class CreateUser extends React.Component {
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="email">
 																				<span className="text-danger">*</span>
-																				Email ID
+																				 {strings.EmailID}
 																			</Label>
 																			<Input
 																				type="text"
@@ -504,7 +508,7 @@ class CreateUser extends React.Component {
 																	<Col lg={6}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="date">
-																				Date Of Birth
+																				{strings.DateOfBirth}
 																			</Label>
 																			<DatePicker
 																				id="dob"
@@ -538,7 +542,7 @@ class CreateUser extends React.Component {
 																<Row>
 																	<Col lg={6}>
 																		<FormGroup className="mb-3">
-																			<Label htmlFor="active">Status</Label>
+																			<Label htmlFor="active">{strings.Status}</Label>
 																			<div>
 																				<FormGroup check inline>
 																					<div className="custom-radio custom-control">
@@ -566,7 +570,7 @@ class CreateUser extends React.Component {
 																							className="custom-control-label"
 																							htmlFor="inline-radio1"
 																						>
-																							Active
+																							Active 
 																							</label>
 																					</div>
 																				</FormGroup>
@@ -609,7 +613,7 @@ class CreateUser extends React.Component {
 																		<FormGroup>
 																			<Label htmlFor="roleId">
 																				<span className="text-danger">*</span>
-																				Role
+																				 {strings.Role}
 																			</Label>
 																			<Select
 																				styles={customStyles}
@@ -655,7 +659,7 @@ class CreateUser extends React.Component {
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="timezone">
 																				<span className="text-danger">*</span>
-																				Time Zone Preference
+																				 {strings.TimeZonePreference}
 																			</Label>
 																			<Select
 																				styles={customStyles}
@@ -775,7 +779,7 @@ class CreateUser extends React.Component {
 																		<FormGroup>
 																			<Label htmlFor="select">
 																				<span className="text-danger">*</span>
-																				Password
+																				 {strings.Password}
 																			</Label>
 																			<div>
 																				<Input
@@ -827,7 +831,7 @@ class CreateUser extends React.Component {
 																		<FormGroup>
 																			<Label htmlFor="select">
 																				<span className="text-danger">*</span>
-																				Confirm Password
+																				 {strings.ConfirmPassword}
 																			</Label>
 																			<Input
 																				type="password"
@@ -933,7 +937,7 @@ class CreateUser extends React.Component {
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="contactId">
 																				<span className="text-danger">*</span>
-																		Employee
+																		Employee 
 																	</Label>
 																			<Select
 																				styles={customStyles}
@@ -979,7 +983,7 @@ class CreateUser extends React.Component {
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="contactId">
 																				<span className="text-danger">*</span>
-																		Salary Role
+																		Salary Role 
 																	</Label>
 																			<Select
 																				styles={customStyles}
@@ -1023,7 +1027,7 @@ class CreateUser extends React.Component {
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="contactId">
 																				<span className="text-danger">*</span>
-																		Designation
+																		Designation 
 																	</Label>
 																			<Select
 																				styles={customStyles}
@@ -1088,7 +1092,7 @@ class CreateUser extends React.Component {
 																		}}
 																	>
 																		<i className="fa fa-dot-circle-o"></i>{' '}
-																		Create
+																		 {strings.Create}
 																	</Button>
 																	<Button
 																		name="button"
@@ -1103,8 +1107,7 @@ class CreateUser extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-refresh"></i> Create and
-																		More
+																		<i className="fa fa-refresh"></i> {strings.CreateandMore}
 																	</Button>
 																	<Button
 																		color="secondary"
@@ -1115,7 +1118,7 @@ class CreateUser extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-ban"></i> Cancel
+																		<i className="fa fa-ban"></i> {strings.Cancel}
 																	</Button>
 																</FormGroup>
 															</Col>

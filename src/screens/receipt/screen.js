@@ -589,7 +589,7 @@ class Receipt extends React.Component {
 												dataSort
 												className="table-header-bg"
 												>
-													{strings.RecieptNumber}
+													{strings.RECEIPTNUMBER}
 												</TableHeaderColumn>
 												  <TableHeaderColumn 
 											  dataField="currencyIsoCode" 

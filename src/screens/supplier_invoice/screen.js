@@ -313,7 +313,7 @@ class SupplierInvoice extends React.Component {
 									)
 								}
 							>
-								<i className="fas fa-edit" /> Edit
+								<i className="fas fa-edit" />  {strings.Edit}
 							</DropdownItem>
 						)}
 						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && row.statusEnum !== 'Partially Paid' && (
@@ -322,20 +322,29 @@ class SupplierInvoice extends React.Component {
 									this.postInvoice(row);
 								}}
 							>
-								<i className="fas fa-send" /> Post
+								<i className="fas fa-send" />  {strings.Post}
 							</DropdownItem>
 						)}
 						{/* <DropdownItem  onClick={() => {this.openInvoicePreviewModal(row.id)}}>
               <i className="fas fa-eye" /> View
             </DropdownItem> */}
-						
+						<DropdownItem
+							onClick={() =>
+								this.props.history.push(
+									'/admin/expense/supplier-invoice/view',
+									{ id: row.id },
+								)
+							}
+						>
+							<i className="fas fa-eye" />  {strings.View}
+						</DropdownItem>
 						{row.statusEnum === 'Sent' && (
 							<DropdownItem
 								onClick={() => {
 									this.unPostInvoice(row);
 								}}
 							>
-								<i className="fas fa-file" /> Draft
+								<i className="fas fa-file" /> {strings.Draft}
 							</DropdownItem>
 						)}
 						{row.statusEnum !== 'Draft' && row.statusEnum !== 'Paid' && (
@@ -347,7 +356,7 @@ class SupplierInvoice extends React.Component {
 									)
 								}
 							>
-								<i className="fas fa-university" /> Record Payment
+								<i className="fas fa-university" />  {strings.RecordPayment}
 							</DropdownItem>
 						)}
 						{/* {row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
@@ -1101,7 +1110,22 @@ class SupplierInvoice extends React.Component {
 													? supplier_invoice_list.count
 													: 0,
 											}}
-											className="supplier-invoice-table"
+											className="supplier-invoi
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											ce-table"
 											ref={(node) => (this.table = node)}
 										>
 											<TableHeaderColumn

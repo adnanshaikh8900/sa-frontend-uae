@@ -202,18 +202,18 @@ this.props.supplierInvoiceDetailActions
 									{/* <th style={{ padding: '0.5rem' }}>Item</th> */}
 									<th style={{ padding: '0.5rem' }}>Invoice Number</th>
 									<th style={{ padding: '0.5rem' }}>Customer Name</th>
-									<th style={{ padding: '0.5rem' }}>Status</th>
-									<th className="center" style={{ padding: '0.5rem' }}>
+								
+									{/* <th className="center" style={{ padding: '0.5rem' }}>
 										Invoice Date
 									</th>
 									<th className="center" style={{ padding: '0.5rem' }}>
 									Invoice Due Date
+									</th> */}
+									<th style={{ padding: '0.5rem', textAlign: 'left' }}>
+									Total Amount
 									</th>
 									<th style={{ padding: '0.5rem', textAlign: 'left' }}>
-									TOTAL Amount
-									</th>
-									<th style={{ padding: '0.5rem', textAlign: 'left' }}>
-									TOTAL Vat Amount
+									Total Vat Amount
 									</th>
 								
 								</tr>
@@ -225,15 +225,15 @@ this.props.supplierInvoiceDetailActions
 										return (
 											<tr key={index}>
 												<td className="center">{index + 1}</td>
-												<td>{item.poNumber}</td>
-												<td>{item.supplierName}</td>
-												<td>{item.status}</td>
+												<td>{item.invoiceNumber}</td>
+												<td>{item.contactName}</td>
+{/* 										
 												<td>{moment(item.poApproveDate).format(
 									'DD MMM YYYY',
 								)}</td>
 									<td>{moment(item.poReceiveDate).format(
 									'DD MMM YYYY',
-								)}</td>
+								)}</td> */}
 												<td>{item.totalAmount}</td>
 												<td>{item.totalVatAmount}</td>
 											

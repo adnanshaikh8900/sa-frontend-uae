@@ -400,7 +400,9 @@ class CreditNotes extends React.Component {
 										
 										this.props.history.push(
 											'/admin/income/credit-notes/applyToInvoice',
-											{ contactId: row.contactId , creditNoteId: row.id ,referenceNumber:row.invoiceNumber},
+											{ contactId: row.contactId , creditNoteId: row.id ,
+											  referenceNumber:row.invoiceNumber,
+											  creditAmount:row.invoiceAmount},
 										);
 									}}
 								>
@@ -464,7 +466,7 @@ class CreditNotes extends React.Component {
 						<DropdownItem
 							onClick={() =>
 								this.props.history.push('/admin/income/credit-notes/view', {
-									id: row.id,
+									id: row.id,status:row.status
 								})
 							}
 						>

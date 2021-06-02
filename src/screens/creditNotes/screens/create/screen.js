@@ -933,8 +933,11 @@ class CreateCreditNote extends React.Component {
 		const { term } = this.state;
 		const formData = new FormData();
 		if (invoiceNumber && invoiceNumber.value) {
-			formData.append('invoiceNumber', invoiceNumber.value);
+			formData.append('invoiceId', invoiceNumber.value);
 		}
+
+			// formData.append('invoiceNumber',this.state.referenceNumber !== null ? this.state.selectedData.referenceNumber : '');
+
 		formData.append(
 			'creditNoteNumber',
 			creditNoteNumber !== null ? this.state.prefix + creditNoteNumber : '',

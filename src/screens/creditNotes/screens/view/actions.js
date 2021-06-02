@@ -21,7 +21,7 @@ export const getInvoicesForCNById = (_id) => {
 	return (dispatch) => {
 	  let data = {
 		method: 'GET',
-		url: `rest/poquatation/getPoGrnById?id=${_id}`
+		url: `/rest/creditNote/getInvoiceByCreditNoteId?id=${_id}`
 	  }
 	  return authApi(data).then((res) => {
 		return res

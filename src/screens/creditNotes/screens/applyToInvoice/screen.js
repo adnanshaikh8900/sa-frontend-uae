@@ -123,7 +123,7 @@ class ApplyToInvoice extends React.Component {
 
         this.selectRowProp = {
             mode: 'checkbox',
-            bgColor: 'rgba(223,233,47,1)',
+            bgColor: 'rgba(0,0,0, 0.05)',
             clickToSelect: false,
             onSelect: this.onRowSelect,
             onSelectAll: this.onSelectAll

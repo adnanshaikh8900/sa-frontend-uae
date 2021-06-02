@@ -726,7 +726,7 @@ class CreateEmployeePayroll extends React.Component {
                                         active={this.state.activeTab[0] === '2'}
 
                                     >
-                                        Employement
+                                        Employment
 									</NavLink>
                                 </NavItem>
                                 <NavItem>
@@ -771,6 +771,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                         onSubmit={(values, { resetForm }) => {
                                                                             this.handleSubmit(values, resetForm)
                                                                         }}
+                                                                      
                                                                         validationSchema={Yup.object().shape({
                                                                             firstName: Yup.string()
                                                                                 .required("first Name is Required"),
@@ -782,8 +783,19 @@ class CreateEmployeePayroll extends React.Component {
                                                                             // .required(" Employee Role is required"),
                                                                             dob: Yup.date()
                                                                             .required('DOB is Required') ,
-                                                                            // mobileNumber : Yup.date()
-                                                                            // .required('Mobile Number is Required') ,  
+                                                                            // mobileNumber: Yup.string()
+                                                                            // .required('Mobile Number is required')
+                                                                            // .test(
+                                                                            //     'quantity',
+                                                                            //     'Invalid Mobile Number',
+                                                                            //     (value) => {
+                                                                            //         if (isValidPhoneNumber(value)) {
+                                                                            //             return true;
+                                                                            //         } else {
+                                                                            //             return false;
+                                                                            //         }
+                                                                            //     },
+                                                                            // ), 
                                                                             // active : Yup.date()
                                                                             // .required('status is Required') ,  
                                                                             // employeeDesignationId : Yup.date()
@@ -823,6 +835,8 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                         ? 'hideButton'
                                                                                                         : 'showButton'
                                                                                                 }
+                                                                                                defaultImages={this.state.userPhoto}
+                                                                                                imageState={this.state.imageState}
                                                                                             />
                                                                                         </FormGroup>
                                                                                     </Col>
@@ -909,10 +923,9 @@ class CreateEmployeePayroll extends React.Component {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="mobileNumber">
-                                                                                                        Mobile
-																		Number
-																	</Label>
+                                                                                                    <Label htmlFor="mobileNumber"><span className="text-danger">*</span>
+                                                                                                        Mobile Number
+															                                    		</Label>
                                                                                                     <PhoneInput
                                                                                                         id="mobileNumber"
                                                                                                         name="mobileNumber"
@@ -1361,15 +1374,9 @@ class CreateEmployeePayroll extends React.Component {
                                                                                 </Row>
                                                                                 <Row>
                                                                                     <Col lg={12} className="mt-5">
-                                                                                        <FormGroup className="text-center">
-                                                                                            {/* <Button type="button" color="primary" className="btn-square " onClick={() => {
-                                                                                                this.setState({ createMore: false }, () => {
-                                                                                                    props.handleSubmit()
-                                                                                                })
-                                                                                            }}>
-                                                                                                <i className="fa fa-dot-circle-o"></i> Save
-                                                                                           </Button> */}
-                                                                                            <Button name="button" color="primary" className="btn-square "
+                                                                                      
+                                                                                          
+                                                                                            <Button name="button" color="primary" className="btn-square pull-right"
                                                                                                 // onClick={() => {
                                                                                                 //     this.toggle(0, '2')
                                                                                                 // }}
@@ -1382,7 +1389,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                 <i className="fa fa-next"></i> Next
                                                                                               </Button>
 
-                                                                                        </FormGroup>
+                                                                                    
                                                                                     </Col>
                                                                                 </Row>
                                                                             </Form>
@@ -1703,15 +1710,8 @@ class CreateEmployeePayroll extends React.Component {
                                                                                 </Row>
                                                                                 <Row>
                                                                                     <Col lg={12} className="mt-5">
-                                                                                        <FormGroup className="text-center">
-                                                                                            {/* <Button type="button" color="primary" className="btn-square " onClick={() => {
-                                                                                                this.setState({ createMore: false }, () => {
-                                                                                                    props.handleSubmit()
-                                                                                                })
-                                                                                            }}>
-                                                                                                <i className="fa fa-dot-circle-o"></i> Save
-                                                                                           </Button> */}
-                                                                                            <Button name="button" color="primary" className="btn-square "
+                                                                                      
+                                                                                            <Button name="button" color="primary" className="btn-square pull-right"
                                                                                                 // onClick={() => {
                                                                                                 //     this.toggle(0, '3')
                                                                                                 // }}
@@ -1724,7 +1724,6 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                 <i className="fa fa-next"></i> Next
                                                                                               </Button>
 
-                                                                                        </FormGroup>
                                                                                     </Col>
                                                                                 </Row>
                                                                             </Form>
@@ -1913,15 +1912,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                 </Row>
                                                                                 <Row>
                                                                                     <Col lg={12} className="mt-5">
-                                                                                        <FormGroup className="text-center">
-                                                                                            {/* <Button type="button" color="primary" className="btn-square " onClick={() => {
-                                                                                                this.setState({ createMore: false }, () => {
-                                                                                                    props.handleSubmit()
-                                                                                                })
-                                                                                            }}>
-                                                                                                <i className="fa fa-dot-circle-o"></i> Save
-                                                                                           </Button> */}
-                                                                                            <Button name="button" color="primary" className="btn-square "
+                                                                                            <Button name="button" color="primary" className="btn-square pull-right "
                                                                                                 onClick={() => {
                                                                                                     this.setState({ createMore: false }, () => {
                                                                                                         props.handleSubmit()
@@ -1930,8 +1921,6 @@ class CreateEmployeePayroll extends React.Component {
                                                                                             >
                                                                                                 <i className="fa fa-next"></i> Next
                                                                                               </Button>
-
-                                                                                        </FormGroup>
                                                                                     </Col>
                                                                                 </Row>
                                                                             </Form>
@@ -1996,7 +1985,8 @@ class CreateEmployeePayroll extends React.Component {
                                         {(props) => (
 
                                             <Form onSubmit={props.handleSubmit}>
-                                              <div style={{width:"100%"}}> <Card  style={{margin:"auto",width:"75%"}} >
+                                              <div style={{width:"100%"}}> 
+                                             
                                                 <div style={{textAlign:"center"}}>
                                                         <FormGroup className="mt-3"   style={{textAlign:"center",display: "inline-grid"}} >
                                                          <Label><span className="text-danger">*</span>  CTC : </Label>
@@ -2020,12 +2010,28 @@ class CreateEmployeePayroll extends React.Component {
                                                             )}
                                                         </FormGroup>
                                                         </div>
-                                                </Card>
+                                               
                                                 </div> 
-                                                <Row>
-                                                    <Row>
+                                                <Row className='mt-4'>
+                                                    <Card>
+                                                    <Row className='m-4'>
                                                         <Col lg={8}>
-                                                            <h4>Fixed Earnings</h4>
+                                                            <Row  className='ml-2'>  
+                                                                 <h4>Fixed Earnings</h4>
+                                                                
+                                                                <Button
+                                                                color="link"
+                                                                 className=" mr-3 mb-3"
+                                                                onClick={(e, props) => {
+                                                                    this.openSalaryComponentFixed(props);
+                                                                    this.renderActionForState()
+                                                                }}
+                                                            >
+                                                                <i className="fa fa-plus"></i> Add Fixed
+																</Button>
+                                                             
+                                                                </Row>
+                                                           
                                                             <Table className="text-center" style={{border:"3px solid #c8ced3",    width: '133%'}} >
                                                                 <thead style={{border:"3px solid #c8ced3"}}>
                                                                       <tr style={{border:"3px solid #c8ced3",    background: '#dfe9f7',color:"Black"}}>
@@ -2072,7 +2078,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                         type="text"
                                                                                         size="30"
                                                                                         style={{textAlign:"center"}}
-                                                                                        value={item.monthlyAmount.toFixed(2)}
+                                                                                        value={item.monthlyAmount ? item.monthlyAmount.toFixed(2) : 0.00 }
                                                                                         id='' />
                                                                                 </td>
 
@@ -2089,44 +2095,35 @@ class CreateEmployeePayroll extends React.Component {
 
                                                                             {item.formula ?
                                                                                 (<td style={{border:"3px solid  #c8ced3"}} >
-                                                                                      <span
-                                                                                        type="text"
-                                                                                        size="30"
-                                                                                        style={{textAlign:"center"}}
-                                                                                        
-                                                                                       
-                                                                                        id='' >
-                                                                                        {item.yearlyAmount.toFixed(2)}</span>
+                                                                                     
+                                                                                        {item.yearlyAmount ?  item.yearlyAmount.toFixed(2) : 0.00}
                                                                                 </td>
 
                                                                                 ) : (
                                                                                     <td style={{border:"3px solid  #c8ced3"}} >
-                                                                                        <span
-                                                                                            type="text"
-                                                                                            size="30"
-                                                                                            style={{textAlign:"center"}}
-                                                                                            
-                                                                                            id='' >{item.flatAmount * 12}</span>
+                                                                                  
+                                                                                          {item.flatAmount ? item.flatAmount* 12 : 0.00}
                                                                                     </td>
                                                                                 )}
                                                                         </tr>
                                                                     ))}
                                                                 </tbody>
                                                             </Table>
-                                                            <Button
-                                                                type="button"
-                                                                color="primary"
-                                                                className="btn-square mr-3 mb-3"
+                                                          
+                                                        </Col>
+                                                        <Col lg={8}>
+                                                            <Row  className='ml-2'> 
+                                                                <h4>Variable Earnings</h4>
+                                                             <Button
+                                                               color="link"
+                                                               className=" mr-3 mb-3"
                                                                 onClick={(e, props) => {
-                                                                    this.openSalaryComponentFixed(props);
+                                                                    this.openSalaryComponentVariable(props);
                                                                     this.renderActionForState()
                                                                 }}
                                                             >
-                                                                <i className="fa fa-plus"></i> Add Fixed
-																</Button>
-                                                        </Col>
-                                                        <Col lg={8}>
-                                                            <h4>Variable Earnings</h4>
+                                                                <i className="fa fa-plus"></i> Add Variable
+																</Button></Row>
                                                             <Table className="text-center" style={{border:"3px solid #c8ced3",    width: '133%'}}>
                                                             <thead style={{border:"3px solid #c8ced3"}}>
                                                                       <tr style={{border:"3px solid #c8ced3",    background: '#dfe9f7',color:"Black"}}>
@@ -2190,24 +2187,13 @@ class CreateEmployeePayroll extends React.Component {
 
                                                                         {item.formula ?
                                                                                 (<td style={{border:"3px solid  #c8ced3"}} >
-                                                                                      <span
-                                                                                        type="text"
-                                                                                        size="30"
-                                                                                        style={{textAlign:"center"}}
-                                                                                        
-                                                                                       
-                                                                                        id='' >
-                                                                                        {(item.yearlyAmount.toFixed(2))}</span>
+                                                                                     
+                                                                                        {(item.yearlyAmount.toFixed(2))}
                                                                                 </td>
 
                                                                                 ) : (
                                                                                     <td style={{border:"3px solid  #c8ced3"}} >
-                                                                                        <span
-                                                                                            type="text"
-                                                                                            size="30"
-                                                                                            style={{textAlign:"center"}}
-                                                                                            
-                                                                                            id='' >{item.flatAmount * 12}</span>
+                                                                                     {item.flatAmount * 12}
                                                                                     </td>
                                                                                 )}
 
@@ -2220,21 +2206,22 @@ class CreateEmployeePayroll extends React.Component {
                                                                   
                                                                 </tbody>
                                                             </Table>
-                                                            <Button
-                                                                type="button"
-                                                                color="primary"
-                                                                className="btn-square mr-3 mb-3"
+                                                          
+                                                        </Col>
+                                                        <Col lg={8}>
+                                                            <Row  className='ml-2'>    
+                                                            <h4>Deductions</h4>
+                                                              <Button
+                                                               color="link"
+                                                               className=" mr-3 mb-3"
                                                                 onClick={(e, props) => {
-                                                                    this.openSalaryComponentVariable(props);
+                                                                    this.openSalaryComponentDeduction(props);
                                                                     this.renderActionForState()
                                                                 }}
                                                             >
-                                                                <i className="fa fa-plus"></i> Add Variable
-																</Button>
-                                                        </Col>
-                                                        <Col lg={8}>
-                                                            <h4>Deductions</h4>
-                                                            <Table className="text-center" style={{border:"3px solid #c8ced3",    width: '133%'}}>
+                                                                <i className="fa fa-plus"></i> Add Deduction
+																</Button></Row>
+                                                            <Table className="text-center" style={{border:"3px solid #c8ced3", width: '133%'}}>
                                                             <thead style={{border:"3px solid #c8ced3"}}>
                                                                       <tr style={{border:"3px solid #c8ced3",    background: '#dfe9f7',color:"Black"}}>
                                                                         {this.columnHeader1.map((column, index) => {
@@ -2296,24 +2283,13 @@ class CreateEmployeePayroll extends React.Component {
 
                                                                         {item.formula ?
                                                                                 (<td style={{border:"3px solid  #c8ced3"}} >
-                                                                                      <span
-                                                                                        type="text"
-                                                                                        size="30"
-                                                                                        style={{textAlign:"center"}}
-                                                                                        
-                                                                                       
-                                                                                        id='' >
-                                                                                        {item.yearlyAmount.toFixed(2)}</span>
+                                                                                     
+                                                                                        {item.yearlyAmount.toFixed(2)}
                                                                                 </td>
 
                                                                                 ) : (
                                                                                     <td style={{border:"3px solid  #c8ced3"}} >
-                                                                                        <span
-                                                                                            type="text"
-                                                                                            size="30"
-                                                                                            style={{textAlign:"center"}}
-                                                                                            
-                                                                                            id='' >{item.flatAmount * 12}</span>
+                                                                                      {item.flatAmount * 12}
                                                                                     </td>
                                                                                 )}
                                                                         </tr>
@@ -2322,17 +2298,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                     )}
                                                                 </tbody>
                                                             </Table>
-                                                            <Button
-                                                                type="button"
-                                                                color="primary"
-                                                                className="btn-square mr-3 mb-3"
-                                                                onClick={(e, props) => {
-                                                                    this.openSalaryComponentDeduction(props);
-                                                                    this.renderActionForState()
-                                                                }}
-                                                            >
-                                                                <i className="fa fa-plus"></i> Add Deduction
-																</Button>
+                                                       
                                                         </Col>
                                                         <Col lg={8}>
                                                             <Table className="text-center" style={{border:"3px solid #c8ced3" ,    width: '133%'}}>
@@ -2390,26 +2356,22 @@ class CreateEmployeePayroll extends React.Component {
                                                             </Table>
                                                         </Col>
                                                     </Row>
-
+                                                    <div className="table-wrapper mb-4">
+                                                   
+                                                   <Button type="button" color="primary" className="btn-square mr-3 pull-right" onClick={() => {
+                                                       this.setState({ createMore: false }, () => {
+                                                           props.handleSubmit()
+                                                       })
+                                                    
+                                                   }}
+                                                   >
+                                                       <i className="fa fa-dot-circle-o"></i> Save
+                                                  </Button>
+                                            
+                                           </div>
+                                                    </Card>
                                                 </Row>
-                                                <div className="table-wrapper">
-                                                    <FormGroup className="text-center">
-                                                        {/* <Button color="secondary" className="btn-square mr-3"
-                                                            onClick={() => { this.toggle(0, '3') }}>
-                                                            <i className="fa fa-ban"></i> Back
-                                      </Button> */}
-                                                        <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
-                                                            this.setState({ createMore: false }, () => {
-                                                                props.handleSubmit()
-                                                            })
-                                                         
-                                                        }}
-                                                        >
-                                                            <i className="fa fa-dot-circle-o"></i> Save
-                                      </Button>
-                                                       
-                                                    </FormGroup>
-                                                </div>
+                                             
                                             </Form>
                                         )
                                         }

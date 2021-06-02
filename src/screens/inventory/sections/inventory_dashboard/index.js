@@ -554,6 +554,7 @@ class InventoryDashboard extends React.Component {
 								</h6>
 									<div className="w-25 mb-1 card-header-actions card-select-alignment">
 										<Select
+										//className="form-control card-select"
 											options={
 												this.dropdown
 													? selectOptionsFactory.renderOptions(
@@ -573,6 +574,7 @@ class InventoryDashboard extends React.Component {
 											name="term"
 											placeholder="Select Terms ">
 										</Select>
+											
 									</div>
 								</div>
 								<CardBody>

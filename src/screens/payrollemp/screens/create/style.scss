@@ -12,3 +12,17 @@ Table, td, th {
   color: #fff !important;
   background-color: #2064d8  !important;
 }
+
+  .card-header {
+    color: #2064d8;
+  }
+  .password-msg {
+    font-size: 0.7rem;
+  }
+
+.showButton , .showLabel{
+  display: block;
+}
+.hideButton , .hideLabel{
+  display: none;
+}

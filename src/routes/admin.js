@@ -806,7 +806,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/master/product/detail/inventoryhistory',
-		name: 'ViewInventoryHistory',
+		name: 'InventoryHistory',
 		component: InventoryHistory.screen,
 	},
 	{

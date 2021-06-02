@@ -146,7 +146,7 @@ this.props.supplierInvoiceDetailActions
 									<i className="fa fa-pencil"></i>
 								</Button> */}
 								<Button
-									className=" print-btn-cont"
+									className="btn-lg mb-1 print-btn-cont"
 									onClick={() => {
 										this.exportPDFWithComponent();
 									}}
@@ -155,7 +155,7 @@ this.props.supplierInvoiceDetailActions
 								</Button>
 								<ReactToPrint
 									trigger={() => (
-										<Button type="button" className=" print-btn-cont">
+										<Button type="button" className="ml-1 mb-1 mr-1 print-btn-cont btn-lg">
 											<i className="fa fa-print"></i>
 										</Button>
 									)}
@@ -163,13 +163,13 @@ this.props.supplierInvoiceDetailActions
 								/>
 										<Button
 											type="button"
-											className=" print-btn-cont"
-											style={{color: "black"}}
+											className="close-btn mb-1 btn-lg print-btn-cont"
+											
 											onClick={() => {
 												this.props.history.push('/admin/income/customer-invoice');
 											}}
 										>
-										X
+									<i class="fas fa-times"></i>
 										</Button>
 							</div>
 							<div>
@@ -181,6 +181,7 @@ this.props.supplierInvoiceDetailActions
 									<InvoiceTemplate
 										invoiceData={invoiceData}
 										currencyData={currencyData}
+										status={this.props.location.state.status}
 										ref={(el) => (this.componentRef = el)}
 										totalNet={this.state.totalNet}
 										companyData={profile}

@@ -50,7 +50,6 @@ import {
 
   export const getSalarySlip = (obj) => {
 	return (dispatch) => {
-		debugger
 		let id=obj.id;
 		let salaryDate=obj.salaryDate;
 	  let data = {

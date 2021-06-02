@@ -161,6 +161,7 @@ import ViewEmployee from './payrollemp/screens/view'
 import UpdateEmployeePersonal from './payrollemp/screens/update_emp_personal'
 import UpdateEmployeeBank from './payrollemp/screens/update_emp_bank'
 import UpdateEmployeeEmployment from './payrollemp/screens/update_emp_employemet'
+import UpdateSalaryComponent from './payrollemp/screens/update_salary_component'
 import Designation from './designation'
 import CreateDesignation from './designation/screens/create'
 import DetailSalaryStructure from './salaryStructure/screens/detail'
@@ -325,5 +326,6 @@ export {
 	ViewEmployee,
 	UpdateEmployeePersonal,
 	UpdateEmployeeBank,
-	UpdateEmployeeEmployment
+	UpdateEmployeeEmployment,
+	UpdateSalaryComponent
 };

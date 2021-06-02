@@ -175,7 +175,8 @@ import {
 	DetailDesignation,
 	ApplyToInvoice,
 	Refund,
-	UpdateEmployeeEmployment
+	UpdateEmployeeEmployment,
+	UpdateSalaryComponent
 } from 'screens';
 
 const adminRoutes = [
@@ -537,6 +538,11 @@ const adminRoutes = [
 		component: UpdateEmployeeEmployment.screen,
 	},
 	{
+		path: '/admin/payroll/employee/updateSalaryComponent',
+		name: 'UpdateEmployee',
+		component: UpdateSalaryComponent.screen,
+	},
+	{
 		path: '/admin/payroll/employee/create',
 		name: 'AddEmployee',
 		component: CreatePayrollEmployee.screen,
@@ -640,11 +646,7 @@ const adminRoutes = [
 		name: 'Employee',
 	},
 
-	{
-		path: '/admin/taxes/vat-transactions',
-		name: 'VatTransactions',
-		component: VatTransactions.screen,
-	},
+	
 	{
 		path: '/admin/taxes/reports-filing',
 		name: 'Reports Filing',
@@ -656,7 +658,11 @@ const adminRoutes = [
 	// 	pathTo: '/admin/taxes/vat-transactions',
 	// 	name: 'Taxes',
 	// },
-
+	{
+		path: '/admin/report/vat-transactions',
+		name: 'VatTransactions',
+		component: VatTransactions.screen,
+	},
 	{
 		path: '/admin/report/transactions',
 		name: 'Transactions',

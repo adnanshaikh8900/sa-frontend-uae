@@ -402,7 +402,7 @@ class PayrollEmployee extends React.Component {
                                                         <div style={{ width: "1650px" }}>
                                                             <Button
                                                                 color="primary"
-                                                                className="btn-square pull-right mb-2"
+                                                                className="btn-square pull-right mb-2 mr-4"
                                                                 style={{ marginBottom: '10px' }}
                                                                 onClick={() => this.props.history.push(`/admin/payroll/employee/create`)}
 

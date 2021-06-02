@@ -13,29 +13,28 @@ class RFQTemplate extends Component {
 		this.state = {};
 	}
 
-	getRibbonColor = (RFQData) => {
-		if (RFQData.status == 'Draft') {
-			return 'pending-color';
-		} else if (RFQData.status == 'Sent') {
-			return 'saved-color';
+	renderRFQStatus = (cell, RFQData) => {
+		let classname = '';
+		if (RFQData.status === 'Closed') {
+			classname = 'label-closed';
+		} else if (RFQData.status === 'Draft') {
+			classname = 'label-draft';
+		} else if (RFQData.status === 'Sent') {
+			classname = 'label-sent';
 		} else {
-			return 'saved-color';
+			classname = 'label-overdue';
 		}
+		return (
+			<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
+				{RFQData.status}
+			</span>
+		);
 	};
-
 	render() {
 		const { RFQData, currencyData, totalNet, companyData } = this.props;
 		return (
 			<div>
 				<Card id="singlePage" className="box">
-					<div
-						className={`ribbon ribbon-top-left ${this.getRibbonColor(
-							RFQData,
-						)}`}
-					>
-						<span>{RFQData.status}</span>
-					</div>
-
 					<CardBody style={{ marginTop: '7rem' }}>
 						<div 
 							style={{
@@ -45,7 +44,8 @@ class RFQTemplate extends Component {
 								padding:'7px',borderColor:'#c8ced3'
 							}}
 						>
-							<div className="text-center mt-1 "><h4><b> Request For Quatation Details</b></h4></div>
+						<div className="text-center mt-1 "><h4><b> Request For Quatation Details</b></h4></div>
+						{/* <div  className="text-right"><span className="mb-1 ml-2">Status :  </span></div> */}
 							<div className="text-center">
 									<img
 										src={

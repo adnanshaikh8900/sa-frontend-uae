@@ -4,11 +4,20 @@ const fr = {
         SALARYROLEID_Lang:"ID DE RÔLE SALAIRE",
         SALARYROLENAME_Lang:"NOM DU RÔLE SALAIRE",
         NewSalaryRoles_Lang:"Nouveaux rôles salariaux",
-
-        //sidebar
+//Help
+Question:"Avoir une question?",
+Find:"Trouvez des réponses détaillées aux questions les plus courantes que vous pourriez avoir lors de l'utilisation de notre site",
+CustomerSupport:"Customer Support",
+Version:"Versions de comptes simples",
+FrontEndVerison:"De face finir Verison",
+BackEndVersion:"dos finir version",
+GotoFAQ:"Aller à la FAQ", 
+       
+          //sidebar
         Import:"Importer",
         Dashboard:"Tableau de bord",
         Report:"Signaler",
+        CreateCN:"create CN",
         Inventory:"Inventaire",
         Income:"Revenu",
         Expense:"Frais",

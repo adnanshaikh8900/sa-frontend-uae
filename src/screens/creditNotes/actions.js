@@ -534,3 +534,25 @@ export const updateInvoicePrefix = (obj) => {
 			});
 	};
 };
+
+
+export const getInvoiceListForDropdown = (id) => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: `/rest/invoice/getInvoicesForDropdown?type=2`,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+						type: CUSTOMER_INVOICE.INVOICE_LIST_FOR_DROPDOWN,
+						payload: res,
+					});
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

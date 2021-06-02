@@ -28,14 +28,17 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
 
 import EmailModal from './sections/email_template';
-
+import * as CustomerInvoiceDetailActions from './screens/detail/actions'
 import * as CustomerInvoiceActions from './actions';
+import * as CreditNotesActions from '../creditNotes/screens/create/actions'
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
-import {data}  from '../Language/index'
+import { data } from '../Language/index'
 import LocalizedStrings from 'react-localization';
 
 import './style.scss';
+import { CreateCreditNoteModal } from './sections';
+import moment from 'moment';
 
 const mapStateToProps = (state) => {
 	return {
@@ -51,6 +54,15 @@ const mapDispatchToProps = (dispatch) => {
 			CustomerInvoiceActions,
 			dispatch,
 		),
+		customerInvoiceDetailActions:bindActionCreators(
+			CustomerInvoiceDetailActions,
+			dispatch,
+		),
+		creditNotesActions:bindActionCreators(
+			CreditNotesActions,
+			dispatch,
+		),
+		
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
@@ -143,7 +155,9 @@ class CustomerInvoice extends React.Component {
 				this.setState({ loading: false });
 			});
 	};
-
+	closeModal = (res) => {
+		this.setState({ openModal: false });
+	};
 	initializeData = (search) => {
 		let { filterData } = this.state;
 		const paginationData = {
@@ -316,24 +330,24 @@ class CustomerInvoice extends React.Component {
 	};
 
 	renderInvoiceAmount = (cell, row, extraData) => {
-	return(
-		<div>
-		<div>
+		return (
+			<div>
+				<div>
 					<label className="font-weight-bold mr-2 ">{strings.InvoiceAmount} : </label>
 					<label>
-						{row.invoiceAmount  === 0 ? row.currencySymbol + row.invoiceAmount.toFixed(2) : row.currencySymbol + row.invoiceAmount.toFixed(2)}
+						{row.invoiceAmount === 0 ? row.currencySymbol + row.invoiceAmount.toFixed(2) : row.currencySymbol + row.invoiceAmount.toFixed(2)}
 					</label>
 				</div>
-				<div style={{display: row.vatAmount === 0 ? 'none' : ''}}>
-				<label className="font-weight-bold mr-2">{strings.VatAmount} : </label>
-				<label>{row.vatAmount === 0  ? row.currencySymbol + row.vatAmount.toFixed(2) : row.currencySymbol + row.vatAmount.toFixed(2)}</label>
+				<div style={{ display: row.vatAmount === 0 ? 'none' : '' }}>
+					<label className="font-weight-bold mr-2">{strings.VatAmount} : </label>
+					<label>{row.vatAmount === 0 ? row.currencySymbol + row.vatAmount.toFixed(2) : row.currencySymbol + row.vatAmount.toFixed(2)}</label>
 				</div>
-				<div style={{display: row.dueAmount === 0 ? 'none' : ''}}>
+				<div style={{ display: row.dueAmount === 0 ? 'none' : '' }}>
 					<label className="font-weight-bold mr-2">{strings.DueAmount} : </label>
-					<label>{row.dueAmount === 0  ? row.currencySymbol + row.dueAmount.toFixed(2) : row.currencySymbol + row.dueAmount.toFixed(2)}</label>
+					<label>{row.dueAmount === 0 ? row.currencySymbol + row.dueAmount.toFixed(2) : row.currencySymbol + row.dueAmount.toFixed(2)}</label>
 				</div>
 
-		</div>);
+			</div>);
 	};
 	renderCurrency = (cell, row) => {
 		if (row.currencyName) {
@@ -363,11 +377,11 @@ class CustomerInvoice extends React.Component {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.vatAmount === 0  ? row.currencySymbol + row.vatAmount.toFixed(2) : row.currencySymbol + row.vatAmount.toFixed(2);
+		return row.vatAmount === 0 ? row.currencySymbol + row.vatAmount.toFixed(2) : row.currencySymbol + row.vatAmount.toFixed(2);
 	};
 
-	renderDueAmount =(cell,row,extraData) => {
-		return row.dueAmount === 0  ? row.currencySymbol + row.dueAmount.toFixed(2) : row.currencySymbol + row.dueAmount.toFixed(2);
+	renderDueAmount = (cell, row, extraData) => {
+		return row.dueAmount === 0 ? row.currencySymbol + row.dueAmount.toFixed(2) : row.currencySymbol + row.dueAmount.toFixed(2);
 	}
 	renderActions = (cell, row) => {
 		return (
@@ -450,9 +464,17 @@ class CustomerInvoice extends React.Component {
 								<i className="fa fa-send" /> Send Custom Email
 							</DropdownItem>
 						)} */}
-
+							 {row.statusEnum === 'Paid' && ( 
+							<DropdownItem
+							onClick={() => {
+							this.renderActionForState(row.id);
+							}}
+							>
+								<i className="fas fa-plus" /> {strings.CreateCN}
+							</DropdownItem>
+							)} 
 						<DropdownItem
-
+						debugger
 							onClick={() =>
 								
 								this.props.history.push('/admin/income/customer-invoice/view', {
@@ -467,6 +489,157 @@ class CustomerInvoice extends React.Component {
 			</div>
 		);
 	};
+	renderActionForState = (id) => {
+		this.props.customerInvoiceActions.getVatList();
+		this.props.customerInvoiceActions.getProductList();
+
+
+		// this.props.customerInvoiceDetailActions
+		// .getInvoiceById(this.props.location.state.id)
+		// .then((res) => {
+		// 	if (res.status === 200) {
+		// 		this.getCompanyCurrency();
+		// 		this.props.customerInvoiceActions.getVatList();
+		// 		this.props.customerInvoiceActions.getCustomerList(
+		// 			this.state.contactType,
+		// 		);
+		// 		this.props.currencyConvertActions.getCurrencyConversionList();
+		// 		this.props.customerInvoiceActions.getCountryList();
+		// 		this.props.customerInvoiceActions.getProductList();
+
+		// 		this.setState(
+		// 			{
+		// 				current_customer_id: this.props.location.state.id,
+		// 				initValue: {
+		// 					receiptAttachmentDescription: res.data
+		// 						.receiptAttachmentDescription
+		// 						? res.data.receiptAttachmentDescription
+		// 						: '',
+		// 					receiptNumber: res.data.receiptNumber
+		// 						? res.data.receiptNumber
+		// 						: '',
+		// 					contact_po_number: res.data.contactPoNumber
+		// 						? res.data.contactPoNumber
+		// 						: '',
+		// 					currency: res.data.currencyCode ? res.data.currencyCode : '',
+		// 					exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
+		// 					currencyName:res.data.currencyName ? res.data.currencyName : '',
+		// 					invoiceDueDate: res.data.invoiceDueDate
+		// 						? moment(res.data.invoiceDueDate).format('DD/MM/YYYY')
+		// 						: '',
+		// 					invoiceDate: res.data.invoiceDate
+		// 						? moment(res.data.invoiceDate).format('DD/MM/YYYY')
+		// 						: '',
+		// 					contactId: res.data.contactId ? res.data.contactId : '',
+		// 					project: res.data.projectId ? res.data.projectId : '',
+		// 					invoice_number: res.data.referenceNumber
+		// 						? res.data.referenceNumber
+		// 						: '',
+		// 					total_net: 0,
+		// 					invoiceVATAmount: res.data.totalVatAmount
+		// 						? res.data.totalVatAmount
+		// 						: 0,
+		// 					totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
+		// 					notes: res.data.notes ? res.data.notes : '',
+		// 					lineItemsString: res.data.invoiceLineItems
+		// 						? res.data.invoiceLineItems
+		// 						: [],
+		// 					discount: res.data.discount ? res.data.discount : 0,
+		// 					discountPercentage: res.data.discountPercentage
+		// 						? res.data.discountPercentage
+		// 						: '',
+		// 					discountType: res.data.discountType
+		// 						? res.data.discountType
+		// 						: '',
+		// 					term: res.data.term ? res.data.term : '',
+		// 					placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+		// 					fileName: res.data.fileName ? res.data.fileName : '',
+		// 					filePath: res.data.filePath ? res.data.filePath : '',
+		// 				},
+		// 				discountAmount: res.data.discount ? res.data.discount : 0,
+		// 				discountPercentage: res.data.discountPercentage
+		// 					? res.data.discountPercentage
+		// 					: '',
+		// 				data: res.data.invoiceLineItems
+		// 					? res.data.invoiceLineItems
+		// 					: [],
+		// 				selectedContact: res.data.contactId ? res.data.contactId : '',
+		// 				term: res.data.term ? res.data.term : '',
+		// 				placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+		// 				loading: false,
+		// 			},
+		// 			() => {
+		// 				if (this.state.data.length > 0) {
+		// 					this.calTotalNet(this.state.data);
+		// 					const { data } = this.state;
+		// 					const idCount =
+		// 						data.length > 0
+		// 							? Math.max.apply(
+		// 									Math,
+		// 									data.map((item) => {
+		// 										return item.id;
+		// 									}),
+		// 							  )
+		// 							: 0;
+		// 					this.setState({
+		// 						idCount,
+		// 					});
+		// 				} else {
+		// 					this.setState({
+		// 						idCount: 0,
+		// 					});
+		// 				}
+		// 			},
+		// 		);
+		// 	}
+		// });
+		this.props.creditNotesActions.getInvoiceNo().then((response) => {
+			this.setState({
+				prefixData: response.data
+
+			});
+		});
+		this.props.customerInvoiceDetailActions
+		.getInvoiceById(id).then((res) => {
+			this.setState({		
+				// current_rfq_id: this.props.location.state.id,
+				openModal:true, rowId : id,
+				    selectedData:res.data,
+					invoiceNumber:res.data.referenceNumber,
+					rfqReceiveDate: res.data.invoiceDate
+						? moment(res.data.invoiceDate).format('DD/MM/YYYY')
+						: '',
+						rfqExpiryDate: res.data.invoiceDueDate
+						? moment(res.data.invoiceDueDate).format('DD/MM/YYYY')
+						: '',
+						supplierId: res.data.supplierId ? res.data.supplierId : '',
+						rfqNumber: res.data.referenceNumber
+						? res.data.referenceNumber
+						: '',
+					totalVatAmount: res.data.totalVatAmount
+						? res.data.totalVatAmount
+						: 0,
+						totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
+						total_net: 0,
+					notes: res.data.notes ? res.data.notes : '',
+					lineItemsString: res.data.invoiceLineItems
+						? res.data.invoiceLineItems
+						: [],
+								
+				data: res.data.invoiceLineItems
+					? res.data.invoiceLineItems
+					: [],
+				selectedContact: res.data.contactId ? res.data.contactId : '',
+			
+				loading: false,
+			})
+			debugger
+			console.log(this.state.rfqReceiveDate)
+			console.log('selecteddata ',this.state.selectedData)
+		});
+		// this.setState({openModal:true});
+	}
+
 
 	sendMail = (id) => {
 		this.props.customerInvoiceActions
@@ -727,28 +900,28 @@ class CustomerInvoice extends React.Component {
 		const customer_invoice_data =
 			this.props.customer_invoice_list && this.props.customer_invoice_list.data
 				? this.props.customer_invoice_list.data.map((customer) => ({
-						id: customer.id,
-						status: customer.status,
-						statusEnum: customer.statusEnum,
-						customerName: customer.name,
-						dueAmount:customer.dueAmount,
-						contactId: customer.contactId,
-						invoiceNumber: customer.referenceNumber,
-						invoiceDate: customer.invoiceDate ? customer.invoiceDate : '',
-						invoiceDueDate: customer.invoiceDueDate
-							? customer.invoiceDueDate
-							: '',
-						currencyName:customer.currencyName ? customer.currencyName:'',
-						currencySymbol:customer.currencySymbol ? customer.currencySymbol:'',
-						invoiceAmount: customer.totalAmount,
-						vatAmount: customer.totalVatAmount,
-				  }))
+					id: customer.id,
+					status: customer.status,
+					statusEnum: customer.statusEnum,
+					customerName: customer.name,
+					dueAmount: customer.dueAmount,
+					contactId: customer.contactId,
+					invoiceNumber: customer.referenceNumber,
+					invoiceDate: customer.invoiceDate ? customer.invoiceDate : '',
+					invoiceDueDate: customer.invoiceDueDate
+						? customer.invoiceDueDate
+						: '',
+					currencyName: customer.currencyName ? customer.currencyName : '',
+					currencySymbol: customer.currencySymbol ? customer.currencySymbol : '',
+					invoiceAmount: customer.totalAmount,
+					vatAmount: customer.totalVatAmount,
+				}))
 				: '';
 
 		let tmpCustomer_list = []
 
 		customer_list.map(item => {
-			let obj = {label: item.label.contactName, value: item.value}
+			let obj = { label: item.label.contactName, value: item.value }
 			tmpCustomer_list.push(obj)
 		})
 
@@ -796,7 +969,7 @@ class CustomerInvoice extends React.Component {
 													<h5 className="ml-3">{strings.Overdue}</h5>
 													<h3 className="invoice-detail ml-3">
 														{universal_currency_list[0] &&
-														this.state.overDueAmountDetails.overDueAmount ? (
+															this.state.overDueAmountDetails.overDueAmount ? (
 															<Currency
 																value={
 																	this.state.overDueAmountDetails.overDueAmount
@@ -832,8 +1005,8 @@ class CustomerInvoice extends React.Component {
 													<h5 className="ml-3">{strings.DueWithinThisWeek}</h5>
 													<h3 className="invoice-detail ml-3">
 														{universal_currency_list[0] &&
-														this.state.overDueAmountDetails
-															.overDueAmountWeekly ? (
+															this.state.overDueAmountDetails
+																.overDueAmountWeekly ? (
 															<Currency
 																value={
 																	this.state.overDueAmountDetails
@@ -871,8 +1044,8 @@ class CustomerInvoice extends React.Component {
 													<h5 className="ml-3">{strings.DueWithin30Days}</h5>
 													<h3 className="invoice-detail ml-3">
 														{universal_currency_list[0] &&
-														this.state.overDueAmountDetails
-															.overDueAmountMonthly ? (
+															this.state.overDueAmountDetails
+																.overDueAmountMonthly ? (
 															<Currency
 																value={
 																	this.state.overDueAmountDetails
@@ -944,11 +1117,11 @@ class CustomerInvoice extends React.Component {
 													options={
 														tmpCustomer_list
 															? selectOptionsFactory.renderOptions(
-																	'label',
-																	'value',
-																	tmpCustomer_list,
-																	'Customer',
-															  )
+																'label',
+																'value',
+																tmpCustomer_list,
+																'Customer',
+															)
 															: []
 													}
 													value={filterData.customerId}
@@ -1012,11 +1185,11 @@ class CustomerInvoice extends React.Component {
 													options={
 														status_list
 															? selectOptionsFactory.renderOptions(
-																	'label',
-																	'value',
-																	status_list,
-																	'Status',
-															  )
+																'label',
+																'value',
+																status_list,
+																'Status',
+															)
 															: []
 													}
 													value={filterData.status}
@@ -1051,102 +1224,102 @@ class CustomerInvoice extends React.Component {
 										</Row>
 									</div>
 									<Row>
-									<div style={{width:"1650px"}}>
-									<Button
-										color="primary"
-										className="btn-square pull-right mb-2"
-										style={{ marginBottom: '10px' }}
-										onClick={() =>
-											this.props.history.push(
-												`/admin/income/customer-invoice/create`,
-											)
-										}
-									>
-										<i className="fas fa-plus mr-1" />
-									{strings.AddNewInvoice}
-									</Button></div></Row>
+										<div style={{ width: "1650px" }}>
+											<Button
+												color="primary"
+												className="btn-square pull-right mb-2"
+												style={{ marginBottom: '10px' }}
+												onClick={() =>
+													this.props.history.push(
+														`/admin/income/customer-invoice/create`,
+													)
+												}
+											>
+												<i className="fas fa-plus mr-1" />
+												{strings.AddNewInvoice}
+											</Button></div></Row>
 
-										<BootstrapTable
-											selectRow={this.selectRowProp}
-											search={false}
-											options={this.options}
-											data={customer_invoice_data ? customer_invoice_data : []}
-											version="4"
-											hover
-											responsive
-											currencyList
-											keyField="id"
-											remote
-											pagination={
-												customer_invoice_data &&
+									<BootstrapTable
+										selectRow={this.selectRowProp}
+										search={false}
+										options={this.options}
+										data={customer_invoice_data ? customer_invoice_data : []}
+										version="4"
+										hover
+										responsive
+										currencyList
+										keyField="id"
+										remote
+										pagination={
+											customer_invoice_data &&
 												customer_invoice_data.length > 0
-													? true
-													: false
-											}
-											fetchInfo={{
-												dataTotalSize: customer_invoice_list.count
-													? customer_invoice_list.count
-													: 0,
-											}}
-											className="customer-invoice-table"
-											csvFileName="Customer_Invoice.csv"
-											ref={(node) => {
-												this.table = node;
-											}}
-										>
-											<TableHeaderColumn
-												dataField="invoiceNumber"
-												// dataFormat={this.renderInvoiceNumber}
-												dataSort
+												? true
+												: false
+										}
+										fetchInfo={{
+											dataTotalSize: customer_invoice_list.count
+												? customer_invoice_list.count
+												: 0,
+										}}
+										className="customer-invoice-table"
+										csvFileName="Customer_Invoice.csv"
+										ref={(node) => {
+											this.table = node;
+										}}
+									>
+										<TableHeaderColumn
+											dataField="invoiceNumber"
+											// dataFormat={this.renderInvoiceNumber}
+											dataSort
 											//	width="7%"
-												className="table-header-bg"
-											>
-												{strings.INVOICENUMBER}
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												dataField="customerName"
+											className="table-header-bg"
+										>
+											{strings.INVOICENUMBER}
+										</TableHeaderColumn>
+										<TableHeaderColumn
+											dataField="customerName"
 											//	dataSort width="10%"
-												className="table-header-bg"
-											>
-												{strings.CUSTOMERNAME}
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												//width="9%"
-												dataField="status"
-												dataFormat={this.renderInvoiceStatus}
-												dataSort
-												className="table-header-bg"
-											>
-												{strings.STATUS}
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												dataField="invoiceDate"
-												dataSort
-												//width="6%"
-												dataFormat={this.invoiceDate}
-												className="table-header-bg"
-											>
+											className="table-header-bg"
+										>
+											{strings.CUSTOMERNAME}
+										</TableHeaderColumn>
+										<TableHeaderColumn
+											//width="9%"
+											dataField="status"
+											dataFormat={this.renderInvoiceStatus}
+											dataSort
+											className="table-header-bg"
+										>
+											{strings.STATUS}
+										</TableHeaderColumn>
+										<TableHeaderColumn
+											dataField="invoiceDate"
+											dataSort
+											//width="6%"
+											dataFormat={this.invoiceDate}
+											className="table-header-bg"
+										>
 											{strings.INVOICEDATE}
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												dataField="invoiceDueDate"
-												dataSort
-												//width="6%"
-												dataFormat={this.invoiceDueDate}
-												className="table-header-bg"
-											>
+										</TableHeaderColumn>
+										<TableHeaderColumn
+											dataField="invoiceDueDate"
+											dataSort
+											//width="6%"
+											dataFormat={this.invoiceDueDate}
+											className="table-header-bg"
+										>
 											{strings.DUEDATE}
-											</TableHeaderColumn>
-											<TableHeaderColumn
-													dataSort
-													dataField="currencyName"
-												//	width="4%"
-													dataFormat={this.renderCurrency}
-													className="table-header-bg"
-												>
-													{strings.CURRENCY}
-												</TableHeaderColumn>
-											{/* <TableHeaderColumn
+										</TableHeaderColumn>
+										<TableHeaderColumn
+											dataSort
+											dataField="currencyName"
+											//	width="4%"
+											dataFormat={this.renderCurrency}
+											className="table-header-bg"
+										>
+											{strings.CURRENCY}
+										</TableHeaderColumn>
+										{/* <TableHeaderColumn
 												dataField="totalVatAmount"
 												dataSort
 												width="5%"
@@ -1156,17 +1329,17 @@ class CustomerInvoice extends React.Component {
 											>
 												VAT Amount
 											</TableHeaderColumn> */}
-											<TableHeaderColumn
-												dataField="totalAmount"
-												dataSort
-												//width="5%"
-												dataFormat={this.renderInvoiceAmount}
-												formatExtraData={universal_currency_list}
-												className="table-header-bg"
-											>
+										<TableHeaderColumn
+											dataField="totalAmount"
+											dataSort
+											//width="5%"
+											dataFormat={this.renderInvoiceAmount}
+											formatExtraData={universal_currency_list}
+											className="table-header-bg"
+										>
 											{strings.Amount}
-											</TableHeaderColumn>
-											{/* <TableHeaderColumn
+										</TableHeaderColumn>
+										{/* <TableHeaderColumn
 												dataField="dueamount"
 												dataSort
 												width="5%"
@@ -1176,14 +1349,14 @@ class CustomerInvoice extends React.Component {
 											>
 												Due Amount
 											</TableHeaderColumn> */}
-											<TableHeaderColumn
-												className="text-right"
-												columnClassName="text-right"
+										<TableHeaderColumn
+											className="text-right"
+											columnClassName="text-right"
 											//	width="5%"
-												dataFormat={this.renderActions}
-												className="table-header-bg"
-											></TableHeaderColumn>
-										</BootstrapTable>
+											dataFormat={this.renderActions}
+											className="table-header-bg"
+										></TableHeaderColumn>
+									</BootstrapTable>
 								</Col>
 							</Row>
 						</CardBody>
@@ -1196,6 +1369,33 @@ class CustomerInvoice extends React.Component {
           currency_list={this.props.currency_list}
           id={this.state.selectedId}
         /> */}
+
+
+				<CreateCreditNoteModal
+					openModal={this.state.openModal}
+					closeModal={(e) => {
+						this.closeModal(e);
+					}}
+				updateParentAmount={
+					(e,e1) => {
+						this.updateParentAmount(e,e1);
+				}}
+				invoiceNumber={this.state.invoiceNumber}
+				id={this.state.rowId}
+				selectedData={this.state.selectedData}
+
+				prefixData={this.state.prefixData}
+
+				createCreditNote={this.props.creditNotesActions.createCreditNote}
+				totalAmount={this.state.totalAmount}
+				totalVatAmount={this.state.totalVatAmount}
+				// getRfqbyid={this.props.requestForQuotationDetailsAction.getRFQeById}
+				//	 getState={this.props.requestForQuotationDetailsAction.renderActionForState}
+				//	getInvoice={this.props.purchaseOrderCreateAction.getPoNo()}
+				//	nextprefixData={this.state.nextprefixData}
+				//	getVat={this.props.purchaseOrderAction.getVatList()}
+				//	getProductList={this.props.purchaseOrderAction.getProductList()}
+				/>
 				<EmailModal
 					openEmailModal={this.state.openEmailModal}
 					closeEmailModal={(e) => {

@@ -51,3 +51,40 @@ export const checkValidation = (obj) => {
 			});
 	};
 };
+
+
+// export const getInvoiceById = (_id) => {
+// 	debugger
+// 	return (dispatch) => {
+// 	  let data = {
+// 		method: 'GET',
+// 		url: `/rest/invoice/getInvoiceById?id=1007`
+// 	  }
+  
+// 	  return authApi(data)
+// 	  .then((res) => {
+// 		  if (res.status === 200) {
+// 			  return res;
+// 		  }
+// 	  })
+// 	  .catch((err) => {
+// 		  throw err;
+// 	  });
+// 	}
+//   }
+
+  
+export const getInvoiceById = (_id) => {
+	return (dispatch) => {
+	  let data = {
+		method: 'GET',
+		url: `/rest/invoice/getInvoiceById?id=${_id}`
+	  }
+  
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }

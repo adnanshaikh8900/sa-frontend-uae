@@ -3,6 +3,15 @@ const en = {
       SALARYROLEID_Lang: "SALARY ROLE ID",
       SALARYROLENAME_Lang: "SALARY ROLE NAME",
       NewSalaryRoles_Lang: "New Salary Roles",
+
+      //Help
+Question:"Have a question?",
+Find:"Find detailed answers to the most common questions you might have while using our site",
+CustomerSupport:"Customer Support",
+Version:"Simple Accounts Versions",
+FrontEndVerison:"FrontEnd Verison",
+BackEndVersion:"BackEnd Version",
+GotoFAQ:"Go to FAQ", 
 //sideBar
 Dashboard:"Dashboard",
 Report:"Report",
@@ -428,6 +437,7 @@ Send:"Send",
 Close:"Close",
 View:"View",
 CreatePO:"Create PO",
+CreateCN:"create CN",
 CreateGRN:"Create GRN",
 Edit:"Edit",
 RecordPayment:"Record Payment",

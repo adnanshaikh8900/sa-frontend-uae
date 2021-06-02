@@ -12,6 +12,7 @@ const initState = {
 	place_of_supply:[],
 	status_list: [],
 	pay_mode: [],
+	invoice_list:[],
 };
 
 const CustomerInvoiceReducer = (state = initState, action) => {
@@ -82,6 +83,11 @@ const CustomerInvoiceReducer = (state = initState, action) => {
 					...state,
 					place_of_supply: Object.assign([], payload),
 				};	
+				case  CUSTOMER_INVOICE.INVOICE_LIST_FOR_DROPDOWN:
+					return{
+						...state,
+						invoice_list:Object.assign([],payload),
+					};
 
 		default:
 			return state;

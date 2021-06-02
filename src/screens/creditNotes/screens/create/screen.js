@@ -40,6 +40,7 @@ import LocalizedStrings from 'react-localization';
 const mapStateToProps = (state) => {
 	return {
 		currency_list: state.customer_invoice.currency_list,
+		invoice_list:state.creditNote.invoice_list,
 		vat_list: state.customer_invoice.vat_list,
 		product_list: state.customer_invoice.product_list,
 		customer_list: state.customer_invoice.customer_list,
@@ -105,6 +106,7 @@ class CreateCreditNote extends React.Component {
 			],
 			idCount: 0,
 			initValue: {
+				invoiceNumber:'',
 				receiptAttachmentDescription: '',
 				receiptNumber: '',
 				contact_po_number: '',
@@ -419,6 +421,7 @@ class CreateCreditNote extends React.Component {
 
 	getInitialData = () => {
 		this.getInvoiceNo();
+		this.props.creditNotesActions.getInvoiceListForDropdown();
 		this.props.creditNotesActions.getCustomerList(this.state.contactType);
 		this.props.creditNotesActions.getCountryList();
 		this.props.creditNotesActions.getVatList();
@@ -915,6 +918,7 @@ class CreateCreditNote extends React.Component {
 			receiptNumber,
 			contact_po_number,
 			currency,
+			invoiceNumber,
 			// exchangeRate,
 			// invoiceDueDate,
 			creditNoteDate,
@@ -928,6 +932,9 @@ class CreateCreditNote extends React.Component {
 		} = data;
 		const { term } = this.state;
 		const formData = new FormData();
+		if (invoiceNumber && invoiceNumber.value) {
+			formData.append('invoiceNumber', invoiceNumber.value);
+		}
 		formData.append(
 			'creditNoteNumber',
 			creditNoteNumber !== null ? this.state.prefix + creditNoteNumber : '',
@@ -1217,11 +1224,107 @@ class CreateCreditNote extends React.Component {
 		return customer_currencyCode;
 	}
 
+	invoiceValue = (e, row, name, form, field, props) => {
+		const { invoice_list } = this.props;
+		let data = this.state.data;
+		const result = invoice_list.data.find((item) => item.id === parseInt(e));
+		let idx;
+		data.map((obj, index) => {
+			if (obj.id === row.id) {
+				console.log(result);
+				obj['unitPrice'] = result.unitPrice;
+				obj['vatCategoryId'] = result.vatCategoryId;
+				obj['description'] = result.description;
+				idx = index;
+			}
+			return obj;
+		});
+
+		this.updateAmount(data, props);
+	};
+
+	getInvoiceDetails = (e, row, props,form,field) => {
+		debugger
+		let option;
+		const { invoice_list,selectedData } = this.props;
+			let idx;
+			this.state.data.map((obj, index) => {
+				if (obj.id === row.id) {
+					idx = index;
+				}
+				return obj;
+			});
+		if (e && e.label !== 'Select invoiceNumber') {
+	
+			this.invoiceValue(
+				e.value,
+				row,
+				'invoiceNumber',
+				form,
+				field,
+				props,
+			);
+			this.props.creditNotesCreateActions
+			.getInvoiceById(e.value).then((response) => {
+				this.setState(
+					{
+						option : {
+							label: response.data.name,
+							value: response.data.contactId,
+						},
+					data:response.data.invoiceLineItems ,
+					totalAmount:response.data.totalAmount,
+					customer_currency:response.data.currencyCode,
+					initValue: {
+						...this.state.initValue,
+						...{
+							totalVatAmount: response.data.totalVatAmount,
+							totalAmount: response.data.totalAmount,
+						},
+					},
+	
+				//	data1:response.data.supplierId,
+				},() => {
+					this.formRef.current.setFieldValue(
+						'lineItemsString',
+						this.state.data,
+						true,
+					);
+					this.formRef.current.setFieldTouched(
+						`lineItemsString[${this.state.data.length - 1}]`,
+						false,
+						true,
+					);
+					// this.formRef.current.setFieldValue(
+						
+					// 	totalAmount,
+					// 	true,
+					// );
+				},
+				// () => {
+				// 	this.formRef.current.setFieldValue('supplierId',
+				// 	this.state.option.value,
+				// 	true,)
+				// },
+	
+				);
+				this.formRef.current.setFieldValue('contactId', this.state.option, true);
+				this.formRef.current.setFieldValue('currencyCode', this.state.customer_currency, true);
+				console.log(this.state.data,"api")
+				console.log("option ",this.state.option)
+				console.log(this.state.initValue.totalAmount,"this.state.initValue.totalAmount+++++++")
+				console.log(this.state.initValue.totalVatAmount,"this.state.initValue.totalVatAmount+++++++")
+			});
+		}
+	}
+	
+	
 	render() {
 		strings.setLanguage(this.state.language);
 		const { data, discountOptions, initValue, exist, prefix } = this.state;
 		const {
 			customer_list,
+			invoice_list,
 			universal_currency_list,
 			currency_convert_list,
 		} = this.props;
@@ -1271,99 +1374,159 @@ class CreateCreditNote extends React.Component {
 												// 	}
 												// 	return errors;
 												// }}
-												// validationSchema={Yup.object().shape({
-												// 	creditNoteNumber: Yup.string().required(
-												// 		'Credit Note Number is Required',
-												// 	),
-												// 	contactId: Yup.string().required(
-												// 		'Customer is Required',
-												// 	),
-												// 	// placeOfSupplyId: Yup.string().required('Place of supply is Required'),
-												// 	term: Yup.string().required('Term is Required'),
-												// 	currency: Yup.string().required(
-												// 		'Currency is Required',
-												// 	),
-												// 	creditNoteDate: Yup.string().required(
-												// 		'Credit Note Date is Required',
-												// 	),
-												// 	lineItemsString: Yup.array()
-												// 		.required(
-												// 			'Atleast one Credit Note sub detail is mandatory',
-												// 		)
-												// 		.of(
-												// 			Yup.object().shape({
-												// 				quantity: Yup.string()
-												// 					.required('Value is Required')
-												// 					.test(
-												// 						'quantity',
-												// 						'Quantity Should be Greater than 1',
-												// 						(value) => {
-												// 							if (value > 0) {
-												// 								return true;
-												// 							} else {
-												// 								return false;
-												// 							}
-												// 						},
-												// 					),
-												// 				unitPrice: Yup.string()
-												// 					.required('Value is Required')
-												// 					.test(
-												// 						'Unit Price',
-												// 						'Unit Price Should be Greater than 1',
-												// 						(value) => {
-												// 							if (value > 0) {
-												// 								return true;
-												// 							} else {
-												// 								return false;
-												// 							}
-												// 						},
-												// 					),
-												// 				vatCategoryId: Yup.string().required(
-												// 					'Value is Required',
-												// 				),
-												// 				productId: Yup.string().required(
-												// 					'Product is Required',
-												// 				),
-												// 			}),
-												// 		),
-												// 	// attachmentFile: Yup.mixed()
-												// 	// 	.test(
-												// 	// 		'fileType',
-												// 	// 		'*Unsupported File Format',
-												// 	// 		(value) => {
-												// 	// 			value &&
-												// 	// 				this.setState({
-												// 	// 					fileName: value.name,
-												// 	// 				});
-												// 	// 			if (
-												// 	// 				!value ||
-												// 	// 				(value &&
-												// 	// 					this.supported_format.includes(value.type))
-												// 	// 			) {
-												// 	// 				return true;
-												// 	// 			} else {
-												// 	// 				return false;
-												// 	// 			}
-												// 	// 		},
-												// 	// 	)
-												// 	// 	.test(
-												// 	// 		'fileSize',
-												// 	// 		'*File Size is too large',
-												// 	// 		(value) => {
-												// 	// 			if (
-												// 	// 				!value ||
-												// 	// 				(value && value.size <= this.file_size)
-												// 	// 			) {
-												// 	// 				return true;
-												// 	// 			} else {
-												// 	// 				return false;
-												// 	// 			}
-												// 	// 		},
-												// 	// 	),
-												// })}
+												validationSchema={Yup.object().shape({
+													creditNoteNumber: Yup.string().required(
+														'Credit Note Number is Required',
+													),
+													// contactId: Yup.string().required(
+													// 	'Customer is Required',
+													// ),
+													// placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+													// term: Yup.string().required('Term is Required'),
+													// currency: Yup.string().required(
+													// 	'Currency is Required',
+													// ),
+													creditNoteDate: Yup.string().required(
+														'Credit Note Date is Required',
+													),
+													lineItemsString: Yup.array()
+														.required(
+															'Atleast one Credit Note sub detail is mandatory',
+														)
+														.of(
+															Yup.object().shape({
+																quantity: Yup.string()
+																	.required('Value is Required')
+																	.test(
+																		'quantity',
+																		'Quantity Should be Greater than 1',
+																		(value) => {
+																			if (value > 0) {
+																				return true;
+																			} else {
+																				return false;
+																			}
+																		},
+																	),
+																unitPrice: Yup.string()
+																	.required('Value is Required')
+																	.test(
+																		'Unit Price',
+																		'Unit Price Should be Greater than 1',
+																		(value) => {
+																			if (value > 0) {
+																				return true;
+																			} else {
+																				return false;
+																			}
+																		},
+																	),
+																vatCategoryId: Yup.string().required(
+																	'Value is Required',
+																),
+																productId: Yup.string().required(
+																	'Product is Required',
+																),
+															}),
+														),
+													// attachmentFile: Yup.mixed()
+													// 	.test(
+													// 		'fileType',
+													// 		'*Unsupported File Format',
+													// 		(value) => {
+													// 			value &&
+													// 				this.setState({
+													// 					fileName: value.name,
+													// 				});
+													// 			if (
+													// 				!value ||
+													// 				(value &&
+													// 					this.supported_format.includes(value.type))
+													// 			) {
+													// 				return true;
+													// 			} else {
+													// 				return false;
+													// 			}
+													// 		},
+													// 	)
+													// 	.test(
+													// 		'fileSize',
+													// 		'*File Size is too large',
+													// 		(value) => {
+													// 			if (
+													// 				!value ||
+													// 				(value && value.size <= this.file_size)
+													// 			) {
+													// 				return true;
+													// 			} else {
+													// 				return false;
+													// 			}
+													// 		},
+													// 	),
+												})}
 											>
 												{(props) => (
 													<Form onSubmit={props.handleSubmit}>
+														<Row>
+														<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="invoiceNumber">
+																	{strings.InvoiceNumber}
+																	</Label>
+																	<Select
+																		styles={customStyles}
+																		id="invoiceNumber"
+																		name="invoiceNumber"
+																		placeholder="Select Invoice Number"
+																		options={
+																			invoice_list.data
+																				? selectOptionsFactory.renderOptions(
+																						'label',
+																						'value',
+																						invoice_list.data,
+																						'invoiceNumber',
+																				  )
+																				: []
+																		}
+																		value={props.values.invoiceNumber}
+
+																		onChange={(option) => {
+																			if (option && option.value) {
+																				 this.getInvoiceDetails(option, option.value, props)
+																				 props.handleChange('invoiceNumber')(option);
+
+																			} else {
+
+																				props.handleChange('invoiceNumber')('');
+																			}
+
+																				// if(!this.state.data1){
+																				// 	this.state.supplierList = this.state.data1
+																				// }else{
+																				// 	this.state.supplierList =	props.values.supplierId
+																				// }
+
+																		}}
+                                                                        // onChange={() => {
+                                                                        //     this.getrfqDetails
+                                                                        // }}
+																		className={
+																			props.errors.invoiceNumber &&
+																			props.touched.invoiceNumber
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.invoiceNumber &&
+																		props.touched.invoiceNumber && (
+																			<div className="invalid-feedback">
+																				{props.errors.invoiceNumber}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+
+														</Row>
 														<Row>
 															<Col lg={3}>
 																<FormGroup className="mb-3">
@@ -1712,7 +1875,7 @@ class CreateCreditNote extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
-															<Col lg={3}>
+															{/* <Col lg={3}>
 												<FormGroup>
 													<Label htmlFor="email">
 														{strings.SalesPerson}
@@ -1739,7 +1902,7 @@ class CreateCreditNote extends React.Component {
 														</div>
 													)}
 												</FormGroup>
-											</Col>
+											</Col> */}
 														</Row>
 														<hr />
 																{/* <Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
@@ -2065,7 +2228,7 @@ class CreateCreditNote extends React.Component {
 																<Col lg={4}>
 																	<div className="">
 																		<div className="total-item p-2">
-																			<Row>
+																			{/* <Row>
 																				<Col lg={6}>
 																					<FormGroup>
 																						<Label htmlFor="discountType">
@@ -2152,8 +2315,8 @@ class CreateCreditNote extends React.Component {
 																						</FormGroup>
 																					</Col>
 																				) : null}
-																			</Row>
-																			<Row>
+																			</Row> */}
+																			{/* <Row>
 																				<Col lg={6} className="mt-4">
 																					<FormGroup>
 																						<Label htmlFor="discount">
@@ -2201,7 +2364,7 @@ class CreateCreditNote extends React.Component {
 																						/>
 																					</FormGroup>
 																				</Col>
-																			</Row>
+																			</Row> */}
 																		</div>
 																		<div className="total-item p-2">
 																			<Row>

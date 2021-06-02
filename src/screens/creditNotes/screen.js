@@ -380,7 +380,7 @@ class CreditNotes extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-						{row.statusEnum !== 'Closed'  && (
+						{row.statusEnum !== 'Closed' && row.statusEnum !== 'Open'   && (
 							<DropdownItem>
 								<div
 									onClick={() => {
@@ -393,7 +393,7 @@ class CreditNotes extends React.Component {
 									<i className="fas fa-edit" /> {strings.Edit}
 								</div>
 							</DropdownItem>
-						)}	{row.statusEnum !== 'Closed' &&  (
+						)}	{row.statusEnum !== 'Closed' && row.statusEnum !== 'Draft'  &&  (
 							<DropdownItem>
 								<div
 									onClick={() => {
@@ -431,7 +431,7 @@ class CreditNotes extends React.Component {
 								<i className="fas fa-file" />  {strings.Draft}
 							</DropdownItem>
 						)} */}
-									{row.statusEnum !== 'Closed' && (
+									{row.statusEnum !== 'Closed' && row.statusEnum !== 'Draft'  && (
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(

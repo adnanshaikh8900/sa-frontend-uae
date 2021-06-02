@@ -4,7 +4,14 @@ const ar = {
         SALARYROLEID_Lang:"معرّف دور الراتب",
         SALARYROLENAME_Lang:"اسم دور الراتب",
         NewSalaryRoles_Lang:"أدوار الراتب الجديدة",  
-
+//Help
+Question:"لدي سؤال؟",
+Find:"اعثر على إجابات مفصلة عن الأسئلة الأكثر شيوعًا التي قد تكون لديك أثناء استخدام موقعنا",
+CustomerSupport:"دعم العملاء",
+Version:"إصدارات الحسابات البسيطة",
+FrontEndVerison:"فرونت إند فيريزون",
+BackEndVersion:"الخلفيةنسخة",
+GotoFAQ:"انتقل إلى التعليمات", 
         //Sidebar
         Dashboard:"لوحة القيادة",
         Report:"تقرير",
@@ -420,6 +427,7 @@ Send:"إرسال",
 Close:"مغلق",	
 View:"منظر",	
 CreatePO:"إنشاء أمر شراء",	
+CreateCN:"create CN",
 CreateGRN:"إنشاء ملاحظة استلام السلع",	
 Edit:"تعديل",	
 RecordPayment:"سجل دفع",	

@@ -142,12 +142,12 @@ console.log(this.state.Variable,"Variable")
 		return (
 			<div className="contact-modal-screen">
 				<Modal isOpen={openModal} className="modal-success contact-modal">
-					<ModalBody>
-						<div className="view-invoice-screen">
+					<ModalBody style={{padding: "15px 0px 0px 0px"}}>
+						<div className="view-invoice-screen" style={{padding:" 0px 1px"}}>
 							<div className="animated fadeIn">
 								<Row>
 									<Col lg={12} className="mx-auto">
-										<div className="pull-right" style={{ display: "inline-flex" }}>
+										<div className="pull-right mb-1" style={{ display: "inline-flex" ,marginRight:"20px"}}>
 
 											<Button
 												className="mr-2 print-btn-cont"

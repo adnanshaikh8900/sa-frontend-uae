@@ -1734,6 +1734,7 @@ class CreateSupplierInvoice extends React.Component {
 																		{strings.Currency}
 																	</Label>
 																	<Select
+																	isDisabled={true}
 																	placeholder="Select Currency"
 																		styles={customStyles}
 																		options={

@@ -276,7 +276,7 @@ class CreateBankTransaction extends React.Component {
 			vendorId,
 			employeeId,
 			expenseCategory,
-			currency,
+			currencyCode,
 			userId,
 		} = data;
 		if (
@@ -321,8 +321,8 @@ class CreateBankTransaction extends React.Component {
 		) {
 			formData.append('vatId', vatId ? vatId.value : '');
 		}
-		if (currency && coaCategoryId.label === 'Expense') {
-			formData.append('currencyCode', currency.value);
+		if (currencyCode && coaCategoryId.label === 'Expense') {
+			formData.append('currencyCode', currencyCode.value);
 		}
 		if (
 			(customerId &&
@@ -624,6 +624,12 @@ class CreateBankTransaction extends React.Component {
 													){
 														errors.employeeId = 'User is required'
 													}
+													if(
+														(values.coaCategoryId.label ===
+															'Expense' ) && !values.currencyCode
+													){
+														errors.currencyCode = " Currency is required"
+													}
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({
@@ -915,7 +921,7 @@ class CreateBankTransaction extends React.Component {
 																	<Row>
 																		<Col lg={3}>
 																				<FormGroup className="mb-3">
-																					<Label htmlFor="currencyCode">
+																					<Label htmlFor="currencyCode"><span className="text-danger">*</span>
 																						Currency
 																					</Label>
 																					<Select
@@ -948,19 +954,19 @@ class CreateBankTransaction extends React.Component {
 																								)
 																							}
 																						onChange={(option) => {
-																							props.handleChange('currency')(option);
+																							props.handleChange('currencyCode')(option);
 																							this.setExchange(option.value);
 																							this.setCurrency(option.value)
 																						   }}
 																						className={
-																							props.errors.currency &&
-																							props.touched.currency
+																							props.errors.currencyCode &&
+																							props.touched.currencyCode
 																								? 'is-invalid'
 																								: ''
 																						}
 																					/>
-																					{props.errors.currency &&
-																						props.touched.currency && (
+																					{props.errors.currencyCode &&
+																						props.touched.currencyCode && (
 																							<div className="invalid-feedback">
 																								{props.errors.currencyCode}
 																							</div>

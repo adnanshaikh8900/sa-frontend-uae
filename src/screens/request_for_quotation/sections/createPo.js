@@ -1203,7 +1203,7 @@ class CreatePurchaseOrder extends React.Component {
 													
 														<Row>
 															<Col lg={12} className="mb-3">
-																<Button
+																{/* <Button
 																	color="primary"
 																	className={`btn-square mr-3 ${
 																		this.checkedRow() ? `disabled-cursor` : ``
@@ -1217,7 +1217,7 @@ class CreatePurchaseOrder extends React.Component {
 																	disabled={this.checkedRow() ? true : false}
 																>
 																	<i className="fa fa-plus"></i> {strings.Addmore}
-																</Button>
+																</Button> */}
 															</Col>
 														</Row>
 														<Row>

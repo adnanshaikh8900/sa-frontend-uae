@@ -128,6 +128,8 @@ class ViewEmployee extends React.Component {
 		return (
 			<div>
 				<Button
+				className="btn-sm"
+				style={{padding:'0px'}}
 				 color="link"
 					onClick={() => {
 						
@@ -256,7 +258,7 @@ class ViewEmployee extends React.Component {
 									</div>
 								</Col>
 							</Row>
-							<Nav tabs>
+							<Nav tabs pills>
 								<NavItem>
 									<NavLink
 										active={this.state.activeTab[0] === '1'}
@@ -533,7 +535,7 @@ class ViewEmployee extends React.Component {
 
 
 								<TabPane tabId="3">
-									<div className="table-wrapper">
+									<div style={{    width: "50%"}} className="table-wrapper">
 										
 											<BootstrapTable
 												selectRow={this.selectRowProp}
@@ -556,6 +558,7 @@ class ViewEmployee extends React.Component {
 												<TableHeaderColumn
 													className="table-header-bg"
 													dataField="salaryDate"
+													width="15%"
 													dataSort
 
 
@@ -563,6 +566,7 @@ class ViewEmployee extends React.Component {
 													Salary Date
 													</TableHeaderColumn>
 												<TableHeaderColumn
+													width="15%"
 													className="table-header-bg"
 													dataField="monthYear"
 													dataSort
@@ -571,6 +575,7 @@ class ViewEmployee extends React.Component {
 													Month Year
 													</TableHeaderColumn>
 												<TableHeaderColumn
+													width="15%"
 													className="table-header-bg"
 
 													dataFormat={this.renderActions}
@@ -578,7 +583,7 @@ class ViewEmployee extends React.Component {
 
 
 												>
-													PAY-SLIPS
+													PAY SLIPS
 													</TableHeaderColumn>
 												{/* <TableHeaderColumn
                                                         className="table-header-bg"

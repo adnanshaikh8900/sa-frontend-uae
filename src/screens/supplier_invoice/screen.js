@@ -328,16 +328,7 @@ class SupplierInvoice extends React.Component {
 						{/* <DropdownItem  onClick={() => {this.openInvoicePreviewModal(row.id)}}>
               <i className="fas fa-eye" /> View
             </DropdownItem> */}
-						<DropdownItem
-							onClick={() =>
-								this.props.history.push(
-									'/admin/expense/supplier-invoice/view',
-									{ id: row.id },
-								)
-							}
-						>
-							<i className="fas fa-eye" />  {strings.View}
-						</DropdownItem>
+						
 						{row.statusEnum === 'Sent' && (
 							<DropdownItem
 								onClick={() => {
@@ -377,15 +368,15 @@ class SupplierInvoice extends React.Component {
 								<i className="fa fa-send" /> Send Custom Email
 							</DropdownItem>
 						)} */}
-						<DropdownItem
+					<DropdownItem
 							onClick={() =>
 								this.props.history.push(
 									'/admin/expense/supplier-invoice/view',
-									{ id: row.id,status:row.status },
+									{ id: row.id },
 								)
 							}
 						>
-							<i className="fas fa-eye" /> View
+							<i className="fas fa-eye" />  {strings.View}
 						</DropdownItem>
 					</DropdownMenu>
 				</ButtonDropdown>

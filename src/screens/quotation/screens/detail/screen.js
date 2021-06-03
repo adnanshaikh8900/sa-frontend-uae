@@ -898,7 +898,7 @@ class DetailQuotation extends React.Component {
 
 	removePo = () => {
 		const { current_po_id } = this.state;
-		this.props.purchaseOrderDetailsAction
+		this.props.quotationDetailsAction
 			.deletePo(current_po_id)
 			.then((res) => {
 				if (res.status === 200) {

@@ -64,7 +64,7 @@ class Inventory extends React.Component {
 							</Row>
 						</CardHeader>
 						<CardBody>
-							<Nav tabs>
+							<Nav tabs pills>
 								<NavItem>
 									<NavLink
 										active={this.state.activeTab[0] === '1'}

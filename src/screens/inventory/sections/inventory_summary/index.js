@@ -254,18 +254,17 @@ class InventorySummary extends React.Component {
 		return (
 			<div className="transactions-report-screen">
 				<div className="animated fadeIn">
-					<Card>
-						<div>
-							<CardHeader>
+					
+						<div id="section-to-print">
+			
 							
-							</CardHeader>
-							
-							<CardBody id="section-to-print">
+						
 								<PDFExport
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
 									paperSize="A4"
-								>
+								><br/>
+								<br/>
 							<div style={{										
 									display: 'flex',
 									justifyContent: 'space-between',
@@ -296,6 +295,8 @@ class InventorySummary extends React.Component {
 										
 											<b style ={{ fontSize: '18px'}}>{strings.InventorySummary}</b>
 											<br/>
+											<br/>
+										
 											As on {initValue.endDate}
 											
 									</div>
@@ -381,9 +382,9 @@ class InventorySummary extends React.Component {
 									)}
 									<div style={{ textAlignLast:'center'}}> {strings.PoweredBy} <b>SimpleAccounts</b></div> 
 								</PDFExport>
-							</CardBody>
+						
 						</div>
-					</Card>
+				
 				</div>
 			</div>
 		);

@@ -1607,6 +1607,7 @@ class DetailSupplierInvoice extends React.Component {
 																		Currency
 																	</Label>
 																	<Select
+																	isDisabled={true}
 																		styles={customStyles}
 																		options={
 																			currency_convert_list

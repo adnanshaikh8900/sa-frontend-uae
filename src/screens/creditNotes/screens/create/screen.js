@@ -2121,7 +2121,7 @@ class CreateCreditNote extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="receiptNumber">
-																					 {strings.RecieptNumber}
+																					 {strings.ReceiptNumber}
 																				</Label>
 																				<Input
 																					type="text"

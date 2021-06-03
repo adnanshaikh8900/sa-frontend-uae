@@ -2178,10 +2178,10 @@ class DetailCreditNote extends React.Component {
 																			className="btn-square mr-3"
 																			disabled={this.state.disabled}
 																		>
-																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			{this.state.disabled
+																			<i className="fa fa-dot-circle-o"></i>{strings.Update}
+																			{/* { {this.state.disabled }
 																				? 'Updating...'
-																				: 'Update'}
+																				{ : 'Update'} } */}
 																		</Button>
 																		<Button
 																			color="secondary"

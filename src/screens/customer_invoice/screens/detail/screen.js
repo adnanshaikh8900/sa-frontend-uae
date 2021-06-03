@@ -1527,6 +1527,7 @@ class DetailCustomerInvoice extends React.Component {
 																			{strings.Currency}
 																		</Label>
 																		<Select
+																		isDisabled={true}
 																			styles={customStyles}
 																			options={
 																				currency_convert_list

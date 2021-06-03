@@ -724,8 +724,8 @@ class CreateCustomerInvoice extends React.Component {
 									this.props.customerInvoiceActions.getInventoryByProductId(e.value).then((response) => {
 										this.setState({inventoryList:response.data						
 										});
-										if(response.data.length !== 0 && response.data.length !== 1){
-										this.openMultiSupplierProductModal(response);}
+										// if(response.data.length !== 0 && response.data.length !== 1){
+										// this.openMultiSupplierProductModal(response);}
 									});
 								} else {
 									form.setFieldValue(
@@ -1663,6 +1663,7 @@ class CreateCustomerInvoice extends React.Component {
 																		{strings.Currency}
 																	</Label>
 																	<Select
+																	isDisabled={true}
 																		styles={customStyles}
 																		placeholder="Select Currency"
 																		options={

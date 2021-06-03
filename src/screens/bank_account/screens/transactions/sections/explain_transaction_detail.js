@@ -505,12 +505,22 @@ class ExplainTrasactionDetail extends React.Component {
 			(coaCategoryId.label === 'Expense' ||
 				coaCategoryId.label === 'Admin Expense' ||
 				coaCategoryId.label === 'Other Expense' ||
-				coaCategoryId.label === 'Cost Of Goods Sold'||
-				coaCategoryId.label === 'Sales'||
-				coaCategoryId.label === 'Supplier Invoice')
+				coaCategoryId.label === 'Cost Of Goods Sold'
+			
+			)
 		) {
-			formData.append('currencyCode', currencyCode ? currencyCode : '');
+			formData.append('currencyCode', currencyCode.value);
 		}
+
+		if (
+			currencyCode &&
+			(
+				coaCategoryId.label === 'Supplier Invoice' ||
+				coaCategoryId.label === 'Sales')
+		) {
+			formData.append('currencyCode', currencyCode );
+		}
+		
 		if (
 			expenseCategory &&
 			(coaCategoryId.label === 'Expense' ||
@@ -1625,7 +1635,7 @@ class ExplainTrasactionDetail extends React.Component {
 																		<Row>
 																			<Col lg={3}>
 																				<FormGroup className="mb-3">
-																					<Label htmlFor="currencyCode">
+																					<Label htmlFor="currencyCode"><span className="text-danger">*</span>
 																						Currency
 																						</Label>
 																					<Select
@@ -1654,11 +1664,11 @@ class ExplainTrasactionDetail extends React.Component {
 																								.find(
 																									(option) =>
 																										option.value ===
-																										+props.values.currency,
+																										+props.values.currencyCode,
 																								)
 																						}
 																						onChange={(option) => {
-																							props.handleChange('currency')(option);
+																							props.handleChange('currencyCode')(option);
 																							this.setExchange(option.value);
 																							this.setCurrency(option.value)
 																						}}
@@ -1779,7 +1789,7 @@ class ExplainTrasactionDetail extends React.Component {
 																								.find(
 																									(option) =>
 																										option.value ===
-																										+props.values.currency,
+																										+props.values.currencyCode,
 																								)
 																						}
 																						onChange={(option) => {
@@ -1917,7 +1927,7 @@ class ExplainTrasactionDetail extends React.Component {
 																						}
 																						isDisabled={true}
 																						onChange={(option) => {
-																							props.handleChange('currency')(option);
+																							props.handleChange('currencyCode')(option);
 																							this.setExchange(option.value);
 																							this.setCurrency(option.value)
 																						   }}

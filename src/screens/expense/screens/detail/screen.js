@@ -761,7 +761,7 @@ class DetailExpense extends React.Component {
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="pay_through">
-																				Pay Through 
+																				 {strings.PayThrough}
 																			</Label>
 																			<Select
 																				id="pay_through"

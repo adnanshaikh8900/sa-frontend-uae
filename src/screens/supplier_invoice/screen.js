@@ -328,7 +328,7 @@ class SupplierInvoice extends React.Component {
 						{/* <DropdownItem  onClick={() => {this.openInvoicePreviewModal(row.id)}}>
               <i className="fas fa-eye" /> View
             </DropdownItem> */}
-						
+
 						{row.statusEnum === 'Sent' && (
 							<DropdownItem
 								onClick={() => {

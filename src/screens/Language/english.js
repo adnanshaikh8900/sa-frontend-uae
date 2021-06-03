@@ -112,13 +112,13 @@ EmployeeDesignation:"Employee Designation",
       TotalVat: "Total Vat",
       Discount: "Discount",
       Total: "Total",
-      CreateandMore: "Create and More",
+      CreateandMore: " Create and More",
       AddACustomer: "Add A Customer",
       Addmore: "Add More",
       upload: "Upload",
       UpdateInvoice: "Update Invoice",
       Delete:"Delete",
-      Update: "Update",
+      Update: " Update",
 
       CreateContact: "Create Contact",
       ContactDetails: "Contact Details",
@@ -165,7 +165,7 @@ EmployeeDesignation:"Employee Designation",
       CreateSupplier:"Create Supplier",		
 
       //Expenses
-      PayThrough:"PayThrough",
+      PayThrough:"Pay Through",
       Expenses:"Expenses",
       EXPENSEDATE:"EXPENSE DATE",		
       PAYEE:"PAYEE",
@@ -222,6 +222,7 @@ PONUMBER:"PO NUMBER",
 PODATE:"PO DATE",
 POEXPIRYDATE:"PO EXPIRY DATE",				
 AddNewPurchaseOrder:"Add New Purchase Order",
+UpdatePurchaseOrder:"Update Purchase Order",
 
 //create purchase order	
 CreatePurchaseOrder:"Create Purchase Order",		
@@ -569,6 +570,7 @@ MailingSMTPStartTLSEnable:"Mailing SMTP StartTLS Enable",
 Yes:"Yes",
 Save:"Save",
 APIKey:"API Key",
+CreateCN:"Create CN",
 
 }
 export { en }

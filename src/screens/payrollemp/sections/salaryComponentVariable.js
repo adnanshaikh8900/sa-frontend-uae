@@ -387,7 +387,7 @@ class SalaryComponentVariable extends React.Component {
 
 										</Row>
 									</ModalBody>
-									<ModalFooter>
+									<ModalFooter style={{padding: "10px"}}>
 										<Button
 											type="button"
 											color="primary"

@@ -61,11 +61,11 @@ class UpdateEmployeePersonal extends React.Component {
             initValue: {},
             loading: true,
             dialog: null,
-            selectedStatus: '',
             gender:'',
             bloodGroup:'',
             current_employee_id: null
         }
+        
         this.regExAlpha = /^[a-zA-Z ]+$/;
         this.regExBoth = /[a-zA-Z0-9]+$/;
         this.regExSpaceBoth = /[a-zA-Z0-9 ]+$/;
@@ -159,13 +159,14 @@ class UpdateEmployeePersonal extends React.Component {
                                 res.data.parentId && res.data.parentId !== null
                                     ? res.data.parentId
                                     : '',
-                            selectedStatus: res.data.isActive ? true : false,
+                           
                             isActive:
                                 res.data.isActive && res.data.isActive !== null
                                     ? res.data.isActive
                                     : '',
 
                         },
+                        selectedStatus: res.data.isActive ? true : false,
                     }
                     )
 

@@ -282,7 +282,7 @@ class Quatation extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-					{row.status !== 'Sent' && row.status !== "Approved" && (
+					{row.status !== 'Closed' && row.status !== "Sent" && (
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
@@ -293,7 +293,7 @@ class Quatation extends React.Component {
 							>
 								<i className="fas fa-edit" />  {strings.Edit} </DropdownItem>
 					)}
-							{row.status !== 'Sent' && row.status !== "Approved" && (
+							{row.status !== 'Closed' && row.status !== "Sent" && (
 							<DropdownItem
 								onClick={() => {
 									this.sendMail(row.id);

@@ -665,14 +665,14 @@ class BankTransactions extends React.Component {
 							>
 								<i className="fas fa-edit" /> Change Status
 							</DropdownItem>
-							{/* <DropdownItem
+							<DropdownItem
 								onClick={() => {
 									this.closeTransaction(row.id);
 								}}
 								className="dropdown-button-margin"
 							>
 								<i className="fa fa-trash" /> Delete
-							</DropdownItem> */}
+							</DropdownItem>
 						</DropdownMenu>
 					</ButtonDropdown>
 				</div>

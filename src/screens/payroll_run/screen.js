@@ -271,7 +271,7 @@ class PayrollRun extends React.Component {
 				this.initializeData();
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Income Receipt Deleted Successfully',
+					'Salary Generated Successfully',
 				);
 				if (payroll_employee_list && payroll_employee_list.length > 0) {
 					this.setState({

@@ -266,10 +266,10 @@ console.log(this.state.Variable,"Variable")
 																	border: '1px solid', borderColor: '#c8ced3'
 																}}
 															>
-																<div className="mb-1 mt-1 ml-2">
+																<div className="mb-1 mt-1 ml-2" style={{ fontSize: "15px"}}>
 																	<b>Employee Pay Summary,</b>
 																</div>
-																<div className="m-2" style={{ fontSize: '10px' }}>
+																<div className="m-2" style={{ fontSize: '15px' }}>
 																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>Employee Name </Col>
 																		<Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.employeename !== '' ? this.state.selectedData.employeename : ('-')}</Col></Row>
 
@@ -299,9 +299,9 @@ console.log(this.state.Variable,"Variable")
 															}}
 														>
 															<Card className="" style={{ width: '80%',margin:"1.5rem" ,fontSize:"10px" }}>
-																<div className="text-center pt-4">Employee Net Pay</div>
+																<div className="text-center pt-4" style={{ fontSize: "15px"}}>Employee Net Pay</div>
 																<div className="mb-1 ml-2 text-center"><h1 style={{ color: "#2064d8" }}><b>{this.state.selectedData.netPay}</b></h1></div>
-																<div className="mb-1 ml-2 text-center">Paid Days : {this.state.selectedData.noOfDays} <b>|</b>  LOP Days : {this.state.selectedData.lopDays}</div>
+																<div className="mb-1 ml-2 text-center"  style={{ fontSize: "12px"}}>Paid Days : {this.state.selectedData.noOfDays} <b>|</b>  LOP Days : {this.state.selectedData.lopDays}</div>
 															</Card>
 														</div>
 													</div>
@@ -310,7 +310,7 @@ console.log(this.state.Variable,"Variable")
 															width: '100%',
 															display: "flex",
 															border: 'solid 1px', borderColor: '#c8ced3',
-															fontSize: "12px",
+															fontSize: "15px",
 
 														}}
 													>

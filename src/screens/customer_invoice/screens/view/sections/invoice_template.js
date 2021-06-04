@@ -276,7 +276,7 @@ class InvoiceTemplate extends Component {
 								display: 'flex',
 								justifyContent: 'space-between',
 								marginBottom: '1rem',border:'solid 1px',borderColor:'#c8ced3',
-								fontSize: "12px"
+								fontSize: "14px"
 							}}
 						>
 								<div
@@ -284,7 +284,7 @@ class InvoiceTemplate extends Component {
 									width: '200%',
 									display: 'flex',
 									flexDirection: 'column',
-									justifyContent: 'center',
+									
 								}}
 							>
 								<div className="pl-5 pb-2">Amount In Words:<br/>

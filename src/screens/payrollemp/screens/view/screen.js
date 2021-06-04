@@ -134,7 +134,7 @@ class ViewEmployee extends React.Component {
 					onClick={() => {
 						
 						this.props.employeeViewActions
-							.getSalarySlip({id: this.props.location.state.id, salaryDate: row.salaryDate})
+							.getSalarySlip({id: this.props.location.state.id, salaryDate: moment(row.salaryDate).format('DD/MM/YYYY') })
 							.then((res) => {
 								if (res.status === 200) {
 									// this.initializeData();
@@ -154,10 +154,12 @@ class ViewEmployee extends React.Component {
 							.catch((err) => {
 								this.props.commonActions.tostifyAlert(
 									'error',
+
 									err && err.data ? err.data.message : 'Something Went Wrong',
 								);
 							});
-						this.viewPaySlip({ id: this.props.location.state.id, salaryDate: row.salaryDate });
+							debugger
+						this.viewPaySlip({ id: this.props.location.state.id, salaryDate: moment(Date(row.salaryDate)).format('DD/MM/YYYY') });
 					}
 
 					}
@@ -438,7 +440,7 @@ class ViewEmployee extends React.Component {
 												<div className='m-4'>
 													<Row style={{ width: '63%' }}>
 														<Col><h5>Annual CTC  </h5>
-															<div><h3>  {this.state.CTC}</h3></div></Col>
+															<div><h3>  {this.state.CTC  ? (this.state.CTC).toFixed(2) : ''}</h3></div></Col>
 														<Col><h5>Monthly Income  </h5>
 															<div> <h3>{this.state.CTC ? (this.state.CTC /12).toFixed(2) : ''}</h3></div></Col>
 															<Col>
@@ -476,8 +478,8 @@ class ViewEmployee extends React.Component {
 																		).map((item) => (
 																			<tr className="p-1">
 																					<td  className="text-left" style={{border:"3px solid #dfe9f7"}} >{item.description}<div className=''>{item.description === 'Basic SALARY' ? '% of CTC' : '% of Baisc'}</div></td>
-																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.monthlyAmount}</td>
-																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.yearlyAmount}</td>
+																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.monthlyAmount ? item.monthlyAmount.toFixed(2) : '' }</td>
+																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.yearlyAmount ? item.yearlyAmount.toFixed(2) :''}</td>
 																			</tr>
 
 																		))) : (<tr></tr>)}
@@ -489,8 +491,8 @@ class ViewEmployee extends React.Component {
 																		).map((item) => (
 																			<tr>
 																							<td  className="text-left" style={{border:"3px solid #dfe9f7"}} >{item.description}</td>
-																							<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.monthlyAmount}</td>
-																							<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.yearlyAmount}</td>
+																							<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.monthlyAmount ? item.monthlyAmount.toFixed(2) : '' }</td>
+																							<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.yearlyAmount ? item.yearlyAmount.toFixed(2) :''}</td>
 																			</tr>
 																		))) : (<tr></tr>)}
 
@@ -501,8 +503,8 @@ class ViewEmployee extends React.Component {
 																		).map((item) => (
 																			<tr>
 																						<td  className="text-left" style={{border:"3px solid #dfe9f7"}} >{item.description}</td>
-																						<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.monthlyAmount}</td>
-																						<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.yearlyAmount}</td>
+																						<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.monthlyAmount ? item.monthlyAmount.toFixed(2) : '' }</td>
+																						<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.yearlyAmount ? item.yearlyAmount.toFixed(2) :''}</td>
 																			</tr>
 																		))) : (<tr></tr>)}
 																</tbody>
@@ -513,14 +515,14 @@ class ViewEmployee extends React.Component {
 																		).map((item) => (
 																			<tr>
 																				<td  className="text-left" style={{border:"3px solid #dfe9f7"}} >{item.description}</td>
-																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.monthlyAmount}</td>
-																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.yearlyAmount}</td>
+																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.monthlyAmount ? item.monthlyAmount.toFixed(2) : '' }</td>
+																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.yearlyAmount ? item.yearlyAmount.toFixed(2) :''}</td>
 																			</tr>
 																		))) : (<tr></tr>)}
 																	<tr style={{border:"3px solid #dfe9f7"}}>
 																		<td className="text-left"><h5><b>Cost to Company</b></h5></td>
 																		<td className="text-right"><h5>{this.state.CTC ? (this.state.CTC / 12).toFixed(2) : ''}</h5></td>
-																		<td className="text-right"><h5>{this.state.CTC}</h5></td>
+																		<td className="text-right"><h5>{this.state.CTC  ? (this.state.CTC).toFixed(2) : ''}</h5></td>
 																	</tr>
 																</tfoot>
 															</Table>

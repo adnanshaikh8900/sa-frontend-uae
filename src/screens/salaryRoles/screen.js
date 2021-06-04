@@ -387,11 +387,12 @@ console.log("strings",strings)
                             target="_blank"
                           />} */}
                           <Button
+
                             color="primary"
-                            className="btn-square"
+                            className="btn-square mb-2"
                             onClick={() => this.props.history.push(`/admin/payroll/salaryRoles/create`)}
                           >
-                            <i className="fas fa-plus mr-1" />
+                            <i className="fas fa-plus mr-1 " />
                             {strings.NewSalaryRoles_Lang}
                           </Button>
                           {/* <Button

@@ -221,16 +221,17 @@ console.log(this.state.Variable,"Variable")
 														</div>
 														<div style={{ width: '130%', justifyContent: 'center' }}>
 
-															<div
+														
+														<div className="text-center"
 																style={{
-																	width: '130%',
+																	width: '100%',
 																	fontSize: '1rem',
 																	fontWeight: '700',
-																	textTransform: 'uppercase',
+																	// textTransform: 'uppercase',
 																	color: 'black',
 																}}
 															>
-																Payslip for the month of {this.state.selectedData.salaryMonth}
+																Payslip ( {this.state.selectedData.salaryMonth} )
 															</div>
 
 														</div>

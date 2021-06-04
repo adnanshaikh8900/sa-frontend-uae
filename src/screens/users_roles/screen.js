@@ -189,12 +189,16 @@ class UsersRoles extends React.Component {
 											<TableHeaderColumn
 												isKey
 												dataField="email"
+												className="table-header-bg"
 												dataFormat={this.getUserName}
 												dataSort
 											>
 												 {strings.UserDetail} 
 											</TableHeaderColumn>
-											<TableHeaderColumn dataField="roleName" dataSort>
+											<TableHeaderColumn 
+											dataField="roleName"
+											className="table-header-bg"
+											dataSort>
 												 {strings.Role}
 											</TableHeaderColumn>
 										</BootstrapTable>

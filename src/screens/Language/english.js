@@ -36,7 +36,7 @@ SalaryRoles:"Salary Roles",
 SalaryTemplates:"Salary Templates",
 SalaryStructure:"Salary Structure",
 EmployeeDesignation:"Employee Designation",
-
+Vat:"Vat", 
 
 
 

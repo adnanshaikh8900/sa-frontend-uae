@@ -533,17 +533,19 @@ class User extends React.Component {
 													this.table = node;
 												}}
 											>
-												<TableHeaderColumn dataField="firstName" dataSort>
+												<TableHeaderColumn dataField="firstName"       className="table-header-bg" dataSort>
 													  {strings.UserName}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="dob"
 													dataSort
+													className="table-header-bg"
 													dataFormat={this.renderDate}
 												>
 													DOB
 												</TableHeaderColumn>
 												<TableHeaderColumn
+												    className="table-header-bg"
 													dataField="roleName"
 													dataSort
 													// dataFormat={this.renderRole}
@@ -551,6 +553,7 @@ class User extends React.Component {
 													 {strings.RoleName}
 												</TableHeaderColumn>
 												<TableHeaderColumn
+												      className="table-header-bg"
 													dataField="active"
 													dataSort
 													dataFormat={this.renderStatus}

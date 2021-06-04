@@ -647,20 +647,20 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 															</Col>
 															<Col lg={3}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="vatCategoryId">{strings.Tax}</Label>
+																	<Label htmlFor="vatCategoryId">{strings.Vat}</Label>
 																	<Select
 																		styles={customStyles}
 																		className="select-default-width"
 																		id="vatCategoryId"
 																		name="vatCategoryId"
-																		placeholder="Select Tax "
+																		placeholder="Select Vat "
 																		options={
 																			vat_list
 																				? selectOptionsFactory.renderOptions(
 																						'name',
 																						'id',
 																						vat_list,
-																						'Tax',
+																						'Vat',
 																				  )
 																				: []
 																		}

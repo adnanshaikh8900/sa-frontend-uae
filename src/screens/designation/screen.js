@@ -343,12 +343,14 @@ console.log("designation_list",designation_list)
                           ref={(node) => this.table = node}
                         >
                           <TableHeaderColumn
+                            className="table-header-bg"
                             dataField="id"
                             dataSort
                           >
                             Designation Id
                           </TableHeaderColumn>
                           <TableHeaderColumn
+                            className="table-header-bg"
                             dataField="designationName"
                             dataSort
                           // dataFormat={this.vatCategoryFormatter}

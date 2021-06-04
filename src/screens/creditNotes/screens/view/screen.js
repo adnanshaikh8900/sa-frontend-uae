@@ -167,7 +167,7 @@ this.props.supplierInvoiceDetailActions
 											className="close-btn mb-1 btn-lg print-btn-cont"
 											
 											onClick={() => {
-												this.props.history.push('/admin/income/customer-invoice');
+												this.props.history.push('/admin/income/credit-notes');
 											}}
 										>
 									<i class="fas fa-times"></i>

@@ -373,7 +373,7 @@ class SalaryComponentFixed extends React.Component {
 										</Row>
 										
 									</ModalBody>
-									<ModalFooter>
+									<ModalFooter style={{padding: "10px"}}>
 										<Button
 											type="button"
 											color="primary"

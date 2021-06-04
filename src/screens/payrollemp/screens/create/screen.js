@@ -757,13 +757,9 @@ class CreateEmployeePayroll extends React.Component {
                                         <div className="animated fadeIn">
                                             <Row>
                                                 <Col lg={12} className="mx-auto">
-                                                    <Card>
-                                                        <CardHeader>
-                                                            <Row>
-
-                                                            </Row>
-                                                        </CardHeader>
-                                                        <CardBody>
+                                                    <div>
+                                                   
+                                               
                                                             <Row>
                                                                 <Col lg={12}>
                                                                     <Formik
@@ -1398,8 +1394,8 @@ class CreateEmployeePayroll extends React.Component {
                                                                     </Formik>
                                                                 </Col>
                                                             </Row>
-                                                        </CardBody>
-                                                    </Card>
+                                               
+                                                    </div>
                                                 </Col>
                                             </Row>
                                         </div>
@@ -1411,13 +1407,9 @@ class CreateEmployeePayroll extends React.Component {
                                         <div className="animated fadeIn">
                                             <Row>
                                                 <Col lg={12} className="mx-auto">
-                                                    <Card>
-                                                        <CardHeader>
-                                                            <Row>
-
-                                                            </Row>
-                                                        </CardHeader>
-                                                        <CardBody>
+                                                    <div>
+                                             
+                                                 
                                                             <Row>
                                                                 <Col lg={12}>
                                                                     <Formik
@@ -1587,29 +1579,7 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                     )}
                                                                                                 </FormGroup>
                                                                                             </Col>
-                                                                                            <Col md="4">
-                                                                                                <FormGroup>
-                                                                                                    <Label htmlFor="labourCard">Labour Card</Label>
-                                                                                                    <Input
-                                                                                                        type="text"
-                                                                                                        id="labourCard"
-                                                                                                        name="labourCard"
-                                                                                                        value={props.values.labourCard}
-                                                                                                        placeholder="Enter labour Card"
-                                                                                                        onChange={(value) => {
-                                                                                                            props.handleChange('labourCard')(value);
-
-                                                                                                        }}
-                                                                                                        className={props.errors.labourCard && props.touched.labourCard ? "is-invalid" : ""}
-                                                                                                    />
-                                                                                                    {props.errors.labourCard && props.touched.labourCard && (
-                                                                                                        <div className="invalid-feedback">
-                                                                                                            {props.errors.labourCard}
-                                                                                                        </div>
-                                                                                                    )}
-
-                                                                                                </FormGroup>
-                                                                                            </Col>
+                                                                                          
                                                                                         </Row>
                                                                                         <Row>
                                                                                             <Col md="4">
@@ -1703,6 +1673,31 @@ class CreateEmployeePayroll extends React.Component {
                                                                                                 </FormGroup>
                                                                                             </Col>
                                                                                         </Row>
+                                                                                        <Row>
+                                                                                        <Col md="4">
+                                                                                                <FormGroup>
+                                                                                                    <Label htmlFor="labourCard">Labour Card</Label>
+                                                                                                    <Input
+                                                                                                        type="text"
+                                                                                                        id="labourCard"
+                                                                                                        name="labourCard"
+                                                                                                        value={props.values.labourCard}
+                                                                                                        placeholder="Enter labour Card"
+                                                                                                        onChange={(value) => {
+                                                                                                            props.handleChange('labourCard')(value);
+
+                                                                                                        }}
+                                                                                                        className={props.errors.labourCard && props.touched.labourCard ? "is-invalid" : ""}
+                                                                                                    />
+                                                                                                    {props.errors.labourCard && props.touched.labourCard && (
+                                                                                                        <div className="invalid-feedback">
+                                                                                                            {props.errors.labourCard}
+                                                                                                        </div>
+                                                                                                    )}
+
+                                                                                                </FormGroup>
+                                                                                            </Col>
+                                                                                        </Row>
 
                                                                                     </Col>
 
@@ -1732,8 +1727,8 @@ class CreateEmployeePayroll extends React.Component {
                                                                     </Formik>
                                                                 </Col>
                                                             </Row>
-                                                        </CardBody>
-                                                    </Card>
+                                                
+                                                    </div>
                                                 </Col>
                                             </Row>
                                         </div>
@@ -1745,13 +1740,9 @@ class CreateEmployeePayroll extends React.Component {
                                         <div className="animated fadeIn">
                                             <Row>
                                                 <Col lg={12} className="mx-auto">
-                                                    <Card>
-                                                        <CardHeader>
-                                                            <Row>
-
-                                                            </Row>
-                                                        </CardHeader>
-                                                        <CardBody>
+                                                    <div>
+                                
+                                           
                                                             <Row>
                                                                 <Col lg={12}>
                                                                     <Formik
@@ -1777,7 +1768,7 @@ class CreateEmployeePayroll extends React.Component {
 
                                                                                     <Col xs="4" md="4" lg={10}>
                                                                                         <h4>Bank Details</h4>
-                                                                                        <hr />
+                                                                                       
 
                                                                                         <Row  >
                                                                                             <Col md="4">
@@ -1929,8 +1920,8 @@ class CreateEmployeePayroll extends React.Component {
                                                                     </Formik>
                                                                 </Col>
                                                             </Row>
-                                                        </CardBody>
-                                                    </Card>
+                                     
+                                                    </div>
                                                 </Col>
                                             </Row>
                                         </div>
@@ -2012,10 +2003,10 @@ class CreateEmployeePayroll extends React.Component {
                                                         </div>
                                                
                                                 </div> 
-                                                <Row className='mt-4'>
-                                                    <Card>
+                                                <Row >
+                                                    
                                                     <Row className='m-4'>
-                                                        <Col lg={8}>
+                                                        <Col lg={9}>
                                                             <Row  className='ml-2'>  
                                                                  <h4>Fixed Earnings</h4>
                                                                 
@@ -2111,7 +2102,7 @@ class CreateEmployeePayroll extends React.Component {
                                                             </Table>
                                                           
                                                         </Col>
-                                                        <Col lg={8}>
+                                                        <Col lg={9}>
                                                             <Row  className='ml-2'> 
                                                                 <h4>Variable Earnings</h4>
                                                              <Button
@@ -2208,7 +2199,7 @@ class CreateEmployeePayroll extends React.Component {
                                                             </Table>
                                                           
                                                         </Col>
-                                                        <Col lg={8}>
+                                                        <Col lg={9}>
                                                             <Row  className='ml-2'>    
                                                             <h4>Deductions</h4>
                                                               <Button
@@ -2300,7 +2291,7 @@ class CreateEmployeePayroll extends React.Component {
                                                             </Table>
                                                        
                                                         </Col>
-                                                        <Col lg={8}>
+                                                        <Col lg={9}>
                                                             <Table className="text-center" style={{border:"3px solid #c8ced3" ,    width: '133%'}}>
                                                             {/* <thead style={{border:"3px solid #dfe9f7"}}>
                                                                       <tr style={{border:"3px solid #dfe9f7",    background: '#dfe9f7',color:"Black"}}>
@@ -2331,7 +2322,7 @@ class CreateEmployeePayroll extends React.Component {
                                                             </Table>
                                                           
                                                         </Col>
-                                                        <Col lg={8}>
+                                                        <Col lg={9}>
                                                             <Table className="text-center"  style={{border:"3px solid #c8ced3",    width: '133%'}}>
                                                             {/* <thead style={{border:"3px solid #c8ced3"}}>
                                                                       <tr style={{border:"3px solid #c8ced3",    background: '#dfe9f7',color:"Black"}}>
@@ -2356,9 +2347,9 @@ class CreateEmployeePayroll extends React.Component {
                                                             </Table>
                                                         </Col>
                                                     </Row>
-                                                    <div className="table-wrapper mb-4">
+                                                    <div className="table-wrapper mb-4" style={{width: "100%"}}>
                                                    
-                                                   <Button type="button" color="primary" className="btn-square mr-3 pull-right" onClick={() => {
+                                                   <Button type="button" color="primary" className="btn-square mr-5 pull-right" onClick={() => {
                                                        this.setState({ createMore: false }, () => {
                                                            props.handleSubmit()
                                                        })
@@ -2369,7 +2360,7 @@ class CreateEmployeePayroll extends React.Component {
                                                   </Button>
                                             
                                            </div>
-                                                    </Card>
+                                                   
                                                 </Row>
                                              
                                             </Form>

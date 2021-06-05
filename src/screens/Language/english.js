@@ -86,7 +86,7 @@ Vat:"Vat",
       InvoiceAmount: "Invoice Amount",
       VatAmount: "Vat Amount",
       DueAmount: "Due Amount",
-
+      DepositFrom:"Deposit From",
       CreateInvoice: "Create Invoice",
       InvoiceNumber: "Invoice Number",
       CustomerName: "Customer Name",

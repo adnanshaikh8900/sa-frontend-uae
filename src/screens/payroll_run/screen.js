@@ -543,7 +543,7 @@ class PayrollRun extends React.Component {
                                                     keyField="employeeId"
                                                     remote
                                                     fetchInfo={{ dataTotalSize: payroll_employee_list.count ? payroll_employee_list.count : 0 }}
-                                                    className="employee-table mt-4"
+                                                    // className="employee-table mt-4"
                                                     trClassName="cursor-pointer"
                                                     csvFileName="payroll_employee_list.csv"
                                                     ref={(node) => this.table = node}
@@ -552,7 +552,7 @@ class PayrollRun extends React.Component {
                                                         className="table-header-bg"
                                                         dataField="employeeName"
                                                         dataSort
-                                                        width="15%"
+                                                        
                                                     >
                                                         Employee Name
                           </TableHeaderColumn>

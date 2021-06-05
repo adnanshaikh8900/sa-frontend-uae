@@ -270,7 +270,12 @@ class CreateEmployeePayroll extends React.Component {
                 this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
             })
     }
-
+uploadImage = (picture, file) => {
+		this.setState({
+			userPhoto: picture,
+			userPhotoFile: file,
+		});
+	};
     renderActionForState = () => {
         this.props.createPayrollEmployeeActions.getEmployeeById(this.state.employeeid)
             .then((res) => {

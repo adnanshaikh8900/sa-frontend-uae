@@ -2128,7 +2128,7 @@ class CreateCreditNote extends React.Component {
 																					maxLength="100"
 																					id="receiptNumber"
 																					name="receiptNumber"
-																					placeholder="Reciept Number"
+																					placeholder="Receipt Number"
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||
@@ -2420,7 +2420,7 @@ class CreateCreditNote extends React.Component {
 																				</Col>
 																			</Row>
 																		</div>
-																		<div className="total-item p-2">
+																		{/* <div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
@@ -2429,25 +2429,16 @@ class CreateCreditNote extends React.Component {
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																					{/* {universal_currency_list[0] && (
-																						<Currency
-																						value={this.state.initValue.discount.toFixed(
-																							2,
-																						)}
-																						currencySymbol={this.state.customer_currency_IsoCode}
-																							/>
-																							)} */}
+																				
 																						{this.state.customer_currency_symbol} &nbsp;
 																							{initValue.discount.toFixed(
 																							2,
 																						)}
-																						{/* {this.state.initValue.discount.toFixed(
-																									2,
-																								)} */}
+																					
 																					</label>
 																				</Col>
 																			</Row>
-																		</div>
+																		</div> */}
 																		<div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>

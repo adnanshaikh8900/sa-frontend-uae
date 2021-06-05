@@ -364,12 +364,14 @@ class SalaryStructure extends React.Component {
                           ref={(node) => this.table = node}
                         >
                           <TableHeaderColumn
+                                className="table-header-bg"
                             dataField="salaryStructureType"
                         
                           >
                           Salary Structure Type
                           </TableHeaderColumn>
                           <TableHeaderColumn
+                                className="table-header-bg"
                             dataField="salaryStructureName"
                           
                           // dataFormat={this.vatCategoryFormatter}

@@ -117,7 +117,7 @@ GotoFAQ:"Aller à la FAQ",
       UpdateInvoice: "Mettre à jour la facture",
       Delete:"Effacer",
       Update: " Mettre à jour",
-
+      DepositFrom:"dépôt de",
       CreateContact: "Créer le contact",
       ContactName:"Nom du contact",
       ContactDetails: "Coordonnées",

@@ -641,7 +641,7 @@ class Refund extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="depositeTo">
 																			<span className="text-danger">*</span>{' '}
-																		      {strings.DepositTo}
+																		      {strings.DepositFrom}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -656,7 +656,7 @@ class Refund extends React.Component {
 																					props.handleChange('depositeTo')('');
 																				}
 																			}}
-																			placeholder="Select Deposit To"
+																			placeholder="Select Deposit From"
 																			id="depositeTo"
 																			name="depositeTo"
 																			className={

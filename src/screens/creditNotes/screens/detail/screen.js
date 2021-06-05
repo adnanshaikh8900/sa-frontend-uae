@@ -1798,7 +1798,7 @@ class DetailCreditNote extends React.Component {
 																					maxLength="100"
 																					id="receiptNumber"
 																					name="receiptNumber"
-																					placeholder="Reciept Number"
+																					placeholder="Receipt Number"
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||
@@ -1900,7 +1900,7 @@ class DetailCreditNote extends React.Component {
 																</Col>
 																	<Col lg={4}>
 																		<div className="">
-																			<div className="total-item p-2">
+																			{/* <div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
 																						<FormGroup>
@@ -2043,7 +2043,7 @@ class DetailCreditNote extends React.Component {
 																						</FormGroup>
 																					</Col>
 																				</Row>
-																			</div>
+																			</div> */}
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
@@ -2098,7 +2098,7 @@ class DetailCreditNote extends React.Component {
 																					</Col>
 																				</Row>
 																			</div>
-																			<div className="total-item p-2">
+																			{/* <div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
 																						<h5 className="mb-0 text-right">
@@ -2107,18 +2107,7 @@ class DetailCreditNote extends React.Component {
 																					</Col>
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
-																							{/* {universal_currency_list[0] && (
-																						<Currency
-																						value=		{this.state.initValue.discount.toFixed(
-																							2,
-																						)}
-																						currencySymbol={
-																							universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
-																							/>
-																							)} */}
+																					
 																							{this.state.customer_currency_symbol} &nbsp;
 																								{this.state.initValue.discount.toFixed(
 																							2,
@@ -2126,7 +2115,7 @@ class DetailCreditNote extends React.Component {
 																						</label>
 																					</Col>
 																				</Row>
-																			</div>
+																			</div> */}
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>

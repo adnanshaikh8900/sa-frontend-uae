@@ -324,7 +324,7 @@ class InvoiceTemplate extends Component {
 												</span>
 											</td>
 										</tr>
-										<tr >
+										{/* <tr >
 											<td style={{ width: '40%' }}>
 												<strong>
 													Discount
@@ -362,7 +362,7 @@ class InvoiceTemplate extends Component {
 													)}
 												</span>
 											</td>
-										</tr>
+										</tr> */}
 										<tr >
 											<td style={{ width: '40%' }}>
 												<strong>VAT</strong>

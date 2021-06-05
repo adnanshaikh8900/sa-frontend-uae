@@ -79,7 +79,7 @@ GotoFAQ:"انتقل إلى التعليمات",
       InvoiceAmount: "مبلغ الفاتورة",
       VatAmount: "مبلغ ضريبة القيمة المضافة ",
       DueAmount: "المبلغ المستحق",
-
+      DepositFrom:"إيداع من",
       CreateInvoice: "إنشاء فاتورة",
       InvoiceNumber: "رقم الفاتورة",
       CustomerName: "اسم العميل",

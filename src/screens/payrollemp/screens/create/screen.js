@@ -55,6 +55,9 @@ import * as PayrollEmployeeActions from '../../actions'
 import { DesignationModal, SalaryComponentDeduction, SalaryComponentFixed, SalaryComponentVariable } from 'screens/payrollemp/sections';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { ThreeDRotationSharp } from '@material-ui/icons';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
+
 
 const mapStateToProps = (state) => {
     return ({
@@ -76,13 +79,14 @@ const mapDispatchToProps = (dispatch) => {
         commonActions: bindActionCreators(CommonActions, dispatch),
     };
 };
-
+let strings = new LocalizedStrings(data);
 class CreateEmployeePayroll extends React.Component {
 
     constructor(props) {
         super(props)
 
         this.state = {
+            language: window['localStorage'].getItem('language'),
             Fixed: [
                 {
                     description: '',
@@ -698,6 +702,7 @@ uploadImage = (picture, file) => {
     }
 
     render() {
+        strings.setLanguage(this.state.language);
 
         const { salary_role_dropdown, designation_dropdown, country_list, state_list, employee_list_dropdown } = this.props
         return (
@@ -709,7 +714,7 @@ uploadImage = (picture, file) => {
                                 <Col lg={12}>
                                     <div className="h4 mb-0 d-flex align-items-center">
                                         <i className="nav-icon fas fa-user-tie" />
-                                        <span className="ml-2">Create Employee</span>
+                                        <span className="ml-2">{strings.CreateEmployee}</span>
                                     </div>
                                 </Col>
                             </Row>
@@ -723,7 +728,7 @@ uploadImage = (picture, file) => {
                                     // 	this.toggle(0, '1');
                                     // }}
                                     >
-                                        Basic Details
+                                         {strings.BasicDetails}
 									</NavLink>
                                 </NavItem>
                                 <NavItem>
@@ -731,7 +736,7 @@ uploadImage = (picture, file) => {
                                         active={this.state.activeTab[0] === '2'}
 
                                     >
-                                        Employment
+                                        {strings.Employment}
 									</NavLink>
                                 </NavItem>
                                 <NavItem>
@@ -741,7 +746,7 @@ uploadImage = (picture, file) => {
                                     // 	this.toggle(0, '3');
                                     // }}
                                     >
-                                        Financial Details
+                                         {strings.FinancialDetails}
 									</NavLink>
                                 </NavItem>
                                 <NavItem>
@@ -751,7 +756,7 @@ uploadImage = (picture, file) => {
                                     // 	this.toggle(0, '4');
                                     // }}
                                     >
-                                        Salary Setup
+                                        {strings.SalarySetup}
 									</NavLink>
                                 </NavItem>
                             </Nav>
@@ -847,7 +852,7 @@ uploadImage = (picture, file) => {
 
                                                                                             <Col lg={4}>
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span>First Name</Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span> {strings.FirstName}</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="firstName"
@@ -866,7 +871,7 @@ uploadImage = (picture, file) => {
                                                                                             </Col>
                                                                                             <Col lg={4}>
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select">Middle Name</Label>
+                                                                                                    <Label htmlFor="select">{strings.MiddleName}</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="middleName"
@@ -885,7 +890,7 @@ uploadImage = (picture, file) => {
                                                                                             </Col>
                                                                                             <Col lg={4}>
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span>Last Name</Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span>{strings.LastName}</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="lastName"
@@ -907,7 +912,7 @@ uploadImage = (picture, file) => {
                                                                                         <Row>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span>Email</Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span> {strings.Email}</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="email"
@@ -925,7 +930,7 @@ uploadImage = (picture, file) => {
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
                                                                                                     <Label htmlFor="mobileNumber"><span className="text-danger">*</span>
-                                                                                                        Mobile Number
+                                                                                                         {strings.MobileNumber}
 															                                    		</Label>
                                                                                                     <PhoneInput
                                                                                                         id="mobileNumber"
@@ -955,7 +960,7 @@ uploadImage = (picture, file) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup className="mb-3">
-                                                                                                    <Label htmlFor="active"><span className="text-danger">*</span>Status</Label>
+                                                                                                    <Label htmlFor="active"><span className="text-danger">*</span>{strings.Status}</Label>
                                                                                                     <div>
                                                                                                         <FormGroup check inline>
                                                                                                             <div className="custom-radio custom-control">
@@ -983,7 +988,7 @@ uploadImage = (picture, file) => {
                                                                                                                     className="custom-control-label"
                                                                                                                     htmlFor="inline-radio1"
                                                                                                                 >
-                                                                                                                    Active
+                                                                                                                     {strings.Active}
 																							</label>
                                                                                                             </div>
                                                                                                         </FormGroup>
@@ -1013,7 +1018,7 @@ uploadImage = (picture, file) => {
                                                                                                                     className="custom-control-label"
                                                                                                                     htmlFor="inline-radio2"
                                                                                                                 >
-                                                                                                                    Inactive
+                                                                                                                    {strings.Inactive}
 																							</label>
                                                                                                             </div>
                                                                                                         </FormGroup>
@@ -1025,7 +1030,7 @@ uploadImage = (picture, file) => {
                                                                                         <Row>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="gender">Gender</Label>
+                                                                                                    <Label htmlFor="gender">{strings.Gender}</Label>
                                                                                                     <Select
 
                                                                                                         options={
@@ -1060,7 +1065,7 @@ uploadImage = (picture, file) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="bloodGroup">Blood group</Label>
+                                                                                                    <Label htmlFor="bloodGroup">{strings.BloodGroup}</Label>
                                                                                                     <Select
 
                                                                                                         options={
@@ -1096,7 +1101,7 @@ uploadImage = (picture, file) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup className="mb-3">
-                                                                                                    <Label htmlFor="date"><span className="text-danger">*</span>Date Of Birth</Label>
+                                                                                                    <Label htmlFor="date"><span className="text-danger">*</span>{strings.DateOfBirth}</Label>
                                                                                                     <DatePicker
                                                                                                         className={`form-control ${props.errors.dob && props.touched.dob ? "is-invalid" : ""}`}
                                                                                                         id="dob"
@@ -1121,7 +1126,7 @@ uploadImage = (picture, file) => {
                                                                                         <Row>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="parentId">Reports To</Label>
+                                                                                                    <Label htmlFor="parentId">{strings.ReportsTo}</Label>
                                                                                                     <Select
 
                                                                                                         options={
@@ -1156,7 +1161,7 @@ uploadImage = (picture, file) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="employeeDesignationId"><span className="text-danger">*</span>Designation</Label>
+                                                                                                    <Label htmlFor="employeeDesignationId"><span className="text-danger">*</span>{strings.Designation}</Label>
                                                                                                     <Select
 
                                                                                                         options={
@@ -1204,7 +1209,7 @@ uploadImage = (picture, file) => {
                                                                                                         this.openDesignationModal(props);
                                                                                                     }}
                                                                                                 >
-                                                                                                    <i className="fa fa-plus"></i> Add Designation
+                                                                                                    <i className="fa fa-plus"></i>  {strings.AddDesignation}
 															                            	</Button>
                                                                                             </Col>
 
@@ -1213,7 +1218,7 @@ uploadImage = (picture, file) => {
                                                                                         <Row className="row-wrapper">
                                                                                             <Col md="8">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="gender">Present Address </Label>
+                                                                                                    <Label htmlFor="gender"> {strings.PresentAddress} </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="presentAddress"
@@ -1234,7 +1239,7 @@ uploadImage = (picture, file) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="city">Pin Code </Label>
+                                                                                                    <Label htmlFor="city"> {strings.PinCode} </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="pincode"
@@ -1259,7 +1264,7 @@ uploadImage = (picture, file) => {
                                                                                         <Row className="row-wrapper">
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="countryId">Country</Label>
+                                                                                                    <Label htmlFor="countryId">{strings.Country}</Label>
                                                                                                     <Select
                                                                                                         options={
                                                                                                             country_list
@@ -1305,7 +1310,7 @@ uploadImage = (picture, file) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="stateId">State Region</Label>
+                                                                                                    <Label htmlFor="stateId">{strings.StateRegion}</Label>
                                                                                                     <Select
 
                                                                                                         options={
@@ -1346,7 +1351,7 @@ uploadImage = (picture, file) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="state">City     </Label>
+                                                                                                    <Label htmlFor="state">{strings.City}     </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="city"
@@ -1387,7 +1392,7 @@ uploadImage = (picture, file) => {
                                                                                                     })
                                                                                                 }}
                                                                                             >
-                                                                                                <i className="fa fa-next"></i> Next
+                                                                                                <i className="fa fa-next"></i>  {strings.Next}
                                                                                               </Button>
 
                                                                                     
@@ -1443,7 +1448,7 @@ uploadImage = (picture, file) => {
                                                                                         <Row>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span>Employee Code </Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span> {strings.EmployeeCode}  </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="employeeCode"
@@ -1463,7 +1468,7 @@ uploadImage = (picture, file) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="salaryRoleId"><span className="text-danger">*</span>Salary Role </Label>
+                                                                                                    <Label htmlFor="salaryRoleId"><span className="text-danger">*</span> {strings.SalaryRole} </Label>
                                                                                                     <Select
 
                                                                                                         options={
@@ -1543,7 +1548,7 @@ uploadImage = (picture, file) => {
                                                                                         <Row  >
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select">Department </Label>
+                                                                                                    <Label htmlFor="select"> {strings.Department}  </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="department"
@@ -1563,7 +1568,7 @@ uploadImage = (picture, file) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup className="mb-3">
-                                                                                                    <Label htmlFor="dateOfJoining"><span className="text-danger">*</span>Date Of Joining</Label>
+                                                                                                    <Label htmlFor="dateOfJoining"><span className="text-danger">*</span>{strings.DateOfJoining}</Label>
                                                                                                     <DatePicker
                                                                                                         className={`form-control ${props.errors.dateOfJoining && props.touched.dateOfJoining ? "is-invalid" : ""}`}
                                                                                                         id="dateOfJoining"
@@ -1589,7 +1594,7 @@ uploadImage = (picture, file) => {
                                                                                         <Row>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="gender">Passport Number </Label>
+                                                                                                    <Label htmlFor="gender">{strings.PassportNumber} </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         maxLength="9"
@@ -1611,7 +1616,7 @@ uploadImage = (picture, file) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup className="mb-3">
-                                                                                                    <Label htmlFor="passportExpiryDate">Passport expiry Date</Label>
+                                                                                                    <Label htmlFor="passportExpiryDate"> {strings.PassportExpiryDate}</Label>
                                                                                                     <DatePicker
                                                                                                         className={`form-control ${props.errors.passportExpiryDate && props.touched.passportExpiryDate ? "is-invalid" : ""}`}
                                                                                                         id="passportExpiryDate"
@@ -1635,7 +1640,7 @@ uploadImage = (picture, file) => {
                                                                                         </Row>  <Row>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="gender">Visa Number </Label>
+                                                                                                    <Label htmlFor="gender"> {strings.VisaNumber} </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="visaNumber"
@@ -1656,7 +1661,7 @@ uploadImage = (picture, file) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup className="mb-3">
-                                                                                                    <Label htmlFor="visaExpiryDate">Visa ExpiryDate</Label>
+                                                                                                    <Label htmlFor="visaExpiryDate">{strings.VisaExpiryDate} </Label>
                                                                                                     <DatePicker
                                                                                                         className={`form-control ${props.errors.visaExpiryDate && props.touched.visaExpiryDate ? "is-invalid" : ""}`}
                                                                                                         id="visaExpiryDate"
@@ -1681,7 +1686,7 @@ uploadImage = (picture, file) => {
                                                                                         <Row>
                                                                                         <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="labourCard">Labour Card</Label>
+                                                                                                    <Label htmlFor="labourCard"> {strings.LabourCard}</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="labourCard"
@@ -1721,7 +1726,7 @@ uploadImage = (picture, file) => {
                                                                                                     })
                                                                                                 }}
                                                                                             >
-                                                                                                <i className="fa fa-next"></i> Next
+                                                                                                <i className="fa fa-next"></i> {strings.Next}
                                                                                               </Button>
 
                                                                                     </Col>
@@ -1772,13 +1777,13 @@ uploadImage = (picture, file) => {
 
 
                                                                                     <Col xs="4" md="4" lg={10}>
-                                                                                        <h4>Bank Details</h4>
+                                                                                        <h4> {strings.BankDetails} </h4>
                                                                                        
 
                                                                                         <Row  >
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span>Account Holder Name </Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span>{strings.AccountHolderName}  </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="accountHolderName"
@@ -1798,7 +1803,7 @@ uploadImage = (picture, file) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span>Account Number</Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span> {strings.AccountNumber}</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="accountNumber"
@@ -1818,7 +1823,7 @@ uploadImage = (picture, file) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select">Bank Name </Label>
+                                                                                                    <Label htmlFor="select"> {strings.BankName} </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="bankName"
@@ -1841,7 +1846,7 @@ uploadImage = (picture, file) => {
                                                                                         <Row className="row-wrapper">
                                                                                             <Col lg={4}>
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select">Branch</Label>
+                                                                                                    <Label htmlFor="select">{strings.Branch}</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="branch"
@@ -1861,7 +1866,7 @@ uploadImage = (picture, file) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select">IBAN Number</Label>
+                                                                                                    <Label htmlFor="select">{strings.IBANNumber}</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="ibanNumber"
@@ -1882,7 +1887,7 @@ uploadImage = (picture, file) => {
 
                                                                                             <Col lg={4}>
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select">Swift Code</Label>
+                                                                                                    <Label htmlFor="select">{strings.SwiftCode}</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="swiftCode"
@@ -1915,7 +1920,7 @@ uploadImage = (picture, file) => {
                                                                                                     })
                                                                                                 }}
                                                                                             >
-                                                                                                <i className="fa fa-next"></i> Next
+                                                                                                <i className="fa fa-next"></i> {strings.Next}
                                                                                               </Button>
                                                                                     </Col>
                                                                                 </Row>
@@ -2013,7 +2018,7 @@ uploadImage = (picture, file) => {
                                                     <Row className='m-4'>
                                                         <Col lg={9}>
                                                             <Row  className='ml-2'>  
-                                                                 <h4>Fixed Earnings</h4>
+                                                                 <h4>{strings.FixedEarnings}</h4>
                                                                 
                                                                 <Button
                                                                 color="link"
@@ -2023,7 +2028,7 @@ uploadImage = (picture, file) => {
                                                                     this.renderActionForState()
                                                                 }}
                                                             >
-                                                                <i className="fa fa-plus"></i> Add Fixed
+                                                                <i className="fa fa-plus"></i>  {strings.AddFixed}
 																</Button>
                                                              
                                                                 </Row>
@@ -2065,7 +2070,7 @@ uploadImage = (picture, file) => {
                                                                                         />{item.description !== 'Basic SALARY' ? ( ' % of Basic') : ( ' % of CTC')}
                                                                                     </td>
                                                                                 ) : (
-                                                                                    <td style={{border:"3px solid #c8ced3"}}>Fixed amount</td>)
+                                                                                    <td style={{border:"3px solid #c8ced3"}}> {strings.FixedAmount}</td>)
                                                                             }
                                                                             {item.formula ?
                                                                                 (<td style={{border:"3px solid #c8ced3"}}
@@ -2109,7 +2114,7 @@ uploadImage = (picture, file) => {
                                                         </Col>
                                                         <Col lg={9}>
                                                             <Row  className='ml-2'> 
-                                                                <h4>Variable Earnings</h4>
+                                                                <h4> {strings.VariableEarnings}</h4>
                                                              <Button
                                                                color="link"
                                                                className=" mr-3 mb-3"
@@ -2118,7 +2123,7 @@ uploadImage = (picture, file) => {
                                                                     this.renderActionForState()
                                                                 }}
                                                             >
-                                                                <i className="fa fa-plus"></i> Add Variable
+                                                                <i className="fa fa-plus"></i>  {strings.AddVariable}
 																</Button></Row>
                                                             <Table className="text-center" style={{border:"3px solid #c8ced3",    width: '133%'}}>
                                                             <thead style={{border:"3px solid #c8ced3"}}>
@@ -2153,7 +2158,7 @@ uploadImage = (picture, file) => {
                                                                                         />{' '}% of Basic
                                                                                     </td>
                                                                                 ) : (
-                                                                                    <td style={{border:"3px solid # #c8ced3"}}>Fixed amount</td>)
+                                                                                    <td style={{border:"3px solid # #c8ced3"}}>{strings.FixedAmount}</td>)
                                                                             }
                                                                             {item.formula ?
                                                                                 (<td style={{border:"3px solid #c8ced3"}} >
@@ -2206,7 +2211,7 @@ uploadImage = (picture, file) => {
                                                         </Col>
                                                         <Col lg={9}>
                                                             <Row  className='ml-2'>    
-                                                            <h4>Deductions</h4>
+                                                            <h4> {strings.Deductions}</h4>
                                                               <Button
                                                                color="link"
                                                                className=" mr-3 mb-3"
@@ -2215,7 +2220,7 @@ uploadImage = (picture, file) => {
                                                                     this.renderActionForState()
                                                                 }}
                                                             >
-                                                                <i className="fa fa-plus"></i> Add Deduction
+                                                                <i className="fa fa-plus"></i>  {strings.AddDeduction}
 																</Button></Row>
                                                             <Table className="text-center" style={{border:"3px solid #c8ced3", width: '133%'}}>
                                                             <thead style={{border:"3px solid #c8ced3"}}>
@@ -2253,7 +2258,7 @@ uploadImage = (picture, file) => {
                                                                                         />{' '}% of CTC
                                                                                     </td >
                                                                                 ) : (
-                                                                                    <td style={{border:"3px solid #c8ced3"}}>Fixed amount</td>)
+                                                                                    <td style={{border:"3px solid #c8ced3"}}>{strings.FixedAmount}</td>)
                                                                             }
                                                                             {item.formula ?
                                                                                 (<td style={{border:"3px solid #c8ced3"}} >
@@ -2361,7 +2366,7 @@ uploadImage = (picture, file) => {
                                                     
                                                    }}
                                                    >
-                                                       <i className="fa fa-dot-circle-o"></i> Save
+                                                       <i className="fa fa-dot-circle-o"></i>  {strings.Save}
                                                   </Button>
                                             
                                            </div>

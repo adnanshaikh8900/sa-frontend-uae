@@ -33,7 +33,8 @@ import {
 
 import './style.scss'
 import moment from 'moment';
-import { data } from 'screens/Language';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
     return ({
@@ -46,12 +47,13 @@ const mapDispatchToProps = (dispatch) => {
         commonActions: bindActionCreators(CommonActions, dispatch)
     })
 }
-
+let strings = new LocalizedStrings(data);
 class PayrollEmployee extends React.Component {
 
     constructor(props) {
         super(props)
         this.state = {
+            language: window['localStorage'].getItem('language'),
             actionButtons: {},
             loading: true,
             selectedRows: [],
@@ -151,7 +153,7 @@ class PayrollEmployee extends React.Component {
                                 )
                             }
                         >
-                            <i className="fas fa-edit" /> Edit
+                            <i className="fas fa-edit" />  {strings.Edit}
 							</DropdownItem>
 
 
@@ -163,7 +165,7 @@ class PayrollEmployee extends React.Component {
                                 )
                             }
                         >
-                            <i className="fas fa-eye" /> Salary Slip
+                            <i className="fas fa-eye" />  {strings.SalarySlip} 
 						</DropdownItem>
 
                     </DropdownMenu>
@@ -351,7 +353,7 @@ class PayrollEmployee extends React.Component {
     }
 
     render() {
-
+        strings.setLanguage(this.state.language);
         const { loading, dialog, selectedRows, csvData, view, filterData } = this.state
         const { payroll_employee_list } = this.props
 
@@ -366,7 +368,7 @@ class PayrollEmployee extends React.Component {
                                 <Col lg={12}>
                                     <div className="h4 mb-0 d-flex align-items-center">
                                         <i className="fas fa-object-group" />
-                                        <span className="ml-2">Employees</span>
+                                        <span className="ml-2"> {strings.Employees} </span>
                                     </div>
                                 </Col>
                             </Row>
@@ -408,7 +410,7 @@ class PayrollEmployee extends React.Component {
 
                                                             >
                                                                 <i className="fas fa-plus mr-1" />
-                                        New Employee
+                                         {strings.NewEmployee}
 									</Button>
                                     </div>
                                     </Row>
@@ -472,7 +474,7 @@ class PayrollEmployee extends React.Component {
                                                         width="20%"
                                                         dataFormat={this.fullname}
                                                     >
-                                                        Full Name
+                                                         {strings.FullName}
                           </TableHeaderColumn>
                           <TableHeaderColumn
                                                         className="table-header-bg"
@@ -480,7 +482,7 @@ class PayrollEmployee extends React.Component {
                                                         dataSort
                                                         width="20%"
                                                     >
-                                                        Email
+                                                         {strings.Email}
                           </TableHeaderColumn>
                                                     <TableHeaderColumn
                                                         className="table-header-bg"
@@ -489,7 +491,7 @@ class PayrollEmployee extends React.Component {
                                                     // dataFormat={this.vatCategoryFormatter}
                                                     width="12%"
                                                     >
-                                                        mobile Number
+                                                         {strings.MobileNumber}
                           </TableHeaderColumn>
                                                     <TableHeaderColumn
                                                         className="table-header-bg"
@@ -498,7 +500,7 @@ class PayrollEmployee extends React.Component {
                                                         dataFormat={this.renderDOB}
                                                         width="12%"
                                                     >
-                                                        Date Of Birth
+                                                         {strings.DateOfBirth}
                           </TableHeaderColumn>
                                                     <TableHeaderColumn
                                                         className="table-header-bg"
@@ -506,7 +508,7 @@ class PayrollEmployee extends React.Component {
                                                         dataSort
                                                         width="12%"
                                                     >
-                                                        gender
+                                                         {strings.Gender}
                           </TableHeaderColumn>
                                                   
                                                     <TableHeaderColumn
@@ -516,7 +518,7 @@ class PayrollEmployee extends React.Component {
                                                     // dataFormat={this.vatCategoryFormatter}
                                                     width="10%"
                                                     >
-                                                        city
+                                                        {strings.City}
                           </TableHeaderColumn>
                                                     <TableHeaderColumn
                                                         className="table-header-bg"
@@ -525,7 +527,7 @@ class PayrollEmployee extends React.Component {
                                                     dataFormat={this.renderStatus}
                                                          width="10%"
                                                     >
-                                                       Status
+                                                        {strings.Status}
                           </TableHeaderColumn>
                                                     {/* <TableHeaderColumn
                                                         className="text-right"

@@ -193,7 +193,7 @@ class UpdateEmployeeBank extends React.Component {
                                 <CardHeader>
                                     <div className="h4 mb-0 d-flex align-items-center">
                                         <i className="nav-icon icon-briefcase" />
-                                        <span className="ml-2"> Update Employee Bank Detail</span>
+                                        <span className="ml-2"> {strings.UpdateEmployeeBankDetails} </span>
                                     </div>
                                 </CardHeader>
                                 <CardBody>
@@ -216,13 +216,13 @@ class UpdateEmployeeBank extends React.Component {
 
 
                                                                 <Col lg={12}>
-                                                                    <h4>Bank Details</h4>
+                                                                    <h4>{strings.BankDetails}</h4>
                                                                     <hr />
 
                                                                     <Row  >
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select"><span className="text-danger">*</span>Account Holder Name </Label>
+                                                                                <Label htmlFor="select"><span className="text-danger">*</span>{strings.AccountHolderName} </Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="accountHolderName"
@@ -242,7 +242,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                         </Col>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select"><span className="text-danger">*</span>Account Number</Label>
+                                                                                <Label htmlFor="select"><span className="text-danger">*</span> {strings.AccountNumber}</Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="accountNumber"
@@ -262,7 +262,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                         </Col>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select">Bank Name </Label>
+                                                                                <Label htmlFor="select">{strings.BankName} </Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="bankName"
@@ -285,7 +285,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                     <Row className="row-wrapper">
                                                                         <Col lg={4}>
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select">Branch</Label>
+                                                                                <Label htmlFor="select">{strings.Branch}</Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="branch"
@@ -305,7 +305,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                         </Col>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select">IBAN Number</Label>
+                                                                                <Label htmlFor="select"> {strings.IBANNumber}</Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="ibanNumber"
@@ -326,7 +326,7 @@ class UpdateEmployeeBank extends React.Component {
 
                                                                         <Col lg={4}>
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select">Swift Code</Label>
+                                                                                <Label htmlFor="select">{strings.SwiftCode}</Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="swiftCode"

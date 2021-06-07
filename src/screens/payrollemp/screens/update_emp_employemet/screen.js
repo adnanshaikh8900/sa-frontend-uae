@@ -198,7 +198,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                 <CardHeader>
                                     <div className="h4 mb-0 d-flex align-items-center">
                                         <i className="nav-icon icon-briefcase" />
-                                        <span className="ml-2"> Update Employement Detail</span>
+                                        <span className="ml-2"> {strings.UpdateEmployementDetails}</span>
                                     </div>
                                 </CardHeader>
                                 <CardBody>
@@ -224,7 +224,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                     <Row>
                                                                     <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select">Department </Label>
+                                                                                <Label htmlFor="select"> {strings.Department} </Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="department"
@@ -244,7 +244,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                         </Col>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="salaryRoleId"><span className="text-danger">*</span>Salary Role </Label>
+                                                                                <Label htmlFor="salaryRoleId"><span className="text-danger">*</span> {strings.SalaryRole} </Label>
                                                                                 <Select
 
                                                                                     options={
@@ -325,7 +325,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                        
                                                                         <Col md="4">
                                                                             <FormGroup className="mb-3">
-                                                                                <Label htmlFor="dateOfJoining"><span className="text-danger">*</span>Date Of Joining</Label>
+                                                                                <Label htmlFor="dateOfJoining"><span className="text-danger">*</span> {strings.DateOfJoining}</Label>
                                                                                 <DatePicker
                                                                                     className={`form-control ${props.errors.dateOfJoining && props.touched.dateOfJoining ? "is-invalid" : ""}`}
                                                                                     id="dateOfJoining"
@@ -348,7 +348,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                         </Col>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="labourCard">Labour Card</Label>
+                                                                                <Label htmlFor="labourCard">{strings.LabourCard}</Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="labourCard"
@@ -373,7 +373,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                     <Row>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="gender">Passport Number </Label>
+                                                                                <Label htmlFor="gender">{strings.PassportNumber} </Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     maxLength="9"
@@ -395,7 +395,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                         </Col>
                                                                         <Col md="4">
                                                                             <FormGroup className="mb-3">
-                                                                                <Label htmlFor="passportExpiryDate">Passport expiry Date</Label>
+                                                                                <Label htmlFor="passportExpiryDate"> {strings.PassportExpiryDate}</Label>
                                                                                 <DatePicker
                                                                                     className={`form-control ${props.errors.passportExpiryDate && props.touched.passportExpiryDate ? "is-invalid" : ""}`}
                                                                                     id="passportExpiryDate"
@@ -419,7 +419,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                     </Row>  <Row>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="gender">Visa Number </Label>
+                                                                                <Label htmlFor="gender"> {strings.VisaNumber} </Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="visaNumber"
@@ -440,7 +440,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                         </Col>
                                                                         <Col md="4">
                                                                             <FormGroup className="mb-3">
-                                                                                <Label htmlFor="visaExpiryDate">Visa ExpiryDate</Label>
+                                                                                <Label htmlFor="visaExpiryDate">{strings.VisaExpiryDate}</Label>
                                                                                 <DatePicker
                                                                                     className={`form-control ${props.errors.visaExpiryDate && props.touched.visaExpiryDate ? "is-invalid" : ""}`}
                                                                                     id="visaExpiryDate"

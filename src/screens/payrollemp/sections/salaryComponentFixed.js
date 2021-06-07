@@ -22,12 +22,15 @@ import Select from 'react-select'
 import { toast } from 'react-toastify';
 import 'react-phone-number-input/style.css';
 import moment from 'moment';
+import {data}  from '../../Language/index'
+import LocalizedStrings from 'react-localization';
 
-
+let strings = new LocalizedStrings(data);
 class SalaryComponentFixed extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			showDetails: false,
 			loading: false,
 			initValue: {
@@ -145,6 +148,7 @@ class SalaryComponentFixed extends React.Component {
 
 	
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			openSalaryComponentFixed,
 			closeSalaryComponentFixed,
@@ -216,7 +220,7 @@ class SalaryComponentFixed extends React.Component {
 											<Col lg={12}>
 												<div className="h4 mb-0 d-flex align-items-center">
 													<i className="nav-icon fas fa-id-card-alt" />
-													<span className="ml-2">Create Fixed Component</span>
+													<span className="ml-2">{strings.CreateFixedComponent}</span>
 												</div>
 											</Col>
 										</Row>
@@ -225,7 +229,7 @@ class SalaryComponentFixed extends React.Component {
 										<Row>
 											<Col lg={8}>
 												<FormGroup>
-													<Label htmlFor="id">Component</Label>
+													<Label htmlFor="id">{strings.Component}</Label>
 													<Select
 
 														options={
@@ -264,7 +268,7 @@ class SalaryComponentFixed extends React.Component {
 											<Col lg={8}>
 												<FormGroup className="mb-3">
 													<Label htmlFor="componentName">
-														Component Name
+														{strings.ComponentName}
 													</Label>
 													<Input
 														type="text"
@@ -288,7 +292,7 @@ class SalaryComponentFixed extends React.Component {
 											<Row>
 											<Col md="8">
 												<FormGroup>
-													<Label htmlFor="gender">Type</Label>
+													<Label htmlFor="gender">{strings.Type}</Label>
 													<Select
 
 														options={
@@ -328,7 +332,7 @@ class SalaryComponentFixed extends React.Component {
 											<Col lg={8}>
 												<FormGroup className="mb-3">
 													<Label htmlFor="salaryStructure">
-														Percentage
+													 {strings.Percentage}
 													</Label>
 													<Input
 														type="text"
@@ -351,7 +355,7 @@ class SalaryComponentFixed extends React.Component {
 											<Col lg={8}>
 												<FormGroup className="mb-3">
 													<Label htmlFor="flatAmount">
-														Flat Amount
+														 {strings.FlatAmount}
 													</Label>
 													<Input
 														type="text"
@@ -384,7 +388,7 @@ class SalaryComponentFixed extends React.Component {
 												});
 											}}
 										>
-											<i className="fa fa-dot-circle-o"></i> Create
+											<i className="fa fa-dot-circle-o"></i> {strings.Create}
 										</Button>
 										&nbsp;
 										<Button
@@ -394,7 +398,7 @@ class SalaryComponentFixed extends React.Component {
 												closeSalaryComponentFixed(false);
 											}}
 										>
-											<i className="fa fa-ban"></i> Cancel
+											<i className="fa fa-ban"></i> {strings.Cancel}
 										</Button>
 									</ModalFooter>
 								</Form>

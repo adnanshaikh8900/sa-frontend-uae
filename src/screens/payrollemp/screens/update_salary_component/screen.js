@@ -55,9 +55,8 @@ const mapDispatchToProps = (dispatch) => {
         createPayrollEmployeeActions : bindActionCreators(CreatePayrollEmployeeActions, dispatch),
     })
 }
+
 let strings = new LocalizedStrings(data);
-
-
 class UpdateSalaryComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -309,7 +308,7 @@ class UpdateSalaryComponent extends React.Component {
                                 <CardHeader>
                                     <div className="h4 mb-0 d-flex align-items-center">
                                         <i className="nav-icon icon-briefcase" />
-                                        <span className="ml-2"> Update Employee Bank Detail</span>
+                                        <span className="ml-2"> {strings.UpdateEmployeeBankDetails}</span>
                                     </div>
                                 </CardHeader>
                                 <CardBody>
@@ -356,7 +355,7 @@ class UpdateSalaryComponent extends React.Component {
                                                     <Row>
                                                         <Col lg={8}>
                                                             <Row className='ml-2'>  
-                                                                 <h4>Fixed Earnings</h4>
+                                                                 <h4>{strings.FixedEarnings}</h4>
                                                                 
                                                                 <Button
                                                                 color="link"
@@ -366,7 +365,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                     this.renderActionForState()
                                                                 }}
                                                             >
-                                                                <i className="fa fa-plus"></i> Add Fixed
+                                                                <i className="fa fa-plus"></i>  {strings.AddFixed}
 																</Button>
                                                              
                                                                 </Row>
@@ -408,7 +407,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                                         />{item.description !== 'Basic SALARY' ? ( ' % of Basic') : ( ' % of CTC')}
                                                                                     </td>
                                                                                 ) : (
-                                                                                    <td style={{border:"3px solid #c8ced3"}}>Fixed amount</td>)
+                                                                                    <td style={{border:"3px solid #c8ced3"}}>{strings.FixedAmount}</td>)
                                                                             }
                                                                             {item.formula ?
                                                                                 (<td style={{border:"3px solid #c8ced3"}}
@@ -452,7 +451,7 @@ class UpdateSalaryComponent extends React.Component {
                                                         </Col>
                                                         <Col lg={8}>
                                                             <Row className='ml-2'> 
-                                                                <h4>Variable Earnings</h4>
+                                                                <h4>{strings.VariableEarnings}</h4>
                                                              <Button
                                                                color="link"
                                                                className=" mr-3 mb-3"
@@ -461,7 +460,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                     this.renderActionForState()
                                                                 }}
                                                             >
-                                                                <i className="fa fa-plus"></i> Add Variable
+                                                                <i className="fa fa-plus"></i>  {strings.AddVariable}
 																</Button></Row>
                                                             <Table className="text-center" style={{border:"3px solid #c8ced3",    width: '150%'}}>
                                                             <thead style={{border:"3px solid #c8ced3"}}>
@@ -493,10 +492,10 @@ class UpdateSalaryComponent extends React.Component {
                                                                                             
                                                                                             value={item.formula}
                                                                                             id=''
-                                                                                        />{' '}% of Basic
+                                                                                        />{' '}% {strings.OfBasic} 
                                                                                     </td>
                                                                                 ) : (
-                                                                                    <td style={{border:"3px solid # #c8ced3"}}>Fixed amount</td>)
+                                                                                    <td style={{border:"3px solid # #c8ced3"}}>{strings.FixedAmount}</td>)
                                                                             }
                                                                             {item.formula ?
                                                                                 (<td style={{border:"3px solid #c8ced3"}} >
@@ -549,7 +548,7 @@ class UpdateSalaryComponent extends React.Component {
                                                         </Col>
                                                         <Col lg={8}>
                                                             <Row className='ml-2'>   
-                                                            <h4>Deductions</h4>
+                                                            <h4>{strings.Deductions}</h4>
                                                               <Button
                                                                color="link"
                                                                className=" mr-3 mb-3"
@@ -558,7 +557,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                     this.renderActionForState()
                                                                 }}
                                                             >
-                                                                <i className="fa fa-plus"></i> Add Deduction
+                                                                <i className="fa fa-plus"></i>  {strings.AddDeduction}
 																</Button></Row>
                                                             <Table className="text-center" style={{border:"3px solid #c8ced3",    width: '150%'}}>
                                                             <thead style={{border:"3px solid #c8ced3"}}>
@@ -596,7 +595,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                                         />{' '}% of CTC
                                                                                     </td >
                                                                                 ) : (
-                                                                                    <td style={{border:"3px solid #c8ced3"}}>Fixed amount</td>)
+                                                                                    <td style={{border:"3px solid #c8ced3"}}>{strings.FixedAmount}</td>)
                                                                             }
                                                                             {item.formula ?
                                                                                 (<td style={{border:"3px solid #c8ced3"}} >

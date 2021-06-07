@@ -285,7 +285,7 @@ class UpdateEmployeePersonal extends React.Component {
                                 <CardHeader>
                                     <div className="h4 mb-0 d-flex align-items-center">
                                         <i className="nav-icon icon-briefcase" />
-                                        <span className="ml-2"> Upate Employee Personal Detail</span>
+                                        <span className="ml-2"> {strings.UpdateEmployeePersonalDetails}</span>
                                     </div>
                                 </CardHeader>
                                 <CardBody>
@@ -342,7 +342,7 @@ class UpdateEmployeePersonal extends React.Component {
 
                                                                         <Col lg={4}>
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select"><span className="text-danger">*</span>First Name</Label>
+                                                                                <Label htmlFor="select"><span className="text-danger">*</span> {strings.FirstName}</Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="firstName"
@@ -361,7 +361,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         </Col>
                                                                         <Col lg={4}>
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select">Middle Name</Label>
+                                                                                <Label htmlFor="select"> {strings.MiddleName}</Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="middleName"
@@ -380,7 +380,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         </Col>
                                                                         <Col lg={4}>
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select"><span className="text-danger">*</span>Last Name</Label>
+                                                                                <Label htmlFor="select"><span className="text-danger">*</span>{strings.LastName}</Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="lastName"
@@ -402,7 +402,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                     <Row>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select"><span className="text-danger">*</span>Email</Label>
+                                                                                <Label htmlFor="select"><span className="text-danger">*</span>{strings.Email}</Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="email"
@@ -420,8 +420,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         <Col md="4">
                                                                             <FormGroup>
                                                                                 <Label htmlFor="mobileNumber">
-                                                                                    Mobile
-                                                                                    Number
+                                                                                {strings. MobileNumber}
 																	</Label>
                                                                                 <PhoneInput
                                                                                     id="mobileNumber"
@@ -451,7 +450,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         </Col>
                                                                         <Col md="4">
                                                                             <FormGroup className="mb-3">
-                                                                                <Label htmlFor="active"><span className="text-danger">*</span>Status</Label>
+                                                                                <Label htmlFor="active"><span className="text-danger">*</span> {strings.Status}</Label>
                                                                                 <div>
                                                                                     <FormGroup check inline>
                                                                                         <div className="custom-radio custom-control">
@@ -479,7 +478,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                 className="custom-control-label"
                                                                                                 htmlFor="inline-radio1"
                                                                                             >
-                                                                                                Active
+                                                                                                {strings.Active}
 																							</label>
                                                                                         </div>
                                                                                     </FormGroup>
@@ -509,7 +508,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                 className="custom-control-label"
                                                                                                 htmlFor="inline-radio2"
                                                                                             >
-                                                                                                Inactive
+                                                                                                 {strings.Inactive}
 																							</label>
                                                                                         </div>
                                                                                     </FormGroup>
@@ -521,7 +520,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                     <Row>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="gender">Gender</Label>
+                                                                                <Label htmlFor="gender"> {strings.Gender} {strings.Gender}</Label>
                                                                                 <Select
 
                                                                                     options={
@@ -561,7 +560,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         </Col>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="bloodGroup">Blood group</Label>
+                                                                                <Label htmlFor="bloodGroup">{strings.BloodGroup}</Label>
                                                                                 <Select
 
                                                                                     options={
@@ -604,7 +603,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         </Col>
                                                                         <Col md="4">
                                                                             <FormGroup className="mb-3">
-                                                                                <Label htmlFor="date"><span className="text-danger">*</span>Date Of Birth</Label>
+                                                                                <Label htmlFor="date"><span className="text-danger">*</span>{strings.DateOfBirth}</Label>
                                                                                 <DatePicker
                                                                                     className={`form-control ${props.errors.dob && props.touched.dob ? "is-invalid" : ""}`}
                                                                                     id="dob"
@@ -629,7 +628,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                     <Row>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="parentId">Reports To</Label>
+                                                                                <Label htmlFor="parentId"> {strings.ReportsTo}</Label>
                                                                                 <Select
 
                                                                                     options={
@@ -675,7 +674,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         </Col>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="employeeDesignationId"><span className="text-danger">*</span>Designation</Label>
+                                                                                <Label htmlFor="employeeDesignationId"><span className="text-danger">*</span>{strings.Designation}</Label>
                                                                                 <Select
 
                                                                                     options={
@@ -742,7 +741,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                     <Row className="row-wrapper">
                                                                         <Col md="8">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="gender">Present Address </Label>
+                                                                                <Label htmlFor="gender"> {strings.PresentAddress} </Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="presentAddress"
@@ -763,7 +762,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         </Col>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="city">Pin Code </Label>
+                                                                                <Label htmlFor="city">{strings.PinCode} </Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="pincode"
@@ -788,7 +787,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                     <Row className="row-wrapper">
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="countryId">Country</Label>
+                                                                                <Label htmlFor="countryId">{strings.Country}</Label>
                                                                                 <Select
                                                                                     options={
                                                                                         country_list
@@ -846,7 +845,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         </Col>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="stateId">State Region</Label>
+                                                                                <Label htmlFor="stateId">{strings.StateRegion}</Label>
                                                                                 <Select
 
                                                                                     options={
@@ -899,7 +898,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         </Col>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="state">City     </Label>
+                                                                                <Label htmlFor="state">{strings.City} </Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="city"

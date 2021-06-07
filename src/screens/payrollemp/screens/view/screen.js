@@ -28,7 +28,8 @@ import { ViewPaySlip } from './sections';
 import {
 	CommonActions
 } from 'services/global'
-
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 const mapStateToProps = (state) => {
 	return {
 		profile: state.auth.profile,
@@ -44,11 +45,12 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const avatar = require('assets/images/avatars/default-avatar.jpg');
-
+let strings = new LocalizedStrings(data);
 class ViewEmployee extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			openModal: false,
 			selectedData:{},
 			activeTab: new Array(4).fill('1'),
@@ -93,7 +95,7 @@ class ViewEmployee extends React.Component {
 						)
 					}
 				>
-					<i className="fas fa-eye" /> View
+					<i className="fas fa-eye" /> {strings.View}
 						</Button>
 
 			</div>
@@ -164,7 +166,7 @@ class ViewEmployee extends React.Component {
 
 					}
 				>
-					<i className="fas fa-eye" /> View
+					<i className="fas fa-eye" />  {strings.View}
 						</Button>
 
 			</div>
@@ -244,6 +246,7 @@ class ViewEmployee extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		console.log(this.state.Fixed)
 		const {profile} = this.props;
 		return (
@@ -268,7 +271,7 @@ class ViewEmployee extends React.Component {
 											this.toggle(0, '1');
 										}}
 									>
-										OverView
+										 {strings.OverView}
 									</NavLink>
 								</NavItem>
 								<NavItem>
@@ -278,7 +281,7 @@ class ViewEmployee extends React.Component {
 											this.toggle(0, '2');
 										}}
 									>
-										Salary Details
+										 {strings.SalaryDetails}
 									</NavLink>
 								</NavItem>
 								<NavItem>
@@ -288,7 +291,7 @@ class ViewEmployee extends React.Component {
 											this.toggle(0, '3');
 										}}
 									>
-										Payslips
+										 {strings.Payslips}
 									</NavLink>
 								</NavItem>
 
@@ -337,7 +340,7 @@ class ViewEmployee extends React.Component {
 														<hr style={{ width: '90%' }}></hr>
 
 														<div>
-															<label >Basic Information</label>
+															<label > {strings. BasicInformation}</label>
 															<hr style={{ width: '50%' }}></hr>
 															<div style={{ fontSize: '16px' }}>
 																<div className='mt-2 mb-2'><i class="far fa-envelope"></i> &nbsp;{this.state.EmployeeDetails.email}</div>
@@ -360,7 +363,7 @@ class ViewEmployee extends React.Component {
 															<div>
 																<Row>
 																	<Col>
-																		<label> <b>Personal Information</b></label>
+																		<label> <b>{strings.PersonalInformation} </b></label>
 																	</Col>
 																	<Col>
 																		<Button
@@ -374,17 +377,17 @@ class ViewEmployee extends React.Component {
 																		</Button>
 																	</Col>
 																</Row>
-																<Row> <Col className='mt-2 mb-2'>Father's Name </Col>
+																<Row> <Col className='mt-2 mb-2'> {strings.FathersName} </Col>
 																	<Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.middleName !== '' && this.state.EmployeeDetails.lastName !== '' ?
 																		this.state.EmployeeDetails.middleName + " " + this.state.EmployeeDetails.lastName : ('-')}</Col></Row>
 
-																<Row> <Col className='mt-2 mb-2'>Date Of Birth </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.dob !== '' ? moment(this.state.EmployeeDetails.dob).format('DD-MM-YYYY') : ('-')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2'> {strings.DateOfBirth} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.dob !== '' ? moment(this.state.EmployeeDetails.dob).format('DD-MM-YYYY') : ('-')}</Col></Row>
 
 																{/* <Row> <Col className='mt-2 mb-2'>Personal Email  </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.email ? this.state.EmployeeDetails.email : ('-')}</Col></Row>				 */}
 
-																<Row> <Col className='mt-2 mb-2'>Mobile Number </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.mobileNumber !== '' ? this.state.EmployeeDetails.mobileNumber : ('-')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2'> {strings.MobileNumber} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.mobileNumber !== '' ? this.state.EmployeeDetails.mobileNumber : ('-')}</Col></Row>
 
-																<Row> <Col className='mt-2 mb-2'>Address </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.presentAddress + ' ' + this.state.EmployeeDetails.city + ' ' + this.state.EmployeeDetails.pincode + ' ' + this.state.EmployeeDetails.stateName + ' ' + this.state.EmployeeDetails.countryName}</Col></Row>
+																<Row> <Col className='mt-2 mb-2'>{strings.Address} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.presentAddress + ' ' + this.state.EmployeeDetails.city + ' ' + this.state.EmployeeDetails.pincode + ' ' + this.state.EmployeeDetails.stateName + ' ' + this.state.EmployeeDetails.countryName}</Col></Row>
 
 															</div>
 														</CardBody>
@@ -397,7 +400,7 @@ class ViewEmployee extends React.Component {
 															<div>
 																<Row>
 																	<Col>
-																		<label><b> Bank Information</b></label>
+																		<label><b> {strings.BankInformation} </b></label>
 																	</Col>
 																	<Col>
 																		<Button
@@ -411,17 +414,17 @@ class ViewEmployee extends React.Component {
 																		</Button>
 																	</Col>
 																</Row>
-																<Row> <Col className='mt-2 mb-2'>Bank Holder Name </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.accountHolderName !== '' ?
+																<Row> <Col className='mt-2 mb-2'>{strings.BankHolderName} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.accountHolderName !== '' ?
 																	this.state.EmployeeDetails.accountHolderName : ('-')}</Col></Row>
 
 
-																<Row> <Col className='mt-2 mb-2'>Account Number </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.accountNumber !== '' ? this.state.EmployeeDetails.accountNumber : ('-')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2'> {strings.AccountNumber} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.accountNumber !== '' ? this.state.EmployeeDetails.accountNumber : ('-')}</Col></Row>
 
-																<Row> <Col className='mt-2 mb-2'>Bank Name</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.bankName !== '' ? this.state.EmployeeDetails.bankName : ('-')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2'>{strings.BankName}</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.bankName !== '' ? this.state.EmployeeDetails.bankName : ('-')}</Col></Row>
 
-																<Row> <Col className='mt-2 mb-2'>Branch</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.branch !== '' ? this.state.EmployeeDetails.branch : ('-')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2'>{strings.Branch}</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.branch !== '' ? this.state.EmployeeDetails.branch : ('-')}</Col></Row>
 
-																<Row> <Col className='mt-2 mb-2'>iban</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.iban ? this.state.EmployeeDetails.iban : ('-')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2'>{strings.IBAN} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.iban ? this.state.EmployeeDetails.iban : ('-')}</Col></Row>
 
 															</div>
 														</CardBody>
@@ -439,9 +442,9 @@ class ViewEmployee extends React.Component {
 											<Col>
 												<div className='m-4'>
 													<Row style={{ width: '63%' }}>
-														<Col><h5>Annual CTC  </h5>
+														<Col><h5> {strings.AnnualCTC} </h5>
 															<div><h3>  {this.state.CTC  ? (this.state.CTC).toFixed(2) : ''}</h3></div></Col>
-														<Col><h5>Monthly Income  </h5>
+														<Col><h5> {strings.MonthlyIncome} </h5>
 															<div> <h3>{this.state.CTC ? (this.state.CTC /12).toFixed(2) : ''}</h3></div></Col>
 															<Col>
 																		<Button
@@ -451,7 +454,7 @@ class ViewEmployee extends React.Component {
 																			onClick={() => this.props.history.push(`/admin/payroll/employee/updateSalaryComponent`,
 																				{ id: this.state.current_employee_id })}
 																		>
-																			<i class="far fa-edit"> Edit</i>
+																			<i class="far fa-edit">{strings.Edit}</i>
 																		</Button>
 																	</Col>
 													</Row>
@@ -520,7 +523,7 @@ class ViewEmployee extends React.Component {
 																			</tr>
 																		))) : (<tr></tr>)}
 																	<tr style={{border:"3px solid #dfe9f7"}}>
-																		<td className="text-left"><h5><b>Cost to Company</b></h5></td>
+																		<td className="text-left"><h5><b> {strings.CosttoCompany}</b></h5></td>
 																		<td className="text-right"><h5>{this.state.CTC ? (this.state.CTC / 12).toFixed(2) : ''}</h5></td>
 																		<td className="text-right"><h5>{this.state.CTC  ? (this.state.CTC).toFixed(2) : ''}</h5></td>
 																	</tr>
@@ -565,7 +568,7 @@ class ViewEmployee extends React.Component {
 
 
 												>
-													Salary Date
+													 {strings.SalaryDate} 
 													</TableHeaderColumn>
 												<TableHeaderColumn
 													width="15%"
@@ -574,7 +577,7 @@ class ViewEmployee extends React.Component {
 													dataSort
 
 												>
-													Month Year
+													{strings.MonthYear}
 													</TableHeaderColumn>
 												<TableHeaderColumn
 													width="15%"
@@ -585,7 +588,7 @@ class ViewEmployee extends React.Component {
 
 
 												>
-													PAY SLIPS
+													 {strings.Payslips} 
 													</TableHeaderColumn>
 												{/* <TableHeaderColumn
                                                         className="table-header-bg"

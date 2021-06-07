@@ -30,6 +30,8 @@ import * as SalarayStructureDetailActions from './actions';
 
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
   return ({
@@ -43,12 +45,13 @@ const mapDispatchToProps = (dispatch) => {
     salarayStructureDetailActions: bindActionCreators(SalarayStructureDetailActions, dispatch)
   })
 }
-
+let strings = new LocalizedStrings(data);
 class DetailSalaryStructure extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
+      language: window['localStorage'].getItem('language'),
       loading: true,
       initValue: {},
       current_salary_structure_id: null,
@@ -165,7 +168,7 @@ class DetailSalaryStructure extends React.Component {
   }
 
   render() {
-
+    strings.setLanguage(this.state.language);
     const { currency_list } = this.props
     const { dialog, loading, initValue } = this.state
     return (
@@ -179,7 +182,7 @@ class DetailSalaryStructure extends React.Component {
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
                         <i className="nav-icon fas fa-user-tie" />
-                        <span className="ml-2">Update Salary Structure</span>
+                        <span className="ml-2">{strings.UpdateSalaryStructure}</span>
                       </div>
                     </Col>
                   </Row>
@@ -220,7 +223,7 @@ class DetailSalaryStructure extends React.Component {
                             
                             <Col lg={4}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>Salary Structure Type</Label>
+                                  <Label htmlFor="select"><span className="text-danger">*</span>{strings.SalaryStructureType}</Label>
                                   <Input
                                     type="text"
                                     id="salaryStructureType"
@@ -239,7 +242,7 @@ class DetailSalaryStructure extends React.Component {
                               </Col>
                               <Col lg={4}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>Salary Structure Name</Label>
+                                  <Label htmlFor="select"><span className="text-danger">*</span>{strings.SalaryStructureName}</Label>
                                   <Input
                                     type="text"
                                     id="salaryStructureName"
@@ -269,7 +272,7 @@ class DetailSalaryStructure extends React.Component {
                                       <Button type="button" name="button" color="danger" className="btn-square"
                                         onClick={this.deleteEmployee}
                                       >
-                                        <i className="fa fa-trash"></i> Delete
+                                        <i className="fa fa-trash"></i> {strings.Delete}
                                     </Button>
                                     </FormGroup>
                                     <FormGroup className="text-right">
@@ -278,11 +281,11 @@ class DetailSalaryStructure extends React.Component {
                                       props.handleSubmit()
                                     })
                                   }}>
-                                        <i className="fa fa-dot-circle-o"></i> Update
+                                        <i className="fa fa-dot-circle-o"></i>  {strings.Update}
                                     </Button>
                                       <Button type="button" color="secondary" className="btn-square"
                                         onClick={() => { this.props.history.push('/admin/payroll/salaryStructure') }}>
-                                        <i className="fa fa-ban"></i> Cancel
+                                        <i className="fa fa-ban"></i> {strings.Cancel}
                                     </Button>
                                     </FormGroup>
                                   </Col>

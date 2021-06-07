@@ -22,12 +22,15 @@ import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 import 'react-phone-number-input/style.css';
 import moment from 'moment';
+import {data}  from '../../Language/index'
+import LocalizedStrings from 'react-localization';
 
-
+let strings = new LocalizedStrings(data);
 class PayrollModal extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			showDetails : false,
 			loading: false,
 			initValue: {
@@ -155,6 +158,7 @@ class PayrollModal extends React.Component {
         })
   }
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			openPayrollModal,
 			closePayrollModal,
@@ -223,7 +227,7 @@ class PayrollModal extends React.Component {
 											<Col >
 												<div >
 													
-													<span className="ml-2">Employee Name:</span>
+													<span className="ml-2">{strings.EmployeeName}:</span>
                                                     <h4>{this.state.employeename}</h4>
 												</div>
                                                 </Col>
@@ -234,7 +238,7 @@ class PayrollModal extends React.Component {
                                                                              <Row>
 																				<Col>
 																					<h5 className="mb-2 text-left">
-																					Payable Days
+																					 {strings.PayableDays}
 																					</h5>
 																				</Col>
 																				<Col className="text-left">
@@ -248,7 +252,7 @@ class PayrollModal extends React.Component {
                                                                             <Row>
 																				<Col>
 																					<h5 className="mt-2 text-left">
-                                                                                    LOP Days
+                                                                                    {strings.LOPDays}
 																					</h5>
 																				</Col>
 																				<Col  className="text-left">
@@ -290,7 +294,7 @@ class PayrollModal extends React.Component {
                                                                             <Row>
 																				<Col>
 																					<h5 className="mt-2 text-left">
-																					Actual Payable Days	
+																					{strings.ActualPayableDays}	
 																					</h5>
 																				</Col>
 																				<Col className="text-left">
@@ -360,7 +364,7 @@ class PayrollModal extends React.Component {
 <hr></hr>                                                                    <Row style={{backgroundColor:'#dfe9f7'}}>
 																				<Col lg={6}>
 																					<h5 className="mt-2 text-left">
-																					Net Pay
+																					{strings.NetPay}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-left">
@@ -383,7 +387,7 @@ class PayrollModal extends React.Component {
 												});
 											}}
 										>
-											<i className="fa fa-dot-circle-o"></i> Create
+											<i className="fa fa-dot-circle-o"></i>  {strings.Create}
 										</Button>
 										&nbsp;
 										<Button
@@ -393,7 +397,7 @@ class PayrollModal extends React.Component {
 												closePayrollModal(false);
 											}}
 										>
-											<i className="fa fa-ban"></i> Cancel
+											<i className="fa fa-ban"></i> {strings.Cancel}
 										</Button>
 									</ModalFooter>
 								</Form>

@@ -30,11 +30,7 @@ import {
 
 import './style.scss'
 import LocalizedStrings from 'react-localization';
-//import { data } from '../Language/languageData.js';
  import {data}  from '../Language/index'
-import {englishData} from '../Language/english'
-import {frenchData} from '../Language/french'
-import {arabicData} from '../Language/arabic'
 const mapStateToProps = (state) => {
   return ({
     salaryRole_list: state.salaryRoles.salaryRole_list,
@@ -47,33 +43,8 @@ const mapDispatchToProps = (dispatch) => {
     commonActions: bindActionCreators(CommonActions, dispatch)
   })
 }
-//let strings = new LocalizedStrings(englishData||frenchData||arabicData);
+
 let strings = new LocalizedStrings(data);
-// let strings = new LocalizedStrings({
-//   en:{
-
-//     SalaryRole_Lang : "Salary Role",
-//     SALARYROLEID_Lang:"SALARY ROLE ID",
-//     SALARYROLENAME_Lang:"SALARY ROLE NAME",
-//     NewSalaryRoles_Lang:"New Salary Roles"
-//   },
-//   ar: {
-    
-
-//     SalaryRole_Lang : "دور الراتب",
-//     SALARYROLEID_Lang:"معرّف دور الراتب",
-//     SALARYROLENAME_Lang:"اسم دور الراتب",
-//     NewSalaryRoles_Lang:"أدوار الراتب الجديدة"
- 
-//   },
-//   it: {
-//     SalaryRole_Lang : "Salaire Rôle",
-//     SALARYROLEID_Lang:"ID DE RÔLE SALAIRE",
-//     SALARYROLENAME_Lang:"NOM DU RÔLE SALAIRE",
-//     NewSalaryRoles_Lang:"Nouveaux rôles salariaux"
-//   }
-//  });
-
 class SalaryRoles extends React.Component {
 
   constructor(props) {
@@ -307,7 +278,7 @@ class SalaryRoles extends React.Component {
 								}
 							>
 								
-								<i className="fas fa-edit" /> Edit
+								<i className="fas fa-edit" /> {strings.Edit}
 							</DropdownItem>
 							
 				
@@ -353,7 +324,7 @@ console.log("strings",strings)
                 <Col lg={12}>
                   <div className="h4 mb-0 d-flex align-items-center">
                     <i className="fas fa-object-group" />
-                    <span className="ml-2"> {strings.SalaryRole_Lang}</span>
+                    <span className="ml-2"> {strings.SalaryRole}</span>
                   </div>
                 </Col>
               </Row>
@@ -393,7 +364,7 @@ console.log("strings",strings)
                             onClick={() => this.props.history.push(`/admin/payroll/salaryRoles/create`)}
                           >
                             <i className="fas fa-plus mr-1 " />
-                            {strings.NewSalaryRoles_Lang}
+                            {strings.NewSalaryRoles}
                           </Button>
                           {/* <Button
                             color="warning"
@@ -428,13 +399,13 @@ console.log("strings",strings)
                             dataField="salaryRoleId"
                             className="table-header-bg" 
                           >
-                         {strings.SALARYROLEID_Lang}
+                         {strings.SALARYROLEID}
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="salaryRoleName"
                             className="table-header-bg"
                           >
-                       {strings.SALARYROLENAME_Lang}
+                       {strings.SALARYROLENAME}
                           </TableHeaderColumn>
                         
                         </BootstrapTable>

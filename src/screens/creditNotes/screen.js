@@ -368,15 +368,15 @@ class CreditNotes extends React.Component {
 	renderActions = (cell, row) => {
 		return (
 			<div>
-				<ButtonDropdown
+				<ButtonDropdown 
 					isOpen={this.state.actionButtons[row.id]}
 					toggle={() => this.toggleActionButton(row.id)}
 				>
-					<DropdownToggle size="sm" color="primary" className="btn-brand icon">
+					<DropdownToggle size="lg" color="link" >
 						{this.state.actionButtons[row.id] === true ? (
-							<i className="fas fa-chevron-up" />
+							<i style={{color:'grey'}} className="fas fa-ellipsis-h " />
 						) : (
-							<i className="fas fa-chevron-down" />
+							<i  style={{color:'grey'}}  className="fas fa-ellipsis-h " />
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>

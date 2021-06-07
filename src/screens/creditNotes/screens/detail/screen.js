@@ -1529,6 +1529,7 @@ class DetailCreditNote extends React.Component {
 																		</Label>
 																		<Select
 																			styles={customStyles}
+																			placeholder="Select Currency"
 																			options={
 																				currency_convert_list
 																					? selectCurrencyFactory.renderOptions(

@@ -165,7 +165,7 @@ class PayrollEmployee extends React.Component {
                                 )
                             }
                         >
-                            <i className="fas fa-eye" />  {strings.SalarySlip} 
+                            <i className="fas fa-eye" />  {strings.SalarySlip}
 						</DropdownItem>
 
                     </DropdownMenu>
@@ -263,11 +263,27 @@ class PayrollEmployee extends React.Component {
     };
 
     renderStatus = (cell, row) => {
-        if(row.isActive === true )
-        { return "Active"
-       }   else{
-        return " InActive"};
+
+
+        let classname = '';
+        if (row.isActive === true) {
+            classname = 'label-success';
+        } else {
+            classname = 'label-due';
+        }
+        return (
+            <span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
+                {
+                    row.isActive === true ?
+                        "Active" :
+                        "InActive"
+
+                }
+            </span>
+        );
+
     };
+
 
     removeBulk = () => {
         this.removeDialog()

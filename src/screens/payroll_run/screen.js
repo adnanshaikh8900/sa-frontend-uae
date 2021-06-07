@@ -58,12 +58,13 @@ const customStyles = {
 		},
 	}),
 };
-let strings = new LocalizedStrings(data);
 
+let strings = new LocalizedStrings(data);
 class PayrollRun extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
             payRollList:{},
             actionButtons: {},
 			loading: true,
@@ -82,7 +83,6 @@ class PayrollRun extends React.Component {
 			},
 			csvData: [],
 			view: false,
-			language: window['localStorage'].getItem('language'),
             openPayrollModal : false,
             selectedData: '',
             current_employee: '',
@@ -455,7 +455,7 @@ class PayrollRun extends React.Component {
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="nav-icon fa fa-file-o" />
-										<span className="ml-2">Generate Payoll</span>
+										<span className="ml-2">{strings.GeneratePayroll}</span>
 									</div>
 								</Col>
 							</Row>
@@ -502,7 +502,7 @@ class PayrollRun extends React.Component {
 										</div>
                                         <Row>
 												<Col lg={2} className="mb-1 ml-4">
-                                                    <Label>Period</Label>
+                                                    <Label>{strings.Period}</Label>
 													<DatePicker
 														className="form-control"
 														id="date"
@@ -527,7 +527,7 @@ class PayrollRun extends React.Component {
 													disabled={selectedRows.length === 0}
 												>
 													<i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
-												Generate Salary
+												 {strings.GenerateSalary}
 												</Button>
 												</Col>
                                                 </Row>
@@ -554,7 +554,7 @@ class PayrollRun extends React.Component {
                                                         dataSort
                                                         
                                                     >
-                                                        Employee Name
+                                                         {strings.EmployeeName}
                           </TableHeaderColumn>
                           <TableHeaderColumn
                                                         className="table-header-bg"
@@ -562,7 +562,7 @@ class PayrollRun extends React.Component {
                                                         dataSort
                                                         width="15%"
                                                     >
-                                                        Pay Days
+                                                        {strings.PAYDAYS}
                           </TableHeaderColumn>
                                                     <TableHeaderColumn
                                                         className="table-header-bg"
@@ -571,7 +571,7 @@ class PayrollRun extends React.Component {
                                                     // dataFormat={this.vatCategoryFormatter}
                                                     width="12%"
                                                     >
-                                                       Earnings
+                                                        {strings.EARNINGS}
                           </TableHeaderColumn>
                                                     <TableHeaderColumn
                                                         className="table-header-bg"
@@ -579,7 +579,7 @@ class PayrollRun extends React.Component {
                                                         dataSort
                                                         width="12%"
                                                     >
-                                                       Deductions
+                                                       {strings.DEDUCTIONS}
                           </TableHeaderColumn>
                                                     <TableHeaderColumn
                                                         className="table-header-bg"
@@ -587,7 +587,7 @@ class PayrollRun extends React.Component {
                                                         dataSort
                                                         width="12%"
                                                     >
-                                                        Net Pay
+                                                         {strings.NETPAY}
                           </TableHeaderColumn>
                                                   
                                                     <TableHeaderColumn
@@ -597,7 +597,7 @@ class PayrollRun extends React.Component {
                                                    
                                                     width="10%"
                                                     >
-                                                        Status
+                                                        {strings.STATUS}
                           </TableHeaderColumn>
                                                 </BootstrapTable>
 										</div>

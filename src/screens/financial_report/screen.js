@@ -12,6 +12,8 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 // import 'react-select/dist/react-select.css'
 import './style.scss';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {};
@@ -26,10 +28,12 @@ const Sales = require('assets/images/reports/sales.png');
 const Purchase = require('assets/images/reports/pay.png');
 const Receivables = require('assets/images/reports/inbox.png');
 
+let strings = new LocalizedStrings(data);
 class FinancialReport extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			activeTab: new Array(4).fill('3'),
 		};
 	}
@@ -44,6 +48,7 @@ class FinancialReport extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		return (
 			<div className="financial-report-screen">
 				<div className="animated fadeIn">
@@ -53,7 +58,7 @@ class FinancialReport extends React.Component {
 								<Col lg={12}>
 									<div className="h6 mb-0 d-flex align-items-center">
 										<i className="nav-icon fas fa-usd" />
-										<span className="ml-2"> Reports</span>
+										<span className="ml-2"> {strings.Reports}</span>
 									</div>
 								</Col>
 							</Row>
@@ -133,16 +138,16 @@ class FinancialReport extends React.Component {
 											className="ml-2 mr-2 mt-2 mb-2 "
 											src={Financial}
 											style={{height:'25px'}}
-											></img>	<h5 className="mb-3 mt-2">Financial Reports</h5></div>
+											></img>	<h5 className="mb-3 mt-2">{strings.FinancialReports}</h5></div>
 											<div className="mt-2 ml-4">
 											<h6><a style={{fontWeight:'400'}} href ="#" onClick={() => 
-											this.props.history.push('/admin/report/profitandloss')}> Profit & Loss</a></h6>
+											this.props.history.push('/admin/report/profitandloss')}> {strings.ProfitandLoss}</a></h6>
 											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
-											this.props.history.push('/admin/report/balancesheet')}>Balance Sheet</a></h6>
+											this.props.history.push('/admin/report/balancesheet')}>{strings.BalanceSheet}</a></h6>
 											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
-											this.props.history.push('/admin/report/horizontalbalancesheet')}>Horizontal Balance Sheet</a></h6>
+											this.props.history.push('/admin/report/horizontalbalancesheet')}>{strings.HorizontalBalanceSheet}</a></h6>
 											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
-											this.props.history.push('/admin/report/trailbalances')}>Trail Balances</a></h6>
+											this.props.history.push('/admin/report/trailbalances')}>{strings.TrailBalances}</a></h6>
 
 									</div>
 										</Col>
@@ -153,12 +158,12 @@ class FinancialReport extends React.Component {
 											className="ml-2 mr-2 mt-2 mb-2 "
 											src={Vat}
 											style={{height:'25px'}}
-											></img>	<h5  className="mb-3 mt-2">Vat Reports</h5></div>
+											></img>	<h5  className="mb-3 mt-2">{strings.VatReports}</h5></div>
 										<div className="mt-2 ml-4">
 										<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
-									this.props.history.push('/admin/report/vatreturns')}>Vat Returns Report</a></h6>
+									this.props.history.push('/admin/report/vatreturns')}>{strings.VatReturnsReport}</a></h6>
 										<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
-									this.props.history.push('/admin/report/vat-transactions')}>Vat Transaction Report</a></h6>
+									this.props.history.push('/admin/report/vat-transactions')}>{strings.VatTransactionReport}</a></h6>
 									</div>
 										</Col>
 										<Col className="report-section ml-4">
@@ -167,13 +172,13 @@ class FinancialReport extends React.Component {
 											className="ml-2 mr-2 mt-2 mb-2 "
 											src={Journal}
 											style={{height:'25px'}}
-											></img>	<h5 className="mb-3 mt-2">Detailed</h5></div>
+											></img>	<h5 className="mb-3 mt-2">{strings.Detailed}</h5></div>
 										<div className="mt-2 ml-4">
 										<h6><a   style={{fontWeight:'400'}} href="#"
 										onClick={() =>
 											this.props.history.push('/admin/report/detailed-general-ledger')}
 											>
-										Detailed General ledger</a></h6>
+										{strings.DetailedGeneralLedger}</a></h6>
 										</div>
 										</Col>
 
@@ -189,9 +194,9 @@ class FinancialReport extends React.Component {
 											></img>	<h5 className="mb-3 mt-2">Sales</h5></div>
 											<div className="mt-2 ml-4">
 											<h6><a  style={{fontWeight:'400'}} href ="#" onClick={() => 
-											this.props.history.push('/admin/report/salesbycustomer')}> Sales By Customer</a></h6>
+											this.props.history.push('/admin/report/salesbycustomer')}> {strings.SalesByCustomer}</a></h6>
 											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
-											this.props.history.push('/admin/report/salesbyproduct')}>Sales By Product</a></h6>
+											this.props.history.push('/admin/report/salesbyproduct')}>{strings.SalesByProduct}</a></h6>
 									
 									</div>
 										</Col>
@@ -202,12 +207,12 @@ class FinancialReport extends React.Component {
 												className="ml-2 mr-2 mt-2 mb-2 "
 											src={Purchase}
 											style={{height:'25px'}}
-											></img>	<h5 className="mb-3 mt-2">Purchase</h5></div>
+											></img>	<h5 className="mb-3 mt-2">{strings.Purchase}</h5></div>
 											<div className="mt-2 ml-4">
 											<h6><a  style={{fontWeight:'400'}} href ="#" onClick={() => 
-											this.props.history.push('/admin/report/purchasebyvendor')}> Purhase By Vendor</a></h6>
+											this.props.history.push('/admin/report/purchasebyvendor')}> {strings.PurhaseByVendor}</a></h6>
 											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
-											this.props.history.push('/admin/report/purchasebyitem')}>Purhase By Product</a></h6>
+											this.props.history.push('/admin/report/purchasebyitem')}>{strings.PurhaseByProduct}</a></h6>
 									
 									</div>
 										</Col>
@@ -217,10 +222,10 @@ class FinancialReport extends React.Component {
 												className="ml-2 mr-2 mt-2 mb-2 "
 											src={Receivables}
 											style={{height:'25px'}}
-											></img>	<h5 className="mb-3 mt-2">Receivables</h5></div>
+											></img>	<h5 className="mb-3 mt-2">{strings.Receivables}</h5></div>
 											<div className="mt-2 ml-4">
 											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
-											this.props.history.push('/admin/report/receivable-invoice-summary')}>Receivable Invoice Summary</a></h6>
+											this.props.history.push('/admin/report/receivable-invoice-summary')}>{strings.ReceivableInvoiceSummary}</a></h6>
 											{/* <h6><a  style={{fontWeight:'400'}} href ="#" onClick={() => 
 											this.props.history.push('/admin/report/receivable-invoice-details')}> Receivable Invoice Detail</a></h6> */}
 									</div>
@@ -233,10 +238,10 @@ class FinancialReport extends React.Component {
 												className="ml-2 mr-2 mt-2 mb-2 "
 											src={Receivables}
 											style={{height:'25px'}}
-											></img>	<h5 className="mb-3 mt-2">Payables</h5></div>
+											></img>	<h5 className="mb-3 mt-2">{strings.Payables}</h5></div>
 											<div className="mt-2 ml-4">
 											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
-											this.props.history.push('/admin/report/payable-invoice-summary')}>Payables Invoice Summary</a></h6>
+											this.props.history.push('/admin/report/payable-invoice-summary')}>{strings.PayablesInvoiceSummary}</a></h6>
 											{/* <h6><a  style={{fontWeight:'400'}} href ="#" onClick={() => 
 											this.props.history.push('/admin/report/payable-invoice-details')}> Payables Invoice Detail</a></h6> */}
 										

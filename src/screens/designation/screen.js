@@ -28,6 +28,8 @@ import { CSVLink } from "react-csv";
 
 
 import './style.scss'
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
   return ({
@@ -40,12 +42,13 @@ const mapDispatchToProps = (dispatch) => {
     commonActions: bindActionCreators(CommonActions, dispatch)
   })
 }
-
+let strings = new LocalizedStrings(data);
 class Designation extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
+      language: window['localStorage'].getItem('language'),
       loading: true,
       selectedRows: [],
       dialog: null,
@@ -257,7 +260,7 @@ class Designation extends React.Component {
   }
 
   render() {
-
+    strings.setLanguage(this.state.language);
     const { loading, dialog, selectedRows, csvData, view, filterData } = this.state
     const { designation_list } = this.props
 console.log("designation_list",designation_list)
@@ -273,7 +276,7 @@ console.log("designation_list",designation_list)
                 <Col lg={12}>
                   <div className="h4 mb-0 d-flex align-items-center">
                     <i className="fas fa-object-group" />
-                    <span className="ml-2">Designations</span>
+                    <span className="ml-2">{strings.Designations}</span>
                   </div>
                 </Col>
               </Row>
@@ -311,7 +314,7 @@ console.log("designation_list",designation_list)
                             onClick={() => this.props.history.push(`/admin/payroll/employeeDesignation/create`)}
                           >
                             <i className="fas fa-plus mr-1" />
-                            New Designation
+                            {strings.NewDesignation}
                           </Button>
                           {/* <Button
                             color="warning"
@@ -347,7 +350,7 @@ console.log("designation_list",designation_list)
                             dataField="id"
                             dataSort
                           >
-                            Designation Id
+                             {strings.DESIGNATIONID}
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             className="table-header-bg"
@@ -355,7 +358,7 @@ console.log("designation_list",designation_list)
                             dataSort
                           // dataFormat={this.vatCategoryFormatter}
                           >
-                           Designation Name
+                         {strings.DESIGNATIONNAME}
                           </TableHeaderColumn>
                         
                         </BootstrapTable>

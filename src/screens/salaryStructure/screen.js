@@ -28,6 +28,8 @@ import { CSVLink } from "react-csv";
 
 
 import './style.scss'
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
   return ({
@@ -41,12 +43,13 @@ const mapDispatchToProps = (dispatch) => {
     commonActions: bindActionCreators(CommonActions, dispatch)
   })
 }
-
+let strings = new LocalizedStrings(data);
 class SalaryStructure extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
+      language: window['localStorage'].getItem('language'),
       loading: true,
       selectedRows: [],
       dialog: null,
@@ -258,7 +261,7 @@ class SalaryStructure extends React.Component {
   }
 
   render() {
-
+    strings.setLanguage(this.state.language);
     const { loading, dialog, selectedRows, csvData, view, filterData } = this.state
     const { salaryStructure_list } = this.props
 
@@ -274,7 +277,7 @@ class SalaryStructure extends React.Component {
                 <Col lg={12}>
                   <div className="h4 mb-0 d-flex align-items-center">
                     <i className="fas fa-object-group" />
-                    <span className="ml-2">Salary Structure</span>
+                    <span className="ml-2">{strings.SalaryStructure}</span>
                   </div>
                 </Col>
               </Row>
@@ -312,7 +315,7 @@ class SalaryStructure extends React.Component {
                             onClick={() => this.props.history.push(`/admin/payroll/salaryStructure/create`)}
                           >
                             <i className="fas fa-plus mr-1" />
-                            New Salary Structure
+                            {strings.NewSalaryStructure}
                           </Button>
                           {/* <Button
                             color="warning"
@@ -368,7 +371,7 @@ class SalaryStructure extends React.Component {
                             dataField="salaryStructureType"
                         
                           >
-                          Salary Structure Type
+                          {strings.SalaryStructureType}
                           </TableHeaderColumn>
                           <TableHeaderColumn
                                 className="table-header-bg"
@@ -376,7 +379,7 @@ class SalaryStructure extends React.Component {
                           
                           // dataFormat={this.vatCategoryFormatter}
                           >
-                        Salary Structure Name
+                         {strings.SalaryStructureName}
                           </TableHeaderColumn>
                       
                         </BootstrapTable>

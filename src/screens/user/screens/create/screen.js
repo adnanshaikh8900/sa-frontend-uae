@@ -284,7 +284,7 @@ class CreateUser extends React.Component {
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="nav-icon fas fa-users" />
-												<span className="ml-2">Create User</span>
+												<span className="ml-2">{strings.CreateUser}</span>
 											</div>
 										</Col>
 									</Row>
@@ -570,7 +570,7 @@ class CreateUser extends React.Component {
 																							className="custom-control-label"
 																							htmlFor="inline-radio1"
 																						>
-																							Active 
+																							{strings.Active}
 																							</label>
 																					</div>
 																				</FormGroup>
@@ -600,7 +600,7 @@ class CreateUser extends React.Component {
 																							className="custom-control-label"
 																							htmlFor="inline-radio2"
 																						>
-																							Inactive
+																							{strings.Inactive}
 																							</label>
 																					</div>
 																				</FormGroup>
@@ -862,7 +862,7 @@ class CreateUser extends React.Component {
 																</Row>
 															<Row>
 																<Col>
-																<Label>	<span className="text-danger">*</span> Select Link Or Create Employee </Label>
+																<Label>	<span className="text-danger">*</span>{strings.SelectLinkOrCreateEmployee} </Label>
 																</Col>
 															</Row>
 																<Row>
@@ -891,7 +891,7 @@ class CreateUser extends React.Component {
 																				// 		: ''
 																				// }
 																			/>
-																		Link Employee
+																		 {strings.LinkEmployee}
 																			{props.errors.productPriceType &&
 																				props.touched.productPriceType && (
 																					<div className="invalid-feedback">
@@ -926,7 +926,7 @@ class CreateUser extends React.Component {
 																				// 		: ''
 																				// }
 																			/>
-																		Create Employee
+																		 {strings.CreateEmployee}
 
 																		</Label>
 																	</FormGroup>
@@ -937,7 +937,7 @@ class CreateUser extends React.Component {
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="contactId">
 																				<span className="text-danger">*</span>
-																		Employee 
+																		 {strings.Employee} 
 																	</Label>
 																			<Select
 																				styles={customStyles}
@@ -983,7 +983,7 @@ class CreateUser extends React.Component {
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="contactId">
 																				<span className="text-danger">*</span>
-																		Salary Role 
+																		{strings.SalaryRole}
 																	</Label>
 																			<Select
 																				styles={customStyles}
@@ -1027,7 +1027,7 @@ class CreateUser extends React.Component {
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="contactId">
 																				<span className="text-danger">*</span>
-																		Designation 
+																		 {strings.Designation}
 																	</Label>
 																			<Select
 																				styles={customStyles}

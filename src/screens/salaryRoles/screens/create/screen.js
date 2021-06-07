@@ -28,6 +28,8 @@ import * as SalaryRoleCreateActions from './actions';
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
 import PhoneInput from 'react-phone-number-input'
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
   return ({
@@ -53,11 +55,13 @@ const customStyles = {
 		},
 	}),
 };
+let strings = new LocalizedStrings(data);
 class CreateSalaryRoles extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
+      language: window['localStorage'].getItem('language'),
       loading: false,
       createMore: false,
       initValue: {
@@ -118,7 +122,7 @@ class CreateSalaryRoles extends React.Component {
   }
 
   render() {
-
+    strings.setLanguage(this.state.language);
     const { currency_list,state_list } = this.props
 
 
@@ -133,7 +137,7 @@ class CreateSalaryRoles extends React.Component {
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
                         <i className="nav-icon fas fa-user-tie" />
-                        <span className="ml-2">Create Salary Role</span>
+                        <span className="ml-2">{strings.CreateSalaryRole}</span>
                       </div>
                     </Col>
                   </Row>
@@ -170,7 +174,7 @@ class CreateSalaryRoles extends React.Component {
                               
                               <Col lg={4}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>Salary Role Name</Label>
+                                  <Label htmlFor="select"><span className="text-danger">*</span>{strings.SalaryRoleName}</Label>
                                   <Input
                                     type="text"
                                     id="salaryRoleName"
@@ -202,7 +206,7 @@ class CreateSalaryRoles extends React.Component {
                                       props.handleSubmit()
                                     })
                                   }}>
-                                    <i className="fa fa-dot-circle-o"></i> Create
+                                    <i className="fa fa-dot-circle-o"></i>  {strings.Create}
                                       </Button>
                                   <Button name="button" color="primary" className="btn-square mr-3"
                                     onClick={() => {
@@ -210,11 +214,11 @@ class CreateSalaryRoles extends React.Component {
                                         props.handleSubmit()
                                       })
                                     }}>
-                                    <i className="fa fa-refresh"></i> Create and More
+                                    <i className="fa fa-refresh"></i>  {strings.CreateandMore}
                                       </Button>
                                   <Button color="secondary" className="btn-square"
                                     onClick={() => { this.props.history.push('/admin/payroll/salaryRoles') }}>
-                                    <i className="fa fa-ban"></i> Cancel
+                                    <i className="fa fa-ban"></i>  {strings.Cancel}
                                       </Button>
                                 </FormGroup>
                               </Col>

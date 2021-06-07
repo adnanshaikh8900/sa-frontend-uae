@@ -30,6 +30,8 @@ import * as SalarayRoleDetailActions from './actions';
 
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
   return ({
@@ -43,12 +45,13 @@ const mapDispatchToProps = (dispatch) => {
     salarayRoleDetailActions: bindActionCreators(SalarayRoleDetailActions, dispatch)
   })
 }
-
+let strings = new LocalizedStrings(data);
 class DetailSalaryRole extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
+      language: window['localStorage'].getItem('language'),
       loading: true,
       initValue: {},
       current_salary_role_id: null,
@@ -162,7 +165,7 @@ class DetailSalaryRole extends React.Component {
   }
 
   render() {
-
+    strings.setLanguage(this.state.language);
     const { currency_list } = this.props
     const { dialog, loading, initValue } = this.state
     return (
@@ -176,7 +179,7 @@ class DetailSalaryRole extends React.Component {
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
                         <i className="nav-icon fas fa-user-tie" />
-                        <span className="ml-2">Update Salary Role</span>
+                        <span className="ml-2"> {strings.UpdateSalaryRole}</span>
                       </div>
                     </Col>
                   </Row>
@@ -217,7 +220,7 @@ class DetailSalaryRole extends React.Component {
                               
                               <Col lg={4}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>Salary Role Name</Label>
+                                  <Label htmlFor="select"><span className="text-danger">*</span>{strings.SalaryRoleName}</Label>
                                   <Input
                                     type="text"
                                     id="salaryRoleName"
@@ -247,7 +250,7 @@ class DetailSalaryRole extends React.Component {
                                       <Button type="button" name="button" color="danger" className="btn-square"
                                         onClick={this.deleteEmployee}
                                       >
-                                        <i className="fa fa-trash"></i> Delete
+                                        <i className="fa fa-trash"></i>  {strings.Delete}
                                     </Button>
                                     </FormGroup>
                                     <FormGroup className="text-right">
@@ -256,11 +259,11 @@ class DetailSalaryRole extends React.Component {
                                       props.handleSubmit()
                                     })
                                   }}>
-                                        <i className="fa fa-dot-circle-o"></i> Update
+                                        <i className="fa fa-dot-circle-o"></i> {strings.Update} 
                                     </Button>
                                       <Button type="button" color="secondary" className="btn-square"
                                         onClick={() => { this.props.history.push('/admin/payroll/salaryRoles') }}>
-                                        <i className="fa fa-ban"></i> Cancel
+                                        <i className="fa fa-ban"></i>{strings.Cancel}
                                     </Button>
                                     </FormGroup>
                                   </Col>

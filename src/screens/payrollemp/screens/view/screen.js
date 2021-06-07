@@ -331,7 +331,7 @@ class ViewEmployee extends React.Component {
 														</div>
 														<div className='text-center' >
 															<h3>{upperFirst(this.state.EmployeeDetails.fullName)} {' '}
-															({this.state.EmployeeDetails.employeeCode !== '' ? '-' : this.state.EmployeeDetails.employeeCode}{ })</h3>
+															({this.state.EmployeeDetails.employeeCode  ?  this.state.EmployeeDetails.employeeCode :'-' }{ })</h3>
 
 															<h4>
 																{upperFirst(this.state.EmployeeDetails.employeeDsignationName)}
@@ -343,10 +343,10 @@ class ViewEmployee extends React.Component {
 															<label > {strings. BasicInformation}</label>
 															<hr style={{ width: '50%' }}></hr>
 															<div style={{ fontSize: '16px' }}>
-																<div className='mt-2 mb-2'><i class="far fa-envelope"></i> &nbsp;{this.state.EmployeeDetails.email}</div>
-																<div className='mt-2 mb-2'><i class="far fa-user"></i> &nbsp;{this.state.EmployeeDetails.gender}</div>
-																<div className='mt-2 mb-2'><i class="far fa-calendar-minus"></i> &nbsp;{this.state.EmployeeDetails.dateOfJoining}</div>
-																<div className='mt-2 mb-2'><i class="fas fa-network-wired"></i> &nbsp;{this.state.EmployeeDetails.department}</div>
+																<div className='mt-2 mb-2'><i class="far fa-envelope"></i> &nbsp;{this.state.EmployeeDetails.email ? this.state.EmployeeDetails.email : '-'}</div>
+																<div className='mt-2 mb-2'><i class="far fa-user"></i> &nbsp;{this.state.EmployeeDetails.gender ? this.state.EmployeeDetails.gender :'-'}</div>
+																<div className='mt-2 mb-2'><i class="far fa-calendar-minus"></i> &nbsp;{this.state.EmployeeDetails.dateOfJoining ? this.state.EmployeeDetails.dateOfJoining :'-'}</div>
+																<div className='mt-2 mb-2'><i class="fas fa-network-wired"></i> &nbsp;{this.state.EmployeeDetails.department ? this.state.EmployeeDetails.department : '-'}</div>
 															</div>
 														</div>
 														<hr></hr>
@@ -377,17 +377,17 @@ class ViewEmployee extends React.Component {
 																		</Button>
 																	</Col>
 																</Row>
-																<Row> <Col className='mt-2 mb-2'> {strings.FathersName} </Col>
-																	<Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.middleName !== '' && this.state.EmployeeDetails.lastName !== '' ?
+																<Row> <Col className='mt-2 mb-2'>{strings.FathersName} </Col>
+																	<Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.middleName  && this.state.EmployeeDetails.lastName  ?
 																		this.state.EmployeeDetails.middleName + " " + this.state.EmployeeDetails.lastName : ('-')}</Col></Row>
 
-																<Row> <Col className='mt-2 mb-2'> {strings.DateOfBirth} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.dob !== '' ? moment(this.state.EmployeeDetails.dob).format('DD-MM-YYYY') : ('-')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2'>{strings.DateOfBirth} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.dob  ? moment(this.state.EmployeeDetails.dob).format('DD-MM-YYYY') : ('-')}</Col></Row>
 
 																{/* <Row> <Col className='mt-2 mb-2'>Personal Email  </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.email ? this.state.EmployeeDetails.email : ('-')}</Col></Row>				 */}
 
-																<Row> <Col className='mt-2 mb-2'> {strings.MobileNumber} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.mobileNumber !== '' ? this.state.EmployeeDetails.mobileNumber : ('-')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2'>{strings.MobileNumber} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.mobileNumber  ? this.state.EmployeeDetails.mobileNumber : ('-')}</Col></Row>
 
-																<Row> <Col className='mt-2 mb-2'>{strings.Address} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.presentAddress + ' ' + this.state.EmployeeDetails.city + ' ' + this.state.EmployeeDetails.pincode + ' ' + this.state.EmployeeDetails.stateName + ' ' + this.state.EmployeeDetails.countryName}</Col></Row>
+																<Row> <Col className='mt-2 mb-2'>{strings.Address} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.presentAddress || this.state.EmployeeDetails.city || this.state.EmployeeDetails.pincode || this.state.EmployeeDetails.stateName || this.state.EmployeeDetails.countryName ? this.state.EmployeeDetails.presentAddress + ' ' + this.state.EmployeeDetails.city + ' ' + this.state.EmployeeDetails.pincode + ' ' + this.state.EmployeeDetails.stateName + ' ' + this.state.EmployeeDetails.countryName :'-'}</Col></Row>
 
 															</div>
 														</CardBody>
@@ -414,15 +414,15 @@ class ViewEmployee extends React.Component {
 																		</Button>
 																	</Col>
 																</Row>
-																<Row> <Col className='mt-2 mb-2'>{strings.BankHolderName} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.accountHolderName !== '' ?
+																<Row> <Col className='mt-2 mb-2'>{strings.BankHolderName} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.accountHolderName ?
 																	this.state.EmployeeDetails.accountHolderName : ('-')}</Col></Row>
 
 
-																<Row> <Col className='mt-2 mb-2'> {strings.AccountNumber} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.accountNumber !== '' ? this.state.EmployeeDetails.accountNumber : ('-')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2'>{strings.AccountNumber} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.accountNumber  ? this.state.EmployeeDetails.accountNumber : ('-')}</Col></Row>
 
-																<Row> <Col className='mt-2 mb-2'>{strings.BankName}</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.bankName !== '' ? this.state.EmployeeDetails.bankName : ('-')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2'>{strings.BankName}</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.bankName ? this.state.EmployeeDetails.bankName : ('-')}</Col></Row>
 
-																<Row> <Col className='mt-2 mb-2'>{strings.Branch}</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.branch !== '' ? this.state.EmployeeDetails.branch : ('-')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2'>{strings.Branch}</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.branch ? this.state.EmployeeDetails.branch : ('-')}</Col></Row>
 
 																<Row> <Col className='mt-2 mb-2'>{strings.IBAN} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.iban ? this.state.EmployeeDetails.iban : ('-')}</Col></Row>
 
@@ -568,7 +568,7 @@ class ViewEmployee extends React.Component {
 
 
 												>
-													 {strings.SalaryDate} 
+													 {strings.SalaryDate}
 													</TableHeaderColumn>
 												<TableHeaderColumn
 													width="15%"
@@ -588,7 +588,7 @@ class ViewEmployee extends React.Component {
 
 
 												>
-													 {strings.Payslips} 
+													 {strings.Payslips}
 													</TableHeaderColumn>
 												{/* <TableHeaderColumn
                                                         className="table-header-bg"

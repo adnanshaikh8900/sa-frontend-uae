@@ -24,14 +24,14 @@ class InvoiceTemplate extends Component {
 	};
 	renderInvoiceStatus = (status) => {
 		let classname = '';
-		if (status === 'Paid') {
-			classname = 'label-success';
+		if (status === 'Closed') {
+			classname = 'label-closed';
 		} else if (status === 'Draft') {
-			classname = 'label-currency';
+			classname = 'label-draft';
 		} else if (status === 'Partially Paid') {
 			classname = 'label-PartiallyPaid';
-		} else if (status === 'Due Today') {
-			classname = 'label-due';
+		}else if (status === 'Open') {
+			classname = 'label-posted';
 		} else {
 			classname = 'label-overdue';
 		}

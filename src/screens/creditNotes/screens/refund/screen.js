@@ -641,12 +641,12 @@ class Refund extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="depositeTo">
 																			<span className="text-danger">*</span>{' '}
-																		      {strings.DepositFrom}
+																		      {strings.depositeFrom}
 																		</Label>
 																		<Select
 																			styles={customStyles}
 																			options={deposit_list}
-																			value={props.values.depositeTo}
+																			value={props.values.depositeFrom}
 																			onChange={(option) => {
 																				if (option && option.value) {
 																					props.handleChange('depositeTo')(

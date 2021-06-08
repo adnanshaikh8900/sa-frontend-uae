@@ -84,7 +84,7 @@ EmployeeDesignation:"Employee Designation",
       InvoiceAmount: "Invoice Amount",
       VatAmount: "Vat Amount",
       DueAmount: "Due Amount",
-
+      depositeFrom:"Deposit From",
       CreateInvoice: "Create Invoice",
       InvoiceNumber: "Invoice Number",
       CustomerName: "Customer Name",

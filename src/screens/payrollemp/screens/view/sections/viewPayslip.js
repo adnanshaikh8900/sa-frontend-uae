@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import logo from 'assets/images/brand/logo.png';
+import logo from 'assets/images/brand/datainnLogo.png';
 import {
 	Button,
 	Row,
@@ -194,16 +194,16 @@ console.log(this.state.Variable,"Variable")
 											>
 											
 												<CardBody  id="section-to-print" style={{}}>
-													<div
+													<div className="text-center"
 														style={{
 															width: '100%',
-															display: 'flex',
+															// display: 'flex',
 															border: '1px solid',
 															padding: '7px', borderColor: '#c8ced3'
 														}}
 													>
-														<div style={{ width: '70%' }}>
-															<div className="companyDetails">
+														
+															<div >
 																<img
 																	src={
 																		companyData &&
@@ -215,37 +215,23 @@ console.log(this.state.Variable,"Variable")
 																	}
 																	className=""
 																	alt=""
-																	style={{ width: ' 100px' }}
+																	style={{ width: '200px' }}
 																/>
 															</div>
-														</div>
-														<div style={{ width: '130%', justifyContent: 'center' }}>
-
+													
+														
 														
 														<div className="text-center"
 																style={{
-																	width: '100%',
-																	fontSize: '1rem',
-																	fontWeight: '700',
-																	// textTransform: 'uppercase',
-																	color: 'black',
+																
 																}}
 															>
-																Payslip ( {this.state.selectedData.salaryMonth} )
-															</div>
+														<h5>	<b>	Payslip</b> ( {this.state.selectedData.salaryMonth} )
+														</h5>	</div>
 
 														</div>
-														<div
-															style={{
-																width: '70%',
-																display: 'flex',
-																flexDirection: 'column',
-																justifyContent: 'right',
-															}}
-														>
-
-														</div>
-													</div>
+													
+											
 
 
 													<div
@@ -259,52 +245,53 @@ console.log(this.state.Variable,"Variable")
 															borderBottom: '1px solid', borderColor: '#c8ced3'
 														}}
 													>
-														<div style={{ width: '185%' }}>
+														<Col style={{ width: '185%',border: '1px solid', borderColor: '#c8ced3' }}>
 															<div
 																style={{
 																	width: '95%',
 																	margin: '0.5rem',
-																	border: '1px solid', borderColor: '#c8ced3'
+																	
 																}}
 															>
-																<div className="mb-1 mt-1 ml-2" style={{ fontSize: "15px"}}>
-																	<b>Employee Pay Summary,</b>
-																</div>
-																<div className="m-2" style={{ fontSize: '15px' }}>
+																
+															
 																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>Employee Name </Col>
 																		<Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.employeename !== '' ? this.state.selectedData.employeename : ('-')}</Col></Row>
 
 																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>Designation </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.designation !== '' ? this.state.selectedData.designation : ('-')}</Col></Row>
 
-																	{/* <Row> <Col className='mt-2 mb-2'>Personal Email  </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.email ? this.state.EmployeeDetails.email : ('-')}</Col></Row>				 */}
+																	{/* <Row> <Col className='mt-2 mb-2'>Personal Email  </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.email ? this.state.selectedData.email : ('-')}</Col></Row>				 */}
 
 																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>Date of Joining</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.dateOfJoining !== '' ? this.state.selectedData.dateOfJoining : ('-')}</Col></Row>
 
 																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>Pay Period </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.salaryMonth !== '' ? this.state.selectedData.salaryMonth : ('-')}</Col></Row>
 																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>Pay Date </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.payDate !== '' ? this.state.selectedData.payDate : ('-')}</Col></Row>
-																</div>
-
-
-																{/* <div className="mb-1 ml-2"><b>Name:</b> {invoiceData.name}</div>
-																<div className="mb-1 ml-2"><b>Company:</b> {invoiceData.organisationName}</div>
-																<div className="mb-1 ml-2"><b>Email:</b> {invoiceData.email}</div>
-																<div className="mb-3 ml-2"><b>Address:</b> {invoiceData.address}</div> */}
+															
 															</div>
-														</div>
-														<div
-															style={{
-																width: '100%',
-																display: 'flex',
-																justifyContent: 'space-between',
-																padding:"22px"
-															}}
-														>
-															<Card className="" style={{ width: '80%',margin:"1.5rem" ,fontSize:"10px" }}>
-																<div className="text-center pt-4" style={{ fontSize: "15px"}}>Employee Net Pay</div>
-																<div className="mb-1 ml-2 text-center"><h1 style={{ color: "#2064d8" }}><b>{this.state.selectedData.netPay}</b></h1></div>
-																<div className="mb-1 ml-2 text-center"  style={{ fontSize: "12px"}}>Paid Days : {this.state.selectedData.noOfDays} <b>|</b>  LOP Days : {this.state.selectedData.lopDays}</div>
-															</Card>
-														</div>
+														</Col>
+														<Col style={{ width: '185%',border: '1px solid', borderColor: '#c8ced3' }}>
+															<div
+																style={{
+																	width: '95%',
+																	margin: '0.5rem',
+																	
+																}}
+															>
+									
+															{/* <Row> <Col className='mt-2 mb-2'>Bank Holder Name </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.accountHolderName ?
+																	this.state.selectedData.accountHolderName : ('-')}</Col></Row>
+
+
+																<Row> <Col className='mt-2 mb-2'>Account Number </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.accountNumber  ? this.state.selectedData.accountNumber : ('-')}</Col></Row>
+
+																<Row> <Col className='mt-2 mb-2'>Bank Name</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.bankName ? this.state.selectedData.bankName : ('-')}</Col></Row>
+
+																<Row> <Col className='mt-2 mb-2'>Branch</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.branch ? this.state.selectedData.branch : ('-')}</Col></Row>
+
+																<Row> <Col className='mt-2 mb-2'>IBan No </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.iban ? this.state.selectedData.iban : ('-')}</Col></Row> */}
+
+															</div>
+														</Col>
 													</div>
 													<div
 														style={{
@@ -316,7 +303,7 @@ console.log(this.state.Variable,"Variable")
 														}}
 													>
 
-														<div className="pr-2" style={{ width: "50%" }}>
+														<div className="" style={{ width: "50%" }}>
 															<Table >
 																<thead className="table-header-bg">
 																	<tr>
@@ -366,7 +353,7 @@ console.log(this.state.Variable,"Variable")
 																	);
 																})}
 														</tbody>
-														<tfoot  className=" table-bordered table-hover">
+														<tfoot  className="table-header-bg table-bordered table-hover">
 															<tr>
 																{/* <td></td> */}
 																<td><b>Gross Earnings</b></td>
@@ -375,7 +362,7 @@ console.log(this.state.Variable,"Variable")
 														</tfoot>
 															</Table>
 														</div>
-														<div className="pl-2"  style={{ width: "50%" }}>
+														<div className=""  style={{ width: "50%" }}>
 															<Table  >
 																<thead className="table-header-bg">
 																	<tr>
@@ -402,7 +389,7 @@ console.log(this.state.Variable,"Variable")
 																	);
 																})}
 														</tbody>
-														<tfoot  className=" table-bordered table-hover">
+														<tfoot  className="table-header-bg table-bordered table-hover">
 															<tr>
 																{/* <td></td> */}
 																<td><b>Total Deductions</b></td>
@@ -414,7 +401,8 @@ console.log(this.state.Variable,"Variable")
 														</div>
 
 													</div>
-													<div
+													
+													<div className="text-center"
 														style={{
 															width: '100%',
 
@@ -423,10 +411,13 @@ console.log(this.state.Variable,"Variable")
 															backgroundColor: "#e4f8ff"
 														}}
 													>
-														<h5>	<span style={{ color: "blue" }}>|</span> Total Net Payable <b>{this.state.selectedData.netPay}</b>  &nbsp; ( {upperFirst(converter.toWords(toInteger(this.state.selectedData.netPay)))} )
+														<h5>	<span style={{ color: "blue" }}>|</span> Total Net Payable <b>{this.state.selectedData.netPay}</b>
+														</h5>
+														<h5>	 ( {upperFirst(converter.toWords(toInteger(this.state.selectedData.netPay)))} )
 														</h5>
 													</div>
 												</CardBody>
+												<div className="text-center" style={{color:"#979b9f",    margin: "20px"}}>This is System generated Payslip And does not require a signature</div>
 											</PDFExport>
 										</div>
 									</Col>

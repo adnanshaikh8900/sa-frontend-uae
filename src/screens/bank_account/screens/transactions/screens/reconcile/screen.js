@@ -448,7 +448,7 @@ class ReconcileTransaction extends React.Component {
 												remote
 												keyField="bankAccountId"
 												multiColumnSort
-												className="bank-account-table"
+												// className="bank-account-table"
 												csvFileName="bank_account_list.csv"
 												ref={(node) => {
 													this.table = node;
@@ -457,21 +457,21 @@ class ReconcileTransaction extends React.Component {
 												<TableHeaderColumn
 													dataField="reconciledDate"
 													dataSort
-													width="10%"
+													// width="10%"
 												>
 													{strings.RECONCILEDATE}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="reconciledDuration"
 													dataSort
-													width="15%"
+													// width="15%"
 												>
 													 {strings.RECONCILEDURATION}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="closingBalance"
 													dataSort
-													width="15%"
+													// width="15%"
 												>
 												 {strings.CLOSINGBALANCE}
 												</TableHeaderColumn>

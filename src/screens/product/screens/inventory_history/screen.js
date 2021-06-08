@@ -38,6 +38,8 @@ import * as SupplierInvoiceActions from '../../../supplier_invoice/actions';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { InventoryModel} from '../../sections';
 import moment from 'moment'
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 function dateFormat(value, row, index) {
 	return moment(value).format('DD/MM/YYYY');
  }
@@ -73,11 +75,12 @@ const customStyles = {
 		},
 	}),
 };
-
+let strings = new LocalizedStrings(data);
 class InventoryHistory extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: true,
 			initValue: {},
 			contactType: 1,
@@ -349,6 +352,7 @@ class InventoryHistory extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { vat_list, product_category_list,supplier_list,inventory_history_list,current_inventory_id} = this.props;
 		const { loading, dialog, purchaseCategory, salesCategory, inventoryAccount ,singleObject} = this.state;
 	 	// this.state.singleObject=this.props.inventory_history_list[0];
@@ -370,7 +374,7 @@ class InventoryHistory extends React.Component {
 											<Col lg={12}>
 												<div className="h4 mb-0 d-flex align-items-center">
 													<i className="fa fa-history fa-2x" />
-													<span className="ml-2">Inventory History</span>
+													<span className="ml-2">{strings.InventoryHistory}</span>
 												</div>
 											</Col>
 										</Row>
@@ -390,7 +394,7 @@ class InventoryHistory extends React.Component {
 																	  <td colSpan="9">
 																		  <b style={{ fontWeight: '600' }}>
 																			  {console.log(Object.values(item['productCode']),"itemsss")}
-																			  <div><h5><u>Product Code :</u> </h5></div>
+																			  <div><h5><u>{strings.ProductCode} :</u> </h5></div>
 																		  </b>
 																	  </td>
 																	  <td colSpan="9">
@@ -443,24 +447,24 @@ class InventoryHistory extends React.Component {
 												Product	Name
 												</TableHeaderColumn > */}
 												<TableHeaderColumn isKey  dataField="supplierName" dataSort className="table-header-bg">
-												Supplier / Customer 
+												{strings.Supplier} / {strings.Customer}
 												</TableHeaderColumn >
 												<TableHeaderColumn  dataField="date" 
 												dataSort 
 												dataFormat={this.renderDate} className="table-header-bg">
-												Date
+												 {strings.Date}
 												</TableHeaderColumn >
 												<TableHeaderColumn  dataField="transactionType" dataSort className="table-header-bg">
-												Transaction Type
+												{strings.TransactionType}
 												</TableHeaderColumn >
 												<TableHeaderColumn  dataField="invoiceNumber" dataSort className="table-header-bg">
-												Invoice Number
+												 {strings.InvoiceNumber}
 												</TableHeaderColumn >
 												<TableHeaderColumn  dataField="unitCost" dataSort className="table-header-bg">
-												Unit Cost
+												 {strings.UnitCost} 
 												</TableHeaderColumn >
 												<TableHeaderColumn  dataField="unitSellingPrice" dataSort className="table-header-bg">
-												Unit Selling Price
+												 {strings.UnitSellingPrice}
 												</TableHeaderColumn >
 											</BootstrapTable>
 										</div>		

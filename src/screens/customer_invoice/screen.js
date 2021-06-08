@@ -328,7 +328,11 @@ class CustomerInvoice extends React.Component {
 			actionButtons: temp,
 		});
 	};
-
+	updateParentAmount = (totalAmount,totalVatAmount,totalNet) => {
+		this.setState({totalAmount:totalAmount,totalVatAmount:totalVatAmount})
+		console.log(totalAmount,"00000000")
+		console.log(totalVatAmount,"00000000")
+	};
 	renderInvoiceAmount = (cell, row, extraData) => {
 		return (
 			<div>

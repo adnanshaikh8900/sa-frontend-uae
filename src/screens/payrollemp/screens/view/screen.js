@@ -616,6 +616,7 @@ class ViewEmployee extends React.Component {
 					closeModal={(e) => {
 						this.closeModal(e);
 					}}
+					bankDetails={this.state.EmployeeDetails}
 					employeename={this.state.employeename}
 				// id={this.state.rowId}
 				Fixed={this.state.Fixed}

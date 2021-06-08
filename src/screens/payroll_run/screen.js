@@ -500,7 +500,7 @@ class PayrollRun extends React.Component {
 												</Button> */}
 											</ButtonGroup>
 										</div>
-                                        <Row>
+                                        <Row  className="mb-4 ">
 												<Col lg={2} className="mb-1 ml-4">
                                                     <Label>{strings.Period}</Label>
 													<DatePicker

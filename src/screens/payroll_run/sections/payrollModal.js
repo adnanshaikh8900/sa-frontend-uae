@@ -306,7 +306,7 @@ class PayrollModal extends React.Component {
 																			</Row>
 
                                                                            < hr></hr>   
-                                                                    <Table style={{width:'514px'}} >
+                                                                    <Table >
                                                                 <thead style={{backgroundColor:'#dfe9f7'}}>
                                                                     <tr >
                                                                         {this.columnHeader1.map((column, index) => {
@@ -333,7 +333,8 @@ class PayrollModal extends React.Component {
                                                                 <tbody>
                                                                     </tbody>
                                                                     </Table>
-                                                                    <Table style={{width:'514px'}} >
+																	{this.state.selectedData.salaryDetailAsNoOfDaysMap.Deductions ? (
+                                                                    <Table >
                                                                     <thead style={{backgroundColor:'#dfe9f7'}}>
                                                                     <tr >
                                                                         {this.columnHeader2.map((column, index) => {
@@ -345,7 +346,6 @@ class PayrollModal extends React.Component {
                                                                         })}
                                                                     </tr>
                                                                 </thead>
-                                                              
                                                                     <tbody>
                                                                     {this.state.selectedData.salaryDetailAsNoOfDaysMap.Deductions ? (
 																	Object.values(
@@ -360,7 +360,7 @@ class PayrollModal extends React.Component {
 
                                                                     )) ):(   <tr></tr>)}
                                                                     </tbody>
-                                                                    </Table>
+                                                                    </Table>):( '')}
 <hr></hr>                                                                    <Row style={{backgroundColor:'#dfe9f7'}}>
 																				<Col lg={6}>
 																					<h5 className="mt-2 text-left">
@@ -387,7 +387,7 @@ class PayrollModal extends React.Component {
 												});
 											}}
 										>
-											<i className="fa fa-dot-circle-o"></i>  {strings.Create}
+											<i className="fa fa-dot-circle-o"></i>  {strings.Save}
 										</Button>
 										&nbsp;
 										<Button

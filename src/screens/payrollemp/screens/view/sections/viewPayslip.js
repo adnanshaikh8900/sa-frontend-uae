@@ -133,7 +133,7 @@ class PaySlipModal extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { openModal, closeModal, id, companyData } = this.props;
+		const { openModal, closeModal, id, companyData ,bankDetails} = this.props;
 		const { initValue, contentState, data, supplierId } = this.state;
 
 		let tmpSupplier_list = []
@@ -278,17 +278,17 @@ console.log(this.state.Variable,"Variable")
 																}}
 															>
 									
-															{/* <Row> <Col className='mt-2 mb-2'>Bank Holder Name </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.accountHolderName ?
-																	this.state.selectedData.accountHolderName : ('-')}</Col></Row>
+															<Row> <Col className='mt-2 mb-2'>Bank Holder Name </Col><Col className='mt-2 mb-2'>: &nbsp;{bankDetails.accountHolderName ?
+																	bankDetails.accountHolderName : ('-')}</Col></Row>
 
 
-																<Row> <Col className='mt-2 mb-2'>Account Number </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.accountNumber  ? this.state.selectedData.accountNumber : ('-')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2'>Account Number </Col><Col className='mt-2 mb-2'>: &nbsp;{bankDetails.accountNumber  ? bankDetails.accountNumber : ('-')}</Col></Row>
 
-																<Row> <Col className='mt-2 mb-2'>Bank Name</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.bankName ? this.state.selectedData.bankName : ('-')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2'>Bank Name</Col><Col className='mt-2 mb-2'>: &nbsp;{bankDetails.bankName ? bankDetails.bankName : ('-')}</Col></Row>
 
-																<Row> <Col className='mt-2 mb-2'>Branch</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.branch ? this.state.selectedData.branch : ('-')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2'>Branch</Col><Col className='mt-2 mb-2'>: &nbsp;{bankDetails.branch ? bankDetails.branch : ('-')}</Col></Row>
 
-																<Row> <Col className='mt-2 mb-2'>IBan No </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.iban ? this.state.selectedData.iban : ('-')}</Col></Row> */}
+																<Row> <Col className='mt-2 mb-2'>IBan No </Col><Col className='mt-2 mb-2'>: &nbsp;{bankDetails.iban ? bankDetails.iban : ('-')}</Col></Row>
 
 															</div>
 														</Col>

@@ -372,7 +372,7 @@ class SupplierInvoice extends React.Component {
 							onClick={() =>
 								this.props.history.push(
 									'/admin/expense/supplier-invoice/view',
-									{ id: row.id },
+									{ id: row.id ,status:row.status},
 								)
 							}
 						>

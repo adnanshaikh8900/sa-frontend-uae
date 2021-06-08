@@ -12,7 +12,7 @@ Version:"Versions de comptes simples",
 FrontEndVerison:"De face finir Verison",
 BackEndVersion:"dos finir version",
 GotoFAQ:"Aller à la FAQ", 
-       
+depositeFrom:"Dépôt de",     
           //sidebar
         Import:"Importer",
         Dashboard:"Tableau de bord",

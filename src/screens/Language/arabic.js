@@ -422,6 +422,7 @@ AmountReceived:"المبلغ المستلم",
 PaymentDate:"تاريخ الدفع",
 PaymentMode:"وضع الدفع",
 DepositTo:"إيداع ل",
+depositeFrom:"إيداع من",
 RecordPayment:"سجل دفع",
 
 //Dropdown

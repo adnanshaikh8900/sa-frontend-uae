@@ -187,7 +187,7 @@ class DetailSupplierInvoice extends React.Component {
 									contact_po_number: res.data.contactPoNumber
 										? res.data.contactPoNumber
 										: '',
-									currency: res.data.currencyCode ? res.data.currencyCode : '',
+									currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
 									exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
 									currencyName:res.data.currencyName ? res.data.currencyName : '',
 									invoiceDueDate: res.data.invoiceDueDate
@@ -920,7 +920,7 @@ class DetailSupplierInvoice extends React.Component {
 			receiptAttachmentDescription,
 			receiptNumber,
 			contact_po_number,
-			currency,
+			currencyCode,
 			invoiceDueDate,
 			invoiceDate,
 			contactId,
@@ -966,7 +966,7 @@ class DetailSupplierInvoice extends React.Component {
 		formData.append('discount', discount);
 		formData.append('discountType', discountType);
 		formData.append('term', term);
-		formData.append('exchangeRate',  this.state.initValue.exchangeRate);
+		formData.append('exchangeRate',  exchangeRate ? exchangeRate : '');
 		if (placeOfSupplyId && placeOfSupplyId.value) {
 			formData.append('placeOfSupplyId', placeOfSupplyId.value);
 		}		
@@ -976,8 +976,8 @@ class DetailSupplierInvoice extends React.Component {
 		if (contactId) {
 			formData.append('contactId', contactId);
 		}
-		if (currency && currency.value) {
-			formData.append('currencyCode', currency.value);
+		if (currencyCode ) {
+			formData.append('currencyCode', currencyCode);
 		}
 		if (project) {
 			formData.append('projectId', project);
@@ -1244,7 +1244,7 @@ class DetailSupplierInvoice extends React.Component {
 														invoiceDueDate: Yup.string().required(
 															'Invoice Due Date is Required',
 														),
-														currency: Yup.string().required(
+														currencyCode: Yup.string().required(
 															'Currency is Requsired',
 														),
 														lineItemsString: Yup.array()
@@ -1379,7 +1379,7 @@ class DetailSupplierInvoice extends React.Component {
 																			}
 																			onChange={(option) => {
 																				if (option && option.value) {
-																					this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
+																					this.formRef.current.setFieldValue('currencyCode', this.getCurrency(option.value), true);
 																					this.setExchange( this.getCurrency(option.value) );
 																					props.handleChange('contactId')(
 																						option.value,
@@ -1623,8 +1623,8 @@ class DetailSupplierInvoice extends React.Component {
 																				  )
 																				: []
 																		}
-																		id="currency"
-																		name="currency"
+																		id="currencyCode"
+																		name="currencyCode"
 																		value={
 																			currency_convert_list &&
 																			selectCurrencyFactory
@@ -1637,23 +1637,23 @@ class DetailSupplierInvoice extends React.Component {
 																				.find(
 																					(option) =>
 																						option.value ===
-																						(this.state.supplier_currency ? +this.state.supplier_currency : +props.values.currency),
+																						(this.state.supplier_currency ? +this.state.supplier_currency : +props.values.currencyCode),
 																				)
 																		}
 																		onChange={(option) =>
-																			props.handleChange('currency')(option)
+																			props.handleChange('currencyCode')(option)
 																		}
 																		className={`${
-																			props.errors.currency &&
-																			props.touched.currency
+																			props.errors.currencyCode &&
+																			props.touched.currencyCode
 																				? 'is-invalid'
 																				: ''
 																		}`}
 																	/>
-																	{props.errors.currency &&
-																		props.touched.currency && (
+																	{props.errors.currencyCode &&
+																		props.touched.currencyCode && (
 																			<div className="invalid-feedback">
-																				{props.errors.currency}
+																				{props.errors.currencyCode}
 																			</div>
 																		)}
 																</FormGroup>

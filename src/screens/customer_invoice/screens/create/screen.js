@@ -406,8 +406,10 @@ class CreateCustomerInvoice extends React.Component {
 						{
 							exist: true,
 						},
+						
 						() => {},
 					);
+				
 				} else {
 					this.setState({
 						exist: false,
@@ -1264,7 +1266,7 @@ class CreateCustomerInvoice extends React.Component {
 													let errors = {};
 													if (exist === true) {
 														errors.invoice_number =
-															'Invoice Number cannot be same';
+															'Invoice Number already exists';
 													}
 													return errors;
 												}}
@@ -1375,10 +1377,11 @@ class CreateCustomerInvoice extends React.Component {
 																		placeholder="Invoice Number"
 																		value={props.values.invoice_number}
 																		onBlur={props.handleBlur('invoice_number')}
-																		onChange={(value) => {
+																		onChange={(option) => {
 																			props.handleChange('invoice_number')(
-																				value,
+																				option,
 																			);
+																			this.validationCheck(option.target.value);
 																		}}
 																		className={
 																			props.errors.invoice_number &&

@@ -37,7 +37,8 @@ import { CommonActions } from 'services/global';
 import * as SupplierInvoiceActions from '../../../supplier_invoice/actions';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { InventoryModel} from '../../sections';
-
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -69,11 +70,12 @@ const customStyles = {
 		},
 	}),
 };
-
+let strings = new LocalizedStrings(data);
 class InventoryEdit extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: true,
 			initValue: {},
 			contactType: 1,
@@ -355,6 +357,7 @@ class InventoryEdit extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { vat_list, product_category_list,supplier_list,inventory_list,current_inventory_id} = this.props;
 		const { loading, dialog, purchaseCategory, salesCategory, inventoryAccount } = this.state;
 		let tmpSupplier_list = []
@@ -379,7 +382,7 @@ class InventoryEdit extends React.Component {
 											<Col lg={12}>
 												<div className="h4 mb-0 d-flex align-items-center">
 													<i className="fas fa-object-group" />
-													<span className="ml-2">Update Inventory</span>
+													<span className="ml-2">{strings.UpdateInventory}</span>
 												</div>
 											</Col>
 										</Row>
@@ -412,7 +415,7 @@ class InventoryEdit extends React.Component {
 																	<Col lg={4} >	
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="salesUnitPrice">
-																		Inventory Account
+																		 {strings.InventoryAccount}
 																		</Label>
 																		<Select
 																		isDisabled = {true}
@@ -486,7 +489,7 @@ class InventoryEdit extends React.Component {
 																	<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="inventoryQty">
-																		Opening Stock
+																		 {strings.OpeningStock}
 																			
 																		</Label>
 																		<Input
@@ -536,7 +539,7 @@ class InventoryEdit extends React.Component {
 																<Col  lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="inventoryPurchasePrice">
-																			Purchase Price
+																			{strings.PurchasePrice}
 																		</Label>
 																		<Input
 																		disabled
@@ -584,7 +587,7 @@ class InventoryEdit extends React.Component {
 																	<FormGroup className="mb-3">
 																	<Label htmlFor="contactId">
 																	
-																		Supplier Name
+																		 {strings.SupplierName}
 																	</Label>
 																	<Select
 																		 isDisabled={true}
@@ -631,7 +634,7 @@ class InventoryEdit extends React.Component {
 																	<Col  lg={4}>
 																	<FormGroup>
 																		<Label htmlFor="inventoryReorderLevel">
-																			Re-Order Level
+																			{strings.ReOrderLevel}
 																		</Label>
 																		<Input
 																			// readOnly={
@@ -674,7 +677,7 @@ class InventoryEdit extends React.Component {
 																			className="btn-square mr-3"
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			Update
+																		 {strings.Update}
 																		</Button>
 																		<Button
 																			color="secondary"
@@ -685,7 +688,7 @@ class InventoryEdit extends React.Component {
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i> Cancel
+																			<i className="fa fa-ban"></i> {strings.Cancel}
 																		</Button>
 																	</FormGroup>
 																</Col>

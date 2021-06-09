@@ -176,6 +176,7 @@ class CreateGoodsReceivedNote extends React.Component {
 			discountPercentage: '',
 			discountAmount: 0,
 			purchaseCategory: [],
+			exist: false,
 			language: window['localStorage'].getItem('language'),
 			
 		};
@@ -1231,19 +1232,19 @@ class CreateGoodsReceivedNote extends React.Component {
 
 	validationCheck = (value) => {
 		const data = {
-			moduleType: 6,
+			moduleType: 13,
 			name: value,
 		};
 		this.props.goodsReceivedNoteCreateAction
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'Invoice Number already exists') {
+				if (response.data === 'grnNumber already exists') {
 					this.setState(
 						{
 							exist: true,
 						},
 						() => {
-							console.log(this.state.exist);
+							
 						},
 					);
 				} else {
@@ -1398,7 +1399,7 @@ console.log(po_list)
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.grn_Number =
-															'Invoice Number cannot be same';
+															'GRN Number already exists';
 													}
 													return errors;
 												}}
@@ -1570,10 +1571,11 @@ console.log(po_list)
 																		placeholder="Invoice Number"
 																		value={props.values.grn_Number}
 																		onBlur={props.handleBlur('grn_Number')}
-																		onChange={(value) => {
+																		onChange={(option) => {
 																			props.handleChange('grn_Number')(
-																				value,
+																				option,
 																			);
+																			this.validationCheck(option.target.value)
 																		}}
 																		className={
 																			props.errors.grn_Number &&

@@ -400,7 +400,7 @@ class CreateCreditNote extends React.Component {
 		this.props.creditNotesCreateActions
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'Credit Note Number already exists') {
+				if (response.data === 'Invoice Number already exists') {
 					this.setState(
 						{
 							exist: true,
@@ -1005,7 +1005,7 @@ class CreateCreditNote extends React.Component {
 		// if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
 		// 	formData.append('attachmentFile', this.uploadFile.files[0]);
 		// }
-
+	
 		this.props.creditNotesCreateActions
 			.createCreditNote(formData)
 			.then((res) => {
@@ -1368,14 +1368,14 @@ class CreateCreditNote extends React.Component {
 												onSubmit={(values, { resetForm }) => {
 													this.handleSubmit(values, resetForm);
 												}}
-												// validate={(values) => {
-												// 	let errors = {};
-												// 	if (exist === true) {
-												// 		errors.creditNoteNumber =
-												// 			'Credit Note Number cannot be same';
-												// 	}
-												// 	return errors;
-												// }}
+												validate={(values) => {
+													let errors = {};
+													if (exist === true) {
+														errors.creditNoteNumber =
+															'Credit Note Number cannot be same';
+													}
+													return errors;
+												}}
 												validationSchema={Yup.object().shape({
 													creditNoteNumber: Yup.string().required(
 														'Credit Note Number is Required',
@@ -1543,10 +1543,11 @@ class CreateCreditNote extends React.Component {
 																		placeholder="Invoice Number"
 																		value={props.values.creditNoteNumber}
 																		onBlur={props.handleBlur('creditNoteNumber')}
-																		onChange={(value) => {
+																		onChange={(option) => {
 																			props.handleChange('creditNoteNumber')(
-																				value,
+																				option,
 																			);
+																			this.validationCheck(option.target.value);
 																		}}
 																		className={
 																			props.errors.creditNoteNumber &&

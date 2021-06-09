@@ -162,6 +162,7 @@ class CreatePurchaseOrder extends React.Component {
 			discountPercentage: '',
 			discountAmount: 0,
 			purchaseCategory: [],
+			exist: false,
 			language: window['localStorage'].getItem('language'),	
 		};
 
@@ -1155,13 +1156,13 @@ class CreatePurchaseOrder extends React.Component {
 
 	validationCheck = (value) => {
 		const data = {
-			moduleType: 6,
+			moduleType: 12,
 			name: value,
 		};
 		this.props.purchaseOrderCreateAction
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'Invoice Number already exists') {
+				if (response.data === 'poNumber already exists') {
 					this.setState(
 						{
 							exist: true,
@@ -1307,7 +1308,7 @@ getrfqDetails = (e, row, props,form,field) => {
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.po_number =
-															'Invoice Number cannot be same';
+															'PO Number already exists';
 													}
 													return errors;
 												}}
@@ -1482,10 +1483,11 @@ getrfqDetails = (e, row, props,form,field) => {
 																		placeholder="Invoice Number"
 																		value={props.values.po_number}
 																		onBlur={props.handleBlur('po_number')}
-																		onChange={(value) => {
+																		onChange={(option) => {
 																			props.handleChange('po_number')(
-																				value,
+																				option,
 																			);
+																			this.validationCheck(option.target.value)
 																		}}
 																		className={
 																			props.errors.po_number &&

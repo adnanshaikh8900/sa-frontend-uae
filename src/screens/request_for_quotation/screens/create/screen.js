@@ -154,7 +154,9 @@ class CreateRequestForQuotation extends React.Component {
 			discountPercentage: '',
 			discountAmount: 0,
 			purchaseCategory: [],
+			exist: false,
 			language: window['localStorage'].getItem('language'),	
+	
 		};
 
 		this.formRef = React.createRef();
@@ -1104,13 +1106,13 @@ class CreateRequestForQuotation extends React.Component {
 
 	validationCheck = (value) => {
 		const data = {
-			moduleType: 6,
+			moduleType: 11,
 			name: value,
 		};
 		this.props.requestForQuotationCreateAction
 			.checkValidation(data)
 			.then((response) => {
-				if (response.data === 'RFQ Number already exists') {
+				if (response.data === 'rfqNumber already exists') {
 					this.setState(
 						{
 							exist: true,
@@ -1182,7 +1184,7 @@ class CreateRequestForQuotation extends React.Component {
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.rfq_number =
-															'Invoice Number cannot be same';
+															'RFQ number already exists';
 													}
 													return errors;
 												}}
@@ -1298,10 +1300,11 @@ class CreateRequestForQuotation extends React.Component {
 																		placeholder="Invoice Number"
 																		value={props.values.rfq_number}
 																		onBlur={props.handleBlur('rfq_number')}
-																		onChange={(value) => {
+																		onChange={(option) => {
 																			props.handleChange('rfq_number')(
-																				value,
+																				option,
 																			);
+																			this.validationCheck(option.target.value);
 																		}}
 																		className={
 																			props.errors.rfq_number &&

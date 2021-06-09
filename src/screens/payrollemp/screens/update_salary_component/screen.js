@@ -100,6 +100,7 @@ class UpdateSalaryComponent extends React.Component {
     }
 
     getSalaryComponentByEmployeeId = () => {
+        debugger
         if (this.props.location.state && this.props.location.state.id) {
             this.props.detailSalaryComponentAction.getSalaryComponentByEmployeeId(this.props.location.state.id).then((res) => {
                 if (res.status === 200) {
@@ -343,6 +344,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                 placeholder="Enter CTC here"
                                                                 onChange={(option) => {
                                                                     if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('CTC')(option) }
+                                                                   
                                                                     this.updateSalary(option.target.value);
 
                                                                 }}
@@ -385,7 +387,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                    {Object.values(
+                                                                    { this.state.Fixed ? Object.values(
                                                                      this.state.Fixed,
                                                                     ).map((item) => (
                                                                         <tr>
@@ -403,6 +405,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                                             value={item.formula}
                                                                                             onChange={(option) => {
                                                                                                 if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
+                                                                                                debugger
                                                                                                 this.updateSalary(this.state.CTC);
 
                                                                                             }}
@@ -446,7 +449,7 @@ class UpdateSalaryComponent extends React.Component {
                                                                                     </td>
                                                                                 )}
                                                                         </tr>
-                                                                    ))}
+                                                                    )) :""}
                                                                 </tbody>
                                                             </Table>
                                                           

@@ -486,7 +486,7 @@ class ExplainTrasactionDetail extends React.Component {
 		);
 		formData.append('description', description ? description : '');
 		formData.append('amount', amount ? amount : '');
-		formData.append('dueAmount', dueAmount ? dueAmount : '');
+		formData.append('dueAmount', dueAmount ? dueAmount : 0);
 		formData.append('coaCategoryId', coaCategoryId ? id : '');
 		if (transactionCategoryId) {
 			formData.append(

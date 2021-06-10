@@ -173,10 +173,10 @@ class UpdateEmployeePersonal extends React.Component {
                 }
             }).catch((err) => {
                 this.setState({ loading: false })
-                this.props.history.push('/admin/payroll/employee/viewEmployee')
+                this.props.history.push('/admin/payroll/employee')
             })
         } else {
-            this.props.history.push('/admin/payroll/employee/viewEmployee')
+            this.props.history.push('/admin/payroll/employee')
         }
     }
 

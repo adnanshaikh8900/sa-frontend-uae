@@ -22,7 +22,7 @@ class ExpenseTemplate extends Component {
 	};
 
 	render() {
-		const { expenseData} = this.props;
+		const { expenseData,companyData} = this.props;
 		return (
 			<div>
 				<Card id="singlePage" className="box">
@@ -59,15 +59,23 @@ class ExpenseTemplate extends Component {
 											</td>						
 									</div>
 									<div style={{ textAlign:'center'}}>
-													<div className="companyDetails">
-														<img
-															src={logo}
-															className=""
-															alt=""
-															style={{ width: ' 200px' }}
-														/>
-												
-													</div>
+								
+								<div className="companyDetails">
+									<img
+										src={
+											companyData &&
+											companyData.company &&
+											companyData.company.companyLogo
+												? 'data:image/jpg;base64,' +
+												  companyData.company.companyLogo
+												: logo
+										}
+										className=""
+										alt=""
+										style={{ width: ' 100px' }}
+									/>
+								
+							</div>
 												</div>
 									<div style={{textAlign:'center'}}><h4> {expenseData.payee} </h4></div>
 									<div style={{textAlign:'center'}}><b>Expense Date</b> : {moment(expenseData.expenseDate ).format('DD/MM/YYYY')}</div>

@@ -11,6 +11,10 @@ import {
 	ButtonGroup,
 	FormGroup,
 	Input,
+	ButtonDropdown,
+	DropdownToggle,
+	DropdownMenu,
+	DropdownItem,
 } from 'reactstrap';
 import Select from 'react-select';
 
@@ -61,10 +65,11 @@ class Product extends React.Component {
 			selectedVat: '',
 			csvData: [],
 			view: false,
+			actionButtons: {},
 		};
 
 		this.options = {
-			onRowClick: this.goToDetail,
+			// onRowClick: this.goToDetail,
 			page: 1,
 			sizePerPage: 10,
 			onSizePerPageList: this.onSizePerPageList,
@@ -89,11 +94,11 @@ class Product extends React.Component {
 		this.initializeData();
 	};
 
-	componentWillUnmount = () => {
-		this.setState({
-			selectedRows: [],
-		});
-	};
+	// componentWillUnmount = () => {
+	// 	this.setState({
+	// 		selectedRows: [],
+	// 	});
+	// };
 
 	initializeData = (search) => {
 		const { filterData } = this.state;
@@ -317,6 +322,50 @@ class Product extends React.Component {
 			/>
 		);
 	}
+	toggleActionButton = (index) => {
+		let temp = Object.assign({}, this.state.actionButtons);
+		if (temp[parseInt(index, 10)]) {
+			temp[parseInt(index, 10)] = false;
+		} else {
+			temp[parseInt(index, 10)] = true;
+		}
+		this.setState({
+			actionButtons: temp,
+		});
+	};
+
+	renderActions = (cell, row) => {
+		return (
+			<div>
+				<ButtonDropdown
+					isOpen={this.state.actionButtons[row.id]}
+					toggle={() => this.toggleActionButton(row.id)}
+				>
+					<DropdownToggle size="sm" color="primary" className="btn-brand icon">
+						{this.state.actionButtons[row.id] === true ? (
+							<i className="fas fa-chevron-up" />
+						) : (
+							<i className="fas fa-chevron-down" />
+						)}
+					</DropdownToggle>
+					<DropdownMenu right>
+							<DropdownItem>
+								<div
+									onClick={() => {
+										this.props.history.push(
+											'/admin/master/product/detail',
+											{ id: row.id },
+										);
+									}}
+								>
+									<i className="fas fa-edit" /> {strings.Edit}
+								</div>
+							</DropdownItem>
+					</DropdownMenu>
+				</ButtonDropdown>
+			</div>
+		);
+	};
 
 	render() {
 		strings.setLanguage(this.state.language);
@@ -527,6 +576,13 @@ class Product extends React.Component {
 												>
 													 {strings.UNITPRICE}
 												</TableHeaderColumn>
+												<TableHeaderColumn
+											className="text-right"
+											columnClassName="text-right"
+											//	width="5%"
+											dataFormat={this.renderActions}
+											className="table-header-bg"
+										></TableHeaderColumn>
 											</BootstrapTable>
 										</div>
 									</Col>

@@ -138,7 +138,34 @@ class SalesByCustomer extends React.Component {
 	exportPDFWithComponent = () => {
 		this.pdfExportComponent.save();
 	};
-
+	rendersalesExcludingvat = (cell, row, extraData) => {
+		return row.salesExcludingvat === 0 ? (
+			<Currency
+				value={row.salesExcludingvat}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			<Currency
+				value={row.salesExcludingvat}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		);
+		
+	};
+	rendergetSalesWithvat = (cell, row, extraData) => {
+		return row.getSalesWithvat === 0 ? (
+			<Currency
+				value={row.getSalesWithvat}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			<Currency
+				value={row.getSalesWithvat}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		);
+		
+	};
 	render() {
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
 		const { profile, universal_currency_list,company_profile,sales_by_customer } = this.props;
@@ -323,13 +350,16 @@ class SalesByCustomer extends React.Component {
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="salesExcludingvat"
-												
+												dataFormat={this.rendersalesExcludingvat}
+												formatExtraData={universal_currency_list}
 												className="table-header-bg"
 											>
 												Sales
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="getSalesWithvat"
+												dataFormat={this.rendergetSalesWithvat}
+												formatExtraData={universal_currency_list}
 												
 												className="table-header-bg"
 											>

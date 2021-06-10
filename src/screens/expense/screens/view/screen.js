@@ -132,6 +132,7 @@ class ViewExpense extends React.Component {
 								>
 									<ExpenseTemplate
 										expenseData={expenseData}
+										companyData={profile}
 										ref={(el) => (this.componentRef = el)}								
 									/>
 								</PDFExport>

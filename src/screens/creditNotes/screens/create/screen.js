@@ -721,14 +721,14 @@ class CreateCreditNote extends React.Component {
 									field,
 									props,
 								);
-								this.props.creditNotesActions.getInventoryByProductId(e.value).then((response) => {
-									this.setState({
-										inventoryList: response.data
-									});
-									if (response.data.length !== 0 && response.data.length !== 1) {
-										this.openMultiSupplierProductModal(response);
-									}
-								});
+								// this.props.creditNotesActions.getInventoryByProductId(e.value).then((response) => {
+								// 	this.setState({
+								// 		inventoryList: response.data
+								// 	});
+								// 	if (response.data.length !== 0 && response.data.length !== 1) {
+								// 		this.openMultiSupplierProductModal(response);
+								// 	}
+								// });
 							} else {
 								form.setFieldValue(
 									`lineItemsString.${idx}.productId`,

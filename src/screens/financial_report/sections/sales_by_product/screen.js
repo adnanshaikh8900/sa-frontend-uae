@@ -138,7 +138,34 @@ class SalesByProduct extends React.Component {
 	exportPDFWithComponent = () => {
 		this.pdfExportComponent.save();
 	};
-
+	rendertotalAmountForAProduct = (cell, row, extraData) => {
+		return row.totalAmountForAProduct === 0 ? (
+			<Currency
+				value={row.totalAmountForAProduct}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			<Currency
+				value={row.totalAmountForAProduct}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		);
+		
+	};
+	renderaverageAmount = (cell, row, extraData) => {
+		return row.averageAmount === 0 ? (
+			<Currency
+				value={row.averageAmount}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			<Currency
+				value={row.averageAmount}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		);
+		
+	};
 	render() {
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
 		const { profile, universal_currency_list,company_profile,sales_by_item } = this.props;
@@ -322,12 +349,16 @@ class SalesByProduct extends React.Component {
 											<TableHeaderColumn
 												dataField="totalAmountForAProduct"
 												className="table-header-bg"
+												dataFormat={this.rendertotalAmountForAProduct}
+												formatExtraData={universal_currency_list}
 											>
 												Amount
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="averageAmount"
 												className="table-header-bg"
+												dataFormat={this.renderaverageAmount}
+												formatExtraData={universal_currency_list}
 											>
 												Average Amount
 											</TableHeaderColumn>

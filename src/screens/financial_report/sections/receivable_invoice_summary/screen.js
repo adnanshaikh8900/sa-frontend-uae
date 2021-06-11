@@ -144,30 +144,20 @@ class ReceivableInvoiceSummary extends React.Component {
 	renderinvoiceDueDate = (cell, rows) => {
 		return moment(rows.invoiceDueDate).format('DD/MM/YYYY');
 	};
-	renderbalance = (row,extraData,universal_currency_list) => {
-	return 	row.balance  ? 
-		<Currency
-			value={row.balance}
-			currencySymbol={
-				universal_currency_list[0]
-					? universal_currency_list[0]
-							.currencyIsoCode
-					: 'USD'
-			}
-		/>
-	 : 
-		<Currency
-			value={row.balance}
-			currencySymbol={
-				universal_currency_list[0]
-					? universal_currency_list[0]
-							.currencyIsoCode
-					: 'USD'
-			}
-		/>
-	
+	renderbalance = (cell, row, extraData) => {
+		return row.balance === 0 ? (
+			<Currency
+				value={row.balance}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			<Currency
+				value={row.balance}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		);
 		
-	}
+	};
 	render() {
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
 		const { profile, universal_currency_list,company_profile,receivable_invoice } = this.props;
@@ -373,7 +363,7 @@ class ReceivableInvoiceSummary extends React.Component {
 											<TableHeaderColumn
 												dataField="balance"
 												className="table-header-bg"
-												//dataFormat={this.renderbalance}
+												dataFormat={this.renderbalance}
 												formatExtraData={universal_currency_list}
 											>
 												Balance

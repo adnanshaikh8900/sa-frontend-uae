@@ -139,6 +139,34 @@ class PurchaseByitem extends React.Component {
 		this.pdfExportComponent.save();
 	};
 
+	renderAverageAmount = (cell, row, extraData) => {
+		return row.averageAmount === 0 ? (
+			<Currency
+				value={row.averageAmount}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			<Currency
+				value={row.averageAmount}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		);
+		
+	};
+	rendertotalAmountForAProduct = (cell, row, extraData) => {
+		return row.totalAmountForAProduct === 0 ? (
+			<Currency
+				value={row.totalAmountForAProduct}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			<Currency
+				value={row.totalAmountForAProduct}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		);
+		
+	};
 	render() {
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
 		const { profile, universal_currency_list,company_profile,purchase_by_item } = this.props;
@@ -279,7 +307,7 @@ class PurchaseByitem extends React.Component {
 												: ''}
 											</h2>	
 											<br style={{ marginBottom: '5px' }} />
-											<b style ={{ fontSize: '18px'}}>Purchase By Item</b>
+											<b style ={{ fontSize: '18px'}}>Purchase By Product</b>
 											<br style={{ marginBottom: '5px' }} />
 											From {initValue.startDate} To {initValue.endDate}
 											
@@ -323,14 +351,16 @@ class PurchaseByitem extends React.Component {
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="totalAmountForAProduct"
-												
+												dataFormat={this.rendertotalAmountForAProduct}
+												formatExtraData={universal_currency_list}
 												className="table-header-bg"
 											>
 													Amount
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="averageAmount"
-												
+												dataFormat={this.renderAverageAmount}
+												formatExtraData={universal_currency_list}
 												className="table-header-bg"
 											>
 												Average Amount

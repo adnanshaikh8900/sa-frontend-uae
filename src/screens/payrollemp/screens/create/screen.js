@@ -700,7 +700,154 @@ uploadImage = (picture, file) => {
 
             })
     }
+    updateSalary1 = (CTC1,newFormula,id,newFlatAmount) => {
+        const CTC = this.state.CTC
 
+        const Fixed = this.state.Fixed
+        const Variable = this.state.Variable
+        const Deduction = this.state.Deduction
+        const Fixed_Allowance = this.state.FixedAllowance
+     
+        var locallist = []
+        var basicSalaryAnnulay = 0;
+        var basicSalaryMonthy = 0;
+        var totalFixedSalary = 0;
+        Fixed.map((obj) => {
+            locallist.push(obj);
+            debugger
+            if (obj.formula != null && obj.description === "Basic SALARY") {
+                if(newFormula !== undefined && obj.id===id ){
+                        if( newFormula === '')
+                        {  obj.formula = '0' ;}
+                        else
+                            { obj.formula=newFormula ;} 
+                }
+          
+                basicSalaryAnnulay = (CTC1 * (obj.formula / 100));
+                basicSalaryMonthy = (basicSalaryAnnulay) / 12;
+                obj.monthlyAmount = basicSalaryMonthy;
+                obj.yearlyAmount = basicSalaryAnnulay;
+                totalFixedSalary = totalFixedSalary + basicSalaryMonthy;
+            }
+            else if (obj.formula != null && obj.description != "Basic SALARY" && obj.formula.length > 0) {
+                if(newFormula !== undefined && obj.id===id ){
+                    if( newFormula === '')
+                    {  obj.formula = '0' ;}
+                    else
+                        { obj.formula=newFormula ;} 
+            }
+                var salaryMonthy = basicSalaryMonthy * (obj.formula / 100);
+                var salaryAnnulay = salaryMonthy * 12;
+                obj.monthlyAmount = salaryMonthy;
+                obj.yearlyAmount = salaryAnnulay;
+                totalFixedSalary = totalFixedSalary + salaryMonthy;
+            }
+            else if (obj.flatAmount != null) {
+                if(newFlatAmount !== undefined && obj.id===id ){
+                    if( newFlatAmount === '')
+                    {  obj.flatAmount = '0' ;}
+                    else
+                        { obj.flatAmount=newFlatAmount ;} 
+            }
+                var salaryMonthy = obj.flatAmount;
+                obj.monthlyAmount = salaryMonthy;
+                obj.yearlyAmount = salaryMonthy * 12;
+                totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
+            }
+
+            return obj;
+        });
+        if(Variable != null){
+        Variable.map((obj) => {
+            locallist.push(obj);
+            if (obj.formula != null && obj.description != "Basic SALARY" && obj.formula.length > 0) {
+                if(newFormula !== undefined && obj.id===id ){
+                    if( newFormula === '')
+                    {  obj.formula = '0' ;}
+                    else
+                        { obj.formula=newFormula ;} 
+            }
+                var salaryMonthy = basicSalaryMonthy * (obj.formula / 100);
+                var salaryAnnulay = salaryMonthy * 12;
+                obj.monthlyAmount = salaryMonthy;
+                obj.yearlyAmount = salaryAnnulay;
+                totalFixedSalary = totalFixedSalary + salaryMonthy;
+            }
+            else if (obj.flatAmount != null) {
+                if(newFlatAmount !== undefined && obj.id===id ){
+                    if( newFlatAmount === '')
+                    {  obj.flatAmount = '0' ;}
+                    else
+                        { obj.flatAmount=newFlatAmount ;} 
+            }
+                var salaryMonthy = obj.flatAmount;
+                obj.monthlyAmount = salaryMonthy;
+                obj.yearlyAmount = salaryMonthy * 12;
+                totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
+            }
+
+            return obj;
+        });}
+        if(Deduction != null){
+        Deduction.map((obj) => {
+            locallist.push(obj);
+            if (obj.formula != null && obj.description != "Basic SALARY" && obj.formula.length > 0) {
+                if(newFormula !== undefined && obj.id===id ){
+                    if( newFormula === '')
+                    {  obj.formula = '0' ;}
+                    else
+                        { obj.formula=newFormula ;} 
+            }
+                var salaryMonthy = basicSalaryMonthy * (obj.formula / 100);
+                var salaryAnnulay = salaryMonthy * 12;
+                obj.monthlyAmount = salaryMonthy;
+                obj.yearlyAmount = salaryAnnulay;
+                totalFixedSalary = totalFixedSalary + salaryMonthy;
+            }
+            else if (obj.flatAmount != null) {
+                if(newFlatAmount !== undefined && obj.id===id ){
+                    if( newFlatAmount === '')
+                    {  obj.flatAmount = '0' ;}
+                    else
+                        { obj.flatAmount=newFlatAmount ;} 
+            }
+                var salaryMonthy = obj.flatAmount;
+                obj.monthlyAmount = salaryMonthy;
+                obj.yearlyAmount = salaryMonthy * 12;
+                totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
+            }
+
+            return obj;
+        });}
+
+
+debugger
+        const monthlySalary = CTC1 / 12
+        const componentTotal1 = monthlySalary - totalFixedSalary;
+        console.log(componentTotal1, "%$componentTotal")
+
+        if(Fixed_Allowance != null){
+            Fixed_Allowance.map((obj) => {
+                locallist.push(obj);
+            if (obj.flatAmount != null) {
+                 
+                    obj.monthlyAmount = componentTotal1;
+                    obj.yearlyAmount = componentTotal1 * 12;
+               
+                }
+    
+                return obj;
+            });}
+
+        this.setState(
+            {
+                componentTotal: componentTotal1,
+                CTC: CTC1,
+                list: locallist
+
+            })
+        console.log(this.state.componentTotal, "componentTotal")
+    }
     render() {
         strings.setLanguage(this.state.language);
 
@@ -2055,7 +2202,7 @@ uploadImage = (picture, file) => {
                                                                             {item.formula ?
                                                                                 (
                                                                                     <td style={{border:"3px solid #c8ced3"}}>
-                                                                                        <input
+                                                                                        <Input
                                                                                             type="number"
                                                                                             size="30"
                                                                                             style={{textAlign:"center"}}
@@ -2064,9 +2211,9 @@ uploadImage = (picture, file) => {
                                                                                             value={item.formula}
                                                                                             onChange={(option) => {
                                                                                                 if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
-                                                                                                this.updateSalary(this.state.CTC);
-
-                                                                                            }}
+                                                                                                this.updateSalary1(this.state.CTC,option.target.value,item.id);
+    
+                                                                                            }}        
                                                                                         />{item.description !== 'Basic SALARY' ? ( ' % of Basic') : ( ' % of CTC')}
                                                                                     </td>
                                                                                 ) : (
@@ -2075,7 +2222,8 @@ uploadImage = (picture, file) => {
                                                                             {item.formula ?
                                                                                 (<td style={{border:"3px solid #c8ced3"}}
                                                                                  >
-                                                                                      <input
+                                                                                      <Input
+                                                                                           disabled={true}
                                                                                         type="text"
                                                                                         size="30"
                                                                                         style={{textAlign:"center"}}
@@ -2085,10 +2233,15 @@ uploadImage = (picture, file) => {
 
                                                                                 ) : (
                                                                                     <td style={{border:"3px solid #c8ced3"}} >
-                                                                                        <input
+                                                                                        <Input
                                                                                             type="text"
                                                                                             size="30"
                                                                                             style={{textAlign:"center"}}
+                                                                                            onChange={(option) => {
+                                                                                                if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
+                                                                                                this.updateSalary1(this.state.CTC,undefined,item.id,option.target.value);
+    
+                                                                                            }}  
                                                                                             value={item.flatAmount}
                                                                                             id='' />
                                                                                     </td>
@@ -2148,11 +2301,15 @@ uploadImage = (picture, file) => {
                                                                             {item.formula ?
                                                                                 (
                                                                                     <td style={{border:"3px solid  #c8ced3"}}>
-                                                                                        <input
+                                                                                        <Input
                                                                                             type="number"
                                                                                             style={{textAlign:"center"}}
                                                                                             size="30"
-                                                                                            
+                                                                                            onChange={(option) => {
+                                                                                                if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
+                                                                                                this.updateSalary1(this.state.CTC,option.target.value,item.id);
+    
+                                                                                            }}   
                                                                                             value={item.formula}
                                                                                             id=''
                                                                                         />{' '}% of Basic
@@ -2162,25 +2319,27 @@ uploadImage = (picture, file) => {
                                                                             }
                                                                             {item.formula ?
                                                                                 (<td style={{border:"3px solid #c8ced3"}} >
-                                                                                      <input
+                                                                                      <Input
+                                                                                           disabled={true}
                                                                                         type="text"
                                                                                         size="30"
                                                                                         style={{textAlign:"center"}}
-                                                                                        onChange={(option) => {
-                                                                                            if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
-                                                                                            this.updateSalary(this.state.CTC);
-
-                                                                                        }}
+                                                                                          
                                                                                         value={item.monthlyAmount.toFixed(2)}
                                                                                         id='' />
                                                                                 </td>
 
                                                                                 ) : (
                                                                                     <td style={{border:"3px solid  #c8ced3"}} >
-                                                                                        <input
+                                                                                        <Input
                                                                                             type="text"
                                                                                             size="30"
                                                                                             style={{textAlign:"center"}}
+                                                                                            onChange={(option) => {
+                                                                                                if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
+                                                                                                this.updateSalary1(this.state.CTC,undefined,item.id,option.target.value);
+    
+                                                                                            }}  
                                                                                             value={item.flatAmount}
                                                                                             id='' />
                                                                                     </td>
@@ -2245,16 +2404,16 @@ uploadImage = (picture, file) => {
                                                                             {item.formula ?
                                                                                 (
                                                                                     <td style={{border:"3px solid #c8ced3"}}>
-                                                                                        <input
+                                                                                        <Input
                                                                                             type="number"
                                                                                             size="30"
                                                                                             className="text-center"
                                                                                             value={item.formula}
-                                                                                        // onChange={(option) => {
-                                                                                        //     if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
-                                                                                        //     this.updateSalary();
-
-                                                                                        // }}
+                                                                                            onChange={(option) => {
+                                                                                                if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
+                                                                                                this.updateSalary1(this.state.CTC,option.target.value,item.id);
+    
+                                                                                            }}        
                                                                                         />{' '}% of CTC
                                                                                     </td >
                                                                                 ) : (
@@ -2262,8 +2421,8 @@ uploadImage = (picture, file) => {
                                                                             }
                                                                             {item.formula ?
                                                                                 (<td style={{border:"3px solid #c8ced3"}} >
-                                                                                    <input
-                                                                                    isDisabled={true}
+                                                                                    <Input
+                                                                                    disabled={true}
                                                                                         type="text"
                                                                                         size="30"
                                                                                         style={{textAlign:"center"}}
@@ -2273,10 +2432,15 @@ uploadImage = (picture, file) => {
 
                                                                                 ) : (
                                                                                     <td style={{border:"3px solid #c8ced3"}} >
-                                                                                        <input
+                                                                                        <Input
                                                                                             type="text"
                                                                                             size="30"
                                                                                             style={{textAlign:"center"}}
+                                                                                            onChange={(option) => {
+                                                                                                if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
+                                                                                                this.updateSalary1(this.state.CTC,undefined,item.id,option.target.value);
+    
+                                                                                            }}  
                                                                                             value={item.flatAmount}
                                                                                             id='' />
                                                                                     </td>

@@ -33,3 +33,20 @@ import {
       })
     }
   }
+
+  
+export const deleteSalaryComponentRow = (id,componentId) => {
+	return (dispatch) => {
+		let data = {
+			method: 'DELETE',
+			url: `/rest/payroll/deleteSalaryComponentRow?id=${id}&componentId=${componentId}`,
+		};
+		return authApi(data)
+			.then((res) => {
+				return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

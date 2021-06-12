@@ -94,7 +94,7 @@ class UpdateSalaryComponent extends React.Component {
 
 //added by mudassar
 handleChange = (evt) => { 
-    debugger 
+     
 
      const value = evt.target.value;
     this.setState({
@@ -129,7 +129,7 @@ handleChange = (evt) => {
                       
                     }
                     )
-                    debugger
+                    
                     this.updateSalary(res.data.ctc)
                 }
             }).catch((err) => {
@@ -174,7 +174,6 @@ handleChange = (evt) => {
               
             });
     }
-  
     // Create or Edit Vat
     handleSubmit = (data) => {
 
@@ -307,6 +306,18 @@ handleChange = (evt) => {
         console.log(this.state.componentTotal, "componentTotal")
     }
  
+    removeComponent=(ComponentId)=>{
+
+        this.props.detailSalaryComponentAction.deleteSalaryComponentRow(this.state.current_employee_id,ComponentId).then((res) => {
+            if (res.status === 200) {
+                this.getSalaryComponentByEmployeeId();
+            }
+        }).catch((err) => {
+            this.props.commonActions.tostifyAlert('error', err.data.message)
+        });
+       
+    }
+
     updateSalary1 = (CTC1,newFormula,id,newFlatAmount) => {
         const CTC = this.state.CTC
 
@@ -321,7 +332,7 @@ handleChange = (evt) => {
         var totalFixedSalary = 0;
         Fixed.map((obj) => {
             locallist.push(obj);
-            debugger
+            
             if (obj.formula != null && obj.description === "Basic SALARY") {
                 if(newFormula !== undefined && obj.id===id ){
                         if( newFormula === '')
@@ -622,7 +633,20 @@ handleChange = (evt) => {
                                                                                           {item.flatAmount ? item.flatAmount* 12 : 0.00}
                                                                                     </td>
                                                                                 )}
+                                                                          <td>    
+                                                                              { item.description !== "Basic SALARY" ?(
+                                                                                        <Button 
+                                                                                          color='link'
+
+                                                                                          onClick={()=>{
+                                                                                           this.removeComponent(item.id)
+                                                                                          }}
+                                                                                        >
+                                                                                           <i class="far fa-times-circle"></i>
+                                                                                       </Button>) : ''}</td>
+                                                                               
                                                                         </tr>
+                                                                        
                                                                     )) :""}
                                                                 </tbody>
                                                             </Table>
@@ -723,7 +747,17 @@ handleChange = (evt) => {
                                                                                      {item.flatAmount * 12}
                                                                                     </td>
                                                                                 )}
-
+                                                                        <td>    
+                                                                            {}
+                                                                                        <Button 
+                                                                                          color='link'
+                                                                                          onClick={()=>{
+                                                                                           this.removeComponent(item.id)
+                                                                                          }}
+                                                                                        >
+                                                                                           <i class="far fa-times-circle"></i>
+                                                                                       </Button></td>
+                                                                        
 
                                                                         </tr>
                                                                     ))): (
@@ -781,7 +815,7 @@ handleChange = (evt) => {
                                                                                                 this.updateSalary1(this.state.CTC,option.target.value,item.id);
     
                                                                                             }}   
-                                                                                        />{' '}% of CTC
+                                                                                        />{' '}% of Basic
                                                                                     </td >
                                                                                 ) : (
                                                                                     <td style={{border:"1px solid #c8ced3"}}>{strings.FixedAmount}</td>)
@@ -824,6 +858,16 @@ handleChange = (evt) => {
                                                                                       {item.flatAmount * 12}
                                                                                     </td>
                                                                                 )}
+                                                                                <td>    
+                                                                                        <Button 
+                                                                                          color='link'
+
+                                                                                          onClick={()=>{
+                                                                                           this.removeComponent(item.id)
+                                                                                          }}
+                                                                                        >
+                                                                                           <i class="far fa-times-circle"></i>
+                                                                                       </Button></td>
                                                                         </tr>
                                                                     ))) : (
                                                                         " "

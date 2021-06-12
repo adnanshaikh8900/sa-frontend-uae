@@ -49,7 +49,7 @@ import { selectCurrencyFactory, selectOptionsFactory } from 'utils'
 import 'react-datepicker/dist/react-datepicker.css'
 import PhoneInput from 'react-phone-number-input'
 import moment from 'moment'
-
+import * as DetailSalaryComponentAction from '../update_salary_component/actions';
 import * as CreatePayrollEmployeeActions from '../create/actions'
 import * as PayrollEmployeeActions from '../../actions'
 import { DesignationModal, SalaryComponentDeduction, SalaryComponentFixed, SalaryComponentVariable } from 'screens/payrollemp/sections';
@@ -74,6 +74,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
     return {
+        detailSalaryComponentAction:bindActionCreators(DetailSalaryComponentAction,dispatch),
         createPayrollEmployeeActions: bindActionCreators(CreatePayrollEmployeeActions, dispatch),
         payrollEmployeeActions: bindActionCreators(PayrollEmployeeActions, dispatch),
         commonActions: bindActionCreators(CommonActions, dispatch),
@@ -319,7 +320,17 @@ uploadImage = (picture, file) => {
                 this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
             })
     }
+    removeComponent=(ComponentId)=>{
 
+        this.props.detailSalaryComponentAction.deleteSalaryComponentRow(this.state.employeeid,ComponentId).then((res) => {
+            if (res.status === 200) {
+                this.getSalaryComponentByEmployeeId();
+            }
+        }).catch((err) => {
+            this.props.commonActions.tostifyAlert('error', err.data.message)
+        });
+       
+    }
     handleSubmitForFinancial = (data, resetForm) => {
         this.setState({ disabled: true });
         const {
@@ -714,7 +725,7 @@ uploadImage = (picture, file) => {
         var totalFixedSalary = 0;
         Fixed.map((obj) => {
             locallist.push(obj);
-            debugger
+          
             if (obj.formula != null && obj.description === "Basic SALARY") {
                 if(newFormula !== undefined && obj.id===id ){
                         if( newFormula === '')
@@ -821,7 +832,7 @@ uploadImage = (picture, file) => {
         });}
 
 
-debugger
+
         const monthlySalary = CTC1 / 12
         const componentTotal1 = monthlySalary - totalFixedSalary;
         console.log(componentTotal1, "%$componentTotal")
@@ -2259,7 +2270,20 @@ debugger
                                                                                           {item.flatAmount ? item.flatAmount* 12 : 0.00}
                                                                                     </td>
                                                                                 )}
+                                                                                  <td>    
+                                                                              { item.description !== "Basic SALARY" ?(
+                                                                                        <Button 
+                                                                                          color='link'
+
+                                                                                          onClick={()=>{
+                                                                                           this.removeComponent(item.id)
+                                                                                          }}
+                                                                                        >
+                                                                                           <i class="far fa-times-circle"></i>
+                                                                                       </Button>) : ''}</td>
+                                                                               
                                                                         </tr>
+                                                                      
                                                                     ))}
                                                                 </tbody>
                                                             </Table>
@@ -2356,7 +2380,18 @@ debugger
                                                                                      {item.flatAmount * 12}
                                                                                     </td>
                                                                                 )}
+                                                                                 <td>    
+                                                                            {}
+                                                                                        <Button 
+                                                                                          color='link'
 
+                                                                                          onClick={()=>{
+                                                                                           this.removeComponent(item.id)
+                                                                                          }}
+                                                                                        >
+                                                                                           <i class="far fa-times-circle"></i>
+                                                                                       </Button></td>
+                                                                        
 
                                                                         </tr>
                                                                     ))): (
@@ -2414,7 +2449,7 @@ debugger
                                                                                                 this.updateSalary1(this.state.CTC,option.target.value,item.id);
     
                                                                                             }}        
-                                                                                        />{' '}% of CTC
+                                                                                        />{' '}% of Basic
                                                                                     </td >
                                                                                 ) : (
                                                                                     <td style={{border:"3px solid #c8ced3"}}>{strings.FixedAmount}</td>)
@@ -2457,6 +2492,18 @@ debugger
                                                                                       {item.flatAmount * 12}
                                                                                     </td>
                                                                                 )}
+                                                                                  <td>    
+                                                                            {}
+                                                                                        <Button 
+                                                                                          color='link'
+
+                                                                                          onClick={()=>{
+                                                                                           this.removeComponent(item.id)
+                                                                                          }}
+                                                                                        >
+                                                                                           <i class="far fa-times-circle"></i>
+                                                                                       </Button></td>
+                                                                        
                                                                         </tr>
                                                                     ))) : (
                                                                         " "

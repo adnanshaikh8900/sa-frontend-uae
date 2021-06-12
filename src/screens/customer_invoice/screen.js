@@ -637,7 +637,7 @@ class CustomerInvoice extends React.Component {
 			
 				loading: false,
 			})
-			debugger
+			
 			console.log(this.state.rfqReceiveDate)
 			console.log('selecteddata ',this.state.selectedData)
 		});

@@ -160,7 +160,7 @@ class ViewEmployee extends React.Component {
 									err && err.data ? err.data.message : 'Something Went Wrong',
 								);
 							});
-							debugger
+							
 						this.viewPaySlip({ id: this.props.location.state.id, salaryDate: moment(Date(row.salaryDate)).format('DD/MM/YYYY') });
 					}
 

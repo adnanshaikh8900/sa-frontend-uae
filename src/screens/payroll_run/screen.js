@@ -583,7 +583,7 @@ class PayrollRun extends React.Component {
                           </TableHeaderColumn>
                                                     <TableHeaderColumn
                                                         className="table-header-bg"
-                                                        dataField="netPay"
+                                                        dataField="grossSalary"
                                                         dataSort
                                                         width="12%"
                                                     >

@@ -331,8 +331,7 @@ Addnewcontact:"إضافة جهة اتصال جديدة",
 //Product
 Products:"منتجات",		 		
 PRODUCTCODE:"كود المنتج",				
-VATPERCENTAGE:"نسبة ضريبة القيمة المضافة",		
-UNITPRICE:"سعر الوحدة",		
+VATPERCENTAGE:"نسبة ضريبة القيمة المضافة",			
 AddnewProduct:"إضافة منتج جديد",		
 
 //Add product

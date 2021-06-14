@@ -336,8 +336,7 @@ Addnewcontact:"Ajouter un nouveau contact",
 //Product
 Products:"Produits",		 		
 PRODUCTCODE:"CODE PRODUIT",				
-VATPERCENTAGE:"POURCENTAGE DE TVA",		
-UNITPRICE:"Prix unitaire",		
+VATPERCENTAGE:"POURCENTAGE DE TVA",				
 AddnewProduct:"Ajouter un nouveau produit",		
 
 //Add product
@@ -712,11 +711,7 @@ UpdateReceipt:"Mettre à jour le reçu",
 Invoice:"Facture",
 ModeTBD:"Mode(TBD)",
 
-//placeholder
-SelectVat:"Sélectionnez la TVA",
-SelectProduct:"Sélectionner Produit",
-SelectCustomerName:"Sélectionnez Nom du Client",	
-SelectTerms:"Sélectionnez les termes",	
+//placeholder	
 ReceiptAttachmentDescription:"Description de la pièce jointe au reçu",	
 DiscountPercentage:"Pourcentage de remise",	
 SelectCurrency:"Sélectionnez la devise",	

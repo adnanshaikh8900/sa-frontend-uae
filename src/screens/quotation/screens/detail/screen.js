@@ -103,7 +103,7 @@ class DetailQuotation extends React.Component {
 			discount_option: '',
 			data: [],
 			initValue: {},
-			contactType: 1,
+			contactType: 2,
 			openSupplierModal: false,
 			openProductModal: false,
 			selectedContact: '',

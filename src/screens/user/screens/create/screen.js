@@ -266,7 +266,7 @@ class CreateUser extends React.Component {
 		const { role_list, employee_list,salary_role_dropdown,designation_dropdown } = this.props;
 		const { timezone } = this.state;
 		const { isPasswordShown } = this.state;
-		console.log(role_list,"role_list")
+		console.log(employee_list,"employee_list")
 
 		// emlpoyee_list.map(item => {
 		// 	let obj = {label: item.label.fullName, value: item.value}
@@ -860,13 +860,13 @@ class CreateUser extends React.Component {
 																		</FormGroup>
 																	</Col>
 																</Row>
-															<Row>
+															{/* <Row>
 																<Col>
 																<Label>	<span className="text-danger">*</span>{strings.SelectLinkOrCreateEmployee} </Label>
 																</Col>
-															</Row>
+															</Row> */}
 																<Row>
-																	<Col lg={2} style={{display: props.values.isNewEmployee === true ? 'none' : ''}}>
+																	{/* <Col lg={2} >
 																	<FormGroup check inline className="mb-3">
 																		<Label
 																			className="form-check-label"
@@ -900,8 +900,8 @@ class CreateUser extends React.Component {
 																				)}
 																		</Label>
 																	</FormGroup>
-																</Col>
-																<Col style={{display: props.values.isAlreadyAvailableEmployee === true ? 'none' : ''}}>
+																</Col> */}
+																{/* <Col style={{display: props.values.isAlreadyAvailableEmployee === true ? 'none' : ''}}>
 																<FormGroup check inline className="mb-3">
 																		<Label
 																			className="form-check-label"
@@ -930,10 +930,10 @@ class CreateUser extends React.Component {
 
 																		</Label>
 																	</FormGroup>
-																</Col>
+																</Col> */}
 																</Row>
-																<Row style={{display: props.values.isAlreadyAvailableEmployee === false ? 'none' : ''}}>
-																	<Col lg={3}>
+																<Row >
+																	<Col lg={6}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="contactId">
 																				<span className="text-danger">*</span>
@@ -978,7 +978,7 @@ class CreateUser extends React.Component {
 																		</FormGroup>
 																	</Col>
 																</Row>
-																<Row style={{display: props.values.isNewEmployee === false ? 'none' : ''}}>
+																{/* <Row style={{display: props.values.isNewEmployee === false ? 'none' : ''}}>
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="contactId">
@@ -1067,7 +1067,7 @@ class CreateUser extends React.Component {
 																				)}
 																		</FormGroup>
 																	</Col>
-																</Row>
+																</Row> */}
 															</Col>
 
 														</Row>

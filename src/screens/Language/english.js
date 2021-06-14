@@ -100,7 +100,7 @@ EmployeeDesignation:"Employee Designation",
       QUANTITY: "QUANTITY",
       Quantity:"Quantity",
       UNITPRICE: "UNIT PRICE",
-      Unitprice: "Unit Price",
+      UnitPrice: "Unit Price",
       VAT: "VAT (%)",
       SUBTOTAL: "SUB TOTAL",
       Notes: "Notes",
@@ -206,9 +206,11 @@ AMOUNT:"AMOUNT",
 			
 //RFQ			
 RequestForQuotation:"Request For Quotation",						
-RFQNUMBER:"RFQ NUMBER",									
+RFQNUMBER:"RFQ NUMBER",	
+RFQDate:"RFQ Date",								
 RFQDATE:"RFQ DATE",			
-RFQDUEDATE:"RFQ DUE DATE",						
+RFQDUEDATE:"RFQ DUE DATE",
+RFQDueDate:"RFQ Due Date",						
 AddnewRequest:"Add new Request",			
 											
 //Create RFQ			
@@ -337,8 +339,7 @@ Addnewcontact:"Add New Contact",
 //Product
 Products:"Products",		 		
 PRODUCTCODE:"PRODUCT CODE",				
-VATPERCENTAGE:"VAT PERCENTAGE",		
-UNITPRICE:"UNIT PRICE",		
+VATPERCENTAGE:"VAT PERCENTAGE",				
 AddnewProduct:"Add New Product",		
 
 //Add product
@@ -368,8 +369,7 @@ NewProductCategory:"New Product Category",
 ProductCategoryCode:"Product Category Code",		
 ProductCategoryName:"Product Category Name",	
 
-//VatCategory
-VatCategory:"Vat Category",	
+//VatCategory	
 VatCategories:"Vat Categories",		
 VATNAME:"VAT NAME",	
 VATPERCENTAGE:"VAT PERCENTAGE",	
@@ -720,6 +720,7 @@ UnusedAmount:"UnusedAmount",
 UpdateReceipt:"UpdateReceipt",
 Invoice:"Invoice",
 ModeTBD:"Mode(TBD)",
+
 //placeholder	
 ReceiptAttachmentDescription:"Receipt Attachment Description",	
 DiscountPercentage:"Discount Percentage",		

@@ -204,9 +204,11 @@ AMOUNT:"Quantité",
 			
 //RFQ			
 RequestForQuotation:"Demande de devis",						
-RFQNUMBER:"Demande de numéro de devis ",									
-RFQDATE:"Demande de date de devis ",			
-RFQDUEDATE:"Demande de date d’échéance du devis ",						
+RFQNUMBER:"Demande de numéro de devis",
+RFQDate:"Demande de date de devis",									
+RFQDATE:"DEMANDE DE DATE DE DEVIS",			
+RFQDueDate:"Demande de date d’échéance du devis",	
+RFQDUEDATE:"DEMANDE DE DATE D’échéance DU DEVIS ",					
 AddnewRequest:"Ajouter une nouvelle demande",			
 											
 //Create RFQ			
@@ -334,8 +336,7 @@ Addnewcontact:"Ajouter un nouveau contact",
 //Product
 Products:"Produits",		 		
 PRODUCTCODE:"CODE PRODUIT",				
-VATPERCENTAGE:"POURCENTAGE DE TVA",		
-UNITPRICE:"Prix unitaire",		
+VATPERCENTAGE:"POURCENTAGE DE TVA",				
 AddnewProduct:"Ajouter un nouveau produit",		
 
 //Add product
@@ -710,15 +711,9 @@ UpdateReceipt:"Mettre à jour le reçu",
 Invoice:"Facture",
 ModeTBD:"Mode(TBD)",
 
-//placeholder
-SelectVat:"Sélectionnez la TVA",
-SelectProduct:"Sélectionner Produit",
-SelectCustomerName:"Sélectionnez Nom du Client",	
-SelectTerms:"Sélectionnez les termes",	
+//placeholder	
 ReceiptAttachmentDescription:"Description de la pièce jointe au reçu",	
-DiscountPercentage:"Pourcentage de remise",	
-SelectCurrency:"Sélectionnez la devise",	
-SelectPlaceofSupply:"Sélectionnez la lieu d'approvisionnement",	
+DiscountPercentage:"Pourcentage de remise",		
 Select:"Sélectionnez ",
 Enter:"Entrer ",
 TelephoneNumber:"Numéro de Téléphone",

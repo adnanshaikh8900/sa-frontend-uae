@@ -234,7 +234,7 @@ class CreateCreditNote extends React.Component {
 						onChange={(e) => {
 							this.selectItem(e.target.value, row, 'description', form, field);
 						}}
-						placeholder="Description"
+						placeholder={strings.Description}
 						className={`form-control ${props.errors.lineItemsString &&
 								props.errors.lineItemsString[parseInt(idx, 10)] &&
 								props.errors.lineItemsString[parseInt(idx, 10)].description &&
@@ -280,7 +280,7 @@ class CreateCreditNote extends React.Component {
 									);
 								}
 							}}
-							placeholder="Quantity"
+							placeholder={strings.Quantity}
 							className={`form-control  ${props.errors.lineItemsString &&
 									props.errors.lineItemsString[parseInt(idx, 10)] &&
 									props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
@@ -341,7 +341,7 @@ class CreateCreditNote extends React.Component {
 								);
 							}
 						}}
-						placeholder="Unit Price"
+						placeholder={strings.UnitPrice}
 						className={`form-control ${props.errors.lineItemsString &&
 								props.errors.lineItemsString[parseInt(idx, 10)] &&
 								props.errors.lineItemsString[parseInt(idx, 10)].unitPrice &&
@@ -609,7 +609,7 @@ class CreateCreditNote extends React.Component {
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder="Select Vat"
+						placeholder={strings.Select+strings.Vat}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -702,7 +702,7 @@ class CreateCreditNote extends React.Component {
 								: []
 						}
 						id="productId"
-						placeholder="Select Product"
+						placeholder={strings.Select+strings.Product}
 						onChange={(e) => {
 							if (e && e.label !== 'Select Product') {
 								this.selectItem(
@@ -1479,7 +1479,7 @@ class CreateCreditNote extends React.Component {
 																		styles={customStyles}
 																		id="invoiceNumber"
 																		name="invoiceNumber"
-																		placeholder="Select Invoice Number"
+																		placeholder={strings.Select+strings.InvoiceNumber}
 																		options={
 																			invoice_list.data
 																				? selectOptionsFactory.renderOptions(
@@ -1540,7 +1540,7 @@ class CreateCreditNote extends React.Component {
 																		type="text"
 																		id="creditNoteNumber"
 																		name="creditNoteNumber"
-																		placeholder="Invoice Number"
+																		placeholder={strings.InvoiceNumber }
 																		value={props.values.creditNoteNumber}
 																		onBlur={props.handleBlur('creditNoteNumber')}
 																		onChange={(option) => {
@@ -1574,7 +1574,7 @@ class CreateCreditNote extends React.Component {
 																		styles={customStyles}
 																		id="contactId"
 																		name="contactId"
-																		placeholder="Select Customer name"
+																		placeholder={strings.Select+strings.CustomerName}
 																		options={
 																			tmpCustomer_list
 																				? selectOptionsFactory.renderOptions(
@@ -1769,7 +1769,7 @@ class CreateCreditNote extends React.Component {
 																	<DatePicker
 																		id="creditNoteDate"
 																		name="creditNoteDate"
-																		placeholderText="Invoice Date"
+																		placeholderText={strings.InvoiceDate}
 																		showMonthDropdown
 																		showYearDropdown
 																		dateFormat="dd/MM/yyyy"
@@ -1830,7 +1830,7 @@ class CreateCreditNote extends React.Component {
 																	</Label>
 																	<Select
 																		styles={customStyles}
-																		placeholder="Select Currency"
+																		placeholder={strings.Select+strings.Currency}
 																		options={
 																			currency_convert_list
 																				? selectCurrencyFactory.renderOptions(
@@ -2112,7 +2112,7 @@ class CreateCreditNote extends React.Component {
 																			name="notes"
 																			id="notes"
 																			rows="6"
-																			placeholder="Notes"
+																			placeholder={strings.Notes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}
@@ -2130,7 +2130,7 @@ class CreateCreditNote extends React.Component {
 																					maxLength="100"
 																					id="receiptNumber"
 																					name="receiptNumber"
-																					placeholder="Receipt Number"
+																					placeholder={strings.ReceiptNumber}
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||
@@ -2216,7 +2216,7 @@ class CreateCreditNote extends React.Component {
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
 																			rows="5"
-																			placeholder="Receipt Attachment Description"
+																			placeholder={strings.ReceiptAttachmentDescription}
 																			onChange={(option) =>
 																				props.handleChange(
 																					'receiptAttachmentDescription',

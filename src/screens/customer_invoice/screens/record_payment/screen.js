@@ -565,7 +565,7 @@ class RecordCustomerPayment extends React.Component {
 																		<DatePicker
 																			id="receiptDate"
 																			name="receiptDate"
-																			placeholderText="Payment Date"
+																			placeholderText={strings.PaymentDate}
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd/MM/yyyy"
@@ -620,7 +620,7 @@ class RecordCustomerPayment extends React.Component {
 																					props.handleChange('payMode')('');
 																				}
 																			}}
-																			placeholder="Select Payment Mode"
+																			placeholder={strings.Select+strings.PaymentMode}
 																			id="payMode"
 																			name="payMode"
 																			className={
@@ -657,7 +657,7 @@ class RecordCustomerPayment extends React.Component {
 																					props.handleChange('depositeTo')('');
 																				}
 																			}}
-																			placeholder="Select Deposit To"
+																			placeholder={strings.Select+strings.DepositTo}
 																			id="depositeTo"
 																			name="depositeTo"
 																			className={
@@ -689,7 +689,7 @@ class RecordCustomerPayment extends React.Component {
 																					type="text"
 																					id="referenceCode"
 																					name="referenceCode"
-																					placeholder="Enter Reference Number"
+																					placeholder={strings.Enter+strings.ReferenceNumber}
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||
@@ -716,7 +716,7 @@ class RecordCustomerPayment extends React.Component {
 																					name="notes"
 																					id="notes"
 																					rows="5"
-																					placeholder="Notes"
+																					placeholder={strings.Notes}
 																					onChange={(option) =>
 																						props.handleChange('notes')(option)
 																					}

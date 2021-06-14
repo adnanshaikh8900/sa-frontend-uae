@@ -564,7 +564,7 @@ class Refund extends React.Component {
 																		<DatePicker
 																			id="receiptDate"
 																			name="receiptDate"
-																			placeholderText="Payment Date"
+																			placeholderText={strings.PaymentDate}
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd/MM/yyyy"
@@ -619,7 +619,7 @@ class Refund extends React.Component {
 																					props.handleChange('payMode')('');
 																				}
 																			}}
-																			placeholder="Select Payment Mode"
+																			placeholder={strings.Select+strings.PaymentMode}
 																			id="payMode"
 																			name="payMode"
 																			className={
@@ -641,7 +641,7 @@ class Refund extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="depositeTo">
 																			<span className="text-danger">*</span>{' '}
-																		      {strings.depositeFrom}
+																		      {strings.DepositFrom}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -656,7 +656,7 @@ class Refund extends React.Component {
 																					props.handleChange('depositeTo')('');
 																				}
 																			}}
-																			placeholder="Select Deposit From"
+																			placeholder={strings.Select+strings.DepositFrom}
 																			id="depositeTo"
 																			name="depositeTo"
 																			className={
@@ -688,7 +688,7 @@ class Refund extends React.Component {
 																					type="text"
 																					id="referenceCode"
 																					name="referenceCode"
-																					placeholder="Enter Reference Number"
+																					placeholder={strings.Enter+strings.ReferenceNumber}
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||
@@ -715,7 +715,7 @@ class Refund extends React.Component {
 																					name="notes"
 																					id="notes"
 																					rows="5"
-																					placeholder="Notes"
+																					placeholder={strings.Notes}
 																					onChange={(option) =>
 																						props.handleChange('notes')(option)
 																					}

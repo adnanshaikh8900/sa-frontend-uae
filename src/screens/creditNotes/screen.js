@@ -955,7 +955,7 @@ class CreditNotes extends React.Component {
 											<Col lg={2} className="mb-1">
 												<Select
 													className="select-default-width"
-													placeholder="Select Customer"
+													placeholder={strings.Select+strings.Customer}
 													id="customer"
 													name="customer"
 													options={
@@ -983,7 +983,7 @@ class CreditNotes extends React.Component {
 													className="form-control"
 													id="date"
 													name="invoiceDate"
-													placeholderText="Credit Note Date"
+													placeholderText={strings.CreditNoteDate}
 													selected={filterData.invoiceDate}
 													autoComplete="off"
 													showMonthDropdown
@@ -1001,7 +1001,7 @@ class CreditNotes extends React.Component {
 												<Input
 													type="number"
 													value={filterData.amount}
-													placeholder="Amount"
+													placeholder={strings.Amount}
 													onChange={(e) => {
 														this.handleChange(e.target.value, 'amount');
 													}}
@@ -1028,7 +1028,7 @@ class CreditNotes extends React.Component {
 															this.handleChange('', 'status');
 														}
 													}}
-													placeholder="Status"
+													placeholder={strings.Status}
 												/>
 											</Col>
 											<Col lg={2} className="pl-0 pr-0">

@@ -34,6 +34,9 @@ import { Loader, ConfirmDeleteModal } from 'components'
 import 'react-datepicker/dist/react-datepicker.css'
 
 import './style.scss'
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
+
 
 const mapStateToProps = (state) => {
   return ({
@@ -58,12 +61,13 @@ const customStyles = {
 		},
 	}),
 };
-
+let strings = new LocalizedStrings(data);
 class DetailReceipt extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
+      language: window['localStorage'].getItem('language'),
       loading: true,
       dialog: null,
       initValue: {},
@@ -177,7 +181,7 @@ class DetailReceipt extends React.Component {
   }
 
   render() {
-
+    strings.setLanguage(this.state.language);
     const { contact_list, invoice_list } = this.props
     const { loading, dialog, initValue } = this.state
 
@@ -192,7 +196,7 @@ class DetailReceipt extends React.Component {
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
                         <i className="fa fa-file-o" />
-                        <span className="ml-2">Update Receipt</span>
+                        <span className="ml-2">{strings.UpdateReceipt}</span>
                       </div>
                     </Col>
                   </Row>
@@ -232,12 +236,12 @@ class DetailReceipt extends React.Component {
                                 <Row>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="receiptNo">Receipt Number</Label>
+                                      <Label htmlFor="receiptNo">{strings.ReceiptNumber} </Label>
                                       <Input
                                         type="text"
                                         id="receiptNo"
                                         name="receiptNo"
-                                        placeholder="Receipt Number"
+                                        placeholder={strings.ReceiptNumber}
                                         onChange={(option) => {
                                           if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('receiptNo')(option)}
                                         }}
@@ -247,7 +251,7 @@ class DetailReceipt extends React.Component {
                                   </Col>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="receipt_date"><span className="text-danger">*</span>Receipt Date</Label>
+                                      <Label htmlFor="receipt_date"><span className="text-danger">*</span>{strings.ReceiptDate} </Label>
                                       <DatePicker
                                         id="date"
                                         name="receiptDate"
@@ -255,7 +259,7 @@ class DetailReceipt extends React.Component {
                                         showYearDropdown
                                         dateFormat="dd/MM/yyyy"
                                         dropdownMode="select"
-                                        placeholderText="Receipt Date"
+                                        placeholderText={strings.ReceiptDate}
                                         value={props.values.receiptDate ? moment(props.values.receiptDate).format('DD-MM-YYYY') : ''}
                                         onChange={(value) => {
                                           props.handleChange("receiptDate")(value)
@@ -271,12 +275,12 @@ class DetailReceipt extends React.Component {
                                 <Row>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="referenceCode"><span className="text-danger">*</span>Reference Number</Label>
+                                      <Label htmlFor="referenceCode"><span className="text-danger">*</span>{strings.ReferenceNumber} </Label>
                                       <Input
                                         type="text"
                                         id="referenceCode"
                                         name="referenceCode"
-                                        placeholder="Reference Number"
+                                        placeholder={strings.ReferenceNumber}
                                         value={props.values.referenceCode}
                                         onChange={(option) => {
                                           if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('referenceCode')(option)}
@@ -290,10 +294,10 @@ class DetailReceipt extends React.Component {
                                   </Col>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="customer_name"><span className="text-danger">*</span>Customer Name</Label>
+                                      <Label htmlFor="customer_name"><span className="text-danger">*</span>{strings.CustomerName} </Label>
                                       <Select
                                         options={contact_list ? selectOptionsFactory.renderOptions('label', 'value', contact_list, 'Customer Name') : []}
-                                        placeholder="Customer Name"
+                                        placeholder={strings.CustomerName}
                                         value={contact_list && contact_list.find((option) => option.value === +props.values.contactId)}
                                         onChange={(option) => {
                                           if (option && option.value) {
@@ -313,12 +317,12 @@ class DetailReceipt extends React.Component {
                                 <Row>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="invoice">Invoice</Label>
+                                      <Label htmlFor="invoice">{strings.Invoice}</Label>
                                       <Select
                                       styles={customStyles}
                                         options={invoice_list ? selectOptionsFactory.renderOptions('label', 'value', invoice_list, 'Invoice Number') : []}
                                         className="select-default-width"
-                                        placeholder="Invoice Number"
+                                        placeholder={strings.InvoiceNumber}
                                         value={invoice_list && invoice_list.find((option) => option.value === +props.values.invoiceId)}
                                         onChange={(option) => {
                                           if (option && option.value) {
@@ -336,7 +340,7 @@ class DetailReceipt extends React.Component {
                                 <Row>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="mode">Mode(TBD)</Label>
+                                      <Label htmlFor="mode">{strings.ModeTBD}</Label>
                                       <Select
                                       styles={customStyles}
                                         className="select-default-width"
@@ -350,12 +354,12 @@ class DetailReceipt extends React.Component {
                                 <Row>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="amount"><span className="text-danger">*</span>Amount</Label>
+                                      <Label htmlFor="amount"><span className="text-danger">*</span>{strings.Amount} </Label>
                                       <Input
                                       type="number"
                                         id="amount"
                                         name="amount"
-                                        placeholder="Amount"
+                                        placeholder={strings.Amount}
                                         onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('amount')(option) }}}
                                         value={props.values.amount}
                                         className={`form-control ${props.errors.amount && props.touched.amount ? "is-invalid" : ""}`}
@@ -368,12 +372,12 @@ class DetailReceipt extends React.Component {
                                   </Col>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="unusedAmount">Unused Amount</Label>
+                                      <Label htmlFor="unusedAmount">{strings.UnusedAmount}</Label>
                                       <Input
                                        type="number"
                                         id="unusedAmount"
                                         name="unusedAmount"
-                                        placeholder="Unused Amount"
+                                        placeholder={strings.UnusedAmount}
                                         onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('unusedAmount')(option) }}}
                                         value={props.values.unusedAmount}
     
@@ -385,16 +389,16 @@ class DetailReceipt extends React.Component {
                                   <Col lg={12} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">
                                     <FormGroup>
                                       <Button color="danger" className="btn-square" onClick={this.deleteReceipt}>
-                                        <i className="fa fa-trash"></i> Delete
+                                        <i className="fa fa-trash"></i>{strings.Delete} 
                                 </Button>
                                     </FormGroup>
                                     <FormGroup className="text-right">
                                       <Button type="submit" color="primary" className="btn-square mr-3">
-                                        <i className="fa fa-dot-circle-o"></i> Update
+                                        <i className="fa fa-dot-circle-o"></i>{strings.Update}
                                 </Button>
                                       <Button color="secondary" className="btn-square"
                                         onClick={() => { this.props.history.push('/admin/revenue/receipt') }}>
-                                        <i className="fa fa-ban"></i> Cancel
+                                        <i className="fa fa-ban"></i>{strings.Cancel} 
                                 </Button>
                                     </FormGroup>
                                   </Col>

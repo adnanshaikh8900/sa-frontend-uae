@@ -342,7 +342,7 @@ class ProductModal extends React.Component {
 														}}
 														onBlur={handleBlur}
 														value={props.values.productName}
-														placeholder="Enter Product Name"
+														placeholder={strings.Enter+strings.ProductName}
 														className={
 															props.errors.productName &&
 															props.touched.productName
@@ -381,7 +381,7 @@ class ProductModal extends React.Component {
 														maxLength="70"
 														id="productCode"
 														name="productCode"
-														placeholder="Enter Product Code"
+														placeholder={strings.Enter+strings.ProductCode}
 														onChange={(option) => {
 															if (
 																option.target.value === '' ||
@@ -417,7 +417,7 @@ class ProductModal extends React.Component {
 														}
 														id="productCategoryId"
 														name="productCategoryId"
-														placeholder="Select Product Category"
+														placeholder={strings.Select+strings.ProductCategory}
 														value={props.values.productCategoryId}
 														onChange={(option) => {
 															// this.setState({
@@ -473,7 +473,7 @@ class ProductModal extends React.Component {
 														}
 														id="vatCategoryId"
 														name="vatCategoryId"
-														placeholder="Select Vat Category"
+														placeholder={strings.Select+strings.VATCategory}
 														value={props.values.vatCategoryId}
 														onChange={(option) => {
 															// this.setState({
@@ -675,7 +675,7 @@ class ProductModal extends React.Component {
 														maxLength="10"
 														id="salesUnitPrice"
 														name="salesUnitPrice"
-														placeholder="Enter Selling Price"
+														placeholder={strings.Enter+strings.SellingPrice}
 														readOnly={
 															props.values.productPriceType.includes('SALES')
 																? false
@@ -760,7 +760,7 @@ class ProductModal extends React.Component {
 														name="salesDescription"
 														id="salesDescription"
 														rows="3"
-														placeholder="Description..."
+														placeholder={strings.Description}
 														onChange={(value) => {
 															props.handleChange('salesDescription')(value);
 														}}
@@ -842,7 +842,7 @@ class ProductModal extends React.Component {
 														maxLength="10"
 														id="purchaseUnitPrice"
 														name="purchaseUnitPrice"
-														placeholder="Enter Selling Price"
+														placeholder={strings.Enter+strings.SellingPrice}
 														onChange={(option) => {
 															if (
 																option.target.value === '' ||
@@ -930,7 +930,7 @@ class ProductModal extends React.Component {
 														name="purchaseDescription"
 														id="purchaseDescription"
 														rows="3"
-														placeholder="Description..."
+														placeholder={strings.Description}
 														onChange={(value) => {
 															props.handleChange('purchaseDescription')(value);
 														}}

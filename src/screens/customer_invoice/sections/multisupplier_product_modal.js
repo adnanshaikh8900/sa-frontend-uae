@@ -25,6 +25,7 @@ import { isValidPhoneNumber } from 'react-phone-number-input';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import { TextField } from '@material-ui/core';
+import { StringStream } from 'codemirror';
 
 class SupplierModal extends React.Component {
 	constructor(props) {

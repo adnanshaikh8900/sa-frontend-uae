@@ -279,7 +279,7 @@ class ApplyToInvoice extends React.Component {
 						onChange={(e) => {
 							this.selectItem(e.target.value, row, 'description', form, field);
 						}}
-						placeholder="Description"
+						placeholder={strings.Description}
 						className={`form-control 
             ${
 							props.errors.lineItemsString &&
@@ -327,7 +327,7 @@ class ApplyToInvoice extends React.Component {
 									);
 								}
 							}}
-							placeholder="Quantity"
+							placeholder={strings.Quantity}
 							className={`form-control 
            						${
 												props.errors.lineItemsString &&
@@ -407,7 +407,7 @@ class ApplyToInvoice extends React.Component {
 								);
 							}
 						}}
-						placeholder="Unit Price"
+						placeholder={strings.UnitPrice}
 						className={`form-control 
                        ${
 													props.errors.lineItemsString &&
@@ -533,7 +533,7 @@ class ApplyToInvoice extends React.Component {
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder="Select Vat"
+						placeholder={strings.Select+strings.Vat}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,

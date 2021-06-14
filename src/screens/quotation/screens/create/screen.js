@@ -237,7 +237,7 @@ class CreateQuotation extends React.Component {
 								props,
 							);
 						}}
-						placeholder="Description"
+						placeholder={strings.Description}
 						className={`form-control 
             ${
 							props.errors.lineItemsString &&
@@ -286,7 +286,7 @@ class CreateQuotation extends React.Component {
 									);
 								}
 							}}
-							placeholder="Quantity"
+							placeholder={strings.Quantity}
 							className={`form-control 
             ${
 							props.errors.lineItemsString &&
@@ -346,7 +346,7 @@ class CreateQuotation extends React.Component {
 								);
 							}
 						}}
-						placeholder="Unit Price"
+						placeholder={strings.UnitPrice}
 						className={`form-control 
             ${
 							props.errors.lineItemsString &&
@@ -553,7 +553,7 @@ class CreateQuotation extends React.Component {
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder="Select Vat"
+						placeholder={strings.Select+strings.Vat}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -654,7 +654,7 @@ class CreateQuotation extends React.Component {
 								: []
 						}
 						id="productId"
-						placeholder="Select Product"
+						placeholder={strings.Select+strings.Product}
 						onChange={(e) => {
 							if (e && e.label !== 'Select Product') {
 								this.selectItem(e.value, row, 'productId', form, field, props);
@@ -1263,7 +1263,7 @@ class CreateQuotation extends React.Component {
 																		type="text"
 																		id="quotation_Number"
 																		name="quotation_Number"
-																		placeholder="Invoice Number"
+																		placeholder={strings.InvoiceNumber}
 																		value={props.values.quotation_Number}
 																		onBlur={props.handleBlur('quotation_Number')}
 																		onChange={(option) => {
@@ -1297,7 +1297,7 @@ class CreateQuotation extends React.Component {
 																		styles={customStyles}
 																		id="customerId"
 																		name="customerId"
-																		placeholder="Select Customer Name"
+																		placeholder={strings.Select+strings.CustomerName}
 																		options={
 																			tmpSupplier_list
 																				? selectOptionsFactory.renderOptions(
@@ -1400,7 +1400,7 @@ class CreateQuotation extends React.Component {
 																				? 'is-invalid'
 																				: ''
 																		}`}
-																		placeholderText="Order Due date"
+																		placeholderText={strings.OrderDueDate}
 																		selected={props.values.quotaionExpiration}
 																		showMonthDropdown
 																		showYearDropdown
@@ -1557,7 +1557,7 @@ class CreateQuotation extends React.Component {
 																			name="notes"
 																			id="notes"
 																			rows="6"
-																			placeholder="Notes"
+																			placeholder={strings.Notes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}

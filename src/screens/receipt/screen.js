@@ -419,7 +419,7 @@ class Receipt extends React.Component {
 														className="form-control"
 														id="date"
 														name="receiptDate"
-														placeholderText="Receipt Date"
+														placeholderText={strings.ReceiptDate}
 														selected={filterData.receiptDate}
 														autoComplete="off"
 														showMonthDropdown
@@ -458,7 +458,7 @@ class Receipt extends React.Component {
 																: []
 														}
 														className="select-default-width"
-														placeholder="Invoice Number"
+														placeholder={strings.InvoiceNumber}
 														value={filterData.invoiceId}
 														onChange={(option) => {
 															if (option && option.value) {
@@ -483,7 +483,7 @@ class Receipt extends React.Component {
 																: []
 														}
 														className="select-default-width"
-														placeholder="Customer Name"
+														placeholder={strings.CustomerName}
 														value={filterData.contactId}
 														onChange={(option) => {
 															if (option && option.value) {

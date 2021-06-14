@@ -25,12 +25,16 @@ import { isValidPhoneNumber } from 'react-phone-number-input';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import { TextField } from '@material-ui/core';
+import { StringStream } from 'codemirror';
+import {data}  from '../../Language/index'
+import LocalizedStrings from 'react-localization';
 
+let strings = new LocalizedStrings(data);
 class SupplierModal extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			
+			language: window['localStorage'].getItem('language'),	
 		};
 		
 	}
@@ -46,13 +50,14 @@ class SupplierModal extends React.Component {
 			<Input
 				type="text"
 				
-				placeholder="Quantity" >
+				placeholder={strings.Quantity} >
 			</Input>
 		</div>
 		)
 	}
 	
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			openMultiSupplierProductModal,
 			closeMultiSupplierProductModal,

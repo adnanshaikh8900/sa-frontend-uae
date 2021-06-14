@@ -21,12 +21,15 @@ import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 import 'react-phone-number-input/style.css';
 import moment from 'moment';
+import {data}  from '../../Language/index'
+import LocalizedStrings from 'react-localization';
 
-
+let strings = new LocalizedStrings(data);
 class DesignationModal extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			showDetails : false,
 			loading: false,
 			initValue: {
@@ -160,6 +163,7 @@ class DesignationModal extends React.Component {
 	// 	max-width: 70% !important;
 	// }
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			openDesignationModal,
 			closeDesignationModal,
@@ -230,7 +234,7 @@ class DesignationModal extends React.Component {
 											<Col lg={12}>
 												<div className="h4 mb-0 d-flex align-items-center">
 													<i className="nav-icon fas fa-id-card-alt" />
-													<span className="ml-2">Create Designation</span>
+													<span className="ml-2"> {strings.CreateDesignation} </span>
 												</div>
 											</Col>
 										</Row>
@@ -240,7 +244,7 @@ class DesignationModal extends React.Component {
 										<Row className="row-wrapper">
                                         <Col lg={8}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>Employee Designation Name</Label>
+                                  <Label htmlFor="select"><span className="text-danger">*</span> {strings.EmployeeDesignationName} </Label>
                                   <Input
                                     type="text"
                                     id="designationName"
@@ -271,7 +275,7 @@ class DesignationModal extends React.Component {
 												});
 											}}
 										>
-											<i className="fa fa-dot-circle-o"></i> Create
+											<i className="fa fa-dot-circle-o"></i>  {strings.Create}
 										</Button>
 										&nbsp;
 										<Button
@@ -281,7 +285,7 @@ class DesignationModal extends React.Component {
 												closeDesignationModal(false);
 											}}
 										>
-											<i className="fa fa-ban"></i> Cancel
+											<i className="fa fa-ban"></i> {strings. Cancel}
 										</Button>
 									</ModalFooter>
 								</Form>

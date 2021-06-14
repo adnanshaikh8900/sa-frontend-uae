@@ -2194,13 +2194,13 @@ uploadImage = (picture, file) => {
                                                             <Table className="text-center" style={{border:"3px solid #c8ced3",    width: '133%'}} >
                                                                 <thead style={{border:"3px solid #c8ced3"}}>
                                                                       <tr style={{border:"3px solid #c8ced3",    background: '#dfe9f7',color:"Black"}}>
-                                                                        {this.columnHeader1.map((column, index) => {
+                                                                        { this.state.Fixed ? this.columnHeader1.map((column, index) => {
                                                                             return (
                                                                                 <th>
                                                                                     {column.label}
                                                                                 </th>
                                                                             );
-                                                                        })}
+                                                                        }): ""}
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
@@ -2305,13 +2305,13 @@ uploadImage = (picture, file) => {
                                                             <Table className="text-center" style={{border:"3px solid #c8ced3",    width: '133%'}}>
                                                             <thead style={{border:"3px solid #c8ced3"}}>
                                                                       <tr style={{border:"3px solid #c8ced3",    background: '#dfe9f7',color:"Black"}}>
-                                                                        {this.columnHeader1.map((column, index) => {
+                                                                        { this.state.Variable ? this.columnHeader1.map((column, index) => {
                                                                             return (
                                                                                 <th>
                                                                                     {column.label}
                                                                                 </th>
                                                                             );
-                                                                        })}
+                                                                        }) : ""}
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
@@ -2419,13 +2419,13 @@ uploadImage = (picture, file) => {
                                                             <Table className="text-center" style={{border:"3px solid #c8ced3", width: '133%'}}>
                                                             <thead style={{border:"3px solid #c8ced3"}}>
                                                                       <tr style={{border:"3px solid #c8ced3",    background: '#dfe9f7',color:"Black"}}>
-                                                                        {this.columnHeader1.map((column, index) => {
+                                                                        {this.state.Deduction ? this.columnHeader1.map((column, index) => {
                                                                             return (
                                                                                 <th>
                                                                                     {column.label}
                                                                                 </th>
                                                                             );
-                                                                        })}
+                                                                        }) : ""}
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>

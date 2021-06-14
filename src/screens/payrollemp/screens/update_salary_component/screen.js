@@ -550,13 +550,13 @@ handleChange = (evt) => {
                                                             <Table className="text-center" style={{border:"1px solid #c8ced3",  width: '150%'}} >
                                                                 <thead style={{border:"1px solid #c8ced3"}}>
                                                                       <tr style={{border:"1px solid #c8ced3",    background: '#dfe9f7',color:"Black"}}>
-                                                                        {this.columnHeader1.map((column, index) => {
+                                                                        { this.state.Fixed ? this.columnHeader1.map((column, index) => {
                                                                             return (
                                                                                 <th>
                                                                                     {column.label}
                                                                                 </th>
                                                                             );
-                                                                        })}
+                                                                        }) :""}
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
@@ -668,13 +668,13 @@ handleChange = (evt) => {
                                                             <Table className="text-center" style={{border:"1px solid #c8ced3",    width: '150%'}}>
                                                             <thead style={{border:"1px solid #c8ced3"}}>
                                                                       <tr style={{border:"1px solid #c8ced3",    background: '#dfe9f7',color:"Black"}}>
-                                                                        {this.columnHeader1.map((column, index) => {
+                                                                        {this.state.Variable  ? this.columnHeader1.map((column, index) => {
                                                                             return (
                                                                                 <th>
                                                                                     {column.label}
                                                                                 </th>
                                                                             );
-                                                                        })}
+                                                                        }) :""}
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
@@ -785,13 +785,13 @@ handleChange = (evt) => {
                                                             <Table className="text-center" style={{border:"1px solid #c8ced3",    width: '150%'}}>
                                                             <thead style={{border:"1px solid #c8ced3"}}>
                                                                       <tr style={{border:"1px solid #c8ced3",    background: '#dfe9f7',color:"Black"}}>
-                                                                        {this.columnHeader1.map((column, index) => {
+                                                                        {this.state.Deduction  ?  this.columnHeader1.map((column, index) => {
                                                                             return (
                                                                                 <th>
                                                                                     {column.label}
                                                                                 </th>
                                                                             );
-                                                                        })}
+                                                                        }):""}
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
@@ -857,7 +857,7 @@ handleChange = (evt) => {
                                                                                     <td style={{border:"1px solid  #c8ced3"}} >
                                                                                       {item.flatAmount * 12}
                                                                                     </td>
-                                                                                )}
+                                                                                )}                                                                            
                                                                                 <td>    
                                                                                         <Button 
                                                                                           color='link'

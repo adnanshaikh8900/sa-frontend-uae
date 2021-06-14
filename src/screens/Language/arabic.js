@@ -713,14 +713,8 @@ ModeTBD:"(TBD)الوضع",
 
 
 //placeholder
-SelectVat:"حدد ضريبة القيمة المضافة",
-SelectProduct:"حدد المنتج",
-SelectCustomerName:"حدد اسم العميل",	
-SelectTerms:"حدد الشروط",	
 ReceiptAttachmentDescription:"وصف مرفق الإيصال",	
-DiscountPercentage:"نسبة الخصم",	
-SelectCurrency:"اختر العملة",	
-SelectPlaceofSupply:"حدد مكان التوريد",	
+DiscountPercentage:"نسبة الخصم",		
 Select:"",
 Enter:"",
 TelephoneNumber:"رقم الهاتف",

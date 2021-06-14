@@ -232,7 +232,7 @@ class CreateCustomerInvoice extends React.Component {
 						onChange={(e) => {
 							this.selectItem(e.target.value, row, 'description', form, field);
 						}}
-						placeholder="Description"
+						placeholder={strings.Description}
 						className={`form-control ${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -279,7 +279,7 @@ class CreateCustomerInvoice extends React.Component {
 									);
 								}
 							}}
-							placeholder="Quantity"
+							placeholder={strings.Quantity}
 							className={`form-control  ${
 								props.errors.lineItemsString &&
 								props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -341,7 +341,7 @@ class CreateCustomerInvoice extends React.Component {
 								);
 							}
 						}}
-						placeholder="Unit Price"
+						placeholder={strings.UnitPrice}
 						className={`form-control ${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -610,7 +610,7 @@ class CreateCustomerInvoice extends React.Component {
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder="Select Vat"
+						placeholder={strings.Select+strings.Vat}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -704,7 +704,7 @@ class CreateCustomerInvoice extends React.Component {
 									: []
 							}
 							id="productId"
-							placeholder="Select Product"
+							placeholder={strings.Select+strings.Product}
 							onChange={(e) => {
 								if (e && e.label !== 'Select Product') {
 									this.selectItem(
@@ -1374,7 +1374,7 @@ class CreateCustomerInvoice extends React.Component {
 																		type="text"
 																		id="invoice_number"
 																		name="invoice_number"
-																		placeholder="Invoice Number"
+																		placeholder={strings.InvoiceNumber}
 																		value={props.values.invoice_number}
 																		onBlur={props.handleBlur('invoice_number')}
 																		onChange={(option) => {
@@ -1408,7 +1408,7 @@ class CreateCustomerInvoice extends React.Component {
 																		styles={customStyles}
 																		id="contactId"
 																		name="contactId"
-																		placeholder="Select Customer name"
+																		placeholder={strings.Select+strings.CustomerName} 
 																		options={
 																			tmpCustomer_list
 																				? selectOptionsFactory.renderOptions(
@@ -1472,7 +1472,7 @@ class CreateCustomerInvoice extends React.Component {
 																		styles={customStyles}
 																		id="placeOfSupplyId"
 																		name="placeOfSupplyId"
-																		placeholder="Select Place of Supply"
+																		placeholder={strings.Select+strings.PlaceofSupply}
 																		options={
 																			this.placelist
 																				? selectOptionsFactory.renderOptions(
@@ -1558,7 +1558,7 @@ class CreateCustomerInvoice extends React.Component {
 																		}
 																		id="term"
 																		name="term"
-																		placeholder="Select Terms "
+																		placeholder={strings.Select+strings.Terms} 
 																		value={this.state.term}
 																		onChange={(option) => {
 																			props.handleChange('term')(option);
@@ -1603,7 +1603,7 @@ class CreateCustomerInvoice extends React.Component {
 																	<DatePicker
 																		id="invoiceDate"
 																		name="invoiceDate"
-																		placeholderText="Invoice Date"
+																		placeholderText={strings.InvoiceDate}
 																		showMonthDropdown
 																		showYearDropdown
 																		dateFormat="dd/MM/yyyy"
@@ -1639,7 +1639,7 @@ class CreateCustomerInvoice extends React.Component {
 																			className="form-control"
 																			id="invoiceDueDate"
 																			name="invoiceDueDate"
-																			placeholderText="Invoice Due Date"
+																			placeholderText={strings.InvoiceDueDate}
 																			showMonthDropdown
 																			showYearDropdown
 																			disabled
@@ -1668,7 +1668,7 @@ class CreateCustomerInvoice extends React.Component {
 																	<Select
 																	isDisabled={true}
 																		styles={customStyles}
-																		placeholder="Select Currency"
+																		placeholder={strings.Select+strings.Currency}
 																		options={
 																			currency_convert_list
 																				? selectCurrencyFactory.renderOptions(
@@ -1926,7 +1926,7 @@ class CreateCustomerInvoice extends React.Component {
 																			name="notes"
 																			id="notes"
 																			rows="6"
-																			placeholder="Notes"
+																			placeholder={strings.Notes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}
@@ -1944,7 +1944,7 @@ class CreateCustomerInvoice extends React.Component {
 																					maxLength="100"
 																					id="receiptNumber"
 																					name="receiptNumber"
-																					placeholder="Receipt Number"
+																					placeholder={strings.ReceiptNumber}
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||
@@ -2030,7 +2030,7 @@ class CreateCustomerInvoice extends React.Component {
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
 																			rows="5"
-																			placeholder="Receipt Attachment Description"
+																			placeholder={strings.ReceiptAttachmentDescription}
 																			onChange={(option) =>
 																				props.handleChange(
 																					'receiptAttachmentDescription',
@@ -2097,7 +2097,7 @@ class CreateCustomerInvoice extends React.Component {
 																							<Input
 																								id="discountPercentage"
 																								name="discountPercentage"
-																								placeholder="Discount Percentage"
+																								placeholder={strings.DiscountPercentage}
 																								type="number"
 																								maxLength="5"
 																								value={
@@ -2153,7 +2153,7 @@ class CreateCustomerInvoice extends React.Component {
 																									? true
 																									: false
 																							}
-																							placeholder="Discount Amounts"
+																							placeholder={strings.DiscountAmount}
 																							value={props.values.discount}
 																							onChange={(option) => {
 																								if (

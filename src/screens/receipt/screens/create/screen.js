@@ -32,6 +32,8 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
 import './style.scss';
 import moment from 'moment';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -62,11 +64,12 @@ const customStyles = {
 		},
 	}),
 };
-
+let strings = new LocalizedStrings(data);
 class CreateReceipt extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			createMore: false,
 			initValue: {
 				receiptNo: 1,
@@ -306,7 +309,7 @@ class CreateReceipt extends React.Component {
 						// onChange={(e) => {
 						// 	this.selectItem(e, row, 'description', form, field);
 						// }}
-						placeholder="Amount"
+						placeholder={strings.Amount}
 						className={`form-control`}
 					/>
 				)}
@@ -315,6 +318,7 @@ class CreateReceipt extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { contact_list, deposit_list, pay_mode } = this.props;
 		const { initValue, data } = this.state;
 		return (
@@ -328,7 +332,7 @@ class CreateReceipt extends React.Component {
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="fa fa-file-o" />
-												<span className="ml-2">Create Receipt</span>
+												<span className="ml-2">{strings.CreateReceipt}</span>
 											</div>
 										</Col>
 									</Row>
@@ -407,7 +411,7 @@ class CreateReceipt extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="customer_name">
 																		<span className="text-danger">*</span>
-																		Customer Name
+																		 {strings.CustomerName} 
 																	</Label>
 																	<Select
 																		styles={customStyles}
@@ -422,7 +426,7 @@ class CreateReceipt extends React.Component {
 																				: []
 																		}
 																		// className="select-default-width"
-																		placeholder="Customer Name"
+																		placeholder={strings.CustomerName}
 																		value={props.values.contactId}
 																		onChange={(option) => {
 																			if (option && option.value) {
@@ -481,14 +485,14 @@ class CreateReceipt extends React.Component {
 																						<span className="text-danger">
 																							*
 																						</span>
-																						Amount Received
+																						 {strings.AmountReceived} 
 																					</Label>
 																					<Input
 																						type="number"
 																						id="amount"
 																						name="amount"
 																						readOnly
-																						placeholder="Amount"
+																						placeholder={strings.Amount}
 																						onChange={(option) => {
 																							if (
 																								option.target.value === '' ||
@@ -526,12 +530,12 @@ class CreateReceipt extends React.Component {
 																						<span className="text-danger">
 																							*
 																						</span>
-																						Payment Date
+																						{strings.PaymentDate}
 																					</Label>
 																					<DatePicker
 																						id="date"
 																						name="receiptDate"
-																						placeholderText="Receipt Date"
+																						placeholderText={strings.ReceiptDate}
 																						selected={props.values.receiptDate}
 																						showMonthDropdown
 																						showYearDropdown
@@ -565,7 +569,7 @@ class CreateReceipt extends React.Component {
 																						<span className="text-danger">
 																							*
 																						</span>{' '}
-																						Payment Mode
+																						{strings.PaymentMode}
 																					</Label>
 																					<Select
 																						styles={customStyles}
@@ -591,7 +595,7 @@ class CreateReceipt extends React.Component {
 																								);
 																							}
 																						}}
-																						placeholder="Select Payment Mode"
+																						placeholder={strings.Select+strings.PaymentMode}
 																						id="payMode"
 																						name="payMode"
 																						className={
@@ -615,7 +619,7 @@ class CreateReceipt extends React.Component {
 																						<span className="text-danger">
 																							*
 																						</span>{' '}
-																						Deposit To
+																						{strings.DepositTo} 
 																					</Label>
 																					<Select
 																						styles={customStyles}
@@ -632,7 +636,7 @@ class CreateReceipt extends React.Component {
 																								)('');
 																							}
 																						}}
-																						placeholder="Select Deposit To"
+																						placeholder={strings.Select+strings.DepositTo}
 																						id="depositeTo"
 																						name="depositeTo"
 																						className={
@@ -658,13 +662,13 @@ class CreateReceipt extends React.Component {
 																					<Col lg={6}>
 																						<FormGroup className="mb-3">
 																							<Label htmlFor="referenceCode">
-																								Reference Number
+																								 {strings.ReferenceNumber}
 																							</Label>
 																							<Input
 																								type="text"
 																								id="referenceCode"
 																								name="referenceCode"
-																								placeholder="Enter Reference Number"
+																								placeholder={strings.Enter+strings.ReferenceNumber}
 																								onChange={(option) => {
 																									if (
 																										option.target.value ===
@@ -689,14 +693,14 @@ class CreateReceipt extends React.Component {
 																					<Col lg={12}>
 																						<FormGroup className="mb-3">
 																							<Label htmlFor="notes">
-																								Notes
+																								{strings.Notes} 
 																							</Label>
 																							<Input
 																								type="textarea"
 																								name="notes"
 																								id="notes"
 																								rows="5"
-																								placeholder="Notes"
+																								placeholder={strings.Notes} 
 																								onChange={(option) =>
 																									props.handleChange('notes')(
 																										option,
@@ -719,7 +723,7 @@ class CreateReceipt extends React.Component {
 																								render={({ field, form }) => (
 																									<div>
 																										<Label>
-																											Reciept Attachment
+																											{strings.ReceiptAttachment} 
 																										</Label>{' '}
 																										<br />
 																										<Button
@@ -734,7 +738,7 @@ class CreateReceipt extends React.Component {
 																											className="btn-square mr-3"
 																										>
 																											<i className="fa fa-upload"></i>{' '}
-																											Upload
+																											{strings.Upload} 
 																										</Button>
 																										<input
 																											id="fileInput"
@@ -817,16 +821,16 @@ class CreateReceipt extends React.Component {
 																						this.date(cell, rows, props)
 																					}
 																				>
-																					Date
+																					{strings.Date}
 																				</TableHeaderColumn>
 																				<TableHeaderColumn dataField="referenceNo">
-																					Invoice Number
+																					{strings.InvoiceNumber}
 																				</TableHeaderColumn>
 																				<TableHeaderColumn dataField="totalAount">
-																					Invoice Amount
+																					{strings.InvoiceAmount}
 																				</TableHeaderColumn>
 																				<TableHeaderColumn dataField="dueAmount">
-																					Amount Due
+																					 {strings.AmountDue}
 																				</TableHeaderColumn>
 																				<TableHeaderColumn
 																					dataField="paidAmount"
@@ -834,7 +838,7 @@ class CreateReceipt extends React.Component {
 																						this.renderAmount(cell, rows, props)
 																					}
 																				>
-																					Payment
+																					{strings.Payment}
 																				</TableHeaderColumn>
 																			</BootstrapTable>
 																		</Row>
@@ -853,7 +857,7 @@ class CreateReceipt extends React.Component {
 																						}}
 																					>
 																						<i className="fa fa-dot-circle-o"></i>{' '}
-																						Create
+																						 {strings.Create}
 																					</Button>
 																					<Button
 																						type="button"
@@ -865,7 +869,7 @@ class CreateReceipt extends React.Component {
 																							);
 																						}}
 																					>
-																						<i className="fa fa-ban"></i> Cancel
+																						<i className="fa fa-ban"></i> {strings.Cancel}
 																					</Button>
 																				</FormGroup>
 																			</Col>

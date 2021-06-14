@@ -234,7 +234,7 @@ class CustomerModal extends React.Component {
 																? 'is-invalid'
 																: ''
 														}
-														placeholder="Enter First Name"
+														placeholder={strings.Enter+strings.FirstName}
 													/>
 													{props.errors.firstName &&
 														props.touched.firstName && (
@@ -267,7 +267,7 @@ class CustomerModal extends React.Component {
 																? 'is-invalid'
 																: ''
 														}
-														placeholder="Enter Middle Name"
+														placeholder={strings.Enter+strings.MiddleName}
 													/>
 													{props.errors.middleName &&
 														props.touched.middleName && (
@@ -299,7 +299,7 @@ class CustomerModal extends React.Component {
 																? 'is-invalid'
 																: ''
 														}
-														placeholder="Enter Last Name"
+														placeholder={strings.Enter+strings.LastName}
 													/>
 													{props.errors.lastName && props.touched.lastName && (
 														<div className="invalid-feedback">
@@ -329,7 +329,7 @@ class CustomerModal extends React.Component {
 																? 'is-invalid'
 																: ''
 														}
-														placeholder="Enter Email"
+														placeholder={strings.Enter+strings.Email}
 													/>
 													{props.errors.email && props.touched.email && (
 														<div className="invalid-feedback">
@@ -403,7 +403,7 @@ class CustomerModal extends React.Component {
 																props.handleChange('currencyCode')('');
 															}
 														}}
-														placeholder="Select Currency"
+														placeholder={strings.Select+strings.Currency}
 														id="currrencyCode"
 														name="currencyCode"
 														className={
@@ -451,7 +451,7 @@ class CustomerModal extends React.Component {
 																? 'is-invalid'
 																: ''
 														}
-														placeholder="Enter Tax Registration Number"
+														placeholder={strings.Enter+strings.TaxRegistrationNumber}
 													/>
 													{props.errors.vatRegistrationNumber &&
 														props.touched.vatRegistrationNumber && (
@@ -501,7 +501,7 @@ class CustomerModal extends React.Component {
 																? 'is-invalid'
 																: ''
 														}
-														placeholder="Enter Organization Name"
+														placeholder={strings.Enter+strings.OrganizationName}
 													/>
 													{props.errors.organization &&
 														props.touched.organization && (
@@ -534,7 +534,7 @@ class CustomerModal extends React.Component {
 																? 'is-invalid'
 																: ''
 														}
-														placeholder="Enter PO Box Number"
+														placeholder={strings.Enter+strings.POBoxNumber}
 													/>
 													{props.errors.poBoxNumber &&
 														props.touched.poBoxNumber && (
@@ -565,7 +565,7 @@ class CustomerModal extends React.Component {
 																? 'is-invalid'
 																: ''
 														}
-														placeholder="Enter Telephone Number"
+														placeholder={strings.Enter+strings.TelephoneNumber}
 													/>
 													{props.errors.telephone &&
 														props.touched.telephone && (
@@ -600,7 +600,7 @@ class CustomerModal extends React.Component {
 																? 'is-invalid'
 																: ''
 														}
-														placeholder="Enter AddressLine 1"
+														placeholder={strings.Enter+strings.AddressLine1}
 													/>
 													{props.errors.addressLine1 &&
 														props.touched.addressLine1 && (
@@ -633,7 +633,7 @@ class CustomerModal extends React.Component {
 																? 'is-invalid'
 																: ''
 														}
-														placeholder="Enter AddressLine 2"
+														placeholder={strings.Enter+strings.AddressLine2}
 													/>
 													{props.errors.addressLine2 &&
 														props.touched.addressLine2 && (
@@ -666,7 +666,7 @@ class CustomerModal extends React.Component {
 																? 'is-invalid'
 																: ''
 														}
-														placeholder="Enter AddressLine 3"
+														placeholder={strings.Enter+strings.AddressLine3}
 													/>
 													{props.errors.addressLine3 &&
 														props.touched.addressLine3 && (
@@ -706,7 +706,7 @@ class CustomerModal extends React.Component {
 																value: '',
 															});
 														}}
-														placeholder="Select Country"
+														placeholder={strings.Select+strings.Country}
 														id="countryId"
 														name="countryId"
 														className={
@@ -745,7 +745,7 @@ class CustomerModal extends React.Component {
 																props.handleChange('stateId')('');
 															}
 														}}
-														placeholder="Select State"
+														placeholder={strings.Select+strings.StateRegion}
 														id="stateId"
 														name="stateId"
 														className={
@@ -775,7 +775,7 @@ class CustomerModal extends React.Component {
 																props.handleChange('city')(option);
 															}
 														}}
-														placeholder="Enter City"
+														placeholder={strings.Enter+strings.City}
 														id="city"
 														name="city"
 														type="text"
@@ -818,7 +818,7 @@ class CustomerModal extends React.Component {
 																? 'is-invalid'
 																: ''
 														}
-														placeholder="Enter Postal ZipCode"
+														placeholder={strings.Enter+strings.PostZipCode}
 													/>
 													{props.errors.postZipCode &&
 														props.touched.postZipCode && (
@@ -851,7 +851,7 @@ class CustomerModal extends React.Component {
 																? 'is-invalid'
 																: ''
 														}
-														placeholder="Enter Billing Email"
+														placeholder={strings.Enter+strings.BillingEmail}
 													/>
 													{props.billingEmail && props.touched.billingEmail && (
 														<div className="invalid-feedback">
@@ -885,7 +885,7 @@ class CustomerModal extends React.Component {
 																? 'is-invalid'
 																: ''
 														}
-														placeholder="Enter Contract PoNumber"
+														placeholder={strings.Enter+strings.ContractPONumber}
 													/>
 													{props.errors.contractPoNumber &&
 														props.touched.contractPoNumber && (

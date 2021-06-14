@@ -824,7 +824,7 @@ console.log(quotation_list)
 												<Select
 													styles={customStyles}
 													className="select-default-width"
-													placeholder="Select Customer"
+													placeholder={strings.Select+strings.Customer}
 													id="supplier"
 													name="supplier"
 													options={

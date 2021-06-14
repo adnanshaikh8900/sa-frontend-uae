@@ -35,6 +35,7 @@ const eye = require('assets/images/settings/eye.png');
 const mapStateToProps = (state) => {
 	return {
 		role_list: state.user.role_list,
+		employee_list: state.user.employee_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -80,6 +81,7 @@ class DetailUser extends React.Component {
 	}
 
 	componentDidMount = () => {
+		this.props.userActions.getEmployeesNotInUserForDropdown();
 		this.initializeData();
 	};
 
@@ -111,6 +113,7 @@ class DetailUser extends React.Component {
 								companyId: res.data.companyId ? res.data.companyId : '',
 								timeZone: res.data.timeZone ? res.data.timeZone : '',
 								roleName:res.data.roleName ? res.data.roleName : '',
+								employeeId: res.data.employeeId ? res.data.employeeId: '',
 							},
 							loading: false,
 							selectedStatus: res.data.active ? true : false,
@@ -228,6 +231,7 @@ class DetailUser extends React.Component {
 			roleId,
 			companyId,
 			timeZone,
+			employeeId
 		} = data;
 		const { current_user_id } = this.state;
 		const { userPhotoFile } = this.state;
@@ -246,6 +250,7 @@ class DetailUser extends React.Component {
 		formData.append('active', this.state.selectedStatus);
 		formData.append('password', password ? password : '');
 		formData.append('companyId', companyId ? companyId : '');
+		formData.append('employeeId',employeeId ? employeeId.value : '');
 		if (this.state.userPhotoFile.length > 0) {
 			formData.append('profilePic', userPhotoFile[0]);
 		}
@@ -277,7 +282,7 @@ class DetailUser extends React.Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const { loading, dialog, timezone,current_user_id } = this.state;
-		const { role_list } = this.props;
+		const { role_list,employee_list } = this.props;
 		const { isPasswordShown } = this.state;
 		return (
 			<div className="create-user-screen">
@@ -836,9 +841,55 @@ class DetailUser extends React.Component {
 																			</FormGroup>
 																		</Col>
 																	</Row>
-																	
+																	<Row >
+																	<Col lg={6}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="contactId">
+																				<span className="text-danger">*</span>
+																		 {strings.Employee} 
+																	</Label>
+																			<Select
+																				styles={customStyles}
+																				id="employeeId"
+																				name="employeeId"
+																				placeholder="Select employee"
+																				options={
+																					employee_list
+																						? selectOptionsFactory.renderOptions(
+																							'label',
+																							'value',
+																							employee_list,
+																							'Employee',
+																						)
+																						: []
+																				}
+																				value={props.values.employeeId}
+																				onChange={(option) => {
+																					if (option && option.value) {
+																						props.handleChange('employeeId')(option);
+																					} else {
+																						props.handleChange('employeeId')('');
+																					}
+																				}}
+																				className={
+																					props.errors.employeeId &&
+																						props.touched.employeeId
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.employeeId &&
+																				props.touched.employeeId && (
+																					<div className="invalid-feedback">
+																						{props.errors.employeeId}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																</Row>
 																</Col>
 															</Row>
+															
 															<Row>
 																<Col
 																	lg={12}

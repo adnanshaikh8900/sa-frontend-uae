@@ -200,7 +200,8 @@ AMOUNT:"مبلغ",
 			
 //RFQ			
 RequestForQuotation:"طلب عرض أسعار",						
-RFQNUMBER:"رقم طلب عرض الأسعار",									
+RFQNUMBER:"رقم طلب عرض الأسعار",
+RFQDate:"تاريخ طلب عرض الأسعار",												
 RFQDATE:"تاريخ طلب عرض الأسعار",			
 RFQDUEDATE:"تاريخ استحقاق طلب عرض الأسعار",						
 AddNewRequest:"إضافة طلب جديد",

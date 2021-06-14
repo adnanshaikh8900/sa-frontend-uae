@@ -38,6 +38,8 @@ import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import './style.scss';
 import moment from 'moment';
 import API_ROOT_URL from '../../../../constants/config';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -86,11 +88,12 @@ const customStyles = {
 		},
 	}),
 };
-
+let strings = new LocalizedStrings(data);
 class DetailRequestForQuotation extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: true,
 			dialog: false,
 			discountOptions: [
@@ -372,7 +375,7 @@ class DetailRequestForQuotation extends React.Component {
 								props,
 							);
 						}}
-						placeholder="Description"
+						placeholder={strings.Description}
 						className={`form-control 
             ${
 							props.errors.lineItemsString &&
@@ -420,7 +423,7 @@ class DetailRequestForQuotation extends React.Component {
 									);
 								}
 							}}
-							placeholder="Quantity"
+							placeholder={strings.Quantity}
 							className={`form-control 
            						${
 												props.errors.lineItemsString &&
@@ -484,7 +487,7 @@ class DetailRequestForQuotation extends React.Component {
 								);
 							}
 						}}
-						placeholder="Unit Price"
+						placeholder={strings.UnitPrice}
 						className={`form-control 
                        ${
 													props.errors.lineItemsString &&
@@ -609,7 +612,7 @@ class DetailRequestForQuotation extends React.Component {
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder="Select Vat"
+						placeholder={strings.Select+strings.Vat}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -1087,6 +1090,7 @@ class DetailRequestForQuotation extends React.Component {
 	}
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
 
 		const { project_list, currency_list,currency_convert_list, supplier_list,universal_currency_list } = this.props;
@@ -1109,7 +1113,7 @@ class DetailRequestForQuotation extends React.Component {
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="fas fa-address-book" />
-												<span className="ml-2">Update Request For Quotation</span>
+												<span className="ml-2">{strings.Update+" "+strings.RequestForQuotation}</span>
 											</div>
 										</Col>
 									</Row>
@@ -1230,7 +1234,7 @@ class DetailRequestForQuotation extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="rfqNumber">
 																			<span className="text-danger">*</span>
-																			RFQ Number
+																			{strings.RFQNumber}
 																		</Label>
 																		<Input
 																			type="text"
@@ -1263,7 +1267,7 @@ class DetailRequestForQuotation extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="supplierId">
 																			<span className="text-danger">*</span>
-																			Supplier Name
+																			{strings.SupplierName}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -1318,11 +1322,11 @@ class DetailRequestForQuotation extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
 																		<span className="text-danger">*</span>
-																	Currency
+																	{strings.Currency}
 																	</Label>
 																	<Select
 																	isDisabled={true}
-																	placeholder="Select Currency"
+																	placeholder={strings.Select+strings.Currency}
 																		styles={customStyles}
 																		options={
 																			currency_convert_list
@@ -1378,7 +1382,7 @@ class DetailRequestForQuotation extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">
 																			<span className="text-danger">*</span>
-																			RFQ Date
+																			 {strings.RFQDate}
 																		</Label>
 																		<DatePicker
 																			id="rfqReceiveDate"
@@ -1413,7 +1417,7 @@ class DetailRequestForQuotation extends React.Component {
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="due_date">
-																		RFQ Due Date
+																	   {strings.RFQDueDate}
 																		</Label>
 																		<div>
 																			<DatePicker
@@ -1464,7 +1468,7 @@ class DetailRequestForQuotation extends React.Component {
 																		}
 																		disabled={this.checkedRow() ? true : false}
 																	>
-																		<i className="fa fa-plus"></i> Add More
+																		<i className="fa fa-plus"></i> {strings.Addmore}
 																	</Button>
 																</Col>
 															</Row>
@@ -1508,7 +1512,7 @@ class DetailRequestForQuotation extends React.Component {
 																				this.renderProduct(cell, rows, props)
 																			}
 																		>
-																			Product
+																			{strings.PRODUCT}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																		width="55"
@@ -1536,7 +1540,7 @@ class DetailRequestForQuotation extends React.Component {
 																				)
 																			}
 																		>
-																			Description
+																			{strings.DESCRIPTION}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="quantity"
@@ -1545,7 +1549,7 @@ class DetailRequestForQuotation extends React.Component {
 																				this.renderQuantity(cell, rows, props)
 																			}
 																		>
-																			Quantity
+																			{strings.QUANTITY}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="unitPrice"
@@ -1553,7 +1557,7 @@ class DetailRequestForQuotation extends React.Component {
 																				this.renderUnitPrice(cell, rows, props)
 																			}
 																		>
-																			Unit Price (All)
+																			{strings.UNITPRICE}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="vat"
@@ -1561,7 +1565,7 @@ class DetailRequestForQuotation extends React.Component {
 																				this.renderVat(cell, rows, props)
 																			}
 																		>
-																			Vat (%)
+																			){strings.VAT}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="sub_total"
@@ -1570,7 +1574,7 @@ class DetailRequestForQuotation extends React.Component {
 																			columnClassName="text-right"
 																			formatExtraData={universal_currency_list}
 																		>
-																			Sub Total (All)
+																		{strings.SUBTOTAL}
 																		</TableHeaderColumn>
 																	</BootstrapTable>
 																</Col>
@@ -1579,14 +1583,14 @@ class DetailRequestForQuotation extends React.Component {
 																<Row>
 																		<Col lg={8}>
 																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">Notes</Label>
+																		<Label htmlFor="notes">{strings.Notes}</Label>
 																		<Input
 																			type="textarea"
 																			maxLength="255"
 																			name="notes"
 																			id="notes"
 																			rows="6"
-																			placeholder="Notes"
+																			placeholder={strings.Notes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}
@@ -1598,7 +1602,7 @@ class DetailRequestForQuotation extends React.Component {
 																					name="attachmentFile"
 																					render={({ field, form }) => (
 																						<div>
-																							<Label>Reciept Attachment</Label>{' '}
+																							<Label>{strings.ReceiptAttachment}</Label>{' '}
 																							<br />
 																							<Button
 																								color="primary"
@@ -1610,7 +1614,7 @@ class DetailRequestForQuotation extends React.Component {
 																								className="btn-square mr-3"
 																							>
 																								<i className="fa fa-upload"></i>{' '}
-																								Upload
+																								{strings.upload}
 																							</Button>
 																							<input
 																								id="fileInput"
@@ -1658,7 +1662,7 @@ class DetailRequestForQuotation extends React.Component {
 																				<Row>
 																					<Col lg={6}>
 																						<h5 className="mb-0 text-right">
-																							Total Net
+																							 {strings.TotalNet}
 																						</h5>
 																					</Col>
 																					<Col lg={6} className="text-right">
@@ -1683,7 +1687,7 @@ class DetailRequestForQuotation extends React.Component {
 																				<Row>
 																					<Col lg={6}>
 																						<h5 className="mb-0 text-right">
-																							Total Vat
+																						 {strings.TotalVat}
 																						</h5>
 																					</Col>
 																					<Col lg={6} className="text-right">
@@ -1712,7 +1716,7 @@ class DetailRequestForQuotation extends React.Component {
 																				<Row>
 																					<Col lg={6}>
 																						<h5 className="mb-0 text-right">
-																							Total
+																							 {strings.Total}
 																						</h5>
 																					</Col>
 																					<Col lg={6} className="text-right">
@@ -1749,7 +1753,7 @@ class DetailRequestForQuotation extends React.Component {
 																			className="btn-square"
 																			onClick={this.deleterfq}
 																		>
-																			<i className="fa fa-trash"></i> Delete
+																			<i className="fa fa-trash"></i>  {strings.Delete}
 																		</Button>
 																	</FormGroup>
 																	<FormGroup className="text-right">
@@ -1759,7 +1763,7 @@ class DetailRequestForQuotation extends React.Component {
 																			className="btn-square mr-3"
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			Update
+																			 {strings.Update}
 																		</Button>
 																		<Button
 																			color="secondary"
@@ -1770,7 +1774,7 @@ class DetailRequestForQuotation extends React.Component {
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i> Cancel
+																			<i className="fa fa-ban"></i>{strings.Cancel}
 																		</Button>
 																	</FormGroup>
 																</Col>

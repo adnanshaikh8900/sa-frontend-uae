@@ -147,9 +147,10 @@ console.log(this.state.Variable,"Variable")
 							<div className="animated fadeIn">
 								<Row>
 									<Col lg={12} className="mx-auto">
-										<div className="pull-right mb-1" style={{ display: "inline-flex" ,marginRight:"20px"}}>
+										<div className="pull-right" style={{ display: "inline-flex" ,marginRight:"2%",marginBottom:"1%"}}>
 
 											<Button
+												size='lg'
 												className="mr-2 print-btn-cont"
 												onClick={() => {
 													this.exportPDFWithComponent();
@@ -165,7 +166,8 @@ console.log(this.state.Variable,"Variable")
 												)}
 												content={() => this.componentRef}
 											/> */}
-											<div
+											<Button
+												size='lg'
 												className="mr-2 print-btn-cont"
 												onClick={() => window.print()}
 												style={{
@@ -173,8 +175,9 @@ console.log(this.state.Variable,"Variable")
 												}}
 											>
 												<i className="fa fa-print"></i>
-											</div>
+												</Button>
 											<Button
+											size='lg'
 												type="button"
 												className=" print-btn-cont"
 												style={{ color: "black" }}
@@ -185,7 +188,7 @@ console.log(this.state.Variable,"Variable")
 												X
 										</Button>
 										</div>
-										<div>
+										<div className="mt-3">
 											<PDFExport
 												ref={(component) => (this.pdfExportComponent = component)}
 												scale={0.8}
@@ -411,7 +414,7 @@ console.log(this.state.Variable,"Variable")
 															backgroundColor: "#e4f8ff"
 														}}
 													>
-														<h5>	<span style={{ color: "blue" }}>|</span> Total Net Payable <b>{this.state.selectedData.netPay}</b>
+														<h5>	 Total Net Payable <b>{this.state.selectedData.netPay}</b>
 														</h5>
 														<h5>	 ( {upperFirst(converter.toWords(toInteger(this.state.selectedData.netPay)))} )
 														</h5>

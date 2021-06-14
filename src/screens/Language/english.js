@@ -720,6 +720,7 @@ UnusedAmount:"UnusedAmount",
 UpdateReceipt:"UpdateReceipt",
 Invoice:"Invoice",
 ModeTBD:"Mode(TBD)",
+
 //placeholder	
 ReceiptAttachmentDescription:"Receipt Attachment Description",	
 DiscountPercentage:"Discount Percentage",		

@@ -713,9 +713,7 @@ ModeTBD:"Mode(TBD)",
 
 //placeholder	
 ReceiptAttachmentDescription:"Description de la pièce jointe au reçu",	
-DiscountPercentage:"Pourcentage de remise",	
-SelectCurrency:"Sélectionnez la devise",	
-SelectPlaceofSupply:"Sélectionnez la lieu d'approvisionnement",	
+DiscountPercentage:"Pourcentage de remise",		
 Select:"Sélectionnez ",
 Enter:"Entrer ",
 TelephoneNumber:"Numéro de Téléphone",

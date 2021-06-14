@@ -339,8 +339,7 @@ Addnewcontact:"Add New Contact",
 //Product
 Products:"Products",		 		
 PRODUCTCODE:"PRODUCT CODE",				
-VATPERCENTAGE:"VAT PERCENTAGE",		
-UNITPRICE:"UNIT PRICE",		
+VATPERCENTAGE:"VAT PERCENTAGE",				
 AddnewProduct:"Add New Product",		
 
 //Add product

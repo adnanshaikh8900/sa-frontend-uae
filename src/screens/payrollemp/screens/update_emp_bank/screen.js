@@ -308,18 +308,18 @@ class UpdateEmployeeBank extends React.Component {
                                                                                 <Label htmlFor="select"> {strings.IBANNumber}</Label>
                                                                                 <Input
                                                                                     type="text"
-                                                                                    id="ibanNumber"
-                                                                                    name="ibanNumber"
-                                                                                    value={props.values.ibanNumber}
+                                                                                    id="iban"
+                                                                                    name="iban"
+                                                                                    value={props.values.iban}
                                                                                     placeholder="Enter IBAN Number"
                                                                                     onChange={(value) => {
-                                                                                        props.handleChange('ibanNumber')(value);
+                                                                                        props.handleChange('iban')(value);
 
                                                                                     }}
-                                                                                    className={props.errors.ibanNumber && props.touched.ibanNumber ? "is-invalid" : ""}
+                                                                                    className={props.errors.iban && props.touched.iban ? "is-invalid" : ""}
                                                                                 />
                                                                                 {props.errors.employeeCode && props.touched.employeeCode && (
-                                                                                    <div className="invalid-feedback">{props.errors.ibanNumber}</div>
+                                                                                    <div className="invalid-feedback">{props.errors.iban}</div>
                                                                                 )}
                                                                             </FormGroup>
                                                                         </Col>

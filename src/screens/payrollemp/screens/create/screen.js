@@ -173,14 +173,14 @@ class CreateEmployeePayroll extends React.Component {
                 accountNumber: '',
                 bankName: '',
                 branch: '',
-                ibanNumber: '',
+                iban: '',
                 parentId: '',
                 swiftCode: '',
                 accountHolderName: '',
                 accountNumber: '',
                 bankName: '',
                 branch: '',
-                ibanNumber: '',
+                iban: '',
                 swiftCode: '',
                 CTC: '',
                 componentTotal: '',
@@ -338,7 +338,7 @@ uploadImage = (picture, file) => {
             accountNumber,
             bankName,
             branch,
-            ibanNumber,
+            iban,
             swiftCode
         } = data;
 
@@ -362,8 +362,8 @@ uploadImage = (picture, file) => {
             branch != null ? branch : '',
         )
         formData.append(
-            'ibanNumber',
-            ibanNumber != null ? ibanNumber : '',
+            'iban',
+            iban != null ? iban : '',
         )
         formData.append(
             'swiftCode',
@@ -421,9 +421,9 @@ uploadImage = (picture, file) => {
             employeeCode != null ? employeeCode : '',
         )
         formData.append('dateOfJoining', dateOfJoining ? moment(dateOfJoining).format('DD-MM-YYYY') : '')
-        if (salaryRoleId && salaryRoleId.value) {
-            formData.append('salaryRoleId', salaryRoleId.value);
-        }
+        // if (salaryRoleId && salaryRoleId.value) {
+        //     formData.append('salaryRoleId', salaryRoleId.value);
+        // }
         formData.append(
             'department',
             department != null ? department : '',
@@ -469,7 +469,8 @@ uploadImage = (picture, file) => {
             dob,
             bloodGroup,
             gender,
-            parentId
+            parentId,
+            salaryRoleId
         } = data;
 
 
@@ -508,7 +509,9 @@ uploadImage = (picture, file) => {
             'pincode',
             pincode != null ? pincode : '',
         )
-
+    
+            formData.append('salaryRoleId',  salaryRoleId? salaryRoleId:'');
+       
         if (this.state.userPhotoFile.length > 0) {
             formData.append('profilePic ', this.state.userPhotoFile[0]);
         }
@@ -1117,6 +1120,129 @@ uploadImage = (picture, file) => {
                                                                                                 </FormGroup>
                                                                                             </Col>
                                                                                             <Col md="4">
+                                                                                                <FormGroup>
+                                                                                                    <Label htmlFor="salaryRoleId"><span className="text-danger">*</span> {strings.SalaryRole} </Label>
+                                                                                                    <Select
+
+                                                                                                        options={
+                                                                                                            salary_role_dropdown.data
+                                                                                                                ? selectOptionsFactory.renderOptions(
+                                                                                                                    'label',
+                                                                                                                    'value',
+                                                                                                                    salary_role_dropdown.data,
+                                                                                                                    'SalaryRole',
+                                                                                                                )
+                                                                                                                : []
+                                                                                                        }
+                                                                                                        id="salaryRoleId"
+                                                                                                        name="salaryRoleId"
+                                                                                                        placeholder="Select salary Role "
+                                                                                                        value={
+                                                                                                            salary_role_dropdown.data
+                                                                                                            && selectOptionsFactory.renderOptions(
+                                                                                                                'label',
+                                                                                                                'value',
+                                                                                                                salary_role_dropdown.data,
+                                                                                                                'Employee Salary Role',
+                                                                                                            ).find(
+                                                                                                                (option) =>
+                                                                                                                    option.value ===
+                                                                                                                    props.values
+                                                                                                                        .salaryRoleId,
+                                                                                                            )}
+                                                                                                        onChange={(options) => {
+                                                                                                            if (options && options.value) {
+                                                                                                                props.handleChange(
+                                                                                                                    'salaryRoleId',
+                                                                                                                )(options.value);
+                                                                                                            } else {
+                                                                                                                props.handleChange(
+                                                                                                                    'salaryRoleId',
+                                                                                                                )('');
+                                                                                                            }
+                                                                                                        }}
+                                                                                                        className={`${props.errors.salaryRoleId && props.touched.salaryRoleId
+                                                                                                            ? 'is-invalid'
+                                                                                                            : ''
+                                                                                                            }`}
+                                                                                                    />
+                                                                                                    {props.errors.salaryRoleId && props.touched.salaryRoleId && (
+                                                                                                        <div className="invalid-feedback">
+                                                                                                            {props.errors.salaryRoleId}
+                                                                                                        </div>
+                                                                                                    )}
+                                                                                                </FormGroup>
+                                                                                            </Col>
+                                                                                            {/* <Col md="4">
+                                                                                                <FormGroup className="mb-3">
+                                                                                                    <Label htmlFor="active"><span className="text-danger">*</span>{strings.Status}</Label>
+                                                                                                    <div>
+                                                                                                        <FormGroup check inline>
+                                                                                                            <div className="custom-radio custom-control">
+                                                                                                                <input
+                                                                                                                    className="custom-control-input"
+                                                                                                                    type="radio"
+                                                                                                                    id="inline-radio1"
+                                                                                                                    name="active"
+                                                                                                                    checked={
+                                                                                                                        this.state.selectedStatus
+                                                                                                                    }
+                                                                                                                    value={true}
+                                                                                                                    onChange={(e) => {
+                                                                                                                        if (
+                                                                                                                            e.target.value === 'true'
+                                                                                                                        ) {
+                                                                                                                            this.setState({
+                                                                                                                                selectedStatus: true,
+                                                                                                                                useractive: true
+                                                                                                                            });
+                                                                                                                        }
+                                                                                                                    }}
+                                                                                                                />
+                                                                                                                <label
+                                                                                                                    className="custom-control-label"
+                                                                                                                    htmlFor="inline-radio1"
+                                                                                                                >
+                                                                                                                     {strings.Active}
+																							</label>
+                                                                                                            </div>
+                                                                                                        </FormGroup>
+                                                                                                        <FormGroup check inline>
+                                                                                                            <div className="custom-radio custom-control">
+                                                                                                                <input
+                                                                                                                    className="custom-control-input"
+                                                                                                                    type="radio"
+                                                                                                                    id="inline-radio2"
+                                                                                                                    name="active"
+                                                                                                                    value={false}
+                                                                                                                    checked={
+                                                                                                                        !this.state.selectedStatus
+                                                                                                                    }
+                                                                                                                    onChange={(e) => {
+                                                                                                                        if (
+                                                                                                                            e.target.value === 'false'
+                                                                                                                        ) {
+                                                                                                                            this.setState({
+                                                                                                                                selectedStatus: false,
+                                                                                                                                useractive: false
+                                                                                                                            });
+                                                                                                                        }
+                                                                                                                    }}
+                                                                                                                />
+                                                                                                                <label
+                                                                                                                    className="custom-control-label"
+                                                                                                                    htmlFor="inline-radio2"
+                                                                                                                >
+                                                                                                                    {strings.Inactive}
+																							</label>
+                                                                                                            </div>
+                                                                                                        </FormGroup>
+                                                                                                    </div>
+                                                                                                </FormGroup>
+                                                                                            </Col> */}
+
+                                                                                        </Row>
+                                                                                        <Row> <Col md="4">
                                                                                                 <FormGroup className="mb-3">
                                                                                                     <Label htmlFor="active"><span className="text-danger">*</span>{strings.Status}</Label>
                                                                                                     <div>
@@ -1183,8 +1309,8 @@ uploadImage = (picture, file) => {
                                                                                                     </div>
                                                                                                 </FormGroup>
                                                                                             </Col>
+</Row>
 
-                                                                                        </Row>
                                                                                         <Row>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
@@ -1281,6 +1407,7 @@ uploadImage = (picture, file) => {
                                                                                                 </FormGroup>
                                                                                             </Col>
                                                                                         </Row>
+                                                                                        
                                                                                         <Row>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
@@ -1373,6 +1500,7 @@ uploadImage = (picture, file) => {
 
 
                                                                                         </Row>
+                                                                                        
                                                                                         <Row className="row-wrapper">
                                                                                             <Col md="8">
                                                                                                 <FormGroup>
@@ -1530,7 +1658,7 @@ uploadImage = (picture, file) => {
                                                                                             </Col>
 
                                                                                         </Row>
-
+          
 
                                                                                     </Col>
 
@@ -1588,8 +1716,8 @@ uploadImage = (picture, file) => {
                                                                         validationSchema={Yup.object().shape({
                                                                             employeeCode: Yup.string()
                                                                                 .required("employee Code is Required"),
-                                                                                salaryRoleId: Yup.string()
-                                                                            .required("salary Role is Required"),
+                                                                            //     salaryRoleId: Yup.string()
+                                                                            // .required("salary Role is Required"),
                                                                 
                                                                             dateOfJoining: Yup.date()
                                                                                 .required('date Of Joining is Required')                   
@@ -1624,7 +1752,31 @@ uploadImage = (picture, file) => {
                                                                                                     )}
                                                                                                 </FormGroup>
                                                                                             </Col>
+
                                                                                             <Col md="4">
+                                                                                                <FormGroup>
+                                                                                                    <Label htmlFor="labourCard"> {strings.LabourCard}</Label>
+                                                                                                    <Input
+                                                                                                        type="text"
+                                                                                                        id="labourCard"
+                                                                                                        name="labourCard"
+                                                                                                        value={props.values.labourCard}
+                                                                                                        placeholder="Enter labour Card"
+                                                                                                        onChange={(value) => {
+                                                                                                            props.handleChange('labourCard')(value);
+
+                                                                                                        }}
+                                                                                                        className={props.errors.labourCard && props.touched.labourCard ? "is-invalid" : ""}
+                                                                                                    />
+                                                                                                    {props.errors.labourCard && props.touched.labourCard && (
+                                                                                                        <div className="invalid-feedback">
+                                                                                                            {props.errors.labourCard}
+                                                                                                        </div>
+                                                                                                    )}
+
+                                                                                                </FormGroup>
+                                                                                            </Col>
+                                                                                            {/* <Col md="4">
                                                                                                 <FormGroup>
                                                                                                     <Label htmlFor="salaryRoleId"><span className="text-danger">*</span> {strings.SalaryRole} </Label>
                                                                                                     <Select
@@ -1677,7 +1829,7 @@ uploadImage = (picture, file) => {
                                                                                                         </div>
                                                                                                     )}
                                                                                                 </FormGroup>
-                                                                                            </Col>
+                                                                                            </Col> */}
                                                                                             {/* <Col md="4">
                                                                                                 <FormGroup>
                                                                                                     <Label htmlFor="grossSalary">Gross Salary </Label>
@@ -1841,31 +1993,7 @@ uploadImage = (picture, file) => {
                                                                                                 </FormGroup>
                                                                                             </Col>
                                                                                         </Row>
-                                                                                        <Row>
-                                                                                        <Col md="4">
-                                                                                                <FormGroup>
-                                                                                                    <Label htmlFor="labourCard"> {strings.LabourCard}</Label>
-                                                                                                    <Input
-                                                                                                        type="text"
-                                                                                                        id="labourCard"
-                                                                                                        name="labourCard"
-                                                                                                        value={props.values.labourCard}
-                                                                                                        placeholder="Enter labour Card"
-                                                                                                        onChange={(value) => {
-                                                                                                            props.handleChange('labourCard')(value);
-
-                                                                                                        }}
-                                                                                                        className={props.errors.labourCard && props.touched.labourCard ? "is-invalid" : ""}
-                                                                                                    />
-                                                                                                    {props.errors.labourCard && props.touched.labourCard && (
-                                                                                                        <div className="invalid-feedback">
-                                                                                                            {props.errors.labourCard}
-                                                                                                        </div>
-                                                                                                    )}
-
-                                                                                                </FormGroup>
-                                                                                            </Col>
-                                                                                        </Row>
+                                                                                    
 
                                                                                     </Col>
 
@@ -2027,18 +2155,18 @@ uploadImage = (picture, file) => {
                                                                                                     <Label htmlFor="select">{strings.IBANNumber}</Label>
                                                                                                     <Input
                                                                                                         type="text"
-                                                                                                        id="ibanNumber"
-                                                                                                        name="ibanNumber"
-                                                                                                        value={props.values.ibanNumber}
+                                                                                                        id="iban"
+                                                                                                        name="iban"
+                                                                                                        value={props.values.iban}
                                                                                                         placeholder="Enter IBAN Number"
                                                                                                         onChange={(value) => {
-                                                                                                            props.handleChange('ibanNumber')(value);
+                                                                                                            props.handleChange('iban')(value);
 
                                                                                                         }}
-                                                                                                        className={props.errors.ibanNumber && props.touched.ibanNumber ? "is-invalid" : ""}
+                                                                                                        className={props.errors.iban && props.touched.iban ? "is-invalid" : ""}
                                                                                                     />
                                                                                                     {props.errors.employeeCode && props.touched.employeeCode && (
-                                                                                                        <div className="invalid-feedback">{props.errors.ibanNumber}</div>
+                                                                                                        <div className="invalid-feedback">{props.errors.iban}</div>
                                                                                                     )}
                                                                                                 </FormGroup>
                                                                                             </Col>

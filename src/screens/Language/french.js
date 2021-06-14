@@ -204,9 +204,11 @@ AMOUNT:"Quantité",
 			
 //RFQ			
 RequestForQuotation:"Demande de devis",						
-RFQNUMBER:"Demande de numéro de devis ",									
-RFQDATE:"Demande de date de devis ",			
-RFQDUEDATE:"Demande de date d’échéance du devis ",						
+RFQNUMBER:"Demande de numéro de devis",
+RFQDate:"Demande de date de devis",									
+RFQDATE:"DEMANDE DE DATE DE DEVIS",			
+RFQDueDate:"Demande de date d’échéance du devis",	
+RFQDUEDATE:"DEMANDE DE DATE D’échéance DU DEVIS ",					
 AddnewRequest:"Ajouter une nouvelle demande",			
 											
 //Create RFQ			

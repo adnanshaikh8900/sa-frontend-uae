@@ -1387,7 +1387,7 @@ class DetailRequestForQuotation extends React.Component {
 																		<DatePicker
 																			id="rfqReceiveDate"
 																			name="rfqReceiveDate"
-																			placeholderText="RFQ Date"
+																			placeholderText={strings.RFQDate}
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd/MM/yyyy"
@@ -1423,7 +1423,7 @@ class DetailRequestForQuotation extends React.Component {
 																			<DatePicker
 																				id="rfqExpiryDate"
 																				name="rfqExpiryDate"
-																				placeholderText=" Due Date"
+																				placeholderText={strings.DueDate}
 																				value={props.values.rfqExpiryDate}
 																				showMonthDropdown
 																				showYearDropdown

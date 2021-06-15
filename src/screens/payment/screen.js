@@ -397,7 +397,7 @@ class Payment extends React.Component {
 													<Select
 														styles={customStyles}
 														className="select-default-width"
-														placeholder="Select Supplier"
+														placeholder={strings.Select+strings.Supplier}  
 														id="supplier"
 														name="supplier"
 														options={
@@ -425,7 +425,7 @@ class Payment extends React.Component {
 														className="form-control"
 														id="date"
 														name="paymentDate"
-														placeholderText="Payment Date"
+														placeholderText={strings.PaymentDate}  
 														selected={filterData.paymentDate}
 														showMonthDropdown
 														showYearDropdown
@@ -441,7 +441,7 @@ class Payment extends React.Component {
 												<Col lg={2} className="mb-1">
 													<Input
 														type="number"
-														placeholder="Invoice Amount"
+														placeholder={strings.InvoiceAmount}  
 														value={filterData.invoiceAmount}
 														onChange={(e) =>
 															this.handleChange(e.target.value, 'invoiceAmount')

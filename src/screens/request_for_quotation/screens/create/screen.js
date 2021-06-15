@@ -228,7 +228,7 @@ class CreateRequestForQuotation extends React.Component {
 								props,
 							);
 						}}
-						placeholder="Description"
+						placeholder={strings.Description}
 						className={`form-control 
             ${
 							props.errors.lineItemsString &&
@@ -277,7 +277,7 @@ class CreateRequestForQuotation extends React.Component {
 									);
 								}
 							}}
-							placeholder="Quantity"
+							placeholder={strings.Quantity}
 							className={`form-control 
             ${
 							props.errors.lineItemsString &&
@@ -337,7 +337,7 @@ class CreateRequestForQuotation extends React.Component {
 								);
 							}
 						}}
-						placeholder="Unit Price"
+						placeholder={strings.UnitPrice}
 						className={`form-control 
             ${
 							props.errors.lineItemsString &&
@@ -545,7 +545,7 @@ class CreateRequestForQuotation extends React.Component {
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder="Select Vat"
+						placeholder={strings.Select+strings.Vat}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -646,7 +646,7 @@ class CreateRequestForQuotation extends React.Component {
 								: []
 						}
 						id="productId"
-						placeholder="Select Product"
+						placeholder={strings.Select+strings.Product}
 						onChange={(e) => {
 							if (e && e.label !== 'Select Product') {
 								this.selectItem(e.value, row, 'productId', form, field, props);
@@ -1317,7 +1317,7 @@ class CreateRequestForQuotation extends React.Component {
 																		type="text"
 																		id="rfq_number"
 																		name="rfq_number"
-																		placeholder="Invoice Number"
+																		placeholder={strings.InvoiceNumber}
 																		value={props.values.rfq_number}
 																		onBlur={props.handleBlur('rfq_number')}
 																		onChange={(option) => {
@@ -1351,7 +1351,7 @@ class CreateRequestForQuotation extends React.Component {
 																		styles={customStyles}
 																		id="supplierId"
 																		name="supplierId"
-																		placeholder="Select Supplier Name"
+																		placeholder={strings.Select+strings.SupplierName}
 																		options={
 																			tmpSupplier_list
 																				? selectOptionsFactory.renderOptions(
@@ -1421,7 +1421,7 @@ class CreateRequestForQuotation extends React.Component {
 																	</Label>
 																	<Select
 																	isDisabled={true}
-																	placeholder="Select Currency"
+																	placeholder={strings.Select+strings.Currency}
 																		styles={customStyles}
 																		options={
 																			currency_convert_list
@@ -1488,7 +1488,7 @@ class CreateRequestForQuotation extends React.Component {
 																				? 'is-invalid'
 																				: ''
 																		}`}
-																		placeholderText="Order date"
+																		placeholderText={strings.OrderDate}
 																		selected={props.values.rfqReceiveDate}
 																		showMonthDropdown
 																		showYearDropdown
@@ -1523,7 +1523,7 @@ class CreateRequestForQuotation extends React.Component {
 																				? 'is-invalid'
 																				: ''
 																		}`}
-																		placeholderText="Order Due date"
+																		placeholderText={strings.OrderDueDate}
 																		selected={props.values.rfqExpiryDate}
 																		showMonthDropdown
 																		showYearDropdown
@@ -1680,7 +1680,7 @@ class CreateRequestForQuotation extends React.Component {
 																			name="notes"
 																			id="notes"
 																			rows="6"
-																			placeholder="Notes"
+																			placeholder={strings.Notes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}

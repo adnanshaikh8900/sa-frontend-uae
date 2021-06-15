@@ -80,6 +80,7 @@ Vat:"T.V.A",
       STATUS: "Statut",
       INVOICEDATE: "DATE DE LA FACTURE",
       DUEDATE: "DATE D'ÉCHÉANCE",
+      DueDate:"Date d'échéance",
       AddNewInvoice: "Ajouter une nouvelle facture",
       InvoiceAmount: "Montant de la facture",
       VatAmount: "Montant de la TVA",
@@ -197,10 +198,13 @@ Terms:"Petits caractères",
 AddASupplier:"Ajouter Un Fournisseur",
 
 //Purchase receipts
-Purchasereceipts:"Reçus d’achat",				
+Purchasereceipts:"Reçus D’achat",				
 PAYMENTDATE:"DATE DE PAIEMENT",					
 PAYMENTNUMBER:"NUMÉRO DE PAIEMENT",				
-AMOUNT:"Quantité",		
+AMOUNT:"Quantité",
+CreatePayment:"Créer Paiement",
+AmountPaid:"Montant Payé",
+NewSupplier:"Nouveau Fournisseur",		
 			
 //RFQ			
 RequestForQuotation:"Demande de devis",						
@@ -719,5 +723,6 @@ Enter:"Entrer ",
 TelephoneNumber:"Numéro de Téléphone",
 ReceiptDate:"Date de réception",
 OrderDueDate:"Date d'échéance de la commande",
+OrderDate:"Date de commande",
   }
   export {fr};

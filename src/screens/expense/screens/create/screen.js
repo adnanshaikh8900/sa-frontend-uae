@@ -423,7 +423,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		styles={customStyles}
 																		id="expenseCategory"
 																		name="expenseCategory"
-																		placeholder="Select Expense Category"
+																		placeholder={strings.Select+strings.ExpenseCategory}
 																		options={
 																			expense_categories_list
 																				? selectOptionsFactory.renderOptions(
@@ -496,7 +496,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																				props.handleChange('payee')('');
 																			}
 																		}}
-																		placeholder="Select Payee"
+																		placeholder={strings.Select+strings.Payee}
 																		id="payee"
 																		name="payee"
 																		className={
@@ -528,7 +528,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																				? 'is-invalid'
 																				: ''
 																		}`}
-																		placeholderText="Expense Date"
+																		placeholderText={strings.ExpenseDate}
 																		selected={props.values.expenseDate}
 																		showMonthDropdown
 																		showYearDropdown
@@ -567,7 +567,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																				  )
 																				: []
 																		}
-																		placeholder="Select Currency"
+																		placeholder={strings.Select+strings.Currency}
 																		value={
 																			currency_convert_list &&
 																			selectCurrencyFactory
@@ -635,7 +635,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																			}
 																		}}
 																		value={props.values.expenseAmount}
-																		placeholder="Amount"
+																		placeholder={strings.Amount}
 																	/>
 																	{props.errors.expenseAmount &&
 																		props.touched.expenseAmount && (
@@ -653,7 +653,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		className="select-default-width"
 																		id="vatCategoryId"
 																		name="vatCategoryId"
-																		placeholder="Select Vat "
+																		placeholder={strings.Select+strings.Vat }
 																		options={
 																			vat_list
 																				? selectOptionsFactory.renderOptions(
@@ -680,8 +680,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																			styles={customStyles}
 																			id="payMode"
 																			name="payMode"
-																			placeholder="Select Pay
-																		Through"
+																			placeholder={strings.Select+strings.PayThrough}
 																			options={
 																				pay_mode_list
 																					? selectOptionsFactory.renderOptions(
@@ -850,7 +849,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		name="expenseDescription"
 																		id="expenseDescription"
 																		rows="5"
-																		placeholder="Expense Description"
+																		placeholder={strings.Expense+strings.Description}
 																		onChange={(option) =>
 																			props.handleChange('expenseDescription')(
 																				option,
@@ -875,7 +874,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																				maxLength="50"
 																				id="receiptNumber"
 																				name="receiptNumber"
-																				placeholder="Enter Receipt Number"
+																				placeholder={strings.Enter+strings.ReceiptNumber}
 																				onChange={(option) => {
 																					if (
 																						option.target.value === '' ||
@@ -905,7 +904,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																				name="receiptAttachmentDescription"
 																				id="receiptAttachmentDescription"
 																				rows="5"
-																				placeholder="Receipt Attachment Description"
+																				placeholder={strings.ReceiptAttachmentDescription}
 																				onChange={(option) =>
 																					props.handleChange(
 																						'receiptAttachmentDescription',

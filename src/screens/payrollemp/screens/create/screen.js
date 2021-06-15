@@ -521,9 +521,8 @@ uploadImage = (picture, file) => {
         if (parentId && parentId.value) {
             formData.append('parentId', parentId.value);
         }
-        if (bloodGroup && bloodGroup.value) {
-            formData.append('bloodGroup', bloodGroup.value);
-        }
+            formData.append('bloodGroup', bloodGroup);
+
         if (countryId && countryId.value) {
             formData.append('countryId', countryId.value);
         }
@@ -1366,8 +1365,8 @@ uploadImage = (picture, file) => {
                                                                                                         name="bloodGroup"
                                                                                                         placeholder="Select Blood Group "
                                                                                                         value={this.state.bloodGroup}
-                                                                                                        onChange={(value) => {
-                                                                                                            props.handleChange('bloodGroup')(value);
+                                                                                                        onChange={(option) => {
+                                                                                                            props.handleChange('bloodGroup')(option.value);
 
                                                                                                         }}
                                                                                                         className={`${props.errors.bloodGroup && props.touched.bloodGroup

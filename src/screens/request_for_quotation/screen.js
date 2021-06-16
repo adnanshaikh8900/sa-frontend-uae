@@ -903,7 +903,7 @@ class RequestForQuotation extends React.Component {
 												<Select
 													styles={customStyles}
 													className="select-default-width"
-													placeholder="Select Supplier"
+													placeholder={strings.Select+strings.Supplier}
 													id="supplier"
 													name="supplier"
 													options={

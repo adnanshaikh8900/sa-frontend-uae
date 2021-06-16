@@ -25,12 +25,16 @@ import {
   selectCurrencyFactory,
   selectOptionsFactory
 } from 'utils'
+import {data}  from '../../Language/index'
+import LocalizedStrings from 'react-localization';
 
+let strings = new LocalizedStrings(data);
 class SupplierModal extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
+      language: window['localStorage'].getItem('language'),
       loading: false,
       initValue: {
         firstName: '',
@@ -112,6 +116,7 @@ class SupplierModal extends React.Component {
 }
 
   render() {
+    strings.setLanguage(this.state.language);
     const { openSupplierModal, closeSupplierModal, currency_list, country_list  } = this.props
     const { initValue,state_list } = this.state
     return (
@@ -175,19 +180,19 @@ class SupplierModal extends React.Component {
                 const { isSubmitting } = props;
               return (
               <Form name="simpleForm" onSubmit={props.handleSubmit}>
-                <ModalHeader toggle={this.toggleDanger}>New Supplier</ModalHeader>
+                <ModalHeader toggle={this.toggleDanger}>{strings.NewSupplier}</ModalHeader>
                 <ModalBody>
                   <Row>
                     <Col lg="4">
                       <FormGroup>
-                        <Label htmlFor="firstName"><span className="text-danger">*</span>First Name</Label>
+                        <Label htmlFor="firstName"><span className="text-danger">*</span>{strings.FirstName}</Label>
                         <Input
                           type="text"
                           id="firstName"
                           name="firstName"
                           onChange={(option) => { 
                             if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('firstName')(option) } }}
-                          placeholder="Enter First Name "
+                          placeholder={strings.Enter+strings.FirstName}
                           value={props.values.firstName}
                           className={
                             props.errors.firstName && props.touched.firstName
@@ -202,14 +207,14 @@ class SupplierModal extends React.Component {
                     </Col>
                     <Col lg="4">
                       <FormGroup>
-                        <Label htmlFor="lastName"><span className="text-danger">*</span>Middle Name</Label>
+                        <Label htmlFor="lastName"><span className="text-danger">*</span>{strings.MiddleName}</Label>
                         <Input
                           type="text"
                           id="middleName"
                           name="middleName"
                           onChange={(option) => { 
                             if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('middleName')(option) } }}
-                          placeholder="Enter Middle Name "
+                          placeholder={strings.Enter+strings.MiddleName}
                           value={props.values.middleName}
                           className={
                             props.errors.middleName && props.touched.middleName
@@ -224,14 +229,14 @@ class SupplierModal extends React.Component {
                     </Col>
                     <Col lg="4">
                       <FormGroup>
-                        <Label htmlFor="lastName"><span className="text-danger">*</span>Last Name</Label>
+                        <Label htmlFor="lastName"><span className="text-danger">*</span>{strings.LastName}</Label>
                         <Input
                           type="text"
                           id="lastName"
                           name="lastName"
                           onChange={(option) => { 
                             if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('lastName')(option) } }}
-                          placeholder="Enter Last Name "
+                          placeholder={strings.Enter+strings.LastName}
                           value={props.values.lastName}
                           className={
                             props.errors.lastName && props.touched.lastName
@@ -246,12 +251,12 @@ class SupplierModal extends React.Component {
                     </Col>
                   </Row>
                   <hr />
-                    <h4 className="mb-3 mt-3">Contact Details</h4>
+                    <h4 className="mb-3 mt-3">{strings.ContactDetails}</h4>
                     <Row className="row-wrapper">
                       <Col md="4">
                         <FormGroup>
                           <Label htmlFor="organization ">
-                            Organization Name
+                           {strings.OrganizationName}
                           </Label>
                           <Input
                             type="text"
@@ -267,7 +272,7 @@ class SupplierModal extends React.Component {
                                 ? "is-invalid"
                                 : ""
                             }
-                            placeholder="Enter Organization Name"
+                            placeholder={strings.Enter+strings.OrganizationName}
                           />
                           {props.errors.organization &&
                             props.touched.organization && (
@@ -279,7 +284,7 @@ class SupplierModal extends React.Component {
                       </Col>
                       <Col md="4">
                         <FormGroup>
-                          <Label htmlFor="select">PO Box Number</Label>
+                          <Label htmlFor="select">{strings.POBoxNumber}</Label>
                           <Input
                             type="text"
                             id="poBoxNumber"
@@ -303,7 +308,7 @@ class SupplierModal extends React.Component {
                                 ? "is-invalid"
                                 : ""
                             }
-                            placeholder="Enter PO Box Number"
+                            placeholder={strings.Enter+strings.POBoxNumber}
                           />
                           {props.errors.poBoxNumber &&
                             props.touched.poBoxNumber && (
@@ -318,7 +323,7 @@ class SupplierModal extends React.Component {
                       <Col md="4">
                         <FormGroup>
                           <Label htmlFor="email">
-                            <span className="text-danger">*</span>Email
+                            <span className="text-danger">*</span>{strings.Email}
                           </Label>
                           <Input
                             type="text"
@@ -333,7 +338,7 @@ class SupplierModal extends React.Component {
                                 ? "is-invalid"
                                 : ""
                             }
-                            placeholder="Enter Email"
+                            placeholder={strings.Enter+strings.Email}
                           />
                           {props.errors.email && props.touched.email && (
                             <div className="invalid-feedback">
@@ -344,7 +349,7 @@ class SupplierModal extends React.Component {
                       </Col>
                       <Col md="4">
                         <FormGroup>
-                          <Label htmlFor="telephone"> <span className="text-danger">*</span>Telephone</Label>
+                          <Label htmlFor="telephone"> <span className="text-danger">*</span>{strings.Telephone}</Label>
                           <Input
                             type="text"
                             id="telephone"
@@ -356,7 +361,7 @@ class SupplierModal extends React.Component {
                                 ? "is-invalid"
                                 : ""
                             }
-                            placeholder="Enter Telephone Number"
+                            placeholder={strings.Enter+strings.TelephoneNumber}
                           />
                           {props.errors.telephone &&
                             props.touched.telephone && (
@@ -368,7 +373,7 @@ class SupplierModal extends React.Component {
                       </Col>
                       <Col md="4">
                         <FormGroup>
-                          <Label htmlFor="mobileNumber"> <span className="text-danger">*</span>Mobile Number</Label>
+                          <Label htmlFor="mobileNumber"> <span className="text-danger">*</span>{strings.MobileNumber}</Label>
                           <PhoneInput
                             defaultCountry="AE"
                             international
@@ -413,7 +418,7 @@ class SupplierModal extends React.Component {
                     <Row className="row-wrapper">
                       <Col md="4">
                         <FormGroup>
-                          <Label htmlFor="addressLine1">Address Line1</Label>
+                          <Label htmlFor="addressLine1">{strings.AddressLine1}</Label>
                           <Input
                             type="text"
                             id="addressLine1"
@@ -428,7 +433,7 @@ class SupplierModal extends React.Component {
                                 ? "is-invalid"
                                 : ""
                             }
-                            placeholder="Enter AddressLine 1"
+                            placeholder={strings.Enter+strings.AddressLine1}
                           />
                           {props.errors.addressLine1 &&
                             props.touched.addressLine1 && (
@@ -440,7 +445,7 @@ class SupplierModal extends React.Component {
                       </Col>
                       <Col md="4">
                         <FormGroup>
-                          <Label htmlFor="addressLine2">Address Line2</Label>
+                          <Label htmlFor="addressLine2">{strings.AddressLine2}</Label>
                           <Input
                             type="text"
                             id="addressLine2"
@@ -448,13 +453,13 @@ class SupplierModal extends React.Component {
                             onChange={(value) => {
                               props.handleChange("addressLine2")(value);
                             }}
-                            placeholder="Enter AddressLine 2"
+                            placeholder={strings.Enter+strings.AddressLine2}
                           />
                         </FormGroup>
                       </Col>
                       <Col md="4">
                         <FormGroup>
-                          <Label htmlFor="addressLine3">Address Line3</Label>
+                          <Label htmlFor="addressLine3">{strings.AddressLine3}</Label>
                           <Input
                             type="text"
                             id="addressLine3"
@@ -462,7 +467,7 @@ class SupplierModal extends React.Component {
                             onChange={(value) => {
                               props.handleChange("addressLine3")(value);
                             }}
-                            placeholder="Enter AddressLine 3"
+                            placeholder={strings.Enter+strings.AddressLine3}
                           />
                         </FormGroup>
                       </Col>
@@ -471,7 +476,7 @@ class SupplierModal extends React.Component {
                       <Col md="4">
                         <FormGroup>
                           <Label htmlFor="countryId">
-                            <span className="text-danger">*</span>Country
+                            <span className="text-danger">*</span>{strings.Country}
                           </Label>
                           <Select
                             options={
@@ -495,7 +500,7 @@ class SupplierModal extends React.Component {
                               }
                               props.handleChange("stateId")("");
                             }}
-                            placeholder="Select Country"
+                            placeholder={strings.Select+strings.Country}
                             id="countryId"
                             name="countryId"
                             className={
@@ -514,7 +519,7 @@ class SupplierModal extends React.Component {
                       </Col>
                       <Col md="4">
                         <FormGroup>
-                          <Label htmlFor="stateId">State Region</Label>
+                          <Label htmlFor="stateId">{strings.StateRegion}</Label>
                           <Select
                             options={state_list ? selectOptionsFactory.renderOptions('label', 'value', state_list, 'State') : []}
                             value={props.values.stateId}
@@ -525,7 +530,7 @@ class SupplierModal extends React.Component {
                                 props.handleChange('stateId')('')
                               }
                             }}
-                            placeholder="Select State"
+                            placeholder={strings.Select+strings.StateRegion}
                             id="stateId"
                             name="stateId"
                             className={
@@ -541,14 +546,14 @@ class SupplierModal extends React.Component {
                       </Col>
                       <Col md="4">
                         <FormGroup>
-                          <Label htmlFor="city">City</Label>
+                          <Label htmlFor="city">{strings.City}</Label>
                           <Input
                             // options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
                             value={props.values.city}
                             onChange={(option) =>
                               props.handleChange("city")(option)
                             }
-                            placeholder="Select City"
+                            placeholder={strings.Select+strings.City}
                             id="city"
                             name="city"
                             className={
@@ -568,7 +573,7 @@ class SupplierModal extends React.Component {
                     <Row className="row-wrapper">
                       <Col md="4">
                         <FormGroup>
-                          <Label htmlFor="postZipCode"><span className="text-danger">*</span>Post Zip Code</Label>
+                          <Label htmlFor="postZipCode"><span className="text-danger">*</span>{strings.PostZipCode}</Label>
                           <Input
                             type="text"
                             id="postZipCode"
@@ -583,7 +588,7 @@ class SupplierModal extends React.Component {
                                 ? "is-invalid"
                                 : ""
                             }
-                            placeholder="Enter Postal ZipCode"
+                            placeholder={strings.Enter+strings.PostZipCode}
                           />
                           {props.errors.postZipCode &&
                             props.touched.postZipCode && (
@@ -596,11 +601,11 @@ class SupplierModal extends React.Component {
                     </Row>
 
                     <hr />
-                    <h4 className="mb-3 mt-3">Invoicing Details</h4>
+                    <h4 className="mb-3 mt-3">{strings.InvoicingDetails}</h4>
                     <Row className="row-wrapper">
                       <Col md="4">
                         <FormGroup>
-                          <Label htmlFor="billingEmail">Billing Email</Label>
+                          <Label htmlFor="billingEmail">{strings.BillingEmail}</Label>
                           <Input
                             type="text"
                             id="billingEmail"
@@ -615,7 +620,7 @@ class SupplierModal extends React.Component {
                                 ? "is-invalid"
                                 : ""
                             }
-                            placeholder="Enter Billing Email"
+                            placeholder={strings.Enter+strings.BillingEmail}
                           />
                           {props.billingEmail && props.touched.billingEmail && (
                             <div className="invalid-feedback">
@@ -627,7 +632,7 @@ class SupplierModal extends React.Component {
                       <Col md="4">
                         <FormGroup>
                           <Label htmlFor="contractPoNumber">
-                            Contract PO Number
+                            {strings.ContractPONumber}
                           </Label>
                           <Input
                             type="text"
@@ -643,7 +648,7 @@ class SupplierModal extends React.Component {
                                 ? "is-invalid"
                                 : ""
                             }
-                            placeholder="Enter Contract PoNumber"
+                            placeholder={strings.Enter+strings.ContractPONumber}
                           />
                           {props.errors.contractPoNumber &&
                             props.touched.contractPoNumber && (
@@ -658,7 +663,7 @@ class SupplierModal extends React.Component {
                       <Col md="4">
                         <FormGroup>
                           <Label htmlFor="vatRegistrationNumber">
-                            <span className="text-danger">*</span>Tax Registration Number
+                            <span className="text-danger">*</span>{strings.TaxRegistrationNumber}
                           </Label>
                           <Input
                             type="text"
@@ -674,7 +679,7 @@ class SupplierModal extends React.Component {
                                 ? "is-invalid"
                                 : ""
                             }
-                            placeholder="Enter Tax Registration Number"
+                            placeholder={strings.Enter+strings.TaxRegistrationNumber}
                           />
                           {props.errors.vatRegistrationNumber &&
                             props.touched.vatRegistrationNumber && (
@@ -686,7 +691,7 @@ class SupplierModal extends React.Component {
                       </Col>
                       <Col md="4">
                         <FormGroup>
-                          <Label htmlFor="currencyCode">Currency Code</Label>
+                          <Label htmlFor="currencyCode">{strings.CurrencyCode}</Label>
                           <Select
                             options={
                               currency_list
@@ -708,7 +713,7 @@ class SupplierModal extends React.Component {
                                 props.handleChange("currencyCode")("");
                               }
                             }}
-                            placeholder="Select Currency"
+                            placeholder={strings.Select+strings.Currency}
                             id="currencyCode"
                             name="currencyCode"
                             className={
@@ -729,8 +734,8 @@ class SupplierModal extends React.Component {
                     </Row>
                 </ModalBody>
                 <ModalFooter>
-                  <Button color="success" type="submit" className="btn-square" disabled={isSubmitting}>Save</Button>&nbsp;
-                    <Button color="secondary" className="btn-square" onClick={() => {closeSupplierModal(false)}}>Cancel</Button>
+                  <Button color="success" type="submit" className="btn-square" disabled={isSubmitting}>{strings.Save}</Button>&nbsp;
+                    <Button color="secondary" className="btn-square" onClick={() => {closeSupplierModal(false)}}>{strings.Cancel}</Button>
                 </ModalFooter>
               </Form>
             )}

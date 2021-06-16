@@ -31,6 +31,8 @@ import "./style.scss";
 import * as PaymentActions from "../../actions";
 import * as DetailPaymentActions from "./actions";
 import { CommonActions } from "services/global";
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
   return {
@@ -60,11 +62,12 @@ const customStyles = {
 	}),
 };
 
-
+let strings = new LocalizedStrings(data);
 class DetailPayment extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      language: window['localStorage'].getItem('language'),
       loading: true,
       dialog: null,
       initValue: {},
@@ -247,6 +250,7 @@ class DetailPayment extends React.Component {
   }
 
   render() {
+    strings.setLanguage(this.state.language);
     const { loading, initValue, dialog } = this.state;
     const {
       currency_list,
@@ -271,7 +275,7 @@ class DetailPayment extends React.Component {
                         <Col lg={12}>
                           <div className="h4 mb-0 d-flex align-items-center">
                             <i className="fas fa-money-check" />
-                            <span className="ml-2">Update Payment</span>
+                            <span className="ml-2">{strings.Update+" "+strings.Payment}</span>
                           </div>
                         </Col>
                       </Row>
@@ -328,7 +332,7 @@ class DetailPayment extends React.Component {
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="supplier">
                                         <span className="text-danger">*</span>
-                                        Supplier Name
+                                        {strings.SupplierName}
                                     </Label>
                                       <Select
                                       styles={customStyles}
@@ -367,12 +371,12 @@ class DetailPayment extends React.Component {
                                       onClick={this.openSupplierModal}
                                     >
                                       <i className="fa fa-dot-circle-o"></i>{" "}
-                                      Supplier
+                                       {strings.Supplier}
                                   </Button>
                                   </Col>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="invoiceId"><span className="text-danger">*</span>Invoice #</Label>
+                                      <Label htmlFor="invoiceId"><span className="text-danger">*</span>{strings.Invoice}#</Label>
                                       <Select
                                       styles={customStyles}
                                         id="invoiceId"
@@ -409,14 +413,14 @@ class DetailPayment extends React.Component {
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="invoiceAmount">
                                         <span className="text-danger">*</span>
-                                        Invoice Amount
+                                         {strings.InvoiceAmount}
                                     </Label>
                                       <Input
                                         // className="form-control"
                                         type="number"
                                         id="invoiceAmount"
                                         name="invoiceAmount"
-                                        placeholder="Enter Amount"
+                                        placeholder={strings.Enter+strings.Amount}
                                         value={props.values.invoiceAmount ? props.values.invoiceAmount : ''}
                                         className={props.errors.invoiceAmount && props.touched.invoiceAmount ? "is-invalid" : ""}
                                         onChange={(option) => {
@@ -439,7 +443,7 @@ class DetailPayment extends React.Component {
                                 <Row>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="currency"><span className="text-danger">*</span>Currency</Label>
+                                      <Label htmlFor="currency"><span className="text-danger">*</span>{strings.Currency}</Label>
                                       <Select
                                       styles={customStyles}
                                         id="currency"
@@ -507,7 +511,7 @@ class DetailPayment extends React.Component {
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="payment_date">
                                         <span className="text-danger">*</span>
-                                        Payment Date
+                                         {strings.PaymentDate}
                                     </Label>
                                       <div>
                                         <DatePicker
@@ -568,14 +572,14 @@ class DetailPayment extends React.Component {
                                   <Col lg={8}>
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="description">
-                                        Description
+                                        {strings.Description}
                                     </Label>
                                       <Input
                                         type="textarea"
                                         name="description"
                                         id="description"
                                         rows="6"
-                                        placeholder="Description..."
+                                        placeholder={strings.Description}
                                         onChange={(option) =>
                                           props.handleChange("description")(
                                             option
@@ -601,7 +605,7 @@ class DetailPayment extends React.Component {
                                     className="btn-square"
                                     onClick={this.deletePayment}
                                   >
-                                    <i className="fa fa-trash"></i> Delete
+                                    <i className="fa fa-trash"></i> {strings.Delete}
                                 </Button>
                                 </FormGroup>
                                 <FormGroup className="text-right">
@@ -612,7 +616,7 @@ class DetailPayment extends React.Component {
                                     className="btn-square mr-3"
                                     onClick={props.handleSubmit}
                                   >
-                                    <i className="fa fa-dot-circle-o"></i> Update
+                                    <i className="fa fa-dot-circle-o"></i> {strings.Update}
                                 </Button>
                                   <Button
                                     type="button"
@@ -625,7 +629,7 @@ class DetailPayment extends React.Component {
                                       );
                                     }}
                                   >
-                                    <i className="fa fa-ban"></i> Cancel
+                                    <i className="fa fa-ban"></i> {strings.Cancel}
                                 </Button>
                                 </FormGroup>
                               </Col>

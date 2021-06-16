@@ -551,7 +551,7 @@ class DetailExpense extends React.Component {
 																					props.handleChange('payee')('');
 																				}
 																			}}
-																			placeholder="Select Payee"
+																			placeholder={strings.Select+strings.Payee}
 																			id="payee"
 																			name="payee"
 																			className={
@@ -578,7 +578,7 @@ class DetailExpense extends React.Component {
 																					? 'is-invalid'
 																					: ''
 																			}`}
-																			placeholderText="Expense Date"
+																			placeholderText={strings.ExpenseDate}
 																			value={moment(
 																				props.values.expenseDate,
 																			).format('DD/MM/YYYY')}
@@ -956,7 +956,7 @@ class DetailExpense extends React.Component {
 																			name="expenseDescription"
 																			id="expenseDescription"
 																			rows="5"
-																			placeholder="1024 characters..."
+																			placeholder={strings.Description}
 																			onChange={(option) =>
 																				props.handleChange(
 																					'expenseDescription',
@@ -980,7 +980,7 @@ class DetailExpense extends React.Component {
 																					type="text"
 																					id="receiptNumber"
 																					name="receiptNumber"
-																					placeholder="Enter Receipt Number"
+																					placeholder={strings.Enter+strings.ReceiptNumber}
 																					onChange={(option) =>
 																						props.handleChange('receiptNumber')(
 																							option,
@@ -1002,7 +1002,7 @@ class DetailExpense extends React.Component {
 																					name="receiptAttachmentDescription"
 																					id="receiptAttachmentDescription"
 																					rows="5"
-																					placeholder="1024 characters..."
+																					placeholder={strings.Description}
 																					onChange={(option) =>
 																						props.handleChange(
 																							'receiptAttachmentDescription',

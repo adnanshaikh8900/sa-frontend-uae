@@ -13,28 +13,34 @@ class RFQTemplate extends Component {
 		this.state = {};
 	}
 
-	getRibbonColor = (RFQData) => {
-		if (RFQData.status == 'Draft') {
-			return 'pending-color';
-		} else if (RFQData.status == 'Sent') {
-			return 'saved-color';
+	renderRFQStatus = (status) => {
+		let classname = '';
+		if (status === 'Posted') {
+			classname = 'label-posted';
+		} else if (status === 'Draft') {
+			classname = 'label-draft';
 		} else {
-			return 'saved-color';
+			classname = 'label-overdue';
 		}
+		return (
+			<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
+				{status}
+			</span>
+		);
 	};
 
 	render() {
-		const { RFQData, currencyData, totalNet, companyData } = this.props;
+		const { RFQData, currencyData, totalNet, companyData,status } = this.props;
 		return (
 			<div>
 				<Card id="singlePage" className="box">
-					<div
+					{/* <div
 						className={`ribbon ribbon-top-left ${this.getRibbonColor(
 							RFQData,
 						)}`}
 					>
 						<span>{RFQData.status}</span>
-					</div>
+					</div> */}
 
 					<CardBody style={{ marginTop: '7rem' }}>
 						<div 
@@ -66,11 +72,11 @@ class RFQTemplate extends Component {
 											? companyData.company.companyName
 											: ''}</h5>
 											</div>	
-											<div className="text-center"><h4>{RFQData.grnNumber}</h4></div>		
-						<div className="text-center mt-1">{RFQData.supplierName}</div>	
-						<div className="text-center mt-1"><u>Receive Date :	{moment(RFQData.grnReceiveDate).format(
+											<div className="text-center"><span className="h4">{RFQData.grnNumber} {this.renderRFQStatus(status)} </span></div>		
+						<div className="text-center mt-1 h5">{RFQData.supplierName}</div>	
+						<div className="text-center mt-1 h5">Receive Date :	{moment(RFQData.grnReceiveDate).format(
 									'DD MMM YYYY',
-								)}</u></div>		
+								)}</div>		
 							</div>
 							
 

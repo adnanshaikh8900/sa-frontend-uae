@@ -168,6 +168,7 @@ class ViewGoodsReceivedNote extends React.Component {
 										ref={(el) => (this.componentRef = el)}
 										totalNet={this.state.totalNet}
 										companyData={profile}
+										status={this.props.location.state.status}
 									/>
 								</PDFExport>
 							</div>

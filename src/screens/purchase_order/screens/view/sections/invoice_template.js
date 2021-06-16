@@ -24,18 +24,38 @@ class RFQTemplate extends Component {
 		}
 	};
 
+	renderRFQStatus = (status) => {
+		let classname = '';
+		if (status === 'Approved') {
+			classname = 'label-approved';
+		} else if (status === 'Draft') {
+			classname = 'label-draft';
+		} else if (status === 'Closed') {
+			classname = 'label-closed';
+		}else if (status === 'Send') {
+			classname = 'label-due';
+		} else {
+			classname = 'label-overdue';
+		}
+		return (
+			<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
+				{status}
+			</span>
+		);
+	};
+
 	render() {
-		const { POData, currencyData, totalNet, companyData } = this.props;
+		const { POData, currencyData, totalNet, companyData,status } = this.props;
 		return (
 			<div>
 				<Card id="singlePage" className="box">
-					<div
+					{/* <div
 						className={`ribbon ribbon-top-left ${this.getRibbonColor(
 							POData,
 						)}`}
 					>
 						<span>{POData.status}</span>
-					</div>
+					</div> */}
 
 					<CardBody style={{ marginTop: '7rem' }}>
 					<div 
@@ -67,7 +87,7 @@ class RFQTemplate extends Component {
 											? companyData.company.companyName
 											: ''}</h5>
 											</div>	
-						<div className="text-center"><h4>{POData.poNumber}</h4></div>		
+						<div className="text-center">	<span className="h4">{POData.poNumber} {this.renderRFQStatus(status)} </span></div>			
 						<div className="text-center mt-1">{POData.supplierName}</div>		
 					</div>
 							

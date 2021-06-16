@@ -352,7 +352,7 @@ class RequestForQuotation extends React.Component {
 							onClick={() =>
 								this.props.history.push(
 									'/admin/expense/request-for-quotation/view',
-									{ id: row.id },
+									{ id: row.id ,status:row.status},
 								)
 							}
 						>

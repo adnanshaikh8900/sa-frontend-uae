@@ -948,7 +948,7 @@ class SupplierInvoice extends React.Component {
 												<Select
 													styles={customStyles}
 													className="select-default-width"
-													placeholder="Select Supplier"
+													placeholder={strings.Select+strings.Supplier}
 													id="supplier"
 													name="supplier"
 													options={
@@ -976,7 +976,7 @@ class SupplierInvoice extends React.Component {
 													className="form-control"
 													id="date"
 													name="invoiceDate"
-													placeholderText="Invoice Date"
+													placeholderText={strings.InvoiceDate}
 													showMonthDropdown
 													showYearDropdown
 													autoComplete="off"
@@ -994,7 +994,7 @@ class SupplierInvoice extends React.Component {
 													className="form-control"
 													id="date"
 													name="invoiceDueDate"
-													placeholderText="Invoice Due Date"
+													placeholderText={strings.InvoiceDueDate}
 													showMonthDropdown
 													showYearDropdown
 													autoComplete="off"
@@ -1010,7 +1010,7 @@ class SupplierInvoice extends React.Component {
 												<Input
 													type="number"
 													value={filterData.amount}
-													placeholder="Amount"
+													placeholder={strings.Amount}
 													onChange={(e) => {
 														this.handleChange(e.target.value, 'amount');
 													}}
@@ -1041,7 +1041,7 @@ class SupplierInvoice extends React.Component {
 															this.handleChange('', 'status');
 														}
 													}}
-													placeholder="Status"
+													placeholder={strings.Status}
 												/>
 											</Col>
 											<Col lg={2} className="pl-0 pr-0">

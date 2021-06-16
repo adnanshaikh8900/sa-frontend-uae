@@ -233,7 +233,7 @@ class CreatePurchaseOrder extends React.Component {
 								props,
 							);
 						}}
-						placeholder="Description"
+						placeholder={strings.Description}
 						className={`form-control 
             ${
 							props.errors.poQuatationLineItemRequestModelList &&
@@ -315,7 +315,7 @@ class CreatePurchaseOrder extends React.Component {
 									);
 								}
 							}}
-							placeholder="Quantity"
+							placeholder={strings.Quantity}
 							className={`form-control 
            						${
 												props.errors.poQuatationLineItemRequestModelList &&
@@ -379,7 +379,7 @@ class CreatePurchaseOrder extends React.Component {
 								);
 							}
 						}}
-						placeholder="Unit Price"
+						placeholder={strings.UnitPrice}
 						className={`form-control 
                        ${
 													props.errors.poQuatationLineItemRequestModelList &&
@@ -436,7 +436,7 @@ class CreatePurchaseOrder extends React.Component {
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder="Select Vat"
+						placeholder={strings.Select+strings.Vat}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -954,7 +954,7 @@ class CreatePurchaseOrder extends React.Component {
 																		type="text"
 																		id="rfqNumber"
 																		name="rfqNumber"
-																		placeholder="Invoice Number"
+																		placeholder={strings.InvoiceNumber}
 																		value={this.state.selectedData.rfqNumber}
 																		onBlur={props.handleBlur('rfqNumber')}
 																		onChange={(value) => {
@@ -987,7 +987,7 @@ class CreatePurchaseOrder extends React.Component {
 																		type="text"
 																		id="po_number"
 																		name="po_number"
-																		placeholder="Invoice Number"
+																		placeholder={strings.InvoiceNumber}
 																		value={this.state.prefixData}
 																		onBlur={props.handleBlur('po_number')}
 																		onChange={(value) => {
@@ -1105,7 +1105,7 @@ class CreatePurchaseOrder extends React.Component {
 																		type="text"
 																		id="supplierReferenceNumber"
 																		name="supplierReferenceNumber"
-																		placeholder="Supplier Reference Number"
+																		placeholder={strings.SupplierReferenceNumber}
 																		value={this.state.selectedData.supplierReferenceNumber}
 																		onBlur={props.handleBlur('supplierReferenceNumber')}
 																		onChange={(value) => {
@@ -1147,7 +1147,7 @@ class CreatePurchaseOrder extends React.Component {
 																				? 'is-invalid'
 																				: ''
 																		}`}
-																		placeholderText="Order date"
+																		placeholderText={strings.OrderDate}
 																		selected={props.values.poApproveDate}
 																		showMonthDropdown
 																		showYearDropdown
@@ -1180,7 +1180,7 @@ class CreatePurchaseOrder extends React.Component {
 																				? 'is-invalid'
 																				: ''
 																		}`}
-																		placeholderText="Order Due date"
+																		placeholderText={strings.OrderDueDate}
 																		selected={props.values.poReceiveDate}
 																		showMonthDropdown
 																		showYearDropdown
@@ -1329,7 +1329,7 @@ class CreatePurchaseOrder extends React.Component {
 																			name="notes"
 																			id="notes"
 																			rows="6"
-																			placeholder="Notes"
+																			placeholder={strings.Notes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}

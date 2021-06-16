@@ -80,6 +80,7 @@ EmployeeDesignation:"Employee Designation",
       STATUS: "STATUS",
       INVOICEDATE: "INVOICE DATE",
       DUEDATE: "DUE DATE",
+      DueDate: "Due Date",
       AddNewInvoice: "Add New Invoice",
       InvoiceAmount: "Invoice Amount",
       VatAmount: "Vat Amount",
@@ -199,10 +200,13 @@ Terms:"Terms",
 AddASupplier:"Add A Supplier",
 
 //Purchase receipts
-Purchasereceipts:"Purchase receipts",				
+Purchasereceipts:"Purchase Receipts",				
 PAYMENTDATE:"PAYMENT DATE",					
 PAYMENTNUMBER:"PAYMENT NUMBER",				
-AMOUNT:"AMOUNT",		
+AMOUNT:"AMOUNT",
+CreatePayment:"Create Payment",
+AmountPaid:"Amount Paid",	
+NewSupplier:"New Supplier",	
 			
 //RFQ			
 RequestForQuotation:"Request For Quotation",						
@@ -729,6 +733,8 @@ Enter:"Enter ",
 TelephoneNumber:"Telephone Number",
 ReceiptDate:"Receipt Date",
 OrderDueDate:"Order Due Date",
+OrderDate:"Order Date",
+
 
 	
 }

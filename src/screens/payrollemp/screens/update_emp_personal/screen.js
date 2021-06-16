@@ -63,6 +63,9 @@ class UpdateEmployeePersonal extends React.Component {
             dialog: null,
             gender:'',
             bloodGroup:'',
+            userPhoto: [],
+			showIcon: false,
+			userPhotoFile: {},
             current_employee_id: null
         }
         
@@ -89,6 +92,12 @@ class UpdateEmployeePersonal extends React.Component {
         ];
     }
 
+    uploadImage = (picture, file) => {
+		this.setState({
+			userPhoto: picture,
+			userPhotoFile: file,
+		});
+	};
     componentDidMount = () => {
         if (this.props.location.state && this.props.location.state.id) {
             this.props.detailEmployeePersonalAction.getEmployeeById(this.props.location.state.id).then((res) => {
@@ -164,14 +173,26 @@ class UpdateEmployeePersonal extends React.Component {
                                 res.data.isActive && res.data.isActive !== null
                                     ? res.data.isActive
                                     : '',
+                                    userPhoto: res.data.profilePicByteArray
+                                    ? this.state.userPhoto.concat(res.data.profilePicByteArray)
+                                    : [],
 
                         },
                         selectedStatus: res.data.isActive ? true : false,
+                    },
+                    () => {
+                        this.props.createPayrollEmployeeActions.getStateList(
+                            this.state.initValue.countryId,
+                        );
                     }
+                    
                     )
 
                 }
-            }).catch((err) => {
+                
+            }
+            
+            ).catch((err) => {
                 this.setState({ loading: false })
                 this.props.history.push('/admin/payroll/employee')
             })
@@ -189,7 +210,7 @@ class UpdateEmployeePersonal extends React.Component {
     handleSubmit = (data) => {
         
         this.setState({ disabled: true });
-		const { current_employee_id,gender,bloodGroup } = this.state;
+		const { current_employee_id } = this.state;
 		const {
             firstName,
             middleName,
@@ -201,7 +222,9 @@ class UpdateEmployeePersonal extends React.Component {
             stateId,
             countryId,
             city,
+            gender,
             pincode,
+            bloodGroup,
             presentAddress,
             employeeDesignationId,
 			
@@ -227,6 +250,7 @@ class UpdateEmployeePersonal extends React.Component {
 		);
         formData.append('dob', dob ? moment(dob).format('DD-MM-YYYY') : '');
         formData.append('gender', gender);
+        
         formData.append('bloodGroup', bloodGroup);
         formData.append(
 			'mobileNumber',
@@ -292,6 +316,7 @@ class UpdateEmployeePersonal extends React.Component {
                                     {loading ? (
                                         <Loader></Loader>
                                     ) : (
+                                        
                                         <Row>
                                             <Col lg={8}>
                                                 <Formik
@@ -542,8 +567,8 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                 option.value === props.values.gender,
                                                                                         )
                                                                                     }
-                                                                                    onChange={(value) => {
-                                                                                        props.handleChange('gender')(value);
+                                                                                    onChange={(option) => {
+                                                                                        props.handleChange('gender')(option.value);
 
                                                                                     }}
                                                                                     className={`${props.errors.gender && props.touched.gender
@@ -583,6 +608,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                         )
                                                                                     }
                                                                                     onChange={(option) => {
+                                                                                        debugger
                                                                                         props.handleChange('bloodGroup')(
                                                                                             option.value,
                                                                                         );
@@ -818,7 +844,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                             this.getStateList(option.value);
                                                                                         } else {
                                                                                             props.handleChange('countryId')('');
-                                                                                            this.getStateList('');
+                                                                                            this.getStateList(option.value);
                                                                                         }
                                                                                         props.handleChange('stateId')({
                                                                                             label: 'Select State',
@@ -938,7 +964,7 @@ class UpdateEmployeePersonal extends React.Component {
 																			className="btn-square"
 																			onClick={() => {
 																				this.props.history.push(
-																					'/admin/payroll/employee',
+																					'/admin/payroll/employee/viewEmployee',
 																				);
 																			}}
 																		>

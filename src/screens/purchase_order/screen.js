@@ -351,7 +351,7 @@ class PurchaseOrder extends React.Component {
 							onClick={() =>
 								this.props.history.push(
 									'/admin/expense/purchase-order/view',
-									{ id: row.id },
+									{ id: row.id ,status:row.status},
 								)
 							}
 						>

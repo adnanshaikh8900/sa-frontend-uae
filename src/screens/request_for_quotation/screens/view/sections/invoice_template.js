@@ -13,29 +13,29 @@ class RFQTemplate extends Component {
 		this.state = {};
 	}
 
-	renderRFQStatus = (cell, RFQData) => {
+	renderRFQStatus = (status) => {
 		let classname = '';
-		if (RFQData.status === 'Closed') {
+		if (status === 'Closed') {
 			classname = 'label-closed';
-		} else if (RFQData.status === 'Draft') {
+		} else if (status === 'Draft') {
 			classname = 'label-draft';
-		} else if (RFQData.status === 'Sent') {
+		} else if (status === 'Sent') {
 			classname = 'label-sent';
 		} else {
 			classname = 'label-overdue';
 		}
 		return (
 			<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
-				{RFQData.status}
+				{status}
 			</span>
 		);
 	};
 	render() {
-		const { RFQData, currencyData, totalNet, companyData } = this.props;
+		const { RFQData, currencyData, totalNet, companyData,status } = this.props;
 		return (
 			<div>
 				<Card id="singlePage" className="box">
-					<CardBody style={{ marginTop: '7rem' }}>
+					<CardBody>
 						<div 
 							style={{
 								width: '100%',
@@ -44,7 +44,12 @@ class RFQTemplate extends Component {
 								padding:'7px',borderColor:'#c8ced3'
 							}}
 						>
-						<div className="text-center mt-1 "><h4><b> Request For Quatation Details</b></h4></div>
+						
+						<div className="text-center mt-1">
+							<h4><b> Request For Quatation Details</b></h4>
+						
+						</div>
+						
 						{/* <div  className="text-right"><span className="mb-1 ml-2">Status :  </span></div> */}
 							<div className="text-center">
 									<img
@@ -61,12 +66,14 @@ class RFQTemplate extends Component {
 										style={{ width: ' 250px' }}
 						/>
 					</div>
+				
+					
 					
 					<div className="text-center mt-1"><h5>{companyData && companyData.company
 											? companyData.company.companyName
 											: ''}</h5>
 											</div>	
-						<div className="text-center"><h4>{RFQData.rfqNumber}</h4></div>		
+						<div className="text-center "><span className="h4">{RFQData.rfqNumber} {this.renderRFQStatus(status)} </span></div>		
 						<div className="text-center mt-1">{RFQData.supplierName}</div>		
 							</div>
 					

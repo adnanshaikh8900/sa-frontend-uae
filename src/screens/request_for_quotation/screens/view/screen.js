@@ -190,6 +190,8 @@ class ViewRequestForQuotation extends React.Component {
 									<RFQTemplate
 										RFQData={RFQData}
 										currencyData={currencyData}
+									
+										status={this.props.location.state.status}
 										ref={(el) => (this.componentRef = el)}
 										totalNet={this.state.totalNet}
 										companyData={profile}

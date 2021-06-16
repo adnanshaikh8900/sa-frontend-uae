@@ -343,7 +343,7 @@ class GoodsReceivedNote extends React.Component {
 							onClick={() =>
 								this.props.history.push(
 									'/admin/expense/goods-received-note/view',
-									{ id: row.id },
+									{ id: row.id ,status:row.status},
 								)
 							}
 						>

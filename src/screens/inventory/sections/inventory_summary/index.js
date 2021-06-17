@@ -34,6 +34,7 @@ import logo from 'assets/images/brand/logo.png';
 import { CommonActions } from 'services/global';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import { InventoryHistoryModal } from './sections';
 
 const mapStateToProps = (state) => {
 	return {
@@ -67,7 +68,9 @@ class InventorySummary extends React.Component {
 				endDate: moment().local().format('DD/MM/YYYY'),
 				
 			},
+			openModal:false,
 			csvData: [],
+			inventory_history_list:[],
 			activePage: 1,
 			sizePerPage: 10,
 			totalCount: 0,
@@ -109,12 +112,38 @@ class InventorySummary extends React.Component {
 			},
 		);
 	};
+	viewPaySlip = (data) => {
+		//getSalarySlip
+		// this.props.employeeViewActions
+		// 	.getSalarySlip(data)
+		// 	.then((res) => {
+		//         if (res.status === 200) {
+		// 		// this.initializeData();
 
+
+		// 			this.setState({
+
+		// 			});
+
+		//     }})
+		// 	.catch((err) => {
+		// 		this.props.commonActions.tostifyAlert(
+		// 			'error',
+		// 			err && err.data ? err.data.message : 'Something Went Wrong',
+		// 		);
+		// 	});
+		this.setState({
+			openModal: true
+		})
+
+	}
 	componentDidMount = () => {
 		this.initializeData();
 		this.props.commonActions.getCompany() 
 	};
-
+	closeModal = (res) => {
+		this.setState({ openModal: false });
+	};
 	initializeData = (search) => {
 		const { filterData } = this.state;
 		const paginationData = {
@@ -246,6 +275,43 @@ class InventorySummary extends React.Component {
 	// 	);
 	// };
 
+
+	renderActions = (cell, row) => {
+		return (
+			<div>
+				<Button
+				className="btn btn-lg "
+				style={{padding:"0px"}}
+				 color="link"
+					onClick={() => {
+						this.props.productActions.getInventoryHistory({p_id:row.productId,s_id:row.supplierId}).then((res) => {
+								if (res.status === 200) {
+									this.setState({
+
+										inventory_history_list:res.data,
+											});
+
+								}debugger
+							})
+							.catch((err) => {
+								this.props.commonActions.tostifyAlert(
+									'error',
+
+									err && err.data ? err.data.message : 'Something Went Wrong',
+								);
+							});
+							
+						this.viewPaySlip({ });
+					}
+
+					}
+				>
+						<i class="fa fa-history fa-lg"></i> 
+						</Button>
+
+			</div>
+		);
+	};
 	render() {
 		strings.setLanguage(this.state.language);
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
@@ -371,12 +437,12 @@ class InventorySummary extends React.Component {
 												<TableHeaderColumn  dataField="supplierName" dataSort className="table-header-bg">
 												{strings.SUPPLIERNAME}
 												</TableHeaderColumn >
-												{/* <TableHeaderColumn
+												<TableHeaderColumn
 												className="text-right"
 												columnClassName="text-right"
 												dataFormat={this.renderActions}
 												className="table-header-bg"
-											     ></TableHeaderColumn> */}
+											     ></TableHeaderColumn>
 											</BootstrapTable>
 										</div>
 									)}
@@ -384,7 +450,14 @@ class InventorySummary extends React.Component {
 								</PDFExport>
 						
 						</div>
-				
+						<InventoryHistoryModal
+					openModal={this.state.openModal}
+					closeModal={(e) => {
+						this.closeModal(e);
+					}}
+					// id={this.state.rowId}
+					 inventory_history_list={this.state.inventory_history_list}
+				/>
 				</div>
 			</div>
 		);

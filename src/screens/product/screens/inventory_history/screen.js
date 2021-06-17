@@ -394,7 +394,7 @@ class InventoryHistory extends React.Component {
 																	  <td colSpan="9">
 																		  <b style={{ fontWeight: '600' }}>
 																			  {console.log(Object.values(item['productCode']),"itemsss")}
-																			  <div><h5><u>{strings.ProductCode} :</u> </h5></div>
+																			  <div><h5> {strings.ProductCode} :  </h5></div>
 																		  </b>
 																	  </td>
 																	  <td colSpan="9">
@@ -409,7 +409,7 @@ class InventoryHistory extends React.Component {
 																	  key={index}
 																  >  <td colSpan="9">
 																  <b style={{ fontWeight: '600' }}>
-																  <div><h5><u>Product Name :</u> </h5></div>
+																  <div><h5> Product Name :  </h5></div>
 																	  {console.log(Object.values(item['productname']),"productname")}
 																  </b>
 															  </td>

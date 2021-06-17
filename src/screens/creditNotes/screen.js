@@ -320,10 +320,14 @@ class CreditNotes extends React.Component {
 					{row.invoiceAmount === 0  ? row.currencySymbol + row.invoiceAmount.toFixed(2) : row.currencySymbol + row.invoiceAmount.toFixed(2)}
 					</label>
 				</div>
-				<div style={{display: row.vatAmount === 0 ? 'none' : ''}}>
-				<label className="font-weight-bold mr-2">Vat Amount : </label>
-				<label>{row.vatAmount === 0  ? row.currencySymbol + row.vatAmount.toFixed(2) : row.currencySymbol + row.vatAmount.toFixed(2)}</label>
+				<div>
+					<label className="font-weight-bold mr-2 ">Remaining Credits : </label>
+					<label>
+					{row.dueAmount === 0  ? row.currencySymbol + row.dueAmount.toFixed(2) : row.currencySymbol + row.dueAmount.toFixed(2)}
+					</label>
 				</div>
+			
+			
 				{/* <div style={{display: row.dueAmount === 0 ? 'none' : ''}}>
 					<label className="font-weight-bold mr-2">Due Amount : </label>
 					<label>{row.dueAmount === 0  ? row.currencySymbol + row.dueAmount.toFixed(2) : row.currencySymbol + row.dueAmount.toFixed(2)}</label>
@@ -409,7 +413,7 @@ class CreditNotes extends React.Component {
 											'/admin/income/credit-notes/applyToInvoice',
 											{ contactId: row.contactId , creditNoteId: row.id ,
 											  referenceNumber:row.invoiceNumber,
-											  creditAmount:row.invoiceAmount},
+											  creditAmount:row.dueAmount},
 										);
 									}}
 								>

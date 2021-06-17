@@ -801,7 +801,7 @@ class CreateCreditNote extends React.Component {
 		return (
 			<Button
 				size="sm"
-				className="btn-twitter btn-brand icon"
+				className="btn-twitter btn-brand icon mt-1"
 				disabled={this.state.data.length === 1 ? true : false}
 				onClick={(e) => {
 					this.deleteRow(e, rows, props);
@@ -1486,7 +1486,7 @@ class CreateCreditNote extends React.Component {
 																						'label',
 																						'value',
 																						invoice_list.data,
-																						'invoiceNumber',
+																						'Invoice Number',
 																				  )
 																				: []
 																		}
@@ -1625,7 +1625,7 @@ class CreateCreditNote extends React.Component {
 																		this.openCustomerModal(props);
 																	}}
 																>
-																	<i className="fa fa-plus"></i>{strings.AddACustomer}
+																	<i className="fa fa-plus"></i> {strings.AddACustomer}
 																</Button>
 															</Col>
 															{/* <Col lg={3}>

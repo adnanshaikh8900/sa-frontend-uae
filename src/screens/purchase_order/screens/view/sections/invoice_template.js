@@ -57,7 +57,7 @@ class RFQTemplate extends Component {
 						<span>{POData.status}</span>
 					</div> */}
 
-					<CardBody style={{ marginTop: '7rem' }}>
+					<CardBody>
 					<div 
 							style={{
 								width: '100%',

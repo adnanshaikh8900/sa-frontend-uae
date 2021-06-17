@@ -83,7 +83,7 @@ class InvoiceTemplate extends Component {
 							<div className="text-center" style={{ width: '130%',justifyContent:'center' }}>
 							<div 
 										style={{
-											width: '77%',
+											width: '100%',
 											fontSize: '2rem',
 											fontWeight: '700',
 											textTransform: 'uppercase',

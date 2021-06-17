@@ -308,14 +308,19 @@ console.log("designation_list",designation_list)
                             ref={this.csvLink}
                             target="_blank"
                           />} */}
-                          <Button
-                            color="primary"
-                            className="btn-square"
-                            onClick={() => this.props.history.push(`/admin/payroll/employeeDesignation/create`)}
-                          >
-                            <i className="fas fa-plus mr-1" />
-                            {strings.NewDesignation}
-                          </Button>
+                         
+                          <div style={{ width: "1650px" }}>
+                                                            <Button
+                                                                color="primary"
+                                                                className="btn-square pull-right mb-2 mr-2"
+                                                                style={{ marginBottom: '10px' }}
+                                                                onClick={() => this.props.history.push(`/admin/payroll/employeeDesignation/create`)}
+
+                                                            >
+                                                                <i className="fas fa-plus mr-1" />
+                                                                {strings.NewDesignation}
+									</Button>
+                                    </div>
                           {/* <Button
                             color="warning"
                             className="btn-square"

@@ -309,14 +309,27 @@ class SalaryStructure extends React.Component {
                             ref={this.csvLink}
                             target="_blank"
                           />} */}
-                          <Button
+                          {/* <Button
                             color="primary"
                             className="btn-square"
                             onClick={() => this.props.history.push(`/admin/payroll/salaryStructure/create`)}
                           >
-                            <i className="fas fa-plus mr-1" />
+                            <i className="fas fa-plus" />
                             {strings.NewSalaryStructure}
-                          </Button>
+                          </Button> */}
+
+                          <div style={{ width: "1650px" }}>
+                                                            <Button
+                                                                color="primary"
+                                                                className="btn-square pull-right mb-2 mr-2"
+                                                                style={{ marginBottom: '10px' }}
+                                                                onClick={() => this.props.history.push(`/admin/payroll/salaryStructure/create`)}
+
+                                                            >
+                                                                <i className="fas fa-plus mr-1" />
+                                                                {strings.NewSalaryStructure}
+									</Button>
+                                    </div>
                           {/* <Button
                             color="warning"
                             className="btn-square"

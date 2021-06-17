@@ -362,11 +362,12 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 													expenseDate: Yup.date().required(
 														'Expense Date is Required',
 													),
+													
 													currency: Yup.string().required(
 														'Currency is required',
 													),
 													payee: Yup.string().required(
-														'payee Category is required',
+														'Paid By is required',
 													),
 													expenseAmount: Yup.string()
 														.required('Amount is Required')

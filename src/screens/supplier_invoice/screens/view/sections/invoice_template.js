@@ -12,35 +12,7 @@ class InvoiceTemplate extends Component {
 		this.state = {};
 	}
 
-	renderInvoiceStatus = (invoiceData) => {
-		let classname = '';
-		if (invoiceData.status === 'Paid') {
-			classname = 'label-success';
-		} else if (invoiceData.status === 'Draft') {
-			classname = 'label-currency';
-		} else if (invoiceData.status === 'Partially Paid') {
-			classname = 'label-PartiallyPaid';
-		} else if (invoiceData.status === 'Due Today') {
-			classname = 'label-due';
-		} else {
-			classname = 'label-overdue';
-		}
-		return (
-			<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
-				{invoiceData.status}
-			</span>
-		);
-	};
-
-	getRibbonColor = (invoiceData) => {
-		if (invoiceData.status == 'Draft') {
-			return 'pending-color';
-		} else if (invoiceData.status == 'Sent') {
-			return 'saved-color';
-		} else {
-			return 'saved-color';
-		}
-	};
+	
 	renderInvoiceStatus = (status) => {
 		let classname = '';
 		if (status === 'Paid') {

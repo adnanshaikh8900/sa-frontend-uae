@@ -646,7 +646,7 @@ class ImportTransaction extends React.Component {
 																						)}
 																				</Col>
 																			</Row>
-																			<Row className="mt-3">
+																			{/* <Row className="mt-3">
 																				<Col md={5}>
 																					<Label htmlFor="skip_rows">
 																						{strings.SkipRows}
@@ -730,8 +730,8 @@ class ImportTransaction extends React.Component {
 																						/>
 																					</FormGroup>
 																				</Col>
-																			</Row>
-																			<Row>
+																			</Row> */}
+																			<Row className="mt-3">
 																				<Col md={5}>
 																					<Label htmlFor="description">
 																						<span className="text-danger">

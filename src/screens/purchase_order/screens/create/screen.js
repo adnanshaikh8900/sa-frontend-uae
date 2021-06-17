@@ -33,7 +33,7 @@ import { ProductModal } from '../../../customer_invoice/sections';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
-import { selectOptionsFactory } from 'utils';
+import {selectCurrencyFactory, selectOptionsFactory } from 'utils';
 
 import './style.scss';
 import moment from 'moment';
@@ -374,7 +374,7 @@ class CreatePurchaseOrder extends React.Component {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.subTotal === 0 ? row.subTotal.toFixed(2) : row.subTotal.toFixed(2);
+		return row.subTotal === 0 ? this.state.supplier_currency_symbol + row.subTotal.toFixed(2) : this.state.supplier_currency_symbol + row.subTotal.toFixed(2);
 	};
 
 	componentDidMount = () => {
@@ -387,23 +387,23 @@ class CreatePurchaseOrder extends React.Component {
 		this.getInvoiceNo();
 		this.props.purchaseOrderAction.getSupplierList(this.state.contactType);
 		this.props.purchaseOrderAction.getRFQList();
-		// this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
-		// 	this.setState({
-		// 		initValue: {
-		// 			...this.state.initValue,
-		// 			...{
-		// 				currencyCode: response.data
-		// 					? parseInt(response.data[0].currencyCode)
-		// 					: '',
-		// 			},
-		// 		},
-		// 	});
-		// 	// this.formRef.current.setFieldValue(
-		// 	// 	'currency',
-		// 	// 	response.data[0].currencyCode,
-		// 	// 	true,
-		// 	// );
-		// });
+		this.props.currencyConvertActions.getCurrencyConversionList().then((response) => {
+			this.setState({
+				initValue: {
+					...this.state.initValue,
+					...{
+						currencyCode: response.data
+							? parseInt(response.data[0].currencyCode)
+							: '',
+					},
+				},
+			});
+			// this.formRef.current.setFieldValue(
+			// 	'currency',
+			// 	response.data[0].currencyCode,
+			// 	true,
+			// );
+		});
 		this.props.purchaseOrderAction.getPoPrefix().then((response) => {
 			this.setState({prefixData:response.data
 		});
@@ -520,6 +520,24 @@ class CreatePurchaseOrder extends React.Component {
 			},
 		);
 	};
+
+	getCurrency = (opt) => {
+		let supplier_currencyCode = 0;
+
+		this.props.supplier_list.map(item => {
+			if(item.label.contactId == opt) {
+				this.setState({
+					supplier_currency: item.label.currency.currencyCode,
+					supplier_currency_des: item.label.currency.currencyName,
+					supplier_currency_symbol: item.label.currency.currencySymbol
+				});
+
+				supplier_currencyCode = item.label.currency.currencyCode;
+			}
+		})
+
+		return supplier_currencyCode;
+	}
 
 	selectItem = (e, row, name, form, field, props) => {
 		//e.preventDefault();
@@ -786,7 +804,7 @@ class CreatePurchaseOrder extends React.Component {
 		return (
 			<Button
 				size="sm"
-				className="btn-twitter btn-brand icon"
+				className="btn-twitter btn-brand icon mt-1"
 				disabled={this.state.data.length === 1 ? true : false}
 				onClick={(e) => {
 					this.deleteRow(e, rows, props);
@@ -943,6 +961,9 @@ class CreatePurchaseOrder extends React.Component {
 		}
 		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
+		}
+		if (currency !== null && currency) {
+			formData.append('currencyCode', this.state.supplier_currency);
 		}
 		this.props.purchaseOrderCreateAction
 			.createPO(formData)
@@ -1428,7 +1449,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																						'label',
 																						'value',
 																						rfq_list.data,
-																						'rfqNumber',
+																						'RFQ Number',
 																				  )
 																				: []
 																		}
@@ -1538,6 +1559,8 @@ getrfqDetails = (e, row, props,form,field) => {
 																		}
 																		onChange={(option) => {
 																			if (option && option.value) {
+																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
+																				this.setExchange( this.getCurrency(option.value) );
 																				props.handleChange('supplierId')(option);
 																			} else {
 
@@ -1577,32 +1600,57 @@ getrfqDetails = (e, row, props,form,field) => {
 															</Col>
 															<Col lg={3}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="supplierReferenceNumber">
-																	{strings.SupplierReferenceNumber}
+																	<Label htmlFor="currency">
+																		<span className="text-danger">*</span>
+																		{strings.Currency}
 																	</Label>
-																	<Input
-																		type="text"
-																		id="supplierReferenceNumber"
-																		name="supplierReferenceNumber"
-																		placeholder="Supplier Reference Number"
-																		value={props.values.supplierReferenceNumber}
-																		onBlur={props.handleBlur('supplierReferenceNumber')}
-																		onChange={(value) => {
-																			props.handleChange('supplierReferenceNumber')(
-																				value,
-																			);
-																		}}
-																		className={
-																			props.errors.supplierReferenceNumber &&
-																			props.touched.supplierReferenceNumber
+																	<Select
+																	isDisabled={true}
+																	placeholder="Select Currency"
+																		styles={customStyles}
+																		options={
+																			currency_convert_list
+																				? selectCurrencyFactory.renderOptions(
+																						'currencyName',
+																						'currencyCode',
+																						currency_convert_list,
+																						'Currency',
+																				  )
+																				: []
+																		}
+																		id="currency"
+																		name="currency"
+																		value={																		
+																			currency_convert_list &&
+																			selectCurrencyFactory
+																				.renderOptions(
+																					'currencyName',
+																					'currencyCode',
+																					currency_convert_list,
+																					'Currency',
+																				)
+																				.find(
+																					(option) =>
+																						option.value ===
+																						this.state.supplier_currency,
+																				)
+																		}
+																		onChange={(option) => {
+																			props.handleChange('currency')(option);
+																			this.setExchange(option.value);
+																			this.setCurrency(option.value)
+																		   }}
+																		className={`${
+																			props.errors.currency &&
+																			props.touched.currency
 																				? 'is-invalid'
 																				: ''
-																		}
+																		}`}
 																	/>
-																	{props.errors.supplierReferenceNumber &&
-																		props.touched.supplierReferenceNumber && (
+																	{props.errors.currency &&
+																		props.touched.currency && (
 																			<div className="invalid-feedback">
-																				{props.errors.supplierReferenceNumber}
+																				{props.errors.currency}
 																			</div>
 																		)}
 																</FormGroup>
@@ -1677,6 +1725,38 @@ getrfqDetails = (e, row, props,form,field) => {
 																			</div>
 																		)}
 																	
+																</FormGroup>
+															</Col>
+															<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="supplierReferenceNumber">
+																	{strings.SupplierReferenceNumber}
+																	</Label>
+																	<Input
+																		type="text"
+																		id="supplierReferenceNumber"
+																		name="supplierReferenceNumber"
+																		placeholder="Supplier Reference Number"
+																		value={props.values.supplierReferenceNumber}
+																		onBlur={props.handleBlur('supplierReferenceNumber')}
+																		onChange={(value) => {
+																			props.handleChange('supplierReferenceNumber')(
+																				value,
+																			);
+																		}}
+																		className={
+																			props.errors.supplierReferenceNumber &&
+																			props.touched.supplierReferenceNumber
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.supplierReferenceNumber &&
+																		props.touched.supplierReferenceNumber && (
+																			<div className="invalid-feedback">
+																				{props.errors.supplierReferenceNumber}
+																			</div>
+																		)}
 																</FormGroup>
 															</Col>
 														</Row>
@@ -1906,7 +1986,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																								}
 																							/>
 																						)} */}
-																						{/* {this.state.supplier_currency_symbol} */}
+																						{this.state.supplier_currency_symbol}
 																						{initValue.total_net.toFixed(
 																									2,
 																								)}
@@ -1936,7 +2016,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																								}
 																							/>
 																						)} */}
-																						{/* {this.state.supplier_currency_symbol} */}
+																						{this.state.supplier_currency_symbol}
 																						{initValue.totalVatAmount.toFixed(
 																									2,
 																								)}
@@ -1966,7 +2046,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																								}
 																							/>
 																						)} */}
-																						{/* {this.state.supplier_currency_symbol} */}
+																						{this.state.supplier_currency_symbol}
 																						{initValue.totalAmount.toFixed(
 																									2,
 																								)}

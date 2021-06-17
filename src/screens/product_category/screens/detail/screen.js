@@ -119,7 +119,7 @@ class DetailProductCategory extends React.Component {
     this.props.detailProductCategoryAction.deleteProductCategory(current_product_category_id).then((res) => {
       if (res.status === 200) {
         // this.success('Chart Account Deleted Successfully');
-        this.props.commonActions.tostifyAlert('success', 'ProductCategory Deleted Successfully')
+        this.props.commonActions.tostifyAlert('success', 'Product Category Deleted Successfully')
         this.props.history.push('/admin/master/product-category')
       }
     }).catch((err) => {

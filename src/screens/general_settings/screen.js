@@ -758,16 +758,22 @@ class GeneralSettings extends React.Component {
 																	</Col>
 																</Row>
 															)} */}
-															<FormGroup className="text-right mt-5">
+
+															<Row>
+															<Col lg={12} className="mt-5">
+															<FormGroup className="text-right mt-5 ">
 																<Button
-																	type="submit"
+																	type="button"
 																	name="submit"
 																	color="primary"
 																	className="btn-square"
+
+																
 																>
 																	<i className="fa fa-dot-circle-o"></i> {strings.Save}
 																</Button>
 																<Button
+																					type="button"
 																					color="secondary"
 																					className="btn-square"
 																					onClick={() => {
@@ -779,6 +785,8 @@ class GeneralSettings extends React.Component {
 																					<i className="fa fa-ban"></i>  {strings.Cancel}
 																				</Button>
 															</FormGroup>
+															</Col>
+														</Row>
 														</Form>
 													)}
 												</Formik>

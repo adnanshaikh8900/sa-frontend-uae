@@ -1256,7 +1256,7 @@ console.log(this.state.selectedRows)
 																			{strings.InvoiceDate}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
-																			dataField="totalAount"
+																			dataField="dueAmount"
 																			dataSort className="table-header-bg"
 																			// dataFormat={(cell, rows) =>
 																			// 	this.renderUnitPrice(cell, rows, props)

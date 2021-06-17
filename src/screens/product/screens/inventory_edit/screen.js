@@ -649,7 +649,7 @@ class InventoryEdit extends React.Component {
 																			name="inventoryReorderLevel"
 																			id="inventoryReorderLevel"
 																			rows="3"
-																			placeholder="inventoryReorderLevel..."
+																			placeholder="Inventory Re-order Level"
 																			onChange={(value) => {
 																				props.handleChange(
 																					'inventoryReorderLevel',

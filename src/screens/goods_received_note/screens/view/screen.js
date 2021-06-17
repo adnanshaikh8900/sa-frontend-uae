@@ -129,8 +129,8 @@ class ViewGoodsReceivedNote extends React.Component {
 								>
 									<i className="fa fa-pencil"></i>
 								</Button> */}
-								<Button
-									className=" print-btn-cont"
+										<Button
+									className="btn-lg mb-1 print-btn-cont"
 									onClick={() => {
 										this.exportPDFWithComponent();
 									}}
@@ -139,7 +139,7 @@ class ViewGoodsReceivedNote extends React.Component {
 								</Button>
 								<ReactToPrint
 									trigger={() => (
-										<Button type="button" className=" print-btn-cont">
+										<Button type="button" className="ml-1 mb-1 mr-1 print-btn-cont btn-lg">
 											<i className="fa fa-print"></i>
 										</Button>
 									)}
@@ -147,10 +147,10 @@ class ViewGoodsReceivedNote extends React.Component {
 								/>
 										<Button
 											type="button"
-											className=" print-btn-cont"
+											className="close-btn mb-1 btn-lg print-btn-cont"
 											style={{color: "black"}}
 											onClick={() => {
-												this.props.history.push('/admin/income/customer-invoice');
+												this.props.history.push('/admin/expense/goods-received-note');
 											}}
 										>
 										X

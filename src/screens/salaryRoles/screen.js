@@ -357,7 +357,7 @@ console.log("strings",strings)
                             ref={this.csvLink}
                             target="_blank"
                           />} */}
-                          <Button
+                          {/* <Button
 
                             color="primary"
                             className="btn-square mb-2"
@@ -365,7 +365,20 @@ console.log("strings",strings)
                           >
                             <i className="fas fa-plus mr-1 " />
                             {strings.NewSalaryRoles}
-                          </Button>
+                          </Button> */}
+
+                          <div style={{ width: "1650px" }}>
+                                                            <Button
+                                                                color="primary"
+                                                                className="btn-square pull-right mb-2 mr-2"
+                                                                style={{ marginBottom: '10px' }}
+                                                                onClick={() => this.props.history.push(`/admin/payroll/salaryRoles/create`)}
+
+                                                            >
+                                                                <i className="fas fa-plus mr-1" />
+                                                                {strings.NewSalaryRoles}
+									</Button>
+                                    </div>
                           {/* <Button
                             color="warning"
                             className="btn-square"

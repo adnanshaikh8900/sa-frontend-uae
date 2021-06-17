@@ -816,7 +816,7 @@ class CreateSupplierInvoice extends React.Component {
 		return (
 			<Button
 				size="sm"
-				className="btn-twitter btn-brand icon"
+				className="btn-twitter btn-brand icon mt-1"
 				disabled={this.state.data.length === 1 ? true : false}
 				onClick={(e) => {
 					this.deleteRow(e, rows, props);

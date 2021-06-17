@@ -635,7 +635,7 @@ class CreateContact extends React.Component {
 																		maxLength="100"
 																		id="addressLine1"
 																		name="addressLine1"
-																		placeholder="Enter Address Line1"
+																		placeholder="Enter Address Line 1"
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
@@ -674,7 +674,7 @@ class CreateContact extends React.Component {
 																		maxLength="100"
 																		id="addressLine2"
 																		name="addressLine2"
-																		placeholder="Enter Address Line2"
+																		placeholder="Enter Address Line 2"
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
@@ -701,7 +701,7 @@ class CreateContact extends React.Component {
 																		maxLength="100"
 																		id="addressLine3"
 																		name="addressLine3"
-																		placeholder="Enter Address Line3"
+																		placeholder="Enter Address Line 3"
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||

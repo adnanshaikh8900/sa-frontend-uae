@@ -600,7 +600,7 @@ class SupplierModal extends React.Component {
 																? 'is-invalid'
 																: ''
 														}
-														placeholder="Enter AddressLine 1"
+														placeholder="Enter Address Line 1"
 													/>
 													{props.errors.addressLine1 &&
 														props.touched.addressLine1 && (
@@ -626,7 +626,7 @@ class SupplierModal extends React.Component {
 																props.handleChange('addressLine2')(option);
 															}
 														}}
-														placeholder="Enter AddressLine 2"
+														placeholder="Enter Address Line 2"
 													/>
 												</FormGroup>
 											</Col>
@@ -646,7 +646,7 @@ class SupplierModal extends React.Component {
 																props.handleChange('addressLine3')(option);
 															}
 														}}
-														placeholder="Enter AddressLine 3"
+														placeholder="Enter Address Line 3"
 													/>
 												</FormGroup>
 											</Col>

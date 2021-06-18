@@ -49,8 +49,8 @@ EmployeeDesignation:"Employee Designation",
       TransactionCategory: "Transaction Category",
       OpeningDate: "Opening Date",
       Amount: "Amount",
-      Create: "Create",
-      Cancel: "Cancel",
+      Create: " Create",
+      Cancel: " Cancel",
       AddOpeningBalance: "Add Opening Balance",
       NewOpeningBalance:"New Opening Balance",		
 
@@ -147,7 +147,7 @@ EmployeeDesignation:"Employee Designation",
       InvoicingDetails:"Invoicing Details",
       BillingEmail:"Billing Email",
       ContractPONumber: "Contract PO Number",
-      Cancel:"Cancel",
+
 
       //Income receipts
       Receipts:"Receipts",		
@@ -734,8 +734,8 @@ TelephoneNumber:"Telephone Number",
 ReceiptDate:"Receipt Date",
 OrderDueDate:"Order Due Date",
 OrderDate:"Order Date",
-
-
+GrnReceivedQuantity:"Grn Received Quantity",
+ReceivedQuantity:"Received Quantity",
 	
 }
 export { en }

@@ -216,7 +216,7 @@ class CreateGoodsReceivedNote extends React.Component {
 								props,
 							);
 						}}
-						placeholder="Description"
+						placeholder={strings.Description}
 						className={`form-control 
             ${
 							props.errors.poQuatationLineItemRequestModelList &&
@@ -299,7 +299,7 @@ class CreateGoodsReceivedNote extends React.Component {
 									);
 								}
 							}}
-							placeholder="Quantity"
+							placeholder={strings.Quantity}
 							className={`form-control 
            						${
 												props.errors.poQuatationLineItemRequestModelList &&
@@ -363,7 +363,7 @@ class CreateGoodsReceivedNote extends React.Component {
 								);
 							}
 						}}
-						placeholder="Unit Price"
+						placeholder={strings.UnitPrice}
 						className={`form-control 
                        ${
 													props.errors.poQuatationLineItemRequestModelList &&
@@ -420,7 +420,7 @@ class CreateGoodsReceivedNote extends React.Component {
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder="Select Vat"
+						placeholder={strings.Select+strings.Vat}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -566,7 +566,7 @@ class CreateGoodsReceivedNote extends React.Component {
 									);
 								}
 							}}
-							placeholder="Grn Received Quantity"
+							placeholder={strings.GrnReceivedQuantity}
 							className={`form-control 
             ${
 							props.errors.lineItemsString &&
@@ -912,7 +912,7 @@ class CreateGoodsReceivedNote extends React.Component {
 																		type="text"
 																		id="poNumber"
 																		name="poNumber"
-																		placeholder="Invoice Number"
+																		placeholder={strings.InvoiceNumber}
 																		value={this.state.selectedData.poNumber}
 																		onBlur={props.handleBlur('poNumber')}
 																		onChange={(value) => {
@@ -945,7 +945,7 @@ class CreateGoodsReceivedNote extends React.Component {
 																		type="text"
 																		id="grn_number"
 																		name="grn_number"
-																		placeholder="Invoice Number"
+																		placeholder={strings.InvoiceNumber}
 																		value={this.state.prefixData}
 																		onBlur={props.handleBlur('grn_number')}
 																		onChange={(value) => {
@@ -1064,7 +1064,7 @@ class CreateGoodsReceivedNote extends React.Component {
 																		type="text"
 																		id="supplierReferenceNumber"
 																		name="supplierReferenceNumber"
-																		placeholder="Supplier Reference Number"
+																		placeholder={strings.SupplierReferenceNumber}
 																		value={this.state.selectedData.supplierReferenceNumber}
 																	
 																		onChange={(value) => {
@@ -1104,7 +1104,7 @@ class CreateGoodsReceivedNote extends React.Component {
 																				? 'is-invalid'
 																				: ''
 																		}`}
-																		placeholderText="Order date"
+																		placeholderText={strings.OrderDate}
 																		selected={props.values.grnReceiveDate}
 																		showMonthDropdown
 																		showYearDropdown
@@ -1262,7 +1262,7 @@ class CreateGoodsReceivedNote extends React.Component {
 																			name="notes"
 																			id="notes"
 																			rows="6"
-																			placeholder="Notes"
+																			placeholder={strings.Notes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}

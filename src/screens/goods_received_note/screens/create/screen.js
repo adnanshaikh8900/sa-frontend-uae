@@ -249,7 +249,7 @@ class CreateGoodsReceivedNote extends React.Component {
 								props,
 							);
 						}}
-						placeholder="Description"
+						placeholder={strings.Description}
 						className={`form-control 
             ${
 							props.errors.lineItemsString &&
@@ -299,7 +299,7 @@ class CreateGoodsReceivedNote extends React.Component {
 									);
 								}
 							}}
-							placeholder="Quantity"
+							placeholder={strings.Quantity}
 							className={`form-control 
             ${
 							props.errors.lineItemsString &&
@@ -359,7 +359,7 @@ class CreateGoodsReceivedNote extends React.Component {
 									);
 								}
 							}}
-							placeholder="Received Quantity"
+							placeholder={strings.ReceivedQuantity}
 							className={`form-control 
             ${
 							props.errors.lineItemsString &&
@@ -418,7 +418,7 @@ class CreateGoodsReceivedNote extends React.Component {
 								);
 							}
 						}}
-						placeholder="Unit Price"
+						placeholder={strings.UnitPrice}
 						className={`form-control 
             ${
 							props.errors.lineItemsString &&
@@ -652,7 +652,7 @@ class CreateGoodsReceivedNote extends React.Component {
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder="Select Vat"
+						placeholder={strings.Select+strings.Vat}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -754,7 +754,7 @@ class CreateGoodsReceivedNote extends React.Component {
 								: []
 						}
 						id="productId"
-						placeholder="Select Product"
+						placeholder={strings.Select+strings.Product}
 						onChange={(e) => {
 							if (e && e.label !== 'Select Product') {
 								this.selectItem(e.value, row, 'productId', form, field, props);
@@ -1510,7 +1510,7 @@ console.log(po_list)
 																		styles={customStyles}
 																		id="poNumber"
 																		name="poNumber"
-																		placeholder="Select PO Number"
+																		placeholder={strings.Select+strings.PONumber}
 																		options={
 																			po_list
 																				? selectOptionsFactory.renderOptions(
@@ -1568,7 +1568,7 @@ console.log(po_list)
 																		type="text"
 																		id="grn_Number"
 																		name="grn_Number"
-																		placeholder="Invoice Number"
+																		placeholder={strings.InvoiceNumber}
 																		value={props.values.grn_Number}
 																		onBlur={props.handleBlur('grn_Number')}
 																		onChange={(option) => {
@@ -1605,7 +1605,7 @@ console.log(po_list)
 																		styles={customStyles}
 																		id="supplierId"
 																		name="supplierId"
-																		placeholder="Select Supplier Name"
+																		placeholder={strings.Select+strings.SupplierName}
 																		options={
 																			tmpSupplier_list
 																				? selectOptionsFactory.renderOptions(
@@ -1671,7 +1671,7 @@ console.log(po_list)
 								  disabled={true}
 								  id="supplierReferenceNumber"
 								  name="supplierReferenceNumber"
-								  placeholder="Supplier Reference Number"
+								  placeholder={strings.Select+strings.ReferenceNumber}
 								  value={props.values.supplierReferenceNumber}
 								  onBlur={props.handleBlur('supplierReferenceNumber')}
 								  onChange={(value) => {
@@ -1715,7 +1715,7 @@ console.log(po_list)
 																				? 'is-invalid'
 																				: ''
 																		}`}
-																		placeholderText="Order date"
+																		placeholderText={strings.OrderDate}
 																		selected={props.values.grnReceiveDate}
 																		showMonthDropdown
 																		showYearDropdown
@@ -1926,7 +1926,7 @@ console.log(po_list)
 																			name="grnRemarks"
 																			id="grnRemarks"
 																			rows="6"
-																			placeholder="Notes"
+																			placeholder={strings.Notes}
 																			onChange={(option) =>
 																				props.handleChange('grnRemarks')(option)
 																			}

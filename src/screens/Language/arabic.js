@@ -46,8 +46,8 @@ GotoFAQ:"انتقل إلى التعليمات",
       TransactionCategory: "فئة المعاملة",
       OpeningDate: "موعد الافتتاح",
       Amount :"كمية",
-      Create :"يخلق",
-      Cancel: "يلغي",
+      Create :" يخلق",
+      Cancel: " إلغاء",
       AddOpeningBalance : "إضافة رصيد افتتاحي",
       NewOpeningBalance:"الرصيد الافتتاحي الجديد ",
 
@@ -725,5 +725,7 @@ TelephoneNumber:"رقم الهاتف",
 ReceiptDate:"تاريخ استلام",
 OrderDueDate:"تاريخ إستحقاق الطلب",
 OrderDate:"تاريخ الطلب",
+GrnReceivedQuantity:"الكمية المستلمة Grn",
+ReceivedQuantity:"الكمية المستلمة"
   }
   export {ar};

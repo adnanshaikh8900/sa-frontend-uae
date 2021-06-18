@@ -362,7 +362,7 @@ class DetailPurchaseOrder extends React.Component {
 								props,
 							);
 						}}
-						placeholder="Description"
+						placeholder={strings.Description}
 						className={`form-control 
             ${
 							props.errors.lineItemsString &&
@@ -410,7 +410,7 @@ class DetailPurchaseOrder extends React.Component {
 									);
 								}
 							}}
-							placeholder="Quantity"
+							placeholder={strings.Quantity}
 							className={`form-control 
            						${
 												props.errors.lineItemsString &&
@@ -474,7 +474,7 @@ class DetailPurchaseOrder extends React.Component {
 								);
 							}
 						}}
-						placeholder="Unit Price"
+						placeholder={strings.UnitPrice}
 						className={`form-control 
                        ${
 													props.errors.lineItemsString &&
@@ -599,7 +599,7 @@ class DetailPurchaseOrder extends React.Component {
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder="Select Vat"
+						placeholder={strings.Select+strings.Vat}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -1316,7 +1316,7 @@ class DetailPurchaseOrder extends React.Component {
 																		disabled={true}
 																		id="supplierReferenceNumber"
 																		name="supplierReferenceNumber"
-																		placeholder="Supplier Reference Number"
+																		placeholder={strings.SupplierReferenceNumber}
 																		value={props.values.supplierReferenceNumber}
 																		onBlur={props.handleBlur('supplierReferenceNumber')}
 																		onChange={(value) => {
@@ -1352,7 +1352,7 @@ class DetailPurchaseOrder extends React.Component {
 																		<DatePicker
 																			id="poApproveDate"
 																			name="poApproveDate"
-																			placeholderText="Invoice Date"
+																			placeholderText={strings.InvoiceDate}
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd/MM/yyyy"
@@ -1389,7 +1389,7 @@ class DetailPurchaseOrder extends React.Component {
 																			<DatePicker
 																				id="poReceiveDate"
 																				name="poReceiveDate"
-																				placeholderText=" Due Date"
+																				placeholderText={strings.DueDate}
 																				value={props.values.poReceiveDate}
 																				showMonthDropdown
 																				showYearDropdown
@@ -1556,7 +1556,7 @@ class DetailPurchaseOrder extends React.Component {
 																			name="notes"
 																			id="notes"
 																			rows="6"
-																			placeholder="Notes"
+																			placeholder={strings.Notes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}

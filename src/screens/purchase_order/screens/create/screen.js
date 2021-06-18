@@ -234,7 +234,7 @@ class CreatePurchaseOrder extends React.Component {
 								props,
 							);
 						}}
-						placeholder="Description"
+						placeholder={strings.Description}
 						className={`form-control 
             ${
 							props.errors.lineItemsString &&
@@ -283,7 +283,7 @@ class CreatePurchaseOrder extends React.Component {
 									);
 								}
 							}}
-							placeholder="Quantity"
+							placeholder={strings.Quantity}
 							className={`form-control 
             ${
 							props.errors.lineItemsString &&
@@ -343,7 +343,7 @@ class CreatePurchaseOrder extends React.Component {
 								);
 							}
 						}}
-						placeholder="Unit Price"
+						placeholder={strings.UnitPrice}
 						className={`form-control 
             ${
 							props.errors.lineItemsString &&
@@ -605,7 +605,7 @@ class CreatePurchaseOrder extends React.Component {
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder="Select Vat"
+						placeholder={strings.Select+strings.Vat}
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -706,7 +706,7 @@ class CreatePurchaseOrder extends React.Component {
 								: []
 						}
 						id="productId"
-						placeholder="Select Product"
+						placeholder={strings.Select+strings.Product}
 						onChange={(e) => {
 							if (e && e.label !== 'Select Product') {
 								this.selectItem(e.value, row, 'productId', form, field, props);
@@ -1442,7 +1442,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		styles={customStyles}
 																		id="rfqNumber"
 																		name="rfqNumber"
-																		placeholder="Select RFQ Number"
+																		placeholder={strings.Select+strings.RFQNumber}
 																		options={
 																			rfq_list.data
 																				? selectOptionsFactory.renderOptions(
@@ -1501,7 +1501,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		type="text"
 																		id="po_number"
 																		name="po_number"
-																		placeholder="Invoice Number"
+																		placeholder={strings.InvoiceNumber}
 																		value={props.values.po_number}
 																		onBlur={props.handleBlur('po_number')}
 																		onChange={(option) => {
@@ -1541,7 +1541,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		styles={customStyles}
 																		id="supplierId"
 																		name="supplierId"
-																		placeholder="Select Supplier Name"
+																		placeholder={strings.Select+strings.SupplierName}
 																		options={
 																			tmpSupplier_list
 																				? selectOptionsFactory.renderOptions(
@@ -1606,7 +1606,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																	</Label>
 																	<Select
 																	isDisabled={true}
-																	placeholder="Select Currency"
+																	placeholder={strings.Select+strings.Currency}
 																		styles={customStyles}
 																		options={
 																			currency_convert_list
@@ -1673,7 +1673,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																				? 'is-invalid'
 																				: ''
 																		}`}
-																		placeholderText="Order date"
+																		placeholderText={strings.OrderDate}
 																		selected={props.values.poApproveDate}
 																		showMonthDropdown
 																		showYearDropdown
@@ -1707,7 +1707,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																				? 'is-invalid'
 																				: ''
 																		}`}
-																		placeholderText="Order Due date"
+																		placeholderText={strings.OrderDueDate}
 																		selected={props.values.poReceiveDate}
 																		showMonthDropdown
 																		showYearDropdown
@@ -1736,7 +1736,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		type="text"
 																		id="supplierReferenceNumber"
 																		name="supplierReferenceNumber"
-																		placeholder="Supplier Reference Number"
+																		placeholder={strings.SupplierReferenceNumber}
 																		value={props.values.supplierReferenceNumber}
 																		onBlur={props.handleBlur('supplierReferenceNumber')}
 																		onChange={(value) => {
@@ -1895,7 +1895,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																			name="notes"
 																			id="notes"
 																			rows="6"
-																			placeholder="Notes"
+																			placeholder={strings.Notes}
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}

@@ -51,8 +51,8 @@ Vat:"T.V.A",
       TransactionCategory: "Catégorie de transaction",
       OpeningDate:"Date d'ouverture",
       Amount :"Montant",
-      Create :"Créer",
-      Cancel: "Annuler",
+      Create :" Créer",
+      Cancel: " Annuler",
       AddOpeningBalance : "Ajouter un solde d'ouverture",
       NewOpeningBalance:"Nouvel équilibre d’ouverture ",
 
@@ -145,7 +145,7 @@ Vat:"T.V.A",
       InvoicingDetails:"Détails de facturation ",
       BillingEmail:"E-mail de facturation",
       ContractPONumber: "Numéro po du contrat",
-      Cancel:"Annuler",
+      
 
       //Income receipts
       Receipts:"Recette",		
@@ -724,5 +724,7 @@ TelephoneNumber:"Numéro de Téléphone",
 ReceiptDate:"Date de réception",
 OrderDueDate:"Date d'échéance de la commande",
 OrderDate:"Date de commande",
+GrnReceivedQuantity:"Grn Reçue Quantité",
+ReceivedQuantity:"Reçue Quantité",
   }
   export {fr};

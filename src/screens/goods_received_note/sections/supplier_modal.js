@@ -244,7 +244,7 @@ class SupplierModal extends React.Component {
 																? 'is-invalid'
 																: ''
 														}
-														placeholder="Enter First Name"
+														placeholder={strings.Enter+strings.FirstName}
 													/>
 													{props.errors.firstName &&
 														props.touched.firstName && (
@@ -277,7 +277,7 @@ class SupplierModal extends React.Component {
 																? 'is-invalid'
 																: ''
 														}
-														placeholder="Enter Middle Name"
+														placeholder={strings.Enter+strings.MiddleName}
 													/>
 													{props.errors.middleName &&
 														props.touched.middleName && (
@@ -309,7 +309,7 @@ class SupplierModal extends React.Component {
 																? 'is-invalid'
 																: ''
 														}
-														placeholder="Enter Last Name"
+														placeholder={strings.Enter+strings.LastName}
 													/>
 													{props.errors.lastName && props.touched.lastName && (
 														<div className="invalid-feedback">
@@ -339,7 +339,7 @@ class SupplierModal extends React.Component {
 																? 'is-invalid'
 																: ''
 														}
-														placeholder="Enter Email"
+														placeholder={strings.Enter+strings.Email}
 													/>
 													{props.errors.email && props.touched.email && (
 														<div className="invalid-feedback">
@@ -413,7 +413,7 @@ class SupplierModal extends React.Component {
 																props.handleChange('currencyCode')('');
 															}
 														}}
-														placeholder="Select Currency"
+														placeholder={strings.Select+strings.Currency}
 														id="currencyCode"
 														name="currencyCode"
 														className={
@@ -461,7 +461,7 @@ class SupplierModal extends React.Component {
 																? 'is-invalid'
 																: ''
 														}
-														placeholder="Enter Tax Registration Number"
+														placeholder={strings.Enter+strings.TaxRegistrationNumber}
 													/>
 													{props.errors.vatRegistrationNumber &&
 														props.touched.vatRegistrationNumber && (
@@ -505,7 +505,7 @@ class SupplierModal extends React.Component {
 																? 'is-invalid'
 																: ''
 														}
-														placeholder="Enter Organization Name"
+														placeholder={strings.Enter+strings.OrganizationName}
 													/>
 													{props.errors.organization &&
 														props.touched.organization && (
@@ -533,7 +533,7 @@ class SupplierModal extends React.Component {
 																? 'is-invalid'
 																: ''
 														}
-														placeholder="Enter PO Box Number"
+														placeholder={strings.Enter+strings.POBoxNumber}
 													/>
 													{props.errors.poBoxNumber &&
 														props.touched.poBoxNumber && (
@@ -564,7 +564,7 @@ class SupplierModal extends React.Component {
 																? 'is-invalid'
 																: ''
 														}
-														placeholder="Enter Telephone Number"
+														placeholder={strings.Enter+strings.TelephoneNumber}
 													/>
 													{props.errors.telephone &&
 														props.touched.telephone && (
@@ -600,7 +600,7 @@ class SupplierModal extends React.Component {
 																? 'is-invalid'
 																: ''
 														}
-														placeholder="Enter Address Line 1"
+														placeholder={strings.Enter+strings.AddressLine1}
 													/>
 													{props.errors.addressLine1 &&
 														props.touched.addressLine1 && (
@@ -626,7 +626,7 @@ class SupplierModal extends React.Component {
 																props.handleChange('addressLine2')(option);
 															}
 														}}
-														placeholder="Enter Address Line 2"
+														placeholder={strings.Enter+strings.AddressLine2}
 													/>
 												</FormGroup>
 											</Col>
@@ -646,7 +646,7 @@ class SupplierModal extends React.Component {
 																props.handleChange('addressLine3')(option);
 															}
 														}}
-														placeholder="Enter Address Line 3"
+														placeholder={strings.Enter+strings.AddressLine3}
 													/>
 												</FormGroup>
 											</Col>
@@ -677,7 +677,7 @@ class SupplierModal extends React.Component {
 															}
 															props.handleChange('stateId')('');
 														}}
-														placeholder="Select Country"
+														placeholder={strings.Select+strings.Country}
 														id="countryId"
 														name="countryId"
 														className={
@@ -716,7 +716,7 @@ class SupplierModal extends React.Component {
 																props.handleChange('stateId')('');
 															}
 														}}
-														placeholder="Select State"
+														placeholder={strings.Select+strings.StateRegion}
 														id="stateId"
 														name="stateId"
 														className={
@@ -784,7 +784,7 @@ class SupplierModal extends React.Component {
 																? 'is-invalid'
 																: ''
 														}
-														placeholder="Enter Postal ZipCode"
+														placeholder={strings.Enter+strings.PostZipCode}
 													/>
 													{props.errors.postZipCode &&
 														props.touched.postZipCode && (
@@ -817,7 +817,7 @@ class SupplierModal extends React.Component {
 																? 'is-invalid'
 																: ''
 														}
-														placeholder="Enter Billing Email"
+														placeholder={strings.Enter+strings.BillingEmail}
 													/>
 													{props.billingEmail && props.touched.billingEmail && (
 														<div className="invalid-feedback">
@@ -846,7 +846,7 @@ class SupplierModal extends React.Component {
 																? 'is-invalid'
 																: ''
 														}
-														placeholder="Enter Contract PoNumber"
+														placeholder={strings.Enter+strings.ContractPONumber}
 													/>
 													{props.errors.contractPoNumber &&
 														props.touched.contractPoNumber && (

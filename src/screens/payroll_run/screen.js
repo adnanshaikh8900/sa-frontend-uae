@@ -427,6 +427,18 @@ class PayrollRun extends React.Component {
         this.initializeData();
     };
 
+	grossSalary =(cell,row,extraData) => {
+		return row.grossSalary ? row.grossSalary.toLocaleString() : row.grossSalary.toLocaleString();
+	}
+
+	deductions =(cell,row,extraData) => {
+		return row.deductions ? row.deductions.toLocaleString() : row.deductions.toLocaleString();
+	}
+
+	earnings =(cell,row,extraData) => {
+		return row.earnings ? row.earnings.toLocaleString() : row.earnings.toLocaleString();
+	}
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
@@ -568,7 +580,7 @@ class PayrollRun extends React.Component {
                                                         className="table-header-bg"
                                                         dataField="earnings"
                                                         dataSort
-                                                    // dataFormat={this.vatCategoryFormatter}
+														dataFormat={this.earnings}
                                                     width="12%"
                                                     >
                                                         {strings.EARNINGS}
@@ -577,6 +589,7 @@ class PayrollRun extends React.Component {
                                                         className="table-header-bg"
                                                         dataField="deductions"
                                                         dataSort
+														dataFormat={this.deductions}
                                                         width="12%"
                                                     >
                                                        {strings.DEDUCTIONS}
@@ -585,6 +598,7 @@ class PayrollRun extends React.Component {
                                                         className="table-header-bg"
                                                         dataField="grossSalary"
                                                         dataSort
+														dataFormat={this.grossSalary}
                                                         width="12%"
                                                     >
                                                          {strings.NETPAY}

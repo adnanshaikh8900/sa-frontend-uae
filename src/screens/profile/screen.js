@@ -1503,7 +1503,7 @@ class Profile extends React.Component {
 																											'label',
 																											'value',
 																											industry_type_list,
-																											'Industry Type',
+																											'Industry Type Code',
 																										)
 																										: []
 																								}

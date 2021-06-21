@@ -1514,13 +1514,13 @@ class DetailRequestForQuotation extends React.Component {
 																		>
 																			{strings.PRODUCT}
 																		</TableHeaderColumn>
-																		<TableHeaderColumn
+																		{/* <TableHeaderColumn
 																		width="55"
 																		dataAlign="center"
 																		dataFormat={(cell, rows) =>
 																			this.renderAddProduct(cell, rows, props)
 																		}
-																		></TableHeaderColumn>
+																		></TableHeaderColumn> */}
 																		{/* <TableHeaderColumn
 																			dataField="account"
 																			width="15%"
@@ -1565,7 +1565,7 @@ class DetailRequestForQuotation extends React.Component {
 																				this.renderVat(cell, rows, props)
 																			}
 																		>
-																			){strings.VAT}
+																			{strings.VAT}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="sub_total"

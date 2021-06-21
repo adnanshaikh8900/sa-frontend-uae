@@ -254,7 +254,7 @@ ReceivedDate:"Receipt Date",
 RECEIVEDQUANTITY:"RECEIVED QUANTITY",			
 POQUANTITY:"PO-QUANTITY",
 
-
+RecieptNumber:"Receipt Number",
 //Bank Account
 BankAccounts:"Bank Accounts",		
 BANK:"BANK",		

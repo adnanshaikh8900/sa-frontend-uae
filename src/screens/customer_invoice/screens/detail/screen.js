@@ -48,6 +48,7 @@ const mapStateToProps = (state) => {
 		country_list: state.customer_invoice.country_list,
 		universal_currency_list: state.common.universal_currency_list,
 		currency_convert_list: state.currencyConvert.currency_convert_list,
+		product_category_list: state.product.product_category_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -182,7 +183,7 @@ class DetailCustomerInvoice extends React.Component {
 						this.props.currencyConvertActions.getCurrencyConversionList();
 						this.props.customerInvoiceActions.getCountryList();
 						this.props.customerInvoiceActions.getProductList();
-
+						this.props.productActions.getProductCategoryList();
 						this.setState(
 							{
 								current_customer_id: this.props.location.state.id,
@@ -1716,13 +1717,13 @@ class DetailCustomerInvoice extends React.Component {
 																		>
 																			{strings.PRODUCT}
 																		</TableHeaderColumn>
-																		<TableHeaderColumn
+																		{/* <TableHeaderColumn
 																		width="55"
 																		dataAlign="center"
 																		dataFormat={(cell, rows) =>
 																			this.renderAddProduct(cell, rows, props)
 																		}
-																	></TableHeaderColumn>
+																	></TableHeaderColumn> */}
 																		<TableHeaderColumn
 																			dataField="description"
 																			dataFormat={(cell, rows) =>

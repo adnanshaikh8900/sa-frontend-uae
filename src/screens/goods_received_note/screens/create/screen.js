@@ -1823,7 +1823,7 @@ console.log(po_list)
 																		}
 																	></TableHeaderColumn>
 																	<TableHeaderColumn
-																	width="10%"
+																	width="18%"
 																		dataField="product"
 																		dataFormat={(cell, rows) =>
 																			this.renderProduct(cell, rows, props)
@@ -1832,7 +1832,7 @@ console.log(po_list)
 																		{strings.PRODUCT}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
-																		width="10%"
+																		width="5%"
 																		dataAlign="center"
 																		dataFormat={(cell, rows) =>
 																			this.renderAddProduct(cell, rows, props)
@@ -1850,7 +1850,7 @@ console.log(po_list)
 
 																	<TableHeaderColumn
 																		dataField="poQuantity"
-																		width="10%"
+																		width="13%"
 																		dataFormat={(cell, rows) =>
 																			this.renderGRNQuantity(cell, rows, props)
 																		}
@@ -1876,6 +1876,7 @@ console.log(po_list)
 																		Received Quantity
 																	</TableHeaderColumn> */}
 																	<TableHeaderColumn
+																	width="12%"
 																		dataField="unitPrice"
 																		dataFormat={(cell, rows) =>
 																			this.renderUnitPrice(cell, rows, props)
@@ -1895,6 +1896,7 @@ console.log(po_list)
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
+																	width="12%"
 																		dataField="vat"
 																		dataFormat={(cell, rows) =>
 																			this.renderVat(cell, rows, props)

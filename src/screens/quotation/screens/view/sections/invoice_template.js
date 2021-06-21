@@ -167,12 +167,12 @@ class RFQTemplate extends Component {
 								}}
 							>
 								<div className="pb-2">Amount In Words:<br/>
-									<b> {upperCase(converter.toWords(toInteger(QuotationData.totalAmount)))}
+									<b> {upperCase(converter.toWords(toInteger(QuotationData.totalAmount)))+" ONLY"}
 									{/* <b> {parseInt(QuotationData.dueAmount)} */}
 									</b></div>
 								<div className="pb-2">VAT Amount In Words:
 										<br/>
-									<b> {upperCase(converter.toWords(toInteger(QuotationData.totalVatAmount)))}</b>
+									<b> {upperCase(converter.toWords(toInteger(QuotationData.totalVatAmount)))+" ONLY"}</b>
 									{/* <b> {QuotationData.totalVatAmount}</b> */}
 								</div>
 							<div style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>

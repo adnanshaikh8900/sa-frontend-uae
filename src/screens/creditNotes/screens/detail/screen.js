@@ -1523,13 +1523,13 @@ class DetailCreditNote extends React.Component {
 																</Col> */}
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
-																		<Label htmlFor="currency">
+																		<Label htmlFor="currencyCode">
 																			<span className="text-danger">*</span>
-																			 {strings.Currency}
+																			{strings.Currency}
 																		</Label>
 																		<Select
+																		isDisabled={true}
 																			styles={customStyles}
-																			placeholder={strings.Select+strings.Currency}
 																			options={
 																				currency_convert_list
 																					? selectCurrencyFactory.renderOptions(
@@ -1540,8 +1540,8 @@ class DetailCreditNote extends React.Component {
 																					  )
 																					: []
 																			}
-																			id="currency"
-																			name="currency"
+																			id="currencyCode"
+																			name="currencyCode"
 																			value={
 																				currency_convert_list &&
 																				selectCurrencyFactory
@@ -1554,25 +1554,25 @@ class DetailCreditNote extends React.Component {
 																					.find(
 																						(option) =>
 																							option.value ===
-																							(this.state.customer_currency ? +this.state.customer_currency : +props.values.currency),
+																							(this.state.currency ? +this.state.currency : +props.values.currency),
 																					)
 																			}
 																			onChange={(option) =>
-																				props.handleChange('currency')(
+																				props.handleChange('currencyCode')(
 																					option.value,
 																				)
 																			}
 																			className={`${
-																				props.errors.currency &&
+																				props.errors.currencyCode &&
 																				props.touched.currency
 																					? 'is-invalid'
 																					: ''
 																			}`}
 																		/>
-																		{props.errors.currency &&
-																			props.touched.currency && (
+																		{props.errors.currencyCode &&
+																			props.touched.currencyCode && (
 																				<div className="invalid-feedback">
-																					{props.errors.currency}
+																					{props.errors.currencyCode}
 																				</div>
 																			)}
 																	</FormGroup>

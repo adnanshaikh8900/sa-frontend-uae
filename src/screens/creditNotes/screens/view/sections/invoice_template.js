@@ -109,7 +109,7 @@ class InvoiceTemplate extends Component {
 								<h4 className="mb-1 ml-2"><b>{companyData && companyData.company
 											? companyData.company.companyName
 											: ''}</b></h4>
-								<h6 className="mb-1 ml-2">#{invoiceData.referenceNumber}</h6>
+								<h6 className="mb-1 ml-2">Credit Note #{invoiceData.referenceNumber}</h6>
 								<h6 className="mb-1 ml-2"><b>Date:{' '}
 													{moment(invoiceData.invoiceDate).format(
 														'DD MMM YYYY',

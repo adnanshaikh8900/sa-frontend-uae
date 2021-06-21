@@ -170,7 +170,9 @@ class InvoiceTemplate extends Component {
 										<b>Bill To,</b>
 									</div>
 									<div className="mb-1 ml-2"><b>Name:</b> {invoiceData.name}</div>
+									<div className="mb-1 ml-2"><b>TRN:</b> {invoiceData.taxRegistrationNo}</div>
 									<div className="mb-1 ml-2"><b>Company:</b> {invoiceData.organisationName}</div>
+									
 									<div className="mb-1 ml-2"><b>Email:</b> {invoiceData.email}</div>
 									<div className="mb-3 ml-2"><b>Address:</b> {invoiceData.address}</div>
 								</div>
@@ -288,12 +290,12 @@ class InvoiceTemplate extends Component {
 								}}
 							>
 								<div className="pl-5 pb-2">Amount In Words:<br/>
-									<b> {upperCase(converter.toWords(toInteger(invoiceData.totalAmount)))}
+									<b> {upperCase(converter.toWords(toInteger(invoiceData.totalAmount)))+" ONLY" }
 									{/* <b> {parseInt(invoiceData.dueAmount)} */}
 									</b></div>
 								<div className="pl-5 pb-2">VAT Amount In Words:
 										<br/>
-									<b> {upperCase(converter.toWords(toInteger(invoiceData.totalVatAmount)))}</b>
+									<b> {upperCase(converter.toWords(toInteger(invoiceData.totalVatAmount)))+" ONLY" }</b>
 									{/* <b> {invoiceData.totalVatAmount}</b> */}
 								</div>
 							<div className="pl-5" style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>

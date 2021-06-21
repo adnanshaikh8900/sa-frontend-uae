@@ -1360,11 +1360,14 @@ class DetailProduct extends React.Component {
 															</Row>
 															<hr></hr>
 														
-														<Row style={{display: props.values.productPriceType &&
-																				props.values.productPriceType.includes(
-																					'PURCHASE',
-																				)
-																				?'' : 'none'
+														<Row style={{display: 	props.values.productPriceType.includes(
+																					'PURCHASE' 
+																				
+																				)&& props.values.productType !=
+																				'SERVICE'
+																		
+																			?'' : 'none'
+																
 																			}}>
 															
 																	<Col lg={8}>

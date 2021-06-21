@@ -14,6 +14,7 @@ BackEndVersion:"dos finir version",
 GotoFAQ:"Aller à la FAQ", 
 DepositFrom:"Dépôt De",   
 Vat:"T.V.A",  
+RecieptNumber:"Numéro de reçu",
           //sidebar
         Import:"Importer",
         Dashboard:"Tableau de bord",

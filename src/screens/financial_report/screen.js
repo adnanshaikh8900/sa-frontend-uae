@@ -129,11 +129,9 @@ class FinancialReport extends React.Component {
 								</TabPane>
 							</TabContent> */}
 
-									<Row xs="3">
-
-
-										<Col  className="report-section ml-4">
-										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "35px",width:"350px" }}>
+									<Row lg={12}>
+										<Col lg={3}  className="report-section ml-4">
+										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "40px",width:"350px" }}>
 											<img
 											className="ml-2 mr-2 mt-2 mb-2 "
 											src={Financial}
@@ -152,8 +150,8 @@ class FinancialReport extends React.Component {
 									</div>
 										</Col>
 
-										<Col className="report-section">
-										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "35px",width:"350px" }}>
+										<Col  lg={3} className="report-section">
+										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "40px",width:"350px" }}>
 											<img
 											className="ml-2 mr-2 mt-2 mb-2 "
 											src={Vat}
@@ -166,8 +164,8 @@ class FinancialReport extends React.Component {
 									this.props.history.push('/admin/report/vat-transactions')}>{strings.VatTransactionReport}</a></h6>
 									</div>
 										</Col>
-										<Col className="report-section ml-4">
-										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "35px",width:"350px" }}>
+										<Col  lg={3} className="report-section ml-4">
+										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "40px",width:"350px" }}>
 											<img
 											className="ml-2 mr-2 mt-2 mb-2 "
 											src={Journal}
@@ -183,10 +181,10 @@ class FinancialReport extends React.Component {
 										</Col>
 
 									</Row>
-									<Row xs="3" className="mt-4">
+									<Row lg={12} className="mt-4">
 									
-									<Col  className="report-section ml-4">
-									<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "35px",width:"350px" }}>
+									<Col lg={3} className="report-section ml-4">
+									<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "40px",width:"350px" }}>
 											<img
 												className="ml-2 mr-2 mt-2 mb-2 "
 											src={Sales}
@@ -201,8 +199,8 @@ class FinancialReport extends React.Component {
 									</div>
 										</Col>
 
-										<Col  className="report-section ml-4">
-										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "35px",width:"350px" }}>
+										<Col lg={3} className="report-section ">
+										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "40px",width:"350px" }}>
 											<img
 												className="ml-2 mr-2 mt-2 mb-2 "
 											src={Purchase}
@@ -216,8 +214,8 @@ class FinancialReport extends React.Component {
 									
 									</div>
 										</Col>
-										<Col  className="report-section ml-4">
-										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "35px",width:"350px" }}>
+										<Col lg={3} className="report-section ml-4">
+										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "40px",width:"350px" }}>
 											<img
 												className="ml-2 mr-2 mt-2 mb-2 "
 											src={Receivables}
@@ -233,7 +231,7 @@ class FinancialReport extends React.Component {
 									</Row>
 									<Row xs="3" className="mt-4">
 									<Col  className="report-section ml-4">
-										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "35px",width:"350px" }}>
+										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "40px",width:"350px" }}>
 											<img
 												className="ml-2 mr-2 mt-2 mb-2 "
 											src={Receivables}

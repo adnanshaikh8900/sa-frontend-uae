@@ -562,7 +562,7 @@ class ExplainTrasactionDetail extends React.Component {
 					//esetForm();
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Transaction Detail Updated Successfully.',
+						'Transaction Detail Explained Successfully.',
 					);
 					this.props.closeExplainTransactionModal(this.state.id);
 				}

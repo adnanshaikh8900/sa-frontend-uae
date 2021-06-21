@@ -1227,14 +1227,14 @@ console.log(this.state.selectedRows)
 																		<TableHeaderColumn
 																			width="55"
 																			dataAlign="center"
-																			dataSort className="table-header-bg"
+																			 className="table-header-bg"
 																			// dataFormat={(cell, rows) =>
 																			// 	this.renderActions(cell, rows, props)
 																			// }
 																		></TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="referenceNo"
-																			dataSort className="table-header-bg"
+																			 className="table-header-bg"
 																			// dataFormat={(cell, rows) =>
 																			// 	this.renderDescription(
 																			// 		cell,
@@ -1248,7 +1248,7 @@ console.log(this.state.selectedRows)
 																		<TableHeaderColumn
 																			dataField='date'
 																			dataFormat={this.renderDate}
-																			dataSort className="table-header-bg"
+																			 className="table-header-bg"
 																			// dataFormat={(cell, rows) =>
 																			// 	this.renderQuantity(cell, rows, props)
 																			// }
@@ -1257,7 +1257,7 @@ console.log(this.state.selectedRows)
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="dueAmount"
-																			dataSort className="table-header-bg"
+																			className="table-header-bg"
 																			// dataFormat={(cell, rows) =>
 																			// 	this.renderUnitPrice(cell, rows, props)
 																			// }

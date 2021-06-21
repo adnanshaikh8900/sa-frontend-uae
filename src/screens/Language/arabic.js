@@ -12,6 +12,7 @@ Version:"إصدارات الحسابات البسيطة",
 FrontEndVerison:"فرونت إند فيريزون",
 BackEndVersion:"الخلفيةنسخة",
 GotoFAQ:"انتقل إلى التعليمات", 
+RecieptNumber:"عدد إيصال",
         //Sidebar
         Dashboard:"لوحة القيادة",
         Report:"تقرير",

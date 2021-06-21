@@ -1715,13 +1715,13 @@ class DetailCreditNote extends React.Component {
 																		>
 																			 {strings.PRODUCT}
 																		</TableHeaderColumn>
-																		<TableHeaderColumn
+																		{/* <TableHeaderColumn
 																		width="55"
 																		dataAlign="center"
 																		dataFormat={(cell, rows) =>
 																			this.renderAddProduct(cell, rows, props)
 																		}
-																	></TableHeaderColumn>
+																	></TableHeaderColumn> */}
 																		<TableHeaderColumn
 																			dataField="description"
 																			dataFormat={(cell, rows) =>

@@ -34,6 +34,8 @@ import * as DetailOpeningBalancesAction from './actions'
 import * as OpeningBalanceActions from '../../actions';
 
 import { Formik } from 'formik';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 
 const mapStateToProps = (state) => {
@@ -49,11 +51,12 @@ const mapDispatchToProps = (dispatch) => {
     openingBalanceActions: bindActionCreators(OpeningBalanceActions, dispatch),
   })
 }
-
+let strings = new LocalizedStrings(data);
 class DetailOpeningBalance extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      language: window['localStorage'].getItem('language'),
       initValue: {
       },
       loading: true,
@@ -137,6 +140,7 @@ class DetailOpeningBalance extends React.Component {
   }
 
   render() {
+    strings.setLanguage(this.state.language);
     const { loading, initValue,dialog} = this.state
 
     const{transaction_category_list} =this.props;
@@ -161,7 +165,7 @@ class DetailOpeningBalance extends React.Component {
                 <CardHeader>
                   <div className="h4 mb-0 d-flex align-items-center">
                     <i className="nav-icon icon-briefcase" />
-                    <span className="ml-2">Update Opening Balances</span>
+                    <span className="ml-2">{strings.Update+" "+strings.OpeningBalance}</span>
                   </div>
                 </CardHeader>
                 <CardBody>
@@ -188,13 +192,13 @@ class DetailOpeningBalance extends React.Component {
 																<Col lg={3}>
 																<FormGroup className="mb-3">
 																<Label htmlFor="transactionCategoryBalanceId">
-																	Chart of Account
+																 {strings.ChartofAccounts}
 																</Label>
 																		<Select
 																		styles={customStyles}
 																		id="transactionCategoryId"
 																		name="transactionCategoryId"
-																		placeholder="Select Transaction Category"
+																		placeholder={strings.Select+strings.TransactionCategory}
 																		options={
 																			transaction_category_list
 																				? selectOptionsFactory.renderOptions(
@@ -230,7 +234,7 @@ class DetailOpeningBalance extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="effectiveDate">
 																		<span className="text-danger">*</span>
-																	Effective Date
+																  {strings.EffectiveDate}
 																	</Label>
                                   <DatePicker
 																		id="date"
@@ -241,7 +245,7 @@ class DetailOpeningBalance extends React.Component {
 																				? 'is-invalid'
 																				: ''
 																		}`}
-																		placeholderText="Effective date"
+																		placeholderText={strings.EffectiveDate}
 																		selected={props.values.effectiveDate}
 																		showMonthDropdown
 																		showYearDropdown
@@ -265,7 +269,7 @@ class DetailOpeningBalance extends React.Component {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="openingBalance">
-																		<span className="text-danger">*</span>Amount
+																		<span className="text-danger">*</span>{strings.Amount}
 																	</Label>
 																	<Input
 																		type="number"
@@ -292,7 +296,7 @@ class DetailOpeningBalance extends React.Component {
 																			}
 																		}}
 																		value={props.values.openingBalance}
-																		placeholder="Amount"
+																		placeholder={strings.Enter+strings.Amount}
 																	/>
 																	{props.errors.openingBalance &&
 																		props.touched.openingBalance && (
@@ -307,11 +311,11 @@ class DetailOpeningBalance extends React.Component {
                                   <Col lg={10} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">
                                                                       <FormGroup className="text-right">
                                       <Button type="submit" name="submit" color="primary" className="btn-square mr-3">
-                                        <i className="fa fa-dot-circle-o"></i> Update
+                                        <i className="fa fa-dot-circle-o"></i> {strings.Update}
                                       </Button>
                                       <Button type="submit" color="secondary" className="btn-square"
                                         onClick={() => { this.props.history.push('/admin/accountant/opening-balance') }}>
-                                        <i className="fa fa-ban"></i> Cancel
+                                        <i className="fa fa-ban"></i>  {strings.Cancel}
                                       </Button>
                                     </FormGroup>
                                   </Col>

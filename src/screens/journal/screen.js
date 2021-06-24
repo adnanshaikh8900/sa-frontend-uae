@@ -499,7 +499,7 @@ class Journal extends React.Component {
 														className="form-control"
 														id="date"
 														name="journalDate"
-														placeholderText="Post Date"
+														placeholderText={strings.PostDate}
 														showMonthDropdown
 														showYearDropdown
 														dropdownMode="select"
@@ -514,7 +514,7 @@ class Journal extends React.Component {
 												<Col lg={2} className="mb-1">
 													<Input
 														type="text"
-														placeholder="Reference Number"
+														placeholder={strings.ReferenceNumber}
 														value={filterData.journalReferenceNo}
 														onChange={(e) => {
 															this.handleChange(
@@ -527,7 +527,7 @@ class Journal extends React.Component {
 												<Col lg={2} className="mb-1">
 													<Input
 														type="text"
-														placeholder="Notes"
+														placeholder={strings.Notes}
 														value={filterData.description}
 														onChange={(e) => {
 															this.handleChange(e.target.value, 'description');

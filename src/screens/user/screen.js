@@ -399,7 +399,7 @@ class User extends React.Component {
 													<Input
 														type="text"
 														value={filterData.name}
-														placeholder="User Name"
+														placeholder={strings.UserName}
 														onChange={(e) => {
 															this.handleChange(e.target.value, 'name');
 														}}
@@ -427,7 +427,7 @@ class User extends React.Component {
 													<Select
 														styles={customStyles}
 														className="select-default-width"
-														placeholder="Select Role"
+														placeholder={strings.Select+strings.Role}
 														id="roleId"
 														name="roleId"
 														options={
@@ -454,7 +454,7 @@ class User extends React.Component {
 													<Select
 														styles={customStyles}
 														className="select-default-width"
-														placeholder="Select Status"
+														placeholder={strings.Select+strings.Status}
 														id="active"
 														name="active"
 														options={this.statusOption ? this.statusOption : []}

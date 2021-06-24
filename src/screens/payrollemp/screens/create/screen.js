@@ -1018,7 +1018,8 @@ uploadImage = (picture, file) => {
                                                                                                         id="firstName"
                                                                                                         name="firstName"
                                                                                                         value={props.values.firstName}
-                                                                                                        placeholder="Enter first Name"
+                                                                                                        placeholder={strings.Enter+strings.FirstName}
+
                                                                                                         onChange={(option) => {
                                                                                                             if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('firstName')(option) }
                                                                                                         }}
@@ -1037,7 +1038,7 @@ uploadImage = (picture, file) => {
                                                                                                         id="middleName"
                                                                                                         name="middleName"
                                                                                                         value={props.values.middleName}
-                                                                                                        placeholder="Enter middle Name"
+                                                                                                        placeholder={strings.Enter+strings.MiddleName}
                                                                                                         onChange={(option) => {
                                                                                                             if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('middleName')(option) }
                                                                                                         }}
@@ -1056,7 +1057,7 @@ uploadImage = (picture, file) => {
                                                                                                         id="lastName"
                                                                                                         name="lastName"
                                                                                                         value={props.values.lastName}
-                                                                                                        placeholder="Enter last Name"
+                                                                                                        placeholder={strings.Enter+strings.LastName}
                                                                                                         onChange={(option) => {
                                                                                                             if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('lastName')(option) }
                                                                                                         }}
@@ -1078,7 +1079,7 @@ uploadImage = (picture, file) => {
                                                                                                         id="email"
                                                                                                         name="email"
                                                                                                         value={props.values.email}
-                                                                                                        placeholder="Enter Email Address"
+                                                                                                        placeholder={strings.Enter+strings.EmailAddress}
                                                                                                         onChange={(value) => { props.handleChange('email')(value) }}
                                                                                                         className={props.errors.email && props.touched.email ? "is-invalid" : ""}
                                                                                                     />
@@ -1098,7 +1099,7 @@ uploadImage = (picture, file) => {
                                                                                                         defaultCountry="AE"
                                                                                                         international
                                                                                                         value={props.values.mobileNumber}
-                                                                                                        placeholder="Enter Mobile Number"
+                                                                                                        placeholder={strings.Enter+strings.MobileNumber}
                                                                                                         onBlur={props.handleBlur('mobileNumber')}
                                                                                                         onChange={(option) => {
                                                                                                             props.handleChange('mobileNumber')(
@@ -1135,7 +1136,7 @@ uploadImage = (picture, file) => {
                                                                                                         }
                                                                                                         id="salaryRoleId"
                                                                                                         name="salaryRoleId"
-                                                                                                        placeholder="Select salary Role "
+                                                                                                        placeholder={strings.Select+strings.SalaryRole}
                                                                                                         value={
                                                                                                             salary_role_dropdown.data
                                                                                                             && selectOptionsFactory.renderOptions(
@@ -1328,7 +1329,7 @@ uploadImage = (picture, file) => {
                                                                                                         }
                                                                                                         id="gender"
                                                                                                         name="gender"
-                                                                                                        placeholder="Select Gender "
+                                                                                                        placeholder={strings.Select+strings.Gender}
                                                                                                         value={this.state.gender}
                                                                                                         onChange={(value) => {
                                                                                                             props.handleChange('gender')(value);
@@ -1363,7 +1364,7 @@ uploadImage = (picture, file) => {
                                                                                                         }
                                                                                                         id="bloodGroup"
                                                                                                         name="bloodGroup"
-                                                                                                        placeholder="Select Blood Group "
+                                                                                                        placeholder={strings.Select+strings.BloodGroup}
                                                                                                         value={this.state.bloodGroup}
                                                                                                         onChange={(option) => {
                                                                                                             props.handleChange('bloodGroup')(option.value);
@@ -1389,7 +1390,7 @@ uploadImage = (picture, file) => {
                                                                                                         className={`form-control ${props.errors.dob && props.touched.dob ? "is-invalid" : ""}`}
                                                                                                         id="dob"
                                                                                                         name="dob"
-                                                                                                        placeholderText="Select Date of Birth"
+                                                                                                        placeholderText={strings.Select+strings.DateOfBirth}
                                                                                                         showMonthDropdown
                                                                                                         showYearDropdown
                                                                                                         dateFormat="dd/MM/yyyy"
@@ -1425,7 +1426,7 @@ uploadImage = (picture, file) => {
                                                                                                         }
                                                                                                         id="parentId"
                                                                                                         name="parentId"
-                                                                                                        placeholder="Select Superior Employee Name "
+                                                                                                        placeholder={strings.Select+strings.SuperiorEmployeeName}
                                                                                                         value={this.state.parentId}
                                                                                                         onChange={(value) => {
                                                                                                             props.handleChange('parentId')(value);
@@ -1460,7 +1461,7 @@ uploadImage = (picture, file) => {
                                                                                                         }
                                                                                                         id="employeeDesignationId"
                                                                                                         name="employeeDesignationId"
-                                                                                                        placeholder="Select designation "
+                                                                                                        placeholder={strings.Select+strings.Designation}
                                                                                                         value={this.state.salaryDesignation}
                                                                                                         onChange={(value) => {
                                                                                                             props.handleChange('employeeDesignationId')(value);
@@ -1508,7 +1509,7 @@ uploadImage = (picture, file) => {
                                                                                                         type="text"
                                                                                                         id="presentAddress"
                                                                                                         name="presentAddress"
-                                                                                                        placeholder="Enter Present Address "
+                                                                                                        placeholder={strings.Enter+strings.PresentAddress}
                                                                                                         onChange={(value) => { props.handleChange("presentAddress")(value) }}
                                                                                                         value={props.values.presentAddress}
                                                                                                         className={
@@ -1529,7 +1530,7 @@ uploadImage = (picture, file) => {
                                                                                                         type="text"
                                                                                                         id="pincode"
                                                                                                         name="pincode"
-                                                                                                        placeholder="Enter Pin Code "
+                                                                                                        placeholder={strings.Enter+strings.PinCode}
                                                                                                         onChange={(value) => { props.handleChange("pincode")(value) }}
                                                                                                         value={props.values.pincode}
                                                                                                         className={
@@ -1575,7 +1576,7 @@ uploadImage = (picture, file) => {
                                                                                                                 value: '',
                                                                                                             });
                                                                                                         }}
-                                                                                                        placeholder="Select Country"
+                                                                                                        placeholder={strings.Select+strings.Country}
                                                                                                         id="countryId"
                                                                                                         name="countryId"
                                                                                                         className={
@@ -1616,7 +1617,7 @@ uploadImage = (picture, file) => {
                                                                                                                 props.handleChange('stateId')('');
                                                                                                             }
                                                                                                         }}
-                                                                                                        placeholder="Select State"
+                                                                                                        placeholder={strings.Select+strings.StateRegion}
                                                                                                         id="stateId"
                                                                                                         name="stateId"
                                                                                                         className={
@@ -1641,7 +1642,7 @@ uploadImage = (picture, file) => {
                                                                                                         type="text"
                                                                                                         id="city"
                                                                                                         name="city"
-                                                                                                        placeholder="Enter City Name "
+                                                                                                        placeholder={strings.Enter+strings.City}
                                                                                                         onChange={(value) => { props.handleChange("city")(value) }}
                                                                                                         value={props.values.city}
                                                                                                         className={
@@ -1739,7 +1740,7 @@ uploadImage = (picture, file) => {
                                                                                                         id="employeeCode"
                                                                                                         name="employeeCode"
                                                                                                         value={props.values.employeeCode}
-                                                                                                        placeholder="Enter Employee Code"
+                                                                                                        placeholder={strings.Enter+strings.EmployeeCode}
                                                                                                         onChange={(value) => {
                                                                                                             props.handleChange('employeeCode')(value);
 
@@ -1760,7 +1761,7 @@ uploadImage = (picture, file) => {
                                                                                                         id="labourCard"
                                                                                                         name="labourCard"
                                                                                                         value={props.values.labourCard}
-                                                                                                        placeholder="Enter labour Card"
+                                                                                                        placeholder={strings.Enter+strings.LabourCard}
                                                                                                         onChange={(value) => {
                                                                                                             props.handleChange('labourCard')(value);
 
@@ -1863,7 +1864,7 @@ uploadImage = (picture, file) => {
                                                                                                         id="department"
                                                                                                         name="department"
                                                                                                         value={props.values.department}
-                                                                                                        placeholder="Enter department"
+                                                                                                        placeholder={strings.Enter+strings.Department}
                                                                                                         onChange={(value) => {
                                                                                                             props.handleChange('department')(value);
 
@@ -1882,7 +1883,7 @@ uploadImage = (picture, file) => {
                                                                                                         className={`form-control ${props.errors.dateOfJoining && props.touched.dateOfJoining ? "is-invalid" : ""}`}
                                                                                                         id="dateOfJoining"
                                                                                                         name="dateOfJoining"
-                                                                                                        placeholderText="Select Date Of Joining"
+                                                                                                        placeholderText={strings.Select+strings.DateOfJoining}
                                                                                                         showMonthDropdown
                                                                                                         showYearDropdown
                                                                                                         dateFormat="dd/MM/yyyy"
@@ -1909,7 +1910,7 @@ uploadImage = (picture, file) => {
                                                                                                         maxLength="9"
                                                                                                         id="passportNumber"
                                                                                                         name="passportNumber"
-                                                                                                        placeholder="Enter Passport Number "
+                                                                                                        placeholder={strings.Enter+strings.PassportNumber}
                                                                                                         onChange={(value) => { props.handleChange("passportNumber")(value) }}
                                                                                                         value={props.values.passportNumber}
                                                                                                         className={
@@ -1930,7 +1931,7 @@ uploadImage = (picture, file) => {
                                                                                                         className={`form-control ${props.errors.passportExpiryDate && props.touched.passportExpiryDate ? "is-invalid" : ""}`}
                                                                                                         id="passportExpiryDate"
                                                                                                         name="passportExpiryDate"
-                                                                                                        placeholderText="Select passport Expiry Date"
+                                                                                                        placeholderText={strings.Select+strings.PassportExpiryDate}
                                                                                                         showMonthDropdown
                                                                                                         showYearDropdown
                                                                                                         dateFormat="dd/MM/yyyy"
@@ -1954,7 +1955,7 @@ uploadImage = (picture, file) => {
                                                                                                         type="text"
                                                                                                         id="visaNumber"
                                                                                                         name="visaNumber"
-                                                                                                        placeholder="Enter Visa Number "
+                                                                                                        placeholder={strings.Enter+strings.VisaNumber}
                                                                                                         onChange={(value) => { props.handleChange("visaNumber")(value) }}
                                                                                                         value={props.values.visaNumber}
                                                                                                         className={
@@ -1975,7 +1976,7 @@ uploadImage = (picture, file) => {
                                                                                                         className={`form-control ${props.errors.visaExpiryDate && props.touched.visaExpiryDate ? "is-invalid" : ""}`}
                                                                                                         id="visaExpiryDate"
                                                                                                         name="visaExpiryDate"
-                                                                                                        placeholderText="Select visa Expiry Date"
+                                                                                                        placeholderText={strings.Select+strings.VisaExpiryDate}
                                                                                                         showMonthDropdown
                                                                                                         showYearDropdown
                                                                                                         dateFormat="dd/MM/yyyy"
@@ -2074,7 +2075,7 @@ uploadImage = (picture, file) => {
                                                                                                         id="accountHolderName"
                                                                                                         name="accountHolderName"
                                                                                                         value={props.values.accountHolderName}
-                                                                                                        placeholder="Enter Account Holder Name"
+                                                                                                        placeholder={strings.Enter+strings.AccountHolderName}
                                                                                                         onChange={(value) => {
                                                                                                             props.handleChange('accountHolderName')(value);
 
@@ -2094,7 +2095,7 @@ uploadImage = (picture, file) => {
                                                                                                         id="accountNumber"
                                                                                                         name="accountNumber"
                                                                                                         value={props.values.accountNumber}
-                                                                                                        placeholder="Enter account Number"
+                                                                                                        placeholder={strings.Enter+strings.AccountNumber}
                                                                                                         onChange={(value) => {
                                                                                                             props.handleChange('accountNumber')(value);
 
@@ -2114,7 +2115,7 @@ uploadImage = (picture, file) => {
                                                                                                         id="bankName"
                                                                                                         name="bankName"
                                                                                                         value={props.values.bankName}
-                                                                                                        placeholder="Enter bank Name"
+                                                                                                        placeholder={strings.Enter+strings.BankName}
                                                                                                         onChange={(value) => {
                                                                                                             props.handleChange('bankName')(value);
 
@@ -2137,7 +2138,7 @@ uploadImage = (picture, file) => {
                                                                                                         id="branch"
                                                                                                         name="branch"
                                                                                                         value={props.values.branch}
-                                                                                                        placeholder="Enter branch"
+                                                                                                        placeholder={strings.Enter+strings.Branch}
                                                                                                         onChange={(value) => {
                                                                                                             props.handleChange('branch')(value);
 
@@ -2157,7 +2158,7 @@ uploadImage = (picture, file) => {
                                                                                                         id="iban"
                                                                                                         name="iban"
                                                                                                         value={props.values.iban}
-                                                                                                        placeholder="Enter IBAN Number"
+                                                                                                        placeholder={strings.Enter+strings.IBANNumber}
                                                                                                         onChange={(value) => {
                                                                                                             props.handleChange('iban')(value);
 
@@ -2178,7 +2179,7 @@ uploadImage = (picture, file) => {
                                                                                                         id="swiftCode"
                                                                                                         name="swiftCode"
                                                                                                         value={props.values.swiftCode}
-                                                                                                        placeholder="Enter swift Code"
+                                                                                                        placeholder={strings.Enter+strings.SwiftCode}
                                                                                                         onChange={(value) => {
                                                                                                             props.handleChange('swiftCode')(value);
 
@@ -2283,7 +2284,7 @@ uploadImage = (picture, file) => {
                                                                 name="CTC"
                                                                 style={{textAlign:"center"}}
                                                                 value={props.values.CTC}
-                                                                placeholder="Enter CTC here"
+                                                                placeholder={strings.Enter+"CTC"}
                                                                 onChange={(option) => {
                                                                     if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('CTC')(option) }
                                                                     this.updateSalary(option.target.value);

@@ -533,7 +533,7 @@ try {
 																			}}
 																			onBlur={handleBlur}
 																			value={props.values.productName}
-																			placeholder="Enter Product Name"
+																			placeholder={strings.Enter+strings.ProductName}
 																			className={
 																				props.errors.productName &&
 																				props.touched.productName
@@ -572,7 +572,7 @@ try {
 																			maxLength="70"
 																			id="productCode"
 																			name="productCode"
-																			placeholder="Enter Product Code"
+																			placeholder={strings.Enter+strings.ProductCode}
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
@@ -628,7 +628,7 @@ try {
 																			}
 																			id="productCategoryId"
 																			name="productCategoryId"
-																			placeholder="Select Product Category"
+																			placeholder={strings.Select+strings.ProductCategory}
 																			value={props.values.productCategoryId}
 																			onChange={(option) => {
 																				// this.setState({
@@ -688,7 +688,7 @@ try {
 																			}
 																			id="vatCategoryId"
 																			name="vatCategoryId"
-																			placeholder="Select Vat Category"
+																			placeholder={strings.Select+strings.VATCategory}
 																			value={props.values.vatCategoryId}
 																			onChange={(option) => {
 																				// this.setState({
@@ -899,7 +899,7 @@ try {
 																			maxLength="10"
 																			id="salesUnitPrice"
 																			name="salesUnitPrice"
-																			placeholder="Enter Selling Price"
+																			placeholder={strings.Enter+strings.SellingPrice}
 																			readOnly={
 																				props.values.productPriceType.includes(
 																					'SALES',
@@ -1008,7 +1008,7 @@ try {
 																			name="salesDescription"
 																			id="salesDescription"
 																			rows="3"
-																			placeholder="Description..."
+																			placeholder={strings.Description}
 																			onChange={(value) => {
 																				props.handleChange('salesDescription')(
 																					value,
@@ -1101,7 +1101,7 @@ try {
 																			id="purchaseUnitPrice"
 																			name="purchaseUnitPrice"
 																			
-																			placeholder="Enter Purchase Price"
+																			placeholder={strings.Enter+strings.PurchasePrice}
 																			disabled={props.values.isInventoryEnabled===true }
 																			onChange={(option) => {
 																				if (
@@ -1212,7 +1212,7 @@ try {
 																			name="purchaseDescription"
 																			id="purchaseDescription"
 																			rows="3"
-																			placeholder="Description..."
+																			placeholder={strings.Description}
 																			onChange={(value) => {
 																				props.handleChange(
 																					'purchaseDescription',
@@ -1344,7 +1344,7 @@ try {
 																			maxLength="10"
 																			id="inventoryQty"
 																			name="inventoryQty"
-																			placeholder="Enter Quantity"
+																			placeholder={strings.Enter+strings.Quantity}
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
@@ -1393,7 +1393,7 @@ try {
 																			maxLength="10"
 																			id="inventoryPurchasePrice"
 																			name="inventoryPurchasePrice"
-																			placeholder="Enter Purchase Price"
+																			placeholder={strings.Enter+strings.PurchasePrice}
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
@@ -1446,7 +1446,7 @@ try {
 																		styles={customStyles}
 																		id="contactId"
 																		name="contactId"
-																		placeholder="Select Supplier Name"
+																		placeholder={strings.Select+strings.SupplierName}
 																		options={
 																			tmpSupplier_list
 																				? selectOptionsFactory.renderOptions(
@@ -1503,7 +1503,7 @@ try {
 																			name="inventoryReorderLevel"
 																			id="inventoryReorderLevel"
 																			rows="3"
-																			placeholder="Enter Inventory Reorder Level..."
+																			placeholder={strings.Enter+strings.InventoryReorderLevel}
 																			onChange={(value) => {
 																				props.handleChange(
 																					'inventoryReorderLevel',

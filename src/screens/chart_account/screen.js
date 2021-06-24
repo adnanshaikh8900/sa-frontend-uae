@@ -29,6 +29,7 @@ import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
 import { string } from 'prop-types';
+import { toLower, upperCase, upperFirst } from 'lodash-es';
 
 const mapStateToProps = (state) => {
 	return {
@@ -412,7 +413,7 @@ class ChartAccount extends React.Component {
 														<Input
 														maxLength="25"
 															type="text"
-															placeholder="Code"
+															placeholder={strings.Code}
 															value={filterData.transactionCategoryCode}
 															onChange={(e) => {
 																this.handleChange(
@@ -426,7 +427,7 @@ class ChartAccount extends React.Component {
 														<Input
 														maxLength="30"
 															type="text"
-															placeholder="Name"
+															placeholder={strings.Name}
 															value={filterData.transactionCategoryName}
 															onChange={(e) => {
 																this.handleChange(
@@ -464,7 +465,7 @@ class ChartAccount extends React.Component {
 																	}
 																}}
 																className="select-default-width"
-																placeholder="Transaction Type"
+																placeholder={strings.TransactionType}
 																value={filterData.chartOfAccountId}
 															/>
 														</FormGroup>

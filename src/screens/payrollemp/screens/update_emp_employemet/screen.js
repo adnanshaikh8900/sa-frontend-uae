@@ -230,7 +230,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                     id="department"
                                                                                     name="department"
                                                                                     value={props.values.department}
-                                                                                    placeholder="Enter department"
+                                                                                    placeholder={strings.Enter+strings.Department}
                                                                                     onChange={(value) => {
                                                                                         props.handleChange('department')(value);
 
@@ -259,7 +259,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                     }
                                                                                     id="salaryRoleId"
                                                                                     name="salaryRoleId"
-                                                                                    placeholder="Select salary Role "
+                                                                                    placeholder={strings.Select+strings.SalaryRole}
                                                                                     value={
                                                                                         salary_role_dropdown.data
                                                                                         && selectOptionsFactory.renderOptions(
@@ -330,7 +330,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                     className={`form-control ${props.errors.dateOfJoining && props.touched.dateOfJoining ? "is-invalid" : ""}`}
                                                                                     id="dateOfJoining"
                                                                                     name="dateOfJoining"
-                                                                                    placeholderText="Select Date Of Joining"
+                                                                                    placeholderText={strings.Select+strings.DateOfJoining}
                                                                                     showMonthDropdown
                                                                                     showYearDropdown
                                                                                     dateFormat="dd/MM/yyyy"
@@ -354,7 +354,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                     id="labourCard"
                                                                                     name="labourCard"
                                                                                     value={props.values.labourCard}
-                                                                                    placeholder="Enter labour Card"
+                                                                                    placeholder={strings.Enter+strings.LabourCard}
                                                                                     onChange={(value) => {
                                                                                         props.handleChange('labourCard')(value);
 
@@ -379,7 +379,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                     maxLength="9"
                                                                                     id="passportNumber"
                                                                                     name="passportNumber"
-                                                                                    placeholder="Enter Passport Number "
+                                                                                    placeholder={strings.Enter+strings.PassportNumber}
                                                                                     onChange={(value) => { props.handleChange("passportNumber")(value) }}
                                                                                     value={props.values.passportNumber}
                                                                                     className={
@@ -400,7 +400,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                     className={`form-control ${props.errors.passportExpiryDate && props.touched.passportExpiryDate ? "is-invalid" : ""}`}
                                                                                     id="passportExpiryDate"
                                                                                     name="passportExpiryDate"
-                                                                                    placeholderText="Select passport Expiry Date"
+                                                                                    placeholderText={strings.Select+strings.PassportExpiryDate}
                                                                                     showMonthDropdown
                                                                                     showYearDropdown
                                                                                     dateFormat="dd/MM/yyyy"
@@ -424,7 +424,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                     type="text"
                                                                                     id="visaNumber"
                                                                                     name="visaNumber"
-                                                                                    placeholder="Enter Visa Number "
+                                                                                    placeholder={strings.Enter+strings.VisaNumber}
                                                                                     onChange={(value) => { props.handleChange("visaNumber")(value) }}
                                                                                     value={props.values.visaNumber}
                                                                                     className={
@@ -445,7 +445,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                     className={`form-control ${props.errors.visaExpiryDate && props.touched.visaExpiryDate ? "is-invalid" : ""}`}
                                                                                     id="visaExpiryDate"
                                                                                     name="visaExpiryDate"
-                                                                                    placeholderText="Select visa Expiry Date"
+                                                                                    placeholderText={strings.Select+strings.VisaExpiryDate}
                                                                                     showMonthDropdown
                                                                                     showYearDropdown
                                                                                     dateFormat="dd/MM/yyyy"

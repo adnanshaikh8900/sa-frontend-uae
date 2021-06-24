@@ -246,7 +246,7 @@ class DetailJournal extends React.Component {
 										)
 								: row.transactionCategoryId
 						}
-						placeholder="Select Account"
+						placeholder={strings.Select+strings.Account}
 						className={`${
 							props.errors.journalLineItems &&
 							props.errors.journalLineItems[parseInt(idx, 10)] &&
@@ -288,7 +288,7 @@ class DetailJournal extends React.Component {
 						onChange={(e) => {
 							this.selectItem(e.target.value, row, 'description', form, field);
 						}}
-						placeholder="Description"
+						placeholder={strings.Description}
 						className={`form-control 
             ${
 							props.errors.journalLineItems &&
@@ -394,7 +394,7 @@ class DetailJournal extends React.Component {
 								);
 							}
 						}}
-						placeholder="Debit Amount"
+						placeholder={strings.Debit+" "+strings.Amount }
 						className={`form-control 
             ${
 							props.errors.journalLineItems &&
@@ -446,7 +446,7 @@ class DetailJournal extends React.Component {
 								);
 							}
 						}}
-						placeholder="Credit Amount"
+						placeholder={strings.Credit+" "+strings.Amount}
 						className={`form-control 
             ${
 							props.errors.journalLineItems &&
@@ -732,7 +732,7 @@ class DetailJournal extends React.Component {
 																			className="form-control"
 																			id="journalDate"
 																			name="journalDate"
-																			placeholderText="Journal Date"
+																			placeholderText={strings.JournalDate}
 																			disabled={
 																				props.values.postingReferenceType ===
 																				'MANUAL'
@@ -776,7 +776,7 @@ class DetailJournal extends React.Component {
 																					? false
 																					: true
 																			}
-																			placeholder="Reference Number"
+																			placeholder={strings.ReferenceNumber}
 																			value={props.values.journalReferenceNo}
 																			onChange={(option) => {
 																				if (
@@ -809,7 +809,7 @@ class DetailJournal extends React.Component {
 																					? false
 																					: true
 																			}
-																			placeholder="1024 characters..."
+																			placeholder={strings.Description}
 																			value={props.values.description}
 																			onChange={(value) => {
 																				props.handleChange('description')(

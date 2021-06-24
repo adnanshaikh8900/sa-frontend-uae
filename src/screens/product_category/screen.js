@@ -377,7 +377,7 @@ class ProductCategory extends React.Component {
 														<Input
 															type="text"
 															name="code"
-															placeholder="Product Category Code"
+															placeholder={strings.ProductCategoryCode}
 															value={filterData.productCategoryCode}
 															// value={productCategoryCode ? productCategoryCode: ''}
 															onChange={(e) => {
@@ -392,7 +392,7 @@ class ProductCategory extends React.Component {
 														<Input
 															type="text"
 															name="name"
-															placeholder="Product Category Name"
+															placeholder={strings.ProductCategoryName}
 															value={filterData.productCategoryName}
 															autoComplete="off"
 															// value={productCategoryName ?  productCategoryName : ''}

@@ -25,6 +25,8 @@ import './style.scss';
 import { Loader, ConfirmDeleteModal } from 'components';
 import moment from 'moment';
 import { selectOptionsFactory, selectCurrencyFactory } from 'utils';
+import {data}  from '../../../../Language/index'
+import LocalizedStrings from 'react-localization';
 const mapStateToProps = (state) => {
 	return {
 		expense_list: state.bank_account.expense_list,
@@ -58,10 +60,12 @@ const customStyles = {
 	}),
 };
 
+let strings = new LocalizedStrings(data);
 class ExplainTrasactionDetail extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			createMore: false,
 			loading: false,
 			fileName: '',
@@ -703,6 +707,7 @@ class ExplainTrasactionDetail extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			initValue,
 			loading,
@@ -745,7 +750,7 @@ class ExplainTrasactionDetail extends React.Component {
 													<div className="h4 mb-0 d-flex align-items-center">
 														<i className="icon-doc" />
 														<span className="ml-2">
-															Explain Transaction {this.state.id}
+													  {strings.Explain+" "+strings.Transaction} {this.state.id}
 														</span>
 													</div>
 												</Col>
@@ -859,7 +864,7 @@ class ExplainTrasactionDetail extends React.Component {
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="chartOfAccountId">
 																				<span className="text-danger">*</span>
-																			Transaction Type
+																			     {strings.TransactionType}
 																		</Label>
 																			<Select
 																				styles={customStyles}
@@ -909,7 +914,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					);
 																					this.setValue(null);
 																				}}
-																				placeholder="Select Type"
+																				placeholder={strings.Select+strings.Type}
 																				id="coaCategoryId"
 																				name="coaCategoryId"
 																				className={
@@ -931,13 +936,13 @@ class ExplainTrasactionDetail extends React.Component {
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="amount">
 																				<span className="text-danger">*</span>
-																			Amount
+																			{strings.Amount}
 																		</Label>
 																			<Input
 																				type="number"
 																				id="amount"
 																				name="amount"
-																				placeholder="Amount"
+																				placeholder={strings.Amount}
 																				readOnly={
 																					this.state.creationMode === 'MANUAL'
 																						? false
@@ -1046,7 +1051,7 @@ class ExplainTrasactionDetail extends React.Component {
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="expenseCategory">
 																						<span className="text-danger">*</span>
-																					Expense Category
+																					  {strings.ExpenseCategory}
 																				</Label>
 																					<Select
 																						styles={customStyles}
@@ -1103,7 +1108,7 @@ class ExplainTrasactionDetail extends React.Component {
 																				'Expense' && (
 																					<Col lg={3}>
 																						<FormGroup className="mb-3">
-																							<Label htmlFor="vatId">Vat</Label>
+																							<Label htmlFor="vatId">{strings.Vat}</Label>
 																							<Select
 																								options={
 																									vat_list
@@ -1141,7 +1146,7 @@ class ExplainTrasactionDetail extends React.Component {
 																										);
 																									}
 																								}}
-																								placeholder="Select Type"
+																								placeholder={strings.Select+strings.Type}
 																								id="vatId"
 																								name="vatId"
 																								className={
@@ -1164,7 +1169,7 @@ class ExplainTrasactionDetail extends React.Component {
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="vendorId">
 																						<span className="text-danger">*</span>
-																					Vendor
+																					 {strings.Vendor}
 																				</Label>
 																					<Select
 																						styles={customStyles}
@@ -1200,7 +1205,7 @@ class ExplainTrasactionDetail extends React.Component {
 																									+props.values.vendorId,
 																							)
 																						}
-																						placeholder="Select Type"
+																						placeholder={strings.Select+strings.Type}
 																						id="vendorId"
 																						name="vendorId"
 																						className={
@@ -1222,7 +1227,7 @@ class ExplainTrasactionDetail extends React.Component {
 																								<span className="text-danger">
 																									*
 																							</span>
-																							Invoice
+																							{strings.Invoice}
 																						</Label>
 																							<Select
 																								styles={customStyles}
@@ -1251,7 +1256,7 @@ class ExplainTrasactionDetail extends React.Component {
 																										: props.values
 																											.explainParamList
 																								}
-																								placeholder="Select Type"
+																								placeholder={strings.Select+strings.Type}
 																								id="invoiceIdList"
 																								name="invoiceIdList"
 																								className={
@@ -1310,7 +1315,7 @@ class ExplainTrasactionDetail extends React.Component {
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="customerId">
 																						<span className="text-danger">*</span>
-																					Customer
+																					   {strings.Customer}
 																				</Label>
 																					<Select
 																						styles={customStyles}
@@ -1346,7 +1351,7 @@ class ExplainTrasactionDetail extends React.Component {
 																									+props.values.customerId,
 																							)
 																						}
-																						placeholder="Select Type"
+																						placeholder={strings.Select+strings.Type}
 																						id="customerId"
 																						name="customerId"
 																						className={
@@ -1372,7 +1377,7 @@ class ExplainTrasactionDetail extends React.Component {
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="invoiceIdList">
 																						<span className="text-danger">*</span>
-																					Invoice
+																					{strings.Invoice}
 																				</Label>
 																					<Select
 																						styles={customStyles}
@@ -1400,7 +1405,7 @@ class ExplainTrasactionDetail extends React.Component {
 																								)
 																								: props.values.explainParamList
 																						}
-																						placeholder="Select Type"
+																						placeholder={strings.Select+strings.Type}
 																						id="invoiceIdList"
 																						name="invoiceIdList"
 																						className={
@@ -1461,7 +1466,7 @@ class ExplainTrasactionDetail extends React.Component {
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="transactionCategoryId">
 																						<span className="text-danger">*</span>
-																					Category
+																					{strings.Category}
 																				</Label>
 																					<Select
 																						styles={customStyles}
@@ -1556,7 +1561,7 @@ class ExplainTrasactionDetail extends React.Component {
 																						// }
 																					
 																						
-																						placeholder="Select Category"
+																						placeholder={strings.Select+strings.Category}
 																						id="transactionCategoryId"
 																						name="transactionCategoryId"
 																						className={
@@ -1614,7 +1619,7 @@ class ExplainTrasactionDetail extends React.Component {
 																								);
 																							}
 																						}}
-																						placeholder="Select User"
+																						placeholder={strings.Select+strings.User}
 																						id="employeeId"
 																						name="employeeId"
 																						className={
@@ -1636,7 +1641,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			<Col lg={3}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="currencyCode"><span className="text-danger">*</span>
-																						Currency
+																						{strings.Currency}
 																						</Label>
 																					<Select
 																						styles={customStyles}
@@ -1761,7 +1766,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			<Col lg={3}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="currencyCode">
-																						Currency
+																						{strings.Currency}
 																						</Label>
 																					<Select
 																						styles={customStyles}
@@ -1894,7 +1899,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			<Col lg={3}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="currencyCode">
-																						Currency
+																						{strings.Currency}
 																						</Label>
 																					<Select
 																						styles={customStyles}
@@ -2016,14 +2021,14 @@ class ExplainTrasactionDetail extends React.Component {
 																	<Col lg={8}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="description">
-																				Description
+																				{strings.Description}
 																		</Label>
 																			<Input
 																				type="textarea"
 																				name="description"
 																				id="description"
 																				rows="6"
-																				placeholder="Description..."
+																				placeholder={strings.Description}
 																				onChange={(option) =>
 																					props.handleChange('description')(
 																						option,
@@ -2043,7 +2048,7 @@ class ExplainTrasactionDetail extends React.Component {
 																						name="attachment"
 																						render={({ field, form }) => (
 																							<div>
-																								<Label>Attachment</Label> <br />
+																								<Label>{strings.Attachment}</Label> <br />
 																								<Button
 																									color="primary"
 																									onClick={() => {
@@ -2054,7 +2059,7 @@ class ExplainTrasactionDetail extends React.Component {
 																									className="btn-square mr-3"
 																								>
 																									<i className="fa fa-upload"></i>{' '}
-																								Upload
+																								{strings.upload}
 																							</Button>
 																								<input
 																									id="fileInput"
@@ -2100,7 +2105,7 @@ class ExplainTrasactionDetail extends React.Component {
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="date">
 																						<span className="text-danger">*</span>
-																					Transaction Date
+																					{strings.TransactionDate}
 																				</Label>
 																					<DatePicker
 																						id="date"
@@ -2110,7 +2115,7 @@ class ExplainTrasactionDetail extends React.Component {
 																								? false
 																								: true
 																						}
-																						placeholderText="Transaction Date"
+																						placeholderText={strings.TransactionDate}
 																						showMonthDropdown
 																						showYearDropdown
 																						dateFormat="dd/MM/yyyy"
@@ -2150,13 +2155,13 @@ class ExplainTrasactionDetail extends React.Component {
 																			<Col lg={12}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="reference">
-																						Reference Number
+																						{strings.ReferenceNumber}
 																				</Label>
 																					<Input
 																						type="text"
 																						id="reference"
 																						name="reference"
-																						placeholder="Reference Number"
+																						placeholder={strings.ReferenceNumber}
 																						onChange={(option) => {
 																							if (
 																								option.target.value === '' ||
@@ -2183,7 +2188,7 @@ class ExplainTrasactionDetail extends React.Component {
 																				<Col lg={4}>
 																					<FormGroup className="mb-3">
 																						<Label htmlFor="employeeId">
-																							User
+																							{strings.User}
 																					</Label>
 																						<Select
 																							styles={customStyles}
@@ -2212,7 +2217,7 @@ class ExplainTrasactionDetail extends React.Component {
 																									)('');
 																								}
 																							}}
-																							placeholder="Select Contact"
+																							placeholder={strings.Select+strings.Contact}
 																							id="employeeId"
 																							name="employeeId"
 																							className={
@@ -2243,7 +2248,7 @@ class ExplainTrasactionDetail extends React.Component {
 																									onClick={props.handleSubmit}
 																								>
 																									<i className="fa fa-dot-circle-o"></i>{' '}
-																						Explain
+																						         {strings.Explain}
 																					</Button>
 																								<Button
 																									color="secondary"
@@ -2254,7 +2259,7 @@ class ExplainTrasactionDetail extends React.Component {
 																										)
 																									}
 																								>
-																									<i className="fa fa-ban"></i> Delete
+																									<i className="fa fa-ban"></i> {strings.Delete}
 																					</Button>
 																							</div>
 																						) : (
@@ -2270,7 +2275,7 @@ class ExplainTrasactionDetail extends React.Component {
 																									}
 																								>
 																									<i className="fa fa-dot-circle-o"></i>{' '}
-																						Unexplain
+																						          {strings.Unexplain}
 																					</Button>
 																								<Button
 																									color="secondary"
@@ -2278,7 +2283,7 @@ class ExplainTrasactionDetail extends React.Component {
 																									onClick={props.handleSubmit}
 																								>
 																									<i className="fa fa-dot-circle-o"></i>{' '}
-																						Update
+																						{strings.Update}
 																					</Button>
 																							</div>
 																						)}

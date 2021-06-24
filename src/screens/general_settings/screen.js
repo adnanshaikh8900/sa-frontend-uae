@@ -257,7 +257,7 @@ class GeneralSettings extends React.Component {
 																			type="text"
 																			id="invoicingReferencePattern"
 																			name="invoicingReferencePattern"
-																			placeholder="Enter Invoicing Reference Pattern"
+																			placeholder={strings.Enter+strings.InvoicingReferencePattern}
 																			value={
 																				props.values.invoicingReferencePattern
 																			}
@@ -313,7 +313,7 @@ class GeneralSettings extends React.Component {
 																			type="text"
 																			id="mailingHost"
 																			name="mailingHost"
-																			placeholder="Enter Mailing Host"
+																			placeholder={strings.Enter+strings.MailingHost}
 																			value={props.values.mailingHost}
 																			onChange={(option) => {
 																				props.handleChange('mailingHost')(
@@ -344,7 +344,7 @@ class GeneralSettings extends React.Component {
 																			type="text"
 																			id="mailingPort"
 																			name="mailingPort"
-																			placeholder="Enter Mailing Port"
+																			placeholder={strings.Enter+strings.MailingPort}
 																			value={props.values.mailingPort}
 																			onChange={(option) => {
 																				props.handleChange('mailingPort')(
@@ -377,7 +377,7 @@ class GeneralSettings extends React.Component {
 																			type="text"
 																			id="mailingUserName"
 																			name="mailingUserName"
-																			placeholder="Enter Username"
+																			placeholder={strings.Enter+strings.UserName}
 																			value={props.values.mailingUserName}
 																			autoComplete="off"
 																			onChange={(option) => {
@@ -409,7 +409,7 @@ class GeneralSettings extends React.Component {
 																			type="password"
 																			id="mailingPassword"
 																			name="mailingPassword"
-																			placeholder="Enter Password"
+																			placeholder={strings.Enter+strings.Password}
 																			autoComplete="new-password"
 																			value={props.values.mailingPassword}
 																			onChange={(option) => {
@@ -570,7 +570,7 @@ class GeneralSettings extends React.Component {
 																				type="text"
 																				id="mailingAPIKey"
 																				name="mailingAPIKey"
-																				placeholder="API key "
+																				placeholder={strings.APIKey}
 																				value={props.values.mailingAPIKey}
 																				onChange={(option) => {
 																					props.handleChange('mailingAPIKey')(

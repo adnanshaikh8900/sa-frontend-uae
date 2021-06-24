@@ -176,7 +176,7 @@ class DetailProductCategory extends React.Component {
                                     type="text"
                                     id="productCategoryCode"
                                     name="productCategoryCode"
-                                    placeholder="Enter Product Category Code"
+                                    placeholder={strings.Enter+strings.ProductCategoryCode}
                                     onChange={(option) => { if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('productCategoryCode')(option) }}}
                                     value={props.values.productCategoryCode}
                                     className={
@@ -195,7 +195,7 @@ class DetailProductCategory extends React.Component {
                                     type="text"
                                     id="productCategoryName"
                                     name="productCategoryName"
-                                    placeholder="Enter Product Category Name"
+                                    placeholder={strings.Enter+strings.ProductCategoryName}
                                     onChange={(option) => { if (option.target.value === '' || this.regExSpaceBoth.test(option.target.value)){ 
                                       props.handleChange('productCategoryName')(option) }}}
                                     value={props.values.productCategoryName}

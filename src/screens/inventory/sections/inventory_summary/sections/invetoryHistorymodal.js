@@ -249,7 +249,7 @@ console.log(inventory_history_list,"inventory_history_list")
 																	  key={index}
 																  >  <td colSpan="9">
 																  <b style={{ fontWeight: '600' }}>
-																  <div><h5> Product Name :  </h5></div>
+																  <div><h5>{strings.ProductName}:  </h5></div>
 																	  {console.log(Object.values(item['productname']),"productname")}
 																  </b>
 															  </td>

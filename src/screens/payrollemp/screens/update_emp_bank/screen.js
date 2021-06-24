@@ -228,7 +228,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                                     id="accountHolderName"
                                                                                     name="accountHolderName"
                                                                                     value={props.values.accountHolderName}
-                                                                                    placeholder="Enter Account Holder Name"
+                                                                                    placeholder={strings.Enter+strings.AccountHolderName}
                                                                                     onChange={(value) => {
                                                                                         props.handleChange('accountHolderName')(value);
 
@@ -248,7 +248,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                                     id="accountNumber"
                                                                                     name="accountNumber"
                                                                                     value={props.values.accountNumber}
-                                                                                    placeholder="Enter account Number"
+                                                                                    placeholder={strings.Enter+strings.AccountNumber}
                                                                                     onChange={(value) => {
                                                                                         props.handleChange('accountNumber')(value);
 
@@ -268,7 +268,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                                     id="bankName"
                                                                                     name="bankName"
                                                                                     value={props.values.bankName}
-                                                                                    placeholder="Enter bank Name"
+                                                                                    placeholder={strings.Enter+strings.BankName}
                                                                                     onChange={(value) => {
                                                                                         props.handleChange('bankName')(value);
 
@@ -291,7 +291,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                                     id="branch"
                                                                                     name="branch"
                                                                                     value={props.values.branch}
-                                                                                    placeholder="Enter branch"
+                                                                                    placeholder={strings.Enter+strings.Branch}
                                                                                     onChange={(value) => {
                                                                                         props.handleChange('branch')(value);
 
@@ -311,7 +311,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                                     id="iban"
                                                                                     name="iban"
                                                                                     value={props.values.iban}
-                                                                                    placeholder="Enter IBAN Number"
+                                                                                    placeholder={strings.Enter+strings.IBANNumber}
                                                                                     onChange={(value) => {
                                                                                         props.handleChange('iban')(value);
 
@@ -332,7 +332,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                                     id="swiftCode"
                                                                                     name="swiftCode"
                                                                                     value={props.values.swiftCode}
-                                                                                    placeholder="Enter swift Code"
+                                                                                    placeholder={strings.Enter+strings.SwiftCode}
                                                                                     onChange={(value) => {
                                                                                         props.handleChange('swiftCode')(value);
 

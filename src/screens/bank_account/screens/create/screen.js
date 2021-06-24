@@ -338,7 +338,7 @@ class CreateBankAccount extends React.Component {
 																		maxLength="50"
 																		id="account_name"
 																		name="account_name"
-																		placeholder="Enter Account Name"
+																		placeholder={strings.Enter+strings.AccountName}
 																		value={props.values.account_name}
 																		onChange={(option) => {
 																			if (
@@ -377,7 +377,7 @@ class CreateBankAccount extends React.Component {
 																		styles={customStyles}
 																		id="currency"
 																		name="currency"
-																		placeholder="Select Currency"
+																		placeholder={strings.Select+strings.Currency}
 																		options={
 																			currency_convert_list
 																				? selectCurrencyFactory.renderOptions(
@@ -437,7 +437,7 @@ class CreateBankAccount extends React.Component {
 																		type="type"
 																		id="opening_balance"
 																		name="opening_balance"
-																		placeholder="Your Opening Balance"
+																		placeholder={strings.Enter+strings.OpeningBalance}
 																		value={props.values.opening_balance}
 																		onChange={(option) => {
 																			if (
@@ -496,7 +496,7 @@ class CreateBankAccount extends React.Component {
 																				enabled: false,
 																			},
 																		}}
-																		placeholderText="Opening Date"
+																		placeholderText={strings.OpeningDate}
 																		selected={props.values.openingDate}
 																		showMonthDropdown
 																		showYearDropdown
@@ -587,7 +587,7 @@ class CreateBankAccount extends React.Component {
 																		maxLength="100"
 																		id="bank_name"
 																		name="bank_name"
-																		placeholder="Enter Bank Name"
+																		placeholder={strings.Enter+strings.BankName}
 																		value={props.values.bank_name}
 																		onChange={(option) => {
 																			if (
@@ -623,7 +623,7 @@ class CreateBankAccount extends React.Component {
 																		maxLength="50"
 																		id="account_number"
 																		name="account_number"
-																		placeholder="Enter Account Number"
+																		placeholder={strings.Enter+strings.AccountNumber}
 																		value={props.values.account_number}
 																		onBlur={props.handleBlur('account_number')}
 																		onChange={(option) => {
@@ -659,7 +659,7 @@ class CreateBankAccount extends React.Component {
 																		styles={customStyles}
 																		id="countrycode"
 																		name="countrycode"
-																		placeholder="Select Country"
+																		placeholder={strings.Select+strings.Country}
 																		// getOptionValue={(option) =>
 																		// 	option.countrycode
 																		// }

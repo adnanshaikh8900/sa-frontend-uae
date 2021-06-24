@@ -209,7 +209,7 @@ class DetailVatCode extends React.Component {
 																	type="text"
 																	id="name"
 																	name="name"
-																	placeholder="Enter Vat Category Name"
+																	placeholder={strings.Enter+strings.VatCategoryName}
 																	onChange={(option) => {
 																		if (
 																			option.target.value === '' ||
@@ -240,7 +240,7 @@ class DetailVatCode extends React.Component {
 																	type="text"
 																	id="vat"
 																	name="vat"
-																	placeholder="Enter Percentage"
+																	placeholder={strings.Enter+strings.Percentage}
 																	onChange={(option) => {
 																		if (
 																			option.target.value === '' ||

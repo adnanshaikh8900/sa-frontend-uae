@@ -927,7 +927,7 @@ class BankTransactions extends React.Component {
 														className="form-control"
 														id="date"
 														name="transactionDate"
-														placeholderText="Transaction Date"
+														placeholderText={strings.TransactionDate}
 														showMonthDropdown
 														showYearDropdown
 														dropdownMode="select"

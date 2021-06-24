@@ -262,7 +262,7 @@ class CreateJournal extends React.Component {
 								field,
 							);
 						}}
-						placeholder="Select Account"
+						placeholder={strings.Select+strings.Account}
 						className={`${
 							props.errors.journalLineItems &&
 							props.errors.journalLineItems[parseInt(idx, 10)] &&
@@ -302,7 +302,7 @@ class CreateJournal extends React.Component {
 						onChange={(e) => {
 							this.selectItem(e.target.value, row, 'description', form, field);
 						}}
-						placeholder="Description"
+						placeholder={strings.Description}
 						className={`form-control 
             ${
 							props.errors.journalLineItems &&
@@ -404,7 +404,7 @@ class CreateJournal extends React.Component {
 								);
 							}
 						}}
-						placeholder="Debit Amount"
+						placeholder={strings.Debit+" "+strings.Amount}
 						className={`form-control 
             ${
 							props.errors.journalLineItems &&
@@ -454,7 +454,7 @@ class CreateJournal extends React.Component {
 								);
 							}
 						}}
-						placeholder="Credit Amount"
+						placeholder={strings.Credit+" "+strings.Amount}
 						className={`form-control 
             ${
 							props.errors.journalLineItems &&
@@ -750,7 +750,7 @@ class CreateJournal extends React.Component {
 																	<DatePicker
 																		id="journalDate"
 																		name="journalDate"
-																		placeholderText="Journal Date"
+																		placeholderText={strings.JournalDate}
 																		selected={props.values.journalDate}
 																		showMonthDropdown
 																		showYearDropdown
@@ -787,7 +787,7 @@ class CreateJournal extends React.Component {
 																		maxLength="20"
 																		id="journalReferenceNo"
 																		name="journalReferenceNo"
-																		placeholder="Reference Number"
+																		placeholder={strings.ReferenceNumber}
 																		value={
 																			props.values.journalReferenceNo || ''
 																		}
@@ -815,7 +815,7 @@ class CreateJournal extends React.Component {
 																		name="description"
 																		id="description"
 																		rows="5"
-																		placeholder="Notes"
+																		placeholder={strings.Notes}
 																		value={props.values.description || ''}
 																		onChange={(value) => {
 																			props.handleChange('description')(value);

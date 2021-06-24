@@ -240,7 +240,7 @@ class UpdateRole extends React.Component {
 																	maxLength="30"
 																	id="name"
 																	name="name"
-																	placeholder="Enter Name"
+																	placeholder={strings.Enter+strings.Name}
 																	onBlur={props.handleBlur}
 																	onChange={(option) => {
 																		if (
@@ -269,7 +269,7 @@ class UpdateRole extends React.Component {
 																	type="text"
 																	id="description"
 																	name="description"
-																	placeholder="Description"
+																	placeholder={strings.Description}
 																	onChange={(option) => {
 																		if (
 																			option.target.value === '' ||

@@ -276,7 +276,7 @@ class DetailCurrencyConvert extends React.Component {
 																									)('');
 																								}
 																							}}
-																							placeholder="Select Currency"
+																							placeholder={strings.Select+strings.Currency}
 																							id="currencyCode"
 																							name="currencyCode"
 																							className={
@@ -313,7 +313,7 @@ class DetailCurrencyConvert extends React.Component {
 																	type="number" maxLength='20'
 																	id="exchangeRate"
 																	name="exchangeRate"
-																	placeholder="Enter Exchange Rate"
+																	placeholder={strings.Enter+strings.Exchangerate}
 																	onChange={(option) => {
 																		if (
 																			option.target.value === '' ||

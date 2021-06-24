@@ -16,13 +16,16 @@ import * as Yup from "yup";
 
 import Select from 'react-select'
 import { selectOptionsFactory } from "utils";
+import {data}  from '../../Language/index'
+import LocalizedStrings from 'react-localization';
 
-
+let strings = new LocalizedStrings(data);
 class OpeningBalanceModal extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
+      language: window['localStorage'].getItem('language'),
       initValue: {
         accountName: '',
         openingBalance: '',
@@ -71,6 +74,7 @@ class OpeningBalanceModal extends React.Component {
   }
 
   render() {
+    strings.setLanguage(this.state.language);
     const { showOpeningBalanceModal, bankAccountList, closeOpeningBalanceModal , selectedRowData } = this.props
     const { initValue } = this.state
     return (
@@ -79,7 +83,7 @@ class OpeningBalanceModal extends React.Component {
           <Modal isOpen={showOpeningBalanceModal}
             className={"modal-primary " + this.props.className}
           >
-            <ModalHeader toggle={this.toggleDanger}><i className="nav-icon fas fa-area-chart" /> {selectedRowData ? 'Update' : 'Add'} Opening Balance</ModalHeader>
+            <ModalHeader toggle={this.toggleDanger}><i className="nav-icon fas fa-area-chart" /> {selectedRowData ? 'Update' : 'Add'} {strings.OpeningBalance}</ModalHeader>
             <ModalBody>
               <Formik
                 initialValues={initValue}
@@ -99,11 +103,11 @@ class OpeningBalanceModal extends React.Component {
                 {(props) => (
                   <Form onSubmit={props.handleSubmit}>
                     <FormGroup>
-                      <Label htmlFor="categoryCode"><span className="text-danger">*</span>Account</Label>
+                      <Label htmlFor="categoryCode"><span className="text-danger">*</span>{strings.Account}</Label>
                       <Select
                       styles={customStyles}
                         options={bankAccountList ? selectOptionsFactory.renderOptions('name', 'bankAccountId', bankAccountList, 'Account') : []}
-                        placeholder="Select Account"
+                        placeholder={strings.Select+strings.Account}
                         onChange={(option) => {
                           if (option && option.value) {
                             props.handleChange('accountName')(option)
@@ -123,12 +127,12 @@ class OpeningBalanceModal extends React.Component {
                       )}
                     </FormGroup>
                     <FormGroup>
-                      <Label htmlFor="openingBalance"><span className="text-danger">*</span>Opening Balance</Label>
+                      <Label htmlFor="openingBalance"><span className="text-danger">*</span>{strings.OpeningBalance}</Label>
                       <Input
                         type="text"
                         id="openingBalance"
                         name="openingBalance"
-                        placeholder="Enter Opening Balnce"
+                        placeholder={strings.Enter+strings.OpeningBalance}
                         onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('openingBalance')(option) } }}
                         value={props.values.openingBalance}
                         autoComplete="off"
@@ -143,12 +147,12 @@ class OpeningBalanceModal extends React.Component {
                       )}
                     </FormGroup>
                     <FormGroup>
-                      <Label htmlFor="categoryCode">Currency</Label>
+                      <Label htmlFor="categoryCode">{strings.Currency}</Label>
                       <Input
                         type="text"
                         id="categoryCode"
                         name="categoryCode"
-                        placeholder="Currency"
+                        placeholder={strings.Select+strings.Currency}
                         disabled
                         value={props.values.currency}
                       />
@@ -158,8 +162,8 @@ class OpeningBalanceModal extends React.Component {
               </Formik>
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" type="button" className="btn-square" onClick={() => { this.formRef.current.handleSubmit() }}>Save</Button>&nbsp;
-                <Button color="secondary" className="btn-square" onClick={closeOpeningBalanceModal}>Cancel</Button>
+              <Button color="primary" type="button" className="btn-square" onClick={() => { this.formRef.current.handleSubmit() }}>{strings.Save}</Button>&nbsp;
+                <Button color="secondary" className="btn-square" onClick={closeOpeningBalanceModal}>{strings.Cancel}</Button>
             </ModalFooter>
           </Modal>
         </div>

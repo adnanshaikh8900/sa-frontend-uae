@@ -185,7 +185,7 @@ class CreateSalaryStructure extends React.Component {
                                     id="type"
                                     name="type"
                                     value={props.values.type}
-                                    placeholder="Enter salary Structure Type "
+                                    placeholder={strings.Enter+strings.SalaryStructureType}
                                     onChange={(option) => {
                                       if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('type')(option) }
                                     }}
@@ -204,7 +204,7 @@ class CreateSalaryStructure extends React.Component {
                                     id="name"
                                     name="name"
                                     value={props.values.name}
-                                    placeholder="Enter salary Structure Name"
+                                    placeholder={strings.Enter+strings.SalaryStructureName}
                                     onChange={(option) => {
                                       if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('name')(option) }
                                     }}

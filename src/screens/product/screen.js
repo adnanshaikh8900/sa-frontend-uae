@@ -442,7 +442,7 @@ class Product extends React.Component {
 												<Col lg={3} className="mb-2">
 														<Input
 															type="text"
-															placeholder="Product Code"
+															placeholder={strings.ProductCode}
 															value={filterData.productCode}
 															onChange={(e) => {
 																this.handleChange(
@@ -455,7 +455,7 @@ class Product extends React.Component {
 													<Col lg={3} className="mb-1">
 														<Input
 															type="text"
-															placeholder="Name"
+															placeholder={strings.Name}
 															value={filterData.name}
 															onChange={(e) => {
 																this.handleChange(e.target.value, 'name');
@@ -476,7 +476,7 @@ class Product extends React.Component {
 																		: []
 																}
 																className="select-default-width"
-																placeholder="Vat Percentage"
+																placeholder={strings.VatPercentage}
 																value={filterData.vatPercentage}
 																onChange={(option) => {
 																	if (option && option.value) {

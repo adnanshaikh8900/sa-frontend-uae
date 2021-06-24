@@ -23,7 +23,8 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
-
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -39,11 +40,12 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
-
+let strings = new LocalizedStrings(data);
 class LogIn extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			isPasswordShown: false,
 			initValue: {
 				username: '',
@@ -126,6 +128,7 @@ class LogIn extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { isPasswordShown } = this.state;
 		const { initValue } = this.state;
 		return (
@@ -174,20 +177,20 @@ class LogIn extends React.Component {
 															<Form onSubmit={props.handleSubmit}>
 																{/* <h1>Log In</h1> */}
 																<div className="registerScreen">
-																	<h2 className="">Login</h2>
-											  						<p>Enter your details below to continue</p>
+																	<h2 className="">{strings.Login}</h2>
+											  						<p>{strings.Enteryourdetailsbelowtocontinue}</p>
 																</div>
 																<Row>
 																	<Col lg={12}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="username"><b>
-																				Email</b>
+																				{strings.Email}</b>
 																			</Label>
 																			<Input
 																				type="text"
 																				id="username"
 																				name="username"
-																				placeholder="Enter Email Id"
+																				placeholder={strings.Enter+strings.EmailID}
 																				value={props.values.username}
 																				onChange={(option) => {
 																					props.handleChange('username')(
@@ -214,7 +217,7 @@ class LogIn extends React.Component {
 																		<FormGroup className="mb-3">
 																	
 																			<Label htmlFor="password">
-																			<b>	Password</b>
+																			<b>	{strings.Password}</b>
 																			</Label>
 																		
 																			<Input
@@ -225,7 +228,7 @@ class LogIn extends React.Component {
 																				}
 																				id="password"
 																				name="password"
-																				placeholder="Enter password"
+																				placeholder={strings.Enter+strings.Password}
 																				value={props.values.password}
 																				onChange={(option) => {
 																					props.handleChange('password')(
@@ -268,7 +271,7 @@ class LogIn extends React.Component {
 																			}}
 																			style={{ marginTop: '-10px' }}
 																		>
-																			Forgot password?
+																			{strings.Forgotpassword}
 																		</Button>
 																	</Col>
 																</Row>
@@ -281,7 +284,7 @@ class LogIn extends React.Component {
 																			style={{ width: '200px' }}
 																			disabled={this.state.loading}
 																		>
-																			<i className="fa fa-sign-in" /> Log In
+																			<i className="fa fa-sign-in" />{strings.Login}
 																		</Button>
 																	</Col>
 																</Row>
@@ -289,7 +292,7 @@ class LogIn extends React.Component {
 																	<Row>
 																		<Col className="mt-3">
 																			<p className="r-btn">
-																				Don't have an account?{' '}
+																				{strings.Donthaveanaccount}{' '}
 																				<span
 																					onClick={() => {
 																						this.props.history.push(
@@ -297,7 +300,7 @@ class LogIn extends React.Component {
 																						);
 																					}}
 																				>
-																					Register Here
+																					{strings.RegisterHere}
 																				</span>
 																			</p>
 																		</Col>

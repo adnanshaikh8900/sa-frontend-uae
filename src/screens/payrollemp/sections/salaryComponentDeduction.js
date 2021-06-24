@@ -262,7 +262,7 @@ class SalaryComponentDeduction extends React.Component {
 														}
 														id="id"
 														name="id"
-														placeholder="Select component "
+														placeholder={strings.Select+strings.Component}
 														value={this.state.id}
 														onChange={(value) => {
 															props.handleChange('id')(value);
@@ -292,7 +292,7 @@ class SalaryComponentDeduction extends React.Component {
 														id="description"
 														name="description"
 														value={props.values.description}
-														placeholder="Enter Salary Component Name"
+														placeholder={strings.Enter+strings.SalaryComponent+" "+strings.Name}
 														onChange={(option) => {
 															if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('description')(option) }
 														}}
@@ -324,7 +324,7 @@ class SalaryComponentDeduction extends React.Component {
 														}
 														id="type"
 														name="type"
-														placeholder="Select type "
+														placeholder={strings.Select+strings.Type}
 														value={this.state.gender}
 														onChange={(value) => {
 															props.handleChange('type')(value);
@@ -356,7 +356,7 @@ class SalaryComponentDeduction extends React.Component {
 														id="formula"
 														name="formula"
 														value={props.values.formula}
-														placeholder="Enter Percentage"
+														placeholder={strings.Enter+strings.Percentage}
 														onChange={(option) => {
 															if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
 														}}
@@ -379,7 +379,7 @@ class SalaryComponentDeduction extends React.Component {
 														id="flatAmount"
 														name="flatAmount"
 														value={props.values.flatAmount}
-														placeholder="Enter flat Amount"
+														placeholder={strings.Enter+strings.FlatAmount}
 														onChange={(option) => {
 															if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('flatAmount')(option) }
 														}}

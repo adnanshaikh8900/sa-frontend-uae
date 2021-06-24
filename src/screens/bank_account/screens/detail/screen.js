@@ -364,7 +364,7 @@ class DetailBankAccount extends React.Component {
 																	type="text"
 																	id="account_name"
 																	name="account_name"
-																	placeholder="Enter Account Name"
+																	placeholder={strings.Enter+strings.AccountName}
 																	value={props.values.account_name}
 																	onChange={(option) => {
 																		if (
@@ -467,7 +467,7 @@ class DetailBankAccount extends React.Component {
 																			? true
 																			: false
 																	}
-																	placeholder="Your Opening Balance"
+																	placeholder={strings.Enter+strings.OpeningBalance}
 																	value={props.values.opening_balance}
 																	onChange={(option) => {
 																		if (
@@ -515,7 +515,7 @@ class DetailBankAccount extends React.Component {
 																			? 'is-invalid'
 																			: ''
 																	}`}
-																	placeholderText="Expense Date"
+																	placeholderText={strings.ExpenseDate}
 																	value={props.values.openingDate}
 																	showMonthDropdown
 																	showYearDropdown
@@ -606,7 +606,7 @@ class DetailBankAccount extends React.Component {
 																	type="text"
 																	id="bank_name"
 																	name="bank_name"
-																	placeholder="Enter Bank Name"
+																	placeholder={strings.Enter+strings.BankName}
 																	value={props.values.bank_name}
 																	onChange={(option) => {
 																		if (
@@ -643,7 +643,7 @@ class DetailBankAccount extends React.Component {
 																	type="text"
 																	id="account_number"
 																	name="account_number"
-																	placeholder="Enter Account Number"
+																	placeholder={strings.Enter+strings.AccountNumber}
 																	value={props.values.account_number}
 																	onChange={(option) => {
 																		if (
@@ -720,7 +720,7 @@ class DetailBankAccount extends React.Component {
 																				}
 																				props.handleChange('stateId')('');
 																			}}
-																			placeholder="Select Country"
+																			placeholder={strings.Select+strings.Country}
 																			id="countryId"
 																			name="countryId"
 																			className={

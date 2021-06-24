@@ -498,7 +498,7 @@ class InventoryEdit extends React.Component {
 																			maxLength="10"
 																			id="inventoryQty"
 																			name="inventoryQty"
-																			placeholder="Enter Quantity"
+																			placeholder={strings.Enter+strings.Quantity}
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
@@ -547,7 +547,7 @@ class InventoryEdit extends React.Component {
 																			maxLength="10"
 																			id="inventoryPurchasePrice"
 																			name="inventoryPurchasePrice"
-																			placeholder="Enter Purchase Price"
+																			placeholder={strings.Enter+strings.PurchasePrice}
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
@@ -594,7 +594,7 @@ class InventoryEdit extends React.Component {
 																		styles={customStyles}
 																		id="contactId"
 																		name="contactId"
-																		placeholder="Select Supplier Name"
+																		placeholder={strings.Select+strings.SupplierName}
 																		options={
 																			tmpSupplier_list
 																				? selectOptionsFactory.renderOptions(
@@ -649,7 +649,7 @@ class InventoryEdit extends React.Component {
 																			name="inventoryReorderLevel"
 																			id="inventoryReorderLevel"
 																			rows="3"
-																			placeholder="Inventory Re-order Level"
+																			placeholder={strings.InventoryReorderLevel}
 																			onChange={(value) => {
 																				props.handleChange(
 																					'inventoryReorderLevel',

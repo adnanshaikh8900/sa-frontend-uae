@@ -758,7 +758,7 @@ class DetailProduct extends React.Component {
 																				}
 																			}}
 																			value={props.values.productName || ''}
-																			placeholder="Enter Product Name"
+																			placeholder={strings.Enter+strings.ProductName}
 																			className={
 																				props.errors.productName &&
 																				props.touched.productName
@@ -786,7 +786,7 @@ class DetailProduct extends React.Component {
 																			id="productCode"
 																			name="productCode"
 																			value={props.values.productCode || ''}
-																			placeholder="Enter Product Code"
+																			placeholder={strings.Enter+strings.ProductCode}
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
@@ -1023,7 +1023,7 @@ class DetailProduct extends React.Component {
 																			type="number"
 																			id="salesUnitPrice"
 																			name="salesUnitPrice"
-																			placeholder="Enter Selling Price"
+																			placeholder={strings.Enter+strings.SellingPrice}
 																			readOnly={
 																				props.values.productPriceType &&
 																				props.values.productPriceType.includes(
@@ -1144,7 +1144,7 @@ class DetailProduct extends React.Component {
 																			name="salesDescription"
 																			id="salesDescription"
 																			rows="3"
-																			placeholder="Description..."
+																			placeholder={strings.Description}
 																			onChange={(value) => {
 																				props.handleChange('salesDescription')(
 																					value,
@@ -1220,7 +1220,7 @@ class DetailProduct extends React.Component {
 																			type="number"
 																			id="purchaseUnitPrice"
 																			name="purchaseUnitPrice"
-																			placeholder="Enter Purchase Price"
+																			placeholder={strings.Enter+strings.PurchasePrice}
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
@@ -1345,7 +1345,7 @@ class DetailProduct extends React.Component {
 																			name="purchaseDescription"
 																			id="purchaseDescription"
 																			rows="3"
-																			placeholder="Description..."
+																			placeholder={strings.Description}
 																			onChange={(value) => {
 																				props.handleChange(
 																					'purchaseDescription',

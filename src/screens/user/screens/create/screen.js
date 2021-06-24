@@ -404,7 +404,7 @@ class CreateUser extends React.Component {
 																				id="firstName"
 																				name="firstName"
 																				value={props.values.firstName}
-																				placeholder="First Name"
+																				placeholder={strings.FirstName}
 																				onChange={(option) => {
 																					if (
 																						option.target.value === '' ||
@@ -443,7 +443,7 @@ class CreateUser extends React.Component {
 																				maxLength="26"
 																				id="lastName"
 																				name="lastName"
-																				placeholder="Last Name"
+																				placeholder={strings.LastName}
 																				value={props.values.lastName}
 																				onChange={(option) => {
 																					if (
@@ -485,7 +485,7 @@ class CreateUser extends React.Component {
 																				maxLength="80"
 																				id="email"
 																				name="email"
-																				placeholder="Enter Email ID"
+																				placeholder={strings.Enter+strings.EmailID}
 																				value={props.values.email}
 																				onChange={(option) => {
 																					props.handleChange('email')(option);
@@ -520,7 +520,7 @@ class CreateUser extends React.Component {
 																				showYearDropdown
 																				dateFormat="dd/MM/yyyy"
 																				dropdownMode="select"
-																				placeholderText="Enter Date of Birth"
+																				placeholderText={strings.Enter+strings.DateOfBirth}
 																				maxDate={new Date()}
 																				selected={props.values.dob}
 																				//value={props.values.dob}
@@ -640,7 +640,7 @@ class CreateUser extends React.Component {
 																						props.handleChange('roleId')('');
 																					}
 																				}}
-																				placeholder="Select Role"
+																				placeholder={strings.Select+strings.Role}
 																				id="roleId"
 																				name="roleId"
 																				className={
@@ -668,7 +668,7 @@ class CreateUser extends React.Component {
 																				styles={customStyles}
 																				id="timezone"
 																				name="timezone"
-																				placeholder="Select Time Zone"
+																				placeholder={strings.Select+strings.TimeZonePreference}
 																				options={timezone ? timezone : []}
 																				value={props.values.timezone}
 																				onChange={(option) => {
@@ -793,7 +793,7 @@ class CreateUser extends React.Component {
 																					}
 																					id="password"
 																					name="password"
-																					placeholder="Enter password"
+																					placeholder={strings.Enter+strings.Password}
 																					value={props.values.password}
 																					onChange={(option) => {
 																						props.handleChange('password')(
@@ -841,7 +841,7 @@ class CreateUser extends React.Component {
 																				id="confirmPassword"
 																				name="confirmPassword"
 																				value={props.values.confirmPassword}
-																				placeholder="Enter the Confirm Password"
+																				placeholder={strings.Enter+strings.ConfirmPassword}
 																				onChange={(value) => {
 																					props.handleChange('confirmPassword')(
 																						value,
@@ -946,7 +946,7 @@ class CreateUser extends React.Component {
 																				styles={customStyles}
 																				id="employeeId"
 																				name="employeeId"
-																				placeholder="Select employee"
+																				placeholder={strings.Select+strings.Employee}
 																				options={
 																					employee_list
 																						? selectOptionsFactory.renderOptions(

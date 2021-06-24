@@ -514,7 +514,7 @@ handleChange = (evt) => {
                                                                 name="CTC"
                                                                 style={{textAlign:"center"}}
                                                                 value={this.state.CTC}
-                                                                placeholder="Enter CTC here"
+                                                                placeholder={strings.Enter+"CTC"}
                                                                 onChange={(option) => {
                                                                     if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('CTC')(option) }
                                                                    

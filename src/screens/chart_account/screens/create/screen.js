@@ -208,7 +208,7 @@ class CreateChartAccount extends React.Component {
 																type="text" maxLength='50'
 																id="transactionCategoryName"
 																name="transactionCategoryName"
-																placeholder="Enter Name"
+																placeholder={strings.Enter+strings.Name}
 																onChange={(option) => {
 																	if (
 																		option.target.value === '' ||
@@ -265,7 +265,7 @@ class CreateChartAccount extends React.Component {
 															styles={customStyles}
 																id="chartOfAccount"
 																name="chartOfAccount"
-																placeholder='Select type'
+																placeholder={strings.Select+strings.Type}
 																value={props.values.chartOfAccount}
 																// size="1"
 																onChange={(val) => {

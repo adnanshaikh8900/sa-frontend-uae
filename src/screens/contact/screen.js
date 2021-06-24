@@ -399,7 +399,7 @@ class Contact extends React.Component {
 														<Input
 													     	maxLength="25"
 															type="text"
-															placeholder="Name"
+															placeholder={strings.Name}
 															value={filterData.name}
 															onChange={(e) => {
 																this.handleChange(e.target.value, 'name');
@@ -411,7 +411,7 @@ class Contact extends React.Component {
 														<Input
 															maxLength="30"
 															type="text"
-															placeholder="Email"
+															placeholder={strings.Email}
 															value={filterData.email}
 															onChange={(e) => {
 																this.handleChange(e.target.value, 'email');
@@ -443,7 +443,7 @@ class Contact extends React.Component {
 																}
 															}}
 															className="select-default-width"
-															placeholder="Contact Type"
+															placeholder={strings.ContactType}
 															value={filterData.contactType}
 														/>
 													</Col>

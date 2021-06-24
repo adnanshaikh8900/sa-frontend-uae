@@ -805,7 +805,7 @@ class Profile extends React.Component {
 																								type="text"
 																								id="email"
 																								name="email"
-																								placeholder="Enter Email ID"
+																								placeholder={strings.Enter+strings.EmailID}
 																								value={props.values.email}
 																								onChange={(value) => {
 																									props.handleChange('email')(
@@ -847,7 +847,7 @@ class Profile extends React.Component {
 																								showYearDropdown
 																								dateFormat="dd/MM/yyyy"
 																								dropdownMode="select"
-																								placeholderText="Enter Date of Birth"
+																								placeholderText={strings.Enter+strings.DateOfBirth}
 																								maxDate={new Date()}
 																								autoComplete="off"
 																								// selected={props.values.dob}
@@ -915,7 +915,7 @@ class Profile extends React.Component {
 																										);
 																									}
 																								}}
-																								placeholder="Select Role"
+																								placeholder={strings.Select+strings.Role}
 																								id="roleId"
 																								name="roleId"
 																								className={
@@ -963,7 +963,7 @@ class Profile extends React.Component {
 																										)('');
 																									}
 																								}}
-																								placeholder="Select TimeZOne"
+																								placeholder={strings.Select+strings.TimeZonePreference}
 																								id="timezone"
 																								name="timezone"
 																								className={
@@ -1062,7 +1062,7 @@ class Profile extends React.Component {
 																								id="password"
 																								name="password"
 																								autoComplete="new-password"
-																								placeholder="Enter the Password"
+																								placeholder={strings.Enter+strings.Password}
 																								onChange={(value) => {
 																									props.handleChange('password')(
 																										value,
@@ -1099,7 +1099,7 @@ class Profile extends React.Component {
 																								type="password"
 																								id="confirmPassword"
 																								name="confirmPassword"
-																								placeholder="Enter the Confirm Password"
+																								placeholder={strings.Enter+strings.ConfirmPassword}
 																								onChange={(value) => {
 																									props.handleChange(
 																										'confirmPassword',
@@ -1360,7 +1360,7 @@ class Profile extends React.Component {
 																								type="text"
 																								id="companyName"
 																								name="companyName"
-																								placeholder="Enter Company Name"
+																								placeholder={strings.Enter+strings.CompanyName}
 																								value={props.values.companyName}
 																								onChange={(option) => {
 																									if (
@@ -1386,7 +1386,7 @@ class Profile extends React.Component {
 																								type="text"
 																								id="companyRegistrationNumber"
 																								name="companyRegistrationNumber"
-																								placeholder="Enter Company Registration No"
+																								placeholder={strings.Enter+strings.CompanyRegistrationNo}
 																								value={
 																									props.values
 																										.companyRegistrationNumber
@@ -1415,7 +1415,7 @@ class Profile extends React.Component {
 																								type="text"
 																								id="vatRegistrationNumber"
 																								name="vatRegistrationNumber"
-																								placeholder="Enter VAT Registration No"
+																								placeholder={strings.Enter+strings.VATRegistrationNo}
 																								value={
 																									props.values
 																										.vatRegistrationNumber
@@ -1473,7 +1473,7 @@ class Profile extends React.Component {
 																										)('');
 																									}
 																								}}
-																								placeholder="Select Company"
+																								placeholder={strings.Enter+strings.CompanyName}
 																								id="companyTypeCode"
 																								name="companyTypeCode"
 																								className={
@@ -1527,7 +1527,7 @@ class Profile extends React.Component {
 																										)('');
 																									}
 																								}}
-																								placeholder="Select Industry Type Code"
+																								placeholder={strings.Select+strings.IndustryTypeCode}
 																								id="industryTypeCode"
 																								name="industryTypeCode"
 																								className={
@@ -1593,7 +1593,7 @@ class Profile extends React.Component {
 																										)('');
 																									}
 																								}}
-																								placeholder="Select Currency"
+																								placeholder={strings.Select+strings.Currency}
 																								id="currencyCode"
 																								name="currencyCode"
 																								className={
@@ -1622,7 +1622,7 @@ class Profile extends React.Component {
 																								type="text"
 																								id="website"
 																								name="website"
-																								placeholder="Enter Website"
+																								placeholder={strings.Enter+strings.Website}
 																								value={props.values.website}
 																								onChange={(option) => {
 																									props.handleChange('website')(
@@ -1641,7 +1641,7 @@ class Profile extends React.Component {
 																								type="text"
 																								id="emailAddress"
 																								name="emailAddress"
-																								placeholder="Enter Email"
+																								placeholder={strings.Enter+strings.Email}
 																								value={props.values.emailAddress}
 																								onChange={(option) => {
 																									props.handleChange(
@@ -1660,7 +1660,7 @@ class Profile extends React.Component {
 																								defaultCountry="AE"
 																								international
 																								value={props.values.phoneNumber}
-																								placeholder="Enter Mobile Number"
+																								placeholder={strings.Enter+strings.MobileNumber}
 																								onChange={(option) => {
 																									props.handleChange(
 																										'phoneNumber',
@@ -1696,7 +1696,7 @@ class Profile extends React.Component {
 																						type="text"
 																						id="companyExpenseBudget"
 																						name="companyExpenseBudget"
-																						placeholder="Enter Expense Budget"
+																						placeholder={strings.Enter+strings.ExpenseBudget}
 																						value={
 																							props.values.companyExpenseBudget
 																						}
@@ -1724,7 +1724,7 @@ class Profile extends React.Component {
 																						type="text"
 																						id="companyRevenueBudget"
 																						name="companyRevenueBudget"
-																						placeholder="Enter Revenue Budget"
+																						placeholder={strings.Enter+strings.RevenueBudget}
 																						value={
 																							props.values.companyRevenueBudget
 																						}
@@ -1758,7 +1758,7 @@ class Profile extends React.Component {
 																						type="textarea"
 																						id="invoicingAddressLine1"
 																						name="invoicingAddressLine1"
-																						placeholder="Enter Invoicing Address Line1"
+																						placeholder={strings.Enter+strings.InvoicingAddressLine1}
 																						rows="5"
 																						value={
 																							props.values.invoicingAddressLine1
@@ -1789,7 +1789,7 @@ class Profile extends React.Component {
 																						type="textarea"
 																						id="categoryDiscription"
 																						name="categoryDiscription"
-																						placeholder="Enter Invoicing Address Line2"
+																						placeholder={strings.Enter+strings.InvoicingAddressLine2}
 																						rows="5"
 																						value={
 																							props.values.invoicingAddressLine2
@@ -1820,7 +1820,7 @@ class Profile extends React.Component {
 																						type="textarea"
 																						id="categoryDiscription"
 																						name="categoryDiscription"
-																						placeholder="Enter Invoicing Address Line3"
+																						placeholder={strings.Enter+strings.InvoicingAddressLine3}
 																						rows="5"
 																						value={
 																							props.values
@@ -1918,7 +1918,7 @@ class Profile extends React.Component {
 																								});
 																							}
 																						}}
-																						placeholder="Select Currency"
+																						placeholder={strings.Select+strings.Currency}
 																						id="invoicingCountryCode"
 																						name="invoicingCountryCode"
 																						className={
@@ -2012,7 +2012,7 @@ class Profile extends React.Component {
 																								});
 																							}
 																						}}
-																						placeholder="Select State"
+																						placeholder={strings.Select+strings.StateRegion}
 																						id="invoicingStateRegion"
 																						name="invoicingStateRegion"
 																						className={
@@ -2043,7 +2043,7 @@ class Profile extends React.Component {
 																						type="text"
 																						id="invoicingCity"
 																						name="invoicingCity"
-																						placeholder="Enter City"
+																						placeholder={strings.Enter+strings.City}
 																						value={
 																							props.values.invoicingCity || ''
 																						}
@@ -2075,7 +2075,7 @@ class Profile extends React.Component {
 																						type="text"
 																						id="invoicingPoBoxNumber"
 																						name="invoicingPoBoxNumber"
-																						placeholder="Enter PO Box No"
+																						placeholder={strings.Enter+strings.POBoxNumber}
 																						value={
 																							props.values.invoicingPoBoxNumber ||
 																							''
@@ -2113,7 +2113,7 @@ class Profile extends React.Component {
 																						type="text"
 																						id="invoicingPostZipCode"
 																						name="invoicingPostZipCode"
-																						placeholder="Enter Post Zip Code"
+																						placeholder={strings.Enter+strings.PostZipCode}
 																						value={
 																							props.values.invoicingPostZipCode ||
 																							''
@@ -2201,7 +2201,7 @@ class Profile extends React.Component {
 																						type="textarea"
 																						id="companyAddressLine1"
 																						name="companyAddressLine1"
-																						placeholder="Enter Company Address Line1"
+																						placeholder={strings.Enter+strings.CompanyAddressLine1}
 																						rows="5"
 																						value={
 																							isSame
@@ -2226,7 +2226,7 @@ class Profile extends React.Component {
 																						type="textarea"
 																						id="companyAddressLine2"
 																						name="companyAddressLine2"
-																						placeholder="Enter Company Address Line2"
+																						placeholder={strings.Enter+strings.CompanyAddressLine2}
 																						rows="5"
 																						value={
 																							isSame
@@ -2251,7 +2251,7 @@ class Profile extends React.Component {
 																						type="textarea"
 																						id="companyAddressLine3"
 																						name="companyAddressLine3"
-																						placeholder="Enter Company Address Line3"
+																						placeholder={strings.Enter+strings.CompanyAddressLine3}
 																						rows="5"
 																						value={
 																							isSame
@@ -2338,7 +2338,7 @@ class Profile extends React.Component {
 																								)('');
 																							}
 																						}}
-																						placeholder="Select Country"
+																						placeholder={strings.Select+strings.Country}
 																						id="companyCountryCode"
 																						name="companyCountryCode"
 																						className={
@@ -2407,7 +2407,7 @@ class Profile extends React.Component {
 																								)('');
 																							}
 																						}}
-																						placeholder="Select State"
+																						placeholder={strings.Select+strings.StateRegion}
 																						id="companyStateRegion"
 																						name="companyStateRegion"
 																						className={
@@ -2434,7 +2434,7 @@ class Profile extends React.Component {
 																						type="text"
 																						id="companyCity"
 																						name="companyCity"
-																						placeholder="Enter City"
+																						placeholder={strings.Enter+strings.City}
 																						value={
 																							isSame
 																								? this.state.companyAddress
@@ -2460,7 +2460,7 @@ class Profile extends React.Component {
 																						type="text"
 																						id="companyPoBoxNumber"
 																						name="companyPoBoxNumber"
-																						placeholder="Enter PO Box No"
+																						placeholder={strings.Enter+strings.POBoxNumber}
 																						value={
 																							isSame
 																								? this.state.companyAddress
@@ -2491,7 +2491,7 @@ class Profile extends React.Component {
 																						type="text"
 																						id="companyPostZipCode"
 																						name="companyPostZipCode"
-																						placeholder="Enter Post Zip Code"
+																						placeholder={strings.Enter+strings.PostZipCode}
 																						value={
 																							isSame
 																								? this.state.companyAddress

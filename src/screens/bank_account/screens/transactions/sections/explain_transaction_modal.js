@@ -18,6 +18,8 @@ import { selectOptionsFactory } from 'utils';
 import * as TransactionsActions from '../actions';
 import { CommonActions } from 'services/global';
 import './style.scss';
+import {data}  from '../../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapDispatchToProps = (dispatch) => {
 	return {
@@ -26,10 +28,12 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+let strings = new LocalizedStrings(data);
 class ExplainTransactionModal extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: false,
 			transactionAmount: 0,
 			currentBalance: 0,
@@ -312,6 +316,7 @@ class ExplainTransactionModal extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			openExplainTransactionModal,
 			closeExplainTransactionModal,
@@ -337,7 +342,7 @@ class ExplainTransactionModal extends React.Component {
 				>
 					<ModalHeader toggle={this.toggleDanger}>
 						<div className="header text">
-							<h2>Explain Transaction# {`${selectedData.referenceNo}`}</h2>
+							<h2>{strings.Explain+" "+strings.Transaction}# {`${selectedData.referenceNo}`}</h2>
 							<i
 								className="fa fa-close close-btn"
 								onClick={() => closeExplainTransactionModal()}
@@ -353,15 +358,15 @@ class ExplainTransactionModal extends React.Component {
 							) : null}
 							<Row>
 								<Col lg={3}>
-									<label class="value">Transaction Amount</label>
+									<label class="value">{strings.Transaction+" "+strings.Amount}</label>
 									<label class="value">{transactionAmount}</label>
 								</Col>
 								<Col lg={3}>
-									<label class="value">Current Balance</label>
+									<label class="value">{strings.CurrentBankBalance}</label>
 									<label class="value">{currentBalance}</label>
 								</Col>
 								<Col lg={3} className="p-0">
-									<label class="value">Transaction Date</label>
+									<label class="value">{strings.TransactionDate}</label>
 									<label class="value">{selectedData.transactionDate}</label>
 								</Col>
 								<Col lg={3}>
@@ -385,7 +390,7 @@ class ExplainTransactionModal extends React.Component {
 												<div class="sub-container">
 													<div className="mb-3 mr-2" style={{ width: '30%' }}>
 														<Label className="label">
-															Chart Of Account Category
+															{strings.ChartOfAccountCategory}
 														</Label>
 														<Select
 															// className="custom-select-box"
@@ -412,7 +417,7 @@ class ExplainTransactionModal extends React.Component {
 																this.getTransactionCategoryList(option.value);
 															}}
 															// className="select-default-width"
-															placeholder="Chart Of Account"
+															placeholder={strings.ChartofAccounts}
 															value={item.chartOfAccountCategoryId}
 														/>
 													</div>
@@ -420,7 +425,7 @@ class ExplainTransactionModal extends React.Component {
 													{explainList[`${index}`].chartOfAccountCategoryId && (
 														<div className="mb-3 mr-2" style={{ width: '30%' }}>
 															<Label className="label">
-																Transaction Category
+																{strings.TransactionCategory}
 															</Label>
 															<Select
 																// className="custom-select-box"
@@ -452,7 +457,7 @@ class ExplainTransactionModal extends React.Component {
 																	);
 																}}
 																// className="select-default-width"
-																placeholder="Transaction Category"
+																placeholder={strings.TransactionCategory}
 																value={item.transactionCategoryId}
 															/>
 														</div>
@@ -537,11 +542,11 @@ class ExplainTransactionModal extends React.Component {
 									{transactionAmount > currentBalance && showChartOfAccount && (
 										<Row className="m-0">
 											<Col lg={5} className="pl-0">
-												<label class="value">Remaining Balance</label>
+												<label class="value">{strings.RemainingBalance}</label>
 												<label class="value">{currentBalance}</label>
 											</Col>
 											<Col lg={5} className="p-0">
-												<Label className="label">Transaction Category</Label>
+												<Label className="label">{strings.TransactionCategory}</Label>
 												<Select
 													options={
 														transactionCategoryTypeList
@@ -567,7 +572,7 @@ class ExplainTransactionModal extends React.Component {
 															});
 														}
 													}}
-													placeholder="Select Type"
+													placeholder={strings.Select+strings.Type}
 													id="chartOfAccountId"
 													name="chartOfAccountId"
 												/>
@@ -588,7 +593,7 @@ class ExplainTransactionModal extends React.Component {
 							}}
 							disabled={currentBalance === transactionAmount ? true : false}
 						>
-							<i className="fa fa-dot-circle-o"></i> Explain
+							<i className="fa fa-dot-circle-o"></i> {strings.Explain}
 						</Button>
 					</ModalFooter>
 				</Modal>

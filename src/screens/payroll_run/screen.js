@@ -519,7 +519,7 @@ class PayrollRun extends React.Component {
 														className="form-control"
 														id="date"
 														name="salaryDate"
-														placeholderText="Post Date"
+														placeholderText={strings.PostDate}
 														showMonthDropdown
 														showYearDropdown
 														dropdownMode="select"

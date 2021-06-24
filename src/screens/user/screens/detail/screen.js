@@ -416,6 +416,7 @@ class DetailUser extends React.Component {
 																					type="text"
 																					id="firstName"
 																					name="firstName"
+																					placeholder={strings.Enter+strings.FirstName}
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||
@@ -454,6 +455,7 @@ class DetailUser extends React.Component {
 																					type="text"
 																					id="lastName"
 																					name="lastName"
+																					placeholder={strings.Enter+strings.LastName}
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||
@@ -494,7 +496,7 @@ class DetailUser extends React.Component {
 																					type="text"
 																					id="email"
 																					name="email"
-																					placeholder="Enter Email ID"
+																					placeholder={strings.Enter+strings.EmailID}
 																					value={props.values.email}
 																					onChange={(value) => {
 																						props.handleChange('email')(value);
@@ -534,7 +536,7 @@ class DetailUser extends React.Component {
 																					dropdownMode="select"
 																					maxDate={new Date()}
 																					autoComplete="off"
-																					placeholderText="Enter Date of Birth"
+																					placeholderText={strings.Enter+strings.DateOfBirth}
 																					// selected={props.values.dob}
 																					value={
 																						props.values.dob
@@ -667,7 +669,7 @@ class DetailUser extends React.Component {
 																					onChange={(option) =>
 																						props.handleChange('roleId')(option)
 																					}
-																					placeholder="Select Role"
+																					placeholder={strings.Select+strings.Role}
 																					id="roleId"
 																					name="roleId"
 																					className={
@@ -772,7 +774,7 @@ class DetailUser extends React.Component {
 																				}
 																				id="password"
 																				name="password"
-																				placeholder="Enter password"
+																				placeholder={strings.Enter+strings.Password}
 																				value={props.values.password}
 																				onChange={(option) => {
 																					props.handleChange('password')(
@@ -819,7 +821,7 @@ class DetailUser extends React.Component {
 																					type="password"
 																					id="confirmPassword"
 																					name="confirmPassword"
-																					placeholder="Enter the Confirm Password"
+																					placeholder={strings.Enter+strings.ConfirmPassword}
 																					onChange={(value) => {
 																						props.handleChange(
 																							'confirmPassword',
@@ -852,7 +854,7 @@ class DetailUser extends React.Component {
 																				styles={customStyles}
 																				id="employeeId"
 																				name="employeeId"
-																				placeholder="Select employee"
+																				placeholder={strings.Select+strings.Employee}
 																				options={
 																					employee_list
 																						? selectOptionsFactory.renderOptions(

@@ -221,7 +221,7 @@ class UsersRoles extends React.Component {
 										type="text"
 										id="categoryName"
 										name="categoryName"
-										placeholder="Enter User Name"
+										placeholder={strings.Enter+strings.UserName}
 										required
 									/>
 								</FormGroup>
@@ -231,7 +231,7 @@ class UsersRoles extends React.Component {
 										type="text"
 										id="categoryCode"
 										name="categoryCode"
-										placeholder="Enter Email"
+										placeholder={strings.Enter+strings.Email}
 										required
 									/>
 								</FormGroup>
@@ -240,7 +240,7 @@ class UsersRoles extends React.Component {
 									<Select
 										className="select-min-width"
 										options={[]}
-										placeholder="Position"
+										placeholder={strings.Position}
 									/>
 								</FormGroup>
 							</Form>

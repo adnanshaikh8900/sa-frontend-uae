@@ -185,7 +185,7 @@ class OpeningBalance extends React.Component {
 								this.selectItem(e, row, 'openingBalance');
 							}
 						}}
-						placeholder="Opening Balance"
+						placeholder={strings.OpeningBalance}
 						className={`form-control ${
 							row.openingBalance === '' && submitBtnClick ? 'is-invalid' : ''
 						}`}

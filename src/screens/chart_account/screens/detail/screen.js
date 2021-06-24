@@ -315,7 +315,7 @@ class DetailChartAccount extends React.Component {
 																	type="text"
 																	id="transactionCategoryName"
 																	name="transactionCategoryName"
-																	placeholder="Enter Name"
+																	placeholder={strings.Enter+strings.Name}
 																	onChange={(option) => {
 																		if (
 																			option.target.value === '' ||

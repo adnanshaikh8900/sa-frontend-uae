@@ -197,7 +197,7 @@ class CreateOpeningBalance extends React.Component {
 																		styles={customStyles}
 																		id="transactionCategoryId"
 																		name="transactionCategoryId"
-																		placeholder="Select Transaction Category"
+																		placeholder={strings.Select+strings.TransactionCategory}
 																		options={
 																			transaction_category_list
 																				? selectOptionsFactory.renderOptions(
@@ -245,7 +245,7 @@ class CreateOpeningBalance extends React.Component {
 																				? 'is-invalid'
 																				: ''
 																		}`}
-																		placeholderText="Effective date"
+																		placeholderText={strings.Enter+strings.EffectiveDate}
 																		selected={props.values.effectiveDate}
 																		showMonthDropdown
 																		showYearDropdown
@@ -298,7 +298,7 @@ class CreateOpeningBalance extends React.Component {
 																			}
 																		}}
 																		value={props.values.openingBalance}
-																		placeholder="Amount"
+																		placeholder={strings.Enter+strings.Amount}
 																	/>
 																	{props.errors.openingBalance &&
 																		props.touched.openingBalance && (

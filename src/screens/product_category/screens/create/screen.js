@@ -206,7 +206,7 @@ class CreateProductCategory extends React.Component {
 																	type="text" maxLength='20'
 																	id="productCategoryCode"
 																	name="productCategoryCode"
-																	placeholder="Enter Product Category Code"
+																	placeholder={strings.Enter+strings.ProductCategoryCode}
 																	onChange={(option) => {
 																		if (
 																			option.target.value === '' ||
@@ -242,7 +242,7 @@ class CreateProductCategory extends React.Component {
 																	type="text" maxLength='50'
 																	id="productCategoryName"
 																	name="productCategoryName"
-																	placeholder="Enter Product Category Name"
+																	placeholder={strings.Enter+strings.ProductCategoryName}
 																	onChange={(option) => {
 																		if (
 																			option.target.value === '' ||

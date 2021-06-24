@@ -374,7 +374,7 @@ class DetailContact extends React.Component {
 																			type="text"
 																			id="firstName"
 																			name="firstName"
-																			placeholder="Enter First Name"
+																			placeholder={strings.Enter+strings.FirstName}
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
@@ -412,7 +412,7 @@ class DetailContact extends React.Component {
 																			type="text"
 																			id="middleName"
 																			name="middleName"
-																			placeholder="Enter Middle Name"
+																			placeholder={strings.Enter+strings.MiddleName}
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
@@ -448,7 +448,7 @@ class DetailContact extends React.Component {
 																			type="text"
 																			id="lastName"
 																			name="lastName"
-																			placeholder="Enter Last Name"
+																			placeholder={strings.Enter+strings.LastName}
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
@@ -516,7 +516,7 @@ class DetailContact extends React.Component {
 																					props.handleChange('contactType')('');
 																				}
 																			}}
-																			placeholder="Select Contact Type"
+																			placeholder={strings.Select+strings.ContactType}
 																			id="contactType"
 																			name="contactType"
 																			className={
@@ -543,7 +543,7 @@ class DetailContact extends React.Component {
 																			type="text"
 																			id="organization"
 																			name="organization"
-																			placeholder="Enter Organization Name"
+																			placeholder={strings.Enter+strings.OrganizationName}
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
@@ -581,7 +581,7 @@ class DetailContact extends React.Component {
 																			type="text"
 																			id="poBoxNumber"
 																			name="poBoxNumber"
-																			placeholder="Enter PO Box Number"
+																			placeholder={strings.Enter+strings.POBoxNumber}
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
@@ -622,7 +622,7 @@ class DetailContact extends React.Component {
 																			type="text"
 																			id="email"
 																			name="email"
-																			placeholder="Enter Email Address"
+																			placeholder={strings.Enter+strings.EmailAddress}
 																			onChange={(value) => {
 																				props.handleChange('email')(value);
 																			}}
@@ -649,7 +649,7 @@ class DetailContact extends React.Component {
 																			type="text"
 																			id="telephone"
 																			name="telephone"
-																			placeholder="Enter Telephone Number"
+																			placeholder={strings.Enter+strings.TelephoneNumber}
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
@@ -704,7 +704,7 @@ class DetailContact extends React.Component {
 																			defaultCountry="AE"
 																			international
 																			value={props.values.mobileNumber}
-																			placeholder="Enter Mobile Number"
+																			placeholder={strings.Enter+strings.MobileNumber}
 																			onBlur={props.handleBlur('mobileNumber')}
 																			onChange={(option) => {
 																				props.handleChange('mobileNumber')(
@@ -737,7 +737,7 @@ class DetailContact extends React.Component {
 																			type="text"
 																			id="addressLine1"
 																			name="addressLine1"
-																			placeholder="Enter Address Line1"
+																			placeholder={strings.Enter+strings.AddressLine1}
 																			onChange={(value) => {
 																				props.handleChange('addressLine1')(
 																					value,
@@ -768,7 +768,7 @@ class DetailContact extends React.Component {
 																			type="text"
 																			id="addressLine2"
 																			name="addressLine2"
-																			placeholder="Enter Address Line2"
+																			placeholder={strings.Enter+strings.AddressLine2}
 																			value={props.values.addressLine2}
 																			onChange={(value) => {
 																				props.handleChange('addressLine2')(
@@ -787,7 +787,7 @@ class DetailContact extends React.Component {
 																			type="text"
 																			id="addressLine3"
 																			name="addressLine3"
-																			placeholder="Enter Address Line3"
+																			placeholder={strings.Enter+strings.AddressLine3}
 																			value={props.values.addressLine3}
 																			onChange={(value) => {
 																				props.handleChange('addressLine3')(
@@ -843,7 +843,7 @@ class DetailContact extends React.Component {
 																				}
 																				props.handleChange('stateId')('');
 																			}}
-																			placeholder="Select Country"
+																			placeholder={strings.Select+strings.Country}
 																			id="countryId"
 																			name="countryId"
 																			className={
@@ -902,7 +902,7 @@ class DetailContact extends React.Component {
 																					props.handleChange('stateId')('');
 																				}
 																			}}
-																			placeholder="Select State"
+																			placeholder={strings.Select+strings.StateRegion}
 																			id="stateId"
 																			name="stateId"
 																			className={
@@ -936,7 +936,7 @@ class DetailContact extends React.Component {
 																					props.handleChange('city')(option);
 																				}
 																			}}
-																			placeholder="Enter City"
+																			placeholder={strings.Enter+strings.City}
 																			id="city"
 																			name="city"
 																			className={
@@ -964,7 +964,7 @@ class DetailContact extends React.Component {
 																			type="text"
 																			id="postZipCode"
 																			name="postZipCode"
-																			placeholder="Enter Postal Zip Code"
+																			placeholder={strings.Enter+strings.PostZipCode}
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
@@ -1007,7 +1007,7 @@ class DetailContact extends React.Component {
 																			type="text"
 																			id="billingEmail"
 																			name="billingEmail"
-																			placeholder="Enter Billing Email Address"
+																			placeholder={strings.Enter+strings.BillingEmail+" "+strings.Address}
 																			onChange={(value) => {
 																				props.handleChange('billingEmail')(
 																					value,
@@ -1038,7 +1038,7 @@ class DetailContact extends React.Component {
 																			type="text"
 																			id="contractPoNumber"
 																			name="contractPoNumber"
-																			placeholder="Enter Contract PO Number"
+																			placeholder={strings.Enter+strings.ContractPONumber}
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
@@ -1078,7 +1078,7 @@ class DetailContact extends React.Component {
 																			type="text"
 																			id="vatRegistrationNumber"
 																			name="vatRegistrationNumber"
-																			placeholder="Enter Tax Registration Number"
+																			placeholder={strings.Enter+strings.TaxRegistrationNumber}
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
@@ -1152,7 +1152,7 @@ class DetailContact extends React.Component {
 																					);
 																				}
 																			}}
-																			placeholder="Select Currency"
+																			placeholder={strings.Select+strings.Currency}
 																			id="currencyCode"
 																			name="currencyCode"
 																			className={

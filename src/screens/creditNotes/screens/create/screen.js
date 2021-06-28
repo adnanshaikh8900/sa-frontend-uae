@@ -1203,7 +1203,7 @@ class CreateCreditNote extends React.Component {
 						...{ creditNoteNumber: res.data },
 					},
 				});
-				this.formRef.current.setFieldValue('creditNoteNumber', res.data, true);
+				this.formRef.current.setFieldValue('creditNoteNumber', res.data, true,this.validationCheck(res.data));
 			}
 		});
 	};

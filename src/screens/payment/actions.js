@@ -61,11 +61,11 @@ export const getSupplierContactList = (id) => {
   }
 }
 
-export const getSupplierInvoiceList = () => {
+export const getSupplierInvoiceList  = (id) => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: '/rest/invoice/getInvoicesForDropdown'
+      url:  `/rest/invoice/getInvoicesForDropdown?type=1`
     }
     return authApi(data).then((res) => {
       if (res.status === 200) {

@@ -470,7 +470,7 @@ Last3Months:"Last 3 Months",
 
 //credit notes
 CreditNotes:"Credit Notes",
-CREDITNOTE:"CREDIT NOTE#",
+CREDITNOTE:"CREDIT NOTE",
 AddCreditNote:"Add Credit Note",
 CreateCreditNote:"Create Credit Note",
 CreditNoteNumber:"Credit Note Number",

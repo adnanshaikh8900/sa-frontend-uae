@@ -463,7 +463,7 @@ Last3Months:"آخر 3 أشهر",
 
 //credit notes
 CreditNotes:"ملاحظات الائتمان ",	
-CREDITNOTE:"ملاحظات الائتمان #",	
+CREDITNOTE:"ملاحظات الائتمان",	
 AddCreditNote:"إضافة إشعار دائن",	
 CreateCreditNote:"إنشاء إشعار دائن",	
 CreditNoteNumber:"رقم مذكرة الائتمان",	

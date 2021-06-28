@@ -465,7 +465,7 @@ Last3Months:"Les 3 derniers mois",
 
 //credit notes
 CreditNotes:"Notes de crédit",	
-CREDITNOTE:"NOTE DE CRÉDIT #",	
+CREDITNOTE:"NOTE DE CRÉDIT",	
 AddCreditNote:"Ajouter une note de crédit",	
 CreateCreditNote:"Créer une note de crédit",	
 CreditNoteNumber:"Numéro de note de crédit",	

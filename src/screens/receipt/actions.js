@@ -88,7 +88,7 @@ export const getInvoiceList = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'GET',
-			url: '/rest/invoice/getInvoicesForDropdown',
+			url: `/rest/invoice/getInvoicesForDropdown?type=2`,
 		};
 
 		return authApi(data)

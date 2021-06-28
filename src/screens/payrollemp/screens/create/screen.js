@@ -421,9 +421,9 @@ uploadImage = (picture, file) => {
             employeeCode != null ? employeeCode : '',
         )
         formData.append('dateOfJoining', dateOfJoining ? moment(dateOfJoining).format('DD-MM-YYYY') : '')
-        // if (salaryRoleId && salaryRoleId.value) {
-        //     formData.append('salaryRoleId', salaryRoleId.value);
-        // }
+        if (salaryRoleId && salaryRoleId.value) {
+            formData.append('salaryRoleId', salaryRoleId.value);
+        }
         formData.append(
             'department',
             department != null ? department : '',
@@ -469,8 +469,7 @@ uploadImage = (picture, file) => {
             dob,
             bloodGroup,
             gender,
-            parentId,
-            salaryRoleId
+            parentId
         } = data;
 
 
@@ -509,9 +508,7 @@ uploadImage = (picture, file) => {
             'pincode',
             pincode != null ? pincode : '',
         )
-    
-            formData.append('salaryRoleId',  salaryRoleId? salaryRoleId:'');
-       
+
         if (this.state.userPhotoFile.length > 0) {
             formData.append('profilePic ', this.state.userPhotoFile[0]);
         }
@@ -961,7 +958,7 @@ uploadImage = (picture, file) => {
                                                                             //             return false;
                                                                             //         }
                                                                             //     },
-                                                                            // ), 
+                                                                            // ),
                                                                             // active : Yup.date()
                                                                             // .required('status is Required') ,  
                                                                             // employeeDesignationId : Yup.date()
@@ -1407,7 +1404,7 @@ uploadImage = (picture, file) => {
                                                                                                 </FormGroup>
                                                                                             </Col>
                                                                                         </Row>
-                                                                                        
+
                                                                                         <Row>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
@@ -1658,7 +1655,7 @@ uploadImage = (picture, file) => {
                                                                                             </Col>
 
                                                                                         </Row>
-          
+
 
                                                                                     </Col>
 
@@ -1993,7 +1990,7 @@ uploadImage = (picture, file) => {
                                                                                                 </FormGroup>
                                                                                             </Col>
                                                                                         </Row>
-                                                                                    
+
 
                                                                                     </Col>
 
@@ -2366,7 +2363,7 @@ uploadImage = (picture, file) => {
                                                                                         type="text"
                                                                                         size="30"
                                                                                         style={{textAlign:"center"}}
-                                                                                        value={item.monthlyAmount ? item.monthlyAmount.toFixed(2) : 0.00 }
+                                                                                        value={item.monthlyAmount ? item.monthlyAmount.toLocaleString() : 0.00 }
                                                                                         id='' />
                                                                                 </td>
 
@@ -2389,7 +2386,7 @@ uploadImage = (picture, file) => {
                                                                             {item.formula ?
                                                                                 (<td style={{border:"3px solid  #c8ced3"}} >
                                                                                      
-                                                                                        {item.yearlyAmount ?  item.yearlyAmount.toFixed(2) : 0.00}
+                                                                                        {item.yearlyAmount ?  item.yearlyAmount.toLocaleString() : 0.00}
                                                                                 </td>
 
                                                                                 ) : (
@@ -2477,7 +2474,7 @@ uploadImage = (picture, file) => {
                                                                                         size="30"
                                                                                         style={{textAlign:"center"}}
                                                                                           
-                                                                                        value={item.monthlyAmount.toFixed(2)}
+                                                                                        value={item.monthlyAmount.toLocaleString()}
                                                                                         id='' />
                                                                                 </td>
 
@@ -2500,7 +2497,7 @@ uploadImage = (picture, file) => {
                                                                         {item.formula ?
                                                                                 (<td style={{border:"3px solid  #c8ced3"}} >
                                                                                      
-                                                                                        {(item.yearlyAmount.toFixed(2))}
+                                                                                        {(item.yearlyAmount.toLocaleString())}
                                                                                 </td>
 
                                                                                 ) : (
@@ -2589,7 +2586,7 @@ uploadImage = (picture, file) => {
                                                                                         type="text"
                                                                                         size="30"
                                                                                         style={{textAlign:"center"}}
-                                                                                        value={item.monthlyAmount.toFixed(2)}
+                                                                                        value={item.monthlyAmount.toLocaleString()}
                                                                                     />
                                                                                 </td>
 
@@ -2612,7 +2609,7 @@ uploadImage = (picture, file) => {
                                                                         {item.formula ?
                                                                                 (<td style={{border:"3px solid  #c8ced3"}} >
                                                                                      
-                                                                                        {item.yearlyAmount.toFixed(2)}
+                                                                                        {item.yearlyAmount.toLocaleString()}
                                                                                 </td>
 
                                                                                 ) : (
@@ -2661,8 +2658,8 @@ uploadImage = (picture, file) => {
                                                                     <Row >
                                                                         <Col className="p-2"  >{item.description ? item.description : "-"}</Col>
                                                                         <Col className="p-2" > {"-"} </Col>
-                                                                        <Col className="p-2" > {item.monthlyAmount ? item.monthlyAmount.toFixed(2) :"-"} </Col>
-                                                                        <Col className="p-2" >{item.yearlyAmount ? item.yearlyAmount.toFixed(2) : "-"}</Col>
+                                                                        <Col className="p-2" > {item.monthlyAmount ? item.monthlyAmount.toLocaleString() :"-"} </Col>
+                                                                        <Col className="p-2" >{item.yearlyAmount ? item.yearlyAmount.toLocaleString() : "-"}</Col>
                                                                     </Row>
                                                                       ))) : (
                                                                        ""
@@ -2688,7 +2685,7 @@ uploadImage = (picture, file) => {
                                                                 <Row >
                                                                         <Col className="p-2" >{"Company Cost"}</Col>
                                                                         <Col className="p-2"  > {"-"} </Col>
-                                                                        <Col className="p-2"  >{props.values.CTC ? (props.values.CTC / 12).toFixed(2) :"-"}</Col>
+                                                                        <Col className="p-2"  >{props.values.CTC ? (props.values.CTC / 12).toLocaleString() :"-"}</Col>
                                                                         <Col className="p-2" >{props.values.CTC ? props.values.CTC : "-"}</Col>
                                                                     </Row>
                                                                  

@@ -444,9 +444,9 @@ class ViewEmployee extends React.Component {
 												<div className='m-4'>
 													<Row style={{ width: '63%' }}>
 														<Col><h5> {strings.AnnualCTC} </h5>
-															<div><h3>  {this.state.CTC  ? (this.state.CTC).toFixed(2) : ''}</h3></div></Col>
+															<div><h3>  {this.state.CTC  ? (this.state.CTC).toLocaleString() : ''}</h3></div></Col>
 														<Col><h5> {strings.MonthlyIncome} </h5>
-															<div> <h3>{this.state.CTC ? (this.state.CTC /12).toFixed(2) : ''}</h3></div></Col>
+															<div> <h3>{this.state.CTC ? (this.state.CTC /12).toLocaleString() : ''}</h3></div></Col>
 															<Col>
 																		<Button
 																			color="primary"
@@ -482,8 +482,8 @@ class ViewEmployee extends React.Component {
 																		).map((item) => (
 																			<tr className="p-1">
 																					<td  className="text-left" style={{border:"3px solid #dfe9f7"}} >{item.description}<div className=''>{item.description === 'Basic SALARY' ? '% of CTC' : '% of Baisc'}</div></td>
-																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.monthlyAmount ? item.monthlyAmount.toFixed(2) : '' }</td>
-																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.yearlyAmount ? item.yearlyAmount.toFixed(2) :''}</td>
+																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.monthlyAmount ? item.monthlyAmount.toLocaleString() : '' }</td>
+																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.yearlyAmount ? item.yearlyAmount.toLocaleString() :''}</td>
 																			</tr>
 
 																		))) : (<tr></tr>)}
@@ -495,8 +495,8 @@ class ViewEmployee extends React.Component {
 																		).map((item) => (
 																			<tr>
 																							<td  className="text-left" style={{border:"3px solid #dfe9f7"}} >{item.description}</td>
-																							<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.monthlyAmount ? item.monthlyAmount.toFixed(2) : '' }</td>
-																							<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.yearlyAmount ? item.yearlyAmount.toFixed(2) :''}</td>
+																							<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.monthlyAmount ? item.monthlyAmount.toLocaleString() : '' }</td>
+																							<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.yearlyAmount ? item.yearlyAmount.toLocaleString() :''}</td>
 																			</tr>
 																		))) : (<tr></tr>)}
 
@@ -507,8 +507,8 @@ class ViewEmployee extends React.Component {
 																		).map((item) => (
 																			<tr>
 																						<td  className="text-left" style={{border:"3px solid #dfe9f7"}} >{item.description}</td>
-																						<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.monthlyAmount ? item.monthlyAmount.toFixed(2) : '' }</td>
-																						<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.yearlyAmount ? item.yearlyAmount.toFixed(2) :''}</td>
+																						<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.monthlyAmount ? item.monthlyAmount.toLocaleString() : '' }</td>
+																						<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.yearlyAmount ? item.yearlyAmount.toLocaleString() :''}</td>
 																			</tr>
 																		))) : (<tr></tr>)}
 																</tbody>
@@ -519,14 +519,14 @@ class ViewEmployee extends React.Component {
 																		).map((item) => (
 																			<tr>
 																				<td  className="text-left" style={{border:"3px solid #dfe9f7"}} >{item.description}</td>
-																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.monthlyAmount ? item.monthlyAmount.toFixed(2) : '' }</td>
-																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.yearlyAmount ? item.yearlyAmount.toFixed(2) :''}</td>
+																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.monthlyAmount ? item.monthlyAmount.toLocaleString() : '' }</td>
+																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.yearlyAmount ? item.yearlyAmount.toLocaleString() :''}</td>
 																			</tr>
 																		))) : (<tr></tr>)}
 																	<tr style={{border:"3px solid #dfe9f7"}}>
 																		<td className="text-left"><h5><b> {strings.CosttoCompany}</b></h5></td>
-																		<td className="text-right"><h5>{this.state.CTC ? (this.state.CTC / 12).toFixed(2) : ''}</h5></td>
-																		<td className="text-right"><h5>{this.state.CTC  ? (this.state.CTC).toFixed(2) : ''}</h5></td>
+																		<td className="text-right"><h5>{this.state.CTC ? (this.state.CTC / 12).toLocaleString() : 0}</h5></td>
+																		<td className="text-right"><h5>{this.state.CTC  ? (this.state.CTC).toLocaleString() : 0}</h5></td>
 																	</tr>
 																</tfoot>
 															</Table>
@@ -565,9 +565,6 @@ class ViewEmployee extends React.Component {
 													className="table-header-bg"
 													dataField="salaryDate"
 													width="15%"
-													dataSort
-
-
 												>
 													 {strings.SalaryDate}
 													</TableHeaderColumn>
@@ -575,19 +572,13 @@ class ViewEmployee extends React.Component {
 													width="15%"
 													className="table-header-bg"
 													dataField="monthYear"
-													dataSort
-
 												>
 													{strings.MonthYear}
 													</TableHeaderColumn>
 												<TableHeaderColumn
 													width="15%"
 													className="table-header-bg"
-
 													dataFormat={this.renderActions}
-													dataSort
-
-
 												>
 													 {strings.Payslips}
 													</TableHeaderColumn>

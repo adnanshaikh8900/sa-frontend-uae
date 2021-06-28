@@ -1221,7 +1221,7 @@ class CreateSupplierInvoice extends React.Component {
 						},
 					},
 				});
-				this.formRef.current.setFieldValue('invoice_number', res.data, true);
+				this.formRef.current.setFieldValue('invoice_number', res.data, true,this.validationCheck(res.data));
 			}
 		});
 	};

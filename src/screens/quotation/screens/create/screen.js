@@ -1100,7 +1100,7 @@ class CreateQuotation extends React.Component {
 						},
 					},
 				});
-				this.formRef.current.setFieldValue('quotation_Number', res.data, true);
+				this.formRef.current.setFieldValue('quotation_Number', res.data, true,this.validationCheck(res.data));
 			}
 		});
 	};

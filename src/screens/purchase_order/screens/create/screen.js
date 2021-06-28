@@ -1170,7 +1170,7 @@ class CreatePurchaseOrder extends React.Component {
 						},
 					},
 				});
-				this.formRef.current.setFieldValue('po_number', res.data, true);
+				this.formRef.current.setFieldValue('po_number', res.data, true,this.validationCheck(res.data));
 			}
 		});
 	};

@@ -1103,7 +1103,7 @@ class CreateRequestForQuotation extends React.Component {
 						},
 					},
 				});
-				this.formRef.current.setFieldValue('rfq_number', res.data, true);
+				this.formRef.current.setFieldValue('rfq_number', res.data, true,this.validationCheck(res.data));
 			}
 		});
 	};

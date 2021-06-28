@@ -1225,7 +1225,7 @@ class CreateGoodsReceivedNote extends React.Component {
 						},
 					},
 				});
-			this.formRef.current.setFieldValue('grn_Number', res.data, true);
+			this.formRef.current.setFieldValue('grn_Number', res.data, true,this.validationCheck(res.data));
 			}
 		});
 	};

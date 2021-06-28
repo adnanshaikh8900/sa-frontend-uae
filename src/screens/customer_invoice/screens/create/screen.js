@@ -1192,7 +1192,7 @@ class CreateCustomerInvoice extends React.Component {
 						...{ invoice_number: res.data },
 					},
 				});
-				this.formRef.current.setFieldValue('invoice_number', res.data, true);
+				this.formRef.current.setFieldValue('invoice_number', res.data, true,this.validationCheck(res.data));
 			}
 		});
 	};

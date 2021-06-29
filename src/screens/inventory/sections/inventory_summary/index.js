@@ -284,7 +284,8 @@ class InventorySummary extends React.Component {
 				style={{padding:"0px"}}
 				 color="link"
 					onClick={() => {
-						this.props.productActions.getInventoryHistory({p_id:row.productId,s_id:row.supplierId}).then((res) => {
+						if(row.supplierId !== null && row.productId !== null){
+							this.props.productActions.getInventoryHistory({p_id:row.productId,s_id:row.supplierId}).then((res) => {
 								if (res.status === 200) {
 									this.setState({
 
@@ -300,8 +301,16 @@ class InventorySummary extends React.Component {
 									err && err.data ? err.data.message : 'Something Went Wrong',
 								);
 							});
+
+						
+				
 							
 						this.viewPaySlip({ });
+						}//if
+						else {
+							this.props.commonActions.tostifyAlert(
+								'info',"Sorry , No supplier Available to View Inventory History List ! ")
+						}
 					}
 
 					}

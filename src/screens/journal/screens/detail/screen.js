@@ -333,6 +333,7 @@ class DetailJournal extends React.Component {
 							props.values.postingReferenceType === 'MANUAL' ? false : true
 						}
 						value={row.contactId}
+						placeholder={strings.Select+strings.Contact}
 						className={`form-control 
             ${
 							props.errors.journalLineItems &&

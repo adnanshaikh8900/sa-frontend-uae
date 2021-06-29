@@ -720,7 +720,7 @@ class CreateBankTransaction extends React.Component {
 																				this.getVendorList();
 																			}
 																		}}
-																		placeholder="Select Type"
+																		placeholder={strings.Select+" "+strings.Type}
 																		id="coaCategoryId"
 																		name="coaCategoryId"
 																		className={
@@ -748,7 +748,7 @@ class CreateBankTransaction extends React.Component {
 																		autoComplete="off"
 																		id="transactionDate"
 																		name="transactionDate"
-																		placeholderText="Transaction Date"
+																		placeholderText={strings.TransactionDate}
 																		maxDate={new Date()}
 																		showMonthDropdown
 																		showYearDropdown
@@ -788,7 +788,7 @@ class CreateBankTransaction extends React.Component {
 																		maxLength="10"
 																		id="transactionAmount"
 																		name="transactionAmount"
-																		placeholder="Amount"
+																		placeholder={strings.Amount}
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
@@ -900,7 +900,7 @@ class CreateBankTransaction extends React.Component {
 																								props.handleChange('vatId')('');
 																							}
 																						}}
-																						placeholder="Select Type"
+																						placeholder={strings.Select+" "+strings.Type}
 																						id="vatId"
 																						name="vatId"
 																						className={
@@ -1082,7 +1082,7 @@ class CreateBankTransaction extends React.Component {
 																						props.values.transactionAmount,
 																					);
 																				}}
-																				placeholder="Select Type"
+																				placeholder={strings.Select+" "+strings.Type}
 																				id="vendorId"
 																				name="vendorId"
 																				className={
@@ -1117,7 +1117,7 @@ class CreateBankTransaction extends React.Component {
 																							)(option);
 																							this.invoiceIdList(option);
 																						}}
-																						placeholder="Select Type"
+																						placeholder={strings.Select+" "+strings.Type}
 																						id="invoiceIdList"
 																						name="invoiceIdList"
 																						className={
@@ -1400,7 +1400,7 @@ class CreateBankTransaction extends React.Component {
 																		name="description"
 																		id="description"
 																		rows="6"
-																		placeholder="Description..."
+																		placeholder={strings.Description}
 																		onChange={(option) =>
 																			props.handleChange('description')(option)
 																		}
@@ -1421,7 +1421,7 @@ class CreateBankTransaction extends React.Component {
 																				type="text"
 																				id="reference"
 																				name="reference"
-																				placeholder="Reference Number"
+																				placeholder={strings.ReferenceNumber}
 																				onChange={(option) => {
 																					if (
 																						option.target.value === '' ||

@@ -28,6 +28,8 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { CommonActions } from 'services/global';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -46,11 +48,12 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
-
+let strings = new LocalizedStrings(data);
 class PayablesInvoiceSummary extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: true,
 			dropdownOpen: false,
 			view: false,
@@ -162,6 +165,7 @@ class PayablesInvoiceSummary extends React.Component {
 		
 	};
 	render() {
+		strings.setLanguage(this.state.language); 
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
 		const { profile, universal_currency_list,company_profile,payable_invoice } = this.props;
 		console.log(universal_currency_list)
@@ -187,7 +191,7 @@ class PayablesInvoiceSummary extends React.Component {
 													}}
 													onClick={this.viewFilter}
 												>
-													<i className="fa fa-cog mr-2"></i>Customize Report
+													<i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
 												</p>
 											</div>
 											<div className="d-flex">
@@ -301,9 +305,9 @@ class PayablesInvoiceSummary extends React.Component {
 												: ''}
 											</h2>	
 											<br style={{ marginBottom: '5px' }} />
-											<b style ={{ fontSize: '18px'}}>Payables Invoice Summary</b>
+											<b style ={{ fontSize: '18px'}}>{strings.PayablesInvoiceSummary}</b>
 											<br style={{ marginBottom: '5px' }} />
-											From {initValue.startDate} To {initValue.endDate}
+											{strings.From } {initValue.startDate} {strings.To } {initValue.endDate}
 											
 									</div>
 									<div>
@@ -334,34 +338,34 @@ class PayablesInvoiceSummary extends React.Component {
 												dataField="invoiceNumber"
 												className="table-header-bg"
 											>
-												Invoice Number					
+												{strings.InvoiceNumber}					
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="supplierName"
 												className="table-header-bg"
 											>
-												Supplier Name
+												{strings.SupplierName}
 											</TableHeaderColumn>
 											<TableHeaderColumn 
 												dataField="invoiceDate" 
 												className="table-header-bg"
 												dataFormat={this.renderinvoiceDate}
 											>
-												Invoice Date
+												{strings.InvoiceDate}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="invoiceDueDate"
 												className="table-header-bg"
 												dataFormat={this.renderinvoiceDueDate}
 											>
-												Invoice Due Date
+												{strings.InvoiceDueDate}
 											</TableHeaderColumn>
 											
 											<TableHeaderColumn
 												dataField="status"
 												className="table-header-bg"
 											>
-												Status
+												{strings.Status}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="balance"
@@ -369,12 +373,12 @@ class PayablesInvoiceSummary extends React.Component {
 												dataFormat={this.renderbalance}
 												formatExtraData={universal_currency_list}
 											>
-												Balance
+											{strings.Balance}
 											</TableHeaderColumn>
 										</BootstrapTable>
 										</div>
 									)}
-									<div style={{ textAlignLast:'center'}}> Powered By <b>SimpleAccounts</b></div> 
+									<div style={{ textAlignLast:'center'}}> {strings.PoweredBy } <b>SimpleAccounts</b></div> 
 								</PDFExport>
 							</CardBody>
 						</div>

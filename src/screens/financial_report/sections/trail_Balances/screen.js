@@ -29,6 +29,8 @@ import { Loader, Currency } from 'components';
 import * as FinancialReportActions from '../../actions';
 import FilterComponent from '../filterComponent';
 import logo from 'assets/images/brand/logo.png';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -45,11 +47,12 @@ const mapDispatchToProps = (dispatch) => {
 		),
 	};
 };
-
+let strings = new LocalizedStrings(data);
 class TrailBalances extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: true,
 			dropdownOpen: false,
 			view: false,
@@ -185,6 +188,7 @@ class TrailBalances extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
 		const { profile, universal_currency_list,company_profile } = this.props;
 		return (
@@ -209,7 +213,8 @@ class TrailBalances extends React.Component {
 													}}
 													onClick={this.viewFilter}
 												>
-													<i className="fa fa-cog mr-2"></i>Customize Report
+													<i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
+
 												</p>
 											</div>
 											<div className="d-flex">
@@ -327,9 +332,9 @@ class TrailBalances extends React.Component {
 												: ''}
 											</h2>	
 										
-											<b style ={{ fontSize: '18px'}}>Trial Balance Report</b>
+											<b style ={{ fontSize: '18px'}}>{strings.TrailBalances+" "+strings.Report}</b>
 											<br/>
-											As on {initValue.endDate}
+											{strings.Ason} {initValue.endDate}
 											
 									</div>
 									<div>
@@ -360,7 +365,7 @@ class TrailBalances extends React.Component {
 													{Object.keys(this.state.data).length > 0 ? (
 														<>
 															<tr>
-																<td className="mainLable ">Assets</td>
+																<td className="mainLable ">{strings.Assets}</td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -410,7 +415,7 @@ class TrailBalances extends React.Component {
 																),
 															)}
 															<tr>
-																<td className="mainLable ">Fixed Assets</td>
+																<td className="mainLable ">{strings.FixedAssets}</td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -460,7 +465,7 @@ class TrailBalances extends React.Component {
 																),
 															)}
 															<tr>
-																<td className="mainLable ">Bank </td>
+																<td className="mainLable ">{strings.Bank} </td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -510,7 +515,7 @@ class TrailBalances extends React.Component {
 																),
 															)}
 															<tr>
-																<td className="mainLable ">Liabilities</td>
+																<td className="mainLable ">{strings.Liabilities}</td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -560,7 +565,7 @@ class TrailBalances extends React.Component {
 																),
 															)}
 															<tr>
-																<td className="mainLable ">Equities</td>
+																<td className="mainLable ">{strings.Equities}</td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -610,7 +615,7 @@ class TrailBalances extends React.Component {
 																),
 															)}
 															<tr>
-																<td className="mainLable ">Income</td>
+																<td className="mainLable ">{strings.Income}</td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -660,7 +665,7 @@ class TrailBalances extends React.Component {
 																),
 															)}
 															<tr>
-																<td className="mainLable ">Expense</td>
+																<td className="mainLable ">{strings.Expense}</td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -711,7 +716,7 @@ class TrailBalances extends React.Component {
 															)}
 															<tr>
 																<td className="mainLable ">
-																	Account Receivable
+																	{strings.Account+" "+strings.Receivable}
 																</td>
 																<td className="text-right">
 																	{this.state.data['transactionCategoryMapper'][
@@ -753,7 +758,7 @@ class TrailBalances extends React.Component {
 																</td>
 															</tr>
 															<tr>
-																<td className="mainLable ">Account Payable</td>
+																<td className="mainLable ">{strings.AccountsPayable }</td>
 																<td className="text-right">
 																	{' '}
 																	{this.state.data['transactionCategoryMapper'][
@@ -795,7 +800,7 @@ class TrailBalances extends React.Component {
 																</td>
 															</tr>
 															<tr>
-																<td className="mainLable text-right ">Total</td>
+																<td className="mainLable text-right ">{strings.Total}</td>
 																<td className="text-right">
 																	<Currency
 																		value={this.state.data['totalDebitAmount']}
@@ -823,7 +828,7 @@ class TrailBalances extends React.Component {
 													) : (
 														<tr className="mainLable ">
 															<td style={{ textAlign: 'center' }} colSpan="9">
-																There is no data to display
+															{strings.Thereisnodatatodisplay }
 															</td>
 														</tr>
 													)}
@@ -831,7 +836,7 @@ class TrailBalances extends React.Component {
 											</Table>
 										</div>
 									)}
-									<div style={{ textAlignLast:'center'}}> Powered By <b>SimpleAccounts</b></div> 
+									<div style={{ textAlignLast:'center'}}> {strings.PoweredBy } <b>SimpleAccounts</b></div> 
 								</PDFExport>
 							</CardBody>
 						</div>

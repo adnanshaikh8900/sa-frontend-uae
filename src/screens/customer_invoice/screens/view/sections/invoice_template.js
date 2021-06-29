@@ -6,12 +6,16 @@ import '../../../style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { Currency } from 'components';
 import { toInteger, upperCase } from 'lodash';
+import {data}  from '../../../../Language/index'
+import LocalizedStrings from 'react-localization';
+import { string } from 'prop-types';
 
+let strings = new LocalizedStrings(data);
 var converter = require('number-to-words');
 class InvoiceTemplate extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {language: window['localStorage'].getItem('language') };
 	}
 
 	getRibbonColor = (invoiceData) => {
@@ -43,6 +47,7 @@ class InvoiceTemplate extends Component {
 		);
 	};
 	render() {
+		strings.setLanguage(this.state.language);
 		const { invoiceData, currencyData, totalNet, companyData,status } = this.props;
 		return (
 			<div>
@@ -92,7 +97,7 @@ class InvoiceTemplate extends Component {
 											color: 'black',
 										}}
 									>
-										Tax Invoice
+									 {strings.Tax+" "+strings.Invoice}
 									</div>
 								
 							</div>
@@ -114,8 +119,8 @@ class InvoiceTemplate extends Component {
 								<h4 className="mb-1 ml-2"><b>{companyData && companyData.company
 											? companyData.company.companyName
 											: ''}</b></h4>
-								<h6 className="mb-1 ml-2">Invoice  # {invoiceData.referenceNumber}</h6>
-								<h6 className="mb-1 ml-2"><b>Balance Due: {invoiceData.dueAmount ? (
+								<h6 className="mb-1 ml-2">{strings.Invoice } # {invoiceData.referenceNumber}</h6>
+								<h6 className="mb-1 ml-2"><b>{strings.BalanceDue}: {invoiceData.dueAmount ? (
 														<Currency
 															value={invoiceData.dueAmount}
 															currencySymbol={
@@ -134,7 +139,7 @@ class InvoiceTemplate extends Component {
 															}
 														/>
 													)}</b></h6>
-													<span className="mb-1 ml-2">Status :  {this.renderInvoiceStatus(status)}</span>
+													<span className="mb-1 ml-2">{strings.Status}:  {this.renderInvoiceStatus(status)}</span>
 													{/* <div
 														className={`ribbon ${this.getRibbonColor(
 															invoiceData,
@@ -167,14 +172,14 @@ class InvoiceTemplate extends Component {
 									}}
 								>
 									<div style={{ fontWeight: '600' }} className="mb-1 mt-1 ml-2">
-										<b>Bill To,</b>
+										<b>{strings.BillTo },</b>
 									</div>
-									<div className="mb-1 ml-2"><b>Name:</b> {invoiceData.name}</div>
+									<div className="mb-1 ml-2"><b>{strings.Name}:</b> {invoiceData.name}</div>
 									<div className="mb-1 ml-2"><b>TRN:</b> {invoiceData.taxRegistrationNo}</div>
-									<div className="mb-1 ml-2"><b>Company:</b> {invoiceData.organisationName}</div>
+									<div className="mb-1 ml-2"><b>{strings.Company }:</b> {invoiceData.organisationName}</div>
 									
-									<div className="mb-1 ml-2"><b>Email:</b> {invoiceData.email}</div>
-									<div className="mb-3 ml-2"><b>Address:</b> {invoiceData.address}</div>
+									<div className="mb-1 ml-2"><b>{strings.Email}:</b> {invoiceData.email}</div>
+									<div className="mb-3 ml-2"><b>{strings.Address}:</b> {invoiceData.address}</div>
 								</div>
 							</div>
 							<div
@@ -188,7 +193,7 @@ class InvoiceTemplate extends Component {
 									<Table className="table table-bordered" style={{width: '90%',margin:'0.5rem',border:'1px solid',width:'250px', textAlign: 'center' ,border:'1px solid',borderColor:'#c8ced3'}}>
 										<tbody>
 											<tr style={{ textAlign: 'right' }}>
-												<td  style={{backgroundColor:'#e3e3e3' ,width:'104px'  }}>Invoice Date</td>
+												<td  style={{backgroundColor:'#e3e3e3' ,width:'104px'  }}>{strings.InvoiceDate}</td>
 												<td style={{ width:'143px'  }}>
 													{' '}
 													{moment(invoiceData.invoiceDate).format(
@@ -197,11 +202,11 @@ class InvoiceTemplate extends Component {
 												</td>
 											</tr>
 											<tr style={{ textAlign: 'right',width:'143px' }}>
-												<td style={{width:'109px' ,backgroundColor:'#e3e3e3' }}>Term</td>
+												<td style={{width:'109px' ,backgroundColor:'#e3e3e3' }}>{strings.Terms }</td>
 												<td style={{width:'143px'}}>{invoiceData.term}</td>
 											</tr>
 											<tr style={{ textAlign: 'right' }}>
-												<td style={{width:'104px' ,backgroundColor:'#e3e3e3' }}>Due Date</td>
+												<td style={{width:'104px' ,backgroundColor:'#e3e3e3' }}>{strings.DueDate }</td>
 												<td style={{ width:'143px'  }}>
 													{moment(invoiceData.invoiceDueDate).format(
 														'DD MMM YYYY',
@@ -220,17 +225,17 @@ class InvoiceTemplate extends Component {
 										#
 									</th>
 									{/* <th style={{ padding: '0.5rem' }}>Item</th> */}
-									<th style={{ padding: '0.5rem' }}>Product Name</th>
-									<th style={{ padding: '0.5rem' }}>Description</th>
+									<th style={{ padding: '0.5rem' }}>{strings.ProductName }</th>
+									<th style={{ padding: '0.5rem' }}>{strings.Description }</th>
 									<th className="center" style={{ padding: '0.5rem' }}>
-										Quantity
+										{strings.Quantity}
 									</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
-										Unit Cost
+										{strings.UnitCost }
 									</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right' ,   width: "60px" }}>Vat</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right' ,   width: "60px" }}>{strings.Vat }</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
-										Total
+										{strings.Total }
 									</th>
 								</tr>
 							</thead>
@@ -289,11 +294,11 @@ class InvoiceTemplate extends Component {
 									
 								}}
 							>
-								<div className="pl-5 pb-2">Amount In Words:<br/>
+								<div className="pl-5 pb-2">{strings.AmountInWords }:<br/>
 									<b> {upperCase(converter.toWords(toInteger(invoiceData.totalAmount)))+" ONLY" }
 									{/* <b> {parseInt(invoiceData.dueAmount)} */}
 									</b></div>
-								<div className="pl-5 pb-2">VAT Amount In Words:
+								<div className="pl-5 pb-2">{strings.Vat+" "+strings.AmountInWords }:
 										<br/>
 									<b> {upperCase(converter.toWords(toInteger(invoiceData.totalVatAmount)))+" ONLY" }</b>
 									{/* <b> {invoiceData.totalVatAmount}</b> */}
@@ -301,7 +306,7 @@ class InvoiceTemplate extends Component {
 							<div className="pl-5" style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>
 
 								<h6 className="mb-0 pt-2">
-									<b>Notes:</b>
+									<b>{strings.Notes }:</b>
 								</h6>
 								<h6 className="mb-0">{invoiceData.notes}</h6>
 							</div>
@@ -320,7 +325,7 @@ class InvoiceTemplate extends Component {
 									<tbody>
 										<tr >
 											<td style={{ width: '40%' }}>
-												<strong>Subtotal</strong>
+												<strong>{strings.SubTotal }</strong>
 											</td>
 											<td
 												style={{
@@ -355,7 +360,7 @@ class InvoiceTemplate extends Component {
 										<tr >
 											<td style={{ width: '40%' }}>
 												<strong>
-													Discount
+													{strings.Discount }
 													{invoiceData.discountPercentage
 														? `(${invoiceData.discountPercentage}%)`
 														: ''}
@@ -393,7 +398,7 @@ class InvoiceTemplate extends Component {
 										</tr>
 										<tr >
 											<td style={{ width: '40%' }}>
-												<strong>VAT</strong>
+												<strong>{strings.Vat }</strong>
 											</td>
 											<td
 												style={{
@@ -427,7 +432,7 @@ class InvoiceTemplate extends Component {
 										</tr>
 										<tr >
 											<td style={{ width: '40%' }}>
-												<strong>Total</strong>
+												<strong>{strings.Total }</strong>
 											</td>
 											<td
 												style={{
@@ -461,7 +466,7 @@ class InvoiceTemplate extends Component {
 										</tr>
 										<tr style={{ background: '#f2f2f2' }}>
 											<td style={{ width: '40%' }}>
-												<strong>Balance Due</strong>
+												<strong>{strings.BalanceDue }</strong>
 											</td>
 											<td>
 												<b

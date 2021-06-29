@@ -31,6 +31,9 @@ import * as FinancialReportActions from '../../actions';
 import FilterComponent from '../filterComponent';
 import logo from 'assets/images/brand/logo.png';
 import { CommonActions } from 'services/global';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
+
 
 const mapStateToProps = (state) => {
 	return {
@@ -48,11 +51,12 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
-
+let strings = new LocalizedStrings(data);
 class BalanceSheet extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: true,
 			dropdownOpen: false,
 			view: false,
@@ -176,6 +180,7 @@ class BalanceSheet extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
 		const { profile, universal_currency_list,company_profile } = this.props;
 		return (
@@ -200,7 +205,7 @@ class BalanceSheet extends React.Component {
 													}}
 													onClick={this.viewFilter}
 												>
-													<i className="fa fa-cog mr-2"></i>Customize Report
+													<i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
 												</p>
 											</div>
 											<div className="d-flex">
@@ -319,9 +324,9 @@ class BalanceSheet extends React.Component {
 												: ''}
 											</h2>	
 										
-											<b style ={{ fontSize: '18px'}}>Balance Sheet</b>
+											<b style ={{ fontSize: '18px'}}>{strings.BalanceSheet}</b>
 											<br/>
-											As on {initValue.endDate}
+											{strings.Ason} {initValue.endDate}
 											
 									</div>
 									<div>
@@ -354,12 +359,12 @@ class BalanceSheet extends React.Component {
 													{Object.keys(this.state.data).length > 0 ? (
 														<>
 															<tr>
-																<td className="mainLable ">Assets</td>
+																<td className="mainLable ">{strings.Assets}</td>
 																<td></td>
 																<td></td>
 															</tr>
 															<tr>
-																<td className="mainLable ">Fixed Assets</td>
+																<td className="mainLable ">{strings.FixedAssets}</td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -390,7 +395,7 @@ class BalanceSheet extends React.Component {
 															)}
 															<tr className="mainLable ">
 																<td className="text-right">
-																	Total Fixed Assets
+																	{strings.Total+" "+strings.FixedAssets} 
 																</td>
 																<td></td>
 																<td className="text-right">
@@ -413,7 +418,7 @@ class BalanceSheet extends React.Component {
 															</tr>
 															<br />
 															<tr>
-																<td className="mainLable ">Current Assets</td>
+																<td className="mainLable ">{strings.CurrentAssets}</td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -443,7 +448,7 @@ class BalanceSheet extends React.Component {
 																</tr>
 															))}
 															<tr>
-																<td className="mainLable ">Bank</td>
+																<td className="mainLable ">{strings.Bank}</td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -474,7 +479,7 @@ class BalanceSheet extends React.Component {
 															)}
 															<tr>
 																<td className="mainLable ">
-																	Account Receivable
+																 {strings.Account+" "+strings.Receivable}
 																</td>
 																<td></td>
 																<td className="text-right">
@@ -497,7 +502,7 @@ class BalanceSheet extends React.Component {
 															</tr>
 															<tr>
 																<td className="mainLable ">
-																	Other Current Assets
+																 {strings.Other+" "+strings.CurrentAssets}
 																</td>
 																<td></td>
 																<td></td>
@@ -529,7 +534,7 @@ class BalanceSheet extends React.Component {
 															))}
 															<tr className="mainLable ">
 																<td className="text-right">
-																	Total Current Assets
+																{strings.Total+" "+strings.CurrentAssets}
 																</td>
 																<td></td>
 																<td className="text-right">
@@ -553,7 +558,7 @@ class BalanceSheet extends React.Component {
 															<br />
 															<tr className="mainLable table-amount-header">
 																<td className="mainLable text-right">
-																	Total Assets
+																	{strings.Total+" "+strings.Assets}
 																</td>
 																<td></td>
 																<td className="text-right">
@@ -577,13 +582,13 @@ class BalanceSheet extends React.Component {
 															<br />
 															<tr>
 																<td className="mainLable ">
-																	Equities & Liabilities
+																	{strings.EquitiesandLiabilities}
 																</td>
 																<td></td>
 																<td></td>
 															</tr>
 															<tr>
-																<td className="mainLable ">Equities</td>
+																<td className="mainLable ">{strings.Equities}</td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -614,7 +619,7 @@ class BalanceSheet extends React.Component {
 															)}
 															<tr className="mainLable ">
 																<td className="mainLable text-right">
-																	Total Equity
+																	{strings.TotalEquity}
 																</td>
 																<td></td>
 																<td className="text-right">
@@ -637,7 +642,7 @@ class BalanceSheet extends React.Component {
 															</tr>
 															<br />
 															<tr>
-																<td className="mainLable ">Other Liability</td>
+																<td className="mainLable ">{strings.Other+" "+strings.Liability}</td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -668,7 +673,7 @@ class BalanceSheet extends React.Component {
 															))}
 															<tr className="mainLable ">
 																<td className="mainLable text-right">
-																	Total Other Liability
+																	{strings.Total+" "+strings.Other+" "+strings.Liability }
 																</td>
 																<td></td>
 																<td className="text-right">
@@ -692,14 +697,14 @@ class BalanceSheet extends React.Component {
 															<br />
 															<tr>
 																<td className="mainLable ">
-																	Other Current Liability
+																{strings.Other+" "+strings.CurrentLiability }
 																</td>
 																<td></td>
 																<td></td>
 															</tr>
 
 															<tr className="">
-																<td className="mainLable ">Accounts Payable</td>
+																<td className="mainLable ">{strings.AccountsPayable}</td>
 																<td></td>
 																<td className="text-right">
 																	{this.state.data['totalAccountPayable'] ? (
@@ -748,7 +753,7 @@ class BalanceSheet extends React.Component {
 															))}
 															<tr className="mainLable ">
 																<td className="mainLable text-right">
-																	Total Other Current Liability
+																	{strings.Total+" "+strings.Other+" "+strings.CurrentLiability }
 																</td>
 																<td></td>
 																<td className="text-right">
@@ -774,7 +779,7 @@ class BalanceSheet extends React.Component {
 															<br />
 															<tr className="mainLable ">
 																<td className="mainLable text-right">
-																	Total Liability
+																	{strings.Total+" "+strings.Liability}
 																</td>
 																<td></td>
 																<td className="text-right">
@@ -798,7 +803,7 @@ class BalanceSheet extends React.Component {
 															<br />
 															<tr className="mainLable table-amount-header">
 																<td className="mainLable text-right">
-																	Total Equities & Liability
+																	 {strings.Total+" "+strings.Equities+" & "+strings.Liability}
 																</td>
 																<td></td>
 																<td className="text-right">
@@ -823,7 +828,7 @@ class BalanceSheet extends React.Component {
 													) : (
 														<tr className="mainLable ">
 															<td style={{ textAlign: 'center' }} colSpan="9">
-																There is no data to display
+																{strings.Thereisnodatatodisplay }
 															</td>
 														</tr>
 													)}
@@ -831,7 +836,7 @@ class BalanceSheet extends React.Component {
 											</Table>
 										</div>
 									)}
-									<div style={{ textAlignLast:'center'}}> Powered By <b>SimpleAccounts</b></div> 
+									<div style={{ textAlignLast:'center'}}> {strings.PoweredBy} <b>SimpleAccounts</b></div> 
 								</PDFExport>
 							</CardBody>
 						</div>

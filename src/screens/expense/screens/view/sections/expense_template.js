@@ -4,11 +4,14 @@ import moment from 'moment';
 import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { Currency } from 'components';
+import {data}  from '../../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
+let strings = new LocalizedStrings(data);
 class ExpenseTemplate extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {language: window['localStorage'].getItem('language'),};
 	}
 
 	getRibbonColor = (expenseData) => {
@@ -22,6 +25,7 @@ class ExpenseTemplate extends Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { expenseData,companyData} = this.props;
 		return (
 			<div>
@@ -55,7 +59,7 @@ class ExpenseTemplate extends Component {
 													textAlign:'center'
 												}}
 											>
-												<b>Expense</b>
+												<b>{strings.Expense}</b>
 											</td>						
 									</div>
 									<div style={{ textAlign:'center'}}>
@@ -78,7 +82,7 @@ class ExpenseTemplate extends Component {
 							</div>
 												</div>
 									<div style={{textAlign:'center'}}><h4> {expenseData.payee} </h4></div>
-									<div style={{textAlign:'center'}}><b>Expense Date</b> : {moment(expenseData.expenseDate ).format('DD/MM/YYYY')}</div>
+									<div style={{textAlign:'center'}}><b>{strings.ExpenseDate}</b> : {moment(expenseData.expenseDate ).format('DD/MM/YYYY')}</div>
 					</div>
 <div style={{backgroundColor:'rgb(32 100 216)', height:'45px'}}></div>
 					<div className="card text-start border"
@@ -91,15 +95,15 @@ class ExpenseTemplate extends Component {
 
 <Table  striped>
 <tbody  >
-    <tr>      <td className="ml-3" style={{width:'245px'}}>	<b>Paid By</b> :</td> 
+    <tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.PaidBy}</b> :</td> 
 	           <td> {expenseData.payee}</td>
 	</tr>
 
-	<tr>      <td className="ml-3" style={{width:'245px'}} >	<b>Expense Category</b> :</td>
+	<tr>      <td className="ml-3" style={{width:'245px'}} >	<b>{strings.ExpenseCategory}</b> :</td>
 	           <td> {expenseData.transactionCategoryName}</td>
 	</tr>
 
-	<tr>      <td className="ml-3" style={{width:'245px'}}>  <b>Expense Amount</b> :	</td> 
+	<tr>      <td className="ml-3" style={{width:'245px'}}>  <b>{strings.ExpenseAmount }</b> :	</td> 
 	           <td>{expenseData.expenseAmount}</td>
     </tr>
 
@@ -107,24 +111,24 @@ class ExpenseTemplate extends Component {
 			  <td>{expenseData.expenseId}</td>
 	</tr> */}
 
-	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>Vat Type</b> : </td>  
+	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.Vat+" "+strings.Type }</b> : </td>  
 	          <td>{expenseData.vatCategoryName} </td>
 	</tr>
 	
-	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>Receipt Number</b> : </td>  
+	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.ReceiptNumber }</b> : </td>  
 	          <td>{expenseData.receiptNumber} </td>
 	</tr>
 	
 	
-	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>Expense Description</b> : </td>  
+	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.Expense+" "+strings.Description }</b> : </td>  
 	          <td>{expenseData.expenseDescription} </td>
 	</tr>
 
-	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>Receipt Description</b> : </td>  
+	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.Receipt+" "+strings.Description }</b> : </td>  
 	          <td>{expenseData.receiptAttachmentDescription} </td>
 	</tr>
 
-	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>Posted Date</b> : </td> 
+	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.PostedDate }</b> : </td> 
 	          <td>{moment(expenseData.lastUpdateDate).format('DD/MM/YYYY')}</td>
 	</tr>
 </tbody>
@@ -136,7 +140,7 @@ class ExpenseTemplate extends Component {
 									
 					</div>											
 					</CardBody>
-					<div style={{ textAlignLast:'center'}}> Powered By <b>SimpleAccounts</b></div> 
+					<div style={{ textAlignLast:'center'}}>{strings.PoweredBy+" " } <b>SimpleAccounts</b></div> 
 				</Card>
 			</div>
 		);

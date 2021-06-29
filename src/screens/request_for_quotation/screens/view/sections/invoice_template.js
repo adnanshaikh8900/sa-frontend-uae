@@ -5,12 +5,16 @@ import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { Currency } from 'components';
 import { toInteger, upperCase } from 'lodash';
+import {data}  from '../../../../Language/index'
+import LocalizedStrings from 'react-localization';
+
 var converter = require('number-to-words');
+let strings = new LocalizedStrings(data);
 
 class RFQTemplate extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {language: window['localStorage'].getItem('language'),};
 	}
 
 	renderRFQStatus = (status) => {
@@ -31,6 +35,7 @@ class RFQTemplate extends Component {
 		);
 	};
 	render() {
+		strings.setLanguage(this.state.language);
 		const { RFQData, currencyData, totalNet, companyData,status } = this.props;
 		return (
 			<div>
@@ -46,7 +51,7 @@ class RFQTemplate extends Component {
 						>
 						
 						<div className="text-center mt-1">
-							<h4><b> Request For Quatation Details</b></h4>
+							<h4><b> {strings.RequestForQuotation+" "+strings.Details }</b></h4>
 						
 						</div>
 						
@@ -108,7 +113,7 @@ class RFQTemplate extends Component {
 								<h6
 								style={{textAlign: 'center',marginLeft:'220px'}}
 								className={'mt-3 mb-2'}
-								>	RFQ date:{' '}
+								>	{strings.RFQDate }:{' '}
 								{moment(RFQData.rfqReceiveDate).format(
 									'DD MMM YYYY',
 								)}
@@ -124,7 +129,7 @@ class RFQTemplate extends Component {
 								<h6
 								style={{textAlign: 'center',marginLeft:'220px'}}
 								className={'mt-3 mb-2'}
-								>	Expiry Date:{' '}
+								>	{strings.ExpiryDate}:{' '}
 								{moment(RFQData.rfqExpiryDate).format(
 									'DD MMM YYYY',
 								)}
@@ -139,17 +144,17 @@ class RFQTemplate extends Component {
 										#
 									</th>
 									{/* <th style={{ padding: '0.5rem' }}>Item</th> */}
-									<th style={{ padding: '0.5rem' }}>Product Name</th>
-									<th style={{ padding: '0.5rem' }}>Description</th>
+									<th style={{ padding: '0.5rem' }}>{strings.ProductName }</th>
+									<th style={{ padding: '0.5rem' }}>{strings.Description }</th>
 									<th className="center" style={{ padding: '0.5rem' }}>
-										Quantity
+										{strings.Quantity }
 									</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
-										Unit Cost
+										{strings.UnitCost }
 									</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right' }}>Vat</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Vat}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
-										Total
+										{strings.Total }
 									</th>
 								</tr>
 							</thead>
@@ -209,11 +214,11 @@ class RFQTemplate extends Component {
 									justifyContent: 'center',
 								}}
 							>
-								<div className="pb-2">Amount In Words:<br/>
+								<div className="pb-2">{strings.AmountInWords }:<br/>
 									<b> {upperCase(converter.toWords(toInteger(RFQData.totalAmount)))+" ONLY"}
 									{/* <b> {parseInt(RFQData.dueAmount)} */}
 									</b></div>
-								<div className="pb-2">VAT Amount In Words:
+								<div className="pb-2">{strings.Vat+" "+strings.AmountInWords }:
 										<br/>
 									<b> {upperCase(converter.toWords(toInteger(RFQData.totalVatAmount)))+" ONLY"}</b>
 									{/* <b> {RFQData.totalVatAmount}</b> */}
@@ -221,7 +226,7 @@ class RFQTemplate extends Component {
 							<div style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>
 
 								<h6 className="mt-2 mb-2 pt-2">
-									<b>Notes:</b>
+									<b>{strings.Notes }:</b>
 								</h6>
 								<h6 className="mb-0">{RFQData.notes}</h6>
 							</div>
@@ -239,7 +244,7 @@ class RFQTemplate extends Component {
 									<tbody>
 										<tr >
 											<td style={{ width: '60%' }}>
-												<strong>Subtotal</strong>
+												<strong>{strings.SubTotal }</strong>
 											</td>
 											<td
 												style={{
@@ -275,7 +280,7 @@ class RFQTemplate extends Component {
 										
 										<tr >
 											<td style={{ width: '60%' }}>
-												<strong>VAT</strong>
+												<strong>{strings.Vat }</strong>
 											</td>
 											<td
 												style={{
@@ -310,7 +315,7 @@ class RFQTemplate extends Component {
 										</tr>
 										<tr >
 											<td style={{ width: '60%' }}>
-												<strong>Total</strong>
+												<strong>{strings.Total }</strong>
 											</td>
 											<td
 												style={{

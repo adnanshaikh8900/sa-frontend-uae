@@ -17,6 +17,8 @@ import {
 // import './style.scss'
 import  moment  from 'moment'
 import API_ROOT_URL from '../../../../../../../constants/config'
+import {data}  from '../../../../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 
 const mapStateToProps = (state) => {
@@ -29,9 +31,16 @@ const mapDispatchToProps = (dispatch) => {
 
   })
 }
-
+let strings = new LocalizedStrings(data);
 class ViewBankAccount extends React.Component {
+  constructor(props) {
+		super(props);
+		this.state = {
+    language: window['localStorage'].getItem('language'),
+  };
+}
   render() {
+    strings.setLanguage(this.state.language);
     const {
       chartOfAccountId,transactionDate,transactionAmount,transactionCategoryId,projectId,description,receiptNumber,attachementDescription,fileName,filePath
     } = this.props.initialVals
@@ -42,7 +51,7 @@ class ViewBankAccount extends React.Component {
                 <Col lg={11}>
                   <div className="h4 mb-0 d-flex align-items-center">
                     <i className="fas fa-university" />
-                    <span className="ml-2">View Bank Account Details {
+                    <span className="ml-2">{strings.View+" "+strings.BankAccount+" "+strings.Details} {
                       // current_bank_account ? ` - ${current_bank_account.bankAccountName}` : ''
                     }
                     </span>
@@ -60,19 +69,19 @@ class ViewBankAccount extends React.Component {
                     <Row>
                       <Col lg={4}>
                         <FormGroup className="mb-3">
-                          <Label className="label" htmlFor="account_name">Transaction Type </Label>
+                          <Label className="label" htmlFor="account_name">{strings.TransactionType} </Label>
                           <p> {chartOfAccountId}</p>
                         </FormGroup>
                       </Col>
                       <Col lg={4}>
                         <FormGroup className="mb-3">
-                          <Label className="label" htmlFor="currency">Transaction Date </Label>
+                          <Label className="label" htmlFor="currency">{strings.TransactionDate} </Label>
                           <p>{moment(transactionDate).format('DD/MM/YYYY')}</p> 
                         </FormGroup>
                       </Col>
                       <Col lg={4}>
                         <FormGroup className="mb-3">
-                          <Label className="label" htmlFor="opening_balance">Total Amount</Label>
+                          <Label className="label" htmlFor="opening_balance">{strings.Total+" "+strings.Amount}</Label>
                           <p>{(transactionAmount).toFixed(2)}</p>
                         </FormGroup>
                       </Col>
@@ -80,13 +89,13 @@ class ViewBankAccount extends React.Component {
                     <Row>
                       <Col lg={4}>
                         <FormGroup className="">
-                          <Label className="label" htmlFor="account_type">Category</Label>
+                          <Label className="label" htmlFor="account_type">{strings.Category}</Label>
                           <p>{transactionCategoryId}</p>
                         </FormGroup>
                       </Col>
                       <Col lg={4}>
                         <FormGroup className="mb-3">
-                          <Label className="label" htmlFor="account_number">Project</Label>
+                          <Label className="label" htmlFor="account_number">{strings.Project}</Label>
                           <p>{projectId}</p>
                         </FormGroup>
                       </Col>
@@ -94,7 +103,7 @@ class ViewBankAccount extends React.Component {
                     <Row>
                       <Col lg={4}>
                         <FormGroup className="mb-3">
-                          <Label className="label" htmlFor="bank_name">Description</Label>
+                          <Label className="label" htmlFor="bank_name">{strings.Description}</Label>
                           <p>{description}</p>
                         </FormGroup>
                       </Col>
@@ -103,19 +112,19 @@ class ViewBankAccount extends React.Component {
                     <Row>
                       <Col lg={4}>
                         <FormGroup className="mb-3">
-                          <Label className="label" htmlFor="iban_number">Reciept Number</Label>
+                          <Label className="label" htmlFor="iban_number">{strings.ReceiptNumber}</Label>
                           <p>{receiptNumber}</p>
                         </FormGroup>
                       </Col>
                       <Col lg={4}>
                         <FormGroup className="mb-3">
-                          <Label className="label" htmlFor="swift_code">Attachment Description</Label>
+                          <Label className="label" htmlFor="swift_code">{strings.AttachmentDescription}</Label>
                           <p>{attachementDescription}</p>
                         </FormGroup>
                       </Col>
                       <Col lg={4}>
                         <FormGroup className="mb-3">
-                          <Label className="label" htmlFor="country">Reciept Attachment</Label>
+                          <Label className="label" htmlFor="country">{strings.ReceiptAttachment}</Label>
                           <NavLink download={fileName} href={`${API_ROOT_URL.API_ROOT_URL}${filePath}`} style={{ fontSize: '0.875rem' }} target="_blank" >{fileName}</NavLink>
                         </FormGroup>
                       </Col>

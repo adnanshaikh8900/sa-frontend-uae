@@ -27,6 +27,8 @@ import FilterComponent2 from '../filterComponet2';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -45,10 +47,12 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+let strings = new LocalizedStrings(data);
 class PurchaseByVendor extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: true,
 			dropdownOpen: false,
 			view: false,
@@ -168,6 +172,7 @@ class PurchaseByVendor extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
 		const { profile, universal_currency_list,company_profile,purchase_by_vendor } = this.props;
 		return (
@@ -192,7 +197,7 @@ class PurchaseByVendor extends React.Component {
 													}}
 													onClick={this.viewFilter}
 												>
-													<i className="fa fa-cog mr-2"></i>Customize Report
+													<i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
 												</p>
 											</div>
 											<div className="d-flex">
@@ -306,9 +311,9 @@ class PurchaseByVendor extends React.Component {
 												: ''}
 											</h2>	
 											<br style={{ marginBottom: '5px' }} />
-											<b style ={{ fontSize: '18px'}}>Purchase By Vendor</b>
+											<b style ={{ fontSize: '18px'}}>{strings.PurhaseByVendor}</b>
 											<br style={{ marginBottom: '5px' }} />
-											From {initValue.startDate} To {initValue.endDate}
+											{strings.From} {initValue.startDate} {strings.To} {initValue.endDate}
 											
 									</div>
 									<div>
@@ -340,13 +345,13 @@ class PurchaseByVendor extends React.Component {
 												
 												className="table-header-bg"
 											>
-												Vendor Name
+												{strings.Vendor+" "+strings.Name}
 											</TableHeaderColumn>
 											<TableHeaderColumn 
 												dataField="invoiceCount" 
 												className="table-header-bg"
 											>
-												Invoice Count
+											{strings.InvoiceCount}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="salesExcludingvat"
@@ -354,7 +359,7 @@ class PurchaseByVendor extends React.Component {
 												formatExtraData={universal_currency_list}
 												className="table-header-bg"
 											>
-												Sales
+												{strings.Sales}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="getSalesWithvat"
@@ -362,12 +367,12 @@ class PurchaseByVendor extends React.Component {
 												formatExtraData={universal_currency_list}
 												className="table-header-bg"
 											>
-												Sales With Vat 
+										      {strings.SalesWithVat }
 											</TableHeaderColumn>
 										</BootstrapTable>
 										</div>
 									)}
-									<div style={{ textAlignLast:'center'}}> Powered By <b>SimpleAccounts</b></div> 
+									<div style={{ textAlignLast:'center'}}> {strings.PoweredBy} <b>SimpleAccounts</b></div> 
 								</PDFExport>
 							</CardBody>
 						</div>

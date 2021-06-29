@@ -24,6 +24,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { CommonActions } from 'services/global';
 import './style.scss';
 import DatePicker from 'react-datepicker';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 
 const mapStateToProps = (state) => {
@@ -132,10 +134,12 @@ const ranges = {
 	],
 };
 
+let strings = new LocalizedStrings(data);
 class VatTransactions extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			selectedVat: '',
 			selectedStatus: '',
 			filterData: {
@@ -286,6 +290,7 @@ class VatTransactions extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		// const vat_transaction_data =
 		// 	this.props.vat_transaction_list && this.props.vat_transaction_list.data
 		// 		? this.props.vat_transaction_list.data.map((data) => ({
@@ -308,7 +313,7 @@ class VatTransactions extends React.Component {
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
 										<i className="fas fa-exchange-alt" />
-										<span className="ml-2">VAT Transactions</span>
+										<span className="ml-2">{strings.Vat+" "+strings.Transaction}</span>
 									</div>
 								</Col>
 							</Row>
@@ -324,7 +329,7 @@ class VatTransactions extends React.Component {
 												onClick={() => this.table.handleExportCSV()}
 											>
 												<i className="fa glyphicon glyphicon-export fa-download mr-1" />
-												Export
+												{strings.Export}
 											</Button>
 										</ButtonGroup>
 									</FormGroup>
@@ -476,43 +481,43 @@ class VatTransactions extends React.Component {
 									dataSort
 									dataField='customerName' 
 									className="table-header-bg"
-									>Customer Name
+									>{strings.CustomerName}
 									</TableHeaderColumn>
 									<TableHeaderColumn
 									dataField='countryName'
 									dataSort
 									className="table-header-bg"
-									>Country
+									>{strings.Country}
 									</TableHeaderColumn>
 									<TableHeaderColumn
 									dataSort
 									 dataField='invoiceDate'
 									 className="table-header-bg"
-									 >Invoice Date
+									 >{strings.InvoiceDate}
 									 </TableHeaderColumn>
 									 <TableHeaderColumn
 									dataSort
 									 dataField='invoiceNumber' 
 									 className="table-header-bg"
-									 >Invoice Number
+									 >{strings.InvoiceNumber}
 									 </TableHeaderColumn>
 									 <TableHeaderColumn
 									dataSort
 									 dataField='taxRegistrationNo' 
 									 className="table-header-bg"
-									 >TAX Reg No
+									 >{strings.TaxRegistrationNumber}
 									 </TableHeaderColumn>
 									<TableHeaderColumn 
 									dataSort
 									dataField="referenceType" 
 									className="table-header-bg">
-										Reference Type
+									{strings.Reference+" "+strings.Type} 
 									</TableHeaderColumn>
 									<TableHeaderColumn 
 									dataField="vatType" 
 									className="table-header-bg"
 									>
-										Vat Type
+										{strings.Vat+" "+strings.Type}
 									</TableHeaderColumn>
 									<TableHeaderColumn
 									dataSort
@@ -521,7 +526,7 @@ class VatTransactions extends React.Component {
 										formatExtraData={universal_currency_list}
 										className="table-header-bg"
 									>
-										Amount
+										{strings.Amount}
 									</TableHeaderColumn>
 									<TableHeaderColumn
 									dataSort
@@ -530,7 +535,7 @@ class VatTransactions extends React.Component {
 										formatExtraData={universal_currency_list}
 										className="table-header-bg"
 									>
-										Vat Amount
+									   {strings.VatAmount }
 									</TableHeaderColumn>
 								</BootstrapTable>
 							</div>

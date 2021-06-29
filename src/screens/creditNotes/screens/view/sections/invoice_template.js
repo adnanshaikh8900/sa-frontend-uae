@@ -5,12 +5,15 @@ import '../style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { Currency } from 'components';
 import { toInteger, upperCase } from 'lodash';
+import {data}  from '../../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 var converter = require('number-to-words');
+let strings = new LocalizedStrings(data);
 class InvoiceTemplate extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {language: window['localStorage'].getItem('language'), };
 	}
 
 	getRibbonColor = (invoiceData) => {
@@ -42,6 +45,7 @@ class InvoiceTemplate extends Component {
 		);
 	};
 	render() {
+		strings.setLanguage(this.state.language);
 		const { invoiceData,status, currencyData, totalNet, companyData } = this.props;
 		return (
 			<div>
@@ -90,7 +94,7 @@ class InvoiceTemplate extends Component {
 											color: 'black',
 										}}
 									>
-										Credit Note
+										{strings.CreditNote }
 							</div>
 								
 							</div>
@@ -109,12 +113,12 @@ class InvoiceTemplate extends Component {
 								<h4 className="mb-1 ml-2"><b>{companyData && companyData.company
 											? companyData.company.companyName
 											: ''}</b></h4>
-								<h6 className="mb-1 ml-2">Credit Note #{invoiceData.referenceNumber}</h6>
-								<h6 className="mb-1 ml-2"><b>Date:{' '}
+								<h6 className="mb-1 ml-2">{strings.CreditNote } #{invoiceData.referenceNumber}</h6>
+								<h6 className="mb-1 ml-2"><b>{strings.Date }:{' '}
 													{moment(invoiceData.invoiceDate).format(
 														'DD MMM YYYY',
 													)}</b></h6>
-													<span className="mb-1 ml-2">Status :  {this.renderInvoiceStatus(status)}</span>
+													<span className="mb-1 ml-2">{strings.Status } :  {this.renderInvoiceStatus(status)}</span>
 													
 								</div>
 								</div>
@@ -141,13 +145,13 @@ class InvoiceTemplate extends Component {
 									}}
 								>
 									<h6 style={{ fontWeight: '600' }} className="mb-1 mt-1 ml-2">
-										<b>Bill To,</b>
+										<b>{strings.BillTo },</b>
 									</h6>
-									<h6 className="mb-1 ml-2"><b>Name:</b> {invoiceData.name}</h6>
+									<h6 className="mb-1 ml-2"><b>{strings.Name }:</b> {invoiceData.name}</h6>
 									<div className="mb-1 ml-2"><b>TRN:</b> {invoiceData.taxRegistrationNo}</div>
-									<h6 className="mb-1 ml-2"><b>Company:</b> {invoiceData.organisationName}</h6>
-									<h6 className="mb-1 ml-2"><b>Email:</b> {invoiceData.email}</h6>
-									<h6 className="mb-3 ml-2"><b>Address:</b> {invoiceData.address}</h6>
+									<h6 className="mb-1 ml-2"><b>{strings.Company }:</b> {invoiceData.organisationName}</h6>
+									<h6 className="mb-1 ml-2"><b>{strings.Email }:</b> {invoiceData.email}</h6>
+									<h6 className="mb-3 ml-2"><b>{strings.Address }:</b> {invoiceData.address}</h6>
 								</div>
 							</div>
 							<div
@@ -193,17 +197,17 @@ class InvoiceTemplate extends Component {
 										#
 									</th>
 									{/* <th style={{ padding: '0.5rem' }}>Item</th> */}
-									<th style={{ padding: '0.5rem' }}>Product Name</th>
-									<th style={{ padding: '0.5rem' }}>Description</th>
+									<th style={{ padding: '0.5rem' }}>{strings.ProductName }</th>
+									<th style={{ padding: '0.5rem' }}>{strings.Description }</th>
 									<th className="center" style={{ padding: '0.5rem' }}>
-										Quantity
+										{strings.Quantity }
 									</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
-										Unit Cost
+										{strings.UnitCost }
 									</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right' ,   width: "60px" }}>Vat</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right' ,   width: "60px" }}>{strings.Vat }</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
-										Total
+										{strings.Total }
 									</th>
 								</tr>
 							</thead>
@@ -262,11 +266,11 @@ class InvoiceTemplate extends Component {
 									justifyContent: 'center',
 								}}
 							>
-								<div className="pl-5 pb-2">Amount In Words:<br/>
+								<div className="pl-5 pb-2">{strings.AmountInWords }:<br/>
 									<b> {upperCase(converter.toWords(toInteger(invoiceData.totalAmount)))+" ONLY"}
 									{/* <b> {parseInt(invoiceData.dueAmount)} */}
 									</b></div>
-								<div className="pl-5 pb-2">VAT Amount In Words:
+								<div className="pl-5 pb-2">{strings.Vat+" "+strings.AmountInWords  }:
 										<br/>
 									<b> {upperCase(converter.toWords(toInteger(invoiceData.totalVatAmount)))+" ONLY"}</b>
 									{/* <b> {invoiceData.totalVatAmount}</b> */}
@@ -274,7 +278,7 @@ class InvoiceTemplate extends Component {
 							<div className="pl-5" style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>
 
 								<h6 className="mb-0 pt-2">
-									<b>Notes:</b>
+									<b>{strings.Notes }:</b>
 								</h6>
 								<h6 className="mb-0">{invoiceData.notes}</h6>
 							</div>
@@ -293,7 +297,7 @@ class InvoiceTemplate extends Component {
 									<tbody>
 										<tr >
 											<td style={{ width: '40%' }}>
-												<strong>Subtotal</strong>
+												<strong>{strings.SubTotal }</strong>
 											</td>
 											<td
 												style={{
@@ -366,7 +370,7 @@ class InvoiceTemplate extends Component {
 										</tr> */}
 										<tr >
 											<td style={{ width: '40%' }}>
-												<strong>VAT</strong>
+												<strong>{strings.Vat}</strong>
 											</td>
 											<td
 												style={{
@@ -400,7 +404,7 @@ class InvoiceTemplate extends Component {
 										</tr>
 										<tr >
 											<td style={{ width: '40%' }}>
-												<strong>Total</strong>
+												<strong>{strings.Total }</strong>
 											</td>
 											<td
 												style={{
@@ -434,7 +438,7 @@ class InvoiceTemplate extends Component {
 										</tr>
 										<tr style={{ background: '#f2f2f2' }}>
 											<td style={{ width: '40%' }}>
-												<strong>CREDITS REMAINING</strong>
+												<strong>{strings.CREDITSREMAINING } </strong>
 											</td>
 											<td>
 												<b

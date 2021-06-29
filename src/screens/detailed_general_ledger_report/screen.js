@@ -28,6 +28,9 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { CommonActions } from 'services/global';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
+
 
 const mapStateToProps = (state) => {
 	return {
@@ -45,11 +48,12 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
-
+let strings = new LocalizedStrings(data);
 class DetailedGeneralLedgerReport extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: true,
 			dropdownOpen: false,
 			detailedGeneralLedgerList: [],
@@ -283,6 +287,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			loading,
 			initValue,
@@ -314,7 +319,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 													}}
 													onClick={this.viewFilter}
 												>
-													<i className="fa fa-cog mr-2"></i>Customize Report
+													<i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
 												</p>
 											</div>
 											<div className="d-flex">
@@ -439,10 +444,10 @@ class DetailedGeneralLedgerReport extends React.Component {
 												: ''}
 											</h2>	
 											<div className="ml-4" >
-												<b style ={{ fontSize: '18px'}}>Detailed General Ledger</b>
+												<b style ={{ fontSize: '18px'}}>{strings.DetailedGeneralLedger}</b>
 												<br/>
 												
-												From {initValue.startDate} To {initValue.endDate}
+												{strings.From } {initValue.startDate} {strings.To} {initValue.endDate}
 											</div>	
 									</div>
 									<div className='mr-3'>
@@ -708,7 +713,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 													) : (
 														<tr style={{ borderBottom: '2px solid lightgray' }}>
 															<td style={{ textAlign: 'center' }} colSpan="9">
-																There is no data to display
+																{strings.Thereisnodatatodisplay}
 															</td>
 														</tr>
 													)}
@@ -716,7 +721,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 											</Table>
 										</div>
 									)}
-									<div style={{ textAlignLast:'center'}}> Powered By <b>SimpleAccounts</b></div> 
+									<div style={{ textAlignLast:'center'}}> {strings.PoweredBy} <b>SimpleAccounts</b></div> 
 								</PDFExport>
 							</CardBody>
 						</div>

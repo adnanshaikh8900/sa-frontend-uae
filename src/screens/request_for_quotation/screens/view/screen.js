@@ -19,6 +19,9 @@ import './style.scss';
 import { RFQTemplate } from './sections';
 import { Card, CardBody, Table } from 'reactstrap';
 import moment from 'moment';
+import { StringStream } from 'codemirror';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -46,11 +49,12 @@ const mapDispatchToProps = (dispatch) => {
 		//commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
-
+let strings = new LocalizedStrings(data);
 class ViewRequestForQuotation extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			RFQData: {},
 			PoDataList: {},
 			totalNet: 0,
@@ -134,6 +138,7 @@ class ViewRequestForQuotation extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { RFQData, PoDataList,currencyData, id } = this.state;
 
 		const { profile } = this.props;
@@ -211,20 +216,20 @@ class ViewRequestForQuotation extends React.Component {
 										#
 									</th>
 									{/* <th style={{ padding: '0.5rem' }}>Item</th> */}
-									<th style={{ padding: '0.5rem' }}>Po Number</th>
-									<th style={{ padding: '0.5rem' }}>Supplier Name</th>
-									<th style={{ padding: '0.5rem' }}>Status</th>
+									<th style={{ padding: '0.5rem' }}>{strings.PONumber}</th>
+									<th style={{ padding: '0.5rem' }}>{strings.SupplierName}</th>
+									<th style={{ padding: '0.5rem' }}>{strings.Status}</th>
 									<th className="center" style={{ padding: '0.5rem' }}>
-										Po Date
+										{strings.PODate}
 									</th>
 									<th className="center" style={{ padding: '0.5rem' }}>
-										Po Expiry Date
+										{strings.POExpiryDate}
 									</th>
 									<th style={{ padding: '0.5rem', textAlign: 'left' }}>
-									TOTAL Amount
+									{strings.Total+" "+strings.Amount}
 									</th>
 									<th style={{ padding: '0.5rem', textAlign: 'left' }}>
-									TOTAL Vat Amount
+									{strings.TotalVat+" "+strings.Amount}
 									</th>
 								
 								</tr>

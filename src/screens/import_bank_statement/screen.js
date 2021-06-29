@@ -342,7 +342,7 @@ class ImportBankStatement extends React.Component {
 																	</label>
 																	<FormGroup>
 																		<Select
-																		placeholder="Select Template"
+																		placeholder={strings.Select+" "+strings.Template}
 																			options={templateList ? templateList : []}
 																			value={
 																				templateList &&

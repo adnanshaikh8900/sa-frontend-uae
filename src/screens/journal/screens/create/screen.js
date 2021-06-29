@@ -66,6 +66,7 @@ class CreateJournal extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: false,
 			createMore: false,
 			data: [
@@ -117,7 +118,7 @@ class CreateJournal extends React.Component {
 				],
 			},
 			submitJournal: false,
-			language: window['localStorage'].getItem('language'),
+			
 		};
 
 		this.formRef = React.createRef();
@@ -304,7 +305,7 @@ class CreateJournal extends React.Component {
 						}}
 						placeholder={strings.Description}
 						className={`form-control 
-            ${
+             ${
 							props.errors.journalLineItems &&
 							props.errors.journalLineItems[parseInt(idx, 10)] &&
 							props.errors.journalLineItems[parseInt(idx, 10)].description &&
@@ -336,7 +337,7 @@ class CreateJournal extends React.Component {
 		});
 
 		return (
-			<Field
+		      <Field
 				name={`journalLineItems.${idx}.contactId`}
 				render={({ field, form }) => (
 					<Input
@@ -345,8 +346,9 @@ class CreateJournal extends React.Component {
 							this.selectItem(e.target.value, row, 'contactId', form, field);
 						}}
 						value={row.contactId}
+						placeholder={strings.Select+strings.Contact}
 						className={`form-control 
-            ${
+             ${
 							props.errors.journalLineItems &&
 							props.errors.journalLineItems[parseInt(idx, 10)] &&
 							props.errors.journalLineItems[parseInt(idx, 10)].contactId &&

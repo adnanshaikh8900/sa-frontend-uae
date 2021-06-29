@@ -27,6 +27,8 @@ import FilterComponent2 from '../filterComponet2';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -44,11 +46,12 @@ const mapDispatchToProps = (dispatch) => {
 		),
 	};
 };
-
+let strings = new LocalizedStrings(data);
 class ReceivableInvoiceSummary extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: true,
 			dropdownOpen: false,
 			view: false,
@@ -159,6 +162,7 @@ class ReceivableInvoiceSummary extends React.Component {
 		
 	};
 	render() {
+		strings.setLanguage(this.state.language);
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
 		const { profile, universal_currency_list,company_profile,receivable_invoice } = this.props;
 		console.log(universal_currency_list)
@@ -184,7 +188,7 @@ class ReceivableInvoiceSummary extends React.Component {
 													}}
 													onClick={this.viewFilter}
 												>
-													<i className="fa fa-cog mr-2"></i>Customize Report
+													<i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
 												</p>
 											</div>
 											<div className="d-flex">
@@ -298,9 +302,9 @@ class ReceivableInvoiceSummary extends React.Component {
 												: ''}
 											</h2>	
 											
-											<b style ={{ fontSize: '18px'}}>Receivable Invoice Summary</b>
+											<b style ={{ fontSize: '18px'}}>{strings.ReceivableInvoiceSummary}</b>
 											<br style={{ marginBottom: '5px' }} />
-											From {initValue.startDate} To {initValue.endDate}
+											{strings.From} {initValue.startDate} {strings.To} {initValue.endDate}
 											
 									</div>
 									<div>
@@ -331,34 +335,34 @@ class ReceivableInvoiceSummary extends React.Component {
 												dataField="invoiceNumber"
 												className="table-header-bg"
 											>
-												Invoice Number					
+												{strings.InvoiceNumber}					
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="customerName"
 												className="table-header-bg"
 											>
-												Customer Name
+												{strings.CustomerName}
 											</TableHeaderColumn>
 											<TableHeaderColumn 
 												dataField="invoiceDate" 
 												className="table-header-bg"
 												dataFormat={this.renderinvoiceDate}
 											>
-												Invoice Date
+												{strings.InvoiceDate}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="invoiceDueDate"
 												className="table-header-bg"
 												dataFormat={this.renderinvoiceDueDate}
 											>
-												Due Date
+												{strings.DueDate}
 											</TableHeaderColumn>
 											
 											<TableHeaderColumn
 												dataField="status"
 												className="table-header-bg"
 											>
-												Status
+											   {strings.Status}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="balance"
@@ -366,12 +370,12 @@ class ReceivableInvoiceSummary extends React.Component {
 												dataFormat={this.renderbalance}
 												formatExtraData={universal_currency_list}
 											>
-												Balance
+												{strings.Balance}
 											</TableHeaderColumn>
 										</BootstrapTable>
 										</div>
 									)}
-									<div style={{ textAlignLast:'center'}}> Powered By <b>SimpleAccounts</b></div> 
+									<div style={{ textAlignLast:'center'}}> {strings.PoweredBy} <b>SimpleAccounts</b></div> 
 								</PDFExport>
 							</CardBody>
 						</div>

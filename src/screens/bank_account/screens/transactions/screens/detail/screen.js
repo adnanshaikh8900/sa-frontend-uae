@@ -32,6 +32,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 import API_ROOT_URL from '../../../../../../constants/config';
 import { ViewBankAccount } from './sections';
+import {data}  from '../../../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
   return {
@@ -61,11 +63,12 @@ const customStyles = {
 	}),
 };
 
-
+let strings = new LocalizedStrings(data);
 class DetailBankTransaction extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      language: window['localStorage'].getItem('language'),
       createMore: false,
       loading: true,
       fileName: '',
@@ -259,6 +262,7 @@ class DetailBankTransaction extends React.Component {
   };
 
   render() {
+    strings.setLanguage(this.state.language);
     const {
       project_list,
       transaction_category_list,
@@ -288,7 +292,7 @@ class DetailBankTransaction extends React.Component {
                         <div className="h4 mb-0 d-flex align-items-center">
                           <i className="icon-doc" />
                           <span className="ml-2">
-                            Update Bank Transaction Detail
+                          {strings.Update+" "+strings.Bank+" "+strings.Transaction+" "+strings.Details}
                           </span>
                         </div>
                       </Col>
@@ -360,7 +364,7 @@ class DetailBankTransaction extends React.Component {
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="chartOfAccountId">
                                       <span className="text-danger">*</span>
-                                      Transaction Type
+                                     {strings.TransactionType}
                                     </Label>
                                     <Select
                                     styles={customStyles}
@@ -400,7 +404,7 @@ class DetailBankTransaction extends React.Component {
                                           )('');
                                         }
                                       }}
-                                      placeholder="Select Type"
+                                      placeholder={strings.Select+" "+strings.Type}
                                       id="chartOfAccountId"
                                       name="chartOfAccountId"
                                       className={
@@ -422,12 +426,12 @@ class DetailBankTransaction extends React.Component {
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="date">
                                       <span className="text-danger">*</span>
-                                      Transaction Date
+                                      {strings.TransactionDate}
                                     </Label>
                                     <DatePicker
                                       id="transactionDate"
                                       name="transactionDate"
-                                      placeholderText="Transaction Date"
+                                      placeholderText={strings.TransactionDate}
                                       showMonthDropdown
                                       showYearDropdown
                                       dateFormat="dd/MM/yyyy"
@@ -464,13 +468,13 @@ class DetailBankTransaction extends React.Component {
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="transactionAmount">
                                       <span className="text-danger">*</span>
-                                      Total Amount
+                                     {strings.Total+" "+strings.Amount }
                                     </Label>
                                     <Input
                                       type="number"
                                       id="transactionAmount"
                                       name="transactionAmount"
-                                      placeholder="Amount"
+                                      placeholder={strings.Amount}
                                       onChange={(option) => {
                                         if (
                                           option.target.value === '' ||
@@ -502,7 +506,7 @@ class DetailBankTransaction extends React.Component {
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="transactionCategoryId">
-                                      Category
+                                      {strings.Category}
                                     </Label>
                                     <Select
                                     styles={customStyles}
@@ -555,14 +559,14 @@ class DetailBankTransaction extends React.Component {
                                 <Col lg={8}>
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="transactionDescription">
-                                      Description
+                                       {strings.Description}
                                     </Label>
                                     <Input
                                       type="textarea"
                                       name="description"
                                       id="description"
                                       rows="6"
-                                      placeholder="Description..."
+                                      placeholder={strings.Description}
                                       onChange={(option) =>
                                         props.handleChange(
                                           'transactionDescription',
@@ -578,7 +582,7 @@ class DetailBankTransaction extends React.Component {
                               <Row>
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
-                                    <Label htmlFor="projectId">Project</Label>
+                                    <Label htmlFor="projectId">{strings.Project}</Label>
                                     <Select
                                     styles={customStyles}
                                       className="select-default-width"
@@ -621,13 +625,13 @@ class DetailBankTransaction extends React.Component {
                                     <Col lg={6}>
                                       <FormGroup className="mb-3">
                                         <Label htmlFor="receiptNumber">
-                                          Reciept Number
+                                          {strings.ReceiptNumber}
                                         </Label>
                                         <Input
                                           type="text"
                                           id="receiptNumber"
                                           name="receiptNumber"
-                                          placeholder="Reciept Number"
+                                          placeholder={strings.ReceiptNumber}
                                           onChange={(option) => {
                                             if (
                                               option.target.value === '' ||
@@ -649,14 +653,14 @@ class DetailBankTransaction extends React.Component {
                                     <Col lg={12}>
                                       <FormGroup className="mb-3">
                                         <Label htmlFor="attachementDescription">
-                                          Attachment Description
+                                        {strings.AttachmentDescription}
                                         </Label>
                                         <Input
                                           type="textarea"
                                           name="attachementDescription"
                                           id="attachementDescription"
                                           rows="5"
-                                          placeholder="1024 characters..."
+                                          placeholder={strings.Description}
                                           onChange={(option) =>
                                             props.handleChange(
                                               'attachementDescription',
@@ -678,7 +682,7 @@ class DetailBankTransaction extends React.Component {
                                           name="attachment"
                                           render={({ field, form }) => (
                                             <div>
-                                              <Label>Reciept Attachment</Label>{' '}
+                                              <Label>{strings.ReceiptAttachment}</Label>{' '}
                                               <br />
                                               <div className="file-upload-cont">
                                                 <Button
@@ -693,7 +697,7 @@ class DetailBankTransaction extends React.Component {
                                                   className="btn-square mr-3"
                                                 >
                                                   <i className="fa fa-upload"></i>{' '}
-                                                  Upload
+                                                  {strings.upload}
                                                 </Button>
                                                 <input
                                                   id="fileInput"
@@ -766,7 +770,7 @@ class DetailBankTransaction extends React.Component {
                                       onClick={props.handleSubmit}
                                     >
                                       <i className="fa fa-dot-circle-o"></i>{' '}
-                                      Update
+                                       {strings.Update}
                                     </Button>
                                     <Button
                                       color="secondary"
@@ -781,7 +785,7 @@ class DetailBankTransaction extends React.Component {
                                         )
                                       }
                                     >
-                                      <i className="fa fa-ban"></i> Cancel
+                                      <i className="fa fa-ban"></i>  {strings.Cancel}
                                     </Button>
                                   </FormGroup>
                                 </Col>

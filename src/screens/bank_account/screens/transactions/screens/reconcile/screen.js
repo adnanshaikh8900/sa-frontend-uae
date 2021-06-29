@@ -320,7 +320,7 @@ class ReconcileTransaction extends React.Component {
 																		<DatePicker
 																			id="date"
 																			name="date"
-																			placeholderText="Transaction Date"
+																			placeholderText={strings.TransactionDate}
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd/MM/yyyy"
@@ -359,7 +359,7 @@ class ReconcileTransaction extends React.Component {
 																			type="number"
 																			id="closingBalance"
 																			name="closingBalance"
-																			placeholder="Amount"
+																			placeholder={strings.Amount}
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||

@@ -16,6 +16,8 @@ import { PDFExport } from '@progress/kendo-react-pdf';
 import './style.scss';
 import { InvoiceTemplate } from './sections';
 import moment from 'moment';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -35,11 +37,11 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
-
+let strings = new LocalizedStrings(data);
 class ViewCreditNote extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
+		this.state = {language: window['localStorage'].getItem('language'),
 			InvoiceDataList:[],
 			invoiceData: {},
 			totalNet: 0,
@@ -126,6 +128,7 @@ this.props.supplierInvoiceDetailActions
 		this.pdfExportComponent.save();
 	};	
 	render() {
+		strings.setLanguage(this.state.language);
 		const { invoiceData, currencyData,InvoiceDataList, id } = this.state;
 		const { profile } = this.props;
 
@@ -202,8 +205,8 @@ this.props.supplierInvoiceDetailActions
 										#
 									</th>
 									{/* <th style={{ padding: '0.5rem' }}>Item</th> */}
-									<th style={{ padding: '0.5rem' }}>Invoice Number</th>
-									<th style={{ padding: '0.5rem' }}>Customer Name</th>
+									<th style={{ padding: '0.5rem' }}>{strings.InvoiceNumber}</th>
+									<th style={{ padding: '0.5rem' }}>{strings.CustomerName}</th>
 								
 									{/* <th className="center" style={{ padding: '0.5rem' }}>
 										Invoice Date
@@ -212,10 +215,10 @@ this.props.supplierInvoiceDetailActions
 									Invoice Due Date
 									</th> */}
 									<th style={{ padding: '0.5rem', textAlign: 'left' }}>
-									Total Amount
+									{strings.Total+" "+strings.Amount}
 									</th>
 									<th style={{ padding: '0.5rem', textAlign: 'left' }}>
-									Total Vat Amount
+									{strings.TotalVat+" "+strings.Amount}
 									</th>
 								
 								</tr>

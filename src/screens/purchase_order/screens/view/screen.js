@@ -20,6 +20,9 @@ import { RFQTemplate } from './sections';
 import * as RequestForQuotationViewAction from '../../../request_for_quotation/screens/view/actions'
 import { Card, CardBody, Table } from 'reactstrap';
 import moment from 'moment';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
+
 const mapStateToProps = (state) => {
 	return {
 		profile: state.auth.profile,
@@ -50,11 +53,12 @@ const mapDispatchToProps = (dispatch) => {
 		//commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
-
+let strings = new LocalizedStrings(data);
 class ViewPurchaseOrder extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			POData: {},
 			PoDataList: {},
 			totalNet: 0,
@@ -138,6 +142,7 @@ class ViewPurchaseOrder extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { POData, currencyData, id,	PoDataList } = this.state;
 
 		const { profile } = this.props;
@@ -215,17 +220,17 @@ class ViewPurchaseOrder extends React.Component {
 					#
 				</th>
 				{/* <th style={{ padding: '0.5rem' }}>Item</th> */}
-				<th style={{ padding: '0.5rem' }}>GRN Number</th>
-				<th style={{ padding: '0.5rem' }}>Supplier Name</th>
-				<th style={{ padding: '0.5rem' }}>Status</th>
+				<th style={{ padding: '0.5rem' }}>{strings.GRNNumber}</th>
+				<th style={{ padding: '0.5rem' }}>{strings.SupplierName}</th>
+				<th style={{ padding: '0.5rem' }}>{strings.Status}</th>
 				<th className="center" style={{ padding: '0.5rem' }}>
-					Received Date
+				  {strings.ReceiveDate }
 				</th>
 				{/* <th className="center" style={{ padding: '0.5rem' }}>
 					Po Expiry Date
 				</th> */}
 				<th style={{ padding: '0.5rem', textAlign: 'left' }}>
-				TOTAL Amount
+			    {strings.Total+" "+strings.Amount }
 				</th>
 				{/* <th style={{ padding: '0.5rem', textAlign: 'left' }}>
 				TOTAL Vat Amount

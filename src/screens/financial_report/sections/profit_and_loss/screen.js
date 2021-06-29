@@ -26,6 +26,8 @@ import FilterComponent2 from '../filterComponet2';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -42,11 +44,12 @@ const mapDispatchToProps = (dispatch) => {
 		),
 	};
 };
-
+let strings = new LocalizedStrings(data);
 class ProfitAndLossReport extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: true,
 			dropdownOpen: false,
 			view: false,
@@ -160,6 +163,7 @@ class ProfitAndLossReport extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
 		const { profile, universal_currency_list,company_profile } = this.props;
 		return (
@@ -184,7 +188,7 @@ class ProfitAndLossReport extends React.Component {
 													}}
 													onClick={this.viewFilter}
 												>
-													<i className="fa fa-cog mr-2"></i>Customize Report
+													<i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
 												</p>
 											</div>
 											<div className="d-flex">
@@ -298,9 +302,9 @@ class ProfitAndLossReport extends React.Component {
 												: ''}
 											</h2>	
 											<br style={{ marginBottom: '5px' }} />
-											<b style ={{ fontSize: '18px'}}>Profit And Loss</b>
+											<b style ={{ fontSize: '18px'}}>{strings.ProfitandLoss}</b>
 											<br style={{ marginBottom: '5px' }} />
-											From {initValue.startDate} To {initValue.endDate}
+											{strings.From} {initValue.startDate} {strings.To} {initValue.endDate}
 											
 									</div>
 									<div>
@@ -331,7 +335,7 @@ class ProfitAndLossReport extends React.Component {
 													{Object.keys(this.state.data).length > 0 ? (
 														<>
 															<tr>
-																<td className="mainLable ">Operating Income</td>
+																<td className="mainLable ">{strings.OperatingIncome}</td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -358,7 +362,7 @@ class ProfitAndLossReport extends React.Component {
 															))}
 															<tr>
 																<td className="mainLable ">
-																	Total Operating Income
+																	{strings.Total+" "+strings.OperatingIncome}
 																</td>
 																<td></td>
 																<td className="text-right">
@@ -382,7 +386,7 @@ class ProfitAndLossReport extends React.Component {
 															</tr>
 															<tr>
 																<td className="mainLable ">
-																	Cost of Goods Sold
+																	{strings.CostofGoodsSold}
 																</td>
 																<td></td>
 																<td></td>
@@ -410,7 +414,7 @@ class ProfitAndLossReport extends React.Component {
 															))}
 															<tr>
 																<td className="mainLable ">
-																	Total Cost of Goods Sold
+																	{strings.Total+" "+strings.CostofGoodsSold}
 																</td>
 																<td></td>
 																<td className="text-right">
@@ -434,7 +438,7 @@ class ProfitAndLossReport extends React.Component {
 															</tr>
 															<tr>
 																<td></td>
-																<td className="mainLable ">Gross Profit</td>
+																<td className="mainLable ">{strings.GrossProfit}</td>
 																<td className="text-right">
 																	{this.state.data['grossProfit'] != null ? (
 																		<Currency
@@ -454,7 +458,7 @@ class ProfitAndLossReport extends React.Component {
 																</td>
 															</tr>
 															<tr>
-																<td className="mainLable ">Operating Expense</td>
+																<td className="mainLable ">{strings.Operating+" "+strings.Expense}</td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -481,7 +485,7 @@ class ProfitAndLossReport extends React.Component {
 															))}
 															<tr>
 																<td className="mainLable ">
-																	Total Operating Expense
+																	{strings.Total+" "+strings.Operating+" "+strings.Expense}
 																</td>
 																<td></td>
 																<td className="text-right">
@@ -505,7 +509,7 @@ class ProfitAndLossReport extends React.Component {
 															</tr>
 															<tr>
 																<td></td>
-																<td className="mainLable ">Operating Profit </td>
+																<td className="mainLable ">{strings.OperatingProfit} </td>
 																<td className="text-right">
 																	{this.state.data['operatingProfit'] !=
 																	null ? (
@@ -527,7 +531,7 @@ class ProfitAndLossReport extends React.Component {
 															</tr>
 															<tr>
 																<td className="mainLable ">
-																	Non Operating Income
+																	{strings.NonOperating+" "+strings.Income}
 																</td>
 																<td></td>
 																<td></td>
@@ -555,7 +559,7 @@ class ProfitAndLossReport extends React.Component {
 															))}
 															<tr>
 																<td className="mainLable ">
-																	Total Non Operating Income
+																	{strings.Total+" "+strings.NonOperating+" "+strings.Income}
 																</td>
 																<td></td>
 																<td className="text-right">
@@ -579,7 +583,7 @@ class ProfitAndLossReport extends React.Component {
 															</tr>
 															<tr>
 																<td className="mainLable ">
-																	Non Operating Expense
+																	 {strings.NonOperating+" "+strings.Expense}
 																</td>
 																<td></td>
 																<td></td>
@@ -607,7 +611,7 @@ class ProfitAndLossReport extends React.Component {
 															))}
 															<tr>
 																<td className="mainLable ">
-																	Total Non Operating Expense
+																	{strings.Total+" "+strings.NonOperating+" "+strings.Expense}
 																</td>
 																<td></td>
 																<td className="text-right">
@@ -632,7 +636,7 @@ class ProfitAndLossReport extends React.Component {
 															</tr>
 															<tr>
 																<td></td>
-																<td className="mainLable ">Net Profit/Loss </td>
+																<td className="mainLable ">{strings.NetProfitLoss} </td>
 																<td className="text-right">
 																	{this.state.data['netProfitLoss'] != null ? (
 																		<Currency
@@ -655,7 +659,7 @@ class ProfitAndLossReport extends React.Component {
 													) : (
 														<tr className="mainLable ">
 															<td style={{ textAlign: 'center' }} colSpan="9">
-																There is no data to display
+																{strings.Thereisnodatatodisplay}
 															</td>
 														</tr>
 													)}
@@ -663,7 +667,7 @@ class ProfitAndLossReport extends React.Component {
 											</Table>
 										</div>
 									)}
-									<div style={{ textAlignLast:'center'}}> Powered By <b>SimpleAccounts</b></div> 
+									<div style={{ textAlignLast:'center'}}> {strings.PoweredBy} <b>SimpleAccounts</b></div> 
 								</PDFExport>
 							</CardBody>
 						</div>

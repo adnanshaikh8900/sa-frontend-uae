@@ -409,7 +409,7 @@ class ImportTransaction extends React.Component {
 																		type="text"
 																		id="name"
 																		name="name"
-																		placeholder="Enter Name"
+																		placeholder={strings.Enter+" "+strings.Name}
 																		value={this.state.initValue.name}
 																		onChange={(e) => {
 																			this.handleInputChange(
@@ -440,7 +440,7 @@ class ImportTransaction extends React.Component {
 															<Col lg={3} md={7}>
 																<FormGroup>
 																	<Select
-																	placeholder="Select Configuration"
+																	placeholder={strings.Select +" "+strings.Configuration}
 																		value={
 																			configurationList &&
 																			selectOptionsFactory
@@ -556,7 +556,7 @@ class ImportTransaction extends React.Component {
 																										<Input
 																											className="ml-3"
 																											type="text"
-																											placeholder="Other"
+																											placeholder={strings.Other}
 																											value={
 																												this.state.initValue
 																													.otherDilimiterStr ||
@@ -799,7 +799,7 @@ class ImportTransaction extends React.Component {
 																							}}
 																							id=""
 																							rows="6"
-																							placeholder="Date Format"
+																							placeholder={strings.DateFormat}
 																						/>
 																						{this.state.error &&
 																							this.state.error.dateFormatId && (

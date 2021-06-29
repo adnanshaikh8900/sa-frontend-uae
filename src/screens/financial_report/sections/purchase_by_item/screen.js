@@ -27,6 +27,8 @@ import FilterComponent2 from '../filterComponet2';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -44,11 +46,12 @@ const mapDispatchToProps = (dispatch) => {
 		),
 	};
 };
-
+let strings = new LocalizedStrings(data);
 class PurchaseByitem extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
+		this.state = {			
+language: window['localStorage'].getItem('language'),
 			loading: true,
 			dropdownOpen: false,
 			view: false,
@@ -168,6 +171,7 @@ class PurchaseByitem extends React.Component {
 		
 	};
 	render() {
+		strings.setLanguage(this.state.language);
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
 		const { profile, universal_currency_list,company_profile,purchase_by_item } = this.props;
 		console.log(purchase_by_item.sbcustomerList)
@@ -193,7 +197,7 @@ class PurchaseByitem extends React.Component {
 													}}
 													onClick={this.viewFilter}
 												>
-													<i className="fa fa-cog mr-2"></i>Customize Report
+													<i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
 												</p>
 											</div>
 											<div className="d-flex">
@@ -307,9 +311,9 @@ class PurchaseByitem extends React.Component {
 												: ''}
 											</h2>	
 											<br style={{ marginBottom: '5px' }} />
-											<b style ={{ fontSize: '18px'}}>Purchase By Product</b>
+											<b style ={{ fontSize: '18px'}}>{strings.PurhaseByProduct}</b>
 											<br style={{ marginBottom: '5px' }} />
-											From {initValue.startDate} To {initValue.endDate}
+											{strings.From} {initValue.startDate} {strings.To} {initValue.endDate}
 											
 									</div>
 									<div>
@@ -341,13 +345,13 @@ class PurchaseByitem extends React.Component {
 												
 												className="table-header-bg"
 											>
-												Product Name
+												{strings.ProductName}
 											</TableHeaderColumn>
 											<TableHeaderColumn 
 												dataField="quantityPurchased" 
 												className="table-header-bg"
 											>
-												Quantity Purchased
+											 {strings.QuantityPurchased}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="totalAmountForAProduct"
@@ -355,7 +359,7 @@ class PurchaseByitem extends React.Component {
 												formatExtraData={universal_currency_list}
 												className="table-header-bg"
 											>
-													Amount
+													{strings.Amount}
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="averageAmount"
@@ -363,12 +367,12 @@ class PurchaseByitem extends React.Component {
 												formatExtraData={universal_currency_list}
 												className="table-header-bg"
 											>
-												Average Amount
+											 {strings.Average+" "+strings.Amount}
 											</TableHeaderColumn>
 										</BootstrapTable>
 										</div>
 									)}
-									<div style={{ textAlignLast:'center'}}> Powered By <b>SimpleAccounts</b></div> 
+									<div style={{ textAlignLast:'center'}}> {strings.PoweredBy} <b>SimpleAccounts</b></div> 
 								</PDFExport>
 							</CardBody>
 						</div>

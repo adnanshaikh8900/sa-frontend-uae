@@ -1380,6 +1380,9 @@ class CreateCreditNote extends React.Component {
 													creditNoteNumber: Yup.string().required(
 														'Credit Note Number is Required',
 													),
+													contactId: Yup.string().required(
+															'Customer Name is Required',
+														),
 													// contactId: Yup.string().required(
 													// 	'Customer is Required',
 													// ),

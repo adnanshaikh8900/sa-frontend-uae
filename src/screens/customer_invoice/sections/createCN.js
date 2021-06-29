@@ -958,9 +958,9 @@ class CreateCreditNoteModal extends React.Component {
 							// poApproveDate: Yup.string().required(
 							// 	'Order Date is Required',
 							// ),
-							// poReceiveDate: Yup.string().required(
-							// 	'Order Due Date is Required'
-							// ),
+							creditNoteDate: Yup.string().required(
+								'credit Note  Date is Required'
+							),
 							// attachmentFile: Yup.mixed()
 							// .test(
 							// 	'fileType',

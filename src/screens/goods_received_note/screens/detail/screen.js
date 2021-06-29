@@ -955,7 +955,7 @@ class DetailGoodsReceivedNote extends React.Component {
         <text>
         <b>Delete Request For Quotation?</b>
         </text>
-        const message = 'This Request For Quotation will be deleted permanently and cannot be recovered. ';
+        const message = 'This Good Received Note will be deleted permanently and cannot be recovered. ';
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
@@ -977,7 +977,7 @@ class DetailGoodsReceivedNote extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Request For Quotation Deleted Successfully',
+						'Good Received Note Deleted Successfully',
 					);
 					this.props.history.push('/admin/expense/request-for-quotation');
 				}

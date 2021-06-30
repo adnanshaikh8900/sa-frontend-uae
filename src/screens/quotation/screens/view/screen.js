@@ -155,7 +155,7 @@ class ViewQuotation extends React.Component {
 											className=" print-btn-cont"
 											style={{color: "black"}}
 											onClick={() => {
-												this.props.history.push('/admin/income/customer-invoice');
+												this.props.history.push('/admin/income/quotation');
 											}}
 										>
 										X

@@ -322,7 +322,7 @@ class UpdateEmployeeEmployment extends React.Component {
         </Col> */}
                                                                     </Row>
                                                                     <Row  >
-                                                                    <Col md="4">
+                                                                    {/* <Col md="4">
                                                                             <FormGroup>
                                                                                 <Label htmlFor="select"> {strings.Department} </Label>
                                                                                 <Input
@@ -330,7 +330,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                     id="department"
                                                                                     name="department"
                                                                                     value={props.values.department}
-                                                                                    placeholder="Enter department"
+                                                                                    placeholder={strings.Enter+strings.Department }
                                                                                     onChange={(value) => {
                                                                                         props.handleChange('department')(value);
 
@@ -341,7 +341,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                     <div className="invalid-feedback">{props.errors.department}</div>
                                                                                 )}
                                                                             </FormGroup>
-                                                                        </Col>
+                                                                        </Col> */}
                                                                         <Col md="4">
                                                                             <FormGroup className="mb-3">
                                                                                 <Label htmlFor="dateOfJoining"><span className="text-danger">*</span> {strings.DateOfJoining}</Label>
@@ -365,7 +365,8 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                 )}
                                                                             </FormGroup>
                                                                         </Col>
-                                                                        <Col md="4">
+
+                                                                         <Col md="4">
                                                                             <FormGroup>
                                                                                 <Label htmlFor="labourCard">{strings.LabourCard}</Label>
                                                                                 <Input
@@ -387,7 +388,8 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                 )}
 
                                                                             </FormGroup>
-                                                                        </Col>
+                                                                        </Col> 
+                                                                         
                                                                     </Row>
                                                                     <Row>
                                                                         <Col md="4">
@@ -487,7 +489,7 @@ class UpdateEmployeeEmployment extends React.Component {
 
                                                             </Row>
                                                             <Row>
-                                                            <Col md="4">
+                                                            {/* <Col md="4">
                                                                             <FormGroup>
                                                                                 <Label htmlFor="labourCard">{strings.LabourCard}</Label>
                                                                                 <Input
@@ -495,7 +497,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                     id="labourCard"
                                                                                     name="labourCard"
                                                                                     value={props.values.labourCard}
-                                                                                    placeholder="Enter labour Card"
+                                                                                    placeholder={strings.Enter+strings.LabourCard}
                                                                                     onChange={(value) => {
                                                                                         props.handleChange('labourCard')(value);
 
@@ -509,7 +511,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                 )}
 
                                                                             </FormGroup>
-                                                                        </Col>
+                                                                        </Col> */}
                                                             </Row>
                                                             <Row className='pull-right'>
                                                                 <FormGroup className="text-right">

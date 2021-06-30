@@ -42,6 +42,7 @@ RecieptNumber:"Numéro de reçu",
         SalaryStructure:"Structure salariale",
         EmployeeDesignation:"Désignation des employés",
 
+
          //Opening Balance
       OpeningBalance: "Solde d'ouverture",
       TRANSACTIONCATEGORYNAME : "NOM DE LA CATÉGORIE DE TRANSACTION",
@@ -633,7 +634,7 @@ UpdateEmployeePersonalDetails:"Mettre à jour les données personnelles des empl
 UpdateEmployementDetails:"Mettre à jour les détails de l'emploi",
 OverView:"Aperçu",
 SalaryDetails:"Détails du salaire",
-Payslips:"Bulletins de salaire",
+Payslips:"Fiches de paie",
 BasicInformation:"Informations de base",
 PersonalInformation:"Renseignements Personnels",
 FathersName:"Le nom du père",
@@ -689,6 +690,15 @@ LOPDays:"LOP Jours",
 ActualPayableDays:"Jours Payables Réels",
 NetPay:"SALAIRE NET",
 Period:"Période",
+
+Payslip:"Fiche de paie",
+PayPeriod:"Période de paie",
+PayDate:"Date de paie",
+IBanNumber:"Iban Numéro",
+Earnings:"Gains",
+Gross:"Brut",
+Payable:"Payable",
+PayslipNote:"Ceci est une fiche de paie générée par le système et ne nécessite pas de signature",
 
 //Reports
 Reports:"Rapports",

@@ -700,6 +700,16 @@ ActualPayableDays:"Actual Payable Days",
 NetPay:"Net Pay",
 Period:"Period",
 
+Payslip:"Payslip",
+PayPeriod:"Pay Period",
+PayDate:"Pay Date",
+IBanNumber:"IBan Number",
+Earnings:"Earnings",
+Gross:"Gross",
+Payable:"Payable",
+PayslipNote:"This is System generated Payslip And does not require a signature",
+
+
 //Reports
 Reports:"Reports",
 FinancialReports:"Financial Reports",

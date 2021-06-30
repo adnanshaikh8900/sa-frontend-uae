@@ -208,7 +208,7 @@ class CreateCurrencyConvert extends React.Component {
 													currencyCode: Yup.string().required(
 														'Currency is required',
 													),
-													exchangeRate: Yup.date().required(
+													exchangeRate: Yup.string().required(
 														'Exchange Rate is Required',
 													),
 												

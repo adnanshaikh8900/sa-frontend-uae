@@ -1037,7 +1037,7 @@ class PurchaseOrder extends React.Component {
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="supplierName"
-												dataSort
+												// dataSort
 											//	width="12%"
 												className="table-header-bg"
 											>

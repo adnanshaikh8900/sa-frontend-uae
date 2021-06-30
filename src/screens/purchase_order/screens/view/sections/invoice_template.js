@@ -269,7 +269,7 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{totalNet}
+													{totalNet.toFixed(2)}
 													 {/* ? (
 														<Currency
 															value={totalNet.toFixed(2)}
@@ -304,7 +304,7 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{POData.totalVatAmount }
+													{POData.totalVatAmount?POData.totalVatAmount.toFixed(2):0 }
 													{/* ? (
 														<Currency
 															value={POData.totalVatAmount.toFixed(2)}
@@ -339,7 +339,7 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{POData.totalAmount}
+													{POData.totalAmount?POData.totalAmount.toFixed(2):0}
 													 {/* ? (
 														<Currency
 															value={POData.totalAmount.toFixed(2)}

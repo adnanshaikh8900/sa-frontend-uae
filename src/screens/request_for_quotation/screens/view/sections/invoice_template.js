@@ -254,7 +254,7 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{totalNet}
+													{totalNet.toFixed(2)}
 													{/* // ? (
 													// 	<Currency
 													// 		value={totalNet.toFixed(2)}
@@ -290,7 +290,7 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{RFQData.totalVatAmount} 
+													{RFQData.totalVatAmount? RFQData.totalVatAmount.toFixed(2):0 } 
 													{/* ? (
 														<Currency
 															value={RFQData.totalVatAmount.toFixed(2)}
@@ -325,7 +325,7 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{RFQData.totalAmount }
+													{RFQData.totalAmount?RFQData.totalAmount.toFixed(2):0}
 													
 												</span>
 											</td>

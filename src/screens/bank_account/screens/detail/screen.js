@@ -194,7 +194,7 @@ class DetailBankAccount extends React.Component {
 			swiftCode: data.swift_code,
 			openingBalance: data.opening_balance,
 			//openingDate: data.openingDate,
-			bankCountry: data.countryId,
+			bankCountry: data.countryId.value,
 			bankAccountType: data.account_type,
 		};
 		this.props.detailBankAccountActions
@@ -713,10 +713,10 @@ class DetailBankAccount extends React.Component {
 																					props.handleChange('countryId')(
 																						option,
 																					);
-																					this.getStateList(option.value);
+																					// this.getStateList(option.value);
 																				} else {
 																					props.handleChange('countryId')('');
-																					this.getStateList(option.value);
+																					// this.getStateList(option.value);
 																				}
 																				props.handleChange('stateId')('');
 																			}}

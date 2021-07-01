@@ -137,7 +137,7 @@ class UpdateEmployeeEmployment extends React.Component {
 
     // Create or Edit Vat
     handleSubmit = (data) => {
-
+debugger
         this.setState({ disabled: true });
         const { current_employee_id } = this.state;
         const {
@@ -172,7 +172,7 @@ class UpdateEmployeeEmployment extends React.Component {
         );
         formData.append('dateOfJoining', dateOfJoining ? moment(dateOfJoining).format('DD-MM-YYYY') : '');
         formData.append('passportExpiryDate', passportExpiryDate ? moment(passportExpiryDate).format('DD-MM-YYYY') : '');
-        formData.append('dob', passportExpiryDate ? moment(passportExpiryDate).format('DD-MM-YYYY') : '');
+        formData.append('visaExpiryDate', visaExpiryDate ? moment(visaExpiryDate).format('DD-MM-YYYY') : '');
     
         this.props.detailEmployeeEmployementAction.updateEmployment(formData).then((res) => {
             if (res.status === 200) {
@@ -322,26 +322,7 @@ class UpdateEmployeeEmployment extends React.Component {
         </Col> */}
                                                                     </Row>
                                                                     <Row  >
-                                                                    <Col md="4">
-                                                                            <FormGroup>
-                                                                                <Label htmlFor="select"> {strings.Department} </Label>
-                                                                                <Input
-                                                                                    type="text"
-                                                                                    id="department"
-                                                                                    name="department"
-                                                                                    value={props.values.department}
-                                                                                    placeholder="Enter department"
-                                                                                    onChange={(value) => {
-                                                                                        props.handleChange('department')(value);
-
-                                                                                    }}
-                                                                                    className={props.errors.department && props.touched.department ? "is-invalid" : ""}
-                                                                                />
-                                                                                {props.errors.department && props.touched.department && (
-                                                                                    <div className="invalid-feedback">{props.errors.department}</div>
-                                                                                )}
-                                                                            </FormGroup>
-                                                                        </Col>
+                                                                   
                                                                         <Col md="4">
                                                                             <FormGroup className="mb-3">
                                                                                 <Label htmlFor="dateOfJoining"><span className="text-danger">*</span> {strings.DateOfJoining}</Label>
@@ -487,29 +468,7 @@ class UpdateEmployeeEmployment extends React.Component {
 
                                                             </Row>
                                                             <Row>
-                                                            <Col md="4">
-                                                                            <FormGroup>
-                                                                                <Label htmlFor="labourCard">{strings.LabourCard}</Label>
-                                                                                <Input
-                                                                                    type="text"
-                                                                                    id="labourCard"
-                                                                                    name="labourCard"
-                                                                                    value={props.values.labourCard}
-                                                                                    placeholder="Enter labour Card"
-                                                                                    onChange={(value) => {
-                                                                                        props.handleChange('labourCard')(value);
-
-                                                                                    }}
-                                                                                    className={props.errors.labourCard && props.touched.labourCard ? "is-invalid" : ""}
-                                                                                />
-                                                                                {props.errors.labourCard && props.touched.labourCard && (
-                                                                                    <div className="invalid-feedback">
-                                                                                        {props.errors.labourCard}
-                                                                                    </div>
-                                                                                )}
-
-                                                                            </FormGroup>
-                                                                        </Col>
+                                                           
                                                             </Row>
                                                             <Row className='pull-right'>
                                                                 <FormGroup className="text-right">

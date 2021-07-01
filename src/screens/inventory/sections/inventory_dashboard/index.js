@@ -153,7 +153,7 @@ class InventoryDashboard extends React.Component {
 			topSellingProducts: {},
 			lowSellingProducts: {},
 			topProfitGeneratingProducts: {},
-			totalRevenue: {},
+			totalRevenue:{},
 			quantityAvailable: '',
 			//	lowStockCount:[],
 			options: {},
@@ -541,7 +541,7 @@ class InventoryDashboard extends React.Component {
 
 					<Row>
 						<CardGroup style={{
-							width: "100%",
+							width: "110%",
 
 						}}>
 							<Card className="mr-2" style={{
@@ -735,7 +735,7 @@ class InventoryDashboard extends React.Component {
 														this.dropdown,
 														'Terms',
 													)
-													: []
+													: []                                         
 											}
 											defaultValue={{ label: "Yearly", value: "Yearly" }}
 											onChange={(val) => {
@@ -748,11 +748,14 @@ class InventoryDashboard extends React.Component {
 										</Select>
 									</div>
 									</div>
-									<CardBody>
-										<div>
+
+									<CardBody >
+										<div >
 											<Bar
 											data={databar}
 											options={databarOption}
+											style={{height: "200px"}}
+											
 											/>
 											
 										</div>

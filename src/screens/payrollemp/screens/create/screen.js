@@ -974,7 +974,7 @@ uploadImage = (picture, file) => {
                                                                                         <FormGroup className="mb-3 text-center">
                                                                                             <ImageUploader
                                                                                                 // withIcon={true}
-                                                                                                buttonText="Choose images"
+                                                                                                buttonText="Choose image"
                                                                                                 onChange={this.uploadImage}
                                                                                                 imgExtension={['jpg', 'gif', 'png', 'jpeg']}
                                                                                                 maxFileSize={11048576}

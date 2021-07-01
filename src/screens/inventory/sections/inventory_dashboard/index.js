@@ -637,7 +637,7 @@ class InventoryDashboard extends React.Component {
 							width: "100%",
 
 						}}>
-							<Card className="mr-2" style={{
+							{/* <Card className="mr-2" style={{
 								width: "50%",
 
 							}}>
@@ -717,8 +717,47 @@ class InventoryDashboard extends React.Component {
 											
 										</div>
 									</CardBody>
-							</Card>
+							</Card> */}
+	<Card style={{
+								
+							}}>
+									<div className="d-flex justify-content-between" style={{ color: "#2064d8", backgroundColor: "#edf2f9"}}>
+									<h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">
+									{strings.Totalprofitgenerated}
+								</h6>
+								<div className="w-25 mb-1 card-header-actions card-select-alignment">
+										<Select
+											options={
+												this.dropdown
+													? selectOptionsFactory.renderOptions(
+														'label',
+														'value',
+														this.dropdown,
+														'Terms',
+													)
+													: []
+											}
+											defaultValue={{ label: "Yearly", value: "Yearly" }}
+											onChange={(val) => {
+												this.handleChange3(val, 'term');
+											}}
 
+											id="term"
+											name="term"
+											placeholder="Select Terms ">
+										</Select>
+									</div>
+									</div>
+									<CardBody>
+										<div>
+											<Bar
+											data={databar}
+											options={databarOption}
+											/>
+											
+										</div>
+									</CardBody>
+							</Card>
 					</CardGroup>
 				</Row>
 				</div>

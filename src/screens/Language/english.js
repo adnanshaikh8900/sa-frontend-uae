@@ -245,7 +245,7 @@ PODueDate:"PO Due Date",
 GoodsReceivedNotes:"Goods Received Notes",						
 GRNNUMBER:"GRN NUMBER",									
 GRNRECEIVEDATE:"GRN RECEIVE DATE",			
-GRNREMARKS:"GRN REMARKS",			
+GRNREMARKS:"GRN Remarks",			
 AddNewGoodsReceivedNotes:"Add New Goods Received Notes",
 
 //AddGoodsReceiveNotes

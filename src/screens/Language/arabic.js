@@ -693,6 +693,15 @@ ActualPayableDays:" فعلي مستحق الدفع أيام",
 NetPay:"صافي الأجر",
 Period:"فترة",
 
+Payslip:"قسيمة الراتب",
+PayPeriod:"فترة الدفع",
+PayDate:"تاريخ الدفع",
+IBanNumber:"رقم الآيبان",
+Earnings:"الأرباح",
+Gross:"غزير",
+Payable:"مستحق الدفع",
+PayslipNote:"هذا هو إيصال الدفع الذي تم إنشاؤه بواسطة النظام ولا يتطلب توقيع",
+
 //Reports
 Reports:"التقارير",
 FinancialReports:"تقارير مالية",

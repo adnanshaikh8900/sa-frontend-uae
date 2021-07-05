@@ -229,7 +229,7 @@ console.log(this.state.Variable,"Variable")
 																
 																}}
 															>
-														<h5>	<b>	Payslip</b> ( {this.state.selectedData.salaryMonth} )
+														<h5>	<b>	{strings.Payslip}</b> ( {this.state.selectedData.salaryMonth} )
 														</h5>	</div>
 
 														</div>
@@ -258,17 +258,17 @@ console.log(this.state.Variable,"Variable")
 															>
 																
 															
-																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>Employee Name </Col>
+																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.EmployeeName} </Col>
 																		<Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.employeename !== '' ? this.state.selectedData.employeename : ('-')}</Col></Row>
 
-																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>Designation </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.designation !== '' ? this.state.selectedData.designation : ('-')}</Col></Row>
+																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.Designation} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.designation !== '' ? this.state.selectedData.designation : ('-')}</Col></Row>
 
 																	{/* <Row> <Col className='mt-2 mb-2'>Personal Email  </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.email ? this.state.selectedData.email : ('-')}</Col></Row>				 */}
 
-																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>Date of Joining</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.dateOfJoining !== '' ? this.state.selectedData.dateOfJoining : ('-')}</Col></Row>
+																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.DateOfJoining}</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.dateOfJoining !== '' ? this.state.selectedData.dateOfJoining : ('-')}</Col></Row>
 
-																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>Pay Period </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.salaryMonth !== '' ? this.state.selectedData.salaryMonth : ('-')}</Col></Row>
-																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>Pay Date </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.payDate !== '' ? this.state.selectedData.payDate : ('-')}</Col></Row>
+																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.PayPeriod} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.salaryMonth !== '' ? this.state.selectedData.salaryMonth : ('-')}</Col></Row>
+																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.PayDate} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.payDate !== '' ? this.state.selectedData.payDate : ('-')}</Col></Row>
 															
 															</div>
 														</Col>
@@ -281,17 +281,17 @@ console.log(this.state.Variable,"Variable")
 																}}
 															>
 									
-															<Row> <Col className='mt-2 mb-2'>Bank Holder Name </Col><Col className='mt-2 mb-2'>: &nbsp;{bankDetails.accountHolderName ?
+															<Row> <Col className='mt-2 mb-2'>{strings.BankHolderName} </Col><Col className='mt-2 mb-2'>: &nbsp;{bankDetails.accountHolderName ?
 																	bankDetails.accountHolderName : ('-')}</Col></Row>
 
 
-																<Row> <Col className='mt-2 mb-2'>Account Number </Col><Col className='mt-2 mb-2'>: &nbsp;{bankDetails.accountNumber  ? bankDetails.accountNumber : ('-')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2'>{strings.AccountNumber} </Col><Col className='mt-2 mb-2'>: &nbsp;{bankDetails.accountNumber  ? bankDetails.accountNumber : ('-')}</Col></Row>
 
-																<Row> <Col className='mt-2 mb-2'>Bank Name</Col><Col className='mt-2 mb-2'>: &nbsp;{bankDetails.bankName ? bankDetails.bankName : ('-')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2'>{strings.BankName}</Col><Col className='mt-2 mb-2'>: &nbsp;{bankDetails.bankName ? bankDetails.bankName : ('-')}</Col></Row>
 
-																<Row> <Col className='mt-2 mb-2'>Branch</Col><Col className='mt-2 mb-2'>: &nbsp;{bankDetails.branch ? bankDetails.branch : ('-')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2'>{strings.Branch}</Col><Col className='mt-2 mb-2'>: &nbsp;{bankDetails.branch ? bankDetails.branch : ('-')}</Col></Row>
 
-																<Row> <Col className='mt-2 mb-2'>IBan No </Col><Col className='mt-2 mb-2'>: &nbsp;{bankDetails.iban ? bankDetails.iban : ('-')}</Col></Row>
+																<Row> <Col className='mt-2 mb-2'>{strings.IBanNumber} </Col><Col className='mt-2 mb-2'>: &nbsp;{bankDetails.iban ? bankDetails.iban : ('-')}</Col></Row>
 
 															</div>
 														</Col>
@@ -312,8 +312,8 @@ console.log(this.state.Variable,"Variable")
 																	<tr>
 																		{/* <th className="center" style={{ padding: '0.5rem', width: "40px" }}>																			#									</th> */}
 																		{/* <th style={{ padding: '0.5rem' }}>Item</th> */}
-																		<th style={{ padding: '0.5rem' }}>Earnings</th>
-																		<th style={{ padding: '0.5rem' }}>Amount</th>
+																		<th style={{ padding: '0.5rem' }}>{strings.Earnings} </th>
+																		<th style={{ padding: '0.5rem' }}>{strings.Amount}</th>
 
 																	</tr>
 																</thead>
@@ -359,7 +359,7 @@ console.log(this.state.Variable,"Variable")
 														<tfoot  className="table-header-bg table-bordered table-hover">
 															<tr>
 																{/* <td></td> */}
-																<td><b>Gross Earnings</b></td>
+																<td><b>{strings.Gross+" "+strings.Earnings}</b></td>
 																<td>{this.state.selectedData.earnings}</td>
 															</tr>
 														</tfoot>
@@ -373,8 +373,8 @@ console.log(this.state.Variable,"Variable")
 																			#
 									</th> */}
 																		{/* <th style={{ padding: '0.5rem' }}>Item</th> */}
-																		<th style={{ padding: '0.5rem' }}>Deductions</th>
-																		<th style={{ padding: '0.5rem' }}>Amount</th>
+																		<th style={{ padding: '0.5rem' }}>{strings.Deductions}</th>
+																		<th style={{ padding: '0.5rem' }}>{strings.Amount}</th>
 
 																	</tr>
 																</thead>
@@ -395,7 +395,7 @@ console.log(this.state.Variable,"Variable")
 														<tfoot  className="table-header-bg table-bordered table-hover">
 															<tr>
 																{/* <td></td> */}
-																<td><b>Total Deductions</b></td>
+																<td><b>{strings.Total+" "+strings.Deductions}</b></td>
 																<td>{this.state.selectedData.deductions ? this.state.selectedData.deductions : 0}</td>
 															</tr>
 														</tfoot>
@@ -414,13 +414,13 @@ console.log(this.state.Variable,"Variable")
 															backgroundColor: "#e4f8ff"
 														}}
 													>
-														<h5>	 Total Net Payable <b>{this.state.selectedData.netPay}</b>
+														<h5> {strings.TotalNet+" "+strings.Payable} <b>{this.state.selectedData.netPay}</b>
 														</h5>
 														<h5>	 ( {upperFirst(converter.toWords(toInteger(this.state.selectedData.netPay)))} )
 														</h5>
 													</div>
 												</CardBody>
-												<div className="text-center" style={{color:"#979b9f",    margin: "20px"}}>This is System generated Payslip And does not require a signature</div>
+												<div className="text-center" style={{color:"#979b9f",    margin: "20px"}}>{strings.PayslipNote}</div>
 											</PDFExport>
 										</div>
 									</Col>

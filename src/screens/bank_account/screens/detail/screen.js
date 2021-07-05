@@ -99,7 +99,8 @@ class DetailBankAccount extends React.Component {
 			// 	},
 			// ],
 			dialog: null,
-
+			disabled: false,
+			disabled1: false,
 			current_bank_account_id: null,
 			current_bank_account: null,
 
@@ -183,6 +184,7 @@ class DetailBankAccount extends React.Component {
 	};
 
 	handleSubmit = (data) => {
+		this.setState({ disabled: true });
 		let obj = {
 			bankAccountId: this.state.current_bank_account_id,
 			bankAccountName: data.account_name,
@@ -201,6 +203,7 @@ class DetailBankAccount extends React.Component {
 			.updateBankAccount(obj)
 			.then((res) => {
 				if (res.status === 200) {
+					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
 						'success',
 						'Bank Account Details Updated Successfully',
@@ -253,11 +256,13 @@ class DetailBankAccount extends React.Component {
 	};
 
 	removeBankAccount = () => {
+		this.setState({ disabled1: true });
 		let { current_bank_account_id } = this.state;
 		this.removeDialog();
 		this.props.detailBankAccountActions
 			.removeBankAccountByID(current_bank_account_id)
 			.then(() => {
+				this.setState({ disabled1: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
 					'Bank Account Deleted Successfully',
@@ -869,9 +874,12 @@ class DetailBankAccount extends React.Component {
 																	name="button"
 																	color="danger"
 																	className="btn-square"
+																	disabled={this.state.disabled1}
 																	onClick={() => this.closeBankAccount(current_bank_account_id)}
 																>
-																	<i className="fa fa-trash"></i> {strings.Delete}
+																	<i className="fa fa-trash"></i>{this.state.disabled
+																				? 'Deleting...'
+																				: strings.Delete}
 																</Button>
 															</FormGroup>
 															<FormGroup className="text-right">
@@ -880,8 +888,11 @@ class DetailBankAccount extends React.Component {
 																	name="submit"
 																	color="primary"
 																	className="btn-square mr-3"
+																	disabled={this.state.disabled}
 																>
-																	<i className="fa fa-dot-circle-o"></i> {strings.Update}
+																	<i className="fa fa-dot-circle-o"></i> {this.state.disabled
+																				? 'Updating...'
+																				: strings.Update}
 																</Button>
 																<Button
 																	type="button"

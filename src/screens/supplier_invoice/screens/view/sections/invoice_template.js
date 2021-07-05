@@ -231,7 +231,7 @@ class InvoiceTemplate extends Component {
 															}
 														/>
 													)}</b></h6>
-														<span className="mb-1 ml-2">{strings.Status } :  {this.renderInvoiceStatus(status)}</span>
+														<span className="mb-1 ml-2">{strings.Status } :  {this.renderInvoiceStatus(invoiceData.status)}</span>
 								</div>
 								</div>
 							</div>

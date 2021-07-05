@@ -1921,14 +1921,14 @@ console.log(po_list)
 															<Row>
 																<Col lg={8}>
 																	<FormGroup className="py-2">
-																		<Label htmlFor="grnRemarks">{strings.Notes}</Label>
+																		<Label htmlFor="grnRemarks">{strings.GRNREMARKS}</Label>
 																		<Input
 																			type="textarea"
 																			maxLength="255"
 																			name="grnRemarks"
 																			id="grnRemarks"
 																			rows="6"
-																			placeholder={strings.Notes}
+																			placeholder={strings.GRNREMARKS}
 																			onChange={(option) =>
 																				props.handleChange('grnRemarks')(option)
 																			}

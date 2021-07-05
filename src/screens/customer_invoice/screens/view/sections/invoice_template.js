@@ -376,7 +376,7 @@ class InvoiceTemplate extends Component {
 												<span>
 													{invoiceData.discount ? (
 														<Currency
-															value={invoiceData.discount.toFixed(2)}
+															value={invoiceData.discount ? '-'+invoiceData.discount.toFixed(2) : invoiceData.discount.toFixed(2)}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode

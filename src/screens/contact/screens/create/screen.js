@@ -231,17 +231,17 @@ class CreateContact extends React.Component {
 													// ),
 													mobileNumber: Yup.string()
 														.required('Mobile Number is required')
-														// .test(
-														// 	'quantity',
-														// 	'Invalid Mobile Number',
-														// 	(value) => {
-														// 		if (isValidPhoneNumber(value)) {
-														// 			return true;
-														// 		} else {
-														// 			return false;
-														// 		}
-														// 	},
-														// )
+														.test(
+															'quantity',
+															'Invalid Mobile Number',
+															(value) => {
+																if (isValidPhoneNumber(value)) {
+																	return true;
+																} else {
+																	return false;
+																}
+															},
+														)
 														,
 														billingEmail: Yup.string().email("Invalid Billing  Email ")
 													//     addressLine1: Yup.string()

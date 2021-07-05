@@ -114,11 +114,11 @@ class CreateContact extends React.Component {
 					},
 				},
 			});
-			this.formRef.current.setFieldValue(
-				'currencyCode',
-				response.data[0].currencyCode,
-				true,
-			);
+			// this.formRef.current.setFieldValue(
+			// 	'currencyCode',
+			// 	response.data[0].currencyCode,
+			// 	true,
+			// );
 		});
 	};
 

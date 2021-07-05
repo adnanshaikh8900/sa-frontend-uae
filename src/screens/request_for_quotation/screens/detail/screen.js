@@ -516,7 +516,8 @@ class DetailRequestForQuotation extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		return row.subTotal === 0 ? this.state.supplier_currency_symbol + row.subTotal.toFixed(2) : this.state.supplier_currency_symbol + row.subTotal.toFixed(2);
+		// return row.subTotal === 0 ? this.state.supplier_currency_symbol + row.subTotal.toFixed(2) : this.state.supplier_currency_symbol + row.subTotal.toFixed(2);
+		return row.subTotal === 0 ? row.subTotal.toFixed(2) :  row.subTotal.toFixed(2);
 	};
 	addRow = () => {
 		const data = [...this.state.data];
@@ -1318,7 +1319,7 @@ class DetailRequestForQuotation extends React.Component {
 																	</FormGroup>
 																</Col>
 															
-																<Col lg={3}>
+																{/* <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
 																		<span className="text-danger">*</span>
@@ -1373,7 +1374,7 @@ class DetailRequestForQuotation extends React.Component {
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>
+															</Col> */}
 															</Row>
 															<hr />
 															<Row>
@@ -1677,7 +1678,7 @@ class DetailRequestForQuotation extends React.Component {
 																							}
 																							/>
 																							)} */}
-																								{this.state.supplier_currency_symbol}
+																								{/* {this.state.supplier_currency_symbol} */}
 																							{initValue.total_net.toFixed(2)}
 																						</label>
 																					</Col>
@@ -1704,7 +1705,7 @@ class DetailRequestForQuotation extends React.Component {
 																							}
 																							/>
 																							)} */}
-																								{this.state.supplier_currency_symbol}
+																								{/* {this.state.supplier_currency_symbol} */}
 																							{initValue.totalVatAmount.toFixed(
 																							2,
 																						)}
@@ -1731,7 +1732,7 @@ class DetailRequestForQuotation extends React.Component {
 																							}
 																							/>
 																							)} */}
-																								{this.state.supplier_currency_symbol}
+																								{/* {this.state.supplier_currency_symbol} */}
 																							{initValue.totalAmount.toFixed(2)}
 																						</label>
 																					</Col>

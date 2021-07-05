@@ -494,6 +494,7 @@ Applycreditsfrom:"Apply credits from",
 AmountToCredit:"Amount To Credit",
 Save:"Save",
 Saving:"Saving",
+RemainingCredits:"Remaining Credits",
 
 //ImportStatement
 ImportStatement:"Import Statement",	       

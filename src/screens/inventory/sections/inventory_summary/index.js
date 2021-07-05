@@ -292,7 +292,7 @@ class InventorySummary extends React.Component {
 										inventory_history_list:res.data,
 											});
 
-								}debugger
+								}
 							})
 							.catch((err) => {
 								this.props.commonActions.tostifyAlert(
@@ -309,7 +309,7 @@ class InventorySummary extends React.Component {
 						}//if
 						else {
 							this.props.commonActions.tostifyAlert(
-								'info',"Sorry , No supplier Available to View Inventory History List ! ")
+								'success',"Sorry , No supplier Available to View Inventory History List")
 						}
 					}
 

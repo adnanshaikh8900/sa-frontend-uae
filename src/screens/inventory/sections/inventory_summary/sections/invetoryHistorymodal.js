@@ -114,6 +114,12 @@ class InventoryHistoryModal extends React.Component {
 
 	// Create
 
+	renderUnitCost  = (cell, row, extraData) => {
+		 return row.unitCost ? row.unitCost.toFixed(2) :'';
+	};
+	renderunitSellingPrice  = (cell, row, extraData) => {
+		return row.unitSellingPrice ? row.unitSellingPrice.toFixed(2) :'';
+	};
 	displayMsg = (err) => {
 		toast.error(`${err.data}`, {
 			position: toast.POSITION.TOP_RIGHT,
@@ -301,10 +307,10 @@ console.log(inventory_history_list,"inventory_history_list")
 												<TableHeaderColumn  dataField="invoiceNumber" dataSort className="table-header-bg">
 												 {strings.InvoiceNumber}
 												</TableHeaderColumn >
-												<TableHeaderColumn  dataField="unitCost" dataSort className="table-header-bg">
+												<TableHeaderColumn  dataField="unitCost" dataFormat={this.renderUnitCost} dataSort className="table-header-bg">
 												 {strings.UnitCost} 
 												</TableHeaderColumn >
-												<TableHeaderColumn  dataField="unitSellingPrice" dataSort className="table-header-bg">
+												<TableHeaderColumn  dataField="unitSellingPrice" dataFormat={this.renderunitSellingPrice} dataSort className="table-header-bg">
 												 {strings.UnitSellingPrice}
 												</TableHeaderColumn >
 											</BootstrapTable>

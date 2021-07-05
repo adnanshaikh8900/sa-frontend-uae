@@ -316,7 +316,7 @@ class PurchaseOrder extends React.Component {
 								this.renderActionForState(row.id);
 							}}
 							>
-								<i className="fas fa-send" />   {strings.CreateGRN}
+								<i className="fas fa-plus" />   {strings.CreateGRN}
 							</DropdownItem>
 							)}
 							{row.status === "Approved" && (

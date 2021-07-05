@@ -2344,12 +2344,12 @@ class CreateSupplierInvoice extends React.Component {
 																												.currencyIsoCode
 																										: 'USD'
 																								}
-																							/>
+																							
 																						)} */}
 																						{this.state.supplier_currency_symbol}
-																						{this.state.initValue.discount.toFixed(
-																									2,
-																								)}
+																						{this.state.initValue.discount  ? '-'+initValue.discount.toFixed(2) : initValue.discount.toFixed(2)
+																									 
+																							}
 																					</label>
 																				</Col>
 																			</Row>

@@ -2202,9 +2202,9 @@ class DetailSupplierInvoice extends React.Component {
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
 																						{this.state.supplier_currency_symbol}
-																							{this.state.initValue.discount.toFixed(
-																							2,
-																						)}
+																							{this.state.initValue.discount  ? '-'+initValue.discount.toFixed(2) : initValue.discount.toFixed(2)
+																							
+																						}
 																						
 																						</label>
 																					</Col>

@@ -203,7 +203,7 @@ class DetailGoodsReceivedNote extends React.Component {
 										: 0,
 										totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
 										total_net: 0,
-									notes: res.data.notes ? res.data.notes : '',
+									grnRemarks: res.data.grnRemarks ? res.data.grnRemarks : '',
 									lineItemsString: res.data.poQuatationLineItemRequestModelList
 										? res.data.poQuatationLineItemRequestModelList
 										: [],
@@ -907,7 +907,7 @@ class DetailGoodsReceivedNote extends React.Component {
 			grnReceiveDate,
 			supplierId,
 			grnNumber,
-			notes,
+			grnRemarks,
 			supplierReferenceNumber,
 			totalVatAmount,
 			totalAmount,
@@ -924,7 +924,7 @@ class DetailGoodsReceivedNote extends React.Component {
 				? moment(grnReceiveDate, 'DD/MM/YYYY').toDate()
 				: grnReceiveDate,
 		);
-		formData.append('notes', notes ? notes : '');
+		formData.append('grnRemarks', grnRemarks ? grnRemarks : '');
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
@@ -1606,19 +1606,19 @@ class DetailGoodsReceivedNote extends React.Component {
 															{data.length > 0 && (
 																<Row>
 																		<Col lg={8}>
-																	<FormGroup className="py-2">
-																		<Label htmlFor="notes">{strings.Notes}</Label>
+																		<FormGroup className="py-2">
+																		<Label htmlFor="grnRemarks">{strings.GRNREMARKS}</Label>
 																		<Input
 																			type="textarea"
 																			maxLength="255"
-																			name="notes"
-																			id="notes"
+																			name="grnRemarks"
+																			id="grnRemarks"
 																			rows="6"
-																			placeholder={strings.Notes}
+																			placeholder={strings.GRNREMARKS}
 																			onChange={(option) =>
-																				props.handleChange('notes')(option)
+																				props.handleChange('grnRemarks')(option)
 																			}
-																			value={props.values.notes}
+																			value={props.values.grnRemarks}
 																		/>
 																	</FormGroup>
 																

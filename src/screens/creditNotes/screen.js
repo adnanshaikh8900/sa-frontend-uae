@@ -982,7 +982,7 @@ class CreditNotes extends React.Component {
 													}}
 												/>
 											</Col>
-											<Col lg={2} className="mb-1">
+											{/* <Col lg={2} className="mb-1">
 												<DatePicker
 													className="form-control"
 													id="date"
@@ -994,12 +994,12 @@ class CreditNotes extends React.Component {
 													showYearDropdown
 													dateFormat="dd/MM/yyyy"
 													dropdownMode="select"
-													// value={filterData.invoiceDate}
+													value={filterData.invoiceDate}
 													onChange={(value) => {
 														this.handleChange(value, 'invoiceDate');
 													}}
 												/>
-											</Col>
+											</Col> */}
 
 											<Col lg={2} className="mb-1">
 												<Input

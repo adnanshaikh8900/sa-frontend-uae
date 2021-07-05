@@ -1598,7 +1598,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																	<i className="fa fa-plus"></i> {strings.AddASupplier}
 																</Button>
 															</Col>
-															<Col lg={3}>
+															{/* <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
 																		<span className="text-danger">*</span>
@@ -1654,7 +1654,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>
+															</Col> */}
 														</Row>
 														<hr />
 														<Row>

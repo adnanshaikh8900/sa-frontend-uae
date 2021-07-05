@@ -2123,9 +2123,7 @@ class DetailCustomerInvoice extends React.Component {
 																							/>
 																							)} */}
 																							{this.state.customer_currency_symbol} &nbsp;
-																								{this.state.initValue.discount.toFixed(
-																							2,
-																						)}
+																							{initValue.discount ? '-'+initValue.discount.toFixed(2) : initValue.discount.toFixed(2)}
 																						</label>
 																					</Col>
 																				</Row>

@@ -46,6 +46,7 @@ class UpdateRole extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			disabled: false,
 			language: window['localStorage'].getItem('language'),
 			initValue: {},
 			loading: true,
@@ -151,6 +152,7 @@ class UpdateRole extends React.Component {
 
 	// Create or Edit Vat
 	handleSubmit = (data, resetForm) => {
+		this.setState({ disabled: true });
 		const obj = {
 			roleName: data.name,
 			roleDescription: data.description,
@@ -160,6 +162,7 @@ class UpdateRole extends React.Component {
 		this.props.RoleActions.updateRole(obj)
 			.then((res) => {
 				if (res.status === 200) {
+					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
 						'success',
 						'Role Updated Successfully!',
@@ -304,14 +307,18 @@ class UpdateRole extends React.Component {
 																	name="submit"
 																	color="primary"
 																	className="btn-square mr-3"
+																	disabled={this.state.disabled}
 																	onClick={() => {
 																		this.setState({ createMore: false }, () => {
 																			props.handleSubmit();
 																		});
 																	}}
 																>
-																	<i className="fa fa-dot-circle-o"></i> {strings.Update}
+																	<i className="fa fa-dot-circle-o"></i>	{this.state.disabled
+																				? 'Updating...'
+																				: strings.Update}
 																</Button>
+
 																<Button
 																	type="submit"
 																	color="secondary"

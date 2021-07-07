@@ -387,8 +387,8 @@ class ViewEmployee extends React.Component {
 
 																<Row> <Col className='mt-2 mb-2'>{strings.MobileNumber} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.mobileNumber  ? this.state.EmployeeDetails.mobileNumber : ('-')}</Col></Row>
 
-																<Row> <Col className='mt-2 mb-2'>{strings.Address} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.EmployeeDetails.presentAddress || this.state.EmployeeDetails.city || this.state.EmployeeDetails.pincode || this.state.EmployeeDetails.stateName || this.state.EmployeeDetails.countryName ? 
-																this.state.EmployeeDetails.presentAddress + ' , ' + this.state.EmployeeDetails.city + ' , ' + this.state.EmployeeDetails.countryName + ' , ' + this.state.EmployeeDetails.stateName+ ' , ' + this.state.EmployeeDetails.pincode +" ." :'-'}</Col></Row>
+																<Row> <Col className='mt-2 mb-2'>{strings.Address} </Col><Col className='mt-2 mb-2'>: &nbsp;{(this.state.EmployeeDetails.presentAddress ? this.state.EmployeeDetails.presentAddress : " ") + ' , ' + (this.state.EmployeeDetails.city ? this.state.EmployeeDetails.city : '')  + ' , ' + 
+																(this.state.EmployeeDetails.stateName ? this.state.EmployeeDetails.stateName : ' ') + ' , ' + (this.state.EmployeeDetails.countryName ? this.state.EmployeeDetails.countryName : '')+ ' , ' + (this.state.EmployeeDetails.pincode ? this.state.EmployeeDetails.pincode : ' ')  }</Col></Row>
 
 															</div>
 														</CardBody>

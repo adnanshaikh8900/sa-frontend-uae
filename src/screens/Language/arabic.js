@@ -676,7 +676,7 @@ CreateDesignation:"إنشاء التعيين",
 EmployeeDesignationName:"اسم تعيين الموظف",	
 UpdateDesignation:"تحديث التعيين",	
 DesignationName:"اسم التعيين",	
-
+PayrollConfigurations:"تكوينات الرواتب",
 GeneratePayroll:"توليد كشوف المرتبات",
 GenerateSalary:"توليد الراتب",
 PAYDAYS:"أيام الدفع",

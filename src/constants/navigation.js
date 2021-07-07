@@ -280,29 +280,35 @@ export default {
 					path: 'ViewPayrollRun',
 				},
 				{
-					name: strings.SalaryRoles,
-					url: '/admin/payroll/salaryRoles',
-					icon: 'fas fa-user-tie',
+					name: strings.PayrollConfigurations,
+					url: '/admin/payroll/config',
+					icon: 'fas fa-cogs',
 					path: 'ViewSalaryRole',
 				},
+				// {
+				// 	name: strings.SalaryRoles,
+				// 	url: '/admin/payroll/salaryRoles',
+				// 	icon: 'fas fa-user-tie',
+				// 	path: 'ViewSalaryRole',
+				// },
 				// {
 				// 	name: strings.SalaryTemplates,
 				// 	url: '/admin/payroll/salaryTemplate',
 				// 	icon: 'fas fa-chalkboard-teacher',
 				// 	path: 'ViewSalaryTemplate',
 				// },
-				{
-					name: strings.SalaryStructure,
-					url: '/admin/payroll/salaryStructure',
-					icon: 'fas fa-chalkboard-teacher',
-					path: 'ViewSalaryStructure',
-				},
-				{
-					name: strings.EmployeeDesignation,
-					url: '/admin/payroll/employeeDesignation',
-					icon: 'fas fa-id-card-alt',
-					path: 'ViewEmployeeDesignation',
-				},
+				// {
+				// 	name: strings.SalaryStructure,
+				// 	url: '/admin/payroll/salaryStructure',
+				// 	icon: 'fas fa-chalkboard-teacher',
+				// 	path: 'ViewSalaryStructure',
+				// },
+				// {
+				// 	name: strings.EmployeeDesignation,
+				// 	url: '/admin/payroll/employeeDesignation',
+				// 	icon: 'fas fa-id-card-alt',
+				// 	path: 'ViewEmployeeDesignation',
+				// },
 
 				// {
 				// 	name: 'Journals',

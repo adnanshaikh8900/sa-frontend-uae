@@ -176,7 +176,8 @@ import {
 	ApplyToInvoice,
 	Refund,
 	UpdateEmployeeEmployment,
-	UpdateSalaryComponent
+	UpdateSalaryComponent,
+	PayrollConfigurations
 } from 'screens';
 
 const adminRoutes = [
@@ -185,6 +186,7 @@ const adminRoutes = [
 		name: 'Dashboard',
 		component: Dashboard.screen,
 	},
+
 	{
 		path: '/admin/dashboard-two',
 		name: 'DashboardTwo',
@@ -599,11 +601,17 @@ const adminRoutes = [
 		name: 'UpdateSalaryTemplate',
 		component: DetailSalaryTemplate.screen,
 	},
+	// {
+	// 	path: '/admin/payroll/salaryRoles',
+	// 	name: 'ViewSalaryRole',
+	// 	component: SalaryRoles.screen,
+	// },
 	{
-		path: '/admin/payroll/salaryRoles',
+		path: '/admin/payroll/config',
 		name: 'ViewSalaryRole',
-		component: SalaryRoles.screen,
+		component: PayrollConfigurations.screen,
 	},
+	
 	{
 		path: '/admin/payroll/salaryTemplate/create',
 		name: 'CreateSalaryTemplate',

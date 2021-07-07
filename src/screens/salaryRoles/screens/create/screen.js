@@ -113,7 +113,7 @@ class CreateSalaryRoles extends React.Component {
           })
           resetForm(this.state.initValue)
         } else {
-          this.props.history.push('/admin/payroll/salaryRoles')
+          this.props.history.push('/admin/payroll/config');
         }
       }
     }).catch((err) => {
@@ -217,7 +217,7 @@ class CreateSalaryRoles extends React.Component {
                                     <i className="fa fa-refresh"></i>  {strings.CreateandMore}
                                       </Button>
                                   <Button color="secondary" className="btn-square"
-                                    onClick={() => { this.props.history.push('/admin/payroll/salaryRoles') }}>
+                                    onClick={() => { 	this.props.history.push('/admin/payroll/config'); }}>
                                     <i className="fa fa-ban"></i>  {strings.Cancel}
                                       </Button>
                                 </FormGroup>

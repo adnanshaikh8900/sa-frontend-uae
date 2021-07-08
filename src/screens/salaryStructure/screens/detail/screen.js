@@ -68,6 +68,7 @@ class DetailSalaryStructure extends React.Component {
   }
 
   initializeData = () => {
+    debugger
     if (this.props.location.state && this.props.location.state.id) {
       this.props.salarayStructureDetailActions.getSalaryStructureById
       (this.props.location.state.id).then((res) => {
@@ -85,7 +86,7 @@ class DetailSalaryStructure extends React.Component {
         this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
       })
     } else {
-      this.props.history.push('/admin/payroll/salaryStructures')
+      this.props.history.push('/admin/payroll/config')
     }
   }
 
@@ -122,7 +123,7 @@ class DetailSalaryStructure extends React.Component {
 					'success',
 					'salary Structure Updated Successfully.',
 				);
-				this.props.history.push('/admin/payroll/salaryStructure');
+				this.props.history.push('/admin/payroll/config');
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
@@ -154,7 +155,7 @@ class DetailSalaryStructure extends React.Component {
     this.props.employeeDetailActions.deleteEmployee(current_employee_id).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Employee Deleted Successfully !!')
-        this.props.history.push('/admin/master/employee')
+        this.props.history.push('/admin/payroll/config')
       }
     }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
@@ -268,13 +269,13 @@ class DetailSalaryStructure extends React.Component {
                                 </Row>
                                 <Row>
                                   <Col lg={12} className="d-flex align-items-center justify-content-between flex-wrap mt-5">
-                                    <FormGroup>
+                                    {/* <FormGroup>
                                       <Button type="button" name="button" color="danger" className="btn-square"
                                         onClick={this.deleteEmployee}
                                       >
                                         <i className="fa fa-trash"></i> {strings.Delete}
                                     </Button>
-                                    </FormGroup>
+                                    </FormGroup> */}
                                     <FormGroup className="text-right">
                                     <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
                                     this.setState({ createMore: false }, () => {
@@ -284,7 +285,7 @@ class DetailSalaryStructure extends React.Component {
                                         <i className="fa fa-dot-circle-o"></i>  {strings.Update}
                                     </Button>
                                       <Button type="button" color="secondary" className="btn-square"
-                                        onClick={() => { this.props.history.push('/admin/payroll/salaryStructure') }}>
+                                        onClick={() => { this.props.history.push('/admin/payroll/config') }}>
                                         <i className="fa fa-ban"></i> {strings.Cancel}
                                     </Button>
                                     </FormGroup>

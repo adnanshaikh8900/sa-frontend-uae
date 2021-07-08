@@ -35,8 +35,8 @@ Employee:"Employee",
 PayrollRun:"Payroll Run",
 SalaryRoles:"Salary Roles",
 SalaryTemplates:"Salary Templates",
-SalaryStructure:"Salary Structure",
-EmployeeDesignation:"Employee Designation",
+SalaryStructure:"Salary Structures",
+EmployeeDesignation:"Employee Designations",
 
       //Opening Balances
 
@@ -595,7 +595,8 @@ Save:"Save",
 APIKey:"API Key",
 CreateCN:"Create CN",
 
-//Payroll
+//Payroll 
+PayrollConfigurations:"Payroll Config",
 Employees:"Employees",
 NewEmployee:"New Employee",
 CreateEmployee:"Create Employee", 
@@ -616,7 +617,7 @@ AddDesignation:"Add Designation",
 PresentAddress:"Present Address",	
 SalarySlip:"Salary Slip",	
 EmployeeCode:"Employee Code",
-SalaryRole:"Salary Role",
+SalaryRole:"Salary Roles",
 Department:"Department",
 DateOfJoining:"Date Of Joining",
 PassportNumber:"Passport Number",
@@ -668,7 +669,7 @@ CreateFixedComponent:"Create Fixed Component",
 CreateVariableComponent:"Create Variable Component",	
 SalaryComponent:"Salary Component",
 
-SalaryStructure:"Salary Structure",		
+SalaryStructure:"Salary Structures",		
 SALARYSTRUCTURETYPE:"SALARY STRUCTURE TYPE",		
 SALARYSTRUCTURENAME:"SALARY STRUCTURE NAME",		
 NewSalaryStructure:"New Salary Structure",		

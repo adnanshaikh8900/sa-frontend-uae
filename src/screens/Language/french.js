@@ -677,7 +677,7 @@ CreateDesignation:"Créer Désignation",
 EmployeeDesignationName:"Désignation de l'employé Nom",	
 UpdateDesignation:"Mettre à jour la Désignation",	
 DesignationName:"Désignation Nom",	
-
+PayrollConfigurations:"Configurations de paie",
 GeneratePayroll:"Générer La Paie",
 GenerateSalary:"Générer Salaire",
 PAYDAYS:"JOURS DE PAIE",

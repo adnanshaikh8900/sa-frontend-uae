@@ -173,6 +173,7 @@ import ViewCreditNote from './creditNotes/screens/view'
 import CreditNotes from './creditNotes'
 import ApplyToInvoice from './creditNotes/screens/applyToInvoice'
 import Refund from './creditNotes/screens/refund'
+import PayrollConfigurations from './payroll_configurations'
 export {
 	LogIn,
 	LogInTwo,
@@ -327,5 +328,6 @@ export {
 	UpdateEmployeePersonal,
 	UpdateEmployeeBank,
 	UpdateEmployeeEmployment,
-	UpdateSalaryComponent
+	UpdateSalaryComponent,
+	PayrollConfigurations
 };

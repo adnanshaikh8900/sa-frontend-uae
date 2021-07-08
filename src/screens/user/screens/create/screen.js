@@ -336,9 +336,9 @@ class CreateUser extends React.Component {
 													timezone: Yup.string().required(
 														'Time Zone is Required',
 													),
-													employeeId:Yup.string().required(
-														'Employee is Required',
-													),
+													// employeeId:Yup.string().required(
+													// 	'Employee is Required',
+													// ),
 													password: Yup.string()
 														.required('Password is Required')
 														// .min(8, "Password Too Short")
@@ -939,7 +939,7 @@ class CreateUser extends React.Component {
 																	<Col lg={6}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="contactId">
-																				<span className="text-danger">*</span>
+																				{/* <span className="text-danger">*</span> */}
 																		 {strings.Employee} 
 																	</Label>
 																			<Select

@@ -123,8 +123,12 @@ class PayrollConfigurations extends React.Component {
 	renderActions = (cell, row) => {
 	
 	};
-	initializeData = (search) => {
+	initializeData = (search) => {  
+		if(this.props.location.state!==undefined && this.props.location.state!==null && this.props.location.state.tabNo !== undefined && this.props.location.state.tabNo !== null){
+			this.toggle(0, this.props.location.state.tabNo)
+		}
 		const { filterData } = this.state
+		
 		const paginationData = {
 			pageNo: this.options.page ? this.options.page - 1 : 0,
 			pageSize: this.options.sizePerPage

@@ -197,14 +197,17 @@ class PayrollRun extends React.Component {
 
 	onRowSelect = (row, isSelected, e) => {
 		let tempList = [];
-	
+	debugger
 			if (isSelected && row.status === "UnPaid") {
 				tempList = Object.assign([], this.state.selectedRows);
 				tempList.push(row.employeeId);
-			} else {
-				this.props.commonActions.tostifyAlert(
+			} else 
+			{ 
+				if(isSelected==true) {	this.props.commonActions.tostifyAlert(
 					'success',"Salary for \""+row.employeeName+'\" has ALREADY GENERATED',
-				);
+				);}
+				
+			
 				this.state.selectedRows.map((item) => {
 					if (item !== row.employeeId) {
 						tempList.push(item);

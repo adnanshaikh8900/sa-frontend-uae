@@ -241,7 +241,7 @@ class CreateSalaryStructure extends React.Component {
                                     <i className="fa fa-refresh"></i> {strings.CreateandMore}
                                       </Button>
                                   <Button color="secondary" className="btn-square"
-                                    onClick={() => { this.props.history.push('/admin/payroll/config') }}>
+                                    onClick={() => { this.props.history.push('/admin/payroll/config',{tabNo:'2'}) }}>
                                     <i className="fa fa-ban"></i>  {strings.Cancel}
                                       </Button>
                                 </FormGroup>

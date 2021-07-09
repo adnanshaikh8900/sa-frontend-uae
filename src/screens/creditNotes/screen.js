@@ -315,13 +315,13 @@ class CreditNotes extends React.Component {
 	return(
 		<div>
 		<div>
-					<label className="font-weight-bold mr-2 ">Amount : </label>
+					<label className="font-weight-bold mr-2 ">{strings.Amount}: </label>
 					<label>
 					{row.invoiceAmount === 0  ? row.currencySymbol + row.invoiceAmount.toFixed(2) : row.currencySymbol + row.invoiceAmount.toFixed(2)}
 					</label>
 				</div>
 				<div>
-					<label className="font-weight-bold mr-2 ">Remaining Credits : </label>
+					<label className="font-weight-bold mr-2 ">{strings.RemainingCredits}: </label>
 					<label>
 					{row.dueAmount === 0  ? row.currencySymbol + row.dueAmount.toFixed(2) : row.currencySymbol + row.dueAmount.toFixed(2)}
 					</label>

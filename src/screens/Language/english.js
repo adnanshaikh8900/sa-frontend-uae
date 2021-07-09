@@ -494,6 +494,7 @@ Applycreditsfrom:"Apply credits from",
 AmountToCredit:"Amount To Credit",
 Save:"Save",
 Saving:"Saving",
+RemainingCredits:"Remaining Credits",
 
 //ImportStatement
 ImportStatement:"Import Statement",	       
@@ -700,6 +701,16 @@ LOPDays:"LOP Days",
 ActualPayableDays:"Actual Payable Days",
 NetPay:"Net Pay",
 Period:"Period",
+
+Payslip:"Payslip",
+PayPeriod:"Pay Period",
+PayDate:"Pay Date",
+IBanNumber:"IBan Number",
+Earnings:"Earnings",
+Gross:"Gross",
+Payable:"Payable",
+PayslipNote:"This is System generated Payslip And does not require a signature",
+
 
 //Reports
 Reports:"Reports",

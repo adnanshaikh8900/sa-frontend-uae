@@ -262,7 +262,7 @@ class DetailSalaryRole extends React.Component {
                                         <i className="fa fa-dot-circle-o"></i> {strings.Update} 
                                     </Button>
                                       <Button type="button" color="secondary" className="btn-square"
-                                        onClick={() => { this.props.history.push('/admin/payroll/config') }}>
+                                        onClick={() => { this.props.history.push('/admin/payroll/config',{tabNo:'1'}) }}>
                                         <i className="fa fa-ban"></i>{strings.Cancel}
                                     </Button>
                                     </FormGroup>

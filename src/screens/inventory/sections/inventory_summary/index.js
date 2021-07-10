@@ -97,7 +97,12 @@ class InventorySummary extends React.Component {
 		];
 	}
 	
+		
+	renderName=(cell,row)=>{
+		debugger
+		return (<span>{cell ? cell : "-"}</span>);
 
+	}
 	generateReport = (value) => {
 		this.setState(
 			{
@@ -443,7 +448,7 @@ class InventorySummary extends React.Component {
 												<TableHeaderColumn  dataField="stockInHand" dataSort className="table-header-bg">
 												{strings.STOCKINHAND}
 												</TableHeaderColumn >
-												<TableHeaderColumn  dataField="supplierName" dataSort className="table-header-bg">
+												<TableHeaderColumn  dataField="supplierName" dataFormat={this.renderName} dataSort className="table-header-bg">
 												{strings.SUPPLIERNAME}
 												</TableHeaderColumn >
 												<TableHeaderColumn

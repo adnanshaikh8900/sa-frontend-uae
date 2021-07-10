@@ -223,7 +223,12 @@ class DetailProduct extends React.Component {
 			})
 		}
 	};
-	
+			
+renderName=(cell,row)=>{
+	debugger
+	return (<span>{cell ? cell : "-"}</span>);
+
+}
 	getProductId = (p_id, s_id) => {
 		const data = {
 			pid: p_id,
@@ -1685,6 +1690,7 @@ class DetailProduct extends React.Component {
 												dataField="supplierName"
 												dataSort
 												className="table-header-bg"
+												dataFormat={this.renderName}
 											>
 												 {strings.SupplierName}
 											</TableHeaderColumn>

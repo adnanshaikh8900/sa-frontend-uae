@@ -1134,9 +1134,9 @@ class DetailRequestForQuotation extends React.Component {
 													}}
 													validationSchema={Yup.object().shape(
 														{
-														rfq_number: Yup.string().required(
-															'Invoice Number is Required',
-														),
+														// rfq_number: Yup.string().required(
+														// 	'Invoice Number is Required',
+														// ),
 														supplierId: Yup.string().required(
 															'Supplier is Required',
 														),

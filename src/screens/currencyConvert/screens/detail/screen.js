@@ -61,7 +61,8 @@ class DetailCurrencyConvert extends React.Component {
       basecurrency:[],
       loading: true,
       dialog: null,
-      current_currency_convert_id: null
+      current_currency_convert_id: null,
+      currency_list:[],
     }
     this.regExAlpha = /^[a-zA-Z ]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
@@ -71,7 +72,19 @@ class DetailCurrencyConvert extends React.Component {
 
   componentDidMount = () => {
     if (this.props.location.state && this.props.location.state.id) {
-      this.props.authActions.getCurrencylist();
+      this.props.authActions.getCurrencylist()
+      .then((res) => {
+        if (res.status === 200) {
+          this.setState({ currency_list: res.data });
+        }
+      })
+      .catch((err) => {
+        this.props.commonActions.tostifyAlert(
+          'error',
+          err && err.data ? err.data.message : 'Something Went Wrong',
+        );
+        this.setState({ loading: false });
+      });;;
       this.getCompanyCurrency();
       this.props.detailCurrencyConvertAction.getCurrencyConvertById(this.props.location.state.id).then((res) => {
         if (res.status === 200) {
@@ -181,9 +194,9 @@ class DetailCurrencyConvert extends React.Component {
 
   render() {
     strings.setLanguage(this.state.language);
-    const { loading, initValue,dialog} = this.state
+    const { loading, initValue,dialog,currency_list} = this.state
 
-    const{currencyList,currency_list} =this.props;
+    const{currencyList} =this.props;
     return (
       <div className="detail-vat-code-screen">
         <div className="animated fadeIn">

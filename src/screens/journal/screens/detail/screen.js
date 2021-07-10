@@ -351,7 +351,7 @@ class DetailJournal extends React.Component {
 							? contactList.map((obj) => {
 									return (
 										<option value={obj.value} key={obj.value}>
-											{obj.label.contactName}
+											{obj.label.contactName ? obj.label.contactName : ''}
 										</option>
 									);
 							  })

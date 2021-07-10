@@ -64,6 +64,7 @@ class CreateCurrencyConvert extends React.Component {
 			basecurrency:[],
 			loading: false,
 			createMore: false,
+			currency_list : [],
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
@@ -71,7 +72,19 @@ class CreateCurrencyConvert extends React.Component {
 		this.formRef = React.createRef();
 	}
 	componentWillMount = () => {
-		this.props.authActions.getCurrencylist() ;
+		this.props.authActions.getCurrencylist() 
+		.then((res) => {
+			if (res.status === 200) {
+				this.setState({ currency_list: res.data });
+			}
+		})
+		.catch((err) => {
+			this.props.commonActions.tostifyAlert(
+				'error',
+				err && err.data ? err.data.message : 'Something Went Wrong',
+			);
+			this.setState({ loading: false });
+		});;
 	}
 	componentDidMount = () => {
 	
@@ -171,10 +184,9 @@ class CreateCurrencyConvert extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, initValue} = this.state;
+		const { loading, initValue,currency_list} = this.state;
 		
-		const{currencyList,currency_list} =this.props;
-		console.log(this.state.exist)
+		const{currencyList} =this.props;
 		return (
 			<div className="vat-code-create-screen">
 				<div className="animated fadeIn">

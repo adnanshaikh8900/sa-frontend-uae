@@ -869,7 +869,7 @@ class CreateUser extends React.Component {
 																					</div>
 																				)}
 																			<PasswordChecklist
-																				rules={["length", "specialChar", "number", "capital", "match"]}
+																				rules={["length", "specialChar", "number", "capital"]}
 																				minLength={5}
 																				value={props.values.password}
 																				valueAgain={props.values.confirmPassword}
@@ -906,6 +906,12 @@ class CreateUser extends React.Component {
 																						{props.errors.confirmPassword}
 																					</div>
 																				)}
+																				<PasswordChecklist
+																				rules={[ "match"]}
+																				minLength={5}
+																				value={props.values.password}
+																				valueAgain={props.values.confirmPassword}
+																			/>
 																		</FormGroup>
 																	</Col>
 																</Row>

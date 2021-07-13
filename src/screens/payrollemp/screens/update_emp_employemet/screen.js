@@ -81,6 +81,7 @@ class UpdateEmployeeEmployment extends React.Component {
                         current_employee_id: this.props.location.state.id,
                         initValue: {
                             id: res.data.id ? res.data.id : '',
+                            employmentId: res.data.employmentId ? res.data.employmentId : '',
                             employeeCode:
                                 res.data.employeeCode && res.data.employeeCode !== null
                                     ? res.data.employeeCode
@@ -153,7 +154,7 @@ class UpdateEmployeeEmployment extends React.Component {
         } = data;
 
         let formData = new FormData();
-        formData.append('id', current_employee_id);
+        formData.append('id', this.state.initValue.employmentId);
         formData.append(
             'department',
             department !== null ? department : '',
@@ -322,26 +323,7 @@ class UpdateEmployeeEmployment extends React.Component {
         </Col> */}
                                                                     </Row>
                                                                     <Row  >
-                                                                    <Col md="4">
-                                                                            <FormGroup>
-                                                                                <Label htmlFor="select"> {strings.Department} </Label>
-                                                                                <Input
-                                                                                    type="text"
-                                                                                    id="department"
-                                                                                    name="department"
-                                                                                    value={props.values.department}
-                                                                                    placeholder="Enter department"
-                                                                                    onChange={(value) => {
-                                                                                        props.handleChange('department')(value);
-
-                                                                                    }}
-                                                                                    className={props.errors.department && props.touched.department ? "is-invalid" : ""}
-                                                                                />
-                                                                                {props.errors.department && props.touched.department && (
-                                                                                    <div className="invalid-feedback">{props.errors.department}</div>
-                                                                                )}
-                                                                            </FormGroup>
-                                                                        </Col>
+                                                                   
                                                                         <Col md="4">
                                                                             <FormGroup className="mb-3">
                                                                                 <Label htmlFor="dateOfJoining"><span className="text-danger">*</span> {strings.DateOfJoining}</Label>
@@ -365,8 +347,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                 )}
                                                                             </FormGroup>
                                                                         </Col>
-
-                                                                         <Col md="4">
+                                                                        <Col md="4">
                                                                             <FormGroup>
                                                                                 <Label htmlFor="labourCard">{strings.LabourCard}</Label>
                                                                                 <Input
@@ -389,7 +370,6 @@ class UpdateEmployeeEmployment extends React.Component {
 
                                                                             </FormGroup>
                                                                         </Col>
-
                                                                     </Row>
                                                                     <Row>
                                                                         <Col md="4">
@@ -489,29 +469,7 @@ class UpdateEmployeeEmployment extends React.Component {
 
                                                             </Row>
                                                             <Row>
-                                                            {/* <Col md="4">
-                                                                            <FormGroup>
-                                                                                <Label htmlFor="labourCard">{strings.LabourCard}</Label>
-                                                                                <Input
-                                                                                    type="text"
-                                                                                    id="labourCard"
-                                                                                    name="labourCard"
-                                                                                    value={props.values.labourCard}
-                                                                                    placeholder={strings.Enter+strings.LabourCard}
-                                                                                    onChange={(value) => {
-                                                                                        props.handleChange('labourCard')(value);
-
-                                                                                    }}
-                                                                                    className={props.errors.labourCard && props.touched.labourCard ? "is-invalid" : ""}
-                                                                                />
-                                                                                {props.errors.labourCard && props.touched.labourCard && (
-                                                                                    <div className="invalid-feedback">
-                                                                                        {props.errors.labourCard}
-                                                                                    </div>
-                                                                                )}
-
-                                                                            </FormGroup>
-                                                                        </Col> */}
+                                                           
                                                             </Row>
                                                             <Row className='pull-right'>
                                                                 <FormGroup className="text-right">

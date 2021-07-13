@@ -591,9 +591,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 																							// }
 																							>
 																								<Currency
-																									value={row.totalAmount.toFixed(
-																										2,
-																									)}
+																									value={ row.vatAmount ? (row.vatAmount + row.unitPrice).toFixed(2) : row.totalAmount.toFixed(2) }
 																									currencySymbol={
 																										universal_currency_list[0]
 																											? universal_currency_list[0]

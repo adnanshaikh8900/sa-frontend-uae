@@ -82,6 +82,7 @@ class UpdateEmployeeBank extends React.Component {
                         current_employee_id: this.props.location.state.id,
                         initValue: {
                             id: res.data.id ? res.data.id : '',
+                            employeeBankDetailsId: res.data.employeeBankDetailsId ? res.data.employeeBankDetailsId : '',
                             accountHolderName:
                                 res.data.accountHolderName && res.data.accountHolderName !== null
                                     ? res.data.accountHolderName
@@ -141,7 +142,7 @@ class UpdateEmployeeBank extends React.Component {
         } = data;
 
         let formData = new FormData();
-        formData.append('id', current_employee_id);
+        formData.append('id', this.state.initValue.employeeBankDetailsId);
         formData.append(
             'accountHolderName',
             accountHolderName !== null ? accountHolderName : '',

@@ -69,20 +69,20 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 			chart_of_account_list: [],
 		};
 		this.columnHeader = [
-			{ label: 'invoiceDate', value: 'invoiceDate' },
-			{ label: 'invoiceNumber', value: 'invoiceNumber' },
+			{ label: 'Invoice Date', value: 'invoiceDate' },
+			{ label: 'Invoice Number', value: 'invoiceNumber' },
 			
-			{ label: 'productCode', value: 'productCode'},
+			{ label: 'Product Name', value: 'productName' },
 			{
-				label: 'description',
+				label: 'Description',
 				value: 'description',
 				sort: true,
 			},
-			{ label: 'quantity', value: 'quantity', sort: true },
-			{ label: 'unitPrice', value: 'unitPrice', sort: false,align: 'right'  },
-			{ label: 'discount', value: 'discount', sort: false, align: 'left' },
-			{ label: 'vatAmount', value: 'vatAmount', sort: false, align: 'left' },
-			{ label: 'totalAmount', value: 'totalAmount', sort: false, align: 'left' },
+			{ label: 'Quantity', value: 'quantity', sort: true },
+			{ label: 'Unit Price', value: 'unitPrice', sort: false,align: 'right'  },
+			{ label: 'Discount', value: 'discount', sort: false, align: 'left' },
+			{ label: 'Vat Amount', value: 'vatAmount', sort: false, align: 'left' },
+			{ label: 'Total Amount', value: 'totalAmount', sort: false, align: 'left' },
 		];
 	}
 
@@ -528,7 +528,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 																					</td>
 																					<td style={{ width: '12%' }}>
 																						{/* {row['name']} */}
-																						{row['productCode']}
+																						{row['productName']}
 																					</td>
 																					<td style={{ width: '12%' }}>
 																						{/* {row['postingReferenceTypeEnum']} */}
@@ -545,8 +545,10 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 																					</td>
 																					
 																						<td style={{ width: '12%' }}>
-																							{row.vatAmount > 0 && (
-																								<p
+																							{row.vatAmount > 0 && (row.unitPrice ? (
+																									""
+																								) : (
+																									<p
 																									className="text-left"
 																									// onClick={() =>
 																									// 	this.getInvoice(
@@ -559,9 +561,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 																									// }
 																								>
 																									<Currency
-																										value={row.vatAmount.toFixed(
-																											2,
-																										)}
+																										value={ row.vatAmount.toFixed(2) }
 																										currencySymbol={
 																											universal_currency_list[0]
 																												? universal_currency_list[0]
@@ -570,6 +570,10 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 																										}
 																									/>
 																								</p>
+																								)
+
+
+																								
 																							)}
 																						</td>
 																						<td style={{ width: '12%' }}>
@@ -587,7 +591,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 																									// }
 																								>
 																									<Currency
-																										value={ row.vatAmount ? (row.vatAmount + row.unitPrice).toFixed(2) : row.totalAmount.toFixed(2) }
+																										value={ row.vatAmount && row.unitPrice ? (row.vatAmount + row.unitPrice).toFixed(2) : row.totalAmount.toFixed(2) }
 																										currencySymbol={
 																											universal_currency_list[0]
 																												? universal_currency_list[0]

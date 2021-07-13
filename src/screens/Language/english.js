@@ -776,7 +776,8 @@ OperatingProfit:"Operating Profit",
 NonOperating:"Non Operating",	
 NetProfitLoss:"Net Profit/Loss",
 Operating:"Operating",	
-	
+PaymentsRecevied : 'Payments Received',
+CreditNoteDetails : 'Credit Note Details',	
 
 //placeholder	
 ReceiptAttachmentDescription:"Receipt Attachment Description",	

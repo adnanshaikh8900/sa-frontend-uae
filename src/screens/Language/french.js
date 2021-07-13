@@ -765,6 +765,8 @@ OperatingProfit:"Bénéfice d'exploitation",
 NonOperating:"Non En Fonctionnement",	
 NetProfitLoss:"Net Bénéfice/Perte",	
 Operating:"En Fonctionnement",
+PaymentsRecevied : 'paiement reçu',
+CreditNoteDetails:'Détails de la note de crédit',
 
 //placeholder	
 ReceiptAttachmentDescription:"Description de la pièce jointe au reçu",	

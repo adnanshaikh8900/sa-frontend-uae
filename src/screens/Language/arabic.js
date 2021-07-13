@@ -766,7 +766,8 @@ OperatingProfit:"ربح التشغيل",
 NonOperating:"أثناء عدم التشغيل",	
 NetProfitLoss:"صافي الربح أو الخسارة",	
 Operating:"تشغيل",	
-
+PaymentsRecevied : 'الدفعات المستلمة',
+CreditNoteDetails : 'تفاصيل مذكرة الائتمان',
 //placeholder
 ReceiptAttachmentDescription:"وصف مرفق الإيصال",	
 DiscountPercentage:"نسبة الخصم",		

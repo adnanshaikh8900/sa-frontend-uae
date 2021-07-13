@@ -196,7 +196,7 @@ class DetailBankAccount extends React.Component {
 			swiftCode: data.swift_code,
 			openingBalance: data.opening_balance,
 			//openingDate: data.openingDate,
-			bankCountry: data.countryId,
+			bankCountry: data.countryId.value,
 			bankAccountType: data.account_type,
 		};
 		this.props.detailBankAccountActions

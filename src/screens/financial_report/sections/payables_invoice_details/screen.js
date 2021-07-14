@@ -72,20 +72,20 @@ class PayablesInvoiceDetailsReport extends React.Component {
 			chart_of_account_list: [],
 		};
 		this.columnHeader = [
-			{ label: 'invoiceDate', value: 'Invoice Date' },
-			{ label: 'invoiceNumber', value: 'Invoice Number' },
-
-			{ label: 'productCode', value: 'Product Code' },
+			{ label: 'Invoice Date', value: 'invoiceDate' },
+			{ label: 'Invoice Number', value: 'invoiceNumber' },
+			
+			{ label: 'ProductName', value: 'productName' },
 			{
-				label: 'description',
+				label: 'Description',
 				value: 'description',
 				sort: true,
 			},
-			{ label: 'quantity', value: 'quantity', sort: true },
-			{ label: 'unitPrice', value: 'unitPrice', sort: false, align: 'right' },
-			{ label: 'discount', value: 'discount', sort: false, align: 'left' },
-			{ label: 'vatAmount', value: 'vatAmount', sort: false, align: 'left' },
-			{ label: 'totalAmount', value: 'totalAmount', sort: false, align: 'left' },
+			{ label: 'Quantity', value: 'quantity', sort: true },
+			{ label: 'Unit Price', value: 'unitPrice', sort: false,align: 'right'  },
+			{ label: 'Discount', value: 'discount', sort: false, align: 'left' },
+			{ label: 'Vat Amount', value: 'vatAmount', sort: false, align: 'left' },
+			{ label: 'Total Amount', value: 'totalAmount', sort: false, align: 'left' },
 		];
 	}
 
@@ -532,7 +532,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 																					</td>
 																					<td style={{ width: '12%' }}>
 																						{/* {row['name']} */}
-																						{row['productCode']}
+																						{row['productName']}
 																					</td>
 																					<td style={{ width: '12%' }}>
 																						{/* {row['postingReferenceTypeEnum']} */}
@@ -549,33 +549,37 @@ class PayablesInvoiceDetailsReport extends React.Component {
 																					</td>
 
 																					<td style={{ width: '12%' }}>
-																						{row.vatAmount > 0 && (
-																							<p
-																								className="text-left"
-																							// onClick={() =>
-																							// 	this.getInvoice(
-																							// 		row[
-																							// 			'postingReferenceType'
-																							// 		],
-																							// 		row['invoiceType'],
-																							// 		row['referenceId'],
-																							// 	)
-																							// }
-																							>
-																								<Currency
-																									value={row.vatAmount.toFixed(
-																										2,
-																									)}
-																									currencySymbol={
-																										universal_currency_list[0]
-																											? universal_currency_list[0]
-																												.currencyIsoCode
-																											: 'INR'
-																									}
-																								/>
-																							</p>
-																						)}
-																					</td>
+																							{row.vatAmount > 0 && (row.unitPrice ? (
+																									""
+																								) : (
+																									<p
+																									className="text-left"
+																									// onClick={() =>
+																									// 	this.getInvoice(
+																									// 		row[
+																									// 			'postingReferenceType'
+																									// 		],
+																									// 		row['invoiceType'],
+																									// 		row['referenceId'],
+																									// 	)
+																									// }
+																								>
+																									<Currency
+																										value={ row.vatAmount.toFixed(2) }
+																										currencySymbol={
+																											universal_currency_list[0]
+																												? universal_currency_list[0]
+																														.currencyIsoCode
+																												: 'INR'
+																										}
+																									/>
+																								</p>
+																								)
+
+
+																								
+																							)}
+																						</td>
 																					<td style={{ width: '12%' }}>
 																						{row.totalAmount > 0 && (
 																							<p
@@ -591,9 +595,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 																							// }
 																							>
 																								<Currency
-																									value={row.totalAmount.toFixed(
-																										2,
-																									)}
+																									value={ row.vatAmount && row.unitPrice? (row.vatAmount + row.unitPrice).toFixed(2) : row.totalAmount.toFixed(2) }
 																									currencySymbol={
 																										universal_currency_list[0]
 																											? universal_currency_list[0]

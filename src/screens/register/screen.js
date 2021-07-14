@@ -22,6 +22,7 @@ import * as Yup from 'yup';
 import { AuthActions, CommonActions } from 'services/global';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import PasswordChecklist from "react-password-checklist"
 
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
@@ -183,9 +184,9 @@ class Register extends React.Component {
 		return (
 			<div className="log-in-screen">
 				<ToastContainer
-				 autoClose={1700} 
+				 autoClose={1700}
 				closeOnClick
-            	draggable				
+            	draggable
 				/>
 				<div className="animated fadeIn">
 					<div className="app flex-row align-items-center">
@@ -229,10 +230,11 @@ class Register extends React.Component {
 															),
 															password: Yup.string()
 																.required('Please Enter your password')
-																.matches(
-																	/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-																	'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
-																),
+															// .matches(
+															// 	/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+															// 	'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
+															// ),
+															,
 															confirmPassword: Yup.string()
 																.required('Please Confirm Password')
 																.oneOf(
@@ -465,7 +467,7 @@ class Register extends React.Component {
 																					}}
 																					className={
 																						props.errors.timeZone &&
-																						props.touched.timeZone
+																							props.touched.timeZone
 																							? 'is-invalid'
 																							: ''
 																					}
@@ -484,7 +486,7 @@ class Register extends React.Component {
 																					<span className="text-danger">*</span>
 																					Password
 																				</Label>
-																				<div>	
+																				<div>
 																			<Input
 																				type={
 																					this.state.isPasswordShown
@@ -510,26 +512,27 @@ class Register extends React.Component {
 																		<i   className={`fa ${ isPasswordShown ? "fa-eye-slash" : "fa-eye" } password-icon fa-lg`}
 																		onClick={this.togglePasswordVisiblity}
 																	>
-																		{/* <img 
+																		{/* <img
 																			src={eye}
 																			style={{ width: '20px' }}
 																		/> */}
-																		</i>
-																		</div>
-																		{props.errors.password &&
-																			props.touched.password ? (
-																				<div className="invalid-feedback">
-																					{props.errors.password}
+																					</i>
 																				</div>
-																			) : (
-																				<span className="password-msg">
-																					Must Contain 8 Characters, One
-																					Uppercase, One Lowercase, One Number
-																					and one special case Character.
-																				</span>
-																			)}
+																				{props.errors.password &&
+																					props.touched.password && (
+																						<div className="invalid-feedback">
+																							{props.errors.password}
+																						</div>
+																					)}
 																			</FormGroup>
+																			<PasswordChecklist
+																			rules={["length", "specialChar", "number", "capital"]}
+																			minLength={5}
+																			value={props.values.password}
+																			valueAgain={props.values.confirmPassword}
+																		/>
 																		</Col>
+																		
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="email">
@@ -560,6 +563,12 @@ class Register extends React.Component {
 																							{props.errors.confirmPassword}
 																						</div>
 																					)}
+																			<PasswordChecklist
+																				rules={[ "match"]}
+																				minLength={5}
+																				value={props.values.password}
+																				valueAgain={props.values.confirmPassword}
+																			/>
 																			</FormGroup>
 																		</Col>
 																	</Row>

@@ -177,7 +177,8 @@ import {
 	Refund,
 	UpdateEmployeeEmployment,
 	UpdateSalaryComponent,
-	PayrollConfigurations
+	PayrollConfigurations,
+	CreditNoteDetailsReport,
 } from 'screens';
 
 const adminRoutes = [
@@ -735,6 +736,11 @@ const adminRoutes = [
 		path: '/admin/report/receivable-invoice-details',
 		name: 'ReceivableInvoiceDetail',
 		component: ReceivableInvoiceDetailsReport.screen,
+	},
+	{
+		path: '/admin/report/credit-note-details',
+		name: 'ReceivableInvoiceDetail',
+		component: CreditNoteDetailsReport.screen,
 	},
 	{
 		path: '/admin/report/receivable-invoice-summary',

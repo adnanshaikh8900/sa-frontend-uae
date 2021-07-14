@@ -91,6 +91,7 @@ import ReceivableInvoiceDetailsReport from './financial_report/sections/receivab
 import ReceivableInvoiceSummary from './financial_report/sections/receivable_invoice_summary';
 import PayablesInvoiceDetailsReport from './financial_report/sections/payables_invoice_details';
 import PayablesInvoiceSummary from './financial_report/sections/payables_invoice_summary';
+import CreditNoteDetailsReport from './financial_report/sections/credit_note_details';
 
 import ChartAccount from './chart_account';
 import CreateChartAccount from './chart_account/screens/create';
@@ -307,6 +308,7 @@ export {
 	//SalarySlip,
 	UnderConstruction,
 	ReceivableInvoiceDetailsReport,
+	CreditNoteDetailsReport,
 	ReceivableInvoiceSummary,
 	Designation,
 	CreateDesignation,
@@ -329,5 +331,5 @@ export {
 	UpdateEmployeeBank,
 	UpdateEmployeeEmployment,
 	UpdateSalaryComponent,
-	PayrollConfigurations
+	PayrollConfigurations,
 };

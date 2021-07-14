@@ -30,6 +30,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import PasswordChecklist from "react-password-checklist"
 
 const eye = require('assets/images/settings/eye.png');
 const mapStateToProps = (state) => {
@@ -339,10 +340,8 @@ class DetailUser extends React.Component {
 														password: Yup.string()
 															// .required("Password is Required")
 															// .min(8, "Password Too Short")
-															.matches(
-																/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-																'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
-															),
+															
+															,
 														confirmPassword: Yup.string()
 															// .required('Confirm Password is Required')
 															.oneOf(
@@ -558,9 +557,10 @@ class DetailUser extends React.Component {
 																			</FormGroup>
 																		</Col>
 																	</Row>
+																
+																	<Row>
 																	{this.state.current_user_id !== 1 &&
 																	  (
-																	<Row>
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="active">{strings.Status}</Label>
@@ -631,8 +631,52 @@ class DetailUser extends React.Component {
 																					</FormGroup>
 																				</div>
 																			</FormGroup>
-																		</Col>
-																	</Row>)}
+																		</Col>)}
+																		<Col lg={6}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="contactId">
+																				<span className="text-danger">*</span>
+																		 {strings.Employee} 
+																	</Label>
+																			<Select
+																				styles={customStyles}
+																				id="employeeId"
+																				name="employeeId"
+																				placeholder={strings.Select+strings.Employee}
+																				options={
+																					employee_list
+																						? selectOptionsFactory.renderOptions(
+																							'label',
+																							'value',
+																							employee_list,
+																							'Employee',
+																						)
+																						: []
+																				}
+																				value={props.values.employeeId}
+																				onChange={(option) => {
+																					if (option && option.value) {
+																						props.handleChange('employeeId')(option);
+																					} else {
+																						props.handleChange('employeeId')('');
+																					}
+																				}}
+																				className={
+																					props.errors.employeeId &&
+																						props.touched.employeeId
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.employeeId &&
+																				props.touched.employeeId && (
+																					<div className="invalid-feedback">
+																						{props.errors.employeeId}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																	</Row>
 																	<Row>
 																		<Col lg={6}>
 																			<FormGroup>
@@ -797,19 +841,19 @@ class DetailUser extends React.Component {
 																		/> */}
 																		</i>
 																		</div>	
-																			{props.errors.password &&
-																			props.touched.password ? (
-																				<div className="invalid-feedback">
-																					{props.errors.password}
-																				</div>
-																			) : (
-																				<span className="password-msg">
-																					Must Contain 8 Characters, One
-																					Uppercase, One Lowercase, One Number
-																					and one special case Character.
-																				</span>
-																			)}
+																		{props.errors.password &&
+																					props.touched.password && (
+																						<div className="invalid-feedback">
+																							{props.errors.password}
+																						</div>
+																					)}
 																		</FormGroup>
+																		<PasswordChecklist
+																				rules={["length", "specialChar", "number", "capital"]}
+																				minLength={5}
+																				value={props.values.password}
+																				valueAgain={props.values.confirmPassword}
+																			/>
 																	</Col>
 																		<Col lg={6}>
 																			<FormGroup>
@@ -840,54 +884,17 @@ class DetailUser extends React.Component {
 																							{props.errors.confirmPassword}
 																						</div>
 																					)}
+																						<PasswordChecklist
+																				rules={[ "match"]}
+																				minLength={5}
+																				value={props.values.password}
+																				valueAgain={props.values.confirmPassword}
+																			/>
 																			</FormGroup>
 																		</Col>
 																	</Row>
 																	<Row >
-																	<Col lg={6}>
-																		<FormGroup className="mb-3">
-																			<Label htmlFor="contactId">
-																				<span className="text-danger">*</span>
-																		 {strings.Employee} 
-																	</Label>
-																			<Select
-																				styles={customStyles}
-																				id="employeeId"
-																				name="employeeId"
-																				placeholder={strings.Select+strings.Employee}
-																				options={
-																					employee_list
-																						? selectOptionsFactory.renderOptions(
-																							'label',
-																							'value',
-																							employee_list,
-																							'Employee',
-																						)
-																						: []
-																				}
-																				value={props.values.employeeId}
-																				onChange={(option) => {
-																					if (option && option.value) {
-																						props.handleChange('employeeId')(option);
-																					} else {
-																						props.handleChange('employeeId')('');
-																					}
-																				}}
-																				className={
-																					props.errors.employeeId &&
-																						props.touched.employeeId
-																						? 'is-invalid'
-																						: ''
-																				}
-																			/>
-																			{props.errors.employeeId &&
-																				props.touched.employeeId && (
-																					<div className="invalid-feedback">
-																						{props.errors.employeeId}
-																					</div>
-																				)}
-																		</FormGroup>
-																	</Col>
+																
 																</Row>
 																</Col>
 															</Row>

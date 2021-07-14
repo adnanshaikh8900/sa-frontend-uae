@@ -28,7 +28,7 @@ import { selectOptionsFactory } from 'utils';
 import moment from 'moment';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-
+import PasswordChecklist from "react-password-checklist"
 import './style.scss';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
@@ -83,7 +83,8 @@ class CreateUser extends React.Component {
 				confirmPassword: '',
 				roleId: '',
 				timezone: '',
-				designationId: '',employeeId: '',
+				designationId: '',
+				employeeId: '',
 				isAlreadyAvailableEmployee: false,
 				isNewEmployee: false,
 			},
@@ -96,7 +97,7 @@ class CreateUser extends React.Component {
 			selectedStatus: false,
 			useractive: false,
 			openEmployeeModal: false,
-		
+
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 	}
@@ -108,7 +109,7 @@ class CreateUser extends React.Component {
 		this.props.salaryTemplateActions.getSalaryRolesForDropdown();
 		this.props.userActions.getEmployeeDesignationForDropdown();
 		this.props.userActions.getEmployeesNotInUserForDropdown();
-	
+
 		this.initializeData();
 	};
 
@@ -119,9 +120,9 @@ class CreateUser extends React.Component {
 			});
 			this.setState({ timezone: output });
 		});
-	
+
 		this.props.userActions.getCompanyTypeList();
-		
+
 
 		this.setState({ showIcon: false });
 	};
@@ -242,7 +243,7 @@ class CreateUser extends React.Component {
 	};
 
 	getCurrentUser = (data) => {
-		
+
 		let option;
 		if (data.label || data.value) {
 			option = data;
@@ -252,7 +253,7 @@ class CreateUser extends React.Component {
 				value: data.id,
 			};
 		}
-			console.log("shadyuigsa",option)
+
 		this.formRef.current.setFieldValue('employeeId', option, true);
 	};
 	openEmployeeModal = (props) => {
@@ -266,7 +267,7 @@ class CreateUser extends React.Component {
 		const { role_list, employee_list,salary_role_dropdown,designation_dropdown } = this.props;
 		const { timezone } = this.state;
 		const { isPasswordShown } = this.state;
-		console.log(employee_list,"employee_list")
+
 
 		// emlpoyee_list.map(item => {
 		// 	let obj = {label: item.label.fullName, value: item.value}
@@ -341,11 +342,12 @@ class CreateUser extends React.Component {
 													// ),
 													password: Yup.string()
 														.required('Password is Required')
-														// .min(8, "Password Too Short")
-														.matches(
-															/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-															'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
-														),
+													// .min(8, "Password Too Short")
+													// .matches(
+													// 	/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
+													// 	'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
+													// ),
+													,
 													confirmPassword: Yup.string()
 														.required('Confirm Password is Required')
 														.oneOf(
@@ -360,7 +362,7 @@ class CreateUser extends React.Component {
 														<Row>
 															<Col xs="4" md="4" lg={2}>
 																<FormGroup className="mb-3 text-center">
-																	
+
 																	<ImageUploader
 																		// withIcon={true}
 																		buttonText="Choose images"
@@ -610,6 +612,50 @@ class CreateUser extends React.Component {
 																			</div>
 																		</FormGroup>
 																	</Col>
+																	<Col lg={6}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="contactId">
+																				{/* <span className="text-danger">*</span> */}
+																				{strings.Employee}
+																			</Label>
+																			<Select
+																				styles={customStyles}
+																				id="employeeId"
+																				name="employeeId"
+																				placeholder={strings.Select + strings.Employee}
+																				options={
+																					employee_list
+																						? selectOptionsFactory.renderOptions(
+																							'label',
+																							'value',
+																							employee_list,
+																							'Employee',
+																						)
+																						: []
+																				}
+																				value={props.values.employeeId}
+																				onChange={(option) => {
+																					if (option && option.value) {
+																						props.handleChange('employeeId')(option);
+																					} else {
+																						props.handleChange('employeeId')('');
+																					}
+																				}}
+																				className={
+																					props.errors.employeeId &&
+																						props.touched.employeeId
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.employeeId &&
+																				props.touched.employeeId && (
+																					<div className="invalid-feedback">
+																						{props.errors.employeeId}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
 																</Row>
 																<Row>
 																	<Col lg={6}>
@@ -640,7 +686,7 @@ class CreateUser extends React.Component {
 																						props.handleChange('roleId')('');
 																					}
 																				}}
-																				placeholder={strings.Select+strings.Role}
+																				placeholder={strings.Select + strings.Role}
 																				id="roleId"
 																				name="roleId"
 																				className={
@@ -668,7 +714,7 @@ class CreateUser extends React.Component {
 																				styles={customStyles}
 																				id="timezone"
 																				name="timezone"
-																				placeholder={strings.Select+strings.TimeZonePreference}
+																				placeholder={strings.Select + strings.TimeZonePreference}
 																				options={timezone ? timezone : []}
 																				value={props.values.timezone}
 																				onChange={(option) => {
@@ -793,7 +839,7 @@ class CreateUser extends React.Component {
 																					}
 																					id="password"
 																					name="password"
-																					placeholder={strings.Enter+strings.Password}
+																					placeholder={strings.Enter + strings.Password}
 																					value={props.values.password}
 																					onChange={(option) => {
 																						props.handleChange('password')(
@@ -817,17 +863,17 @@ class CreateUser extends React.Component {
 																				</i>
 																			</div>
 																			{props.errors.password &&
-																				props.touched.password ? (
-																				<div className="invalid-feedback">
-																					{props.errors.password}
-																				</div>
-																			) : (
-																				<span className="password-msg">
-																					Must Contain 8 Characters, One
-																					Uppercase, One Lowercase, One Number
-																					and one special case Character.
-																				</span>
-																			)}
+																				props.touched.password && (
+																					<div className="invalid-feedback">
+																						{props.errors.password}
+																					</div>
+																				)}
+																			<PasswordChecklist
+																				rules={["length", "specialChar", "number", "capital"]}
+																				minLength={5}
+																				value={props.values.password}
+																				valueAgain={props.values.confirmPassword}
+																			/>
 																		</FormGroup>
 																	</Col>
 																	<Col lg={6}>
@@ -841,7 +887,7 @@ class CreateUser extends React.Component {
 																				id="confirmPassword"
 																				name="confirmPassword"
 																				value={props.values.confirmPassword}
-																				placeholder={strings.Enter+strings.ConfirmPassword}
+																				placeholder={strings.Enter + strings.ConfirmPassword}
 																				onChange={(value) => {
 																					props.handleChange('confirmPassword')(
 																						value,
@@ -860,6 +906,12 @@ class CreateUser extends React.Component {
 																						{props.errors.confirmPassword}
 																					</div>
 																				)}
+																				<PasswordChecklist
+																				rules={[ "match"]}
+																				minLength={5}
+																				value={props.values.password}
+																				valueAgain={props.values.confirmPassword}
+																			/>
 																		</FormGroup>
 																	</Col>
 																</Row>
@@ -904,7 +956,7 @@ class CreateUser extends React.Component {
 																		</Label>
 																	</FormGroup>
 																</Col> */}
-																{/* <Col style={{display: props.values.isAlreadyAvailableEmployee === true ? 'none' : ''}}>
+																	{/* <Col style={{display: props.values.isAlreadyAvailableEmployee === true ? 'none' : ''}}>
 																<FormGroup check inline className="mb-3">
 																		<Label
 																			className="form-check-label"
@@ -936,50 +988,7 @@ class CreateUser extends React.Component {
 																</Col> */}
 																</Row>
 																<Row >
-																	<Col lg={6}>
-																		<FormGroup className="mb-3">
-																			<Label htmlFor="contactId">
-																				{/* <span className="text-danger">*</span> */}
-																		 {strings.Employee} 
-																	</Label>
-																			<Select
-																				styles={customStyles}
-																				id="employeeId"
-																				name="employeeId"
-																				placeholder={strings.Select+strings.Employee}
-																				options={
-																					employee_list
-																						? selectOptionsFactory.renderOptions(
-																							'label',
-																							'value',
-																							employee_list,
-																							'Employee',
-																						)
-																						: []
-																				}
-																				value={props.values.employeeId}
-																				onChange={(option) => {
-																					if (option && option.value) {
-																						props.handleChange('employeeId')(option);
-																					} else {
-																						props.handleChange('employeeId')('');
-																					}
-																				}}
-																				className={
-																					props.errors.employeeId &&
-																						props.touched.employeeId
-																						? 'is-invalid'
-																						: ''
-																				}
-																			/>
-																			{props.errors.employeeId &&
-																				props.touched.employeeId && (
-																					<div className="invalid-feedback">
-																						{props.errors.employeeId}
-																					</div>
-																				)}
-																		</FormGroup>
-																	</Col>
+
 																</Row>
 																{/* <Row style={{display: props.values.isNewEmployee === false ? 'none' : ''}}>
 																	<Col lg={3}>

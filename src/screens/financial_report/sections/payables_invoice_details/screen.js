@@ -83,7 +83,6 @@ class PayablesInvoiceDetailsReport extends React.Component {
 			},
 			{ label: 'Quantity', value: 'quantity', sort: true },
 			{ label: 'Unit Price', value: 'unitPrice', sort: false,align: 'right'  },
-			{ label: 'Discount', value: 'discount', sort: false, align: 'left' },
 			{ label: 'Vat Amount', value: 'vatAmount', sort: false, align: 'left' },
 			{ label: 'Total Amount', value: 'totalAmount', sort: false, align: 'left' },
 		];
@@ -538,16 +537,12 @@ class PayablesInvoiceDetailsReport extends React.Component {
 																						{/* {row['postingReferenceTypeEnum']} */}
 																						{row['description']}
 																					</td>
-																					<td style={{ width: '12%' }}>
+																					<td style={{ width: '10%' }}>
 																						{row['quantity']}
 																					</td>
 																					<td style={{ width: '12%' }}>
 																						{row['unitPrice']}
 																					</td>
-																					<td style={{ width: '12%' }}>
-																						{row['discount']}
-																					</td>
-
 																					<td style={{ width: '12%' }}>
 																							{row.vatAmount > 0 && (row.unitPrice ? (
 																									""
@@ -580,7 +575,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 																								
 																							)}
 																						</td>
-																					<td style={{ width: '12%' }}>
+																					<td style={{ width: '15%' }}>
 																						{row.totalAmount > 0 && (
 																							<p
 																								className="text-left"

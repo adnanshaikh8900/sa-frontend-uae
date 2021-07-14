@@ -180,7 +180,7 @@ class CreditNoteDetailsReport extends React.Component {
 		strings.setLanguage(this.state.language);
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
 		const { profile, universal_currency_list,company_profile,creditnote_details } = this.props;
-		console.log(creditnote_details)
+	
 		return (
 			<div className="transactions-report-screen">
 				<div className="animated fadeIn">
@@ -329,66 +329,95 @@ class CreditNoteDetailsReport extends React.Component {
 										<Loader />
 									) : (
 										<div className="table-wrapper">
-												<BootstrapTable
-											selectRow={this.selectRowProp}
-											search={false}
-											options={this.options}
-											data={creditnote_details.creditNoteSummaryModelList ? creditnote_details.creditNoteSummaryModelList : []}
-											version="4"
-											hover
-											responsive
-											currencyList
-											keyField="id"
-											remote
-											className="customer-invoice-table"
-											csvFileName="creditnote_details.csv"
-											ref={(node) => {
-												this.table = node;
-											}}
-										>
-											<TableHeaderColumn
-												dataField="creditNoteNumber"
-												className="table-header-bg"
-											>
-												Credit Number			
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												dataField="customerName"
-												className="table-header-bg"
-											>
-												{strings.CustomerName}
-											</TableHeaderColumn>
-											<TableHeaderColumn 
-												dataField="creditNoteDate" 
-												className="table-header-bg"
-												dataFormat={this.renderinvoiceDate}
-											>
-												Credit Date
-											</TableHeaderColumn>
-											
-											<TableHeaderColumn
-												dataField="status"
-												className="table-header-bg"
-											>
-											   {strings.Status}
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												dataField="creditNoteTotalAmount"
-												className="table-header-bg"
-												dataFormat={this.creditNoteTotalAmount}
-												formatExtraData={universal_currency_list}
-											>
-												Credit Total Amount
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												dataField="balance"
-												className="table-header-bg"
-												dataFormat={this.renderbalance}
-												formatExtraData={universal_currency_list}
-											>
-												{strings.Balance}
-											</TableHeaderColumn>
-										</BootstrapTable>
+												<Table >
+												<thead className="header-row" >
+													<tr>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Credit Number</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Customer Name</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Credit Date</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Status</th>
+
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>
+															Invoice Amount
+														</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Balance</th>
+
+													</tr>
+												</thead>
+												<tbody className=" table-bordered table-hover">
+													{this.state.data.creditNoteSummaryModelList &&
+														this.state.data.creditNoteSummaryModelList.map((item, index) => {
+															return (
+																<tr key={index}>
+
+
+																	<td style={{ textAlign: 'center'}}>{item.creditNoteNumber}</td>
+																	<td style={{ textAlign: 'center'}}>{item.customerName}</td>
+																	<td style={{ textAlign: 'center'}}>{item.creditNoteDate ? (
+																		moment(item.invoiceDate).format('DD/MM/YYYY')
+																	) : (" ")}</td>
+
+																	<td style={{ textAlign: 'center' }}>{item.status}</td>
+																	<td style={{ textAlign: 'center' }}>
+																		<Currency
+																			value={item.creditNoteTotalAmount}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0].currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	</td>
+
+																	<td style={{ textAlign: 'center' }}>
+																		<Currency
+																			value={item.balance}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0].currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	</td>
+																</tr>
+															);
+														})}
+
+												</tbody>
+												<tfoot>
+													<tr style={{ border: "3px solid #dfe9f7" }}>
+													<td style={{ textAlign: 'center', width: '20%' }}><b>Total</b></td>
+													<td></td>	<td></td>	<td></td>
+													<td style={{ textAlign: 'center', width: '20%' }}>
+												
+														<b><Currency
+															value={this.state.data.totalAmount}
+															currencySymbol={
+																universal_currency_list[0]
+																	? universal_currency_list[0].currencyIsoCode
+																	: 'USD'
+															}
+														/></b>
+														
+													</td>
+
+													
+													<td style={{ textAlign: 'center', width: '20%' }}>
+														
+													<b>
+													<Currency
+															value={this.state.data.totalBalance}
+															currencySymbol={
+																universal_currency_list[0]
+																	? universal_currency_list[0].currencyIsoCode
+																	: 'USD'
+															}
+														/></b>
+														
+													</td>
+												</tr>
+												</tfoot>
+											</Table>
 										</div>
 									)}
 									<div style={{ textAlignLast:'center'}}> {strings.PoweredBy} <b>SimpleAccounts</b></div> 

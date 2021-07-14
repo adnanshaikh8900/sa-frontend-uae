@@ -22,146 +22,149 @@ export const getProfitAndLossReport = (postData) => {
 	};
 };
 export const getSalesByCustomer = (postData) => {
-	const { startDate, endDate } = postData;
-	let url = `/rest/simpleaccountReports/salesbycustomer?startDate=${startDate}&endDate=${endDate}`;
-
+	const { startDate, endDate} = postData
+	let url = `/rest/simpleaccountReports/salesbycustomer?startDate=${startDate}&endDate=${endDate}`
 	return (dispatch) => {
-		let data = {
-			method: 'get',
-			url,
-		};
-		return authApi(data)
-			.then((res) => {
-				if (res.status === 200) {
-					dispatch({
-						type: REPORTS.SALES_BY_CUSTOMER,
-						payload: res,
-					});
-				}
-			})
-			.catch((err) => {
-				throw err;
-			});
-	};
-};
+	  let data = {
+		method: 'get',
+		url
+	  }
+	  return authApi(data).then((res) => {
+		if (res.status === 200) {
+		  return res
+		}
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }
+
 export const getReceivableInvoiceSummary = (postData) => {
-	const { startDate, endDate } = postData;
-	let url = `/rest/simpleaccountReports/ReceivableInvoiceSummary?startDate=${startDate}&endDate=${endDate}`;
-
+	const { startDate, endDate} = postData
+	let url = `/rest/simpleaccountReports/ReceivableInvoiceSummary?startDate=${startDate}&endDate=${endDate}`
 	return (dispatch) => {
-		let data = {
-			method: 'get',
-			url,
-		};
-		return authApi(data)
-			.then((res) => {
-				if (res.status === 200) {
-					dispatch({
-						type: REPORTS.RECEIVABLE_INVOICE,
-						payload: res,
-					});
-				}
-			})
-			.catch((err) => {
-				throw err;
-			});
-	};
-};
+	  let data = {
+		method: 'get',
+		url
+	  }
+	  return authApi(data).then((res) => {
+		if (res.status === 200) {
+		  return res
+		}
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }
 
-export const getPayableInvoiceSummary = (postData) => {
-	const { startDate, endDate } = postData;
-	let url = `/rest/simpleaccountReports/PayableInvoiceSummary?startDate=${startDate}&endDate=${endDate}`;
-
+  export const getExpenseByCategory = (postData) => {
+	const { startDate, endDate} = postData
+	let url = `/rest/simpleaccountReports/ExpenseByCategory?startDate=${startDate}&endDate=${endDate}`
 	return (dispatch) => {
-		let data = {
-			method: 'get',
-			url,
-		};
-		return authApi(data)
-			.then((res) => {
-				if (res.status === 200) {
-					dispatch({
-						type: REPORTS.PAYABLE_INVOICE,
-						payload: res,
-					});
-				}
-			})
-			.catch((err) => {
-				throw err;
-			});
-	};
-};
+	  let data = {
+		method: 'get',
+		url
+	  }
+	  return authApi(data).then((res) => {
+		if (res.status === 200) {
+		  return res
+		}
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }
+
+  export const getPayableInvoiceSummary = (postData) => {
+	const { startDate, endDate} = postData
+	let url = `/rest/simpleaccountReports/PayableInvoiceSummary?startDate=${startDate}&endDate=${endDate}`
+	return (dispatch) => {
+	  let data = {
+		method: 'get',
+		url
+	  }
+	  return authApi(data).then((res) => {
+		if (res.status === 200) {
+		  return res
+		}
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }
+
 export const getSalesByProduct = (postData) => {
-	const { startDate, endDate } = postData;
-	let url = `/rest/simpleaccountReports/salesbyproduct?startDate=${startDate}&endDate=${endDate}`;
-
+	const { startDate, endDate} = postData
+	let url = `/rest/simpleaccountReports/salesbyproduct?startDate=${startDate}&endDate=${endDate}`
 	return (dispatch) => {
-		let data = {
-			method: 'get',
-			url,
-		};
-		return authApi(data)
-			.then((res) => {
-				if (res.status === 200) {
-					dispatch({
-						type: REPORTS.SALES_BY_ITEM,
-						payload: res,
-					});
-				}
-			})
-			.catch((err) => {
-				throw err;
-			});
-	};
-};
+	  let data = {
+		method: 'get',
+		url
+	  }
+	  return authApi(data).then((res) => {
+		if (res.status === 200) {
+		  return res
+		}
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }
 
-export const getpurchasebyVendor = (postData) => {
-	const { startDate, endDate } = postData;
-	let url = `/rest/simpleaccountReports/purchasebyVendor?startDate=${startDate}&endDate=${endDate}`;
-
+  export const getpurchasebyVendor = (postData) => {
+	const { startDate, endDate} = postData
+	let url = `/rest/simpleaccountReports/purchasebyVendor?startDate=${startDate}&endDate=${endDate}`
 	return (dispatch) => {
-		let data = {
-			method: 'get',
-			url,
-		};
-		return authApi(data)
-			.then((res) => {
-				if (res.status === 200) {
-					dispatch({
-						type: REPORTS.PURCHASE_BY_VENDOR,
-						payload: res,
-					});
-				}
-			})
-			.catch((err) => {
-				throw err;
-			});
-	};
-};
+	  let data = {
+		method: 'get',
+		url
+	  }
+	  return authApi(data).then((res) => {
+		if (res.status === 200) {
+		  return res
+		}
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }
 
-export const getpurchasebyproduct = (postData) => {
-	const { startDate, endDate } = postData;
-	let url = `/rest/simpleaccountReports/purchasebyproduct?startDate=${startDate}&endDate=${endDate}`;
-
+  export const getpurchasebyproduct = (postData) => {
+	const { startDate, endDate} = postData
+	let url = `/rest/simpleaccountReports/purchasebyproduct?startDate=${startDate}&endDate=${endDate}`
 	return (dispatch) => {
-		let data = {
-			method: 'get',
-			url,
-		};
-		return authApi(data)
-			.then((res) => {
-				if (res.status === 200) {
-					dispatch({
-						type: REPORTS.PURCHASE_BY_ITEM,
-						payload: res,
-					});
-				}
-			})
-			.catch((err) => {
-				throw err;
-			});
-	};
-};
+	  let data = {
+		method: 'get',
+		url
+	  }
+	  return authApi(data).then((res) => {
+		if (res.status === 200) {
+		  return res
+		}
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }
+
+  export const getCreditNoteDetails = (postData) => {
+	const { startDate, endDate} = postData
+	let url = `/rest/simpleaccountReports/creditNoteDetails?startDate=${startDate}&endDate=${endDate}`
+	return (dispatch) => {
+	  let data = {
+		method: 'get',
+		url
+	  }
+	  return authApi(data).then((res) => {
+		if (res.status === 200) {
+		  return res
+		}
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }
+
 
 export const getTrialBalanceReport = (postData) => {
 	const { startDate, endDate } = postData;
@@ -241,30 +244,6 @@ export const getBalanceReport = (postData) => {
 							},
 						});
 						return res;
-					}
-				})
-				.catch((err) => {
-					throw err;
-				});
-		};
-	};
-
-	export const getCreditNoteDetails = (postData) => {
-		const { startDate, endDate } = postData;
-		let url = `/rest/simpleaccountReports/creditNoteDetails?startDate=${startDate}&endDate=${endDate}`;
-	
-		return (dispatch) => {
-			let data = {
-				method: 'get',
-				url,
-			};
-			return authApi(data)
-				.then((res) => {
-					if (res.status === 200) {
-						dispatch({
-							type: REPORTS.CREDITNOTE_DETAILS,
-							payload: res,
-						});
 					}
 				})
 				.catch((err) => {

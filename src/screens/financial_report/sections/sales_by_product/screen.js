@@ -69,7 +69,7 @@ class SalesByProduct extends React.Component {
 				column: null,
 				direction: 'desc',
 			},
-		
+			data:[],
 		};
 	
 	}
@@ -322,52 +322,55 @@ class SalesByProduct extends React.Component {
 										<Loader />
 									) : (
 										<div className="table-wrapper">
-												<BootstrapTable
-											selectRow={this.selectRowProp}
-											search={false}
-											options={this.options}
-											data={sales_by_item.salesByProductModelList ? sales_by_item.salesByProductModelList : []}
-											version="4"
-											hover
-											responsive
-											currencyList
-											keyField="id"
-											remote
-											className="customer-invoice-table"
-											csvFileName="sales_by_item.csv"
-											ref={(node) => {
-												this.table = node;
-											}}
-										>
-											<TableHeaderColumn
-												dataField="productName"
-												className="table-header-bg"
-											>
-												{strings.ProductName}
-											</TableHeaderColumn>
-											<TableHeaderColumn 
-												dataField="quantitySold" 
-												className="table-header-bg"
-											>
-												{strings.QuantitySold}
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												dataField="totalAmountForAProduct"
-												className="table-header-bg"
-												dataFormat={this.rendertotalAmountForAProduct}
-												formatExtraData={universal_currency_list}
-											>
-												{strings.Amount}
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												dataField="averageAmount"
-												className="table-header-bg"
-												dataFormat={this.renderaverageAmount}
-												formatExtraData={universal_currency_list}
-											>
-												{strings.Average+" "+strings.Amount}
-											</TableHeaderColumn>
-										</BootstrapTable>
+													<Table  >
+												<thead className="header-row" >
+													<tr>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Product Name</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Quantity Sold</th>
+
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>
+															Total Amount
+														</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Average Amount</th>
+
+													</tr>
+												</thead>
+												<tbody className=" table-bordered table-hover">
+													{this.state.data.salesByProductModelList &&
+														this.state.data.salesByProductModelList.map((item, index) => {
+															return (
+																<tr key={index}>
+
+
+																	<td style={{ textAlign: 'center', width: '20%' }}>{item.productName}</td>
+																	<td style={{ textAlign: 'center', width: '20%' }}>{item.quantitySold}</td>
+																	<td style={{ textAlign: 'center', width: '20%' }}>
+																		<Currency
+																			value={item.totalAmountForAProduct}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0].currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	</td>
+
+																	<td style={{ textAlign: 'center', width: '20%' }}>
+																		<Currency
+																			value={item.averageAmount}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0].currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	</td>
+																</tr>
+															);
+														})}
+
+												</tbody>
+											</Table>
 										</div>
 									)}
 									<div style={{ textAlignLast:'center'}}> {strings.PoweredBy} <b>SimpleAccounts</b></div> 

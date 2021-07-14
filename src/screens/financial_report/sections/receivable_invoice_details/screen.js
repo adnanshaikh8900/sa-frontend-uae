@@ -80,7 +80,6 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 			},
 			{ label: 'Quantity', value: 'quantity', sort: true },
 			{ label: 'Unit Price', value: 'unitPrice', sort: false,align: 'right'  },
-			{ label: 'Discount', value: 'discount', sort: false, align: 'left' },
 			{ label: 'Vat Amount', value: 'vatAmount', sort: false, align: 'left' },
 			{ label: 'Total Amount', value: 'totalAmount', sort: false, align: 'left' },
 		];
@@ -540,9 +539,9 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 																					<td style={{ width: '12%' }}>
 																						{row['unitPrice']}
 																					</td>
-																					<td style={{ width: '12%' }}>
+																					{/* <td style={{ width: '12%' }}>
 																						{row['discount']}
-																					</td>
+																					</td> */}
 																					
 																						<td style={{ width: '12%' }}>
 																							{row.vatAmount > 0 && (row.unitPrice ? (

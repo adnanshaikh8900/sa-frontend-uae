@@ -27,7 +27,7 @@ import FilterComponent2 from '../filterComponet2';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
-import {data}  from '../../../Language/index'
+import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization'
 
 const mapStateToProps = (state) => {
@@ -58,7 +58,7 @@ class SalesByCustomer extends React.Component {
 			initValue: {
 				startDate: moment().startOf('month').format('DD/MM/YYYY'),
 				endDate: moment().endOf('month').format('DD/MM/YYYY'),
-			
+
 			},
 			csvData: [],
 			activePage: 1,
@@ -68,9 +68,10 @@ class SalesByCustomer extends React.Component {
 				column: null,
 				direction: 'desc',
 			},
-		
+			data: [],
+
 		};
-	
+
 	}
 
 	generateReport = (value) => {
@@ -90,7 +91,7 @@ class SalesByCustomer extends React.Component {
 	};
 
 	componentDidMount = () => {
-		this.props.financialReportActions.getCompany() 
+		this.props.financialReportActions.getCompany()
 		this.initializeData();
 	};
 
@@ -153,7 +154,7 @@ class SalesByCustomer extends React.Component {
 				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 			/>
 		);
-		
+
 	};
 	rendergetSalesWithvat = (cell, row, extraData) => {
 		return row.getSalesWithvat === 0 ? (
@@ -167,13 +168,13 @@ class SalesByCustomer extends React.Component {
 				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 			/>
 		);
-		
+
 	};
 	render() {
 		strings.setLanguage(this.state.language);
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
-		const { profile, universal_currency_list,company_profile,sales_by_customer } = this.props;
-		console.log(company_profile)
+		const { profile, universal_currency_list, company_profile, sales_by_customer } = this.props;
+		console.log(this.state.data.sbcustomerList)
 		return (
 			<div className="transactions-report-screen">
 				<div className="animated fadeIn">
@@ -205,31 +206,31 @@ class SalesByCustomer extends React.Component {
 													onClick={() => window.print()}
 													style={{
 														cursor: 'pointer',
-														}}
+													}}
 												>
 													<i className="fa fa-print"></i>
 												</div>
 												<div
-												className="mr-2 print-btn-cont"
-												onClick={() => {
-													this.exportPDFWithComponent();
-												}}
-												style={{
-													cursor: 'pointer',
-													}}
-												>
-												<i className="fa fa-file-pdf-o"></i>
-											</div>
-												<div
 													className="mr-2 print-btn-cont"
-                                                    onClick={() => {
-                                                        this.props.history.push('/admin/report/financial');
-                                                    }}
+													onClick={() => {
+														this.exportPDFWithComponent();
+													}}
 													style={{
 														cursor: 'pointer',
-														}}
+													}}
 												>
-												<span>X</span>
+													<i className="fa fa-file-pdf-o"></i>
+												</div>
+												<div
+													className="mr-2 print-btn-cont"
+													onClick={() => {
+														this.props.history.push('/admin/report/financial');
+													}}
+													style={{
+														cursor: 'pointer',
+													}}
+												>
+													<span>X</span>
 												</div>
 												{/* <Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
 													<DropdownToggle caret>Export As</DropdownToggle>
@@ -275,104 +276,137 @@ class SalesByCustomer extends React.Component {
 									}}
 								/>{' '}
 							</div>
-									<CardBody id="section-to-print">
+							<CardBody id="section-to-print">
 								<PDFExport
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
 									paperSize="A4"
 								>
-							<div style={{	
-									
-									display: 'flex',
-									justifyContent: 'space-between',
-									marginBottom: '1rem'}}>
-									<div>
-									<img
-										src={ 
-											company_profile &&
-											company_profile.companyLogoByteArray
-												? 'data:image/jpg;base64,' +
-											company_profile.companyLogoByteArray
-												: logo
-										}
-										className=""
-										alt=""
-										style={{ width: ' 150px' }}></img>
-								
-									
-									</div>			
-									<div style={{textAlign:'center'}} >
-								
-										<h2>
-										{company_profile &&
-											company_profile['companyName']
-												? company_profile['companyName']
-												: ''}
-											</h2>	
+									<div style={{
+
+										display: 'flex',
+										justifyContent: 'space-between',
+										marginBottom: '1rem'
+									}}>
+										<div>
+											<img
+												src={
+													company_profile &&
+														company_profile.companyLogoByteArray
+														? 'data:image/jpg;base64,' +
+														company_profile.companyLogoByteArray
+														: logo
+												}
+												className=""
+												alt=""
+												style={{ width: ' 150px' }}></img>
+
+
+										</div>
+										<div style={{ textAlign: 'center' }} >
+
+											<h2>
+												{company_profile &&
+													company_profile['companyName']
+													? company_profile['companyName']
+													: ''}
+											</h2>
 											<br style={{ marginBottom: '5px' }} />
-											<b style ={{ fontSize: '18px'}}>{strings.SalesByCustomer}</b>
+											<b style={{ fontSize: '18px' }}>{strings.SalesByCustomer}</b>
 											<br style={{ marginBottom: '5px' }} />
-											{strings.From} {initValue.startDate} {strings.To } {initValue.endDate}
-											
+											{strings.From} {initValue.startDate} {strings.To} {initValue.endDate}
+
+										</div>
+										<div>
+										</div>
 									</div>
-									<div>
-									</div>									
-							</div>
 									{loading ? (
 										<Loader />
 									) : (
 										<div className="table-wrapper">
-												<BootstrapTable
-											selectRow={this.selectRowProp}
-											search={false}
-											options={this.options}
-											data={sales_by_customer.sbcustomerList ? sales_by_customer.sbcustomerList : []}
-											version="4"
-											hover
-											responsive
-											currencyList
-											keyField="id"
-											remote
-											className="customer-invoice-table"
-											csvFileName="sales_by_customer.csv"
-											ref={(node) => {
-												this.table = node;
-											}}
-										>
-											<TableHeaderColumn
-												dataField="customerName"
-												
-												className="table-header-bg"
-											>
-											{strings.CustomerName}
-											</TableHeaderColumn>
-											<TableHeaderColumn 
-												dataField="invoiceCount" 
-												className="table-header-bg"
-											>
-												{strings.InvoiceCount}
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												dataField="salesExcludingvat"
-												dataFormat={this.rendersalesExcludingvat}
-												formatExtraData={universal_currency_list}
-												className="table-header-bg"
-											>
-												{strings.Sales}
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												dataField="getSalesWithvat"
-												dataFormat={this.rendergetSalesWithvat}
-												formatExtraData={universal_currency_list}
-												
-												className="table-header-bg"
-											>
-												{strings.SalesWithVat}
-											</TableHeaderColumn>
-										</BootstrapTable>
+											<Table  >
+												<thead className="header-row" >
+													<tr>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Customer Name</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Invoice Count</th>
+
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>
+															Sales Excluding Tax
+														</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Sales With Tax</th>
+
+													</tr>
+												</thead>
+												<tbody className=" table-bordered table-hover">
+													{this.state.data.sbcustomerList &&
+														this.state.data.sbcustomerList.map((item, index) => {
+															return (
+																<tr key={index}>
+
+
+																	<td style={{ textAlign: 'center', width: '20%' }}>{item.customerName}</td>
+																	<td style={{ textAlign: 'center', width: '20%' }}>{item.invoiceCount}</td>
+																	<td style={{ textAlign: 'center', width: '20%' }}>
+																		<Currency
+																			value={item.salesExcludingvat}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0].currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	</td>
+
+																	<td style={{ textAlign: 'center', width: '20%' }}>
+																		<Currency
+																			value={item.getSalesWithvat}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0].currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	</td>
+																</tr>
+															);
+														})}
+
+												</tbody>
+												<tfoot>
+													<tr style={{ border: "3px solid #dfe9f7" }}>
+													<td style={{ textAlign: 'center', width: '20%' }}><b>Total</b></td>
+													<td></td>
+													<td style={{ textAlign: 'center', width: '20%' }}>
+													
+														<b><Currency
+															value={this.state.data.totalExcludingVat}
+															currencySymbol={
+																universal_currency_list[0]
+																	? universal_currency_list[0].currencyIsoCode
+																	: 'USD'
+															}
+														/></b>
+														
+													</td>
+
+													<td style={{ textAlign: 'center', width: '20%' }}>
+													<b>
+													<Currency
+															value={this.state.data.totalAmount}
+															currencySymbol={
+																universal_currency_list[0]
+																	? universal_currency_list[0].currencyIsoCode
+																	: 'USD'
+															}
+														/></b>
+														
+													</td>
+												</tr>
+												</tfoot>
+											</Table>
 										</div>
 									)}
-									<div style={{ textAlignLast:'center'}}>{strings.PoweredBy} <b>SimpleAccounts</b></div> 
+									<div style={{ textAlignLast: 'center' }}>{strings.PoweredBy} <b>SimpleAccounts</b></div>
 								</PDFExport>
 							</CardBody>
 						</div>

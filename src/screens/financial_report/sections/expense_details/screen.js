@@ -22,14 +22,12 @@ import { CSVLink } from 'react-csv';
 import FilterComponent from './sections/filterComponent';
 import { Loader, Currency } from 'components';
 
-import * as ReceivbaleInvoiceDetailsActions from './actions';
+import * as ExpenseDetailsActions from './actions';
 
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { CommonActions } from 'services/global';
-import {data}  from '../../../Language/index'
-import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -40,22 +38,21 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
-		receivbaleInvoiceDetailsActions: bindActionCreators(
-			ReceivbaleInvoiceDetailsActions,
+		expenseDetailsActions: bindActionCreators(
+			ExpenseDetailsActions,
 			dispatch,
 		),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
-let strings = new LocalizedStrings(data);
-class PayablesInvoiceDetailsReport extends React.Component {
+
+class ExpenseDetailsReport extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			language: window['localStorage'].getItem('language'),
 			loading: true,
 			dropdownOpen: false,
-			payableInvoiceDetailsList: {},
+			expenseDetailsList: {},
 			view: false,
 			initValue: {
 				startDate: moment().startOf('month').format('DD/MM/YYYY'),
@@ -74,23 +71,25 @@ class PayablesInvoiceDetailsReport extends React.Component {
 		this.columnHeader = [
 			{ label: 'Invoice Date', value: 'invoiceDate' },
 			{ label: 'Invoice Number', value: 'invoiceNumber' },
-			
-			{ label: 'ProductName', value: 'productName' },
+
+			{ label: 'Product Name', value: 'productName' },
 			{
 				label: 'Description',
 				value: 'description',
 				sort: true,
 			},
 			{ label: 'Quantity', value: 'quantity', sort: true },
-			{ label: 'Unit Price', value: 'unitPrice', sort: false,align: 'right'  },
+			{ label: 'Unit Price', value: 'unitPrice', sort: false, align: 'right' },
+			{ label: 'Discount', value: 'discount', sort: false, align: 'left' },
 			{ label: 'Vat Amount', value: 'vatAmount', sort: false, align: 'left' },
 			{ label: 'Total Amount', value: 'totalAmount', sort: false, align: 'left' },
 		];
 	}
 
 	componentDidMount = () => {
-		this.props.receivbaleInvoiceDetailsActions.getCompany()
+		this.props.expenseDetailsActions.getCompany()
 		this.initializeData();
+
 	};
 
 	initializeData = () => {
@@ -99,8 +98,8 @@ class PayablesInvoiceDetailsReport extends React.Component {
 			startDate: initValue.startDate,
 			endDate: initValue.endDate,
 		};
-		this.props.receivbaleInvoiceDetailsActions
-			.getPayableInvoiceDetail(postData)
+		this.props.expenseDetailsActions
+			.getExpenseDetails(postData)
 			.then((res) => {
 
 				const tempData = [];
@@ -109,7 +108,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 
 					this.setState(
 
-						{ payableInvoiceDetailsList: res.data },
+						{ expenseDetailsList: res.data },
 						() => {
 							this.setState({
 								loading: false,
@@ -122,7 +121,6 @@ class PayablesInvoiceDetailsReport extends React.Component {
 			.catch((err) => {
 				this.setState({ loading: false });
 			});
-
 	};
 
 	exportFile = (csvData, fileName, type) => {
@@ -158,6 +156,8 @@ class PayablesInvoiceDetailsReport extends React.Component {
 				initValue: {
 					startDate: moment(value.startDate).format('DD/MM/YYYY'),
 					endDate: moment(value.endDate).format('DD/MM/YYYY'),
+					reportBasis: value.reportBasis.value,
+					chartOfAccountId: value.chartOfAccountId.value,
 				},
 				loading: true,
 				view: !this.state.view,
@@ -176,7 +176,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 				? 'desc'
 				: 'asc'
 			: 'desc';
-		const sortedData = this.state.payableInvoiceDetailsList.map((data) => {
+		const sortedData = this.state.expenseDetailsList.map((data) => {
 			let nameA, nameB;
 			data.sort((a, b) => {
 				if (column !== 'date') {
@@ -228,7 +228,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 			return item.data;
 		});
 		this.setState({
-			payableInvoiceDetailsList: val,
+			expenseDetailsList: val,
 			sort: {
 				column,
 				direction,
@@ -277,7 +277,6 @@ class PayablesInvoiceDetailsReport extends React.Component {
 	};
 
 	render() {
-		strings.setLanguage(this.state.language);
 		const {
 			loading,
 			initValue,
@@ -288,7 +287,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 		} = this.state;
 		const { profile, universal_currency_list, company_profile } = this.props;
 
-		console.log(this.state.payableInvoiceDetailsList.resultObject)
+		console.log(this.state.expenseDetailsList)
 		return (
 			<div className="transactions-report-screen">
 				<div className="animated fadeIn">
@@ -311,7 +310,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 													}}
 													onClick={this.viewFilter}
 												>
-													<i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
+													<i className="fa fa-cog mr-2"></i>Customize Report
 												</p>
 											</div>
 											<div className="d-flex">
@@ -409,7 +408,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 									filename={'detailGeneralLedger.pdf'}
 								>
 
-									<div className="text-center" style={{
+									<div style={{
 										display: 'flex',
 										justifyContent: 'space-between',
 										marginBottom: '1rem'
@@ -429,7 +428,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 												alt=""
 												style={{ width: ' 150px' }}></img>
 										</div>
-										<div style={{ justifyContent: 'center' }} >
+										<div className="text-center" style={{ justifyContent: 'center' }} >
 
 											<h2>
 												{company_profile &&
@@ -437,11 +436,11 @@ class PayablesInvoiceDetailsReport extends React.Component {
 													? company_profile['companyName']
 													: ''}
 											</h2>
-											<div className="ml-4">
-												<b style={{ fontSize: '18px' }}>{strings.PayableInvoiceDetails}</b>
+											<div className="ml-4" >
+												<b style={{ fontSize: '18px' }}>Expense Details</b>
 												<br />
 
-												{strings.From} {initValue.startDate} {strings.To} {initValue.endDate}
+												From {initValue.startDate} To {initValue.endDate}
 											</div>
 										</div>
 										<div className='mr-3'>
@@ -472,167 +471,94 @@ class PayablesInvoiceDetailsReport extends React.Component {
 										<Loader />
 									) : (
 										<div className="table-wrapper">
-											<Table responsive>
-												<thead>
-													<tr className="header-row">
-														{this.columnHeader.map((column, index) => {
-															return (
-																<th
-																	key={index}
-																	style={{ fontWeight: '600' }}
-																	className={column.align ? 'text-right' : ''}
-																	className="table-header-color"
-																>
-																	<span>{column.label}</span>
-																	{/* // onClick={() => { column.sort && this.onSort(column.value) }} */}
-																	{/* {column.sort && <span className="fa fa-sort sort-container">
-                                <span className={column.sort ? this.setArrow(column.value) : ''}></span>
-                                </span>} */}
-																</th>
-															);
-														})}
+											<Table  >
+											<thead className="header-row" >
+													<tr>
+														<th style={{ padding: '0.5rem', textAlign: 'center'  }}>Expense Date</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center'  }}>Expense Category</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center'  }}>
+															Status
+														</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>
+															Amount
+														</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center'  }}>Amount With Tax</th>
+
 													</tr>
 												</thead>
-												<tbody className="data-column">
-													{this.state.payableInvoiceDetailsList.resultObject &&
-														this.state.payableInvoiceDetailsList.resultObject.length > 0 ? (
-														this.state.payableInvoiceDetailsList.resultObject.map(
-															(item, index) => {
-																return (
-																	<>
-																		<tr
-																			style={{ background: '#f7f7f7' }}
-																			key={index}
-																		>
-																			<td colSpan="9">
-																				<b style={{ fontWeight: '600' }}>
-																					{item[0]['invoiceNumber']}
-																				</b>
-																			</td>
-																		</tr>
-																		{/* <tr>
-                              <td>As On 01/01/2020 </td>
-                              <td colSpan="5">Opening Balance</td>
-                              <td></td>
-                              <td>0.00</td>
-                              <td></td>
-                            </tr> */}
-																		{item.map((row, index) => {
-																			return (
-																				<tr key={index}>
-																					<td style={{ width: '12%' }}>
-																						{row.invoiceDate ? (
-																							moment(row.invoiceDate).format('DD/MM/YYYY')
-																						) : (" ")}
-																					</td>
-																					<td style={{ width: '12%' }}>
-																						{/* {row.transactionTypeName} */}
-																						{row.invoiceNumber}
-																					</td>
-																					<td style={{ width: '12%' }}>
-																						{/* {row['name']} */}
-																						{row['productName']}
-																					</td>
-																					<td style={{ width: '12%' }}>
-																						{/* {row['postingReferenceTypeEnum']} */}
-																						{row['description']}
-																					</td>
-																					<td style={{ width: '10%' }}>
-																						{row['quantity']}
-																					</td>
-																					<td style={{ width: '12%' }}>
-																						{row['unitPrice']}
-																					</td>
-																					<td style={{ width: '12%' }}>
-																							{row.vatAmount > 0 && (row.unitPrice ? (
-																									""
-																								) : (
-																									<p
-																									className="text-left"
-																									// onClick={() =>
-																									// 	this.getInvoice(
-																									// 		row[
-																									// 			'postingReferenceType'
-																									// 		],
-																									// 		row['invoiceType'],
-																									// 		row['referenceId'],
-																									// 	)
-																									// }
-																								>
-																									<Currency
-																										value={ row.vatAmount.toFixed(2) }
-																										currencySymbol={
-																											universal_currency_list[0]
-																												? universal_currency_list[0]
-																														.currencyIsoCode
-																												: 'INR'
-																										}
-																									/>
-																								</p>
-																								)
+												<tbody className=" table-bordered table-hover">
+												{this.state.expenseDetailsList.expenseSummaryModelModelList &&
+														this.state.expenseDetailsList.expenseSummaryModelModelList.map((item, index) => {
+															return (
+																<tr key={index}>
 
+																	<td style={{ textAlign: 'center' }}>{item.expenseDate ? (
+																		moment(item.expenseDate).format('DD/MM/YYYY')
+																	) : (" ")}</td>
+																	<td style={{ textAlign: 'center' }}>{item.transactionCategoryName}</td>
+																	<td style={{ textAlign: 'center' }}>{item.status}</td>
+																	<td style={{ textAlign: 'center', width: '20%' }}>
+																		<Currency
+																			value={item.amountWithoutTax}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0].currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	</td>
 
-																								
-																							)}
-																						</td>
-																					<td style={{ width: '15%' }}>
-																						{row.totalAmount > 0 && (
-																							<p
-																								className="text-left"
-																							// onClick={() =>
-																							// 	this.getInvoice(
-																							// 		row[
-																							// 			'postingReferenceType'
-																							// 		],
-																							// 		row['invoiceType'],
-																							// 		row['referenceId'],
-																							// 	)
-																							// }
-																							>
-																								<Currency
-																									value={ row.vatAmount && row.unitPrice? (row.vatAmount + row.unitPrice).toFixed(2) : row.totalAmount.toFixed(2) }
-																									currencySymbol={
-																										universal_currency_list[0]
-																											? universal_currency_list[0]
-																												.currencyIsoCode
-																											: 'INR'
-																									}
-																								/>
-																							</p>
-																						)}
-																					</td>
-
-
-
-
-
-																				</tr>
-																			);
-																		})}
-																		{/* <tr>
-                              <td>As On 31/01/2020 </td>
-                              <td colSpan="5">Closing Balance</td>
-                              <td>0.00</td>
-                              <td></td>
-                              <td></td>
-                            </tr> */}
-																	</>
-																);
-															},
-														)
-													) : (
-														<tr style={{ borderBottom: '2px solid lightgray' }}>
-															<td style={{ textAlign: 'center' }} colSpan="9">
-																{strings.Thereisnodatatodisplay}
-
-															</td>
-														</tr>
-													)}
+																	<td style={{ textAlign: 'center' }}>
+																		<Currency
+																			value={item.expenseAmount}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0].currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	</td>
+																</tr>
+															);
+														})}
 												</tbody>
+											
+												<tfoot>
+													<tr style={{ border: "3px solid #dfe9f7" }}>
+													<td style={{ textAlign: 'center', width: '20%' }}><b>Total</b></td>
+													<td></td>
+													<td></td>
+													<td style={{ textAlign: 'center', width: '20%' }}>
+													
+														{/* <b><Currency
+															value={this.state.data.amountWithoutTax}
+															currencySymbol={
+																universal_currency_list[0]
+																	? universal_currency_list[0].currencyIsoCode
+																	: 'USD'
+															}
+														/></b> */}
+														
+													</td>
+
+													<td style={{ textAlign: 'center', width: '20%' }}>
+													<b>
+													<Currency
+															value={this.state.expenseDetailsList.totalAmount}
+															currencySymbol={
+																universal_currency_list[0]
+																	? universal_currency_list[0].currencyIsoCode
+																	: 'USD'
+															}
+														/></b>
+														
+													</td>
+												</tr>
+												</tfoot>
 											</Table>
 										</div>
 									)}
-									<div style={{ textAlignLast: 'center' }}> {strings.PoweredBy}<b>SimpleAccounts</b></div>
+									<div style={{ textAlignLast: 'center' }}> Powered By <b>SimpleAccounts</b></div>
 								</PDFExport>
 							</CardBody>
 						</div>
@@ -646,4 +572,4 @@ class PayablesInvoiceDetailsReport extends React.Component {
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps,
-)(PayablesInvoiceDetailsReport);
+)(ExpenseDetailsReport);

@@ -48,6 +48,14 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 let strings = new LocalizedStrings(data);
+let strings1 = new LocalizedStrings(data);
+if(localStorage.getItem('language')==null)
+{
+	strings1.setLanguage('en');
+}
+else{
+strings1.setLanguage(localStorage.getItem('language'));
+}
 class TrailBalances extends React.Component {
 	constructor(props) {
 		super(props);
@@ -112,9 +120,9 @@ class TrailBalances extends React.Component {
 			},
 		};
 		this.columnHeader = [
-			{ label: 'Account', value: 'Account', sort: true },
-			{ label: 'Net Debit', value: 'Net Debit', sort: false },
-			{ label: 'Net Credit', value: 'Net Credit', sort: false },
+			{ label: strings1.Account, value: 'Account', sort: true },
+			{ label: strings1.Net+" "+strings1.Debit, value: 'Net Debit', sort: false },
+			{ label: strings1.Net+" "+strings1.Credit, value: 'Net Credit', sort: false },
 		];
 	}
 

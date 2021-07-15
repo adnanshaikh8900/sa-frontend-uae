@@ -18,6 +18,8 @@ import moment from 'moment'
 
 import { selectOptionsFactory } from "utils";
 import './style.scss'
+import {data}  from '../../Language/index'
+import LocalizedStrings from 'react-localization';
 const customStyles = {
 	control: (base, state) => ({
 		...base,
@@ -29,11 +31,12 @@ const customStyles = {
 	}),
 };
 
-
+let strings = new LocalizedStrings(data);
 class FilterComponent extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			initValue: {
 				startDate: moment().startOf('month').format('YYYY-MM-DD hh:mm'),
 				endDate: moment().endOf('month').format('YYYY-MM-DD hh:mm'),
@@ -50,13 +53,14 @@ class FilterComponent extends Component {
 	}
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { initValue } = this.state
 		const { chart_of_account_list } = this.props
 		return (
 			<div>
 				<Card>
 					<CardHeader className="d-flex" style={{ justifyContent: 'space-between' }}>
-						<div style={{ fontSize: '1.3rem', paddingLeft: '15px' }}>Customize Report</div>
+						<div style={{ fontSize: '1.3rem', paddingLeft: '15px' }}>{strings.CustomizeReport}</div>
 						<div><i className="fa fa-close" style={{ cursor: 'pointer' }} onClick={this.props.viewFilter}></i></div>
 					</CardHeader>
 					<CardBody>
@@ -69,7 +73,7 @@ class FilterComponent extends Component {
 										<Col lg={4}>
 											<FormGroup className="mb-3">
 												<Label htmlFor="startDate">
-													From
+													{strings.From}
                                   </Label>
 												<DatePicker
 													id="date"
@@ -94,13 +98,13 @@ class FilterComponent extends Component {
 										<Col lg={4}>
 											<FormGroup className="mb-3">
 												<Label htmlFor="endDate">
-													To
+													{strings.To}
                                   </Label>
 												<DatePicker
 													id="date"
 													name="endDate"
 													className={`form-control`}
-													placeholderText="From"
+													placeholderText={strings.Select}
 													showMonthDropdown
 													showYearDropdown
 													value={moment(props.values.endDate).format('DD/MM/YYYY')}
@@ -119,10 +123,11 @@ class FilterComponent extends Component {
 									<Row>
 										<Col lg={4}>
 											<FormGroup className="mb-3">
-												<Label htmlFor="reportBasis">Report Basis</Label>
+												<Label htmlFor="reportBasis"> {strings.ReportBasis}</Label>
 												<Select
 												styles={customStyles}
 													className="select-default-width"
+													placeholder={strings.Select}
 													id="reportBasis"
 													name="reportBasis"
 													options={this.reportBasis}
@@ -135,10 +140,11 @@ class FilterComponent extends Component {
 										</Col>
 										<Col lg={4}>
 											<FormGroup className="mb-3">
-												<Label htmlFor="chart_of_account">Chart Of Account</Label>
+												<Label htmlFor="chart_of_account">{strings.ChartofAccounts}</Label>
 												<Select
 												styles={customStyles}
 													className="select-default-width"
+													placeholder={strings.Select}
 													id="chart_of_account"
 													name="chart_of_account_list"
 													options={chart_of_account_list ? selectOptionsFactory.renderOptions('transactionCategoryName', 'transactionCategoryId', chart_of_account_list, 'Chart of Account') : []}
@@ -155,12 +161,12 @@ class FilterComponent extends Component {
 											<FormGroup className="text-right">
 												<Button type="button" color="primary" className="btn-square mr-3" onClick={() => { this.props.generateReport(props.values) }
 												}>
-													<i className="fa fa-dot-circle-o"></i> Run Report
+													<i className="fa fa-dot-circle-o"></i> {strings.RunReport}
                         </Button>
 
 												<Button color="secondary" className="btn-square"
 													onClick={this.props.viewFilter}>
-													<i className="fa fa-ban"></i> Cancel
+													<i className="fa fa-ban"></i> {strings.Cancel}
                         </Button>
 											</FormGroup>
 										</Col>

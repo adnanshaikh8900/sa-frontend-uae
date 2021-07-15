@@ -48,6 +48,14 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 let strings = new LocalizedStrings(data);
+let strings1 = new LocalizedStrings(data);
+if(localStorage.getItem('language')==null)
+{
+	strings1.setLanguage('en');
+}
+else{
+strings1.setLanguage(localStorage.getItem('language'));
+}
 class PayablesInvoiceDetailsReport extends React.Component {
 	constructor(props) {
 		super(props);
@@ -72,19 +80,15 @@ class PayablesInvoiceDetailsReport extends React.Component {
 			chart_of_account_list: [],
 		};
 		this.columnHeader = [
-			{ label: 'Invoice Date', value: 'invoiceDate' },
-			{ label: 'Invoice Number', value: 'invoiceNumber' },
+			{ label: strings1.InvoiceDate, value: 'invoiceDate' },
+			{ label: strings1.InvoiceNumber, value: 'invoiceNumber' },
 			
-			{ label: 'ProductName', value: 'productName' },
-			{
-				label: 'Description',
-				value: 'description',
-				sort: true,
-			},
-			{ label: 'Quantity', value: 'quantity', sort: true },
-			{ label: 'Unit Price', value: 'unitPrice', sort: false,align: 'right'  },
-			{ label: 'Vat Amount', value: 'vatAmount', sort: false, align: 'left' },
-			{ label: 'Total Amount', value: 'totalAmount', sort: false, align: 'left' },
+			{ label: strings1.ProductName, value: 'productName' },
+			{label: strings1.Description,value: 'description',sort: true},
+			{ label: strings1.Quantity, value: 'quantity', sort: true },
+			{ label: strings1.UnitPrice, value: 'unitPrice', sort: false,align: 'right'  },
+			{ label: strings1.VatAmount, value: 'vatAmount', sort: false, align: 'left' },
+			{ label: strings1.Total+" "+strings1.Amount, value: 'totalAmount', sort: false, align: 'left' },
 		];
 	}
 

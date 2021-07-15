@@ -69,7 +69,8 @@ RecieptNumber:"Numéro de reçu",
       Cashflow: "Flux de trésorerie",
       INFLOW: "Afflux",
       OUTFLOW: "Sortie",
-      NET: "Filet",
+      NET: "FILET",
+      Net: "Filet",
       ProfitLoss: "Bénéfice et perte",
 
       //Customer invoice
@@ -797,7 +798,31 @@ CreditNote:"Note de crédit",
 CREDITSREMAINING:"CRÉDITS RESTANTS",
 ExpenseAmount:"Montant de la dépense",	
 PostedDate:"Date de publication",	
-Receipt:"Reçu",	
+Receipt:"Reçu",
 
-  }
+Adjustment:"Ajustement",
+Box:"Boîte",	
+Recoverable:"Récupérable",	
+VatReturns:"TVA Retours",
+VATonSalesandallotherOutputs:"TVA sur ventes et tous les autres extrants",
+Exemptsupplies:"Fournitures exonérées",
+VATonExpensesandallotherInputs:"TVA sur dépenses et tous les autres intrants",	
+Standardratedexpenses:"Dépenses standard",		
+
+Suppliessubjecttothereversechargeprovisions:"Fournitures soumises aux dispositions d'autoliquidation",													
+Due:"Dû",													
+Totalvalueofduetaxfortheperiod:"Valeur totale de la taxe due pour la période",													
+Totalvalueofrecoverabletaxfortheperiod:"Valeur totale de la taxe récupérable pour la période",													
+NetVATpayablefortheperiodorreclaimable:"TVA nette à payer pour la période(ou récupérable)",													
+DoyouwishtorequestarefundfortheaboveamountofreclaimableVAT:"Vous souhaitez demander un remboursement pour le montant de TVA récupérable ci-dessus?",
+Zeroratedsupplies:"Fournitures détaxées",	
+ReportBasis:"base du rapport",	
+SalesWithTax:"Ventes avec tax",	
+SalesExcludingTax:"Ventes Hors tax",
+ExcludingTax:"Hors tax",
+WithTax:"Avec tax",
+By:"Par",										
+Number:"Nombre",										
+
+}
   export {fr};

@@ -28,6 +28,9 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { CommonActions } from 'services/global';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
+
 
 const mapStateToProps = (state) => {
 	return {
@@ -45,11 +48,21 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
+let strings = new LocalizedStrings(data);
+let strings1 = new LocalizedStrings(data);
+if(localStorage.getItem('language')==null)
+{
+	strings1.setLanguage('en');
+}
+else{
+strings1.setLanguage(localStorage.getItem('language'));
+}
 
 class ReceivableInvoiceDetailsReport extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: true,
 			dropdownOpen: false,
 			receivbaleInvoiceDetailsList: {},
@@ -69,19 +82,15 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 			chart_of_account_list: [],
 		};
 		this.columnHeader = [
-			{ label: 'Invoice Date', value: 'invoiceDate' },
-			{ label: 'Invoice Number', value: 'invoiceNumber' },
+			{ label: strings1.InvoiceDate, value: 'invoiceDate' },
+			{ label: strings1.InvoiceNumber, value: 'invoiceNumber' },
 			
-			{ label: 'Product Name', value: 'productName' },
-			{
-				label: 'Description',
-				value: 'description',
-				sort: true,
-			},
-			{ label: 'Quantity', value: 'quantity', sort: true },
-			{ label: 'Unit Price', value: 'unitPrice', sort: false,align: 'right'  },
-			{ label: 'Vat Amount', value: 'vatAmount', sort: false, align: 'left' },
-			{ label: 'Total Amount', value: 'totalAmount', sort: false, align: 'left' },
+			{ label: strings1.ProductName, value: 'productName' },
+			{label: strings1.Description,value: 'description',sort: true,},
+			{ label: strings1.Quantity, value: 'quantity', sort: true },
+			{ label: strings1.UnitPrice, value: 'unitPrice', sort: false,align: 'right'  },
+			{ label: strings1.VatAmount, value: 'vatAmount', sort: false, align: 'left' },
+			{ label: strings1.Total+" "+strings1.Amount, value: 'totalAmount', sort: false, align: 'left' },
 		];
 	}
 
@@ -276,6 +285,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			loading,
 			initValue,
@@ -309,7 +319,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 													}}
 													onClick={this.viewFilter}
 												>
-													<i className="fa fa-cog mr-2"></i>Customize Report
+													<i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
 												</p>
 											</div>
 											<div className="d-flex">
@@ -434,10 +444,10 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 												: ''}
 											</h2>	
 											<div  className="ml-4" >
-												<b style ={{ fontSize: '18px'}}>Receivable Invoice Details</b>
+												<b style ={{ fontSize: '18px'}}>{strings.Receivable+" "+strings.Invoice+" "+strings.Details}</b>
 												<br/>
 												
-												From {initValue.startDate} To {initValue.endDate}
+												{strings.From}{initValue.startDate} {strings.To} {initValue.endDate}
 											</div>	
 									</div>
 									<div className='mr-3'>
@@ -623,7 +633,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 													) : (
 														<tr style={{ borderBottom: '2px solid lightgray' }}>
 															<td style={{ textAlign: 'center' }} colSpan="9">
-																There is no data to display
+															{strings.Thereisnodatatodisplay}
 															</td>
 														</tr>
 													)}
@@ -631,7 +641,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 											</Table>
 										</div>
 									)}
-									<div style={{ textAlignLast:'center'}}> Powered By <b>SimpleAccounts</b></div> 
+									<div style={{ textAlignLast:'center'}}> {strings.PoweredBy} <b>SimpleAccounts</b></div> 
 								</PDFExport>
 							</CardBody>
 						</div>

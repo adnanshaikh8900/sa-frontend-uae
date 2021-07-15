@@ -49,6 +49,15 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 let strings = new LocalizedStrings(data);
+let strings1 = new LocalizedStrings(data);
+if(localStorage.getItem('language')==null)
+{
+	strings1.setLanguage('en');
+}
+else{
+strings1.setLanguage(localStorage.getItem('language'));
+}
+
 class DetailedGeneralLedgerReport extends React.Component {
 	constructor(props) {
 		super(props);
@@ -75,19 +84,15 @@ class DetailedGeneralLedgerReport extends React.Component {
 			chart_of_account_list: [],
 		};
 		this.columnHeader = [
-			{ label: 'Date', value: 'date', sort: true },
-			{ label: 'Transaction Type', value: 'transcation_type', sort: false },
-			{ label: 'Account', value: 'name', sort: true },
-			{
-				label: 'Transaction Details',
-				value: 'postingReferenceTypeEnum',
-				sort: true,
-			},
-			{ label: 'Transaction#', value: 'transactonRefNo', sort: true },
-			{ label: 'Reference#', value: 'referenceNo', sort: false,align: 'right'  },
-			{ label: 'Debit', value: 'debitAmount', sort: false, align: 'left' },
-			{ label: 'Credit', value: 'creditAmount', sort: false, align: 'left' },
-			{ label: 'Amount', value: 'amount', sort: false, align: 'left' },
+			{ label: strings1.Date, value: 'date', sort: true },
+			{ label: strings1.TransactionType, value: 'transcation_type', sort: false },
+			{ label: strings1.Account, value: 'name', sort: true },
+			{label: strings1.Transaction+" "+strings1.Details,value: 'postingReferenceTypeEnum',sort: true,},
+			{ label: strings1.Transaction+"#", value: 'transactonRefNo', sort: true },
+			{ label: strings1.Reference+"#", value: 'referenceNo', sort: false,align: 'right'  },
+			{ label: strings1.Debit, value: 'debitAmount', sort: false, align: 'left' },
+			{ label: strings1.Credit, value: 'creditAmount', sort: false, align: 'left' },
+			{ label: strings1.Amount, value: 'amount', sort: false, align: 'left' },
 		];
 	}
 

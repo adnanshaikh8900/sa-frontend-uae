@@ -320,16 +320,16 @@ class PayablesInvoiceSummary extends React.Component {
 											<Table >
 												<thead className="header-row" >
 													<tr>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Invoice Number</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Customer Name</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Invoice Date</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Invoice Due Date</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Status</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.InvoiceNumber}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.CustomerName}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.InvoiceDate}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.InvoiceDueDate}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.Status}</th>
 
 														<th style={{ padding: '0.5rem', textAlign: 'center' }}>
-															Invoice Amount
+														{strings.InvoiceAmount}
 														</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Balance</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.Balance}</th>
 
 													</tr>
 												</thead>
@@ -378,7 +378,7 @@ class PayablesInvoiceSummary extends React.Component {
 												</tbody>
 												<tfoot>
 													<tr style={{ border: "3px solid #dfe9f7" }}>
-													<td style={{ textAlign: 'center', width: '20%' }}><b>Total</b></td>
+													<td style={{ textAlign: 'center', width: '20%' }}><b>{strings.Total}</b></td>
 													<td></td>	<td></td>	<td></td>	<td></td>
 													<td style={{ textAlign: 'center', width: '20%' }}>
 												

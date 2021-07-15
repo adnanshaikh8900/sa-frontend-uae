@@ -327,12 +327,12 @@ class ExpenseByCategory extends React.Component {
 											<Table  >
 												<thead className="header-row" >
 													<tr>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Transaction Category Name</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.TransactionCategory+" "+strings.Name}</th>
 													
 														<th style={{ padding: '0.5rem', textAlign: 'center' }}>
-															Amount
+														{strings.Amount}
 														</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Amount With Tax</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.Amount+" "+strings.WithTax}</th>
 
 													</tr>
 												</thead>
@@ -373,7 +373,7 @@ class ExpenseByCategory extends React.Component {
 												</tbody>
 												<tfoot>
 													<tr style={{ border: "3px solid #dfe9f7" }}>
-													<td style={{ textAlign: 'center', width: '20%' }}><b>Total</b></td>
+													<td style={{ textAlign: 'center', width: '20%' }}><b>{strings.Total}</b></td>
 													
 													<td style={{ textAlign: 'center', width: '20%' }}>
 													

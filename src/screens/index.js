@@ -92,6 +92,8 @@ import ReceivableInvoiceSummary from './financial_report/sections/receivable_inv
 import PayablesInvoiceDetailsReport from './financial_report/sections/payables_invoice_details';
 import PayablesInvoiceSummary from './financial_report/sections/payables_invoice_summary';
 import CreditNoteDetailsReport from './financial_report/sections/credit_note_details';
+import ExpenseDetailsReport from './financial_report/sections/expense_details';
+import ExpenseByCategory from './financial_report/sections/expense_by_catogery';
 
 import ChartAccount from './chart_account';
 import CreateChartAccount from './chart_account/screens/create';
@@ -332,4 +334,6 @@ export {
 	UpdateEmployeeEmployment,
 	UpdateSalaryComponent,
 	PayrollConfigurations,
+	ExpenseDetailsReport,
+	ExpenseByCategory,
 };

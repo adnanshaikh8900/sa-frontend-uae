@@ -69,7 +69,7 @@ class PurchaseByVendor extends React.Component {
 				column: null,
 				direction: 'desc',
 			},
-		
+		data:[],
 		};
 	
 	}
@@ -175,6 +175,7 @@ class PurchaseByVendor extends React.Component {
 		strings.setLanguage(this.state.language);
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
 		const { profile, universal_currency_list,company_profile,purchase_by_vendor } = this.props;
+		console.log(this.state.data)
 		return (
 			<div className="transactions-report-screen">
 				<div className="animated fadeIn">
@@ -323,53 +324,86 @@ class PurchaseByVendor extends React.Component {
 										<Loader />
 									) : (
 										<div className="table-wrapper">
-												<BootstrapTable
-											selectRow={this.selectRowProp}
-											search={false}
-											options={this.options}
-											data={purchase_by_vendor.pbyVendorList ? purchase_by_vendor.pbyVendorList : []}
-											version="4"
-											hover
-											responsive
-											currencyList
-											keyField="id"
-											remote
-											className="customer-invoice-table"
-											csvFileName="purchase_by_vendor.csv"
-											ref={(node) => {
-												this.table = node;
-											}}
-										>
-											<TableHeaderColumn
-												dataField="vendorName"
-												
-												className="table-header-bg"
-											>
-												{strings.Vendor+" "+strings.Name}
-											</TableHeaderColumn>
-											<TableHeaderColumn 
-												dataField="invoiceCount" 
-												className="table-header-bg"
-											>
-											{strings.InvoiceCount}
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												dataField="salesExcludingvat"
-												dataFormat={this.rendersalesExcludingvat}
-												formatExtraData={universal_currency_list}
-												className="table-header-bg"
-											>
-												{strings.Sales}
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												dataField="getSalesWithvat"
-												dataFormat={this.rendergetSalesWithvat}
-												formatExtraData={universal_currency_list}
-												className="table-header-bg"
-											>
-										      {strings.SalesWithVat }
-											</TableHeaderColumn>
-										</BootstrapTable>
+											<Table  >
+												<thead className="header-row" >
+													<tr>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Vendor Name</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Invoice Count</th>
+
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>
+															Purchase Excluding Tax
+														</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Purchase With Tax</th>
+
+													</tr>
+												</thead>
+												<tbody className=" table-bordered table-hover">
+													{this.state.data.pbyVendorList &&
+														this.state.data.pbyVendorList.map((item, index) => {
+															return (
+																<tr key={index}>
+
+
+																	<td style={{ textAlign: 'center', width: '25%' }}>{item.vendorName}</td>
+																	<td style={{ textAlign: 'center', width: '25%' }}>{item.invoiceCount}</td>
+																	<td style={{ textAlign: 'center', width: '25%' }}>
+																		<Currency
+																			value={item.salesExcludingvat}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0].currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	</td>
+
+																	<td style={{ textAlign: 'center', width: '25%' }}>
+																		<Currency
+																			value={item.getSalesWithvat}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0].currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	</td>
+																</tr>
+															);
+														})}
+
+												</tbody>
+												<tfoot>
+													<tr style={{ border: "3px solid #dfe9f7" }}>
+													<td style={{ textAlign: 'center', width: '20%' }}><b>Total</b></td>
+													<td></td>
+													<td style={{ textAlign: 'center', width: '20%' }}>
+													
+														<b><Currency
+															value={this.state.data.totalExcludingVat}
+															currencySymbol={
+																universal_currency_list[0]
+																	? universal_currency_list[0].currencyIsoCode
+																	: 'USD'
+															}
+														/></b>
+														
+													</td>
+
+													<td style={{ textAlign: 'center', width: '20%' }}>
+													<b>
+													<Currency
+															value={this.state.data.totalAmount}
+															currencySymbol={
+																universal_currency_list[0]
+																	? universal_currency_list[0].currencyIsoCode
+																	: 'USD'
+															}
+														/></b>
+														
+													</td>
+												</tr>
+												</tfoot>
+											</Table>
 										</div>
 									)}
 									<div style={{ textAlignLast:'center'}}> {strings.PoweredBy} <b>SimpleAccounts</b></div> 

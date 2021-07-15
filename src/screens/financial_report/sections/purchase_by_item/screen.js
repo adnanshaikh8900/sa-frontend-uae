@@ -68,7 +68,7 @@ language: window['localStorage'].getItem('language'),
 				column: null,
 				direction: 'desc',
 			},
-		
+			data:[],
 		};
 	
 	}
@@ -174,7 +174,7 @@ language: window['localStorage'].getItem('language'),
 		strings.setLanguage(this.state.language);
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
 		const { profile, universal_currency_list,company_profile,purchase_by_item } = this.props;
-		console.log(purchase_by_item.sbcustomerList)
+		console.log(this.state.data)
 		return (
 			<div className="transactions-report-screen">
 				<div className="animated fadeIn">
@@ -323,53 +323,55 @@ language: window['localStorage'].getItem('language'),
 										<Loader />
 									) : (
 										<div className="table-wrapper">
-												<BootstrapTable
-											selectRow={this.selectRowProp}
-											search={false}
-											options={this.options}
-											data={purchase_by_item.purchaseByProductModelList ? purchase_by_item.purchaseByProductModelList : []}
-											version="4"
-											hover
-											responsive
-											currencyList
-											keyField="id"
-											remote
-											className="customer-invoice-table"
-											csvFileName="purchase_by_item.csv"
-											ref={(node) => {
-												this.table = node;
-											}}
-										>
-											<TableHeaderColumn
-												dataField="productName"
-												
-												className="table-header-bg"
-											>
-												{strings.ProductName}
-											</TableHeaderColumn>
-											<TableHeaderColumn 
-												dataField="quantityPurchased" 
-												className="table-header-bg"
-											>
-											 {strings.QuantityPurchased}
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												dataField="totalAmountForAProduct"
-												dataFormat={this.rendertotalAmountForAProduct}
-												formatExtraData={universal_currency_list}
-												className="table-header-bg"
-											>
-													{strings.Amount}
-											</TableHeaderColumn>
-											<TableHeaderColumn
-												dataField="averageAmount"
-												dataFormat={this.renderAverageAmount}
-												formatExtraData={universal_currency_list}
-												className="table-header-bg"
-											>
-											 {strings.Average+" "+strings.Amount}
-											</TableHeaderColumn>
-										</BootstrapTable>
+													<Table  >
+												<thead className="header-row" >
+													<tr>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Product Name</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Quantity Sold</th>
+
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>
+															Total Amount
+														</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Average Amount</th>
+
+													</tr>
+												</thead>
+												<tbody className=" table-bordered table-hover">
+													{this.state.data.purchaseByProductModelList &&
+														this.state.data.purchaseByProductModelList.map((item, index) => {
+															return (
+																<tr key={index}>
+
+
+																	<td style={{ textAlign: 'center', width: '20%' }}>{item.productName}</td>
+																	<td style={{ textAlign: 'center', width: '20%' }}>{item.quantitySold}</td>
+																	<td style={{ textAlign: 'center', width: '20%' }}>
+																		<Currency
+																			value={item.totalAmountForAProduct}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0].currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	</td>
+
+																	<td style={{ textAlign: 'center', width: '20%' }}>
+																		<Currency
+																			value={item.averageAmount}
+																			currencySymbol={
+																				universal_currency_list[0]
+																					? universal_currency_list[0].currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	</td>
+																</tr>
+															);
+														})}
+
+												</tbody>
+											</Table>
 										</div>
 									)}
 									<div style={{ textAlignLast:'center'}}> {strings.PoweredBy} <b>SimpleAccounts</b></div> 

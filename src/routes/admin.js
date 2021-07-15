@@ -179,6 +179,8 @@ import {
 	UpdateSalaryComponent,
 	PayrollConfigurations,
 	CreditNoteDetailsReport,
+	ExpenseDetailsReport,
+	ExpenseByCategory,
 } from 'screens';
 
 const adminRoutes = [
@@ -739,7 +741,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/report/credit-note-details',
-		name: 'ReceivableInvoiceDetail',
+		name: 'CreditNotesDetails',
 		component: CreditNoteDetailsReport.screen,
 	},
 	{
@@ -756,6 +758,16 @@ const adminRoutes = [
 		path: '/admin/report/payable-invoice-summary',
 		name: 'PayableInvoiceSummary',
 		component: PayablesInvoiceSummary.screen,
+	},
+	{
+		path: '/admin/report/expense-details',
+		name: 'ExpenseDetails',
+		component: ExpenseDetailsReport.screen,
+	},
+	{
+		path: '/admin/report/expense-by-category',
+		name: 'ExpenseByCategoryDetails',
+		component: ExpenseByCategory.screen,
 	},
 	{
 		redirect: true,

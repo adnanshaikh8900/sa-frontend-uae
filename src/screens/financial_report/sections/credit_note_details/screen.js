@@ -317,7 +317,7 @@ class CreditNoteDetailsReport extends React.Component {
 												: ''}
 											</h2>	
 											
-											<b style ={{ fontSize: '18px'}}>Credit Note Details</b>
+											<b style ={{ fontSize: '18px'}}>{strings.CreditNoteDetails}</b>
 											<br style={{ marginBottom: '5px' }} />
 											{strings.From} {initValue.startDate} {strings.To} {initValue.endDate}
 											
@@ -332,16 +332,12 @@ class CreditNoteDetailsReport extends React.Component {
 												<Table >
 												<thead className="header-row" >
 													<tr>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Credit Number</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Customer Name</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Credit Date</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Status</th>
-
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>
-															Invoice Amount
-														</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Balance</th>
-
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.Credit+" "+strings.Number}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.CustomerName}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.Credit+" "+strings.Date}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.Status}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.InvoiceAmount}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.Balance}</th>
 													</tr>
 												</thead>
 												<tbody className=" table-bordered table-hover">
@@ -386,7 +382,7 @@ class CreditNoteDetailsReport extends React.Component {
 												</tbody>
 												<tfoot>
 													<tr style={{ border: "3px solid #dfe9f7" }}>
-													<td style={{ textAlign: 'center', width: '20%' }}><b>Total</b></td>
+													<td style={{ textAlign: 'center', width: '20%' }}><b>{strings.Total}</b></td>
 													<td></td>	<td></td>	<td></td>
 													<td style={{ textAlign: 'center', width: '20%' }}>
 												

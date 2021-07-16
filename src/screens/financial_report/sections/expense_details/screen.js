@@ -21,6 +21,8 @@ import * as XLSX from 'xlsx';
 import { CSVLink } from 'react-csv';
 import FilterComponent from './sections/filterComponent';
 import { Loader, Currency } from 'components';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 import * as ExpenseDetailsActions from './actions';
 
@@ -45,11 +47,12 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
-
+let strings = new LocalizedStrings(data);
 class ExpenseDetailsReport extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: true,
 			dropdownOpen: false,
 			expenseDetailsList: {},
@@ -277,6 +280,7 @@ class ExpenseDetailsReport extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const {
 			loading,
 			initValue,
@@ -310,7 +314,7 @@ class ExpenseDetailsReport extends React.Component {
 													}}
 													onClick={this.viewFilter}
 												>
-													<i className="fa fa-cog mr-2"></i>Customize Report
+													<i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
 												</p>
 											</div>
 											<div className="d-flex">
@@ -437,10 +441,10 @@ class ExpenseDetailsReport extends React.Component {
 													: ''}
 											</h2>
 											<div className="ml-4" >
-												<b style={{ fontSize: '18px' }}>Expense Details</b>
+												<b style={{ fontSize: '18px' }}>{strings.Expense+" "+strings.Details}</b>
 												<br />
 
-												From {initValue.startDate} To {initValue.endDate}
+												{strings.From} {initValue.startDate} {strings.To} {initValue.endDate}
 											</div>
 										</div>
 										<div className='mr-3'>
@@ -474,15 +478,15 @@ class ExpenseDetailsReport extends React.Component {
 											<Table  >
 											<thead className="header-row" >
 													<tr>
-														<th style={{ padding: '0.5rem', textAlign: 'center'  }}>Expense Date</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center'  }}>Expense Category</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center'  }}>{strings.ExpenseDate}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center'  }}>{strings.ExpenseCategory}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'center'  }}>
-															Status
+														{strings.Status}
 														</th>
 														<th style={{ padding: '0.5rem', textAlign: 'center' }}>
-															Amount
+														{strings.Amount}
 														</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center'  }}>Amount With Tax</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center'  }}>{strings.Amount+" "+strings.WithTax}</th>
 
 													</tr>
 												</thead>
@@ -525,7 +529,7 @@ class ExpenseDetailsReport extends React.Component {
 											
 												<tfoot>
 													<tr style={{ border: "3px solid #dfe9f7" }}>
-													<td style={{ textAlign: 'center', width: '20%' }}><b>Total</b></td>
+													<td style={{ textAlign: 'center', width: '20%' }}><b>{strings.Total}</b></td>
 													<td></td>
 													<td></td>
 													<td style={{ textAlign: 'center', width: '20%' }}>
@@ -558,7 +562,7 @@ class ExpenseDetailsReport extends React.Component {
 											</Table>
 										</div>
 									)}
-									<div style={{ textAlignLast: 'center' }}> Powered By <b>SimpleAccounts</b></div>
+									<div style={{ textAlignLast: 'center' }}> {strings.PoweredBy}<b>SimpleAccounts</b></div>
 								</PDFExport>
 							</CardBody>
 						</div>

@@ -220,12 +220,12 @@ class FinancialReport extends React.Component {
 												className="ml-2 mr-2 mt-2 mb-2 "
 											//src={}
 											style={{height:'25px'}}
-											></img>	<h5 className="mb-3 mt-2">Expense</h5></div>
+											></img>	<h5 className="mb-3 mt-2">{strings.Expense}</h5></div>
 											<div className="mt-2 ml-4">
 											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
-											this.props.history.push('/admin/report/expense-details')}>Expense Details</a></h6>
+											this.props.history.push('/admin/report/expense-details')}>{strings.Expense+" "+strings.Details}</a></h6>
 											<h6><a  style={{fontWeight:'400'}} href ="#" onClick={() => 
-											this.props.history.push('/admin/report/expense-by-category')}> Expense By Category</a></h6>
+											this.props.history.push('/admin/report/expense-by-category')}>{strings.Expense+" "+strings.By+" "+ strings.Category}</a></h6>
 									</div>
 									</Col>
 									</Row>
@@ -241,7 +241,7 @@ class FinancialReport extends React.Component {
 											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
 											this.props.history.push('/admin/report/receivable-invoice-summary')}>{strings.ReceivableInvoiceSummary}</a></h6>
 											<h6><a  style={{fontWeight:'400'}} href ="#" onClick={() => 
-											this.props.history.push('/admin/report/receivable-invoice-details')}> Receivable Invoice Detail</a></h6>
+											this.props.history.push('/admin/report/receivable-invoice-details')}>{strings.Receivable+" "+strings.Invoice+" "+strings.Details}</a></h6>
 									</div>
 									</Col>
 									<Col  className="report-section ml-4">
@@ -255,7 +255,7 @@ class FinancialReport extends React.Component {
 											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
 											this.props.history.push('/admin/report/payable-invoice-summary')}>{strings.PayablesInvoiceSummary}</a></h6>
 											<h6><a  style={{fontWeight:'400'}} href ="#" onClick={() => 
-											this.props.history.push('/admin/report/payable-invoice-details')}> Payables Invoice Detail</a></h6>
+											this.props.history.push('/admin/report/payable-invoice-details')}> {strings.PayableInvoiceDetails}</a></h6>
 										
 									
 									</div>

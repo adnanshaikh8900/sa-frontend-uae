@@ -45,6 +45,15 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 let strings = new LocalizedStrings(data);
+let strings1 = new LocalizedStrings(data);
+if(localStorage.getItem('language')==null)
+{
+	strings1.setLanguage('en');
+}
+else{
+strings1.setLanguage(localStorage.getItem('language'));
+}
+
 class ProfitAndLossReport extends React.Component {
 	constructor(props) {
 		super(props);
@@ -87,9 +96,9 @@ class ProfitAndLossReport extends React.Component {
 			},
 		};
 		this.columnHeader = [
-			{ label: 'Account', value: 'Account', sort: true },
+			{ label: strings1.Account, value: 'Account', sort: true },
 			{ label: '', value: 'Account Code', sort: false },
-			{ label: 'Total', value: 'Total', sort: true },
+			{ label: strings1.Total, value: 'Total', sort: true },
 		];
 	}
 

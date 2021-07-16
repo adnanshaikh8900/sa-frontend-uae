@@ -15,6 +15,8 @@ import DatePicker from "react-datepicker"
 import { Formik } from "formik"
 import Select from "react-select"
 import moment from 'moment'
+import {data}  from '../../../../Language/index'
+import LocalizedStrings from 'react-localization';
 
 import { selectOptionsFactory } from "utils";
 import './style.scss'
@@ -29,11 +31,12 @@ const customStyles = {
 	}),
 };
 
-
+let strings = new LocalizedStrings(data);
 class FilterComponent extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			initValue: {
 				startDate: moment().startOf('month').format('YYYY-MM-DD hh:mm'),
 				endDate: moment().endOf('month').format('YYYY-MM-DD hh:mm'),
@@ -48,6 +51,7 @@ class FilterComponent extends Component {
 	}
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { initValue } = this.state;
 		return (
 			<div>
@@ -57,7 +61,7 @@ class FilterComponent extends Component {
 						style={{ justifyContent: 'space-between' }}
 					>
 						<div style={{ fontSize: '1.3rem', paddingLeft: '15px' }}>
-							Customize Report
+							{strings.CustomizeReport}
 						</div>
 						<div>
 							<i
@@ -74,7 +78,7 @@ class FilterComponent extends Component {
 									<Row>
                                         <Col lg={4}>
 											<FormGroup className="mb-3">
-												<Label htmlFor="startDate">Start Date</Label>
+												<Label htmlFor="startDate">{strings.StartDate}</Label>
 												<DatePicker
 													id="date"
 													name="startDate"
@@ -103,7 +107,7 @@ class FilterComponent extends Component {
 										</Col>
 										<Col lg={4}>
 											<FormGroup className="mb-3">
-												<Label htmlFor="endDate">End Date</Label>
+												<Label htmlFor="endDate">{strings.EndDate}</Label>
 												<DatePicker
 													id="date"
 													name="endDate"
@@ -142,7 +146,7 @@ class FilterComponent extends Component {
 														this.props.generateReport(props.values);
 													}}
 												>
-													<i className="fa fa-dot-circle-o"></i> Run Report
+													<i className="fa fa-dot-circle-o"></i>{strings.RunReport}
 												</Button>
 
 												<Button
@@ -150,7 +154,7 @@ class FilterComponent extends Component {
 													className="btn-square"
 													onClick={this.props.viewFilter}
 												>
-													<i className="fa fa-ban"></i> Cancel
+													<i className="fa fa-ban"></i> {strings.Cancel}
 												</Button>
 											</FormGroup>
 										</Col>

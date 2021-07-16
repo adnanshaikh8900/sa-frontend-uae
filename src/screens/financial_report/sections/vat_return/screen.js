@@ -30,6 +30,9 @@ import * as FinancialReportActions from '../../actions';
 import FilterComponent from '../filterComponent';
 import FilterComponent2 from '../filterComponet2';
 import logo from 'assets/images/brand/logo.png';
+import {data}  from '../../../Language/index'
+import LocalizedStrings from 'react-localization';
+
 
 const mapStateToProps = (state) => {
 	return {
@@ -47,11 +50,20 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
-
+let strings = new LocalizedStrings(data);
+let strings1 = new LocalizedStrings(data);
+if(localStorage.getItem('language')==null)
+{
+	strings1.setLanguage('en');
+}
+else{
+strings1.setLanguage(localStorage.getItem('language'));
+}
 class VatReturnsReport extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			language: window['localStorage'].getItem('language'),
 			loading: false,
 			dropdownOpen: false,
 			view: false,
@@ -132,23 +144,23 @@ class VatReturnsReport extends React.Component {
 				
 		};
 		this.columnHeader1 = [
-			{ label: 'Box#', value: 'Box#', sort: false },
-			{ label: 'Description', value: 'Description', sort: false },
-			{ label: 'Amount', value: 'Amount', sort: false },
-			{ label: 'VAT Amount', value: 'VATAmount', sort: false },
-			{ label: 'Adjustment', value: 'Adjustment', sort: false },
+			{ label: strings1.Box+"#", value: 'Box#', sort: false },
+			{ label: strings1.Description, value: 'Description', sort: false },
+			{ label: strings1.Amount, value: 'Amount', sort: false },
+			{ label: strings1.VatAmount, value: 'VATAmount', sort: false },
+			{ label: strings1.Adjustment, value: 'Adjustment', sort: false },
 		];
 		this.columnHeader2 = [
-			{ label: 'Box#', value: 'Box#', sort: false },
-			{ label: 'Description', value: 'Description', sort: false },
-			{ label: 'Amount', value: 'Amount', sort: false },
-			{ label: 'Recoverable VAT Amount', value: 'RecoverableVATAmount', sort: false },
-			{ label: 'Adjustment', value: 'Adjustment', sort: false },
+			{ label: strings1.Box+"#", value: 'Box#', sort: false },
+			{ label: strings1.Description, value: 'Description', sort: false },
+			{ label: strings1.Amount, value: 'Amount', sort: false },
+			{ label: strings1.Recoverable+" "+strings1.VatAmount, value: 'RecoverableVATAmount', sort: false },
+			{ label: strings1.Adjustment, value: 'Adjustment', sort: false },
 		];
 		this.columnHeader3 = [
-			{ label: 'Box#', value: 'Box#', sort: false },
-			{ label: 'Description', value: 'Description', sort: false },
-			{ label: 'VAT Amount', value: 'VAT Amount', sort: false },
+			{ label: strings1.Box+"#", value: 'Box#', sort: false },
+			{ label: strings1.Description, value: 'Description', sort: false },
+			{ label: strings1.VatAmount, value: 'VATAmount', sort: false },
 		];
 	}
 
@@ -222,6 +234,7 @@ class VatReturnsReport extends React.Component {
 	};
 
 	render() {
+		strings.setLanguage(this.state.language);
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
 		const { profile, universal_currency_list,company_profile } = this.props;
 		return (
@@ -248,7 +261,7 @@ class VatReturnsReport extends React.Component {
 													}}
 													onClick={this.viewFilter}
 												>
-													<i className="fa fa-cog mr-2"></i>Customize Report
+													<i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
 												</p>
 											</div>
 											<div className="d-flex">
@@ -363,9 +376,9 @@ class VatReturnsReport extends React.Component {
 												: ''}
 											</h2>	
 											<br style={{ marginBottom: '5px' }} />
-											<b style ={{ fontSize: '18px'}}>Vat Returns</b>
+											<b style ={{ fontSize: '18px'}}>{strings.VatReturns}</b>
 											<br style={{ marginBottom: '5px' }} />
-											From {initValue.startDate} to {initValue.endDate}
+											{strings.From} {initValue.startDate} {strings.To} {initValue.endDate}
 									</div>
 									<div>
 									</div>									
@@ -374,7 +387,7 @@ class VatReturnsReport extends React.Component {
 										<Loader />
 									) : (
 										<div className="table-wrapper">
-											<p><b>VAT on Sales and all other Outputs</b></p>
+											<p><b>{strings.VATonSalesandallotherOutputs}</b></p>
 											<Table responsive className="table-bordered">
 												<thead className="thead-dark ">
 													<tr className="header-row">
@@ -748,7 +761,7 @@ class VatReturnsReport extends React.Component {
 															</tr>
 																<tr className="mainLable">
 																<td className="mainLable ">2</td>
-																<td className="pt-0 pb-0">Tax Refunds provided to Tourists under the Tax Refundsfor Tourists Scheme</td>
+																<td className="pt-0 pb-0">Tax Refunds provided to Tourists under the Tax Refunds for Tourists Scheme</td>
 																<td className="pt-0 pb-0 ">
 																			{/* {this.state.data[
 																				'totalAmountForDubai'
@@ -794,7 +807,7 @@ class VatReturnsReport extends React.Component {
 
 															<tr className="mainLable">
 																<td className="mainLable ">4</td>
-																<td className="pt-0 pb-0">Zero rated supplies</td>
+																<td className="pt-0 pb-0">{strings.Zeroratedsupplies}</td>
 																<td className="pt-0 pb-0 ">
 																{this.state.data[
 																				'zeroRatedSupplies'
@@ -829,7 +842,7 @@ class VatReturnsReport extends React.Component {
 															</tr>
 															<tr className="mainLable">
 																<td className="mainLable ">5</td>
-																<td className="pt-0 pb-0">Exempt supplies</td>
+																<td className="pt-0 pb-0">{strings.Exemptsupplies}</td>
 																<td className="pt-0 pb-0 ">
 																			{/* {this.state.data[
 																				'totalAmountForDubai'
@@ -895,7 +908,7 @@ class VatReturnsReport extends React.Component {
 															</tr>
 															<tr className="mainLable">
 																<td className="mainLable ">8</td>
-																<td className="pt-0 pb-0">TOTAL</td>
+																<td className="pt-0 pb-0">{strings.Total}</td>
 																<td className="pt-0 pb-0 ">
 																	
 																			
@@ -933,13 +946,13 @@ class VatReturnsReport extends React.Component {
 											) : (
 														<tr className="mainLable">
 															<td style={{ textAlign: 'center' }} colSpan="9">
-																There is no data to display
+															{strings.Thereisnodatatodisplay}
 															</td>
 														</tr>
 													)}
 												</tbody>
 											</Table>
-												<p><b>VAT on Expenses and all other Inputs</b></p>
+												<p><b>{strings1.VATonExpensesandallotherInputs}</b></p>
 												<Table responsive className="table-bordered">
 													<thead className="thead-dark ">
 													<tr className="header-row">
@@ -962,7 +975,7 @@ class VatReturnsReport extends React.Component {
 														<>
 															<tr className="mainLable">
 																<td className="mainLable ">9</td>
-																<td className="pt-0 pb-0">Standard rated expenses</td>
+																<td className="pt-0 pb-0">{strings.Standardratedexpenses}</td>
 																<td className="pt-0 pb-0 ">
 																			{this.state.data[
 																				'standardRatedExpensesTotalAmount'
@@ -1012,7 +1025,7 @@ class VatReturnsReport extends React.Component {
 															</tr>
 															<tr className="mainLable">
 																<td className="mainLable ">10</td>
-																<td className="pt-0 pb-0">Supplies subject to the reverse charge provisions</td>
+																<td className="pt-0 pb-0">{strings.Suppliessubjecttothereversechargeprovisions}</td>
 																<td className="pt-0 pb-0 ">
 																			{/* {this.state.data[
 																				'standardRatedExpensesTotalAmount'
@@ -1062,7 +1075,7 @@ class VatReturnsReport extends React.Component {
 															</tr>
 															<tr className="mainLable">
 																<td className="mainLable ">11</td>
-																<td className="pt-0 pb-0">Total</td>
+																<td className="pt-0 pb-0">{strings.Total}</td>
 																<td className="pt-0 pb-0 ">
 																		
 																</td>
@@ -1097,7 +1110,7 @@ class VatReturnsReport extends React.Component {
 																) : (
 																	<tr className="mainLable">
 																		<td style={{ textAlign: 'center' }} colSpan="9">
-																			There is no data to display
+																		 {strings.Thereisnodatatodisplay}
 																		</td>
 																	</tr>
 																)}
@@ -1105,7 +1118,7 @@ class VatReturnsReport extends React.Component {
 												</Table>
 											
 											<div >
-												<p><b>Net VAT due</b></p>
+												<p><b>{strings.Net+" "+strings.Vat+" "|+strings.Due}</b></p>
 												<Table responsive className="table-bordered">
 												<thead className="thead-dark ">
 													<tr className="header-row">
@@ -1128,7 +1141,7 @@ class VatReturnsReport extends React.Component {
 														<>
 															<tr className="mainLable">
 																<td className="mainLable ">12</td>
-																<td className="pt-0 pb-0">Total value of due tax for the period</td>
+																<td className="pt-0 pb-0">{strings.Totalvalueofduetaxfortheperiod}</td>
 																<td className="pt-0 pb-0 ">
 																			{this.state.data[
 																				'totalValueOfDueTaxForThePeriod'
@@ -1151,7 +1164,7 @@ class VatReturnsReport extends React.Component {
 															</tr>
 															<tr className="mainLable">
 																<td className="mainLable ">13</td>
-																<td className="pt-0 pb-0">Total value of recoverable tax for the period</td>
+																<td className="pt-0 pb-0">{strings.Totalvalueofrecoverabletaxfortheperiod}</td>
 																<td className="pt-0 pb-0 ">
 																			{this.state.data[
 																				'totalValueOfRecoverableTaxForThePeriod'
@@ -1174,7 +1187,7 @@ class VatReturnsReport extends React.Component {
 															</tr>
 															<tr className="mainLable">
 																<td className="mainLable ">14</td>
-																<td className="pt-0 pb-0">Net VAT payable (or reclaimable) for the period</td>
+																<td className="pt-0 pb-0">{strings.NetVATpayablefortheperiodorreclaimable}</td>
 																<td className="pt-0 pb-0 ">
 																			{this.state.data[
 																				'netVatPayableOrReclaimableForThePeriod'
@@ -1197,7 +1210,7 @@ class VatReturnsReport extends React.Component {
 															</tr>
 															<tr className="mainLable">
 																<td className="mainLable ">15</td>
-																<td className="pt-0 pb-0">Do you wish to request a refund for the above amount of reclaimable VAT?</td>
+																<td className="pt-0 pb-0">{strings.DoyouwishtorequestarefundfortheaboveamountofreclaimableVAT}</td>
 																<td className="pt-0 pb-0 "></td>
 															</tr>
 
@@ -1206,7 +1219,7 @@ class VatReturnsReport extends React.Component {
 														) : (
 															<tr className="mainLable">
 																<td style={{ textAlign: 'center' }} colSpan="9">
-																	There is no data to display
+																	{strings.Thereisnodatatodisplay}
 																</td>
 															</tr>
 														)}
@@ -1216,7 +1229,7 @@ class VatReturnsReport extends React.Component {
 											</div>
 										</div>
 									)}
-									<div style={{ textAlignLast:'center'}}> Powered By <b>SimpleAccounts</b></div> 
+									<div style={{ textAlignLast:'center'}}>{strings.PoweredBy} <b>SimpleAccounts</b></div> 
 								</PDFExport>
 							</CardBody>
 						</div>

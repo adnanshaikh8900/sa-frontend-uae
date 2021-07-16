@@ -327,13 +327,13 @@ class PurchaseByVendor extends React.Component {
 											<Table  >
 												<thead className="header-row" >
 													<tr>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Vendor Name</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Invoice Count</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.Vendor+" "+strings.Name}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.InvoiceCount}</th>
 
 														<th style={{ padding: '0.5rem', textAlign: 'center' }}>
-															Purchase Excluding Tax
+															{strings.Purchase+" "+strings.ExcludingTax}
 														</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>Purchase With Tax</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.Purchase+" "+strings.WithTax}</th>
 
 													</tr>
 												</thead>
@@ -374,7 +374,7 @@ class PurchaseByVendor extends React.Component {
 												</tbody>
 												<tfoot>
 													<tr style={{ border: "3px solid #dfe9f7" }}>
-													<td style={{ textAlign: 'center', width: '20%' }}><b>Total</b></td>
+													<td style={{ textAlign: 'center', width: '20%' }}><b>{strings.Total}</b></td>
 													<td></td>
 													<td style={{ textAlign: 'center', width: '20%' }}>
 													

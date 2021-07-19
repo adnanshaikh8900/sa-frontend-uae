@@ -257,6 +257,7 @@ class DetailRequestForQuotation extends React.Component {
 								}
 							},
 						);
+						this.getCurrency(res.data.supplierId)	
 					}
 				});
 		} else {

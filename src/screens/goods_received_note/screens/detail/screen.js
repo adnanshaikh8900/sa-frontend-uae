@@ -243,6 +243,8 @@ class DetailGoodsReceivedNote extends React.Component {
 								}
 							},
 						);
+						debugger
+						this.getCurrency(res.data.supplierId)
 					}
 				});
 		} else {
@@ -1160,22 +1162,6 @@ class DetailGoodsReceivedNote extends React.Component {
 		}
 	};
 
-	getCurrency = (opt) => {
-		let supplier_currencyCode = 0;
-
-		this.props.supplier_list.map(item => {
-			if(item.label.contactId == opt) {
-				this.setState({
-					supplier_currency: item.label.currency.currencyCode,
-					supplier_currency_des: item.label.currency.currencyName
-				});
-
-				supplier_currencyCode = item.label.currency.currencyCode;
-			}
-		})
-
-		return supplier_currencyCode;
-	}
 
 	render() {
 		strings.setLanguage(this.state.language);
@@ -1406,10 +1392,11 @@ class DetailGoodsReceivedNote extends React.Component {
 																			}
 																			onChange={(option) => {
 																				if (option && option.value) {
-																					props.handleChange('supplierId')(
-																						option.value,
-																					);
+																					this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
+																					this.setExchange( this.getCurrency(option.value) );
+																					props.handleChange('supplierId')(option);
 																				} else {
+	
 																					props.handleChange('supplierId')('');
 																				}
 																			}}
@@ -1738,6 +1725,7 @@ class DetailGoodsReceivedNote extends React.Component {
 																							}
 																							/>
 																							)} */}
+																							{this.state.supplier_currency_symbol} 
 																							{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
@@ -1762,6 +1750,7 @@ class DetailGoodsReceivedNote extends React.Component {
 																							}
 																							/>
 																							)} */}
+																							{this.state.supplier_currency_symbol} 
 																							{initValue.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
@@ -1786,6 +1775,7 @@ class DetailGoodsReceivedNote extends React.Component {
 																							}
 																							/>
 																							)} */}
+																							{this.state.supplier_currency_symbol} 
 																							{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>

@@ -241,6 +241,7 @@ class DetailQuotation extends React.Component {
 								}
 							},
 						);
+						this.getCurrency(res.data.supplierId)	
 					}
 				});
 		} else {

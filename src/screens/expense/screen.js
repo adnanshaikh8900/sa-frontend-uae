@@ -323,13 +323,13 @@ class Expense extends React.Component {
 	renderAmount = (cell, row, extraData) => {
 		// return row.expenseAmount ? (
 		// 	<Currency
-		// 		value={row.expenseAmount.toFixed(2)}
+		// 		value={row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// ) : (
 		// 	''
 		// );
-		return row.expenseAmount ? row.currencySymbol +row.expenseAmount.toFixed(2) :'';
+		return row.expenseAmount ? row.currencySymbol +row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :'';
 	};
 	renderCurrency = (cell, row) => {
 		if (row.currencyName) {

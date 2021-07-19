@@ -370,7 +370,7 @@ class PayrollModal extends React.Component {
 																				<Col lg={6} className="text-left">
 																					<h4 className="mt-2">
 																				
-																						{this.state.netPay.toFixed(2)}
+																						{this.state.netPay.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																					</h4>
 																				</Col>
 																			</Row>

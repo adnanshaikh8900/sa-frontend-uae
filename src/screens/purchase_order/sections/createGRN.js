@@ -451,13 +451,13 @@ class CreateGoodsReceivedNote extends React.Component {
 	renderSubTotal = (cell, row,extraData) => {
 		// return row.subTotal ? (
 		// 	<Currency
-		// 		value={row.subTotal.toFixed(2)}
+		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// ) : (
 		// 	''
 		// );
-		return row.subTotal ? row.subTotal.toFixed(2) : '';
+		return row.subTotal ? row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
 	}
 	
 	renderProduct = (cell, row, props) => {
@@ -632,13 +632,13 @@ class CreateGoodsReceivedNote extends React.Component {
 		renderSubTotal = (cell, row,extraData) => {
 			// return row.subTotal ? (
 			// 	<Currency
-			// 		value={row.subTotal.toFixed(2)}
+			// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 			// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 			// 	/>
 			// ) : (
 			// 	''
 			// );
-			return row.subTotal ? row.subTotal.toFixed(2) : '';
+			return row.subTotal ? row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
 		}
 
 	onContentStateChange = (contentState) => {
@@ -694,7 +694,7 @@ class CreateGoodsReceivedNote extends React.Component {
 			if (props.values.discountType === 'PERCENTAGE') {
 				var val =
 					((+obj.unitPrice -
-						+((obj.unitPrice * discountPercentage) / 100).toFixed(2)) *
+						+((obj.unitPrice * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })) *
 						vat *
 						obj.grnReceivedQuantity) /
 					100;
@@ -714,7 +714,7 @@ class CreateGoodsReceivedNote extends React.Component {
 		});
 		const discount =
 			props.values.discountType === 'PERCENTAGE'
-				? +((total_net * discountPercentage) / 100).toFixed(2)
+				? +((total_net * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })
 				: discountAmount;
 		this.setState(
 			{
@@ -1285,7 +1285,7 @@ class CreateGoodsReceivedNote extends React.Component {
 																						<label className="mb-0">
 																						{/* {universal_currency_list[0] && (
 																						<Currency
-																						value=	{initValue.total_net.toFixed(2)}
+																						value=	{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						currencySymbol={
 																						universal_currency_list[0]
 																						? universal_currency_list[0].currencyIsoCode
@@ -1309,9 +1309,7 @@ class CreateGoodsReceivedNote extends React.Component {
 																						<label className="mb-0">
 																						{/* {universal_currency_list[0] && (
 																						<Currency
-																						value=	{initValue.invoiceVATAmount.toFixed(
-																							2,
-																						)}
+																						value=	{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						currencySymbol={
 																						universal_currency_list[0]
 																						? universal_currency_list[0].currencyIsoCode
@@ -1335,7 +1333,7 @@ class CreateGoodsReceivedNote extends React.Component {
 																						<label className="mb-0">
 																						{/* {universal_currency_list[0] && (
 																						<Currency
-																						value=	{initValue.totalAmount.toFixed(2)}
+																						value=	{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						currencySymbol={
 																						universal_currency_list[0]
 																						? universal_currency_list[0].currencyIsoCode

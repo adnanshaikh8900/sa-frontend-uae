@@ -315,7 +315,7 @@ class BankAccount extends React.Component {
 		// 	/>
 		// );
 
-		return row.openingBalance ? row.curruncySymbol + row.openingBalance.toFixed(2) : row.curruncySymbol + row.openingBalance.toFixed(2);
+		return row.openingBalance ? row.curruncySymbol + row.openingBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.curruncySymbol + row.openingBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
 	renderActions = (cell, row) => {
 		return (
@@ -454,7 +454,7 @@ class BankAccount extends React.Component {
 								extraData[0] ? extraData[0].currencyIsoCode : 'USD'
 							}
 						/> */}
-						{row.closingBalance ? row.curruncySymbol + row.closingBalance.toFixed(2) : row.curruncySymbol + row.closingBalance.toFixed(2)}
+						{row.closingBalance ? row.curruncySymbol + row.closingBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.curruncySymbol + row.closingBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 					</label>
 				</div>
 				<div>

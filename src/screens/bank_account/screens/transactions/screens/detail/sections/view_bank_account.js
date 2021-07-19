@@ -73,7 +73,7 @@ class ViewBankAccount extends React.Component {
                       <Col lg={4}>
                         <FormGroup className="mb-3">
                           <Label className="label" htmlFor="opening_balance">Total Amount</Label>
-                          <p>{(transactionAmount).toFixed(2)}</p>
+                          <p>{(transactionAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</p>
                         </FormGroup>
                       </Col>
                     </Row>

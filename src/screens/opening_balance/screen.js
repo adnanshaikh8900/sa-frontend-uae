@@ -417,7 +417,7 @@ class OpeningBalance extends React.Component {
 				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 			/>
 		);
-		//return row.openingBalance ? row.openingBalance.toFixed(2) : row.openingBalance.toFixed(2);
+		//return row.openingBalance ? row.openingBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.openingBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
 	renderDate = (cell, row) => {
 		return typeof row['effectiveDate'] === 'string'

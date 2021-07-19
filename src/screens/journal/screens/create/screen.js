@@ -1034,9 +1034,7 @@ class CreateJournal extends React.Component {
 																				{universal_currency_list[0] && (
 																						<Currency
 																						value=
-																						{this.state.initValue.subTotalDebitAmount.toFixed(
-																							2,
-																						)}
+																						{this.state.initValue.subTotalDebitAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						currencySymbol={
 																						universal_currency_list[0]
 																						? universal_currency_list[0].currencyIsoCode
@@ -1051,9 +1049,7 @@ class CreateJournal extends React.Component {
 																				{universal_currency_list[0] && (
 																						<Currency
 																						value=
-																						{this.state.initValue.subTotalCreditAmount.toFixed(
-																							2,
-																						)}
+																						{this.state.initValue.subTotalCreditAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						currencySymbol={
 																						universal_currency_list[0]
 																						? universal_currency_list[0].currencyIsoCode
@@ -1077,9 +1073,7 @@ class CreateJournal extends React.Component {
 																				{universal_currency_list[0] && (
 																						<Currency
 																						value=
-																						{this.state.initValue.subTotalDebitAmount.toFixed(
-																							2,
-																						)}
+																						{this.state.initValue.subTotalDebitAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						currencySymbol={
 																						universal_currency_list[0]
 																						? universal_currency_list[0].currencyIsoCode
@@ -1094,9 +1088,7 @@ class CreateJournal extends React.Component {
 																				{universal_currency_list[0] && (
 																						<Currency
 																						value=
-																						{this.state.initValue.subTotalCreditAmount.toFixed(
-																							2,
-																						)}
+																						{this.state.initValue.subTotalCreditAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						currencySymbol={
 																						universal_currency_list[0]
 																						? universal_currency_list[0].currencyIsoCode

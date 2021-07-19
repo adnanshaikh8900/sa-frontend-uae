@@ -431,13 +431,13 @@ class ApplyToInvoice extends React.Component {
 	renderSubTotal = (cell, row,extraData) => {
 		// return row.subTotal ? (
 		// 	<Currency
-		// 		value={row.subTotal.toFixed(2)}
+		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// ) : (
 		// 	''
 		// );
-		return row.subTotal === 0 ? this.state.customer_currency_symbol + row.subTotal.toFixed(2) : this.state.customer_currency_symbol + row.subTotal.toFixed(2);
+		return row.subTotal === 0 ? this.state.customer_currency_symbol + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.customer_currency_symbol + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
 	addRow = () => {
 		const data = [...this.state.data];
@@ -719,7 +719,7 @@ class ApplyToInvoice extends React.Component {
 			if (props.values.discountType === 'PERCENTAGE') {
 				var val =
 					((+obj.unitPrice -
-						+((obj.unitPrice * discountPercentage) / 100).toFixed(2)) *
+						+((obj.unitPrice * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })) *
 						vat *
 						obj.quantity) /
 					100;
@@ -1296,7 +1296,7 @@ console.log(this.state.selectedRows)
 																						<label className="mb-0">
 																						
 																							{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.total_net.toFixed(2)}
+																							{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -1314,7 +1314,7 @@ console.log(this.state.selectedRows)
 																						<label className="mb-0">
 																						
 																							{this.state.customer_currency_symbol} &nbsp;
-																								{initValue.totalAmount.toFixed(2)}
+																								{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>

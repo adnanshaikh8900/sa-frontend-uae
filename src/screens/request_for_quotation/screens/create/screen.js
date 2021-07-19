@@ -359,18 +359,18 @@ class CreateRequestForQuotation extends React.Component {
 	renderSubTotal = (cell, row, extraData) => {
 		// return row.subTotal === 0 ? (
 		// 	<Currency
-		// 		value={row.subTotal.toFixed(2)}
+		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// ) : (
 		// 	<Currency
-		// 		value={row.subTotal.toFixed(2)}
+		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-	//	return row.subTotal === 0 ? this.state.supplier_currency_symbol + row.subTotal.toFixed(2) : this.state.supplier_currency_symbol + row.subTotal.toFixed(2);
+	//	return row.subTotal === 0 ? this.state.supplier_currency_symbol + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 
-		return row.subTotal === 0 ?  row.subTotal.toFixed(2) :  row.subTotal.toFixed(2);
+		return row.subTotal === 0 ?  row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :  row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
  
 	};
 
@@ -818,7 +818,7 @@ class CreateRequestForQuotation extends React.Component {
 			if (props.values.discountType.value === 'PERCENTAGE') {
 				var val =
 					((+obj.unitPrice -
-						+((obj.unitPrice * discountPercentage) / 100).toFixed(2)) *
+						+((obj.unitPrice * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })) *
 						vat *
 						obj.quantity) /
 					100;
@@ -839,7 +839,7 @@ class CreateRequestForQuotation extends React.Component {
 
 		const discount =
 			props.values.discountType.value === 'PERCENTAGE'
-				? +((total_net * discountPercentage) / 100).toFixed(2)
+				? +((total_net * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })
 				: discountAmount;
 		this.setState(
 			{

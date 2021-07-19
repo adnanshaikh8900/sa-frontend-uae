@@ -355,7 +355,7 @@ class BankTransactions extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		return row.depositeAmount >= 0 ? row.currencySymbol + row.depositeAmount.toFixed(2) : '';
+		return row.depositeAmount >= 0 ? row.currencySymbol + row.depositeAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
 	};
 	renderWithdrawalAmount = (cell, row, rowIndex, extraData) => {
 		// return row.withdrawalAmount >= 0 ? (
@@ -366,10 +366,10 @@ class BankTransactions extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		return row.withdrawalAmount >= 0 ? row.currencySymbol + row.withdrawalAmount.toFixed(2) : '';
+		return row.withdrawalAmount >= 0 ? row.currencySymbol + row.withdrawalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
 	};
 	renderRunningAmount = (cell, row) => {
-		return row.runningAmount >= 0 ? row.currencySymbol + row.runningAmount.toFixed(2) : '';
+		return row.runningAmount >= 0 ? row.currencySymbol + row.runningAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
 	};
 
 	renderDueAmount = (cell, row, rowIndex, extraData) => {
@@ -381,7 +381,7 @@ class BankTransactions extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		return row.dueAmount >= 0 ? row.currencySymbol + row.dueAmount.toFixed(2) : '';
+		return row.dueAmount >= 0 ? row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
 	};
 
 	test(row) {
@@ -786,7 +786,7 @@ class BankTransactions extends React.Component {
 													<h3>
 														{this.state.bankAccountCurrencySymbol} &nbsp;
 														{this.state.currentBalance ? (				
-															this.state.currentBalance.toFixed(2)
+															this.state.currentBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2 })
 															):(0)}	
 																						
 													</h3>
@@ -797,7 +797,7 @@ class BankTransactions extends React.Component {
 													{this.state.bankAccountCurrencySymbol} &nbsp;
 
 													{this.state.closingBalance ? (
-														this.state.closingBalance.toFixed(2)): ( 0)}
+														this.state.closingBalance.toLocaleString(navigator.language, { minimumFractionDigits: 2 })): ( 0)}
 													</h3>
 												</Col>
 											</Row>

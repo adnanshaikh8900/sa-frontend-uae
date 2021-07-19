@@ -360,7 +360,7 @@ class CreateCustomerInvoice extends React.Component {
 	};
 
 		renderSubTotal = (cell, row,extraData) => {
-			return row.subTotal === 0 ? this.state.customer_currency_symbol + row.subTotal.toFixed(2) : this.state.customer_currency_symbol + row.subTotal.toFixed(2);
+			return row.subTotal === 0 ? this.state.customer_currency_symbol + row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2 }): this.state.customer_currency_symbol + row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2 });
 
 }
 	setDate = (props, value) => {
@@ -856,7 +856,7 @@ class CreateCustomerInvoice extends React.Component {
 			if (props.values.discountType.value === 'PERCENTAGE') {
 				var val =
 					((+obj.unitPrice -
-						+((obj.unitPrice * discountPercentage) / 100).toFixed(2)) *
+						+((obj.unitPrice * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })) *
 						vat *
 						obj.quantity) /
 					100;
@@ -878,7 +878,7 @@ class CreateCustomerInvoice extends React.Component {
 
 		const discount =
 			props.values.discountType.value === 'PERCENTAGE'
-				? +((total_net * discountPercentage) / 100).toFixed(2)
+				? +((total_net * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })
 				: discountAmount;
 		this.setState(
 			{
@@ -2195,17 +2195,13 @@ class CreateCustomerInvoice extends React.Component {
 																					<label className="mb-0">
 																					{/* {universal_currency_list[0] && (
 																						<Currency
-																					value={initValue.total_net.toFixed(
-																							2,
-																						)}
+																					value={initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						currencySymbol={this.state.customer_currency_IsoCode
 																							}
 																							/>
 																							)} */}
 																							{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.total_net.toFixed(
-																							2,
-																						)}
+																							{initValue.total_net.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																					
 																					</label>
 																				</Col>
@@ -2229,9 +2225,7 @@ class CreateCustomerInvoice extends React.Component {
 																							/>
 																							)} */}
 																							{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.invoiceVATAmount.toFixed(
-																							2,
-																						)}
+																							{initValue.invoiceVATAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2247,15 +2241,12 @@ class CreateCustomerInvoice extends React.Component {
 																					<label className="mb-0">
 																					{/* {universal_currency_list[0] && (
 																						<Currency
-																						value={this.state.initValue.discount.toFixed(
-																							2,
-																						)}
+																						value={this.state.initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						currencySymbol={this.state.customer_currency_IsoCode}
 																							/>
 																							)} */}
 																						{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.discount ? '-'+initValue.discount.toFixed(2) : initValue.discount.toFixed(2)}
-																					
+																							{initValue.discount ? '-'+initValue.discount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 }): initValue.discount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																				
 																					</label>
 																				</Col>
@@ -2271,9 +2262,7 @@ class CreateCustomerInvoice extends React.Component {
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
 																					{this.state.customer_currency_symbol}
-																						{initValue.totalAmount.toFixed(
-																									2,
-																								)}
+																						{initValue.totalAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>

@@ -441,13 +441,13 @@ class DetailCustomerInvoice extends React.Component {
 	renderSubTotal = (cell, row,extraData) => {
 		// return row.subTotal ? (
 		// 	<Currency
-		// 		value={row.subTotal.toFixed(2)}
+		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// ) : (
 		// 	''
 		// );
-		return row.subTotal === 0 ? this.state.customer_currency_symbol + row.subTotal.toFixed(2) : this.state.customer_currency_symbol + row.subTotal.toFixed(2);
+		return row.subTotal === 0 ? this.state.customer_currency_symbol + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.customer_currency_symbol + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
 	addRow = () => {
 		const data = [...this.state.data];
@@ -729,7 +729,7 @@ class DetailCustomerInvoice extends React.Component {
 			if (props.values.discountType === 'PERCENTAGE') {
 				var val =
 					((+obj.unitPrice -
-						+((obj.unitPrice * discountPercentage) / 100).toFixed(2)) *
+						+((obj.unitPrice * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })) *
 						vat *
 						obj.quantity) /
 					100;
@@ -2058,7 +2058,7 @@ class DetailCustomerInvoice extends React.Component {
 																						<label className="mb-0">
 																						{/* {universal_currency_list[0] && (
 																						<Currency
-																						value=	{initValue.total_net.toFixed(2)}
+																						value=	{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						currencySymbol={
 																							universal_currency_list[0]
 																						? universal_currency_list[0].currencyIsoCode
@@ -2067,7 +2067,7 @@ class DetailCustomerInvoice extends React.Component {
 																							/>
 																							)} */}
 																							{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.total_net.toFixed(2)}
+																							{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -2083,9 +2083,7 @@ class DetailCustomerInvoice extends React.Component {
 																						<label className="mb-0">
 																						{/* {universal_currency_list[0] && (
 																						<Currency
-																						value={initValue.invoiceVATAmount.toFixed(
-																							2,
-																						)}
+																						value={initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						currencySymbol={
 																							universal_currency_list[0]
 																						? universal_currency_list[0].currencyIsoCode
@@ -2094,9 +2092,7 @@ class DetailCustomerInvoice extends React.Component {
 																							/>
 																							)} */}
 																							{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.invoiceVATAmount.toFixed(
-																							2,
-																						)}
+																							{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -2112,9 +2108,7 @@ class DetailCustomerInvoice extends React.Component {
 																						<label className="mb-0">
 																							{/* {universal_currency_list[0] && (
 																						<Currency
-																						value=		{this.state.initValue.discount.toFixed(
-																							2,
-																						)}
+																						value=		{this.state.initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						currencySymbol={
 																							universal_currency_list[0]
 																						? universal_currency_list[0].currencyIsoCode
@@ -2123,7 +2117,7 @@ class DetailCustomerInvoice extends React.Component {
 																							/>
 																							)} */}
 																							{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.discount ? '-'+initValue.discount.toFixed(2) : initValue.discount.toFixed(2)}
+																							{initValue.discount ? '-'+initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -2139,7 +2133,7 @@ class DetailCustomerInvoice extends React.Component {
 																						<label className="mb-0">
 																						{/* {universal_currency_list[0] && (
 																						<Currency
-																						value=	{initValue.totalAmount.toFixed(2)}
+																						value=	{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						currencySymbol={
 																							universal_currency_list[0]
 																						? universal_currency_list[0].currencyIsoCode
@@ -2148,7 +2142,7 @@ class DetailCustomerInvoice extends React.Component {
 																							/>
 																							)} */}
 																							{this.state.customer_currency_symbol} &nbsp;
-																								{initValue.totalAmount.toFixed(2)}
+																								{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>

@@ -153,13 +153,13 @@ class PayrollRun extends React.Component {
 	renderAmount = (cell, row, extraData) => {
 		// return row.amount ? (
 		// 	<Currency
-		// 		value={row.amount.toFixed(2)}
+		// 		value={row.amount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// ) : (
 		// 	''
 		// );
-		return row.amount ? row.currencySymbol + row.amount.toFixed(2) : '';
+		return row.amount ? row.currencySymbol + row.amount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
 	};
 
 	renderCurrency = (cell, row) => {
@@ -172,7 +172,7 @@ class PayrollRun extends React.Component {
 		}
 	};
 	renderUnusedAmount = (cell, row) => {
-		return row.unusedAmount ? row.unusedAmount.toFixed(2) : '';
+		return row.unusedAmount ? row.unusedAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
 	};
 
 	onSizePerPageList = (sizePerPage) => {

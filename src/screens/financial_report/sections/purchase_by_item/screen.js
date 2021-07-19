@@ -327,7 +327,7 @@ language: window['localStorage'].getItem('language'),
 												<thead className="header-row" >
 													<tr>
 														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.ProductName}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.QuantitySold}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.QuantityPurchased}</th>
 
 														<th style={{ padding: '0.5rem', textAlign: 'center' }}>
 															{strings.Total+" "+strings.Amount}
@@ -344,7 +344,7 @@ language: window['localStorage'].getItem('language'),
 
 
 																	<td style={{ textAlign: 'center', width: '20%' }}>{item.productName}</td>
-																	<td style={{ textAlign: 'center', width: '20%' }}>{item.quantitySold}</td>
+																	<td style={{ textAlign: 'center', width: '20%' }}>{item.quantityPurchased}</td>
 																	<td style={{ textAlign: 'center', width: '20%' }}>
 																		<Currency
 																			value={item.totalAmountForAProduct}

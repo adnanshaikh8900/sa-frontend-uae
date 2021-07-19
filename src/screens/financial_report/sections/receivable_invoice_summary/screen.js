@@ -345,7 +345,7 @@ class ReceivableInvoiceSummary extends React.Component {
 																	<td style={{ textAlign: 'center'}}>
 																	{item.invoiceDueDate ? (
 																		moment(item.invoiceDueDate).format('DD/MM/YYYY')
-																	) : (" ")}</td>
+																	) : ("-")}</td>
 																	<td style={{ textAlign: 'center' }}>{item.status}</td>
 																	<td style={{ textAlign: 'center' }}>
 																		<Currency

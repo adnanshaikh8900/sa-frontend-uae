@@ -269,10 +269,10 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{totalNet.toFixed(2)}
+													{totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 													 {/* ? (
 														<Currency
-															value={totalNet.toFixed(2)}
+															value={totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode
@@ -304,10 +304,10 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{POData.totalVatAmount?POData.totalVatAmount.toFixed(2):0 }
+													{POData.totalVatAmount?POData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 }
 													{/* ? (
 														<Currency
-															value={POData.totalVatAmount.toFixed(2)}
+															value={POData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode
@@ -339,10 +339,10 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{POData.totalAmount?POData.totalAmount.toFixed(2):0}
+													{POData.totalAmount?POData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0}
 													 {/* ? (
 														<Currency
-															value={POData.totalAmount.toFixed(2)}
+															value={POData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode

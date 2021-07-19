@@ -254,10 +254,10 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{totalNet.toFixed(2)}
+													{totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 													{/* // ? (
 													// 	<Currency
-													// 		value={totalNet.toFixed(2)}
+													// 		value={totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 													// 		currencySymbol={
 													// 			currencyData[0]
 													// 				? currencyData[0].currencyIsoCode
@@ -290,10 +290,10 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{RFQData.totalVatAmount? RFQData.totalVatAmount.toFixed(2):0 } 
+													{RFQData.totalVatAmount? RFQData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 } 
 													{/* ? (
 														<Currency
-															value={RFQData.totalVatAmount.toFixed(2)}
+															value={RFQData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode
@@ -325,7 +325,7 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{RFQData.totalAmount?RFQData.totalAmount.toFixed(2):0}
+													{RFQData.totalAmount?RFQData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0}
 													
 												</span>
 											</td>

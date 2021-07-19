@@ -213,7 +213,7 @@ class RFQTemplate extends Component {
 													{totalNet}
 													 {/* ? (
 														<Currency
-															value={totalNet.toFixed(2)}
+															value={totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode
@@ -248,7 +248,7 @@ class RFQTemplate extends Component {
 													{QuotationData.totalVatAmount }
 													{/* ? (
 														<Currency
-															value={QuotationData.totalVatAmount.toFixed(2)}
+															value={QuotationData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode
@@ -283,7 +283,7 @@ class RFQTemplate extends Component {
 													{QuotationData.totalAmount}
 													 {/* ? (
 														<Currency
-															value={QuotationData.totalAmount.toFixed(2)}
+															value={QuotationData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode

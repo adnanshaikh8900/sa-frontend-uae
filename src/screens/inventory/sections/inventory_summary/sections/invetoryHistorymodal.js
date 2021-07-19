@@ -115,10 +115,10 @@ class InventoryHistoryModal extends React.Component {
 	// Create
 
 	renderUnitCost  = (cell, row, extraData) => {
-		 return row.unitCost ? row.unitCost.toFixed(2) :'';
+		 return row.unitCost ? row.unitCost.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :'';
 	};
 	renderunitSellingPrice  = (cell, row, extraData) => {
-		return row.unitSellingPrice ? row.unitSellingPrice.toFixed(2) :'';
+		return row.unitSellingPrice ? row.unitSellingPrice.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :'';
 	};
 	displayMsg = (err) => {
 		toast.error(`${err.data}`, {

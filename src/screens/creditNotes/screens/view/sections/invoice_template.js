@@ -309,7 +309,7 @@ class InvoiceTemplate extends Component {
 												<span>
 													{totalNet ? (
 														<Currency
-															value={totalNet.toFixed(2)}
+															value={totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode
@@ -348,7 +348,7 @@ class InvoiceTemplate extends Component {
 												<span>
 													{invoiceData.discount ? (
 														<Currency
-															value={invoiceData.discount.toFixed(2)}
+															value={invoiceData.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode
@@ -382,7 +382,7 @@ class InvoiceTemplate extends Component {
 												<span>
 													{invoiceData.totalVatAmount ? (
 														<Currency
-															value={invoiceData.totalVatAmount.toFixed(2)}
+															value={invoiceData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode
@@ -416,7 +416,7 @@ class InvoiceTemplate extends Component {
 												<span>
 													{invoiceData.totalAmount ? (
 														<Currency
-															value={invoiceData.totalAmount.toFixed(2)}
+															value={invoiceData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode
@@ -452,7 +452,7 @@ class InvoiceTemplate extends Component {
 													<span>
 													{invoiceData.totalAmount ? (
 														<Currency
-															value={invoiceData.totalAmount.toFixed(2)}
+															value={invoiceData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode

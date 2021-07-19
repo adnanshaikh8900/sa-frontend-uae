@@ -358,7 +358,7 @@ class ProfitAndLossReport extends React.Component {
 																		<Currency
 																			value={this.state.data['operatingIncome'][
 																				`${item}`
-																			].toFixed(2)}
+																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -380,7 +380,7 @@ class ProfitAndLossReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalOperatingIncome'
-																			].toFixed(2)}
+																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -410,7 +410,7 @@ class ProfitAndLossReport extends React.Component {
 																		<Currency
 																			value={this.state.data['costOfGoodsSold'][
 																				`${item}`
-																			].toFixed(2)}
+																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -432,7 +432,7 @@ class ProfitAndLossReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalCostOfGoodsSold'
-																			].toFixed(2)}
+																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -453,7 +453,7 @@ class ProfitAndLossReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'grossProfit'
-																			].toFixed(2)}
+																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -481,7 +481,7 @@ class ProfitAndLossReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'operatingExpense'
-																			][`${item}`].toFixed(2)}
+																			][`${item}`].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -503,7 +503,7 @@ class ProfitAndLossReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalOperatingExpense'
-																			].toFixed(2)}
+																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -525,7 +525,7 @@ class ProfitAndLossReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'operatingProfit'
-																			].toFixed(2)}
+																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -555,7 +555,7 @@ class ProfitAndLossReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'nonOperatingIncome'
-																			][`${item}`].toFixed(2)}
+																			][`${item}`].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -577,7 +577,7 @@ class ProfitAndLossReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalNonOperatingIncome'
-																			].toFixed(2)}
+																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -607,7 +607,7 @@ class ProfitAndLossReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'nonOperatingExpense'
-																			][`${item}`].toFixed(2)}
+																			][`${item}`].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -630,7 +630,7 @@ class ProfitAndLossReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalNonOperatingExpense'
-																			].toFixed(2)}
+																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -651,7 +651,7 @@ class ProfitAndLossReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'netProfitLoss'
-																			].toFixed(2)}
+																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]

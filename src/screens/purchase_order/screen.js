@@ -228,12 +228,12 @@ class PurchaseOrder extends React.Component {
 								<div>
 						<label className="font-weight-bold mr-2 ">{strings.PurchaseOrder+" "+strings.Amount}: </label>
 						<label>
-							{row.totalAmount  === 0 ? row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+							{row.totalAmount  === 0 ? row.currencyCode + row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyCode + row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 						</label>
 					</div>
 					<div style={{display: row.totalVatAmount === 0 ? 'none' : ''}}>
 					<label className="font-weight-bold mr-2">{strings.VatAmount}: </label>
-					<label>{row.totalVatAmount === 0  ?  row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :  row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
+					<label>{row.totalVatAmount === 0  ? row.currencyCode + row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyCode + row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
 					</div>
 					
 					
@@ -783,6 +783,7 @@ class PurchaseOrder extends React.Component {
 			status_list,
 			supplier_list,
 			purchase_order_list,
+			universal_currency_list
 		} = this.props;
 		console.log(this.state.openGoodsReceivedNotes)
 
@@ -799,7 +800,7 @@ class PurchaseOrder extends React.Component {
 							: '',
 						totalAmount: supplier.totalAmount,
 						totalVatAmount: supplier.totalVatAmount,
-					
+						currencyCode: supplier.currencyCode,
 				  }))
 				: '';
 
@@ -1077,7 +1078,7 @@ class PurchaseOrder extends React.Component {
 											//	width="5%"
 												dataFormat={this.renderrfqAmount}
 												className="table-header-bg"
-												
+												formatExtraData={universal_currency_list}
 											>
 												 {strings.AMOUNT} 
 											</TableHeaderColumn>

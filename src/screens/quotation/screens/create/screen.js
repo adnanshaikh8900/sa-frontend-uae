@@ -377,7 +377,7 @@ class CreateQuotation extends React.Component {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.subTotal === 0 ? row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.subTotal === 0 ? this.state.supplier_currency_symbol + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
 
 	componentDidMount = () => {
@@ -872,6 +872,7 @@ class CreateQuotation extends React.Component {
 		this.setState({ disabled: true });
 		const {
 			quotaionExpiration,
+			currency,
 			customerId,
 			quotation_Number,
 			notes,
@@ -895,7 +896,9 @@ class CreateQuotation extends React.Component {
 		if (customerId && customerId.value) {
 			formData.append('customerId', customerId.value);
 		}
-		
+		if (currency !== null && currency) {
+			formData.append('currencyCode', this.state.supplier_currency);
+		}
 		this.props.quotationCreateAction
 			.createQuotation(formData)
 			.then((res) => {
@@ -1008,7 +1011,23 @@ class CreateQuotation extends React.Component {
 		// })
 		this.formRef.current.setFieldValue('customerId', option, true);
 	};
+	getCurrency = (opt) => {
+		let supplier_currencyCode = 0;
 
+		this.props.supplier_list.map(item => {
+			if(item.label.contactId == opt) {
+				this.setState({
+					supplier_currency: item.label.currency.currencyCode,
+					supplier_currency_des: item.label.currency.currencyName,
+					supplier_currency_symbol: item.label.currency.currencySymbol
+				});
+
+				supplier_currencyCode = item.label.currency.currencyCode;
+			}
+		})
+
+		return supplier_currencyCode;
+	}
 	closeSupplierModal = (res) => {
 		if (res) {
 			this.props.requestForQuotationAction.getSupplierList(this.state.contactType);
@@ -1309,8 +1328,18 @@ class CreateQuotation extends React.Component {
 																				: []
 																		}
 																		value={props.values.customerId}
+																		// onChange={(option) => {
+																		// 	if (option && option.value) {
+																		// 		props.handleChange('customerId')(option);
+																		// 	} else {
+
+																		// 		props.handleChange('customerId')('');
+																		// 	}
+																		// }}
 																		onChange={(option) => {
 																			if (option && option.value) {
+																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
+																				this.setExchange( this.getCurrency(option.value) );
 																				props.handleChange('customerId')(option);
 																			} else {
 
@@ -1420,7 +1449,63 @@ class CreateQuotation extends React.Component {
 																	
 																</FormGroup>
 															</Col>
-														
+															<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="currency">
+																		<span className="text-danger">*</span>
+																		{strings.Currency}
+																	</Label>
+																	<Select
+																	isDisabled={true}
+																	placeholder={strings.Select+strings.Currency}
+																		styles={customStyles}
+																		options={
+																			currency_convert_list
+																				? selectCurrencyFactory.renderOptions(
+																						'currencyName',
+																						'currencyCode',
+																						currency_convert_list,
+																						'Currency',
+																				  )
+																				: []
+																		}
+																		id="currency"
+																		name="currency"
+																		value={																		
+																			currency_convert_list &&
+																			selectCurrencyFactory
+																				.renderOptions(
+																					'currencyName',
+																					'currencyCode',
+																					currency_convert_list,
+																					'Currency',
+																				)
+																				.find(
+																					(option) =>
+																						option.value ===
+																						this.state.supplier_currency,
+																				)
+																		}
+																		onChange={(option) => {
+																			props.handleChange('currency')(option);
+																			this.setExchange(option.value);
+																			this.setCurrency(option.value)
+																		   }}
+																		className={`${
+																			props.errors.currency &&
+																			props.touched.currency
+																				? 'is-invalid'
+																				: ''
+																		}`}
+																	/>
+																	{props.errors.currency &&
+																		props.touched.currency && (
+																			<div className="invalid-feedback">
+																				{props.errors.currency}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
 														</Row>
 													
 														<Row>
@@ -1592,7 +1677,7 @@ class CreateQuotation extends React.Component {
 																								}
 																							/>
 																						)} */}
-																						{/* {this.state.supplier_currency_symbol} */}
+																						{this.state.supplier_currency_symbol}
 																						{initValue.total_net.toFixed(
 																									2,
 																								)}
@@ -1622,7 +1707,7 @@ class CreateQuotation extends React.Component {
 																								}
 																							/>
 																						)} */}
-																						{/* {this.state.supplier_currency_symbol} */}
+																						{this.state.supplier_currency_symbol}
 																						{initValue.invoiceVATAmount.toFixed(
 																									2,
 																								)}
@@ -1652,7 +1737,7 @@ class CreateQuotation extends React.Component {
 																								}
 																							/>
 																						)} */}
-																						{/* {this.state.supplier_currency_symbol} */}
+																						{this.state.supplier_currency_symbol}
 																						{initValue.totalAmount.toFixed(
 																									2,
 																								)}

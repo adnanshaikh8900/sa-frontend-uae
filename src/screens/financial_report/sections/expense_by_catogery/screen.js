@@ -343,7 +343,7 @@ class ExpenseByCategory extends React.Component {
 																<tr key={index}>
 
 
-																	<td style={{ textAlign: 'center', width: '20%' }}>{item.transactionCategoryName}</td>
+																	<td style={{ textAlign: 'left', width: '60%' }}>{item.transactionCategoryName}</td>
 																
 																	<td style={{ textAlign: 'center', width: '20%' }}>
 																		<Currency

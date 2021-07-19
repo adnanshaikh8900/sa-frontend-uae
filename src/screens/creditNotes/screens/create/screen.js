@@ -16,7 +16,6 @@ import {
 } from 'reactstrap';
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import { Currency } from 'components';
 import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
@@ -1832,6 +1831,7 @@ class CreateCreditNote extends React.Component {
 																		 {strings.Currency}
 																	</Label>
 																	<Select
+																	isDisabled={true}
 																		styles={customStyles}
 																		placeholder={strings.Select+strings.Currency}
 																		options={

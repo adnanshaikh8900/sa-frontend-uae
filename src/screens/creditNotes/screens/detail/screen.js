@@ -268,6 +268,7 @@ class DetailCreditNote extends React.Component {
 								}
 							},
 						);
+							this.getCurrency(res.data.contactId)	
 					}
 				});
 		} else {

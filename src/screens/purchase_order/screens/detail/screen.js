@@ -246,6 +246,8 @@ class DetailPurchaseOrder extends React.Component {
 								}
 							},
 						);
+						debugger
+						this.getCurrency(res.data.supplierId)	
 					}
 				});
 		} else {
@@ -1070,7 +1072,8 @@ class DetailPurchaseOrder extends React.Component {
 			if(item.label.contactId == opt) {
 				this.setState({
 					supplier_currency: item.label.currency.currencyCode,
-					supplier_currency_des: item.label.currency.currencyName
+					supplier_currency_des: item.label.currency.currencyName,
+					supplier_currency_symbol: item.label.currency.currencySymbol
 				});
 
 				supplier_currencyCode = item.label.currency.currencyCode;

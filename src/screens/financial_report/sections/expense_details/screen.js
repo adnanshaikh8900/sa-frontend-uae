@@ -534,14 +534,14 @@ class ExpenseDetailsReport extends React.Component {
 													<td></td>
 													<td style={{ textAlign: 'center', width: '20%' }}>
 													
-														{/* <b><Currency
-															value={this.state.data.amountWithoutTax}
+														<b><Currency
+															value={this.state.expenseDetailsList.totalAmountWithoutTax}
 															currencySymbol={
 																universal_currency_list[0]
 																	? universal_currency_list[0].currencyIsoCode
 																	: 'USD'
 															}
-														/></b> */}
+														/></b>
 														
 													</td>
 

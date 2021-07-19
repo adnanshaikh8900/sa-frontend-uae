@@ -339,7 +339,39 @@ class DetailGoodsReceivedNote extends React.Component {
 			);
 		});
 	};
+	getCurrency = (opt) => {
+		let supplier_currencyCode = 0;
 
+		this.props.supplier_list.map(item => {
+			if(item.label.contactId == opt) {
+				this.setState({
+					supplier_currency: item.label.currency.currencyCode,
+					supplier_currency_des: item.label.currency.currencyName,
+					supplier_currency_symbol: item.label.currency.currencySymbol
+				});
+
+				supplier_currencyCode = item.label.currency.currencyCode;
+			}
+		})
+
+		return supplier_currencyCode;
+	}
+
+	setExchange = (value) => {
+		let result = this.props.currency_convert_list.filter((obj) => {
+			return obj.currencyCode === value;
+		});
+
+		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
+		};
+
+	setCurrency = (value) => {
+		let result = this.props.currency_convert_list.filter((obj) => {
+			return obj.currencyCode === value;
+		});
+		
+	    this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
+	};
 	renderDescription = (cell, row, props) => {
 		let idx;
 		this.state.data.map((obj, index) => {
@@ -569,7 +601,7 @@ class DetailGoodsReceivedNote extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		return row.subTotal ? row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
+		return row.subTotal === 0 ? this.state.supplier_currency_symbol + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
 	addRow = () => {
 		const data = [...this.state.data];
@@ -912,6 +944,7 @@ class DetailGoodsReceivedNote extends React.Component {
 			totalVatAmount,
 			totalAmount,
 			poNumber,
+			currency,
 		} = data;
 
 		let formData = new FormData();
@@ -932,6 +965,9 @@ class DetailGoodsReceivedNote extends React.Component {
 		formData.append('poNumber', poNumber ? poNumber :'');
 		if (supplierId) {
 			formData.append('supplierId', supplierId);
+		}
+		if (currency !== null && currency) {
+			formData.append('currencyCode', this.state.supplier_currency);
 		}
 		this.props.goodsReceivedNoteDetailsAction
 			.updateGRN(formData)
@@ -1465,6 +1501,63 @@ class DetailGoodsReceivedNote extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
+																<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="currency">
+																		<span className="text-danger">*</span>
+																		{strings.Currency}
+																	</Label>
+																	<Select
+																	isDisabled={true}
+																	placeholder={strings.Select+strings.Currency}
+																		styles={customStyles}
+																		options={
+																			currency_convert_list
+																				? selectCurrencyFactory.renderOptions(
+																						'currencyName',
+																						'currencyCode',
+																						currency_convert_list,
+																						'Currency',
+																				  )
+																				: []
+																		}
+																		id="currency"
+																		name="currency"
+																		value={																		
+																			currency_convert_list &&
+																			selectCurrencyFactory
+																				.renderOptions(
+																					'currencyName',
+																					'currencyCode',
+																					currency_convert_list,
+																					'Currency',
+																				)
+																				.find(
+																					(option) =>
+																						option.value ===
+																						this.state.supplier_currency,
+																				)
+																		}
+																		onChange={(option) => {
+																			props.handleChange('currency')(option);
+																			this.setExchange(option.value);
+																			this.setCurrency(option.value)
+																		   }}
+																		className={`${
+																			props.errors.currency &&
+																			props.touched.currency
+																				? 'is-invalid'
+																				: ''
+																		}`}
+																	/>
+																	{props.errors.currency &&
+																		props.touched.currency && (
+																			<div className="invalid-feedback">
+																				{props.errors.currency}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
 																</Row>
 																
 															<Row>

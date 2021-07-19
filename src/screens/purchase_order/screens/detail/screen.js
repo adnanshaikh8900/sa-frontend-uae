@@ -503,7 +503,8 @@ class DetailPurchaseOrder extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		return row.subTotal ? row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
+		return row.subTotal === 0 ? this.state.supplier_currency_symbol + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		// return row.subTotal ? row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
 	};
 	addRow = () => {
 		const data = [...this.state.data];
@@ -845,6 +846,7 @@ class DetailPurchaseOrder extends React.Component {
 			totalVatAmount,
 			totalAmount,
 			rfqNumber,
+			currency,
 		} = data;
 
 		let formData = new FormData();
@@ -872,6 +874,9 @@ class DetailPurchaseOrder extends React.Component {
 		formData.append('rfqNumber',rfqNumber ? rfqNumber : '');
 		if (supplierId) {
 			formData.append('supplierId', supplierId);
+		}
+		if (currency !== null && currency) {
+			formData.append('currencyCode', this.state.supplier_currency);
 		}
 		this.props.purchaseOrderDetailsAction
 			.updatePO(formData)
@@ -1339,6 +1344,68 @@ class DetailPurchaseOrder extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>		
+															<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="currency">
+																		<span className="text-danger">*</span>
+																	{strings.Currency}
+																	</Label>
+																	<Select
+																	isDisabled={true}
+																	placeholder={strings.Select+strings.Currency}
+																		styles={customStyles}
+																		options={
+																			currency_convert_list
+																				? selectCurrencyFactory.renderOptions(
+																						'currencyName',
+																						'currencyCode',
+																						currency_convert_list,
+																						'Currency',
+																				  )
+																				: []
+																		}
+																		id="currency"
+																		name="currency"
+																		value={																		
+																			currency_convert_list &&
+																			selectCurrencyFactory
+																				.renderOptions(
+																					'currencyName',
+																					'currencyCode',
+																					currency_convert_list,
+																					'Currency',
+																				)
+																				.find(
+																					(option) =>
+																						option.value ===
+																						this.state.supplier_currency,
+																				)
+																		}
+																		onChange={(option) => {
+																			if (option && option.value) {
+																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
+																				
+																				props.handleChange('supplierId')(option);
+																			} else {
+
+																				props.handleChange('supplierId')('');
+																			}
+																		}}
+																		className={`${
+																			props.errors.currency &&
+																			props.touched.currency
+																				? 'is-invalid'
+																				: ''
+																		}`}
+																	/>
+																	{props.errors.currency &&
+																		props.touched.currency && (
+																			<div className="invalid-feedback">
+																				{props.errors.currency}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
 															</Row>
 															<hr />
 															<Row>
@@ -1587,6 +1654,7 @@ class DetailPurchaseOrder extends React.Component {
 																							}
 																							/>
 																							)} */}
+																							{this.state.supplier_currency_symbol}
 																							{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
@@ -1611,6 +1679,7 @@ class DetailPurchaseOrder extends React.Component {
 																							}
 																							/>
 																							)} */}
+																							{this.state.supplier_currency_symbol}
 																							{initValue.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
@@ -1635,6 +1704,7 @@ class DetailPurchaseOrder extends React.Component {
 																							}
 																							/>
 																							)} */}
+																							{this.state.supplier_currency_symbol}
 																							{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>

@@ -498,7 +498,7 @@ class DetailQuotation extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		return row.subTotal ? row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
+		return row.subTotal === 0 ? this.state.supplier_currency_symbol + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
 	addRow = () => {
 		const data = [...this.state.data];
@@ -838,6 +838,7 @@ class DetailQuotation extends React.Component {
 			notes,
 			totalVatAmount,
 			totalAmount,
+			currency,
 		} = data;
 
 		let formData = new FormData();
@@ -859,6 +860,9 @@ class DetailQuotation extends React.Component {
 	
 		if (customerId) {
 			formData.append('customerId', customerId);
+		}
+		if (currency !== null && currency) {
+			formData.append('currencyCode', this.state.supplier_currency);
 		}
 		this.props.quotationDetailsAction
 			.updateQuatation(formData)
@@ -1052,7 +1056,8 @@ class DetailQuotation extends React.Component {
 			if(item.label.contactId == opt) {
 				this.setState({
 					supplier_currency: item.label.currency.currencyCode,
-					supplier_currency_des: item.label.currency.currencyName
+					supplier_currency_des: item.label.currency.currencyName,
+					supplier_currency_symbol: item.label.currency.currencySymbol
 				});
 
 				supplier_currencyCode = item.label.currency.currencyCode;
@@ -1061,7 +1066,6 @@ class DetailQuotation extends React.Component {
 
 		return supplier_currencyCode;
 	}
-
 	render() {
 		strings.setLanguage(this.state.language);
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
@@ -1254,10 +1258,11 @@ class DetailQuotation extends React.Component {
 																			}
 																			onChange={(option) => {
 																				if (option && option.value) {
-																					props.handleChange('customerId')(
-																						option.value,
-																					);
+																					this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
+																					this.setExchange( this.getCurrency(option.value) );
+																					props.handleChange('customerId')(option);
 																				} else {
+	
 																					props.handleChange('customerId')('');
 																				}
 																			}}
@@ -1317,7 +1322,63 @@ class DetailQuotation extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-															
+																<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="currency">
+																		<span className="text-danger">*</span>
+																		{strings.Currency}
+																	</Label>
+																	<Select
+																	isDisabled={true}
+																	placeholder={strings.Select+strings.Currency}
+																		styles={customStyles}
+																		options={
+																			currency_convert_list
+																				? selectCurrencyFactory.renderOptions(
+																						'currencyName',
+																						'currencyCode',
+																						currency_convert_list,
+																						'Currency',
+																				  )
+																				: []
+																		}
+																		id="currency"
+																		name="currency"
+																		value={																		
+																			currency_convert_list &&
+																			selectCurrencyFactory
+																				.renderOptions(
+																					'currencyName',
+																					'currencyCode',
+																					currency_convert_list,
+																					'Currency',
+																				)
+																				.find(
+																					(option) =>
+																						option.value ===
+																						this.state.supplier_currency,
+																				)
+																		}
+																		onChange={(option) => {
+																			props.handleChange('currency')(option);
+																			this.setExchange(option.value);
+																			this.setCurrency(option.value)
+																		   }}
+																		className={`${
+																			props.errors.currency &&
+																			props.touched.currency
+																				? 'is-invalid'
+																				: ''
+																		}`}
+																	/>
+																	{props.errors.currency &&
+																		props.touched.currency && (
+																			<div className="invalid-feedback">
+																				{props.errors.currency}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
 																
 																</Row>
 																
@@ -1489,6 +1550,7 @@ class DetailQuotation extends React.Component {
 																							}
 																							/>
 																							)} */}
+																							{this.state.supplier_currency_symbol}
 																							{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
@@ -1513,6 +1575,7 @@ class DetailQuotation extends React.Component {
 																							}
 																							/>
 																							)} */}
+																							{this.state.supplier_currency_symbol}
 																							{initValue.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
@@ -1537,6 +1600,7 @@ class DetailQuotation extends React.Component {
 																							}
 																							/>
 																							)} */}
+																							{this.state.supplier_currency_symbol}
 																							{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>

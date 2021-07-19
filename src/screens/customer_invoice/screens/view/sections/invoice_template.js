@@ -337,7 +337,7 @@ class InvoiceTemplate extends Component {
 												<span>
 													{totalNet ? (
 														<Currency
-															value={totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+															value={totalNet}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode
@@ -376,7 +376,7 @@ class InvoiceTemplate extends Component {
 												<span>
 													{invoiceData.discount ? (
 														<Currency
-															value={invoiceData.discount ? '-'+invoiceData.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : invoiceData.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+															value={invoiceData.discount ? '-'+invoiceData.discount : invoiceData.discount}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode
@@ -410,7 +410,7 @@ class InvoiceTemplate extends Component {
 												<span>
 													{invoiceData.totalVatAmount ? (
 														<Currency
-															value={invoiceData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+															value={invoiceData.totalVatAmount}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode
@@ -444,7 +444,7 @@ class InvoiceTemplate extends Component {
 												<span>
 													{invoiceData.totalAmount ? (
 														<Currency
-															value={invoiceData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+															value={invoiceData.totalAmount}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode
@@ -480,7 +480,7 @@ class InvoiceTemplate extends Component {
 													<span>
 														{invoiceData.dueAmount ? (
 															<Currency
-																value={invoiceData.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																value={invoiceData.dueAmount}
 																currencySymbol={
 																	currencyData[0]
 																		? currencyData[0].currencyIsoCode

@@ -388,7 +388,7 @@ class TrailBalances extends React.Component {
 																				<Currency
 																					value={this.state.data['assets'][
 																						`${item}`
-																					].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					]   }
 																					currencySymbol={
 																						universal_currency_list[0]
 																							? universal_currency_list[0]
@@ -407,7 +407,7 @@ class TrailBalances extends React.Component {
 																				<Currency
 																					value={this.state.data['assets'][
 																						`${item}`
-																					].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					]   }
 																					currencySymbol={
 																						universal_currency_list[0]
 																							? universal_currency_list[0]
@@ -438,7 +438,7 @@ class TrailBalances extends React.Component {
 																				<Currency
 																					value={this.state.data['fixedAsset'][
 																						`${item}`
-																					].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					]   }
 																					currencySymbol={
 																						universal_currency_list[0]
 																							? universal_currency_list[0]
@@ -457,7 +457,7 @@ class TrailBalances extends React.Component {
 																				<Currency
 																					value={this.state.data['fixedAsset'][
 																						`${item}`
-																					].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					]   }
 																					currencySymbol={
 																						universal_currency_list[0]
 																							? universal_currency_list[0]
@@ -488,7 +488,7 @@ class TrailBalances extends React.Component {
 																				<Currency
 																					value={this.state.data['bank'][
 																						`${item}`
-																					].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					]   }
 																					currencySymbol={
 																						universal_currency_list[0]
 																							? universal_currency_list[0]
@@ -507,7 +507,7 @@ class TrailBalances extends React.Component {
 																				<Currency
 																					value={this.state.data['bank'][
 																						`${item}`
-																					].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					]   }
 																					currencySymbol={
 																						universal_currency_list[0]
 																							? universal_currency_list[0]
@@ -538,7 +538,7 @@ class TrailBalances extends React.Component {
 																				<Currency
 																					value={this.state.data['liabilities'][
 																						`${item}`
-																					].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					]   }
 																					currencySymbol={
 																						universal_currency_list[0]
 																							? universal_currency_list[0]
@@ -557,7 +557,7 @@ class TrailBalances extends React.Component {
 																				<Currency
 																					value={this.state.data['liabilities'][
 																						`${item}`
-																					].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					]   }
 																					currencySymbol={
 																						universal_currency_list[0]
 																							? universal_currency_list[0]
@@ -588,7 +588,7 @@ class TrailBalances extends React.Component {
 																				<Currency
 																					value={this.state.data['equities'][
 																						`${item}`
-																					].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					]   }
 																					currencySymbol={
 																						universal_currency_list[0]
 																							? universal_currency_list[0]
@@ -607,7 +607,7 @@ class TrailBalances extends React.Component {
 																				<Currency
 																					value={this.state.data['equities'][
 																						`${item}`
-																					].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					]   }
 																					currencySymbol={
 																						universal_currency_list[0]
 																							? universal_currency_list[0]
@@ -638,7 +638,7 @@ class TrailBalances extends React.Component {
 																				<Currency
 																					value={this.state.data['income'][
 																						`${item}`
-																					].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					]   }
 																					currencySymbol={
 																						universal_currency_list[0]
 																							? universal_currency_list[0]
@@ -657,7 +657,7 @@ class TrailBalances extends React.Component {
 																				<Currency
 																					value={this.state.data['income'][
 																						`${item}`
-																					].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					]   }
 																					currencySymbol={
 																						universal_currency_list[0]
 																							? universal_currency_list[0]
@@ -688,7 +688,7 @@ class TrailBalances extends React.Component {
 																				<Currency
 																					value={this.state.data['expense'][
 																						`${item}`
-																					].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					]   }
 																					currencySymbol={
 																						universal_currency_list[0]
 																							? universal_currency_list[0]
@@ -707,7 +707,7 @@ class TrailBalances extends React.Component {
 																				<Currency
 																					value={this.state.data['expense'][
 																						`${item}`
-																					].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					]   }
 																					currencySymbol={
 																						universal_currency_list[0]
 																							? universal_currency_list[0]
@@ -733,7 +733,7 @@ class TrailBalances extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'accountReceivable'
-																			]['Accounts Receivable'].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			]['Accounts Receivable']   }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -752,7 +752,7 @@ class TrailBalances extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'accountReceivable'
-																			]['Accounts Receivable'].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			]['Accounts Receivable']   }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -775,7 +775,7 @@ class TrailBalances extends React.Component {
 																		<Currency
 																			value={this.state.data['accountpayable'][
 																				'Accounts Payable'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			]   }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -794,7 +794,7 @@ class TrailBalances extends React.Component {
 																		<Currency
 																			value={this.state.data['accountpayable'][
 																				'Accounts Payable'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			]   }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]

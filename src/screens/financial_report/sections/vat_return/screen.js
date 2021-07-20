@@ -420,7 +420,7 @@ class VatReturnsReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalAmountForAbuDhabi'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			]}
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -439,7 +439,7 @@ class VatReturnsReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalVatForAbuDhabi'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			]}
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -470,7 +470,7 @@ class VatReturnsReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalAmountForAjman'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			]}
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -489,7 +489,7 @@ class VatReturnsReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalVatForAjman'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			]}
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -520,7 +520,7 @@ class VatReturnsReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalAmountForDubai'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			] }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -539,7 +539,7 @@ class VatReturnsReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalVatForDubai'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			] }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -570,7 +570,7 @@ class VatReturnsReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalAmountForFujairah'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			] }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -589,7 +589,7 @@ class VatReturnsReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalVatForFujairah'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			] }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -620,7 +620,7 @@ class VatReturnsReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalAmountForRasAlKhalmah'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			] }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -639,7 +639,7 @@ class VatReturnsReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalVatForRasAlKhalmah'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			] }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -671,7 +671,7 @@ class VatReturnsReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalAmountForSharjah'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			] }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -690,7 +690,7 @@ class VatReturnsReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalVatForSharjah'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			] }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -721,7 +721,7 @@ class VatReturnsReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalAmountForUmmAlQuwain'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			] }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -740,7 +740,7 @@ class VatReturnsReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalVatForUmmAlQuwain'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			] }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -815,7 +815,7 @@ class VatReturnsReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'zeroRatedSupplies'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			] }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -920,7 +920,7 @@ class VatReturnsReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalVatAmount'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			] }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -983,7 +983,7 @@ class VatReturnsReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'standardRatedExpensesTotalAmount'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			] }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -1003,7 +1003,7 @@ class VatReturnsReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'standardRatedExpensesVatAmount'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			] }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -1033,7 +1033,7 @@ class VatReturnsReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'standardRatedExpensesTotalAmount'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			] }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -1053,7 +1053,7 @@ class VatReturnsReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'standardRatedExpensesVatAmount'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			] }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -1086,7 +1086,7 @@ class VatReturnsReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalVatOnExpensesAndAllOtherInputs'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			] }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -1149,7 +1149,7 @@ class VatReturnsReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalValueOfDueTaxForThePeriod'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			] }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -1172,7 +1172,7 @@ class VatReturnsReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalValueOfRecoverableTaxForThePeriod'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			] }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -1195,7 +1195,7 @@ class VatReturnsReport extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'netVatPayableOrReclaimableForThePeriod'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			] }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]

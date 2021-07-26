@@ -564,7 +564,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 																									// }
 																								>
 																									<Currency
-																										value={ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) }
+																										value={ row.vatAmount }
 																										currencySymbol={
 																											universal_currency_list[0]
 																												? universal_currency_list[0]
@@ -594,7 +594,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 																							// }
 																							>
 																								<Currency
-																									value={ row.vatAmount && row.unitPrice? (row.vatAmount + row.unitPrice).toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) }
+																									value={ row.vatAmount && row.unitPrice? (row.vatAmount + row.unitPrice) : row.totalAmount }
 																									currencySymbol={
 																										universal_currency_list[0]
 																											? universal_currency_list[0]

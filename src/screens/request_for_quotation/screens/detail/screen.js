@@ -257,6 +257,7 @@ class DetailRequestForQuotation extends React.Component {
 								}
 							},
 						);
+						this.getCurrency(res.data.supplierId)	
 					}
 				});
 		} else {
@@ -516,8 +517,8 @@ class DetailRequestForQuotation extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		// return row.subTotal === 0 ? this.state.supplier_currency_symbol + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
-		return row.subTotal === 0 ? row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :  row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		 return row.subTotal === 0 ? this.state.supplier_currency_symbol + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		// return row.subTotal === 0 ? row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :  row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
 	addRow = () => {
 		const data = [...this.state.data];
@@ -857,6 +858,7 @@ class DetailRequestForQuotation extends React.Component {
 			notes,
 			totalVatAmount,
 			totalAmount,
+			currency,
 		} = data;
 
 		let formData = new FormData();
@@ -886,6 +888,9 @@ class DetailRequestForQuotation extends React.Component {
 		}
 		if (this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
+		}
+		if (currency !== null && currency) {
+			formData.append('currencyCode', this.state.supplier_currency);
 		}
 		this.props.requestForQuotationDetailsAction
 			.updateRFQ(formData)
@@ -1319,7 +1324,7 @@ class DetailRequestForQuotation extends React.Component {
 																	</FormGroup>
 																</Col>
 															
-																{/* <Col lg={3}>
+																<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
 																		<span className="text-danger">*</span>
@@ -1374,7 +1379,7 @@ class DetailRequestForQuotation extends React.Component {
 																			</div>
 																		)}
 																</FormGroup>
-															</Col> */}
+															</Col>
 															</Row>
 															<hr />
 															<Row>
@@ -1678,7 +1683,7 @@ class DetailRequestForQuotation extends React.Component {
 																							}
 																							/>
 																							)} */}
-																								{/* {this.state.supplier_currency_symbol} */}
+																								{this.state.supplier_currency_symbol}
 																							{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
@@ -1703,7 +1708,7 @@ class DetailRequestForQuotation extends React.Component {
 																							}
 																							/>
 																							)} */}
-																								{/* {this.state.supplier_currency_symbol} */}
+																								{this.state.supplier_currency_symbol}
 																							{initValue.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
@@ -1728,7 +1733,7 @@ class DetailRequestForQuotation extends React.Component {
 																							}
 																							/>
 																							)} */}
-																								{/* {this.state.supplier_currency_symbol} */}
+																								{this.state.supplier_currency_symbol}
 																							{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>

@@ -389,7 +389,7 @@ class HorizontalBalanceSheet extends React.Component {
 																				<Currency
 																					value={this.state.data['fixedAssets'][
 																						`${item}`
-																					].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					]   }
 																					currencySymbol={
 																						universal_currency_list[0]
 																							? universal_currency_list[0]
@@ -414,7 +414,7 @@ class HorizontalBalanceSheet extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalFixedAssets'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			]   }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -444,7 +444,7 @@ class HorizontalBalanceSheet extends React.Component {
 																			<Currency
 																				value={this.state.data['currentAssets'][
 																					`${item}`
-																				].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																				]   }
 																				currencySymbol={
 																					universal_currency_list[0]
 																						? universal_currency_list[0]
@@ -473,7 +473,7 @@ class HorizontalBalanceSheet extends React.Component {
 																				<Currency
 																					value={this.state.data['bank'][
 																						`${item}`
-																					].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					]   }
 																					currencySymbol={
 																						universal_currency_list[0]
 																							? universal_currency_list[0]
@@ -498,7 +498,7 @@ class HorizontalBalanceSheet extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalAccountReceivable'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			]   }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -529,7 +529,7 @@ class HorizontalBalanceSheet extends React.Component {
 																			<Currency
 																				value={this.state.data[
 																					'otherCurrentAssets'
-																				][`${item}`].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																				][`${item}`]   }
 																				currencySymbol={
 																					universal_currency_list[0]
 																						? universal_currency_list[0]
@@ -553,7 +553,7 @@ class HorizontalBalanceSheet extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalCurrentAssets'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			]   }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -577,7 +577,7 @@ class HorizontalBalanceSheet extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalAssets'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			]   }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -644,7 +644,7 @@ class HorizontalBalanceSheet extends React.Component {
 																				<Currency
 																					value={this.state.data['equities'][
 																						`${item}`
-																					].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					]   }
 																					currencySymbol={
 																						universal_currency_list[0]
 																							? universal_currency_list[0]
@@ -669,7 +669,7 @@ class HorizontalBalanceSheet extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalEquities'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			]   }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -699,7 +699,7 @@ class HorizontalBalanceSheet extends React.Component {
 																			<Currency
 																				value={this.state.data[
 																					'otherLiability'
-																				][`${item}`].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																				][`${item}`]   }
 																				currencySymbol={
 																					universal_currency_list[0]
 																						? universal_currency_list[0]
@@ -723,7 +723,7 @@ class HorizontalBalanceSheet extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalOtherLiability'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			]   }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -753,7 +753,7 @@ class HorizontalBalanceSheet extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalAccountPayable'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			]   }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -779,7 +779,7 @@ class HorizontalBalanceSheet extends React.Component {
 																			<Currency
 																				value={this.state.data[
 																					'otherCurrentLiability'
-																				][`${item}`].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																				][`${item}`]   }
 																				currencySymbol={
 																					universal_currency_list[0]
 																						? universal_currency_list[0]
@@ -805,7 +805,7 @@ class HorizontalBalanceSheet extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalOtherCurrentLiability'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			]   }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -829,7 +829,7 @@ class HorizontalBalanceSheet extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalLiability'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			]   }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]
@@ -853,7 +853,7 @@ class HorizontalBalanceSheet extends React.Component {
 																		<Currency
 																			value={this.state.data[
 																				'totalLiabilityEquities'
-																			].toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																			]   }
 																			currencySymbol={
 																				universal_currency_list[0]
 																					? universal_currency_list[0]

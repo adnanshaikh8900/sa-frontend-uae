@@ -212,13 +212,13 @@ class Quatation extends React.Component {
 								<div>
 						<label className="font-weight-bold mr-2 ">{strings.QuotationAmount}: </label>
 						<label>
-							{row.totalAmount  === 0 ? row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+							{row.totalAmount  === 0 ? row.currencyIsoCode + row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :  row.currencyIsoCode + row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 						</label>
 					</div>
 				
 					<div style={{display: row.totalVatAmount === 0 ? 'none' : ''}}>
 					<label className="font-weight-bold mr-2">{strings.VatAmount}: </label>
-					<label>{row.totalVatAmount === 0  ?  row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :  row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
+					<label>{row.totalVatAmount === 0  ?  row.currencyIsoCode + row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :   row.currencyIsoCode + row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
 				
 					</div>
 					
@@ -728,6 +728,7 @@ class Quatation extends React.Component {
 			status_list,
 			supplier_list,
 			quotation_list,
+			universal_currency_list,
 		} = this.props;
 		// const containerStyle = {
 		//   zIndex: 1999
@@ -744,7 +745,7 @@ console.log(quotation_list)
 					
 						totalAmount: quotation.totalAmount,
 						totalVatAmount: quotation.totalVatAmount,
-					
+						currencyIsoCode: quotation.currencyIsoCode,
 				  }))
 				: '';
 
@@ -1013,7 +1014,7 @@ console.log(quotation_list)
 											//	width="5%"
 												dataFormat={this.renderrfqAmount}
 												className="table-header-bg"
-												
+												formatExtraData={universal_currency_list}
 											>
 											   {strings.AMOUNT}
 											</TableHeaderColumn>

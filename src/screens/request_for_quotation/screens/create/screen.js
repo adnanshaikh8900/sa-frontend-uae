@@ -368,9 +368,9 @@ class CreateRequestForQuotation extends React.Component {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-	//	return row.subTotal === 0 ? this.state.supplier_currency_symbol + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.subTotal === 0 ? this.state.supplier_currency_symbol + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 
-		return row.subTotal === 0 ?  row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :  row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		// return row.subTotal === 0 ?  row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :  row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
  
 	};
 
@@ -1415,7 +1415,7 @@ class CreateRequestForQuotation extends React.Component {
 																</Button>
 															</Col>
 															
-															{/* <Col lg={3}>
+															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
 																		<span className="text-danger">*</span>
@@ -1471,7 +1471,7 @@ class CreateRequestForQuotation extends React.Component {
 																			</div>
 																		)}
 																</FormGroup>
-															</Col> */}
+															</Col>
 														</Row>
 														<hr />
 														<Row>
@@ -1774,8 +1774,10 @@ class CreateRequestForQuotation extends React.Component {
 																								}
 																							/>
 																						)} */}
-																						{/* {this.state.supplier_currency_symbol} */}
-																						{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						{this.state.supplier_currency_symbol}
+																						{initValue.total_net.toFixed(
+																									2,
+																								)}
 																					</label>
 																				</Col>
 																			</Row>
@@ -1802,8 +1804,10 @@ class CreateRequestForQuotation extends React.Component {
 																								}
 																							/>
 																						)} */}
-																						{/* {this.state.supplier_currency_symbol} */}
-																						{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						{this.state.supplier_currency_symbol}
+																						{initValue.invoiceVATAmount.toFixed(
+																									2,
+																								)}
 																					</label>
 																				</Col>
 																			</Row>
@@ -1830,8 +1834,10 @@ class CreateRequestForQuotation extends React.Component {
 																								}
 																							/>
 																						)} */}
-																						{/* {this.state.supplier_currency_symbol} */}
-																						{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						{this.state.supplier_currency_symbol}
+																						{initValue.totalAmount.toFixed(
+																									2,
+																								)}
 																					</label>
 																				</Col>
 																			</Row>

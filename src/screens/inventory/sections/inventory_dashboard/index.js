@@ -503,7 +503,7 @@ class InventoryDashboard extends React.Component {
 								<h3 className="d-block mt-4 text-center" >
 										{this.state.inventoryValue ? (
 																				<Currency
-																					value={this.state.inventoryValue.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					value={this.state.inventoryValue}
 																					currencySymbol={
 																						universal_currency_list[0]
 																							? universal_currency_list[0]

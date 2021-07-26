@@ -268,6 +268,7 @@ class DetailCustomerInvoice extends React.Component {
 								}
 							},
 						);
+						this.getCurrency(res.data.contactId)	
 					}
 				});
 		} else {

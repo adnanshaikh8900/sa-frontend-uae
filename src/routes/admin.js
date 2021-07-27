@@ -233,7 +233,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/settings/template',
-		name: 'ViewUser',
+		name: 'MailThemes',
 		component: Template.screen,
 	},
 	{

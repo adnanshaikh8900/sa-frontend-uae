@@ -324,18 +324,11 @@ class InvoiceTemplate extends Component {
 								<Table className="table-clear cal-table">
 									<tbody>
 										<tr >
-											<td style={{ width: '40%' }}>
-												<strong>{strings.SubTotal }</strong>
-											</td>
-											<td
-												style={{
-													display: 'flex',
-													justifyContent: 'space-between',
-												}}
-											>
+											<td style={{ width: '40%' }}><strong>{strings.SubTotal }</strong></td>
+											<td style={{display: 'flex',justifyContent: 'space-between',}}>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{totalNet ? (
+													 {totalNet ? (
 														<Currency
 															value={totalNet}
 															currencySymbol={
@@ -351,9 +344,9 @@ class InvoiceTemplate extends Component {
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode
 																	: 'USD'
-															}
+															} 
 														/>
-													)}
+													)}  
 												</span>
 											</td>
 										</tr>

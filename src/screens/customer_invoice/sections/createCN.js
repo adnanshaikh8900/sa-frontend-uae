@@ -1441,7 +1441,8 @@ class CreateCreditNoteModal extends React.Component {
 																							}
 																							/>
 																							)} */}
-																							{initValue.total_net}
+																							{this.state.customer_currency_symbol} &nbsp;
+																							{initValue.total_net.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -1464,8 +1465,10 @@ class CreateCreditNoteModal extends React.Component {
 																						: 'USD'
 																							}
 																							/>
-																							)} */}
-																							{this.state.totalVatAmount	}
+																							)} 
+																							{this.state.totalVatAmount} */}
+																							{this.state.customer_currency_symbol} &nbsp;
+																							{this.state.totalVatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -1488,8 +1491,10 @@ class CreateCreditNoteModal extends React.Component {
 																						: 'USD'
 																							}
 																							/>
-																							)} */}
-																							{this.state.totalAmount}
+																							)} 
+																						 {this.state.totalAmount}*/}
+																							{this.state.customer_currency_symbol} &nbsp;
+																							{initValue.totalAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>

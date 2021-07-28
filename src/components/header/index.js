@@ -142,7 +142,7 @@ class Header extends Component {
                                     this.props.history.push('/admin/settings/template')
                                 }
                             >
-                                <i className="fas fa-users"></i> Template
+                             <i class="fas fa-palette"></i> Mail Themes
                             </DropdownItem>
 							{/* <DropdownItem
 								onClick={() =>

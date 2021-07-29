@@ -16,3 +16,21 @@ export const updateMailTheme = (id) => {
 			});
 	};
 };
+export const getTemplateList = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'GET',
+			url: `/rest/templates/getTemplateDropdown`,
+		};
+
+		return authApi(data)
+			.then((res) => {
+				
+				return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+ 

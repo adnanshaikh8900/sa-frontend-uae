@@ -155,6 +155,7 @@ class UpdateEmployeeEmployment extends React.Component {
 
         let formData = new FormData();
         formData.append('id', this.state.initValue.employmentId);
+        formData.append('employee', this.props.location.state.id?this.props.location.state.id:"");
         formData.append(
             'department',
             department !== null ? department : '',

@@ -27,7 +27,7 @@ import * as detailBankAccountActions from './actions';
 import * as BankAccountActions from '../../actions';
 
 import './style.scss';
-import {data}  from '../../../Language/index'
+import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
@@ -63,7 +63,7 @@ class DetailBankAccount extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			language: window['localStorage'].getItem('language'),	
+			language: window['localStorage'].getItem('language'),
 			// country_list: [
 			// 	{
 			// 		countryCode: 229,
@@ -100,6 +100,7 @@ class DetailBankAccount extends React.Component {
 			// ],
 			dialog: null,
 			disabled: false,
+			disabledDate: true,
 			disabled1: false,
 			current_bank_account_id: null,
 			current_bank_account: null,
@@ -123,7 +124,18 @@ class DetailBankAccount extends React.Component {
 	componentDidMount = () => {
 		if (this.props.location.state && this.props.location.state.bankAccountId) {
 			this.initializeData();
+			// this.checkvalid();
+			this.props.detailBankAccountActions.getTransactionsCountByBankId(this.props.location.state.bankAccountId)
+				.then((res) => {
+				
+					if(res.status===200){
+						if (res.data === 0) {
+							this.setState({ disabledDate: false })
+						}
+					}
+				})
 			this.updateOpeningBalance(this.props.location.state.bankAccountId);
+
 			this.setState(
 				{
 					current_bank_account_id: this.props.location.state.bankAccountId,
@@ -166,6 +178,7 @@ class DetailBankAccount extends React.Component {
 			this.props.history.push('/admin/banking/bank-account');
 		}
 	};
+
 
 	initializeData = () => {
 		this.props.detailBankAccountActions.getAccountTypeList();
@@ -230,10 +243,10 @@ class DetailBankAccount extends React.Component {
 					);
 				} else {
 					const message1 =
-					<text>
-					<b>Delete Bank Account?</b>
-					</text>
-					const message ='This Bank Account will be deleted permanently and cannot be recovered.';
+						<text>
+							<b>Delete Bank Account?</b>
+						</text>
+					const message = 'This Bank Account will be deleted permanently and cannot be recovered.';
 					this.setState({
 						dialog: (
 							<ConfirmDeleteModal
@@ -286,7 +299,7 @@ class DetailBankAccount extends React.Component {
 	updateOpeningBalance = (_id) => {
 		this.props.bankAccountActions
 			.getExplainCount(_id)
-			.then((res) => {
+			.then((res) => {				
 				this.setState({ transactionCount: res.data });
 			})
 			.catch((err) => {
@@ -301,7 +314,7 @@ class DetailBankAccount extends React.Component {
 		strings.setLanguage(this.state.language);
 		const { account_type_list, currency_list, country_list } = this.props;
 
-		const { initialVals, current_bank_account, dialog,current_bank_account_id } = this.state;
+		const { initialVals, current_bank_account, dialog, current_bank_account_id } = this.state;
 
 		return (
 			<div className="detail-bank-account-screen">
@@ -369,7 +382,7 @@ class DetailBankAccount extends React.Component {
 																	type="text"
 																	id="account_name"
 																	name="account_name"
-																	placeholder={strings.Enter+strings.AccountName}
+																	placeholder={strings.Enter + strings.AccountName}
 																	value={props.values.account_name}
 																	onChange={(option) => {
 																		if (
@@ -387,7 +400,7 @@ class DetailBankAccount extends React.Component {
 																	}}
 																	className={
 																		props.errors.account_name &&
-																		props.touched.account_name
+																			props.touched.account_name
 																			? 'is-invalid'
 																			: ''
 																	}
@@ -412,11 +425,11 @@ class DetailBankAccount extends React.Component {
 																	options={
 																		currency_list
 																			? selectCurrencyFactory.renderOptions(
-																					'currencyName',
-																					'currencyCode',
-																					currency_list,
-																					'Currency',
-																			  )
+																				'currencyName',
+																				'currencyCode',
+																				currency_list,
+																				'Currency',
+																			)
 																			: []
 																	}
 																	value={
@@ -445,7 +458,7 @@ class DetailBankAccount extends React.Component {
 																	}}
 																	className={
 																		props.errors.currency &&
-																		props.touched.currency
+																			props.touched.currency
 																			? 'is-invalid'
 																			: ''
 																	}
@@ -472,7 +485,7 @@ class DetailBankAccount extends React.Component {
 																			? true
 																			: false
 																	}
-																	placeholder={strings.Enter+strings.OpeningBalance}
+																	placeholder={strings.Enter + strings.OpeningBalance}
 																	value={props.values.opening_balance}
 																	onChange={(option) => {
 																		if (
@@ -490,7 +503,7 @@ class DetailBankAccount extends React.Component {
 																	}}
 																	className={
 																		props.errors.opening_balance &&
-																		props.touched.opening_balance
+																			props.touched.opening_balance
 																			? 'is-invalid'
 																			: ''
 																	}
@@ -509,27 +522,36 @@ class DetailBankAccount extends React.Component {
 															<FormGroup className="mb-3">
 																<Label htmlFor="opening_date">
 																	<span className="text-danger">*</span>
-																	 {strings.OpeningDate}
+																	{strings.OpeningDate}
 																</Label>
+															
+
 																<DatePicker
 																	id="date"
 																	name="openingDate"
-																	className={`form-control ${
-																		props.errors.openingDate &&
-																		props.touched.openingDate
+																	className={`form-control ${props.errors.openingDate &&
+																			props.touched.openingDate
 																			? 'is-invalid'
 																			: ''
-																	}`}
-																	placeholderText={strings.ExpenseDate}
+																		}`}
+																	
 																	value={props.values.openingDate}
 																	showMonthDropdown
 																	showYearDropdown
-																	disabled
+																	disabled={this.state.disabledDate}
 																	dropdownMode="select"
 																	dateFormat="dd/MM/yyyy"
-																	// maxDate={new Date()}
+																	 //maxDate={new Date()}
+																	// onChange={(value) => {
+																	
+																	// 	props.handleChange('openingDate')(value);
+																	// }}
+
 																	onChange={(value) => {
-																		props.handleChange('openingDate')(value);
+																		props.handleChange('openingDate')(
+																			moment(value).format('DD/MM/YYYY'),
+																		);
+																	
 																	}}
 																/>
 																{props.errors.openingDate &&
@@ -544,7 +566,7 @@ class DetailBankAccount extends React.Component {
 															<FormGroup className="">
 																<Label htmlFor="account_type">
 																	<span className="text-danger">*</span>
-																	 {strings.AccountType}
+																	{strings.AccountType}
 																</Label>
 																<Select
 																	styles={customStyles}
@@ -553,11 +575,11 @@ class DetailBankAccount extends React.Component {
 																	options={
 																		account_type_list
 																			? selectOptionsFactory.renderOptions(
-																					'name',
-																					'id',
-																					account_type_list,
-																					'Account Type',
-																			  )
+																				'name',
+																				'id',
+																				account_type_list,
+																				'Account Type',
+																			)
 																			: []
 																	}
 																	value={
@@ -586,7 +608,7 @@ class DetailBankAccount extends React.Component {
 																	}}
 																	className={
 																		props.errors.account_type &&
-																		props.touched.account_type
+																			props.touched.account_type
 																			? 'is-invalid'
 																			: ''
 																	}
@@ -611,7 +633,7 @@ class DetailBankAccount extends React.Component {
 																	type="text"
 																	id="bank_name"
 																	name="bank_name"
-																	placeholder={strings.Enter+strings.BankName}
+																	placeholder={strings.Enter + strings.BankName}
 																	value={props.values.bank_name}
 																	onChange={(option) => {
 																		if (
@@ -626,7 +648,7 @@ class DetailBankAccount extends React.Component {
 																	}}
 																	className={
 																		props.errors.bank_name &&
-																		props.touched.bank_name
+																			props.touched.bank_name
 																			? 'is-invalid'
 																			: ''
 																	}
@@ -648,7 +670,7 @@ class DetailBankAccount extends React.Component {
 																	type="text"
 																	id="account_number"
 																	name="account_number"
-																	placeholder={strings.Enter+strings.AccountNumber}
+																	placeholder={strings.Enter + strings.AccountNumber}
 																	value={props.values.account_number}
 																	onChange={(option) => {
 																		if (
@@ -668,7 +690,7 @@ class DetailBankAccount extends React.Component {
 																	}}
 																	className={
 																		props.errors.account_number &&
-																		props.touched.account_number
+																			props.touched.account_number
 																			? 'is-invalid'
 																			: ''
 																	}
@@ -683,66 +705,66 @@ class DetailBankAccount extends React.Component {
 														</Col>
 														<Col md="4">
 															<FormGroup className="mb-3">
-																		<Label htmlFor="countryId">
-																			 {strings.Country}
-																		</Label>
-																		<Select
-																			styles={customStyles}
-																			options={
-																				country_list
-																					? selectOptionsFactory.renderOptions(
-																							'countryName',
-																							'countryCode',
-																							country_list,
-																							'Country',
-																					  )
-																					: []
-																			}
-																			value={
-																				country_list &&
-																				selectOptionsFactory
-																					.renderOptions(
-																						'countryName',
-																						'countryCode',
-																						country_list,
-																						'Country',
-																					)
-																					.find(
-																						(option) =>
-																							option.value ===
-																							+props.values.countryId,
-																					)
-																			}
-																			onChange={(option) => {
-																				if (option && option.value) {
-																					props.handleChange('countryId')(
-																						option,
-																					);
-																					// this.getStateList(option.value);
-																				} else {
-																					props.handleChange('countryId')('');
-																					// this.getStateList(option.value);
-																				}
-																				props.handleChange('stateId')('');
-																			}}
-																			placeholder={strings.Select+strings.Country}
-																			id="countryId"
-																			name="countryId"
-																			className={
-																				props.errors.countryId &&
-																				props.touched.countryId
-																					? 'is-invalid'
-																					: ''
-																			}
-																		/>
-																		{props.errors.countryId &&
-																			props.touched.countryId && (
-																				<div className="invalid-feedback">
-																					{props.errors.countryId}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col>
+																<Label htmlFor="countryId">
+																	{strings.Country}
+																</Label>
+																<Select
+																	styles={customStyles}
+																	options={
+																		country_list
+																			? selectOptionsFactory.renderOptions(
+																				'countryName',
+																				'countryCode',
+																				country_list,
+																				'Country',
+																			)
+																			: []
+																	}
+																	value={
+																		country_list &&
+																		selectOptionsFactory
+																			.renderOptions(
+																				'countryName',
+																				'countryCode',
+																				country_list,
+																				'Country',
+																			)
+																			.find(
+																				(option) =>
+																					option.value ===
+																					+props.values.countryId,
+																			)
+																	}
+																	onChange={(option) => {
+																		if (option && option.value) {
+																			props.handleChange('countryId')(
+																				option,
+																			);
+																			// this.getStateList(option.value);
+																		} else {
+																			props.handleChange('countryId')('');
+																			// this.getStateList(option.value);
+																		}
+																		props.handleChange('stateId')('');
+																	}}
+																	placeholder={strings.Select + strings.Country}
+																	id="countryId"
+																	name="countryId"
+																	className={
+																		props.errors.countryId &&
+																			props.touched.countryId
+																			? 'is-invalid'
+																			: ''
+																	}
+																/>
+																{props.errors.countryId &&
+																	props.touched.countryId && (
+																		<div className="invalid-feedback">
+																			{props.errors.countryId}
+																		</div>
+																	)}
+															</FormGroup>
+														</Col>
 													</Row>
 													<Row>
 														{/* <Col lg={4}>
@@ -823,11 +845,11 @@ class DetailBankAccount extends React.Component {
 																	options={
 																		this.account_for
 																			? selectOptionsFactory.renderOptions(
-																					'label',
-																					'value',
-																					this.account_for,
-																					'Type',
-																			  )
+																				'label',
+																				'value',
+																				this.account_for,
+																				'Type',
+																			)
 																			: []
 																	}
 																	value={
@@ -849,7 +871,7 @@ class DetailBankAccount extends React.Component {
 																	}}
 																	className={
 																		props.errors.account_is_for &&
-																		props.touched.account_is_for
+																			props.touched.account_is_for
 																			? 'is-invalid'
 																			: ''
 																	}
@@ -878,8 +900,8 @@ class DetailBankAccount extends React.Component {
 																	onClick={() => this.closeBankAccount(current_bank_account_id)}
 																>
 																	<i className="fa fa-trash"></i>{this.state.disabled
-																				? 'Deleting...'
-																				: strings.Delete}
+																		? 'Deleting...'
+																		: strings.Delete}
 																</Button>
 															</FormGroup>
 															<FormGroup className="text-right">
@@ -891,8 +913,8 @@ class DetailBankAccount extends React.Component {
 																	disabled={this.state.disabled}
 																>
 																	<i className="fa fa-dot-circle-o"></i> {this.state.disabled
-																				? 'Updating...'
-																				: strings.Update}
+																		? 'Updating...'
+																		: strings.Update}
 																</Button>
 																<Button
 																	type="button"

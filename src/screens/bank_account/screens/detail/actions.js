@@ -90,6 +90,26 @@ export const getBankAccountByID = (_id) => {
 	};
 };
 
+export const getTransactionsCountByBankId = (_id) => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: `/rest/transaction/getTransactionsCountByBankId?bankId=${_id}`,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				} else {
+					throw new Error('Some Error detected. ');
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
 export const updateBankAccount = (obj) => {
 	return (dispatch) => {
 		let url = `/rest/bank/${obj.bankAccountId}?bankAccountId=${obj.bankAccountId}`;

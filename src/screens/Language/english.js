@@ -37,6 +37,7 @@ SalaryRoles:"Salary Roles",
 SalaryTemplates:"Salary Templates",
 SalaryStructure:"Salary Structures",
 EmployeeDesignation:"Employee Designations",
+EmployementDetails:"Employment Details",
 
       //Opening Balances
 

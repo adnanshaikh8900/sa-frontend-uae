@@ -944,8 +944,8 @@ uploadImage = (picture, file) => {
                                                                             .required("Last Name is Required"),
                                                                             email: Yup.string()
                                                                             .required("Valid Email Required"),
-                                                                            // salaryRoleId :  Yup.string()
-                                                                            // .required(" Employee Role is required"),
+                                                                            salaryRoleId :  Yup.string()
+                                                                            .required(" Employee Role is required"),
                                                                             dob: Yup.date()
                                                                             .required('DOB is Required') ,
                                                                             // mobileNumber: Yup.string()
@@ -961,10 +961,10 @@ uploadImage = (picture, file) => {
                                                                             //         }
                                                                             //     },
                                                                             // ),
-                                                                            // active : Yup.date()
-                                                                            // .required('status is Required') ,  
-                                                                            // employeeDesignationId : Yup.date()
-                                                                            // .required('Designation is Required') ,
+                                                                            active : Yup.string()
+                                                                            .required('status is Required') ,  
+                                                                            employeeDesignationId : Yup.string()
+                                                                            .required('Designation is Required') ,
                                                                         })}
                                                                     >
                                                                         {(props) => (

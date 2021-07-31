@@ -69,7 +69,7 @@ class UpdateEmployeePersonal extends React.Component {
 			userPhotoFile: {},
             current_employee_id: null
         }
-        
+
         this.regExAlpha = /^[a-zA-Z ]+$/;
         this.regExBoth = /[a-zA-Z0-9]+$/;
         this.regExSpaceBoth = /[a-zA-Z0-9 ]+$/;
@@ -134,6 +134,10 @@ class UpdateEmployeePersonal extends React.Component {
                                 res.data.mobileNumber && res.data.mobileNumber !== null
                                     ? res.data.mobileNumber
                                     : '',
+                                    salaryRoleId:
+                                    res.data.salaryRoleId && res.data.salaryRoleId !== null
+                                        ? res.data.salaryRoleId
+                                        : '',
                             dob: res.data.dob
                                 ? moment(res.data.dob, 'DD-MM-YYYY').toDate()
                                 : '',
@@ -170,7 +174,7 @@ class UpdateEmployeePersonal extends React.Component {
                                 res.data.parentId && res.data.parentId !== null
                                     ? res.data.parentId
                                     : '',
-                           
+
                             isActive:
                                 res.data.isActive && res.data.isActive !== null
                                     ? res.data.isActive
@@ -187,13 +191,13 @@ class UpdateEmployeePersonal extends React.Component {
                             this.state.initValue.countryId,
                         );
                     }
-                    
+
                     )
 
                 }
-                
+
             }
-            
+
             ).catch((err) => {
                 this.setState({ loading: false })
                 this.props.history.push('/admin/payroll/employee')
@@ -210,7 +214,7 @@ class UpdateEmployeePersonal extends React.Component {
 
     // Create or Edit Vat
     handleSubmit = (data) => {
-        
+
         this.setState({ disabled: true });
 		const { current_employee_id } = this.state;
 		const {
@@ -254,7 +258,7 @@ class UpdateEmployeePersonal extends React.Component {
 		);
         formData.append('dob', dob ? moment(dob).format('DD-MM-YYYY') : '');
         formData.append('gender', gender);
-        
+
         formData.append('bloodGroup', bloodGroup);
         formData.append(
 			'mobileNumber',
@@ -299,10 +303,6 @@ class UpdateEmployeePersonal extends React.Component {
         strings.setLanguage(this.state.language);
         const { loading, initValue, dialog } = this.state
         const { designation_dropdown, country_list, state_list, employee_list_dropdown,salary_role_dropdown } = this.props
-        console.log(salary_role_dropdown,"salary_role_dropdown")
-        console.log(this.state.gender,"gender")
-        console.log(this.state.bloodGroup,"blood")
-        console.log(this.state.selectedStatus)
 
         return (
             <div className="detail-vat-code-screen">
@@ -321,7 +321,7 @@ class UpdateEmployeePersonal extends React.Component {
                                     {loading ? (
                                         <Loader></Loader>
                                     ) : (
-                                        
+
                                         <Row>
                                             <Col lg={8}>
                                                 <Formik
@@ -330,7 +330,36 @@ class UpdateEmployeePersonal extends React.Component {
                                                     onSubmit={(values) => {
                                                         this.handleSubmit(values)
                                                     }}
-                                                  
+                                                    validationSchema={Yup.object().shape({
+                                                        firstName: Yup.string()
+                                                            .required("first Name is Required"),
+                                                        lastName: Yup.string()
+                                                            .required("Last Name is Required"),
+                                                        email: Yup.string()
+                                                            .required("Valid Email Required"),
+                                                        salaryRoleId: Yup.string()
+                                                            .required(" Employee Role is required"),
+                                                        dob: Yup.date()
+                                                            .required('DOB is Required'),
+                                                        // mobileNumber: Yup.string()
+                                                        // .required('Mobile Number is required')
+                                                        // .test(
+                                                        //     'quantity',
+                                                        //     'Invalid Mobile Number',
+                                                        //     (value) => {
+                                                        //         if (isValidPhoneNumber(value)) {
+                                                        //             return true;
+                                                        //         } else {
+                                                        //             return false;
+                                                        //         }
+                                                        //     },
+                                                        // ),
+                                                        // active: Yup.string()
+                                                        //     .required('status is Required'),
+                                                        employeeDesignationId: Yup.string()
+                                                            .required('Designation is Required'),
+                                                    })}
+
                                                 >
                                                     {(props) => (
                                                         <Form onSubmit={props.handleSubmit} name="simpleForm">
@@ -378,7 +407,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                     id="firstName"
                                                                                     name="firstName"
                                                                                     value={props.values.firstName}
-                                                                                    placeholder={strings.Enter+strings.FirstName}
+                                                                                    placeholder={strings.Enter + strings.FirstName}
                                                                                     onChange={(option) => {
                                                                                         if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('firstName')(option) }
                                                                                     }}
@@ -397,7 +426,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                     id="middleName"
                                                                                     name="middleName"
                                                                                     value={props.values.middleName}
-                                                                                    placeholder={strings.Enter+strings.MiddleName}
+                                                                                    placeholder={strings.Enter + strings.MiddleName}
                                                                                     onChange={(option) => {
                                                                                         if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('middleName')(option) }
                                                                                     }}
@@ -416,7 +445,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                     id="lastName"
                                                                                     name="lastName"
                                                                                     value={props.values.lastName}
-                                                                                    placeholder={strings.Enter+strings.LastName}
+                                                                                    placeholder={strings.Enter + strings.LastName}
                                                                                     onChange={(option) => {
                                                                                         if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('lastName')(option) }
                                                                                     }}
@@ -438,7 +467,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                     id="email"
                                                                                     name="email"
                                                                                     value={props.values.email}
-                                                                                    placeholder={strings.Enter+strings.EmailAddress}
+                                                                                    placeholder={strings.Enter + strings.EmailAddress}
                                                                                     onChange={(value) => { props.handleChange('email')(value) }}
                                                                                     className={props.errors.email && props.touched.email ? "is-invalid" : ""}
                                                                                 />
@@ -450,15 +479,15 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         <Col md="4">
                                                                             <FormGroup>
                                                                                 <Label htmlFor="mobileNumber">
-                                                                                {strings. MobileNumber}
-																	</Label>
+                                                                                    {strings.MobileNumber}
+                                                                                </Label>
                                                                                 <PhoneInput
                                                                                     id="mobileNumber"
                                                                                     name="mobileNumber"
                                                                                     defaultCountry="AE"
                                                                                     international
                                                                                     value={props.values.mobileNumber}
-                                                                                    placeholder={strings.Enter+strings.MobileNumber}
+                                                                                    placeholder={strings.Enter + strings.MobileNumber}
                                                                                     onBlur={props.handleBlur('mobileNumber')}
                                                                                     onChange={(option) => {
                                                                                         props.handleChange('mobileNumber')(
@@ -480,6 +509,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         </Col>
                                                                         <Col md="4">
                                                                             <FormGroup>
+
                                                                                 <Label htmlFor="salaryRoleId"><span className="text-danger">*</span> {strings.SalaryRole} </Label>
                                                                                 <Select
 
@@ -495,14 +525,14 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                     }
                                                                                     id="salaryRoleId"
                                                                                     name="salaryRoleId"
-                                                                                    placeholder={strings.Select+strings.SalaryRole}
+                                                                                    placeholder={strings.Select + strings.SalaryRole}
                                                                                     value={
                                                                                         salary_role_dropdown.data
                                                                                         && selectOptionsFactory.renderOptions(
                                                                                             'label',
                                                                                             'value',
                                                                                             salary_role_dropdown.data,
-                                                                                            'EmploSalaryRoleyee',
+                                                                                            'Employee Salary Role',
                                                                                         ).find(
                                                                                             (option) =>
                                                                                                 option.value ===
@@ -563,7 +593,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                 htmlFor="inline-radio1"
                                                                                             >
                                                                                                 {strings.Active}
-																							</label>
+                                                                                            </label>
                                                                                         </div>
                                                                                     </FormGroup>
                                                                                     <FormGroup check inline>
@@ -592,8 +622,8 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                 className="custom-control-label"
                                                                                                 htmlFor="inline-radio2"
                                                                                             >
-                                                                                                 {strings.Inactive}
-																							</label>
+                                                                                                {strings.Inactive}
+                                                                                            </label>
                                                                                         </div>
                                                                                     </FormGroup>
                                                                                 </div>
@@ -619,7 +649,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                     }
                                                                                     id="gender"
                                                                                     name="gender"
-                                                                                    placeholder={strings.Select+strings.Gender}
+                                                                                    placeholder={strings.Select + strings.Gender}
                                                                                     value={this.gender &&
                                                                                         this.gender.find(
                                                                                             (option) =>
@@ -659,7 +689,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                     }
                                                                                     id="bloodGroup"
                                                                                     name="bloodGroup"
-                                                                                    placeholder={strings.Select+strings.BloodGroup}
+                                                                                    placeholder={strings.Select + strings.BloodGroup}
                                                                                     value={this.bloodGroup &&
                                                                                         this.bloodGroup.find(
                                                                                             (option) =>
@@ -693,7 +723,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                     className={`form-control ${props.errors.dob && props.touched.dob ? "is-invalid" : ""}`}
                                                                                     id="dob"
                                                                                     name="dob"
-                                                                                    placeholderText={strings.Select+strings.DateOfBirth}
+                                                                                    placeholderText={strings.Select + strings.DateOfBirth}
                                                                                     showMonthDropdown
                                                                                     showYearDropdown
                                                                                     dateFormat="dd/MM/yyyy"
@@ -728,7 +758,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                     }
                                                                                     id="parentId"
                                                                                     name="parentId"
-                                                                                    placeholder={strings.Select+strings.SuperiorEmployeeName}
+                                                                                    placeholder={strings.Select + strings.SuperiorEmployeeName}
                                                                                     value={employee_list_dropdown.data
                                                                                         && selectOptionsFactory.renderOptions(
                                                                                             'label',
@@ -774,7 +804,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                     }
                                                                                     id="employeeDesignationId"
                                                                                     name="employeeDesignationId"
-                                                                                    placeholder={strings.Select+strings.Designation}
+                                                                                    placeholder={strings.Select + strings.Designation}
                                                                                     value={designation_dropdown
                                                                                         && selectOptionsFactory.renderOptions(
                                                                                             'label',
@@ -831,7 +861,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                     type="text"
                                                                                     id="presentAddress"
                                                                                     name="presentAddress"
-                                                                                    placeholder={strings.Enter+strings.PresentAddress}
+                                                                                    placeholder={strings.Enter + strings.PresentAddress}
                                                                                     onChange={(value) => { props.handleChange("presentAddress")(value) }}
                                                                                     value={props.values.presentAddress}
                                                                                     className={
@@ -852,7 +882,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                     type="text"
                                                                                     id="pincode"
                                                                                     name="pincode"
-                                                                                    placeholder={strings.Enter+strings.PinCode}
+                                                                                    placeholder={strings.Enter + strings.PinCode}
                                                                                     onChange={(value) => { props.handleChange("pincode")(value) }}
                                                                                     value={props.values.pincode}
                                                                                     className={
@@ -910,7 +940,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                             value: '',
                                                                                         });
                                                                                     }}
-                                                                                    placeholder={strings.Select+strings.Country}
+                                                                                    placeholder={strings.Select + strings.Country}
                                                                                     id="countryId"
                                                                                     name="countryId"
                                                                                     className={
@@ -963,7 +993,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                             props.handleChange('stateId')('');
                                                                                         }
                                                                                     }}
-                                                                                    placeholder={strings.Select+strings.StateRegion}
+                                                                                    placeholder={strings.Select + strings.StateRegion}
                                                                                     id="stateId"
                                                                                     name="stateId"
                                                                                     className={
@@ -988,7 +1018,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                     type="text"
                                                                                     id="city"
                                                                                     name="city"
-                                                                                    placeholder={strings.Select+strings.City}
+                                                                                    placeholder={strings.Select + strings.City}
                                                                                     onChange={(value) => { props.handleChange("city")(value) }}
                                                                                     value={props.values.city}
                                                                                     className={
@@ -1006,29 +1036,29 @@ class UpdateEmployeePersonal extends React.Component {
                                                                 </Col>
                                                             </Row>
                                                             <Row className='pull-right'>
-                                                            <FormGroup className="text-right">
-																		<Button
-																			type="submit"
-																			color="primary"
-																			className="btn-square mr-3"
-																			disabled={this.state.disabled}
-																		>
-																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			{this.state.disabled
-																				? 'Updating...'
-																				: strings.Update}
-																		</Button>
-																		<Button
-																			color="secondary"
-																			className="btn-square"
-																			onClick={() => {
-																				this.props.history.push(
-																					'/admin/payroll/employee/viewEmployee',
-																				);
-																			}}
-																		>
-																			<i className="fa fa-ban"></i> {strings.Cancel}
-																		</Button>
+                                                                <FormGroup className="text-right">
+                                                                    <Button
+                                                                        type="submit"
+                                                                        color="primary"
+                                                                        className="btn-square mr-3"
+                                                                        disabled={this.state.disabled}
+                                                                    >
+                                                                        <i className="fa fa-dot-circle-o"></i>{' '}
+                                                                        {this.state.disabled
+                                                                            ? 'Updating...'
+                                                                            : strings.Update}
+                                                                    </Button>
+                                                                    <Button
+                                                                        color="secondary"
+                                                                        className="btn-square"
+                                                                        onClick={() => {
+                                                                            this.props.history.push(
+                                                                                '/admin/payroll/employee/viewEmployee',
+                                                                            );
+                                                                        }}
+                                                                    >
+                                                                        <i className="fa fa-ban"></i> {strings.Cancel}
+                                                                    </Button>
                                                                 </FormGroup>
                                                             </Row>
                                                         </Form>

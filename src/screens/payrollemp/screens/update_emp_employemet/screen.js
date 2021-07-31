@@ -150,7 +150,8 @@ class UpdateEmployeeEmployment extends React.Component {
             dateOfJoining,
             passportExpiryDate,
             salaryRoleId,
-            visaExpiryDate
+            visaExpiryDate,
+            employeeCode,
 
         } = data;
 
@@ -162,6 +163,10 @@ class UpdateEmployeeEmployment extends React.Component {
             'department',
             department !== null ? department : '',
         );
+        formData.append(
+            'employeeCode',
+            employeeCode !== null ? employeeCode : '',
+        )
         formData.append(
             'labourCard',
             labourCard !== null ? labourCard : '',
@@ -217,6 +222,15 @@ class UpdateEmployeeEmployment extends React.Component {
                                                     onSubmit={(values) => {
                                                         this.handleSubmit(values)
                                                     }}
+                                                    validationSchema={Yup.object().shape({
+                                                        employeeCode: Yup.string()
+                                                            .required("employee Code is Required"),
+                                                        //     salaryRoleId: Yup.string()
+                                                        // .required("salary Role is Required"),
+                                            
+                                                        dateOfJoining: Yup.date()
+                                                            .required('date Of Joining is Required')                   
+                                                    })}
 
                                                 >
                                                     {(props) => (
@@ -227,7 +241,27 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                 <Col lg={12}>
                                                                   
                                                                     <Row  >
-                                                                   
+                                                                    <Col md="4">
+                                                                                                <FormGroup>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span> {strings.EmployeeCode}  </Label>
+                                                                                                    <Input
+                                                                                                        type="text"
+                                                                                                        id="employeeCode"
+                                                                                                        name="employeeCode"
+                                                                                                        value={props.values.employeeCode}
+                                                                                                        placeholder={strings.Enter+strings.EmployeeCode}
+                                                                                                        onChange={(value) => {
+                                                                                                            props.handleChange('employeeCode')(value);
+
+                                                                                                        }}
+                                                                                                        className={props.errors.employeeCode && props.touched.employeeCode ? "is-invalid" : ""}
+                                                                                                    />
+                                                                                                    {props.errors.employeeCode && props.touched.employeeCode && (
+                                                                                                        <div className="invalid-feedback">{props.errors.employeeCode}</div>
+                                                                                                    )}
+                                                                                                </FormGroup>
+                                                                                            </Col>
+
                                                                         <Col md="4">
                                                                             <FormGroup className="mb-3">
                                                                                 <Label htmlFor="dateOfJoining"><span className="text-danger">*</span> {strings.DateOfJoining}</Label>
@@ -251,7 +285,11 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                 )}
                                                                             </FormGroup>
                                                                         </Col>
-                                                                        <Col md="4">
+                                                                       
+                                                                    </Row>
+                                                                    <Row>
+
+                                                                    <Col md="4">
                                                                             <FormGroup>
                                                                                 <Label htmlFor="labourCard">{strings.LabourCard}</Label>
                                                                                 <Input
@@ -272,6 +310,26 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                     </div>
                                                                                 )}
 
+                                                                            </FormGroup>
+                                                                        </Col>
+                                                                        <Col md="4">
+                                                                            <FormGroup>
+                                                                                <Label htmlFor="select"> {strings.Department} </Label>
+                                                                                <Input
+                                                                                    type="text"
+                                                                                    id="department"
+                                                                                    name="department"
+                                                                                    value={props.values.department}
+                                                                                    placeholder={strings.Enter+strings.Department}
+                                                                                    onChange={(value) => {
+                                                                                        props.handleChange('department')(value);
+
+                                                                                    }}
+                                                                                    className={props.errors.department && props.touched.department ? "is-invalid" : ""}
+                                                                                />
+                                                                                {props.errors.department && props.touched.department && (
+                                                                                    <div className="invalid-feedback">{props.errors.department}</div>
+                                                                                )}
                                                                             </FormGroup>
                                                                         </Col>
                                                                     </Row>
@@ -368,26 +426,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                         </Col>
                                                                     </Row>
                                                                     <Row>
-                                                                    <Col md="4">
-                                                                            <FormGroup>
-                                                                                <Label htmlFor="select"> {strings.Department} </Label>
-                                                                                <Input
-                                                                                    type="text"
-                                                                                    id="department"
-                                                                                    name="department"
-                                                                                    value={props.values.department}
-                                                                                    placeholder={strings.Enter+strings.Department}
-                                                                                    onChange={(value) => {
-                                                                                        props.handleChange('department')(value);
-
-                                                                                    }}
-                                                                                    className={props.errors.department && props.touched.department ? "is-invalid" : ""}
-                                                                                />
-                                                                                {props.errors.department && props.touched.department && (
-                                                                                    <div className="invalid-feedback">{props.errors.department}</div>
-                                                                                )}
-                                                                            </FormGroup>
-                                                                        </Col>
+                                                                 
                                                                         {/* <Col md="4">
                                                                             <FormGroup>
                                                                                 <Label htmlFor="salaryRoleId"><span className="text-danger">*</span> {strings.SalaryRole} </Label>

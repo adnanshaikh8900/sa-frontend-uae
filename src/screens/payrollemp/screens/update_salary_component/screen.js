@@ -187,6 +187,7 @@ handleChange = (evt) => {
 
         let formData = new FormData();
         formData.append('employee', current_employee_id)
+        formData.append('employeeId', this.props.location.state.id?this.props.location.state.id:"");
         formData.append('grossSalary', CTC != null ? CTC : '')
 
         formData.append('salaryComponentString', JSON.stringify(this.state.list));

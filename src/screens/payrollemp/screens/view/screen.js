@@ -126,6 +126,14 @@ class ViewEmployee extends React.Component {
 		})
 
 	}
+
+	disable = () => {
+		if (this.state.EmployeeDetails.employmentId === null) {
+				return true;
+		} else {
+			return false;
+		}
+	};
 	renderActions = (cell, row) => {
 		return (
 			<div>
@@ -303,9 +311,12 @@ class ViewEmployee extends React.Component {
 											<Card style={{ height: '621px' }}>
 												<div >
 													<CardBody className='m-4'>
-														<div>
-															<Row className='pull-right'>
-
+													
+															<Row>
+																<Col>
+																		<label> <b>{strings.EmployementDetails} </b></label>
+																	</Col>
+																	<Col>
 																<Button
 																	color="primary"
 																	className="btn-square pull-right mb-2"
@@ -315,9 +326,9 @@ class ViewEmployee extends React.Component {
 																>
 																	<i class="far fa-edit"></i>
 																</Button>
-
+																</Col>
 															</Row>
-														</div>
+													
 														<div className='text-center'>
 
 															<img
@@ -449,12 +460,22 @@ class ViewEmployee extends React.Component {
 															<div> <h3>{this.state.CTC ? (this.state.CTC /12).toLocaleString() : ''}</h3></div></Col>
 															<Col>
 																		<Button
+																		className={`btn-square mr-3 ${
+																			this.disable() ? `disabled-cursor` : ``
+																		} `}
+																			disabled={this.disable() ? true : false}
 																			color="primary"
 																			className="btn-square pull-right mb-2"
 																			style={{ marginBottom: '10px' }}
 																			onClick={() => this.props.history.push(`/admin/payroll/employee/updateSalaryComponent`,
 																				{ id: this.state.current_employee_id })}
-																		>
+																				
+																				title={
+																					this.disable()
+																						? `Please fill the Employement Details before salary setup`
+																						: ''
+																				}
+																			>
 																			<i class="far fa-edit">{strings.Edit}</i>
 																		</Button>
 																	</Col>

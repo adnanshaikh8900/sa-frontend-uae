@@ -41,6 +41,7 @@ RecieptNumber:"Numéro de reçu",
         SalaryTemplates:"Modèles de salaire",
         SalaryStructure:"Structure salariale",
         EmployeeDesignation:"Désignation des employés",
+        EmployementDetails: "Détails de l'emploi",
 
 
          //Opening Balance

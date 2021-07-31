@@ -469,12 +469,14 @@ uploadImage = (picture, file) => {
             dob,
             bloodGroup,
             gender,
+            salaryRoleId,
             parentId
         } = data;
 
 
         const formData = new FormData();
         formData.append('isActive', this.state.useractive);
+        formData.append('salaryRoleId', salaryRoleId);
         formData.append(
             'firstName',
             firstName !== null ? firstName : '',

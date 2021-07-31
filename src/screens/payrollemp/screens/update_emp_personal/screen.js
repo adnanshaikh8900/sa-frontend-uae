@@ -41,6 +41,7 @@ const mapStateToProps = (state) => {
         employee_list_dropdown: state.payrollEmployee.employee_list_dropdown,
         state_list: state.payrollEmployee.state_list,
         country_list: state.payrollEmployee.country_list,
+        salary_role_dropdown: state.payrollEmployee.salary_role_dropdown,
     })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -105,6 +106,7 @@ class UpdateEmployeePersonal extends React.Component {
                 this.props.createPayrollEmployeeActions.getStateList();
                 this.props.createPayrollEmployeeActions.getEmployeeDesignationForDropdown();
                 this.props.createPayrollEmployeeActions.getEmployeesForDropdown();
+                this.props.createPayrollEmployeeActions.getSalaryRolesForDropdown();
                 if (res.status === 200) {
 
                     this.setState({
@@ -227,11 +229,13 @@ class UpdateEmployeePersonal extends React.Component {
             bloodGroup,
             presentAddress,
             employeeDesignationId,
+            salaryRoleId
 			
 		} = data;
 
 		let formData = new FormData();
 		formData.append('id', current_employee_id);
+        formData.append('salaryRoleId', salaryRoleId);
         formData.append(
 			'firstName',
 			firstName !== null ? firstName : '',
@@ -294,7 +298,8 @@ class UpdateEmployeePersonal extends React.Component {
     render() {
         strings.setLanguage(this.state.language);
         const { loading, initValue, dialog } = this.state
-        const { designation_dropdown, country_list, state_list, employee_list_dropdown } = this.props
+        const { designation_dropdown, country_list, state_list, employee_list_dropdown,salary_role_dropdown } = this.props
+        console.log(salary_role_dropdown,"salary_role_dropdown")
         console.log(this.state.gender,"gender")
         console.log(this.state.bloodGroup,"blood")
         console.log(this.state.selectedStatus)
@@ -471,6 +476,60 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                     <div className="invalid-feedback">{props.errors.mobileNumber}</div>
                                                                                 )}
 
+                                                                            </FormGroup>
+                                                                        </Col>
+                                                                        <Col md="4">
+                                                                            <FormGroup>
+                                                                                <Label htmlFor="salaryRoleId"><span className="text-danger">*</span> {strings.SalaryRole} </Label>
+                                                                                <Select
+
+                                                                                    options={
+                                                                                        salary_role_dropdown.data
+                                                                                            ? selectOptionsFactory.renderOptions(
+                                                                                                'label',
+                                                                                                'value',
+                                                                                                salary_role_dropdown.data,
+                                                                                                'SalaryRole',
+                                                                                            )
+                                                                                            : []
+                                                                                    }
+                                                                                    id="salaryRoleId"
+                                                                                    name="salaryRoleId"
+                                                                                    placeholder={strings.Select+strings.SalaryRole}
+                                                                                    value={
+                                                                                        salary_role_dropdown.data
+                                                                                        && selectOptionsFactory.renderOptions(
+                                                                                            'label',
+                                                                                            'value',
+                                                                                            salary_role_dropdown.data,
+                                                                                            'EmploSalaryRoleyee',
+                                                                                        ).find(
+                                                                                            (option) =>
+                                                                                                option.value ===
+                                                                                                props.values
+                                                                                                    .salaryRoleId,
+                                                                                        )}
+                                                                                    onChange={(options) => {
+                                                                                        if (options && options.value) {
+                                                                                            props.handleChange(
+                                                                                                'salaryRoleId',
+                                                                                            )(options.value);
+                                                                                        } else {
+                                                                                            props.handleChange(
+                                                                                                'salaryRoleId',
+                                                                                            )('');
+                                                                                        }
+                                                                                    }}
+                                                                                    className={`${props.errors.salaryRoleId && props.touched.salaryRoleId
+                                                                                        ? 'is-invalid'
+                                                                                        : ''
+                                                                                        }`}
+                                                                                />
+                                                                                {props.errors.salaryRoleId && props.touched.salaryRoleId && (
+                                                                                    <div className="invalid-feedback">
+                                                                                        {props.errors.salaryRoleId}
+                                                                                    </div>
+                                                                                )}
                                                                             </FormGroup>
                                                                         </Col>
                                                                         <Col md="4">

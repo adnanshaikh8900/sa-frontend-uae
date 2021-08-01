@@ -149,16 +149,24 @@ class UpdateEmployeeEmployment extends React.Component {
             employee,
             dateOfJoining,
             passportExpiryDate,
-            visaExpiryDate
+            salaryRoleId,
+            visaExpiryDate,
+            employeeCode,
 
         } = data;
 
         let formData = new FormData();
         formData.append('id', this.state.initValue.employmentId);
+        formData.append('employee', this.props.location.state.id?this.props.location.state.id:"");
+        formData.append('salaryRoleId', salaryRoleId);
         formData.append(
             'department',
             department !== null ? department : '',
         );
+        formData.append(
+            'employeeCode',
+            employeeCode !== null ? employeeCode : '',
+        )
         formData.append(
             'labourCard',
             labourCard !== null ? labourCard : '',
@@ -214,6 +222,15 @@ class UpdateEmployeeEmployment extends React.Component {
                                                     onSubmit={(values) => {
                                                         this.handleSubmit(values)
                                                     }}
+                                                    validationSchema={Yup.object().shape({
+                                                        employeeCode: Yup.string()
+                                                            .required("employee Code is Required"),
+                                                        //     salaryRoleId: Yup.string()
+                                                        // .required("salary Role is Required"),
+                                            
+                                                        dateOfJoining: Yup.date()
+                                                            .required('date Of Joining is Required')                   
+                                                    })}
 
                                                 >
                                                     {(props) => (
@@ -222,108 +239,29 @@ class UpdateEmployeeEmployment extends React.Component {
 
 
                                                                 <Col lg={12}>
-                                                                    <Row>
-                                                                    <Col md="4">
-                                                                            <FormGroup>
-                                                                                <Label htmlFor="select"> {strings.Department} </Label>
-                                                                                <Input
-                                                                                    type="text"
-                                                                                    id="department"
-                                                                                    name="department"
-                                                                                    value={props.values.department}
-                                                                                    placeholder={strings.Enter+strings.Department}
-                                                                                    onChange={(value) => {
-                                                                                        props.handleChange('department')(value);
-
-                                                                                    }}
-                                                                                    className={props.errors.department && props.touched.department ? "is-invalid" : ""}
-                                                                                />
-                                                                                {props.errors.department && props.touched.department && (
-                                                                                    <div className="invalid-feedback">{props.errors.department}</div>
-                                                                                )}
-                                                                            </FormGroup>
-                                                                        </Col>
-                                                                        <Col md="4">
-                                                                            <FormGroup>
-                                                                                <Label htmlFor="salaryRoleId"><span className="text-danger">*</span> {strings.SalaryRole} </Label>
-                                                                                <Select
-
-                                                                                    options={
-                                                                                        salary_role_dropdown.data
-                                                                                            ? selectOptionsFactory.renderOptions(
-                                                                                                'label',
-                                                                                                'value',
-                                                                                                salary_role_dropdown.data,
-                                                                                                'SalaryRole',
-                                                                                            )
-                                                                                            : []
-                                                                                    }
-                                                                                    id="salaryRoleId"
-                                                                                    name="salaryRoleId"
-                                                                                    placeholder={strings.Select+strings.SalaryRole}
-                                                                                    value={
-                                                                                        salary_role_dropdown.data
-                                                                                        && selectOptionsFactory.renderOptions(
-                                                                                            'label',
-                                                                                            'value',
-                                                                                            salary_role_dropdown.data,
-                                                                                            'EmploSalaryRoleyee',
-                                                                                        ).find(
-                                                                                            (option) =>
-                                                                                                option.value ===
-                                                                                                props.values
-                                                                                                    .salaryRoleId,
-                                                                                        )}
-                                                                                    onChange={(options) => {
-                                                                                        if (options && options.value) {
-                                                                                            props.handleChange(
-                                                                                                'salaryRoleId',
-                                                                                            )(options.value);
-                                                                                        } else {
-                                                                                            props.handleChange(
-                                                                                                'salaryRoleId',
-                                                                                            )('');
-                                                                                        }
-                                                                                    }}
-                                                                                    className={`${props.errors.salaryRoleId && props.touched.salaryRoleId
-                                                                                        ? 'is-invalid'
-                                                                                        : ''
-                                                                                        }`}
-                                                                                />
-                                                                                {props.errors.salaryRoleId && props.touched.salaryRoleId && (
-                                                                                    <div className="invalid-feedback">
-                                                                                        {props.errors.salaryRoleId}
-                                                                                    </div>
-                                                                                )}
-                                                                            </FormGroup>
-                                                                        </Col>
-                                                                        {/* <Col md="4">
-            <FormGroup>
-                <Label htmlFor="grossSalary">Gross Salary </Label>
-                <Input
-                    type="text"
-                    id="grossSalary"
-                    name="grossSalary"
-                    placeholder="Enter  grossSalary "
-                    onChange={(value) => {
-                        props.handleChange('grossSalary')(value);
-
-                    }}
-                    value={props.values.grossSalary}
-                    className={
-                        props.errors.grossSalary && props.touched.grossSalary
-                            ? "is-invalid"
-                            : ""
-                    }
-                />
-                {props.grossSalary && props.touched.grossSalary && (
-                    <div className="invalid-feedback">{props.errors.visaNumber}</div>
-                )}
-            </FormGroup>
-        </Col> */}
-                                                                    </Row>
+                                                                  
                                                                     <Row  >
-                                                                   
+                                                                    <Col md="4">
+                                                                                                <FormGroup>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span> {strings.EmployeeCode}  </Label>
+                                                                                                    <Input
+                                                                                                        type="text"
+                                                                                                        id="employeeCode"
+                                                                                                        name="employeeCode"
+                                                                                                        value={props.values.employeeCode}
+                                                                                                        placeholder={strings.Enter+strings.EmployeeCode}
+                                                                                                        onChange={(value) => {
+                                                                                                            props.handleChange('employeeCode')(value);
+
+                                                                                                        }}
+                                                                                                        className={props.errors.employeeCode && props.touched.employeeCode ? "is-invalid" : ""}
+                                                                                                    />
+                                                                                                    {props.errors.employeeCode && props.touched.employeeCode && (
+                                                                                                        <div className="invalid-feedback">{props.errors.employeeCode}</div>
+                                                                                                    )}
+                                                                                                </FormGroup>
+                                                                                            </Col>
+
                                                                         <Col md="4">
                                                                             <FormGroup className="mb-3">
                                                                                 <Label htmlFor="dateOfJoining"><span className="text-danger">*</span> {strings.DateOfJoining}</Label>
@@ -347,7 +285,11 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                 )}
                                                                             </FormGroup>
                                                                         </Col>
-                                                                        <Col md="4">
+                                                                       
+                                                                    </Row>
+                                                                    <Row>
+
+                                                                    <Col md="4">
                                                                             <FormGroup>
                                                                                 <Label htmlFor="labourCard">{strings.LabourCard}</Label>
                                                                                 <Input
@@ -368,6 +310,26 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                     </div>
                                                                                 )}
 
+                                                                            </FormGroup>
+                                                                        </Col>
+                                                                        <Col md="4">
+                                                                            <FormGroup>
+                                                                                <Label htmlFor="select"> {strings.Department} </Label>
+                                                                                <Input
+                                                                                    type="text"
+                                                                                    id="department"
+                                                                                    name="department"
+                                                                                    value={props.values.department}
+                                                                                    placeholder={strings.Enter+strings.Department}
+                                                                                    onChange={(value) => {
+                                                                                        props.handleChange('department')(value);
+
+                                                                                    }}
+                                                                                    className={props.errors.department && props.touched.department ? "is-invalid" : ""}
+                                                                                />
+                                                                                {props.errors.department && props.touched.department && (
+                                                                                    <div className="invalid-feedback">{props.errors.department}</div>
+                                                                                )}
                                                                             </FormGroup>
                                                                         </Col>
                                                                     </Row>
@@ -463,11 +425,92 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                             </FormGroup>
                                                                         </Col>
                                                                     </Row>
+                                                                    <Row>
+                                                                 
+                                                                        {/* <Col md="4">
+                                                                            <FormGroup>
+                                                                                <Label htmlFor="salaryRoleId"><span className="text-danger">*</span> {strings.SalaryRole} </Label>
+                                                                                <Select
 
+                                                                                    options={
+                                                                                        salary_role_dropdown.data
+                                                                                            ? selectOptionsFactory.renderOptions(
+                                                                                                'label',
+                                                                                                'value',
+                                                                                                salary_role_dropdown.data,
+                                                                                                'SalaryRole',
+                                                                                            )
+                                                                                            : []
+                                                                                    }
+                                                                                    id="salaryRoleId"
+                                                                                    name="salaryRoleId"
+                                                                                    placeholder={strings.Select+strings.SalaryRole}
+                                                                                    value={
+                                                                                        salary_role_dropdown.data
+                                                                                        && selectOptionsFactory.renderOptions(
+                                                                                            'label',
+                                                                                            'value',
+                                                                                            salary_role_dropdown.data,
+                                                                                            'EmploSalaryRoleyee',
+                                                                                        ).find(
+                                                                                            (option) =>
+                                                                                                option.value ===
+                                                                                                props.values
+                                                                                                    .salaryRoleId,
+                                                                                        )}
+                                                                                    onChange={(options) => {
+                                                                                        if (options && options.value) {
+                                                                                            props.handleChange(
+                                                                                                'salaryRoleId',
+                                                                                            )(options.value);
+                                                                                        } else {
+                                                                                            props.handleChange(
+                                                                                                'salaryRoleId',
+                                                                                            )('');
+                                                                                        }
+                                                                                    }}
+                                                                                    className={`${props.errors.salaryRoleId && props.touched.salaryRoleId
+                                                                                        ? 'is-invalid'
+                                                                                        : ''
+                                                                                        }`}
+                                                                                />
+                                                                                {props.errors.salaryRoleId && props.touched.salaryRoleId && (
+                                                                                    <div className="invalid-feedback">
+                                                                                        {props.errors.salaryRoleId}
+                                                                                    </div>
+                                                                                )}
+                                                                            </FormGroup>
+                                                                        </Col> */}
+                                                                        {/* <Col md="4">
+            <FormGroup>
+                <Label htmlFor="grossSalary">Gross Salary </Label>
+                <Input
+                    type="text"
+                    id="grossSalary"
+                    name="grossSalary"
+                    placeholder="Enter  grossSalary "
+                    onChange={(value) => {
+                        props.handleChange('grossSalary')(value);
+
+                    }}
+                    value={props.values.grossSalary}
+                    className={
+                        props.errors.grossSalary && props.touched.grossSalary
+                            ? "is-invalid"
+                            : ""
+                    }
+                />
+                {props.grossSalary && props.touched.grossSalary && (
+                    <div className="invalid-feedback">{props.errors.visaNumber}</div>
+                )}
+            </FormGroup>
+        </Col> */}
+                                                                    </Row>
                                                                 </Col>
 
 
                                                             </Row>
+                                                            
                                                             <Row>
                                                            
                                                             </Row>
@@ -507,6 +550,7 @@ class UpdateEmployeeEmployment extends React.Component {
                             </Card>
                         </Col>
                     </Row>
+
                 </div>
             </div>
         )

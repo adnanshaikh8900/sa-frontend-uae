@@ -37,6 +37,7 @@ RecieptNumber:"عدد إيصال",
         SalaryTemplates:"قوالب الراتب",
         SalaryStructure:"هيكلية الرواتب",
         EmployeeDesignation:"تعيين الموظف",
+        EmployementDetails:"تفاصيل الوظيفة ",
       //Opening Balance
       OpeningBalance: "الرصيد الافتتاحي",
       TRANSACTIONCATEGORYNAME : "اسم فئة المعاملة",

@@ -1690,7 +1690,7 @@ uploadImage = (picture, file) => {
                                                                                                     })
                                                                                                 }}
                                                                                             >
-                                                                                                <i className="fa fa-next"></i>  {strings.Next}
+                                                                                                 {strings.Next}<i class="far fa-arrow-alt-circle-right ml-1"></i>
                                                                                               </Button>
 
                                                                                     
@@ -2019,7 +2019,7 @@ uploadImage = (picture, file) => {
                                                                                                 }}
                                                                                                
                                                                                             >
-                                                                                                <i className="fa fa-next"></i> Back
+                                                                                                <i class="far fa-arrow-alt-circle-left mr-1"></i> Back
                                                                                               </Button>
                                                                                             <Button name="button" color="primary" className="btn-square pull-right"
                                                                                                 // onClick={() => {
@@ -2031,7 +2031,7 @@ uploadImage = (picture, file) => {
                                                                                                     })
                                                                                                 }}
                                                                                             >
-                                                                                                <i className="fa fa-next"></i> {strings.Next}
+                                                                                           {strings.Next}<i class="far fa-arrow-alt-circle-right ml-1"></i>
                                                                                               </Button>
 
                                                                                     </Col>
@@ -2224,7 +2224,7 @@ uploadImage = (picture, file) => {
                                                                                                 }}
                                                                                               
                                                                                             >
-                                                                                                <i className="fa fa-next"></i> Back
+                                                                                                <i class="far fa-arrow-alt-circle-left mr-1"></i> Back
                                                                                               </Button>
                                                                                             <Button name="button" color="primary" className="btn-square pull-right "
                                                                                                 onClick={() => {
@@ -2233,7 +2233,7 @@ uploadImage = (picture, file) => {
                                                                                                     })
                                                                                                 }}
                                                                                             >
-                                                                                                <i className="fa fa-next"></i> {strings.Next}
+                                                                                                 {strings.Next} <i class="far fa-arrow-alt-circle-right ml-1"></i>
                                                                                               </Button>
                                                                                     </Col>
                                                                                 </Row>
@@ -2268,7 +2268,7 @@ uploadImage = (picture, file) => {
                                                 onClick={() => {
                                                     this.toggle(0, '4')
                                                 }}>
-                                                <i className="fa fa-next"></i> Next
+                                                <i class="far fa-arrow-alt-circle-left mr-1"></i> Next
                                       </Button>
 
                                         </FormGroup>
@@ -2730,7 +2730,7 @@ uploadImage = (picture, file) => {
                                                                                                 }}
                                                                                              
                                                                                             >
-                                                                                                <i className="fa fa-next"></i> Back
+                                                                                                <i class="far fa-arrow-alt-circle-left mr-1"></i> Back
                                                                                               </Button>
                                                    
                                                    <Button type="button" color="primary" className="btn-square mr-5 pull-right" onClick={() => {

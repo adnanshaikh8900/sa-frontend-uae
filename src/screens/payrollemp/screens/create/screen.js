@@ -475,9 +475,9 @@ uploadImage = (picture, file) => {
 
 
         const formData = new FormData();
-        debugger
+        
         if(typeof this.state.employeeid !=="string"){
-            debugger
+         
             formData.append('id', this.state.employeeid);
         }
         

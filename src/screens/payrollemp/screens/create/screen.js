@@ -475,6 +475,12 @@ uploadImage = (picture, file) => {
 
 
         const formData = new FormData();
+        
+        if(typeof this.state.employeeid !=="string"){
+         
+            formData.append('id', this.state.employeeid);
+        }
+        
         formData.append('isActive', this.state.useractive);
         formData.append('salaryRoleId', salaryRoleId);
         formData.append(
@@ -893,7 +899,9 @@ uploadImage = (picture, file) => {
                                 <NavItem>
                                     <NavLink
                                         active={this.state.activeTab[0] === '2'}
-
+                                        // onClick={() => {
+                                        //     this.toggle(0, '2');
+                                        // }}
                                     >
                                         {strings.Employment}
 									</NavLink>
@@ -1666,7 +1674,12 @@ uploadImage = (picture, file) => {
                                                                                 <Row>
                                                                                     <Col lg={12} className="mt-5">
                                                                                       
-                                                                                          
+                                                                                    {/* <Button  color="secondary" className="btn-square"
+                                                                                              
+                                                                                               
+                                                                                            >
+                                                                                                <i className="fa fa-ban"></i> Back
+                                                                                              </Button> */}
                                                                                             <Button name="button" color="primary" className="btn-square pull-right"
                                                                                                 // onClick={() => {
                                                                                                 //     this.toggle(0, '2')
@@ -1677,7 +1690,7 @@ uploadImage = (picture, file) => {
                                                                                                     })
                                                                                                 }}
                                                                                             >
-                                                                                                <i className="fa fa-next"></i>  {strings.Next}
+                                                                                                 {strings.Next}<i class="far fa-arrow-alt-circle-right ml-1"></i>
                                                                                               </Button>
 
                                                                                     
@@ -2000,7 +2013,14 @@ uploadImage = (picture, file) => {
                                                                                 </Row>
                                                                                 <Row>
                                                                                     <Col lg={12} className="mt-5">
-                                                                                      
+                                                                                    <Button name="button" color="primary" className="btn-square"
+                                                                                                onClick={() => {
+                                                                                                    this.toggle(0, '1')
+                                                                                                }}
+                                                                                               
+                                                                                            >
+                                                                                                <i class="far fa-arrow-alt-circle-left mr-1"></i> Back
+                                                                                              </Button>
                                                                                             <Button name="button" color="primary" className="btn-square pull-right"
                                                                                                 // onClick={() => {
                                                                                                 //     this.toggle(0, '3')
@@ -2011,7 +2031,7 @@ uploadImage = (picture, file) => {
                                                                                                     })
                                                                                                 }}
                                                                                             >
-                                                                                                <i className="fa fa-next"></i> {strings.Next}
+                                                                                           {strings.Next}<i class="far fa-arrow-alt-circle-right ml-1"></i>
                                                                                               </Button>
 
                                                                                     </Col>
@@ -2198,6 +2218,14 @@ uploadImage = (picture, file) => {
                                                                                 </Row>
                                                                                 <Row>
                                                                                     <Col lg={12} className="mt-5">
+                                                                                    <Button name="button" color="primary" className="btn-square "
+                                                                                                onClick={() => {
+                                                                                                    this.toggle(0, '2')
+                                                                                                }}
+                                                                                              
+                                                                                            >
+                                                                                                <i class="far fa-arrow-alt-circle-left mr-1"></i> Back
+                                                                                              </Button>
                                                                                             <Button name="button" color="primary" className="btn-square pull-right "
                                                                                                 onClick={() => {
                                                                                                     this.setState({ createMore: false }, () => {
@@ -2205,7 +2233,7 @@ uploadImage = (picture, file) => {
                                                                                                     })
                                                                                                 }}
                                                                                             >
-                                                                                                <i className="fa fa-next"></i> {strings.Next}
+                                                                                                 {strings.Next} <i class="far fa-arrow-alt-circle-right ml-1"></i>
                                                                                               </Button>
                                                                                     </Col>
                                                                                 </Row>
@@ -2240,7 +2268,7 @@ uploadImage = (picture, file) => {
                                                 onClick={() => {
                                                     this.toggle(0, '4')
                                                 }}>
-                                                <i className="fa fa-next"></i> Next
+                                                <i class="far fa-arrow-alt-circle-left mr-1"></i> Next
                                       </Button>
 
                                         </FormGroup>
@@ -2696,6 +2724,14 @@ uploadImage = (picture, file) => {
                                                         </Col>
                                                     </Row>
                                                     <div className="table-wrapper mb-4" style={{width: "100%"}}>
+                                                    <Button name="button" color="primary" className="btn-square"
+                                                                                                onClick={() => {
+                                                                                                    this.toggle(0, '3')
+                                                                                                }}
+                                                                                             
+                                                                                            >
+                                                                                                <i class="far fa-arrow-alt-circle-left mr-1"></i> Back
+                                                                                              </Button>
                                                    
                                                    <Button type="button" color="primary" className="btn-square mr-5 pull-right" onClick={() => {
                                                        this.setState({ createMore: false }, () => {

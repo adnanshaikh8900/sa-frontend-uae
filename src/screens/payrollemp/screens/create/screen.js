@@ -1674,12 +1674,12 @@ uploadImage = (picture, file) => {
                                                                                 <Row>
                                                                                     <Col lg={12} className="mt-5">
                                                                                       
-                                                                                    <Button  color="secondary" className="btn-square"
+                                                                                    {/* <Button  color="secondary" className="btn-square"
                                                                                               
                                                                                                
                                                                                             >
                                                                                                 <i className="fa fa-ban"></i> Back
-                                                                                              </Button>
+                                                                                              </Button> */}
                                                                                             <Button name="button" color="primary" className="btn-square pull-right"
                                                                                                 // onClick={() => {
                                                                                                 //     this.toggle(0, '2')

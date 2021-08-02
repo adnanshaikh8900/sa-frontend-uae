@@ -166,6 +166,10 @@ class CreateUser extends React.Component {
 			employeeId
 		} = data;
 		let formData = new FormData();
+		
+
+		console.log(window.location.origin);
+		formData.append('loginUrl', window.location.origin);
 		formData.append('firstName', firstName ? firstName : '');
 		formData.append('lastName', lastName ? lastName : '');
 		formData.append('email', email ? email : '');

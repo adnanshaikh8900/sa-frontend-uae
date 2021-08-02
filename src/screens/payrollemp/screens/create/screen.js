@@ -19,11 +19,6 @@ import {
 import Select from 'react-select'
 
 import { bindActionCreators } from 'redux'
-
-
-import { Basic, Employement } from './sections';
-
-
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
 
@@ -53,10 +48,11 @@ import * as DetailSalaryComponentAction from '../update_salary_component/actions
 import * as CreatePayrollEmployeeActions from '../create/actions'
 import * as PayrollEmployeeActions from '../../actions'
 import { DesignationModal, SalaryComponentDeduction, SalaryComponentFixed, SalaryComponentVariable } from 'screens/payrollemp/sections';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import { ThreeDRotationSharp } from '@material-ui/icons';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import * as DetailEmployeePersonalAction from '../update_emp_personal/actions';
+import * as DetailEmployeeEmployementAction from '../update_emp_employemet/actions';
+import * as DetailEmployeeBankAction from '../update_emp_bank/actions';
 
 
 const mapStateToProps = (state) => {
@@ -75,6 +71,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         detailSalaryComponentAction:bindActionCreators(DetailSalaryComponentAction,dispatch),
+        detailEmployeePersonalAction: bindActionCreators(DetailEmployeePersonalAction, dispatch),
+        detailEmployeeEmployementAction: bindActionCreators(DetailEmployeeEmployementAction, dispatch),
+        detailEmployeeBankAction: bindActionCreators(DetailEmployeeBankAction, dispatch),
         createPayrollEmployeeActions: bindActionCreators(CreatePayrollEmployeeActions, dispatch),
         payrollEmployeeActions: bindActionCreators(PayrollEmployeeActions, dispatch),
         commonActions: bindActionCreators(CommonActions, dispatch),
@@ -252,7 +251,6 @@ class CreateEmployeePayroll extends React.Component {
     };
 
     initializeData = () => {
-
     };
 
     getSalaryComponentByEmployeeId = () => {
@@ -369,7 +367,8 @@ uploadImage = (picture, file) => {
             'swiftCode',
             swiftCode != null ? swiftCode : '',
         )
-        this.props.createPayrollEmployeeActions
+        if(this.state.selectedData.employeeBankDetailsId === null || this.state.selectedData.employeeBankDetailsId === ""){
+            this.props.createPayrollEmployeeActions
             .saveEmployeeBankDetails(formData)
             .then((res) => {
                 if (res.status === 200) {
@@ -378,11 +377,25 @@ uploadImage = (picture, file) => {
                         ' Finacial details saved Successfully')
                     this.toggle(0, '4')
                     this.getSalaryComponentByEmployeeId();
+                    this.renderActionForState(this.state.employeeid)
                 }
             }).catch((err) => {
 
                 this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
             })
+        }else{
+            this.props.detailEmployeeBankAction.updateEmployeeBank(formData).then((res) => {
+                if (res.status === 200) {
+                    this.props.commonActions.tostifyAlert('success', 'Employee Updated Successfully!')
+                    this.toggle(0, '4')
+                    this.getSalaryComponentByEmployeeId();
+                    this.renderActionForState(this.state.employeeid)
+                }
+            }).catch((err) => {
+                this.props.commonActions.tostifyAlert('error', err.data.message)
+            })
+        }
+      
     }
     handleSubmitForEmployement = (data, resetForm) => {
         this.setState({ disabled: true });
@@ -436,7 +449,7 @@ uploadImage = (picture, file) => {
             'grossSalary',
             grossSalary != null ? grossSalary : '',
         )
-
+        if(this.state.selectedData.employmentId === null || this.state.selectedData.employmentId === "" ){
         this.props.createPayrollEmployeeActions
             .saveEmployment(formData)
             .then((res) => {
@@ -445,11 +458,24 @@ uploadImage = (picture, file) => {
                         'success',
                         ' Employment details saved Successfully')
                     this.toggle(0, '3')
+                    this.renderActionForState(this.state.employeeid)
                 }
             }).catch((err) => {
 
                 this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
             })
+        }else{
+            this.props.detailEmployeeEmployementAction.updateEmployment(formData).then((res) => {
+                if (res.status === 200) {
+                    this.props.commonActions.tostifyAlert('success', 'Employee Updated Successfully!')
+                    this.toggle(0, '3')
+                    this.renderActionForState(this.state.employeeid)
+                }
+            }).catch((err) => {
+                this.props.commonActions.tostifyAlert('error', err.data.message)
+            })
+        }
+
     }
 
     handleSubmit = (data, resetForm) => {
@@ -538,6 +564,7 @@ uploadImage = (picture, file) => {
         if (employeeDesignationId && employeeDesignationId.value) {
             formData.append('employeeDesignationId', employeeDesignationId.value);
         }
+        if(this.state.employeeid === null || this.state.employeeid === ""){ 
         this.props.createPayrollEmployeeActions
             .createEmployee(formData)
             .then((res) => {
@@ -550,11 +577,24 @@ uploadImage = (picture, file) => {
 
                     })
                     this.toggle(0, '2')
+                    this.renderActionForState(this.state.employeeid)
                 }
             }).catch((err) => {
 
                 this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
             })
+        }
+        else{
+            this.props.detailEmployeePersonalAction.updateEmployeePersonal(formData).then((res) => {
+                if (res.status === 200) {
+                    this.props.commonActions.tostifyAlert('success', 'Employee Updated Successfully!')
+                    this.toggle(0, '2')
+                    this.renderActionForState(this.state.employeeid)
+                }
+            }).catch((err) => {
+                this.props.commonActions.tostifyAlert('error', err.data.message)
+            })
+        }
     }
 
 

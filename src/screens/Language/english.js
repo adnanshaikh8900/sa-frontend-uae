@@ -38,6 +38,17 @@ SalaryTemplates:"Salary Templates",
 SalaryStructure:"Salary Structures",
 EmployeeDesignation:"Employee Designations",
 EmployementDetails:"Employment Details",
+EducationDetails:"EducationDetails",
+University:"University",
+qualification:"Qualification",
+qualificationYearOfCompletionDate:"Qualification Year Of Completion Date",
+EmergencyContact:"Emergency Contact",
+ContactName1:"Contact Name 1",
+ContactName2:"Contact Name 2",
+ContactNumber1:"Contact Number 1",
+ContactNumber2:"Contact Number 2",
+Relationship1:"Relationship 1",
+Relationship2:"Relationship 2",
 
       //Opening Balances
 

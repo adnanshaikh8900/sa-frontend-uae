@@ -136,6 +136,8 @@ class Register extends React.Component {
 		for (var key in this.state.initValue) {
 			formData.append(key, data[key]);
 		}
+
+		formData.append('loginUrl', window.location.origin);
 		this.props.authActions
 			.register(formData)
 			.then((res) => {

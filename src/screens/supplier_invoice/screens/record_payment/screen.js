@@ -269,6 +269,14 @@ class RecordSupplierPayment extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
+  		formData.append(
+			'invoiceNumber',
+			this.props.location.state.id.invoiceNumber?this.props.location.state.id.invoiceNumber :"Invoice-00000",
+		);
+		formData.append(
+			'invoiceAmount',
+			this.props.location.state.id.invoiceAmount ?this.props.location.state.id.invoiceAmount :"00000",
+		);
 		this.props.SupplierRecordPaymentActions.recordPayment(formData)
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(

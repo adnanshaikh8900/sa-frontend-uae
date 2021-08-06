@@ -312,7 +312,7 @@ class ExpenseByCategory extends React.Component {
 													: ''}
 											</h2>
 											<br style={{ marginBottom: '5px' }} />
-											<b style={{ fontSize: '18px' }}>{strings.SalesByCustomer}</b>
+											<b style={{ fontSize: '18px' }}>Expense By Category details</b>
 											<br style={{ marginBottom: '5px' }} />
 											{strings.From} {initValue.startDate} {strings.To} {initValue.endDate}
 

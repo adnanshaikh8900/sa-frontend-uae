@@ -114,7 +114,7 @@ handleChange = (evt) => {
        
         if (this.props.location.state && this.props.location.state.id) {
             this.props.detailSalaryComponentAction.getSalaryComponentByEmployeeId(this.props.location.state.id).then((res) => {
-                
+
                 if (res.status === 200) {
                     this.setState({
                         loading: false,
@@ -130,7 +130,7 @@ handleChange = (evt) => {
                     }
                     )
                     
-                    this.updateSalary(res.data.ctc)
+                     this.updateSalary(res.data.ctc ? res.data.ctc : this.state.CTC)
                 }
             }).catch((err) => {
                 this.setState({ loading: false })
@@ -485,7 +485,7 @@ handleChange = (evt) => {
                                 <CardHeader>
                                     <div className="h4 mb-0 d-flex align-items-center">
                                         <i className="nav-icon icon-briefcase" />
-                                        <span className="ml-2"> {strings.UpdateEmployeeBankDetails}</span>
+                                        <span className="ml-2"> {strings.UpdateEmployementDetails}</span>
                                     </div>
                                 </CardHeader>
                                 <CardBody>
@@ -514,7 +514,7 @@ handleChange = (evt) => {
                                                                 size="30"
                                                                 name="CTC"
                                                                 style={{textAlign:"center"}}
-                                                                value={this.state.CTC}
+                                                                value={this.state.CTC ? this.state.CTC : props.values.CTC}
                                                                 placeholder={strings.Enter+"CTC"}
                                                                 onChange={(option) => {
                                                                     if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('CTC')(option) }

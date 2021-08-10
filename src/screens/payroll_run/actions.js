@@ -28,6 +28,29 @@ import {
                 });
         };
     };
+    export const getIncompletedEmployeeList = () => {
+    
+      let url = `/rest/Salary/getIncompleteEmployeeList`;
+  
+      return (dispatch) => {
+          let data = {
+              method: 'get',
+              url,
+          };
+          return authApi(data)
+              .then((res) => {
+                  if (res.status === 200) {
+                      dispatch({
+                          type:EMPLOYEEPAYROLL.INCOMPLETED_EMPLOYEE_LIST,
+                          payload: res.data.incompleteEmployeeList,
+                      });
+                  }
+              })
+              .catch((err) => {
+                  throw err;
+              });
+      };
+  };
 
     export const getSalaryDetailByEmployeeIdNoOfDays = (_id) => {
         return (dispatch) => {

@@ -3,13 +3,20 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
 	Card,
-	CardHeader,
+	FormGroup,
 	CardBody,
-	Button,
 	Row,
 	Col,
+	NavItem,
+	Nav,
+	TabContent,
+	NavLink,
+	TabPane,
+	CardGroup,
+	Table,
+	Button,
+	CardHeader,
 	ButtonGroup,
-	Input,
 	ButtonDropdown,
 	DropdownToggle,
 	DropdownMenu,
@@ -41,6 +48,7 @@ import { PaidInvoices } from 'screens/dashboard/sections';
 const mapStateToProps = (state) => {
 	return {
 		payroll_employee_list: state.payrollEmployee.payroll_employee_list.resultSalaryPerMonthList,
+		incompleteEmployeeList: state.payrollEmployee.incompleteEmployeeList,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -82,6 +90,7 @@ class PayrollRun extends React.Component {
 			initValue: {
 				presentdate: moment().local().format('DD/MM/YYYY'),
 			},
+			activeTab: new Array(4).fill('1'),
 			csvData: [],
 			view: false,
 			openPayrollModal: false,
@@ -115,11 +124,33 @@ class PayrollRun extends React.Component {
 	componentDidMount = () => {
 		this.initializeData();
 	};
+	toggle = (tabPane, tab) => {
+		const newArray = this.state.activeTab.slice();
+		newArray[parseInt(tabPane, 10)] = tab;
+		console.log(tab);
+		this.setState({
+			activeTab: newArray,
+		});
+	};
 
 	initializeData = (search) => {
 		const { initValue } = this.state;
 		const postData =
 			initValue.presentdate
+
+
+			this.props.payRollActions.getIncompletedEmployeeList()
+			// .then((res) => {
+			// 	if (res.status === 200) {
+
+			// 		this.setState({
+			// 			incompleteEmployeeList: res.data,
+			// 		})
+			// 	}
+			// })
+			// .catch((err) => {
+			// 	this.setState({ loading: false });
+			// });
 
 		this.props.payRollActions
 			.getPayrollEmployeeList(postData)
@@ -134,6 +165,9 @@ class PayrollRun extends React.Component {
 			.catch((err) => {
 				this.setState({ loading: false });
 			});
+
+	
+			
 	};
 
 	goToDetail = (row) => {
@@ -197,8 +231,8 @@ class PayrollRun extends React.Component {
 
 	onRowSelect = (row, isSelected, e) => {
 		let tempList = [];
-	debugger
-			if (isSelected && row.status === "UnPaid") {
+	
+			if (isSelected && row.status === "Draft") {
 				tempList = Object.assign([], this.state.selectedRows);
 				tempList.push(row.employeeId);
 			} else 
@@ -227,7 +261,7 @@ class PayrollRun extends React.Component {
 		let EmployeeNames="";
 		if (isSelected) {
 			rows.map((item) => {
-				if (item.status === 'UnPaid') {			
+				if (item.status === 'Draft') {			
 					tempList.push(item.employeeId)
 				}
 			});
@@ -306,8 +340,6 @@ class PayrollRun extends React.Component {
 		const formData = new FormData();
 		formData.append('employeeListIds', (this.state.selectedRows))
 		formData.append('salaryDate', this.state.salaryDate)
-
-
 
 		this.props.payRollActions
 			.generateSalary(formData)
@@ -423,44 +455,19 @@ class PayrollRun extends React.Component {
 	renderActions = (cell, row) => {
 		return (
 			<div>
-				<ButtonDropdown
-					isOpen={this.state.actionButtons[row.id]}
-					toggle={() => this.toggleActionButton(row.id)}
-				>
-					<DropdownToggle size="sm" color="primary" className="btn-brand icon">
-						{this.state.actionButtons[row.id] === true ? (
-							<i className="fas fa-chevron-up" />
-						) : (
-							<i className="fas fa-chevron-down" />
-						)}
-					</DropdownToggle>
-					<DropdownMenu right>
-
-						<DropdownItem
+			
+				<Button
 							onClick={() =>
 								this.props.history.push(
-									'/admin/payroll/employee/detail',
-									{ id: row.id },
+									'/admin/payroll/employee/viewEmployee',
+									{ id: row.employeeId },
 								)
 							}
 						>
-							<i className="fas fa-edit" /> Edit
-						</DropdownItem>
-
-
-						<DropdownItem
-							onClick={() =>
-								this.props.history.push(
-									'/admin/payroll/employee/salarySlip',
-									{ id: row.id, monthNo: 4 },
-								)
-							}
-						>
-							<i className="fas fa-eye" /> Salary Slip
-						</DropdownItem>
-
-					</DropdownMenu>
-				</ButtonDropdown>
+							<i className="fas fa-edit" /> 
+						</Button>
+				&nbsp;&nbsp;&nbsp;	{row.employeeName}
+				
 			</div>
 		);
 	};
@@ -497,18 +504,22 @@ class PayrollRun extends React.Component {
 		} = this.state;
 		const {
 			payroll_employee_list,
+			incompleteEmployeeList,
 			invoice_list,
 			contact_list,
 			universal_currency_list,
 		} = this.props;
-		console.log(payroll_employee_list)
+		
+		console.log(payroll_employee_list,"payroll_employee_list")
+		console.log(incompleteEmployeeList,"incompleteEmployeeList")
+		
 		return (
 			<div className="receipt-screen">
 				<div className="animated fadeIn">
 					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
 					{dialog}
 					<Card>
-						<CardHeader>
+					<CardHeader>
 							<Row>
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
@@ -518,6 +529,43 @@ class PayrollRun extends React.Component {
 								</Col>
 							</Row>
 						</CardHeader>
+						<CardBody>
+
+
+							<Nav tabs pills>
+								<NavItem>
+									<NavLink
+										active={this.state.activeTab[0] === '1'}
+										onClick={() => {
+											this.toggle(0, '1');
+										}}
+									>
+									Profile Completed Employees
+									</NavLink>
+								</NavItem>
+								<NavItem>
+									<NavLink
+										active={this.state.activeTab[0] === '2'}
+										onClick={() => {
+											this.toggle(0, '2');
+										}}
+									>
+									Profile InCompleted Employees
+									</NavLink>
+								</NavItem>
+								
+							</Nav>
+							<TabContent activeTab={this.state.activeTab[0]}>
+								<TabPane tabId="1">
+									<div className="employee-screen">
+										<div className="animated fadeIn">
+											{dialog}
+												<Card>
+
+	
+											</Card>
+												<Card>
+				
 						<CardBody>
 							{loading ? (
 								<Row>
@@ -530,37 +578,12 @@ class PayrollRun extends React.Component {
 									<Col lg={12}>
 										<div className="d-flex justify-content-end">
 											<ButtonGroup size="sm">
-												{/* <Button
-													color="primary"
-													className="btn-square mr-1"
-													onClick={() => this.getCsvData()}
-												>
-													<i className="fa glyphicon glyphicon-export fa-download mr-1" />
-													Export To CSV
-												</Button>
-												{view && (
-													<CSVLink
-														data={csvData}
-														filename={'Receipt.csv'}
-														className="hidden"
-														ref={this.csvLink}
-														target="_blank"
-													/>
-												)} */}
-												{/* <Button
-													color="primary"
-													className="btn-square mr-1"
-													onClick={this.bulkDelete}
-													disabled={selectedRows.length === 0}
-												>
-													<i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
-													Bulk Delete
-												</Button> */}
+												
 											</ButtonGroup>
 										</div>
 										<Row className="mb-4 ">
 											<Col lg={2} className="mb-1 ml-4">
-												<Label>{strings.Period}</Label>
+											<Label><i class="far fa-calendar-minus  fa-2x mr-2"></i>{strings.Period}</Label>
 												<DatePicker
 													className="form-control"
 													id="date"
@@ -584,7 +607,8 @@ class PayrollRun extends React.Component {
 													onClick={this.generateSalary}
 													disabled={selectedRows.length === 0}
 												>
-													<i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
+													<i class="fas fa-check-double mr-1"></i>
+												
 													{strings.GenerateSalary}
 												</Button>
 											</Col>
@@ -668,6 +692,74 @@ class PayrollRun extends React.Component {
 
 								</Row>
 							)}
+						</CardBody>
+					</Card>
+										</div>
+									</div>
+								</TabPane>
+
+
+
+								<TabPane tabId="2">
+									<div className="employee-screen">
+										<div className="animated fadeIn">
+											{dialog}
+										<Card>
+												<CardHeader>
+													<Row>
+														<Col lg={12}>
+															<div className="h4 mb-0 d-flex align-items-center">
+																<i className="fas fa-object-group" />
+																<span className="ml-2"> Employees  List </span>
+															</div>
+														</Col>
+													</Row>
+												</CardHeader>
+												<CardBody>
+												<div >
+											<BootstrapTable
+												// selectRow={this.selectRowProp}
+												search={false}
+												// options={this.options}
+												 data={incompleteEmployeeList &&
+												 	incompleteEmployeeList ? incompleteEmployeeList : []}
+												version="4"
+												hover
+												keyField="employeeId"
+												remote
+												 fetchInfo={{ dataTotalSize: incompleteEmployeeList.count ? incompleteEmployeeList.count : 0 }}
+												// className="employee-table mt-4"
+												trClassName="cursor-pointer"
+												//csvFileName="payroll_employee_list.csv"
+												ref={(node) => this.table = node}
+											>
+												<TableHeaderColumn
+													className="table-header-bg"
+													dataField="employeeId"
+													dataSort			
+												>
+													Employee Id
+												</TableHeaderColumn>
+												<TableHeaderColumn
+													className="table-header-bg"
+													dataField="employeeName"
+													dataSort
+													dataFormat={this.renderActions}
+
+												>
+											{strings.EmployeeName}
+												</TableHeaderColumn>
+											
+											</BootstrapTable>
+										</div>
+													
+												</CardBody>
+											</Card>
+										</div>
+									</div>
+								</TabPane>				
+							</TabContent>
+
 						</CardBody>
 					</Card>
 				</div>

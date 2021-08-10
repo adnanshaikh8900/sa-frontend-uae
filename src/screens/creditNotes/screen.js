@@ -404,7 +404,7 @@ class CreditNotes extends React.Component {
 									<i className="fas fa-edit" /> {strings.Edit}
 								</div>
 							</DropdownItem>
-						)}	{row.statusEnum !== 'Closed' && row.statusEnum !== 'Draft'  &&  (
+						)}	{row.statusEnum !== 'Closed' && row.statusEnum !== 'Draft' && row.cnCreatedOnPaidInvoice !==true &&  (
 							<DropdownItem>
 								<div
 									onClick={() => {
@@ -763,6 +763,7 @@ class CreditNotes extends React.Component {
 						currencySymbol:customer.currencySymbol ? customer.currencySymbol:'',
 						invoiceAmount: customer.totalAmount,
 						vatAmount: customer.totalVatAmount,
+						cnCreatedOnPaidInvoice: customer.cnCreatedOnPaidInvoice,
 				  }))
 				: '';
 

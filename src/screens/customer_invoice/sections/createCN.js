@@ -792,6 +792,7 @@ class CreateCreditNoteModal extends React.Component {
 			'email',
 			email !== null ? email : '',
 		);
+		formData.append('cnCreatedOnPaidInvoice','1');
 		// formData.append(
 		// 	'invoiceDueDate',
 		// 	invoiceDueDate ? moment(invoiceDueDate, 'DD/MM/YYYY').toDate() : null,

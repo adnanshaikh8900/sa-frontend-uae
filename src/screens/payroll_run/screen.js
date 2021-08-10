@@ -249,14 +249,14 @@ class PayrollRun extends React.Component {
         if (row.status === "Paid") {
             classname = 'label-success';
         } else {
-            classname = 'label-approved';
+            classname = 'label-draft';
         }
         return (
             <span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
                 {
                     row.status === "Paid"?
                         "Paid" :
-                        "UnPaid"
+                        "Draft"
 
                 }
             </span>

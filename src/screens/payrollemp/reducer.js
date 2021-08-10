@@ -11,6 +11,7 @@ const initState = {
     salary_component_fixed_dropdown:[],
     salary_component_varaible_dropdown:[],
     salary_component_deduction_dropdown:[],
+    incompleteEmployeeList:[],
 }
 
 const PayrollEmployeeReducer = (state = initState, action) => {
@@ -73,6 +74,14 @@ const PayrollEmployeeReducer = (state = initState, action) => {
                     ...state,
                   salary_component_deduction_dropdown: Object.assign([], payload)
               } 
+
+              case EMPLOYEEPAYROLL.INCOMPLETED_EMPLOYEE_LIST:
+             
+                return {
+                    ...state,
+                    incompleteEmployeeList: Object.assign([], payload)
+                }
+    
         default:
             return state
     }

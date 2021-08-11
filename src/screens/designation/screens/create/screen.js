@@ -66,7 +66,8 @@ class CreateDesignation extends React.Component {
       loading: false,
       createMore: false,
       initValue: {
-        designationName:''
+        designationName:'',
+        designationId:''
       },
 
     }
@@ -89,13 +90,18 @@ class CreateDesignation extends React.Component {
   handleSubmit = (data, resetForm) => {
     this.setState({ disabled: true });
 		const {
-      designationName
+      designationName,
+      designationId
 		} = data;
 
 
 		const formData = new FormData();
 
-  
+    
+    formData.append(
+      'designationId',
+      designationId != null ? designationId : '',
+    )
     formData.append(
       'designationName',
       designationName != null ? designationName : '',
@@ -114,7 +120,7 @@ class CreateDesignation extends React.Component {
           })
           resetForm(this.state.initValue)
         } else {
-          this.props.history.push('/admin/payroll/config')
+          this.props.history.push('/admin/payroll/config',{tabNo:'3'})
         }
       }
     }).catch((err) => {
@@ -171,7 +177,25 @@ class CreateDesignation extends React.Component {
                           
                            <Col lg={10}>
                             <Row  className="row-wrapper">
-                              
+                            <Col lg={4}>
+                                <FormGroup>
+                                  <Label htmlFor="select"><span className="text-danger">*</span>{strings.DESIGNATIONID}</Label>
+                                  <Input
+                                    type="text"
+                                    id="designationId"
+                                    name="designationId"
+                                    value={props.values.designationId}
+                                    placeholder={strings.Enter+strings.DESIGNATIONID}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('designationId')(option) }
+                                    }}
+                                    className={props.errors.designationId && props.touched.designationId ? "is-invalid" : ""}
+                                  />
+                                  {props.errors.designationId && props.touched.designationId && (
+                                    <div className="invalid-feedback">{props.errors.designationId}</div>
+                                  )}
+                                </FormGroup>
+                              </Col>
                               <Col lg={4}>
                                 <FormGroup>
                                   <Label htmlFor="select"><span className="text-danger">*</span>{strings.EmployeeDesignationName}</Label>

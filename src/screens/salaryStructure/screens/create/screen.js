@@ -116,7 +116,7 @@ class CreateSalaryStructure extends React.Component {
           })
           resetForm(this.state.initValue)
         } else {
-          this.props.history.push('/admin/payroll/config')
+          this.props.history.push('/admin/payroll/config',{tabNo:'2'})
         }
       }
     }).catch((err) => {

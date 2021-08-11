@@ -381,6 +381,13 @@ class PayrollConfigurations extends React.Component {
 			actionButtons: temp,
 		});
 	};
+	renderForId=(cell,row)=>{
+		debugger
+		return (
+
+			<div>{row.designationId ?row.designationId :'-'}</div>
+		);
+	}
 	renderActions = (cell, row) => {
 		return (
 
@@ -871,8 +878,8 @@ class PayrollConfigurations extends React.Component {
 																		>
 																			<TableHeaderColumn
 																				className="table-header-bg"
-																				dataField="id"
-																				
+																				dataField="designationId"
+																				dataFormat={this.renderForId}																				
 																			>
 																				{strings.DESIGNATIONID}
 																			</TableHeaderColumn>

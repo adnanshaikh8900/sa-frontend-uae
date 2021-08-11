@@ -76,6 +76,8 @@ class DetailDesignation extends React.Component {
           this.setState({
             current_salary_role_id: this.props.location.state.id,
             initValue: {
+              designationId:res.data.designationId ? res.data.designationId : '',
+          
               designationName: res.data.designationName ? res.data.designationName : '',
             },
             loading: false,
@@ -107,12 +109,14 @@ class DetailDesignation extends React.Component {
 		const { current_salary_role_id} = this.state;
 		const {
       designationName,
-    
+      designationId
 		} = data;
 
 		let formData = new FormData();
 		formData.append('id', current_salary_role_id);
-		formData.append('designationName', designationName ? designationName : '');
+    
+		formData.append('designationId', designationId ? designationId : '');
+    formData.append('designationName', designationName ? designationName : '');
 		this.props.designationDetailActions
 			.updateEmployeeDesignation(formData)
 			.then((res) => {
@@ -120,7 +124,7 @@ class DetailDesignation extends React.Component {
 					'success',
 					'Designation Updated Successfully.',
 				);
-				this.props.history.push('/admin/payroll/config');
+				this.props.history.push('/admin/payroll/config',{tabNo:'3'});
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
@@ -202,6 +206,8 @@ class DetailDesignation extends React.Component {
                               // resetForm(this.state.initValue)
                             }}
                             validationSchema={Yup.object().shape({
+                              designationId:Yup.string()
+                              .required("Designation Name is Required"),
                               designationName: Yup.string()
                                 .required("Designation Name is Required"),
                             
@@ -218,7 +224,25 @@ class DetailDesignation extends React.Component {
                                 <Row>
                                 <Col lg={10}>
                             <Row  className="row-wrapper">
-                              
+                            <Col lg={4}>
+                                <FormGroup>
+                                  <Label htmlFor="select"><span className="text-danger">*</span>{strings.DESIGNATIONID}</Label>
+                                  <Input
+                                    type="text"
+                                    id="designationId"
+                                    name="designationId"
+                                    value={props.values.designationId}
+                                    placeholder={strings.Enter+strings.designationId}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('designationId')(option) }
+                                    }}
+                                    className={props.errors.designationId && props.touched.designationId ? "is-invalid" : ""}
+                                  />
+                                  {props.errors.designationId && props.touched.designationId && (
+                                    <div className="invalid-feedback">{props.errors.designationId}</div>
+                                  )}
+                                </FormGroup>
+                              </Col>
                               <Col lg={4}>
                                 <FormGroup>
                                   <Label htmlFor="select"><span className="text-danger">*</span>{strings.DesignationName}</Label>

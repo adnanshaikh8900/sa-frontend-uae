@@ -419,7 +419,7 @@ class VatCode extends React.Component {
 														fullWidth
 														type="text"
 														value={filterData.vatPercentage}
-														placeholder={strings.Vat+strings.Percentage}
+														placeholder={strings.Vat+" "+strings.Percentage}
 														size="small"
 														onChange={(e) => {
 															this.handleChange(

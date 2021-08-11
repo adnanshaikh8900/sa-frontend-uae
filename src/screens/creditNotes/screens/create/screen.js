@@ -1542,7 +1542,7 @@ class CreateCreditNote extends React.Component {
 																		type="text"
 																		id="creditNoteNumber"
 																		name="creditNoteNumber"
-																		placeholder={strings.InvoiceNumber }
+																		placeholder={strings.CreditNoteNumber}
 																		value={props.values.creditNoteNumber}
 																		onBlur={props.handleBlur('creditNoteNumber')}
 																		onChange={(option) => {

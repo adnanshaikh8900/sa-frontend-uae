@@ -692,7 +692,7 @@ SalaryStructureName:"Salary Structure Name",
 UpdateSalaryStructure:"Update Salary Structure",
 
 Designations:"Designations",	
-DESIGNATIONID:"DESIGNATION ID",	
+DESIGNATIONID:"Designation Id",	
 DESIGNATIONNAME:"DESIGNATION NAME",	
 NewDesignation:"New Designation",
 CreateDesignation:"Create Designation",	

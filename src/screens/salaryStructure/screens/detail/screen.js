@@ -123,7 +123,7 @@ class DetailSalaryStructure extends React.Component {
 					'success',
 					'salary Structure Updated Successfully.',
 				);
-				this.props.history.push('/admin/payroll/config');
+				this.props.history.push('/admin/payroll/config',{tabNo:'2'});
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(

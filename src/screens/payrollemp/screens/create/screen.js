@@ -1815,12 +1815,12 @@ validationCheck = (value) => {
                                                                                        
                                                                                           <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="university"> {strings.university} </Label>
+                                                                                                    <Label htmlFor="university"> {strings.University} </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="university"
                                                                                                         name="university"
-                                                                                                        placeholder={strings.Enter+strings.university}
+                                                                                                        placeholder={strings.Enter+strings.University}
                                                                                                         onChange={(value) => { props.handleChange("university")(value) }}
                                                                                                         value={props.values.university}
                                                                                                         className={

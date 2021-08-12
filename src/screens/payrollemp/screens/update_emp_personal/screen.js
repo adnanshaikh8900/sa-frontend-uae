@@ -680,7 +680,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                     <Row>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="gender"> {strings.Gender} {strings.Gender}</Label>
+                                                                                <Label htmlFor="gender"> {strings.Gender}</Label>
                                                                                 <Select
 
                                                                                     options={
@@ -1102,7 +1102,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                     type="text"
                                                                                     id="city"
                                                                                     name="city"
-                                                                                    placeholder={strings.Select + strings.City}
+                                                                                    placeholder={strings.Enter+strings.City}
                                                                                     onChange={(value) => { props.handleChange("city")(value) }}
                                                                                     value={props.values.city}
                                                                                     className={
@@ -1124,12 +1124,12 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                        
                                                                                           <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="university"> {strings.university} </Label>
+                                                                                                    <Label htmlFor="university"> {strings.University} </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="university"
                                                                                                         name="university"
-                                                                                                        placeholder={strings.Enter+strings.university}
+                                                                                                        placeholder={strings.Enter+strings.University}
                                                                                                         onChange={(value) => { props.handleChange("university")(value) }}
                                                                                                         value={props.values.university}
                                                                                                         className={
@@ -1328,6 +1328,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                         type="text"
                                                                                                         id="emergencyContactRelationship2"
                                                                                                         name="emergencyContactRelationship2"
+                                                                                                        placeholder={strings.Enter+strings.Relationship2}
                                                                                                         // placeholder={strings.Enter+strings.PinCode}
                                                                                                         onChange={(value) => { props.handleChange("emergencyContactRelationship2")(value) }}
                                                                                                         value={props.values.emergencyContactRelationship2}

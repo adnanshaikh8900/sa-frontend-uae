@@ -221,7 +221,7 @@ class PayrollConfigurations extends React.Component {
 				<Button
 				className="btn btn-sm pdf-btn"
 				onClick={(e, ) => {
-					debugger
+					
 					this.props.history.push('/admin/payroll/salaryStructure/detail', { id: row.salaryStructureId })
 				}}
 				>
@@ -382,11 +382,11 @@ class PayrollConfigurations extends React.Component {
 		});
 	};
 	renderForId=(cell,row)=>{
-		debugger
+		for(let i=121;i<=10000;i++){
 		return (
-
-			<div>{row.designationId ?row.designationId :'-'}</div>
+			<div>{row.designationId ?row.designationId :row.id}</div>
 		);
+		}
 	}
 	renderActions = (cell, row) => {
 		return (

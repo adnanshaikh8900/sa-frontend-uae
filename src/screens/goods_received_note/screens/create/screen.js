@@ -1040,9 +1040,9 @@ class CreateGoodsReceivedNote extends React.Component {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
 		
-		if (currency !== null && currency) {
+	
 			formData.append('currencyCode', this.state.supplier_currency);
-		}
+
 		formData.append('supplierReferenceNumber', supplierReferenceNumber ? supplierReferenceNumber : '');
 		this.props.goodsReceivedNoteCreateAction
 			.createGNR(formData)
@@ -1354,6 +1354,7 @@ class CreateGoodsReceivedNote extends React.Component {
 						},
 					data:response.data.poQuatationLineItemRequestModelList ,
 					supplierReferenceNumber: response.data.supplierReferenceNumber,
+					supplier_currency:response.data.currencyCode,
 					
 				//	data1:response.data.supplierId,
 				},() => {
@@ -1376,6 +1377,7 @@ class CreateGoodsReceivedNote extends React.Component {
 				  
 				);
 				this.formRef.current.setFieldValue('supplierId', this.state.option, true);
+				this.formRef.current.setFieldValue('currencyCode', this.state.supplier_currency, true);
 				this.formRef.current.setFieldValue('supplierReferenceNumber', this.state.supplierReferenceNumber, true);
 				
 			});

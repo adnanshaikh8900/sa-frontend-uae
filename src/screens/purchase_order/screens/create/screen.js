@@ -962,9 +962,9 @@ class CreatePurchaseOrder extends React.Component {
 		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
-		if (currency !== null && currency) {
+		
 			formData.append('currencyCode', this.state.supplier_currency);
-		}
+		
 		this.props.purchaseOrderCreateAction
 			.createPO(formData)
 			.then((res) => {
@@ -1229,6 +1229,7 @@ getrfqDetails = (e, row, props,form,field) => {
 					},
 				data:response.data.poQuatationLineItemRequestModelList ,
 				totalAmount:response.data.totalAmount,
+				supplier_currency:response.data.currencyCode,
 				initValue: {
 					...this.state.initValue,
 					...{
@@ -1263,6 +1264,7 @@ getrfqDetails = (e, row, props,form,field) => {
 
             );
 			this.formRef.current.setFieldValue('supplierId', this.state.option, true);
+			this.formRef.current.setFieldValue('currencyCode', this.state.supplier_currency, true);
             console.log(this.state.data,"api")
 			console.log("option ",this.state.option)
 			console.log(this.state.initValue.totalAmount,"this.state.initValue.totalAmount+++++++")

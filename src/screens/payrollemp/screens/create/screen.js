@@ -84,7 +84,7 @@ class CreateEmployeePayroll extends React.Component {
 
     constructor(props) {
         super(props)
-
+       
         this.state = {
             language: window['localStorage'].getItem('language'),
             Fixed: [
@@ -161,7 +161,7 @@ class CreateEmployeePayroll extends React.Component {
                 passportNumber: '',
                 passportExpiryDate: '',
                 visaNumber: '',
-                employeeCode: '',
+                employeeCode:'',
                 visaExpiryDate: '',
                 dateOfJoining: '',
                 department: '',
@@ -205,8 +205,10 @@ class CreateEmployeePayroll extends React.Component {
             employeeid: '',
             selectedData: {},
             componentTotal: '',
-        }
-
+            prefix: '',
+            exist: false,
+        }        
+        this.formRef = React.createRef();       
         this.regEx = /^[0-9\d]+$/;
         this.regExBoth = /[a-zA-Z0-9]+$/;
         this.regExAlpha = /^[a-zA-Z ]+$/;
@@ -259,6 +261,12 @@ class CreateEmployeePayroll extends React.Component {
     };
 
     initializeData = () => {
+        this.getEmployeeCode();
+        
+        // this.props.createPayrollEmployeeActions.getInvoicePrefix().then((response) => {
+		// 	this.setState({prefixData:response.data
+		// });
+		// });
     };
 
     getSalaryComponentByEmployeeId = () => {
@@ -287,6 +295,47 @@ uploadImage = (picture, file) => {
 			userPhotoFile: file,
 		});
 	};
+
+getEmployeeCode=()=>{
+
+    this.props.createPayrollEmployeeActions.getEmployeeCode().then((res) => {
+        if (res.status === 200) {
+            this.setState({
+                initValue: {
+                    ...this.state.initValue,
+                    ...{ employeeCode: res.data },
+                },
+            });
+            this.formRef.current.setFieldValue('employeeCode', res.data, true,this.validationCheck(res.data));
+        }
+    });
+
+console.log(this.state.employeeCode)
+}
+validationCheck = (value) => {
+    const data = {
+        moduleType: 15,
+        name: value,
+    };
+    this.props.createPayrollEmployeeActions
+        .checkValidation(data)
+        .then((response) => {
+            if (response.data === 'employeeCode already exists') {
+                this.setState(
+                    {
+                        exist: true,
+                    },
+                    
+                    () => {},
+                );
+            
+            } else {
+                this.setState({
+                    exist: false,
+                });
+            }
+        });
+};
     renderActionForState = () => {
         this.props.createPayrollEmployeeActions.getEmployeeById(this.state.employeeid)
             .then((res) => {
@@ -962,7 +1011,7 @@ uploadImage = (picture, file) => {
     }
     render() {
         strings.setLanguage(this.state.language);
-
+        const {	exist}=this.state
         const { salary_role_dropdown, designation_dropdown, country_list, state_list, employee_list_dropdown } = this.props
         return (
             <div className="financial-report-screen">
@@ -2040,9 +2089,18 @@ uploadImage = (picture, file) => {
                                                             <Row>
                                                                 <Col lg={12}>
                                                                     <Formik
+                                                                    ref={this.formRef}
                                                                         initialValues={this.state.initValue}
                                                                         onSubmit={(values, { resetForm }) => {
                                                                             this.handleSubmitForEmployement(values, resetForm)
+                                                                        }}
+                                                                        validate={(values) => {
+                                                                            let errors = {};
+                                                                            if (exist === true) {
+                                                                                errors.employeeCode =
+                                                                                    'employeeCode Number already exists';
+                                                                            }
+                                                                            return errors;
                                                                         }}
                                                                         validationSchema={Yup.object().shape({
                                                                             employeeCode: Yup.string()
@@ -2072,9 +2130,15 @@ uploadImage = (picture, file) => {
                                                                                                         name="employeeCode"
                                                                                                         value={props.values.employeeCode}
                                                                                                         placeholder={strings.Enter+strings.EmployeeCode}
-                                                                                                        onChange={(value) => {
-                                                                                                            props.handleChange('employeeCode')(value);
+                                                                                                        // onChange={(value) => {
+                                                                                                        //     props.handleChange('employeeCode')(value);
+                                                                                                        // }}
 
+                                                                                                        onChange={(option) => {
+                                                                                                            props.handleChange('employeeCode')(
+                                                                                                                option,
+                                                                                                            );
+                                                                                                            this.validationCheck(option.target.value);
                                                                                                         }}
                                                                                                         className={props.errors.employeeCode && props.touched.employeeCode ? "is-invalid" : ""}
                                                                                                     />

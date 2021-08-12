@@ -316,11 +316,11 @@ class ReconcileTransaction extends React.Component {
 															<Row>
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
-																		<Label htmlFor="date">{strings.Date}</Label>
+																		<Label htmlFor="date">{strings.BankClosingDate}</Label>
 																		<DatePicker
 																			id="date"
 																			name="date"
-																			placeholderText={strings.TransactionDate}
+																			placeholderText={strings.Select+" "+strings.BankClosingDate}
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd/MM/yyyy"
@@ -473,7 +473,7 @@ class ReconcileTransaction extends React.Component {
 													dataSort
 													// width="15%"
 												>
-												 {strings.CLOSINGBALANCE}
+												 {strings.ClosingBalance}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													className="text-right"

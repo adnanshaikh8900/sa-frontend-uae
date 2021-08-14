@@ -262,7 +262,7 @@ class SalaryComponentVariable extends React.Component {
 														}
 														id="id"
 														name="id"
-														placeholder={strings.Select+strings.Type}
+														placeholder={strings.Select+strings.Component}
 														value={this.state.id}
 														onChange={(value) => {
 															props.handleChange('id')(value);

@@ -550,7 +550,7 @@ class PayrollRun extends React.Component {
 											this.toggle(0, '2');
 										}}
 									>
-									Profile InCompleted Employees
+									Profile Incompleted Employees
 									</NavLink>
 								</NavItem>
 								

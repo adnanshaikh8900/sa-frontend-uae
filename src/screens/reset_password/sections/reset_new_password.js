@@ -24,6 +24,7 @@ import './style.scss'
 import {
   Message
 } from 'components'
+import PasswordChecklist from "react-password-checklist"
 // import { display } from "html2canvas/dist/types/css/property-descriptors/display";
 
 class ResetNewPassword extends React.Component {
@@ -34,6 +35,7 @@ class ResetNewPassword extends React.Component {
         password: "",
         confirmPassword: ''
       },
+      isPasswordShown: false,
       alert: null
     };
     this.formikRef = React.createRef();
@@ -78,9 +80,14 @@ class ResetNewPassword extends React.Component {
       position: toast.POSITION.TOP_RIGHT
     });
   }
+  togglePasswordVisiblity = () => {
+		const { isPasswordShown } = this.state;
+		this.setState({ isPasswordShown: !isPasswordShown });
+	};
 
   render() {
     const { initValue } = this.state;
+    const { isPasswordShown } = this.state;
     return (
       // <div className="reset-password-screen">
         <div className="animated fadeIn">
@@ -123,36 +130,93 @@ class ResetNewPassword extends React.Component {
                               <Row>
                                 <Col lg={12}>
                                   <FormGroup>
-                                    <Label htmlFor="select"><span className="text-danger">*</span>Password</Label>
-                                    <Input
-                                      type="password"
-                                      id="password"
-                                      name="password"
-                                      autoComplete="new-password"
-                                      value={props.values.password}
-                                      onChange={(value) => { props.handleChange('password')(value) }}
-                                      className={props.errors.password && props.touched.password ? "is-invalid" : ""}
-                                    />
-                                    {props.errors.password && props.touched.password ? (
-                                      <div className="invalid-feedback">{props.errors.password}</div>
-                                    ) :  (<span className="password-msg">Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character.</span>)}
-                                  </FormGroup>
+																			<Label htmlFor="select">
+																				<span className="text-danger">*</span>
+																				 Password
+																			</Label>
+																			<div>
+																				<Input
+																					type={
+																						this.state.isPasswordShown
+																							? 'text'
+																							: 'password'
+																					}
+																					id="password"
+																					name="password"
+																					placeholder=" Enter Password"
+																					value={props.values.password}
+																					onChange={(option) => {
+																						props.handleChange('password')(
+																							option,
+																						);
+																					}}
+																					className={
+																						props.errors.password &&
+																							props.touched.password
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																				<i className={`fa ${isPasswordShown ? "fa-eye-slash" : "fa-eye"} password-icon fa-lg`}
+																					onClick={this.togglePasswordVisiblity}
+																				>
+																					{/* <img 
+																			src={eye}
+																			style={{ width: '20px' }}
+																		/> */}
+																				</i>
+																			</div>
+																			{props.errors.password &&
+																				props.touched.password && (
+																					<div className="invalid-feedback">
+																						{props.errors.password}
+																					</div>
+																				)}
+																			<PasswordChecklist
+																				rules={["length", "specialChar", "number", "capital"]}
+																				minLength={5}
+																				value={props.values.password}
+																				valueAgain={props.values.confirmPassword}
+																			/>
+																		</FormGroup>
                                 </Col>
                                 <Col lg={12}>
                                   <FormGroup>
-                                    <Label htmlFor="select"><span className="text-danger">*</span>Confirm Password</Label>
-                                    <Input
-                                      type="password"
-                                      id="confirmPassword"
-                                      name="confirmPassword"
-                                      value={props.values.confirmPassword}
-                                      onChange={(value) => { props.handleChange('confirmPassword')(value) }}
-                                      className={props.errors.confirmPassword && props.touched.confirmPassword ? "is-invalid" : ""}
-                                    />
-                                    {props.errors.confirmPassword && props.touched.confirmPassword && (
-                                      <div className="invalid-feedback">{props.errors.confirmPassword}</div>
-                                    )}
-                                  </FormGroup>
+																			<Label htmlFor="select">
+																				<span className="text-danger">*</span>
+																			Confirm Password
+																			</Label>
+																			<Input
+																				type="password"
+																				id="confirmPassword"
+																				name="confirmPassword"
+																				value={props.values.confirmPassword}
+																				placeholder="Confrim Password"
+																				onChange={(value) => {
+																					props.handleChange('confirmPassword')(
+																						value,
+																					);
+																				}}
+																				className={
+																					props.errors.confirmPassword &&
+																						props.touched.confirmPassword
+																						? 'is-invalid'
+																						: ''
+																				}
+																			/>
+																			{props.errors.confirmPassword &&
+																				props.touched.confirmPassword && (
+																					<div className="invalid-feedback">
+																						{props.errors.confirmPassword}
+																					</div>
+																				)}
+																				<PasswordChecklist
+																				rules={[ "match"]}
+																				minLength={5}
+																				value={props.values.password}
+																				valueAgain={props.values.confirmPassword}
+																			/>
+																		</FormGroup>
                                 </Col>
                               </Row>
                               <Row className="button-group">

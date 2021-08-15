@@ -104,6 +104,7 @@ class RecordSupplierPayment extends React.Component {
 			discountPercentage: '',
 			discountAmount: 0,
 			fileName: '',
+			disabled: false,
 		};
 
 		// this.options = {
@@ -233,6 +234,7 @@ class RecordSupplierPayment extends React.Component {
 	};
 
 	handleSubmit = (data) => {
+		this.setState({ disabled: true });
 		const { invoiceId } = this.state;
 		const {
 			paymentNo,
@@ -828,9 +830,12 @@ class RecordSupplierPayment extends React.Component {
 																			type="submit"
 																			color="primary"
 																			className="btn-square mr-3"
+																			disabled={this.state.disabled}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			 {strings.RecordPayment}
+																			{this.state.disabled
+																			? 'Recording...'
+																			: strings.RecordPayment }
 																		</Button>
 																		<Button
 																			color="secondary"

@@ -26,8 +26,11 @@ import { CommonActions } from 'services/global';
 import './style.scss';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import * as GeneralSettingActions from './actions';
-import {data}  from '../Language/index'
+import { data } from '../Language/index'
 import LocalizedStrings from 'react-localization';
+import { tostifyAlert } from 'services/global/common/actions';
+import { toast } from 'react-toastify';
+import { Toast } from 'bootstrap';
 
 const mapStateToProps = (state) => {
 	return {};
@@ -79,6 +82,11 @@ class GeneralSettings extends React.Component {
 		this.initializeData();
 	};
 
+	testMail = () => {
+		this.props.generalSettingActions.getTestUserMailById(1);
+		// toast.info("Test mail Sent .... !");
+		// alert("Test mail Sent .... !");
+	}
 	initializeData = () => {
 		this.props.generalSettingActions
 			.getGeneralSettingDetail()
@@ -251,13 +259,13 @@ class GeneralSettings extends React.Component {
 																	<FormGroup>
 																		<Label htmlFor="invoicingReferencePattern">
 																			{' '}
-																			 {strings.InvoicingReferencePattern}
+																			{strings.InvoicingReferencePattern}
 																		</Label>
 																		<Input
 																			type="text"
 																			id="invoicingReferencePattern"
 																			name="invoicingReferencePattern"
-																			placeholder={strings.Enter+strings.InvoicingReferencePattern}
+																			placeholder={strings.Enter + strings.InvoicingReferencePattern}
 																			value={
 																				props.values.invoicingReferencePattern
 																			}
@@ -276,7 +284,7 @@ class GeneralSettings extends React.Component {
 																			className={
 																				props.errors
 																					.invoicingReferencePattern &&
-																				props.touched.invoicingReferencePattern
+																					props.touched.invoicingReferencePattern
 																					? 'is-invalid'
 																					: ''
 																			}
@@ -293,6 +301,7 @@ class GeneralSettings extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
+															
 																{/* <Col sm="6">
                                                     <FormGroup >
                                                       <Label htmlFor="select">Invoicing Templates</Label>
@@ -307,13 +316,13 @@ class GeneralSettings extends React.Component {
 																<Col sm="6">
 																	<FormGroup>
 																		<Label htmlFor="mailingHost">
-																			 {strings.MailingHost}
+																			{strings.MailingHost}
 																		</Label>
 																		<Input
 																			type="text"
 																			id="mailingHost"
 																			name="mailingHost"
-																			placeholder={strings.Enter+strings.MailingHost}
+																			placeholder={strings.Enter + strings.MailingHost}
 																			value={props.values.mailingHost}
 																			onChange={(option) => {
 																				props.handleChange('mailingHost')(
@@ -322,7 +331,7 @@ class GeneralSettings extends React.Component {
 																			}}
 																			className={
 																				props.errors.mailingHost &&
-																				props.touched.mailingHost
+																					props.touched.mailingHost
 																					? 'is-invalid'
 																					: ''
 																			}
@@ -338,13 +347,13 @@ class GeneralSettings extends React.Component {
 																<Col sm="6">
 																	<FormGroup>
 																		<Label htmlFor="mailingPort">
-																			 {strings.MailingPort}
+																			{strings.MailingPort}
 																		</Label>
 																		<Input
 																			type="text"
 																			id="mailingPort"
 																			name="mailingPort"
-																			placeholder={strings.Enter+strings.MailingPort}
+																			placeholder={strings.Enter + strings.MailingPort}
 																			value={props.values.mailingPort}
 																			onChange={(option) => {
 																				props.handleChange('mailingPort')(
@@ -353,7 +362,7 @@ class GeneralSettings extends React.Component {
 																			}}
 																			className={
 																				props.errors.mailingPort &&
-																				props.touched.mailingPort
+																					props.touched.mailingPort
 																					? 'is-invalid'
 																					: ''
 																			}
@@ -371,13 +380,13 @@ class GeneralSettings extends React.Component {
 																<Col sm="6">
 																	<FormGroup>
 																		<Label htmlFor="mailingUserName">
-																			 {strings.MailingUserName}
+																			{strings.MailingUserName}
 																		</Label>
 																		<Input
 																			type="text"
 																			id="mailingUserName"
 																			name="mailingUserName"
-																			placeholder={strings.Enter+strings.UserName}
+																			placeholder={strings.Enter + strings.UserName}
 																			value={props.values.mailingUserName}
 																			autoComplete="off"
 																			onChange={(option) => {
@@ -387,7 +396,7 @@ class GeneralSettings extends React.Component {
 																			}}
 																			className={
 																				props.errors.mailingUserName &&
-																				props.touched.mailingUserName
+																					props.touched.mailingUserName
 																					? 'is-invalid'
 																					: ''
 																			}
@@ -403,13 +412,13 @@ class GeneralSettings extends React.Component {
 																<Col sm="6">
 																	<FormGroup>
 																		<Label htmlFor="mailingPassword">
-																			 {strings.MailingPassword}
+																			{strings.MailingPassword}
 																		</Label>
 																		<Input
 																			type="password"
 																			id="mailingPassword"
 																			name="mailingPassword"
-																			placeholder={strings.Enter+strings.Password}
+																			placeholder={strings.Enter + strings.Password}
 																			autoComplete="new-password"
 																			value={props.values.mailingPassword}
 																			onChange={(option) => {
@@ -419,7 +428,7 @@ class GeneralSettings extends React.Component {
 																			}}
 																			className={
 																				props.errors.mailingPassword &&
-																				props.touched.mailingPassword
+																					props.touched.mailingPassword
 																					? 'is-invalid'
 																					: ''
 																			}
@@ -437,7 +446,7 @@ class GeneralSettings extends React.Component {
 																<Col sm="6">
 																	<FormGroup>
 																		<Label htmlFor="mailingSmtpAuthorization">
-																			 {strings.MailingSMTPAuthorization}
+																			{strings.MailingSMTPAuthorization}
 																		</Label>
 																		<div>
 																			<FormGroup check inline>
@@ -463,7 +472,7 @@ class GeneralSettings extends React.Component {
 																						className="custom-control-label"
 																						htmlFor="inline-radio1"
 																					>
-																						 {strings.Yes}
+																						{strings.Yes}
 																					</label>
 																				</div>
 																			</FormGroup>
@@ -490,7 +499,7 @@ class GeneralSettings extends React.Component {
 																						className="custom-control-label"
 																						htmlFor="inline-radio2"
 																					>
-																					{strings.No}
+																						{strings.No}
 																					</label>
 																				</div>
 																			</FormGroup>
@@ -500,7 +509,7 @@ class GeneralSettings extends React.Component {
 																<Col sm="6">
 																	<FormGroup>
 																		<Label htmlFor="mailingSmtpStarttlsEnable">
-																			 {strings.MailingSMTPStartTLSEnable}
+																			{strings.MailingSMTPStartTLSEnable}
 																		</Label>
 																		<div>
 																			<FormGroup check inline>
@@ -526,7 +535,7 @@ class GeneralSettings extends React.Component {
 																						className="custom-control-label"
 																						htmlFor="inline-radio3"
 																					>
-																						 {strings.Yes}
+																						{strings.Yes}
 																					</label>
 																				</div>
 																			</FormGroup>
@@ -553,7 +562,7 @@ class GeneralSettings extends React.Component {
 																						className="custom-control-label"
 																						htmlFor="inline-radio4"
 																					>
-																						 {strings.No}
+																						{strings.No}
 																					</label>
 																				</div>
 																			</FormGroup>
@@ -579,7 +588,7 @@ class GeneralSettings extends React.Component {
 																				}}
 																				className={
 																					props.errors.mailingAPIKey &&
-																					props.touched.mailingAPIKey
+																						props.touched.mailingAPIKey
 																						? 'is-invalid'
 																						: ''
 																				}
@@ -760,33 +769,47 @@ class GeneralSettings extends React.Component {
 															)} */}
 
 															<Row>
-															<Col lg={12} className="mt-5">
-															<FormGroup className="text-right mt-5 ">
-																<Button
-																	type="button"
-																	name="submit"
-																	color="primary"
-																	className="btn-square"
+													
+																<Col lg={12} className="mt-5">
+															
+																	<Button
+																		type="button"
+																		color="primary"
+																		className="btn-square pull-left  mt-5"
+																		onClick={() => {
+																		this.testMail();
+																		}}
+																	>
+																	<i class="fas fa-envelope"></i> Test Mail
+																	</Button>
 
-																
-																>
-																	<i className="fa fa-dot-circle-o"></i> {strings.Save}
-																</Button>
-																<Button
-																					type="button"
-																					color="secondary"
-																					className="btn-square"
-																					onClick={() => {
-																						this.props.history.push(
-																							'/admin/dashboard',
-																						);
-																					}}
-																				>
-																					<i className="fa fa-ban"></i>  {strings.Cancel}
-																				</Button>
-															</FormGroup>
-															</Col>
-														</Row>
+															
+																	<FormGroup className="text-right mt-5 ">
+																		<Button
+																			type="button"
+																			name="submit"
+																			color="primary"
+																			className="btn-square"
+
+
+																		>
+																			<i className="fa fa-dot-circle-o"></i> {strings.Save}
+																		</Button>
+																		<Button
+																			type="button"
+																			color="secondary"
+																			className="btn-square"
+																			onClick={() => {
+																				this.props.history.push(
+																					'/admin/dashboard',
+																				);
+																			}}
+																		>
+																			<i className="fa fa-ban"></i>  {strings.Cancel}
+																		</Button>
+																	</FormGroup>
+																</Col>
+															</Row>
 														</Form>
 													)}
 												</Formik>

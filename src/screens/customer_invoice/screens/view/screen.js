@@ -158,7 +158,7 @@ class ViewCustomerInvoice extends React.Component {
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
 									paperSize="A4"
-									fileName="Customer_Invoice.pdf"
+									fileName={invoiceData.referenceNumber + ".pdf"}
 								>
 									<InvoiceTemplate
 									

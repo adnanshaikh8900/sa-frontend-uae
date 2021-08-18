@@ -277,10 +277,11 @@ class ProfitAndLossReport extends React.Component {
 								/>{' '}
 							</div>
 									<CardBody id="section-to-print">
-								<PDFExport
+									<PDFExport
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
-									paperSize="A4"
+									paperSize="A3"
+									fileName="Profit & Loss.pdf"
 								>
 							<div style={{	
 									

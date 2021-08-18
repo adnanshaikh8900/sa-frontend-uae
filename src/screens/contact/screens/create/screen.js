@@ -561,7 +561,7 @@ class CreateContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="telephone">{strings.Telephone}</Label>
 																	<Input
-																	maxLength="15"
+																		maxLength="15"
 																		type="text"
 																		id="telephone"
 																		name="telephone"
@@ -1061,6 +1061,7 @@ class CreateContact extends React.Component {
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
+																		disabled={this.state.disabled}
 																		onClick={() => {
 																			this.setState(
 																				{ createMore: false },
@@ -1070,13 +1071,15 @@ class CreateContact extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-dot-circle-o"></i>{' '}
-																		{strings.Create}
+																		<i className="fa fa-dot-circle-o"></i>	{this.state.disabled
+																			? 'Creating...'
+																			: strings.Create }
 																	</Button>
 																	<Button
 																		name="button"
 																		color="primary"
 																		className="btn-square mr-3"
+																		disabled={this.state.disabled}
 																		onClick={() => {
 																			this.setState(
 																				{ createMore: true },
@@ -1086,7 +1089,9 @@ class CreateContact extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-refresh"></i> {strings.CreateandMore}
+																		<i className="fa fa-refresh"></i> 	{this.state.disabled
+																			? 'Creating...'
+																			: strings.createMore }
 																	</Button>
 																	<Button
 																		color="secondary"

@@ -166,6 +166,7 @@ class ViewQuotation extends React.Component {
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
 									paperSize="A3"
+									fileName={QuotationData.poNumber + ".pdf"}
 								>
 									<RFQTemplate
 										QuotationData={QuotationData}

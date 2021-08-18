@@ -68,6 +68,7 @@ class DetailContact extends React.Component {
 			currentData: {},
 			dialog: null,
 			current_contact_id: null,
+			disabled: false,
 		};
 		// this.regEx = /^[0-9\d]+$/;
 		this.regEx =/[a-zA-Z0-9]+$/;
@@ -197,6 +198,7 @@ class DetailContact extends React.Component {
 	};
 
 	handleSubmit = (data, resetForm) => {
+		this.setState({ disabled: true });
 		const { current_contact_id } = this.state;
 		let postData = this.getData(data);
 
@@ -206,6 +208,7 @@ class DetailContact extends React.Component {
 			.updateContact(postData)
 			.then((res) => {
 				if (res.status === 200) {
+					this.setState({ disabled: false });
 					resetForm();
 					this.props.commonActions.tostifyAlert(
 						'success',
@@ -646,6 +649,7 @@ class DetailContact extends React.Component {
 																	<FormGroup>
 																		<Label htmlFor="telephone">{strings.Telephone}</Label>
 																		<Input
+																		maxLength="15"
 																			type="text"
 																			id="telephone"
 																			name="telephone"
@@ -1193,9 +1197,12 @@ class DetailContact extends React.Component {
 																			name="submit"
 																			color="primary"
 																			className="btn-square mr-3"
+																			disabled={this.state.disabled}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			 {strings.Update}
+																			{this.state.disabled
+																			? 'Updating...'
+																			: strings.Update }
 																		</Button>
 																		<Button
 																			type="button"

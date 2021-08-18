@@ -346,6 +346,7 @@ class ContactModal extends React.Component {
                       <FormGroup>
                         <Label htmlFor="telephone"> <span className="text-danger">*</span>Telephone</Label>
                         <Input
+                        maxLength="15"
                           type="text"
                           id="telephone"
                           name="telephone"

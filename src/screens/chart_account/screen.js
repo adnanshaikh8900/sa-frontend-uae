@@ -437,7 +437,7 @@ class ChartAccount extends React.Component {
 															}}
 														/>
 													</Col>
-													<Col lg={3} className="mb-1">
+													{/* <Col lg={3} className="mb-1">
 														<FormGroup className="mb-3">
 															<Select
 																styles={customStyles}
@@ -469,7 +469,7 @@ class ChartAccount extends React.Component {
 																value={filterData.chartOfAccountId}
 															/>
 														</FormGroup>
-													</Col>
+													</Col> */}
 													<Col lg={3} className="pl-0 pr-0">
 														<Button
 															type="button"

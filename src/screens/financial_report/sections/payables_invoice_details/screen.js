@@ -410,7 +410,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
 									paperSize="A3"
-									filename={'detailGeneralLedger.pdf'}
+									filename={'Payables Invoice Details.pdf'}
 								>
 
 									<div className="text-center" style={{

@@ -166,14 +166,14 @@ class CustomerModal extends React.Component {
 								.email('Invalid Email'),
 							mobileNumber: Yup.string()
 								.required('Mobile Number is required')
-								// .test('quantity', 'Invalid Mobile Number', (value) => {
-								// 	if (isValidPhoneNumber(value)) {
-								// 		return true;
-								// 	} else {
-								// 		return false;
-								// 	}
-								// }
-								// )
+								.test('quantity', 'Invalid Mobile Number', (value) => {
+									if (isValidPhoneNumber(value)) {
+										return true;
+									} else {
+										return false;
+									}
+								}
+								)
 								,
 							//     addressLine1: Yup.string()
 							//       .required("Address is required"),
@@ -550,6 +550,7 @@ class CustomerModal extends React.Component {
 												<FormGroup>
 													<Label htmlFor="telephone">{strings.Telephone}</Label>
 													<Input
+													maxLength="15"
 														type="text"
 														id="telephone"
 														name="telephone"

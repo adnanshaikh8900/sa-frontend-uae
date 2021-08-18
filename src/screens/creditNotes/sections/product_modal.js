@@ -85,6 +85,7 @@ class ProductModal extends React.Component {
 		this.regExBoth = /[a-zA-Z0-9-./\\|]+$/;
 		// this.regExBoth = /[a-zA-Z0-9 ]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
+		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 	}
 
 	getData = (data) => {
@@ -685,7 +686,7 @@ class ProductModal extends React.Component {
 														onChange={(option) => {
 															if (
 																option.target.value === '' ||
-																this.regEx.test(option.target.value)
+																this.regDecimal.test(option.target.value)
 															) {
 																props.handleChange('salesUnitPrice')(option);
 															}
@@ -847,7 +848,7 @@ class ProductModal extends React.Component {
 														onChange={(option) => {
 															if (
 																option.target.value === '' ||
-																this.regEx.test(option.target.value)
+																this.regDecimal.test(option.target.value)
 															) {
 																props.handleChange('purchaseUnitPrice')(option);
 															}

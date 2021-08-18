@@ -403,11 +403,11 @@ class ExpenseDetailsReport extends React.Component {
 								/>
 							</div>
 							<CardBody id="section-to-print">
-								<PDFExport
+							<PDFExport
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
 									paperSize="A3"
-									filename={'detailGeneralLedger.pdf'}
+									fileName="Expense Details.pdf"
 								>
 
 									<div style={{

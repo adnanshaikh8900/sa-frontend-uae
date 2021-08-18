@@ -99,7 +99,6 @@ class InventorySummary extends React.Component {
 	
 		
 	renderName=(cell,row)=>{
-		debugger
 		return (<span>{cell ? cell : "-"}</span>);
 
 	}

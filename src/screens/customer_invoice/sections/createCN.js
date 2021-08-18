@@ -950,9 +950,9 @@ class CreateCreditNoteModal extends React.Component {
 						}}
 						validationSchema={Yup.object().shape(
 							{
-							 creditNoteNumber: Yup.string().required(
-                            							 	'credit Note Number Number is Required',
-                            							 ),
+							//  creditNoteNumber: Yup.string().required(
+                            // 							 	'credit Note Number Number is Required',
+                            // 							 ),
 							creditNoteDate: Yup.date().required("credit Note  Date is Required"),							
 						}
 						)

@@ -295,12 +295,12 @@ class InvoiceTemplate extends Component {
 								}}
 							>
 								<div className="pl-5 pb-2">{strings.AmountInWords }:<br/>
-									<b> {upperCase(converter.toWords(toInteger(invoiceData.totalAmount)))+" ONLY" }
+									<b> {upperCase(invoiceData.currencyName + " " +(converter.toWords(toInteger(invoiceData.totalAmount)))+" ONLY" )}
 									{/* <b> {parseInt(invoiceData.dueAmount)} */}
 									</b></div>
 								<div className="pl-5 pb-2">{strings.Vat+" "+strings.AmountInWords }:
 										<br/>
-									<b> {upperCase(converter.toWords(toInteger(invoiceData.totalVatAmount)))+" ONLY" }</b>
+									<b> {upperCase(invoiceData.currencyName + " " +(converter.toWords(toInteger(invoiceData.totalVatAmount)))+" ONLY") }</b>
 									{/* <b> {invoiceData.totalVatAmount}</b> */}
 								</div>
 							<div className="pl-5" style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>

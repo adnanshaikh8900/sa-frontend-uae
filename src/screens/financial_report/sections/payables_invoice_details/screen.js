@@ -594,7 +594,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 																							// }
 																							>
 																								<Currency
-																									value={ row.vatAmount && row.unitPrice? (row.vatAmount + row.unitPrice) : row.totalAmount }
+																									value={row.totalAmount }
 																									currencySymbol={
 																										universal_currency_list[0]
 																											? universal_currency_list[0]

@@ -781,6 +781,8 @@ NetProfitLoss:"صافي الربح أو الخسارة",
 Operating:"تشغيل",	
 PaymentsRecevied : 'الدفعات المستلمة',
 CreditNoteDetails : 'تفاصيل مذكرة الائتمان',
+InvoiceDetails: 'تفاصيل الفاتورة',	
+Invoices: 'الفواتير',
 //placeholder
 ReceiptAttachmentDescription:"وصف مرفق الإيصال",	
 DiscountPercentage:"نسبة الخصم",		

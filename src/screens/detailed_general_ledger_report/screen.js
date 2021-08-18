@@ -574,9 +574,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 																									}
 																								>
 																									<Currency
-																										value={row.debitAmount.toFixed(
-																											2,
-																										)}
+																										value={row.debitAmount}
 																										currencySymbol={
 																											universal_currency_list[0]
 																												? universal_currency_list[0]
@@ -595,9 +593,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 																							>
 																								{row.debitAmount !== null ? (
 																									<Currency
-																										value={row.debitAmount.toFixed(
-																											2,
-																										)}
+																										value={row.debitAmount}
 																										currencySymbol={
 																											universal_currency_list[0]
 																												? universal_currency_list[0]
@@ -631,9 +627,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 																									}
 																								>
 																									<Currency
-																										value={row.creditAmount.toFixed(
-																											2,
-																										)}
+																										value={row.creditAmount}
 																										currencySymbol={
 																											universal_currency_list[0]
 																												? universal_currency_list[0]
@@ -652,9 +646,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 																							>
 																								{row.creditAmount !== null ? (
 																									<Currency
-																										value={row.creditAmount.toFixed(
-																											2,
-																										)}
+																										value={row.creditAmount}
 																										currencySymbol={
 																											universal_currency_list[0]
 																												? universal_currency_list[0]

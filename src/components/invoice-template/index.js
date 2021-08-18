@@ -78,9 +78,6 @@ class TemplateComponent extends React.Component {
     } = this.props
 
    
-  
-
-console.log(checkdata,"checkdata")
     return (
       <div className="theme-wrapper">
         <p className="template-title"><Checkbox className="btn-success"  checked={ enable  }></Checkbox><b>{templateTitle}</b></p>

@@ -128,6 +128,7 @@ class CreateRole extends React.Component {
 
 	// Create or Edit Vat
 	handleSubmit = (data, resetForm) => {
+		this.setState({ disabled: true });
 			const obj = {
 			roleName: data.name,
 			roleDescription: data.description,
@@ -136,6 +137,7 @@ class CreateRole extends React.Component {
 		this.props.RoleActions.createRole(obj)
 			.then((res) => {
 				if (res.status === 200) {
+					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
 						'success',
 						'New Role Created Successfully!',
@@ -366,25 +368,33 @@ class CreateRole extends React.Component {
 																name="submit"
 																color="primary"
 																className="btn-square mr-3"
+																disabled={this.state.disabled}
 																onClick={() => {
 																	this.setState({ createMore: false }, () => {
 																		props.handleSubmit();
 																	});
 																}}
 															>
-																<i className="fa fa-dot-circle-o"></i> {strings.Create}
+																<i className="fa fa-dot-circle-o"></i> 
+																{this.state.disabled
+																			? 'Creating...'
+																			: strings.Create }
 															</Button>
 															<Button
 																name="button"
 																color="primary"
 																className="btn-square mr-3"
+																disabled={this.state.disabled}
 																onClick={() => {
 																	this.setState({ createMore: true }, () => {
 																		props.handleSubmit();
 																	});
 																}}
 															>
-																<i className="fa fa-refresh"></i> {strings.CreateandMore}
+																<i className="fa fa-refresh"></i>
+																 {this.state.disabled
+																			? 'Creating...'
+																			: strings.CreateandMore }
 															</Button>
 															<Button
 																type="submit"

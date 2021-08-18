@@ -94,6 +94,7 @@ import PayablesInvoiceSummary from './financial_report/sections/payables_invoice
 import CreditNoteDetailsReport from './financial_report/sections/credit_note_details';
 import ExpenseDetailsReport from './financial_report/sections/expense_details';
 import ExpenseByCategory from './financial_report/sections/expense_by_catogery';
+import InvoiceDetails from './financial_report/sections/invoice_details';
 
 import ChartAccount from './chart_account';
 import CreateChartAccount from './chart_account/screens/create';
@@ -177,6 +178,7 @@ import CreditNotes from './creditNotes'
 import ApplyToInvoice from './creditNotes/screens/applyToInvoice'
 import Refund from './creditNotes/screens/refund'
 import PayrollConfigurations from './payroll_configurations'
+import Import from './import'
 export {
 	LogIn,
 	LogInTwo,
@@ -336,4 +338,6 @@ export {
 	PayrollConfigurations,
 	ExpenseDetailsReport,
 	ExpenseByCategory,
+	InvoiceDetails,
+	Import,
 };

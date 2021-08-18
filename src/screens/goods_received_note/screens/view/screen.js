@@ -161,6 +161,7 @@ class ViewGoodsReceivedNote extends React.Component {
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
 									paperSize="A3"
+									fileName="Goods_Received_Note.pdf"
 								>
 									<RFQTemplate
 										RFQData={RFQData}

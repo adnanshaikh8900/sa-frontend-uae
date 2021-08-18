@@ -196,6 +196,7 @@ class ViewPurchaseOrder extends React.Component {
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
 									paperSize="A3"
+									fileName="Purchase_Order.pdf"
 								>
 									<RFQTemplate
 										POData={POData}

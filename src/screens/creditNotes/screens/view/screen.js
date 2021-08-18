@@ -181,6 +181,7 @@ this.props.supplierInvoiceDetailActions
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
 									paperSize="A4"
+									fileName="creditnote.pdf"
 								>
 									<InvoiceTemplate
 										invoiceData={invoiceData}

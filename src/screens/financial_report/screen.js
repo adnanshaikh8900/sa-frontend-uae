@@ -279,6 +279,56 @@ class FinancialReport extends React.Component {
 									</div>
 									</Col>
 									</Row>
+
+									<Row xs="3" className="mt-4">
+									<Col  className="report-section ml-4">
+										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "37px",width:"350px" }}>
+											<img
+												className="ml-2 mr-2 mt-2 mb-2 "
+											src={Receivables}
+											style={{height:'25px'}}
+											></img>	<h5 className="mb-3 mt-2">{strings.Invoices}</h5></div>
+											<div className="mt-2 ml-4">
+											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
+											this.props.history.push('/admin/report/invoice-details')}>{strings.InvoiceDetails}</a></h6>
+											{/* <h6><a  style={{fontWeight:'400'}} href ="#" onClick={() => 
+											this.props.history.push('/admin/report/receivable-invoice-details')}>{strings.Receivable+" "+strings.Invoice+" "+strings.Details}</a></h6> */}
+									</div>
+									</Col>
+									{/* <Col  className="report-section ml-4">
+										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "37px",width:"350px" }}>
+											<img
+												className="ml-2 mr-2 mt-2 mb-2 "
+											src={Payables}
+											style={{height:'25px'}}
+											></img>	<h5 className="mb-3 mt-2">{strings.Payables}</h5></div>
+											<div className="mt-2 ml-4">
+											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
+											this.props.history.push('/admin/report/payable-invoice-summary')}>{strings.PayablesInvoiceSummary}</a></h6>
+											<h6><a  style={{fontWeight:'400'}} href ="#" onClick={() => 
+											this.props.history.push('/admin/report/payable-invoice-details')}> {strings.PayableInvoiceDetails}</a></h6>
+										
+									
+									</div>
+									</Col> */}
+									{/* <Col  className="report-section ml-4">
+										<div className="d-flex" style={{ backgroundColor: "#e8effb", height: "37px",width:"350px" }}>
+											<img
+												className="ml-2 mr-2 mt-2 mb-2 "
+											src={Financial}
+											style={{height:'25px'}}
+											></img>	<h5 className="mb-3 mt-2">{strings.PaymentsRecevied}</h5></div>
+											<div className="mt-2 ml-4">
+											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
+											this.props.history.push('/admin/report/credit-note-details')}>{strings.CreditNoteDetails}</a></h6>
+											<h6><a  style={{fontWeight:'400'}} href ="#" onClick={() => 
+											this.props.history.push('/admin/report/payable-invoice-details')}> Payables Invoice Detail</a></h6>
+										
+									
+									</div>
+									</Col> */}
+									</Row>
+								
 						</CardBody>
 					</Card>
 				</div>

@@ -791,6 +791,8 @@ NetProfitLoss:"Net Profit/Loss",
 Operating:"Operating",	
 PaymentsRecevied : 'Payments Received',
 CreditNoteDetails : 'Credit Note Details',	
+InvoiceDetails: 'Invoice Details',	
+Invoices: 'Invoices',
 
 //placeholder	
 ReceiptAttachmentDescription:"Receipt Attachment Description",	

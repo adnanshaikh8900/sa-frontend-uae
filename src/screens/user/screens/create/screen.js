@@ -1108,12 +1108,15 @@ class CreateUser extends React.Component {
 																		}}
 																	>
 																		<i className="fa fa-dot-circle-o"></i>{' '}
-																		 {strings.Create}
+																		{this.state.createDisabled
+																			? 'Creating...'
+																			: strings.Create }
 																	</Button>
 																	<Button
 																		name="button"
 																		color="primary"
 																		className="btn-square mr-3"
+																		disabled={this.state.createDisabled}
 																		onClick={() => {
 																			this.setState(
 																				{ createMore: true },
@@ -1123,7 +1126,9 @@ class CreateUser extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-refresh"></i> {strings.CreateandMore}
+																		<i className="fa fa-refresh"></i> 	 {this.state.createDisabled
+																			? 'Creating...'
+																			: strings.CreateandMore }
 																	</Button>
 																	<Button
 																		color="secondary"

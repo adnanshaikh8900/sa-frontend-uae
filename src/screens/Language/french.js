@@ -778,6 +778,8 @@ NetProfitLoss:"Net Bénéfice/Perte",
 Operating:"En Fonctionnement",
 PaymentsRecevied : 'paiement reçu',
 CreditNoteDetails:'Détails de la note de crédit',
+InvoiceDetails: 'Détails de la facture',	
+Invoices: 'Factures',
 
 //placeholder	
 ReceiptAttachmentDescription:"Description de la pièce jointe au reçu",	

@@ -181,6 +181,8 @@ import {
 	CreditNoteDetailsReport,
 	ExpenseDetailsReport,
 	ExpenseByCategory,
+	InvoiceDetails,
+	Import,
 } from 'screens';
 
 const adminRoutes = [
@@ -745,6 +747,11 @@ const adminRoutes = [
 		component: CreditNoteDetailsReport.screen,
 	},
 	{
+		path: '/admin/report/invoice-details',
+		name: 'InvoiceDetails',
+		component: InvoiceDetails.screen,
+	},
+	{
 		path: '/admin/report/receivable-invoice-summary',
 		name: 'ReceivableInvoiceSummary',
 		component: ReceivableInvoiceSummary.screen,
@@ -942,6 +949,11 @@ const adminRoutes = [
 		path: '/admin/settings/user',
 		name: 'ViewUser',
 		component: User.screen,
+	},
+	{
+		path: '/admin/settings/import',
+		name: 'Migration',
+		component: Import.screen,
 	},
 	{
 		path: '/admin/settings/organization',

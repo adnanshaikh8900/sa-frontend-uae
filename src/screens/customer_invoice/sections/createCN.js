@@ -100,7 +100,7 @@ class CreateCreditNoteModal extends React.Component {
 				},
 			],
 			initValue: {
-				poApproveDate: new Date(),
+				creditNoteDate: new Date(),
 				poReceiveDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
 				supplierId: '',
 				invoiceLineItems: [
@@ -138,6 +138,7 @@ class CreateCreditNoteModal extends React.Component {
 			productId:'',
 			prefixData:'',
 			fileName: '',
+			creditNoteDate: new Date(),
 		};
 	
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
@@ -949,89 +950,10 @@ class CreateCreditNoteModal extends React.Component {
 						}}
 						validationSchema={Yup.object().shape(
 							{
-							// po_number: Yup.string().required(
-							// 	'Invoice Number is Required',
-							// ),
-							// supplierId: Yup.string().required(
-							// 	'Supplier is Required',
-							// ),
-							
-							// poApproveDate: Yup.string().required(
-							// 	'Order Date is Required',
-							// ),
-							creditNoteDate: Yup.string().required(
-								'credit Note  Date is Required'
-							),
-							// attachmentFile: Yup.mixed()
-							// .test(
-							// 	'fileType',
-							// 	'*Unsupported File Format',
-							// 	(value) => {
-							// 		value &&
-							// 			this.setState({
-							// 				fileName: value.name,
-							// 			});
-							// 		if (
-							// 			!value ||
-							// 			(value &&
-							// 				this.supported_format.includes(value.type))
-							// 		) {
-							// 			return true;
-							// 		} else {
-							// 			return false;
-							// 		}
-							// 	},
-							// )
-							// .test(
-							// 	'fileSize',
-							// 	'*File Size is too large',
-							// 	(value) => {
-							// 		if (
-							// 			!value ||
-							// 			(value && value.size <= this.file_size)
-							// 		) {
-							// 			return true;
-							// 		} else {
-							// 			return false;
-							// 		}
-							// 	},
-							// ),
-							// lineItemsString: Yup.array()
-							// 	.required(
-							// 		'Atleast one invoice sub detail is mandatory',
-							// 	)
-							// 	.of(
-							// 		Yup.object().shape({
-							// 			quantity: Yup.string()
-							// 				.required('Value is Required')
-							// 				.test(
-							// 					'quantity',
-							// 					'Quantity Should be Greater than 1',
-							// 					(value) => {
-							// 						if (value > 0) {
-							// 							return true;
-							// 						} else {
-							// 							return false;
-							// 						}
-							// 					},
-							// 				),
-							// 			unitPrice: Yup.string()
-							// 				.required('Value is Required')
-							// 				.test(
-							// 					'Unit Price',
-							// 					'Unit Price Should be Greater than 1',
-							// 					(value) => {
-							// 						if (value > 0) {
-							// 							return true;
-							// 						} else {
-							// 							return false;
-							// 						}
-							// 					},
-							// 				),
-								
-									
-							// 		}),
-							// 	),
+							 creditNoteNumber: Yup.string().required(
+                            							 	'credit Note Number Number is Required',
+                            							 ),
+							creditNoteDate: Yup.date().required("credit Note  Date is Required"),							
 						}
 						)
 					}
@@ -1245,7 +1167,7 @@ class CreateCreditNoteModal extends React.Component {
 																				: ''
 																		}`}
 																	/>
-																	{props.errors.creditNoteDate &&
+																		{props.errors.creditNoteDate &&
 																		props.touched.creditNoteDate && (
 																			<div className="invalid-feedback">
 																				{props.errors.creditNoteDate}

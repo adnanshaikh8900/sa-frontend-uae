@@ -176,12 +176,12 @@ class RFQTemplate extends Component {
 								}}
 							>
 								<div className="pb-2">{strings.AmountInWords }:<br/>
-									<b> {upperCase(converter.toWords(toInteger(RFQData.totalAmount)))+" ONLY"}
+									<b> {upperCase(RFQData.currencyName + " " +(converter.toWords(toInteger(RFQData.totalAmount)))+" ONLY")}
 									{/* <b> {parseInt(RFQData.dueAmount)} */}
 									</b></div>
 								<div className="pb-2">{strings.Vat+" "+strings.AmountInWords }:
 										<br/>
-									<b> {upperCase(converter.toWords(toInteger(RFQData.totalVatAmount)))+" ONLY"}</b>
+									<b> {upperCase(RFQData.currencyName + " " +(converter.toWords(toInteger(RFQData.totalVatAmount)))+" ONLY")}</b>
 									{/* <b> {RFQData.totalVatAmount}</b> */}
 								</div>
 							<div style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>

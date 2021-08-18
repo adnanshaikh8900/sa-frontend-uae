@@ -267,12 +267,12 @@ class InvoiceTemplate extends Component {
 								}}
 							>
 								<div className="pl-5 pb-2">{strings.AmountInWords }:<br/>
-									<b> {upperCase(converter.toWords(toInteger(invoiceData.totalAmount)))+" ONLY"}
+									<b> {upperCase (invoiceData.currencyName + " " +(converter.toWords(toInteger(invoiceData.totalAmount)))+" ONLY")}
 									{/* <b> {parseInt(invoiceData.dueAmount)} */}
 									</b></div>
 								<div className="pl-5 pb-2">{strings.Vat+" "+strings.AmountInWords  }:
 										<br/>
-									<b> {upperCase(converter.toWords(toInteger(invoiceData.totalVatAmount)))+" ONLY"}</b>
+									<b> {upperCase(invoiceData.currencyName + " " +(converter.toWords(toInteger(invoiceData.totalVatAmount)))+" ONLY")}</b>
 									{/* <b> {invoiceData.totalVatAmount}</b> */}
 								</div>
 							<div className="pl-5" style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>
@@ -297,7 +297,7 @@ class InvoiceTemplate extends Component {
 									<tbody>
 										<tr >
 											<td style={{ width: '40%' }}>
-												<strong>{strings.SubTotal }</strong>
+												<strong>{strings.SubTotal}</strong>
 											</td>
 											<td
 												style={{
@@ -309,7 +309,7 @@ class InvoiceTemplate extends Component {
 												<span>
 													{totalNet ? (
 														<Currency
-															value={totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+															value={totalNet}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode
@@ -382,7 +382,7 @@ class InvoiceTemplate extends Component {
 												<span>
 													{invoiceData.totalVatAmount ? (
 														<Currency
-															value={invoiceData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+															value={invoiceData.totalVatAmount}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode
@@ -416,7 +416,7 @@ class InvoiceTemplate extends Component {
 												<span>
 													{invoiceData.totalAmount ? (
 														<Currency
-															value={invoiceData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+															value={invoiceData.totalAmount}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode
@@ -452,7 +452,7 @@ class InvoiceTemplate extends Component {
 													<span>
 													{invoiceData.totalAmount ? (
 														<Currency
-															value={invoiceData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+															value={invoiceData.totalAmount}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode

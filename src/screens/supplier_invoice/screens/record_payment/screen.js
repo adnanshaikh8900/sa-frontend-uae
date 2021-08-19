@@ -418,6 +418,21 @@ class RecordSupplierPayment extends React.Component {
 														payMode: Yup.string().required(
 															'Payment Mode is Required',
 														),
+														amount: Yup.mixed()
+														.test(
+															'amount',
+															'Amount cannot be greater than invoice amount',
+															(value) => {
+																if (
+																	!value ||
+																	(value  <= this.props.location.state.id.dueAmount)
+																) {
+																	return true;
+																} else {
+																	return false;
+																}
+															},
+														),
 														attachmentFile: Yup.mixed()
 															.test(
 																'fileType',

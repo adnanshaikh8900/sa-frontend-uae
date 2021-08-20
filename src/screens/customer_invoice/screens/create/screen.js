@@ -191,6 +191,7 @@ class CreateCustomerInvoice extends React.Component {
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 		this.regDecimalP = /(^100(\.0{1,2})?$)|(^([1-9]([0-9])?|0)(\.[0-9]{1,2})?$)/;
+		this.regExAlpha = /^[a-zA-Z0-9!@#$&()-\\`.+,/\"]+$/;
 	}
 
 	// renderActions (cell, row) {
@@ -1948,7 +1949,7 @@ class CreateCustomerInvoice extends React.Component {
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||
-																							this.regExBoth.test(
+																							this.regExAlpha.test(
 																								option.target.value,
 																							)
 																						) {

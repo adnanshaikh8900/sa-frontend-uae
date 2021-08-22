@@ -22,7 +22,7 @@ import * as Yup from 'yup';
 
 import { Loader } from 'components';
 
-import { CommonActions } from 'services/global';
+import { CommonActions,AuthActions } from 'services/global';
 import './style.scss';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import * as GeneralSettingActions from './actions';
@@ -39,6 +39,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		generalSettingActions: bindActionCreators(GeneralSettingActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
+		authActions:bindActionCreators(AuthActions, dispatch),
 	};
 };
 
@@ -80,10 +81,26 @@ class GeneralSettings extends React.Component {
 	// }
 	componentDidMount = () => {
 		this.initializeData();
-	};
-
+		this.props.authActions
+			.checkAuthStatus().then((res) => {
+				if (res.status === 200) {
+					this.setState({userId:res.data.userId});
+				}})
+			.catch((err) => {
+				this.setState({
+					loading: false,
+				});
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+				this.props.history.push('/admin');
+			});
+	}
+			
+		
 	testMail = () => {
-		this.props.generalSettingActions.getTestUserMailById(1);
+		this.props.generalSettingActions.getTestUserMailById(this.state.userId ? this.state.userId:1);
 		// toast.info("Test mail Sent .... !");
 		// alert("Test mail Sent .... !");
 	}

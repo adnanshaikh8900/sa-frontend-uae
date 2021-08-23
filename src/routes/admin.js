@@ -183,6 +183,9 @@ import {
 	ExpenseByCategory,
 	InvoiceDetails,
 	Import,
+	CreatePayroll,
+	CreatePayrollList,
+	PayrollApproverScreen,
 } from 'screens';
 
 const adminRoutes = [
@@ -565,6 +568,21 @@ const adminRoutes = [
 		component: PayrollRun.screen,
 	},
 
+	{
+		path: '/admin/payroll/createPayroll',
+		name: 'ViewPayrollRun',
+		component: CreatePayrollList.screen,
+	},
+	{
+		path: '/admin/payroll/createPayrollList',
+		name: 'ViewPayrollRun',
+		component: CreatePayroll.screen,
+	},
+	{
+		path: '/admin/payroll/payrollApproverScreen',
+		name: 'ViewPayrollRun',
+		component: PayrollApproverScreen.screen,
+	},
 	// {
 	// 	path: '/admin/payroll/employment/create',
 	// 	name: 'CreateEmployment',

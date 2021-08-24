@@ -64,7 +64,8 @@ class CreateProductCategory extends React.Component {
 			createMore: false,
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
-		this.regExBoth = /[a-zA-Z0-9]+$/;
+		this.regExBoth = /^[a-zA-Z0-9\s,'-/()]+$/;
+		//this.regExCode = /^[a-zA-Z0-9\s,'-]+$/;
 	}
 
 	componentDidMount = () => {

@@ -896,7 +896,7 @@ class DetailBankAccount extends React.Component {
 																	disabled={this.state.disabled1}
 																	onClick={() => this.closeBankAccount(current_bank_account_id)}
 																>
-																	<i className="fa fa-trash"></i>{this.state.disabled
+																	<i className="fa fa-trash"></i>{' '}{this.state.disabled
 																		? 'Deleting...'
 																		: strings.Delete}
 																</Button>

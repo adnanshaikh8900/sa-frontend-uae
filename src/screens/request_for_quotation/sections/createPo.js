@@ -772,6 +772,7 @@ class CreatePurchaseOrder extends React.Component {
         formData.append('totalVatAmount',this.state.totalVatAmount );
 	    formData.append('supplierId', this.state.selectedData.supplierId);
 		formData.append('supplierReferenceNumber',supplierReferenceNumber ? supplierReferenceNumber : '');
+		formData.append('currencyCode', this.state.selectedData.currencyCode);
         if (rfqNumber && rfqNumber.value) {
 			formData.append('rfqNumber', rfqNumber.value);
 		}

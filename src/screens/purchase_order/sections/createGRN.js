@@ -815,6 +815,7 @@ class CreateGoodsReceivedNote extends React.Component {
 		formData.append('totalAmount', this.state.initValue.totalAmount);
         formData.append('totalVatAmount',this.state.initValue.totalVatAmount);
 		formData.append('supplierId', this.state.selectedData.supplierId);
+		formData.append('currencyCode', this.state.selectedData.currencyCode);
         if (poNumber && poNumber.value) {
 			formData.append('poNumber', poNumber.value);
 		}

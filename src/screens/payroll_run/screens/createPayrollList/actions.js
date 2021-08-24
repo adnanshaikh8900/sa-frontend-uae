@@ -81,3 +81,33 @@ export const getApproversForDropdown = () => {
 			});
 	};
 };
+
+
+export const getAllPayrollEmployee = (_id) => {
+	return (dispatch) => {
+	  let data = {
+		method: 'GET',
+		url: `/rest/payroll/getAllPayrollEmployee?payrollid=${_id}`
+	  }
+  
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+}
+export const removeEmployee = (ids) => {
+	return (dispatch) => {
+	  let data = {
+		method: 'DELETE',
+		url: `/rest/payroll/removeEmployee?employeeIds=${ids}`
+	  }
+  
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+}

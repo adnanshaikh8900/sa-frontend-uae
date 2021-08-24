@@ -46,9 +46,11 @@ import { PayrollModal } from './sections';
 import { PaidInvoices } from 'screens/dashboard/sections';
 
 const mapStateToProps = (state) => {
+	
 	return {
-		payroll_employee_list: state.payrollEmployee.payroll_employee_list.resultSalaryPerMonthList,
-		incompleteEmployeeList: state.payrollEmployee.incompleteEmployeeList,
+		payroll_employee_list:state.payrollRun.payroll_list,
+		// payroll_employee_list: state.payrollEmployee.payroll_employee_list.resultSalaryPerMonthList,
+		incompleteEmployeeList: state.payrollRun.incompleteEmployeeList,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -139,7 +141,7 @@ class PayrollRun extends React.Component {
 			initValue.presentdate
 
 
-			this.props.payRollActions.getIncompletedEmployeeList()
+			// this.props.payRollActions.getIncompletedEmployeeList()
 			// .then((res) => {
 			// 	if (res.status === 200) {
 
@@ -153,7 +155,7 @@ class PayrollRun extends React.Component {
 			// });
 
 		this.props.payRollActions
-			.getPayrollEmployeeList(postData)
+			.getPayrollList(postData)
 			.then((res) => {
 				if (res.status === 200) {
 
@@ -179,9 +181,7 @@ class PayrollRun extends React.Component {
 	};
 
 	renderDate = (cell, rows) => {
-		return rows['receiptDate'] !== null
-			? moment(rows['receiptDate']).format('DD/MM/YYYY')
-			: '';
+		return moment(rows.payrollDate).format('DD/MM/YYYY');
 	};
 
 	renderAmount = (cell, row, extraData) => {
@@ -237,9 +237,9 @@ class PayrollRun extends React.Component {
 				tempList.push(row.employeeId);
 			} else 
 			{ 
-				if(isSelected==true) {	this.props.commonActions.tostifyAlert(
-					'success',"Salary for \""+row.employeeName+'\" has ALREADY GENERATED',
-				);}
+				// if(isSelected==true) {	this.props.commonActions.tostifyAlert(
+				// 	'success',"Salary for \""+row.employeeName+'\" has ALREADY GENERATED',
+				// );}
 				
 			
 				this.state.selectedRows.map((item) => {
@@ -510,9 +510,7 @@ class PayrollRun extends React.Component {
 			universal_currency_list,
 		} = this.props;
 		
-		console.log(payroll_employee_list,"payroll_employee_list")
-		console.log(incompleteEmployeeList,"incompleteEmployeeList")
-		
+				console.log(payroll_employee_list,"payroll_employee_list")
 		return (
 			<div className="receipt-screen">
 				<div className="animated fadeIn">
@@ -523,8 +521,8 @@ class PayrollRun extends React.Component {
 							<Row>
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
-										<i className="nav-icon fa fa-file-o" />
-										<span className="ml-2">{strings.GeneratePayroll}</span>
+									<i class="fas fa-money-check-alt"></i>
+										<span className="ml-2">Payrolls</span>
 									</div>
 								</Col>
 							</Row>
@@ -532,41 +530,11 @@ class PayrollRun extends React.Component {
 						<CardBody>
 
 
-							<Nav tabs pills>
-								<NavItem>
-									<NavLink
-										active={this.state.activeTab[0] === '1'}
-										onClick={() => {
-											this.toggle(0, '1');
-										}}
-									>
-									Profile Completed Employees
-									</NavLink>
-								</NavItem>
-								<NavItem>
-									<NavLink
-										active={this.state.activeTab[0] === '2'}
-										onClick={() => {
-											this.toggle(0, '2');
-										}}
-									>
-									Profile Incompleted Employees
-									</NavLink>
-								</NavItem>
-								
-							</Nav>
-							<TabContent activeTab={this.state.activeTab[0]}>
-								<TabPane tabId="1">
 									<div className="employee-screen">
 										<div className="animated fadeIn">
 											{dialog}
-												<Card>
-
-	
-											</Card>
-												<Card>
+										
 				
-						<CardBody>
 							{loading ? (
 								<Row>
 									<Col lg={12}>
@@ -582,40 +550,26 @@ class PayrollRun extends React.Component {
 											</ButtonGroup>
 										</div>
 										<Row className="mb-4 ">
-											<Col lg={2} className="mb-1 ml-4">
-											<Label><i class="far fa-calendar-minus  fa-2x mr-2"></i>{strings.Period}</Label>
-												<DatePicker
-													className="form-control"
-													id="date"
-													name="salaryDate"
-													placeholderText={strings.PostDate}
-													showMonthDropdown
-													showYearDropdown
-													dropdownMode="select"
-													dateFormat="dd/MM/yyyy"
-													autoComplete="off"
-													value={this.state.salaryDate}
-													onChange={(value) => {
-														this.handleChange(value, 'salaryDate');
-													}}
-												/>
-											</Col>
+											
 											<Col>
 												<Button
 													color="primary"
-													className="btn-square mt-4"
-													onClick={this.generateSalary}
-													disabled={selectedRows.length === 0}
+													className="btn-square mt-2 pull-right"
+													// onClick={}
+													onClick={() =>
+														this.props.history.push('/admin/payroll/createPayroll')
+													}
+													// disabled={selectedRows.length === 0}
 												>
-													<i class="fas fa-check-double mr-1"></i>
+												 <i className="fas fa-plus mr-1" />
 												
-													{strings.GenerateSalary}
+													Create New Payroll
 												</Button>
 											</Col>
 										</Row>
 										<div >
 											<BootstrapTable
-												selectRow={this.selectRowProp}
+												// selectRow={this.selectRowProp}
 												search={false}
 												options={this.options}
 												data={payroll_employee_list &&
@@ -624,7 +578,7 @@ class PayrollRun extends React.Component {
 												hover
 												keyField="employeeId"
 												remote
-												fetchInfo={{ dataTotalSize: payroll_employee_list.count ? payroll_employee_list.count : 0 }}
+												// fetchInfo={{ dataTotalSize: payroll_employee_list.count ? payroll_employee_list.count : 0 }}
 												// className="employee-table mt-4"
 												trClassName="cursor-pointer"
 												csvFileName="payroll_employee_list.csv"
@@ -632,56 +586,60 @@ class PayrollRun extends React.Component {
 											>
 												<TableHeaderColumn
 													className="table-header-bg"
+													dataField="payrollDate"
+													dataFormat={this.renderDate}
+													dataSort	
+												>
+												Payroll Date
+												</TableHeaderColumn>
+												<TableHeaderColumn
+													className="table-header-bg"
+													dataField="payrollSubject"
+													dataSort
+												>
+												Payroll Subject
+												</TableHeaderColumn>
+												<TableHeaderColumn
+													className="table-header-bg"
+													dataField=" "
+													dataSort
+												>
+												Pay Period
+												</TableHeaderColumn>
+												<TableHeaderColumn
+													className="table-header-bg"
+													dataField=" "
+													dataSort
+												>
+												Employee Count
+												</TableHeaderColumn>
+												<TableHeaderColumn
+													className="table-header-bg"
+													dataField="generatedBy"
+													dataSort
+												>
+												Generated by
+												</TableHeaderColumn>
+												<TableHeaderColumn
+													className="table-header-bg"
+													dataField=""
+													dataSort
+												>
+												Approver
+												</TableHeaderColumn>
+												<TableHeaderColumn
+													className="table-header-bg"
 													dataField="status"
 													dataSort
-													dataFormat={this.renderStatus}
-													width="10%"
 												>
 													{strings.STATUS}
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													className="table-header-bg"
-													dataField="employeeName"
-													dataSort
-
+													dataField="runDate"
+													dataSort		
 												>
-													{strings.EmployeeName}
-												</TableHeaderColumn>
-												
-												<TableHeaderColumn
-													className="table-header-bg"
-													dataField="payDays"
-													dataSort
-													width="15%"
-												>
-													{strings.PAYDAYS}
-												</TableHeaderColumn>
-												<TableHeaderColumn
-													className="table-header-bg"
-													dataField="earnings"
-													dataSort
-													dataFormat={this.earnings}
-													width="12%"
-												>
-													{strings.EARNINGS}
-												</TableHeaderColumn>
-												<TableHeaderColumn
-													className="table-header-bg"
-													dataField="deductions"
-													dataSort
-													dataFormat={this.deductions}
-													width="12%"
-												>
-													{strings.DEDUCTIONS}
-												</TableHeaderColumn>
-												<TableHeaderColumn
-													className="table-header-bg"
-													dataField="grossSalary"
-													dataSort
-													dataFormat={this.grossSalary}
-													width="12%"
-												>
-													{strings.NETPAY}
+													Run Date
 												</TableHeaderColumn>
 
 											
@@ -692,78 +650,13 @@ class PayrollRun extends React.Component {
 
 								</Row>
 							)}
-						</CardBody>
-					</Card>
+					
 										</div>
-									</div>
-								</TabPane>
-
-
-
-								<TabPane tabId="2">
-									<div className="employee-screen">
-										<div className="animated fadeIn">
-											{dialog}
-										<Card>
-												<CardHeader>
-													<Row>
-														<Col lg={12}>
-															<div className="h4 mb-0 d-flex align-items-center">
-																<i className="fas fa-object-group" />
-																<span className="ml-2"> Employees  List </span>
-															</div>
-														</Col>
-													</Row>
-												</CardHeader>
-												<CardBody>
-												<div >
-											<BootstrapTable
-												// selectRow={this.selectRowProp}
-												search={false}
-												// options={this.options}
-												 data={incompleteEmployeeList &&
-												 	incompleteEmployeeList ? incompleteEmployeeList : []}
-												version="4"
-												hover
-												keyField="employeeId"
-												remote
-												 fetchInfo={{ dataTotalSize: incompleteEmployeeList.count ? incompleteEmployeeList.count : 0 }}
-												// className="employee-table mt-4"
-												trClassName="cursor-pointer"
-												//csvFileName="payroll_employee_list.csv"
-												ref={(node) => this.table = node}
-											>
-												<TableHeaderColumn
-													className="table-header-bg"
-													dataField="employeeId"
-													dataSort			
-												>
-													Employee Id
-												</TableHeaderColumn>
-												<TableHeaderColumn
-													className="table-header-bg"
-													dataField="employeeName"
-													dataSort
-													dataFormat={this.renderActions}
-
-												>
-											{strings.EmployeeName}
-												</TableHeaderColumn>
-											
-											</BootstrapTable>
-										</div>
-													
-												</CardBody>
-											</Card>
-										</div>
-									</div>
-								</TabPane>				
-							</TabContent>
-
+									</div>									
 						</CardBody>
 					</Card>
 				</div>
-				<PayrollModal
+				{/* <PayrollModal
 					openPayrollModal={this.state.openPayrollModal}
 					closePayrollModal={(e) => {
 						this.closePayrollModal(e);
@@ -781,7 +674,7 @@ class PayrollRun extends React.Component {
 					updateEmployeeSalary={this.props.payRollActions.updateSalaryComponentAsNoOfDays}
 
 
-				/>
+				/> */}
 			</div>
 		);
 	}

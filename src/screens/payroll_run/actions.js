@@ -98,3 +98,29 @@ import {
           })
         }
       }
+
+      
+
+      export const getPayrollList = () => {
+    
+        let url = `/rest/payroll/getPayrollList`;
+    
+        return (dispatch) => {
+            let data = {
+                method: 'get',
+                url,
+            };
+            return authApi(data)
+                .then((res) => {
+                    if (res.status === 200) {
+                        dispatch({
+                            type:EMPLOYEEPAYROLL.PAYROLL_LIST,
+                            payload: res.data,
+                        });
+                    }
+                })
+                .catch((err) => {
+                    throw err;
+                });
+        };
+    };

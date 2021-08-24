@@ -45,7 +45,8 @@ import {
 	Designation,
 	PayrollEmployee,
 	CreditNotes,
-	PayrollConfigurations
+	PayrollConfigurations,
+	PayrollRun
 } from 'screens';
 
 
@@ -95,7 +96,7 @@ const reducer = combineReducers({
 	payrollEmployee : PayrollEmployee.reducer,
 	user: User.reducer,
 	creditNote:CreditNotes.reducer,
-	payrollConfigurations:PayrollConfigurations.reducer
+	payrollRun:PayrollRun.reducer,
 });
 
 export default reducer;

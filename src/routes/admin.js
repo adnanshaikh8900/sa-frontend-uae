@@ -564,23 +564,23 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/payroll/payrollrun',
-		name: 'ViewPayrollRun',
+		name: 'ViewPayroll',
 		component: PayrollRun.screen,
 	},
 
 	{
 		path: '/admin/payroll/createPayroll',
-		name: 'ViewPayrollRun',
+		name: 'ViewPayroll',
 		component: CreatePayrollList.screen,
 	},
 	{
 		path: '/admin/payroll/createPayrollList',
-		name: 'ViewPayrollRun',
+		name: 'GeneratePayroll',
 		component: CreatePayroll.screen,
 	},
 	{
 		path: '/admin/payroll/payrollApproverScreen',
-		name: 'ViewPayrollRun',
+		name: 'ApprovePayroll',
 		component: PayrollApproverScreen.screen,
 	},
 	// {

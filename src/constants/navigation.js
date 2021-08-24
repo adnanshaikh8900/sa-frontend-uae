@@ -277,7 +277,7 @@ export default {
 					name: strings.PayrollRun,
 					url: '/admin/payroll/payrollrun',
 					icon: 'fas fa-user-plus',
-					path: 'ViewPayrollRun',
+					path: 'ViewPayroll',
 				},
 				{
 					name: strings.PayrollConfigurations,

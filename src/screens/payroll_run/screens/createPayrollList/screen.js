@@ -43,6 +43,7 @@ const mapStateToProps = (state) => {
 		country_list: state.contact.country_list,
 		state_list: state.contact.state_list,
 		employees_for_dropdown: state.payrollRun.employees_for_dropdown,
+		approver_dropdown_list:state.payrollRun.approver_dropdown_list,
 		// employee_list:state.payrollEmployee.payroll_employee_list,
 		 employee_list: state.payrollEmployee.employee_list_dropdown,
 		
@@ -108,16 +109,16 @@ class CreatePayrollList extends React.Component {
 	}
 
 	componentDidMount = () => {
-		
-		// if (this.props.location.state 
-		// 	// && this.props.location.state.id
-		// 	) {
-            this.props.createPayrollActions.getPayrollById(1105).then((res) => {
+		this.props.createPayrollActions.getApproversForDropdown();
+		if (this.props.location.state 
+			 && this.props.location.state.id
+			) {
+            this.props.createPayrollActions.getPayrollById(this.props.location.state.id).then((res) => {
                 if (res.status === 200) {
-					debugger
+					
                     this.setState({
                         loading: false,
-                        // current_payroll_id: this.props.location.state.id,
+                         current_payroll_id: this.props.location.state.id,
                   
                             id: res.data.id ? res.data.id : '',
 							approvedBy: res.data.approvedBy ? res.data.approvedBy : '',
@@ -138,20 +139,20 @@ class CreatePayrollList extends React.Component {
 
                     }
                     )
-					
+				}
 
-                }
+                
             }).catch((err) => {
                 this.setState({ loading: false })
               
             })
-        
+		}   
 	};
 	closeModal = (res) => {
 		this.setState({ openModal: false });
 	};
 	initializeData = () => {
-
+		
 		 this.props.createPayrollActions.getEmployeesForDropdown();
 		this.props.createPayrollEmployeeActions.getEmployeesForDropdown();
 		const { filterData } = this.state
@@ -290,8 +291,9 @@ formData.append('employeeListIds', employeeList );
 	render() {
 		strings.setLanguage(this.state.language);
 
-		const { employee_list } = this.props
+		const { employee_list,approver_dropdown_list } = this.props
 		const { loading,initValue } = this.state
+		console.log(approver_dropdown_list,"approver_dropdown_list")
 		return (
 			<div className="create-employee-screen">
 				<div className="animated fadeIn">
@@ -628,6 +630,19 @@ formData.append('employeeListIds', employeeList );
 
 													</BootstrapTable>
 												</div>
+												<Formik
+													
+											     initialValues={this.state}
+														onSubmit={(values, { resetForm }) => {
+															this.addEmployee(values)
+
+														}}
+
+													>
+														{(props) => (
+
+
+															<Form onSubmit={props.handleSubmit}>
 												<Row className="mt-4 ">
 													<Col lg={3}>
 														<FormGroup>
@@ -640,26 +655,26 @@ formData.append('employeeListIds', employeeList );
 																id="contactId"
 																name="contactId"
 																placeholder={"Select Approver"}
-															// options={
-															// 	tmpCustomer_list
-															// 		? selectOptionsFactory.renderOptions(
-															// 				'label',
-															// 				'value',
-															// 				tmpCustomer_list,
-															// 				'Customer',
-															// 		  )
-															// 		: []
-															// }
-															// value={props.values.contactId}
-															// onChange={(option) => {
-															// 	if (option && option.value) {
-															// 		this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
-															// 		// this.setExchange( this.getCurrency(option.value) );
-															// 		props.handleChange('contactId')(option);
-															// 	} else {
-															// 		props.handleChange('contactId')('');
-															// 	}
-															// }}
+															options={
+																approver_dropdown_list.data
+																	? selectOptionsFactory.renderOptions(
+																			'name',
+																			'userId',
+																			approver_dropdown_list.data,
+																			'User',
+																	  )
+																	: []
+															}
+														
+															onChange={(option) => {
+																if (option && option.value) {
+																	
+																	// this.setExchange( this.getCurrency(option.value) );
+																	props.handleChange('UserId')(option);
+																} else {
+																	props.handleChange('UserId')('');
+																}
+															}}
 															/>
 
 														</FormGroup>
@@ -695,6 +710,10 @@ formData.append('employeeListIds', employeeList );
 														</Button>
 													</Col>
 												</Row>
+												</Form>
+														)
+														}
+													</Formik>
 											</Col>
 										</Row>
 									)}

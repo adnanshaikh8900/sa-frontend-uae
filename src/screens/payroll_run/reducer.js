@@ -7,6 +7,7 @@ const initState = {
 
     incompleteEmployeeList:[],
     payroll_list:[],
+    approver_dropdown_list:[],
 }
 
 const PayrollRunReducer = (state = initState, action) => {
@@ -40,6 +41,13 @@ const PayrollRunReducer = (state = initState, action) => {
                         ...state,
                         payroll_list: Object.assign([], payload)
                     }
+        case EMPLOYEEPAYROLL.APPROVER_DROPDOWN:
+             
+                        return {
+                            ...state,
+                            approver_dropdown_list: Object.assign([], payload)
+                        }
+                    
         default:
             return state
     }

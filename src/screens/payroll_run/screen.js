@@ -173,7 +173,9 @@ class PayrollRun extends React.Component {
 	};
 
 	goToDetail = (row) => {
-		this.renderActionForState(row.employeeId);
+		// this.renderActionForState(row.employeeId);
+		this.props.history.push('/admin/payroll/createPayrollList',{id:row.id})
+		
 	};
 
 	renderMode = (cell, row) => {
@@ -452,6 +454,18 @@ class PayrollRun extends React.Component {
 			actionButtons: temp,
 		});
 	};
+	renderSubject = (cell, row) => {
+		return (
+			<label
+				className="mb-0 label-bank"
+				style={{
+					cursor: 'pointer',
+					}}
+			>
+				{row.payrollSubject}
+			</label>
+		);
+	};
 	renderActions = (cell, row) => {
 		return (
 			<div>
@@ -569,7 +583,7 @@ class PayrollRun extends React.Component {
 										</Row>
 										<div >
 											<BootstrapTable
-												// selectRow={this.selectRowProp}
+												//  selectRow={this.selectRowProp}
 												search={false}
 												options={this.options}
 												data={payroll_employee_list &&
@@ -595,6 +609,7 @@ class PayrollRun extends React.Component {
 												<TableHeaderColumn
 													className="table-header-bg"
 													dataField="payrollSubject"
+													dataFormat={this.renderSubject}
 													dataSort
 												>
 												Payroll Subject

@@ -57,3 +57,27 @@ export const getEmployeesForDropdown = () => {
 			});
 	};
 };
+
+export const getApproversForDropdown = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/payroll/getAproverUsers',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+            type: EMPLOYEEPAYROLL.APPROVER_DROPDOWN,
+			payload: {
+				data: res.data,
+			},
+						
+					});
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

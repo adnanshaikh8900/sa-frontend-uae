@@ -580,7 +580,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/payroll/payrollApproverScreen',
-		name: 'ViewPayroll',
+		name: 'ApprovePayroll',
 		component: PayrollApproverScreen.screen,
 	},
 	// {

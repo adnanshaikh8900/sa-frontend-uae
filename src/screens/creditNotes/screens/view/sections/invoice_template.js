@@ -450,9 +450,9 @@ class InvoiceTemplate extends Component {
 												>
 													<span style={{ marginLeft: '2rem' }}></span>
 													<span>
-													{invoiceData.totalAmount ? (
+													{invoiceData.dueAmount ? (
 														<Currency
-															value={invoiceData.totalAmount}
+															value={invoiceData.dueAmount}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode

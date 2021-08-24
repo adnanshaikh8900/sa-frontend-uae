@@ -575,7 +575,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/payroll/createPayrollList',
-		name: 'ViewPayroll',
+		name: 'GeneratePayroll',
 		component: CreatePayroll.screen,
 	},
 	{

@@ -36,6 +36,7 @@ import LocalizedStrings from 'react-localization';
 import { AddEmployeesModal } from './sections';
 import moment from 'moment';
 
+
 const mapStateToProps = (state) => {
 
 	return ({
@@ -81,19 +82,21 @@ class CreatePayrollList extends React.Component {
 			loading: false,
 			initValue: {},
 			employeeListIds: [],
-			openModal:false,		                                          
+			openModal:false,
+			selectedRows:[],	
+			selectRowProp : {
+				mode: 'checkbox',
+				bgColor: 'rgba(0,0,0, 0.05)',
+				clickToSelect: false,
+				onSelect: this.onRowSelect,
+				onSelectAll: this.onSelectAll,
+			}	                                          
 		}
 
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
-		this.selectRowProp = {
-			mode: 'checkbox',
-			bgColor: 'rgba(0,0,0, 0.05)',
-			clickToSelect: false,
-			onSelect: this.onRowSelect,
-			onSelectAll: this.onSelectAll
-		}
+		
 		this.options = {
 			// onRowClick: this.goToDetail,
 			 paginationPosition: 'bottom',
@@ -109,52 +112,67 @@ class CreatePayrollList extends React.Component {
 	}
 
 	componentDidMount = () => {
-		this.props.createPayrollActions.getApproversForDropdown();
-		if (this.props.location.state 
-			 && this.props.location.state.id
-			) {
-            this.props.createPayrollActions.getPayrollById(this.props.location.state.id).then((res) => {
-                if (res.status === 200) {
-					
-                    this.setState({
-                        loading: false,
-                         current_payroll_id: this.props.location.state.id,
-                  
-                            id: res.data.id ? res.data.id : '',
-							approvedBy: res.data.approvedBy ? res.data.approvedBy : '',
-							comment: res.data.comment ? res.data.comment : '',
-							deleteFlag: res.data.deleteFlag ? res.data.deleteFlag : '',
-							employeeCount: res.data.employeeCount ? res.data.employeeCount : '',
-							generatedBy: res.data.generatedBy ? res.data.generatedBy : '',
-							
-							isActive: res.data.isActive ? res.data.isActive : '',
-							payPeriod: res.data.payPeriod ? res.data.payPeriod : '',
-							payrollApprover:res.data.payrollApprover ? res.data.payrollApprover : '',
-							payrollDate: res.data.payrollDate
-																		? moment(res.data.payrollDate).format('DD/MM/YYYY')
-																		: '',
-							payrollSubject: res.data.payrollSubject ? res.data.payrollSubject : '',
-							runDate: res.data.runDate ? res.data.runDate : '',
-							status: res.data.status ? res.data.status : '',
 
-                    }
-                    )
-				}
+		let search = window.location.search;
+		let params = new URLSearchParams(search);
+		let payroll_id = params.get('payroll_id');
 
-                
-            }).catch((err) => {
-                this.setState({ loading: false })
-              
-            })
-		}   
+		if(payroll_id) {
+			this.setState({
+				payroll_id:payroll_id
+			})
+			this.proceed(payroll_id);
+		}
+
+        
 	};
+
+	proceed = (payroll_id) => {
+		this.props.createPayrollActions.getPayrollById(payroll_id).then((res) => {
+			if (res.status === 200) {
+			//	debugger
+				this.setState({
+					    loading: false,
+						id: res.data.id ? res.data.id : '',
+						approvedBy: res.data.approvedBy ? res.data.approvedBy : '',
+						comment: res.data.comment ? res.data.comment : '',
+						deleteFlag: res.data.deleteFlag ? res.data.deleteFlag : '',
+						employeeCount: res.data.employeeCount ? res.data.employeeCount : '',
+						generatedBy: res.data.generatedBy ? res.data.generatedBy : '',
+						
+						isActive: res.data.isActive ? res.data.isActive : '',
+						payPeriod: res.data.payPeriod ? res.data.payPeriod : '',
+						payrollApprover:res.data.payrollApprover ? res.data.payrollApprover : '',
+						payrollDate: res.data.payrollDate
+																	? moment(res.data.payrollDate).format('DD/MM/YYYY')
+																	: '',
+						payrollSubject: res.data.payrollSubject ? res.data.payrollSubject : '',
+						runDate: res.data.runDate ? res.data.runDate : '',
+						status: res.data.status ? res.data.status : '',
+
+				}
+				)
+
+				this.initializeData();
+				this.getAllPayrollEmployee(payroll_id)
+				
+
+			}
+		}).catch((err) => {
+			this.setState({ loading: false })
+		  
+		})
+	}
+
+
+
+
 	closeModal = (res) => {
 		this.setState({ openModal: false });
 	};
 	initializeData = () => {
 		
 		 this.props.createPayrollActions.getEmployeesForDropdown();
-		this.props.createPayrollEmployeeActions.getEmployeesForDropdown();
 		const { filterData } = this.state
         const paginationData = {
             pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -175,6 +193,7 @@ class CreatePayrollList extends React.Component {
             this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
         })
 	};
+
 	employeeListIds = (option) => {
 		this.setState(
 			{
@@ -189,47 +208,25 @@ class CreatePayrollList extends React.Component {
 		);
 		// this.formRef.current.setFieldValue('employeeListIds', option, true);
 	};
+
 	addEmployee = (data) => {
 		 
 		this.setState({ disabled: true });
-		const {
-			employeeIds,
-			employeeListIds,
-			noOfDays,
-			salaryDate
-		} = data;
+		const { employeeIds } = data;
 	
-		const formData = new FormData();
 
-		// var result = employeeListIds.map((o) => ({
-		//   employeeIds: o.value,  
-		// }));
-		// formData.append(
-		// 	'employeeListIds',
-		//   employeeIds)
-		// employeeIds.forEach(item => {
-		// 	formData.append('employeeListIds', item.value);
-		// });
-let employeeList =[];
-		  Object.keys(employeeIds).forEach(key => {
-			// buildFormData(formData, data[key], parentKey ? `${parentKey}[${key}]` : key);
-			employeeList.push(employeeIds[key].value) 
-		  });
+		let employeeList =[];
+		Object.keys(employeeIds).forEach(key => {
+		 employeeList.push(employeeIds[key].value) 
+		});
 	
-formData.append('employeeListIds', employeeList );
-		
-		formData.append(
-			'payrollId',
-		  this.props.location.state.id);
 
 		this.props.createPayrollActions
-			.addMultipleEmployees( this.props.location.state.id,employeeList)
+			.addMultipleEmployees( this.state.payroll_id,employeeList)
 			.then((res) => {
 				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert(
-						'success',
-						'Employees added Successfully')
-					// resetForm(this.state.initValue)
+					this.props.commonActions.tostifyAlert('success','Employees added Successfully')
+					this.getAllPayrollEmployee()
 				}
 			}).catch((err) => {
 				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
@@ -287,6 +284,288 @@ formData.append('employeeListIds', employeeList );
 		// 	props.setFieldValue('invoiceDueDate', date, true);
 		// }
 	};
+
+
+	getAllPayrollEmployee  = () => {
+		this.props.createPayrollActions.getAllPayrollEmployee(this.state.payroll_id).then((res)=>{
+
+			if(res.status === 200) {
+				// uncomment this this is real data
+				// this.setState({
+				// 	allPayrollEmployee:res.data
+				// })
+
+				//fake data remove it
+				
+				let fakeData  = []
+
+				for(let i=0;i<10;i++) {
+					fakeData.push(
+						{
+							id:i,
+							empNo: 1,
+							name: 'data',
+							lop_days: null,
+							payble_days:30,
+							package:30000,
+							deductions:0,
+							net_pay:30000,
+							status:'ACTIVE'
+							
+							}
+					)
+				}
+				this.setState({
+					allPayrollEmployee:fakeData
+				})
+			  
+			}
+		})
+	}
+
+	getPayrollEmployeeList = () => {
+
+		const cols = [
+			{
+				label:'Employee No',
+				dataSort:true,
+				width:'',
+				key:'empNo'
+			},
+			{
+				label:'Employee Name',
+				dataSort:true,
+				width:'',
+				key:'name'
+
+			},
+			{
+				label:'LOP',
+				dataSort:true,
+				width:'8%',
+				key:'lop_days'
+			},
+			{
+				label:'Paid Days',
+				dataSort:true,
+				width:'12%',
+				key:'payble_days'
+			},
+			{
+				label:'Gross Pay',
+				dataSort:true,
+				width:'',
+				key:'package'
+			},
+			
+			{
+				label:'Deductions',
+				dataSort:true,
+				width:'',
+				key:'deductions'
+			},
+			{
+				label:'Net Pay',
+				dataSort:true,
+				width:'12%',
+				key:'net_pay'
+
+			}
+			
+	]
+
+ 
+
+
+
+
+
+		return (
+			<React.Fragment>
+			<Row>
+			<Col>
+				<Button
+					color="primary"
+					className="btn-square mb-2 "
+					onClick ={()=>{
+						this.removeEmployee()
+					}}
+					
+				 disabled={this.state.selectedRows.length === 0}
+				>
+					<i class="far fa-trash-alt mr-1"></i>
+					Remove Employees
+				</Button>
+			</Col>
+
+		</Row>
+		<div >
+			<BootstrapTable
+				selectRow={this.state.selectRowProp}
+				search={false}
+				options={this.options}
+				data = {this.state.allPayrollEmployee || []}
+				version="4"
+				hover
+				keyField="id"
+				remote
+				trClassName="cursor-pointer"
+				csvFileName="payroll_employee_list.csv"
+				ref={(node) => this.table = node}
+			>
+				{
+					cols.map((col,index)=>{
+
+						const  format = (cell, row)=> {
+
+							if(col.key === 'lop_days') {
+								return (
+									<Input
+									type="number"
+									max={30}
+									id="lopDays"
+									name="lopDays"
+									value={cell || 0}
+									onChange={(evt) => {
+
+										let value = evt.target.value;
+
+										if(value >30 || value<0) {
+											return ;
+										}
+
+										let newData = [...this.state.allPayrollEmployee]
+										newData = newData.map((data)=>{
+
+                                        
+											if(row.id === data.id) {
+												data.lop_days = value;
+												data.payble_days = 30-value
+												data.net_pay = Number(((data.package/30)*(30-value))).toFixed(2)-(data.deductions || 0)
+											}
+											return data
+											
+										})
+
+
+										this.setState({
+											allPayrollEmployee:newData
+
+										})
+
+
+
+	
+									}}
+								/>
+	
+								);
+
+							} else {
+								return (
+									<div>{cell}</div>
+								)
+							}
+							
+
+							}
+							
+						
+
+
+						  
+						return (
+							<TableHeaderColumn
+							    key={index}
+								dataFormat={format}
+								dataField={col.key} 
+								dataAlign="center" 
+								className="table-header-bg"
+								dataSort = {col.dataSort}
+								width = {col.width}>
+							{col.label}
+							</TableHeaderColumn>
+
+						)
+					})
+				}
+				
+
+			</BootstrapTable>
+		</div>
+		</React.Fragment>
+
+		)
+	}
+
+	removeEmployee = () => {
+		let ids = this.state.selectedRows;
+		if(ids && ids.length) {
+
+			this.props.createPayrollActions.removeEmployee(ids.join(',')).then((res)=>{
+
+
+				let newselectRowProp = {...this.state.selectedRowprop}
+				newselectRowProp.selected = []
+
+				this.setState({
+					selectRow:[],
+					selectedRowprop:newselectRowProp
+					
+				});
+
+				if(res.status ==200) {
+
+					this.props.commonActions.tostifyAlert('success','Employee(s) deleted Successfully')
+					this.getAllPayrollEmployee()
+				}
+
+			}).catch((err)=>{
+
+				this.props.commonActions.tostifyAlert('error','Error...')
+
+
+				
+
+	
+			})
+
+		}
+	
+	}
+
+	onRowSelect = (row, isSelected, e) => {
+		 
+		let tempList = [];
+		if (isSelected) {
+			tempList = Object.assign([], this.state.selectedRows);
+			tempList.push(row.id);
+		} else {
+			this.state.selectedRows.map((item) => {
+				if (item !== row.id) {
+					tempList.push(item);
+				}
+				return item;
+			});
+		}
+		this.setState({
+			selectedRows: tempList,
+		});
+	};
+	onSelectAll = (isSelected, rows) => {
+		 
+		let tempList = [];
+		if (isSelected) {
+			rows.map((item) => {
+				tempList.push(item.id);
+				return item;
+			});
+		}
+		this.setState({
+			selectedRows: tempList,
+		});
+	};
+
 
 	render() {
 		strings.setLanguage(this.state.language);
@@ -488,9 +767,9 @@ formData.append('employeeListIds', employeeList );
 																				this.setState(() => {
 																					props.handleSubmit()
 																				})
-																				// this.setState({
-																				// 	openModal: true
-																				// })
+																				this.setState({
+																					openModal: true
+																				})
 																			}}>
 																				<i className="fa fa-dot-circle-o"></i> Add Employees
 																			</Button>
@@ -507,142 +786,7 @@ formData.append('employeeListIds', employeeList );
 
 
 												</div>
-												<Row>
-													<Col>
-														<Button
-															color="primary"
-															className="btn-square mb-2 "
-															// onClick={}
-															onClick={() =>
-																this.props.history.push('/admin/payroll/createPayroll')
-															}
-														// disabled={selectedRows.length === 0}
-														>
-															<i class="far fa-trash-alt mr-1"></i>
-															Remove Employees
-														</Button>
-													</Col>
-													{/* <Col>
-																		<FormGroup className="pull-right">
-																			<Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
-																				// this.setState(() => {
-																				// 	props.handleSubmit()
-																				// })
-																				this.setState({
-																					openModal: true
-																				})
-																			}}>
-																				<i className="fa fa-dot-circle-o"></i> Add Employees
-																			</Button>
-																		</FormGroup>
-																	</Col> */}
-
-												</Row>
-												<div >
-													<BootstrapTable
-														selectRow={this.selectRowProp}
-														search={false}
-														options={this.options}
-														// data={payroll_employee_list &&
-														// 	payroll_employee_list ? payroll_employee_list : []}
-														version="4"
-														hover
-														keyField="employeeId"
-														remote
-														// fetchInfo={{ dataTotalSize: payroll_employee_list.count ? payroll_employee_list.count : 0 }}
-														// className="employee-table mt-4"
-														trClassName="cursor-pointer"
-														csvFileName="payroll_employee_list.csv"
-														ref={(node) => this.table = node}
-													>
-														<TableHeaderColumn
-															className="table-header-bg"
-															dataField="status"
-															dataSort
-
-														>
-															Employee NO#
-														</TableHeaderColumn>
-														<TableHeaderColumn
-															className="table-header-bg"
-															dataField="status"
-															dataSort
-														>
-															Employee Name
-														</TableHeaderColumn>
-														<TableHeaderColumn
-															className="table-header-bg"
-															dataField="status"
-															dataSort
-															width="8%"
-
-														>
-															LOP Days 
-														</TableHeaderColumn>
-														<TableHeaderColumn
-															className="table-header-bg"
-															dataField="status"
-															dataSort
-															width="12%"
-														>
-															Payable Days
-														</TableHeaderColumn>
-														<TableHeaderColumn
-															className="table-header-bg"
-															dataField="status"
-															dataSort	>
-															Package
-														</TableHeaderColumn>
-														<TableHeaderColumn
-															className="table-header-bg"
-															dataField="status"
-															dataSort
-
-
-														>
-															Earnings
-														</TableHeaderColumn>
-														<TableHeaderColumn
-															className="table-header-bg"
-															dataField="status"
-															dataSort
-
-
-														>
-															Deductions
-														</TableHeaderColumn>
-														<TableHeaderColumn
-															className="table-header-bg"
-															dataField="status"
-															dataSort
-
-														>
-															Net Pay
-														</TableHeaderColumn>
-														<TableHeaderColumn
-															className="table-header-bg"
-															dataField="status"
-															dataSort
-															width="8%"
-														>
-															{strings.STATUS}
-														</TableHeaderColumn>
-
-													</BootstrapTable>
-												</div>
-												<Formik
-													
-											     initialValues={this.state}
-														onSubmit={(values, { resetForm }) => {
-															this.addEmployee(values)
-
-														}}
-
-													>
-														{(props) => (
-
-
-															<Form onSubmit={props.handleSubmit}>
+												{this.getPayrollEmployeeList()}
 												<Row className="mt-4 ">
 													<Col lg={3}>
 														<FormGroup>
@@ -670,9 +814,9 @@ formData.append('employeeListIds', employeeList );
 																if (option && option.value) {
 																	
 																	// this.setExchange( this.getCurrency(option.value) );
-																	props.handleChange('UserId')(option);
+																	this.props.handleChange('UserId')(option);
 																} else {
-																	props.handleChange('UserId')('');
+																	this.props.handleChange('UserId')('');
 																}
 															}}
 															/>
@@ -710,10 +854,6 @@ formData.append('employeeListIds', employeeList );
 														</Button>
 													</Col>
 												</Row>
-												</Form>
-														)
-														}
-													</Formik>
 											</Col>
 										</Row>
 									)}

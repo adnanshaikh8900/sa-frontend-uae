@@ -231,7 +231,7 @@ class CreatePayroll extends React.Component {
 						'success',
 						'New Payroll Created Successfully')
 						
-						this.props.history.push('/admin/payroll/createPayrollList',{id:res.data})
+						this.props.history.push(`/admin/payroll/createPayrollList?payroll_id=${res.data}`,{id:res.data})
 					
 				}
 			}).catch((err) => {

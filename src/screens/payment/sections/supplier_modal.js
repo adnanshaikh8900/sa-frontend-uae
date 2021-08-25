@@ -18,8 +18,8 @@ import * as Yup from "yup";
 
 import { toast } from 'react-toastify'
 import 'react-phone-number-input/style.css'
-import PhoneInput from 'react-phone-number-input'
-import { isValidPhoneNumber } from 'react-phone-number-input'
+import PhoneInput  from "react-phone-input-2";
+import 'react-phone-input-2/lib/style.css'
 import Select from 'react-select'
 import {
   selectCurrencyFactory,
@@ -144,14 +144,7 @@ class SupplierModal extends React.Component {
                 telephone: Yup.number()
                   .required("Telephone Number is Required"),
                   mobileNumber: Yup.string()
-                  .required("Mobile Number is required")
-                  .test('quantity', 'Invalid Mobile Number', (value) => {
-                    if (isValidPhoneNumber(value)) {
-                      return true
-                    } else {
-                      return false
-                    }
-                  }),
+                  .required("Mobile Number is required"),
                  //     addressLine1: Yup.string()
                 //       .required("Address is required"),
                 countryId: Yup.string().required("Country is Required")
@@ -376,7 +369,8 @@ class SupplierModal extends React.Component {
                         <FormGroup>
                           <Label htmlFor="mobileNumber"> <span className="text-danger">*</span>{strings.MobileNumber}</Label>
                           <PhoneInput
-                            defaultCountry="AE"
+                            country={"ae"}
+                            enableSearch={true}
                             international
                             value={props.values.mobileNumber}
                             onChange={(option) => { props.handleChange('mobileNumber')(option) }}

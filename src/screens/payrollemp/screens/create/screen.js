@@ -42,7 +42,8 @@ import { selectCurrencyFactory, selectOptionsFactory } from 'utils'
 
 
 import 'react-datepicker/dist/react-datepicker.css'
-import PhoneInput from 'react-phone-number-input'
+import PhoneInput  from "react-phone-input-2";
+import 'react-phone-input-2/lib/style.css'
 import moment from 'moment'
 import * as DetailSalaryComponentAction from '../update_salary_component/actions';
 import * as CreatePayrollEmployeeActions from '../create/actions'
@@ -1099,19 +1100,7 @@ validationCheck = (value) => {
                                                                             // .required(" Employee Role is required"),
                                                                             dob: Yup.date()
                                                                             .required('DOB is Required') ,
-                                                                            // mobileNumber: Yup.string()
-                                                                            // .required('Mobile Number is required')
-                                                                            // .test(
-                                                                            //     'quantity',
-                                                                            //     'Invalid Mobile Number',
-                                                                            //     (value) => {
-                                                                            //         if (isValidPhoneNumber(value)) {
-                                                                            //             return true;
-                                                                            //         } else {
-                                                                            //             return false;
-                                                                            //         }
-                                                                            //     },
-                                                                            // ),
+                                                                          
                                                                             active : Yup.string()
                                                                             .required('status is Required') ,  
                                                                             employeeDesignationId : Yup.string()
@@ -1246,7 +1235,8 @@ validationCheck = (value) => {
                                                                                                     <PhoneInput
                                                                                                         id="mobileNumber"
                                                                                                         name="mobileNumber"
-                                                                                                        defaultCountry="AE"
+                                                                                                        country={"ae"}
+                                                                                                        enableSearch={true}
                                                                                                         international
                                                                                                         value={props.values.mobileNumber}
                                                                                                         placeholder={strings.Enter+strings.MobileNumber}
@@ -1913,7 +1903,8 @@ validationCheck = (value) => {
                                                                                                     <PhoneInput
                                                                                                         id="emergencyContactNumber1"
                                                                                                         name="emergencyContactNumber1"
-                                                                                                        defaultCountry="AE"
+                                                                                                        country={"ae"}
+                                                                                                        enableSearch={true}
                                                                                                         international
                                                                                                         value={props.values.emergencyContactNumber1}
                                                                                                         placeholder={strings.Enter+strings.ContactNumber1}
@@ -1988,7 +1979,8 @@ validationCheck = (value) => {
                                                                                                     <PhoneInput
                                                                                                         id="emergencyContactNumber2"
                                                                                                         name="emergencyContactNumber2"
-                                                                                                        defaultCountry="AE"
+                                                                                                        country={"ae"}
+                                                                                                        enableSearch={true}
                                                                                                         international
                                                                                                         value={props.values.emergencyContactNumber2}
                                                                                                         placeholder={strings.Enter+strings.ContactNumber2}

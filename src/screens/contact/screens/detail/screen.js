@@ -27,8 +27,8 @@ import { CommonActions } from 'services/global';
 import * as ContactActions from '../../actions';
 import * as DetailContactActions from './actions';
 import 'react-phone-number-input/style.css';
-import PhoneInput from 'react-phone-number-input';
-import { isValidPhoneNumber } from 'react-phone-number-input';
+import PhoneInput  from "react-phone-input-2";
+import 'react-phone-input-2/lib/style.css'
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
@@ -346,18 +346,7 @@ class DetailContact extends React.Component {
 															.required('Email is Required')
 															.email('Invalid Email'),
 														mobileNumber: Yup.string()
-															.required('Mobile Number is required')
-															.test(
-																'quantity',
-																'Invalid Mobile Number',
-																(value) => {
-																	if (isValidPhoneNumber(value)) {
-																		return true;
-																	} else {
-																		return false;
-																	}
-																},
-															),
+															.required('Mobile Number is required'),
 														currencyCode: Yup.string()
 															.required('Please Select Currency')
 															.nullable(),
@@ -686,27 +675,12 @@ class DetailContact extends React.Component {
 																			<span className="text-danger">*</span>
 																			 {strings.MobileNumber}
 																		</Label>
-																		{/* <Input
-                                        type="text"
-                                        id="mobileNumber"
-                                        name="mobileNumber"
-
-                                        onChange={(value) => { props.handleChange("mobileNumber")(value) }}
-                                        value={props.values.mobileNumber}
-                                        className={
-                                          props.errors.mobileNumber && props.touched.mobileNumber
-                                            ? "is-invalid"
-                                            : ""
-                                        }
-                                      />
-                                      {props.errors.mobileNumber && props.touched.mobileNumber && (
-                                        <div className="invalid-feedback">{props.errors.mobileNumber}</div>
-                                      )} */}
+																	
 																		<PhoneInput
 																			id="mobileNumber"
 																			name="mobileNumber"
-																			defaultCountry="AE"
-																			international
+																				country={"ae"}
+																				enableSearch={true}
 																			value={props.values.mobileNumber}
 																			placeholder={strings.Enter+strings.MobileNumber}
 																			onBlur={props.handleBlur('mobileNumber')}

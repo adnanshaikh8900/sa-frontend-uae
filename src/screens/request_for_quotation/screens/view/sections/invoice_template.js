@@ -44,7 +44,7 @@ class RFQTemplate extends Component {
 						<div 
 							style={{
 								width: '100%',
-								height:"210px",
+								height:"250px",
 								border:'1px solid',
 								padding:'7px',borderColor:'#c8ced3'
 							}}
@@ -68,7 +68,7 @@ class RFQTemplate extends Component {
 										}
 										className=""
 										alt=""
-										style={{ width: ' 250px' }}
+										style={{ width: ' 250px',height:'100px' }}
 						/>
 					</div>
 				
@@ -79,7 +79,7 @@ class RFQTemplate extends Component {
 											: ''}</h5>
 											</div>	
 						<div className="text-center "><span className="h4">{RFQData.rfqNumber} {this.renderRFQStatus(status)} </span></div>		
-						<div className="text-center mt-1">{RFQData.supplierName}</div>		
+						<div className="text-center mt-1 mb-2">{RFQData.supplierName}</div>		
 							</div>
 					
 

@@ -40,7 +40,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 // import 'react-images-uploader/font.css'
 
 import './style.scss';
-import PhoneInput from 'react-phone-number-input';
+import PhoneInput  from "react-phone-input-2";
+import 'react-phone-input-2/lib/style.css'
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
 
@@ -1657,7 +1658,8 @@ class Profile extends React.Component {
 																							 {strings.MobileNumber}
 																						</Label>
 																							<PhoneInput
-																								defaultCountry="AE"
+																								country={"ae"}
+																								enableSearch={true}
 																								international
 																								value={props.values.phoneNumber}
 																								placeholder={strings.Enter+strings.MobileNumber}

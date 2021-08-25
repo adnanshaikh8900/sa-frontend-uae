@@ -20,7 +20,6 @@ import * as Yup from "yup";
 import {selectCurrencyFactory, selectOptionsFactory} from 'utils'
 import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
-import { isValidPhoneNumber } from 'react-phone-number-input'
 
 class ContactModal extends React.Component {
 
@@ -144,14 +143,7 @@ class ContactModal extends React.Component {
               telephone: Yup.number()
                 .required("Telephone Number is Required"),
               mobileNumber: Yup.string()
-                .required("Mobile Number is required")
-                .test('quantity', 'Invalid Mobile Number', (value) => {
-                  if (isValidPhoneNumber(value)) {
-                    return true
-                  } else {
-                    return false
-                  }
-                }),
+                .required("Mobile Number is required"),
               postZipCode: Yup.string()
                 .required("Postal Code is Required"),
               vatRegistrationNumber: Yup.string()

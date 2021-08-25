@@ -21,7 +21,6 @@ import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import { toast } from 'react-toastify';
  
 
-import { isValidPhoneNumber } from 'react-phone-number-input';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import { TextField } from '@material-ui/core';

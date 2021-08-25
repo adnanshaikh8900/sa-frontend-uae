@@ -87,7 +87,7 @@ export const getAllPayrollEmployee = (_id) => {
 	return (dispatch) => {
 	  let data = {
 		method: 'GET',
-		url: `/rest/payroll/getAllPayrollEmployee?payrollid=${_id}`
+		url: `/rest/payroll/getAllPayrollEmployeeForGenerator?payrollid=${_id}`
 	  }
   
 	  return authApi(data).then((res) => {
@@ -101,7 +101,7 @@ export const removeEmployee = (ids) => {
 	return (dispatch) => {
 	  let data = {
 		method: 'DELETE',
-		url: `/rest/payroll/removeEmployee?employeeIds=${ids}`
+		url: `/rest/payroll/removeEmployee?payEmpListIds=${ids}`
 	  }
   
 	  return authApi(data).then((res) => {
@@ -111,3 +111,21 @@ export const removeEmployee = (ids) => {
 	  })
 	}
 }
+
+
+export const generatePayroll = (payrollId,string,date) => {
+	
+	return (dispatch) => {
+	  let data = {
+		method: 'post',
+		url: `/rest/payroll/generatePayroll?generatePayrollString=${string}&payrollId=${payrollId}&salaryDate=${date}`,
+		// data: obj
+	  }
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }
+ 

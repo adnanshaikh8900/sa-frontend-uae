@@ -124,3 +124,44 @@ import {
                 });
         };
     };
+
+    // export const getUserAndRole = (_id) => {
+    //     return (dispatch) => {
+    //         let data = {
+    //             method: 'GET',
+    //             url: `/rest/payroll/getUserAndRole`,
+    //         };
+    
+    //         return authApi(data)
+    //             .then((res) => {
+    //                 return res;
+    //             })
+    //             .catch((err) => {
+    //                 throw err;
+    //             });
+    //     };
+    // };
+    export const getUserAndRole = () => {
+        return (dispatch) => {
+            let data = {
+                method: 'get',
+                url: '/rest/payroll/getUserAndRole',
+            };
+            return authApi(data)
+                .then((res) => {
+                    if (res.status === 200) {
+                        dispatch({
+                type: EMPLOYEEPAYROLL.USER_APPROVER_GENERATER_DROPDOWN,
+                payload: {
+                    data: res.data,
+                },
+                            
+                        });
+                    }
+                })
+                .catch((err) => {
+                    throw err;
+                });
+        };
+    };
+    

@@ -30,7 +30,7 @@ import * as CreatePayrollEmployeeActions from '../../../payrollemp/screens/creat
 import * as PayrollEmployeeActions from '../../../payrollemp/actions'
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
-import PhoneInput from 'react-phone-number-input'
+  
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { AddEmployeesModal } from './sections';

@@ -27,7 +27,7 @@ import * as EmploymentCreateActions from './actions';
 
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
-import PhoneInput from 'react-phone-number-input'
+  
 
 const mapStateToProps = (state) => {
   return ({

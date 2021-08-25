@@ -26,7 +26,7 @@ import * as Yup from 'yup';
 import { CommonActions } from 'services/global';
 import * as ContactActions from '../../actions';
 import * as DetailContactActions from './actions';
-import 'react-phone-number-input/style.css';
+ 
 import PhoneInput  from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
 import {data}  from '../../../Language/index'

@@ -1091,7 +1091,7 @@ class CreateContact extends React.Component {
 																	>
 																		<i className="fa fa-refresh"></i> 	{this.state.disabled
 																			? 'Creating...'
-																			: strings.createMore }
+																			: strings.CreateandMore }
 																	</Button>
 																	<Button
 																		color="secondary"

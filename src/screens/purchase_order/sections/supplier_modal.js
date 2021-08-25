@@ -19,7 +19,7 @@ import * as Yup from 'yup';
 
 import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import { toast } from 'react-toastify';
-import 'react-phone-number-input/style.css';
+ 
 import PhoneInput  from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
 import IconButton from '@material-ui/core/IconButton';

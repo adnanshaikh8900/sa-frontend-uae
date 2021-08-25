@@ -20,7 +20,7 @@ import { selectCurrencyFactory, selectOptionsFactory } from 'utils'
 
 import Select from 'react-select'
 import { toast } from 'react-toastify';
-import 'react-phone-number-input/style.css';
+ 
 import moment from 'moment';
 import {data}  from '../../Language/index'
 import LocalizedStrings from 'react-localization';

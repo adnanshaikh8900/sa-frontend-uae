@@ -69,7 +69,7 @@ class RFQTemplate extends Component {
 										}
 										className=""
 										alt=""
-										style={{ width: ' 250px' }}
+										style={{ width: ' 250px',height:'100px' }}
 						/>
 					</div>
 					

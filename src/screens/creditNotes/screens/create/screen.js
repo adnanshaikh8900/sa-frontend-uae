@@ -1771,7 +1771,7 @@ class CreateCreditNote extends React.Component {
 																	<DatePicker
 																		id="creditNoteDate"
 																		name="creditNoteDate"
-																		placeholderText={strings.InvoiceDate}
+																		placeholderText={strings.CreditNoteDate}
 																		showMonthDropdown
 																		showYearDropdown
 																		dateFormat="dd/MM/yyyy"

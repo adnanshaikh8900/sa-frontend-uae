@@ -25,9 +25,8 @@ import * as Yup from 'yup';
 import { CommonActions } from 'services/global';
 import * as ContactActions from '../../actions';
 import * as CreateContactActions from './actions';
-import 'react-phone-number-input/style.css';
-import PhoneInput from 'react-phone-number-input';
-import { isValidPhoneNumber } from 'react-phone-number-input';
+import PhoneInput  from "react-phone-input-2";
+import 'react-phone-input-2/lib/style.css'
 
 const mapStateToProps = (state) => {
 	return {
@@ -231,17 +230,7 @@ class CreateContact extends React.Component {
 													// ),
 													mobileNumber: Yup.string()
 														.required('Mobile Number is required')
-														.test(
-															'quantity',
-															'Invalid Mobile Number',
-															(value) => {
-																if (isValidPhoneNumber(value)) {
-																	return true;
-																} else {
-																	return false;
-																}
-															},
-														)
+													
 														,
 														billingEmail: Yup.string().email("Invalid Billing  Email ")
 													//     addressLine1: Yup.string()
@@ -597,10 +586,10 @@ class CreateContact extends React.Component {
 																	{strings.MobileNumber}
 																	</Label>
 																	<PhoneInput
+																		enableSearch={true}
 																		id="mobileNumber"
 																		name="mobileNumber"
-																		defaultCountry="AE"
-																		international
+																		country={"ae"}
 																		value={props.values.mobileNumber}
 																		placeholder={strings.Enter+strings.MobileNumber}
 																		onBlur={props.handleBlur('mobileNumber')}

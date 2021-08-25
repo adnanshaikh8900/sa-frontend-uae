@@ -28,7 +28,8 @@ import * as CreatePayrollEmployeeActions from '../create/actions'
 import { Formik } from 'formik';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import PhoneInput from 'react-phone-number-input'
+import PhoneInput  from "react-phone-input-2";
+import 'react-phone-input-2/lib/style.css'
 import { selectOptionsFactory } from 'utils'
 import moment from 'moment'
 
@@ -419,19 +420,6 @@ class UpdateEmployeePersonal extends React.Component {
                                                         //     .required(" Employee Role is required"),
                                                         dob: Yup.date()
                                                             .required('DOB is Required'),
-                                                        // mobileNumber: Yup.string()
-                                                        // .required('Mobile Number is required')
-                                                        // .test(
-                                                        //     'quantity',
-                                                        //     'Invalid Mobile Number',
-                                                        //     (value) => {
-                                                        //         if (isValidPhoneNumber(value)) {
-                                                        //             return true;
-                                                        //         } else {
-                                                        //             return false;
-                                                        //         }
-                                                        //     },
-                                                        // ),
                                                         // active: Yup.string()
                                                         //     .required('status is Required'),
                                                         employeeDesignationId: Yup.string()
@@ -562,7 +550,8 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                 <PhoneInput
                                                                                     id="mobileNumber"
                                                                                     name="mobileNumber"
-                                                                                    defaultCountry="AE"
+                                                                                    country={"ae"}
+                                                                                    enableSearch={true}
                                                                                     international
                                                                                     value={props.values.mobileNumber}
                                                                                     placeholder={strings.Enter + strings.MobileNumber}
@@ -1222,7 +1211,8 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                     <PhoneInput
                                                                                                         id="emergencyContactNumber1"
                                                                                                         name="emergencyContactNumber1"
-                                                                                                        defaultCountry="AE"
+                                                                                                        country={"ae"}
+                                                                                                        enableSearch={true}
                                                                                                         international
                                                                                                         value={props.values.emergencyContactNumber1}
                                                                                                         placeholder={strings.Enter+strings.ContactNumber1}
@@ -1297,7 +1287,8 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                     <PhoneInput
                                                                                                         id="emergencyContactNumber2"
                                                                                                         name="emergencyContactNumber2"
-                                                                                                        defaultCountry="AE"
+                                                                                                        country={"ae"}
+                                                                                                        enableSearch={true}
                                                                                                         international
                                                                                                         value={props.values.emergencyContactNumber2}
                                                                                                         placeholder={strings.Enter+strings.ContactNumber2}

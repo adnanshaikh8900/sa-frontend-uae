@@ -45,7 +45,7 @@ class RFQTemplate extends Component {
 					<div 
 							style={{
 								width: '100%',
-								height:"210px",
+								height:"250px",
 								border:'1px solid',
 								padding:'7px',borderColor:'#c8ced3'
 							}}
@@ -63,7 +63,7 @@ class RFQTemplate extends Component {
 										}
 										className=""
 										alt=""
-										style={{ width: ' 250px' }}
+										style={{ width: ' 250px',height: '100px' }}
 						/>
 					</div>
 					

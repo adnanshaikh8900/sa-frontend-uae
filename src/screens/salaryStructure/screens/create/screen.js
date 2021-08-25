@@ -27,7 +27,7 @@ import * as SalaryStructureCreateActions from './actions';
 
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
-import PhoneInput from 'react-phone-number-input'
+  
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 

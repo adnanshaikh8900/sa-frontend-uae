@@ -29,7 +29,7 @@ import * as SalaryStructureCreateActions from './actions';
 
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
-import PhoneInput from 'react-phone-number-input'
+  
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
@@ -67,7 +67,6 @@ class PayrollApproverScreen extends React.Component {
       language: window['localStorage'].getItem('language'),
       loading: false,
       createMore: false,
-      loading:true,
       initValue: {
         type:'',
         name:'',

@@ -30,7 +30,7 @@ import { SalaryComponentDeduction, SalaryComponentFixed, SalaryComponentVariable
 import { Formik } from 'formik';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import PhoneInput from 'react-phone-number-input'
+  
 import { selectOptionsFactory } from 'utils'
 import moment from 'moment'
 

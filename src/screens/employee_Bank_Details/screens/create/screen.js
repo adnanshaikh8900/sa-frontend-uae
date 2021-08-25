@@ -27,7 +27,7 @@ import * as EmployeeCreateActions from './actions';
 
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
-import PhoneInput from 'react-phone-number-input'
+  
 
 const mapStateToProps = (state) => {
   return ({
@@ -67,7 +67,6 @@ class CreateEmployeeFinancial extends React.Component {
        contractType:'',
        accountNumber:'',
        swiftCode:'',
-       routingCode:'',
        ibanNumber:'',
        branch:'',
        bankName:'',

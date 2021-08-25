@@ -18,7 +18,6 @@ import { Formik } from 'formik';
 import * as Yup from "yup";
 
 import {selectCurrencyFactory, selectOptionsFactory} from 'utils'
-import 'react-phone-number-input/style.css'
 import PhoneInput  from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
 

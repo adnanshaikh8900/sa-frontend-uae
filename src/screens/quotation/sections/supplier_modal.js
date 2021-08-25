@@ -19,7 +19,7 @@ import * as Yup from 'yup';
 
 import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import { toast } from 'react-toastify';
-import 'react-phone-number-input/style.css';
+ 
 import PhoneInput  from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
 import IconButton from '@material-ui/core/IconButton';
@@ -167,7 +167,8 @@ class SupplierModal extends React.Component {
 								.email('Invalid Email'),
 							//telephone: Yup.number().required('Telephone Number is Required'),
 							mobileNumber: Yup.string()
-								.required('Mobile Number is required'),
+								.required('Mobile Number is required')
+						,
 							//     addressLine1: Yup.string()
 							//       .required("Address is required"),
 							// countryId: Yup.string()

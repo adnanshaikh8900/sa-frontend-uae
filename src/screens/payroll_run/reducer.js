@@ -8,6 +8,7 @@ const initState = {
     incompleteEmployeeList:[],
     payroll_list:[],
     approver_dropdown_list:[],
+    user_approver_generater_dropdown_list:[],
 }
 
 const PayrollRunReducer = (state = initState, action) => {
@@ -47,7 +48,13 @@ const PayrollRunReducer = (state = initState, action) => {
                             ...state,
                             approver_dropdown_list: Object.assign([], payload)
                         }
-                    
+        case  EMPLOYEEPAYROLL.USER_APPROVER_GENERATER_DROPDOWN:
+             
+                            return {
+                                ...state,
+                                user_approver_generater_dropdown_list: Object.assign([], payload)
+                            }
+                       
         default:
             return state
     }

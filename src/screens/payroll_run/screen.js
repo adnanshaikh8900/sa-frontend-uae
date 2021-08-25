@@ -44,11 +44,13 @@ import { data } from '../Language/index'
 import LocalizedStrings from 'react-localization';
 import { PayrollModal } from './sections';
 import { PaidInvoices } from 'screens/dashboard/sections';
+import { toast } from 'react-toastify';
 
 const mapStateToProps = (state) => {
 	
 	return {
-		payroll_employee_list:state.payrollRun.payroll_list,
+		user_approver_generater_dropdown_list:state.payrollRun.user_approver_generater_dropdown_list.data,
+		payroll_employee_list:state.payrollRun.payroll_list,	
 		// payroll_employee_list: state.payrollEmployee.payroll_employee_list.resultSalaryPerMonthList,
 		incompleteEmployeeList: state.payrollRun.incompleteEmployeeList,
 	};
@@ -123,7 +125,15 @@ class PayrollRun extends React.Component {
 		this.csvLink = React.createRef();
 	}
 
+	componentWillReceiveProps=(nextProps)=>{
+		this.setState({payroll_employee_list1:nextProps.payroll_employee_list})
+		console.log(nextProps.payroll_employee_list,"nextProps")
+
+		
+	}
 	componentDidMount = () => {
+		
+		this.props.payRollActions.getUserAndRole();
 		this.initializeData();
 	};
 	toggle = (tabPane, tab) => {
@@ -174,8 +184,31 @@ class PayrollRun extends React.Component {
 
 	goToDetail = (row) => {
 		// this.renderActionForState(row.employeeId);
-		this.props.history.push('/admin/payroll/createPayrollList',{id:row.id})
+		const {user_approver_generater_dropdown_list}=this.props;
+	debugger
+		var userValue=user_approver_generater_dropdown_list.length ? user_approver_generater_dropdown_list[0].value:'';
+		var userLabel=user_approver_generater_dropdown_list.length ? user_approver_generater_dropdown_list[0].label:'';
 		
+		if(userValue.toString()===row.generatedBy && userLabel==="Payroll Generator"){
+			this.props.history.push('/admin/payroll/createPayrollList',{id:row.id})
+		}
+		else
+		if(userValue===row.payrollApprover  && userLabel==="Payroll Approver"){
+			this.props.history.push('/admin/payroll/payrollApproverScreen',{id:row.id})
+		}
+		else{
+		let list=[...this.state.payroll_employee_list1];
+		list=list.map((data)=>{
+				if(data.id===row.id){
+					data.hover=true;
+				}
+				return data;
+		});
+		console.log(list,"list")
+		this.setState({payroll_employee_list1:list})
+
+		 toast.success("This is created by another user , So you can'nt able to Open it !")
+		}	
 	};
 
 	renderMode = (cell, row) => {
@@ -455,16 +488,34 @@ class PayrollRun extends React.Component {
 		});
 	};
 	renderSubject = (cell, row) => {
-		return (
-			<label
-				className="mb-0 label-bank"
-				style={{
-					cursor: 'pointer',
-					}}
-			>
-				{row.payrollSubject}
-			</label>
-		);
+		if(row.hover){
+			return (
+				<label
+					className="mb-0 label-bank"
+					
+					style={{
+						cursor: 'pointer',
+						backgroundColor:"yellow !important"
+						}}
+				>
+					{row.payrollSubject} Hello
+				</label>
+			);
+		}
+		else{
+			return (
+				<label
+					className="mb-0 label-bank"
+					style={{
+						cursor: 'pointer',
+						}}
+				>
+					{row.payrollSubject}
+				</label>
+			);
+		}
+
+	
 	};
 	renderActions = (cell, row) => {
 		return (
@@ -518,13 +569,16 @@ class PayrollRun extends React.Component {
 		} = this.state;
 		const {
 			payroll_employee_list,
+			user_approver_generater_dropdown_list,
 			incompleteEmployeeList,
 			invoice_list,
 			contact_list,
 			universal_currency_list,
 		} = this.props;
-		
-				console.log(payroll_employee_list,"payroll_employee_list")
+
+	 const userForCheckApprover=user_approver_generater_dropdown_list && user_approver_generater_dropdown_list.length !== 0 ? user_approver_generater_dropdown_list[0].label :'';
+
+				console.log(user_approver_generater_dropdown_list,"user_approver_generater_dropdown_list")
 		return (
 			<div className="receipt-screen">
 				<div className="animated fadeIn">
@@ -564,30 +618,32 @@ class PayrollRun extends React.Component {
 											</ButtonGroup>
 										</div>
 										<Row className="mb-4 ">
+										{userForCheckApprover==="Payroll Approver" ?"X"
+									:<Col>
+									<Button
+										color="primary"
+										className="btn-square mt-2 pull-right"
+										// onClick={}
+										onClick={() =>
+											this.props.history.push('/admin/payroll/createPayroll')
+										}
+										// disabled={selectedRows.length === 0}
+									>
+									 <i className="fas fa-plus mr-1" />
+									
+										Create New Payroll
+									</Button>
+								</Col>	
+									}	
 											
-											<Col>
-												<Button
-													color="primary"
-													className="btn-square mt-2 pull-right"
-													// onClick={}
-													onClick={() =>
-														this.props.history.push('/admin/payroll/createPayroll')
-													}
-													// disabled={selectedRows.length === 0}
-												>
-												 <i className="fas fa-plus mr-1" />
-												
-													Create New Payroll
-												</Button>
-											</Col>
 										</Row>
 										<div >
 											<BootstrapTable
 												//  selectRow={this.selectRowProp}
 												search={false}
 												options={this.options}
-												data={payroll_employee_list &&
-													payroll_employee_list ? payroll_employee_list : []}
+												data={this.state.payroll_employee_list1 &&
+													this.state.payroll_employee_list1 ? this.state.payroll_employee_list1 : []}
 												version="4"
 												hover
 												keyField="employeeId"

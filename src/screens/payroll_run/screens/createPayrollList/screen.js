@@ -84,6 +84,7 @@ class CreatePayrollList extends React.Component {
 			employeeListIds: [],
 			openModal:false,
 			selectedRows:[],	
+			selectedRows1:[],
 			selectRowProp : {
 				mode: 'checkbox',
 				bgColor: 'rgba(0,0,0, 0.05)',
@@ -113,10 +114,11 @@ class CreatePayrollList extends React.Component {
 
 	componentDidMount = () => {
 
-		let search = window.location.search;
-		let params = new URLSearchParams(search);
-		let payroll_id = params.get('payroll_id');
-
+		// let search = window.location.search;
+		// let params = new URLSearchParams(search);
+		// let payroll_id = params.get('payroll_id');
+		this.props.createPayrollActions.getApproversForDropdown();
+		let payroll_id =this.props.location.state.id;
 		if(payroll_id) {
 			this.setState({
 				payroll_id:payroll_id
@@ -209,7 +211,7 @@ class CreatePayrollList extends React.Component {
 		// this.formRef.current.setFieldValue('employeeListIds', option, true);
 	};
 
-	addEmployee = (data) => {
+	addEmployee = (data,resetForm) => {
 		 
 		this.setState({ disabled: true });
 		const { employeeIds } = data;
@@ -227,6 +229,7 @@ class CreatePayrollList extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert('success','Employees added Successfully')
 					this.getAllPayrollEmployee()
+					// resetForm(this.state.initValue)
 				}
 			}).catch((err) => {
 				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
@@ -291,33 +294,33 @@ class CreatePayrollList extends React.Component {
 
 			if(res.status === 200) {
 				// uncomment this this is real data
-				// this.setState({
-				// 	allPayrollEmployee:res.data
-				// })
+				this.setState({
+					allPayrollEmployee:res.data
+				})
 
 				//fake data remove it
 				
-				let fakeData  = []
+				// let fakeData  = []
 
-				for(let i=0;i<10;i++) {
-					fakeData.push(
-						{
-							id:i,
-							empNo: 1,
-							name: 'data',
-							lop_days: null,
-							payble_days:30,
-							package:30000,
-							deductions:0,
-							net_pay:30000,
-							status:'ACTIVE'
+				// for(let i=0;i<10;i++) {
+				// 	fakeData.push(
+				// 		{
+				// 			id:i,
+				// 			empNo: 1,
+				// 			name: 'data',
+				// 			lop_days: null,
+				// 			payble_days:30,
+				// 			package:30000,
+				// 			deductions:0,
+				// 			net_pay:30000,
+				// 			status:'ACTIVE'
 							
-							}
-					)
-				}
-				this.setState({
-					allPayrollEmployee:fakeData
-				})
+				// 			}
+				// 	)
+				// }
+				// this.setState({
+				// 	allPayrollEmployee:fakeData
+				// })
 			  
 			}
 		})
@@ -325,56 +328,102 @@ class CreatePayrollList extends React.Component {
 
 	getPayrollEmployeeList = () => {
 
-		const cols = [
-			{
-				label:'Employee No',
-				dataSort:true,
-				width:'',
-				key:'empNo'
-			},
-			{
-				label:'Employee Name',
-				dataSort:true,
-				width:'',
-				key:'name'
+		// const cols = [
+		// 	{
+		// 		label:'Employee No',
+		// 		dataSort:true,
+		// 		width:'',
+		// 		key:'empNo'
+		// 	},
+		// 	{
+		// 		label:'Employee Name',
+		// 		dataSort:true,
+		// 		width:'',
+		// 		key:'name'
 
-			},
-			{
-				label:'LOP',
-				dataSort:true,
-				width:'8%',
-				key:'lop_days'
-			},
-			{
-				label:'Paid Days',
-				dataSort:true,
-				width:'12%',
-				key:'payble_days'
-			},
-			{
-				label:'Gross Pay',
-				dataSort:true,
-				width:'',
-				key:'package'
-			},
+		// 	},
+		// 	{
+		// 		label:'LOP',
+		// 		dataSort:true,
+		// 		width:'8%',
+		// 		key:'lop_days'
+		// 	},
+		// 	{
+		// 		label:'Paid Days',
+		// 		dataSort:true,
+		// 		width:'12%',
+		// 		key:'payble_days'
+		// 	},
+		// 	{
+		// 		label:'Gross Pay',
+		// 		dataSort:true,
+		// 		width:'',
+		// 		key:'package'
+		// 	},
 			
-			{
-				label:'Deductions',
-				dataSort:true,
-				width:'',
-				key:'deductions'
-			},
-			{
-				label:'Net Pay',
-				dataSort:true,
-				width:'12%',
-				key:'net_pay'
+		// 	{
+		// 		label:'Deductions',
+		// 		dataSort:true,
+		// 		width:'',
+		// 		key:'deductions'
+		// 	},
+		// 	{
+		// 		label:'Net Pay',
+		// 		dataSort:true,
+		// 		width:'12%',
+		// 		key:'net_pay'
 
-			}
+		// 	}
 			
+	// ]
+
+	const cols = [
+		{
+			label:'Employee No',
+			dataSort:true,
+			width:'',
+			key:'empCode'
+		},
+		{
+			label:'Employee Name',
+			dataSort:true,
+			width:'',
+			key:'empName'
+
+		},
+		{
+			label:'LOP',
+			dataSort:true,
+			width:'8%',
+			key:'lopDay'
+		},
+		{
+			label:'Paid Days',
+			dataSort:true,
+			width:'12%',
+			key:'noOfDays'
+		},
+		{
+			label:'Gross Pay',
+			dataSort:true,
+			width:'',
+			key:'grossPay'
+		},
+		
+		{
+			label:'Deductions',
+			dataSort:true,
+			width:'',
+			key:'deduction'
+		},
+		{
+			label:'Net Pay',
+			dataSort:true,
+			width:'12%',
+			key:'netPay'
+
+		}
 	]
-
- 
 
 
 
@@ -418,13 +467,13 @@ class CreatePayrollList extends React.Component {
 
 						const  format = (cell, row)=> {
 
-							if(col.key === 'lop_days') {
+							if(col.key === 'lopDay') {
 								return (
 									<Input
 									type="number"
 									max={30}
-									id="lopDays"
-									name="lopDays"
+									id="lopDay"
+									name="lopDay"
 									value={cell || 0}
 									onChange={(evt) => {
 
@@ -439,9 +488,11 @@ class CreatePayrollList extends React.Component {
 
                                         
 											if(row.id === data.id) {
-												data.lop_days = value;
-												data.payble_days = 30-value
-												data.net_pay = Number(((data.package/30)*(30-value))).toFixed(2)-(data.deductions || 0)
+												data.lopDay = value;
+												data.noOfDays = 30-value
+												data.grossPay= Number(((data.grossPay/30)*(data.noOfDays))).toFixed(2)
+												data.netPay = Number(((data.grossPay/30)*(30-value))).toFixed(2)-(data.deduction || 0)
+												
 											}
 											return data
 											
@@ -497,12 +548,33 @@ class CreatePayrollList extends React.Component {
 
 		)
 	}
+generate=()=>{
+	debugger
 
+
+	this.props.createPayrollActions
+	.generatePayroll( this.state.payroll_id,JSON.stringify(this.state.allPayrollEmployee),this.state.payrollDate)
+	.then((res) => {
+		if (res.status === 200) {
+			this.props.commonActions.tostifyAlert('success','genrated payroll Successfully')
+			this.getAllPayrollEmployee()
+			// resetForm(this.state.initValue)
+		}
+	}).catch((err) => {
+		this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+	})
+
+}
 	removeEmployee = () => {
 		let ids = this.state.selectedRows;
 		if(ids && ids.length) {
 
-			this.props.createPayrollActions.removeEmployee(ids.join(',')).then((res)=>{
+			let employeeList =[];
+			Object.keys(this.state.selectedRows).forEach(key => {
+			 employeeList.push(this.state.selectedRows[key]) 
+			});
+			debugger
+			this.props.createPayrollActions.removeEmployee(employeeList).then((res)=>{
 
 
 				let newselectRowProp = {...this.state.selectedRowprop}
@@ -520,49 +592,58 @@ class CreatePayrollList extends React.Component {
 					this.getAllPayrollEmployee()
 				}
 
+				if(res.status ==204) {
+
+					this.props.commonActions.tostifyAlert('success','Employee(s) deleted Successfully')
+					this.getAllPayrollEmployee()
+				}
 			}).catch((err)=>{
 
 				this.props.commonActions.tostifyAlert('error','Error...')
 
-
-				
-
-	
 			})
 
 		}
-	
+		this.getAllPayrollEmployee()
 	}
 
 	onRowSelect = (row, isSelected, e) => {
 		 
 		let tempList = [];
+		let tempList1 = [];
 		if (isSelected) {
 			tempList = Object.assign([], this.state.selectedRows);
+			tempList1 = Object.assign([], this.state.selectedRows1);
 			tempList.push(row.id);
+			tempList1.push(row);
 		} else {
 			this.state.selectedRows.map((item) => {
 				if (item !== row.id) {
 					tempList.push(item);
+					tempList1.push(item); 
 				}
 				return item;
 			});
 		}
 		this.setState({
 			selectedRows: tempList,
+			selectedRows1: tempList1,
 		});
 	};
 	onSelectAll = (isSelected, rows) => {
 		 
 		let tempList = [];
+		let tempList1 = [];
 		if (isSelected) {
 			rows.map((item) => {
 				tempList.push(item.id);
+				tempList1.push(item); 
 				return item;
 			});
 		}
 		this.setState({
 			selectedRows: tempList,
+			selectedRows1: tempList1,
 		});
 	};
 
@@ -767,9 +848,9 @@ class CreatePayrollList extends React.Component {
 																				this.setState(() => {
 																					props.handleSubmit()
 																				})
-																				this.setState({
-																					openModal: true
-																				})
+																				// this.setState({
+																				// 	openModal: true
+																				// })
 																			}}>
 																				<i className="fa fa-dot-circle-o"></i> Add Employees
 																			</Button>
@@ -787,6 +868,19 @@ class CreatePayrollList extends React.Component {
 
 												</div>
 												{this.getPayrollEmployeeList()}
+												<Formik
+													
+													initialValues={this.state}
+														   onSubmit={(values, { resetForm }) => {
+															   this.addEmployee(values,resetForm)
+   
+														   }}
+   
+													   >
+														   {(props) => (
+   
+   
+															   <Form onSubmit={props.handleSubmit}>
 												<Row className="mt-4 ">
 													<Col lg={3}>
 														<FormGroup>
@@ -814,9 +908,9 @@ class CreatePayrollList extends React.Component {
 																if (option && option.value) {
 																	
 																	// this.setExchange( this.getCurrency(option.value) );
-																	this.props.handleChange('UserId')(option);
+																	this.props.handleChange('userId')(option);
 																} else {
-																	this.props.handleChange('UserId')('');
+																	this.props.handleChange('userId')('');
 																}
 															}}
 															/>
@@ -844,7 +938,7 @@ class CreatePayrollList extends React.Component {
 															className="btn-square mt-4 pull-right"
 															// onClick={}
 															onClick={() =>
-																this.props.history.push('/admin/payroll/createPayroll')
+																this.generate()
 															}
 														// disabled={selectedRows.length === 0}
 														>
@@ -854,6 +948,11 @@ class CreatePayrollList extends React.Component {
 														</Button>
 													</Col>
 												</Row>
+												
+												</Form>
+														)
+														}
+													</Formik>
 											</Col>
 										</Row>
 									)}

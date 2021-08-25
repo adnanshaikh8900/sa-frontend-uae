@@ -25,7 +25,7 @@ import {
 } from 'services/global'
 import {selectCurrencyFactory, selectOptionsFactory} from 'utils'
 import * as EmployeeActions from '../../actions';
-import * as SalaryStructureCreateActions from './actions';
+import * as ApproverActions from './actions';
 
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
@@ -44,7 +44,7 @@ const mapDispatchToProps = (dispatch) => {
   return ({
     commonActions: bindActionCreators(CommonActions, dispatch),
     employeeActions: bindActionCreators(EmployeeActions, dispatch),
-    salaryStructureCreateActions: bindActionCreators(SalaryStructureCreateActions, dispatch)
+    approverActions: bindActionCreators(ApproverActions, dispatch)
 
   })
 }
@@ -87,51 +87,11 @@ class PayrollApproverScreen extends React.Component {
   }
 
   componentDidMount = () => {
-    this.initializeData();
-  };
-
-  initializeData = () => {
 
   };
 
-  handleSubmit = (data, resetForm) => {
-    this.setState({ disabled: true });
-		const {
-      type,
-      name
-		} = data;
 
-
-		const formData = new FormData();
-    formData.append(
-      'type',
-      type != null ? type : '',
-    )
-    formData.append(
-      'name',
-      name != null ? name : '',
-    )
-    this.props.salaryStructureCreateActions
-    .createSalaryStructure(formData)
-    .then((res) => {
-      if (res.status === 200) {
-        this.props.commonActions.tostifyAlert(
-          'success',
-           'New Salary Structure Created Successfully')
-        if (this.state.createMore) {
-          this.setState({
-            createMore: false
-          })
-          resetForm(this.state.initValue)
-        } else {
-          this.props.history.push('/admin/payroll/config',{tabNo:'2'})
-        }
-      }
-    }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
-    })
-  }
-
+ 
 
   render() {
     strings.setLanguage(this.state.language);
@@ -149,7 +109,7 @@ class PayrollApproverScreen extends React.Component {
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
                         <i className="nav-icon fas fa-user-tie" />
-                        <span className="ml-2">{strings.CreateSalaryStructure}</span>
+                        <span className="ml-2">Payroll-Approval</span>
                       </div>
                     </Col>
                   </Row>
@@ -170,7 +130,7 @@ class PayrollApproverScreen extends React.Component {
 											</ButtonGroup>
 										</div>
 										<Row className="mb-4 ">
-                    <Col>
+                    						{/* <Col>
 												<Button
 													color="primary"
 													className="btn-square mt-2 "
@@ -183,7 +143,7 @@ class PayrollApproverScreen extends React.Component {
 													<i class="  mr-1"></i>
                           Remove Employees
 												</Button>
-											</Col>
+											</Col> */}
 											<Col>
 												<Button
 													color="primary"
@@ -302,7 +262,8 @@ class PayrollApproverScreen extends React.Component {
 													className="btn-square mt-4 pull-right"
 													// onClick={}
 													onClick={() =>
-														this.props.history.push('/admin/payroll/createPayroll')
+														this.props.approverActions.approveRunPayroll(this.props.location.state.id)
+														// this.props.history.push('/admin/payroll/createPayroll')
 													}
 													// disabled={selectedRows.length === 0}
 												>

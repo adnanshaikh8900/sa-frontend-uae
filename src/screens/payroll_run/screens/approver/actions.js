@@ -2,12 +2,12 @@ import {
   authApi
 } from 'utils'
 
-export const createSalaryStructure = (obj) => {
+export const approveRunPayroll = (payrollId) => {
   return (dispatch) => {
     let data = {
       method: 'post',
-      url: '/rest/payroll/saveSalaryStructure',
-      data: obj
+      url: `/rest/payroll/approveRunPayroll ?payrollId=${payrollId} `,
+      // data: obj
     }
     return authApi(data).then((res) => {
       return res

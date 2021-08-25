@@ -498,7 +498,7 @@ class PayrollRun extends React.Component {
 						backgroundColor:"yellow !important"
 						}}
 				>
-					{row.payrollSubject} Hello
+					{row.payrollSubject} 
 				</label>
 			);
 		}

@@ -117,6 +117,7 @@ class CreatePayrollList extends React.Component {
 		// let search = window.location.search;
 		// let params = new URLSearchParams(search);
 		// let payroll_id = params.get('payroll_id');
+		
 		this.props.createPayrollActions.getApproversForDropdown();
 		let payroll_id =this.props.location.state.id;
 		if(payroll_id) {
@@ -154,9 +155,8 @@ class CreatePayrollList extends React.Component {
 
 				}
 				)
-
 				this.initializeData();
-				this.getAllPayrollEmployee(payroll_id)
+				this.tableApiCallsOnStatus();
 				
 
 			}
@@ -168,7 +168,14 @@ class CreatePayrollList extends React.Component {
 
 
 
-
+tableApiCallsOnStatus=()=>{
+	// this.proceed(this.state.payroll_id);
+	if(this.state.status==="Draft"){
+		this.getAllPayrollEmployee2()
+	}else{
+	this.getAllPayrollEmployee()
+	}
+}
 	closeModal = (res) => {
 		this.setState({ openModal: false });
 	};
@@ -211,6 +218,14 @@ class CreatePayrollList extends React.Component {
 		// this.formRef.current.setFieldValue('employeeListIds', option, true);
 	};
 
+	disable = () => {
+		
+		if (this.state.status === '') {
+				return true;
+		} else {
+			return false;
+		}
+	};
 	addEmployee = (data,resetForm) => {
 		 
 		this.setState({ disabled: true });
@@ -228,7 +243,7 @@ class CreatePayrollList extends React.Component {
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert('success','Employees added Successfully')
-					this.getAllPayrollEmployee()
+					this.tableApiCallsOnStatus()
 					// resetForm(this.state.initValue)
 				}
 			}).catch((err) => {
@@ -287,6 +302,17 @@ class CreatePayrollList extends React.Component {
 		// 	props.setFieldValue('invoiceDueDate', date, true);
 		// }
 	};
+
+	getAllPayrollEmployee2  = () => {
+		this.props.createPayrollActions.getAllPayrollEmployee2(this.state.payroll_id).then((res)=>{
+
+			if(res.status === 200) {
+				this.setState({
+					allPayrollEmployee:res.data
+				})		  
+			}
+		})
+	}
 
 
 	getAllPayrollEmployee  = () => {
@@ -492,13 +518,14 @@ class CreatePayrollList extends React.Component {
 												data.noOfDays = 30-value
 												data.grossPay= Number(((data.grossPay/30)*(data.noOfDays))).toFixed(2)
 												data.netPay = Number(((data.grossPay/30)*(30-value))).toFixed(2)-(data.deduction || 0)
-												
+												data.payrollId=this.state.payroll_id
+												data.salaryDate=this.state.payrollDate
 											}
 											return data
 											
 										})
-
-
+console.log(newData)
+debugger
 										this.setState({
 											allPayrollEmployee:newData
 
@@ -549,15 +576,33 @@ class CreatePayrollList extends React.Component {
 		)
 	}
 generate=()=>{
-	debugger
-
+    const formData = new FormData();
+	formData.append('payrollId', this.state.payroll_id)
+	formData.append('salaryDate', this.state.payrollDate)
+    formData.append('generatePayrollString', JSON.stringify(this.state.allPayrollEmployee));
 
 	this.props.createPayrollActions
-	.generatePayroll( this.state.payroll_id,JSON.stringify(this.state.allPayrollEmployee),this.state.payrollDate)
+	.generatePayroll(formData )
 	.then((res) => {
 		if (res.status === 200) {
 			this.props.commonActions.tostifyAlert('success','genrated payroll Successfully')
-			this.getAllPayrollEmployee()
+			this.tableApiCallsOnStatus()
+			// resetForm(this.state.initValue)
+		}
+	}).catch((err) => {
+		this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+	})
+
+}
+submitPayroll=(data)=>{
+	debugger
+	const {userId }=data;
+	this.props.createPayrollActions
+	.submitPayroll( this.state.payroll_id,this.state.userId)
+	.then((res) => {
+		if (res.status === 200) {
+			this.props.commonActions.tostifyAlert('success','Payroll Submitted Successfully')
+			this.tableApiCallsOnStatus()
 			// resetForm(this.state.initValue)
 		}
 	}).catch((err) => {
@@ -589,13 +634,13 @@ generate=()=>{
 				if(res.status ==200) {
 
 					this.props.commonActions.tostifyAlert('success','Employee(s) deleted Successfully')
-					this.getAllPayrollEmployee()
+					this.tableApiCallsOnStatus()
 				}
 
 				if(res.status ==204) {
 
 					this.props.commonActions.tostifyAlert('success','Employee(s) deleted Successfully')
-					this.getAllPayrollEmployee()
+					this.tableApiCallsOnStatus()
 				}
 			}).catch((err)=>{
 
@@ -604,7 +649,7 @@ generate=()=>{
 			})
 
 		}
-		this.getAllPayrollEmployee()
+		this.tableApiCallsOnStatus()
 	}
 
 	onRowSelect = (row, isSelected, e) => {
@@ -872,7 +917,7 @@ generate=()=>{
 													
 													initialValues={this.state}
 														   onSubmit={(values, { resetForm }) => {
-															   this.addEmployee(values,resetForm)
+															   this.submitPayroll(values)
    
 														   }}
    
@@ -889,9 +934,10 @@ generate=()=>{
 																Select Approver
 															</Label>
 															<Select
+																isDisabled={	this.disable() ? true : false}
 																styles={customStyles}
-																id="contactId"
-																name="contactId"
+																id="userId"
+																name="userId"
 																placeholder={"Select Approver"}
 															options={
 																approver_dropdown_list.data
@@ -905,12 +951,9 @@ generate=()=>{
 															}
 														
 															onChange={(option) => {
-																if (option && option.value) {
-																	
-																	// this.setExchange( this.getCurrency(option.value) );
-																	this.props.handleChange('userId')(option);
-																} else {
-																	this.props.handleChange('userId')('');
+																if (option && option.value) {																	
+																	this.setState({userId:option.value})
+																
 																}
 															}}
 															/>
@@ -925,11 +968,27 @@ generate=()=>{
 															type="button"
 															color="primary"
 															className="btn-square mt-4 "
-
+															className={`btn-square mt-4 ${
+																this.disable() ? `disabled-cursor` : ``
+															} `}
+															submitPayroll
+															disabled={this.disable() ? true : false}
+															onClick={() =>
+																// this.submitPayroll()
+																this.setState(() => {
+																	props.handleSubmit()
+																})
+															}
+															title={
+																this.disable()
+																	? `Please Generate Payroll Before Submitting !`
+																	: ''
+															}
 														>
 															<i class="fas fa-bullseye mr-1"></i>
 															Submit Payroll
 														</Button>
+													
 													</Col>
 
 													<Col>
@@ -939,6 +998,7 @@ generate=()=>{
 															// onClick={}
 															onClick={() =>
 																this.generate()
+																
 															}
 														// disabled={selectedRows.length === 0}
 														>

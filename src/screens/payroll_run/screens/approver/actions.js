@@ -87,7 +87,7 @@ export const getAllPayrollEmployee = (_id) => {
 	return (dispatch) => {
 	  let data = {
 		method: 'GET',
-		url: `/rest/payroll/getAllPayrollEmployeeForGenerator?payrollid=${_id}`
+		url: `/rest/payroll/getAllPayrollEmployee?payrollid=${_id}`
 	  }
   
 	  return authApi(data).then((res) => {
@@ -128,4 +128,21 @@ export const generatePayroll = (payrollId,string,date) => {
 	  })
 	}
   }
+  export const approveAndRunPayroll = (payrollId) => {
+	
+	return (dispatch) => {
+	  let data = {
+		method: 'post',
+		url: `/rest/payroll/approveRunPayroll?payrollId=${payrollId}`,
+		// data: obj
+	  }
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }
  
+ 
+  

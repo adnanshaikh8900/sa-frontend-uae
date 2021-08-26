@@ -170,11 +170,11 @@ class CreatePayrollList extends React.Component {
 
 tableApiCallsOnStatus=()=>{
 	// this.proceed(this.state.payroll_id);
-	if(this.state.status==="Draft"){
-		this.getAllPayrollEmployee2()
-	}else{
-	this.getAllPayrollEmployee()
-	}
+	// if(this.state.status==="Draft"){
+	// 	this.getAllPayrollEmployee2()
+	// }else{
+	this.getAllPayrollEmployee2()
+	
 }
 	closeModal = (res) => {
 		this.setState({ openModal: false });

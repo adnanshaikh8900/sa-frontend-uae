@@ -672,14 +672,14 @@ class PayrollRun extends React.Component {
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													className="table-header-bg"
-													dataField=" "
+													dataField="payPeriod"
 													dataSort
 												>
 												Pay Period
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													className="table-header-bg"
-													dataField=" "
+													dataField="employeeCount"
 													dataSort
 												>
 												Employee Count
@@ -693,7 +693,7 @@ class PayrollRun extends React.Component {
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													className="table-header-bg"
-													dataField=""
+													dataField="payrollApprover"
 													dataSort
 												>
 												Approver

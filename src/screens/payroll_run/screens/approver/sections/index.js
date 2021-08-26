@@ -1,5 +1,6 @@
-import Temp from './temp'
+
+import AddEmployeesModal from './addEmployees'
 
 export {
-  Temp
+    AddEmployeesModal
 }

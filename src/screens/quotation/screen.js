@@ -309,7 +309,7 @@ class Quatation extends React.Component {
 							this.changeStatus(row.id);
 							}}
 							>
-								<i className="fas fa-send" />  {strings.Close}
+								<i className="far fa-times-circle" />  {strings.Close}
 							</DropdownItem>
 							)}
 						<DropdownItem

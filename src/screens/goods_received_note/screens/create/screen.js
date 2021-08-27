@@ -1050,7 +1050,7 @@ class CreateGoodsReceivedNote extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'New Invoice Created Successfully.',
+					'Goods Received Notes Created Successfully.',
 				);
 				if (this.state.createMore) {
 					this.setState(

@@ -91,7 +91,8 @@ class CreateContact extends React.Component {
 		this.regExTelephone = /^[0-9-]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
-		this.regExAddress = /^[a-zA-Z0-9\s,'-]+$/;
+		this.regExAddress = /^[a-zA-Z0-9\s,'-/]+$/;
+		
 		this.formRef = React.createRef();
 	}
 

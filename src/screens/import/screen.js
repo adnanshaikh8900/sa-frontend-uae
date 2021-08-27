@@ -60,6 +60,7 @@ class Import extends React.Component {
 			type:'',
 			upload: false,
 			migration: false,
+			migration_list:[],
 			
 		};
 	}
@@ -118,7 +119,9 @@ class Import extends React.Component {
 				if (res.status === 200) {
 					this.setState({ disabled: false,
 						upload: true,
-						migration: true });
+						migration: true,
+						migration_list: res.data
+					 });
 					this.props.commonActions.tostifyAlert(
 						'success',
 						'Files Uploaded Successfully.',
@@ -149,11 +152,14 @@ class Import extends React.Component {
 					.then((res) => {
 						this.setState({ disabled: false });
 						if (res.status === 200) {
+							this.setState({ 
+								migration_list: res.data
+							 });
 							this.props.commonActions.tostifyAlert(
 								'success',
 								'Migration Completed.',
 							);
-							 this.props.history.push('/admin/dashboard');
+							
 						
 						}
 					})
@@ -196,8 +202,8 @@ class Import extends React.Component {
 
 	render() {
 		const { isPasswordShown,product_list,version_list } = this.state;
-		const { initValue } = this.state;
-console.log(initValue.productName)
+		const { initValue,migration_list } = this.state;
+console.log(migration_list)
 		const customStyles = {
 			control: (base, state) => ({
 				...base,
@@ -373,8 +379,8 @@ console.log(initValue.productName)
 																				this.uploadFile = ref;
 																			}}
 																			multiple
-																			directory="" 
-																			webkitdirectory=""
+																			// directory="" 
+																			// webkitdirectory=""
 																			type="file"
 																			accept=".csv"
 																			onChange={(e) => {
@@ -417,39 +423,29 @@ console.log(initValue.productName)
 												selectRow={this.selectRowProp}
 												search={false}
 												options={this.options}
-												// data={
-												// 	summary_list && summary_list.data
-												// 		? summary_list.data
-												// 		: []
-												// }
+												data={
+													migration_list && migration_list
+														? migration_list
+														: []
+												}
 												version="4"
 												hover
-												// pagination={
-												// 	summary_list &&
-												// 	summary_list.data &&
-												// 	summary_list.data.length > 0
-												// 		? true
-												// 		: false
-												// }
+											
 												remote
-												// fetchInfo={{
-												// 	dataTotalSize: summary_list.count
-												// 		? summary_list.count
-												// 		: 0,
-												// }}
-												className="product-table"
+										
+												// className="product-table"
 												trClassName="cursor-pointer"
 												csvFileName="summary_list.csv"
 												ref={(node) => (this.table = node)}
 											>
-												<TableHeaderColumn isKey dataField="productName" dataSort className="table-header-bg">
-												PRODUCTNAME
+												<TableHeaderColumn isKey dataField="fileName" dataSort className="table-header-bg">
+												File name
 												</TableHeaderColumn >
-												<TableHeaderColumn dataField="productCode" dataSort className="table-header-bg">
-												PRODUCTCODE
+												<TableHeaderColumn dataField="recordCount" dataSort className="table-header-bg">
+												Record Uploaded
 												</TableHeaderColumn>
-												<TableHeaderColumn  dataField="purchaseOrder" dataSort className="table-header-bg">
-											ORDERQUANTITY
+												<TableHeaderColumn  dataField="recordsMigrated" dataSort className="table-header-bg">
+												Record Migrated
 												</TableHeaderColumn >
 											</BootstrapTable>
 											</div>

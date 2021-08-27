@@ -79,7 +79,7 @@ class RFQTemplate extends Component {
 											: ''}</h5>
 											</div>	
 						<div className="text-center "><span className="h4">{RFQData.rfqNumber} {this.renderRFQStatus(status)} </span></div>		
-						<div className="text-center mt-1 mb-2">{RFQData.supplierName}</div>		
+						<div className="text-center mt-1 mb-2">{RFQData.organisationName ? RFQData.organisationName : RFQData.supplierName}</div>		
 							</div>
 					
 
@@ -220,7 +220,7 @@ class RFQTemplate extends Component {
 									</b></div>
 								<div className="pb-2">{strings.Vat+" "+strings.AmountInWords }:
 										<br/>
-									<b> {upperCase(RFQData.currencyName + " " +(converter.toWords(toInteger(RFQData.totalVatAmount)))+" ONLY")}</b>
+									<b>{RFQData.totalVatAmount ? (upperCase(RFQData.currencyName + " " +(converter.toWords(toInteger(RFQData.totalVatAmount)))+" ONLY")) : " -" }</b>
 									{/* <b> {RFQData.totalVatAmount}</b> */}
 								</div>
 							<div style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>

@@ -174,9 +174,9 @@ class InvoiceTemplate extends Component {
 									<div style={{ fontWeight: '600' }} className="mb-1 mt-1 ml-2">
 										<b>{strings.BillTo },</b>
 									</div>
-									<div className="mb-1 ml-2"><b>{strings.Name}:</b> {invoiceData.name}</div>
+									<div className="mb-1 ml-2"><b>{strings.Name}:</b> {invoiceData.organisationName ? invoiceData.organisationName : invoiceData.name}</div>
 									<div className="mb-1 ml-2"><b>TRN:</b> {invoiceData.taxRegistrationNo}</div>
-									<div className="mb-1 ml-2"><b>{strings.Company }:</b> {invoiceData.organisationName}</div>
+									{/* <div className="mb-1 ml-2"><b>{strings.Company }:</b> {invoiceData.organisationName}</div> */}
 									
 									<div className="mb-1 ml-2"><b>{strings.Email}:</b> {invoiceData.email}</div>
 									<div className="mb-3 ml-2"><b>{strings.Address}:</b> {invoiceData.address}</div>
@@ -300,7 +300,7 @@ class InvoiceTemplate extends Component {
 									</b></div>
 								<div className="pl-5 pb-2">{strings.Vat+" "+strings.AmountInWords }:
 										<br/>
-									<b> {upperCase(invoiceData.currencyName + " " +(converter.toWords(toInteger(invoiceData.totalVatAmount)))+" ONLY") }</b>
+									<b> {invoiceData.totalVatAmount ? (upperCase(invoiceData.currencyName + " " +(converter.toWords(toInteger(invoiceData.totalVatAmount)))+" ONLY")) : " -" }</b>
 									{/* <b> {invoiceData.totalVatAmount}</b> */}
 								</div>
 							<div className="pl-5" style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>

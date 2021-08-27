@@ -809,6 +809,8 @@ class PurchaseOrder extends React.Component {
 			universal_currency_list
 		} = this.props;
 		console.log(this.state.openGoodsReceivedNotes)
+		console.log(purchase_order_list)
+
 
 		const request_for_quotation_data =
 		purchase_order_list && purchase_order_list.data
@@ -1043,7 +1045,7 @@ class PurchaseOrder extends React.Component {
 											}
 											remote
 											fetchInfo={{
-												dataTotalSize: purchase_order_list.count
+												dataTotalSize: purchase_order_list
 													? purchase_order_list.count
 													: 0,
 											}}

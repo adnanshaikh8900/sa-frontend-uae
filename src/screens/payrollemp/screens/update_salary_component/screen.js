@@ -572,6 +572,7 @@ handleChange = (evt) => {
                                                                                     <td style={{border:"1px solid #c8ced3"}}>
                                                                                         <Input
                                                                                             type="number"
+min="0"
                                                                                             size="30"
                                                                                             style={{textAlign:"center"}}
                                                                                             id="formula"
@@ -691,6 +692,7 @@ handleChange = (evt) => {
                                                                                     <td style={{border:"1px solid  #c8ced3"}}>
                                                                                         <Input
                                                                                             type="number"
+min="0"
                                                                                             style={{textAlign:"center"}}
                                                                                             size="30"
                                                                                             onChange={(option) => {
@@ -808,6 +810,7 @@ handleChange = (evt) => {
                                                                                     <td style={{border:"1px solid #c8ced3"}}>
                                                                                         <Input
                                                                                             type="number"
+min="0"
                                                                                             size="30"
                                                                                             className="text-center"
                                                                                             value={item.formula}

@@ -266,6 +266,7 @@ class CreateCreditNote extends React.Component {
 					<div>
 						<Input
 							type="number"
+min="0"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -323,6 +324,7 @@ class CreateCreditNote extends React.Component {
 				render={({ field, form }) => (
 					<Input
 					type="number"
+min="0"
 						maxLength="10"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
@@ -1958,6 +1960,7 @@ class CreateCreditNote extends React.Component {
 																	<div>
 																		<Input
 																			type="number"
+min="0"
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"
@@ -2288,6 +2291,7 @@ class CreateCreditNote extends React.Component {
 																								name="discountPercentage"
 																								placeholder="Discount Percentage"
 																								type="number"
+min="0"
 																								maxLength="5"
 																								value={
 																									props.values
@@ -2332,6 +2336,7 @@ class CreateCreditNote extends React.Component {
 																						<Input
 																							id="discount"
 																							type="number"
+min="0"
 																							name="discount"
 																							maxLength="10"
 																							

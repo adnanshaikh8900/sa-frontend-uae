@@ -357,6 +357,7 @@ class DetailReceipt extends React.Component {
                                       <Label htmlFor="amount"><span className="text-danger">*</span>{strings.Amount} </Label>
                                       <Input
                                       type="number"
+min="0"
                                         id="amount"
                                         name="amount"
                                         placeholder={strings.Amount}
@@ -375,6 +376,7 @@ class DetailReceipt extends React.Component {
                                       <Label htmlFor="unusedAmount">{strings.UnusedAmount}</Label>
                                       <Input
                                        type="number"
+min="0"
                                         id="unusedAmount"
                                         name="unusedAmount"
                                         placeholder={strings.UnusedAmount}

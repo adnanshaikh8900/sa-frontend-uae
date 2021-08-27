@@ -341,6 +341,7 @@ class DetailCustomerInvoice extends React.Component {
 					<div>
 						<Input
 							type="number"
+min="0"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -402,6 +403,7 @@ class DetailCustomerInvoice extends React.Component {
 				render={({ field, form }) => (
 					<Input
 					type="number"
+min="0"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (
@@ -1632,6 +1634,7 @@ class DetailCustomerInvoice extends React.Component {
 																	<div>
 																		<Input
 																			type="number"
+min="0"
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"
@@ -1965,6 +1968,7 @@ class DetailCustomerInvoice extends React.Component {
 																								name="discountPercentage"
 																								placeholder={strings.DiscountPercentage}
 																								type="number"
+min="0"
 																								maxLength="5"
 																								value={
 																									props.values

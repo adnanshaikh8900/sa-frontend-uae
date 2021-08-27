@@ -318,6 +318,7 @@ class CreateGoodsReceivedNote extends React.Component {
 						<Input
 						disabled
 							type="number"
+min="0"
 							maxLength="10"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
@@ -376,7 +377,8 @@ class CreateGoodsReceivedNote extends React.Component {
 				name={`lineItemsString.${idx}.grnReceivedQuantity`}
 				render={({ field, form }) => (
 					<div>
-						<Input
+						<type="number"
+min="0"
 							type="number"
 							maxLength="10"
 							value={row['grnReceivedQuantity'] !== 0 ? row['grnReceivedQuantity'] : 0}
@@ -424,7 +426,8 @@ class CreateGoodsReceivedNote extends React.Component {
 	};
 	renderUnitPrice = (cell, row, props) => {
 		let idx;
-		this.state.data.map((obj, index) => {
+		thitype="number"
+min="0"map((obj, index) => {
 			if (obj.id === row.id) {
 				idx = index;
 			}

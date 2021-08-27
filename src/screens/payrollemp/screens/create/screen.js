@@ -2745,6 +2745,7 @@ validationCheck = (value) => {
                                                                                     <td style={{border:"3px solid #c8ced3"}}>
                                                                                         <Input
                                                                                             type="number"
+min="0"
                                                                                             size="30"
                                                                                             style={{textAlign:"center"}}
                                                                                             id="formula"
@@ -2857,6 +2858,7 @@ validationCheck = (value) => {
                                                                                     <td style={{border:"3px solid  #c8ced3"}}>
                                                                                         <Input
                                                                                             type="number"
+min="0"
                                                                                             style={{textAlign:"center"}}
                                                                                             size="30"
                                                                                             onChange={(option) => {
@@ -2971,6 +2973,7 @@ validationCheck = (value) => {
                                                                                     <td style={{border:"3px solid #c8ced3"}}>
                                                                                         <Input
                                                                                             type="number"
+min="0"
                                                                                             size="30"
                                                                                             className="text-center"
                                                                                             value={item.formula}

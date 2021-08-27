@@ -898,6 +898,7 @@ try {
 																		</Label>
 																		<Input
 																			type="number"
+min="0"
 																			maxLength="10"
 																			id="salesUnitPrice"
 																			name="salesUnitPrice"
@@ -1099,6 +1100,7 @@ try {
 																		</Label>
 																		<Input
 																		type="number"
+min="0"
 																			maxLength="10"
 																			id="purchaseUnitPrice"
 																			name="purchaseUnitPrice"
@@ -1343,6 +1345,7 @@ try {
 																		</Label>
 																		<Input
 																		type="number"
+min="0"
 																			maxLength="10"
 																			id="inventoryQty"
 																			name="inventoryQty"
@@ -1392,6 +1395,7 @@ try {
 																		</Label>
 																		<Input
 																		type="number"
+min="0"
 																			maxLength="10"
 																			id="inventoryPurchasePrice"
 																			name="inventoryPurchasePrice"
@@ -1501,6 +1505,7 @@ try {
 																			// 		: true
 																			// }
 																			type="number"
+min="0"
 																			maxLength="200"
 																			name="inventoryReorderLevel"
 																			id="inventoryReorderLevel"

@@ -104,6 +104,7 @@ class CreateProduct extends React.Component {
 			createMore: false,
 			exist: false,
 			ProductExist: false,
+			disabled: false,
 		};
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[ +a-zA-Z0-9-./\\|]+$/;
@@ -279,6 +280,7 @@ try {
 		this.props.productActions
 			.createAndSaveProduct(postData)
 			.then((res) => {
+				this.setState({ disabled: false });
 				if (res.status === 200) {
 					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
@@ -1520,7 +1522,7 @@ try {
 															
 															<Row>
 																<Col lg={12} className="mt-5">
-																	<FormGroup className="text-right">
+																	<FormGroup className="text-right" disabled={this.state.disabled}>
 																		<Button
 																			type="button"
 																			color="primary"
@@ -1535,12 +1537,15 @@ try {
 																			}}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			{strings.Create}
+																			{this.state.disabled
+																			? 'Creating...'
+																			: strings.Create }
 																		</Button>
 																		<Button
 																			name="button"
 																			color="primary"
 																			className="btn-square mr-3"
+																			disabled={this.state.disabled}
 																			onClick={() => {
 																				this.setState(
 																					{ createMore: true },
@@ -1550,7 +1555,9 @@ try {
 																				);
 																			}}
 																		>
-																			<i className="fa fa-refresh"></i> {strings.CreateandMore}
+																			<i className="fa fa-refresh"></i> 	{this.state.disabled
+																			? 'Creating...'
+																			: strings.CreateandMore }
 																		</Button>
 																		<Button
 																			color="secondary"

@@ -159,6 +159,7 @@ RecieptNumber:"Numéro de reçu",
       InvoicingDetails:"Détails de facturation ",
       BillingEmail:"E-mail de facturation",
       ContractPONumber: "Numéro po du contrat",
+      VerifyTRN:"Vérifier TRN",
       
 
       //Income receipts

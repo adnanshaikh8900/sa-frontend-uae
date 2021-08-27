@@ -69,6 +69,7 @@ class CreateJournal extends React.Component {
 			language: window['localStorage'].getItem('language'),
 			loading: false,
 			createMore: false,
+			disabled: false,
 			data: [
 				{
 					id: 0,
@@ -589,6 +590,7 @@ class CreateJournal extends React.Component {
 	};
 
 	handleSubmit = (values, resetForm) => {
+		this.setState({ disabled: true });
 		const { data, initValue } = this.state;
 		if (initValue.totalCreditAmount === initValue.totalDebitAmount) {
 			data.map((item) => {
@@ -616,6 +618,7 @@ class CreateJournal extends React.Component {
 			this.props.journalCreateActions
 				.createJournal(postData)
 				.then((res) => {
+					this.setState({ disabled: false });
 					if (res.status === 200) {
 						this.props.commonActions.tostifyAlert(
 							'success',
@@ -682,6 +685,7 @@ class CreateJournal extends React.Component {
 					}
 				})
 				.catch((err) => {
+					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
 						'error',
 						err && err.data ? err.data.message : 'Something Went Wrong',
@@ -1111,6 +1115,7 @@ class CreateJournal extends React.Component {
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
+																		disabled={this.state.disabled}
 																		onClick={() => {
 																			this.setState(
 																				{
@@ -1124,7 +1129,9 @@ class CreateJournal extends React.Component {
 																		}}
 																	>
 																		<i className="fa fa-dot-circle-o"></i>{' '}
-																		{strings.Create} 
+																		{this.state.disabled
+																			? 'Creating...'
+																			: strings.Create }
 																	</Button>
 																	<Button
 																		type="button"
@@ -1142,7 +1149,10 @@ class CreateJournal extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-repeat"></i> {strings.CreateandMore} 
+																		<i className="fa fa-repeat"></i> 
+																		{this.state.disabled
+																			? 'Creating...'
+																			: strings.CreateandMore }
 																	</Button>
 																	<Button
 																		color="secondary"

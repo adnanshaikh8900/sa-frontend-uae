@@ -88,6 +88,7 @@ class CreateExpense extends React.Component {
 			payMode: '',
 			exchangeRate:'',
 			basecurrency:[],
+			disabled: false,
 			language: window['localStorage'].getItem('language'),
 		};
 		this.formRef = React.createRef();
@@ -161,6 +162,7 @@ class CreateExpense extends React.Component {
 
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true });
+		this.setState({ disabled: true });
 		const {
 			payee,
 			expenseDate,
@@ -218,6 +220,7 @@ class CreateExpense extends React.Component {
 		this.props.expenseCreateActions
 			.createExpense(formData)
 			.then((res) => {
+			
 				this.setState({ disabled: false });
 				if (res.status === 200) {
 					resetForm(this.state.initValue);
@@ -986,6 +989,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
+																		disabled={this.state.disabled}
 																		onClick={() => {
 																			this.setState(
 																				{ createMore: false },
@@ -996,12 +1000,15 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		}}
 																	>
 																		<i className="fa fa-dot-circle-o"></i>{' '}
-																		{strings.Create}  
+																		{this.state.disabled
+																			? 'Creating...'
+																			: strings.Create }
 																	</Button>
 																	<Button
 																		name="button"
 																		color="primary"
 																		className="btn-square mr-3"
+																		disabled={this.state.disabled}
 																		onClick={() => {
 																			this.setState(
 																				{ createMore: true },
@@ -1011,7 +1018,9 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																			);
 																		}}
 																	>
-																		<i className="fa fa-refresh"></i> {strings.CreateandMore}  
+																		<i className="fa fa-refresh"></i> 	{this.state.disabled
+																			? 'Creating...'
+																			: strings.CreateandMore }
 																	</Button>
 																	<Button
 																		color="secondary"

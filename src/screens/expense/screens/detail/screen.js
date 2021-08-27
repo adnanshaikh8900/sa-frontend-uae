@@ -86,6 +86,7 @@ class DetailExpense extends React.Component {
 			payMode: '',
 			view: false,
 			basecurrency:[],
+			disabled: false,
 		};
 
 		this.file_size = 1024000;
@@ -181,8 +182,9 @@ class DetailExpense extends React.Component {
 	};
 
 	handleSubmit = (data, resetValue) => {
+		this.setState({ disabled: true });
 		const { current_expense_id } = this.state;
-		const {
+        const {
 			payee,
 			expenseDate,
 			currency,
@@ -235,6 +237,7 @@ class DetailExpense extends React.Component {
 		this.props.expenseDetailActions
 			.updateExpense(formData)
 			.then((res) => {
+				this.setState({ disabled: false });
 				if (res.status === 200) {
 					// resetValue({});
 					this.props.commonActions.tostifyAlert(
@@ -245,6 +248,7 @@ class DetailExpense extends React.Component {
 				}
 			})
 			.catch((err) => {
+				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err && err.data ? err.data.message : 'Something Went Wrong',
@@ -459,7 +463,7 @@ class DetailExpense extends React.Component {
 														<Form onSubmit={props.handleSubmit}>
 															<Row>
 																<Col lg={3}>
-																	<FormGroup className="mb-3">
+																	<FormGroup className="mb-3" >
 																		<Label htmlFor="expenseCategoryId">
 																			<span className="text-danger">*</span>
 																			 {strings.ExpenseCategory}
@@ -1122,9 +1126,12 @@ class DetailExpense extends React.Component {
 																			name="submit"
 																			color="primary"
 																			className="btn-square mr-3"
+																			disabled={this.state.disabled}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			   {strings.Update}
+																			{this.state.disabled
+																				? 'Updating...'
+																				: strings.Update}
 																		</Button>
 																		<Button
 																			type="button"

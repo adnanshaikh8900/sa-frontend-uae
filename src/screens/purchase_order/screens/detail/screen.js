@@ -1127,68 +1127,102 @@ min="0"
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values);
 													}}
-												// 	validationSchema={Yup.object().shape(
-												// 		{
-												// 			po_number: Yup.string().required(
-												// 			'PONumber is Required',
-												// 		),
-												// 		supplierId: Yup.string().required(
-												// 			'Supplier is Required',
-												// 		),
-												// 		// rfqNumber: Yup.string().required(
-												// 		// 	'Rfq Number is Required',
-												// 		// ),
-												// 		// placeOfSupplyId: Yup.string().required('Place of supply is Required'),
+													validationSchema={Yup.object().shape(
+														{
+														// 	po_number: Yup.string().required(
+														// 	'Invoice Number is Required',
+														// ),
+														// supplierId: Yup.string().required(
+														// 	'Supplier is Required',
+														// ),
+														// rfqNumber: Yup.string().required(
+														// 	'Rfq Number is Required',
+														// ),
+														// placeOfSupplyId: Yup.string().required('Place of supply is Required'),
 														
-												// 		poApproveDate: Yup.string().required(
-												// 			'Order Date is Required',
-												// 		),
-												// 		poReceiveDate: Yup.string().required(
-												// 			'Order Due Date is Required'
-												// 		),
-												// 		lineItemsString: Yup.array()
-												// 			.required(
-												// 				'Atleast one POsub detail is mandatory',
-												// 			)
-												// 			.of(
-												// 				Yup.object().shape({
-												// 					quantity: Yup.string()
-												// 						.required('Value is Required')
-												// 						.test(
-												// 							'quantity',
-												// 							'Quantity Should be Greater than 1',
-												// 							(value) => {
-												// 								if (value > 0) {
-												// 									return true;
-												// 								} else {
-												// 									return false;
-												// 								}
-												// 							},
-												// 						),
-												// 					unitPrice: Yup.string()
-												// 						.required('Value is Required')
-												// 						.test(
-												// 							'Unit Price',
-												// 							'Unit Price Should be Greater than 1',
-												// 							(value) => {
-												// 								if (value > 0) {
-												// 									return true;
-												// 								} else {
-												// 									return false;
-												// 								}
-												// 							},
-												// 						),
-												// 					vatCategoryId: Yup.string().required(
-												// 						'Value is Required',
-												// 					),
-												// 					productId: Yup.string().required(
-												// 						'Product is Required',
-												// 					),
-												// 				}),
-												// 			),
-												// 	}
-												// 	)
-												// }
+														poApproveDate: Yup.string().required(
+															'Order Date is Required',
+														),
+														poReceiveDate: Yup.string().required(
+															'Order Due Date is Required'
+														),
+														attachmentFile: Yup.mixed()
+														.test(
+															'fileType',
+															'*Unsupported File Format',
+															(value) => {
+																value &&
+																	this.setState({
+																		fileName: value.name,
+																	});
+																if (
+																	!value ||
+																	(value &&
+																		this.supported_format.includes(value.type))
+																) {
+																	return true;
+																} else {
+																	return false;
+																}
+															},
+														)
+														.test(
+															'fileSize',
+															'*File Size is too large',
+															(value) => {
+																if (
+																	!value ||
+																	(value && value.size <= this.file_size)
+																) {
+																	return true;
+																} else {
+																	return false;
+																}
+															},
+														),
+														lineItemsString: Yup.array()
+															.required(
+																'Atleast one invoice sub detail is mandatory',
+															)
+															.of(
+																Yup.object().shape({
+																	quantity: Yup.string()
+																		.required('Value is Required')
+																		.test(
+																			'quantity',
+																			'Quantity Should be Greater than 1',
+																			(value) => {
+																				if (value > 0) {
+																					return true;
+																				} else {
+																					return false;
+																				}
+																			},
+																		),
+																	unitPrice: Yup.string()
+																		.required('Value is Required')
+																		.test(
+																			'Unit Price',
+																			'Unit Price Should be Greater than 1',
+																			(value) => {
+																				if (value > 0) {
+																					return true;
+																				} else {
+																					return false;
+																				}
+																			},
+																		),
+																	vatCategoryId: Yup.string().required(
+																		'Value is Required',
+																	),
+																	productId: Yup.string().required(
+																		'Product is Required',
+																	),
+																}),
+															),
+													}
+													)
+												}
 												>
 													{(props) => (
 														<Form onSubmit={props.handleSubmit}>

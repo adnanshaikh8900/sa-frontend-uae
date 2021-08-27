@@ -339,7 +339,20 @@ class PayrollApproverScreen extends React.Component {
 			}
 		})
 	}
+	rejectPayroll= () => {
+		this.props.createPayrollActions
+			.rejectPayroll(this.state.payroll_id,this.state.comment)
+			.then((res) => {
+				if (res.status === 200) {
+					this.props.commonActions.tostifyAlert('success', 'Payroll Rejected Successfully')
+					this.getAllPayrollEmployee()
+					// resetForm(this.state.initValue)
+				}
+			}).catch((err) => {
+				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+			})
 
+	}
 	getPayrollEmployeeList = () => {
 
 		// const cols = [
@@ -939,7 +952,7 @@ class PayrollApproverScreen extends React.Component {
 																			className="btn-square mt-4 pull-right"
 																			// onClick={}
 																			onClick={() =>
-																				this.generate()
+																				this.rejectPayroll()
 																			}
 																		// disabled={selectedRows.length === 0}
 																		>

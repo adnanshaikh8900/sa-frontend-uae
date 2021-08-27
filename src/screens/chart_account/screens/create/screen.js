@@ -67,6 +67,7 @@ class CreateChartAccount extends React.Component {
 			},
 			loading: false,
 			createMore: false,
+			exist: false,
 			chartOfAccountCategory: [],
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
@@ -101,7 +102,28 @@ class CreateChartAccount extends React.Component {
 	//   })
 	// }
 
+
 	// Create or Edit Vat
+
+	validationCheck = (value) => {
+		const data = {
+			moduleType: 16,
+			name: value,
+		};
+		this.props.createChartOfAccontActions
+			.checkValidation(data)
+			.then((response) => {
+				if (response.data === 'transactionCategoryName already exists') {
+					this.setState({
+						exist: true,
+					});
+				} else {
+					this.setState({
+						exist: false,
+					});
+				}
+			});
+	};
 	handleSubmit = (data, resetForm) => {
 		const postData = {
 			transactionCategoryName: data.transactionCategoryName,
@@ -167,6 +189,14 @@ class CreateChartAccount extends React.Component {
 												onSubmit={(values, { resetForm }) => {
 													this.handleSubmit(values, resetForm);
 												}}
+												validate={(values) => {
+													let errors = {};
+													if (this.state.exist === true) {
+														errors.transactionCategoryName =
+															'Chart Of Account Name is already exist';
+													}
+													return errors;
+												}}
 												validationSchema={Yup.object().shape({
 													// transactionCategoryCode: Yup.string()
 													//   .required("Code Name is Required"),
@@ -218,6 +248,7 @@ class CreateChartAccount extends React.Component {
 																			'transactionCategoryName',
 																		)(option);
 																	}
+																	this.validationCheck(option.target.value);
 																}}
 																value={props.values.transactionCategoryName}
 																className={

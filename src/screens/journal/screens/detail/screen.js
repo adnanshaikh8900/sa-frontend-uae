@@ -375,9 +375,10 @@ class DetailJournal extends React.Component {
 			<Field
 				name={`journalLineItems.${idx}.debitAmount`}
 				render={({ field, form }) => (
+					<Input
 					type="number"
 min="0"
-					type="number"
+					
 						value={row['debitAmount'] !== 0 ? row['debitAmount'] : 0}
 						disabled={
 							props.values.postingReferenceType === 'MANUAL' ? false : true
@@ -428,9 +429,10 @@ min="0"
 			<Field
 				name={`journalLineItems.${idx}.creditAmount`}
 				render={({ field, form }) => (
+					<Input
 					type="number"
 min="0"
-					type="number"
+				
 						value={row['creditAmount'] !== 0 ? row['creditAmount'] : 0}
 						disabled={
 							props.values.postingReferenceType === 'MANUAL' ? false : true

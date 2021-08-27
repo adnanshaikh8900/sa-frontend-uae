@@ -411,7 +411,7 @@ class PurchaseOrder extends React.Component {
 					if (res.status === 200) {
 						this.props.commonActions.tostifyAlert(
 							'success',
-							 'Purchase Order Send Successfully',
+							 'Purchase Order Approved Successfully',
 
 						);
 						this.setState({

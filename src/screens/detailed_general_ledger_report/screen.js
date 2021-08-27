@@ -419,7 +419,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
 									paperSize="A3"
-										filename={'detailGeneralLedger.pdf'}
+								    fileName="Detailed General Ledger.pdf"
 								>
 
 								<div style={{										

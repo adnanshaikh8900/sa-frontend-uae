@@ -430,10 +430,9 @@ console.log(migration_list)
 												}
 												version="4"
 												hover
-											
 												remote
-										
-												// className="product-table"
+												tableStyle={{width:'800px'}}
+												className="m-4"
 												trClassName="cursor-pointer"
 												csvFileName="summary_list.csv"
 												ref={(node) => (this.table = node)}
@@ -449,8 +448,9 @@ console.log(migration_list)
 												</TableHeaderColumn >
 											</BootstrapTable>
 											</div>
-																	<Col lg={3}>
-																	<FormGroup>
+																
+															</Row>
+															<FormGroup>
 																	<Button
 																		color="primary"
 																		type="button"
@@ -470,10 +470,6 @@ console.log(migration_list)
 																		Migrate
 																	</Button>
 																	</FormGroup>
-															</Col>
-															
-															</Row>
-															
 														</Form>
 													)}
 												</Formik>

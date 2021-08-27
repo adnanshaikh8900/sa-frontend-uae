@@ -133,7 +133,7 @@ class RFQTemplate extends Component {
 																: 'USD'
 														}
 													/> */}
-												{item.unitPrice}
+												{QuotationData.currencyIsoCode + " " +item.unitPrice}
 												</td>
 												<td
 													style={{ textAlign: 'right' }}
@@ -147,7 +147,7 @@ class RFQTemplate extends Component {
 																: 'USD'
 														}
 													/> */}
-													{item.subTotal}
+													{QuotationData.currencyIsoCode + " " +item.subTotal}
 												</td>
 											</tr>
 										);
@@ -171,7 +171,7 @@ class RFQTemplate extends Component {
 								}}
 							>
 								<div className="pb-2">{strings.AmountInWords }:<br/>
-									<b> {upperCase(converter.toWords(toInteger(QuotationData.totalAmount)))+" ONLY"}
+									<b> {upperCase (QuotationData.currencyName + " " +(converter.toWords(toInteger(QuotationData.totalAmount))))+" ONLY"}
 									{/* <b> {parseInt(QuotationData.dueAmount)} */}
 									</b></div>
 								<div className="pb-2">{strings.Vat+" "+strings.AmountInWords }:
@@ -210,7 +210,8 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{totalNet}
+													{totalNet?QuotationData.currencyIsoCode + " " +totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0}
+
 													 {/* ? (
 														<Currency
 															value={totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
@@ -245,7 +246,8 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{QuotationData.totalVatAmount }
+												
+													{QuotationData.totalVatAmount?QuotationData.currencyIsoCode + " " +QuotationData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0}
 													{/* ? (
 														<Currency
 															value={QuotationData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
@@ -280,7 +282,8 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{QuotationData.totalAmount}
+											
+													{QuotationData.totalAmount?QuotationData.currencyIsoCode + " " +QuotationData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0}
 													 {/* ? (
 														<Currency
 															value={QuotationData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}

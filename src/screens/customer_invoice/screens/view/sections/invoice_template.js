@@ -49,6 +49,7 @@ class InvoiceTemplate extends Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const { invoiceData, currencyData, totalNet, companyData,status } = this.props;
+		console.log(currencyData)
 		return (
 			<div>
 				<Card id="singlePage" className="box">

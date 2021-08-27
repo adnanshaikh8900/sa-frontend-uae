@@ -192,7 +192,7 @@ class RFQTemplate extends Component {
 																: 'USD'
 														}
 													/> */}
-												{item.unitPrice}
+												{POData.currencyIsoCode + " " +item.unitPrice}
 												</td>
 												<td
 													style={{ textAlign: 'right' }}
@@ -206,7 +206,7 @@ class RFQTemplate extends Component {
 																: 'USD'
 														}
 													/> */}
-													{item.subTotal}
+													{POData.currencyIsoCode + " " +item.subTotal}
 												</td>
 											</tr>
 										);
@@ -269,7 +269,7 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+													{POData.currencyIsoCode + " " +totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 													 {/* ? (
 														<Currency
 															value={totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
@@ -304,7 +304,7 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{POData.totalVatAmount?POData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 }
+													{POData.totalVatAmount?POData.currencyIsoCode + " " +POData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 }
 													{/* ? (
 														<Currency
 															value={POData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
@@ -339,8 +339,8 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{/* {POData.totalAmount?POData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0} */}
-													{POData.totalAmount ? (
+													{POData.totalAmount?POData.currencyIsoCode + " " +POData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0}
+													{/* {POData.totalAmount ? (
 														<Currency
 															value={POData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 															currencySymbol={
@@ -358,7 +358,7 @@ class RFQTemplate extends Component {
 																	: 'USD'
 															}
 														/>
-													)}
+													)} */}
 												</span>
 											</td>
 										</tr>

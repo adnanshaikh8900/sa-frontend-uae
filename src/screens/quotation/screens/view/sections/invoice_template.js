@@ -176,7 +176,7 @@ class RFQTemplate extends Component {
 									</b></div>
 								<div className="pb-2">{strings.Vat+" "+strings.AmountInWords }:
 										<br/>
-									<b> {upperCase(converter.toWords(toInteger(QuotationData.totalVatAmount)))+" ONLY"}</b>
+									<b> {QuotationData.totalVatAmount ? (upperCase(QuotationData.currencyName + " " +(converter.toWords(toInteger(QuotationData.totalVatAmount)))+" ONLY")) : " -" }</b>
 									{/* <b> {QuotationData.totalVatAmount}</b> */}
 								</div>
 							<div style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>

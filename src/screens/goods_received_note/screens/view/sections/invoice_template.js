@@ -78,7 +78,7 @@ class RFQTemplate extends Component {
 											: ''}</h5>
 											</div>	
 											<div className="text-center"><span className="h4">{RFQData.grnNumber} {this.renderRFQStatus(status)} </span></div>		
-						<div className="text-center mt-1 h5">{RFQData.supplierName}</div>	
+						<div className="text-center mt-1 h5">{RFQData.organisationName ? RFQData.organisationName : RFQData.supplierName}</div>	
 						<div className="text-center mt-1 h5">{strings.ReceiveDate } :	{moment(RFQData.grnReceiveDate).format(
 									'DD MMM YYYY',
 								)}</div>		
@@ -181,7 +181,7 @@ class RFQTemplate extends Component {
 									</b></div>
 								<div className="pb-2">{strings.Vat+" "+strings.AmountInWords }:
 										<br/>
-									<b> {upperCase(RFQData.currencyName + " " +(converter.toWords(toInteger(RFQData.totalVatAmount)))+" ONLY")}</b>
+									<b> {RFQData.totalVatAmount ? (upperCase(RFQData.currencyName + " " +(converter.toWords(toInteger(RFQData.totalVatAmount)))+" ONLY")) : " -" }</b>
 									{/* <b> {RFQData.totalVatAmount}</b> */}
 								</div>
 							<div style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>

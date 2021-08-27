@@ -739,7 +739,7 @@ console.log(quotation_list)
 				? this.props.quotation_list.data.data.map((quotation) => ({
 						id: quotation.id,
 						status: quotation.status,
-						supplierName: quotation.supplierName,
+						customerName: quotation.customerName,
 						quatationNumber: quotation.quatationNumber,
 						quotaionExpiration: quotation.quotaionExpiration ? quotation.quotaionExpiration : '',
 					
@@ -983,7 +983,7 @@ console.log(quotation_list)
 												{strings.QUOTATIONNUMBER}
 											</TableHeaderColumn>
 											<TableHeaderColumn
-												dataField="supplierName"
+												dataField="customerName"
 												dataSort
 											//	width="12%"
 												className="table-header-bg"

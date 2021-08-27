@@ -233,7 +233,7 @@ const adminRoutes = [
 	{
 
 		path: '/admin/Inventory',
-		name: 'Inventory',
+		name: 'InventorySummary',
 		component: Inventory.screen,
 	},
 	{

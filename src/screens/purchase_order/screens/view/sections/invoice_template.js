@@ -92,7 +92,7 @@ class RFQTemplate extends Component {
 											: ''}</h5>
 											</div>	
 						<div className="text-center">	<span className="h4">{POData.poNumber} {this.renderRFQStatus(status)} </span></div>			
-						<div className="text-center mt-1">{POData.supplierName}</div>		
+						<div className="text-center mt-1">{POData.organisationName ? POData.organisationName : POData.supplierName}</div>		
 					</div>
 							
 						
@@ -235,7 +235,7 @@ class RFQTemplate extends Component {
 									</b></div>
 								<div className="pb-2">{strings.Vat+" "+strings.AmountInWords }:
 										<br/>
-									<b> {upperCase(POData.currencyName + " " +(converter.toWords(toInteger(POData.totalVatAmount)))+" ONLY")}</b>
+									<b>{POData.totalVatAmount ? (upperCase(POData.currencyName + " " +(converter.toWords(toInteger(POData.totalVatAmount)))+" ONLY")) : " -" }</b>
 									{/* <b> {POData.totalVatAmount}</b> */}
 								</div>
 							<div style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>
@@ -339,8 +339,8 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{POData.totalAmount?POData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0}
-													 {/* ? (
+													{/* {POData.totalAmount?POData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0} */}
+													{POData.totalAmount ? (
 														<Currency
 															value={POData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 															currencySymbol={
@@ -358,7 +358,7 @@ class RFQTemplate extends Component {
 																	: 'USD'
 															}
 														/>
-													)} */}
+													)}
 												</span>
 											</td>
 										</tr>

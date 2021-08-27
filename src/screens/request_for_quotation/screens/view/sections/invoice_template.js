@@ -177,7 +177,7 @@ class RFQTemplate extends Component {
 																: 'USD'
 														}
 													/> */}
-													{item.unitPrice}
+													{RFQData.currencyIsoCode + " " +item.unitPrice}
 												</td>
 												<td
 													style={{ textAlign: 'right' }}
@@ -191,7 +191,7 @@ class RFQTemplate extends Component {
 																: 'USD'
 														}
 													/> */}
-													{item.subTotal}
+													{RFQData.currencyIsoCode + " " +item.subTotal}
 												</td>
 											</tr>
 										);
@@ -254,26 +254,26 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-													{/* // ? (
-													// 	<Currency
-													// 		value={totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-													// 		currencySymbol={
-													// 			currencyData[0]
-													// 				? currencyData[0].currencyIsoCode
-													// 				: 'USD'
-													// 		}
-													// 	/>
-													// ) : (
-													// 	<Currency
-													// 		value={0}
-													// 		currencySymbol={
-													// 			currencyData[0]
-													// 				? currencyData[0].currencyIsoCode
-													// 				: 'USD'
-													// 		}
-													// 	/>
-													// )} */}
+													{RFQData.currencyIsoCode + " " +totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+													{/* {totalNet ? (
+													 	<Currency
+													 		value={totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+													 		currencySymbol={
+													 			currencyData[0]
+													 				? currencyData[0].currencyIsoCode
+													 				: 'USD'
+													 		}
+													 	/>
+												 ) : (
+														<Currency
+												 		value={0}
+													 		currencySymbol={
+													 			currencyData[0]
+												 				? currencyData[0].currencyIsoCode
+													 				: 'USD'
+													 		}
+													 	/>
+													 )} */}
 												</span>
 											</td>
 										</tr>
@@ -290,8 +290,8 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{RFQData.totalVatAmount? RFQData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 } 
-													{/* ? (
+													{RFQData.totalVatAmount? RFQData.currencyIsoCode + " " +RFQData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 } 
+													{/* {RFQData.totalVatAmount ? (
 														<Currency
 															value={RFQData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 															currencySymbol={
@@ -309,7 +309,7 @@ class RFQTemplate extends Component {
 																	: 'USD'
 															}
 														/>
-													) */}
+													)} */}
 												</span>
 											</td>
 										</tr>
@@ -325,8 +325,26 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{RFQData.totalAmount?RFQData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0}
-													
+													{RFQData.totalAmount?RFQData.currencyIsoCode + " " +RFQData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0}
+													{/* {RFQData.totalAmount ? (
+														<Currency
+															value={RFQData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															}
+														/>
+													) : (
+														<Currency
+															value={0}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															}
+														/>
+													)} */}
 												</span>
 											</td>
 										</tr>

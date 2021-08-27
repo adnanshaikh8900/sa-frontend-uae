@@ -40,7 +40,7 @@ export default {
 					name: strings.IncomeReceipts,
 					url: '/admin/income/receipt',
 					icon: 'fas fa-receipt',
-					path: 'CustomerReceipts',
+					path: 'ViewCustomerReceipt',
 				},
 				{
 					name: strings.Quotation,

@@ -358,7 +358,7 @@ const adminRoutes = [
 	},
 	{
 		path: '/admin/income/receipt',
-		name: 'CustomerReceipts',
+		name: 'ViewCustomerReceipt',
 		component: Receipt.screen,
 	},
 	//

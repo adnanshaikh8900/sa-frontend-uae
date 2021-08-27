@@ -219,13 +219,37 @@ tableApiCallsOnStatus=()=>{
 	};
 
 	disable = () => {
-		
+		debugger
 		if (this.state.status === '') {
 				return true;
-		} else {
+		}
+		else
+		if(this.state.status==="Submitted"){
+			return true;
+		}else {
 			return false;
 		}
 	};
+	disableForGenerateButtun = () => {
+
+		if (this.state.allPayrollEmployee && this.state.allPayrollEmployee.length === 0) {
+				return true;
+		}
+		else
+		if(this.state.status==="Submitted"){
+			return true;
+		}else {
+			return false;
+		}
+	};
+	disableForAddButton = () => {	
+		if(this.state.status==="Submitted"){
+			return true;
+		}else {
+			return false;
+		}
+	};
+	 
 	addEmployee = (data,resetForm) => {
 		 
 		this.setState({ disabled: true });
@@ -458,20 +482,7 @@ tableApiCallsOnStatus=()=>{
 		return (
 			<React.Fragment>
 			<Row>
-			<Col>
-				<Button
-					color="primary"
-					className="btn-square mb-2 "
-					onClick ={()=>{
-						this.removeEmployee()
-					}}
-					
-				 disabled={this.state.selectedRows.length === 0}
-				>
-					<i class="far fa-trash-alt mr-1"></i>
-					Remove Employees
-				</Button>
-			</Col>
+			
 
 		</Row>
 		<div >
@@ -502,6 +513,7 @@ min="0"
 									id="lopDay"
 									name="lopDay"
 									value={cell || 0}
+									disabled={this.disableForAddButton() ? true : false}
 									onChange={(evt) => {
 
 										let value = evt.target.value;
@@ -576,6 +588,39 @@ debugger
 
 		)
 	}
+
+	proceed1=()=>{
+		this.props.createPayrollActions.getPayrollById(this.state.payroll_id).then((res) => {
+			if (res.status === 200) {
+			//	debugger
+				this.setState({
+					    loading: false,
+						id: res.data.id ? res.data.id : '',
+						approvedBy: res.data.approvedBy ? res.data.approvedBy : '',
+						comment: res.data.comment ? res.data.comment : '',
+						deleteFlag: res.data.deleteFlag ? res.data.deleteFlag : '',
+						employeeCount: res.data.employeeCount ? res.data.employeeCount : '',
+						generatedBy: res.data.generatedBy ? res.data.generatedBy : '',
+						
+						isActive: res.data.isActive ? res.data.isActive : '',
+						payPeriod: res.data.payPeriod ? res.data.payPeriod : '',
+						payrollApprover:res.data.payrollApprover ? res.data.payrollApprover : '',
+						payrollDate: res.data.payrollDate
+																	? moment(res.data.payrollDate).format('DD/MM/YYYY')
+																	: '',
+						payrollSubject: res.data.payrollSubject ? res.data.payrollSubject : '',
+						runDate: res.data.runDate ? res.data.runDate : '',
+						status: res.data.status ? res.data.status : '',
+
+				}
+				)			
+			}
+		}).catch((err) => {
+			this.setState({ loading: false })
+		  
+		})
+
+	}
 generate=()=>{
     const formData = new FormData();
 	formData.append('payrollId', this.state.payroll_id)
@@ -587,6 +632,7 @@ generate=()=>{
 	.then((res) => {
 		if (res.status === 200) {
 			this.props.commonActions.tostifyAlert('success','genrated payroll Successfully')
+			this.proceed1()
 			this.tableApiCallsOnStatus()
 			// resetForm(this.state.initValue)
 		}
@@ -603,6 +649,7 @@ submitPayroll=(data)=>{
 	.then((res) => {
 		if (res.status === 200) {
 			this.props.commonActions.tostifyAlert('success','Payroll Submitted Successfully')
+			this.proceed()
 			this.tableApiCallsOnStatus()
 			// resetForm(this.state.initValue)
 		}
@@ -628,8 +675,7 @@ submitPayroll=(data)=>{
 
 				this.setState({
 					selectRow:[],
-					selectedRowprop:newselectRowProp
-					
+					selectedRowprop:newselectRowProp					
 				});
 
 				if(res.status ==200) {
@@ -651,6 +697,16 @@ submitPayroll=(data)=>{
 
 		}
 		this.tableApiCallsOnStatus()
+	}
+
+	onSubmiitedStatus=()=>{
+		if(this.state.status==="Submmited")
+		{
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 
 	onRowSelect = (row, isSelected, e) => {
@@ -711,7 +767,7 @@ submitPayroll=(data)=>{
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="nav-icon fas fa-user-tie" />
-												<span className="ml-2">Create Payroll List</span>
+												<span className="ml-2">Payroll-Generator</span>
 											</div>
 										</Col>
 									</Row>
@@ -762,6 +818,7 @@ submitPayroll=(data)=>{
 																			dateFormat="dd/MM/yyyy"
 																			dropdownMode="select"
 																			value={this.state.payrollDate}
+																			disabled={this.disableForAddButton() ? true : false}
 																			onChange={(value) => {
 																				props.handleChange('payrollDate')(
 																					moment(value).format('DD/MM/YYYY'),
@@ -791,6 +848,7 @@ submitPayroll=(data)=>{
 																				id="payrollSubject"
 																				name="payrollSubject"
 																				value={this.state.payrollSubject}
+																				disabled={this.disableForAddButton() ? true : false}
 																				placeholder={strings.Enter + " Payroll Subject"}
 																				onChange={(value) => {
 																					props.handleChange('payrollSubject')(value);
@@ -814,6 +872,7 @@ submitPayroll=(data)=>{
 																				id="payPeriod"
 																				name="payPeriod"
 																				value={this.state.payPeriod}
+																				disabled={this.disableForAddButton() ? true : false}
 																				placeholder={strings.Enter + " Pay period"}
 																				onChange={(value) => {
 																					props.handleChange('payPeriod')(value);
@@ -833,8 +892,6 @@ submitPayroll=(data)=>{
 																	
 																</Row>
 																<Row>
-																
-																	<Col ></Col>
 																	<Col>
 																	<FormGroup>
 																			<Select
@@ -854,6 +911,7 @@ submitPayroll=(data)=>{
 																						? employee_list.data
 																						: []
 																				}
+																				disabled={this.disableForAddButton() ? true : false}
 																				id="employeeListIds"
 																				name="employeeListIds"
 																				placeholder="Select Employee Names "
@@ -880,6 +938,7 @@ submitPayroll=(data)=>{
 																					? 'is-invalid'
 																					: ''
 																					}`}
+																					
 																			/>
 																			{props.errors.employeeListIds && props.touched.employeeListIds && (
 																				<div className="invalid-feedback">
@@ -889,21 +948,43 @@ submitPayroll=(data)=>{
 																		</FormGroup>
 																	</Col>
 																	<Col>
-																	<FormGroup className="pull-left">
-																			<Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
+														<Button type="button" color="primary" className="btn-square ml-3 mr-1"
+															disabled={this.disableForAddButton() ? true : false}
+														onClick={() => {
 																				this.setState(() => {
 																					props.handleSubmit()
 																				})
+
+																				
 																				// this.setState({
 																				// 	openModal: true
 																				// })
 																			}}>
 																				<i className="fa fa-dot-circle-o"></i> Add Employees
 																			</Button>
+													</Col>
+																	<Col></Col>
+																</Row>
+																<Row>
+																
+																	<FormGroup className="pull-left">
+																		
+																			<Button
+																			color="primary"
+																			className="btn-square ml-3 "
+																			onClick ={()=>{
+																				this.removeEmployee()
+																			}}
+																			
+																		disabled={this.state.selectedRows.length === 0}
+																		>
+																			<i class="far fa-trash-alt mr-1"></i>
+																			Remove Employees
+																		</Button>
 																		</FormGroup>
-																	</Col>
-
 																	
+																		
+																
 																</Row>
 																
 															</Form>
@@ -929,7 +1010,7 @@ submitPayroll=(data)=>{
 															   <Form onSubmit={props.handleSubmit}>
 												<Row className="mt-4 ">
 													<Col lg={3}>
-														<FormGroup>
+														<FormGroup className="mt-3 ">
 															<Label htmlFor="contactId">
 																{/* <span className="text-danger">*</span> */}
 																Select Approver
@@ -961,15 +1042,15 @@ submitPayroll=(data)=>{
 
 														</FormGroup>
 													</Col>
+													
 
-												</Row>
-												<Row className="mb-4 ">
+											
 													<Col>
 														<Button
 															type="button"
 															color="primary"
-															className="btn-square mt-4 "
-															className={`btn-square mt-4 ${
+														
+															className={`btn-square mt-5 ${
 																this.disable() ? `disabled-cursor` : ``
 															} `}
 															submitPayroll
@@ -995,11 +1076,19 @@ submitPayroll=(data)=>{
 													<Col>
 														<Button
 															color="primary"
-															className="btn-square mt-4 pull-right"
+															className="btn-square mt-5 pull-right"
 															// onClick={}
 															onClick={() =>
 																this.generate()
 																
+															}
+															disabled={this.disableForGenerateButtun() ? true : false}
+															
+															// disabled={this.state.allPayrollEmployee && this.state.allPayrollEmployee.length === 0 ?true :false}
+															title={
+																this.disable()
+																	? `Please Add employees Before Generate Payroll !`
+																	: ''
 															}
 														// disabled={selectedRows.length === 0}
 														>

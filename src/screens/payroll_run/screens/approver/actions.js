@@ -143,6 +143,20 @@ export const generatePayroll = (payrollId,string,date) => {
 	  })
 	}
   }
+  export const rejectPayroll = (payrollId,comment) => {
+	
+	return (dispatch) => {
+	  let data = {
+		method: 'post',
+		url: `/rest/payroll/rejectPayroll?payrollId=${payrollId}&comment=${comment}`,
+	  }
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }
  
  
   

@@ -218,11 +218,13 @@ class DetailContact extends React.Component {
 				}
 			})
 			.catch((err) => {
+				console.log(err);
+				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data : 'Something Went Wrong',
 				);
-				this.props.history.push('/admin/master/contact');
+				// this.props.history.push('/admin/master/contact');
 			});
 	};
 	success = (msg) => {

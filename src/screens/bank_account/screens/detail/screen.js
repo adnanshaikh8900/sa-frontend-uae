@@ -104,7 +104,7 @@ class DetailBankAccount extends React.Component {
 			disabled1: false,
 			current_bank_account_id: null,
 			current_bank_account: null,
-
+			exist: false,
 			initialVals: null,
 			currentData: {},
 		};
@@ -295,7 +295,25 @@ class DetailBankAccount extends React.Component {
 			dialog: null,
 		});
 	};
-
+	validationCheck = (value) => {
+		const data = {
+			moduleType: 5,
+			name: value,
+		};
+		this.props.detailBankAccountActions
+			.checkValidation(data)
+			.then((response) => {
+				if (response.data === 'Bank Account already exists') {
+					this.setState({
+						exist: true,
+					});
+				} else {
+					this.setState({
+						exist: false,
+					});
+				}
+			});
+	};
 	updateOpeningBalance = (_id) => {
 		this.props.bankAccountActions
 			.getExplainCount(_id)
@@ -344,6 +362,14 @@ class DetailBankAccount extends React.Component {
 											initialValues={initialVals}
 											onSubmit={(values, { resetForm }) => {
 												this.handleSubmit(values);
+											}}
+											validate={(values) => {
+												let errors = {};
+												if (this.state.exist === true) {
+													errors.account_number =
+														'Account Number is already exist';
+												}
+												return errors;
 											}}
 											validationSchema={Yup.object().shape({
 												account_name: Yup.string()
@@ -685,8 +711,9 @@ class DetailBankAccount extends React.Component {
 																		) {
 																			props.handleChange('account_number')(
 																				option,
-																			);
+																			);																			
 																		}
+																		this.validationCheck(option.target.value);
 																	}}
 																	className={
 																		props.errors.account_number &&

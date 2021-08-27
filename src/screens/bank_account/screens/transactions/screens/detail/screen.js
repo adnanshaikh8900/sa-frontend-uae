@@ -472,6 +472,7 @@ class DetailBankTransaction extends React.Component {
                                     </Label>
                                     <Input
                                       type="number"
+min="0"
                                       id="transactionAmount"
                                       name="transactionAmount"
                                       placeholder={strings.Amount}

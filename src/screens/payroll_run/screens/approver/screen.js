@@ -485,6 +485,7 @@ class PayrollApproverScreen extends React.Component {
 									// 	return (
 									// 		<Input
 									// 		type="number"
+min="0"
 									// 		max={30}
 									// 		id="lopDay"
 									// 		name="lopDay"

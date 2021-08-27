@@ -1009,6 +1009,7 @@ class SupplierInvoice extends React.Component {
 											<Col lg={2} className="mb-1">
 												<Input
 													type="number"
+min="0"
 													value={filterData.amount}
 													placeholder={strings.Amount}
 													onChange={(e) => {

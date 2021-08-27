@@ -267,6 +267,7 @@ class CreateSupplierInvoice extends React.Component {
 					<div>
 						<Input
 							type="number"
+min="0"
 							maxLength="10"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
@@ -327,6 +328,7 @@ class CreateSupplierInvoice extends React.Component {
 				render={({ field, form }) => (
 					<Input
 					type="number"
+min="0"
 						maxLength="10"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
@@ -1836,6 +1838,7 @@ class CreateSupplierInvoice extends React.Component {
 																	<div>
 																		<Input
 																			type="number"
+min="0"
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"
@@ -2181,6 +2184,7 @@ class CreateSupplierInvoice extends React.Component {
 																								name="discountPercentage"
 																								placeholder={strings.DiscountPercentage}
 																								type="number"
+min="0"
 																								maxLength="5"
 																								value={
 																									props.values
@@ -2225,6 +2229,7 @@ class CreateSupplierInvoice extends React.Component {
 																							id="discount"
 																							name="discount"
 																							type="number"
+min="0"
 																							maxLength="7"
 																							disabled={
 																								props.values.discountType &&

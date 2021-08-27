@@ -338,7 +338,8 @@ class CreateCurrencyConvert extends React.Component {
 																	</UncontrolledTooltip> */}
 																	</Label>
 																	<Input
-																	type="number" maxLength='20'
+																	type="number"
+min="0" maxLength='20'
 																	id="exchangeRate"
 																	name="exchangeRate"
 																	placeholder={strings.Enter+strings.Exchangerate}

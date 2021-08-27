@@ -258,6 +258,7 @@ class PayrollModal extends React.Component {
 																				<Col  className="text-left">
 																				<Input
 																		type="number"
+min="0"
 																		maxLength="3"
 																		name="lop"
 																		id="lop"

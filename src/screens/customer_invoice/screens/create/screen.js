@@ -267,6 +267,7 @@ class CreateCustomerInvoice extends React.Component {
 					<div>
 						<Input
 							type="number"
+min="0"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -325,6 +326,7 @@ class CreateCustomerInvoice extends React.Component {
 				render={({ field, form }) => (
 					<Input
 					type="number"
+min="0"
 						maxLength="10"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
@@ -1784,7 +1786,8 @@ class CreateCustomerInvoice extends React.Component {
 																	</div>
 																</FormGroup>
 															</Col>
-															<Col md={2}>
+															<Coltype="number"
+min="0"
 															<Input
 																		disabled
 																				id="currencyName"
@@ -2114,7 +2117,8 @@ class CreateCustomerInvoice extends React.Component {
 																									) {
 																										props.handleChange(
 																											'discountPercentage',
-																										)(e);
+																								type="number"
+min="0"
 																										this.setState(
 																											{
 																												discountPercentage:
@@ -2158,7 +2162,8 @@ class CreateCustomerInvoice extends React.Component {
 																							value={props.values.discount}
 																							onChange={(option) => {
 																								if (
-																									option.target.value === '' ||
+																							type="number"
+min="0"et.value === '' ||
 																									this.regDecimal.test(
 																										option.target.value,
 																									)

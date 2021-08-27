@@ -391,6 +391,7 @@ class CreateJournal extends React.Component {
 				render={({ field, form }) => (
 					<Input
 					type="number"
+min="0"
 					maxLength="9"
 						value={row['debitAmount'] !== 0 ? row['debitAmount'] : 0}
 						onChange={(e) => {
@@ -441,6 +442,7 @@ class CreateJournal extends React.Component {
 				render={({ field, form }) => (
 					<Input
 					type="number"
+min="0"
 					maxLength="9"
 						value={row['creditAmount'] !== 0 ? row['creditAmount'] : 0}
 						onChange={(e) => {
@@ -919,12 +921,8 @@ class CreateJournal extends React.Component {
 																</div>
 															)}
 														{this.state.submitJournal &&
-															this.state.initValue.totalCreditAmount.toFixed(
-																2,
-															) !==
-																this.state.initValue.totalDebitAmount.toFixed(
-																	2,
-																) && (
+															this.state.initValue.totalCreditAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) !==
+															this.state.initValue.totalDebitAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) && (
 																<div
 																	className={
 																		this.state.initValue.totalDebitAmount !==

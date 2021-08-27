@@ -480,6 +480,7 @@ class explainDiv extends React.Component {
 																	<div className="col-sm-9">
 																		<input
 																			type="number"
+min="0"
 																			className="form-control"
 																			id="description"
 																			value={this.state.totalAmount}

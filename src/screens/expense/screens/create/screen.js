@@ -616,6 +616,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	</Label>
 																	<Input
 																		type="number"
+min="0"
 																		maxLength="10"
 																		name="expenseAmount"
 																		id="expenseAmount"
@@ -815,6 +816,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	<div>
 																		<Input
 																			type="number"
+min="0"
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"

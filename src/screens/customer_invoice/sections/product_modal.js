@@ -673,6 +673,7 @@ class ProductModal extends React.Component {
 													</Label>
 													<Input
 													type="number"
+min="0"
 														maxLength="10"
 														id="salesUnitPrice"
 														name="salesUnitPrice"
@@ -840,6 +841,7 @@ class ProductModal extends React.Component {
 													</Label>
 													<Input
 														type="number"
+min="0"
 														maxLength="10"
 														id="purchaseUnitPrice"
 														name="purchaseUnitPrice"

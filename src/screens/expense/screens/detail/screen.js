@@ -689,6 +689,7 @@ class DetailExpense extends React.Component {
 																		</Label>
 																		<Input
 																			type="number"
+min="0"
 																			name="expenseAmount"
 																			id="expenseAmount"
 																			rows="5"
@@ -923,6 +924,7 @@ class DetailExpense extends React.Component {
 																	<div>
 																		<Input
 																			type="number"
+min="0"
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"

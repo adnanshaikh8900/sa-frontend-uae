@@ -940,6 +940,7 @@ class ExplainTrasactionDetail extends React.Component {
 																		</Label>
 																			<Input
 																				type="number"
+min="0"
 																				id="amount"
 																				name="amount"
 																				placeholder={strings.Amount}

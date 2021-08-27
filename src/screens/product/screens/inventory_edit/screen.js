@@ -494,6 +494,7 @@ class InventoryEdit extends React.Component {
 																		</Label>
 																		<Input
 																		type="number"
+min="0"
 																	disabled
 																			maxLength="10"
 																			id="inventoryQty"
@@ -544,6 +545,7 @@ class InventoryEdit extends React.Component {
 																		<Input
 																		disabled
 																		type="number"
+min="0"
 																			maxLength="10"
 																			id="inventoryPurchasePrice"
 																			name="inventoryPurchasePrice"
@@ -645,6 +647,7 @@ class InventoryEdit extends React.Component {
 																			// 		: true
 																			// }
 																			type="number"
+min="0"
 																			maxLength="200"
 																			name="inventoryReorderLevel"
 																			id="inventoryReorderLevel"

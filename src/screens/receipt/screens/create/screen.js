@@ -304,6 +304,7 @@ class CreateReceipt extends React.Component {
 				render={({ field, form }) => (
 					<Input
 					type="number"
+min="0"
 						readOnly
 						value={rows.totalAount}
 						// onChange={(e) => {
@@ -489,6 +490,7 @@ class CreateReceipt extends React.Component {
 																					</Label>
 																					<Input
 																						type="number"
+min="0"
 																						id="amount"
 																						name="amount"
 																						readOnly

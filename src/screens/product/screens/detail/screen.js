@@ -1030,6 +1030,7 @@ renderName=(cell,row)=>{
 																		</Label>
 																		<Input
 																			type="number"
+min="0"
 																			id="salesUnitPrice"
 																			name="salesUnitPrice"
 																			placeholder={strings.Enter+strings.SellingPrice}
@@ -1227,6 +1228,7 @@ renderName=(cell,row)=>{
 																		</Label>
 																		<Input
 																			type="number"
+min="0"
 																			id="purchaseUnitPrice"
 																			name="purchaseUnitPrice"
 																			placeholder={strings.Enter+strings.PurchasePrice}
@@ -1501,6 +1503,7 @@ renderName=(cell,row)=>{
 																		</Label>
 																		<Input
 																		type="number"
+min="0"
 																			maxLength="10"
 																			id="inventoryQty"
 																			name="inventoryQty"
@@ -1549,6 +1552,7 @@ renderName=(cell,row)=>{
 																		</Label>
 																		<Input
 																		type="number"
+min="0"
 																			maxLength="10"
 																			id="inventoryPurchasePrice"
 																			name="inventoryPurchasePrice"
@@ -1656,6 +1660,7 @@ renderName=(cell,row)=>{
 																			// 		: true
 																			// }
 																			type="number"
+min="0"
 																			maxLength="200"
 																			name="inventoryReorderLevel"
 																			id="inventoryReorderLevel"

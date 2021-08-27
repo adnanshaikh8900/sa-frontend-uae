@@ -1786,7 +1786,7 @@ min="0"
 																	</div>
 																</FormGroup>
 															</Col>
-															<Col>
+															<Col  lg={2}>
 															<Input
 																type="number"
 															min="0"	

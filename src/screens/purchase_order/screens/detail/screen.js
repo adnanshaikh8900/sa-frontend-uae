@@ -1503,8 +1503,9 @@ min="0"
 																				dropdownMode="select"
 																				onChange={(value) => {
 																					props.handleChange('poReceiveDate')(
-																						value,
+																						moment(value).format('DD/MM/YYYY'),
 																					);
+																					this.setDate(props, value);
 																				}}
 																				className={`form-control ${
 																					props.errors.poReceiveDate &&

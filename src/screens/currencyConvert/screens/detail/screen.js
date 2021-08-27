@@ -63,6 +63,7 @@ class DetailCurrencyConvert extends React.Component {
       dialog: null,
       current_currency_convert_id: null,
       currency_list:[],
+      disabled: false,
     }
     this.regExAlpha = /^[a-zA-Z ]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
@@ -124,12 +125,14 @@ class DetailCurrencyConvert extends React.Component {
 
   // Create or Edit Currency
   handleSubmit = (data, resetForm) => {
+    this.setState({ disabled: true });
   	const { current_currency_convert_id } = this.state;
 		let postData = this.getData(data);
 
 		postData = { ...postData, ...{ id: current_currency_convert_id } };
       this.props.detailCurrencyConvertAction.updateCurrencyConvert(postData).then((res) => {
       if (res.status === 200) {
+        this.setState({ disabled: false });
         resetForm();
         this.props.commonActions.tostifyAlert('success', 'Currency Conversion Updated Successfully!')
         this.props.history.push('/admin/master/CurrencyConvert')
@@ -387,8 +390,10 @@ class DetailCurrencyConvert extends React.Component {
                                      <FormGroup className="text-right">
                                      {this.state.current_currency_convert_id !== 1 &&
 																	  (
-                                      <Button type="submit" name="submit" color="primary" className="btn-square mr-3">
-                                        <i className="fa fa-dot-circle-o"></i>  {strings.Update}
+                                      <Button type="submit" name="submit" color="primary" className="btn-square mr-3" disabled={this.state.disabled}>
+                                        <i className="fa fa-dot-circle-o"></i> 	{this.state.disabled
+																			? 'Updating...'
+																			: strings.Update }
                                       </Button>)}
                                       <Button type="submit" color="secondary" className="btn-square"
                                         onClick={() => { this.props.history.push('/admin/master/CurrencyConvert') }}>

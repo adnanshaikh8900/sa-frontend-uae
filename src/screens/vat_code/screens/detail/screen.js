@@ -51,6 +51,7 @@ class DetailVatCode extends React.Component {
 			loading: false,
 			dialog: false,
 			current_vat_id: null,
+			disabled: false,
 		};
 
 		this.saveAndContinue = false;
@@ -83,10 +84,12 @@ class DetailVatCode extends React.Component {
 
 	// Create or Edit Vat
 	handleSubmit = (data) => {
+		this.setState({ disabled: true });
 		this.props.vatDetailActions
 			.updateVat(data)
 			.then((res) => {
 				if (res.status === 200) {
+					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
 						'success',
 						'Vat Category Updated Successfully!',
@@ -283,9 +286,12 @@ class DetailVatCode extends React.Component {
 																			name="submit"
 																			color="primary"
 																			className="btn-square mr-3"
+																			disabled={this.state.disabled}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			 {strings.Update}
+																			{this.state.disabled
+																			? 'Updating...'
+																			: strings.Update }
 																		</Button>
 																		<Button
 																			type="submit"

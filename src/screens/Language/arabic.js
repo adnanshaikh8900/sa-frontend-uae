@@ -157,7 +157,8 @@ RecieptNumber:"عدد إيصال",
       BillingEmail:"البريد الإلكتروني للفوترة",
       ContractPONumber: "رقم أمر الشراء للعقد",
       Cancel:" إلغاء الأمر",
-
+      VerifyTRN:"تحقق من TRN",
+      
       //Income receipts
       Receipts:"ايصالات",		
       RECEIPTDATE:"تاريخ الاستلام",		

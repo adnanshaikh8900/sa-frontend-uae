@@ -65,6 +65,7 @@ class CreateCurrencyConvert extends React.Component {
 			loading: false,
 			createMore: false,
 			currency_list : [],
+			
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
@@ -134,6 +135,7 @@ class CreateCurrencyConvert extends React.Component {
 			.createCurrencyConvert(data)
 			.then((res) => {
 				if (res.status === 200) {
+					this.setState({ createDisabled: false });
 					this.props.commonActions.tostifyAlert(
 						'success',
 						'New Currency Conversion is Created Successfully!',
@@ -150,6 +152,7 @@ class CreateCurrencyConvert extends React.Component {
 				}
 			})
 			.catch((err) => {
+				this.setState({ createDisabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err && err.data ? err.data.message : 'Something Went Wrong',
@@ -392,20 +395,25 @@ class CreateCurrencyConvert extends React.Component {
 																	className="btn-square mr-3"
 																	disabled={this.state.createDisabled}
 																>
-																	<i className="fa fa-dot-circle-o"></i> {strings.Create}
+																	<i className="fa fa-dot-circle-o"></i>{this.state.createDisabled
+																			? 'Creating...'
+																			: strings.Create }
 																</Button>
 
 																<Button
 																	name="button"
 																	color="primary"
 																	className="btn-square mr-3"
+																	createDisabled={this.state.createDisabled}
 																	onClick={() => {
 																		this.setState({ createMore: true }, () => {
 																			props.handleSubmit();
 																		});
 																	}}
 																>
-																	<i className="fa fa-refresh"></i> {strings.CreateandMore}
+																	<i className="fa fa-refresh"></i> {this.state.createDisabled
+																			? 'Creating...'
+																			: strings.CreateandMore }
 																</Button>
 
 																<Button

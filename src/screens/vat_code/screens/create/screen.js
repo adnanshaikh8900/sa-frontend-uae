@@ -82,6 +82,7 @@ class CreateVatCode extends React.Component {
 			loading: false,
 			createMore: false,
 			vat_list: [],
+			disabled: false,
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExDecimal = /^[0-9]*(\.[0-9]{0,2})?$/;
@@ -120,10 +121,12 @@ class CreateVatCode extends React.Component {
 
 	// Create or Edit Vat
 	handleSubmit = (data, resetForm) => {
+		this.setState({ disabled: true });
 		this.props.vatCreateActions
 			.createVat(data)
 			.then((res) => {
 				if (res.status === 200) {
+					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
 						'success',
 						'New vat category Created Successfully!',
@@ -139,6 +142,7 @@ class CreateVatCode extends React.Component {
 				}
 			})
 			.catch((err) => {
+				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert('error', err.data.message);
 			});
 	};
@@ -299,25 +303,31 @@ class CreateVatCode extends React.Component {
 																name="submit"
 																color="primary"
 																className="btn-square mr-3"
+																disabled={this.state.disabled}
 																onClick={() => {
 																	this.setState({ createMore: false }, () => {
 																		props.handleSubmit();
 																	});
 																}}
 															>
-																<i className="fa fa-dot-circle-o"></i> {strings.Create}
+																<i className="fa fa-dot-circle-o"></i> 	{this.state.disabled
+																			? 'Creating...'
+																			: strings.Create }
 															</Button>
 															<Button
 																name="button"
 																color="primary"
 																className="btn-square mr-3"
+																disabled={this.state.disabled}
 																onClick={() => {
 																	this.setState({ createMore: true }, () => {
 																		props.handleSubmit();
 																	});
 																}}
 															>
-																<i className="fa fa-refresh"></i> {strings.CreateandMore}
+																<i className="fa fa-refresh"></i> 	{this.state.disabled
+																			? 'Creating...'
+																			: strings.CreateandMore }
 															</Button>
 															<Button
 																type="submit"

@@ -85,6 +85,7 @@ class DetailProduct extends React.Component {
 			dialog: null,
 			current_product_id: null,
 			openInventoryModel: false,
+			disabled: false,
 		};
 
 		this.selectRowProp = {
@@ -323,6 +324,7 @@ renderName=(cell,row)=>{
 	};
 
 	handleSubmit = (data) => {
+		this.setState({ disabled: true });
 		const { current_product_id } = this.state;
 		const productID = current_product_id;
 		const productCode = data['productCode'];
@@ -410,6 +412,7 @@ renderName=(cell,row)=>{
 		this.props.detailProductActions
 			.updateProduct(postData)
 			.then((res) => {
+				this.setState({ disabled: false });
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
@@ -419,6 +422,7 @@ renderName=(cell,row)=>{
 				}
 			})
 			.catch((err) => {
+				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err && err.data ? err.data.message : 'Something Went Wrong',
@@ -1756,9 +1760,12 @@ renderName=(cell,row)=>{
 																			name="submit"
 																			color="primary"
 																			className="btn-square mr-3"
+																			disabled={this.state.disabled}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			{strings.Update}
+																			{this.state.disabled
+																				? 'Updating...'
+																				: strings.Update}
 																		</Button>
 																		<Button
 																			color="secondary"

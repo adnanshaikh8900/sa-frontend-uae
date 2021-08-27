@@ -160,6 +160,7 @@ Relationship2:"Relationship 2",
       InvoicingDetails:"Invoicing Details",
       BillingEmail:"Billing Email",
       ContractPONumber: "Contract PO Number",
+      VerifyTRN:"Verify TRN",
 
 
       //Income receipts

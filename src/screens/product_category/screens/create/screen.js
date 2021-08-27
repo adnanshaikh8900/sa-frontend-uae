@@ -62,6 +62,7 @@ class CreateProductCategory extends React.Component {
 
 			loading: false,
 			createMore: false,
+			disabled: false,
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExBoth = /^[a-zA-Z0-9\s,'-/()]+$/;
@@ -98,10 +99,12 @@ class CreateProductCategory extends React.Component {
 
 	// Create or Edit Vat
 	handleSubmit = (data, resetForm) => {
+		this.setState({ disabled: true });
 		this.props.createProductCategoryActions
 			.createProductCategory(data)
 			.then((res) => {
 				if (res.status === 200) {
+					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
 						'success',
 						'New Product Category is Created Successfully!',
@@ -118,6 +121,7 @@ class CreateProductCategory extends React.Component {
 				}
 			})
 			.catch((err) => {
+				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err && err.data ? err.data.message : 'Something Went Wrong',
@@ -276,14 +280,18 @@ class CreateProductCategory extends React.Component {
 																	name="submit"
 																	color="primary"
 																	className="btn-square mr-3"
+																	disabled={this.state.disabled}
 																>
-																	<i className="fa fa-dot-circle-o"></i>{' '} {strings.Create}
+																	<i className="fa fa-dot-circle-o"></i>{' '} 	{this.state.disabled
+																			? 'Creating...'
+																			: strings.Create }
 																</Button>
 
 																<Button
 																	name="button"
 																	color="primary"
 																	className="btn-square mr-3"
+																	disabled={this.state.disabled}
 																	onClick={() => {
 																		this.setState({ createMore: true }, () => {
 																			props.handleSubmit();
@@ -291,7 +299,9 @@ class CreateProductCategory extends React.Component {
 																	}}
 																>
 																	<i className="fa fa-refresh"></i> {' '}
-																	{strings.CreateandMore}
+																	{this.state.disabled
+																			? 'Creating...'
+																			: strings.CreateandMore }
 																</Button>
 
 																<Button

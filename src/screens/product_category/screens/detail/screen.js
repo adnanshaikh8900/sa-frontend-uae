@@ -49,7 +49,8 @@ class DetailProductCategory extends React.Component {
       initValue: {},
       loading: true,
       dialog: null,
-      current_product_category_id: null
+      current_product_category_id: null,
+      disabled: false,
     }
     this.regExAlpha = /^[a-zA-Z ]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
@@ -81,6 +82,7 @@ class DetailProductCategory extends React.Component {
 
   // Create or Edit Vat
   handleSubmit = (data) => {
+    this.setState({ disabled: true });
     const { id, productCategoryName, productCategoryCode } = data;
     const postData = {
       id,
@@ -89,6 +91,7 @@ class DetailProductCategory extends React.Component {
     }
     this.props.detailProductCategoryAction.updateProductCategory(postData).then((res) => {
       if (res.status === 200) {
+        this.setState({ disabled: false });
         this.props.commonActions.tostifyAlert('success', 'Product Category Updated Successfully!')
         this.props.history.push('/admin/master/product-category')
       }
@@ -218,8 +221,14 @@ class DetailProductCategory extends React.Component {
                                       </Button>
                                     </FormGroup>
                                     <FormGroup className="text-right">
-                                      <Button type="submit" name="submit" color="primary" className="btn-square mr-3">
-                                        <i className="fa fa-dot-circle-o"></i>  {strings.Update}
+                                      <Button type="submit" 
+                                      name="submit" 
+                                      color="primary"
+                                       className="btn-square mr-3"	disabled={this.state.disabled}>
+                                        <i className="fa fa-dot-circle-o"></i> 	{this.state.disabled
+																			? 'Updating...'
+																			: strings.Update }
+
                                       </Button>
                                       <Button type="submit" color="secondary" className="btn-square"
                                         onClick={() => { this.props.history.push('/admin/master/product-category') }}>

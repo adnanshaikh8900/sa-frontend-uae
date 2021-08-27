@@ -51,6 +51,7 @@ class CustomerModal extends React.Component {
 				lastName: '',
 				middleName: '',
 				mobileNumber: '',
+				organizationName: '',
 				organization: '',
 				poBoxNumber: '',
 				postZipCode: '',
@@ -362,6 +363,85 @@ class CustomerModal extends React.Component {
 															</Col>
 															<Col md="4">
 												<FormGroup>
+													<Label htmlFor="organizationName">{strings.OrganizationName}</Label>
+													<Input
+														type="text"
+														maxLength="26"
+														id="organizationName "
+														name="organizationName "
+														onChange={(option) => {
+															if (
+																option.target.value === '' ||
+																this.regExAlpha.test(option.target.value)
+															) {
+																props.handleChange('organizationName')(option);
+															}
+														}}
+														value={props.values.organizationName}
+														className={
+															props.errors.organizationName&&
+															props.touched.organizationName
+																? 'is-invalid'
+																: ''
+														}
+														placeholder={strings.Enter+strings.OrganizationName}
+													/>
+													{props.errors.organizationName &&
+														props.touched.organizationName && (
+															<div className="invalid-feedback">
+																{props.errors.organizationName}
+															</div>
+														)}
+												</FormGroup>
+											</Col>
+										</Row>
+										<Row className="row-wrapper">
+											<Col md="4">
+												<FormGroup>
+													<Label htmlFor="vatRegistrationNumber">
+													<span className="text-danger">*</span>
+														{strings.TaxRegistrationNumber}
+													</Label>
+													<Input
+														type="text"
+														maxLength="20"
+														id="vatRegistrationNumber"
+														name="vatRegistrationNumber"
+														onChange={(option) => {
+															if (
+																option.target.value === '' ||
+																this.regExBoth.test(option.target.value)
+															) {
+																props.handleChange('vatRegistrationNumber')(
+																	option,
+																);
+															}
+														}}
+														value={props.values.vatRegistrationNumber}
+														className={
+															props.errors.vatRegistrationNumber &&
+															props.touched.vatRegistrationNumber
+																? 'is-invalid'
+																: ''
+														}
+														placeholder={strings.Enter+strings.TaxRegistrationNumber}
+													/>
+													{props.errors.vatRegistrationNumber &&
+														props.touched.vatRegistrationNumber && (
+															<div className="invalid-feedback">
+																{props.errors.vatRegistrationNumber}
+															</div>
+														)}
+															<div className="VerifyTRN">
+																		<br/>
+																		<b>	<a target="_blank" href="https://eservices.tax.gov.ae/en-us/trn-verify" style={{ color: '#2266d8' }}  >{strings.VerifyTRN}</a></b>
+															        </div> 
+																	    
+																	   
+												</FormGroup>
+											</Col>
+											<Col md="4">
+												<FormGroup>
 													<Label htmlFor="currrencyCode">
 													<span className="text-danger">*</span>{strings.Currency}
 													</Label>
@@ -411,46 +491,6 @@ class CustomerModal extends React.Component {
 														props.touched.currencyCode && (
 															<div className="invalid-feedback">
 																{props.errors.currencyCode}
-															</div>
-														)}
-												</FormGroup>
-											</Col>
-										</Row>
-										<Row className="row-wrapper">
-											<Col md="4">
-												<FormGroup>
-													<Label htmlFor="vatRegistrationNumber">
-													<span className="text-danger">*</span>
-														{strings.TaxRegistrationNumber}
-													</Label>
-													<Input
-														type="text"
-														maxLength="20"
-														id="vatRegistrationNumber"
-														name="vatRegistrationNumber"
-														onChange={(option) => {
-															if (
-																option.target.value === '' ||
-																this.regExBoth.test(option.target.value)
-															) {
-																props.handleChange('vatRegistrationNumber')(
-																	option,
-																);
-															}
-														}}
-														value={props.values.vatRegistrationNumber}
-														className={
-															props.errors.vatRegistrationNumber &&
-															props.touched.vatRegistrationNumber
-																? 'is-invalid'
-																: ''
-														}
-														placeholder={strings.Enter+strings.TaxRegistrationNumber}
-													/>
-													{props.errors.vatRegistrationNumber &&
-														props.touched.vatRegistrationNumber && (
-															<div className="invalid-feedback">
-																{props.errors.vatRegistrationNumber}
 															</div>
 														)}
 												</FormGroup>

@@ -105,6 +105,7 @@ class DetailSupplierInvoice extends React.Component {
 			purchaseCategory: [],
 			basecurrency:[],
 			supplier_currency: '',
+			disabled: false,
 		};
 
 		// this.options = {
@@ -917,6 +918,7 @@ class DetailSupplierInvoice extends React.Component {
 	};
 
 	handleSubmit = (data) => {
+		this.setState({ disabled: true });
 		const { current_supplier_id, term } = this.state;
 		const {
 			receiptAttachmentDescription,
@@ -990,6 +992,7 @@ class DetailSupplierInvoice extends React.Component {
 		this.props.supplierInvoiceDetailActions
 			.updateInvoice(formData)
 			.then((res) => {
+				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
 					'Invoice Updated Successfully.',
@@ -997,6 +1000,7 @@ class DetailSupplierInvoice extends React.Component {
 				this.props.history.push('/admin/expense/supplier-invoice');
 			})
 			.catch((err) => {
+				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err && err.data ? err.data.message : 'Something Went Wrong',
@@ -2257,9 +2261,12 @@ class DetailSupplierInvoice extends React.Component {
 																			type="submit"
 																			color="primary"
 																			className="btn-square mr-3"
+																			disabled={this.state.disabled}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			 {strings.Update}
+																			{this.state.disabled
+																				? 'Updating...'
+																				: strings.Update}
 																		</Button>
 																		<Button
 																			color="secondary"

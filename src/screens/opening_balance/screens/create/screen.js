@@ -64,6 +64,7 @@ class CreateOpeningBalance extends React.Component {
 			basecurrency:[],
 			loading: false,
 			createMore: false,
+			disabled: false,
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
@@ -88,6 +89,7 @@ class CreateOpeningBalance extends React.Component {
 
 	// Create  Currency conversion
 	handleSubmit = (data,resetForm) =>{
+		this.setState({ disabled: true });
 		const postData = {
 			openingBalance: data.openingBalance,
 			transactionCategoryId: data.transactionCategoryId.value,
@@ -316,8 +318,11 @@ class CreateOpeningBalance extends React.Component {
 																	name="submit"
 																	color="primary"
 																	className="btn-square mr-3"
+																	disabled={this.state.disabled}
 																>
-																	<i className="fa fa-dot-circle-o"></i> {strings.Create}
+																	<i className="fa fa-dot-circle-o"></i> 	{this.state.disabled
+																			? 'Creating...'
+																			: strings.Create }
 																</Button>
 
 																<Button

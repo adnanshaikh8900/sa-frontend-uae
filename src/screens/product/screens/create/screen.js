@@ -898,7 +898,6 @@ try {
 																		</Label>
 																		<Input
 																			type="number"
-min="0"
 																			maxLength="10"
 																			id="salesUnitPrice"
 																			name="salesUnitPrice"
@@ -1007,7 +1006,7 @@ min="0"
 																					: true
 																			}
 																			type="textarea"
-																			maxLength="200"
+																			maxLength="50"
 																			name="salesDescription"
 																			id="salesDescription"
 																			rows="3"
@@ -1100,7 +1099,6 @@ min="0"
 																		</Label>
 																		<Input
 																		type="number"
-min="0"
 																			maxLength="10"
 																			id="purchaseUnitPrice"
 																			name="purchaseUnitPrice"
@@ -1212,7 +1210,7 @@ min="0"
 																					: true
 																			}
 																			type="textarea"
-																			maxLength="200"
+																			maxLength="50"
 																			name="purchaseDescription"
 																			id="purchaseDescription"
 																			rows="3"
@@ -1353,7 +1351,7 @@ min="0"
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
-																					this.regDecimal.test(
+																					this.regEx.test(
 																						option.target.value,
 																					)
 																				) {
@@ -1506,15 +1504,27 @@ min="0"
 																			// }
 																			type="number"
 min="0"
-																			maxLength="200"
+																			maxLength="50"
 																			name="inventoryReorderLevel"
 																			id="inventoryReorderLevel"
 																			rows="3"
 																			placeholder={strings.Enter+strings.InventoryReorderLevel}
+																			// onChange={(value) => {
+																			// 	props.handleChange(
+																			// 		'inventoryReorderLevel',
+																			// 	)(value);
+																			// }}
 																			onChange={(value) => {
-																				props.handleChange(
-																					'inventoryReorderLevel',
-																				)(value);
+																				if (
+																					value.target.value === '' ||
+																					this.regEx.test(
+																						value.target.value,
+																					)
+																				) {
+																					props.handleChange(
+																						'inventoryReorderLevel',
+																					)(value);
+																				}
 																			}}
 																			value={props.values.inventoryReorderLevel}
 																		/>

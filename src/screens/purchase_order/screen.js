@@ -196,6 +196,29 @@ class PurchaseOrder extends React.Component {
 		);
 	};
 
+	close = (id) => {
+		this.props.purchaseOrderAction
+			.changeStatus(id)
+			.then((res) => {
+				if (res.status === 200) {
+					this.props.commonActions.tostifyAlert(
+						'success',
+						'Purchase Order Closed Successfully',
+					);
+					this.setState({
+						loading: false,
+					});
+					this.initializeData();
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					'Something Went Wrong',
+				);
+			});
+	};
+
 	renderRFQStatus = (cell, row) => {
 		let classname = '';
 		if (row.status === 'Approved') {
@@ -341,7 +364,7 @@ class PurchaseOrder extends React.Component {
 							{row.status === 'Approved' &&(
 								<DropdownItem
 							onClick={() => {
-							this.changeStatus(row.id);
+							this.close(row.id);
 							}}
 							>
 							<i className="far fa-times-circle" />  {strings.Close}

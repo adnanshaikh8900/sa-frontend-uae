@@ -377,7 +377,8 @@ min="0"
 				name={`lineItemsString.${idx}.grnReceivedQuantity`}
 				render={({ field, form }) => (
 					<div>
-						<type="number"
+							<Input
+					type="number"
 min="0"
 							type="number"
 							maxLength="10"
@@ -426,8 +427,7 @@ min="0"
 	};
 	renderUnitPrice = (cell, row, props) => {
 		let idx;
-		thitype="number"
-min="0"map((obj, index) => {
+this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
 				idx = index;
 			}

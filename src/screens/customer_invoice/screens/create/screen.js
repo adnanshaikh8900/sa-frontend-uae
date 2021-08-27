@@ -1786,9 +1786,10 @@ min="0"
 																	</div>
 																</FormGroup>
 															</Col>
-															<Coltype="number"
-min="0"
+															<Col>
 															<Input
+																type="number"
+															min="0"	
 																		disabled
 																				id="currencyName"
 																				name="currencyName"
@@ -2117,8 +2118,7 @@ min="0"
 																									) {
 																										props.handleChange(
 																											'discountPercentage',
-																								type="number"
-min="0"
+																										)(e)
 																										this.setState(
 																											{
 																												discountPercentage:
@@ -2150,7 +2150,7 @@ min="0"
 																							type="number"
 																							name="discount"
 																							maxLength="10"
-																							
+																							min="0"
 																							disabled={
 																								props.values.discountType &&
 																								props.values.discountType
@@ -2162,8 +2162,7 @@ min="0"
 																							value={props.values.discount}
 																							onChange={(option) => {
 																								if (
-																							type="number"
-min="0"et.value === '' ||
+																						option.target.value === '' ||
 																									this.regDecimal.test(
 																										option.target.value,
 																									)

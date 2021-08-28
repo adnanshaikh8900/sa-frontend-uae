@@ -38,6 +38,7 @@ import moment from 'moment';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { string } from 'prop-types';
+import { toast } from 'react-toastify';
 
 const mapStateToProps = (state) => {
 	return {
@@ -157,6 +158,7 @@ class CreateCustomerInvoice extends React.Component {
 			exchangeRate:'',		
 			basecurrency:[],
 			inventoryList:[],
+			param:false,
 		};
 
 		this.formRef = React.createRef();
@@ -190,6 +192,7 @@ class CreateCustomerInvoice extends React.Component {
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
+		this.regDec1=/^\d{1,2}\.\d{1,2}$|^\d{1,2}$/;
 		this.regDecimalP = /(^100(\.0{1,2})?$)|(^([1-9]([0-9])?|0)(\.[0-9]{1,2})?$)/;
 		this.regExAlpha = /^[a-zA-Z0-9!@#$&()-\\`.+,/\"]+$/;
 	}
@@ -1077,7 +1080,20 @@ min="0"
 	openInvoicePreviewModal = (props) => {
 		this.setState({ openInvoicePreviewModal: true });
 	};
+	checkAmount=(discount)=>{
+		const { initValue } = this.state;
+			if(discount > initValue.totalAmount){
+					this.setState({
+						param:true
+					});
+			}
+			else{
+				this.setState({
+					param:false
+				});
+			}
 
+	}
 	// getCurrentUser = (data) => {
 	// 	let option;
 	// 	console.log('data', data)
@@ -1221,7 +1237,7 @@ min="0"
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, discountOptions, initValue, exist, prefix } = this.state;
+		const { data, discountOptions, initValue, exist, param,prefix } = this.state;
 		const {
 			customer_list,
 			universal_currency_list,
@@ -1271,6 +1287,10 @@ min="0"
 														errors.invoice_number =
 															'Invoice Number already exists';
 													}
+													if (param === true) {
+														errors.discount =
+															'Discount amount Cannot be greater than Invoice Total Amount';
+													}
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({
@@ -1288,6 +1308,7 @@ min="0"
 													invoiceDate: Yup.string().required(
 														'Invoice Date is Required',
 													),
+													
 													lineItemsString: Yup.array()
 														.required(
 															'Atleast one invoice sub detail is mandatory',
@@ -2102,9 +2123,12 @@ min="0"
 																							<Input
 																								id="discountPercentage"
 																								name="discountPercentage"
+																								min="0"
+																								max="99"
+																								 step="0.01"
 																								placeholder={strings.DiscountPercentage}
 																								type="number"
-																								maxLength="5"
+																								maxLength={2}
 																								value={
 																									props.values
 																										.discountPercentage
@@ -2112,7 +2136,7 @@ min="0"
 																								onChange={(e) => {
 																									if (
 																										e.target.value === '' ||
-																										this.regDecimal.test(
+																										this.regDec1.test(
 																											e.target.value,
 																										)
 																									) {
@@ -2183,8 +2207,21 @@ min="0"
 																										},
 																									);
 																								}
+																								this.checkAmount(option.target.value)
 																							}}
+																							className={`form-control ${
+																								props.errors.discount &&
+																								props.touched.discount
+																									? 'is-invalid'
+																									: ''
+																							}`}
 																						/>
+															{props.errors.discount &&
+																		props.touched.discount && (
+																			<div className="invalid-feedback">
+																				{props.errors.discount}
+																			</div>
+																		)}
 																					</FormGroup>
 																				</Col>
 																			</Row>
@@ -2269,6 +2306,7 @@ min="0"
 																					{this.state.customer_currency_symbol}
 																						{initValue.totalAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																					</label>
+																		
 																				</Col>
 																			</Row>
 																		</div>

@@ -297,8 +297,9 @@ class DetailBankAccount extends React.Component {
 	};
 	validationCheck = (value) => {
 		const data = {
-			moduleType: 5,
+			moduleType: 17,
 			name: value,
+			checkId:this.state.current_bank_account_id,
 		};
 		this.props.detailBankAccountActions
 			.checkValidation(data)

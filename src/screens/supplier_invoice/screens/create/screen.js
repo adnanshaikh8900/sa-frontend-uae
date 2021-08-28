@@ -162,6 +162,7 @@ class CreateSupplierInvoice extends React.Component {
 			exchangeRate:'',	
 			basecurrency:[],
 			language: window['localStorage'].getItem('language'),
+			param:false,
 		};
 
 		this.formRef = React.createRef();
@@ -196,6 +197,7 @@ class CreateSupplierInvoice extends React.Component {
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
+		this.regDec1=/^\d{1,2}\.\d{1,2}$|^\d{1,2}$/;
 	}
 
 	renderProductName = (cell, row) => {
@@ -435,7 +437,20 @@ min="0"
 			console.log(err);
 		}
 	};
+    checkAmount=(discount)=>{
+		const { initValue } = this.state;
+		   if(discount > initValue.totalAmount){
+				   this.setState({
+					   param:true
+				   });
+		   }
+		   else{
+			   this.setState({
+				   param:false
+			   });
+		   }
 
+	   }
 	purchaseCategory = () => {
 		try {
 			this.props.ProductActions.getTransactionCategoryListForPurchaseProduct(
@@ -1273,7 +1288,7 @@ min="0"
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, discountOptions, initValue, prefix } = this.state;
+		const { data, discountOptions, initValue, prefix ,param} = this.state;
 
 		const {
 			currency_list,
@@ -1332,6 +1347,10 @@ min="0"
 													if (this.state.exist === true) {
 														errors.invoice_number =
 															'Invoice Number already exists';
+													}
+													if (param === true) {
+														errors.discount =
+															'Discount amount Cannot be greater than Invoice Total Amount';
 													}
 													return errors;
 												}}
@@ -2182,10 +2201,12 @@ min="0"
 																							<Input
 																								id="discountPercentage"
 																								name="discountPercentage"
+																								min="0"
+																								max="99"
+																								 step="0.01"
 																								placeholder={strings.DiscountPercentage}
 																								type="number"
-min="0"
-																								maxLength="5"
+																								maxLength={2}
 																								value={
 																									props.values
 																										.discountPercentage
@@ -2193,7 +2214,7 @@ min="0"
 																								onChange={(e) => {
 																									if (
 																										e.target.value === '' ||
-																										this.regDecimal.test(
+																										this.regDec1.test(
 																											e.target.value,
 																										)
 																									) {
@@ -2263,8 +2284,21 @@ min="0"
 																										},
 																									);
 																								}
+																								this.checkAmount(option.target.value)
 																							}}
+																							className={`form-control ${
+																								props.errors.discount &&
+																								props.touched.discount
+																									? 'is-invalid'
+																									: ''
+																							}`}
 																						/>
+																		{props.errors.discount &&
+																				props.touched.discount && (
+																			<div className="invalid-feedback">
+																				{props.errors.discount}
+																			</div>
+																		)}
 																					</FormGroup>
 																				</Col>
 																			</Row>

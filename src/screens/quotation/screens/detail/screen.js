@@ -241,7 +241,7 @@ class DetailQuotation extends React.Component {
 								}
 							},
 						);
-						this.getCurrency(res.data.supplierId)	
+						this.getCurrency(res.data.customerId)	
 					}
 				});
 		} else {
@@ -1081,7 +1081,7 @@ min="0"
 			let obj = {label: item.label.contactName, value: item.value}
 			tmpSupplier_list.push(obj)
 		})
-
+console.log(this.state.supplier_currency)
 		return (
 			<div className="detail-supplier-invoice-screen">
 				<div className="animated fadeIn">
@@ -1234,7 +1234,7 @@ min="0"
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="customerId">
 																			<span className="text-danger">*</span>
-																				{strings.SUPPLIERNAME}
+																				{strings.CustomerName}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -1247,13 +1247,28 @@ min="0"
 																							'label',
 																							'value',
 																							tmpSupplier_list,
-																							'Supplier Name',
+																							'Customer Name',
 																					  )
 																					: []
 																			}
+																			value={																		
+																				currency_convert_list &&
+																				selectCurrencyFactory
+																					.renderOptions(
+																						'currencyName',
+																						'currencyCode',
+																						currency_convert_list,
+																						'Currency',
+																					)
+																					.find(
+																						(option) =>
+																							option.value ===
+																							this.state.customerId,
+																					)
+																			}
 																			value={
 																				tmpSupplier_list &&
-																				tmpSupplier_list.find(
+																				tmpSupplier_list.find(	
 																					(option) =>
 																						option.value ===
 																						+props.values.customerId,

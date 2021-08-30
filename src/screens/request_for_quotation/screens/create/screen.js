@@ -217,6 +217,7 @@ class CreateRequestForQuotation extends React.Component {
 				render={({ field, form }) => (
 					<Input
 						type="text"
+						maxLength={50}
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(

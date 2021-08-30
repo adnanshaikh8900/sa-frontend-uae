@@ -119,7 +119,7 @@ class CreatePayrollList extends React.Component {
 		// let payroll_id = params.get('payroll_id');
 		
 		this.props.createPayrollActions.getApproversForDropdown();
-		let payroll_id =this.props.location.state.id;
+		let payroll_id =this.props.location.state=== undefined ? '':this.props.location.state.id ;
 		if(payroll_id) {
 			this.setState({
 				payroll_id:payroll_id
@@ -767,7 +767,7 @@ submitPayroll=(data)=>{
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="nav-icon fas fa-user-tie" />
-												<span className="ml-2">Payroll-Generator</span>
+												<span className="ml-2">Create Payroll</span>
 											</div>
 										</Col>
 									</Row>
@@ -893,7 +893,11 @@ submitPayroll=(data)=>{
 																</Row>
 																<Row>
 																	<Col>
-																	<FormGroup>
+																	<FormGroup className="mt-3 ">
+															<Label htmlFor="contactId">
+																{/* <span className="text-danger">*</span> */}
+																Select Employees
+															</Label>
 																			<Select
 																				styles={customStyles}
 																				isMulti
@@ -948,68 +952,22 @@ submitPayroll=(data)=>{
 																		</FormGroup>
 																	</Col>
 																	<Col>
-														<Button type="button" color="primary" className="btn-square ml-3 mr-1"
+														<Button type="button" color="primary" className="btn-square ml-3 mr-1 mt-5 "
 															disabled={this.disableForAddButton() ? true : false}
 														onClick={() => {
-																				this.setState(() => {
-																					props.handleSubmit()
-																				})
+																				// this.setState(() => {
+																				// 	props.handleSubmit()
+																				// })
 
 																				
-																				// this.setState({
-																				// 	openModal: true
-																				// })
+																				this.setState({
+																					openModal: true
+																				})
 																			}}>
 																				<i className="fa fa-dot-circle-o"></i> Add Employees
 																			</Button>
 													</Col>
-																	<Col></Col>
-																</Row>
-																<Row>
-																
-																	<FormGroup className="pull-left">
-																		
-																			<Button
-																			color="primary"
-																			className="btn-square ml-3 "
-																			onClick ={()=>{
-																				this.removeEmployee()
-																			}}
-																			
-																		disabled={this.state.selectedRows.length === 0}
-																		>
-																			<i class="far fa-trash-alt mr-1"></i>
-																			Remove Employees
-																		</Button>
-																		</FormGroup>
-																	
-																		
-																
-																</Row>
-																
-															</Form>
-														)
-														}
-													</Formik>
-
-
-												</div>
-												{this.getPayrollEmployeeList()}
-												<Formik
-													
-													initialValues={this.state}
-														   onSubmit={(values, { resetForm }) => {
-															   this.submitPayroll(values)
-   
-														   }}
-   
-													   >
-														   {(props) => (
-   
-   
-															   <Form onSubmit={props.handleSubmit}>
-												<Row className="mt-4 ">
-													<Col lg={3}>
+													<Col >
 														<FormGroup className="mt-3 ">
 															<Label htmlFor="contactId">
 																{/* <span className="text-danger">*</span> */}
@@ -1072,6 +1030,52 @@ submitPayroll=(data)=>{
 														</Button>
 													
 													</Col>
+																</Row>
+																<Row>
+																
+																	<FormGroup className="pull-left">
+																		
+																			<Button
+																			color="primary"
+																			className="btn-square ml-3 "
+																			onClick ={()=>{
+																				this.removeEmployee()
+																			}}
+																			
+																		disabled={this.state.selectedRows.length === 0}
+																		>
+																			<i class="far fa-trash-alt mr-1"></i>
+																			Remove Employees
+																		</Button>
+																		</FormGroup>
+																	
+																		
+																
+																</Row>
+																
+															</Form>
+														)
+														}
+													</Formik>
+
+
+												</div>
+												{this.getPayrollEmployeeList()}
+												<Formik
+													
+													initialValues={this.state}
+														   onSubmit={(values, { resetForm }) => {
+															   this.submitPayroll(values)
+   
+														   }}
+   
+													   >
+														   {(props) => (
+   
+   
+															   <Form onSubmit={props.handleSubmit}>
+												<Row className="mt-4 ">
+												
 
 													<Col>
 														<Button
@@ -1094,7 +1098,8 @@ submitPayroll=(data)=>{
 														>
 
 															<i class="fas fa-check-double  mr-1"></i>
-															Generate Payroll
+															{/* Generate Payroll */}
+															Create
 														</Button>
 													</Col>
 												</Row>

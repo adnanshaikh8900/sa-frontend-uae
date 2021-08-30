@@ -810,6 +810,7 @@ class RequestForQuotation extends React.Component {
 			universal_currency_list
 		} = this.props;
 		console.log(this.state.openPurchaseOrder)
+		console.log(request_for_quotation_list.data)
 
 		const request_for_quotation_data =
 		request_for_quotation_list && request_for_quotation_list.data
@@ -1039,15 +1040,12 @@ class RequestForQuotation extends React.Component {
 											hover
 											keyField="id"
 											pagination={
-												request_for_quotation_data &&
-												request_for_quotation_data.length > 0
-													? true
-													: false
+												true
 											}
 											remote
 											fetchInfo={{
-												dataTotalSize: request_for_quotation_list.count
-													? request_for_quotation_list.count
+												dataTotalSize: request_for_quotation_list && request_for_quotation_list && request_for_quotation_list.data && request_for_quotation_list.data.count
+													? request_for_quotation_list.data.count
 													: 0,
 											}}
 											className="supplier-invoice-table"

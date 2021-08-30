@@ -665,7 +665,7 @@ class PayrollRun extends React.Component {
 																className="btn-square mt-2 pull-right"
 																// onClick={}
 																onClick={() =>
-																	this.props.history.push('/admin/payroll/createPayroll')
+																	this.props.history.push('/admin/payroll/createPayrollList')
 																}
 															// disabled={selectedRows.length === 0}
 															>

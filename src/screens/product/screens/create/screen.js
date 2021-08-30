@@ -110,6 +110,7 @@ class CreateProduct extends React.Component {
 		this.regExBoth = /[ +a-zA-Z0-9-./\\|]+$/;
 		this.regExAlpha = /^[0-9!@#$&()-\\`.+,/\"]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
+		this.regDecimal5 =/^\d{1,5}$/;
 	}
 
 	componentDidMount = () => {
@@ -1503,7 +1504,8 @@ min="0"
 																			// 		: true
 																			// }
 																			type="number"
-                                                                            min="0"
+																			min="0"
+																			max="1000"
 																			maxLength="5"
 																			name="inventoryReorderLevel"
 																			id="inventoryReorderLevel"
@@ -1514,16 +1516,16 @@ min="0"
 																			// 		'inventoryReorderLevel',
 																			// 	)(value);
 																			// }}
-																			onChange={(value) => {
+																			onChange={(option) => {
 																				if (
-																					value.target.value === '' ||
-																					this.regEx.test(
-																						value.target.value,
+																					option.target.value === '' ||
+																					this.regDecimal5.test(
+																						option.target.value,
 																					)
 																				) {
 																					props.handleChange(
 																						'inventoryReorderLevel',
-																					)(value);
+																					)(option);
 																				}
 																			}}
 																			value={props.values.inventoryReorderLevel}

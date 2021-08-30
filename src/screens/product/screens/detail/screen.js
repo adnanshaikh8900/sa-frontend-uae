@@ -1047,7 +1047,7 @@ min="0"
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
-																					this.regEx.test(option.target.value)
+																					this.regDecimal.test(option.target.value)
 																				) {
 																					props.handleChange('salesUnitPrice')(
 																						option,
@@ -1237,7 +1237,7 @@ min="0"
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
-																					this.regEx.test(option.target.value)
+																					this.regDecimal.test(option.target.value)
 																				) {
 																					props.handleChange(
 																						'purchaseUnitPrice',

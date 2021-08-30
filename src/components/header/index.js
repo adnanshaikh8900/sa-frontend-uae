@@ -64,7 +64,7 @@ class Header extends Component {
 	}
 
 	render() {
-		strings.setLanguage('en');
+		strings.setLanguage(this.state.language);
 		const { profile } = this.props;
 		return (
 			<React.Fragment>

@@ -14,10 +14,10 @@ const JournalReducer = (state = initState, action) => {
   const { type, payload } = action
   switch (type) {
 
-    case JOURNAL.JOURNAL_LIST:
+    case JOURNAL.JOURNAL_LIST:    
       return {
         ...state,
-        journal_list: Object.assign([], payload.data)
+        journal_list: Object.assign([], payload)
       }
 
     case JOURNAL.TRANSACTION_CATEGORY_LIST:

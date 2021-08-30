@@ -1503,8 +1503,8 @@ min="0"
 																			// 		: true
 																			// }
 																			type="number"
-min="0"
-																			maxLength="50"
+                                                                            min="0"
+																			maxLength="5"
 																			name="inventoryReorderLevel"
 																			id="inventoryReorderLevel"
 																			rows="3"

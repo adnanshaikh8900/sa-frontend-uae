@@ -52,6 +52,7 @@ class DetailVatCode extends React.Component {
 			dialog: false,
 			current_vat_id: null,
 			disabled: false,
+			disabled1:false,
 		};
 
 		this.saveAndContinue = false;
@@ -134,6 +135,7 @@ class DetailVatCode extends React.Component {
 	};
 
 	removeVat = () => {
+		this.setState({ disabled1: true });
 		const { current_vat_id } = this.state;
 		this.props.vatDetailActions
 			.deleteVat(current_vat_id)
@@ -275,9 +277,12 @@ class DetailVatCode extends React.Component {
 																			type="button"
 																			color="danger"
 																			className="btn-square"
+																			disabled1={this.state.disabled1}
 																			onClick={this.deleteVat}
 																		>
-																			<i className="fa fa-trash"></i> {strings.Delete}
+																			<i className="fa fa-trash"></i>	 {this.state.disabled1
+																			? 'Deleting...'
+																			: strings.Delete }
 																		</Button>
 																	</FormGroup>
 																	<FormGroup className="text-right">
@@ -303,7 +308,9 @@ class DetailVatCode extends React.Component {
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i> {strings.Cancel}
+																			<i className="fa fa-ban"></i> {this.state.disabled1
+																			? 'Deleting...'
+																			: strings.Cancel }
 																		</Button>
 																	</FormGroup>
 																</Col>

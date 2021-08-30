@@ -67,6 +67,8 @@ class DetailChartAccount extends React.Component {
 			currentData: {},
 			chartOfAccountCategory: [],
 			coaId: '',
+			disabled: false,
+			disabled1:false,
 		};
 		this.regExAlpha = /^[a-zA-Z]+$/;
 	}
@@ -179,6 +181,7 @@ class DetailChartAccount extends React.Component {
 	};
 
 	removeChartAccount = () => {
+		this.setState({ disabled1: true });
 		const id = this.props.location.state.id;
 		this.props.detailChartOfAccontActions
 			.deleteChartAccount(id)
@@ -207,6 +210,7 @@ class DetailChartAccount extends React.Component {
 
 	// Create or Edit Vat
 	handleSubmit = (data, resetForm) => {
+		this.setState({ disabled: true });
 		const id = this.props.location.state.id;
 		const postData = {
 			transactionCategoryName: data.transactionCategoryName,
@@ -217,6 +221,7 @@ class DetailChartAccount extends React.Component {
 			.updateTransactionCategory(postData)
 			.then((res) => {
 				if (res.status === 200) {
+					this.setState({ disabled: false });
 					resetForm();
 					this.props.commonActions.tostifyAlert(
 						'success',
@@ -402,9 +407,12 @@ class DetailChartAccount extends React.Component {
 																			name="button"
 																			color="danger"
 																			className="btn-square"
+																			disabled1={this.state.disabled1}
 																			onClick={this.deleteChartAccount}
 																		>
-																			<i className="fa fa-trash"></i>  {strings.Delete}
+																			<i className="fa fa-trash"></i>   {this.state.disabled1
+																			? 'Deleting...'
+																			: strings.Delete }
 																		</Button>
 																	</FormGroup>
 																	<FormGroup className="text-right">
@@ -413,9 +421,12 @@ class DetailChartAccount extends React.Component {
 																			name="submit"
 																			color="primary"
 																			className="btn-square mr-3"
+																			disabled={this.state.disabled}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			 {strings.Update}
+																			{this.state.disabled
+																			? 'Updating...'
+																			: strings.Update }
 																		</Button>
 																		<Button
 																			type="button"
@@ -428,7 +439,9 @@ class DetailChartAccount extends React.Component {
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i>  {strings.Cancel}
+																			<i className="fa fa-ban"></i>  {this.state.disabled1
+																			? 'Deleting...'
+																			: strings.Cancel }
 																		</Button>
 																	</FormGroup>
 																</Col>

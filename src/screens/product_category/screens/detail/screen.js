@@ -51,6 +51,7 @@ class DetailProductCategory extends React.Component {
       dialog: null,
       current_product_category_id: null,
       disabled: false,
+      disabled1:false,
     }
     this.regExAlpha = /^[a-zA-Z ]+$/;
     this.regExBoth = /^[a-zA-Z0-9\s,'-/()]+$/;
@@ -118,6 +119,7 @@ class DetailProductCategory extends React.Component {
   }
 
   removeProductCategory = () => {
+    this.setState({ disabled1: true });
     const {current_product_category_id} = this.state
     this.props.detailProductCategoryAction.deleteProductCategory(current_product_category_id).then((res) => {
       if (res.status === 200) {
@@ -216,8 +218,10 @@ class DetailProductCategory extends React.Component {
                                 <Row>
                                   <Col lg={12} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">
                                     <FormGroup>
-                                      <Button type="button" color="danger" className="btn-square" onClick={this.deleteProductCategory}>
-                                        <i className="fa fa-trash"></i> {strings.Delete}
+                                      <Button type="button" color="danger" className="btn-square" 	disabled1={this.state.disabled1} onClick={this.deleteProductCategory}>
+                                        <i className="fa fa-trash"></i> {this.state.disabled1
+																			? 'Deleting...'
+																			: strings.Delete }
                                       </Button>
                                     </FormGroup>
                                     <FormGroup className="text-right">
@@ -232,7 +236,9 @@ class DetailProductCategory extends React.Component {
                                       </Button>
                                       <Button type="submit" color="secondary" className="btn-square"
                                         onClick={() => { this.props.history.push('/admin/master/product-category') }}>
-                                          <i className="fa fa-ban"></i> {strings.Cancel}
+                                          <i className="fa fa-ban"></i> {this.state.disabled1
+																			? 'Deleting...'
+																			: strings.Cancel }
                                       </Button>
                                     </FormGroup>
                                   </Col>

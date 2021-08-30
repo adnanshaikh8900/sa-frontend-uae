@@ -52,8 +52,7 @@ class CustomerModal extends React.Component {
 				middleName: '',
 				mobileNumber: '',
 				organizationName: '',
-				organization: '',
-				poBoxNumber: '',
+			    poBoxNumber: '',
 				postZipCode: '',
 				stateId: '',
 				telephone: '',
@@ -510,41 +509,9 @@ class CustomerModal extends React.Component {
 										(<div id="moreDetails">
 
 										<Row className="row-wrapper">
-											<Col md="4">
-												<FormGroup>
-													<Label htmlFor="organization ">
-														{strings.OrganizationName}
-													</Label>
-													<Input
-														type="text"
-														maxLength="80"
-														id="organization"
-														name="organization"
-														onChange={(option) => {
-															if (
-																option.target.value === '' ||
-																this.regExAlpha.test(option.target.value)
-															) {
-																props.handleChange('organization')(option);
-															}
-														}}
-														value={props.values.organization}
-														className={
-															props.errors.organization &&
-															props.touched.organization
-																? 'is-invalid'
-																: ''
-														}
-														placeholder={strings.Enter+strings.OrganizationName}
-													/>
-													{props.errors.organization &&
-														props.touched.organization && (
-															<div className="invalid-feedback">
-																{props.errors.organization}
-															</div>
-														)}
-												</FormGroup>
-											</Col>
+										
+										
+
 											<Col md="4">
 												<FormGroup>
 													<Label htmlFor="select">{strings.POBoxNumber}</Label>
@@ -610,6 +577,41 @@ class CustomerModal extends React.Component {
 														)}
 												</FormGroup>
 											</Col>
+											<Col md="4">
+												<FormGroup>
+													<Label htmlFor="postZipCode">{strings.PostZipCode}</Label>
+													<Input
+														type="text"
+														maxLength="10"
+														id="postZipCode"
+														name="postZipCode"
+														onChange={(option) => {
+															if (
+																option.target.value === '' ||
+																this.regExBoth.test(option.target.value)
+															) {
+																props.handleChange('postZipCode')(option);
+															}
+														}}
+														value={props.values.postZipCode}
+														className={
+															props.errors.postZipCode &&
+															props.touched.postZipCode
+																? 'is-invalid'
+																: ''
+														}
+														placeholder={strings.Enter+strings.PostZipCode}
+													/>
+													{props.errors.postZipCode &&
+														props.touched.postZipCode && (
+															<div className="invalid-feedback">
+																{props.errors.postZipCode}
+															</div>
+														)}
+												</FormGroup>
+											</Col>
+
+
 										</Row>
 										<Row className="row-wrapper">
 											<Col md="4">
@@ -829,41 +831,9 @@ class CustomerModal extends React.Component {
 												</FormGroup>
 											</Col>
 										</Row>
-										<Row className="row-wrapper">
-											<Col md="4">
-												<FormGroup>
-													<Label htmlFor="postZipCode">{strings.PostZipCode}</Label>
-													<Input
-														type="text"
-														maxLength="10"
-														id="postZipCode"
-														name="postZipCode"
-														onChange={(option) => {
-															if (
-																option.target.value === '' ||
-																this.regExBoth.test(option.target.value)
-															) {
-																props.handleChange('postZipCode')(option);
-															}
-														}}
-														value={props.values.postZipCode}
-														className={
-															props.errors.postZipCode &&
-															props.touched.postZipCode
-																? 'is-invalid'
-																: ''
-														}
-														placeholder={strings.Enter+strings.PostZipCode}
-													/>
-													{props.errors.postZipCode &&
-														props.touched.postZipCode && (
-															<div className="invalid-feedback">
-																{props.errors.postZipCode}
-															</div>
-														)}
-												</FormGroup>
-											</Col>
-										</Row>
+										
+											
+									
 										
 										<hr />
 										<h4 className="mb-3 mt-3">{strings.InvoicingDetails}</h4>

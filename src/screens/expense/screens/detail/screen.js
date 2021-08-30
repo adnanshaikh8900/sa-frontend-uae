@@ -87,6 +87,7 @@ class DetailExpense extends React.Component {
 			view: false,
 			basecurrency:[],
 			disabled: false,
+			disabled1:false,
 		};
 
 		this.file_size = 1024000;
@@ -294,6 +295,7 @@ class DetailExpense extends React.Component {
 			});
 	};	
 	removeExpense = () => {
+		this.setState({ disabled1: true });
 		const { current_expense_id } = this.state;
 		this.props.expenseDetailActions
 			.deleteExpense(current_expense_id)
@@ -1117,9 +1119,12 @@ min="0"
 																			name="button"
 																			color="danger"
 																			className="btn-square"
+																			disabled1={this.state.disabled1}
 																			onClick={this.deleteExpense}
 																		>
-																			<i className="fa fa-trash"></i> {strings.Delete}
+																			<i className="fa fa-trash"></i>{' '}{this.state.disabled1
+																			? 'Deleting...'
+																			: strings.Delete }
 																		</Button>
 																	</FormGroup>
 																	<FormGroup className="text-right">
@@ -1146,7 +1151,9 @@ min="0"
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i> {strings.Cancel}
+																			<i className="fa fa-ban"></i>{this.state.disabled1
+																			? 'Deleting...'
+																			: strings.Cancel }
 																		</Button>
 																	</FormGroup>
 																</Col>

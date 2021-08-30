@@ -553,15 +553,12 @@ class OpeningBalance extends React.Component {
 											hover
 											keyField="transactionCategoryBalanceId"
 											pagination={
-												opening_balance_list &&
-												opening_balance_list.length > 0
-													? true
-													: false
+											true
 											}
 											remote
 											fetchInfo={{
-												dataTotalSize: opening_balance_list.count
-													? opening_balance_list.count
+												dataTotalSize: opening_balance_list.length
+													? opening_balance_list.length
 													: 0,
 											}}
 											className="supplier-invoice-table"

@@ -69,6 +69,7 @@ class DetailContact extends React.Component {
 			dialog: null,
 			current_contact_id: null,
 			disabled: false,
+			disabled1:false,
 		};
 		// this.regEx = /^[0-9\d]+$/;
 		this.regEx =/[a-zA-Z0-9]+$/;
@@ -235,6 +236,7 @@ class DetailContact extends React.Component {
 	};
 
 	deleteContact = () => {
+	
 		const { current_contact_id } = this.state;
 		this.props.contactActions
 			.getInvoicesCountContact(current_contact_id)
@@ -260,12 +262,15 @@ class DetailContact extends React.Component {
 								message={message}
 							/>
 						),
+						
 					});
+					
 				}
 			});
 	};
 
 	removeContact = () => {
+		this.setState({ disabled1: true });
 		const { current_contact_id } = this.state;
 		this.props.detailContactActions
 			.deleteContact(current_contact_id)
@@ -275,6 +280,7 @@ class DetailContact extends React.Component {
 						'success',
 						'Contact Deleted Successfully',
 					);
+					
 					this.props.history.push('/admin/master/contact');
 				}
 			})
@@ -1162,9 +1168,12 @@ class DetailContact extends React.Component {
 																			name="button"
 																			color="danger"
 																			className="btn-square"
+																			disabled1={this.state.disabled1}
 																			onClick={this.deleteContact}
 																		>
-																			<i className="fa fa-trash"></i> {strings.Delete}
+																			<i className="fa fa-trash"></i> {this.state.disabled1
+																			? 'Deleting...'
+																			: strings.Delete }
 																		</Button>
 																	</FormGroup>
 																	<FormGroup className="text-right">
@@ -1191,7 +1200,9 @@ class DetailContact extends React.Component {
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i> {strings.Cancel}
+																			<i className="fa fa-ban"></i>{this.state.disabled1
+																			? 'Deleting...'
+																			: strings.Cancel }
 																		</Button>
 																	</FormGroup>
 																</Col>

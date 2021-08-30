@@ -118,6 +118,7 @@ class DetailPurchaseOrder extends React.Component {
 			purchaseCategory: [],
 			basecurrency:[],
 			supplier_currency: '',
+			disabled1:false,
 		};
 
 		// this.options = {
@@ -839,6 +840,7 @@ min="0"
 	};
 
 	handleSubmit = (data) => {
+		this.setState({ disabled: true });
 		const { current_po_id, term } = this.state;
 		const {
 			poApproveDate,
@@ -919,6 +921,7 @@ min="0"
 	};
 
 	removePo = () => {
+		this.setState({ disabled1: true });
 		const { current_po_id } = this.state;
 		this.props.purchaseOrderDetailsAction
 			.deletePo(current_po_id)
@@ -1764,9 +1767,12 @@ min="0"
 																			type="button"
 																			color="danger"
 																			className="btn-square"
+																			disabled1={this.state.disabled1}
 																			onClick={this.deletepo}
 																		>
-																			<i className="fa fa-trash"></i>  {strings.Delete}
+																			<i className="fa fa-trash"></i> {this.state.disabled1
+																			? 'Deleting...'
+																			: strings.Delete }
 																		</Button>
 																	</FormGroup>
 																	<FormGroup className="text-right">
@@ -1774,9 +1780,12 @@ min="0"
 																			type="submit"
 																			color="primary"
 																			className="btn-square mr-3"
+																			disabled={this.state.disabled}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			 {strings.Update}
+																			{this.state.disabled
+																			? 'Updating...'
+																			: strings.Update }
 																		</Button>
 																		<Button
 																			color="secondary"
@@ -1787,7 +1796,9 @@ min="0"
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i> {strings.Cancel}
+																			<i className="fa fa-ban"></i> {this.state.disabled1
+																			? 'Deleting...'
+																			: strings.Cancel }
 																		</Button>
 																	</FormGroup>
 																</Col>

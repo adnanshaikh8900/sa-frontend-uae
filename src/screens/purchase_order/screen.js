@@ -808,11 +808,10 @@ class PurchaseOrder extends React.Component {
 			purchase_order_list,
 			universal_currency_list
 		} = this.props;
-		console.log(this.state.openGoodsReceivedNotes)
-		console.log(purchase_order_list)
+		console.log(purchase_order_list.data,"purchase_order_list.data")
 
 
-		const request_for_quotation_data =
+		const PO_data =
 		purchase_order_list && purchase_order_list.data
 				? this.props.purchase_order_list.data.data.map((supplier) => ({
 						id: supplier.id,
@@ -829,7 +828,7 @@ class PurchaseOrder extends React.Component {
 				  }))
 				: '';
 
-		console.log(request_for_quotation_data)
+		// console.log(PO_data)
 		let tmpSupplier_list = []
 
 		supplier_list.map(item => {
@@ -1033,20 +1032,21 @@ class PurchaseOrder extends React.Component {
 											selectRow={this.selectRowProp}
 											search={false}
 											options={this.options}
-											data={request_for_quotation_data ? request_for_quotation_data : []}
+											data={PO_data ? PO_data : []}
 											version="4"
 											hover
 											keyField="id"
 											pagination={
-												request_for_quotation_data &&
-												request_for_quotation_data.length > 0
-													? true
-													: false
+												true
 											}
 											remote
 											fetchInfo={{
 												dataTotalSize: purchase_order_list
 													? purchase_order_list.count
+													: 0,
+
+													dataTotalSize: purchase_order_list && purchase_order_list && purchase_order_list.data && purchase_order_list.data.count
+													? purchase_order_list.data.count
 													: 0,
 											}}
 											className="supplier-invoice-table"

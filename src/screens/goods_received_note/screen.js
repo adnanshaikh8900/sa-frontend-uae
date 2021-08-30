@@ -397,7 +397,7 @@ class GoodsReceivedNote extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Goods Received Note Sent Successfully',
+						'Request For Quotation Send Successfully',
 					);
 					this.setState({
 						loading: false,
@@ -811,7 +811,8 @@ class GoodsReceivedNote extends React.Component {
 			let obj = {label: item.label.contactName, value: item.value}
 			tmpSupplier_list.push(obj)
 		})		
-console.log(request_for_quotation_data)
+		console.log(request_for_quotation_data);
+		console.log(goods_received_note_list);
 		return (
 			<div className="supplier-invoice-screen">
 				<div className="animated fadeIn">
@@ -1013,20 +1014,21 @@ console.log(request_for_quotation_data)
 											version="4"
 											hover
 											keyField="id"
-											pagination={
-												request_for_quotation_data &&
-												request_for_quotation_data.length > 0
-													? true
-													: false
+										pagination={
+											true
 											}
 											remote
-											fetchInfo={{
-												dataTotalSize: goods_received_note_list.count
-													? goods_received_note_list.count
+										fetchInfo={{
+												
+												dataTotalSize: goods_received_note_list && goods_received_note_list.data && 
+												goods_received_note_list.data.count ?
+												goods_received_note_list.data.count 
 													: 0,
 											}}
 											className="supplier-invoice-table"
-											ref={(node) => (this.table = node)}
+												ref={(node) => {
+											this.table = node;
+										}}
 										>
 											<TableHeaderColumn
 												dataField="grnNumber"

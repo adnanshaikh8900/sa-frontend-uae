@@ -73,7 +73,7 @@ export const checkValidation = (obj) => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: `/rest/validation/validate?name=${obj.name}&moduleType=${obj.moduleType}`,
+			url: `/rest/validation/validate?name=${obj.name}&moduleType=${obj.moduleType}&checkId=${obj.checkId}`,
 		};
 		return authApi(data)
 			.then((res) => {

@@ -106,6 +106,8 @@ class DetailSupplierInvoice extends React.Component {
 			basecurrency:[],
 			supplier_currency: '',
 			disabled: false,
+			param: false,
+			exist:false,
 		};
 
 		// this.options = {
@@ -141,6 +143,7 @@ class DetailSupplierInvoice extends React.Component {
 		this.regEx = /^[0-9\b]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
+		this.regDec1=/^\d{1,2}\.\d{1,2}$|^\d{1,2}$/;
 	}
 
 	// renderActions  = (cell, row) => {
@@ -158,7 +161,20 @@ class DetailSupplierInvoice extends React.Component {
 	componentDidMount = () => {
 		this.initializeData();
 	};
+	checkAmount=(discount)=>{
+		const { initValue } = this.state;
+			if(discount > initValue.totalAmount){
+					this.setState({
+						param:true
+					});
+			}
+			else{
+				this.setState({
+					param:false
+				});
+			}
 
+	}
 	initializeData = () => {
 		if (this.props.location.state && this.props.location.state.id) {
 			this.props.supplierInvoiceDetailActions
@@ -267,6 +283,20 @@ class DetailSupplierInvoice extends React.Component {
 			this.props.history.push('/admin/expense/supplier-invoice');
 		}
 	};
+
+	checkAmount=(discount)=>{
+		const { initValue } = this.state;
+		   if(discount > initValue.totalAmount){
+				   this.setState({
+					   param:true
+				   });
+		   }
+		   else{
+			   this.setState({
+				   param:false
+			   });
+		   }
+	   }
 
 	purchaseCategory = () => {
 		try {
@@ -1197,7 +1227,7 @@ min="0"
 	}
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, discountOptions, initValue, loading, dialog } = this.state;
+		const { data, discountOptions, initValue, loading, dialog,exist,param } = this.state;
 
 		const { project_list, currency_list,currency_convert_list, supplier_list,universal_currency_list } = this.props;
 
@@ -1236,6 +1266,18 @@ min="0"
 													ref={this.formRef}
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values);
+													}}
+													validate={(values) => {
+														let errors = {};
+														if (exist === true) {
+															errors.invoice_number =
+																'Invoice Number already exists';
+														}
+														if (param === true) {
+															errors.discount =
+																'Discount amount Cannot be greater than Invoice Total Amount';
+														}
+														return errors;
 													}}
 													validationSchema={Yup.object().shape({
 														invoice_number: Yup.string().required(
@@ -2062,10 +2104,12 @@ min="0"
 																								<Input
 																								id="discountPercentage"
 																								name="discountPercentage"
+																								min="0"
+																								max="99"
+																								 step="0.01"
 																								placeholder={strings.DiscountPercentage}
 																								type="number"
-min="0"
-																								maxLength="5"
+																								maxLength={2}
 																								value={
 																									props.values
 																										.discountPercentage
@@ -2073,7 +2117,7 @@ min="0"
 																								onChange={(e) => {
 																									if (
 																										e.target.value === '' ||
-																										this.regDecimal.test(
+																										this.regDec1.test(
 																											e.target.value,
 																										)
 																									) {
@@ -2143,8 +2187,21 @@ min="0"
 																											},
 																										);
 																									}
+																									this.checkAmount(option.target.value)
 																								}}
+																								className={`form-control ${
+																									props.errors.discount &&
+																									props.touched.discount
+																										? 'is-invalid'
+																										: ''
+																								}`}
 																							/>
+																{props.errors.discount &&
+																			props.touched.discount && (
+																				<div className="invalid-feedback">
+																					{props.errors.discount}
+																				</div>
+																			)}
 																						</FormGroup>
 																					</Col>
 																				</Row>

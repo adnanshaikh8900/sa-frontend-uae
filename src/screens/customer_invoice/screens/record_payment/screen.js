@@ -136,7 +136,6 @@ class RecordCustomerPayment extends React.Component {
 	};
 
 	initializeData = () => {
-		debugger
 		this.setState({
 			initValue: {
 				paidInvoiceListStr: [

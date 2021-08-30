@@ -962,7 +962,7 @@ min="0"
 																			name="expenseDescription"
 																			id="expenseDescription"
 																			rows="5"
-																			placeholder={strings.Description}
+																			placeholder={strings.Expense+" "+strings.Description}
 																			onChange={(option) =>
 																				props.handleChange(
 																					'expenseDescription',

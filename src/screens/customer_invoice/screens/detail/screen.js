@@ -745,9 +745,8 @@ min="0"
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 			if (props.values.discountType === 'PERCENTAGE') {
-				var val =
-					((+obj.unitPrice -
-						+((obj.unitPrice * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })) *
+				var val =	((+obj.unitPrice -
+					(+((obj.unitPrice * discountPercentage)) / 100)) *
 						vat *
 						obj.quantity) /
 					100;
@@ -767,7 +766,7 @@ min="0"
 		});
 		const discount =
 			props.values.discountType === 'PERCENTAGE'
-				? (total_net * discountPercentage) / 100
+				? +(total_net * discountPercentage) / 100
 				: discountAmount;
 
 		this.setState(
@@ -776,10 +775,10 @@ min="0"
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net: discount ? total_net - discount : total_net,
-						invoiceVATAmount: total_vat,
+						total_net: total_net > discount ? total_net - discount : 0,
+						invoiceVATAmount: total_vat > 0 ? total_vat : 0,
 						discount: total_net > discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : total,
+						totalAmount: total_net > discount ? total - discount : 0,
 					},
 				},
 			},

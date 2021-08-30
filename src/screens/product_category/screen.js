@@ -375,7 +375,7 @@ class ProductCategory extends React.Component {
 												<Row>
 													<Col lg={4} className="mb-1">
 														<Input
-															type="text"
+															type="text" maxLength='20'
 															name="code"
 															placeholder={strings.ProductCategoryCode}
 															value={filterData.productCategoryCode}
@@ -390,7 +390,7 @@ class ProductCategory extends React.Component {
 													</Col>
 													<Col lg={4} className="mb-1">
 														<Input
-															type="text"
+															type="text" maxLength='50'
 															name="name"
 															placeholder={strings.ProductCategoryName}
 															value={filterData.productCategoryName}

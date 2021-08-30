@@ -86,6 +86,7 @@ class DetailProduct extends React.Component {
 			current_product_id: null,
 			openInventoryModel: false,
 			disabled: false,
+			disabled1: false,
 		};
 
 		this.selectRowProp = {
@@ -472,6 +473,7 @@ renderName=(cell,row)=>{
 
 
 	removeProduct = () => {
+		this.setState({ disabled1: true });
 		const { current_product_id } = this.state;
 		this.props.detailProductActions
 			.deleteProduct(current_product_id)
@@ -1753,9 +1755,12 @@ min="0"
 																			name="button"
 																			color="danger"
 																			className="btn-square"
+																			disabled1={this.state.disabled1}
 																			onClick={this.deleteProduct}
 																		>
-																			<i className="fa fa-trash"></i> {strings.Delete}
+																			<i className="fa fa-trash"></i> {this.state.disabled1
+																			? 'Deleting...'
+																			: strings.Delete }
 																		</Button>
 																	</FormGroup>)}
 																	<FormGroup></FormGroup>
@@ -1781,7 +1786,9 @@ min="0"
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i>  {strings.Cancel}
+																			<i className="fa fa-ban"></i> {this.state.disabled1
+																			? 'Deleting...'
+																			: strings.Cancel }
 																		</Button>
 																	</FormGroup>
 																</Col>

@@ -64,6 +64,7 @@ class DetailCurrencyConvert extends React.Component {
       current_currency_convert_id: null,
       currency_list:[],
       disabled: false,
+      disabled1:false,
     }
     this.regExAlpha = /^[a-zA-Z ]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
@@ -177,6 +178,7 @@ class DetailCurrencyConvert extends React.Component {
 	};	
 
   removeCurrencyConvert = () => {
+    this.setState({ disabled1: true });
     const {current_currency_convert_id} = this.state
     this.props.detailCurrencyConvertAction.deleteCurrencyConvert(current_currency_convert_id).then((res) => {
       if (res.status === 200) {
@@ -383,9 +385,12 @@ min="0" maxLength='20'
 																			name="button"
 																			color="danger"
 																			className="btn-square"
+                                      disabled1={this.state.disabled1}
 																			onClick={this.deleteCurrencyConvert}
 																		>
-																			<i className="fa fa-trash"></i>  {strings.Delete}
+																			<i className="fa fa-trash"></i> {this.state.disabled1
+																			? 'Deleting...'
+																			: strings.Delete }
 																		</Button>
 																	</FormGroup>)}
                                      <FormGroup className="text-right">
@@ -398,7 +403,9 @@ min="0" maxLength='20'
                                       </Button>)}
                                       <Button type="submit" color="secondary" className="btn-square"
                                         onClick={() => { this.props.history.push('/admin/master/CurrencyConvert') }}>
-                                        <i className="fa fa-ban"></i>  {strings.Cancel}
+                                        <i className="fa fa-ban"></i> {this.state.disabled1
+																			? 'Deleting...'
+																			: strings.Cancel }
                                       </Button>
                                     </FormGroup>
                                   </Col>

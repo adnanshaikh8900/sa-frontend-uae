@@ -106,8 +106,7 @@ class DetailSupplierInvoice extends React.Component {
 			basecurrency:[],
 			supplier_currency: '',
 			disabled: false,
-			param: false,
-			exist:false,
+			disabled1:false,
 		};
 
 		// this.options = {
@@ -143,7 +142,6 @@ class DetailSupplierInvoice extends React.Component {
 		this.regEx = /^[0-9\b]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
-		this.regDec1=/^\d{1,2}\.\d{1,2}$|^\d{1,2}$/;
 	}
 
 	// renderActions  = (cell, row) => {
@@ -161,20 +159,7 @@ class DetailSupplierInvoice extends React.Component {
 	componentDidMount = () => {
 		this.initializeData();
 	};
-	checkAmount=(discount)=>{
-		const { initValue } = this.state;
-			if(discount > initValue.totalAmount){
-					this.setState({
-						param:true
-					});
-			}
-			else{
-				this.setState({
-					param:false
-				});
-			}
 
-	}
 	initializeData = () => {
 		if (this.props.location.state && this.props.location.state.id) {
 			this.props.supplierInvoiceDetailActions
@@ -283,20 +268,6 @@ class DetailSupplierInvoice extends React.Component {
 			this.props.history.push('/admin/expense/supplier-invoice');
 		}
 	};
-
-	checkAmount=(discount)=>{
-		const { initValue } = this.state;
-		   if(discount > initValue.totalAmount){
-				   this.setState({
-					   param:true
-				   });
-		   }
-		   else{
-			   this.setState({
-				   param:false
-			   });
-		   }
-	   }
 
 	purchaseCategory = () => {
 		try {
@@ -443,7 +414,6 @@ class DetailSupplierInvoice extends React.Component {
 					<div>
 						<Input
 							type="number"
-min="0"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -505,7 +475,6 @@ min="0"
 				render={({ field, form }) => (
 					<Input
 					type="number"
-min="0"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (
@@ -1059,6 +1028,7 @@ min="0"
 	};
 
 	removeInvoice = () => {
+		this.setState({ disabled1: true });
 		const { current_supplier_id } = this.state;
 		this.props.supplierInvoiceDetailActions
 			.deleteInvoice(current_supplier_id)
@@ -1226,7 +1196,7 @@ min="0"
 	}
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, discountOptions, initValue, loading, dialog,exist,param } = this.state;
+		const { data, discountOptions, initValue, loading, dialog } = this.state;
 
 		const { project_list, currency_list,currency_convert_list, supplier_list,universal_currency_list } = this.props;
 
@@ -1265,18 +1235,6 @@ min="0"
 													ref={this.formRef}
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values);
-													}}
-													validate={(values) => {
-														let errors = {};
-														if (exist === true) {
-															errors.invoice_number =
-																'Invoice Number already exists';
-														}
-														if (param === true) {
-															errors.discount =
-																'Discount amount Cannot be greater than Invoice Total Amount';
-														}
-														return errors;
 													}}
 													validationSchema={Yup.object().shape({
 														invoice_number: Yup.string().required(
@@ -1759,7 +1717,6 @@ min="0"
 																	<div>
 																		<Input
 																			type="number"
-min="0"
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"
@@ -2103,12 +2060,9 @@ min="0"
 																								<Input
 																								id="discountPercentage"
 																								name="discountPercentage"
-																								min="0"
-																								max="99"
-																								 step="0.01"
 																								placeholder={strings.DiscountPercentage}
 																								type="number"
-																								maxLength={2}
+																								maxLength="5"
 																								value={
 																									props.values
 																										.discountPercentage
@@ -2116,7 +2070,7 @@ min="0"
 																								onChange={(e) => {
 																									if (
 																										e.target.value === '' ||
-																										this.regDec1.test(
+																										this.regDecimal.test(
 																											e.target.value,
 																										)
 																									) {
@@ -2152,7 +2106,6 @@ min="0"
 																								id="discount"
 																								name="discount"
 																								type="number"
-min="0"
 																								disabled={
 																									props.values.discountType &&
 																									props.values.discountType ===
@@ -2186,21 +2139,8 @@ min="0"
 																											},
 																										);
 																									}
-																									this.checkAmount(option.target.value)
 																								}}
-																								className={`form-control ${
-																									props.errors.discount &&
-																									props.touched.discount
-																										? 'is-invalid'
-																										: ''
-																								}`}
 																							/>
-																{props.errors.discount &&
-																			props.touched.discount && (
-																				<div className="invalid-feedback">
-																					{props.errors.discount}
-																				</div>
-																			)}
 																						</FormGroup>
 																					</Col>
 																				</Row>
@@ -2312,9 +2252,12 @@ min="0"
 																			type="button"
 																			color="danger"
 																			className="btn-square"
+																			disabled1={this.state.disabled1}
 																			onClick={this.deleteInvoice}
 																		>
-																			<i className="fa fa-trash"></i>  {strings.Delete}
+																			<i className="fa fa-trash"></i>  {' '} {this.state.disabled1
+																			? 'Deleting...'
+																			: strings.Delete }
 																		</Button>
 																	</FormGroup>
 																	<FormGroup className="text-right">
@@ -2338,7 +2281,9 @@ min="0"
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i> {strings.Cancel}
+																			<i className="fa fa-ban"></i>{this.state.disabled1
+																			? 'Deleting...'
+																			: strings.Cancel }
 																		</Button>
 																	</FormGroup>
 																</Col>

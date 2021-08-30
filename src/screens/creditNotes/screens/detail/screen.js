@@ -86,6 +86,7 @@ class DetailCreditNote extends React.Component {
 			loading: true,
 			dialog: false,
 			disabled: false,
+			disabled1:false,
 			discountOptions: [
 				{ value: 'FIXED', label: 'Fixed' },
 				{ value: 'PERCENTAGE', label: 'Percentage' },
@@ -1028,6 +1029,7 @@ min="0"
 	};
 
 	removeInvoice = () => {
+		this.setState({ disabled1: true });
 		const { current_customer_id } = this.state;
 		this.props.creditNotesDetailActions
 			.deleteInvoice(current_customer_id)
@@ -2155,9 +2157,12 @@ min="0"
 																			type="button"
 																			color="danger"
 																			className="btn-square"
+																			disabled1={this.state.disabled1}
 																			onClick={this.deleteInvoice}
 																		>
-																			<i className="fa fa-trash"></i> {strings.Delete}
+																			<i className="fa fa-trash"></i> {' '} {this.state.disabled1
+																			? 'Deleting...'
+																			: strings.Delete }
 																		</Button>
 																	</FormGroup>
 																	<FormGroup className="text-right">
@@ -2167,7 +2172,9 @@ min="0"
 																			className="btn-square mr-3"
 																			disabled={this.state.disabled}
 																		>
-																			<i className="fa fa-dot-circle-o"></i>{strings.Update}
+																			<i className="fa fa-dot-circle-o"></i>{this.state.disabled
+																			? 'Updating...'
+																			: strings.Update }
 																			{/* { {this.state.disabled }
 																				? 'Updating...'
 																				{ : 'Update'} } */}

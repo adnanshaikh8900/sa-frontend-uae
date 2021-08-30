@@ -102,6 +102,7 @@ class Refund extends React.Component {
 			discountPercentage: '',
 			discountAmount: 0,
 			fileName: '',
+			disabled: false,
 		};
 
 		// this.options = {
@@ -230,6 +231,7 @@ class Refund extends React.Component {
 	};
 
 	handleSubmit = (data) => {
+		this.setState({ disabled: true });
 		const { invoiceId } = this.state;
 		const {
 			receiptNo,
@@ -829,9 +831,12 @@ min="0"
 																			type="submit"
 																			color="primary"
 																			className="btn-square mr-3"
+																			disabled={this.state.disabled}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			 {strings.Refund}
+																			{this.state.disabled
+																			? 'Refunding...'
+																			: strings.Refund }
 																		</Button>
 																		<Button
 																			color="secondary"

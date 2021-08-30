@@ -53,7 +53,7 @@ class DetailProductCategory extends React.Component {
       disabled: false,
     }
     this.regExAlpha = /^[a-zA-Z ]+$/;
-    this.regExBoth = /[a-zA-Z0-9]+$/;
+    this.regExBoth = /^[a-zA-Z0-9\s,'-/()]+$/;
     this.regExSpaceBoth = /[a-zA-Z0-9 ]+$/;
   }
 
@@ -195,11 +195,11 @@ class DetailProductCategory extends React.Component {
                                 <FormGroup>
                                   <Label htmlFor="productCategoryName"><span className="text-danger">*</span>{strings.ProductCategoryName}</Label>
                                   <Input
-                                    type="text"
+                                    type="text" maxLength='50'
                                     id="productCategoryName"
                                     name="productCategoryName"
                                     placeholder={strings.Enter+strings.ProductCategoryName}
-                                    onChange={(option) => { if (option.target.value === '' || this.regExSpaceBoth.test(option.target.value)){ 
+                                    onChange={(option) => { if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ 
                                       props.handleChange('productCategoryName')(option) }}}
                                     value={props.values.productCategoryName}
                                     className={

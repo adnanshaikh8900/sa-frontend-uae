@@ -322,7 +322,7 @@ class PayablesInvoiceSummary extends React.Component {
 												<thead className="header-row" >
 													<tr>
 														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.InvoiceNumber}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.CustomerName}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.SupplierName}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.InvoiceDate}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.InvoiceDueDate}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.Status}</th>

@@ -789,7 +789,7 @@ min="0"
 																										);
 																									}}
 																								/>
-																								{this.state.fileName && (
+																								{/* {this.state.fileName && (
 																									<div>
 																										<i
 																											className="fa fa-close"
@@ -801,7 +801,7 @@ min="0"
 																										></i>{' '}
 																										{this.state.fileName}
 																									</div>
-																								)}
+																								)} */}
 																								{this.state.fileName ? (
 																									this.state.fileName
 																								) : (

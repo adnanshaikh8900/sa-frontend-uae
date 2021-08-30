@@ -732,7 +732,7 @@ class SupplierInvoice extends React.Component {
 		// const containerStyle = {
 		//   zIndex: 1999
 		// }
-
+console.log(supplier_invoice_list)
 		const supplier_invoice_data =
 			supplier_invoice_list && supplier_invoice_list.data
 				? this.props.supplier_invoice_list.data.map((supplier) => ({

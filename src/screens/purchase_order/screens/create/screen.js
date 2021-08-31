@@ -1782,6 +1782,17 @@ getrfqDetails = (e, row, props,form,field) => {
 																>
 																	<i className="fa fa-plus"></i> {strings.Addmore}
 																</Button>
+																<Button
+																	color="primary"
+																	className= "btn-square mr-3"
+																	onClick={(e, props) => {
+																		this.openProductModal(props);
+																		}}
+																	
+																	
+																>
+																	<i className="fa fa-plus"></i> {strings.Addproduct}
+																</Button>
 															</Col>
 														</Row>
 														<Row>
@@ -1816,7 +1827,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		}
 																	></TableHeaderColumn>
 																	<TableHeaderColumn
-																	width="15%"
+																	width="20%"
 																		dataField="product"
 																		dataFormat={(cell, rows) =>
 																			this.renderProduct(cell, rows, props)
@@ -1824,13 +1835,13 @@ getrfqDetails = (e, row, props,form,field) => {
 																	>
 																		{strings.PRODUCT}
 																	</TableHeaderColumn>
-																	<TableHeaderColumn
+																	{/* <TableHeaderColumn
 																		width="55"
 																		dataAlign="center"
 																		dataFormat={(cell, rows) =>
 																			this.renderAddProduct(cell, rows, props)
 																		}
-																	></TableHeaderColumn>
+																	></TableHeaderColumn> */}
 																	<TableHeaderColumn
 																		dataField="description"
 																		dataFormat={(cell, rows) =>

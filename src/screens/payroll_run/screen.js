@@ -186,7 +186,7 @@ class PayrollRun extends React.Component {
 	goToDetail = (row) => {
 		// this.renderActionForState(row.employeeId);
 		const { user_approver_generater_dropdown_list } = this.props;
-		debugger
+		 
 		var userValue = user_approver_generater_dropdown_list.length ? user_approver_generater_dropdown_list[0].value : '';
 		var userLabel = user_approver_generater_dropdown_list.length ? user_approver_generater_dropdown_list[0].label : '';
 
@@ -521,7 +521,7 @@ class PayrollRun extends React.Component {
 	};
 	renderSubject = (cell, row) => {
 		if (row.hover) {
-			debugger
+			 
 			return (
 
 				<label

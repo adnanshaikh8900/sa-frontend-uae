@@ -227,7 +227,7 @@ class DetailProduct extends React.Component {
 	};
 			
 renderName=(cell,row)=>{
-	debugger
+	 
 	return (<span>{cell ? cell : "-"}</span>);
 
 }
@@ -1229,8 +1229,9 @@ min="0"
 																			 {strings.PurchasePrice}
 																		</Label>
 																		<Input
+																		disabled={props.values.isInventoryEnabled===true }
 																			type="number"
-min="0"
+																			min="0"
 																			id="purchaseUnitPrice"
 																			name="purchaseUnitPrice"
 																			placeholder={strings.Enter+strings.PurchasePrice}
@@ -1380,7 +1381,7 @@ min="0"
 																				'SERVICE'
 																		
 																			?'' : 'none'
-																
+
 																			}}>
 															
 																	<Col lg={8}>

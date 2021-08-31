@@ -133,7 +133,7 @@ class CreatePayrollList extends React.Component {
 	proceed = (payroll_id) => {
 		this.props.createPayrollActions.getPayrollById(payroll_id).then((res) => {
 			if (res.status === 200) {
-			//	debugger
+			//	 
 				this.setState({
 					    loading: false,
 						id: res.data.id ? res.data.id : '',
@@ -219,7 +219,7 @@ tableApiCallsOnStatus=()=>{
 	};
 
 	disable = () => {
-		debugger
+		 
 		if (this.state.status === '') {
 				return true;
 		}
@@ -538,7 +538,7 @@ min="0"
 											
 										})
 console.log(newData)
-debugger
+ 
 										this.setState({
 											allPayrollEmployee:newData
 
@@ -592,7 +592,7 @@ debugger
 	proceed1=()=>{
 		this.props.createPayrollActions.getPayrollById(this.state.payroll_id).then((res) => {
 			if (res.status === 200) {
-			//	debugger
+			//	 
 				this.setState({
 					    loading: false,
 						id: res.data.id ? res.data.id : '',
@@ -642,7 +642,7 @@ generate=()=>{
 
 }
 submitPayroll=(data)=>{
-	debugger
+	 
 	const {userId }=data;
 	this.props.createPayrollActions
 	.submitPayroll( this.state.payroll_id,this.state.userId)
@@ -666,7 +666,7 @@ submitPayroll=(data)=>{
 			Object.keys(this.state.selectedRows).forEach(key => {
 			 employeeList.push(this.state.selectedRows[key]) 
 			});
-			debugger
+			 
 			this.props.createPayrollActions.removeEmployee(employeeList).then((res)=>{
 
 

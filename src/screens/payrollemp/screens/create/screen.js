@@ -625,7 +625,7 @@ validationCheck = (value) => {
                 'emergencyContactName1',
                 emergencyContactName1 != null ? emergencyContactName1 :'',
             );
-            debugger
+             
             formData.append(
                 'emergencyContactNumber2',
                 emergencyContactNumber2 != null ? 

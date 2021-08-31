@@ -120,6 +120,7 @@ class CreateGoodsReceivedNote extends React.Component {
 				{
 					id: 0,
 					description: '',
+					grnReceivedQuantity: 1,
 					quantity: '',
 					unitPrice: '',
 					vatCategoryId: '',
@@ -379,7 +380,7 @@ min="0"
 					<div>
 							<Input
 					type="number"
-min="0"
+							min="0"
 							type="number"
 							maxLength="10"
 							value={row['grnReceivedQuantity'] !== 0 ? row['grnReceivedQuantity'] : 0}
@@ -409,7 +410,7 @@ min="0"
 								: ''
 						}`}
 						/>
-						{props.errors.lineItemsString &&
+						{/* {props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity &&
 							Object.keys(props.touched).length > 0 &&
@@ -419,7 +420,7 @@ min="0"
 								<div className="invalid-feedback">
 									{props.errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity}
 								</div>
-							)}
+							)} */}
 					</div>
 				)}
 			/>
@@ -1358,6 +1359,7 @@ this.state.data.map((obj, index) => {
 					data:response.data.poQuatationLineItemRequestModelList ,
 					supplierReferenceNumber: response.data.supplierReferenceNumber,
 					supplier_currency:response.data.currencyCode,
+					supplier_currency_symbol:response.data.currencySymbol
 					
 				//	data1:response.data.supplierId,
 				},() => {
@@ -2121,9 +2123,7 @@ console.log(po_list)
 																							/>
 																						)}*/}
 																						{this.state.supplier_currency_symbol} 
-																						{initValue.total_net.toFixed(
-																									2,
-																								)}
+																						{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2151,9 +2151,7 @@ console.log(po_list)
 																							/>
 																						)}*/}
 																						{this.state.supplier_currency_symbol} 
-																						{initValue.invoiceVATAmount.toFixed(
-																									2,
-																								)}
+																						{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2181,9 +2179,7 @@ console.log(po_list)
 																							/>
 																						)} */}
 																					{this.state.supplier_currency_symbol} 
-																						{initValue.totalAmount.toFixed(
-																									2,
-																								)}
+																						{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>

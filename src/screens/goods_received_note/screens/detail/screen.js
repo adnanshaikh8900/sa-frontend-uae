@@ -244,7 +244,7 @@ class DetailGoodsReceivedNote extends React.Component {
 								}
 							},
 						);
-						debugger
+						 
 						this.getCurrency(res.data.supplierId)
 					}
 				});

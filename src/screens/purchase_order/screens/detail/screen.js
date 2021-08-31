@@ -247,7 +247,7 @@ class DetailPurchaseOrder extends React.Component {
 								}
 							},
 						);
-						debugger
+						 
 						this.getCurrency(res.data.supplierId)	
 					}
 				});

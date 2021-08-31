@@ -68,7 +68,7 @@ class DetailSalaryStructure extends React.Component {
   }
 
   initializeData = () => {
-    debugger
+     
     if (this.props.location.state && this.props.location.state.id) {
       this.props.salarayStructureDetailActions.getSalaryStructureById
       (this.props.location.state.id).then((res) => {

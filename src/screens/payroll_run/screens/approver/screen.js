@@ -133,7 +133,7 @@ class PayrollApproverScreen extends React.Component {
 	proceed = (payroll_id) => {
 		this.props.createPayrollActions.getPayrollById(payroll_id).then((res) => {
 			if (res.status === 200) {
-				//	debugger
+				//	 
 				this.setState({
 					loading: false,
 					id: res.data.id ? res.data.id : '',
@@ -578,7 +578,7 @@ class PayrollApproverScreen extends React.Component {
 		)
 	}
 	generate = () => {
-		debugger
+		 
 
 
 		this.props.createPayrollActions
@@ -602,7 +602,7 @@ class PayrollApproverScreen extends React.Component {
 			Object.keys(this.state.selectedRows).forEach(key => {
 				employeeList.push(this.state.selectedRows[key])
 			});
-			debugger
+			 
 			this.props.createPayrollActions.removeEmployee(employeeList).then((res) => {
 
 

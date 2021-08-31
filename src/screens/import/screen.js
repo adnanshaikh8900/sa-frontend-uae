@@ -146,7 +146,7 @@ class Import extends React.Component {
 				let formData = new FormData();
 				formData.append('name',productName ? productName : '');
 				formData.append('version', version ? version : '');
-				debugger
+				 
 				this.props.migrationActions
 					.migrate(formData)
 					.then((res) => {

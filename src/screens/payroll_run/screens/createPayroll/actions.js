@@ -5,7 +5,7 @@ import {
 
  
 export const addMultipleEmployees = (obj) => {
-	debugger
+	 
 	return (dispatch) => {
 	  let data = {
 		method: 'post',

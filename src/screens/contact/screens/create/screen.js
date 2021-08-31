@@ -171,7 +171,7 @@ class CreateContact extends React.Component {
 	};
 	checkMobileNumber=(mobileNumber)=>{
 		// mobileNumber.length!=12 ?  this.setState({checkmobileNumberParam:true}) :this.setState({checkmobileNumberParam:false});
-		// if(mobileNumber.length!=12){			
+		// if(mobileNumber.length!=12){
 		// 	 this.setState({checkmobileNumberParam:true})
 		// }
 		// else{
@@ -214,8 +214,8 @@ class CreateContact extends React.Component {
 												}}
 												validate={(values) => {
 													let errors = {};
-												
-													if (checkmobileNumberParam === true) {												
+
+													if (checkmobileNumberParam === true) {
 													errors.mobileNumber =
 													'Invalid mobile number';
 													}
@@ -637,10 +637,10 @@ class CreateContact extends React.Component {
 																			<div style={{color:"red"}}>
 																				{props.errors.mobileNumber}
 																			</div>
-																		)}															
+																		)}
 																</FormGroup>
 															</Col>
-															
+
 														</Row>
 														<Row className="row-wrapper">
 															<Col md="4">
@@ -1070,11 +1070,6 @@ class CreateContact extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
-														</Row><Row>
-													<Col>
-									{this.state.mobileNumberError}
-																	
-													</Col>
 														</Row>
 														<Row>
 															<Col lg={12} className="mt-5">

@@ -878,7 +878,7 @@ min="0"
 			if (props.values.discountType.value === 'PERCENTAGE') {
 				var val =
 					((+obj.unitPrice -
-						+((obj.unitPrice * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })) *
+						(+((obj.unitPrice * discountPercentage) / 100))) *
 						vat *
 						obj.quantity) /
 					100;
@@ -908,7 +908,7 @@ min="0"
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net: discount ? total_net - discount : total_net,
+						total_net: total_net >discount ? total_net - discount : 0,
 						totalVatAmount: total_vat,
 						discount: total_net > discount ? discount : 0,
 						totalAmount: total_net > discount ? total - discount : total,
@@ -1237,6 +1237,7 @@ getrfqDetails = (e, row, props,form,field) => {
 					...{
 						totalVatAmount: response.data.totalVatAmount,
 						totalAmount: response.data.totalAmount,
+						total_net: response.data.totalAmount -response.data.totalVatAmount 
 					},
 				},
 

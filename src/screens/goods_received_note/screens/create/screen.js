@@ -120,8 +120,7 @@ class CreateGoodsReceivedNote extends React.Component {
 				{
 					id: 0,
 					description: '',
-					grnReceivedQuantity: 1,
-					quantity: '',
+					quantity: 1,
 					unitPrice: '',
 					vatCategoryId: '',
 					subTotal: 0,
@@ -574,9 +573,9 @@ this.state.data.map((obj, index) => {
 				data: data.concat({
 					id: this.state.idCount + 1,
 					description: '',
-					quantity: '',
-                    grnReceivedQuantity: 1,
-                    poQuantity:'',
+					quantity: 1,
+                    grnReceivedQuantity: '',
+                    poQuantity:1,
 					unitPrice: '',
 					vatCategoryId: '',
 					subTotal: 0,
@@ -903,6 +902,7 @@ this.state.data.map((obj, index) => {
 	};
 
 	checkedRow = () => {
+		debugger
 		if (this.state.data.length > 0) {
 			let length = this.state.data.length - 1;
 			let temp = Object.values(this.state.data[`${length}`]).indexOf('');
@@ -1400,7 +1400,7 @@ this.state.data.map((obj, index) => {
 			currency_convert_list,
 			po_list,
 		} = this.props;
-console.log(po_list)
+console.log(this.state.data)
 		let tmpSupplier_list = []
 
 		supplier_list.map(item => {

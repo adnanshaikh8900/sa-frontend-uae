@@ -348,16 +348,22 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 
 													// })
 												}}
-												// validate={(values) => {
-												// 	let errors = {};
-												// 	if (
-												// 		values.payMode.value === 'BANK' &&
-												// 		!values.bankAccountId
-												// 	) {
-												// 		errors.bankAccountId = 'Bank Account is Required';
-												// 	}
-												// 	return errors;
-												// }}
+												validate={(values) => {
+													
+													let errors = {};
+													// if (
+													// 	values.payMode.value === 'BANK' &&
+													// 	!values.bankAccountId
+													// ) {
+													// 	errors.bankAccountId = 'Bank Account is Required';
+													// }
+													
+													if(values.currency ==='' || values.currency === 150){
+														errors.currency="Currency is required "
+													}
+												
+													return errors;
+												}}
 												validationSchema={Yup.object().shape({
 													expenseCategory: Yup.string().required(
 														'Expense Category is required',
@@ -592,16 +598,16 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																			this.setExchange(option.value);
 																			this.setCurrency(option.value);
 																		   }}
-																		className={
-																			props.errors.currency &&
-																			props.touched.currency
-																				? 'is-invalid'
-																				: ''
-																		}
+																		// className={
+																		// 	props.errors.currency &&
+																		// 	props.touched.currency
+																		// 		? 'is-invalid'
+																		// 		: ''
+																		// }
 																	/>
 																	{props.errors.currency &&
 																		props.touched.currency && (
-																			<div className="invalid-feedback">
+																			<div style={{color:"red"}}>
 																				{props.errors.currency}
 																			</div>
 																		)}

@@ -86,6 +86,8 @@ class CreateContact extends React.Component {
 				disabled: false,
 			},
 			createMore: false,
+			checkmobileNumberParam:false,
+
 		};
 		this.regEx = /[a-zA-Z0-9]+$/;
 		this.regExTelephone = /^[0-9-]+$/;
@@ -167,7 +169,15 @@ class CreateContact extends React.Component {
 	getStateList = (countryCode) => {
 		this.props.contactActions.getStateList(countryCode);
 	};
-
+	checkMobileNumber=(mobileNumber)=>{
+		// mobileNumber.length!=12 ?  this.setState({checkmobileNumberParam:true}) :this.setState({checkmobileNumberParam:false});
+		// if(mobileNumber.length!=12){			
+		// 	 this.setState({checkmobileNumberParam:true})
+		// }
+		// else{
+		// 	this.setState({checkmobileNumberParam:false})
+		// }
+	}
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
@@ -176,7 +186,7 @@ class CreateContact extends React.Component {
 			contact_type_list,
 			state_list,
 		} = this.props;
-		const { initValue } = this.state;
+		const { initValue ,checkmobileNumberParam} = this.state;
 		return (
 			<div className="create-contact-screen">
 				<div className="animated fadeIn">
@@ -201,6 +211,19 @@ class CreateContact extends React.Component {
 												ref={this.formRef}
 												onSubmit={(values, { resetForm }) => {
 													this.handleSubmit(values, resetForm);
+												}}
+												validate={(values) => {
+													let errors = {};
+												
+													if (checkmobileNumberParam === true) {												
+													errors.mobileNumber =
+													'Invalid mobile number';
+													}
+													// if (param === true) {
+													// 	errors.discount =
+													// 		'Discount amount Cannot be greater than Invoice Total Amount';
+													// }
+													return errors;
 												}}
 												validationSchema={Yup.object().shape({
 													firstName: Yup.string().required(
@@ -598,22 +621,26 @@ class CreateContact extends React.Component {
 																			props.handleChange('mobileNumber')(
 																				option,
 																			);
+																			// this.checkMobileNumber(option)
+																			option.length!=12 ?  this.setState({checkmobileNumberParam:true}) :this.setState({checkmobileNumberParam:false});
 																		}}
-																		className={
-																			props.errors.mobileNumber &&
-																			props.touched.mobileNumber
-																				? 'is-invalid'
-																				: ''
-																		}
+																		isValid
+																		// className={
+																		// 	props.errors.mobileNumber &&
+																		// 	props.touched.mobileNumber
+																		// 		? 'is-invalid'
+																		// 		: ''
+																		// }
 																	/>
-																	{props.errors.mobileNumber &&
+																		{props.errors.mobileNumber &&
 																		props.touched.mobileNumber && (
-																			<div className="invalid-feedback">
+																			<div style={{color:"red"}}>
 																				{props.errors.mobileNumber}
 																			</div>
-																		)}
+																		)}															
 																</FormGroup>
 															</Col>
+															
 														</Row>
 														<Row className="row-wrapper">
 															<Col md="4">
@@ -1043,6 +1070,11 @@ class CreateContact extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
+														</Row><Row>
+													<Col>
+									{this.state.mobileNumberError}
+																	
+													</Col>
 														</Row>
 														<Row>
 															<Col lg={12} className="mt-5">

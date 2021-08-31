@@ -381,7 +381,7 @@ class Journal extends React.Component {
 	};
 
 	onPageChange = (page, sizePerPage) => {
-		this.props.journalActions.getSavedPageNum(page)
+		// this.props.journalActions.getSavedPageNum(page)
 		if (this.options.page !== page) {
 			this.options.page = page;
 			this.initializeData();
@@ -433,7 +433,31 @@ class Journal extends React.Component {
 			view,
 		} = this.state;
 		const { journal_list, universal_currency_list, page_num } = this.props;
-
+		console.log(journal_list.data,"journal_list")
+		const journal_list_data =
+		journal_list && journal_list.data
+				? this.props.journal_list.data.data.map((item) => ({
+						
+						journalDate: item.journalDate
+							? item.journalDate
+							: '',
+							createdByName: item.createdByName,
+							description: item.description,
+							journalDate: item.journalDate,
+							journalLineItems: item.journalLineItems,
+							journalTransactionCategoryLabel: item.journalTransactionCategoryLabel,
+							postingReferenceTypeDisplayName: item.postingReferenceTypeDisplayName,
+							journalReferenceNo: item.journalReferenceNo,
+							postingReferenceType: item.postingReferenceType,
+							subTotalCreditAmount: item.subTotalCreditAmount,
+							subTotalDebitAmount: item.subTotalDebitAmount,
+							totalCreditAmount: item.totalCreditAmount,
+							totalDebitAmount: item.totalDebitAmount,
+							journalId:item.journalId,				
+				  }))
+				: '';
+		
+console.log(journal_list_data,"journal_list_data")
 		return (
 			<div className="journal-screen">
 				<div className="animated fadeIn">
@@ -573,34 +597,31 @@ class Journal extends React.Component {
 												search={false}
 												options={this.options}
 												data={
-													journal_list && journal_list.data
-														? journal_list.data
+													journal_list_data 
+														? journal_list_data
 														: []
 												}
 												version="4"
 												hover
 												keyField="journalId"
 												pagination={
-													journal_list &&
-													journal_list.data &&
-													journal_list.data.length > 0
-														? true
-														: false
+														true
 												}
 												remote
+										
 												fetchInfo={{
-													dataTotalSize: journal_list.count
-														? journal_list.count
+													dataTotalSize: journal_list && journal_list && journal_list.data && journal_list.data.count
+														? journal_list.data.count
 														: 0,
 												}}
-												// totalSize={journal_list ? journal_list.length : 0}
-												className="journal-table"
+												className="supplier-invoice-table"
 												trClassName="cursor-pointer"
 												csvFileName="Journal.csv"
 												ref={(node) => {
 													this.table = node;
 												}}
 											>
+												
 												<TableHeaderColumn
 													dataField="journalDate"
 													dataSort
@@ -664,7 +685,7 @@ class Journal extends React.Component {
 												>
 													{strings.CREDITAMOUNT}
 												</TableHeaderColumn>
-												{/* <TableHeaderColumn
+							{/* <TableHeaderColumn
                             className="text-right"
                             columnClassName="text-right"
                             width="55"

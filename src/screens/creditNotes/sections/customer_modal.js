@@ -59,6 +59,7 @@ class CustomerModal extends React.Component {
 				vatRegistrationNumber: '',
 			},
 			state_list: [],
+			checkmobileNumberParam:false,
 		};
 		this.formikRef = React.createRef();
 		this.regEx = /^[0-9\d]+$/;
@@ -138,7 +139,7 @@ class CustomerModal extends React.Component {
 			currency_list,
 			country_list,
 		} = this.props;
-		const { initValue, state_list } = this.state;
+		const { initValue, state_list,  checkmobileNumberParam  } = this.state;
 		return (
 			<div className="contact-modal-screen">
 				<Modal
@@ -151,6 +152,17 @@ class CustomerModal extends React.Component {
 						onSubmit={(values, { resetForm, setSubmitting }) => {
 							this.handleSubmit(values, resetForm);
 						}}
+						validate={(values) => {   let errors = {};
+if (checkmobileNumberParam === true) {
+errors.mobileNumber =
+'Invalid mobile number';
+ }
+ // if (param === true) {
+// errors.discount =
+// 'Discount amount Cannot be greater than Invoice Total Amount';
+// }
+ return errors;
+  }}
 						validationSchema={Yup.object().shape({
 							firstName: Yup.string().required('First Name is Required'),
 							vatRegistrationNumber: Yup.string().required('Tax Registration Number is required'),
@@ -344,6 +356,8 @@ class CustomerModal extends React.Component {
 														value={props.values.mobileNumber}
 														onChange={(option) => {
 															props.handleChange('mobileNumber')(option);
+															option.length!=12 ? this.setState({checkmobileNumberParam:true}) :this.setState({checkmobileNumberParam:false});
+														
 														}}
 														className={
 															props.errors.mobileNumber &&
@@ -354,7 +368,7 @@ class CustomerModal extends React.Component {
 													/>
 													{props.errors.mobileNumber &&
 														props.touched.mobileNumber && (
-															<div className="invalid-feedback">
+															<div style={{color:"red"}}>
 																{props.errors.mobileNumber}
 															</div>
 														)}

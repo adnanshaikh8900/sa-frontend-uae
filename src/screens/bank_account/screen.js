@@ -830,7 +830,7 @@ class BankAccount extends React.Component {
 													dataField="bankAccountNo"
 													dataFormat={this.renderAccountNumber}
 													dataSort
-													width="13%"
+													width="10%"
 													className="table-header-bg"
 												>
 													{strings.ACCOUNTNUMBER}
@@ -856,7 +856,7 @@ class BankAccount extends React.Component {
 												<TableHeaderColumn
 													dataField="openingBalance"
 													dataSort
-													width="5%"
+													width="10%"													
 													dataFormat={this.renderBalance}
 													formatExtraData={universal_currency_list}
 													className="table-header-bg"
@@ -869,7 +869,7 @@ class BankAccount extends React.Component {
 													dataSort={false}
 													dataFormat={this.renderLastReconciled}
 													formatExtraData={universal_currency_list}
-													width="5%"
+													width="10%"
 													className="table-header-bg"
 												>
 													{strings.LASTRECONCILED}
@@ -877,7 +877,7 @@ class BankAccount extends React.Component {
 												<TableHeaderColumn
 													className="text-right"
 													columnClassName="text-right"
-													width="5%"
+													width="3%"
 													dataSort={false}
 													export={false}
 													dataFormat={this.renderActions}

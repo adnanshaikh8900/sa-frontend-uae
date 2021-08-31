@@ -799,6 +799,16 @@ min="0"
 			supplierReferenceNumber,
 		} = data;
 		const postData = this.getData(data);
+
+
+		if(!grnReceiveDate || !this.state.prefixData) {
+			return;
+		}
+
+		this.setState({ isSubmitting: true });
+
+
+
 		
 		let formData = new FormData();
 		formData.append(
@@ -827,6 +837,8 @@ min="0"
 		this.props.createGRN(formData)
 			.then((res) => {				
 				if (res.status === 200) {
+					this.setState({ isSubmitting: false });
+
 					resetForm();
 					this.props.closeGoodsReceivedNotes(true);
 
@@ -835,6 +847,8 @@ min="0"
 			})
 			.catch((err) => {
 				this.displayMsg(err);
+				this.setState({ isSubmitting: false });
+
 				this.formikRef.current.setSubmitting(false);
 			});
 
@@ -849,6 +863,29 @@ min="0"
 		  showDetails: bool
 		});
 	  }
+
+	  getTotalNet = () => {
+
+		let data =[];
+
+		let value = 0
+
+		if(this.state.selectedData && this.state.selectedData.poQuatationLineItemRequestModelList && Array.isArray(this.state.selectedData.poQuatationLineItemRequestModelList)) {
+
+			data = this.state.selectedData.poQuatationLineItemRequestModelList
+
+		}
+
+		data.forEach((d)=>{
+			value = value+d.subTotal
+		})
+
+		return value;
+
+
+
+	  }
+  
 
 
 
@@ -952,10 +989,11 @@ min="0"
 																		placeholder={strings.InvoiceNumber}
 																		value={this.state.prefixData}
 																		onBlur={props.handleBlur('grn_number')}
-																		onChange={(value) => {
-																			props.handleChange('grn_number')(
-																				value,
-																			);
+																		onChange={(evt) => {
+
+																			this.setState({
+																				prefixData:evt.target.value
+																			})
 																		}}
 																		className={
 																			props.errors.grn_number &&
@@ -964,10 +1002,10 @@ min="0"
 																				: ''
 																		}
 																	/>
-																	{props.errors.grn_number &&
-																		props.touched.grn_number && (
-																			<div className="invalid-feedback">
-																				{props.errors.grn_number}
+																	{
+																		!this.state.prefixData && (
+																			<div className="text-danger">
+																				{"Please Enter GRN Number"}
 																			</div>
 																		)}
 																</FormGroup>
@@ -1119,10 +1157,10 @@ min="0"
 																			props.handleChange('grnReceiveDate')(value);
 																		}}
 																	/>
-																	{props.errors.grnReceiveDate &&
-																		props.touched.grnReceiveDate && (
-																			<div className="invalid-feedback">
-																				{props.errors.grnReceiveDate}
+																			{
+																		!props.values.grnReceiveDate && (
+																			<div className="text-danger">
+																				{"Please Enter Reciept Date"}
 																			</div>
 																		)}
 																</FormGroup>
@@ -1297,7 +1335,7 @@ min="0"
 																							}
 																							/>
 																							)} */}
-																							{this.state.initValue.total_net}
+																							{this.getTotalNet()}
 																						</label>
 																					</Col>
 																				</Row>
@@ -1360,7 +1398,7 @@ min="0"
 											color="primary"
 											type="submit"
 											className="btn-square"
-											disabled={isSubmitting}
+											disabled={this.state.isSubmitting}
 											
 										>
 											<i className="fa fa-dot-circle-o"></i> {strings.Create}
@@ -1370,6 +1408,15 @@ min="0"
 											color="secondary"
 											className="btn-square"
 											onClick={() => {
+
+												let initValue = {...this.state.initValue}
+												initValue.totalAmount = 0;
+												initValue.totalVatAmount = 0
+
+												this.setState({
+													initValue:initValue
+
+												})
 												closeGoodsReceivedNotes(false);
 											}}
 										>

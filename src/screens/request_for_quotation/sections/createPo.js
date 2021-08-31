@@ -138,6 +138,7 @@ class CreatePurchaseOrder extends React.Component {
 			productId:'',
 			prefixData:'',
 			fileName: '',
+
 		};
 	
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
@@ -475,6 +476,7 @@ min="0"
 		// ) : (
 		// 	''
 		// );
+
 		return row.subTotal ? row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
 	}
 	
@@ -578,6 +580,10 @@ min="0"
 			// ) : (
 			// 	''
 			// );
+
+		// this.setState({
+		// 	sub_total:sub_total+newSubtotal
+		// })
 			return row.subTotal ? row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
 		}
 
@@ -751,6 +757,22 @@ min="0"
 			notes,
 			supplierReferenceNumber,
 		} = data;
+
+
+		if(!this.state.prefixData||!poReceiveDate || !poApproveDate) {
+			this.setState({ disabled: false });
+
+			return ;
+
+		}
+
+
+		this.setState({
+			isSubmitting:true
+		})
+
+
+
 		const postData = this.getData(data);
 		
 		let formData = new FormData();
@@ -791,6 +813,10 @@ min="0"
 				}
 			})
 			.catch((err) => {
+				this.setState({
+					isSubmitting:false
+				})
+		
 				this.displayMsg(err);
 				this.formikRef.current.setSubmitting(false);
 			});
@@ -805,6 +831,28 @@ min="0"
 		this.setState({
 		  showDetails: bool
 		});
+	  }
+
+	  getTotalNet = () => {
+
+		let data =[];
+
+		let value = 0
+
+		if(this.state.selectedData && this.state.selectedData.poQuatationLineItemRequestModelList && Array.isArray(this.state.selectedData.poQuatationLineItemRequestModelList)) {
+
+			data = this.state.selectedData.poQuatationLineItemRequestModelList
+
+		}
+
+		data.forEach((d)=>{
+			value = value+d.subTotal
+		})
+
+		return value;
+
+
+
 	  }
 
 
@@ -993,10 +1041,16 @@ min="0"
 																		placeholder={strings.InvoiceNumber}
 																		value={this.state.prefixData}
 																		onBlur={props.handleBlur('po_number')}
-																		onChange={(value) => {
-																			props.handleChange('po_number')(
-																				value,
-																			);
+																		onChange={(evt) => {
+																			// props.handleChange('po_number')(
+																			// 	value,
+																			// );
+																			this.setState({
+
+																				prefixData:evt.target.value
+
+
+																			})
 																		}}
 																		className={
 																			props.errors.po_number &&
@@ -1005,10 +1059,10 @@ min="0"
 																				: ''
 																		}
 																	/>
-																	{props.errors.po_number &&
-																		props.touched.po_number && (
-																			<div className="invalid-feedback">
-																				{props.errors.po_number}
+																	{
+																		!this.state.prefixData && (
+																			<div  className="text-danger">
+																				{"Please enter PO Number"}
 																			</div>
 																		)}
 																</FormGroup>
@@ -1160,10 +1214,10 @@ min="0"
 																			props.handleChange('poApproveDate')(value);
 																		}}
 																	/>
-																	{props.errors.poApproveDate &&
-																		props.touched.poApproveDate && (
-																			<div className="invalid-feedback">
-																				{props.errors.poApproveDate}
+																	{
+																		!props.values.poApproveDate && (
+																			<div className="text-danger">
+																				{"Please Select Start Date"}
 																			</div>
 																		)}
 																</FormGroup>
@@ -1193,12 +1247,13 @@ min="0"
 																			props.handleChange('poReceiveDate')(value);
 																		}}
 																	/>
-																	{props.errors.poReceiveDate &&
-																		props.touched.poReceiveDate && (
-																			<div className="invalid-feedback">
-																				{props.errors.poReceiveDate}
+																																		{
+																		!props.values.poReceiveDate && (
+																			<div className="text-danger">
+																				{"Please Select End Date"}
 																			</div>
 																		)}
+
 																	
 																</FormGroup>
 															</Col>
@@ -1363,7 +1418,7 @@ min="0"
 																							}
 																							/>
 																							)} */}
-																							{initValue.total_net}
+																							{this.getTotalNet()}
 																						</label>
 																					</Col>
 																				</Row>
@@ -1426,7 +1481,7 @@ min="0"
 											color="primary"
 											type="submit"
 											className="btn-square"
-											disabled={isSubmitting}
+											disabled={this.state.isSubmitting}
 											
 										>
 											<i className="fa fa-dot-circle-o mr-1"></i>{strings.Create}
@@ -1436,6 +1491,12 @@ min="0"
 											color="secondary"
 											className="btn-square"
 											onClick={() => {
+
+												let initValue = {...this.state.initValue}
+												initValue.total_net = 0;
+												this.setState({
+													initValue:initValue
+												})
 												closePurchaseOrder(false);
 											}}
 										>

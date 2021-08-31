@@ -1891,6 +1891,17 @@ console.log(po_list)
 																>
 																	<i className="fa fa-plus"></i>{strings.Addmore}
 																</Button>
+																<Button
+																	color="primary"
+																	className= "btn-square mr-3"
+																	onClick={(e, props) => {
+																		this.openProductModal(props);
+																		}}
+																	
+																
+																>
+																	<i className="fa fa-plus"></i>{strings.Addproduct}
+																</Button>
 															</Col>
 														</Row>
 														<Row>
@@ -1925,7 +1936,7 @@ console.log(po_list)
 																		}
 																	></TableHeaderColumn>
 																	<TableHeaderColumn
-																	width="18%"
+																	width="20%"
 																		dataField="product"
 																		dataFormat={(cell, rows) =>
 																			this.renderProduct(cell, rows, props)
@@ -1933,13 +1944,13 @@ console.log(po_list)
 																	>
 																		{strings.PRODUCT}
 																	</TableHeaderColumn>
-																	<TableHeaderColumn
+																	{/* <TableHeaderColumn
 																		width="5%"
 																		dataAlign="center"
 																		dataFormat={(cell, rows) =>
 																			this.renderAddProduct(cell, rows, props)
 																		}
-																	></TableHeaderColumn>
+																	></TableHeaderColumn> */}
 																	<TableHeaderColumn
 																		dataField="description"
 																		dataFormat={(cell, rows) =>

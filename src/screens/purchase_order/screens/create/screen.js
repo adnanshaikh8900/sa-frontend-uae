@@ -959,7 +959,7 @@ min="0"
 			formData.append('supplierId', supplierId.value);
 		}
         if (rfqNumber && rfqNumber.value) {
-			formData.append('rfqid', rfqNumber.value);
+			formData.append('rfqId', rfqNumber.value);
 		}
 		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
@@ -1239,8 +1239,9 @@ getrfqDetails = (e, row, props,form,field) => {
 						totalAmount: response.data.totalAmount,
 						total_net: response.data.totalAmount -response.data.totalVatAmount 
 					},
+					
 				},
-
+				
 			//	data1:response.data.supplierId,
 			},() => {
 				this.formRef.current.setFieldValue(
@@ -1268,10 +1269,7 @@ getrfqDetails = (e, row, props,form,field) => {
             );
 			this.formRef.current.setFieldValue('supplierId', this.state.option, true);
 			this.formRef.current.setFieldValue('currencyCode', this.state.supplier_currency, true);
-            console.log(this.state.data,"api")
-			console.log("option ",this.state.option)
-			console.log(this.state.initValue.totalAmount,"this.state.initValue.totalAmount+++++++")
-			console.log(this.state.initValue.totalVatAmount,"this.state.initValue.totalVatAmount+++++++")
+			this.getCurrency(this.state.option.value)	
         });
     }
 }

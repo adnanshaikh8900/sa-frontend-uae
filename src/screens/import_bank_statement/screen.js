@@ -10,6 +10,7 @@ import {
 	Col,
 	Form,
 	FormGroup,
+	Label,
 } from 'reactstrap';
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
@@ -17,6 +18,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 import * as ImportBankStatementActions from './actions';
+import * as DetailBankAccountActions from '../bank_account/screens/detail/actions'
 import { CommonActions } from 'services/global';
 
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -36,6 +38,7 @@ const mapDispatchToProps = (dispatch) => {
 			dispatch,
 		),
 		commonActions: bindActionCreators(CommonActions, dispatch),
+		detailBankAccountActions : bindActionCreators(DetailBankAccountActions,dispatch)
 	};
 };
 let strings = new LocalizedStrings(data);
@@ -54,6 +57,7 @@ class ImportBankStatement extends React.Component {
 			tableDataKey: [],
 			tableData: [],
 			errorIndexList: [],
+			showMessage: false,
 		};
 		this.formRef = React.createRef();
 		this.options = {
@@ -82,6 +86,37 @@ class ImportBankStatement extends React.Component {
 			});
 		} else {
 			this.props.history.push('/admin/banking/bank-account');
+		}
+		if (this.props.location.state && this.props.location.state.bankAccountId) {
+			this.setState(
+				{
+					id: this.props.location.state.bankAccountId,
+				},
+				() => {
+					//console.log(this.state.id);
+				},
+			);
+			this.props.detailBankAccountActions
+				.getBankAccountByID(this.props.location.state.bankAccountId)
+				.then((res) => {
+					this.setState(
+						{
+							date: res.openingDate
+								? res.openingDate
+								: '',
+							reconciledDate: res.lastReconcileDate
+								? res.lastReconcileDate
+								: '',
+						},
+						() => {},
+					);
+				})
+				.catch((err) => {
+					this.props.commonActions.tostifyAlert(
+						'error',
+						err && err.data ? err.data.message : 'Something Went Wrong',
+					);
+				});
 		}
 	};
 
@@ -151,19 +186,19 @@ class ImportBankStatement extends React.Component {
 			templateId: selectedTemplate ? +selectedTemplate : '',
 			importDataMap: tableData,
 		};
-		console.log('postdata', postData)
 		this.props.importBankStatementActions
 			.importTransaction(postData)
 			.then((res) => {
 				if (res.data.includes('Transactions Imported 0')) {
-					this.props.commonActions.tostifyAlert(
-						'error',
-						'Imported transaction should not contain any outdated transation',
-						this.props.history.push('/admin/banking/bank-account/transaction', {
-							bankAccountId: postData.bankId
-						})
-					);
-					this.setState({ selectedTemplate: [], tableData: [] });
+					// this.props.commonActions.tostifyAlert(
+					// 	'error',
+					// 	'Imported transaction should not contain any outdated transation',
+					// 	// this.props.history.push('/admin/banking/bank-account/transaction',
+					// 	//  {
+					// 	// 	bankAccountId: postData.bankId
+					// 	// })
+					// );
+					this.setState({ selectedTemplate: [], tableData: [] ,showMessage : true});
 				} else {
 					this.props.commonActions.tostifyAlert('success', res.data);
 					this.props.history.push('/admin/banking/bank-account/transaction', {
@@ -181,7 +216,7 @@ class ImportBankStatement extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { templateList, initValue } = this.state;
+		const { templateList, initValue,showMessage } = this.state;
 		return (
 			<div className="import-bank-statement-screen">
 				<div className="animated fadeIn">
@@ -287,6 +322,21 @@ class ImportBankStatement extends React.Component {
 													ref={this.formRef}
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values);
+													}}
+													validate={() => {
+														const date = this.state.tableData.transactionDate;
+													
+														const date1 = new Date(date);
+														const date2 = new Date(this.state.date);
+														let errors = {};
+														if (
+															date1 < date2 ||
+															date1 < new Date(this.state.reconciledDate)
+														) {
+															errors.transactionDate =
+																'Transaction Date Cannot be less than Bank opening date or Last Reconciled Date';
+														}
+														return errors;
 													}}
 													validationSchema={Yup.object().shape({
 														templateId: Yup.string().required(
@@ -411,9 +461,10 @@ class ImportBankStatement extends React.Component {
 																			props.handleSubmit();
 																		}}
 																		disabled={
-																			this.state.fileName.length === 0
+																			(this.state.fileName.length === 0
 																				? true
-																				: false
+																				: false)
+
 																		}
 																	>
 																		<i className="fa fa-dot-circle-o mr-1"></i>
@@ -421,6 +472,15 @@ class ImportBankStatement extends React.Component {
 																	</Button>
 																</Col>
 															</Row>
+															<div 
+															style={{display: this.state.showMessage === true ? '': 'none'}}
+															className="mt-4"
+															>
+																<Label style={{color:"red",fontWeight:'bold'}}
+																className="text-center">
+																		{strings.Message}
+																</Label>
+															</div>
 														</Form>
 													)}
 												</Formik>
@@ -534,8 +594,9 @@ class ImportBankStatement extends React.Component {
 											</div>
 										</Col>
 									</Row>
+								<div style={{display : this.state.showMessage === false ? '': 'none'}}>
 									<div>
-										{this.state.tableDataKey.length > 0 ? (
+										{this.state.tableDataKey.length  > 0 ? (
 											<BootstrapTable
 												data={this.state.tableData}
 												keyField={this.state.tableDataKey[0]}
@@ -593,7 +654,8 @@ class ImportBankStatement extends React.Component {
 												) : null}
 											</FormGroup>
 										</Col>
-									</Row>
+									</Row> 
+									</div>
 								</CardBody>
 							</Card>
 						</Col>

@@ -959,7 +959,7 @@ min="0"
 			formData.append('supplierId', supplierId.value);
 		}
         if (rfqNumber && rfqNumber.value) {
-			formData.append('rfqNumber', rfqNumber.value);
+			formData.append('rfqid', rfqNumber.value);
 		}
 		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);

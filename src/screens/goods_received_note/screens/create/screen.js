@@ -1895,7 +1895,7 @@ console.log(this.state.data)
 																</Button>
 																<Button
 																	color="primary"
-																	className= "btn-square mr-3"
+																	className="btn-square mr-3"
 																	onClick={(e, props) => {
 																		this.openProductModal(props);
 																		}}

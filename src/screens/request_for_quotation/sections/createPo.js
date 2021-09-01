@@ -584,7 +584,7 @@ min="0"
 		// this.setState({
 		// 	sub_total:sub_total+newSubtotal
 		// })
-			return row.subTotal ? row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
+			return row.subTotal ? row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) +" "+  this.state.selectedData.currencySymbol: '';
 		}
 
 	onContentStateChange = (contentState) => {
@@ -1067,7 +1067,39 @@ min="0"
 																		)}
 																</FormGroup>
 															</Col>
-
+															<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="currencyCode">
+																	<span className="text-danger">*</span>
+																		{strings.Currency}
+																	</Label>
+																	<Input
+																		type="text"
+																		id="currencyCode"
+																		name="currencyCode"
+																		disabled={true}
+																		value={this.state.selectedData.currencyName}
+																		// onBlur={props.handleBlur('currencyCode')}
+																		// onChange={(value) => {
+																		// 	props.handleChange('currencyCode')(
+																		// 		value,
+																		// 	);
+																		// }}
+																		className={
+																			props.errors.currencyCode &&
+																			props.touched.currencyCode
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.currencyCode &&
+																		props.touched.currencyCode && (
+																			<div className="invalid-feedback">
+																				{props.errors.currencyCode}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
                                                             </Row>
                                                             <Row>
 
@@ -1418,7 +1450,9 @@ min="0"
 																							}
 																							/>
 																							)} */}
-																							{this.getTotalNet()}
+																							{/* {this.getTotalNet()} */}
+																							{this.state.selectedData.currencySymbol}  &nbsp;
+																								{this.getTotalNet().toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -1442,7 +1476,9 @@ min="0"
 																							}
 																							/>
 																							)} */}
-																							{this.state.totalVatAmount	}
+																							{/* {this.state.totalVatAmount	} */}
+																							{this.state.selectedData.currencySymbol}  &nbsp;
+																							{this.state.totalVatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -1466,7 +1502,9 @@ min="0"
 																							}
 																							/>
 																							)} */}
-																							{this.state.totalAmount}
+																							{/* {this.state.totalAmount} */}
+																							{this.state.selectedData.currencySymbol} &nbsp;
+																							{this.state.totalAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>

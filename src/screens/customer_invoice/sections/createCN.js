@@ -595,7 +595,7 @@ min="0"
 			// ) : (
 			// 	''
 			// );
-			return row.subTotal ? row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
+			return row.subTotal ? row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })+" "+  this.state.selectedData.currencySymbol: '';
 		}
 
 	onContentStateChange = (contentState) => {
@@ -633,7 +633,27 @@ min="0"
 		props.setFieldValue('invoiceLineItems', newData, true);
 		this.updateAmount(newData, props);
 	};
+	getTotalNet = () => {
 
+		let data =[];
+
+		let value = 0
+
+		if(this.state.selectedData && this.state.selectedData.invoiceLineItems && Array.isArray(this.state.selectedData.invoiceLineItems)) {
+
+			data = this.state.selectedData.invoiceLineItems
+
+		}
+
+		data.forEach((d)=>{
+			value = value+d.subTotal
+		})
+
+		return value;
+
+
+
+	  }
 	updateAmount = (data, props) => {
 		const { vat_list } = this.props;
 		let total_net = 0;
@@ -1366,8 +1386,9 @@ min="0"
 																							}
 																							/>
 																							)} */}
-																							{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.total_net.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
+																								{this.state.selectedData.currencySymbol}  &nbsp;
+																								{this.getTotalNet().toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
+																							{/* {this.getTotalNet()} */}
 																						</label>
 																					</Col>
 																				</Row>
@@ -1390,9 +1411,9 @@ min="0"
 																						: 'USD'
 																							}
 																							/>
-																							)} 
-																							{this.state.totalVatAmount} */}
-																							{this.state.customer_currency_symbol} &nbsp;
+																							)} */}
+																							{/* {this.state.totalVatAmount}  */}
+																							{this.state.selectedData.currencySymbol}  &nbsp;
 																							{this.state.totalVatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
@@ -1416,10 +1437,10 @@ min="0"
 																						: 'USD'
 																							}
 																							/>
-																							)} 
-																						 {this.state.totalAmount}*/}
-																							{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.totalAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
+																							)} */}
+																						 {/* {this.state.totalAmount} */}
+																							{this.state.selectedData.currencySymbol} &nbsp;
+																							{this.state.totalAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -1443,7 +1464,13 @@ min="0"
 										<Button
 											color="secondary"
 											className="btn-square"
+											
 											onClick={() => {
+												let initValue = {...this.state.initValue}
+												initValue.total_net = 0;
+												this.setState({
+													initValue:initValue
+												})
 												closeModal(false);
 											}}
 										>

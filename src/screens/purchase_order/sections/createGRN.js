@@ -122,6 +122,7 @@ class CreateGoodsReceivedNote extends React.Component {
 				notes: '',
 				type: 4,
 				supplierReferenceNumber: '',
+				// grnReceivedQuantityError:'Please Enter Quantity'
 			},
 			prefixData:'',
 			state_list: [],
@@ -132,6 +133,8 @@ class CreateGoodsReceivedNote extends React.Component {
 			message: '',
 			productId:'',
 			prefixData:'',
+			grnReceivedQuantity:0,
+			grnReceivedQuantityError:"Please Enter Quantity"
 		};
 	
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
@@ -554,7 +557,7 @@ min="0"
 					<div>
 						<Input
 							type="number"
-min="0"
+							min="0"
 							maxLength="10"
 							value={row['grnReceivedQuantity'] !== 0 ? row['grnReceivedQuantity'] : 0}
 							onChange={(e) => {
@@ -567,33 +570,37 @@ min="0"
 										field,
 										props,
 									);
+								
+								let val=parseInt(e.target.value);
+								
+									if( val<= 0)
+									{
+										this.setState({grnReceivedQuantityError:"Please Enter Quantity"});
+									}
+									else{
+										this.setState({grnReceivedQuantityError:""});
+									}
 								}
 							}}
 							placeholder={strings.GrnReceivedQuantity}
-							className={`form-control 
-            ${
-							props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity
-								? 'is-invalid'
-								: ''
-						}`}
+			// 				className={`form-control 
+            // ${
+			// 				props.errors.lineItemsString &&
+			// 				props.errors.lineItemsString[parseInt(idx, 10)] &&
+			// 				props.errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity &&
+			// 				Object.keys(props.touched).length > 0 &&
+			// 				props.touched.lineItemsString &&
+			// 				props.touched.lineItemsString[parseInt(idx, 10)] &&
+			// 				props.touched.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity
+			// 					? 'is-invalid'
+			// 					: ''
+			// 			}`}
 						/>
-						{props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity && (
-								<div className="invalid-feedback">
-									{props.errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity}
+				
+								<div  className="text-danger">
+									{this.state.grnReceivedQuantityError}
 								</div>
-							)}
+							
 					</div>
 				)}
 			/>
@@ -641,7 +648,7 @@ min="0"
 			// ) : (
 			// 	''
 			// );
-			return row.subTotal ? row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
+			return row.subTotal ? row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })+" " + this.state.selectedData.currencySymbol: '';
 		}
 
 	onContentStateChange = (contentState) => {
@@ -908,12 +915,13 @@ min="0"
 						ref={this.formikRef}
 						initialValues={initValue}
 						onSubmit={(values, { resetForm ,setSubmitting}) => {
-							this.handleSubmit(values, resetForm);
+							debugger
+							if(this.state.grnReceivedQuantityError!="Please Enter Quantity"){
+								this.handleSubmit(values, resetForm);
+							}
+							
 						}}
-					// 	validationSchema={Yup.object().shape(
-					// 		{
-						
-					// }}
+					
 					>
 						{(props) => {
 							const { isSubmitting } = props;
@@ -1010,7 +1018,39 @@ min="0"
 																		)}
 																</FormGroup>
 															</Col>
-                                                           
+															<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="currencyCode">
+																	<span className="text-danger">*</span>
+																		{strings.Currency}
+																	</Label>
+																	<Input
+																		type="text"
+																		id="currencyCode"
+																		name="currencyCode"
+																		disabled={true}
+																		value={this.state.selectedData.currencyName}
+																		// onBlur={props.handleBlur('currencyCode')}
+																		// onChange={(value) => {
+																		// 	props.handleChange('currencyCode')(
+																		// 		value,
+																		// 	);
+																		// }}
+																		className={
+																			props.errors.currencyCode &&
+																			props.touched.currencyCode
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.currencyCode &&
+																		props.touched.currencyCode && (
+																			<div className="invalid-feedback">
+																				{props.errors.currencyCode}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
                                                             </Row>
                                                             <Row>
                                                            
@@ -1335,7 +1375,9 @@ min="0"
 																							}
 																							/>
 																							)} */}
-																							{this.getTotalNet()}
+																							{/* {this.getTotalNet()} */}
+																							{this.state.selectedData.currencySymbol}  &nbsp;
+																								{this.getTotalNet().toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -1359,7 +1401,9 @@ min="0"
 																							}
 																							/>
 																							)} */}
-																							{this.state.initValue.totalVatAmount	}
+																							{/* {this.state.initValue.totalVatAmount	} */}
+																							{this.state.selectedData.currencySymbol} &nbsp;
+																							{this.state.initValue.totalVatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -1383,7 +1427,9 @@ min="0"
 																							}
 																							/>
 																							)} */}
-																							{this.state.initValue.totalAmount}
+																							{/* {this.state.initValue.totalAmount} */}
+																							{this.state.selectedData.currencySymbol} &nbsp;
+																							{this.state.initValue.totalAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
@@ -1410,12 +1456,14 @@ min="0"
 											onClick={() => {
 
 												let initValue = {...this.state.initValue}
+											
 												initValue.totalAmount = 0;
 												initValue.totalVatAmount = 0
-
+										
 												this.setState({
-													initValue:initValue
-
+													initValue:initValue,
+													grnReceivedQuantity:0,
+													grnReceivedQuantityError:"Please Enter Quantity"											
 												})
 												closeGoodsReceivedNotes(false);
 											}}

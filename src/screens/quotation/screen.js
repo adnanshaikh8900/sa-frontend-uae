@@ -750,7 +750,7 @@ console.log(quotation_list)
 				: '';
 
 		let tmpSupplier_list = []
-
+		console.log(quotation_data,"quotation_data")
 		supplier_list.map(item => {
 			let obj = {label: item.label.contactName, value: item.value}
 			tmpSupplier_list.push(obj)
@@ -959,15 +959,13 @@ console.log(quotation_list)
 											hover
 											keyField="id"
 											pagination={
-												quotation_data &&
-												quotation_data.length > 0
-													? true
-													: false
+											true
 											}
 											remote
+
 											fetchInfo={{
-												dataTotalSize: quotation_list.count
-													? quotation_list.count
+												dataTotalSize: quotation_list && quotation_list && quotation_list.data && quotation_list.data.count
+													? quotation_list.data.count
 													: 0,
 											}}
 											className="supplier-invoice-table"

@@ -288,6 +288,8 @@ AddNewAccount:"Add New Account",
 ViewTransactions:"View Transactions",	
 Project:"Project",
 Configuration:"Configuration",	
+Message:"Transaction Date Cannot be less than Bank opening date or Last Reconciled Date",
+
 
 //Add Bank Account
 CreateBankAccount:"Create Bank Account",		

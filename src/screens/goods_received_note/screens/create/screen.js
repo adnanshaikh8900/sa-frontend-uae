@@ -120,6 +120,7 @@ class CreateGoodsReceivedNote extends React.Component {
 				{
 					id: 0,
 					description: '',
+					grnReceivedQuantity: 1,
 					quantity: 1,
 					unitPrice: '',
 					vatCategoryId: '',
@@ -902,7 +903,6 @@ this.state.data.map((obj, index) => {
 	};
 
 	checkedRow = () => {
-		debugger
 		if (this.state.data.length > 0) {
 			let length = this.state.data.length - 1;
 			let temp = Object.values(this.state.data[`${length}`]).indexOf('');
@@ -1019,6 +1019,7 @@ this.state.data.map((obj, index) => {
 			grn_Number,
 			grnRemarks,
 			supplierReferenceNumber,
+			poNumber
 		} = data;
 		const { term } = this.state;
 
@@ -1043,7 +1044,9 @@ this.state.data.map((obj, index) => {
 		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
-		
+		if (poNumber && poNumber.value) {
+			formData.append('poId', poNumber.value);
+		}
 	
 			formData.append('currencyCode', this.state.supplier_currency);
 

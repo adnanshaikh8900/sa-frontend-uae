@@ -310,6 +310,7 @@ DepositAmount:"Montant du dépôt",
 WithdrawalAmount:"Montant du retrait",		
 DueAmount:"Montant dû",		
 Status:"Statut",		
+Message:"La date de transaction ne peut pas être antérieure à la date d'ouverture de la banque ou à la date de dernier rapprochement",
 
 //Add Transaction
 CreateBankTransaction:"Créer une transaction bancaire",			

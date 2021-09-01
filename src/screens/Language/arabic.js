@@ -307,6 +307,7 @@ DepositAmount:"مبلغ الإيداع",
 WithdrawalAmount:"مبلغ السحب",		
 DueAmount:"المبلغ المستحق",		
 Status:"حالة",		
+Message:"لا يمكن أن يكون تاريخ المعاملة أقل من تاريخ افتتاح البنك أو تاريخ آخر تسوية",
 
 //Add Transaction
 CreateBankTransaction:" إنشاء حركة مصرفية",			
@@ -503,6 +504,7 @@ AmountToCredit:"مبلغ الائتمان",
 Save:"حفظ",
 Saving:"إنقاذ",
 RemainingCredits:"الاعتمادات المتبقية",
+
 //ImportStatement
 ImportStatement:"بيان الاستيراد",	       
 SelectFileToUpload:"حدد ملف للتحميل",	

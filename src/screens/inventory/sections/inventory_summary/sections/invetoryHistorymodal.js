@@ -118,7 +118,7 @@ class InventoryHistoryModal extends React.Component {
 		 return row.unitCost ? row.unitCost.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :'';
 	};
 	renderunitSellingPrice  = (cell, row, extraData) => {
-		return row.unitSellingPrice ? row.unitSellingPrice.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :'';
+		return row.unitSellingPrice ? row.unitSellingPrice.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :"0.00";
 	};
 	displayMsg = (err) => {
 		toast.error(`${err.data}`, {

@@ -1376,7 +1376,7 @@ renderName=(cell,row)=>{
 															</Row>
 															<hr></hr>
 														
-														<Row style={{display: 	props.values.productPriceType.includes(
+														<Row style={{display: props.values.productPriceType &&	props.values.productPriceType.includes(
 																					'PURCHASE' 
 																				
 																				)&& props.values.productType !=

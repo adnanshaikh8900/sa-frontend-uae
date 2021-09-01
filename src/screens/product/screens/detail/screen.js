@@ -472,6 +472,11 @@ renderName=(cell,row)=>{
 	};
 
 
+	removeDialog = () => {
+		this.setState({
+			dialog: null,
+		});
+	};
 	removeProduct = () => {
 		this.setState({ disabled1: true });
 		const { current_product_id } = this.state;

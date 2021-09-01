@@ -6,13 +6,18 @@ const en = {
       
 
       //Help
-Question:"Have a question?",
-Find:"Find detailed answers to the most common questions you might have while using our site",
-CustomerSupport:"Customer Support",
-Version:"Simple Accounts Versions",
+GettingStarted:"Getting Started",
+Guide:"New to SimpleAccounts? Let us guide you through to make the most out of SimpleAccounts",
+Find:"Find detailed answers to the most common questions you might come across while using SimpleAccounts",
+ReadOurBlog:"Read Our Blog",
+Look:"Have a look at some of our interesting articles. Who knows you get a benefit or two for your business?",
+Refer:"Got questions that are still not answered? Talk to our accounting master directly",
+FAQ:"FAQ",
 FrontEndVerison:"FrontEnd Verison",
 BackEndVersion:"BackEnd Version",
 GotoFAQ:"Go to FAQ",
+ContactUs:"Contact Us",
+
 //sideBar
 Dashboard:"Dashboard",
 Report:"Report",

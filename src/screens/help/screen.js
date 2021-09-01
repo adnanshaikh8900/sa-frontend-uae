@@ -51,12 +51,12 @@ class Help extends React.Component {
 											<div className="text-center">
 												<img src={faqIcon} width="40%" alt=""></img>
 											</div>
-											<div><h4>{strings.Question}</h4></div>
+											<div><h4>{strings.GettingStarted}</h4></div>
 											<p>
-											{strings.Find}
+											{strings.Guide}
 											</p>
 											{/* <Link to="https://www.simplevat.com/faqs/">Go to FAQ</Link> */}
-										<b>	<a target="_blank" href="https://www.simplevat.com/faqs/" style={{ color: '#2266d8' }}>{strings.GotoFAQ}</a></b>
+										
 										</div>
 										</CardBody>
 									</Card>
@@ -65,29 +65,12 @@ class Help extends React.Component {
 										<CardBody>
 										<div>
 											<div className="text-center">
-												<img src={userIcon} width="40%" alt=""></img>
+												<img src={versionimage} width="40%" alt=""></img>
 											</div>
-											<div><h4>{strings.CustomerSupport}</h4></div>
+											<div><h4>{strings.ReadOurBlog}</h4></div>
 											<p>
-											{strings.Find}						</p>
-											<div className="d-flex justify-content-center">
-												{/* <button className="btn-pill btn btn-primary btn-lg">
-													<i className="icon-phone icons font-2xl d-block"></i>
-												</button>
-												<button className="btn-pill btn btn-primary btn-lg">
-													<i className="cui-comment-square icons font-2xl d-block"></i>
-												</button> */}
-												<button className="btn-pill btn btn-primary btn-lg"
-												>
+											{strings.Look}						</p>
 											
-													<i
-														className="cui-envelope-closed icons font-2xl d-block"
-														style={{ marginTop: -5 }}
-													></i>
-												
-												</button>
-												<p>support@simpleaccounts.io</p>
-											</div>
 											</div>
 										</CardBody>
 									</Card>
@@ -105,12 +88,15 @@ class Help extends React.Component {
 										<CardBody>
 										<div>
 											<div className="text-center">
-												<img src={versionimage} width="40%" alt=""></img>
+												<img src={faqIcon} width="40%" alt=""></img>
 											</div>
-											<h4>{strings.Version}</h4>
+											<h4>{strings.FAQ}</h4>
 											<p>
-											{strings.FrontEndVerison}:  <label className="mb-0 text-primary">{configData.FRONTEND_RELEASE}</label><br></br>
-											{strings.BackEndVersion}: {
+											{strings.Find}
+									    
+   	<b>	<a  target="_blank" href="https://www.simpleaccounts.io/faqs/" style={{ color: '#2266d8' ,marginTop: "30px !important"}}>{strings.GotoFAQ}</a></b>  </p>
+										    <p> {strings.FrontEndVerison}:  <label className="mb-0 text-primary">{configData.FRONTEND_RELEASE}</label><br></br>
+										{strings.BackEndVersion}: {
            																   version !== '' ?
             														    <label className="mb-0 text-primary">{version}</label>
            																	   :
@@ -127,8 +113,12 @@ class Help extends React.Component {
 										<CardBody>
 										<div>
 											<div className="text-center" >
-												<img src={faqIcon} width="40%" alt=""></img>
+												<img src={userIcon} width="40%" alt=""></img>
 											</div>
+											<div><h4>{strings.ContactUs}</h4></div>
+											<p>
+											{strings.Refer}
+											</p>
 											{/* <h4>Simple Accounts Version Numbers</h4>
 											<p>
 												FrontEnd Verison:  <label className="mb-0 text-primary">{configData.FRONTEND_RELEASE}</label><br></br>
@@ -141,7 +131,25 @@ class Help extends React.Component {
 											</p> */}
 											{/* <Link to="https://www.simplevat.com/faqs/">Go to FAQ</Link> */}
 							{/* <b>	<a target="_blank" href="https://www.simplevat.com/faqs/" style={{ color: '#2266d8' }}>Go to FAQ</a></b> */}
-										
+							<div className="d-flex justify-content-center">
+												{/* <button className="btn-pill btn btn-primary btn-lg">
+													<i className="icon-phone icons font-2xl d-block"></i>
+												</button>
+												<button className="btn-pill btn btn-primary btn-lg">
+													<i className="cui-comment-square icons font-2xl d-block"></i>
+												</button> */}
+												<button className="btn-pill btn btn-primary btn-lg"
+												>
+											
+													<i
+														className="cui-envelope-closed icons font-2xl d-block"
+														style={{ marginTop: -5 }}
+													></i>
+												
+												</button>
+												<p>support@simpleaccounts.io</p>
+											</div>
+
 											</div>
 										</CardBody>
 									</Card>

@@ -1292,6 +1292,46 @@ min="0"
 														// 			}
 														// 		},
 														// 	),
+														lineItemsString: Yup.array()
+														.required(
+															'Atleast one invoice sub detail is mandatory',
+														)
+														.of(
+															Yup.object().shape({
+																grnReceivedQuantity: Yup.string()
+																	.required('Value is Required')
+																	.test(
+																		'grnReceivedQuantity',
+																		'Quantity Should be Greater than 1',
+																		(value) => {
+																			if (value > 0) {
+																				return true;
+																			} else {
+																				return false;
+																			}
+																		},
+																	),
+																unitPrice: Yup.string()
+																	.required('Value is Required')
+																	.test(
+																		'Unit Price',
+																		'Unit Price Should be Greater than 1',
+																		(value) => {
+																			if (value > 0) {
+																				return true;
+																			} else {
+																				return false;
+																			}
+																		},
+																	),
+																vatCategoryId: Yup.string().required(
+																	'Value is Required',
+																),
+																productId: Yup.string().required(
+																	'Product is Required',
+																),
+															}),
+														),
 													})}
 												>
 													{(props) => (

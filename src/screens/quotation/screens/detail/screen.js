@@ -889,7 +889,7 @@ min="0"
 	deletepo = () => {
 		const message1 =
         <text>
-        <b>Delete Request For Quotation?</b>
+        <b>Delete Quotation?</b>
         </text>
         const message = 'This Quotation will be deleted permanently and cannot be recovered. ';
 		this.setState({
@@ -914,7 +914,7 @@ min="0"
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Purchase Order Deleted Successfully',
+						'Quotation Deleted Successfully',
 					);
 					this.props.history.push('/admin/income/quotation');
 				}

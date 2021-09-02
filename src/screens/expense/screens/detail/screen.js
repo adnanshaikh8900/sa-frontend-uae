@@ -660,27 +660,6 @@ class DetailExpense extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																	<Col lg={3}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="exchangeRate">
-																	{strings.Exchangerate}
-																	</Label>
-																	<div>
-																		<Input
-																			className="form-control"
-																			id="exchangeRate"
-																			name="exchangeRate"
-																			
-																			value={props.values.exchangeRate}
-																			onChange={(value) => {
-																				props.handleChange('exchangeRate')(
-																					value,
-																				);
-																			}}
-																		/>
-																	</div>
-																</FormGroup>
-															</Col>
 															</Row>
 															<Row>
 																<Col lg={3}>
@@ -691,7 +670,7 @@ class DetailExpense extends React.Component {
 																		</Label>
 																		<Input
 																			type="number"
-min="0"
+																			min="0"
 																			name="expenseAmount"
 																			id="expenseAmount"
 																			rows="5"

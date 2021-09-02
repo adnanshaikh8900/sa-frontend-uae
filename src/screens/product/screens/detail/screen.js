@@ -764,7 +764,7 @@ renderName=(cell,row)=>{
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
-																					this.regExAlpha.test(
+																					this.regExBoth.test(
 																						option.target.value,
 																					)
 																				) {

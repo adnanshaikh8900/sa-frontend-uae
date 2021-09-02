@@ -1012,7 +1012,7 @@ min="0"
 	deleteInvoice = () => {
 		const message1 =
 			<text>
-			<b>Delete Customer Invoice?</b>
+			<b>Delete Credit Note?</b>
 			</text>
 			const message = 'This Credit Note  will be deleted permanently and cannot be recovered. ';
 		this.setState({
@@ -1037,7 +1037,7 @@ min="0"
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Data Deleted Successfully',
+						'Credit Note Deleted Successfully',
 					);
 					this.props.history.push('/admin/income/credit-notes');
 				}

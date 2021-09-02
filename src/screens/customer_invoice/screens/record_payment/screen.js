@@ -553,7 +553,7 @@ class RecordCustomerPayment extends React.Component {
 																		</Label>
 																		<Input
 																			type="number"
-																			min="0.01"
+																			
 																			id="amount"
 																			name="amount"
 																			value={props.values.amount}

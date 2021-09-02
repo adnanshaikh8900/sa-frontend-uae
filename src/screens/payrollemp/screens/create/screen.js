@@ -192,6 +192,7 @@ class CreateEmployeePayroll extends React.Component {
                 emergencyContactRelationship1:'',
                 emergencyContactNumber1:'',
                 emergencyContactName2:'',
+                
             },
             userPhoto: [],
             userPhotoFile: [],
@@ -1227,6 +1228,30 @@ validationCheck = (value) => {
                                                                                                     )}
                                                                                                 </FormGroup>
                                                                                             </Col>
+                                                                                          
+                                                                                            <Col md="4">
+                                                                                                <FormGroup className="mb-3">
+                                                                                                    <Label htmlFor="date"><span className="text-danger">*</span>{strings.DateOfBirth}</Label>
+                                                                                                    <DatePicker
+                                                                                                        className={`form-control ${props.errors.dob && props.touched.dob ? "is-invalid" : ""}`}
+                                                                                                        id="dob"
+                                                                                                        name="dob"
+                                                                                                        placeholderText={strings.Select+strings.DateOfBirth}
+                                                                                                        showMonthDropdown
+                                                                                                        showYearDropdown
+                                                                                                        dateFormat="dd/MM/yyyy"
+                                                                                                        dropdownMode="select"
+                                                                                                        selected={props.values.dob}
+                                                                                                        value={props.values.dob}
+                                                                                                        onChange={(value) => {
+                                                                                                            props.handleChange("dob")(value)
+                                                                                                        }}
+                                                                                                    />
+                                                                                                    {props.errors.dob && props.touched.dob && (
+                                                                                                        <div className="invalid-feedback">{props.errors.dob}</div>
+                                                                                                    )}
+                                                                                                </FormGroup>
+                                                                                            </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
                                                                                                     <Label htmlFor="mobileNumber"><span className="text-danger">*</span>
@@ -1257,29 +1282,6 @@ validationCheck = (value) => {
                                                                                                         <div className="invalid-feedback">{props.errors.mobileNumber}</div>
                                                                                                     )}
                                                                                                    
-                                                                                                </FormGroup>
-                                                                                            </Col>
-                                                                                            <Col md="4">
-                                                                                                <FormGroup className="mb-3">
-                                                                                                    <Label htmlFor="date"><span className="text-danger">*</span>{strings.DateOfBirth}</Label>
-                                                                                                    <DatePicker
-                                                                                                        className={`form-control ${props.errors.dob && props.touched.dob ? "is-invalid" : ""}`}
-                                                                                                        id="dob"
-                                                                                                        name="dob"
-                                                                                                        placeholderText={strings.Select+strings.DateOfBirth}
-                                                                                                        showMonthDropdown
-                                                                                                        showYearDropdown
-                                                                                                        dateFormat="dd/MM/yyyy"
-                                                                                                        dropdownMode="select"
-                                                                                                        selected={props.values.dob}
-                                                                                                        value={props.values.dob}
-                                                                                                        onChange={(value) => {
-                                                                                                            props.handleChange("dob")(value)
-                                                                                                        }}
-                                                                                                    />
-                                                                                                    {props.errors.dob && props.touched.dob && (
-                                                                                                        <div className="invalid-feedback">{props.errors.dob}</div>
-                                                                                                    )}
                                                                                                 </FormGroup>
                                                                                             </Col>
                                                                                             {/* <Col md="4">

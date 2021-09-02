@@ -1008,6 +1008,10 @@ class CreateContact extends React.Component {
 																				{props.errors.vatRegistrationNumber}
 																			</div>
 																		)}
+																			<div className="VerifyTRN">
+																		<br/>
+																		<b>	<a target="_blank" href="https://eservices.tax.gov.ae/en-us/trn-verify" style={{ color: '#2266d8' }}  >{strings.VerifyTRN}</a></b>
+														</div>
 																</FormGroup>
 															</Col>
 															<Col md="4">

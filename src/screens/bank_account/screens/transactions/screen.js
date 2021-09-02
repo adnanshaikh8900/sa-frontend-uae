@@ -255,11 +255,11 @@ class BankTransactions extends React.Component {
 			pageNo: this.options.page ? this.options.page - 1 : 0,
 			pageSize: this.options.sizePerPage,
 		};
-		if (this.props.location.state.bankAccountId ||  localStorage.getItem('bankId')) {
+		if (this.props.location.state && this.props.location.state.bankAccountId ||  localStorage.getItem('bankId')) {
 			const postData = {
 				...filterData,
 				...data,
-				id: this.props.location.state.bankAccountId ||  localStorage.getItem('bankId'),
+				id: this.props.location.state && this.props.location.state.bankAccountId ||  localStorage.getItem('bankId'),
 				transactionType: this.state.transactionType,
 			};
 			this.props.transactionsActions
@@ -840,7 +840,7 @@ class BankTransactions extends React.Component {
 													<i className="fa glyphicon glyphicon-export fa-upload mr-1" />
 													{strings.Importstatement}
 												</Button>
-												{  this.props.location.state.bankAccountId !== 1001 &&(
+												{  this.props.location.state && this.props.location.state.bankAccountId !== 1001 &&(
 												<Button
 													color="success"
 													className="btn-square mr-1"

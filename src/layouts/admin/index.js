@@ -71,6 +71,10 @@ class AdminLayout extends React.Component {
 					this.props.commonActions.getRoleList(response.data.role.roleCode);
 				})
 				.catch((err) => {
+					this.props.commonActions.tostifyAlert(
+						'error',
+						'Session Timed out',
+					);
 					this.props.authActions.logOut();
 					this.props.history.push('/login');
 				});

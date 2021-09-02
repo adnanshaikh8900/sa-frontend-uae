@@ -981,7 +981,7 @@ min="0"
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Goods Receved note Updated Successfully.',
+					'Goods Received Note Updated Successfully.',
 				);
 				this.props.history.push('/admin/expense/goods-received-note');
 			})

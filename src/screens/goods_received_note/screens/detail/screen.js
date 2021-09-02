@@ -1023,7 +1023,7 @@ min="0"
 						'success',
 						'Good Received Note Deleted Successfully',
 					);
-					this.props.history.push('/admin/expense/request-for-quotation');
+					this.props.history.push('/admin/expense/goods-received-note');
 				}
 			})
 			.catch((err) => {

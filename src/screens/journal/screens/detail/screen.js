@@ -313,13 +313,15 @@ class DetailJournal extends React.Component {
 			? [{ value: '', label: 'Select Contact' }, ...contact_list]
 			: contact_list;
 		let idx;
+
+		if(this.state.data && this.state.data != undefined){
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
 				idx = index;
 			}
 			return obj;
 		});
-
+	}
 		return (
 			<Field
 				name={`journalLineItems.${idx}.contactId`}
@@ -351,7 +353,7 @@ class DetailJournal extends React.Component {
 							? contactList.map((obj) => {
 									return (
 										<option value={obj.value} key={obj.value}>
-											{obj.label.contactName ? obj.label.contactName : ''}
+											{obj && obj.label && obj.label.contactName ? obj.label.contactName : ''}
 										</option>
 									);
 							  })

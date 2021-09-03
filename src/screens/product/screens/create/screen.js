@@ -358,7 +358,8 @@ try {
 			tmpSupplier_list.push(obj)
 		})
 
-
+		console.log(this.state.ReOrderLevel)
+		console.log(this.state.PurchaseQuantity)
 		return (
 			<div className="create-product-screen">
 				<div className="animated fadeIn">
@@ -395,6 +396,19 @@ try {
 													if (this.state.ProductExist === true) {
 														errors.productCode =
 															'Product Code is already exist';
+													}
+													if (values.inventoryReorderLevel > values.inventoryQty)
+													{
+														errors.inventoryReorderLevel = 
+															'Re-order level should be less than purchase quantity';
+													}
+													if (values.inventoryPurchasePrice > values.salesUnitPrice) {
+														errors.inventoryPurchasePrice = 
+														'Purchase price cannot be greater than Sales price'
+													}
+													else if (values.purchaseUnitPrice > values.salesUnitPrice) {
+														errors.purchaseUnitPrice = 
+														'Purchase price cannot be greater than Sales price'
 													}
 													return errors;
 												}}
@@ -1529,7 +1543,19 @@ min="0"
 																				}
 																			}}
 																			value={props.values.inventoryReorderLevel}
+																			className={
+																				props.errors.inventoryReorderLevel &&
+																				props.touched.inventoryReorderLevel
+																					? 'is-invalid'
+																					: ''
+																			}
 																		/>
+																		{props.errors.inventoryReorderLevel &&
+																		props.touched.inventoryReorderLevel && (
+																			<div className="invalid-feedback">
+																				{props.errors.inventoryReorderLevel}
+																			</div>
+																		)}
 																	</FormGroup>
 																	</Col>
 																	

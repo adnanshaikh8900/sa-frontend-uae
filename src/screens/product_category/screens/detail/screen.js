@@ -28,16 +28,30 @@ import { Formik } from 'formik';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
+import * as CreateProductCategoryActions from './actions';
+import * as ProductCategoryActions from '../../actions';
+import { truncate } from 'lodash-es'
+
 
 // const mapStateToProps = (state) => {
 //   return ({
 
 //   })
 // }
+
+const mapStateToProps = (state) => {
+	return {
+		product_category_list: state.product_category.product_category_list,
+	};
+};
 const mapDispatchToProps = (dispatch) => {
   return ({
     commonActions: bindActionCreators(CommonActions, dispatch),
-    detailProductCategoryAction: bindActionCreators(DetailProductCategoryAction, dispatch)
+    detailProductCategoryAction: bindActionCreators(DetailProductCategoryAction, dispatch),
+    productCategoryActions: bindActionCreators(
+			ProductCategoryActions,
+			dispatch,
+		),
   })
 }
 let strings = new LocalizedStrings(data);
@@ -59,12 +73,20 @@ class DetailProductCategory extends React.Component {
   }
 
   componentDidMount = () => {
+    this.props.productCategoryActions.getProductCategoryList().then((res) => {
+			if (res.status === 200) {
+				this.setState({
+					product_category_list: res.data.data,
+				});
+			}
+		});
     if (this.props.location.state && this.props.location.state.id) {
       this.props.detailProductCategoryAction.getProductCategoryById(this.props.location.state.id).then((res) => {
         if (res.status === 200) {
           this.setState({
             loading: false,
             current_product_category_id: this.props.location.state.id,
+            productCategoryCode:res.data.productCategoryCode,
             initValue: {
               id:res.data.id ? res.data.id : '',
               productCategoryCode: res.data.productCategoryCode ? res.data.productCategoryCode : '',
@@ -140,8 +162,12 @@ class DetailProductCategory extends React.Component {
 
   render() {
     strings.setLanguage(this.state.language);
-    const { loading, initValue,dialog} = this.state
-
+    const { loading, initValue,dialog, product_category_list} = this.state
+    if (product_category_list) {
+			var ProductCategoryList = product_category_list.map((item) => {
+				return item.productCategoryCode;
+			});
+		}
     return (
       <div className="detail-vat-code-screen">
         <div className="animated fadeIn">
@@ -172,6 +198,38 @@ class DetailProductCategory extends React.Component {
                               productCategoryCode: Yup.string()
                               .required("Code is Required")
                           })}
+                          validate={(values) => {
+                            let errors = {};
+                            if (!values.productCategoryName) {
+                              errors.productCategoryName =
+                                'Product Category Name is  required';
+                            }
+                            debugger
+                            let check=false;
+                            if (
+                              product_category_list &&
+                              ProductCategoryList.includes(
+                                values.productCategoryCode,
+                              )
+                            ){
+                                check=true;
+                            }
+                     
+
+                              if(check===true
+                                && 
+                               !(this.state.productCategoryCode===values.productCategoryCode)){
+                              errors.productCategoryCode =
+                                'Product Category Code already Exists';
+                            }
+                            
+                            if (!values.productCategoryCode ) {
+                              errors.productCategoryCode =
+                                'Product Category Code is Required';
+                            }
+                            return errors;
+                          }}
+                    
                           >
                             {(props) => (
                               <Form onSubmit={props.handleSubmit} name="simpleForm">

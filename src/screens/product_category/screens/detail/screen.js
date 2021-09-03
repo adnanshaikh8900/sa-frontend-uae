@@ -204,7 +204,7 @@ class DetailProductCategory extends React.Component {
                               errors.productCategoryName =
                                 'Product Category Name is  required';
                             }
-                            debugger
+                            
                             let check=false;
                             if (
                               product_category_list &&

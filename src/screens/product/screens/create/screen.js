@@ -1150,8 +1150,8 @@ try {
 																		{props.errors.purchaseUnitPrice &&
 																			props.touched.purchaseUnitPrice && (
 																				<div className="invalid-feedback">
-																					disabled={props.values.isInventoryEnabled===true }
 																					{props.errors.purchaseUnitPrice}
+																					{props.values.isInventoryEnabled===true }
 																				</div>
 																			)}
 																	</FormGroup>

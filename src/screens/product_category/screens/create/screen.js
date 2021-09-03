@@ -112,6 +112,7 @@ class CreateProductCategory extends React.Component {
 
 					if (this.state.createMore) {
 						resetForm(this.state.initValue);
+						this.componentDidMount()
 						this.setState({
 							createMore: false,
 						});

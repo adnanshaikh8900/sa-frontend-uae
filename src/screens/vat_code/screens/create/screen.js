@@ -136,6 +136,7 @@ class CreateVatCode extends React.Component {
 						this.setState({
 							createMore: false,
 						});
+						this.componentDidMount()
 					} else {
 						this.props.history.push('/admin/master/vat-category');
 					}

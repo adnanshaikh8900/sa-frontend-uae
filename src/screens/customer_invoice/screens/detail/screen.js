@@ -329,7 +329,7 @@ class DetailCustomerInvoice extends React.Component {
 	};
 	checkAmount=(discount)=>{
 		const { initValue } = this.state;
-			if(discount > initValue.totalAmount){
+			if(discount >= initValue.totalAmount){
 					this.setState({
 						param:true
 					});
@@ -776,10 +776,10 @@ min="0"
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net: total_net > discount ? total_net - discount : 0,
-						invoiceVATAmount: total_vat > 0 ? total_vat : 0,
-						discount: total_net > discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : 0,
+						total_net: discount ? total_net - discount : total_net,
+						invoiceVATAmount: total_vat,
+						discount:  discount ? discount : 0,
+						totalAmount: total_net > discount ? total - discount : total - discount,
 					},
 				},
 			},
@@ -854,7 +854,7 @@ min="0"
 		formData.append(
 			'invoiceDueDate',
 			typeof invoiceDueDate === 'string'
-				? moment(invoiceDueDate, 'DD/MM/YYYY').toDate()
+				? invoiceDueDate
 				: invoiceDueDate,
 		);
 

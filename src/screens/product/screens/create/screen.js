@@ -404,11 +404,11 @@ try {
 													}
 													if (values.inventoryPurchasePrice > values.salesUnitPrice) {
 														errors.inventoryPurchasePrice = 
-														'Purchase price cannot be greater than Sales price'
+														'Purchase price cannot be greater than Sales price';
 													}
 													else if (values.purchaseUnitPrice > values.salesUnitPrice) {
 														errors.purchaseUnitPrice = 
-														'Purchase price cannot be greater than Sales price'
+														'Purchase price cannot be greater than Sales price';
 													}
 													return errors;
 												}}
@@ -1150,6 +1150,7 @@ try {
 																		{props.errors.purchaseUnitPrice &&
 																			props.touched.purchaseUnitPrice && (
 																				<div className="invalid-feedback">
+																					disabled={props.values.isInventoryEnabled===true }
 																					{props.errors.purchaseUnitPrice}
 																				</div>
 																			)}

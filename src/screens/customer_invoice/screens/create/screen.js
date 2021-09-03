@@ -159,6 +159,7 @@ class CreateCustomerInvoice extends React.Component {
 			basecurrency:[],
 			inventoryList:[],
 			param:false,
+			date1:'',
 		};
 
 		this.formRef = React.createRef();
@@ -892,10 +893,10 @@ min="0"
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net: total_net > discount ? total_net - discount : 0,
-						invoiceVATAmount: total_vat > 0 ? total_vat : 0,
-						discount: total_net > discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : 0,
+						total_net: discount ? total_net - discount : total_net,
+						invoiceVATAmount: total_vat,
+						discount:  discount ? discount : 0,
+						totalAmount: total_net > discount ? total - discount : total - discount,
 					},
 				},
 			},
@@ -944,7 +945,7 @@ min="0"
 		);
 		formData.append(
 			'invoiceDueDate',
-			invoiceDueDate ? moment(invoiceDueDate, 'DD/MM/YYYY').toDate() : null,
+			invoiceDueDate ? invoiceDueDate  : null,
 		);
 		formData.append(
 			'invoiceDate',
@@ -1082,7 +1083,7 @@ min="0"
 	};
 	checkAmount=(discount)=>{
 		const { initValue } = this.state;
-			if(discount > initValue.totalAmount){
+			if(discount >= initValue.totalAmount){
 					this.setState({
 						param:true
 					});
@@ -2313,7 +2314,7 @@ min="0"
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																					{this.state.customer_currency_symbol}
+																					{this.state.customer_currency_symbol} &nbsp;
 																						{initValue.totalAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																					</label>
 																		

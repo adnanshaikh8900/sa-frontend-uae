@@ -107,6 +107,7 @@ class DetailSupplierInvoice extends React.Component {
 			supplier_currency: '',
 			disabled: false,
 			disabled1:false,
+			date:'',
 		};
 
 		// this.options = {
@@ -902,10 +903,10 @@ class DetailSupplierInvoice extends React.Component {
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net: total_net > discount ? total_net - discount : 0,
-						invoiceVATAmount: total_vat > 0 ? total_vat : 0,
-						discount: total_net > discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : 0,
+						total_net: discount ? total_net - discount : total_net,
+						invoiceVATAmount: total_vat,
+						discount:  discount ? discount : 0,
+						totalAmount: total_net > discount ? total - discount : total - discount, 
 					},
 				},
 			},
@@ -948,12 +949,8 @@ class DetailSupplierInvoice extends React.Component {
 				? moment(invoiceDate, 'DD/MM/YYYY').toDate()
 				: invoiceDate,
 		);
-		formData.append(
-			'invoiceDueDate',
-			typeof invoiceDueDate === 'string'
-				? moment(invoiceDueDate, 'DD/MM/YYYY').toDate()
-				: invoiceDueDate,
-		);
+	
+		formData.append('invoiceDueDate', invoiceDueDate ? invoiceDueDate : '');
 		formData.append('receiptNumber', receiptNumber ? receiptNumber : '');
 		formData.append(
 			'contactPoNumber',
@@ -1194,9 +1191,23 @@ class DetailSupplierInvoice extends React.Component {
 
 		return supplier_currencyCode;
 	}
+	checkAmount=(discount)=>{
+		const { initValue } = this.state;
+		   if(discount >= initValue.totalAmount){
+				   this.setState({
+					   param:true
+				   });
+		   }
+		   else{
+			   this.setState({
+				   param:false
+			   });
+		   }
+
+	   }
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, discountOptions, initValue, loading, dialog } = this.state;
+		const { data, discountOptions, initValue, loading, dialog,param } = this.state;
 
 		const { project_list, currency_list,currency_convert_list, supplier_list,universal_currency_list } = this.props;
 
@@ -1235,6 +1246,14 @@ class DetailSupplierInvoice extends React.Component {
 													ref={this.formRef}
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values);
+													}}
+													validate={(values) => {
+														let errors = {};
+														if (param === true) {
+															errors.discount =
+																'Discount amount Cannot be greater than Invoice Total Amount';
+														}
+														return errors;
 													}}
 													validationSchema={Yup.object().shape({
 														invoice_number: Yup.string().required(
@@ -2139,6 +2158,7 @@ class DetailSupplierInvoice extends React.Component {
 																											},
 																										);
 																									}
+																									this.checkAmount(option.target.value)
 																								}}
 																							/>
 																						</FormGroup>

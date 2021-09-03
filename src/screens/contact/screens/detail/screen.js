@@ -70,6 +70,7 @@ class DetailContact extends React.Component {
 			current_contact_id: null,
 			disabled: false,
 			disabled1:false,
+			checkmobileNumberParam:false,
 			
 		};
 		// this.regEx = /^[0-9\d]+$/;
@@ -311,7 +312,7 @@ class DetailContact extends React.Component {
 			contact_type_list,
 			state_list,
 		} = this.props;
-		const { initValue, loading, dialog } = this.state;
+		const { initValue, loading, dialog, checkmobileNumberParam } = this.state;
 		return (
 			<div className="create-contact-screen">
 				<div className="animated fadeIn">
@@ -340,6 +341,20 @@ class DetailContact extends React.Component {
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values, resetForm);
 													}}
+													validate={(values) => {
+														let errors = {};
+	
+														if (checkmobileNumberParam === true) {
+														errors.mobileNumber =
+														'Invalid mobile number';
+														}
+														// if (param === true) {
+														// 	errors.discount =
+														// 		'Discount amount Cannot be greater than Invoice Total Amount';
+														// }
+														return errors;
+													}}
+					
 													validationSchema={Yup.object().shape({
 														firstName: Yup.string().required(
 															'First Name is Required',
@@ -697,17 +712,19 @@ class DetailContact extends React.Component {
 																				props.handleChange('mobileNumber')(
 																					option,
 																				);
+																				option.length!=12 ?  this.setState({checkmobileNumberParam:true}) :this.setState({checkmobileNumberParam:false});
 																			}}
-																			className={
-																				props.errors.mobileNumber &&
-																				props.touched.mobileNumber
-																					? 'is-invalid'
-																					: ''
-																			}
+																			isValid
+																			// className={
+																			// 	props.errors.mobileNumber &&
+																			// 	props.touched.mobileNumber
+																			// 		? 'is-invalid'
+																			// 		: ''
+																			// }
 																		/>
 																		{props.errors.mobileNumber &&
 																			props.touched.mobileNumber && (
-																				<div className="invalid-feedback">
+																				<div style={{color:"red"}}>
 																					{props.errors.mobileNumber}
 																				</div>
 																			)}

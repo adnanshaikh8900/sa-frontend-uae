@@ -996,7 +996,7 @@ min="0"
 	deleterfq = () => {
 		const message1 =
         <text>
-        <b>Delete Request For Quotation?</b>
+        <b>Delete Goods Received Note?</b>
         </text>
         const message = 'This Good Received Note will be deleted permanently and cannot be recovered. ';
 		this.setState({

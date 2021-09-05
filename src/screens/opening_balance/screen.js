@@ -474,8 +474,10 @@ class OpeningBalance extends React.Component {
 			opening_balance_list,
 			universal_currency_list,
 		} = this.props;
-		console.log(opening_balance_list)
-
+		
+		console.log(opening_balance_list,"opening_balance_list")
+		let opening_balance_list1=	Object.assign({},opening_balance_list)
+		console.log(opening_balance_list1,"opening_balance_list1")
 		return (
 			<div className="expense-screen">
 				<div className="animated fadeIn">
@@ -548,7 +550,7 @@ class OpeningBalance extends React.Component {
 											selectRow={this.selectRowProp}
 											search={false}
 											options={this.options}
-											data={opening_balance_list ? opening_balance_list : []}
+											data={opening_balance_list ? opening_balance_list.data : []}
 											version="4"
 											hover
 											keyField="transactionCategoryBalanceId"
@@ -556,9 +558,14 @@ class OpeningBalance extends React.Component {
 											true
 											}
 											remote
+											// fetchInfo={{
+											// 	dataTotalSize: opening_balance_list1.length
+											// 		? opening_balance_list1.length
+											// 		: 0,
+											// }}
 											fetchInfo={{
-												dataTotalSize: opening_balance_list.length
-													? opening_balance_list.length
+												dataTotalSize: opening_balance_list && opening_balance_list && opening_balance_list.data && opening_balance_list.count
+													? opening_balance_list.count
 													: 0,
 											}}
 											className="supplier-invoice-table"

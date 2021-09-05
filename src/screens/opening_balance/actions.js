@@ -25,7 +25,11 @@ export const getTransactionCategoryList = () => {
 export const getOpeningBalanceList = (obj) => {
   console.log('aadsf', obj)
   let pageNo = obj.pageNo ? obj.pageNo : '';
-  let pageSize = obj.pageSize ? obj.pageSize : '';
+  let pageSize='';
+  if(obj.pageSize===10)
+   pageSize = 15;
+  else
+   pageSize = obj.pageSize ? obj.pageSize : '';
   let order = obj.order ? obj.order : '';
   let sortingCol = obj.sortingCol ? obj.sortingCol : '';
   let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false

@@ -639,6 +639,14 @@ renderName=(cell,row)=>{
 														//   selectedVatCategory: null,
 														// })
 													}}
+													validate={(values) => {
+														let errors = {};
+														if (values.purchaseUnitPrice > values.salesUnitPrice) {
+															errors.purchaseUnitPrice = 
+															'Purchase price cannot be greater than Sales price';
+														}
+														return errors;
+													}}
 													validationSchema={Yup.object().shape({
 														productName: Yup.string().required(
 															'Product Name is Required',

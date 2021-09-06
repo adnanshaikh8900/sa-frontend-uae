@@ -375,7 +375,7 @@ class CreateRole extends React.Component {
 																	});
 																}}
 															>
-																<i className="fa fa-dot-circle-o"></i> 
+																<i className="fa fa-dot-circle-o"></i>{' '} 
 																{this.state.disabled
 																			? 'Creating...'
 																			: strings.Create }
@@ -391,7 +391,7 @@ class CreateRole extends React.Component {
 																	});
 																}}
 															>
-																<i className="fa fa-refresh"></i>
+																<i className="fa fa-refresh"></i>{' '}
 																 {this.state.disabled
 																			? 'Creating...'
 																			: strings.CreateandMore }

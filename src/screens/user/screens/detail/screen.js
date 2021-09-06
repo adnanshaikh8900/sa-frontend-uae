@@ -76,6 +76,7 @@ class DetailUser extends React.Component {
 			imageState: true,
 			current_user_id: null,
 			disabled: false,
+			disabled1:false,
 			timezone: [],
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
@@ -183,6 +184,7 @@ class DetailUser extends React.Component {
 	};
 
 	removeUser = () => {
+		this.setState({ disabled1: true });
 		const { current_user_id } = this.state;
 			this.props.userDetailActions
 			.deleteUser(current_user_id)
@@ -912,9 +914,12 @@ class DetailUser extends React.Component {
 																			type="button"
 																			color="danger"
 																			className="btn-square"
+																				disabled1={this.state.disabled1}
 																			onClick={this.deleteUser}
 																		>
-																			<i className="fa fa-trash"></i> {strings.Delete}
+																			<i className="fa fa-trash"></i> {this.state.disabled1
+																			? 'Deleting...'
+																			: strings.Delete }
 																		</Button>
 																	</FormGroup>
 																	)}
@@ -935,9 +940,12 @@ class DetailUser extends React.Component {
 																			type="submit"
 																			color="primary"
 																			className="btn-square mr-3"
+																			disabled={this.state.disabled}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																		   {strings.Update}
+																		 {this.state.disabled
+																			? 'Updating...'
+																			: strings.Update }
 																		</Button>
 																		<Button
 																			color="secondary"
@@ -948,7 +956,9 @@ class DetailUser extends React.Component {
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i> {strings.Cancel}
+																			<i className="fa fa-ban"></i>{this.state.disabled1
+																			? 'Deleting...'
+																			: strings.Cancel }
 																		</Button>
 																	</FormGroup>
 																</Col>

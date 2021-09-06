@@ -921,10 +921,10 @@ class DetailBankAccount extends React.Component {
 																	name="button"
 																	color="danger"
 																	className="btn-square"
-																	disabled={this.state.disabled1}
+																	disabled1={this.state.disabled1}
 																	onClick={() => this.closeBankAccount(current_bank_account_id)}
 																>
-																	<i className="fa fa-trash"></i>{' '}{this.state.disabled
+																	<i className="fa fa-trash"></i>{' '}{this.state.disabled1
 																		? 'Deleting...'
 																		: strings.Delete}
 																</Button>
@@ -952,7 +952,9 @@ class DetailBankAccount extends React.Component {
 																		);
 																	}}
 																>
-																	<i className="fa fa-ban"></i> {strings.Cancel}
+																	<i className="fa fa-ban"></i>{' '}{this.state.disabled1
+																		? 'Deleting...'
+																		: strings.Cancel}
 																</Button>
 															</FormGroup>
 														</Col>

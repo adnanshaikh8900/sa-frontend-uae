@@ -74,6 +74,7 @@ class ReconcileTransaction extends React.Component {
 			transaction_id: null,
 			dialog: null,
 			view: false,
+			disabled: false,
 		};
 		this.options = {
 			page: 1,
@@ -141,6 +142,7 @@ class ReconcileTransaction extends React.Component {
 	};
 
 	handleSubmit = (data, resetForm) => {
+			this.setState({ disabled: true });
 		const bankAccountId = this.props.location.state.bankAccountId;
 		const { closingBalance, date } = data;
 		let formData = new FormData();
@@ -151,6 +153,7 @@ class ReconcileTransaction extends React.Component {
 			.reconcilenow(formData)
 			.then((res) => {
 				if (res.status === 200) {
+					this.setState({ disabled: false });
 					resetForm();
 					if (res.data.status === 1) {
 						this.props.commonActions.tostifyAlert('success', res.data.message);
@@ -397,10 +400,13 @@ min="0"
 																			type="button"
 																			color="primary"
 																			className="btn-square mr-3"
+																			disabled={this.state.disabled}
 																			onClick={props.handleSubmit}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			{strings.reconcile}
+																			 {this.state.disabled
+																			? 'Reconciling...'
+																			: strings.reconcile }
 																		</Button>
 																		<Button
 																			color="secondary"

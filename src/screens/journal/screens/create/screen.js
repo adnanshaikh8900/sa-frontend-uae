@@ -1147,7 +1147,7 @@ min="0"
 																			);
 																		}}
 																	>
-																		<i className="fa fa-repeat"></i> 
+																		<i className="fa fa-repeat"></i>{' '} 
 																		{this.state.disabled
 																			? 'Creating...'
 																			: strings.CreateandMore }

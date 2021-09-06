@@ -284,7 +284,7 @@ class RecordCustomerPayment extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Invoice Updated Successfully.',
+					'Payment Recorded Successfully.',
 				);
 				this.props.history.push('/admin/income/customer-invoice');
 			})

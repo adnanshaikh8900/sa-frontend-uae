@@ -196,6 +196,8 @@ class ExplainTrasactionDetail extends React.Component {
 								: '',
 							//	currency: res.data.currencyCode ? res.data.currencyCode : '',
 						},
+						transactionCategoryLabel:res.data.transactionCategoryLabel,
+						transactionCategoryId:res.data.transactionCategoryId
 					},
 					() => {
 						if (
@@ -461,6 +463,8 @@ class ExplainTrasactionDetail extends React.Component {
 			transactionId,
 			expenseCategory,
 		} = data;
+
+		console.log("data",data)
 		if (
 			(invoiceIdList && coaCategoryId.label === 'Sales') ||
 			(invoiceIdList && coaCategoryId.label === 'Supplier Invoice')
@@ -492,10 +496,10 @@ class ExplainTrasactionDetail extends React.Component {
 		formData.append('amount', amount ? amount : '');
 		formData.append('dueAmount', dueAmount ? dueAmount : 0);
 		formData.append('coaCategoryId', coaCategoryId ? id : '');
-		if (transactionCategoryId ) {
+		if (this.state.transactionCategoryId ) {
 			formData.append(
 				'transactionCategoryId',
-				transactionCategoryId && transactionCategoryId.value !== undefined ? transactionCategoryId.value : transactionCategoryId,
+				this.state.transactionCategoryId && this.state.transactionCategoryId.value !== undefined ? this.state.transactionCategoryId.value : this.state.transactionCategoryId,
 			);
 		}
 		if (customerId && coaCategoryId.value === 2) {
@@ -559,6 +563,7 @@ class ExplainTrasactionDetail extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachment', this.uploadFile.files[0]);
 		}
+
 		this.props.transactionDetailActions
 			.updateTransaction(formData)
 			.then((res) => {
@@ -577,7 +582,7 @@ class ExplainTrasactionDetail extends React.Component {
 					err && err.data ? err.data.message : 'Something Went Wrong',
 				);
 			});
-		// }
+		
 	};
 	handleFileChange = (e, props) => {
 		e.preventDefault();
@@ -733,7 +738,37 @@ class ExplainTrasactionDetail extends React.Component {
 			tmpSupplier_list.push(obj)
 		})
 
-		console.log(transactionCategoryList)
+		let transactionCategoryValue = {
+			label:''
+		} 
+
+
+		if(this.state.transactionCategoryList && this.state.transactionCategoryList.categoriesList) {
+
+			let allCategories = [];
+
+			this.state.transactionCategoryList.categoriesList.forEach((cat)=>{
+
+				if(cat.options && Array.isArray(cat.options)) {
+					cat.options.forEach((opt)=>{
+
+						allCategories.push(opt)
+
+					})
+				}
+			});
+
+
+			if(this.state.transactionCategoryId) {
+				let labelObj = allCategories.find((ac)=>{
+					return ac.value == this.state.transactionCategoryId
+				})
+
+				if(labelObj) {
+					transactionCategoryValue.label = labelObj.label
+				}
+			}	
+		}
 		return (
 			<div className="detail-bank-transaction-screen">
 				<div className="animated fadeIn">
@@ -1476,23 +1511,12 @@ min="0"
 																								? transactionCategoryList.categoriesList
 																								: []
 																						}
-																						value={
-																							transactionCategoryList
-																							  ? props.values.transactionCategoryId
-																							  : ''
-																						  }
+																						value={transactionCategoryValue}
 																						onChange={(option) => {
 																						
-																							if (option && option.value) {
-																								props.handleChange(
-																									'transactionCategoryId',
-																								)(option);
-																							} else {
-																								props.handleChange(
-																									'transactionCategoryId',
-																								)('');
-																							}
-																							
+																							this.setState({
+																								transactionCategoryId:option.value
+																							})
 																							if (option.label !== 'Salaries and Employee Wages' &&
 																							 option.label !== 'Owners Drawing' &&  
 																							option.label !== 'Dividend' &&

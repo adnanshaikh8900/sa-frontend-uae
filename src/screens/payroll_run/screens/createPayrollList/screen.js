@@ -853,9 +853,9 @@ class CreatePayrollList extends React.Component {
 
 																				}}
 																				className={`form-control ${props.errors.payrollDate &&
-																						props.touched.payrollDate
-																						? 'is-invalid'
-																						: ''
+																					props.touched.payrollDate
+																					? 'is-invalid'
+																					: ''
 																					}`}
 																			/>
 																			{props.errors.payrollDate &&
@@ -876,9 +876,9 @@ class CreatePayrollList extends React.Component {
 																				id="date"
 																				name="startDate"
 																				className={`form-control ${props.errors.startDate &&
-																						props.touched.startDate
-																						? 'is-invalid'
-																						: ''
+																					props.touched.startDate
+																					? 'is-invalid'
+																					: ''
 																					}`}
 																				placeholderText={strings.OrderDate}
 																				selected={props.values.startDate}
@@ -910,9 +910,9 @@ class CreatePayrollList extends React.Component {
 																				id="date"
 																				name="endDate"
 																				className={`form-control ${props.errors.endDate &&
-																						props.touched.endDate
-																						? 'is-invalid'
-																						: ''
+																					props.touched.endDate
+																					? 'is-invalid'
+																					: ''
 																					}`}
 																				placeholderText={strings.OrderDueDate}
 																				selected={props.values.endDate}
@@ -1028,39 +1028,7 @@ class CreatePayrollList extends React.Component {
 																			</Button>
 													</Col> */}
 
-																	<Col lg={3}>
-																		<FormGroup>
-																			<Label htmlFor="contactId">
 
-																				Select Approver
-																			</Label>
-																			<Select
-																				isDisabled={this.disable() ? true : false}
-																				styles={customStyles}
-																				id="userId"
-																				name="userId"
-																				placeholder={"Select Approver"}
-																				options={
-																					approver_dropdown_list.data
-																						? selectOptionsFactory.renderOptions(
-																							'name',
-																							'userId',
-																							approver_dropdown_list.data,
-																							'User',
-																						)
-																						: []
-																				}
-
-																				onChange={(option) => {
-																					if (option && option.value) {
-																						this.setState({ userId: option.value })
-
-																					}
-																				}}
-																			/>
-
-																		</FormGroup>
-																	</Col>
 																	{/* <Col >
 														<FormGroup className="mt-3 ">
 															<Label htmlFor="contactId">
@@ -1154,8 +1122,41 @@ class CreatePayrollList extends React.Component {
 																		</Button>
 																	</FormGroup>
 
+																	<Col></Col>
+																	<Col></Col>
+																	<Col lg={3} className="pull-right mt-3">
+																		<FormGroup>
+																			{/* <Label htmlFor="contactId">
 
+																				Select Approver
+																			</Label> */}
+																			<Select
+																				isDisabled={this.disable() ? true : false}
+																				styles={customStyles}
+																				id="userId"
+																				name="userId"
+																				placeholder={"Select Approver"}
+																				options={
+																					approver_dropdown_list.data
+																						? selectOptionsFactory.renderOptions(
+																							'name',
+																							'userId',
+																							approver_dropdown_list.data,
+																							'User',
+																						)
+																						: []
+																				}
 
+																				onChange={(option) => {
+																					if (option && option.value) {
+																						this.setState({ userId: option.value })
+
+																					}
+																				}}
+																			/>
+
+																		</FormGroup>
+																	</Col>
 																</Row>
 
 															</Form>
@@ -1185,7 +1186,7 @@ class CreatePayrollList extends React.Component {
 																<Col>
 																	<Button
 																		color="secondary"
-																		className="btn-square"
+																		className="btn-square pull-right"
 																		onClick={() => {
 																			this.props.history.push('/admin/payroll/payrollrun')
 																		}}

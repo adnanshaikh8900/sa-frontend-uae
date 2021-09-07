@@ -42,6 +42,7 @@ import { PDFExport } from '@progress/kendo-react-pdf';
 import ReactToPrint from 'react-to-print';
 import { Loader } from 'components';
 import * as PayrollEmployeeActions from '../../../../payrollemp/actions'
+import * as CreatePayrollActions from '../actions';
 var converter = require('number-to-words');
 
 const mapStateToProps = (state) => {
@@ -56,7 +57,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
+		commonActions: bindActionCreators(CommonActions, dispatch),
 		payrollEmployeeActions: bindActionCreators(PayrollEmployeeActions, dispatch),
+		createPayrollActions: bindActionCreators(CreatePayrollActions, dispatch),
 	};
 };
 const customStyles = {
@@ -188,7 +191,7 @@ class AddEmployeesModal extends React.Component {
             sortingCol: this.options.sortName ? this.options.sortName : ''
         }
         const postData = { ...filterData, ...paginationData, ...sortingData }
-        this.props.payrollEmployeeActions.getPayrollEmployeeList(postData).then((res) => {
+        this.props.payrollEmployeeActions.getPayrollEmployeeList2(postData).then((res) => {
             if (res.status === 200) {
 				
                 this.setState({ loading: false })
@@ -288,7 +291,34 @@ class AddEmployeesModal extends React.Component {
             this.initializeData()
         }
     }
+	// addEmployees=()=>{
+	// 	console.log(this.state.selectedRows,"selectedRows")
+	// }
+	addEmployees = () => {
+		 
+		this.setState({ disabled: true });
+		// const { employeeIds } = data;
+	
 
+		let employeeList =[];
+		if(this.state.selectedRows){
+		Object.keys(this.state.selectedRows).forEach(key => {
+		 employeeList.push(this.state.selectedRows[key]) 
+		});}
+	debugger
+
+		this.props.createPayrollActions
+			.addMultipleEmployees( this.state.payroll_id,employeeList)
+			.then((res) => {
+				if (res.status === 200) {
+					this.props.commonActions.tostifyAlert('success','Employees added Successfully')
+					this.tableApiCallsOnStatus()
+					// resetForm(this.state.initValue)
+				}
+			}).catch((err) => {
+				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+			})
+	}
     getCsvData = () => {
         if (this.state.csvData.length === 0) {
             let obj = {
@@ -457,8 +487,9 @@ class AddEmployeesModal extends React.Component {
 								<Button
 									color="primary"
 									className="btn-square "
-									onClick={this.generateSalary}
+									onClick={this.addEmployees}
 									// disabled={selectedRows.length === 0}
+
 								>
 									<i class="fas fa-check-double mr-1"></i>
 

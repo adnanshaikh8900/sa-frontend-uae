@@ -163,7 +163,7 @@ class ExplainTrasactionDetail extends React.Component {
 								: '',
 							invoiceError: '',
 							expenseCategory: res.data.expenseCategory,
-						//	currency: res.data.currencyCode ? res.data.currencyCode : '',
+							currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
 						},
 						unexplainValue: {
 							bankId: bankId,
@@ -194,7 +194,7 @@ class ExplainTrasactionDetail extends React.Component {
 							expenseCategory: res.data.expenseCategory
 								? parseInt(res.data.expenseCategory)
 								: '',
-							//	currency: res.data.currencyCode ? res.data.currencyCode : '',
+							currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
 						},
 						transactionCategoryLabel:res.data.transactionCategoryLabel,
 						transactionCategoryId:res.data.transactionCategoryId
@@ -443,6 +443,7 @@ class ExplainTrasactionDetail extends React.Component {
 		// 	return false;
 		// } 
 		// else {
+			
 		const {
 			bankId,
 			date,
@@ -508,25 +509,36 @@ class ExplainTrasactionDetail extends React.Component {
 		if (vendorId && coaCategoryId.label === 'Supplier Invoice') {
 			formData.append('vendorId', vendorId.value);
 		}
-		if (
-			currencyCode &&
-			(coaCategoryId.label === 'Expense' ||
-				coaCategoryId.label === 'Admin Expense' ||
-				coaCategoryId.label === 'Other Expense' ||
-				coaCategoryId.label === 'Cost Of Goods Sold'
+		// if (
+		// 	currencyCode &&
+		// 	(coaCategoryId.label === 'Expense' ||
+		// 		coaCategoryId.label === 'Admin Expense' ||
+		// 		coaCategoryId.label === 'Other Expense' ||
+		// 		coaCategoryId.label === 'Cost Of Goods Sold'
 			
-			)
+		// 	)
+		// ) {
+		// 	formData.append('currencyCode', currencyCode.value);
+		// }
+		debugger
+		// if (
+		// 	currencyCode &&
+		// 	(
+		// 		coaCategoryId.label === 'Supplier Invoice' ||
+		// 		coaCategoryId.label === 'Sales')
+		// ) {
+		// 	formData.append('currencyCode', currencyCode );
+		// }
+		if (
+			currencyCode && currencyCode.value
+			
 		) {
 			formData.append('currencyCode', currencyCode.value);
-		}
-
-		if (
-			currencyCode &&
-			(
-				coaCategoryId.label === 'Supplier Invoice' ||
-				coaCategoryId.label === 'Sales')
-		) {
-			formData.append('currencyCode', currencyCode );
+		}else 
+		{
+			if(currencyCode){
+				formData.append('currencyCode', currencyCode);
+			}
 		}
 		
 		if (
@@ -1722,7 +1734,7 @@ min="0"
 																{props.values.coaCategoryId &&
 																	props.values.coaCategoryId.label ===
 																	'Expense' && (
-																		<Row>
+																		<Row  style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																			<Col lg={2}>
 																				<Input
 																					disabled
@@ -1855,7 +1867,7 @@ min="0"
 																{props.values.coaCategoryId &&
 																	props.values.coaCategoryId.label ===
 																	'Sales' && (
-																		<Row>
+																		<Row  style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																			<Col lg={2}>
 																				<Input
 																					disabled
@@ -1975,7 +1987,7 @@ min="0"
 																{props.values.coaCategoryId &&
 																	props.values.coaCategoryId.label ===
 																	'Supplier Invoice' && (
-																		<Row>
+																		<Row  style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																			<Col lg={2}>
 																				<Input
 																					disabled

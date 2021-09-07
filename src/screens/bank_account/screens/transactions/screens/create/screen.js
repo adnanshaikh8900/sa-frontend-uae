@@ -80,6 +80,7 @@ class CreateBankTransaction extends React.Component {
 		this.state = {
 			language: window['localStorage'].getItem('language'),
 			createMore: false,
+				disabled: false,
 			fileName: '',
 			initValue: {
 				transactionId: '',
@@ -258,6 +259,7 @@ class CreateBankTransaction extends React.Component {
 	};
 
 	handleSubmit = (data, resetForm) => {
+			this.setState({ disabled: true });
 		let bankAccountId =
 			this.props.location.state && this.props.location.state.bankAccountId
 				? this.props.location.state.bankAccountId
@@ -1507,6 +1509,7 @@ min="0"
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
+																			disabled={this.state.disabled}
 																		onClick={() => {
 																			this.setState(
 																				{ createMore: false },
@@ -1517,12 +1520,15 @@ min="0"
 																		}}
 																	>
 																		<i className="fa fa-dot-circle-o"></i>{' '}
-																		{strings.Create}
+																	{this.state.disabled
+																			? 'Creating...'
+																			: strings.Create }
 																	</Button>
 																	<Button
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
+																		disabled={this.state.disabled}
 																		onClick={() => {
 																			this.setState(
 																				{ createMore: true },
@@ -1532,7 +1538,10 @@ min="0"
 																			);
 																		}}
 																	>
-																		<i className="fa fa-repeat"></i>{' '} {strings.CreateandMore}
+																		<i className="fa fa-repeat"></i>{' '} 	{this.state.disabled
+																			? 'Creating...'
+																			: strings.CreateandMore }
+															
 																	</Button>
 																	<Button
 																		color="secondary"

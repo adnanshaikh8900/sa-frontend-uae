@@ -74,6 +74,8 @@ class DetailJournal extends React.Component {
 			initValue: {},
 			data: [],
 			submitJournal: false,
+		    disabled1:false,
+			disabled2: false,
 		};
 
 		this.formRef = React.createRef();
@@ -600,6 +602,7 @@ min="0"
 	};
 
 	removeJournal = () => {
+		this.setState({ disabled1: true });
 		const { current_journal_id } = this.state;
 		this.props.journalDetailActions
 			.deleteJournal(current_journal_id)
@@ -652,10 +655,13 @@ min="0"
 				totalDebitAmount: initValue.totalDebitAmount,
 				journalLineItems: data,
 			};
+				this.setState({ disabled2: true });
 			this.props.journalDetailActions
+		
 				.updateJournal(postData)
 				.then((res) => {
 					if (res.status === 200) {
+							this.setState({ disabled2: false });
 						this.props.commonActions.tostifyAlert(
 							'success',
 							'Journal Updated Successfully',
@@ -1138,6 +1144,7 @@ min="0"
 																				type="button"
 																				color="danger"
 																				className="btn-square"
+																						disabled1={this.state.disabled1}
 																				disabled={
 																					props.values.postingReferenceType ===
 																					'MANUAL'
@@ -1146,7 +1153,9 @@ min="0"
 																				}
 																				onClick={this.deleteJournal}
 																			>
-																				<i className="fa fa-trash"></i>  {strings.Delete}
+																				<i className="fa fa-trash"></i>  {this.state.disabled1
+																			? 'Deleting...'
+																			: strings.Delete }
 																			</Button>
 																		)}
 																	</FormGroup>
@@ -1163,6 +1172,7 @@ min="0"
 																						: true
 																				}
 																				className="btn-square mr-3"
+																					disabled2={this.state.disabled2}
 																				onClick={() => {
 																					this.setState(
 																						{
@@ -1175,7 +1185,9 @@ min="0"
 																				}}
 																			>
 																				<i className="fa fa-dot-circle-o"></i>{' '}
-																				 {strings.Update}
+																				{this.state.disabled2
+																			? 'Updating...'
+																			: strings.Update }
 																			</Button>
 																		)}
 																		<Button
@@ -1188,7 +1200,9 @@ min="0"
 																				);
 																			}}
 																		>
-																			<i className="fa fa-ban"></i> {strings.Cancel}
+																			<i className="fa fa-ban"></i> {this.state.disabled1
+																			? 'Deleting...'
+																			: strings.Cancel }
 																		</Button>
 																	</FormGroup>
 																</Col>

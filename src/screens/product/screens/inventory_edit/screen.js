@@ -82,6 +82,7 @@ class InventoryEdit extends React.Component {
 			currentData: {},
 			selectedRows: [],
 			openWarehouseModal: false,
+		    disabled: false,
 			dialog: null,
 			current_inventory_id: null,
 			openInventoryModel: false,
@@ -233,10 +234,13 @@ class InventoryEdit extends React.Component {
 		
 		};
 		const postData = this.getData(dataNew);
+		this.setState({ disabled: true });
+
 		this.props.productActions
 			.updateInventory(postData)
 			.then((res) => {
 				if (res.status === 200) {
+					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
 						'success',
 						'Product Updated Successfully',
@@ -678,9 +682,12 @@ min="0"
 																			name="submit"
 																			color="primary"
 																			className="btn-square mr-3"
+																				disabled={this.state.disabled}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																		 {strings.Update}
+																		{this.state.disabled
+																			? 'Updating...'
+																			: strings.Update }
 																		</Button>
 																		<Button
 																			color="secondary"

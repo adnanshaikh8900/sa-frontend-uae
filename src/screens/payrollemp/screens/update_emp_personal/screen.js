@@ -718,7 +718,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                 'label',
                                                                                                 'value',
                                                                                                 this.bloodGroup,
-                                                                                                'Terms',
+                                                                                                'Blood Group',
                                                                                             )
                                                                                             : []
                                                                                     }
@@ -812,7 +812,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                 'label',
                                                                                                 'value',
                                                                                                 salary_role_dropdown.data,
-                                                                                                'SalaryRole',
+                                                                                                'Salary Role',
                                                                                             )
                                                                                             : []
                                                                                     }
@@ -867,7 +867,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                 'label',
                                                                                                 'value',
                                                                                                 designation_dropdown,
-                                                                                                'employeeDesignationId',
+                                                                                                'Employee Designation',
                                                                                             )
                                                                                             : []
                                                                                     }

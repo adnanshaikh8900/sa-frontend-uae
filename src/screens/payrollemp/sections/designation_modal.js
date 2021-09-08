@@ -37,6 +37,7 @@ class DesignationModal extends React.Component {
 			lastName: '',
 			middleName: '',
 			email: '',
+			disabled: false,
 			dob: new Date(),
 			},
 			state_list: [],
@@ -118,6 +119,7 @@ class DesignationModal extends React.Component {
             //  let resConfig = JSON.parse(res.config.data);
             
             if (res.status === 200) {
+				this.setState({ disabled: false });
             
                 resetForm();
             
@@ -126,6 +128,7 @@ class DesignationModal extends React.Component {
             }
         })
         .catch((err) => {
+			this.setState({ disabled: false });
             this.displayMsg(err);
             this.formikRef.current.setSubmitting(false);
         });
@@ -269,13 +272,16 @@ class DesignationModal extends React.Component {
 											type="button"
 											color="primary"
 											className="btn-square mr-3"
+											disabled={this.state.disabled}
 											onClick={() => {
 												this.setState( () => {
 													props.handleSubmit();
 												});
 											}}
 										>
-											<i className="fa fa-dot-circle-o"></i>  {strings.Create}
+											<i className="fa fa-dot-circle-o"></i>  {this.state.disabled
+																			? 'Creating...'
+																			: strings.Create }
 										</Button>
 										&nbsp;
 										<Button

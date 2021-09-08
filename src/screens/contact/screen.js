@@ -317,7 +317,7 @@ class Contact extends React.Component {
 		}
 	}
 	customName(cell, row) {
-		if (row.firstName.length > 15) {
+		if (row.fullName.length > 15) {
 			return `${cell}`;
 		}
 	}
@@ -514,7 +514,7 @@ class Contact extends React.Component {
 													>
 														<TableHeaderColumn
 															isKey
-															dataField="firstName"
+															dataField="fullName"
 															dataSort
 															columnTitle={this.customName}
 															className="table-header-bg"

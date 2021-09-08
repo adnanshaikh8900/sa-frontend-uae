@@ -1097,6 +1097,8 @@ validationCheck = (value) => {
                                                                             .required("Last Name is Required"),
                                                                             email: Yup.string()
                                                                             .required("Valid Email Required"),
+                                                                            mobileNumber:Yup.string()
+                                                                            .required("mobile number Required"),
                                                                             // salaryRoleId :  Yup.string()
                                                                             // .required(" Employee Role is required"),
                                                                             dob: Yup.date()
@@ -1274,12 +1276,12 @@ validationCheck = (value) => {
                                                                                                         className={
                                                                                                             props.errors.mobileNumber &&
                                                                                                                 props.touched.mobileNumber
-                                                                                                                ? 'is-invalid'
+                                                                                                                ? 'text-danger'
                                                                                                                 : ''
                                                                                                         }
                                                                                                     />
                                                                                                      {props.errors.mobileNumber && props.touched.mobileNumber && (
-                                                                                                        <div className="invalid-feedback">{props.errors.mobileNumber}</div>
+                                                                                                        <div className="text-danger">{props.errors.mobileNumber}</div>
                                                                                                     )}
                                                                                                    
                                                                                                 </FormGroup>

@@ -981,7 +981,7 @@ min="0"
 																	{props.values.coaCategoryId &&
 															props.values.coaCategoryId.label ===
 																'Expense' && (
-																	<Row>
+																	<Row  style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} >
 																	<Col lg={1}>
 																<Input
 																		disabled

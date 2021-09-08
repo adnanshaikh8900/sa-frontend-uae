@@ -64,6 +64,7 @@ class CreateSalaryRoles extends React.Component {
       language: window['localStorage'].getItem('language'),
       loading: false,
       createMore: false,
+      disabled: false,
       initValue: {
         salaryRoleName:''
       },
@@ -87,6 +88,7 @@ class CreateSalaryRoles extends React.Component {
 
   handleSubmit = (data, resetForm) => {
     this.setState({ disabled: true });
+    this.setState({ disabled: true });
 		const {
       salaryRoleName
 		} = data;
@@ -104,6 +106,7 @@ class CreateSalaryRoles extends React.Component {
     .createSalaryRole(formData)
     .then((res) => {
       if (res.status === 200) {
+        this.setState({ disabled: false });
         this.props.commonActions.tostifyAlert(
           'success',
            'New Salary Role Created Successfully')
@@ -117,6 +120,7 @@ class CreateSalaryRoles extends React.Component {
         }
       }
     }).catch((err) => {
+      this.setState({ disabled: false });
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
@@ -201,20 +205,24 @@ class CreateSalaryRoles extends React.Component {
                             <Row>
                               <Col lg={12} className="mt-5">
                                 <FormGroup className="text-right">
-                                  <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
+                                  <Button type="button" color="primary" className="btn-square mr-3" 		disabled={this.state.disabled} onClick={() => {
                                     this.setState({ createMore: false }, () => {
                                       props.handleSubmit()
                                     })
                                   }}>
-                                    <i className="fa fa-dot-circle-o"></i>  {strings.Create}
+                                    <i className="fa fa-dot-circle-o"></i>  	{this.state.disabled
+																			? 'Creating...'
+																			: strings.Create }
                                       </Button>
-                                  <Button name="button" color="primary" className="btn-square mr-3"
+                                  <Button name="button" color="primary" className="btn-square mr-3" 		disabled={this.state.disabled}
                                     onClick={() => {
                                       this.setState({ createMore: true }, () => {
                                         props.handleSubmit()
                                       })
                                     }}>
-                                    <i className="fa fa-refresh"></i>  {strings.CreateandMore}
+                                    <i className="fa fa-refresh"></i>  {this.state.disabled
+																			? 'Creating...'
+																			: strings.CreateandMore }
                                       </Button>
                                   <Button color="secondary" className="btn-square"
                                     onClick={() => { 	this.props.history.push('/admin/payroll/config',{tabNo:'1'}); }}>

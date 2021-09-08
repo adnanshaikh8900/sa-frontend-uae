@@ -57,6 +57,7 @@ class CustomerModal extends React.Component {
 				stateId: '',
 				telephone: '',
 				vatRegistrationNumber: '',
+				disabled: false,
 				checkmobileNumberParam:false,
 			},
 			state_list: [],
@@ -82,6 +83,7 @@ class CustomerModal extends React.Component {
 
 	// Create or Contact
 	handleSubmit = (data, resetForm, setSubmitting) => {
+		this.setState({ disabled: true });
 		const postData = this.getData(data);
 		this.props
 			.createCustomer(postData)
@@ -89,6 +91,7 @@ class CustomerModal extends React.Component {
 				let resConfig = JSON.parse(res.config.data);
 				
 				if (res.status === 200) {
+					this.setState({ disabled: false });
 					resetForm();
 					this.props.closeCustomerModal(true);
 
@@ -99,6 +102,7 @@ class CustomerModal extends React.Component {
 				}
 			})
 			.catch((err) => {
+				this.setState({ disabled: false });
 				this.displayMsg(err);
 				this.formikRef.current.setSubmitting(false);
 			});
@@ -935,9 +939,12 @@ errors.mobileNumber =
 											color="primary"
 											type="submit"
 											className="btn-square"
+											disabled={this.state.disabled}
 											disabled={isSubmitting}
 										>
-											<i className="fa fa-dot-circle-o"></i> {strings.Create}
+											<i className="fa fa-dot-circle-o"></i> 	{this.state.disabled
+																			? 'Creating...'
+																			: strings.Create }
 										</Button>
 										&nbsp;
 										<Button

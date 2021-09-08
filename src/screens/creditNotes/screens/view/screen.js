@@ -9,7 +9,7 @@ import ReactToPrint from 'react-to-print';
 
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
-
+import { Currency } from 'components';
 import './style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
 
@@ -240,8 +240,23 @@ this.props.supplierInvoiceDetailActions
 									<td>{moment(item.poReceiveDate).format(
 									'DD MMM YYYY',
 								)}</td> */}
-												<td>{item.totalAmount}</td>
-												<td>{item.totalVatAmount}</td>
+												<td>{item.totalAmount ? <Currency
+														value={item.totalAmount}
+														currencySymbol={
+															currencyData[0]
+																? currencyData[0].currencyIsoCode
+																: 'USD'
+														}
+													/>:0}</td>
+
+												<td>{item.totalVatAmount ? <Currency
+														value={item.totalVatAmount}
+														currencySymbol={
+															currencyData[0]
+																? currencyData[0].currencyIsoCode
+																: 'USD'
+														}
+													/>:0}</td>
 											
 											</tr>
 										);

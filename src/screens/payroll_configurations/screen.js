@@ -501,28 +501,28 @@ class PayrollConfigurations extends React.Component {
 
 							</Nav>
 							<TabContent activeTab={this.state.activeTab[0]}>
-								<TabPane tabId="1">
+								<TabPane tabId="1" >
 									<div className="employee-screen">
 										<div className="animated fadeIn">
 											{dialog}
 											{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
-											<Card>
+											{/* <Card> */}
 
 												{/* <div>
-        Change Language:   <select onChange={this.handleLanguageChange}>
-          <option value="en">En- English</option>
-          <option value="it">fr-french</option>
-          <option value="ar">ar-Arabic</option>
-        </select>
-      </div> */}
-											</Card>
-											<Card>
+												Change Language:   <select onChange={this.handleLanguageChange}>
+													<option value="en">En- English</option>
+													<option value="it">fr-french</option>
+													<option value="ar">ar-Arabic</option>
+												</select>
+											</div> */}
+											{/* </Card> */}
+											{/* <Card> */}
 												<CardHeader>
 													<Row>
 														<Col lg={12}>
-															<div className="h4 mb-0 d-flex align-items-center">
+															<div className="h4 mb-0 mt-0 d-flex align-items-center">
 																<i className="fas fa-object-group" />
-																<span className="ml-2"> {strings.SalaryRole}</span>
+																<span className="ml-2 "> {strings.SalaryRole}</span>
 															</div>
 														</Col>
 													</Row>
@@ -635,7 +635,7 @@ class PayrollConfigurations extends React.Component {
 
 													}
 												</CardBody>
-											</Card>
+											{/* </Card> */}
 										</div>
 									</div>
 								</TabPane>
@@ -647,7 +647,7 @@ class PayrollConfigurations extends React.Component {
 										<div className="animated fadeIn">
 											{dialog}
 											{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
-											<Card>
+											{/* <Card> */}
 												<CardHeader>
 													<Row>
 														<Col lg={12}>
@@ -737,7 +737,7 @@ class PayrollConfigurations extends React.Component {
                             </Col>
                           </Row>
                         </form>
-                      </div> */}
+                         </div> */}
 																	<div>
 																		<BootstrapTable
 																		   selectRow={this.selectRowProp}
@@ -785,7 +785,7 @@ class PayrollConfigurations extends React.Component {
 															</Row>
 													}
 												</CardBody>
-											</Card>
+											{/* </Card> */}
 										</div>
 									</div>
 								</TabPane>
@@ -796,7 +796,7 @@ class PayrollConfigurations extends React.Component {
 										<div className="animated fadeIn">
 											{dialog}
 											{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
-											<Card>
+											{/* <Card> */}
 												<CardHeader>
 													<Row>
 														<Col lg={12}>
@@ -906,7 +906,7 @@ class PayrollConfigurations extends React.Component {
 															</Row>
 													}
 												</CardBody>
-											</Card>
+											{/* </Card> */}
 										</div>
 									</div>
 								</TabPane>

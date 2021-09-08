@@ -1092,7 +1092,7 @@ validationCheck = (value) => {
                                                                       
                                                                         validationSchema={Yup.object().shape({
                                                                             firstName: Yup.string()
-                                                                                .required("first Name is Required"),
+                                                                                .required("First Name is Required"),
                                                                             lastName: Yup.string()
                                                                             .required("Last Name is Required"),
                                                                             email: Yup.string()
@@ -1436,7 +1436,7 @@ validationCheck = (value) => {
                                                                                                                     'label',
                                                                                                                     'value',
                                                                                                                     this.gender,
-                                                                                                                    'Terms',
+                                                                                                                    'Gender',
                                                                                                                 )
                                                                                                                 : []
                                                                                                         }
@@ -1471,7 +1471,7 @@ validationCheck = (value) => {
                                                                                                                     'label',
                                                                                                                     'value',
                                                                                                                     this.bloodGroup,
-                                                                                                                    'Terms',
+                                                                                                                    'Blood Group',
                                                                                                                 )
                                                                                                                 : []
                                                                                                         }
@@ -1546,7 +1546,7 @@ validationCheck = (value) => {
                                                                                                                     'label',
                                                                                                                     'value',
                                                                                                                     salary_role_dropdown.data,
-                                                                                                                    'SalaryRole',
+                                                                                                                    'Salary Role',
                                                                                                                 )
                                                                                                                 : []
                                                                                                         }
@@ -1600,7 +1600,7 @@ validationCheck = (value) => {
                                                                                                                     'label',
                                                                                                                     'value',
                                                                                                                     designation_dropdown,
-                                                                                                                    'employeeDesignationId',
+                                                                                                                    'Employee Designation',
                                                                                                                 )
                                                                                                                 : []
                                                                                                         }

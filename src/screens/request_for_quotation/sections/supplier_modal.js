@@ -56,6 +56,7 @@ class SupplierModal extends React.Component {
 				stateId: '',
 				telephone: '',
 				vatRegistrationNumber: '',
+				disabled: false,
 			},
 			state_list: [],
 			checkmobileNumberParam:false,
@@ -81,6 +82,7 @@ class SupplierModal extends React.Component {
 
 	// Create or Contact
 	handleSubmit = (data, resetForm, setSubmitting) => {
+		this.setState({ disabled: true });
 		const postData = this.getData(data);
 		this.props
 			.createSupplier(postData)
@@ -88,6 +90,7 @@ class SupplierModal extends React.Component {
 				let resConfig = JSON.parse(res.config.data);
 				
 				if (res.status === 200) {
+					this.setState({ disabled: false });
 					resetForm();
 					this.props.closeSupplierModal(true);
 
@@ -98,6 +101,7 @@ class SupplierModal extends React.Component {
 				}
 			})
 			.catch((err) => {
+				this.setState({ disabled: false });
 				this.displayMsg(err);
 				this.formikRef.current.setSubmitting(false);
 			});
@@ -892,9 +896,12 @@ errors.mobileNumber =
 											color="primary"
 											type="submit"
 											className="btn-square"
+											disabled={this.state.disabled}
 											disabled={isSubmitting}
 										>
-											<i className="fa fa-dot-circle-o"></i>{strings.Create} 
+											<i className="fa fa-dot-circle-o"></i>	{this.state.disabled
+																			? 'Creating...'
+																			: strings.Create }
 										</Button>
 										&nbsp;
 										<Button

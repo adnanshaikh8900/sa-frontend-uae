@@ -56,6 +56,7 @@ class DetailSalaryRole extends React.Component {
       initValue: {},
       current_salary_role_id: null,
       dialog: false,
+      disabled: false,
     }
 
     this.regEx = /^[0-9\d]+$/;
@@ -103,6 +104,7 @@ class DetailSalaryRole extends React.Component {
   //   })
   // }
   handleSubmit = (data) => {
+    this.setState({ disabled: true });
 		const { current_salary_role_id} = this.state;
 		const {
 		salaryRoleName,
@@ -115,13 +117,15 @@ class DetailSalaryRole extends React.Component {
 		this.props.salarayRoleDetailActions
 			.updateSalaryRole(formData)
 			.then((res) => {
+        this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'salary Role Updated Successfully.',
+					'Salary Role Updated Successfully.',
 				);
 				this.props.history.push('/admin/payroll/config');
 			})
 			.catch((err) => {
+        this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err && err.data ? err.data.message : 'Something Went Wrong',
@@ -254,12 +258,14 @@ class DetailSalaryRole extends React.Component {
                                     </Button>
                                     </FormGroup> */}
                                     <FormGroup className="text-right">
-                                    <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
+                                    <Button type="button" color="primary" className="btn-square mr-3" 	disabled={this.state.disabled} onClick={() => {
                                     this.setState({ createMore: false }, () => {
                                       props.handleSubmit()
                                     })
                                   }}>
-                                        <i className="fa fa-dot-circle-o"></i> {strings.Update} 
+                                        <i className="fa fa-dot-circle-o"></i> {this.state.disabled
+																			? 'Updating...'
+																			: strings.Update }
                                     </Button>
                                       <Button type="button" color="secondary" className="btn-square"
                                         onClick={() => { this.props.history.push('/admin/payroll/config',{tabNo:'1'}) }}>

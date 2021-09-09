@@ -94,14 +94,17 @@ class FilterComponent extends Component {
 													)}
 													dropdownMode="select"
 													dateFormat="dd/MM/yyyy"
+													// onChange={(value) => {
+													// 	props.handleChange('startDate')(value);
+													// 	if (moment(value).isBefore(props.values.startDate)) {
+													// 		props.setFieldValue(
+													// 			'startDate',
+													// 			moment(value).add(1, 'M'),
+													// 		);
+													// 	}
+													// }}
 													onChange={(value) => {
 														props.handleChange('startDate')(value);
-														if (moment(value).isBefore(props.values.startDate)) {
-															props.setFieldValue(
-																'startDate',
-																moment(value).add(1, 'M'),
-															);
-														}
 													}}
 												/>
 											</FormGroup>
@@ -123,14 +126,17 @@ class FilterComponent extends Component {
 													)}
 													dropdownMode="select"
 													dateFormat="dd/MM/yyyy"
+													// onChange={(value) => {
+													// 	props.handleChange('endDate')(value);
+													// 	if (moment(value).isBefore(props.values.endDate)) {
+													// 		props.setFieldValue(
+													// 			'endDate',
+													// 			moment(value).subtract(1, 'M'),
+													// 		);
+													// 	}
+													// }}
 													onChange={(value) => {
 														props.handleChange('endDate')(value);
-														if (moment(value).isBefore(props.values.endDate)) {
-															props.setFieldValue(
-																'endDate',
-																moment(value).subtract(1, 'M'),
-															);
-														}
 													}}
 												/>
 											</FormGroup>

@@ -27,7 +27,7 @@ class FilterComponent2 extends Component {
 		this.state = {
 			language: window['localStorage'].getItem('language'),
 			initValue: {
-                startDate: moment().startOf('month').format('DD/MM/YYYY'),
+				startDate: moment().startOf('month').format('YYYY-MM-DD hh:mm'),
 				endDate: moment().endOf('month').format('YYYY-MM-DD hh:mm'),
 			},
 		};
@@ -76,14 +76,18 @@ class FilterComponent2 extends Component {
 													)}
 													dropdownMode="select"
 													dateFormat="dd/MM/yyyy"
+													// onChange={(value) => {
+													// 	props.handleChange('startDate')(value);
+													// 	if (moment(value).isBefore(props.values.startDate)) {
+													// 		props.setFieldValue(
+													// 			'startDate',
+													// 			moment(value).add(1, 'M'),
+													// 		);
+													// 	}
+													// }}
+
 													onChange={(value) => {
 														props.handleChange('startDate')(value);
-														if (moment(value).isBefore(props.values.startDate)) {
-															props.setFieldValue(
-																'startDate',
-																moment(value).add(1, 'M'),
-															);
-														}
 													}}
 												/>
 											</FormGroup>
@@ -105,14 +109,18 @@ class FilterComponent2 extends Component {
 													)}
 													dropdownMode="select"
 													dateFormat="dd/MM/yyyy"
+													// onChange={(value) => {
+													// 	debugger
+													// 	props.handleChange('endDate')(value);
+													// 	if (moment(value).isBefore(props.values.endDate)) {
+													// 		props.setFieldValue(
+													// 			'endDate',
+													// 			moment(value).subtract(1, 'M'),
+													// 		);
+													// 	}
+													// }}
 													onChange={(value) => {
 														props.handleChange('endDate')(value);
-														if (moment(value).isBefore(props.values.endDate)) {
-															props.setFieldValue(
-																'endDate',
-																moment(value).subtract(1, 'M'),
-															);
-														}
 													}}
 												/>
 											</FormGroup>

@@ -465,7 +465,15 @@ class ExplainTrasactionDetail extends React.Component {
 			expenseCategory,
 		} = data;
 
-		console.log("data",data)
+
+		if(!this.state.transactionCategoryId) {
+			return;
+		}
+
+		
+
+
+
 		if (
 			(invoiceIdList && coaCategoryId.label === 'Sales') ||
 			(invoiceIdList && coaCategoryId.label === 'Supplier Invoice')
@@ -1602,20 +1610,17 @@ min="0"
 																						id="transactionCategoryId"
 																						name="transactionCategoryId"
 																						className={
-																							props.errors
-																								.transactionCategoryId &&
-																								props.touched.transactionCategoryId
+																							!transactionCategoryValue.label
 																								? 'is-invalid'
 																								: ''
 																						}
 																					/>
-																						{props.errors.transactionCategoryId &&
-																							props.touched
-																								.transactionCategoryId && (
+																						{
+																							!transactionCategoryValue.label &&
+																						 (
 																								<div className="invalid-feedback">
 																									{
-																										props.errors
-																											.transactionCategoryId
+																										"Transaction Category is Required"
 																									}
 																								</div>
 																							)}

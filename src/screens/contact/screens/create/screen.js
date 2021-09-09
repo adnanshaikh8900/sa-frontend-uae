@@ -14,6 +14,7 @@ import {
 	Label,
 } from 'reactstrap';
 import Select from 'react-select';
+import { upperFirst } from 'lodash-es';
 import { selectOptionsFactory, selectCurrencyFactory } from 'utils';
 
 import './style.scss';
@@ -322,7 +323,9 @@ class CreateContact extends React.Component {
 																					option.target.value,
 																				)
 																			) {
-																				props.handleChange('firstName')(option);
+																				
+																			let option1=	upperFirst(option.target.value)
+																				props.handleChange('firstName')(option1);
 																			}
 																		}}
 																		value={props.values.firstName}
@@ -359,8 +362,9 @@ class CreateContact extends React.Component {
 																					option.target.value,
 																				)
 																			) {
+																				let option1=	upperFirst(option.target.value)
 																				props.handleChange('middleName')(
-																					option,
+																					option1,
 																				);
 																			}
 																		}}
@@ -396,7 +400,8 @@ class CreateContact extends React.Component {
 																					option.target.value,
 																				)
 																			) {
-																				props.handleChange('lastName')(option);
+																				let option1=	upperFirst(option.target.value)
+																				props.handleChange('lastName')(option1);
 																			}
 																		}}
 																		value={props.values.lastName}
@@ -483,8 +488,9 @@ class CreateContact extends React.Component {
 																					option.target.value,
 																				)
 																			) {
+																				let option1=	upperFirst(option.target.value)
 																				props.handleChange('organization')(
-																					option,
+																					option1,
 																				);
 																			}
 																		}}
@@ -661,8 +667,9 @@ class CreateContact extends React.Component {
 																					option.target.value,
 																				)
 																			) {
+																				let option1=	upperFirst(option.target.value)
 																				props.handleChange('addressLine1')(
-																					option,
+																					option1,
 																				);
 																			}
 																		}}
@@ -700,8 +707,9 @@ class CreateContact extends React.Component {
 																					option.target.value,
 																				)
 																			) {
+																				let option1=	upperFirst(option.target.value)
 																				props.handleChange('addressLine2')(
-																					option,
+																					option1,
 																				);
 																			}
 																		}}
@@ -727,8 +735,9 @@ class CreateContact extends React.Component {
 																					option.target.value,
 																				)
 																			) {
+																				let option1=	upperFirst(option.target.value)
 																				props.handleChange('addressLine3')(
-																					option,
+																					option1,
 																				);
 																			}
 																		}}
@@ -839,7 +848,8 @@ class CreateContact extends React.Component {
 																					option.target.value,
 																				)
 																			) {
-																				props.handleChange('city')(option);
+																				let option1=	upperFirst(option.target.value)
+																				props.handleChange('city')(option1);
 																			}
 																		}}
 																		placeholder={strings.Enter+strings.City}

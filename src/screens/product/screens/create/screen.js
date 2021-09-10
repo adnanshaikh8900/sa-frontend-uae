@@ -1447,6 +1447,9 @@ min="0"
 																					{props.errors.inventoryPurchasePrice}
 																				</div>
 																			)}
+																	<i>*Note :Inventory Purchase price will be considered </i>
+																		 
+																		
 																	</FormGroup>
 																	</Col>
 																	<Col>
@@ -1561,6 +1564,7 @@ min="0"
 																	</Col>
 																	
 																	</Row>
+																
 																</Col>
 															</Row>
 															

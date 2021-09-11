@@ -95,7 +95,9 @@ class DetailCustomerInvoice extends React.Component {
 			discount_option: '',
 			data: [],
 			current_customer_id: null,
-			initValue: {},
+			initValue: {
+				invoiceDate: new Date(),
+			},
 			contactType: 2,
 			openCustomerModal: false,
 			openProductModal: false,
@@ -109,7 +111,9 @@ class DetailCustomerInvoice extends React.Component {
 			basecurrency:[],
 			customer_currency: '',
 			language: window['localStorage'].getItem('language'),
-			param :false,		};
+			param :false,
+			date:''	,
+		datesChanged : false	};
 
 		// this.options = {
 		//   paginationPosition: 'top'
@@ -118,7 +122,10 @@ class DetailCustomerInvoice extends React.Component {
 		this.termList = [
 			{ label: 'Net 7 Days', value: 'NET_7' },
 			{ label: 'Net 10 Days', value: 'NET_10' },
+			{ label: 'Net 15 Days', value: 'NET_15' },
 			{ label: 'Net 30 Days', value: 'NET_30' },
+			{ label: 'Net 45 Days', value: 'NET_45' },
+			{ label: 'Net 60 Days', value: 'NET_60' },
 			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
 		];
 		this.placelist = [
@@ -210,6 +217,9 @@ class DetailCustomerInvoice extends React.Component {
 									invoiceDate: res.data.invoiceDate
 										? moment(res.data.invoiceDate).format('DD/MM/YYYY')
 										: '',
+										invoiceDateChange: res.data.invoiceDate
+										? res.data.invoiceDate
+										: '',
 									contactId: res.data.contactId ? res.data.contactId : '',
 									project: res.data.projectId ? res.data.projectId : '',
 									invoice_number: res.data.referenceNumber
@@ -236,6 +246,17 @@ class DetailCustomerInvoice extends React.Component {
 									fileName: res.data.fileName ? res.data.fileName : '',
 									filePath: res.data.filePath ? res.data.filePath : '',
 								},
+								invoiceDateNoChange :res.data.invoiceDate
+								? res.data.invoiceDate
+								: '',
+								invoiceDueDateNoChange : res.data.invoiceDueDate ?
+								res.data.invoiceDueDate : '',
+								invoiceDate: res.data.invoiceDate
+										? res.data.invoiceDate
+										: '',
+								invoiceDueDate: res.data.invoiceDueDate
+									? res.data.invoiceDueDate
+									: '',
 								discountAmount: res.data.discount ? res.data.discount : 0,
 								discountPercentage: res.data.discountPercentage
 									? res.data.discountPercentage
@@ -792,6 +813,9 @@ min="0"
 	};
 
 	setDate = (props, value) => {
+		this.setState({
+			datesChanged: true,
+		});
 		const { term } = this.state;
 		const val = term.split('_');
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
@@ -799,10 +823,14 @@ min="0"
 			? value
 			: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
 		if (temp && values) {
+			this.setState({
+				invoiceDueDate: moment(values).add(temp, 'days'),
+			});
 			const date = moment(values)
-				.add(temp - 1, 'days')
+				.add(temp, 'days')
 				.format('DD/MM/YYYY');
 			props.setFieldValue('invoiceDueDate', date, true);
+			props.setFieldValue('invoiceDateChange', values, true);
 		}
 	};
 
@@ -845,19 +873,34 @@ min="0"
 			'referenceNumber',
 			invoice_number !== null ? invoice_number : '',
 		);
-		formData.append(
-			'invoiceDate',
-			typeof invoiceDate === 'string'
-				? moment(invoiceDate, 'DD/MM/YYYY').toDate()
-				: invoiceDate,
-		);
-		formData.append(
-			'invoiceDueDate',
-			typeof invoiceDueDate === 'string'
-				? invoiceDueDate
-				: invoiceDueDate,
-		);
-
+		if(this.state.datesChanged === true)
+		{
+			formData.append(
+				'invoiceDate',
+				typeof invoiceDate === 'string'
+					? moment(invoiceDate).utc().toDate()
+					: invoiceDate,
+			);
+			formData.append(
+				'invoiceDueDate',
+				typeof invoiceDueDate === 'string'
+					? this.state.invoiceDueDate
+					: invoiceDueDate,
+			);
+		}else{
+			formData.append(
+				'invoiceDate',
+				typeof invoiceDate === 'string'
+					? moment(this.state.invoiceDateNoChange).utc().toDate()
+					: '',
+			);
+			formData.append(
+				'invoiceDueDate',
+				typeof invoiceDueDate === 'string'
+					? moment(this.state.invoiceDueDateNoChange).utc().toDate()
+					: '',
+			);
+		}
 		formData.append('exchangeRate', exchangeRate !== null ? exchangeRate : '',);
 		
 		formData.append(
@@ -1492,10 +1535,12 @@ min="0"
 																			showYearDropdown
 																			dateFormat="dd/MM/yyyy"
 																			dropdownMode="select"
-																			value={props.values.invoiceDate}
+																			 value={ props.values.invoiceDate}
+																			 selected={new Date(props.values.invoiceDateChange)} 
+																			
 																			onChange={(value) => {
 																				props.handleChange('invoiceDate')(
-																					moment(value).format('DD/MM/YYYY'),
+																					value
 																				);
 																				this.setDate(props, value);
 																			}}
@@ -1524,7 +1569,6 @@ min="0"
 																				id="invoiceDueDate"
 																				name="invoiceDueDate"
 																				placeholderText={strings.InvoiceDueDate}
-																				// selected={props.values.invoiceDueDate}
 																				showMonthDropdown
 																				showYearDropdown
 																				disabled

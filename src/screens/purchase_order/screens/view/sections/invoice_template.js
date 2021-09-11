@@ -304,7 +304,7 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{POData.totalVatAmount?POData.currencyIsoCode + " " +POData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 }
+													{POData.totalVatAmount?POData.currencyIsoCode+ " " +POData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 }
 													{/* ? (
 														<Currency
 															value={POData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}

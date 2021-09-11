@@ -134,8 +134,9 @@ class ViewQuotation extends React.Component {
 								>
 									<i className="fa fa-pencil"></i>
 								</Button> */}
-								<Button
-									className=" print-btn-cont"
+								
+										<Button
+									className="btn-lg mb-1 print-btn-cont"
 									onClick={() => {
 										this.exportPDFWithComponent();
 									}}
@@ -144,7 +145,7 @@ class ViewQuotation extends React.Component {
 								</Button>
 								<ReactToPrint
 									trigger={() => (
-										<Button type="button" className=" print-btn-cont">
+										<Button type="button" className="ml-1 mb-1 mr-1 print-btn-cont btn-lg">
 											<i className="fa fa-print"></i>
 										</Button>
 									)}
@@ -152,10 +153,10 @@ class ViewQuotation extends React.Component {
 								/>
 										<Button
 											type="button"
-											className=" print-btn-cont"
+											className="close-btn mb-1 btn-lg print-btn-cont"
 											style={{color: "black"}}
 											onClick={() => {
-												this.props.history.push('/admin/income/quotation');
+												this.props.history.push('/admin/expense/purchase-order');
 											}}
 										>
 										X
@@ -166,7 +167,7 @@ class ViewQuotation extends React.Component {
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
 									paperSize="A3"
-									fileName={QuotationData.poNumber + ".pdf"}
+									fileName={QuotationData.quotationNumber + ".pdf"}
 								>
 									<RFQTemplate
 										QuotationData={QuotationData}

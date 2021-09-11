@@ -460,6 +460,12 @@ class InventoryHistory extends React.Component {
 												<TableHeaderColumn  dataField="invoiceNumber" dataSort className="table-header-bg">
 												 {strings.InvoiceNumber}
 												</TableHeaderColumn >
+												<TableHeaderColumn  dataField="quantitySold" dataSort className="table-header-bg">
+												Quantity Sold
+												</TableHeaderColumn >
+												<TableHeaderColumn  dataField="stockOnHand" dataSort className="table-header-bg">
+											Stock In Hand
+												</TableHeaderColumn >
 												<TableHeaderColumn  dataField="unitCost" dataSort className="table-header-bg">
 												 {strings.UnitCost} 
 												</TableHeaderColumn >

@@ -71,7 +71,7 @@ class RFQTemplate extends Component {
 											? companyData.company.companyName
 											: ''}</h5>
 											</div>	
-						<div className="text-center"><h4>{QuotationData.poNumber}</h4></div>		
+						<div className="text-center"><h4>{QuotationData.quotationNumber}</h4></div>		
 						<div className="text-center mt-1">{QuotationData.customerName}</div>		
 					</div>
 							
@@ -171,13 +171,13 @@ class RFQTemplate extends Component {
 								}}
 							>
 								<div className="pb-2">{strings.AmountInWords }:<br/>
-									<b> {upperCase (QuotationData.currencyName + " " +(converter.toWords(toInteger(QuotationData.totalAmount))))+" ONLY"}
-									{/* <b> {parseInt(QuotationData.dueAmount)} */}
+									<b> {upperCase(QuotationData.currencyName + " " +(converter.toWords(toInteger(QuotationData.totalAmount)))+" ONLY")}
+									{/* <b> {parseInt(POData.dueAmount)} */}
 									</b></div>
 								<div className="pb-2">{strings.Vat+" "+strings.AmountInWords }:
 										<br/>
-									<b> {QuotationData.totalVatAmount ? (upperCase(QuotationData.currencyName + " " +(converter.toWords(toInteger(QuotationData.totalVatAmount)))+" ONLY")) : " -" }</b>
-									{/* <b> {QuotationData.totalVatAmount}</b> */}
+									<b>{QuotationData.totalVatAmount ? (upperCase(QuotationData.currencyName + " " +(converter.toWords(toInteger(QuotationData.totalVatAmount)))+" ONLY")) : " -" }</b>
+									{/* <b> {POData.totalVatAmount}</b> */}
 								</div>
 							<div style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>
 
@@ -210,8 +210,7 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{totalNet?QuotationData.currencyIsoCode + " " +totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0}
-
+													{totalNet?QuotationData.currencyIsoCode + " " +totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 }): 0}
 													 {/* ? (
 														<Currency
 															value={totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
@@ -246,11 +245,10 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-												
-													{QuotationData.totalVatAmount?QuotationData.currencyIsoCode + " " +QuotationData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0}
+													{QuotationData.totalVatAmount?QuotationData.currencyIsoCode+ " " +QuotationData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 }
 													{/* ? (
 														<Currency
-															value={QuotationData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+															value={POData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode
@@ -282,11 +280,10 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-											
 													{QuotationData.totalAmount?QuotationData.currencyIsoCode + " " +QuotationData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0}
-													 {/* ? (
+													{/* {POData.totalAmount ? (
 														<Currency
-															value={QuotationData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+															value={POData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode
@@ -310,7 +307,8 @@ class RFQTemplate extends Component {
 								</Table>
 								</div>		
 							</div>
-						</div>												
+						</div>
+										
 					</CardBody>
 				</Card>
 			</div>

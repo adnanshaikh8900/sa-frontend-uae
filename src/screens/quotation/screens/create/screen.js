@@ -1437,7 +1437,7 @@ min="0"
 																		showYearDropdown
 																		dropdownMode="select"
 																		dateFormat="dd/MM/yyyy"
-																		maxDate={new Date()}
+																		
 																		onChange={(value) => {
 																			props.handleChange('quotaionExpiration')(value);
 																		}}

@@ -221,8 +221,9 @@ class DetailProduct extends React.Component {
 			this.props.productActions.getInventoryByProductId(this.props.location.state.id)
 			.then((res) => {
 				if (res.status === 200) {
-					debugger
-					this.setState({ loading: false,inventoryId: res.data[0].inventoryId });
+					
+					this.setState({ loading: false,
+						inventoryId: res.data[0].inventoryId ? res.data[0].inventoryId : ''});
 				}
 			})
 		}
@@ -345,7 +346,7 @@ renderName=(cell,row)=>{
 		const inventoryReorderLevel = data['inventoryReorderLevel'];
 		const contactId = data['contactId'];
 		const isInventoryEnabled = data['isInventoryEnabled'];
-		const transactionCategoryId = data['transactionCategoryId'];
+		const transactionCategoryId = this.state.inventoryAccount ? this.state.inventoryAccount[0].value : '';
 		const inventoryId = this.state.inventoryId;
 
 		let productPriceType;

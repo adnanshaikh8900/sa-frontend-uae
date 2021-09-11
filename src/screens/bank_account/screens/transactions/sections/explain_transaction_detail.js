@@ -466,14 +466,6 @@ class ExplainTrasactionDetail extends React.Component {
 		} = data;
 
 
-		if(!this.state.transactionCategoryId) {
-			return;
-		}
-
-		
-
-
-
 		if (
 			(invoiceIdList && coaCategoryId.label === 'Sales') ||
 			(invoiceIdList && coaCategoryId.label === 'Supplier Invoice')
@@ -836,16 +828,16 @@ class ExplainTrasactionDetail extends React.Component {
 															) {
 																errors.customerId = 'Customer is  required';
 															}
-															if (
-																values.coaCategoryId.label !==
-																'Supplier Invoice' &&
-																values.coaCategoryId.label !== 'Sales' &&
-																values.coaCategoryId.label !== 'Expense' &&
-																!values.transactionCategoryId
-															) {
-																errors.transactionCategoryId =
-																	'Transaction Category is Required';
-															}
+															// if (
+															// 	values.coaCategoryId.label !==
+															// 	'Supplier Invoice' &&
+															// 	values.coaCategoryId.label !== 'Sales' &&
+															// 	values.coaCategoryId.label !== 'Expense' &&
+															// 	!values.transactionCategoryId
+															// ) {
+															// 	errors.transactionCategoryId =
+															// 		'Transaction Category is Required';
+															// }
 															if(
 																(values.coaCategoryId.value === 12 ||
 																values.coaCategoryId.value === 6) &&
@@ -1616,14 +1608,14 @@ min="0"
 																						}
 																					/>
 																						{
-																							!transactionCategoryValue.label &&
-																						 (
-																								<div className="invalid-feedback">
-																									{
-																										"Transaction Category is Required"
-																									}
-																								</div>
-																							)}
+																							!transactionCategoryValue.label ?
+																					''	: (
+																							<div className="invalid-feedback">
+																								{
+																									"Transaction Category is Required"
+																								}
+																							</div>
+																						)}
 																				</FormGroup>
 																			</Col>
 																		)}

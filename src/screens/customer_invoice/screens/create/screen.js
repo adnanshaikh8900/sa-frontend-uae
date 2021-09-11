@@ -159,7 +159,7 @@ class CreateCustomerInvoice extends React.Component {
 			basecurrency:[],
 			inventoryList:[],
 			param:false,
-			date1:'',
+			date:'',
 		};
 
 		this.formRef = React.createRef();
@@ -178,7 +178,10 @@ class CreateCustomerInvoice extends React.Component {
 		this.termList = [
 			{ label: 'Net 7 Days', value: 'NET_7' },
 			{ label: 'Net 10 Days', value: 'NET_10' },
+			{ label: 'Net 15 Days', value: 'NET_15' },
 			{ label: 'Net 30 Days', value: 'NET_30' },
+			{ label: 'Net 45 Days', value: 'NET_45' },
+			{ label: 'Net 60 Days', value: 'NET_60' },
 			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
 		];
 		this.placelist = [
@@ -271,7 +274,7 @@ class CreateCustomerInvoice extends React.Component {
 					<div>
 						<Input
 							type="number"
-min="0"
+							min="0"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -374,15 +377,19 @@ min="0"
 		const { term } = this.state;
 		const val = term ? term.value.split('_') : '';
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
+		debugger
 		const values = value
 			? value
 			: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
-		if (temp && values) {
-			const date = moment(values)
-				.add(temp - 1, 'days')
-				.format('DD/MM/YYYY');
-			props.setFieldValue('invoiceDueDate', date, true);
-		}
+			if (temp && values) {
+				this.setState({
+					date: moment(values).add(temp, 'days'),
+				});
+				const date1 = moment(values)
+				.add(temp, 'days')
+				.format('DD/MM/YYYY')
+				props.setFieldValue('invoiceDueDate',date1, true);
+			}
 	};
 
 	setExchange = (value) => {
@@ -945,14 +952,14 @@ min="0"
 		);
 		formData.append(
 			'invoiceDueDate',
-			invoiceDueDate ? invoiceDueDate  : null,
+			invoiceDueDate ? this.state.date : null,
 		);
 		formData.append(
 			'invoiceDate',
 			invoiceDate
-				?
-						moment(invoiceDate,'DD/MM/YYYY')
-						.toDate()
+				?invoiceDate
+						// moment(invoiceDate,'DD/MM/YYYY')
+						// .toDate()
 				: null,
 		);
 		formData.append(
@@ -1636,6 +1643,7 @@ min="0"
 																		value={props.values.invoiceDate}
 																		selected={props.values.invoiceDate}
 																		onChange={(value) => {
+																			debugger
 																			props.handleChange('invoiceDate')(value);
 																			this.setDate(props, value);
 																		}}

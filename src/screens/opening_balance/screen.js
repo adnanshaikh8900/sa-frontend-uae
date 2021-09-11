@@ -475,9 +475,9 @@ class OpeningBalance extends React.Component {
 			universal_currency_list,
 		} = this.props;
 		
-		console.log(opening_balance_list,"opening_balance_list")
+		
 		let opening_balance_list1=	Object.assign({},opening_balance_list)
-		console.log(opening_balance_list1,"opening_balance_list1")
+	
 		return (
 			<div className="expense-screen">
 				<div className="animated fadeIn">
@@ -577,6 +577,13 @@ class OpeningBalance extends React.Component {
 												className="table-header-bg"
 											>
 												{strings.TRANSACTIONCATEGORYNAME}
+											</TableHeaderColumn>
+											<TableHeaderColumn
+												dataField="chartOfAccount"
+												width="30%"
+												className="table-header-bg"
+											>
+												Chart of Account
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="effectiveDate"

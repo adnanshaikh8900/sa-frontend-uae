@@ -87,6 +87,7 @@ class DetailProduct extends React.Component {
 			openInventoryModel: false,
 			disabled: false,
 			disabled1: false,
+			inventoryId:'',
 		};
 
 		this.selectRowProp = {
@@ -220,7 +221,8 @@ class DetailProduct extends React.Component {
 			this.props.productActions.getInventoryByProductId(this.props.location.state.id)
 			.then((res) => {
 				if (res.status === 200) {
-					this.setState({ loading: false });
+					debugger
+					this.setState({ loading: false,inventoryId: res.data[0].inventoryId });
 				}
 			})
 		}
@@ -325,6 +327,7 @@ renderName=(cell,row)=>{
 	};
 
 	handleSubmit = (data) => {
+		debugger
 		this.setState({ disabled: true });
 		const { current_product_id } = this.state;
 		const productID = current_product_id;
@@ -343,7 +346,7 @@ renderName=(cell,row)=>{
 		const contactId = data['contactId'];
 		const isInventoryEnabled = data['isInventoryEnabled'];
 		const transactionCategoryId = data['transactionCategoryId'];
-		const inventoryId = data['inventoryId'];
+		const inventoryId = this.state.inventoryId;
 
 		let productPriceType;
 		if (data['productPriceType'].includes('SALES')) {

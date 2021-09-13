@@ -391,7 +391,7 @@ class CreditNotes extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-						{row.statusEnum !== 'Closed' && row.statusEnum !== 'Open'   && (
+						{row.statusEnum !== 'Closed' && row.statusEnum !== 'Open' && row.statusEnum !== 'Partially Paid'   && (
 							<DropdownItem>
 								<div
 									onClick={() => {
@@ -422,7 +422,7 @@ class CreditNotes extends React.Component {
 							</DropdownItem>
 						)}
 							
-						{row.statusEnum !== 'Closed' && row.statusEnum !== 'Open' &&(
+						{row.statusEnum !== 'Closed' && row.statusEnum !== 'Open' && row.statusEnum !== 'Partially Paid' &&(
 							<DropdownItem
 								onClick={() => {
 									this.creditNoteposting(row);

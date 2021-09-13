@@ -256,7 +256,7 @@ class ViewPurchaseOrder extends React.Component {
 				{/* <td>{moment(item.poReceiveDate).format(
 				'DD MMM YYYY',
 			)}</td> */}
-							<td>{item.totalAmount}</td>
+							<td>{POData.POData.currencyIsoCode+" "+item.totalAmount}</td>
 							{/* <td>{item.totalVatAmount}</td> */}
 						
 						</tr>

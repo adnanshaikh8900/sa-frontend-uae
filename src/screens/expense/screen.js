@@ -810,7 +810,7 @@ class Expense extends React.Component {
 												dataField="expenseDate"
 												dataSort
 												dataFormat={this.renderDate}
-												width="20%"
+												width="15%"
 												className='table-header-bg'
 											>
 												{strings.EXPENSEDATE}
@@ -819,6 +819,7 @@ class Expense extends React.Component {
 												thStyle={{ whiteSpace: 'normal' }}
 												dataField="payee"
 												dataSort
+												width="15%"
 												className='table-header-bg'
 											>
 												{strings.PAYEE}

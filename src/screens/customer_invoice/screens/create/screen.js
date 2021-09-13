@@ -1643,7 +1643,7 @@ min="0"
 																		value={props.values.invoiceDate}
 																		selected={props.values.invoiceDate}
 																		onChange={(value) => {
-																			debugger
+																			
 																			props.handleChange('invoiceDate')(value);
 																			this.setDate(props, value);
 																		}}

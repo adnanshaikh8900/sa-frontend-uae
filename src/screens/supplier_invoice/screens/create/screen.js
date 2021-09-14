@@ -163,6 +163,7 @@ class CreateSupplierInvoice extends React.Component {
 			basecurrency:[],
 			language: window['localStorage'].getItem('language'),
 			param:false,
+			date: ''
 		};
 
 		this.formRef = React.createRef();
@@ -182,7 +183,10 @@ class CreateSupplierInvoice extends React.Component {
 		this.termList = [
 			{ label: 'Net 7 Days', value: 'NET_7' },
 			{ label: 'Net 10 Days', value: 'NET_10' },
+			{ label: 'Net 15 Days', value: 'NET_15' },
 			{ label: 'Net 30 Days', value: 'NET_30' },
+			{ label: 'Net 45 Days', value: 'NET_45' },
+			{ label: 'Net 60 Days', value: 'NET_60' },
 			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
 		];
 		this.placelist = [
@@ -865,12 +869,15 @@ min="0"
 		const values = value
 			? value
 			: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
-		if (temp && values) {
-			const date = moment(values)
-				.add(temp - 1, 'days')
-				.format('DD/MM/YYYY');
-			props.setFieldValue('invoiceDueDate', date, true);
-		}
+			if (temp && values) {
+				this.setState({
+					date: moment(values).add(temp, 'days'),
+				});
+				const date1 = moment(values)
+				.add(temp, 'days')
+				.format('DD/MM/YYYY')
+				props.setFieldValue('invoiceDueDate',date1, true);
+			}
 	};
 
 	setExchange = (value) => {
@@ -974,10 +981,17 @@ min="0"
 			'referenceNumber',
 			invoice_number ? this.state.prefix + invoice_number : '',
 		);
-		formData.append('invoiceDate', invoiceDate ? invoiceDate : '');
 		formData.append(
 			'invoiceDueDate',
-			invoiceDueDate ? invoiceDueDate: '',
+			invoiceDueDate ? this.state.date : null,
+		);
+		formData.append(
+			'invoiceDate',
+			invoiceDate
+				?invoiceDate
+						// moment(invoiceDate,'DD/MM/YYYY')
+						// .toDate()
+				: null,
 		);
 		formData.append('receiptNumber', receiptNumber ? receiptNumber : '');
 		formData.append(
@@ -2259,7 +2273,7 @@ min="0"
 																							id="discount"
 																							name="discount"
 																							type="number"
-min="0"
+																							min="0"
 																							maxLength="7"
 																							disabled={
 																								props.values.discountType &&

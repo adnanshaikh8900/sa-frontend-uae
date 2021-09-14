@@ -217,7 +217,7 @@ class DetailCustomerInvoice extends React.Component {
 									invoiceDate: res.data.invoiceDate
 										? moment(res.data.invoiceDate).format('DD/MM/YYYY')
 										: '',
-										invoiceDateChange: res.data.invoiceDate
+										invoiceDate1: res.data.invoiceDate
 										? res.data.invoiceDate
 										: '',
 									contactId: res.data.contactId ? res.data.contactId : '',
@@ -247,10 +247,10 @@ class DetailCustomerInvoice extends React.Component {
 									filePath: res.data.filePath ? res.data.filePath : '',
 								},
 								invoiceDateNoChange :res.data.invoiceDate
-								? res.data.invoiceDate
+								? moment(res.data.invoiceDate)
 								: '',
 								invoiceDueDateNoChange : res.data.invoiceDueDate ?
-								res.data.invoiceDueDate : '',
+								moment(res.data.invoiceDueDate) : '',
 								invoiceDate: res.data.invoiceDate
 										? res.data.invoiceDate
 										: '',
@@ -819,18 +819,20 @@ min="0"
 		const { term } = this.state;
 		const val = term.split('_');
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
+		debugger
 		const values = value
 			? value
-			: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
+			: props.values.invoiceDate1
 		if (temp && values) {
 			this.setState({
 				invoiceDueDate: moment(values).add(temp, 'days'),
+				invoiceDate: moment(values),
 			});
 			const date = moment(values)
 				.add(temp, 'days')
 				.format('DD/MM/YYYY');
 			props.setFieldValue('invoiceDueDate', date, true);
-			props.setFieldValue('invoiceDateChange', values, true);
+			props.setFieldValue('invoiceDate1', values, true);
 		}
 	};
 
@@ -865,7 +867,7 @@ min="0"
 			discountType,
 			discountPercentage,
 		} = data;
-
+debugger
 		let formData = new FormData();
 		formData.append('type', 2);
 		formData.append('invoiceId', current_customer_id);
@@ -878,7 +880,7 @@ min="0"
 			formData.append(
 				'invoiceDate',
 				typeof invoiceDate === 'string'
-					? moment(invoiceDate).utc().toDate()
+					? this.state.invoiceDate
 					: invoiceDate,
 			);
 			formData.append(
@@ -891,13 +893,13 @@ min="0"
 			formData.append(
 				'invoiceDate',
 				typeof invoiceDate === 'string'
-					? moment(this.state.invoiceDateNoChange).utc().toDate()
+					? this.state.invoiceDateNoChange
 					: '',
 			);
 			formData.append(
 				'invoiceDueDate',
 				typeof invoiceDueDate === 'string'
-					? moment(this.state.invoiceDueDateNoChange).utc().toDate()
+					? this.state.invoiceDueDateNoChange
 					: '',
 			);
 		}
@@ -1535,10 +1537,11 @@ min="0"
 																			showYearDropdown
 																			dateFormat="dd/MM/yyyy"
 																			dropdownMode="select"
-																			 value={ props.values.invoiceDate}
-																			 selected={new Date(props.values.invoiceDateChange)} 
+																			 value={props.values.invoiceDate}
+																			 selected={new Date(props.values.invoiceDate1)} 
 																			
 																			onChange={(value) => {
+																			
 																				props.handleChange('invoiceDate')(
 																					value
 																				);

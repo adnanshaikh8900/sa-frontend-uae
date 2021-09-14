@@ -205,7 +205,7 @@ class DetailExpense extends React.Component {
 		formData.append('payee', payee ? payee.value : '');
 		formData.append(
 			'expenseDate',
-			expenseDate !== null ? moment(expenseDate).utc().toDate() : '',
+			expenseDate !== null ? moment(expenseDate) : '',
 		);
 		formData.append('expenseDescription', expenseDescription);
 		formData.append('receiptNumber', receiptNumber);

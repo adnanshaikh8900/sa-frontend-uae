@@ -90,7 +90,9 @@ class DetailSupplierInvoice extends React.Component {
 			],
 			discount_option: '',
 			data: [],
-			initValue: {},
+			initValue: {
+				invoiceDate: new Date(),
+			},
 			contactType: 1,
 			openSupplierModal: false,
 			openProductModal: false,
@@ -108,6 +110,7 @@ class DetailSupplierInvoice extends React.Component {
 			disabled: false,
 			disabled1:false,
 			date:'',
+			datesChanged : false
 		};
 
 		// this.options = {
@@ -117,7 +120,10 @@ class DetailSupplierInvoice extends React.Component {
 		this.termList = [
 			{ label: 'Net 7 Days', value: 'NET_7' },
 			{ label: 'Net 10 Days', value: 'NET_10' },
+			{ label: 'Net 15 Days', value: 'NET_15' },
 			{ label: 'Net 30 Days', value: 'NET_30' },
+			{ label: 'Net 45 Days', value: 'NET_45' },
+			{ label: 'Net 60 Days', value: 'NET_60' },
 			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
 		];
 		this.placelist = [
@@ -197,8 +203,11 @@ class DetailSupplierInvoice extends React.Component {
 										? moment(res.data.invoiceDueDate).format('DD/MM/YYYY')
 										: '',
 									invoiceDate: res.data.invoiceDate
-										? moment(res.data.invoiceDate).format('DD/MM/YYYY')
-										: '',
+									? moment(res.data.invoiceDate).format('DD/MM/YYYY')
+									: '',
+									invoiceDate1: res.data.invoiceDate
+									? res.data.invoiceDate
+									: '',
 									contactId: res.data.contactId ? res.data.contactId : '',
 									project: res.data.projectId ? res.data.projectId : '',
 									invoice_number: res.data.referenceNumber
@@ -225,6 +234,17 @@ class DetailSupplierInvoice extends React.Component {
 									fileName: res.data.fileName ? res.data.fileName : '',
 									filePath: res.data.filePath ? res.data.filePath : '',
 								},
+								invoiceDateNoChange :res.data.invoiceDate
+								? moment(res.data.invoiceDate)
+								: '',
+								invoiceDueDateNoChange : res.data.invoiceDueDate ?
+								moment(res.data.invoiceDueDate) : '',
+								invoiceDate: res.data.invoiceDate
+										? res.data.invoiceDate
+										: '',
+								invoiceDueDate: res.data.invoiceDueDate
+									? res.data.invoiceDueDate
+									: '',
 								discountAmount: res.data.discount ? res.data.discount : 0,
 								discountPercentage: res.data.discountPercentage
 									? res.data.discountPercentage
@@ -943,14 +963,34 @@ class DetailSupplierInvoice extends React.Component {
 		formData.append('type', 1);
 		formData.append('invoiceId', current_supplier_id);
 		formData.append('referenceNumber', invoice_number ? invoice_number : '');
-		formData.append(
-			'invoiceDate',
-			typeof invoiceDate === 'string'
-				? moment(invoiceDate, 'DD/MM/YYYY').toDate()
-				: invoiceDate,
-		);
-	
-		formData.append('invoiceDueDate', invoiceDueDate ? invoiceDueDate : '');
+		if(this.state.datesChanged === true)
+		{
+			formData.append(
+				'invoiceDate',
+				typeof invoiceDate === 'string'
+					? this.state.invoiceDate
+					: invoiceDate,
+			);
+			formData.append(
+				'invoiceDueDate',
+				typeof invoiceDueDate === 'string'
+					? this.state.invoiceDueDate
+					: invoiceDueDate,
+			);
+		}else{
+			formData.append(
+				'invoiceDate',
+				typeof invoiceDate === 'string'
+					? this.state.invoiceDateNoChange
+					: '',
+			);
+			formData.append(
+				'invoiceDueDate',
+				typeof invoiceDueDate === 'string'
+					? this.state.invoiceDueDateNoChange
+					: '',
+			);
+		}
 		formData.append('receiptNumber', receiptNumber ? receiptNumber : '');
 		formData.append(
 			'contactPoNumber',
@@ -1060,17 +1100,26 @@ class DetailSupplierInvoice extends React.Component {
 		this.setState({ openProductModal: false });
 	};
 	setDate = (props, value) => {
+		this.setState({
+			datesChanged: true,
+		});
 		const { term } = this.state;
 		const val = term.split('_');
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
+		debugger
 		const values = value
 			? value
-			: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
+			: props.values.invoiceDate1
 		if (temp && values) {
+			this.setState({
+				invoiceDueDate: moment(values).add(temp, 'days'),
+				invoiceDate: moment(values),
+			});
 			const date = moment(values)
-				.add(temp - 1, 'days')
+				.add(temp, 'days')
 				.format('DD/MM/YYYY');
 			props.setFieldValue('invoiceDueDate', date, true);
+			props.setFieldValue('invoiceDate1', values, true);
 		}
 	};
 
@@ -1572,9 +1621,10 @@ class DetailSupplierInvoice extends React.Component {
 																			dateFormat="dd/MM/yyyy"
 																			dropdownMode="select"
 																			value={props.values.invoiceDate}
+																			selected={new Date(props.values.invoiceDate1)} 
 																			onChange={(value) => {
 																				props.handleChange('invoiceDate')(
-																					moment(value).format('DD/MM/YYYY'),
+																					value
 																				);
 																				this.setDate(props, value);
 																			}}

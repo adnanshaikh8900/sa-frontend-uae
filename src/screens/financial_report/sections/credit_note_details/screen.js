@@ -351,7 +351,7 @@ class CreditNoteDetailsReport extends React.Component {
 																	<td style={{ textAlign: 'center'}}>{item.creditNoteNumber}</td>
 																	<td style={{ textAlign: 'center'}}>{item.customerName}</td>
 																	<td style={{ textAlign: 'center'}}>{item.creditNoteDate ? (
-																		moment(item.invoiceDate).format('DD/MM/YYYY')
+																		moment(item.creditNoteDate).format('DD/MM/YYYY')
 																	) : (" ")}</td>
 
 																	<td style={{ textAlign: 'center' }}>{item.status}</td>

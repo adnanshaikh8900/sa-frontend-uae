@@ -700,8 +700,8 @@ const adminRoutes = [
 		component: TransactionsReport.screen,
 	},
 	{
-		path: '/admin/report/financial',
-		name: 'Financial',
+		path: '/admin/report/reports-page',
+		name: 'ViewReports',
 		component: FinancialReport.screen,
 	},
 	{
@@ -797,7 +797,7 @@ const adminRoutes = [
 	{
 		redirect: true,
 		path: '/admin/report',
-		pathTo: '/admin/report/financial',
+		pathTo: '/admin/report/reports-page',
 		name: 'Report',
 	},
 

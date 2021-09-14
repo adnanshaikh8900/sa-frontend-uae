@@ -164,7 +164,7 @@ export default {
 			name: strings.Report,
 			url: '/admin/report',
 			icon: 'fas fa-file-contract',
-			path: 'Financial',
+			path: 'ViewReports',
 		},
 		// {
 		// 	name: 'Report',
@@ -178,7 +178,7 @@ export default {
 		// 		// },
 		// 		{
 		// 			name: 'Financial',
-		// 			url: '/admin/report/financial',
+		// 			url: '/admin/report/reports-page',
 		// 			icon: 'fas fa-usd',
 		// 			path: 'Financial',
 		// 		},

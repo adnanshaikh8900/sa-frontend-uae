@@ -1283,6 +1283,7 @@ min="0"
 						...{
 							totalVatAmount: response.data.totalVatAmount,
 							totalAmount: response.data.totalAmount,
+							total_net: response.data.totalAmount -response.data.totalVatAmount 
 						},
 					},
 	
@@ -1313,6 +1314,7 @@ min="0"
 				);
 				this.formRef.current.setFieldValue('contactId', this.state.option, true);
 				this.formRef.current.setFieldValue('currencyCode', this.state.customer_currency, true);
+				this.getCurrency(this.state.option.value)	
 				console.log(this.state.data,"api")
 				console.log("option ",this.state.option)
 				console.log(this.state.initValue.totalAmount,"this.state.initValue.totalAmount+++++++")

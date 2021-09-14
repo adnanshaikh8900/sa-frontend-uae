@@ -1003,9 +1003,9 @@ min="0"
 		// if (project !== null && project.value) {
 		// 	formData.append('projectId', project.value);
 		// }
-		// if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
-		// 	formData.append('attachmentFile', this.uploadFile.files[0]);
-		// }
+		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
+			formData.append('attachmentFile', this.uploadFile.files[0]);
+		}
 	
 		this.props.creditNotesCreateActions
 			.createCreditNote(formData)
@@ -1437,40 +1437,40 @@ min="0"
 																),
 															}),
 														),
-													// attachmentFile: Yup.mixed()
-													// 	.test(
-													// 		'fileType',
-													// 		'*Unsupported File Format',
-													// 		(value) => {
-													// 			value &&
-													// 				this.setState({
-													// 					fileName: value.name,
-													// 				});
-													// 			if (
-													// 				!value ||
-													// 				(value &&
-													// 					this.supported_format.includes(value.type))
-													// 			) {
-													// 				return true;
-													// 			} else {
-													// 				return false;
-													// 			}
-													// 		},
-													// 	)
-													// 	.test(
-													// 		'fileSize',
-													// 		'*File Size is too large',
-													// 		(value) => {
-													// 			if (
-													// 				!value ||
-													// 				(value && value.size <= this.file_size)
-													// 			) {
-													// 				return true;
-													// 			} else {
-													// 				return false;
-													// 			}
-													// 		},
-													// 	),
+													attachmentFile: Yup.mixed()
+														.test(
+															'fileType',
+															'*Unsupported File Format',
+															(value) => {
+																value &&
+																	this.setState({
+																		fileName: value.name,
+																	});
+																if (
+																	!value ||
+																	(value &&
+																		this.supported_format.includes(value.type))
+																) {
+																	return true;
+																} else {
+																	return false;
+																}
+															},
+														)
+														.test(
+															'fileSize',
+															'*File Size is too large',
+															(value) => {
+																if (
+																	!value ||
+																	(value && value.size <= this.file_size)
+																) {
+																	return true;
+																} else {
+																	return false;
+																}
+															},
+														),
 												})}
 											>
 												{(props) => (
@@ -2165,13 +2165,13 @@ min="0"
 																				/>
 																			</FormGroup>
 																		</Col>
-																		{/* <Col lg={6}>
+																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Field
 																					name="attachmentFile"
 																					render={({ field, form }) => (
 																						<div>
-																							<Label>Reciept Attachment</Label>{' '}
+																							<Label>{strings.ReceiptAttachment}</Label>{' '}
 																							<br />
 																							<Button
 																								color="primary"
@@ -2183,7 +2183,7 @@ min="0"
 																								className="btn-square mr-3"
 																							>
 																								<i className="fa fa-upload"></i>{' '}
-																								Upload
+																								{strings.upload}
 																							</Button>
 																							<input
 																								id="fileInput"
@@ -2222,7 +2222,7 @@ min="0"
 																						</div>
 																					)}
 																			</FormGroup>
-																		</Col> */}
+																		</Col>
 																	</Row>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="receiptAttachmentDescription">

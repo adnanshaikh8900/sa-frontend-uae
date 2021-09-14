@@ -249,7 +249,7 @@ class TrailBalances extends React.Component {
                                             <div
 													className="mr-2 print-btn-cont"
                                                     onClick={() => {
-                                                        this.props.history.push('/admin/report/financial');
+                                                        this.props.history.push('/admin/report/reports-page');
                                                     }}
 													style={{
 														cursor: 'pointer',

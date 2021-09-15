@@ -438,7 +438,7 @@ class Payment extends React.Component {
 														}}
 													/>
 												</Col>
-												<Col lg={2} className="mb-1">
+												{/* <Col lg={2} className="mb-1">
 													<Input
 														type="number"
 min="0"
@@ -448,7 +448,7 @@ min="0"
 															this.handleChange(e.target.value, 'invoiceAmount')
 														}
 													/>
-												</Col>
+												</Col> */}
 												<Col lg={3} className="pl-0 pr-0">
 													<Button
 														type="button"

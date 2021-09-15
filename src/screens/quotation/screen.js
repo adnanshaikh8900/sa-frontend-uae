@@ -32,6 +32,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 
 import * as QuotationAction from './actions';
+import * as CustomerInvoiceActions from './../customer_invoice/actions'
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 
@@ -41,7 +42,7 @@ import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
-		supplier_list: state.quotation.supplier_list,
+		customer_list: state.customer_invoice.customer_list,
 		status_list: state.supplier_invoice.status_list,
 		universal_currency_list: state.common.universal_currency_list,
 		quotation_list: state.quotation.quotation_list,
@@ -53,7 +54,7 @@ const mapDispatchToProps = (dispatch) => {
 			QuotationAction,
 			dispatch,
 		),
-
+		customerInvoiceActions: bindActionCreators(CustomerInvoiceActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
@@ -83,13 +84,13 @@ class Quatation extends React.Component {
 			openEmailModal: false,
 			actionButtons: {},
 			filterData: {
-				supplierId: '',
+				customerId: '',
 				referenceNumber: '',
 				invoiceDate: '',
 				invoiceDueDate: '',
 				amount: '',
 				status: '',
-				contactType: 1,
+				contactType: 2,
 			},
 			selectedRows: [],
 			contactType: 1,
@@ -128,6 +129,7 @@ class Quatation extends React.Component {
 	componentDidMount = () => {
 		let { filterData } = this.state;
 		this.props.quotationAction.getStatusList();
+		this.props.customerInvoiceActions.getCustomerList(filterData.contactType);
  		this.initializeData();
 	};
 
@@ -169,18 +171,7 @@ class Quatation extends React.Component {
 		});
 	};
 
-	renderInvoiceNumber = (cell, row) => {
-		return (
-			<label
-				className="mb-0 my-link"
-				onClick={() =>
-					this.props.history.push('/admin/expense/supplier-invoice/detail')
-				}
-			>
-				{row.transactionCategoryName}
-			</label>
-		);
-	};
+
 
 	renderRFQStatus = (cell, row) => {
 		let classname = '';
@@ -697,14 +688,14 @@ class Quatation extends React.Component {
 		this.setState(
 			{
 				filterData: {
-					supplierId: '',
+					customerId: '',
 					referenceNumber: '',
 					invoiceDate: '',
 					invoiceDueDate: '',
 					amount: '',
 					status: '',
 					statusEnum: '',
-					contactType: 1,
+					contactType: 2,
 					contactId: '',
 				},
 			},
@@ -726,14 +717,14 @@ class Quatation extends React.Component {
 		} = this.state;
 		const {
 			status_list,
-			supplier_list,
+			customer_list,
 			quotation_list,
 			universal_currency_list,
 		} = this.props;
 		// const containerStyle = {
 		//   zIndex: 1999
 		// }
-console.log(quotation_list)
+
 		const quotation_data =
 		quotation_list && quotation_list.data
 				? this.props.quotation_list.data.data.map((quotation) => ({
@@ -749,13 +740,13 @@ console.log(quotation_list)
 				  }))
 				: '';
 
-		let tmpSupplier_list = []
-		console.log(quotation_data,"quotation_data")
-		supplier_list.map(item => {
-			let obj = {label: item.label.contactName, value: item.value}
-			tmpSupplier_list.push(obj)
-		})		
+				let tmpCustomer_list = []
 
+				customer_list.map(item => {
+					let obj = { label: item.label.contactName, value: item.value }
+					tmpCustomer_list.push(obj)
+				})
+		
 		return (
 			<div className="supplier-invoice-screen">
 				<div className="animated fadeIn">
@@ -821,29 +812,28 @@ console.log(quotation_list)
 									<div className="py-3">
 										<h5>{strings.Filter} : </h5>
 										<Row>
-											<Col lg={2} className="mb-1">
+										<Col lg={2} className="mb-1">
 												<Select
-													styles={customStyles}
 													className="select-default-width"
 													placeholder={strings.Select+strings.Customer}
-													id="supplier"
-													name="supplier"
+													id="customer"
+													name="customer"
 													options={
-														tmpSupplier_list
+														tmpCustomer_list
 															? selectOptionsFactory.renderOptions(
-																	'label',
-																	'value',
-																	tmpSupplier_list,
-																	'Customer Name',
-															  )
+																'label',
+																'value',
+																tmpCustomer_list,
+																'Customer',
+															)
 															: []
 													}
-													value={filterData.supplierId}
+													value={filterData.customerId}
 													onChange={(option) => {
 														if (option && option.value) {
-															this.handleChange(option, 'supplierId');
+															this.handleChange(option, 'customerId');
 														} else {
-															this.handleChange('', 'supplierId');
+															this.handleChange('', 'customerId');
 														}
 													}}
 												/>
@@ -968,7 +958,7 @@ console.log(quotation_list)
 													? quotation_list.data.count
 													: 0,
 											}}
-											className="supplier-invoice-table"
+											className="customer-invoice-table"
 											ref={(node) => (this.table = node)}
 										>
 											<TableHeaderColumn

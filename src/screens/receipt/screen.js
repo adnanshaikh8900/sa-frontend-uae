@@ -414,23 +414,6 @@ class Receipt extends React.Component {
 										<div className="py-3">
 											<h5>{strings.Filter}: </h5>
 											<Row>
-												<Col lg={2} className="mb-1">
-													<DatePicker
-														className="form-control"
-														id="date"
-														name="receiptDate"
-														placeholderText={strings.ReceiptDate}
-														selected={filterData.receiptDate}
-														autoComplete="off"
-														showMonthDropdown
-														showYearDropdown
-														dateFormat="dd/MM/yyyy"
-														dropdownMode="select"
-														onChange={(value) => {
-															this.handleChange(value, 'receiptDate');
-														}}
-													/>
-												</Col>
 												{/* <Col lg={2} className="mb-1">
 													<Input
 														type="text"
@@ -444,7 +427,7 @@ class Receipt extends React.Component {
 														}}
 													/>
 												</Col> */}
-												<Col lg={2} className="mb-1">
+												{/* <Col lg={2} className="mb-1">
 													<Select
 														styles={customStyles}
 														options={
@@ -468,7 +451,7 @@ class Receipt extends React.Component {
 															}
 														}}
 													/>
-												</Col>
+												</Col> */}
 												<Col lg={3} className="mb-1">
 													<Select
 														styles={customStyles}
@@ -491,6 +474,23 @@ class Receipt extends React.Component {
 															} else {
 																this.handleChange('', 'contactId');
 															}
+														}}
+													/>
+												</Col>
+												<Col lg={2} className="mb-1">
+													<DatePicker
+														className="form-control"
+														id="date"
+														name="receiptDate"
+														placeholderText={strings.ReceiptDate}
+														selected={filterData.receiptDate}
+														autoComplete="off"
+														showMonthDropdown
+														showYearDropdown
+														dateFormat="dd/MM/yyyy"
+														dropdownMode="select"
+														onChange={(value) => {
+															this.handleChange(value, 'receiptDate');
 														}}
 													/>
 												</Col>

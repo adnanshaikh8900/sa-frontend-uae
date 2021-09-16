@@ -381,7 +381,6 @@ class CreateCreditNoteModal extends React.Component {
 				render={({ field, form }) => (
 					<Input
 					type="number"
-min="0"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (

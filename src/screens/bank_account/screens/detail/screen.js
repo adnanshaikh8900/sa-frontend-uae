@@ -416,13 +416,7 @@ class DetailBankAccount extends React.Component {
 																			option.target.value === '' ||
 																			this.regExAlpha.test(option.target.value)
 																		) {
-																			props.handleChange('account_name')(
-																				option,
-																			);
-																		} else {
-																			props.handleChange('account_name')(
-																				option,
-																			);
+																			props.handleChange('bank_name')(option);
 																		}
 																	}}
 																	className={
@@ -667,9 +661,6 @@ class DetailBankAccount extends React.Component {
 																			option.target.value === '' ||
 																			this.regExAlpha.test(option.target.value)
 																		) {
-																			props.handleChange('bank_name')(option);
-																		}
-																		{
 																			props.handleChange('bank_name')(option);
 																		}
 																	}}

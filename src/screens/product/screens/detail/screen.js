@@ -36,9 +36,12 @@ import * as DetailProductActions from './actions';
 import { CommonActions } from 'services/global';
 import * as SupplierInvoiceActions from '../../../supplier_invoice/actions';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import { InventoryModel} from '../../sections';
+import cellEditFactory from 'react-bootstrap-table2-editor';
+
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import { InventoryHistoryModal} from './sections';
+
 
 const mapStateToProps = (state) => {
 	return {
@@ -88,6 +91,9 @@ class DetailProduct extends React.Component {
 			disabled: false,
 			disabled1: false,
 			inventoryId:'',
+			openModal:false,
+			inventory_history_list:[],
+			inventory_list:[],
 		};
 
 		this.selectRowProp = {
@@ -205,6 +211,7 @@ class DetailProduct extends React.Component {
 								transactionCategoryId: res.data.transactionCategoryId ? res.data.transactionCategoryId : '',
 								inventoryId: res.data.inventoryId ? res.data.inventoryId : '',
 							},
+							isInventoryEnabled: res.data.isInventoryEnabled ? res.data.isInventoryEnabled : '',
 						});
 					} else {
 						this.setState({ loading: false });
@@ -220,17 +227,15 @@ class DetailProduct extends React.Component {
 			this.inventoryAccount();
 			this.props.productActions.getInventoryByProductId(this.props.location.state.id)
 			.then((res) => {
-				if (res.status === 200) {
-					
+				if (res.status === 200 && res.data !== null) {
 					this.setState({ loading: false,
-						inventoryId: res.data[0].inventoryId ? res.data[0].inventoryId : ''});
+						inventoryId: res.data.inventoryId ? res.data.inventoryId : ''});
 				}
 			})
 		}
 	};
 			
 renderName=(cell,row)=>{
-	 
 	return (<span>{cell ? cell : "-"}</span>);
 
 }
@@ -345,7 +350,7 @@ renderName=(cell,row)=>{
 		const inventoryQty = data['inventoryQty'];
 		const inventoryReorderLevel = data['inventoryReorderLevel'];
 		const contactId = data['contactId'];
-		const isInventoryEnabled = data['isInventoryEnabled'];
+		const isInventoryEnabled = this.state.isInventoryEnabled ? this.state.isInventoryEnabled  : '';
 		const transactionCategoryId = this.state.inventoryAccount ? this.state.inventoryAccount[0].value : '';
 		const inventoryId = this.state.inventoryId;
 
@@ -474,8 +479,16 @@ renderName=(cell,row)=>{
 				}
 			});
 	};
+	openSummuryModal = (data) => {
+		this.setState({
+			openModal: true
+		})
 
-
+	}
+	closeModal = (res) => {
+		this.setState({ openModal: false });
+	};
+	
 	removeDialog = () => {
 		this.setState({
 			dialog: null,
@@ -511,23 +524,38 @@ renderName=(cell,row)=>{
 		});
 	};
 	param = (row) => {
+
 		const data = {
 			p_id: row[0].p_id ,
 			s_id: row[1].s_id,
 		};
-		this.props.productActions.getInventoryHistory(data).then((response) => {
-			if (response.status ===200) {
-				this.setState({
-					exist: true,
-				});
-			} else {
-				this.setState({
-					exist: false,
-				});
-			}
-		});
-		this.props.history.push('/admin/master/product/detail/inventoryhistory');
+		if(row.supplierId !== null && row.productId !== null){
+			this.props.productActions.getInventoryHistory(data).then((res) => {
+				if (res.status === 200) {
+					this.setState({
+
+						inventory_history_list:res.data,
+							});
+
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
+
+		this.openSummuryModal({});
+		}//if
+		else {
+			this.props.commonActions.tostifyAlert(
+				'success',"Sorry , No supplier Available to View Inventory History List")
+		}
+	
 	};
+	
 	renderActions = (cell, row) => {
 		return (
 			<Row>
@@ -545,7 +573,7 @@ renderName=(cell,row)=>{
 			<Button
 				className="btn btn-sm pdf-btn ml-3"
 				
-				onClick={(e) => {		
+				onClick={(e) => {
 						this.param([{p_id:row.productId},{s_id:row.supplierId}]);
 				
 				}}
@@ -573,7 +601,7 @@ renderName=(cell,row)=>{
 	// 					)}
 	// 				</DropdownToggle>
 	// 				<DropdownMenu right>
-					
+
 	// 						<DropdownItem>
 	// 							<div
 	// 							onClick={(e, ) => {
@@ -583,8 +611,8 @@ renderName=(cell,row)=>{
 	// 								<i className="fas fa-edit" /> Edit
 	// 							</div>
 	// 						</DropdownItem>
-					
-						
+
+
 	// 						<DropdownItem
 	// 							onClick={() => {
 	// 								this.postInvoice(row);
@@ -592,7 +620,7 @@ renderName=(cell,row)=>{
 	// 						>
 	// 							<i className="fas fa-send" /> Post
 	// 						</DropdownItem>
-					
+
 	// 				</DropdownMenu>
 	// 			</ButtonDropdown>
 	// 		</div>
@@ -608,6 +636,11 @@ renderName=(cell,row)=>{
 			let obj = {label: item.label.contactName, value: item.value}
 			tmpSupplier_list.push(obj)
 		})
+
+		const cellEditProp = {
+			mode: 'dbclick',
+			beforeSaveCell: this.beforeSaveCell,
+		  };
 		return (
 			<div className="detail-product-screen">
 				<div className="animated fadeIn">
@@ -1725,25 +1758,25 @@ min="0"
 											>
 												 {strings.SupplierName}
 											</TableHeaderColumn>
-											<TableHeaderColumn 
+											<TableHeaderColumn
 												dataField="stockInHand" 
 												className="table-header-bg"
 											>
 											 {strings.StockInHand}
 											</TableHeaderColumn>
-											<TableHeaderColumn 
+											<TableHeaderColumn
 												dataField="reOrderLevel" 
 												className="table-header-bg"
 											>
 											 {strings.ReOrderLevel}
 											</TableHeaderColumn>
 											<TableHeaderColumn 
-												dataField="quantitySold" 
+												dataField="quantitySold"
 												className="table-header-bg"
 											>
 											 {strings.QuantitySold}
 											</TableHeaderColumn>
-											<TableHeaderColumn 
+											<TableHeaderColumn
 												dataField="purchaseOrder" 
 												className="table-header-bg"
 											>
@@ -1767,7 +1800,7 @@ min="0"
 																	lg={12}
 																	className="d-flex align-items-center justify-content-between flex-wrap mt-5"
 																>
-																	{props.values.isInventoryEnabled !== true &&
+																	{this.state.isInventoryEnabled !== true &&
 																	  (
 																	<FormGroup>
 																		<Button
@@ -1837,6 +1870,15 @@ min="0"
 						//getInventoryId={this.props.ProductActions.getInventoryById}
 						 getInventoryById={(e) => this.getInventoryById(e)}
 				/> */}
+
+					<InventoryHistoryModal
+					openModal={this.state.openModal}
+					closeModal={(e) => {
+						this.closeModal(e);
+					}}
+					// id={this.state.rowId}
+					 inventory_history_list={this.state.inventory_history_list}
+				/>
 			</div>
 		);
 	}

@@ -1,5 +1,8 @@
-import Temp from './temp'
+
+import InventoryHistoryModal from './invetoryHistorymodal';
+
 
 export {
-  Temp
+    InventoryHistoryModal,
+
 }

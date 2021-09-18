@@ -36,7 +36,7 @@ import * as DetailProductActions from './actions';
 import { CommonActions } from 'services/global';
 import * as SupplierInvoiceActions from '../../../supplier_invoice/actions';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import cellEditFactory from 'react-bootstrap-table2-editor';
+
 
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';

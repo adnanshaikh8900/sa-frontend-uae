@@ -272,7 +272,7 @@ class ReceivableInvoiceSummary extends React.Component {
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
 									paperSize="A3"
-									fileName="Receivales Summary.pdf"
+									fileName="Receivable Invoice Summary.pdf"
 								>
 							<div style={{	
 									

@@ -353,7 +353,7 @@ class ProductCategory extends React.Component {
 						<CardHeader>
 							<div className="h4 mb-0 d-flex align-items-center">
 								<i className="nav-icon icon-briefcase" />
-								<span className="ml-2"> {strings.CurrencyConversion}</span>
+								<span className="ml-2"> {strings.CurrencyRate}</span>
 							</div>
 						</CardHeader>
 						<CardBody>

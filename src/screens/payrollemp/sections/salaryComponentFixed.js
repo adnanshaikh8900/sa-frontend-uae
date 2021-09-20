@@ -173,38 +173,7 @@ class SalaryComponentFixed extends React.Component {
 							//	firstName: Yup.string().required('First Name is Required'),
 
 							//currrencyCode: Yup.string().required('Currency is Required'),
-							// contactType: Yup.string()
-							// .required("Please Select Contact Type"),
-							//       organization: Yup.string()
-							//       .required("Organization Name is Required"),
-							//     poBoxNumber: Yup.number()
-							//       .required("PO Box Number is Required"),
-							// email: Yup.string()
-							// 	.required('Email is Required')
-							// 	.email('Invalid Email'),
-							// mobileNumber: Yup.string()
-							// 	.required('Mobile Number is required')
-							// 	.test('quantity', 'Invalid Mobile Number', (value) => {
-							// 		if (isValidPhoneNumber(value)) {
-							// 			return true;
-							// 		} else {
-							// 			return false;
-							// 		}
-							// 	}),
-							//     addressLine1: Yup.string()
-							//       .required("Address is required"),
-							//     city: Yup.string()
-							//       .required("City is Required"),
-							//     billingEmail: Yup.string()
-							//       .required("Billing Email is Required")
-							//       .email('Invalid Email'),
-							//     contractPoNumber: Yup.number()
-							//       .required("Contract PoNumber is Required"),
-
-							//       currencyCode: Yup.string()
-							//       .required("Please Select Currency")
-							//       .nullable(),
-							// currencyCode: Yup.string().required('Please Select Currency'),
+						
 						})}
 					>
 						{(props) => {
@@ -229,7 +198,7 @@ class SalaryComponentFixed extends React.Component {
 										<Row>
 											<Col lg={8}>
 												<FormGroup>
-													<Label htmlFor="id">{strings.Component}</Label>
+													<Label htmlFor="id">{strings.Select+""+strings.Component}</Label>
 													<Select
 
 														options={
@@ -263,12 +232,19 @@ class SalaryComponentFixed extends React.Component {
 												</FormGroup>
 											</Col>
 										</Row>
-									
+								
+										<Row > 
+											<Col  lg={8}>
+											<div className="text-center"><b>OR </b> </div>
+											{/* <div className="text-center"><h5> Create New Component</h5></div> */}
+											</Col>
+										</Row>
+									<br/>
 										<Row>
 											<Col lg={8}>
 												<FormGroup className="mb-3">
 													<Label htmlFor="componentName">
-														{strings.ComponentName}
+													<span className="text-danger">*</span>{strings.ComponentName}
 													</Label>
 													<Input
 														type="text"
@@ -292,7 +268,7 @@ class SalaryComponentFixed extends React.Component {
 											<Row>
 											<Col md="8">
 												<FormGroup>
-													<Label htmlFor="gender">{strings.Type}</Label>
+													<Label htmlFor="type"><span className="text-danger">*</span>{strings.Type}</Label>
 													<Select
 
 														options={
@@ -331,7 +307,7 @@ class SalaryComponentFixed extends React.Component {
 										<Row style={{ display: props.values.type.value !== 2 ? 'none' : '' }}>
 											<Col lg={8}>
 												<FormGroup className="mb-3">
-													<Label htmlFor="salaryStructure">
+													<Label htmlFor="salaryStructure"><span className="text-danger">*</span>
 													 {strings.Percentage}
 													</Label>
 													<Input
@@ -354,7 +330,7 @@ class SalaryComponentFixed extends React.Component {
 										<Row  style={{ display: props.values.type.value !== 1 ? 'none' : '' }}>
 											<Col lg={8}>
 												<FormGroup className="mb-3">
-													<Label htmlFor="flatAmount">
+													<Label htmlFor="flatAmount"><span className="text-danger">*</span>
 														 {strings.FlatAmount}
 													</Label>
 													<Input

@@ -247,7 +247,7 @@ class SalaryComponentVariable extends React.Component {
 										<Row>
 											<Col lg={8}>
 												<FormGroup>
-													<Label htmlFor="id">{strings.Component}</Label>
+												<Label htmlFor="id">{strings.Select+""+strings.Component}</Label>
 													<Select
 
 														options={
@@ -281,11 +281,18 @@ class SalaryComponentVariable extends React.Component {
 												</FormGroup>
 											</Col>
 										</Row>
+																		
+										<Row > 
+											<Col  lg={8}>
+											<div className="text-center"><b>OR </b> </div>
+											{/* <div className="text-center"><h5> Create New Component</h5></div> */}
+											</Col>
+										</Row>
 										<Row>
 											<Col lg={8}>
 												<FormGroup className="mb-3">
 													<Label htmlFor="salaryStructure">
-													{strings.ComponentName}
+													<span className="text-danger">*</span>{strings.ComponentName}
 													</Label>
 													<Input
 														type="text"
@@ -309,7 +316,7 @@ class SalaryComponentVariable extends React.Component {
 										<Row>
 											<Col md="8">
 												<FormGroup>
-													<Label htmlFor="gender">{strings.Type}</Label>
+													<Label htmlFor="gender"><span className="text-danger">*</span>{strings.Type}</Label>
 													<Select
 
 														options={
@@ -347,7 +354,7 @@ class SalaryComponentVariable extends React.Component {
 											<Col lg={8}>
 												<FormGroup className="mb-3">
 													<Label htmlFor="salaryStructure">
-													 {strings.Percentage}
+													<span className="text-danger">*</span> {strings.Percentage}
 													</Label>
 													<Input
 														type="text"
@@ -370,7 +377,7 @@ class SalaryComponentVariable extends React.Component {
 											<Col lg={8}>
 												<FormGroup className="mb-3">
 													<Label htmlFor="flatAmount">
-														{strings.FlatAmount}
+													<span className="text-danger">*</span>	{strings.FlatAmount}
 													</Label>
 													<Input
 														type="text"

@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Col, Row, Card, CardBody, CardGroup } from 'reactstrap';
 import Chart from 'react-apexcharts';
-import {
-	Invoice,
-	BankAccount,
-	CashFlow,
-	RevenueAndExpense,
-	ProfitAndLoss,
-} from './sections';
+// import {
+// 	Invoice,
+// 	BankAccount,
+// 	CashFlow,
+// 	RevenueAndExpense,
+// 	ProfitAndLoss,
+// } from './sections';
 
 import * as DashboardActions from './actions';
 import { Line } from 'react-chartjs-2';

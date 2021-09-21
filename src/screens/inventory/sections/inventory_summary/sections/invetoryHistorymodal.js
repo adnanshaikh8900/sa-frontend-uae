@@ -1,36 +1,26 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import logo from 'assets/images/brand/logo.png';
+
 import {
 	Button,
 	Row,
 	Col,
 	Form,
 	FormGroup,
-	Input,
-	Label,
+
 	Modal,
 	CardHeader,
 	ModalBody,
 	ModalFooter,
 	ButtonGroup,
-	UncontrolledTooltip,
+
 	CardBody,
-	Table,
-	Card,
+	
 } from 'reactstrap';
-import { toInteger, upperCase, upperFirst } from 'lodash';
-import { Formik, Field } from 'formik';
-import Select from 'react-select';
-import * as Yup from 'yup';
-import { Editor } from 'react-draft-wysiwyg';
-import { EditorState } from 'draft-js';
-import { selectOptionsFactory } from 'utils';
-import DatePicker from 'react-datepicker';
+
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import moment from 'moment';
-import { bindActionCreators } from 'redux';
-import { CommonActions } from 'services/global';
+
 
 import { toast } from 'react-toastify';
 import { data } from '../../../../Language/index'
@@ -38,9 +28,8 @@ import LocalizedStrings from 'react-localization';
 
 import '../style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
-import ReactToPrint from 'react-to-print';
 
-var converter = require('number-to-words');
+
 
 const mapStateToProps = (state) => {
 
@@ -53,21 +42,21 @@ const mapStateToProps = (state) => {
 };
 
 
-const mapDispatchToProps = (dispatch) => {
-	return {
+// const mapDispatchToProps = (dispatch) => {
+// 	return {
 
-	};
-};
-const customStyles = {
-	control: (base, state) => ({
-		...base,
-		borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
-		boxShadow: state.isFocused ? null : null,
-		'&:hover': {
-			borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
-		},
-	}),
-};
+// 	};
+// };
+// const customStyles = {
+// 	control: (base, state) => ({
+// 		...base,
+// 		borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+// 		boxShadow: state.isFocused ? null : null,
+// 		'&:hover': {
+// 			borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+// 		},
+// 	}),
+// };
 
 let strings = new LocalizedStrings(data);
 class InventoryHistoryModal extends React.Component {

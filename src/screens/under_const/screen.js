@@ -2,16 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
-	Button,
-	Card,
-	CardBody,
-	CardGroup,
-	Col,
+
 	Container,
-	Form,
-	Input,
-	FormGroup,
-	Label,
+
 	Row,
 } from 'reactstrap';
 
@@ -19,10 +12,8 @@ import { AuthActions, CommonActions } from 'services/global';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { Formik } from 'formik';
-import * as Yup from 'yup';
 import './style.scss';
-import logo from 'assets/images/brand/logo.png';
+
 
 
 const mapStateToProps = (state) => {
@@ -31,8 +22,6 @@ const mapStateToProps = (state) => {
 	};
 };
 
-const eye = require('assets/images/settings/eye.png');
-const noteye = require('assets/images/settings/noteye.png')
 const mapDispatchToProps = (dispatch) => {
 	return {
 		authActions: bindActionCreators(AuthActions, dispatch),
@@ -126,8 +115,7 @@ class LogIn extends React.Component {
 	};
 
 	render() {
-		const { isPasswordShown } = this.state;
-		const { initValue } = this.state;
+
 		return (
 			<div className="log-in-screen">
 				<ToastContainer 	

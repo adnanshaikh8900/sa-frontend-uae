@@ -1,20 +1,17 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Col, Row, Card, CardBody, CardGroup } from 'reactstrap';
-import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
+import {  Row, Card, CardBody, CardGroup } from 'reactstrap';
+
 
 import moment from 'moment';
-import { PDFExport } from '@progress/kendo-react-pdf';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
-import { CSVLink } from 'react-csv';
-import { Loader, Currency } from 'components';
+import { Currency } from 'components';
 import * as InventoryActions from '../../actions';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import { Bar, HorizontalBar, Line  } from 'react-chartjs-2';
+import { Bar, HorizontalBar  } from 'react-chartjs-2';
 import { selectOptionsFactory } from 'utils';
 import Select from 'react-select';
 import {data}  from '../../../Language/index'

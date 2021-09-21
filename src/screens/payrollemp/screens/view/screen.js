@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {
 	Card,
-	FormGroup,
 	CardBody,
 	Row,
 	Col,
@@ -148,7 +147,7 @@ class ViewEmployee extends React.Component {
 							.then((res) => {
 								if (res.status === 200) {
 									// this.initializeData();
-									let v ="Fixed Allowance"
+									// let v ="Fixed Allowance"
 									this.setState({
 										
 										employeename:res.data.employeename,
@@ -351,7 +350,7 @@ class ViewEmployee extends React.Component {
 														<hr style={{ width: '90%' }}></hr>
 
 														<div>
-															<label > {strings. BasicInformation}</label>
+															<label > {strings.BasicInformation}</label>
 															<hr style={{ width: '50%' }}></hr>
 															<div style={{ fontSize: '16px' }}>
 																<div className='mt-2 mb-2'><i class="far fa-envelope"></i> &nbsp;{this.state.EmployeeDetails.email ? this.state.EmployeeDetails.email : '-'}</div>
@@ -460,12 +459,12 @@ class ViewEmployee extends React.Component {
 															<div> <h3>{this.state.CTC ? (this.state.CTC /12).toLocaleString() : ''}</h3></div></Col>
 															<Col>
 																		<Button
-																		className={`btn-square mr-3 ${
+																		className={`btn-square pull-right mb-2 mr-3 ${
 																			this.disable() ? `disabled-cursor` : ``
 																		} `}
 																			disabled={this.disable() ? true : false}
 																			color="primary"
-																			className="btn-square pull-right mb-2"
+																		
 																			style={{ marginBottom: '10px' }}
 																			onClick={() => this.props.history.push(`/admin/payroll/employee/updateSalaryComponent`,
 																				{ id: this.state.current_employee_id })}

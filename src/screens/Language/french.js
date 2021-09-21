@@ -71,7 +71,7 @@ RecieptNumber:"Numéro de reçu",
       Create :" Créer",
       Cancel: " Annuler",
       AddOpeningBalance : "Ajouter un solde d'ouverture",
-      NewOpeningBalance:"Nouvel équilibre d’ouverture ",
+      // NewOpeningBalance:"Nouvel équilibre d’ouverture ",
 
 
       //Dashoard
@@ -200,8 +200,7 @@ CreateExpense:"Créer des dépenses",
 ExpenseCategory:"Catégorie de dépenses",		
 PaidBy:"Payé par",		
 ExpenseDate:"Date des dépenses",						
-Tax:"Taxe",		
-CurrencyExchangeRate:"Taux de change",		
+Tax:"Taxe",			
 Description:"Description",				
 Attachment:"Attachement",				
 
@@ -212,9 +211,7 @@ INVOICEAMOUNT:"MONTANT DE LA FACTURE",
 		
 //Create invoice
 SupplierName:"Nom du fournisseur",			
-AddNewSupplier:"Ajouter un nouveau fournisseur",			
-PlaceofSupply:"Lieu d’approvisionnement",			
-Terms:"Petits caractères",														
+AddNewSupplier:"Ajouter un nouveau fournisseur",														
 AddASupplier:"Ajouter Un Fournisseur",
 
 //Purchase receipts

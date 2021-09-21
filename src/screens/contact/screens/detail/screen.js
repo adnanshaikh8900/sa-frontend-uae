@@ -712,7 +712,7 @@ class DetailContact extends React.Component {
 																				props.handleChange('mobileNumber')(
 																					option,
 																				);
-																				option.length!=12 ?  this.setState({checkmobileNumberParam:true}) :this.setState({checkmobileNumberParam:false});
+																				option.length!==12 ?  this.setState({checkmobileNumberParam:true}) :this.setState({checkmobileNumberParam:false});
 																			}}
 																			isValid
 																			// className={
@@ -1111,7 +1111,7 @@ class DetailContact extends React.Component {
 																			)}
 																				<div className="VerifyTRN">
 																		<br/>
-																		<b>	<a target="_blank" href="https://eservices.tax.gov.ae/en-us/trn-verify" style={{ color: '#2266d8' }}  >{strings.VerifyTRN}</a></b>
+																		<b>	<a target="_blank" href="https://eservices.tax.gov.ae/en-us/trn-verify" style={{ color: '#2266d8' }} rel="noopener noreferrer"  >{strings.VerifyTRN}</a></b>
 														</div>
 																	</FormGroup>
 																</Col>

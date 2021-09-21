@@ -15,7 +15,7 @@ import { PDFExport } from '@progress/kendo-react-pdf';
 
 import './style.scss';
 import { InvoiceTemplate } from './sections';
-import moment from 'moment';
+
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
@@ -129,7 +129,7 @@ this.props.supplierInvoiceDetailActions
 	};	
 	render() {
 		strings.setLanguage(this.state.language);
-		const { invoiceData, currencyData,InvoiceDataList, id } = this.state;
+		const { invoiceData, currencyData,InvoiceDataList,  } = this.state;
 		const { profile } = this.props;
 
 		return (

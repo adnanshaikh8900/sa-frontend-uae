@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Editor } from 'react-draft-wysiwyg';
 import { EditorState } from 'draft-js';
 
 import {
@@ -14,7 +13,6 @@ import {
 	Input,
 	Label,
 	Row,
-	Table,
 	Button,
 } from 'reactstrap';
 import { Formik } from 'formik';
@@ -28,9 +26,7 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import * as GeneralSettingActions from './actions';
 import { data } from '../Language/index'
 import LocalizedStrings from 'react-localization';
-import { tostifyAlert } from 'services/global/common/actions';
-import { toast } from 'react-toastify';
-import { Toast } from 'bootstrap';
+
 
 const mapStateToProps = (state) => {
 	return {};
@@ -225,7 +221,7 @@ class GeneralSettings extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { initValue, contentState, loading } = this.state;
+		const { initValue, loading } = this.state;
 
 		return (
 			<div className="general-settings-screen">

@@ -88,7 +88,7 @@ class CreateExpense extends React.Component {
 			payMode: '',
 			exchangeRate:'',
 			basecurrency:[],
-			disabled: false,
+			// disabled: false,
 			language: window['localStorage'].getItem('language'),
 		};
 		this.formRef = React.createRef();
@@ -174,7 +174,7 @@ class CreateExpense extends React.Component {
 			employee,
 			expenseDescription,
 			receiptNumber,
-			attachmentFile,
+			// attachmentFile,
 			receiptAttachmentDescription,
 			vatCategoryId,
 			payMode,
@@ -295,11 +295,11 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 		strings.setLanguage(this.state.language);
 		const { initValue, payMode } = this.state;
 		const {
-			currency_list,
+			// currency_list,
 			expense_categories_list,
 			vat_list,
-			profile,
-			user_list,
+			// profile,
+			// user_list,
 			pay_mode_list,
 			bank_list,
 			currency_convert_list,

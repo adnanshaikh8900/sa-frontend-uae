@@ -628,7 +628,7 @@ class CreateContact extends React.Component {
 																				option,
 																			);
 																			// this.checkMobileNumber(option)
-																			option.length!=12 ?  this.setState({checkmobileNumberParam:true}) :this.setState({checkmobileNumberParam:false});
+																			option.length!==12 ?  this.setState({checkmobileNumberParam:true}) :this.setState({checkmobileNumberParam:false});
 																		}}
 																		isValid
 																		// className={
@@ -749,7 +749,7 @@ class CreateContact extends React.Component {
 														<Row className="row-wrapper">
 															<Col md="4">
 																<FormGroup>
-																	<Label htmlFor="countryId">{strings. Country}</Label>
+																	<Label htmlFor="countryId">{strings.Country}</Label>
 																	<Select
 																		styles={customStyles}
 																		options={
@@ -1020,7 +1020,7 @@ class CreateContact extends React.Component {
 																		)}
 																			<div className="VerifyTRN">
 																		<br/>
-																		<b>	<a target="_blank" href="https://eservices.tax.gov.ae/en-us/trn-verify" style={{ color: '#2266d8' }}  >{strings.VerifyTRN}</a></b>
+																		<b>	<a target="_blank" rel="noopener noreferrer"  href="https://eservices.tax.gov.ae/en-us/trn-verify" style={{ color: '#2266d8' }}  >{strings.VerifyTRN}</a></b>
 														</div>
 																</FormGroup>
 															</Col>

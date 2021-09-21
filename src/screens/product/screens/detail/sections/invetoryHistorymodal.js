@@ -310,9 +310,9 @@ console.log(inventory_history_list,"inventory_history_list")
 												<TableHeaderColumn  dataField="quantitySold" dataSort className="table-header-bg">
 												Quantity Sold
 												</TableHeaderColumn >
-												<TableHeaderColumn  dataField="stockOnHand" dataSort className="table-header-bg">
+												{/* <TableHeaderColumn  dataField="stockOnHand" dataSort className="table-header-bg">
 											Stock In Hand
-												</TableHeaderColumn >
+												</TableHeaderColumn > */}
 												<TableHeaderColumn  dataField="unitCost" dataFormat={this.renderUnitCost} dataSort className="table-header-bg">
 												 {strings.UnitCost} 
 												</TableHeaderColumn >

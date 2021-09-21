@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {
 	Card,
-	FormGroup,
+
 	CardBody,
 	Row,
 	Col,
@@ -11,8 +11,7 @@ import {
 	TabContent,
 	NavLink,
 	TabPane,
-	CardGroup,
-	Table,
+
 	Button,
 	CardHeader,
 	ButtonGroup,
@@ -31,8 +30,7 @@ import 'react-toastify/dist/ReactToastify.css';
 // import 'react-select/dist/react-select.css'
 import './style.scss';
 import { bindActionCreators } from 'redux';
-import { upperFirst } from 'lodash-es';
-import moment from 'moment';
+
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
 import {
@@ -41,7 +39,7 @@ import {
 import { data } from '../Language/index'
 import LocalizedStrings from 'react-localization';
 import { Loader } from 'components';
-import { string } from 'yargs';
+
 const mapStateToProps = (state) => {
 	return {
 		designation_list: state.employeeDesignation.designation_list,
@@ -61,7 +59,7 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
-const avatar = require('assets/images/avatars/default-avatar.jpg');
+
 let strings = new LocalizedStrings(data);
 class PayrollConfigurations extends React.Component {
 	constructor(props) {
@@ -449,7 +447,7 @@ class PayrollConfigurations extends React.Component {
 		strings.setLanguage(this.state.language);
 		console.log(this.state.Fixed)
 		const { loading, dialog } = this.state;
-		const { profile, salaryRole_list, salaryStructure_list, designation_list } = this.props;
+		const {  salaryRole_list, salaryStructure_list, designation_list } = this.props;
 		return (
 			<div className="financial-report-screen">
 				<div className="animated fadeIn">

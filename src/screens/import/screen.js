@@ -5,11 +5,8 @@ import {
 	Button,
 	Card,
 	CardBody,
-	CardGroup,
 	Col,
-	Container,
 	Form,
-	Input,
 	FormGroup,
 	Label,
 	Row,
@@ -17,11 +14,9 @@ import {
 } from 'reactstrap';
 import Select from 'react-select';
 import { AuthActions, CommonActions } from 'services/global';
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { Formik } from 'formik';
-import * as Yup from 'yup';
 import './style.scss';
 import * as MigrationAction from './actions';
 import { selectOptionsFactory } from 'utils';
@@ -35,8 +30,8 @@ const mapStateToProps = (state) => {
 	};
 };
 
-const eye = require('assets/images/settings/eye.png');
-const noteye = require('assets/images/settings/noteye.png')
+// const eye = require('assets/images/settings/eye.png');
+// const noteye = require('assets/images/settings/noteye.png')
 const mapDispatchToProps = (dispatch) => {
 	return {
 		authActions: bindActionCreators(AuthActions, dispatch),

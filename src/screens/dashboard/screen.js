@@ -2,16 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { CardColumns } from 'reactstrap';
-import { Col, Row, Card, CardBody, CardGroup } from 'reactstrap';
-import Chart from 'react-apexcharts';
-import { Line } from 'react-chartjs-2';
+
 
 import {
-	Invoice,
+
 	BankAccount,
 	CashFlow,
-	RevenueAndExpense,
-	ProfitAndLoss,
+
 	ProfitAndLossReport,
 	PaidInvoices,
 } from './sections';

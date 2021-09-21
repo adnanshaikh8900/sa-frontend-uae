@@ -1,9 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import {
-	selectCurrencyFactory,
-} from 'utils';
+
 import {
   Card,
   CardHeader,
@@ -18,8 +16,7 @@ import {
 } from 'reactstrap'
 import { Loader , ConfirmDeleteModal} from 'components'
 import Select from 'react-select';
-import * as Yup from 'yup';
-import moment from 'moment';
+
 import { selectOptionsFactory } from 'utils';
 import DatePicker from 'react-datepicker';
 

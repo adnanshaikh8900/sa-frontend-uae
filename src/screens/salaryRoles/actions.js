@@ -5,7 +5,7 @@ import {
 
 export const getSalaryRoleList = (obj) => {
   let salaryRoleName = obj.salaryRoleName ? obj.salaryRoleName : '';
-  let id = obj.id ? obj.id : '';
+  // let id = obj.id ? obj.id : '';
   let pageNo = obj.pageNo ? obj.pageNo : '';
   let pageSize = obj.pageSize ? obj.pageSize : '';
   let order = obj.order ? obj.order : '';

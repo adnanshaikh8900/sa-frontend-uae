@@ -4,27 +4,16 @@ import {
 	Row,
 	Col,
 	Form,
-	FormGroup,
 	Input,
-	Label,
 	Modal,
 	CardHeader,
 	ModalBody,
 	ModalFooter,
 } from 'reactstrap';
-import Select from 'react-select';
+
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-
-import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
-import { toast } from 'react-toastify';
- 
-
-import IconButton from '@material-ui/core/IconButton';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import { TextField } from '@material-ui/core';
-import { StringStream } from 'codemirror';
 import {data}  from '../../Language/index'
 import LocalizedStrings from 'react-localization';
 
@@ -61,11 +50,11 @@ class SupplierModal extends React.Component {
 			openMultiSupplierProductModal,
 			closeMultiSupplierProductModal,
 			inventory_list,
-			currency_list,
-			country_list,
+			// currency_list,
+			// country_list,
 		} = this.props;
 		console.log("inventoryList", inventory_list)
-		const { initValue, state_list } = this.state;
+		const { initValue } = this.state;
 		return (
 			<div className="contact-modal-screen">
 				<Modal

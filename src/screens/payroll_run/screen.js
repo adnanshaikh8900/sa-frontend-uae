@@ -3,39 +3,27 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
 	Card,
-	FormGroup,
+
 	CardBody,
 	Row,
 	Col,
-	NavItem,
-	Nav,
-	TabContent,
-	NavLink,
-	TabPane,
-	CardGroup,
-	Table,
+
 	Button,
 	CardHeader,
 	ButtonGroup,
-	ButtonDropdown,
-	DropdownToggle,
-	DropdownMenu,
-	DropdownItem,
-	Label,
+
 	UncontrolledTooltip,
 } from 'reactstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import Select from 'react-select';
-import DatePicker from 'react-datepicker';
-import { selectOptionsFactory } from 'utils';
 
-import { Loader, ConfirmDeleteModal, Currency } from 'components';
+
+import { Loader, } from 'components';
 
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import { CommonActions } from 'services/global';
-import { CSVLink } from 'react-csv';
+
 
 import * as PayRollActions from './actions';
 import moment from 'moment';
@@ -43,8 +31,7 @@ import moment from 'moment';
 import './style.scss';
 import { data } from '../Language/index'
 import LocalizedStrings from 'react-localization';
-import { PayrollModal } from './sections';
-import { PaidInvoices } from 'screens/dashboard/sections';
+
 import { toast } from 'react-toastify';
 
 const mapStateToProps = (state) => {
@@ -62,16 +49,16 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
-const customStyles = {
-	control: (base, state) => ({
-		...base,
-		borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
-		boxShadow: state.isFocused ? null : null,
-		'&:hover': {
-			borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
-		},
-	}),
-};
+// const customStyles = {
+// 	control: (base, state) => ({
+// 		...base,
+// 		borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+// 		boxShadow: state.isFocused ? null : null,
+// 		'&:hover': {
+// 			borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+// 		},
+// 	}),
+// };
 
 let strings = new LocalizedStrings(data);
 class PayrollRun extends React.Component {
@@ -324,8 +311,8 @@ class PayrollRun extends React.Component {
 	onSelectAll = (isSelected, rows) => {
 
 		let tempList = [];
-		let paidList = [];
-		let EmployeeNames = "";
+		// let paidList = [];
+		// let EmployeeNames = "";
 		if (isSelected) {
 			rows.map((item) => {
 				if (item.status === 'Draft') {

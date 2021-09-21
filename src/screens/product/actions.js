@@ -95,7 +95,7 @@ export const getProductWareHouseList = () => {
 // Get Product VatCategory
 export const getProductVatCategoryList = () => {
 	return (dispatch, getState) => {
-		const state = getState();
+		// const state = getState();
 		let data = {
 			method: 'GET',
 			url: '/rest/datalist/vatCategory',

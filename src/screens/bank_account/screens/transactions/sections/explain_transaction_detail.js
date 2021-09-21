@@ -452,7 +452,7 @@ class ExplainTrasactionDetail extends React.Component {
 			amount,
 			dueAmount,
 			coaCategoryId,
-			transactionCategoryId,
+			// transactionCategoryId,
 			vendorId,
 			employeeId,
 			exchangeRate,
@@ -460,7 +460,7 @@ class ExplainTrasactionDetail extends React.Component {
 			customerId,
 			vatId,
 			currencyCode,
-			userId,
+			// userId,
 			transactionId,
 			expenseCategory,
 		} = data;

@@ -6,31 +6,20 @@ import {
 	CardBody,
 	Row,
 	Col,
-	TabContent,
-	TabPane,
-	Nav,
-	NavItem,
-	NavLink,
+	
 } from 'reactstrap';
 
 import { InvoiceTemplate } from 'components'
-import bauhaus from 'assets/images/invoice-template/bauhaus.jpg';
 import Basic from 'assets/images/invoice-template/Basic.jpg';
 import simple2 from 'assets/images/invoice-template/simple2.png';
-import horizon from 'assets/images/invoice-template/horizon.jpg';
-import ejs from 'assets/images/invoice-template/ejs.jpg';
-import union from 'assets/images/invoice-template/union.jpg';
-import lola from 'assets/images/invoice-template/lola.jpg';
-import tranquility from 'assets/images/invoice-template/tranquility.jpg';
-import modernist from 'assets/images/invoice-template/modernist.jpg';
+
 import * as TemplateActions from './actions';
 // import { Templates } from './sections';
 import { bindActionCreators } from 'redux';
 
 // import 'react-select/dist/react-select.css'
 import './style.scss';
-import { data } from 'screens/Language';
-import { RFC_2822 } from 'moment';
+
 
 const mapStateToProps = (state) => {
 	return {};

@@ -8,6 +8,7 @@ export default function Loader() {
     <img
       src={loader}
       style={{height:'100px'}}
+      alt=''
     ></img>
   </div>
   

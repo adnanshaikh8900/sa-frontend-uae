@@ -4,9 +4,7 @@ import {
 	Row,
 	Col,
 	Form,
-	FormGroup,
 	Input,
-	Label,
 	Modal,
 	CardHeader,
 	ModalBody,
@@ -14,14 +12,12 @@ import {
     Table,
 } from 'reactstrap';
 
-import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 
 import { toast } from 'react-toastify';
  
-import moment from 'moment';
 import {data}  from '../../Language/index'
 import LocalizedStrings from 'react-localization';
 
@@ -74,7 +70,7 @@ class PayrollModal extends React.Component {
 
     static getDerivedStateFromProps(nextProps, prevState) {
         if (prevState.selectedData !== nextProps.selectedData || prevState.employeename !== nextProps.employeename ||
-			prevState.salaryDetailAsNoOfDaysMap != nextProps.salaryDetailAsNoOfDaysMap || prevState.netPay !== nextProps.netPay
+			prevState.salaryDetailAsNoOfDaysMap !== nextProps.salaryDetailAsNoOfDaysMap || prevState.netPay !== nextProps.netPay
             || prevState.noOfDays !== nextProps.noOfDays  || prevState.current_employee !== nextProps.current_employee
             || prevState.lop !== nextProps.lop  )
             
@@ -99,9 +95,9 @@ class PayrollModal extends React.Component {
 
     handleSubmit = (data, resetForm) => {
         this.setState({ disabled: true });
-            const {
-                id
-            } = data;
+            // const {
+            //     // id
+            // } = data;
     
     
             const formData = new FormData();
@@ -215,7 +211,9 @@ class PayrollModal extends React.Component {
 						})}
 					>
 						{(props) => {
-							const { handleBlur } = props;
+							// const {
+							// 	//  handleBlur
+							// 	 } = props;
 							return (
 								<Form
 									name="simpleForm"

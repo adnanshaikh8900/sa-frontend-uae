@@ -69,8 +69,7 @@ Relationship2:"Relationship 2",
       Amount: "Amount",
       Create: " Create",
       Cancel: " Cancel",
-      AddOpeningBalance: "Add Opening Balance",
-      NewOpeningBalance:"New Opening Balance",		
+
 
 
 
@@ -203,8 +202,7 @@ ExpenseCategory:"Expense Category",
 PaidBy:"Paid By",		
 ExpenseDate:"Expense Date",						
 Tax:"Tax",		
-CurrencyExchangeRate:"Currency Exchange Rate",		
-Description:"Description",				
+				
 Attachment:"Attachment",				
 
 //Supplier Invoice
@@ -215,9 +213,7 @@ INVOICEAMOUNT:"INVOICE AMOUNT",
 //Create invoice
 SupplierName:"Supplier Name",			
 AddNewSupplier:"Add New Supplier",			
-PlaceofSupply:"Place of Supply",			
-Terms:"Terms",														
-AddASupplier:"Add A Supplier",
+			
 
 //Purchase receipts
 Purchasereceipts:"Purchase Receipts",				
@@ -254,7 +250,6 @@ UpdatePurchaseOrder:"Update Purchase Order",
 
 //create purchase order	
 CreatePurchaseOrder:"Create Purchase Order",		
-RFQNumber:"RFQ Number",		
 PONumber:"PO Number",				
 SupplierReferenceNumber:"Supplier Reference Number",		
 PODate:"PO Date",		
@@ -316,8 +311,7 @@ All:"All",
 NotExplained:"Not Explained",		
 PotentialDuplicate:"Potential Duplicate",						
 DepositAmount:"Deposit Amount",		
-WithdrawalAmount:"Withdrawal Amount",		
-DueAmount:"Due Amount",		
+WithdrawalAmount:"Withdrawal Amount",			
 Status:"Status",		
 
 //Add Transaction
@@ -355,7 +349,7 @@ ChartofAccounts:"Chart of Accounts",
 CODE:"CODE",
 Code:"Code",		
 NAME:"NAME",		
-TYPE:"TYPE",				
+				
 AddnewAccount:"Add new Account",		
 
 //Add Chart of Accounts
@@ -404,7 +398,7 @@ ProductCategoryName:"Product Category Name",
 //VatCategory	
 VatCategories:"Vat Categories",		
 VATNAME:"VAT NAME",	
-VATPERCENTAGE:"VAT PERCENTAGE",	
+	
 AddNewVat:"Add New Vat",
 
 //AddVatCategory
@@ -428,7 +422,7 @@ BaseCurrency:"Base Currency",
 
 //Inventory
 
-Dashboard:"Dashboard",
+
 Inventory:"Inventory",
 InventoryReorderLevel:"Inventory Reorder Level",
 NumberofSKUs:"Number of SKU's",		
@@ -462,7 +456,7 @@ InventoryAccount:"Inventory Account",
 UpdateInventory:"Update Inventory",			
 
 QuotationAmount:"Quotation Amount",
-VatAmount:"Vat Amount",
+
 UpdateQuotation:"Update Quotation",
 RFQAmount:"RFQ Amount",
 StartDate:"Start Date",
@@ -485,7 +479,7 @@ View:"View",
 CreatePO:"Create PO",
 CreateGRN:"Create GRN",
 Edit:" Edit",
-RecordPayment:"Record Payment",
+
 Draft:"Draft",
 Post:"Post",
 Last12Months:"Last 12 Months",	
@@ -544,7 +538,7 @@ Category:"Category",
 UpdateProductCategory:"Update Product Category",
 UpdateVatCategory:"Update Vat Category",
 UpdateCurrencyConversion:"Update Currency Conversion",
-ContactType:"Contact Type",
+
 PaymentForSupplierInvoice:"Payment For Supplier Invoice",
 Approve:"Approve",
 
@@ -563,7 +557,7 @@ CompanyRegistrationNo:"Company Registration No",
 VATRegistrationNo:"VAT Registration No",
 CompanyTypeCode:"Company Type Code",
 IndustryTypeCode:"Industry Type Code",
-CurrencyCode:"Currency",
+
 Website:"Website",
 EmailAddress:"Email Address",
 CompanyCost:"Company Cost",
@@ -582,7 +576,7 @@ CompanyAddressLine2:"Company Address Line 2",
 CompanyAddressLine3:"Company Address Line 3",
 
 //Header DropDown
-Profile:"Profile",
+
 GeneralSettings:"General Settings",
 User:"User",
 Help:"Help",
@@ -603,7 +597,7 @@ RoleName:"Role Name",
 
 //general settings
 
-GeneralSettings:"General Settings",
+
 GeneralDetails:"General Details",
 InvoicingReferencePattern:"Invoicing Reference Pattern",
 MailConfigurationDetail:"Mail Configuration Detail",
@@ -614,7 +608,7 @@ MailingPassword:"Mailing Password",
 MailingSMTPAuthorization:"Mailing SMTP Authorization",
 MailingSMTPStartTLSEnable:"Mailing SMTP StartTLS Enable",
 Yes:"Yes",
-Save:"Save",
+
 APIKey:"API Key",
 CreateCN:"Create CN",
 
@@ -692,7 +686,7 @@ CreateFixedComponent:"Create Fixed Component",
 CreateVariableComponent:"Create Variable Component",	
 SalaryComponent:"Salary Component",
 
-SalaryStructure:"Salary Structures",		
+		
 SALARYSTRUCTURETYPE:"SALARY STRUCTURE TYPE",		
 SALARYSTRUCTURENAME:"SALARY STRUCTURE NAME",		
 NewSalaryStructure:"New Salary Structure",		
@@ -705,8 +699,8 @@ Designations:"Designations",
 DESIGNATIONID:"Designation Id",	
 DESIGNATIONNAME:"DESIGNATION NAME",	
 NewDesignation:"New Designation",
-CreateDesignation:"Create Designation",	
-EmployeeDesignationName:"Employee Designation Name",	
+
+
 UpdateDesignation:"Update Designation",	
 DesignationName:"Designation Name",	
 
@@ -780,7 +774,7 @@ CurrentLiability:"Current Liability",
 AccountsPayable:"Accounts Payable",
 Thereisnodatatodisplay:"There is no data to display",
 Other:"Other",
-HorizontalBalanceSheet:"Horizontal Balance Sheet",
+
 RunReport:"Run Report",
 From:"From",
 To:"To",

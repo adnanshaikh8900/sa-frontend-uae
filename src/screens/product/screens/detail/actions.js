@@ -1,7 +1,7 @@
 import {
   authApi
 } from 'utils'
-import { PRODUCT } from 'constants/types';
+
 
 export const updateProduct = (obj) => {
   return (dispatch) => {

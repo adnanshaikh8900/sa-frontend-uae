@@ -2,7 +2,6 @@ import React from "react";
 import {
   Button,
   Card,
-  CardHeader,
   CardBody,
   CardGroup,
   Col,
@@ -28,8 +27,8 @@ import {
   api,
 } from 'utils'
 import logo from 'assets/images/brand/logo.png';
-import login_bg from 'assets/images/brand/login_bg.png';
-import login_banner from 'assets/images/brand/login_banner.png';
+// import login_bg from 'assets/images/brand/login_bg.png';
+// import login_banner from 'assets/images/brand/login_banner.png';
 
 class ResetPassword extends React.Component {
   constructor(props) {

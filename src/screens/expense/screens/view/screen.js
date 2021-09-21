@@ -65,7 +65,7 @@ class ViewExpense extends React.Component {
 			this.props.expenseDetailsAction
 				.getExpenseDetail(this.props.location.state.expenseId)
 				.then((res) => {
-					let val = 0;
+		
 					if (res.status === 200) {
 						
 						
@@ -85,7 +85,7 @@ class ViewExpense extends React.Component {
 	};
 
 	render() {
-		const { expenseData, currencyData, id } = this.state;
+		const { expenseData,  } = this.state;
 		const { profile } = this.props;
 		return (
 			<div className="view-expense-screen">

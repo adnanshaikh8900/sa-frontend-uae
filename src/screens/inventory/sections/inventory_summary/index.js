@@ -2,21 +2,15 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
-	Card,
-	CardHeader,
-	CardBody,
 	Button,
-	Row,
-	Col,
 	FormGroup,
 	Form,
 	ButtonGroup,
-	Input,
+
 } from 'reactstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import * as ProductActions from '../../../product/actions';
 
-import { DateRangePicker2 } from 'components';
 import moment from 'moment';
 
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -26,8 +20,8 @@ import './style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
-import { CSVLink } from 'react-csv';
-import { Loader, Currency } from 'components';
+
+import { Loader  } from 'components';
 import * as InventoryActions from '../../actions';
 
 import logo from 'assets/images/brand/logo.png';
@@ -327,8 +321,8 @@ class InventorySummary extends React.Component {
 	};
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
-		const { summary_list, vat_list, universal_currency_list,company_profile} = this.props;
+		const { loading, initValue} = this.state;
+		const { summary_list,company_profile} = this.props;
 
 		return (
 			<div className="transactions-report-screen">
@@ -451,10 +445,10 @@ class InventorySummary extends React.Component {
 												{strings.SUPPLIERNAME}
 												</TableHeaderColumn >
 												<TableHeaderColumn
-												className="text-right"
+												className="text-right table-header-bg"
 												columnClassName="text-right"
 												dataFormat={this.renderActions}
-												className="table-header-bg"
+												
 											     ></TableHeaderColumn>
 											</BootstrapTable>
 										</div>

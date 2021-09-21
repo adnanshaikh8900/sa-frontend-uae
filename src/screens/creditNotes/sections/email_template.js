@@ -73,7 +73,7 @@ class EmailModal extends React.Component {
 	};
 
 	render() {
-		const { openEmailModal, closeEmailModal, id } = this.props;
+		const { openEmailModal, closeEmailModal,} = this.props;
 		const { initValue, contentState } = this.state;
 		return (
 			<div className="contact-modal-screen">

@@ -67,7 +67,7 @@ RecieptNumber:"عدد إيصال",
       Create :" يخلق",
       Cancel: " إلغاء",
       AddOpeningBalance : "إضافة رصيد افتتاحي",
-      NewOpeningBalance:"الرصيد الافتتاحي الجديد ",
+  
 
        //Dashboard
        SupplierCustomerPaidInvoices: "فواتير المورد والعميل المدفوعة",
@@ -161,7 +161,7 @@ RecieptNumber:"عدد إيصال",
       InvoicingDetails:"تفاصيل الفوترة ",
       BillingEmail:"البريد الإلكتروني للفوترة",
       ContractPONumber: "رقم أمر الشراء للعقد",
-      Cancel:" إلغاء الأمر",
+      
       VerifyTRN:"تحقق من TRN",
       
       //Income receipts
@@ -198,7 +198,7 @@ ExpenseCategory:"فئة المصروفات",
 PaidBy:"مدفوعة من قبل",		
 ExpenseDate:"تاريخ المصروفات",						
 Tax:"ضريبة",		
-CurrencyExchangeRate:"سعر صرف العملات",		
+
 Description:"وصف",				
 Attachment:"مرفق",				
 
@@ -210,8 +210,8 @@ INVOICEAMOUNT:"مبلغ الفاتورة",
 //Create invoice
 SupplierName:"اسم المورد",			
 AddNewSupplier:"إضافة مورد جديد",			
-PlaceofSupply:"مكان التوريد",			
-Terms:"حيث",														
+			
+													
 AddASupplier:"إضافة مورد",
 
 //Purchase receipts
@@ -229,7 +229,7 @@ RFQNUMBER:"رقم طلب عرض الأسعار",
 RFQDate:"تاريخ طلب عرض الأسعار",												
 RFQDATE:"تاريخ طلب عرض الأسعار",			
 RFQDUEDATE:"تاريخ استحقاق طلب عرض الأسعار",						
-AddNewRequest:"إضافة طلب جديد",
+
 											
 //Create RFQ			
 CreateRequestForQuotation:"إنشاء طلب عرض أسعار",			
@@ -249,7 +249,7 @@ UpdatePurchaseOrder:" تحديث أمر شراء",
 
 //create purchase order	
 CreatePurchaseOrder:"إنشاء أمر شراء",		
-RFQNumber:"رقم طلب عرض الأسعار",		
+	
 PONumber:"رقم أمر الشراء",				
 SupplierReferenceNumber:"رقم مرجع المورد",		
 PODate:"تاريخ أمر الشراء",		
@@ -309,7 +309,7 @@ NotExplained:"غير مفسر",
 PotentialDuplicate:"تكرار محتمل",						
 DepositAmount:"مبلغ الإيداع",		
 WithdrawalAmount:"مبلغ السحب",		
-DueAmount:"المبلغ المستحق",		
+		
 Status:"حالة",		
 Message:"لا يمكن أن يكون تاريخ المعاملة أقل من تاريخ افتتاح البنك أو تاريخ آخر تسوية",
 
@@ -348,7 +348,7 @@ ChartofAccounts:"مخطط الحسابات",
 CODE:"رمز",		
 Code:"رمز",	
 NAME:"اسم",		
-TYPE:"نوع",				
+
 AddnewAccount:"إضافة حساب جديد",		
 
 //Add Chart of Accounts
@@ -397,7 +397,7 @@ ProductCategoryName:"اسم فئة المنتج",
 //VatCategory	
 VatCategories:"فئات ضريبة القيمة المضافة",		
 VATNAME:"اسم ضريبة القيمة المضافة",	
-VATPERCENTAGE:"نسبة ضريبة القيمة المضافة",	
+
 AddNewVat:"إضافة ضريبة القيمة المضافة الجديدة",
 
 //AddVatCategory
@@ -420,8 +420,8 @@ Exchangerate:"سعر الصرف",
 BaseCurrency:"العملة الأساسية",			
 
 //Inventory
-Dashboard:"لوحه القياده ",
-Inventory:"جرد",
+
+
 InventoryReorderLevel:"مستوى إعادة ترتيب المخزون",
 NumberofSKUs:" SKU عدد  ",		
 TotalValueofSKUs:"SKU إجمالي قيمة",		
@@ -434,12 +434,12 @@ Totalprofitgenerated:"إجمالي الأرباح المتولدة",
 Summary:"ملخص",				
 PRODUCTNAME:"اسم المنتج",		
 ProductName:"اسم المنتج",	
-PRODUCTCODE:"كود المنتج",		
+	
 ORDERQUANTITY:"كمية الطلب ",		
 QUANTITYSOLD:"الكمية المباعة",		
 STOCKINHAND:"المخزون في متناول اليد",		
 StockInHand:"المخزون في متناول اليد",		
-SUPPLIERNAME:"اسم المورد",		
+		
 InventorySummary:"ملخص المخزون",	
 Ason:"كما في",		
 Export:"تصدير ",		
@@ -450,11 +450,11 @@ Supplier:"المورد",
 Customer:"عميل",	
 InventoryHistory:"محفوظات المخزون",	
 OpeningStock:"المخزون الافتتاحي",
-InventoryAccount:"حساب الجرد",
+
 UpdateInventory:"تحديث المخزون",		
 
 QuotationAmount:"مبلغ الاقتباس",
-VatAmount:"مبلغ ضريبة القيمة المضافة ",
+
 UpdateQuotation:"تحديث عرض الأسعار",
 RFQAmount:"طلب عرض أسعار مبلغ",
 StartDate:"تاريخ البدء",
@@ -476,10 +476,10 @@ Send:"إرسال",
 Close:"مغلق",	
 View:"منظر",	
 CreatePO:"إنشاء أمر شراء",	
-CreateCN:"create CN",
+
 CreateGRN:"إنشاء ملاحظة استلام السلع",	
 Edit:" تعديل",	
-RecordPayment:"سجل دفع",	
+
 Draft:"مسودة",
 Post:"بريد",
 Last12Months:"آخر 12 شهرا",	
@@ -554,7 +554,7 @@ CompanyRegistrationNo:"رقم تسجيل الشركة",
 VATRegistrationNo:"رقم تسجيل ضريبة القيمة المضافة",	
 CompanyTypeCode:"كود نوع الشركة",	
 IndustryTypeCode:"رمز نوع الصناعة",	
-CurrencyCode:"كود العملة",	
+
 Website:"الموقع الإلكتروني",	
 EmailAddress:"عنوان البريد الإلكتروني",	
 CompanyCost:"تكلفة الشركة",	
@@ -573,7 +573,7 @@ CompanyAddressLine2:"سطر عنوان الشركة 2",
 CompanyAddressLine3:"سطر عنوان الشركة 3",
 
 //Header DropDown//
-Profile:"ملف تعريف",	
+
 GeneralSettings:"الإعدادات العامة",	
 User:"المستعمل",	
 Help:"مساعدة",	
@@ -594,7 +594,7 @@ RoleName:"اسم الدور",
 
 //general settings
 
-GeneralSettings:"الاعدادات العامة",	
+
 GeneralDetails:"تفاصيل عامة",	
 InvoicingReferencePattern:"النمط المرجعي للفواتير",		
 MailConfigurationDetail:"تفاصيل تكوين البريد",
@@ -605,7 +605,7 @@ MailingPassword:"كلمة المرور البريدية",
 MailingSMTPAuthorization:"تفويض SMTP بالبريد",	
 MailingSMTPStartTLSEnable:"تفعيل SMTP StartTLS للبريد",	
 Yes:"نعم",
-Save:"حفظ",
+
 APIKey:"مفتاح API",
 CreateCN:"CN قم بإنشاء",
 
@@ -682,7 +682,7 @@ CreateFixedComponent:"إنشاء مكون ثابت",
 CreateVariableComponent:"إنشاء مكون متغير",	
 SalaryComponent:"عنصر المرتبات",
 
-SalaryStructure:"راتب بنية",		
+	
 SALARYSTRUCTURETYPE:"نوع هيكل الراتب",		
 SALARYSTRUCTURENAME:"اسم هيكل الراتب",		
 NewSalaryStructure:"هيكل الرواتب الجديد",		
@@ -695,8 +695,7 @@ Designations:"تعيينات",
 DESIGNATIONID:"معرّف التوصيف",	
 DESIGNATIONNAME:"اسم التعيين",	
 NewDesignation:"التعيين الجديد",
-CreateDesignation:"إنشاء التعيين",	
-EmployeeDesignationName:"اسم تعيين الموظف",	
+
 UpdateDesignation:"تحديث التعيين",	
 DesignationName:"اسم التعيين",	
 PayrollConfigurations:"تكوينات الرواتب",
@@ -769,8 +768,8 @@ CurrentLiability:"المسؤولية الحالية",
 AccountsPayable:"حسابات قابلة للدفع",
 Thereisnodatatodisplay:"لا توجد بيانات لعرضها",
 Other:"آخر",
-HorizontalBalanceSheet:"الميزانية العمومية الأفقية",
-RunReport:"تشغيل التقرير",
+
+
 From:"من عند",
 To:"ل",
 PayableInvoiceDetails:"تفاصيل الفاتورة المستحقة الدفع",

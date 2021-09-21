@@ -1297,7 +1297,7 @@ try {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="salesUnitPrice">
 																			{/* <span className="text-danger">*</span>{' '} */}
-																		 {strings.InventoryAccount}
+																			<span className="text-danger">*</span> {strings.InventoryAccount}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -1354,7 +1354,7 @@ try {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="inventoryQty">
 																			{/* <span className="text-danger">*</span>{' '} */}
-																			 {strings.PurchaseQuantity}
+																			<span className="text-danger">*</span>	 {strings.PurchaseQuantity}
 																			
 																		</Label>
 																		<Input
@@ -1405,7 +1405,7 @@ min="0"
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="inventoryPurchasePrice">
 																			{/* <span className="text-danger">*</span>{' '} */}
-																			{strings.PurchasePrice}
+																			<span className="text-danger">*</span>	{strings.PurchasePrice}
 																		</Label>
 																		<Input
 																		type="number"
@@ -1511,7 +1511,7 @@ min="0"
 																	<Col lg={6}>
 																	<FormGroup className="">
 																		<Label htmlFor="inventoryReorderLevel">
-																		  {strings.ReOrderLevel}
+																		<span className="text-danger">*</span>  {strings.ReOrderLevel}
 																		</Label>
 																		<Input
 																			// readOnly={

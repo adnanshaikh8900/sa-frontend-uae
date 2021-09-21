@@ -329,7 +329,7 @@ class DetailCurrencyConvert extends React.Component {
 																</Label>
 																<Input
 																	type="number"
-min="0" maxLength='20'
+                                  maxLength='20'
 																	id="exchangeRate"
 																	name="exchangeRate"
 																	placeholder={strings.Enter+strings.Exchangerate}

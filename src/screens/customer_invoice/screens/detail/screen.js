@@ -1708,7 +1708,8 @@ debugger
 																	<div>
 																		<Input
 																			type="number"
-min="0"
+																			//min="0"
+																			maxLength='20'
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"

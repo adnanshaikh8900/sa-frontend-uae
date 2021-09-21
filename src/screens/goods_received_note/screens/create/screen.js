@@ -277,7 +277,7 @@ class CreateGoodsReceivedNote extends React.Component {
 				this.setState({
 					supplier_currency: item.label.currency.currencyCode,
 					supplier_currency_des: item.label.currency.currencyName,
-					supplier_currency_symbol: item.label.currency.currencySymbol
+					supplier_currency_symbol: item.label.currency.currencyIsoCode
 				});
 
 				supplier_currencyCode = item.label.currency.currencyCode;
@@ -486,7 +486,7 @@ this.state.data.map((obj, index) => {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.subTotal === 0 ? this.state.supplier_currency_symbol + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.subTotal === 0 ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+  row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
 
 	componentDidMount = () => {
@@ -1894,7 +1894,7 @@ console.log(this.state.data)
 																	}
 																	disabled={this.checkedRow() ? true : false}
 																>
-																	<i className="fa fa-plus"></i>{strings.Addmore}
+																	<i className="fa fa-plus"></i>&nbsp;{strings.Addmore}
 																</Button>
 																<Button
 																	color="primary"
@@ -1905,7 +1905,7 @@ console.log(this.state.data)
 																	
 																
 																>
-																	<i className="fa fa-plus"></i>{strings.Addproduct}
+																	<i className="fa fa-plus"></i>&nbsp;{strings.Addproduct}
 																</Button>
 															</Col>
 														</Row>
@@ -2136,7 +2136,7 @@ console.log(this.state.data)
 																								}
 																							/>
 																						)}*/}
-																						{this.state.supplier_currency_symbol} 
+																						{this.state.supplier_currency_symbol} &nbsp;
 																						{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																					</label>
 																				</Col>
@@ -2164,7 +2164,7 @@ console.log(this.state.data)
 																								}
 																							/>
 																						)}*/}
-																						{this.state.supplier_currency_symbol} 
+																						{this.state.supplier_currency_symbol} &nbsp; 
 																						{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																					</label>
 																				</Col>
@@ -2192,7 +2192,7 @@ console.log(this.state.data)
 																								}
 																							/>
 																						)} */}
-																					{this.state.supplier_currency_symbol} 
+																					{this.state.supplier_currency_symbol} &nbsp;  
 																						{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																					</label>
 																				</Col>

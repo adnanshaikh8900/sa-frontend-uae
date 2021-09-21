@@ -541,7 +541,7 @@ class DetailSupplierInvoice extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		return row.subTotal ? this.state.supplier_currency_symbol + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.subTotal ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
 	addRow = () => {
 		const data = [...this.state.data];
@@ -1231,7 +1231,7 @@ class DetailSupplierInvoice extends React.Component {
 				this.setState({
 					supplier_currency: item.label.currency.currencyCode,
 					supplier_currency_des: item.label.currency.currencyName,
-					supplier_currency_symbol: item.label.currency.currencySymbol
+					supplier_currency_symbol: item.label.currency.currencyIsoCode
 				});
 
 				supplier_currencyCode = item.label.currency.currencyCode;
@@ -2234,7 +2234,7 @@ class DetailSupplierInvoice extends React.Component {
 																							}
 																							/>
 																							)} */}
-																							{this.state.supplier_currency_symbol}
+																							{this.state.supplier_currency_symbol} &nbsp;
 																							{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
@@ -2259,7 +2259,7 @@ class DetailSupplierInvoice extends React.Component {
 																							}
 																							/>
 																							)} */}
-																							{this.state.supplier_currency_symbol}
+																							{this.state.supplier_currency_symbol} &nbsp;
 																							{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
@@ -2274,7 +2274,7 @@ class DetailSupplierInvoice extends React.Component {
 																					</Col>
 																					<Col lg={6} className="text-right">
 																						<label className="mb-0">
-																						{this.state.supplier_currency_symbol}
+																						{this.state.supplier_currency_symbol} &nbsp;
 																							{this.state.initValue.discount  ? '-'+initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })
 																							
 																						}
@@ -2302,7 +2302,7 @@ class DetailSupplierInvoice extends React.Component {
 																							}
 																							/>
 																							)} */}
-																							{this.state.supplier_currency_symbol}
+																							{this.state.supplier_currency_symbol} &nbsp;
 																							{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>

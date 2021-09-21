@@ -317,13 +317,13 @@ class CreditNotes extends React.Component {
 		<div>
 					<label className="font-weight-bold mr-2 ">{strings.Amount}: </label>
 					<label>
-					{row.invoiceAmount === 0  ? row.currencySymbol + row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol + row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+					{row.invoiceAmount === 0  ? row.currencyName +" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyName+" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 					</label>
 				</div>
 				<div>
 					<label className="font-weight-bold mr-2 ">{strings.RemainingCredits}: </label>
 					<label>
-					{row.dueAmount === 0  ? row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+					{row.dueAmount === 0  ? row.currencyName+" " + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyName+" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 					</label>
 				</div>
 			
@@ -363,11 +363,11 @@ class CreditNotes extends React.Component {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.vatAmount === 0  ? row.currencySymbol + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.vatAmount === 0  ? row.currencyName +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyName +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
 
 	renderDueAmount =(cell,row,extraData) => {
-		return row.dueAmount === 0  ? row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.dueAmount === 0  ? row.currencyName +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyName +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	}
 	renderActions = (cell, row) => {
 		return (

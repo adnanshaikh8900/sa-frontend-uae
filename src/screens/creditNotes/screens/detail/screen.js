@@ -451,7 +451,7 @@ min="0"
 		// ) : (
 		// 	''
 		// );
-		return row.subTotal === 0 ? this.state.customer_currency_symbol + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.customer_currency_symbol + row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.subTotal === 0 ? this.state.customer_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.customer_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
 	addRow = () => {
 		const data = [...this.state.data];
@@ -1064,7 +1064,7 @@ min="0"
 				this.setState({
 					customer_currency: item.label.currency.currencyCode,
 					customer_currency_des: item.label.currency.currencyName,
-					customer_currency_symbol: item.label.currency.currencySymbol,
+					customer_currency_symbol: item.label.currency.currencyIsoCode,
 				});
 
 				customer_currencyCode = item.label.currency.currencyCode;

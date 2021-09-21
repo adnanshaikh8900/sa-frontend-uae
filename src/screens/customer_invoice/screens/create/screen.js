@@ -38,7 +38,6 @@ import moment from 'moment';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { string } from 'prop-types';
-import { toast } from 'react-toastify';
 
 const mapStateToProps = (state) => {
 	return {
@@ -71,10 +70,10 @@ let strings = new LocalizedStrings(data);
 const customStyles = {
 	control: (base, state) => ({
 		...base,
-		borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+		borderColor: state.isFocused ? '#00FFFF' : '#c7c7c7',
 		boxShadow: state.isFocused ? null : null,
 		'&:hover': {
-			borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+			borderColor: state.isFocused ? '#00FFFF' : '#c7c7c7',
 		},
 	}),
 };
@@ -158,8 +157,6 @@ class CreateCustomerInvoice extends React.Component {
 			exchangeRate:'',		
 			basecurrency:[],
 			inventoryList:[],
-			param:false,
-			date:'',
 		};
 
 		this.formRef = React.createRef();
@@ -178,10 +175,7 @@ class CreateCustomerInvoice extends React.Component {
 		this.termList = [
 			{ label: 'Net 7 Days', value: 'NET_7' },
 			{ label: 'Net 10 Days', value: 'NET_10' },
-			{ label: 'Net 15 Days', value: 'NET_15' },
 			{ label: 'Net 30 Days', value: 'NET_30' },
-			{ label: 'Net 45 Days', value: 'NET_45' },
-			{ label: 'Net 60 Days', value: 'NET_60' },
 			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
 		];
 		this.placelist = [
@@ -196,9 +190,7 @@ class CreateCustomerInvoice extends React.Component {
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
-		this.regDec1=/^\d{1,2}\.\d{1,2}$|^\d{1,2}$/;
 		this.regDecimalP = /(^100(\.0{1,2})?$)|(^([1-9]([0-9])?|0)(\.[0-9]{1,2})?$)/;
-		this.regExAlpha = /^[a-zA-Z0-9!@#$&()-\\`.+,/\"]+$/;
 	}
 
 	// renderActions (cell, row) {
@@ -274,7 +266,6 @@ class CreateCustomerInvoice extends React.Component {
 					<div>
 						<Input
 							type="number"
-							min="0"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -333,7 +324,6 @@ class CreateCustomerInvoice extends React.Component {
 				render={({ field, form }) => (
 					<Input
 					type="number"
-min="0"
 						maxLength="10"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
@@ -370,26 +360,22 @@ min="0"
 	};
 
 		renderSubTotal = (cell, row,extraData) => {
-			return row.subTotal === 0 ? this.state.customer_currency_symbol + row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2 }): this.state.customer_currency_symbol + row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2 });
+			return row.subTotal === 0 ? this.state.customer_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2 }): this.state.customer_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2 });
 
 }
 	setDate = (props, value) => {
 		const { term } = this.state;
 		const val = term ? term.value.split('_') : '';
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
-		debugger
 		const values = value
 			? value
 			: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
-			if (temp && values) {
-				this.setState({
-					date: moment(values).add(temp, 'days'),
-				});
-				const date1 = moment(values)
-				.add(temp, 'days')
-				.format('DD/MM/YYYY')
-				props.setFieldValue('invoiceDueDate',date1, true);
-			}
+		if (temp && values) {
+			const date = moment(values)
+				.add(temp - 1, 'days')
+				.format('DD/MM/YYYY');
+			props.setFieldValue('invoiceDueDate', date, true);
+		}
 	};
 
 	setExchange = (value) => {
@@ -870,7 +856,7 @@ min="0"
 			if (props.values.discountType.value === 'PERCENTAGE') {
 				var val =
 					((+obj.unitPrice -
-						(+((obj.unitPrice * discountPercentage)) / 100)) *
+						+((obj.unitPrice * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })) *
 						vat *
 						obj.quantity) /
 					100;
@@ -892,7 +878,7 @@ min="0"
 
 		const discount =
 			props.values.discountType.value === 'PERCENTAGE'
-				? +((total_net * discountPercentage) / 100)
+				? +((total_net * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })
 				: discountAmount;
 		this.setState(
 			{
@@ -902,8 +888,8 @@ min="0"
 					...{
 						total_net: discount ? total_net - discount : total_net,
 						invoiceVATAmount: total_vat,
-						discount:  discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : total - discount,
+						discount: total_net > discount ? discount : 0,
+						totalAmount: total_net > discount ? total - discount : total,
 					},
 				},
 			},
@@ -952,14 +938,14 @@ min="0"
 		);
 		formData.append(
 			'invoiceDueDate',
-			invoiceDueDate ? this.state.date : null,
+			invoiceDueDate ? moment(invoiceDueDate, 'DD/MM/YYYY').toDate() : null,
 		);
 		formData.append(
 			'invoiceDate',
 			invoiceDate
-				?invoiceDate
-						// moment(invoiceDate,'DD/MM/YYYY')
-						// .toDate()
+				?
+						moment(invoiceDate,'DD/MM/YYYY')
+						.toDate()
 				: null,
 		);
 		formData.append(
@@ -1088,20 +1074,7 @@ min="0"
 	openInvoicePreviewModal = (props) => {
 		this.setState({ openInvoicePreviewModal: true });
 	};
-	checkAmount=(discount)=>{
-		const { initValue } = this.state;
-			if(discount >= initValue.totalAmount){
-					this.setState({
-						param:true
-					});
-			}
-			else{
-				this.setState({
-					param:false
-				});
-			}
 
-	}
 	// getCurrentUser = (data) => {
 	// 	let option;
 	// 	console.log('data', data)
@@ -1232,7 +1205,7 @@ min="0"
 				this.setState({
 					customer_currency: item.label.currency.currencyCode,
 					customer_currency_des: item.label.currency.currencyName,
-					customer_currency_symbol: item.label.currency.currencySymbol,
+					customer_currency_symbol: item.label.currency.currencyIsoCode,
 				});
 
 				customer_currencyCode = item.label.currency.currencyCode;
@@ -1295,10 +1268,6 @@ min="0"
 														errors.invoice_number =
 															'Invoice Number already exists';
 													}
-													if (param === true) {
-														errors.discount =
-															'Discount amount Cannot be greater than Invoice Total Amount';
-													}
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({
@@ -1316,7 +1285,6 @@ min="0"
 													invoiceDate: Yup.string().required(
 														'Invoice Date is Required',
 													),
-													
 													lineItemsString: Yup.array()
 														.required(
 															'Atleast one invoice sub detail is mandatory',
@@ -1643,7 +1611,6 @@ min="0"
 																		value={props.values.invoiceDate}
 																		selected={props.values.invoiceDate}
 																		onChange={(value) => {
-																			
 																			props.handleChange('invoiceDate')(value);
 																			this.setDate(props, value);
 																		}}
@@ -1816,10 +1783,8 @@ min="0"
 																	</div>
 																</FormGroup>
 															</Col>
-															<Col  lg={2}>
+															<Col md={2}>
 															<Input
-																type="number"
-															min="0"	
 																		disabled
 																				id="currencyName"
 																				name="currencyName"
@@ -1845,16 +1810,6 @@ min="0"
 																disabled={this.checkedRow() ? true : false}
 															>
 																<i className="fa fa-plus"></i> {strings.Addmore}
-															</Button>
-															<Button
-																color="primary"
-																className= "btn-square mr-3"
-																onClick={(e, props) => {
-																	this.openProductModal(props);
-																	}}
-																
-															>
-																<i className="fa fa-plus"></i> {strings.Addproduct}
 															</Button>
 														</Col>
 														<Row>
@@ -1891,20 +1846,20 @@ min="0"
 																	></TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="product"
-																		width="20%"
+																		width="15%"
 																		dataFormat={(cell, rows) =>
 																			this.renderProduct(cell, rows, props)
 																		}
 																	>
 																		{strings.PRODUCT}
 																	</TableHeaderColumn>
-																	{/* <TableHeaderColumn
+																	<TableHeaderColumn
 																		width="55"
 																		dataAlign="center"
 																		dataFormat={(cell, rows) =>
 																			this.renderAddProduct(cell, rows, props)
 																		}
-																	></TableHeaderColumn> */}
+																	></TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="description"
 																		dataFormat={(cell, rows) =>
@@ -1993,7 +1948,7 @@ min="0"
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||
-																							this.regExAlpha.test(
+																							this.regExBoth.test(
 																								option.target.value,
 																							)
 																						) {
@@ -2142,12 +2097,9 @@ min="0"
 																							<Input
 																								id="discountPercentage"
 																								name="discountPercentage"
-																								min="0"
-																								max="99"
-																								 step="0.01"
 																								placeholder={strings.DiscountPercentage}
 																								type="number"
-																								maxLength={2}
+																								maxLength="5"
 																								value={
 																									props.values
 																										.discountPercentage
@@ -2155,13 +2107,13 @@ min="0"
 																								onChange={(e) => {
 																									if (
 																										e.target.value === '' ||
-																										this.regDec1.test(
+																										this.regDecimal.test(
 																											e.target.value,
 																										)
 																									) {
 																										props.handleChange(
 																											'discountPercentage',
-																										)(e)
+																										)(e);
 																										this.setState(
 																											{
 																												discountPercentage:
@@ -2193,7 +2145,7 @@ min="0"
 																							type="number"
 																							name="discount"
 																							maxLength="10"
-																							min="0"
+																							
 																							disabled={
 																								props.values.discountType &&
 																								props.values.discountType
@@ -2205,7 +2157,7 @@ min="0"
 																							value={props.values.discount}
 																							onChange={(option) => {
 																								if (
-																						option.target.value === '' ||
+																									option.target.value === '' ||
 																									this.regDecimal.test(
 																										option.target.value,
 																									)
@@ -2226,21 +2178,8 @@ min="0"
 																										},
 																									);
 																								}
-																								this.checkAmount(option.target.value)
 																							}}
-																							className={`form-control ${
-																								props.errors.discount &&
-																								props.touched.discount
-																									? 'is-invalid'
-																									: ''
-																							}`}
 																						/>
-															{props.errors.discount &&
-																		props.touched.discount && (
-																			<div className="invalid-feedback">
-																				{props.errors.discount}
-																			</div>
-																		)}
 																					</FormGroup>
 																				</Col>
 																			</Row>
@@ -2307,7 +2246,7 @@ min="0"
 																							/>
 																							)} */}
 																						{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.discount ? '-'+initValue.discount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 }): initValue.discount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
+																							{initValue.discount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 }) }
 																				
 																					</label>
 																				</Col>
@@ -2322,10 +2261,9 @@ min="0"
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																					{this.state.customer_currency_symbol} &nbsp;
+																					{this.state.customer_currency_symbol}&nbsp;
 																						{initValue.totalAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																					</label>
-																		
 																				</Col>
 																			</Row>
 																		</div>

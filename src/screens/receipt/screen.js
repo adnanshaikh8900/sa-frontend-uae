@@ -158,7 +158,7 @@ class Receipt extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		return row.amount ? row.currencySymbol + row.amount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
+		return row.amount ? row.currencyIsoCode +" "+ row.amount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
 	};
 
 	renderCurrency = (cell, row) => {

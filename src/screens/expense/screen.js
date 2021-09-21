@@ -329,7 +329,7 @@ class Expense extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		return row.expenseAmount ? row.currencySymbol +row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :'';
+		return row.expenseAmount ? row.currencyName +" "+ row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :'';
 	};
 	renderCurrency = (cell, row) => {
 		if (row.currencyName) {

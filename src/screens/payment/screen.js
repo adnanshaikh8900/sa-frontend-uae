@@ -235,7 +235,7 @@ class Payment extends React.Component {
 	};
 
 	renderAmount = (cell, row) => {
-	return row.invoiceAmount ? row.currencySymbol + row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
+	return row.invoiceAmount ? row.currencyIsoCode +" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
 	};
 
 	handleChange = (val, name) => {

@@ -796,7 +796,7 @@ class ExplainTrasactionDetail extends React.Component {
 		})
 
 		let transactionCategoryValue = {
-			label:''
+			label:'Select Category'
 		} 
 
 

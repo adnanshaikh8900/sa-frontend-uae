@@ -206,7 +206,7 @@ class CreateOpeningBalance extends React.Component {
 																								'transactionCategoryName',
 																								'transactionCategoryId',
 																								transaction_category_list,
-																									'Chart of Account',
+																									'Transaction Category',
 																											  )
 																									: []
 																						}

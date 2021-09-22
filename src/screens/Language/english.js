@@ -69,6 +69,7 @@ Relationship2:"Relationship 2",
       Amount: "Amount",
       Create: " Create",
       Cancel: " Cancel",
+      AddOpeningBalance: "Add Opening Balance",
 
 
 

@@ -252,7 +252,7 @@ class CreateProductCategory extends React.Component {
 																	onChange={(option) => {
 																		if (
 																			option.target.value === '' ||
-																			this.regExAlpha.test(option.target.value)
+																			this.regExBoth.test(option.target.value)
 																		) {
 																			handleChange('productCategoryName')(
 																				option,

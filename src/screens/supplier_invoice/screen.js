@@ -254,9 +254,9 @@ class SupplierInvoice extends React.Component {
 		return row.vatAmount === 0 ? row.currencySymbol+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
 	renderCurrency = (cell, row) => {
-		if (row.currencyName) {
+		if (row.currencySymbol) {
 			return (
-				<label className="badge label-currency mb-0">{row.currencyName}</label>
+				<label className="badge label-currency mb-0">{row.currencySymbol}</label>
 			);
 		} else {
 			return <label className="badge badge-danger mb-0">No Specified</label>;

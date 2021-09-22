@@ -82,6 +82,7 @@ class ExplainTrasactionDetail extends React.Component {
 			customer_invoice_list_state: [],
 			supplier_invoice_list_state: [],
 			moneyCategoryList:[],
+			count:0
 		};
 
 		this.file_size = 1024000;
@@ -559,8 +560,11 @@ class ExplainTrasactionDetail extends React.Component {
 		) {
 			formData.append('vatId', vatId ? vatId : '');
 		}
-		if (employeeId != null) {
+		
+		if (employeeId !== null && employeeId.value !== undefined) {
 			formData.append('employeeId', employeeId ? employeeId.value : '');
+		}else if(employeeId !== null){
+			formData.append('employeeId', employeeId ? employeeId : '');
 		}
 		if (
 			(invoiceIdList && coaCategoryId.label === 'Sales') ||
@@ -723,42 +727,45 @@ class ExplainTrasactionDetail extends React.Component {
 		}
 	};
  getValueForCategory=(option)=>{
-	if (option && option.label === 'Salaries and Employee Wages') {
+	
+	if (option && option.label === 'Salaries and Employee Wages' && this.state.count===0) {
 
-		this.getMoneyPaidToUserlist(option);		
+		this.getMoneyPaidToUserlist(option);		this.setState({count:1})
 	}
-	if (option && option.label === 'Owners Drawing' 
+	if (option && option.label === 'Owners Drawing' && this.state.count===0
 																							) {
-																								this.getMoneyPaidToUserlist(option);
+																								this.getMoneyPaidToUserlist(option);this.setState({count:1})
 																							}
-																							if (option && option.label === 'Dividend'
+																							if (option && option.label === 'Dividend' && this.state.count===0
 																							) {
-																								this.getMoneyPaidToUserlist(option);
+																								this.getMoneyPaidToUserlist(option);this.setState({count:1})
 																							}
-																							if (option && option.label === 'Owners Current Account' 
+																							if (option && option.label === 'Owners Current Account' && this.state.count===0 
 																							) {
-																								this.getMoneyPaidToUserlist(option);
+																								this.getMoneyPaidToUserlist(option);this.setState({count:1})
 																							}
-																							if (option && option.label === 'Share Premium'
+																							if (option && option.label === 'Share Premium' && this.state.count===0
 																							) {
-																								this.getMoneyPaidToUserlist(option);
+																								this.getMoneyPaidToUserlist(option);this.setState({count:1})
 																							}
-																							if (option && option.label === 'Employee Advance'
+																							if (option && option.label === 'Employee Advance' && this.state.count===0
 																							) {
-																								this.getMoneyPaidToUserlist(option);
+																								this.getMoneyPaidToUserlist(option);this.setState({count:1})
 																							}
-																							if (option && option.label === 'Employee Reimbursements'
+																							if (option && option.label === 'Employee Reimbursements' && this.state.count===0
 																							) {
-																								this.getMoneyPaidToUserlist(option);
+																								this.getMoneyPaidToUserlist(option);this.setState({count:1})
 																							}
-																							if (option && option.label === 'Director Loan Account'
+																							if (option && option.label === 'Director Loan Account' && this.state.count===0
 																							) {
-																								this.getMoneyPaidToUserlist(option);
+																								this.getMoneyPaidToUserlist(option);this.setState({count:1})
 																							}
-																							if (option && option.label === 'Owners Equity' 
+																							if (option && option.label === 'Owners Equity' && this.state.count===0
 																							) {
-																								this.getMoneyPaidToUserlist(option);
+																								this.getMoneyPaidToUserlist(option);this.setState({count:1})
 																							}
+																							
+																						
 	return option
  }
 	render() {

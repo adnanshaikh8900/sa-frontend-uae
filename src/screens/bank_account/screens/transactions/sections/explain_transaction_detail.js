@@ -722,12 +722,44 @@ class ExplainTrasactionDetail extends React.Component {
 			props.setFieldValue('attachment', file, true);
 		}
 	};
- getValueForCategory=(labelObj)=>{
-	if (labelObj && labelObj.label === 'Salaries and Employee Wages') {
+ getValueForCategory=(option)=>{
+	if (option && option.label === 'Salaries and Employee Wages') {
 
-		this.getMoneyPaidToUserlist(labelObj);		
+		this.getMoneyPaidToUserlist(option);		
 	}
-	return labelObj
+	if (option && option.label === 'Owners Drawing' 
+																							) {
+																								this.getMoneyPaidToUserlist(option);
+																							}
+																							if (option && option.label === 'Dividend'
+																							) {
+																								this.getMoneyPaidToUserlist(option);
+																							}
+																							if (option && option.label === 'Owners Current Account' 
+																							) {
+																								this.getMoneyPaidToUserlist(option);
+																							}
+																							if (option && option.label === 'Share Premium'
+																							) {
+																								this.getMoneyPaidToUserlist(option);
+																							}
+																							if (option && option.label === 'Employee Advance'
+																							) {
+																								this.getMoneyPaidToUserlist(option);
+																							}
+																							if (option && option.label === 'Employee Reimbursements'
+																							) {
+																								this.getMoneyPaidToUserlist(option);
+																							}
+																							if (option && option.label === 'Director Loan Account'
+																							) {
+																								this.getMoneyPaidToUserlist(option);
+																							}
+																							if (option && option.label === 'Owners Equity' 
+																							) {
+																								this.getMoneyPaidToUserlist(option);
+																							}
+	return option
  }
 	render() {
 		strings.setLanguage(this.state.language);

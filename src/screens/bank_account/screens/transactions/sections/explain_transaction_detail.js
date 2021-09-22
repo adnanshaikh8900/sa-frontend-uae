@@ -520,7 +520,7 @@ class ExplainTrasactionDetail extends React.Component {
 		// ) {
 		// 	formData.append('currencyCode', currencyCode.value);
 		// }
-		debugger
+		
 		// if (
 		// 	currencyCode &&
 		// 	(
@@ -722,7 +722,13 @@ class ExplainTrasactionDetail extends React.Component {
 			props.setFieldValue('attachment', file, true);
 		}
 	};
+ getValueForCategory=(labelObj)=>{
+	if (labelObj && labelObj.label === 'Salaries and Employee Wages') {
 
+		this.getMoneyPaidToUserlist(labelObj);		
+	}
+	return labelObj
+ }
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
@@ -778,6 +784,7 @@ class ExplainTrasactionDetail extends React.Component {
 
 				if(labelObj) {
 					transactionCategoryValue.label = labelObj.label
+					transactionCategoryValue.value = labelObj.value
 				}
 			}	
 		}
@@ -1523,7 +1530,7 @@ min="0"
 																								? transactionCategoryList.categoriesList
 																								: []
 																						}
-																						value={transactionCategoryValue}
+																						value={this.getValueForCategory(transactionCategoryValue)}
 																						onChange={(option) => {
 																						
 																							this.setState({

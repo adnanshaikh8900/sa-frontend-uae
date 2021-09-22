@@ -345,7 +345,7 @@ class CustomerInvoice extends React.Component {
 				</div>
 				<div style={{ display: row.vatAmount === 0 ? 'none' : '' }}>
 					<label className="font-weight-bold mr-2">{strings.VatAmount} : </label>
-					<label>{row.vatAmount === 0 ? row.currencySymbol +" "+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }): row.currencySymbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
+					<label>{row.vatAmount === 0 ? row.currencySymbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }): row.currencySymbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
 				</div>
 				<div style={{ display: row.dueAmount === 0 ? 'none' : '' }}>
 					<label className="font-weight-bold mr-2">{strings.DueAmount} : </label>
@@ -355,9 +355,9 @@ class CustomerInvoice extends React.Component {
 			</div>);
 	};
 	renderCurrency = (cell, row) => {
-		if (row.currencyName) {
+		if (row.currencySymbol) {
 			return (
-				<label className="badge label-currency mb-0">{row.currencyName}</label>
+				<label className="badge label-currency mb-0">{row.currencySymbol}</label>
 			);
 		} else {
 			return <label className="badge badge-danger mb-0">No Specified</label>;
@@ -382,11 +382,11 @@ class CustomerInvoice extends React.Component {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.vatAmount === 0 ? row.currencySymbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.vatAmount === 0 ? row.currencySymbol + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
 
 	renderDueAmount = (cell, row, extraData) => {
-		return row.dueAmount === 0 ? row.currencySymbol +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.dueAmount === 0 ? row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol + row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	}
 	renderActions = (cell, row) => {
 		return (
@@ -475,7 +475,7 @@ class CustomerInvoice extends React.Component {
 							this.renderActionForState(row.id);
 							}}
 							>
-								<i className="fas fa-plus" /> {strings.Create+" "+strings.CreditNote}
+								<i className="fas fa-plus" /> {strings.CreateCN}
 							</DropdownItem>
 							)} 
 						<DropdownItem
@@ -1150,9 +1150,9 @@ class CustomerInvoice extends React.Component {
 													autoComplete="off"
 													showMonthDropdown
 													showYearDropdown
-													dateFormat="dd/MM/yyyy"
+													//dateFormat="dd/MM/yyyy"
 													dropdownMode="select"
-													// value={filterData.invoiceDate}
+											//	 value={filterData.invoiceDate}
 													onChange={(value) => {
 														this.handleChange(value, 'invoiceDate');
 													}}

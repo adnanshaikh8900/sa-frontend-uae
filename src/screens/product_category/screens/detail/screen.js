@@ -259,7 +259,7 @@ class DetailProductCategory extends React.Component {
                                     id="productCategoryName"
                                     name="productCategoryName"
                                     placeholder={strings.Enter+strings.ProductCategoryName}
-                                    onChange={(option) => { if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ 
+                                    onChange={(option) => { if (option.target.value === '' || this.regExBoth.test(option.target.value)){ 
                                       props.handleChange('productCategoryName')(option) }}}
                                     value={props.values.productCategoryName}
                                     className={

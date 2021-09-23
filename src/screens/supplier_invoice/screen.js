@@ -793,7 +793,7 @@ console.log(supplier_invoice_list)
 
 							<Row>
 								<Col lg={12}>
-									<div className="mb-4 status-panel p-3">
+									{/* <div className="mb-4 status-panel p-3">
 										<Row className="align-items-center justify-content-around">
 											<div className="h4 mb-0 d-flex align-items-center ">
 												<img
@@ -910,7 +910,7 @@ console.log(supplier_invoice_list)
 												</div>
 											</div>
 										</Row>
-									</div>
+									</div> */}
 									<div className="d-flex justify-content-end">
 										<ButtonGroup size="sm">
 											{/* <Button

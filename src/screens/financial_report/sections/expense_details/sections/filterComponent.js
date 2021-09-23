@@ -153,7 +153,7 @@ class FilterComponent extends Component {
 														this.props.generateReport(props.values);
 													}}
 												>
-													<i className="fa fa-dot-circle-o"></i>{strings.RunReport}
+													<i className="fa fa-dot-circle-o"></i> {strings.RunReport}
 												</Button>
 
 												<Button

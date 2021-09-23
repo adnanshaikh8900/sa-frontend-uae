@@ -606,7 +606,7 @@ class BankTransactions extends React.Component {
 					.then(() => {
 						this.props.commonActions.tostifyAlert(
 							'success',
-							'Transaction status change successfully',
+							'Transaction status changed successfully',
 						);
 						this.initializeData();
 						this.setState({

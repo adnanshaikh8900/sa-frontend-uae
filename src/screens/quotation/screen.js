@@ -353,7 +353,7 @@ class Quatation extends React.Component {
 			if (res.status === 200) {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Request For Quotation Closed Successfully',
+					'Quotation Closed Successfully',
 				);
 
 

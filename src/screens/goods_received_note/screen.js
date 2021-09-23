@@ -397,7 +397,7 @@ class GoodsReceivedNote extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Goods Received Note sent Successfully',
+						'Goods Received Note Sent Successfully',
 					);
 					this.setState({
 						loading: false,
@@ -419,7 +419,7 @@ class GoodsReceivedNote extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Goods Received Note posted Successfully',
+						'Goods Received Note Posted Successfully',
 					);
 					this.setState({
 						loading: false,

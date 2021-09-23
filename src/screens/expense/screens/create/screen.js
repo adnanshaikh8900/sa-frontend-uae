@@ -384,6 +384,9 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 															/^[0-9][0-9]*[.]?[0-9]{0,2}$$/,
 															'Enter a Valid Amount',
 														),
+													vatCategoryId: Yup.string().required(
+														'Vat is Required',
+													),
 													attachmentFile: Yup.mixed()
 														.test(
 															'fileType',
@@ -658,7 +661,7 @@ min="0"
 															</Col>
 															<Col lg={3}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="vatCategoryId">{strings.Vat}</Label>
+																	<Label htmlFor="vatCategoryId"><span className="text-danger">*</span>{strings.Vat}</Label>
 																	<Select
 																		styles={customStyles}
 																		className="select-default-width"
@@ -681,7 +684,20 @@ min="0"
 																				option,
 																			)
 																		}
+																		className={
+																			props.errors.vatCategoryId &&
+																			props.touched.vatCategoryId
+																				? 'is-invalid'
+																				: ''
+																		}
 																	/>
+																	{props.errors.vatCategoryId &&
+																		props.touched.vatCategoryId && (
+																			<div className="invalid-feedback">
+																				{props.errors.vatCategoryId}
+																			</div>
+																		)}
+																	
 																</FormGroup>
 															</Col>
 																<Col lg={3}>

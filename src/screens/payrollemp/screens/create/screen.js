@@ -2688,6 +2688,7 @@ validationCheck = (value) => {
                                                                 id="CTC"
                                                                 size="30"
                                                                 name="CTC"
+                                                                maxLength='10'
                                                                 style={{textAlign:"center"}}
                                                                 value={props.values.CTC}
                                                                 placeholder={strings.Enter+"CTC"}

@@ -120,7 +120,7 @@ class CreateGoodsReceivedNote extends React.Component {
 				{
 					id: 0,
 					description: '',
-					grnReceivedQuantity: 1,
+					grnReceivedQuantity: 0,
 					quantity: 1,
 					unitPrice: '',
 					vatCategoryId: '',
@@ -179,7 +179,7 @@ class CreateGoodsReceivedNote extends React.Component {
 			purchaseCategory: [],
 			exist: false,
 			language: window['localStorage'].getItem('language'),
-			
+			grnReceivedQuantityError:"Please Enter Quantity",
 		};
 
 		this.formRef = React.createRef();
@@ -394,21 +394,30 @@ min="0"
 										field,
 										props,
 									);
+									let val=parseInt(e.target.value);
+								
+									if( val<= 0)
+									{
+										this.setState({grnReceivedQuantityError:"Please Enter Quantity"});
+									}
+									else{
+										this.setState({grnReceivedQuantityError:""});
+									}
 								}
 							}}
 							placeholder={strings.ReceivedQuantity}
-							className={`form-control 
-            ${
-							props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity
-								? 'is-invalid'
-								: ''
-						}`}
+			// 				className={`form-control 
+            // ${
+			// 				props.errors.lineItemsString &&
+			// 				props.errors.lineItemsString[parseInt(idx, 10)] &&
+			// 				props.errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity &&
+			// 				Object.keys(props.touched).length > 0 &&
+			// 				props.touched.lineItemsString &&
+			// 				props.touched.lineItemsString[parseInt(idx, 10)] &&
+			// 				props.touched.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity
+			// 					? 'is-invalid'
+			// 					: ''
+			// 			}`}
 						/>
 						{/* {props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -421,6 +430,9 @@ min="0"
 									{props.errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity}
 								</div>
 							)} */}
+								<div  className="text-danger">
+									{this.state.grnReceivedQuantityError}
+								</div>
 					</div>
 				)}
 			/>
@@ -1437,7 +1449,9 @@ console.log(this.state.data)
 												initialValues={initValue}
 												ref={this.formRef}
 												onSubmit={(values, { resetForm }) => {
-													this.handleSubmit(values, resetForm);
+													if(this.state.grnReceivedQuantityError!="Please Enter Quantity"){
+														this.handleSubmit(values, resetForm);
+													}
 												
 												}}
 												validate={(values) => 

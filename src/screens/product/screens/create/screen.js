@@ -105,6 +105,7 @@ class CreateProduct extends React.Component {
 			exist: false,
 			ProductExist: false,
 			disabled: false,
+			productActive: false,
 		};
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[ +a-zA-Z0-9-./\\|]+$/;
@@ -222,6 +223,7 @@ try {
 		const isInventoryEnabled = data['isInventoryEnabled'];
 		const transactionCategoryId = data['transactionCategoryId'];
 		const productCategoryId = data['productCategoryId'];
+		const isActive = this.state.productActive;
 
 		let productPriceType;
 		if (data['productPriceType'].includes('SALES')) {
@@ -249,6 +251,7 @@ try {
 			contactId,
 			transactionCategoryId,
 			productCategoryId,
+			isActive,
 			...(salesUnitPrice.length !== 0 && {
 				salesUnitPrice,
 			}),
@@ -736,6 +739,75 @@ try {
 																			)}
 																	</FormGroup>
 																</Col>
+															</Row>
+															<Row>
+															<Col md="4">
+                                                                                                <FormGroup className="mb-3">
+                                                                                                    <Label htmlFor="active"><span className="text-danger">*</span>{strings.Status}</Label>
+                                                                                                    <div>
+                                                                                                        <FormGroup check inline>
+                                                                                                            <div className="custom-radio custom-control">
+                                                                                                                <input
+                                                                                                                    className="custom-control-input"
+                                                                                                                    type="radio"
+                                                                                                                    id="inline-radio1"
+                                                                                                                    name="active"
+                                                                                                                    checked={
+                                                                                                                        this.state.selectedStatus
+                                                                                                                    }
+                                                                                                                    value={true}
+                                                                                                                    onChange={(e) => {
+                                                                                                                        if (
+                                                                                                                            e.target.value === 'true'
+                                                                                                                        ) {
+                                                                                                                            this.setState({
+                                                                                                                                selectedStatus: true,
+                                                                                                                                productActive: true
+                                                                                                                            });
+                                                                                                                        }
+                                                                                                                    }}
+                                                                                                                />
+                                                                                                                <label
+                                                                                                                    className="custom-control-label"
+                                                                                                                    htmlFor="inline-radio1"
+                                                                                                                >
+                                                                                                                     {strings.Active}
+																							</label>
+                                                                                                            </div>
+                                                                                                        </FormGroup>
+                                                                                                        <FormGroup check inline>
+                                                                                                            <div className="custom-radio custom-control">
+                                                                                                                <input
+                                                                                                                    className="custom-control-input"
+                                                                                                                    type="radio"
+                                                                                                                    id="inline-radio2"
+                                                                                                                    name="active"
+                                                                                                                    value={false}
+                                                                                                                    checked={
+                                                                                                                        !this.state.selectedStatus
+                                                                                                                    }
+                                                                                                                    onChange={(e) => {
+                                                                                                                        if (
+                                                                                                                            e.target.value === 'false'
+                                                                                                                        ) {
+                                                                                                                            this.setState({
+                                                                                                                                selectedStatus: false,
+                                                                                                                                productActive: false
+                                                                                                                            });
+                                                                                                                        }
+                                                                                                                    }}
+                                                                                                                />
+                                                                                                                <label
+                                                                                                                    className="custom-control-label"
+                                                                                                                    htmlFor="inline-radio2"
+                                                                                                                >
+                                                                                                                    {strings.Inactive}
+																							</label>
+                                                                                                            </div>
+                                                                                                        </FormGroup>
+                                                                                                    </div>
+                                                                                                </FormGroup>
+                                                                                            </Col>
 															</Row>
 															<hr></hr>
 															{/* <Row>

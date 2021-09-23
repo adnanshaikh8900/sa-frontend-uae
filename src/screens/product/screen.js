@@ -334,6 +334,24 @@ class Product extends React.Component {
 		});
 	};
 
+	renderStatus = (cell, row) => {
+        let classname = '';
+        if (row.isActive === true) {
+            classname = 'label-success';
+        } else {
+            classname = 'label-due';
+        }
+        return (
+            <span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
+                {
+                    row.isActive === true ?
+                        "Active" :
+                        "InActive"
+                }
+            </span>
+        );
+    };
+
 	renderActions = (cell, row) => {
 		return (
 			<div>
@@ -576,6 +594,15 @@ class Product extends React.Component {
 												>
 													 {strings.UNITPRICE}
 												</TableHeaderColumn>
+												<TableHeaderColumn
+                                                    className="table-header-bg"
+                                                    dataField="isActive"
+                                                    dataSort
+                                                    dataFormat={this.renderStatus}
+                                                    >
+                                                        {strings.Status}
+
+                          						</TableHeaderColumn>
 												<TableHeaderColumn
 											className="text-right"
 											columnClassName="text-right"

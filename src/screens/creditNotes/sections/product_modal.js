@@ -80,6 +80,7 @@ class ProductModal extends React.Component {
 			salesCategory: [],
 			createMore: false,
 			exist: false,
+			isActive:false,
 		};
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9-./\\|]+$/;
@@ -112,6 +113,7 @@ class ProductModal extends React.Component {
 		const purchaseUnitPrice = data['purchaseUnitPrice'];
 		const vatCategoryId = data['vatCategoryId'];
 		const vatIncluded = data['vatIncluded'];
+		const isActive = this.state.productActive;
 		let productPriceType;
 		if (data['productPriceType'].includes('SALES')) {
 			productPriceType = 'SALES';
@@ -278,7 +280,7 @@ class ProductModal extends React.Component {
 									</CardHeader>
 									<ModalBody>
 										<Row>
-											<Col lg={12}>
+											<Col lg={4}>
 												<FormGroup check inline className="mb-3">
 													<Label className="productlabel mb-0 mr-1">{strings.Type}</Label>
 													<div className="wrapper">
@@ -321,6 +323,69 @@ class ProductModal extends React.Component {
 													</div>
 												</FormGroup>
 											</Col>
+
+											<Col lg={4}>
+																<FormGroup check inline className="mb-3">
+																	<Label className="productlabel mb-0 mr-1"><span className="text-danger">*</span>{strings.Status}</Label>
+																	<div className="wrapper">
+																	<Label
+																		className="form-check-label mr-1"
+																		check
+																	>
+																	<Input
+																		className="form-check-input"
+																		type="radio"
+																		id="inline-radio1"
+                                                                        name="isActive"
+																		checked={
+																					this.state.selectedStatus
+																				}
+																		value={true}
+																		onChange={(e) => {
+																				if (
+																						e.target.value === 'true'
+																					) {
+																						this.setState({
+																						selectedStatus: true,
+																						productActive: true,
+																						isActive:true
+																							});
+																						}
+																					}}
+																				/>
+																			  {strings.Active}
+																			</Label>
+																			<Label
+																				className="productlabel mb-0 mr-1"
+																				check
+																			>
+																				<Input
+																					className="form-check-input"
+																					type="radio"
+																					id="inline-radio2"
+                                                                                    name="isActive"
+																					value={false}
+                                                                                    checked={
+                                                                                                !this.state.selectedStatus
+                                                                                            }
+                                                                                            onChange={(e) => {
+                                                                                                if (
+                                                                                                    	 e.target.value === 'false'
+                                                                                                    ) {
+                                                                                                        	this.setState({
+                                                                                                            selectedStatus: false,
+                                                                                                            productActive: false,
+																											isActive:false
+                                                                                                    	});
+                                                                                                        }
+                                                                                                     }}
+																				/>
+																				   {strings.Inactive}
+																			</Label>
+																		</div>   
+                                                                    </FormGroup>
+                                                                </Col>
+										
 										</Row>
 										<Row>
 											<Col lg={4}>

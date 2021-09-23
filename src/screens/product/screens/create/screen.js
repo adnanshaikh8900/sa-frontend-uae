@@ -106,6 +106,7 @@ class CreateProduct extends React.Component {
 			ProductExist: false,
 			disabled: false,
 			productActive: false,
+			isActive:false,
 		};
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[ +a-zA-Z0-9-./\\|]+$/;
@@ -415,9 +416,11 @@ try {
 													}
 													return errors;
 												}}
-												validationSchema={Yup.object().shape({
-													isActive : Yup.string()
-													.required('status is Required') , 
+												
+												validationSchema={
+													Yup.object().shape({
+													// isActive : Yup.boolean()
+													// .required('status is Required') , 
 													purchaseUnitPrice: Yup.string().when(
 														'productPriceType',
 														{
@@ -550,7 +553,8 @@ try {
 																					) {
 																						this.setState({
 																						selectedStatus: true,
-																						productActive: true
+																						productActive: true,
+																						isActive:true
 																							});
 																						}
 																					}}
@@ -576,7 +580,8 @@ try {
                                                                                                     ) {
                                                                                                         	this.setState({
                                                                                                             selectedStatus: false,
-                                                                                                            productActive: false
+                                                                                                            productActive: false,
+																											isActive:false
                                                                                                     	});
                                                                                                         }
                                                                                                      }}

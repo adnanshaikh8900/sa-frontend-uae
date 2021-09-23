@@ -714,7 +714,11 @@ class ExplainTrasactionDetail extends React.Component {
 
 		console.log('supplier_currencyCode' ,supplier_currencyCode)
 
-		return supplier_currencyCode;
+		if(supplier_currencyCode !=0){
+			return supplier_currencyCode;
+		}else{
+			return this.state.unexplainValue && this.state.unexplainValue.currencyCode ? this.state.unexplainValue.currencyCode :0;
+		}		
 	}
 	handleFileChange = (e, props) => {
 		e.preventDefault();
@@ -1422,7 +1426,8 @@ min="0"
 																						onChange={(option) => {
 																							if (option && option.value) {
 																								this.formRef.current.setFieldValue('currencyCode', this.getCurrency(option.value), true);
-																								//this.setExchange( this.getCurrency(option.value) );
+																								debugger
+																								this.setExchange( this.getCurrency(option.value) );
 																								props.handleChange('customerId')(
 																									option.value,
 																								);
@@ -1862,6 +1867,7 @@ min="0"
 																								)
 																								: []
 																						}
+																						isDisabled={true}
 																						value={
 																							currency_convert_list &&
 																							selectCurrencyFactory

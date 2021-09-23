@@ -414,6 +414,22 @@ try {
 														errors.purchaseUnitPrice = 
 														'Purchase price cannot be greater than Sales price';
 													}
+
+													if(values.isInventoryEnabled===true){
+
+														if(values.inventoryPurchasePrice ==='')
+														errors.inventoryPurchasePrice = 
+														'Inventory Purchase Price is requied';
+
+														if(values.inventoryReorderLevel ==='')
+														errors.inventoryReorderLevel = 
+														'Inventory Reorder Level is requied';
+
+														if(values.inventoryQty ==='')
+														errors.inventoryQty = 
+														'Inventory Quantity is requied';
+														
+													}
 													return errors;
 												}}
 												

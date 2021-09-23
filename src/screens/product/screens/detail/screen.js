@@ -535,7 +535,7 @@ renderName=(cell,row)=>{
 			p_id: row[0].p_id ,
 			s_id: row[1].s_id,
 		};
-		if(row.supplierId !== null && row.productId !== null && row.supplierId !== undefined && row.productId !== undefined){
+		if(row[1].s_id !== null && row[0].p_id !== null && row[1].s_id !== undefined && row[0].p_id !== undefined){
 			this.props.productActions.getInventoryHistory(data).then((res) => {
 				if (res.status === 200) {
 					this.setState({

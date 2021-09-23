@@ -475,7 +475,7 @@ class CustomerInvoice extends React.Component {
 							this.renderActionForState(row.id);
 							}}
 							>
-								<i className="fas fa-plus" /> {strings.CreateCN}
+								<i className="fas fa-plus" /> {strings.Create +" "+strings.CreditNote}
 							</DropdownItem>
 							)} 
 						<DropdownItem

@@ -648,7 +648,7 @@ min="0"
 			// ) : (
 			// 	''
 			// );
-			return row.subTotal ? row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })+" " + this.state.selectedData.currencySymbol: '';
+			return row.subTotal ? this.state.selectedData.currencyIsoCode+" " +row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
 		}
 
 	onContentStateChange = (contentState) => {
@@ -1376,7 +1376,7 @@ min="0"
 																							/>
 																							)} */}
 																							{/* {this.getTotalNet()} */}
-																							{this.state.selectedData.currencySymbol}  &nbsp;
+																							{this.state.selectedData.currencyIsoCode}  &nbsp;
 																								{this.getTotalNet().toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
@@ -1402,7 +1402,7 @@ min="0"
 																							/>
 																							)} */}
 																							{/* {this.state.initValue.totalVatAmount	} */}
-																							{this.state.selectedData.currencySymbol} &nbsp;
+																							{this.state.selectedData.currencyIsoCode} &nbsp;
 																							{this.state.initValue.totalVatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
@@ -1428,7 +1428,7 @@ min="0"
 																							/>
 																							)} */}
 																							{/* {this.state.initValue.totalAmount} */}
-																							{this.state.selectedData.currencySymbol} &nbsp;
+																							{this.state.selectedData.currencyIsoCode} &nbsp;
 																							{this.state.initValue.totalAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>

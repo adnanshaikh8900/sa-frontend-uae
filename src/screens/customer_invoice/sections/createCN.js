@@ -492,7 +492,7 @@ class CreateCreditNoteModal extends React.Component {
 		// 	''
 		// );
 		return row.subTotal ? row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
-	}
+	} 
 	
 	renderProduct = (cell, row, props) => {
 		const { product_list } = this.props;
@@ -594,7 +594,7 @@ class CreateCreditNoteModal extends React.Component {
 			// ) : (
 			// 	''
 			// );
-			return row.subTotal ? row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })+" "+  this.state.selectedData.currencySymbol: '';
+			return row.subTotal ? this.state.selectedData.currencyIsoCode+" " +row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
 		}
 
 	onContentStateChange = (contentState) => {
@@ -1385,7 +1385,7 @@ class CreateCreditNoteModal extends React.Component {
 																							}
 																							/>
 																							)} */}
-																								{this.state.selectedData.currencySymbol}  &nbsp;
+																								{this.state.selectedData.currencyIsoCode}  &nbsp;
 																								{this.getTotalNet().toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																							{/* {this.getTotalNet()} */}
 																						</label>
@@ -1412,7 +1412,7 @@ class CreateCreditNoteModal extends React.Component {
 																							/>
 																							)} */}
 																							{/* {this.state.totalVatAmount}  */}
-																							{this.state.selectedData.currencySymbol}  &nbsp;
+																							{this.state.selectedData.currencyIsoCode}  &nbsp;
 																							{this.state.totalVatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
@@ -1438,7 +1438,7 @@ class CreateCreditNoteModal extends React.Component {
 																							/>
 																							)} */}
 																						 {/* {this.state.totalAmount} */}
-																							{this.state.selectedData.currencySymbol} &nbsp;
+																							{this.state.selectedData.currencyIsoCode} &nbsp;
 																							{this.state.totalAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>

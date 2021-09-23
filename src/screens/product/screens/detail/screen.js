@@ -690,6 +690,8 @@ renderName=(cell,row)=>{
 														return errors;
 													}}
 													validationSchema={Yup.object().shape({
+														isActive : Yup.string()
+													.required('status is Required') ,
 														productName: Yup.string().required(
 															'Product Name is Required',
 														),
@@ -747,7 +749,7 @@ renderName=(cell,row)=>{
 													{(props) => (
 														<Form onSubmit={props.handleSubmit}>
 															<Row>
-																<Col lg={12}>
+																<Col lg={4}>
 																	<FormGroup check inline className="mb-3">
 																		<Label className="productlabel"> {strings.Type}</Label>
 																		<div className="wrapper">
@@ -800,7 +802,67 @@ renderName=(cell,row)=>{
 																		</div>
 																	</FormGroup>
 																</Col>
+																<Col lg={4}>
+																<FormGroup check inline className="mb-3">
+																	<Label className="productlabel"><span className="text-danger">*</span>{strings.Status}</Label>
+																	<div className="wrapper">
+																	<Label
+																		className="form-check-label"
+																		check
+																	>
+																	<Input
+																		className="form-check-input"
+																		type="radio"
+																		id="inline-radio1"
+                                                                        name="isActive"
+																		checked={
+																					this.state.selectedStatus
+																				}
+																		value={true}
+																		onChange={(e) => {
+																				if (
+																						e.target.value === 'true'
+																					) {
+																						this.setState({
+																						selectedStatus: true,
+																						productActive: true
+																							});
+																						}
+																					}}
+																				/>
+																			  {strings.Active}
+																			</Label>
+																			<Label
+																				className="form-check-label"
+																				check
+																			>
+																				<Input
+																					className="form-check-input"
+																					type="radio"
+																					id="inline-radio2"
+                                                                                    name="isActive"
+																					value={false}
+                                                                                    checked={
+                                                                                                !this.state.selectedStatus
+                                                                                            }
+                                                                                            onChange={(e) => {
+                                                                                                if (
+                                                                                                    	 e.target.value === 'false'
+                                                                                                    ) {
+                                                                                                        	this.setState({
+                                                                                                            selectedStatus: false,
+                                                                                                            productActive: false
+                                                                                                    	});
+                                                                                                        }
+                                                                                                     }}
+																				/>
+																				   {strings.Inactive}
+																			</Label>
+																		</div>   
+                                                                    </FormGroup>
+                                                                </Col>
 															</Row>
+															<hr></hr>
 															<Row>
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
@@ -1002,75 +1064,6 @@ renderName=(cell,row)=>{
 																			)}
 																	</FormGroup>
 																</Col>
-															</Row>
-															<Row>
-															<Col md="4">
-                                                                                                <FormGroup className="mb-3">
-                                                                                                    <Label htmlFor="active"><span className="text-danger">*</span>{strings.Status}</Label>
-                                                                                                    <div>
-                                                                                                        <FormGroup check inline>
-                                                                                                            <div className="custom-radio custom-control">
-                                                                                                                <input
-                                                                                                                    className="custom-control-input"
-                                                                                                                    type="radio"
-                                                                                                                    id="inline-radio1"
-                                                                                                                    name="active"
-                                                                                                                    checked={
-                                                                                                                        this.state.selectedStatus
-                                                                                                                    }
-                                                                                                                    value={true}
-                                                                                                                    onChange={(e) => {
-                                                                                                                        if (
-                                                                                                                            e.target.value === 'true'
-                                                                                                                        ) {
-                                                                                                                            this.setState({
-                                                                                                                                selectedStatus: true,
-                                                                                                                                productActive: true
-                                                                                                                            });
-                                                                                                                        }
-                                                                                                                    }}
-                                                                                                                />
-                                                                                                                <label
-                                                                                                                    className="custom-control-label"
-                                                                                                                    htmlFor="inline-radio1"
-                                                                                                                >
-                                                                                                                     {strings.Active}
-																							</label>
-                                                                                                            </div>
-                                                                                                        </FormGroup>
-                                                                                                        <FormGroup check inline>
-                                                                                                            <div className="custom-radio custom-control">
-                                                                                                                <input
-                                                                                                                    className="custom-control-input"
-                                                                                                                    type="radio"
-                                                                                                                    id="inline-radio2"
-                                                                                                                    name="active"
-                                                                                                                    value={false}
-                                                                                                                    checked={
-                                                                                                                        !this.state.selectedStatus
-                                                                                                                    }
-                                                                                                                    onChange={(e) => {
-                                                                                                                        if (
-                                                                                                                            e.target.value === 'false'
-                                                                                                                        ) {
-                                                                                                                            this.setState({
-                                                                                                                                selectedStatus: false,
-                                                                                                                                productActive: false
-                                                                                                                            });
-                                                                                                                        }
-                                                                                                                    }}
-                                                                                                                />
-                                                                                                                <label
-                                                                                                                    className="custom-control-label"
-                                                                                                                    htmlFor="inline-radio2"
-                                                                                                                >
-                                                                                                                    {strings.Inactive}
-																							</label>
-                                                                                                            </div>
-                                                                                                        </FormGroup>
-                                                                                                    </div>
-                                                                                                </FormGroup>
-                                                                                            </Col>
 															</Row>
 															{/* <Row>
 																<Col lg={12}>

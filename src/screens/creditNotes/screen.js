@@ -1004,6 +1004,7 @@ class CreditNotes extends React.Component {
 
 											<Col lg={2} className="mb-1">
 												<Input
+												maxLength="10"
 													type="number"
 min="0"
 													value={filterData.amount}

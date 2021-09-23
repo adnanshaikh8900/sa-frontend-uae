@@ -1009,6 +1009,7 @@ console.log(supplier_invoice_list)
 											<Col lg={2} className="mb-1">
 												<Input
 													type="number"
+													maxLength="10"
 min="0"
 													value={filterData.amount}
 													placeholder={strings.Amount}

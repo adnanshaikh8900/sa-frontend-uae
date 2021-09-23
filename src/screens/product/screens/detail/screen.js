@@ -530,7 +530,7 @@ renderName=(cell,row)=>{
 		});
 	};
 	param = (row) => {
-debugger
+
 		const data = {
 			p_id: row[0].p_id ,
 			s_id: row[1].s_id,

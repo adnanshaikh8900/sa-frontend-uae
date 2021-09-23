@@ -459,6 +459,7 @@ class Product extends React.Component {
 												<Row>
 												<Col lg={3} className="mb-2">
 														<Input
+														maxLength="25"
 															type="text"
 															placeholder={strings.ProductCode}
 															value={filterData.productCode}
@@ -472,6 +473,7 @@ class Product extends React.Component {
 													</Col>
 													<Col lg={3} className="mb-1">
 														<Input
+														maxLength="30"
 															type="text"
 															placeholder={strings.Name}
 															value={filterData.name}

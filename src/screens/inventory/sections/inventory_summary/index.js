@@ -423,7 +423,7 @@ class InventorySummary extends React.Component {
 												}}
 												className="product-table"
 												trClassName="cursor-pointer"
-												csvFileName="summary_list.csv"
+												csvFileName="Inventory Summary List.csv"
 												ref={(node) => (this.table = node)}
 											>
 												<TableHeaderColumn isKey dataField="productName" dataSort className="table-header-bg">

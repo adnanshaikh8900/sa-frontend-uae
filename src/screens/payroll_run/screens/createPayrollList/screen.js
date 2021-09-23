@@ -75,6 +75,7 @@ class CreatePayrollList extends React.Component {
 
 	constructor(props) {
 		super(props)
+		var date = new Date();
 		this.state = {
 			language: window['localStorage'].getItem('language'),
 			loading: false,
@@ -93,8 +94,11 @@ class CreatePayrollList extends React.Component {
 				onSelectAll: this.onSelectAll,
 			},
 			payrollDate: new Date(),
-			startDate: new Date(),
-			endDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
+			 startDate: new Date(date.getFullYear(), date.getMonth(), 1),
+			 endDate:  new Date(date.getFullYear(), date.getMonth() + 1, 0),
+			 payPeriod : '',
+			// startDate: '',
+			// endDate:''
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -124,16 +128,20 @@ class CreatePayrollList extends React.Component {
 		// this.props.createPayrollEmployeeActions.getEmployeesForDropdown();
 		this.props.createPayrollActions.getApproversForDropdown();
 		let payroll_id = this.props.location.state === undefined ? '' : this.props.location.state.id;
-		if (payroll_id) {
-			this.setState({
-				payroll_id: payroll_id
-			})
-			this.proceed(payroll_id);
-		}
-
-
+		// if (payroll_id) {
+		// 	this.setState({
+		// 		payroll_id: payroll_id
+		// 	})
+		// 	this.proceed(payroll_id);
+		// }
+		this.tableApiCallsOnStatus();
+     this.calculatePayperioad();
 	};
-
+calculatePayperioad=()=>{
+	let diff=	Math.abs(parseInt((this.state.startDate - this.state.endDate) / (1000 * 60 * 60 * 24), 10))+1	
+    this.setState({payPeriod:diff});
+	console.log(this.state.payPeriod,"payPeriod",diff)
+}
 	proceed = (payroll_id) => {
 		this.props.createPayrollActions.getPayrollById(payroll_id).then((res) => {
 			if (res.status === 200) {
@@ -177,7 +185,7 @@ class CreatePayrollList extends React.Component {
 		// if(this.state.status==="Draft"){
 		// 	this.getAllPayrollEmployee2()
 		// }else{
-		this.getAllPayrollEmployee2()
+		this.getAllPayrollEmployee()
 
 	}
 	closeModal = (res) => {
@@ -280,37 +288,38 @@ class CreatePayrollList extends React.Component {
 	}
 
 	handleSubmit = (data, resetForm) => {
+		
 		this.setState({ disabled: true });
 		const {
-			type,
-			name
+			payrollSubject,
+			payrollDate,
+			payrollApprover,
+			startDate,
+			endDate
 		} = data;
-
-
+		let employeeListIds=this.state.selectedRows ? this.state.selectedRows :'';
+		
+		let diff=	Math.abs(parseInt((startDate - endDate) / (1000 * 60 * 60 * 24), 10))+1	
+		let string =moment(startDate).format('DD/MM/YYYY')+'-'+moment(endDate).format('DD/MM/YYYY')
+		// this.setState({payPeriod:diff});
+		this.setState({payPeriod:string});
 		const formData = new FormData();
-		formData.append(
-			'type',
-			type != null ? type : '',
-		)
-		formData.append(
-			'name',
-			name != null ? name : '',
-		)
-		this.props.salaryStructureCreateActions
-			.createSalaryStructure(formData)
+		formData.append('payrollSubject', payrollSubject)
+		formData.append('payPeriod', this.state.payPeriod)
+		formData.append('employeeListIds', employeeListIds)
+		// formData.append('payrollApprover', payrollApprover)
+		formData.append('generatePayrollString', JSON.stringify(this.state.allPayrollEmployee));
+		 formData.append('salaryDate',payrollDate)
+		console.log(this.state.payPeriod,"JSON.stringify(this.state.allPayrollEmployee)",JSON.stringify(this.state.allPayrollEmployee))
+		this.props.createPayrollActions
+			 .createPayroll(formData)
+			// .createPayroll(JSON.stringify(employeeListIds),payrollSubject,this.state.payPeriod,JSON.stringify(this.state.allPayrollEmployee),payrollDate)
 			.then((res) => {
 				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert(
-						'success',
-						'New Salary Structure Created Successfully')
-					if (this.state.createMore) {
-						this.setState({
-							createMore: false
-						})
-						// resetForm(this.state.initValue)
-					} else {
-						this.props.history.push('/admin/payroll/config', { tabNo: '2' })
-					}
+					this.props.commonActions.tostifyAlert('success', 'Payroll created Successfully')				
+					this.tableApiCallsOnStatus()
+					this.props.history.push(`/admin/payroll/payrollrun`);
+					// resetForm(this.state.initValue)
 				}
 			}).catch((err) => {
 				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
@@ -344,8 +353,7 @@ class CreatePayrollList extends React.Component {
 
 
 	getAllPayrollEmployee = () => {
-		this.props.createPayrollActions.getAllPayrollEmployee(this.state.payroll_id).then((res) => {
-
+		this.props.createPayrollActions.getAllPayrollEmployee().then((res) => {
 			if (res.status === 200) {
 				// uncomment this this is real data
 				this.setState({
@@ -796,7 +804,7 @@ class CreatePayrollList extends React.Component {
 
 														initialValues={this.state}
 														onSubmit={(values, { resetForm }) => {
-															this.addEmployee(values)
+															this.handleSubmit(values)
 
 														}}
 
@@ -806,7 +814,7 @@ class CreatePayrollList extends React.Component {
 
 															<Form onSubmit={props.handleSubmit}>
 																<Row>
-																	<Col>
+																	<Col lg={3}>
 																		<FormGroup>
 																			<Label htmlFor="payrollSubject">	<span className="text-danger">*</span> Payroll Subject</Label>
 																			<Input
@@ -818,7 +826,6 @@ class CreatePayrollList extends React.Component {
 																				placeholder={strings.Enter + " Payroll Subject"}
 																				onChange={(value) => {
 																					props.handleChange('payrollSubject')(value);
-
 																				}}
 																				className={props.errors.payrollSubject && props.touched.payrollSubject ? "is-invalid" : ""}
 																			/>
@@ -831,7 +838,7 @@ class CreatePayrollList extends React.Component {
 																		</FormGroup>
 																	</Col>
 																	<Col >
-																		<FormGroup className="mb-3">
+																		<FormGroup>
 																			<Label htmlFor="date">
 																				<span className="text-danger">*</span>
 																				Payroll Date
@@ -866,13 +873,22 @@ class CreatePayrollList extends React.Component {
 																				)}
 																		</FormGroup>
 																	</Col>
-																	<Col >
-																		<FormGroup className="mb-3">
-																			<Label htmlFor="date">
+																	<Row >
+
+																	<Col  >
+																	<Label htmlFor="date">
+																				<span className="text-danger">*</span>
+																				Pay-period (Start date - End Date)
+																			</Label>
+																	<div style={{display: "flex"}}>
+																	{/* <FormGroup className="mt-2"><i class="far fa-calendar-alt mt-1"></i>&nbsp;</FormGroup> */}
+																	<FormGroup >
+																			{/* <Label htmlFor="date">
 																				<span className="text-danger">*</span>
 																				Start Date
-																			</Label>
+																			</Label> */}	
 																			<DatePicker
+																			autoComplete="Off"
 																				id="date"
 																				name="startDate"
 																				className={`form-control ${props.errors.startDate &&
@@ -880,7 +896,7 @@ class CreatePayrollList extends React.Component {
 																					? 'is-invalid'
 																					: ''
 																					}`}
-																				placeholderText={strings.OrderDate}
+																				placeholderText={"Select Start Date"}
 																				selected={props.values.startDate}
 																				showMonthDropdown
 																				showYearDropdown
@@ -899,14 +915,16 @@ class CreatePayrollList extends React.Component {
 																					</div>
 																				)}
 																		</FormGroup>
-																	</Col>
-																	<Col >
-																		<FormGroup className="mb-3">
-																			<Label htmlFor="due_date">
+																		
+																		<FormGroup >	<div className='text-center ml-1 mr-1'>_</div></FormGroup>
+																		{/* <FormGroup className="mt-2">&nbsp;<i class="far fa-calendar-alt "></i>&nbsp;</FormGroup> */}
+																		<FormGroup >
+																			{/* <Label htmlFor="due_date">
 																				<span className="text-danger">*</span>
 																				End Date
-																			</Label>
+																			</Label> */}
 																			<DatePicker
+																				autoComplete="Off"
 																				id="date"
 																				name="endDate"
 																				className={`form-control ${props.errors.endDate &&
@@ -914,7 +932,7 @@ class CreatePayrollList extends React.Component {
 																					? 'is-invalid'
 																					: ''
 																					}`}
-																				placeholderText={strings.OrderDueDate}
+																					placeholderText={"Select End Date"}
 																				selected={props.values.endDate}
 																				showMonthDropdown
 																				showYearDropdown
@@ -933,8 +951,47 @@ class CreatePayrollList extends React.Component {
 																				)}
 
 																		</FormGroup>
+
+																	</div>
+																		
 																	</Col>
 
+																	
+																	</Row>
+																	
+																	<Col lg={3}>	<Label htmlFor="due_date">
+																				{/* <span className="text-danger">*</span> */}
+																				Payroll Approver
+																			</Label>
+																		<FormGroup>
+																			
+																			<Select
+																				isDisabled={this.disable() ? true : false}
+																				styles={customStyles}
+																				id="userId"
+																				name="userId"
+																				placeholder={"Select Approver"}
+																				options={
+																					approver_dropdown_list.data
+																						? selectOptionsFactory.renderOptions(
+																							'name',
+																							'userId',
+																							approver_dropdown_list.data,
+																							'User',
+																						)
+																						: []
+																				}
+
+																				onChange={(option) => {
+																					if (option && option.value) {
+																						this.setState({ userId: option.value })
+
+																					}
+																				}}
+																			/>
+
+																		</FormGroup>
+																	</Col>
 																	{/* <Col>
 																		<FormGroup>
 																			<Label htmlFor="payPeriod">  Pay period</Label>
@@ -1125,11 +1182,8 @@ class CreatePayrollList extends React.Component {
 																	<Col></Col>
 																	<Col></Col>
 																	<Col lg={3} className="pull-right mt-3">
-																		<FormGroup>
-																			{/* <Label htmlFor="contactId">
-
-																				Select Approver
-																			</Label> */}
+																		{/* <FormGroup>
+																			
 																			<Select
 																				isDisabled={this.disable() ? true : false}
 																				styles={customStyles}
@@ -1155,19 +1209,13 @@ class CreatePayrollList extends React.Component {
 																				}}
 																			/>
 
-																		</FormGroup>
+																		</FormGroup> */}
 																	</Col>
 																</Row>
 
-															</Form>
-														)
-														}
-													</Formik>
-
-
-												</div>
+													
 												{this.getPayrollEmployeeList()}
-												<Formik
+												{/* <Formik
 
 													initialValues={this.state}
 													onSubmit={(values, { resetForm }) => {
@@ -1179,7 +1227,7 @@ class CreatePayrollList extends React.Component {
 													{(props) => (
 
 
-														<Form onSubmit={props.handleSubmit}>
+														<Form onSubmit={props.handleSubmit}> */}
 															<Row className="mt-4 ">
 
 
@@ -1218,21 +1266,22 @@ class CreatePayrollList extends React.Component {
 																	</Button>
 																	<Button type="button" color="primary" className="btn-square pull-right "
 																	// disabled={this.disableForAddButton() ? true : false}
-																	// onClick={() => {
-
-																	// 					
-																	// 					}}
+																	onClick={() => {
+																			props.handleSubmit()
+																							}}
 																	>
 																		<i className="fa fa-dot-circle-o  mr-1"></i> Create
 																	</Button>
 
 																</Col>
 															</Row>
-
 														</Form>
-													)
-													}
-												</Formik>
+														)
+														}
+													</Formik>
+
+
+												</div>
 											</Col>
 										</Row>
 									)}

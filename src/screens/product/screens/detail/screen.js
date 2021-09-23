@@ -94,6 +94,7 @@ class DetailProduct extends React.Component {
 			openModal:false,
 			inventory_history_list:[],
 			inventory_list:[],
+			isActive:false
 		};
 
 		this.selectRowProp = {
@@ -690,8 +691,8 @@ renderName=(cell,row)=>{
 														return errors;
 													}}
 													validationSchema={Yup.object().shape({
-														isActive : Yup.string()
-													.required('status is Required') ,
+													// 	isActive : Yup.string()
+													// .required('status is Required') ,
 														productName: Yup.string().required(
 															'Product Name is Required',
 														),

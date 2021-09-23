@@ -701,6 +701,7 @@ class PayrollRun extends React.Component {
 															className="table-header-bg"
 															dataField="payPeriod"
 															dataFormat={this.renderPayperiod}
+															width='12%'
 															dataSort
 														>
 															Pay Period

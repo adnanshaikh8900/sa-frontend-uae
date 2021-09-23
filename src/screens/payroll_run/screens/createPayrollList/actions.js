@@ -1,4 +1,5 @@
 import { EMPLOYEEPAYROLL } from 'constants/types';
+import { objectOf } from 'prop-types';
 import {
   authApi
 } from 'utils'
@@ -83,11 +84,25 @@ export const getApproversForDropdown = () => {
 };
 
 
-export const getAllPayrollEmployee = (_id) => {
+// export const getAllPayrollEmployee = (_id) => {
+// 	return (dispatch) => {
+// 	  let data = {
+// 		method: 'GET',
+// 		url: `/rest/payroll/getAllPayrollEmployeeForGenerator?payrollid=${_id}`
+// 	  }
+  
+// 	  return authApi(data).then((res) => {
+// 		return res
+// 	  }).catch((err) => {
+// 		throw err
+// 	  })
+// 	}
+// }
+export const getAllPayrollEmployee = () => {
 	return (dispatch) => {
 	  let data = {
 		method: 'GET',
-		url: `/rest/payroll/getAllPayrollEmployeeForGenerator?payrollid=${_id}`
+		url: `/rest/employee/getAllActiveCompleteEmployee`
 	  }
   
 	  return authApi(data).then((res) => {
@@ -97,6 +112,36 @@ export const getAllPayrollEmployee = (_id) => {
 	  })
 	}
 }
+
+export const createPayroll = (object) => {
+
+	return (dispatch) => {
+	  let data = {
+		method: 'post',
+		url:`/rest/payroll/createPayroll `,
+		 data: object
+	  }
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }
+// export const createPayroll = (employeeListIds,payrollSubject,payPeriod,generatePayrollString,salaryDate) => {
+//     return (dispatch) => {
+//       let data = {
+//         method: 'post',
+//          url:`/rest/payroll/createPayroll`,
+//         // url:`/rest/payroll/createPayroll ?employeeListIds=${employeeListIds}&payrollSubject=${payrollSubject}&payPeriod=${payPeriod}&generatePayrollString=${generatePayrollString}&salaryDate=${salaryDate}`
+//       }
+//       return authApi(data).then((res) => {
+//         return res
+//       }).catch((err) => {
+//         throw err
+//       })
+//     }
+//   }
 export const removeEmployee = (ids) => {
 	return (dispatch) => {
 	  let data = {

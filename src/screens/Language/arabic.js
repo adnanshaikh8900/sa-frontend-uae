@@ -768,7 +768,7 @@ CurrentLiability:"المسؤولية الحالية",
 AccountsPayable:"حسابات قابلة للدفع",
 Thereisnodatatodisplay:"لا توجد بيانات لعرضها",
 Other:"آخر",
-
+DueWithinThisMonth: "تستحق خلال هذا الشهر",
 
 From:"من عند",
 To:"ل",

@@ -231,7 +231,7 @@ RFQDATE:"DEMANDE DE DATE DE DEVIS",
 RFQDueDate:"Demande de date d’échéance du devis",	
 RFQDUEDATE:"DEMANDE DE DATE D’échéance DU DEVIS ",					
 AddnewRequest:"Ajouter une nouvelle demande",			
-											
+DueWithinThisMonth: "Exigible ce mois-ci",								
 //Create RFQ			
 CreateRequestForQuotation:"Créer une demande de devis",			
 RFQNumber:"Demande de numéro de devis ",						

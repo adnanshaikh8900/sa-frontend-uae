@@ -196,6 +196,26 @@ class ProductModal extends React.Component {
 		});
 	};
 
+	ProductvalidationCheck = (value) => {
+		const data = {
+			moduleType: 7,
+			productCode: value,
+		};
+		this.props.productActions
+			.checkProductNameValidation(data)
+			.then((response) => {
+				if (response.data === 'Product code already exists') {
+					this.setState({
+						ProductExist: true,
+					});
+				} else {
+					this.setState({
+						ProductExist: false,
+					});
+				}
+			});
+	};
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
@@ -225,6 +245,10 @@ class ProductModal extends React.Component {
 							}
 							if (this.state.exist === true) {
 								errors.productName = 'Product  Name is already exist';
+							}
+							if (this.state.ProductExist === true) {
+								errors.productCode =
+									'Product Code is already exist';
 							}
 							return errors;
 						}}
@@ -258,7 +282,7 @@ class ProductModal extends React.Component {
 							productPriceType: Yup.string().required(
 								'At least one Selling type is required',
 							),
-							productCode: Yup.string().required('Product code is required'),
+							productCode: Yup.string().required('Product Code is required'),
 							vatCategoryId: Yup.string()
 								.required('Vat Category is Required')
 								.nullable(),
@@ -456,9 +480,25 @@ class ProductModal extends React.Component {
 															) {
 																props.handleChange('productCode')(option);
 															}
+															this.ProductvalidationCheck(
+																option.target.value,
+															);
 														}}
+														onBlur={handleBlur}
 														value={props.values.productCode}
+														className={
+																props.errors.productCode &&
+																props.touched.productCode
+																? 'is-invalid'
+																: ''
+															}
 													/>
+													{props.errors.productCode &&
+														props.touched.productCode && (
+														<div className="invalid-feedback">
+															{props.errors.productCode}
+														</div>
+													)}
 												</FormGroup>
 											</Col>
 										</Row>

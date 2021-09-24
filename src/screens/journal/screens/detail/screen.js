@@ -801,6 +801,17 @@ min="0"
 
 				return item;
 			});
+			let currency='';
+			if(values.currencyCode && values.currencyCode.value )
+			{
+				currency=values.currencyCode.value
+			}
+			else{
+				if(values.currencyCode)
+				{
+					currency=values.currencyCode
+				}			
+			}
 			const postData = {
 				journalId: values.journalId,
 				journalDate: values.journalDate ? values.journalDate : '',
@@ -808,7 +819,7 @@ min="0"
 					? values.journalReferenceNo
 					: '',
 				description: values.description ? values.description : '',
-				currencyCode: values.currencyCode ? values.currencyCode.value : '',
+				currencyCode: currency,
 				subTotalCreditAmount: initValue.subTotalCreditAmount,
 				subTotalDebitAmount: initValue.subTotalDebitAmount,
 				totalCreditAmount: initValue.totalCreditAmount,

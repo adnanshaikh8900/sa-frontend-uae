@@ -215,6 +215,46 @@ class DetailJournal extends React.Component {
 			}
 			return obj;
 		});
+		
+if(row && row.journalTransactionCategoryLabel==='Bank')
+{
+	return (
+		<Field
+			name={`journalLineItems.${idx}.transactionCategoryId`}
+			render={({ field, form }) => (			
+				<Input 
+				id="transactionCategoryId"
+				disabled={true} 
+				value={row.journalTransactionCategoryLabel ?
+					row.journalTransactionCategoryLabel 
+					:''}
+				placeholder={strings.Select+strings.Account}
+					>						
+				</Input>
+			)}
+		/>
+	);
+}else
+
+	if(row && row.transactionCategoryName==='Petty Cash')
+	{
+		return (
+			<Field
+				name={`journalLineItems.${idx}.transactionCategoryId`}
+				render={({ field, form }) => (			
+					<Input 
+					id="transactionCategoryId"
+					disabled={true} 
+					value={row.transactionCategoryName ?
+						row.transactionCategoryName 
+						:''}
+					placeholder={strings.Select+strings.Account}
+						>						
+					</Input>
+				)}
+			/>
+		);
+	}else{
 
 		return (
 			<Field
@@ -266,6 +306,9 @@ class DetailJournal extends React.Component {
 				)}
 			/>
 		);
+
+	}
+		
 	};
 
 	renderDescription = (cell, row, props) => {
@@ -324,22 +367,97 @@ class DetailJournal extends React.Component {
 			return obj;
 		});
 	}
+	switch(row && row.postingReferenceType ?row.postingReferenceType:'')
+	{
+		case "MANUAL":
+			return (
+				<Field
+					name={`journalLineItems.${idx}.contactId`}
+					render={({ field, form }) => (
+						<Input
+							type="select"
+							onChange={(e) => {
+								this.selectItem(e.target.value, row, 'contactId', form, field);
+							}}
+							disabled={
+								props.values.postingReferenceType === 'MANUAL' ? false : true
+							}
+							value={row.contactId}
+							placeholder={strings.Select+strings.Contact}
+							className={`form-control 
+				${
+								props.errors.journalLineItems &&
+								props.errors.journalLineItems[parseInt(idx, 10)] &&
+								props.errors.journalLineItems[parseInt(idx, 10)].contactId &&
+								Object.keys(props.touched).length > 0 &&
+								props.touched.journalLineItems &&
+								props.touched.journalLineItems[parseInt(idx, 10)] &&
+								props.touched.journalLineItems[parseInt(idx, 10)].contactId
+									? 'is-invalid'
+									: ''
+							}`}
+						>
+							{contactList
+								? contactList.map((obj) => {
+										return (
+											<option value={obj.value} key={obj.value}>
+												{obj && obj.label && obj.label.contactName ? obj.label.contactName : ''}
+											</option>
+										);
+								  })
+								: ''}
+						</Input>
+					)}
+				/>
+			);
+
+			break;
+		
+		case "BANK_ACCOUNT":
+			return (
+				<Field
+					name={`journalLineItems.${idx}.contactId`}
+					render={({ field, form }) => (
+						<Input
+						
+							disabled={
+								props.values.postingReferenceType === 'MANUAL' ? false : true
+							}
+							value={"-"}
+							placeholder={strings.Select+strings.Contact}
+							className={`form-control 
+				${
+								props.errors.journalLineItems &&
+								props.errors.journalLineItems[parseInt(idx, 10)] &&
+								props.errors.journalLineItems[parseInt(idx, 10)].contactId &&
+								Object.keys(props.touched).length > 0 &&
+								props.touched.journalLineItems &&
+								props.touched.journalLineItems[parseInt(idx, 10)] &&
+								props.touched.journalLineItems[parseInt(idx, 10)].contactId
+									? 'is-invalid'
+									: ''
+							}`}
+						>
+						</Input>
+					)}
+				/>
+			);
+			break;
+		
+		default :
 		return (
 			<Field
 				name={`journalLineItems.${idx}.contactId`}
 				render={({ field, form }) => (
 					<Input
-						type="select"
-						onChange={(e) => {
-							this.selectItem(e.target.value, row, 'contactId', form, field);
-						}}
+					
 						disabled={
 							props.values.postingReferenceType === 'MANUAL' ? false : true
 						}
-						value={row.contactId}
+						value={row.contactId ? row.contactId:'-'}
 						placeholder={strings.Select+strings.Contact}
 						className={`form-control 
-            ${
+			${
 							props.errors.journalLineItems &&
 							props.errors.journalLineItems[parseInt(idx, 10)] &&
 							props.errors.journalLineItems[parseInt(idx, 10)].contactId &&
@@ -351,19 +469,61 @@ class DetailJournal extends React.Component {
 								: ''
 						}`}
 					>
-						{contactList
-							? contactList.map((obj) => {
-									return (
-										<option value={obj.value} key={obj.value}>
-											{obj && obj.label && obj.label.contactName ? obj.label.contactName : ''}
-										</option>
-									);
-							  })
-							: ''}
+								{contactList
+								? contactList.map((obj) => {
+										return (
+											<option value={obj.value} key={obj.value}>
+												{obj && obj.label && obj.label.contactName ? obj.label.contactName : ''}
+											</option>
+										);
+								  })
+								: '-'}
 					</Input>
 				)}
 			/>
 		);
+		break;
+	}
+		// return (
+		// 	<Field
+		// 		name={`journalLineItems.${idx}.contactId`}
+		// 		render={({ field, form }) => (
+		// 			<Input
+		// 				type="select"
+		// 				onChange={(e) => {
+		// 					this.selectItem(e.target.value, row, 'contactId', form, field);
+		// 				}}
+		// 				disabled={
+		// 					props.values.postingReferenceType === 'MANUAL' ? false : true
+		// 				}
+		// 				value={row.contactId}
+		// 				placeholder={strings.Select+strings.Contact}
+		// 				className={`form-control 
+        //     ${
+		// 					props.errors.journalLineItems &&
+		// 					props.errors.journalLineItems[parseInt(idx, 10)] &&
+		// 					props.errors.journalLineItems[parseInt(idx, 10)].contactId &&
+		// 					Object.keys(props.touched).length > 0 &&
+		// 					props.touched.journalLineItems &&
+		// 					props.touched.journalLineItems[parseInt(idx, 10)] &&
+		// 					props.touched.journalLineItems[parseInt(idx, 10)].contactId
+		// 						? 'is-invalid'
+		// 						: ''
+		// 				}`}
+		// 			>
+		// 				{contactList
+		// 					? contactList.map((obj) => {
+		// 							return (
+		// 								<option value={obj.value} key={obj.value}>
+		// 									{obj && obj.label && obj.label.contactName ? obj.label.contactName : ''}
+		// 								</option>
+		// 							);
+		// 					  })
+		// 					: ''}
+		// 			</Input>
+		// 		)}
+		// 	/>
+		// );
 	};
 
 	renderDebits = (cell, row, props) => {

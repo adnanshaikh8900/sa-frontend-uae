@@ -963,7 +963,7 @@ class CustomerInvoice extends React.Component {
 							)}
 							<Row>
 								<Col lg={12}>
-									{/* <div className="mb-4 status-panel p-3">
+									<div className="mb-4 status-panel p-3">
 										<Row className="align-items-center justify-content-around">
 											<div className="h4 mb-0 d-flex align-items-center ">
 												<img
@@ -1047,7 +1047,7 @@ class CustomerInvoice extends React.Component {
 													style={{ width: '60px' }}
 												/>
 												<div>
-													<h5 className="ml-3">{strings.DueWithin30Days}</h5>
+													<h5 className="ml-3">{strings.DueWithinThisMonth}</h5>
 													<h3 className="invoice-detail ml-3">
 														{universal_currency_list[0] &&
 															this.state.overDueAmountDetails
@@ -1080,7 +1080,7 @@ class CustomerInvoice extends React.Component {
 												</div>
 											</div>
 										</Row>
-									</div> */}
+									</div>
 									<div className="d-flex justify-content-end">
 										<ButtonGroup size="sm">
 											{/* <Button

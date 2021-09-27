@@ -45,6 +45,8 @@ const mapDispatchToProps = (dispatch) => {
 		RoleActions: bindActionCreators(roleActions, dispatch),
 	};
 };
+
+
 let strings = new LocalizedStrings(data);
 class CreateRole extends React.Component {
 	constructor(props) {
@@ -58,7 +60,10 @@ class CreateRole extends React.Component {
 			checked: [],
 			roleList: [],
 			roleexist: false,
-			disabled: false
+			disabled: false,
+			selectedStatus: true,
+			isActive: true,
+			expanded: ["SelectAll"],
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExDecimal = /^[0-9]*(\.[0-9]{0,2})?$/;
@@ -128,12 +133,20 @@ class CreateRole extends React.Component {
 
 	// Create or Edit Vat
 	handleSubmit = (data, resetForm) => {
+		
+		let index =this.state.checked ? this.state.checked.indexOf('SelectAll') :-1;
+		if(index != -1) {
+			this.state.checked.splice(index, 1); // remove 1 element from index 
+		}
+		
 		this.setState({ disabled: true });
 			const obj = {
 			roleName: data.name,
 			roleDescription: data.description,
 			moduleListIds: this.state.checked,
+			isActive:this.state.isActive
 		};
+		
 		this.props.RoleActions.createRole(obj)
 			.then((res) => {
 				if (res.status === 200) {
@@ -202,6 +215,25 @@ class CreateRole extends React.Component {
 			{ value: 'Customer Invoice', label: 'Customer Invoice' },
 		];
 		const { checked, expanded } = this.state;
+		const nodes = [
+			{
+			  value: "SelectAll",
+			  label: "Select All",
+			  children: this.state.roleList
+			//   [
+			// 	{ value: "mercury", label: "Mercury" },
+			// 	{
+			// 	  value: "jupiter",
+			// 	  label: "Jupiter",
+			// 	  children: [
+			// 		{ value: "io", label: "Io" },
+			// 		{ value: "europa", label: "Europa" },
+			// 	  ],
+			// 	},
+			//   ]
+			  ,
+			},
+		  ];
 		return (
 			<div className="role-create-screen">
 				<div className="animated fadeIn">
@@ -242,6 +274,74 @@ class CreateRole extends React.Component {
 											>
 												{(props) => (
 													<Form onSubmit={props.handleSubmit} name="simpleForm">
+														<Row>
+																	<Col >
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="active"><span className="text-danger">*</span>{strings.Status}</Label>
+																			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+																				<FormGroup check inline>
+																					<div className="custom-radio custom-control">
+																						<input
+																							className="custom-control-input"
+																							type="radio"
+																							id="inline-radio1"
+																							name="active"
+																							checked={
+																								this.state.selectedStatus
+																							}
+																							value={true}
+																							onChange={(e) => {
+																								if (
+																									e.target.value === 'true'
+																								) {
+																									this.setState({
+																										selectedStatus: true,
+																										isActive: true
+																									});
+																								}
+																							}}
+																						/>
+																						<label
+																							className="custom-control-label"
+																							htmlFor="inline-radio1"
+																						>
+																							{strings.Active}
+																							</label>
+																					</div>
+																				</FormGroup>
+																				<FormGroup check inline>
+																					<div className="custom-radio custom-control">
+																						<input
+																							className="custom-control-input"
+																							type="radio"
+																							id="inline-radio2"
+																							name="active"
+																							value={false}
+																							checked={
+																								!this.state.selectedStatus
+																							}
+																							onChange={(e) => {
+																								if (
+																									e.target.value === 'false'
+																								) {
+																									this.setState({
+																										selectedStatus: false,
+																										isActive: false
+																									});
+																								}
+																							}}
+																						/>
+																						<label
+																							className="custom-control-label"
+																							htmlFor="inline-radio2"
+																						>
+																							{strings.Inactive}
+																							</label>
+																					</div>
+																				</FormGroup>
+																			
+																		</FormGroup>
+																	</Col></Row>
 														<FormGroup>
 															<Label htmlFor="name">
 																<span className="text-danger">*</span> {strings.Name}
@@ -313,10 +413,12 @@ class CreateRole extends React.Component {
 															<CheckboxTree
 																id="RoleList"
 																name="RoleList"
+																nodes={nodes}
 																checked={checked}
 																expanded={expanded}
 																iconsClass="fa5"
-																nodes={this.state.roleList}
+															
+																checkModel="all"
 																onCheck={this.onCheck}
 																onExpand={this.onExpand}
 															/>

@@ -114,6 +114,26 @@ class UsersRoles extends React.Component {
 			</div>
 		);
 	};
+	renderStatus = (cell, row) => {
+
+        let classname = '';
+        if (row.isActive === true) {
+            classname = 'label-success';
+        } else {
+            classname = 'label-due';
+        }
+        return (
+            <span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
+                {
+                    row.isActive === true ?
+                        "Active" :
+                        "InActive"
+
+                }
+            </span>
+        );
+
+    };
 
 	render() {
 		strings.setLanguage(this.state.language);
@@ -163,10 +183,11 @@ class UsersRoles extends React.Component {
 												</Col>
 											</Row>
 										</div> */}
+										
 										<Button
 											color="primary"
 											style={{ marginBottom: '10px' }}
-											className="btn-square"
+											className="btn-square pull-right"
 											onClick={() =>
 												this.props.history.push(
 													`/admin/settings/user-role/create`,
@@ -200,6 +221,13 @@ class UsersRoles extends React.Component {
 											className="table-header-bg"
 											dataSort>
 												 {strings.Role}
+											</TableHeaderColumn>
+											<TableHeaderColumn 
+											dataField="isActive"
+											dataFormat={this.renderStatus}
+											className="table-header-bg"
+											dataSort>
+												 {strings.Status}
 											</TableHeaderColumn>
 										</BootstrapTable>
 									</Col>

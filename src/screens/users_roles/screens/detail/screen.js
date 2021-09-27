@@ -20,6 +20,7 @@ import Select from 'react-select';
 import CheckboxTree from 'react-checkbox-tree';
 import 'react-checkbox-tree/lib/react-checkbox-tree.css';
 
+import {  ConfirmDeleteModal } from 'components';
 import { CommonActions } from 'services/global';
 
 import 'react-toastify/dist/ReactToastify.css';
@@ -53,6 +54,12 @@ class UpdateRole extends React.Component {
 			createMore: false,
 			checked: [],
 			roleList: [],
+			count:'',
+			selectedStatus: false,
+			isActive: false,
+			current_role_id:null,
+			dialog: null,
+			expanded: ["SelectAll"],
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExDecimal = /^[0-9]*(\.[0-9]{0,2})?$/;
@@ -67,6 +74,7 @@ class UpdateRole extends React.Component {
 
 	initializeData = () => {
 		if (this.props.location.state && this.props.location.state.id) {
+			this.setState({current_role_id:this.props.location.state.id});
 			this.props.RoleCommonActions.getModuleList(this.props.location.state.id)
 				.then((res) => {
 					if (res.status === 200) {
@@ -90,6 +98,22 @@ class UpdateRole extends React.Component {
 				.catch((err) => {
 					this.props.history.push('/admin/settings/user-role');
 				});
+
+				this.props.RoleCommonActions.getUsersCountForRole(this.props.location.state.id).then((res) => {
+					if (res.status === 200) {
+						
+						if (res.data === 0){
+							this.setState({count:0});
+						}
+						// var result = res.data.map(function (el) {
+						// 	var o = Object.assign({}, el);
+						// 	o.value = el.moduleId;
+						// 	o.label = el.moduleName;
+						// 	return o;
+						// });
+						// this.list_to_tree(result);
+					}
+				});
 		} else {
 			this.props.history.push('/admin/settings/user-role');
 		}
@@ -104,6 +128,7 @@ class UpdateRole extends React.Component {
 				this.list_to_tree(result);
 			}
 		});
+		
 	};
 
 	list_to_tree = (arr) => {
@@ -153,11 +178,18 @@ class UpdateRole extends React.Component {
 	// Create or Edit Vat
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true });
+		
+		let index =this.state.checked ? this.state.checked.indexOf('SelectAll') :-1;
+		if(index != -1) {
+			this.state.checked.splice(index, 1); // remove 1 element from index 
+		}
+		
 		const obj = {
 			roleName: data.name,
 			roleDescription: data.description,
 			moduleListIds: this.state.checked,
 			roleID: this.props.location.state.id,
+			isActive:this.state.isActive
 		};
 		this.props.RoleActions.updateRole(obj)
 			.then((res) => {
@@ -191,11 +223,79 @@ class UpdateRole extends React.Component {
 	onExpand = (expanded) => {
 		this.setState({ expanded });
 	};
+	deleteRole = () => {
+		
+		const message1 = (
+			<text>
+				<b>Delete Role?</b>
+			</text>
+		);
+		const message =
+			'This Role will be deleted permanently and cannot be recovered. ';
+		this.setState({
+			dialog: (
+				<ConfirmDeleteModal
+					isOpen={true}
+					okHandler={this.removeRole}
+					cancelHandler={this.removeDialog}
+					message={message}
+					message1={message1}
+				/>
+			),
+		});
+	};
+
+	removeRole = () => {
+		this.setState({ disabled1: true });
+		const { current_role_id } = this.state;
+			this.props.RoleCommonActions
+			.deleteRole(current_role_id)
+			.then((res) => {
+				if (res.status === 200) {
+					this.props.commonActions.tostifyAlert(
+						'success',
+						'Role Deleted Successfully',
+					);
+					this.props.history.push('/admin/settings/user-role');
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
+	};
+
+	removeDialog = () => {
+		this.setState({
+			dialog: null,
+		});
+	};
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, initValue } = this.state;
+		const { loading, initValue,dialog } = this.state;
 		const { checked, expanded } = this.state;
+		const nodes = [
+			{
+			  value: "SelectAll",
+			  label: "Select All",
+			  children: this.state.roleList
+			//   [
+			// 	{ value: "mercury", label: "Mercury" },
+			// 	{
+			// 	  value: "jupiter",
+			// 	  label: "Jupiter",
+			// 	  children: [
+			// 		{ value: "io", label: "Io" },
+			// 		{ value: "europa", label: "Europa" },
+			// 	  ],
+			// 	},
+			//   ]
+			  ,
+			},
+		  ];
 		return (
 			<div className="role-create-screen">
 				<div className="animated fadeIn">
@@ -209,6 +309,7 @@ class UpdateRole extends React.Component {
 									</div>
 								</CardHeader>
 								<CardBody>
+									{dialog}
 									{loading ? (
 										<Loader />
 									) : (
@@ -234,6 +335,74 @@ class UpdateRole extends React.Component {
 															onSubmit={props.handleSubmit}
 															name="simpleForm"
 														>
+															<Row>
+																	<Col >
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="active"><span className="text-danger">*</span>{strings.Status}</Label>
+																			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+																				<FormGroup check inline>
+																					<div className="custom-radio custom-control">
+																						<input
+																							className="custom-control-input"
+																							type="radio"
+																							id="inline-radio1"
+																							name="active"
+																							checked={
+																								this.state.selectedStatus
+																							}
+																							value={true}
+																							onChange={(e) => {
+																								if (
+																									e.target.value === 'true'
+																								) {
+																									this.setState({
+																										selectedStatus: true,
+																										isActive: true
+																									});
+																								}
+																							}}
+																						/>
+																						<label
+																							className="custom-control-label"
+																							htmlFor="inline-radio1"
+																						>
+																							{strings.Active}
+																							</label>
+																					</div>
+																				</FormGroup>
+																				<FormGroup check inline>
+																					<div className="custom-radio custom-control">
+																						<input
+																							className="custom-control-input"
+																							type="radio"
+																							id="inline-radio2"
+																							name="active"
+																							value={false}
+																							checked={
+																								!this.state.selectedStatus
+																							}
+																							onChange={(e) => {
+																								if (
+																									e.target.value === 'false'
+																								) {
+																									this.setState({
+																										selectedStatus: false,
+																										isActive: false
+																									});
+																								}
+																							}}
+																						/>
+																						<label
+																							className="custom-control-label"
+																							htmlFor="inline-radio2"
+																						>
+																							{strings.Inactive}
+																							</label>
+																					</div>
+																				</FormGroup>
+																			
+																		</FormGroup>
+																	</Col></Row>
 															<FormGroup>
 																<Label htmlFor="name">
 																	<span className="text-danger">*</span> {strings.Name}
@@ -293,16 +462,39 @@ class UpdateRole extends React.Component {
 															<FormGroup>
 																<Label htmlFor="name">Modules {strings.Modules  }</Label>
 																<CheckboxTree
+																    nodes={nodes}
 																	checked={checked}
 																	expanded={expanded}
 																	iconsClass="fa5"
-																	nodes={this.state.roleList}
+																	// checkModel="all"
+																	// nodes={this.state.roleList}
 																	onCheck={this.onCheck}
 																	onExpand={this.onExpand}
 																/>
 															</FormGroup>
-															<FormGroup className="text-right mt-5">
-																<Button
+															<FormGroup  className="mt-5">
+																<Row>
+
+																<Col>
+																{this.state.count === 0 &&
+																	  (
+																		
+																		<Button
+																			type="button"
+																			color="danger"
+																			className="btn-square mr-3"
+																				disabled1={this.state.disabled1}
+																			onClick={this.deleteRole}
+																		>
+																			<i className="fa fa-trash"></i> {this.state.disabled1
+																			? 'Deleting...'
+																			: strings.Delete }
+																		</Button>
+																
+																	)}</Col>
+															
+																	<Col>
+																	<Button
 																	type="button"
 																	name="submit"
 																	color="primary"
@@ -331,6 +523,11 @@ class UpdateRole extends React.Component {
 																>
 																	<i className="fa fa-ban"></i> {strings.Cancel}
 																</Button>
+																	</Col>
+																</Row>
+																
+															{/* <FormGroup className="text-right mt-5"> */}
+																
 															</FormGroup>
 														</Form>
 													)}

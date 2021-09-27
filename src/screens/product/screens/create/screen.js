@@ -105,8 +105,9 @@ class CreateProduct extends React.Component {
 			exist: false,
 			ProductExist: false,
 			disabled: false,
-			productActive: false,
-			isActive:false,
+			productActive: true,
+			isActive:true,
+			selectedStatus:true,
 		};
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[ +a-zA-Z0-9-./\\|]+$/;

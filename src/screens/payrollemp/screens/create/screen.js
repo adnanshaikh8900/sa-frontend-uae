@@ -196,7 +196,7 @@ class CreateEmployeePayroll extends React.Component {
             },
             userPhoto: [],
             userPhotoFile: [],
-            useractive: false,
+            useractive: true,
             showIcon: false,
             basic: false,
             activeTab: new Array(4).fill('1'),
@@ -209,6 +209,7 @@ class CreateEmployeePayroll extends React.Component {
             componentTotal: '',
             prefix: '',
             exist: false,
+            selectedStatus:true,
         }        
         this.formRef = React.createRef();       
         this.regEx = /^[0-9\d]+$/;

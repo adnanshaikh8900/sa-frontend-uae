@@ -94,8 +94,8 @@ class CreateUser extends React.Component {
 			showIcon: false,
 			exist: false,
 			createDisabled: false,
-			selectedStatus: false,
-			useractive: false,
+			selectedStatus: true,
+			useractive: true,
 			openEmployeeModal: false,
 
 		};

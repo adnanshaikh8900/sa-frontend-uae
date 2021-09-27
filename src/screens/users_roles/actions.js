@@ -38,3 +38,35 @@ export const getModuleList = (id) => {
 			});
 	};
 };
+
+export const getUsersCountForRole = (id) => {
+	return (dispatch) => {
+		let data = {
+			method: 'GET',
+			url: `/rest/roleModule/getUsersCountForRole?roleId=${id}`,
+		};
+
+		return authApi(data)
+			.then((res) => {
+				return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const deleteRole = (id) => {
+	return (dispatch) => {
+	  let data = {
+		method: 'DELETE',
+		url: `/rest/roleModule/delete?roleCode=${id}`
+	  }
+  
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }

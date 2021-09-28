@@ -81,14 +81,18 @@ class UpdateRole extends React.Component {
 						let tempArray = [];
 						res.data.map((value) => {
 							tempArray.push(value.moduleId.toString());
-						});
+						});debugger
 						this.setState(
 							{
 								checked: tempArray,
 								initValue: {
 									name: res.data ? res.data[0].roleName : '',
 									description: res.data ? res.data[0].moduleDescription : '',
+									isActive: res.data ? res.data[0].isActive : '',
+									selectedStatus: res.data ? res.data[0].isActive : '',
 								},
+								isActive: res.data ? res.data[0].isActive : '',
+								selectedStatus: res.data ? res.data[0].isActive : '',
 								loading: false,
 							},
 							() => {},

@@ -65,6 +65,8 @@ class DetailCurrencyConvert extends React.Component {
       currency_list:[],
       disabled: false,
       disabled1:false,
+      selectedStatus: false,
+			isActive: false,
     }
     this.regExAlpha = /^[a-zA-Z ]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
@@ -93,11 +95,14 @@ class DetailCurrencyConvert extends React.Component {
           this.setState({
             loading: false,
             current_currency_convert_id: this.props.location.state.id,
+            isActive: res.data ? res.data.isActive : '',
+            selectedStatus: res.data ? res.data.isActive : '',
             initValue: {
               id:res.data.current_currency_convert_id ? res.data.current_currency_convert_id : '',
               currencyCode: res.data.currencyCode && res.data.currencyCode !== null ? res.data.currencyCode : '',
               exchangeRate: res.data.exchangeRate && res.data.exchangeRate !== null ? res.data.exchangeRate : '',
-             
+              isActive: res.data ? res.data.isActive : '',  
+              selectedStatus: res.data ? res.data.isActive : '',
             }
           })
           
@@ -106,6 +111,14 @@ class DetailCurrencyConvert extends React.Component {
         this.setState({loading: false})
         this.props.history.push('/admin/master/CurrencyConvert')
       })
+
+      // this.props.RoleCommonActions.getCountForCurrencyConvert(this.props.location.state.id).then((res) => {
+      //   if (res.status === 200) {         
+      //     if (res.data === 0){
+      //       this.setState({count:0});
+      //     }
+      //   }
+      // });
     } else {
       this.props.history.push('/admin/master/CurrencyConvert')
     }
@@ -127,8 +140,13 @@ class DetailCurrencyConvert extends React.Component {
   // Create or Edit Currency
   handleSubmit = (data, resetForm) => {
     this.setState({ disabled: true });
+    const obj = {
+			currencyCode: data.currencyCode,
+			exchangeRate: data.exchangeRate,
+			isActive:this.state.isActive
+		};
   	const { current_currency_convert_id } = this.state;
-		let postData = this.getData(data);
+		let postData = this.getData(obj);
 
 		postData = { ...postData, ...{ id: current_currency_convert_id } };
       this.props.detailCurrencyConvertAction.updateCurrencyConvert(postData).then((res) => {
@@ -235,6 +253,74 @@ class DetailCurrencyConvert extends React.Component {
                             {(props) => (
                               
                               <Form onSubmit={props.handleSubmit} name="simpleForm">
+                                	<Row>
+																	<Col >
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="active"><span className="text-danger">*</span>{strings.Status}</Label>
+																			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+																				<FormGroup check inline>
+																					<div className="custom-radio custom-control">
+																						<input
+																							className="custom-control-input"
+																							type="radio"
+																							id="inline-radio1"
+																							name="active"
+																							checked={
+																								this.state.selectedStatus
+																							}
+																							value={true}
+																							onChange={(e) => {
+																								if (
+																									e.target.value === 'true'
+																								) {
+																									this.setState({
+																										selectedStatus: true,
+																										isActive: true
+																									});
+																								}
+																							}}
+																						/>
+																						<label
+																							className="custom-control-label"
+																							htmlFor="inline-radio1"
+																						>
+																							{strings.Active}
+																							</label>
+																					</div>
+																				</FormGroup>
+																				<FormGroup check inline>
+																					<div className="custom-radio custom-control">
+																						<input
+																							className="custom-control-input"
+																							type="radio"
+																							id="inline-radio2"
+																							name="active"
+																							value={false}
+																							checked={
+																								!this.state.selectedStatus
+																							}
+																							onChange={(e) => {
+																								if (
+																									e.target.value === 'false'
+																								) {
+																									this.setState({
+																										selectedStatus: false,
+																										isActive: false
+																									});
+																								}
+																							}}
+																						/>
+																						<label
+																							className="custom-control-label"
+																							htmlFor="inline-radio2"
+																						>
+																							{strings.Inactive}
+																							</label>
+																					</div>
+																				</FormGroup>
+																			
+																		</FormGroup>
+																	</Col></Row>
                                 <Row>
                                 <Col lg={1}>
 																	<FormGroup className="mt-2">

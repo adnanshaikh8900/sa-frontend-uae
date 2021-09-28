@@ -65,6 +65,8 @@ class CreateCurrencyConvert extends React.Component {
 			loading: false,
 			createMore: false,
 			currency_list : [],
+			selectedStatus: true,
+			isActive: true,
 			
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
@@ -131,8 +133,13 @@ class CreateCurrencyConvert extends React.Component {
 		this.setState({
 			createDisabled: true,
 		})
+		const obj = {
+			currencyCode: data.currencyCode,
+			exchangeRate: data.exchangeRate,
+			isActive:this.state.isActive
+		};
 		this.props.createCurrencyConvertActions
-			.createCurrencyConvert(data)
+			.createCurrencyConvert(obj)
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState({ createDisabled: false });
@@ -241,6 +248,74 @@ class CreateCurrencyConvert extends React.Component {
 													} = props;
 													return (
 														<form onSubmit={handleSubmit}>
+															<Row>
+																	<Col >
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="active"><span className="text-danger">*</span>{strings.Status}</Label>
+																			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+																				<FormGroup check inline>
+																					<div className="custom-radio custom-control">
+																						<input
+																							className="custom-control-input"
+																							type="radio"
+																							id="inline-radio1"
+																							name="active"
+																							checked={
+																								this.state.selectedStatus
+																							}
+																							value={true}
+																							onChange={(e) => {
+																								if (
+																									e.target.value === 'true'
+																								) {
+																									this.setState({
+																										selectedStatus: true,
+																										isActive: true
+																									});
+																								}
+																							}}
+																						/>
+																						<label
+																							className="custom-control-label"
+																							htmlFor="inline-radio1"
+																						>
+																							{strings.Active}
+																							</label>
+																					</div>
+																				</FormGroup>
+																				<FormGroup check inline>
+																					<div className="custom-radio custom-control">
+																						<input
+																							className="custom-control-input"
+																							type="radio"
+																							id="inline-radio2"
+																							name="active"
+																							value={false}
+																							checked={
+																								!this.state.selectedStatus
+																							}
+																							onChange={(e) => {
+																								if (
+																									e.target.value === 'false'
+																								) {
+																									this.setState({
+																										selectedStatus: false,
+																										isActive: false
+																									});
+																								}
+																							}}
+																						/>
+																						<label
+																							className="custom-control-label"
+																							htmlFor="inline-radio2"
+																						>
+																							{strings.Inactive}
+																							</label>
+																					</div>
+																				</FormGroup>
+																			
+																		</FormGroup>
+																	</Col></Row>
 																<Row>
 																	<Col lg={1}>
 																	<FormGroup className="mt-2">

@@ -181,7 +181,25 @@ class Contact extends React.Component {
 	goToDetail = (row) => {
 		this.props.history.push('/admin/master/contact/detail', { id: row.id });
 	};
+	renderStatus = (cell, row) => {
 
+        let classname = '';
+        if (row.isActive === true) {
+            classname = 'label-success';
+        } else {
+            classname = 'label-due';
+        }
+        return (
+            <span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
+                {
+                    row.isActive === true ?
+                        "Active" :
+                        "InActive"
+                }
+            </span>
+        );
+
+    };
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
 		this.props.contactActions
@@ -545,6 +563,13 @@ class Contact extends React.Component {
 														>
 														    {strings.TYPE}
 														</TableHeaderColumn>
+														<TableHeaderColumn 
+											dataField="isActive"
+											dataFormat={this.renderStatus}
+											className="table-header-bg"
+											dataSort>
+												 {strings.Status}
+											</TableHeaderColumn>
 													</BootstrapTable>
 												</Col>
 												{/* <Col xs="12" lg="4">

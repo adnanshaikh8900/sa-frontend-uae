@@ -88,6 +88,8 @@ class CreateContact extends React.Component {
 			},
 			createMore: false,
 			checkmobileNumberParam:false,
+			selectedStatus: true,
+			isActive: true,
 
 		};
 		this.regEx = /[a-zA-Z0-9]+$/;
@@ -134,6 +136,8 @@ class CreateContact extends React.Component {
 				temp[`${item}`] = data[`${item}`].value;
 			}
 		}
+		// isActive:this.state.isActive
+		temp[`isActive`] = this.state.isActive;
 		return temp;
 	};
 
@@ -304,6 +308,74 @@ class CreateContact extends React.Component {
 												{(props) => (
 													<Form onSubmit={props.handleSubmit}>
 														<h4 className="mb-4">{strings.ContactName}</h4>
+														<Row>
+																	<Col >
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="active"><span className="text-danger">*</span>{strings.Status}</Label>
+																			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+																				<FormGroup check inline>
+																					<div className="custom-radio custom-control">
+																						<input
+																							className="custom-control-input"
+																							type="radio"
+																							id="inline-radio1"
+																							name="active"
+																							checked={
+																								this.state.selectedStatus
+																							}
+																							value={true}
+																							onChange={(e) => {
+																								if (
+																									e.target.value === 'true'
+																								) {
+																									this.setState({
+																										selectedStatus: true,
+																										isActive: true
+																									});
+																								}
+																							}}
+																						/>
+																						<label
+																							className="custom-control-label"
+																							htmlFor="inline-radio1"
+																						>
+																							{strings.Active}
+																							</label>
+																					</div>
+																				</FormGroup>
+																				<FormGroup check inline>
+																					<div className="custom-radio custom-control">
+																						<input
+																							className="custom-control-input"
+																							type="radio"
+																							id="inline-radio2"
+																							name="active"
+																							value={false}
+																							checked={
+																								!this.state.selectedStatus
+																							}
+																							onChange={(e) => {
+																								if (
+																									e.target.value === 'false'
+																								) {
+																									this.setState({
+																										selectedStatus: false,
+																										isActive: false
+																									});
+																								}
+																							}}
+																						/>
+																						<label
+																							className="custom-control-label"
+																							htmlFor="inline-radio2"
+																						>
+																							{strings.Inactive}
+																							</label>
+																					</div>
+																				</FormGroup>
+																			
+																		</FormGroup>
+																	</Col></Row>
 														<Row className="row-wrapper">
 															<Col md="4">
 																<FormGroup>

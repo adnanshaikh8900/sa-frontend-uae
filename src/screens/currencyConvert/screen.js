@@ -161,7 +161,25 @@ class ProductCategory extends React.Component {
 			return <label className="badge badge-danger mb-0">No Specified</label>;
 		}
 	};
+	renderStatus = (cell, row) => {
 
+        let classname = '';
+        if (row.isActive === true) {
+            classname = 'label-success';
+        } else {
+            classname = 'label-due';
+        }
+        return (
+            <span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
+                {
+                    row.isActive === true ?
+                        "Active" :
+                        "InActive"
+                }
+            </span>
+        );
+
+    };
 	renderBaseCurrency = (cell, row) => {
 		if (row.description) {
 			return (
@@ -496,6 +514,13 @@ class ProductCategory extends React.Component {
 												className="table-header-bg"
 											>
 												{strings.EXCHANGERATE}
+											</TableHeaderColumn>
+											<TableHeaderColumn 
+											dataField="isActive"
+											dataFormat={this.renderStatus}
+											className="table-header-bg"
+											dataSort>
+												 {strings.Status}
 											</TableHeaderColumn>
 										</BootstrapTable>
 									</Col>

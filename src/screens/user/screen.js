@@ -139,7 +139,26 @@ class User extends React.Component {
 				);
 			});
 	};
+	renderStatus = (cell, row) => {
 
+        let classname = '';
+        if (row.active === true) {
+            classname = 'label-success';
+        } else {
+            classname = 'label-due';
+        }
+        return (
+            <span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
+                {
+                    row.active === true ?
+                        "Active" :
+                        "InActive"
+
+                }
+            </span>
+        );
+
+    };
 	goToDetail = (row) => {
 		this.props.history.push('/admin/settings/user/detail', { id: row.id });
 	};
@@ -271,13 +290,13 @@ class User extends React.Component {
 		return row['company'] ? row['company']['companyName'] : '';
 	};
 
-	renderStatus = (cell, row) => {
-		return row['active'] !== ''
-			? row['active'] === true
-				? 'Active'
-				: 'InActive'
-			: '';
-	};
+	// renderStatus = (cell, row) => {
+	// 	return row['active'] !== ''
+	// 		? row['active'] === true
+	// 			? 'Active'
+	// 			: 'InActive'
+	// 		: '';
+	// };
 
 	handleChange = (val, name) => {
 		this.setState({

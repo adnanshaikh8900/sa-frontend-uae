@@ -346,12 +346,12 @@ class DetailUser extends React.Component {
 														/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
 														
 													),
-														confirmPassword: Yup.string()
-															// .required('Confirm Password is Required')
-															.oneOf(
-																[Yup.ref('password'), null],
-																'Passwords must match',
-															),
+													confirmPassword: Yup.string()
+													.required('Confirm Password is Required')
+													.oneOf(
+														[Yup.ref('password'), null],
+														'Passwords must match',
+													),
 														//	dob: Yup.string().required('DOB is Required'),
 													})}
 												>

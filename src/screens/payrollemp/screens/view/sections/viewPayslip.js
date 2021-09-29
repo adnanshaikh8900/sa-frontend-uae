@@ -15,7 +15,7 @@ import {
 	Table,
 
 } from 'reactstrap';
-import { toInteger, upperFirst } from 'lodash';
+import { toInteger, upperCase, upperFirst } from 'lodash';
 
 
 import { toast } from 'react-toastify';
@@ -54,6 +54,16 @@ const customStyles = {
 };
 
 let strings = new LocalizedStrings(data);
+const { ToWords } = require('to-words');
+const toWords = new ToWords({
+	localeCode: 'en-IN',
+	converterOptions: {
+	//   currency: true,
+	  ignoreDecimal: false,
+	  ignoreZeroCurrency: false,
+	  doNotAddOnly: false,
+	}
+  });
 class PaySlipModal extends React.Component {
 	constructor(props) {
 		super(props);
@@ -401,7 +411,9 @@ console.log(this.state.Variable,"Variable")
 													>
 														<h5> {strings.TotalNet+" "+strings.Payable} <b>{this.state.selectedData.netPay}</b>
 														</h5>
-														<h5>	 ( {upperFirst(converter.toWords(toInteger(this.state.selectedData.netPay)))} )
+														<h5>	
+															 {/* (	{	upperFirst(converter.toWords(toInteger(this.state.selectedData.netPay)))} ) */}
+														 {this.state.selectedData.netPay ? (upperCase((toWords.convert(this.state.selectedData.netPay)))) : " -" }
 														</h5>
 													</div>
 												</CardBody>

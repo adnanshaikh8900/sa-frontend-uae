@@ -25,6 +25,15 @@ class InvoiceTemplate extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {language: window['localStorage'].getItem('language') };
+		this.termList = [
+			{ label: 'Net 7 Days', value: 'NET_7' },
+			{ label: 'Net 10 Days', value: 'NET_10' },
+			{ label: 'Net 15 Days', value: 'NET_15' },
+			{ label: 'Net 30 Days', value: 'NET_30' },
+			{ label: 'Net 45 Days', value: 'NET_45' },
+			{ label: 'Net 60 Days', value: 'NET_60' },
+			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
+		];
 	}
 
 	getRibbonColor = (invoiceData) => {
@@ -55,6 +64,45 @@ class InvoiceTemplate extends Component {
 			</span>
 		);
 	};
+	// getTerms=(termData)=>{
+	// 	let term='';
+
+	// 	switch(termData){
+		
+	// 					case 'NET_7':  term="Payment due in 7 days";
+	// 					break;
+
+	// 					case 'NET_10': term="Payment due in 7 days";
+	// 					break;	
+
+	// 					case 'NET_15': term="Payment due in 7 days";
+	// 					break;	
+
+	// 					case 'NET_45': term="Payment due in 7 days";
+	// 					break;	
+						
+	// 					case 'NET_60': term="Payment due in 7 days";
+	// 					break;	
+
+	// 					case 'NET_30': term="Payment due in 7 days";
+	// 					break;	
+
+	// 					case 'DUE_ON_RECEIPT': term="Due On Receipt";
+	// 					break;	
+	// 	}
+	// 	return(
+	// 		<div>{term}</div>
+	// 	);
+	// }
+	getTerms=(term)=>{
+
+		let	val=	this.termList &&
+			this.termList.find(
+				(option) =>
+					option.value === term,
+			)
+			return val && val.label ? val.label :''
+		}
 	render() {
 		strings.setLanguage(this.state.language);
 		const { invoiceData, currencyData, totalNet, companyData,status } = this.props;
@@ -199,7 +247,7 @@ class InvoiceTemplate extends Component {
 								}}
 							>
 								<div style={{ width: '80%' }}>
-									<Table className="table table-bordered" style={{width: '90%',margin:'0.5rem',border:'1px solid',width:'250px', textAlign: 'center' ,border:'1px solid',borderColor:'#c8ced3'}}>
+									<Table className="table table-bordered" style={{width: '90%',margin:'0.5rem',border:'1px solid',width:'284px', textAlign: 'center' ,border:'1px solid',borderColor:'#c8ced3'}}>
 										<tbody>
 											<tr style={{ textAlign: 'right' }}>
 												<td  style={{backgroundColor:'#e3e3e3' ,width:'104px'  }}>{strings.InvoiceDate}</td>
@@ -212,7 +260,7 @@ class InvoiceTemplate extends Component {
 											</tr>
 											<tr style={{ textAlign: 'right',width:'143px' }}>
 												<td style={{width:'109px' ,backgroundColor:'#e3e3e3' }}>{strings.Terms }</td>
-												<td style={{width:'143px'}}>{invoiceData.term}</td>
+												<td style={{width:'143px'}}>{this.getTerms(invoiceData.term)}</td>
 											</tr>
 											<tr style={{ textAlign: 'right' }}>
 												<td style={{width:'104px' ,backgroundColor:'#e3e3e3' }}>{strings.DueDate }</td>

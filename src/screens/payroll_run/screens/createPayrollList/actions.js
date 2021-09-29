@@ -204,4 +204,19 @@ export const generatePayroll = (string) => {
 	  })
 	}
   }
-  
+
+
+export const createAndSubmitPayroll = (object) => {
+	return (dispatch) => {
+	  let data = {
+		method: 'post',
+		url:`/rest/payroll/createAndSubmitPayroll`,
+		 data: object
+	  }
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }

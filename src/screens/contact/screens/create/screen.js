@@ -261,12 +261,12 @@ class CreateContact extends React.Component {
 														.required('Mobile Number is required')
 													
 														,
-														billingEmail: Yup.string().email("Invalid Billing  Email ")
+														billingEmail: Yup.string().email("Invalid Billing  Email "),
 													//     addressLine1: Yup.string()
 													//       .required("Address is required"),
-													// countryId: Yup.string()
-													//   .required('Country is Required')
-													//   .nullable(),
+													countryId: Yup.string()
+													  .required('Country is Required')
+													  .nullable(),
 													// stateId: Yup.string().when('countryId', {
 													//   is: (val) => (val ? true : false),
 													//   then: Yup.string().required('State is Required'),
@@ -821,7 +821,7 @@ class CreateContact extends React.Component {
 														<Row className="row-wrapper">
 															<Col md="4">
 																<FormGroup>
-																	<Label htmlFor="countryId">{strings.Country}</Label>
+																	<Label htmlFor="countryId"><span className="text-danger">*</span>{strings.Country}</Label>
 																	<Select
 																		styles={customStyles}
 																		options={

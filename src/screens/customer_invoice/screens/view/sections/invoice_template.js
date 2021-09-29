@@ -11,7 +11,16 @@ import LocalizedStrings from 'react-localization';
 import { string } from 'prop-types';
 
 let strings = new LocalizedStrings(data);
-var converter = require('number-to-words');
+const { ToWords } = require('to-words');
+const toWords = new ToWords({
+	localeCode: 'en-IN',
+	converterOptions: {
+	//   currency: true,
+	  ignoreDecimal: false,
+	  ignoreZeroCurrency: false,
+	  doNotAddOnly: false,
+	}
+  });
 class InvoiceTemplate extends Component {
 	constructor(props) {
 		super(props);
@@ -49,8 +58,7 @@ class InvoiceTemplate extends Component {
 	render() {
 		strings.setLanguage(this.state.language);
 		const { invoiceData, currencyData, totalNet, companyData,status } = this.props;
-		console.log(currencyData)
-		return (
+			return (
 			<div>
 				<Card id="singlePage" className="box">
 					{/* <div
@@ -296,12 +304,12 @@ class InvoiceTemplate extends Component {
 								}}
 							>
 								<div className="pl-5 pb-2">{strings.AmountInWords }:<br/>
-									<b> {upperCase(invoiceData.currencyName + " " +(converter.toWords(toInteger(invoiceData.totalAmount)))+" ONLY" )}
+									<b><u> {invoiceData.totalAmount ? upperCase(invoiceData.currencyName + " " +(toWords.convert(invoiceData.totalAmount))+" ONLY" ): " -" }
 									{/* <b> {parseInt(invoiceData.dueAmount)} */}
-									</b></div>
+									</u></b></div>
 								<div className="pl-5 pb-2">{strings.Vat+" "+strings.AmountInWords }:
 										<br/>
-									<b> {invoiceData.totalVatAmount ? (upperCase(invoiceData.currencyName + " " +(converter.toWords(toInteger(invoiceData.totalVatAmount)))+" ONLY")) : " -" }</b>
+									<b><u> {invoiceData.totalVatAmount ? (upperCase(invoiceData.currencyName + " " +(toWords.convert(invoiceData.totalVatAmount)))+" ONLY") : " -" }</u></b>
 									{/* <b> {invoiceData.totalVatAmount}</b> */}
 								</div>
 							<div className="pl-5" style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>

@@ -387,7 +387,7 @@ class DetailBankAccount extends React.Component {
 												bank_name: Yup.string()
 													.required('Bank Name is Required')
 													.min(2, 'Bank Name Is Too Short!')
-													.max(20, 'Bank Name Is Too Long!'),
+													.max(50, 'Bank Name Is Too Long!'),
 												account_number: Yup.string()
 													.required('Account Number is Required')
 													.min(2, 'Account Number Is Too Short!')

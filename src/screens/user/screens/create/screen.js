@@ -346,12 +346,12 @@ class CreateUser extends React.Component {
 													// ),
 													password: Yup.string()
 														.required('Password is Required')
-													// .min(8, "Password Too Short")
-													// .matches(
-													// 	/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-													// 	'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
-													// ),
-													,
+													.min(8, "Password Too Short")
+													.matches(
+														/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
+														
+													),
+													
 													confirmPassword: Yup.string()
 														.required('Confirm Password is Required')
 														.oneOf(

@@ -9,7 +9,16 @@ import { textAlign } from '@material-ui/system';
 import {data}  from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
-var converter = require('number-to-words');
+const { ToWords } = require('to-words');
+const toWords = new ToWords({
+	localeCode: 'en-IN',
+	converterOptions: {
+	//   currency: true,
+	  ignoreDecimal: false,
+	  ignoreZeroCurrency: false,
+	  doNotAddOnly: false,
+	}
+  });
 let strings = new LocalizedStrings(data);
 class RFQTemplate extends Component {
 	constructor(props) {
@@ -171,12 +180,12 @@ class RFQTemplate extends Component {
 								}}
 							>
 								<div className="pb-2">{strings.AmountInWords }:<br/>
-									<b> {upperCase(QuotationData.currencyName + " " +(converter.toWords(toInteger(QuotationData.totalAmount)))+" ONLY")}
+									<b><u> {QuotationData.totalAmount ? upperCase(QuotationData.currencyName + " " +(toWords.convert(QuotationData.totalAmount))+" ONLY") : " -" }
 									{/* <b> {parseInt(POData.dueAmount)} */}
-									</b></div>
+									</u></b></div>
 								<div className="pb-2">{strings.Vat+" "+strings.AmountInWords }:
 										<br/>
-									<b>{QuotationData.totalVatAmount ? (upperCase(QuotationData.currencyName + " " +(converter.toWords(toInteger(QuotationData.totalVatAmount)))+" ONLY")) : " -" }</b>
+									<b><u>{QuotationData.totalVatAmount ? (upperCase(QuotationData.currencyName + " " +(toWords.convert(QuotationData.totalVatAmount))+" ONLY")) : " -" }</u></b>
 									{/* <b> {POData.totalVatAmount}</b> */}
 								</div>
 							<div style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>

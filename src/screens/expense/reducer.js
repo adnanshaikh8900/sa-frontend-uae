@@ -112,9 +112,12 @@ const ExpenseReducer = (state = initState, action) => {
 			};
 
 		case EXPENSE.USER_LIST:
+			
+			let obj=new Object({label: "Company Expense",value: "Company Expense"});
+	     	payload.push(obj);		
 			return {
 				...state,
-				user_list: Object.assign([], payload),
+				user_list: Object.assign([],payload),
 			};
 			case EXPENSE.PAY_TO_LIST:
 			return {

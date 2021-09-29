@@ -416,8 +416,21 @@ try {
 														'Purchase price cannot be greater than Sales price';
 													}
 
-													if(values.isInventoryEnabled===true){
+													 if (values.salesUnitPrice < values.purchaseUnitPrice) {
 
+                                                        errors.salesUnitPrice= 
+
+                                                        'Purchase price cannot be less than Sales price';
+
+                                                    }
+													if(values.isInventoryEnabled===true){
+														if (values.salesUnitPrice < values.inventoryPurchasePrice) {
+
+															errors.salesUnitPrice= 
+	
+															'Purchase price cannot be less than Sales price';
+	
+														}														
 														if(values.inventoryPurchasePrice ==='')
 														errors.inventoryPurchasePrice = 
 														'Inventory Purchase Price is requied';

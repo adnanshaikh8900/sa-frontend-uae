@@ -369,3 +369,24 @@ export const unPostExpense = (obj) => {
 			});
 	};
 };
+
+export const getPaytoList = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/reconsile/getChildrenTransactionCategoryList?id=91',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+						type: EXPENSE.USER_LIST,
+						payload: res.data,
+					});
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

@@ -111,7 +111,7 @@ class Expense extends React.Component {
 	componentDidMount = () => {
 		this.props.expenseActions.getExpenseCategoriesList();
 		this.initializeData();
-		this.props.expenseActions.getUserForDropdown();
+		this.props.expenseActions.getPaytoList();
 	};
 
 	initializeData = (search) => {

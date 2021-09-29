@@ -1262,6 +1262,7 @@ min="0"
 																			styles={customStyles}
 																			id="contactId"
 																			name="contactId"
+																			isDisabled={true}
 																			options={
 																				tmpCustomer_list
 																					? selectOptionsFactory.renderOptions(

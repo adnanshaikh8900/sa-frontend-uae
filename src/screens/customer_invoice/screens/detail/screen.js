@@ -2172,31 +2172,6 @@ debugger
 																				<Row>
 																					<Col lg={6}>
 																						<h5 className="mb-0 text-right">
-																						{strings.TotalVat}
-																						</h5>
-																					</Col>
-																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
-																						{/* {universal_currency_list[0] && (
-																						<Currency
-																						value={initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						currencySymbol={
-																							universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
-																							/>
-																							)} */}
-																							{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						</label>
-																					</Col>
-																				</Row>
-																			</div>
-																			<div className="total-item p-2">
-																				<Row>
-																					<Col lg={6}>
-																						<h5 className="mb-0 text-right">
 																							{strings.Discount}
 																						</h5>
 																					</Col>
@@ -2218,6 +2193,32 @@ debugger
 																					</Col>
 																				</Row>
 																			</div>
+																			<div className="total-item p-2">
+																				<Row>
+																					<Col lg={6}>
+																						<h5 className="mb-0 text-right">
+																						{strings.TotalVat}
+																						</h5>
+																					</Col>
+																					<Col lg={6} className="text-right">
+																						<label className="mb-0">
+																						{/* {universal_currency_list[0] && (
+																						<Currency
+																						value={initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						currencySymbol={
+																							universal_currency_list[0]
+																						? universal_currency_list[0].currencyIsoCode
+																						: 'USD'
+																							}
+																							/>
+																							)} */}
+																							{this.state.customer_currency_symbol} &nbsp;
+																							{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						</label>
+																					</Col>
+																				</Row>
+																			</div>
+																			
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>

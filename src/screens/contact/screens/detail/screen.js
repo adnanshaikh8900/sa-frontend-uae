@@ -354,6 +354,15 @@ class DetailContact extends React.Component {
 														errors.mobileNumber =
 														'Invalid mobile number';
 														}
+
+														if( values.stateId ===''){
+															errors.stateId =
+															'State is Required';
+														}
+														if( values.stateId.label && values.stateId.label ==='Select State'){
+															errors.stateId =
+															'State is Required';
+														}
 														// if (param === true) {
 														// 	errors.discount =
 														// 		'Discount amount Cannot be greater than Invoice Total Amount';
@@ -380,6 +389,13 @@ class DetailContact extends React.Component {
 														currencyCode: Yup.string()
 															.required('Please Select Currency')
 															.nullable(),
+														countryId: Yup.string()
+															.required('Country is Required')
+															.nullable(),
+														stateId: Yup.string().when('countryId', {
+															is: (val) => (val ? true : false),
+															then: Yup.string().required('State is Required'),
+														  }),
 													})}
 												>
 													{(props) => (
@@ -880,7 +896,7 @@ class DetailContact extends React.Component {
 																<Col md="4">
 																	<FormGroup>
 																		<Label htmlFor="countryId">
-																			 {strings.Country}
+																		<span className="text-danger">*</span>	 {strings.Country}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -942,7 +958,7 @@ class DetailContact extends React.Component {
 																<Col md="4">
 																	<FormGroup>
 																		<Label htmlFor="stateId">
-																			 {strings.StateRegion}
+																		<span className="text-danger">*</span> {strings.StateRegion}
 																		</Label>
 																		<Select
 																			styles={customStyles}

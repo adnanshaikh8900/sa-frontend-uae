@@ -112,7 +112,7 @@ class CreateProduct extends React.Component {
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[ +a-zA-Z0-9-./\\|]+$/;
 		this.regExAlpha = /^[0-9!@#$&()-\\`.+,/\"]+$/;
-		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
+		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,6}$$/;
 		this.regDecimal5 =/^\d{1,5}$/;
 	}
 

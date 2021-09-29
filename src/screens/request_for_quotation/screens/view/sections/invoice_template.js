@@ -8,7 +8,16 @@ import { toInteger, upperCase } from 'lodash';
 import {data}  from '../../../../Language/index'
 import LocalizedStrings from 'react-localization';
 
-var converter = require('number-to-words');
+const { ToWords } = require('to-words');
+const toWords = new ToWords({
+	localeCode: 'en-IN',
+	converterOptions: {
+	//   currency: true,
+	  ignoreDecimal: false,
+	  ignoreZeroCurrency: false,
+	  doNotAddOnly: false,
+	}
+  });
 let strings = new LocalizedStrings(data);
 
 class RFQTemplate extends Component {
@@ -215,12 +224,12 @@ class RFQTemplate extends Component {
 								}}
 							>
 								<div className="pb-2">{strings.AmountInWords }:<br/>
-									<b> {upperCase(RFQData.currencyName + " " +(converter.toWords(toInteger(RFQData.totalAmount)))+" ONLY")}
+									<b><u> {RFQData.totalAmount ? upperCase(RFQData.currencyName + " " +(toWords.convert(RFQData.totalAmount))+" ONLY") : " -" }
 									{/* <b> {parseInt(RFQData.dueAmount)} */}
-									</b></div>
+									</u></b></div>
 								<div className="pb-2">{strings.Vat+" "+strings.AmountInWords }:
 										<br/>
-									<b>{RFQData.totalVatAmount ? (upperCase(RFQData.currencyName + " " +(converter.toWords(toInteger(RFQData.totalVatAmount)))+" ONLY")) : " -" }</b>
+									<b>{RFQData.totalVatAmount ? (upperCase(RFQData.currencyName + " " +(toWords.convert(RFQData.totalVatAmount))+" ONLY")) : " -" }</b>
 									{/* <b> {RFQData.totalVatAmount}</b> */}
 								</div>
 							<div style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>

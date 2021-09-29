@@ -340,10 +340,12 @@ class DetailUser extends React.Component {
 															'Time Zone is Required',
 														),
 														password: Yup.string()
-															// .required("Password is Required")
-															// .min(8, "Password Too Short")
-															
-															,
+														.required('Password is Required')
+													.min(8, "Password Too Short")
+													.matches(
+														/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
+														
+													),
 														confirmPassword: Yup.string()
 															// .required('Confirm Password is Required')
 															.oneOf(

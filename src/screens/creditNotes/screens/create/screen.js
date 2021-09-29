@@ -1013,7 +1013,7 @@ min="0"
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'New Credit Note Created Successfully.',
+					'New Tax Credit Note Created Successfully.',
 				);
 				if (this.state.createMore) {
 					this.setState(
@@ -1375,13 +1375,13 @@ min="0"
 													let errors = {};
 													if (exist === true) {
 														errors.creditNoteNumber =
-															'Credit Note Number cannot be same';
+															'Tax Credit Note Number cannot be same';
 													}
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({
 													creditNoteNumber: Yup.string().required(
-														'Credit Note Number is Required',
+														'Tax Credit Note Number is Required',
 													),
 													contactId: Yup.string().required(
 															'Customer Name is Required',
@@ -1395,11 +1395,11 @@ min="0"
 													// 	'Currency is Required',
 													// ),
 													creditNoteDate: Yup.string().required(
-														'Credit Note Date is Required',
+														'Tax Credit Note Date is Required',
 													),
 													lineItemsString: Yup.array()
 														.required(
-															'Atleast one Credit Note sub detail is mandatory',
+															'Atleast one Tax Credit Note sub detail is mandatory',
 														)
 														.of(
 															Yup.object().shape({

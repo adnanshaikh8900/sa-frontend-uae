@@ -136,7 +136,7 @@ class CreateCreditNoteModal extends React.Component {
 			viewEditor: false,
 			message: '',
 			productId:'',
-			prefixData:'',
+
 			fileName: '',
 			creditNoteDate: new Date(),
 		};
@@ -993,7 +993,7 @@ class CreateCreditNoteModal extends React.Component {
 											<Col lg={12}>
 												<div className="h4 mb-0 d-flex align-items-center">
 													<i className="nav-icon fas fa-id-card-alt" />
-													<span className="ml-2">Create Credit Note</span>
+													<span className="ml-2">{strings.CreateCreditNote}</span>
 												</div>
 											</Col>
 										</Row>

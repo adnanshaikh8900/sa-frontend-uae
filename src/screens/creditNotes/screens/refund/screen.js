@@ -283,7 +283,7 @@ class Refund extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'The Refund information for this credit note has been saved Successfully.',
+					'The Refund information for this tax credit note has been saved Successfully.',
 				);
 				this.props.history.push('/admin/income/credit-notes');
 			})

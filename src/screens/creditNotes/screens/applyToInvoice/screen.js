@@ -939,7 +939,7 @@ handleSubmit=(data)=>{
 			this.initializeData();
 			this.props.commonActions.tostifyAlert(
 				'success',
-				'Credit Note Applied to Invoices Successfully',
+				'Tax Credit Note Applied to Invoices Successfully',
 			);
 			if (this.state.invoice_list && this.state.invoice_list.length > 0) {
 				this.setState({

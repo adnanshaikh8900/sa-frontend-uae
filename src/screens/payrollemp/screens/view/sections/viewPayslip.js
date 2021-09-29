@@ -26,8 +26,6 @@ import '../style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
 
 
-var converter = require('number-to-words');
-
 const mapStateToProps = (state) => {
 
 	return {

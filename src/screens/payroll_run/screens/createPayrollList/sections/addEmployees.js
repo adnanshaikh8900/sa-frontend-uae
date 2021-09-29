@@ -43,7 +43,6 @@ import ReactToPrint from 'react-to-print';
 import { Loader } from 'components';
 import * as PayrollEmployeeActions from '../../../../payrollemp/actions'
 import * as CreatePayrollActions from '../actions';
-var converter = require('number-to-words');
 
 const mapStateToProps = (state) => {
  

@@ -40,7 +40,6 @@ import '../style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import ReactToPrint from 'react-to-print';
 
-var converter = require('number-to-words');
 
 const mapStateToProps = (state) => {
 

@@ -71,7 +71,7 @@ class CreateChartAccount extends React.Component {
 			chartOfAccountCategory: [],
 			disabled: false,
 		};
-		this.regExAlpha = /^[a-zA-Z ]+$/;
+		this.regExAlpha = /^[A-Za-z0-9\!\@\#\$\%\^\&\*\)\(+\=\._-]+$/;
 	}
 
 	componentDidMount = () => {

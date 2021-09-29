@@ -224,6 +224,16 @@ class CreateContact extends React.Component {
 													errors.mobileNumber =
 													'Invalid mobile number';
 													}
+													
+													if( values.stateId ===''){
+														errors.stateId =
+														'State is Required';
+													}
+													if( values.stateId.label && values.stateId.label ==='Select State'){
+														errors.stateId =
+														'State is Required';
+													}
+													
 													// if (param === true) {
 													// 	errors.discount =
 													// 		'Discount amount Cannot be greater than Invoice Total Amount';
@@ -267,10 +277,10 @@ class CreateContact extends React.Component {
 													countryId: Yup.string()
 													  .required('Country is Required')
 													  .nullable(),
-													// stateId: Yup.string().when('countryId', {
-													//   is: (val) => (val ? true : false),
-													//   then: Yup.string().required('State is Required'),
-													// }),
+													stateId: Yup.string().when('countryId', {
+													  is: (val) => (val ? true : false),
+													  then: Yup.string().required('State is Required'),
+													}),
 													// postZipCode: Yup.string().required(
 													//   'Postal Code is Required',
 													// ),
@@ -868,7 +878,7 @@ class CreateContact extends React.Component {
 															</Col>
 															<Col md="4">
 																<FormGroup>
-																	<Label htmlFor="stateId">{strings.StateRegion}</Label>
+																	<Label htmlFor="stateId"><span className="text-danger">*</span>{strings.StateRegion}</Label>
 																	<Select
 																		styles={customStyles}
 																		options={

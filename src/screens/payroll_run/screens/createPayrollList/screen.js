@@ -97,6 +97,7 @@ class CreatePayrollList extends React.Component {
 			 startDate: new Date(date.getFullYear(), date.getMonth(), 1),
 			 endDate:  new Date(date.getFullYear(), date.getMonth() + 1, 0),
 			 payPeriod : '',
+			 apiSelector:''
 			// startDate: '',
 			// endDate:''
 		}
@@ -311,6 +312,8 @@ calculatePayperioad=()=>{
 		formData.append('generatePayrollString', JSON.stringify(this.state.allPayrollEmployee));
 		 formData.append('salaryDate',payrollDate)
 		console.log(this.state.payPeriod,"JSON.stringify(this.state.allPayrollEmployee)",JSON.stringify(this.state.allPayrollEmployee))
+		
+		if(this.state.apiSelector ==="createPayroll"){
 		this.props.createPayrollActions
 			 .createPayroll(formData)
 			// .createPayroll(JSON.stringify(employeeListIds),payrollSubject,this.state.payPeriod,JSON.stringify(this.state.allPayrollEmployee),payrollDate)
@@ -324,7 +327,26 @@ calculatePayperioad=()=>{
 			}).catch((err) => {
 				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
 			})
+	}else {
+		if(this.state.apiSelector==="createAndSubmitPayroll"){
+
+			this.props.createPayrollActions
+			 .createAndSubmitPayroll(formData)
+			// .createPayroll(JSON.stringify(employeeListIds),payrollSubject,this.state.payPeriod,JSON.stringify(this.state.allPayrollEmployee),payrollDate)
+			.then((res) => {
+				if (res.status === 200) {
+					this.props.commonActions.tostifyAlert('success', 'Payroll created And Submitted Successfully')				
+					this.tableApiCallsOnStatus()
+					this.props.history.push(`/admin/payroll/payrollrun`);
+					// resetForm(this.state.initValue)
+				}
+			}).catch((err) => {
+				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+			})
+		}
+	}	
 	}
+
 	setDate = (props, value) => {
 		const { term } = this.state;
 		const val = term ? term.value.split('_') : '';
@@ -1245,10 +1267,10 @@ calculatePayperioad=()=>{
 																		color="primary"
 																		className="btn-square pull-right"
 																		// onClick={}
-																		onClick={() =>
-																			this.generate()
-
-																		}
+																		onClick={() => {
+																			this.setState({apiSelector:"createAndSubmitPayroll"})
+																				props.handleSubmit()
+																								}}
 																		disabled={this.disableForGenerateButtun() ? true : false}
 
 																		// disabled={this.state.allPayrollEmployee && this.state.allPayrollEmployee.length === 0 ?true :false}
@@ -1267,6 +1289,7 @@ calculatePayperioad=()=>{
 																	<Button type="button" color="primary" className="btn-square pull-right "
 																	// disabled={this.disableForAddButton() ? true : false}
 																	onClick={() => {
+																		this.setState({apiSelector:"createPayroll"})
 																			props.handleSubmit()
 																							}}
 																	>

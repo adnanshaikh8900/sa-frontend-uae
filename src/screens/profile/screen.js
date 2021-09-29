@@ -1415,6 +1415,7 @@ class Profile extends React.Component {
 																							<Input
 																								type="text"
 																								id="vatRegistrationNumber"
+																								maxLength="15"
 																								name="vatRegistrationNumber"
 																								placeholder={strings.Enter+strings.VATRegistrationNo}
 																								value={
@@ -1437,8 +1438,80 @@ class Profile extends React.Component {
 																						</FormGroup>
 																					</Col>
 																				</Row>
+																				
 																				<Row>
 																					<Col lg={4}>
+																						<FormGroup className="mb-3">
+																							<Label htmlFor="product_code">
+																								{strings.Website}
+																						</Label>
+																							<Input
+																								type="text"
+																								id="website"
+																								name="website"
+																								placeholder={strings.Enter+strings.Website}
+																								value={props.values.website}
+																								onChange={(option) => {
+																									props.handleChange('website')(
+																										option,
+																									);
+																								}}
+																							/>
+																						</FormGroup>
+																					</Col>
+																					<Col lg={4}>
+																						<FormGroup className="mb-3">
+																							<Label htmlFor="product_code">
+																								 {strings.EmailAddress}
+																						</Label>
+																							<Input
+																								type="text"
+																								id="emailAddress"
+																								name="emailAddress"
+																								placeholder={strings.Enter+strings.Email}
+																								value={props.values.emailAddress}
+																								onChange={(option) => {
+																									props.handleChange(
+																										'emailAddress',
+																									)(option);
+																								}}
+																							/>
+																						</FormGroup>
+																					</Col>
+																					<Col lg={4}>
+																						<FormGroup className="mb-3">
+																							<Label htmlFor="phoneNumber">
+																							 {strings.MobileNumber}
+																						</Label>
+																							<PhoneInput
+																								country={"ae"}
+																								enableSearch={true}
+																								international
+																								value={props.values.phoneNumber}
+																								placeholder={strings.Enter+strings.MobileNumber}
+																								onChange={(option) => {
+																									props.handleChange(
+																										'phoneNumber',
+																									)(option);
+																								}}
+																								className={
+																									props.errors.phoneNumber &&
+																										props.touched.phoneNumber
+																										? 'is-invalid'
+																										: ''
+																								}
+																							/>
+																							{props.errors.phoneNumber &&
+																								props.touched.phoneNumber && (
+																									<div className="invalid-feedback">
+																										{props.errors.phoneNumber}
+																									</div>
+																								)}
+																						</FormGroup>
+																					</Col>
+																				</Row>
+																				<Row>
+																					{/* <Col lg={4}>
 																						<FormGroup>
 																							<Label htmlFor="companyId">
 																								 {strings.CompanyTypeCode}
@@ -1549,7 +1622,7 @@ class Profile extends React.Component {
 																									</div>
 																								)}
 																						</FormGroup>
-																					</Col>
+																					</Col> */}
 																					<Col lg={4}>
 																						<FormGroup>
 																							<Label htmlFor="currencyCode">
@@ -1608,77 +1681,6 @@ class Profile extends React.Component {
 																								props.touched.currencyCode && (
 																									<div className="invalid-feedback">
 																										{props.errors.currencyCode}
-																									</div>
-																								)}
-																						</FormGroup>
-																					</Col>
-																				</Row>
-																				<Row>
-																					<Col lg={4}>
-																						<FormGroup className="mb-3">
-																							<Label htmlFor="product_code">
-																								{strings.Website}
-																						</Label>
-																							<Input
-																								type="text"
-																								id="website"
-																								name="website"
-																								placeholder={strings.Enter+strings.Website}
-																								value={props.values.website}
-																								onChange={(option) => {
-																									props.handleChange('website')(
-																										option,
-																									);
-																								}}
-																							/>
-																						</FormGroup>
-																					</Col>
-																					<Col lg={4}>
-																						<FormGroup className="mb-3">
-																							<Label htmlFor="product_code">
-																								 {strings.EmailAddress}
-																						</Label>
-																							<Input
-																								type="text"
-																								id="emailAddress"
-																								name="emailAddress"
-																								placeholder={strings.Enter+strings.Email}
-																								value={props.values.emailAddress}
-																								onChange={(option) => {
-																									props.handleChange(
-																										'emailAddress',
-																									)(option);
-																								}}
-																							/>
-																						</FormGroup>
-																					</Col>
-																					<Col lg={4}>
-																						<FormGroup className="mb-3">
-																							<Label htmlFor="phoneNumber">
-																							 {strings.MobileNumber}
-																						</Label>
-																							<PhoneInput
-																								country={"ae"}
-																								enableSearch={true}
-																								international
-																								value={props.values.phoneNumber}
-																								placeholder={strings.Enter+strings.MobileNumber}
-																								onChange={(option) => {
-																									props.handleChange(
-																										'phoneNumber',
-																									)(option);
-																								}}
-																								className={
-																									props.errors.phoneNumber &&
-																										props.touched.phoneNumber
-																										? 'is-invalid'
-																										: ''
-																								}
-																							/>
-																							{props.errors.phoneNumber &&
-																								props.touched.phoneNumber && (
-																									<div className="invalid-feedback">
-																										{props.errors.phoneNumber}
 																									</div>
 																								)}
 																						</FormGroup>

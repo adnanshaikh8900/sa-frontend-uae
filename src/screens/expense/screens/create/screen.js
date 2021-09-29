@@ -470,6 +470,41 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 															</Col>
 															<Col lg={3}>
 																<FormGroup className="mb-3">
+																	<Label htmlFor="expense_date">
+																		<span className="text-danger">*</span>
+																		{strings.ExpenseDate}  
+																	</Label>
+																	<DatePicker
+																		id="date"
+																		name="expenseDate"
+																		className={`form-control ${
+																			props.errors.expenseDate &&
+																			props.touched.expenseDate
+																				? 'is-invalid'
+																				: ''
+																		}`}
+																		placeholderText={strings.ExpenseDate}
+																		selected={props.values.expenseDate}
+																		showMonthDropdown
+																		showYearDropdown
+																		dropdownMode="select"
+																		dateFormat="dd/MM/yyyy"
+																		maxDate={new Date()}
+																		onChange={(value) => {
+																			props.handleChange('expenseDate')(value);
+																		}}
+																	/>
+																	{props.errors.expenseDate &&
+																		props.touched.expenseDate && (
+																			<div className="invalid-feedback">
+																				{props.errors.expenseDate}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+															
+															<Col lg={3}>
+																<FormGroup className="mb-3">
 																	<Label htmlFor="payee">
 																		<span className="text-danger">*</span>{strings.PaidBy}  
 																	</Label>
@@ -525,97 +560,22 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																			</div>
 																		)}
 																</FormGroup>
+															  
+                                    
 															</Col>
-															<Col lg={3}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="expense_date">
-																		<span className="text-danger">*</span>
-																		{strings.ExpenseDate}  
-																	</Label>
-																	<DatePicker
-																		id="date"
-																		name="expenseDate"
-																		className={`form-control ${
-																			props.errors.expenseDate &&
-																			props.touched.expenseDate
-																				? 'is-invalid'
-																				: ''
-																		}`}
-																		placeholderText={strings.ExpenseDate}
-																		selected={props.values.expenseDate}
-																		showMonthDropdown
-																		showYearDropdown
-																		dropdownMode="select"
-																		dateFormat="dd/MM/yyyy"
-																		maxDate={new Date()}
-																		onChange={(value) => {
-																			props.handleChange('expenseDate')(value);
-																		}}
-																	/>
-																	{props.errors.expenseDate &&
-																		props.touched.expenseDate && (
-																			<div className="invalid-feedback">
-																				{props.errors.expenseDate}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
-															<Col lg={3}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="currency">
-																		<span className="text-danger">*</span>
-																		{strings.Currency}  
-																	</Label>
-																	<Select
-																		styles={customStyles}
-																		id="currency"
-																		name="currency"
-																		options={
-																			currency_convert_list
-																				? selectCurrencyFactory.renderOptions(
-																						'currencyName',
-																						'currencyCode',
-																						currency_convert_list,
-																						'currency',
-																				  )
-																				: []
-																		}
-																		placeholder={strings.Select+strings.Currency}
-																		value={
-																			currency_convert_list &&
-																			selectCurrencyFactory
-																				.renderOptions(
-																					'currencyName',
-																					'currencyCode',
-																					currency_convert_list,
-																					'Currency',
-																				)
-																				.find(
-																					(option) =>
-																						option.value ===
-																						+props.values.currencyCode,
-																				)
-																		}
-																		onChange={(option) => {
-																			props.handleChange('currency')(option);
-																			this.setExchange(option.value);
-																			this.setCurrency(option.value);
-																		   }}
-																		// className={
-																		// 	props.errors.currency &&
-																		// 	props.touched.currency
-																		// 		? 'is-invalid'
-																		// 		: ''
-																		// }
-																	/>
-																	{props.errors.currency &&
-																		props.touched.currency && (
-																			<div style={{color:"red"}}>
-																				{props.errors.currency}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
+															
+															
+															<Button
+                                                                color="primary"
+                                                                className="btn-square pull-right mb-3 mr-3 mt-4"
+                                                                style={{ marginBottom: '40px' }}
+                                                                onClick={() => this.props.history.push(`/admin/payroll/employee/create`)}
+
+                                                            >
+                                                                <i className="fas fa-plus mr-1" />
+                                         {strings.NewEmployee}
+									</Button>
+															
 														</Row>
 														<Row>
 															<Col lg={3}>
@@ -787,6 +747,62 @@ min="0"
 																	</FormGroup>
 																</Col>
 															)}
+															<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="currency">
+																		<span className="text-danger">*</span>
+																		{strings.Currency}  
+																	</Label>
+																	<Select
+																		styles={customStyles}
+																		id="currency"
+																		name="currency"
+																		options={
+																			currency_convert_list
+																				? selectCurrencyFactory.renderOptions(
+																						'currencyName',
+																						'currencyCode',
+																						currency_convert_list,
+																						'currency',
+																				  )
+																				: []
+																		}
+																		placeholder={strings.Select+strings.Currency}
+																		value={
+																			currency_convert_list &&
+																			selectCurrencyFactory
+																				.renderOptions(
+																					'currencyName',
+																					'currencyCode',
+																					currency_convert_list,
+																					'Currency',
+																				)
+																				.find(
+																					(option) =>
+																						option.value ===
+																						+props.values.currencyCode,
+																				)
+																		}
+																		onChange={(option) => {
+																			props.handleChange('currency')(option);
+																			this.setExchange(option.value);
+																			this.setCurrency(option.value);
+																		   }}
+																		// className={
+																		// 	props.errors.currency &&
+																		// 	props.touched.currency
+																		// 		? 'is-invalid'
+																		// 		: ''
+																		// }
+																	/>
+																	{props.errors.currency &&
+																		props.touched.currency && (
+																			<div style={{color:"red"}}>
+																				{props.errors.currency}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
 														</Row>
 														<hr />
 														<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>

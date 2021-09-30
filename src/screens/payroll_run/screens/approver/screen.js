@@ -945,7 +945,7 @@ class PayrollApproverScreen extends React.Component {
 																			id="comment"
 																			name="comment"
 																			value={this.state.comment}
-																			disable={this.state.comment===null ?false :true }
+																			disabled={this.state.status==="Approved" ?true :false }
 																			placeholder={strings.Enter + " Reason"}
 																			onChange={(event) => {
 																				this.setState({

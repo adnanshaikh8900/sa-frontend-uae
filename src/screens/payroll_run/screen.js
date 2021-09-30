@@ -196,6 +196,10 @@ class PayrollRun extends React.Component {
 				if ( userLabel === "Admin" && row.status==="Approved") {
 					this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
 				}
+				else
+				if ( userLabel === "Admin" && row.status==="Rejected") {
+					this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
+				}
 		        else{
 				let list = [...this.state.payroll_employee_list1];
 				list = list.map((data) => {

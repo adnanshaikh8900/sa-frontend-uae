@@ -108,7 +108,7 @@ class SupplierModal extends React.Component {
 	};
 
 	displayMsg = (err) => {
-		toast.error(`${err.data}`, {
+		toast.error(`${err.data.message}`, {
 			position: toast.POSITION.TOP_RIGHT,
 		});
 	};

@@ -186,6 +186,7 @@ import {
 	CreatePayroll,
 	CreatePayrollList,
 	PayrollApproverScreen,
+	UpdatePayroll
 } from 'screens';
 
 const adminRoutes = [
@@ -572,6 +573,11 @@ const adminRoutes = [
 		path: '/admin/payroll/createPayroll',
 		name: 'ViewPayroll',
 		component: CreatePayrollList.screen,
+	},
+	{
+		path: '/admin/payroll/updatePayroll',
+		name: 'GeneratePayroll',
+		component: UpdatePayroll.screen,
 	},
 	{
 		path: '/admin/payroll/createPayrollList',

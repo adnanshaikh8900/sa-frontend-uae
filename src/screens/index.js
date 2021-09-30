@@ -183,7 +183,7 @@ import CreatePayroll from './payroll_run/screens/createPayrollList';
 import CreatePayrollList from './payroll_run/screens/createPayroll';
 
 import PayrollApproverScreen from './payroll_run/screens/approver';
-
+import UpdatePayroll from './payroll_run/screens/updatePayroll';
 export {
 	LogIn,
 	LogInTwo,
@@ -348,4 +348,5 @@ export {
 	CreatePayroll,
 	CreatePayrollList,
 	PayrollApproverScreen,
+	UpdatePayroll,
 };

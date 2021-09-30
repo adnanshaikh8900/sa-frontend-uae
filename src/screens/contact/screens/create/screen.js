@@ -166,7 +166,7 @@ class CreateContact extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Something Went Wrong',
 				);
 			});
 	};

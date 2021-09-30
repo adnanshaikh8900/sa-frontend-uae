@@ -178,13 +178,29 @@ class PayrollRun extends React.Component {
 		var userLabel = user_approver_generater_dropdown_list.length ? user_approver_generater_dropdown_list[0].label : '';
 
 		if (userValue.toString() === row.generatedBy && userLabel === "Payroll Generator") {
-			this.props.history.push('/admin/payroll/createPayrollList', { id: row.id })
+			this.props.history.push('/admin/payroll/updatePayroll', { id: row.id })
 		}
 		else
 			if (userValue === row.payrollApprover && userLabel === "Payroll Approver") {
 				this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
 			}
-			else {
+			else
+			if ( userLabel === "Admin" && row.status==="Draft") {
+				this.props.history.push('/admin/payroll/updatePayroll', { id: row.id })
+			}
+			else
+			
+				if ( userLabel === "Admin" && row.status==="Submitted") {
+					this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
+				}else
+				if ( userLabel === "Admin" && row.status==="Approved") {
+					this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
+				}
+				else
+				if ( userLabel === "Admin" && row.status==="Rejected") {
+					this.props.history.push('/admin/payroll/payrollApproverScreen', { id: row.id })
+				}
+		        else{
 				let list = [...this.state.payroll_employee_list1];
 				list = list.map((data) => {
 					if (data.id === row.id) {
@@ -196,7 +212,8 @@ class PayrollRun extends React.Component {
 				this.setState({ payroll_employee_list1: list })
 
 				toast.success("This is created by another user , So you can'nt able to Open it !")
-			}
+			}			
+			
 	};
 
 	renderMode = (cell, row) => {
@@ -645,7 +662,7 @@ class PayrollRun extends React.Component {
 													</ButtonGroup>
 												</div>
 												<Row className="mb-4 ">
-													{userForCheckApprover === "Payroll Approver" ? "X"
+													{userForCheckApprover === "Payroll Approver" ? ""
 														: <Col>
 															<Button
 																color="primary"
@@ -792,5 +809,6 @@ class PayrollRun extends React.Component {
 		);
 	}
 }
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(PayrollRun);

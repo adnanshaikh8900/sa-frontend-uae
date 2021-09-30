@@ -71,7 +71,7 @@ const customStyles = {
 	}),
 };
 let strings = new LocalizedStrings(data);
-class CreatePayrollList extends React.Component {
+class UpdatePayroll extends React.Component {
 
 	constructor(props) {
 		super(props)
@@ -97,12 +97,9 @@ class CreatePayrollList extends React.Component {
 			 startDate: new Date(date.getFullYear(), date.getMonth(), 1),
 			 endDate:  new Date(date.getFullYear(), date.getMonth() + 1, 0),
 			 payPeriod : '',
-			 apiSelector:'',
-			 submitButton:true,
+			 apiSelector:''
 			// startDate: '',
-			// endDate:'',
-			paidDays:0,
-			countForTableApiCall:0,
+			// endDate:''
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -132,59 +129,59 @@ class CreatePayrollList extends React.Component {
 		// this.props.createPayrollEmployeeActions.getEmployeesForDropdown();
 		this.props.createPayrollActions.getApproversForDropdown();
 		let payroll_id = this.props.location.state === undefined ? '' : this.props.location.state.id;
-		// if (payroll_id) {
-		// 	this.setState({
-		// 		payroll_id: payroll_id
-		// 	})
-		// 	this.proceed(payroll_id);
-		// }
+		if (payroll_id) {
+			this.setState({
+				payroll_id: payroll_id
+			})
+			this.proceed(payroll_id);
+		}
 		this.tableApiCallsOnStatus();
-     this.calculatePayperioad(this.state.startDate ,this.state.endDate);
+     this.calculatePayperioad();
 	};
-calculatePayperioad=(startDate,endDate)=>{
-	// let diffDays=	Math.abs(parseInt((this.state.startDate - this.state.endDate) / (1000 * 60 * 60 * 24), 10))+1
-    const diffTime = Math.abs(startDate-endDate);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))+1; 
-    this.setState({paidDays:diffDays});
-	console.log(diffTime + " milliseconds");
-    console.log(diffDays + " days");
-	console.log(this.state.paidDays,"paid-Days",diffDays)
+calculatePayperioad=()=>{
+	let diff=	Math.abs(parseInt((this.state.startDate - this.state.endDate) / (1000 * 60 * 60 * 24), 10))+1	
+    this.setState({payPeriod:diff});
+	console.log(this.state.payPeriod,"payPeriod",diff)
 }
-	// proceed = (payroll_id) => {
-	// 	this.props.createPayrollActions.getPayrollById(payroll_id).then((res) => {
-	// 		if (res.status === 200) {
-	// 			//	 
-	// 			this.setState({
-	// 				loading: false,
-	// 				id: res.data.id ? res.data.id : '',
-	// 				approvedBy: res.data.approvedBy ? res.data.approvedBy : '',
-	// 				comment: res.data.comment ? res.data.comment : '',
-	// 				deleteFlag: res.data.deleteFlag ? res.data.deleteFlag : '',
-	// 				employeeCount: res.data.employeeCount ? res.data.employeeCount : '',
-	// 				generatedBy: res.data.generatedBy ? res.data.generatedBy : '',
+	proceed = (payroll_id) => {
+		
+		this.props.createPayrollActions.getPayrollById(payroll_id).then((res) => {
+			if (res.status === 200) {
+				//	 
+				
+				this.setState({
+					loading: false,
+					
+						id: res.data.id ? res.data.id : '',
+					approvedBy: res.data.approvedBy ? res.data.approvedBy : '',
+					comment: res.data.comment ? res.data.comment : '',
+					deleteFlag: res.data.deleteFlag ? res.data.deleteFlag : '',
+					employeeCount: res.data.employeeCount ? res.data.employeeCount : '',
+					generatedBy: res.data.generatedBy ? res.data.generatedBy : '',
 
-	// 				isActive: res.data.isActive ? res.data.isActive : '',
-	// 				payPeriod: res.data.payPeriod ? res.data.payPeriod : '',
-	// 				payrollApprover: res.data.payrollApprover ? res.data.payrollApprover : '',
-	// 				payrollDate: res.data.payrollDate
-	// 					? moment(res.data.payrollDate).format('DD/MM/YYYY')
-	// 					: '',
-	// 				payrollSubject: res.data.payrollSubject ? res.data.payrollSubject : '',
-	// 				runDate: res.data.runDate ? res.data.runDate : '',
-	// 				status: res.data.status ? res.data.status : '',
+					isActive: res.data.isActive ? res.data.isActive : '',
+					payPeriod: res.data.payPeriod ? res.data.payPeriod : '',
+					payrollApprover: res.data.payrollApprover ? res.data.payrollApprover : '',
+					payrollDate: res.data.payrollDate
+						? moment(res.data.payrollDate).format('DD/MM/YYYY')
+						: '',
+					payrollSubject: res.data.payrollSubject ? res.data.payrollSubject : '',
+					runDate: res.data.runDate ? res.data.runDate : '',
+					status: res.data.status ? res.data.status : '',
+					
 
-	// 			}
-	// 			)
-	// 			this.initializeData();
-	// 			this.tableApiCallsOnStatus();
+				}
+				)
+				this.initializeData();
+				this.tableApiCallsOnStatus();
 
 
-	// 		}
-	// 	}).catch((err) => {
-	// 		this.setState({ loading: false })
+			}
+		}).catch((err) => {
+			this.setState({ loading: false })
 
-	// 	})
-	// }
+		})
+	}
 
 
 
@@ -384,101 +381,14 @@ calculatePayperioad=(startDate,endDate)=>{
 	getAllPayrollEmployee = () => {
 		this.props.createPayrollActions.getAllPayrollEmployee().then((res) => {
 			if (res.status === 200) {
-				// uncomment this this is real data
 				this.setState({
 					allPayrollEmployee: res.data
-				})
-
-				//fake data remove it
-
-				// let fakeData  = []
-
-				// for(let i=0;i<10;i++) {
-				// 	fakeData.push(
-				// 		{
-				// 			id:i,
-				// 			empNo: 1,
-				// 			name: 'data',
-				// 			lop_days: null,
-				// 			payble_days:30,
-				// 			package:30000,
-				// 			deductions:0,
-				// 			net_pay:30000,
-				// 			status:'ACTIVE'
-
-				// 			}
-				// 	)
-				// }
-				// this.setState({
-				// 	allPayrollEmployee:fakeData
-				// })
-
-				//added by Suraj
-				let newData = [...this.state.allPayrollEmployee]
-				newData = newData.map((data) => {					
-						data.noOfDays =this.state.paidDays					
-					return data
-				})
-				console.log(newData)
-
-				this.setState({
-					allPayrollEmployee: newData
 				})
 			}
 		})
 	}
 
 	getPayrollEmployeeList = () => {
-
-		// const cols = [
-		// 	{
-		// 		label:'Employee No',
-		// 		dataSort:true,
-		// 		width:'',
-		// 		key:'empNo'
-		// 	},
-		// 	{
-		// 		label:'Employee Name',
-		// 		dataSort:true,
-		// 		width:'',
-		// 		key:'name'
-
-		// 	},
-		// 	{
-		// 		label:'LOP',
-		// 		dataSort:true,
-		// 		width:'8%',
-		// 		key:'lop_days'
-		// 	},
-		// 	{
-		// 		label:'Paid Days',
-		// 		dataSort:true,
-		// 		width:'12%',
-		// 		key:'payble_days'
-		// 	},
-		// 	{
-		// 		label:'Gross Pay',
-		// 		dataSort:true,
-		// 		width:'',
-		// 		key:'package'
-		// 	},
-
-		// 	{
-		// 		label:'Deductions',
-		// 		dataSort:true,
-		// 		width:'',
-		// 		key:'deductions'
-		// 	},
-		// 	{
-		// 		label:'Net Pay',
-		// 		dataSort:true,
-		// 		width:'12%',
-		// 		key:'net_pay'
-
-		// 	}
-
-		// ]
-
 		const cols = [
 			{
 				label: 'Employee No',
@@ -526,10 +436,6 @@ calculatePayperioad=(startDate,endDate)=>{
 
 			}
 		]
-
-
-
-
 
 		return (
 			<React.Fragment>
@@ -580,7 +486,7 @@ calculatePayperioad=(startDate,endDate)=>{
 
 														if (row.id === data.id) {
 															data.lopDay = value;
-															data.noOfDays = data.noOfDays - value
+															data.noOfDays = 30 - value
 															data.grossPay = Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2)
 															data.netPay = Number(((data.grossPay / 30) * (30 - value))).toFixed(2) - (data.deduction || 0)
 															data.payrollId = this.state.payroll_id
@@ -596,9 +502,6 @@ calculatePayperioad=(startDate,endDate)=>{
 
 													})
 
-
-
-
 												}}
 											/>
 
@@ -612,10 +515,6 @@ calculatePayperioad=(startDate,endDate)=>{
 
 
 								}
-
-
-
-
 
 								return (
 									<TableHeaderColumn
@@ -637,10 +536,41 @@ calculatePayperioad=(startDate,endDate)=>{
 					</BootstrapTable>
 				</div>
 			</React.Fragment>
-
 		)
 	}
 
+	proceed1 = () => {
+		this.props.createPayrollActions.getPayrollById(this.state.payroll_id).then((res) => {
+			if (res.status === 200) {
+				//	 
+				this.setState({
+					loading: false,
+					id: res.data.id ? res.data.id : '',
+					approvedBy: res.data.approvedBy ? res.data.approvedBy : '',
+					comment: res.data.comment ? res.data.comment : '',
+					deleteFlag: res.data.deleteFlag ? res.data.deleteFlag : '',
+					employeeCount: res.data.employeeCount ? res.data.employeeCount : '',
+					generatedBy: res.data.generatedBy ? res.data.generatedBy : '',
+
+					isActive: res.data.isActive ? res.data.isActive : '',
+					payPeriod: res.data.payPeriod ? res.data.payPeriod : '',
+					payrollApprover: res.data.payrollApprover ? res.data.payrollApprover : '',
+					payrollDate: res.data.payrollDate
+																? moment(res.data.payrollDate).format('DD/MM/YYYY')
+																: '',
+					payrollSubject: res.data.payrollSubject ? res.data.payrollSubject : '',
+					runDate: res.data.runDate ? res.data.runDate : '',
+					status: res.data.status ? res.data.status : '',
+
+				}
+				)
+			}
+		}).catch((err) => {
+			this.setState({ loading: false })
+
+		})
+
+	}
 	generate = () => {
 		const formData = new FormData();
 		formData.append('payrollId', this.state.payroll_id)
@@ -775,6 +705,8 @@ calculatePayperioad=(startDate,endDate)=>{
 		const { employee_list, approver_dropdown_list } = this.props
 		const { loading, initValue } = this.state
 		console.log(employee_list.data, "employee_list.data")
+
+		
 		return (
 			<div className="create-employee-screen">
 				<div className="animated fadeIn">
@@ -786,7 +718,7 @@ calculatePayperioad=(startDate,endDate)=>{
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="nav-icon fas fa-user-tie" />
-												<span className="ml-2">Create Payroll</span>
+												<span className="ml-2">Update Payroll</span>
 											</div>
 										</Col>
 									</Row>
@@ -913,7 +845,7 @@ calculatePayperioad=(startDate,endDate)=>{
 
 																				onChange={(value) => {
 																					props.handleChange('startDate')(value);
-																					this.calculatePayperioad(value,props.values.endDate)
+
 																				}}
 																			/>
 																			{props.errors.startDate &&
@@ -948,8 +880,7 @@ calculatePayperioad=(startDate,endDate)=>{
 																				dateFormat="dd/MM/yyyy"
 
 																				onChange={(value) => {
-																					props.handleChange('endDate')(value);																					
-																					this.calculatePayperioad(props.values.startDate,value)
+																					props.handleChange('endDate')(value);
 																				}}
 																			/>
 																			{props.errors.endDate &&
@@ -979,6 +910,21 @@ calculatePayperioad=(startDate,endDate)=>{
 																				styles={customStyles}
 																				id="userId"
 																				name="userId"
+																				value={
+																					approver_dropdown_list.data &&
+																					selectOptionsFactory
+																						.renderOptions(
+																							'name',
+																							'userId',
+																							approver_dropdown_list.data,
+																							'User',
+																						)
+																						.find(
+																							(option) =>
+																								option.value ===
+																								this.state.payrollApprover,
+																						)
+																				}
 																				placeholder={"Select Approver"}
 																				options={
 																					approver_dropdown_list.data
@@ -993,12 +939,7 @@ calculatePayperioad=(startDate,endDate)=>{
 
 																				onChange={(option) => {
 																					if (option && option.value) {
-																						props.handleChange('payrollApprover')(option.value);
-																						this.setState({
-																							 userId: option.value ,
-																							 submitButton:false
-																						})
-																						
+																						this.setState({ userId: option.value,payrollApprover:option.value })
 																					}
 																				}}
 																			/>
@@ -1033,135 +974,7 @@ calculatePayperioad=(startDate,endDate)=>{
 
 																</Row>
 																<Row>
-																	{/* <Col>
-																	<FormGroup className="mt-3 ">
-															<Label htmlFor="contactId">
-																
-																Select Employees
-															</Label>
-																			<Select
-																				styles={customStyles}
-																				isMulti
-																				options={
-
-																				
-																					employee_list.data
-																						? employee_list.data
-																						: []
-																				}
-																				disabled={this.disableForAddButton() ? true : false}
-																				id="employeeListIds"
-																				name="employeeListIds"
-																				placeholder="Select Employee Names "
-																				value={
-																					employee_list.data &&
-																						props.values.employeeIds
-																						? employee_list.data.find(
-																							(option) =>
-																								option.value ===
-																								+props.values.employeeIds.map(
-																									(item) => item.id,
-																								),
-																						)
-																						: props.values
-																							.employeeIds
-																				}
-																				onChange={(option) => {
-																					props.handleChange(
-																						'employeeIds',
-																					)(option);
-																					this.employeeListIds(option);
-																				}}
-																				className={`${props.errors.employeeListIds && props.touched.employeeListIds
-																					? 'is-invalid'
-																					: ''
-																					}`}
-																					
-																			/>
-																			{props.errors.employeeListIds && props.touched.employeeListIds && (
-																				<div className="invalid-feedback">
-																					{props.errors.employeeListIds}
-																				</div>
-																			)}
-																		</FormGroup>
-																	</Col>
-																	<Col>
-														<Button type="button" color="primary" className="btn-square ml-3 mr-1 mt-5 "
-															disabled={this.disableForAddButton() ? true : false}
-														onClick={() => {
-																				this.setState(() => {
-																					props.handleSubmit()
-																				})
-																		
-																			}}>
-																				<i className="fa fa-dot-circle-o"></i> Add Employees
-																			</Button>
-													</Col> */}
-
-
-																	{/* <Col >
-														<FormGroup className="mt-3 ">
-															<Label htmlFor="contactId">
-															
-																Select Approver
-															</Label>
-															<Select
-																isDisabled={	this.disable() ? true : false}
-																styles={customStyles}
-																id="userId"
-																name="userId"
-																placeholder={"Select Approver"}
-															options={
-																approver_dropdown_list.data
-																	? selectOptionsFactory.renderOptions(
-																			'name',
-																			'userId',
-																			approver_dropdown_list.data,
-																			'User',
-																	  )
-																	: []
-															}
-														
-															onChange={(option) => {
-																if (option && option.value) {																	
-																	this.setState({userId:option.value})
-																
-																}
-															}}
-															/>
-
-														</FormGroup>
-													</Col>
-													
-
-											
-													<Col>
-														<Button
-															type="button"
-															color="primary"
-														
-															className={`btn-square mt-5 ${
-																this.disable() ? `disabled-cursor` : ``
-															} `}
-															submitPayroll
-															disabled={this.disable() ? true : false}
-															onClick={() =>
-																// this.submitPayroll()
-																this.setState(() => {
-																	props.handleSubmit()
-																})
-															}
-															title={
-																this.disable()
-																	? `Please Generate Payroll Before Submitting !`
-																	: ''
-															}
-														>
-															<i class="fas fa-bullseye mr-1"></i>
-															Submit Payroll
-														</Button>
-													
-													</Col> */}
+								
 																</Row>
 																<Row>
 
@@ -1195,52 +1008,13 @@ calculatePayperioad=(startDate,endDate)=>{
 																	<Col></Col>
 																	<Col></Col>
 																	<Col lg={3} className="pull-right mt-3">
-																		{/* <FormGroup>
-																			
-																			<Select
-																				isDisabled={this.disable() ? true : false}
-																				styles={customStyles}
-																				id="userId"
-																				name="userId"
-																				placeholder={"Select Approver"}
-																				options={
-																					approver_dropdown_list.data
-																						? selectOptionsFactory.renderOptions(
-																							'name',
-																							'userId',
-																							approver_dropdown_list.data,
-																							'User',
-																						)
-																						: []
-																				}
-
-																				onChange={(option) => {
-																					if (option && option.value) {
-																						this.setState({ userId: option.value })
-
-																					}
-																				}}
-																			/>
-
-																		</FormGroup> */}
+																
 																	</Col>
 																</Row>
 
 													
 												{this.getPayrollEmployeeList()}
-												{/* <Formik
-
-													initialValues={this.state}
-													onSubmit={(values, { resetForm }) => {
-														this.submitPayroll(values)
-
-													}}
-
-												>
-													{(props) => (
-
-
-														<Form onSubmit={props.handleSubmit}> */}
+											
 															<Row className="mt-4 ">
 
 
@@ -1262,8 +1036,8 @@ calculatePayperioad=(startDate,endDate)=>{
 																			this.setState({apiSelector:"createAndSubmitPayroll"})
 																				props.handleSubmit()
 																								}}
-																		// disabled={this.disableForGenerateButtun() ? true : false}
-																		disabled={this.state.submitButton}
+																		disabled={this.disableForGenerateButtun() ? true : false}
+
 																		// disabled={this.state.allPayrollEmployee && this.state.allPayrollEmployee.length === 0 ?true :false}
 																		title={
 																			this.disable()
@@ -1273,7 +1047,7 @@ calculatePayperioad=(startDate,endDate)=>{
 																	// disabled={selectedRows.length === 0}
 																	>
 
-																		<i class="fas fa-check-double  mr-1"></i> Create and Submit
+																		<i class="fas fa-check-double  mr-1"></i>Update and Submit
 																		{/* Generate Payroll */}
 
 																	</Button>
@@ -1284,7 +1058,7 @@ calculatePayperioad=(startDate,endDate)=>{
 																			props.handleSubmit()
 																							}}
 																	>
-																		<i className="fa fa-dot-circle-o  mr-1"></i> Create
+																		<i className="fa fa-dot-circle-o  mr-1"></i> Update
 																	</Button>
 
 																</Col>
@@ -1317,6 +1091,5 @@ calculatePayperioad=(startDate,endDate)=>{
 	}
 }
 
-
-export default connect(mapStateToProps, mapDispatchToProps)(CreatePayrollList)
+export default connect(mapStateToProps, mapDispatchToProps)(UpdatePayroll)
 

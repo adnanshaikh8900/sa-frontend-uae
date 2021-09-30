@@ -569,7 +569,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
                                                                 color="primary"
                                                                 className="btn-square pull-right mb-3 mr-3 mt-4"
                                                                 style={{ marginBottom: '40px' }}
-                                                                onClick={() => this.props.history.push(`/admin/payroll/employee/create`)}
+                                                                onClick={() => this.props.history.push(`/admin/payroll/employee/create`,{goto:"Expense"})}
 
                                                             >
                                                                 <i className="fas fa-plus mr-1" />

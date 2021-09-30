@@ -739,6 +739,7 @@ class PayrollApproverScreen extends React.Component {
 																			<DatePicker
 																				id="payrollDate"
 																				name="payrollDate"
+																				disabled={true}
 																				placeholderText={strings.payrollDate}
 																				showMonthDropdown
 																				showYearDropdown
@@ -772,6 +773,7 @@ class PayrollApproverScreen extends React.Component {
 																				type="text"
 																				id="payrollSubject"
 																				name="payrollSubject"
+																				disabled={true}
 																				value={this.state.payrollSubject}
 																				placeholder={strings.Enter + " Payroll Subject"}
 																				onChange={(value) => {
@@ -801,6 +803,7 @@ class PayrollApproverScreen extends React.Component {
 																					props.handleChange('payPeriod')(value);
 
 																				}}
+																				disabled={true}
 																				className={props.errors.payPeriod && props.touched.payPeriod ? "is-invalid" : ""}
 																			/>
 																			{props.errors.payPeriod && props.touched.payPeriod && (
@@ -912,17 +915,26 @@ class PayrollApproverScreen extends React.Component {
 
 															<Row className="mb-4 ">
 																<Col>
-																	<Button
-																		type="button"
-																		color="primary"
-																		className="btn-square mt-4 "
-																		onClick={() =>
-																			this.approveAndRunPayroll()
+																
+
+																	{this.state.status && this.state.status!=="Approved" ? 
+																		
+																		(
+																			<Button
+																			type="button"
+																			color="primary"
+																			className="btn-square mt-4 "
+																			onClick={() =>
+																				this.approveAndRunPayroll()
+																			}
+																		>
+																			<i class="fas fa-bullseye mr-1"></i>
+																			Approve & Run Payroll
+																		</Button>
+																		)
+																		:''
+																		
 																		}
-																	>
-																		<i class="fas fa-bullseye mr-1"></i>
-																		Approve & Run Payroll
-																	</Button>
 																</Col>
 																<Col>
 																	<FormGroup>
@@ -933,6 +945,7 @@ class PayrollApproverScreen extends React.Component {
 																			id="comment"
 																			name="comment"
 																			value={this.state.comment}
+																			disable={this.state.comment===null ?false :true }
 																			placeholder={strings.Enter + " Reason"}
 																			onChange={(event) => {
 																				this.setState({
@@ -947,7 +960,10 @@ class PayrollApproverScreen extends React.Component {
 																				{props.errors.comment}
 																			</div>
 																		)}
-																		<Button
+																		{this.state.status && this.state.status!=="Approved" ? 
+																		
+																		(
+																			<Button
 																			color="primary"
 																			className="btn-square mt-4 pull-right"
 																			// onClick={}
@@ -960,6 +976,11 @@ class PayrollApproverScreen extends React.Component {
 
 																			Reject Payroll
 																		</Button>
+																		)
+																		:''
+																		
+																		}
+																		
 																	</FormGroup>
 
 

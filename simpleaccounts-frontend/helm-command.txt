@@ -43,7 +43,7 @@ helm uninstall $subdomain-frontend -n $nameserver
 
 helm rollback $subdomain-frontend 0  -n $nameserver
 
-simplevat-frontend-reactjs/simpleaccounts-frontend/simpleaccounts-frontend.sh install demo 0.0.3-alpha-408
+simplevat-frontend-reactjs/simpleaccounts-frontend/simpleaccounts-frontend.sh install uat1 0.0.3-alpha-1202
 
 simplevat-frontend-reactjs/simpleaccounts-frontend/simpleaccounts-frontend.sh install foreverrich 0.0.3-alpha-632 >> ~/simpleaccounts-frontend-deployment.log
 

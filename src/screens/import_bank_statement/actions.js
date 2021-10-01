@@ -49,3 +49,20 @@ export const importTransaction = (obj) => {
 			});
 	};
 };
+
+export const downloadcsv = (obj) => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/transactionimport/downloadcsv',
+			data: obj,
+		};
+		return authApi(data)
+			.then((res) => {
+				return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

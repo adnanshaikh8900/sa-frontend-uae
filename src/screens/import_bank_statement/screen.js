@@ -25,6 +25,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
+import download from 'downloadjs';
 
 const mapStateToProps = (state) => {
 	return {
@@ -178,10 +179,10 @@ class ImportBankStatement extends React.Component {
 	};
 
 	handleSave = () => {
-		const { selectedTemplate, tableData } = this.state;
+		const { selectedTemplate, tableData,id } = this.state;
 		const postData = {
-			bankId: this.props.location.state.bankAccountId
-				? this.props.location.state.bankAccountId
+			bankId:id
+				? id
 				: '',
 			templateId: selectedTemplate ? +selectedTemplate : '',
 			importDataMap: tableData,
@@ -214,6 +215,21 @@ class ImportBankStatement extends React.Component {
 			});
 	};
 
+	export = () => {
+		this.props.importBankStatementActions
+			.downloadcsv()
+			.then((res) => {
+				if (res.status === 200) {
+					const blob = new Blob([res.data],{type:'application/csv'});
+					download(blob,'Sample Transaction.csv')
+				} })
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
+	};
 	render() {
 		strings.setLanguage(this.state.language);
 		const { templateList, initValue,showMessage } = this.state;
@@ -442,6 +458,9 @@ class ImportBankStatement extends React.Component {
 																			}}
 																		/>
 																	</div>
+																	<h6><a  style={{fontWeight:'400'}} href="#" 	onClick={() => {
+																			this.export();
+																		}}>Sample Transaction File</a></h6>
 																	</Col>
 															</Row>
 															<Row className="mt-4">
@@ -464,6 +483,7 @@ class ImportBankStatement extends React.Component {
 																		 {strings.ParseFile}
 																	</Button>
 																</Col>
+																
 															</Row>
 															<div 
 															style={{display: this.state.showMessage === true ? '': 'none'}}

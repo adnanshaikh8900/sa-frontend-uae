@@ -19,7 +19,7 @@ import Select from 'react-select'
 import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
 import * as Yup from "yup";
-import { ImageUploader, Loader } from 'components';
+import { ConfirmDeleteModal, ImageUploader, Loader } from 'components';
 import {
 	CommonActions
 } from 'services/global'
@@ -80,6 +80,7 @@ class PayrollApproverScreen extends React.Component {
 			loading: false,
 			createMore: false,
 			loading: false,
+			dialog: false,
 			initValue: {},
 			employeeListIds: [],
 			openModal: false,
@@ -243,6 +244,7 @@ class PayrollApproverScreen extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert('success', 'Payroll Approved Successfully')
 					this.getAllPayrollEmployee()
+					this.props.history.push('/admin/payroll/payrollrun')
 					// resetForm(this.state.initValue)
 				}
 			}).catch((err) => {
@@ -339,20 +341,7 @@ class PayrollApproverScreen extends React.Component {
 			}
 		})
 	}
-	rejectPayroll= () => {
-		this.props.createPayrollActions
-			.rejectPayroll(this.state.payroll_id,this.state.comment)
-			.then((res) => {
-				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert('success', 'Payroll Rejected Successfully')
-					this.getAllPayrollEmployee()
-					// resetForm(this.state.initValue)
-				}
-			}).catch((err) => {
-				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
-			})
 
-	}
 	getPayrollEmployeeList = () => {
 
 		// const cols = [
@@ -675,13 +664,55 @@ class PayrollApproverScreen extends React.Component {
 			selectedRows1: tempList1,
 		});
 	};
+	rejectPayroll1= () => {
+		this.props.createPayrollActions
+			.rejectPayroll(this.state.payroll_id,this.state.comment)
+			.then((res) => {
+				if (res.status === 200) {
+					this.props.commonActions.tostifyAlert('success', 'Payroll Rejected Successfully')
+					this.getAllPayrollEmployee()
+					this.props.history.push('/admin/payroll/payrollrun')
+					// resetForm(this.state.initValue)
+				}
+			}).catch((err) => {
+				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+			})
+
+	}
+	rejectPayroll = () => {
+
+	
+		const message1 =
+        <text>
+        <b>Would you like to reject this payroll ?</b>
+        </text>
+        const message = 'This Payroll will be Rejected. ';
+		this.setState({
+			dialog: (
+				<ConfirmDeleteModal
+					isOpen={true}
+					okHandler={this.rejectPayroll1}
+					cancelHandler={this.removeDialog}
+					message={message}
+					message1={message1}
+				/>
+			),
+		});
+	
+
+	};
 
 
+	removeDialog = () => {
+		this.setState({
+			dialog: null,
+		});
+	};
 	render() {
 		strings.setLanguage(this.state.language);
 
 		const { employee_list, approver_dropdown_list } = this.props
-		const { loading, initValue } = this.state
+		const { loading, initValue,dialog } = this.state
 		console.log(approver_dropdown_list, "approver_dropdown_list")
 		return (
 			<div className="create-employee-screen">
@@ -700,6 +731,7 @@ class PayrollApproverScreen extends React.Component {
 									</Row>
 								</CardHeader>
 								<CardBody>
+									{dialog}
 									{loading ? (
 										<Row>
 											<Col lg={12}>
@@ -937,7 +969,11 @@ class PayrollApproverScreen extends React.Component {
 																		}
 																</Col>
 																<Col>
+																
 																	<FormGroup>
+																	{this.state.status!=="Approved" ? (
+																		<div>
+
 																		<Label htmlFor="payrollSubject">Comment </Label>
 																		<Input
 																			// className="mt-4 pull-right"
@@ -951,10 +987,26 @@ class PayrollApproverScreen extends React.Component {
 																				this.setState({
 																					comment: event.target.value
 																				})
-
+		
 																			}}
 																			className={props.errors.comment && props.touched.comment ? "is-invalid" : ""}
 																		/>
+																		</div>
+																		
+																	)
+																
+																:''	
+																}
+																		
+																			<Button
+																		color="secondary"
+																		className="btn-square pull-right  mt-4"
+																		onClick={() => {
+																			this.props.history.push('/admin/payroll/payrollrun')
+																		}}
+																	>
+																		<i className="fa fa-ban"></i> {strings.Cancel}
+																	</Button>
 																		{props.errors.comment && props.touched.comment && (
 																			<div className="invalid-feedback">
 																				{props.errors.comment}
@@ -980,7 +1032,7 @@ class PayrollApproverScreen extends React.Component {
 																		:''
 																		
 																		}
-																		
+																	
 																	</FormGroup>
 
 

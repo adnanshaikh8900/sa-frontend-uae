@@ -93,6 +93,7 @@ class CreatePayrollList extends React.Component {
 				onSelect: this.onRowSelect,
 				onSelectAll: this.onSelectAll,
 			},
+			payrollApprover:'',
 			payrollDate: new Date(),
 			 startDate: new Date(date.getFullYear(), date.getMonth(), 1),
 			 endDate:  new Date(date.getFullYear(), date.getMonth() + 1, 0),
@@ -312,12 +313,20 @@ calculatePayperioad=(startDate,endDate)=>{
 		// this.setState({payPeriod:diff});
 		this.setState({payPeriod:string});
 		const formData = new FormData();
-		formData.append('payrollSubject', payrollSubject)
+		if(payrollSubject === undefined)
+		{formData.append('payrollSubject', this.state.payrollSubject ? this.state.payrollSubject :null)}
+		else 
+		{formData.append('payrollSubject', payrollSubject)}
+
 		formData.append('payPeriod', this.state.payPeriod)
 		formData.append('employeeListIds', employeeListIds)
-		formData.append('approverId', payrollApprover)
+		
+		if(payrollApprover === undefined)
+		{formData.append('approverId', this.state.payrollApprover ?this.state.payrollApprover :null)}
+		else if(payrollApprover!=="")
+		{formData.append('approverId',  parseInt(payrollApprover) )}
 		formData.append('generatePayrollString', JSON.stringify(this.state.allPayrollEmployee));
-		 formData.append('salaryDate',payrollDate)
+		formData.append('salaryDate',payrollDate)
 		console.log(this.state.payPeriod,"JSON.stringify(this.state.allPayrollEmployee)",JSON.stringify(this.state.allPayrollEmployee))
 		
 		if(this.state.apiSelector ==="createPayroll"){

@@ -220,3 +220,34 @@ export const createAndSubmitPayroll = (object) => {
 	  })
 	}
   }
+
+  export const updatePayroll = (object) => {
+
+	return (dispatch) => {
+	  let data = {
+		method: 'post',
+		url:`/rest/payroll/updatePayroll `,
+		 data: object
+	  }
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }
+
+  export const updateAndSubmitPayroll = (object) => {
+	return (dispatch) => {
+	  let data = {
+		method: 'post',
+		url:`/rest/payroll/updateAndSubmitPayroll`,
+		 data: object
+	  }
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }

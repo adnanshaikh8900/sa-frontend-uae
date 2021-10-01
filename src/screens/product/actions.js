@@ -337,3 +337,37 @@ export const getInventoryById = (id) => {
 	  })
 	}
   }
+
+  export const getProductCode = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'GET',
+			url: `/rest/customizeinvoiceprefixsuffix/getNextInvoiceNo?invoiceType=9`,
+		};
+
+		return authApi(data)
+			.then((res) => {
+				return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+export const getProductCodePrefix = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/customizeinvoiceprefixsuffix/getListForInvoicePrefixAndSuffix?invoiceType=8',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

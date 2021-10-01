@@ -225,12 +225,27 @@ class ImportBankStatement extends React.Component {
 							<Card>
 								<CardHeader>
 									<Row>
-										<Col lg={12}>
+										<Col lg={8}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="fa glyphicon glyphicon-export fa-upload" />
 												<span className="ml-2">{strings.ImportStatement}</span>
 											</div>
 										</Col>
+										<Col lg={4}>
+										<Button
+																		onClick={() =>
+																			this.props.history.push(
+																				'/admin/banking/upload-statement/transaction',
+																				{
+																					bankAccountId: this.props.location
+																						.state.bankAccountId,
+																				},
+																			)
+																		}
+																	>
+																		<i className="fas fa-plus mr-1" />
+																		 {strings.CreateNewTemplate}
+																	</Button></Col>
 									</Row>
 								</CardHeader>
 								<CardBody>
@@ -346,46 +361,8 @@ class ImportBankStatement extends React.Component {
 												>
 													{(props) => (
 														<Form onSubmit={props.handleSubmit}>
-															<Row>
-																<Col md="2">
-																	<label htmlFor="Other">
-																		<span className="text-danger">*</span> {strings.SelectFileToUpload}
-																	</label>
-																</Col>
-																<Col md="3">
-																	<FormGroup className="">
-																		<Button
-																			color="primary"
-																			onClick={() => {
-																				document
-																					.getElementById('fileInput')
-																					.click();
-																			}}
-																			className="btn-square mr-3"
-																		>
-																			<i className="fa fa-upload"></i>  {strings.upload}
-																		</Button>
-																		<input
-																			id="fileInput"
-																			ref={(ref) => {
-																				this.uploadFile = ref;
-																			}}
-																			type="file"
-																			style={{ display: 'none' }}
-																			onChange={(e) => {
-																				this.setState({
-																					fileName: e.target.value
-																						.split('\\')
-																						.pop(),
-																				});
-																			}}
-																		/>
-																		{this.state.fileName}
-																	</FormGroup>
-																</Col>
-															</Row>
 															<Row className="align-template">
-																<Col lg={2}>
+																<Col lg={4}>
 																	<label>
 																		<span className="text-danger">*</span>
 																		 {strings.ParsingTemplate}
@@ -432,26 +409,42 @@ class ImportBankStatement extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																<Col lg={3}>
-																	<Button
-																		color="primary"
-																		className="btn-square"
-																		onClick={() =>
-																			this.props.history.push(
-																				'/admin/banking/upload-statement/transaction',
-																				{
-																					bankAccountId: this.props.location
-																						.state.bankAccountId,
-																				},
-																			)
-																		}
-																	>
-																		<i className="fas fa-plus mr-1" />
-																		 {strings.CreateNewTemplate}
-																	</Button>
+																<Col>
+																
 																</Col>
 															</Row>
 															<Row>
+																<Col>
+															<div 
+																	style={{
+																		width: '30%',
+																		height: '200px',
+																		border:'1px solid grey',
+																	padding:'90px'
+																	}}>
+																	
+																		<input
+																			id="file"
+																			ref={(ref) => {
+																				this.uploadFile = ref;
+																			}}
+																			multiple
+																			// directory="" 
+																			// webkitdirectory=""
+																			type="file"
+																			accept=".csv,.xlsx"
+																			onChange={(e) => {
+																				this.setState({
+																					fileName: e.target.value
+																						.split('\\')
+																						.pop(),
+																				});
+																			}}
+																		/>
+																	</div>
+																	</Col>
+															</Row>
+															<Row className="mt-4">
 																<Col>
 																	<Button
 																		color="primary"
@@ -595,7 +588,9 @@ class ImportBankStatement extends React.Component {
 										</Col>
 									</Row>
 								<div style={{display : this.state.showMessage === false ? '': 'none'}}>
-									<div>
+									<div className="table-responsive mt-4" style={{
+																		border:'1px solid grey',
+																	}}>
 										{this.state.tableDataKey.length  > 0 ? (
 											<BootstrapTable
 												data={this.state.tableData}

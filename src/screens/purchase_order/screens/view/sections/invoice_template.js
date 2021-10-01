@@ -82,14 +82,13 @@ class RFQTemplate extends Component {
 							<div className="text-center mt-1 "><h4><b>{strings.PurchaseOrder+" "+strings.Details }</b></h4></div>
 							<div className="text-center">
 									<img
-										src={
-											companyData &&
-											companyData.company &&
-											companyData.company.companyLogo
-												? 'data:image/jpg;base64,' +
-												companyData.company.companyLogo
-												: logo
-										}
+									src={
+										companyData &&
+										companyData.companyLogoByteArray
+											? 'data:image/jpg;base64,' +
+											  companyData.companyLogoByteArray
+											: logo
+									}
 										className=""
 										alt=""
 										style={{ width: ' 250px',height:'100px' }}

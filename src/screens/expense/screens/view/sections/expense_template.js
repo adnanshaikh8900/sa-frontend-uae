@@ -66,14 +66,13 @@ class ExpenseTemplate extends Component {
 								
 								<div className="companyDetails">
 									<img
-										src={
-											companyData &&
-											companyData.company &&
-											companyData.company.companyLogo
-												? 'data:image/jpg;base64,' +
-												  companyData.company.companyLogo
-												: logo
-										}
+									src={
+										companyData &&
+										companyData.companyLogoByteArray
+											? 'data:image/jpg;base64,' +
+											  companyData.companyLogoByteArray
+											: logo
+									}
 										className=""
 										alt=""
 										style={{ width: ' 100px' }}

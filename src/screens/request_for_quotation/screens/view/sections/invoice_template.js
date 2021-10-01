@@ -69,10 +69,9 @@ class RFQTemplate extends Component {
 									<img
 										src={
 											companyData &&
-											companyData.company &&
-											companyData.company.companyLogo
+											companyData.companyLogoByteArray
 												? 'data:image/jpg;base64,' +
-												companyData.company.companyLogo
+												  companyData.companyLogoByteArray
 												: logo
 										}
 										className=""

@@ -381,7 +381,7 @@ PurchasePrice:"Prix d’achat",
 
 EnableInventory:"Activer l’inventaire",
 InventoryAccount:"Compte d’inventaire",
-PurchaseQuantity:"Quantité d’achat",
+OpeningBalanceQuantity:"Quantité du solde d'ouverture",
 ReOrderLevel:"Niveau de ré-ordre",
 	
 //Product Category										

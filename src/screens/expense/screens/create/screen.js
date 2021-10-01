@@ -387,6 +387,9 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 													vatCategoryId: Yup.string().required(
 														'Vat is Required',
 													),
+													payMode: Yup.string().required(
+														'Pay Through is required',
+													),
 													attachmentFile: Yup.mixed()
 														.test(
 															'fileType',
@@ -564,17 +567,18 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
                                     
 															</Col>
 															
-															
+															<Col>
 															<Button
                                                                 color="primary"
-                                                                className="btn-square pull-right mb-3 mr-3 mt-4"
-                                                                style={{ marginBottom: '40px' }}
+                                                                className="btn-square pull-left mb-3 mr-3 mt-4"
+                                                                // style={{ marginBottom: '40px' }}
                                                                 onClick={() => this.props.history.push(`/admin/payroll/employee/create`,{goto:"Expense"})}
 
                                                             >
                                                                 <i className="fas fa-plus mr-1" />
                                          {strings.NewEmployee}
-									</Button>
+									</Button></Col>
+														
 															
 														</Row>
 														<Row>
@@ -660,50 +664,7 @@ min="0"
 																	
 																</FormGroup>
 															</Col>
-																<Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="payMode"> {strings.PayThrough}</Label>
-																		<Select
-																			styles={customStyles}
-																			id="payMode"
-																			name="payMode"
-																			placeholder={strings.Select+strings.PayThrough}
-																			options={
-																				pay_mode_list
-																					? selectOptionsFactory.renderOptions(
-																							'label',
-																							'value',
-																							pay_mode_list,
-																							'',
-																					  )
-																					: []
-																			}
-																			value={props.values.payMode}
-																			onChange={(option) => {
-																				props.handleChange('payMode')(option);
-																				if (option && option.value) {
-																					this.setState({
-																						payMode: option,
-																					});
-																				} else {
-																					this.setState({ payMode: '' });
-																				}
-																			}}
-																			className={
-																				props.errors.payMode &&
-																				props.touched.payMode
-																					? 'is-invalid'
-																					: ''
-																			}
-																		/>
-																		{props.errors.payMode &&
-																			props.touched.payMode && (
-																				<div className="invalid-feedback">
-																					{props.errors.payMode}
-																				</div>
-																			)}
-																	</FormGroup>
-																</Col>
+																
 															
 															{!props.values.payee && payMode.value === 'BANK' && (
 																<Col lg={3}>
@@ -803,6 +764,50 @@ min="0"
 																		)}
 																</FormGroup>
 															</Col>
+															<Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="payMode"><span className="text-danger">*</span> {strings.PayThrough}</Label>
+																		<Select
+																			styles={customStyles}
+																			id="payMode"
+																			name="payMode"
+																			placeholder={strings.Select+strings.PayThrough}
+																			options={
+																				pay_mode_list
+																					? selectOptionsFactory.renderOptions(
+																							'label',
+																							'value',
+																							pay_mode_list,
+																							'',
+																					  )
+																					: []
+																			}
+																			value={props.values.payMode}
+																			onChange={(option) => {
+																				props.handleChange('payMode')(option);
+																				if (option && option.value) {
+																					this.setState({
+																						payMode: option,
+																					});
+																				} else {
+																					this.setState({ payMode: '' });
+																				}
+																			}}
+																			className={
+																				props.errors.payMode &&
+																				props.touched.payMode
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{props.errors.payMode &&
+																			props.touched.payMode && (
+																				<div className="invalid-feedback">
+																					{props.errors.payMode}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
 														</Row>
 														<hr />
 														<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>

@@ -221,7 +221,7 @@ class DetailContact extends React.Component {
 					resetForm();
 					this.props.commonActions.tostifyAlert(
 						'success',
-						' Contact Updated Successfully',
+					res.message
 					);
 					this.props.history.push('/admin/master/contact');
 				}
@@ -231,7 +231,7 @@ class DetailContact extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data : 'Something Went Wrong',
+				err.message
 				);
 				// this.props.history.push('/admin/master/contact');
 			});

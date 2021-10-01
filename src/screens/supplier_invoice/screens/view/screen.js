@@ -59,6 +59,20 @@ class ViewInvoice extends React.Component {
 	};
 
 	initializeData = () => {
+		this.props.supplierInvoiceDetailActions
+		.getCompanyDetails()
+		.then((res) => {
+			
+			if (res.status === 200) {
+				
+				this.setState(
+					{
+						companyData: res.data,							
+					},
+				
+				);
+			}
+		});
 		if (this.props.location.state && this.props.location.state.id) {
 			this.props.supplierInvoiceDetailActions
 				.getInvoiceById(this.props.location.state.id)
@@ -165,7 +179,7 @@ class ViewInvoice extends React.Component {
 										currencyData={currencyData}
 										ref={(el) => (this.componentRef = el)}
 										totalNet={this.state.totalNet}
-										companyData={profile}
+										companyData={this.state && this.state.companyData ?this.state.companyData:''}
 									/>
 								</PDFExport>
 							</div>

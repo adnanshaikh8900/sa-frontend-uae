@@ -80,13 +80,14 @@ class ProductModal extends React.Component {
 			salesCategory: [],
 			createMore: false,
 			exist: false,
-			isActive:false,
+			isActive:true,
+			selectedStatus:true,
 		};
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9-./\\|]+$/;
 		// this.regExBoth = /[a-zA-Z0-9 ]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
-		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
+		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,6}$$/;
 	}
 
 	getData = (data) => {
@@ -113,7 +114,7 @@ class ProductModal extends React.Component {
 		const purchaseUnitPrice = data['purchaseUnitPrice'];
 		const vatCategoryId = data['vatCategoryId'];
 		const vatIncluded = data['vatIncluded'];
-		const isActive = this.state.productActive;
+		const isActive = this.state.isActive;
 		let productPriceType;
 		if (data['productPriceType'].includes('SALES')) {
 			productPriceType = 'SALES';

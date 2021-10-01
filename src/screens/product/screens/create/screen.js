@@ -109,6 +109,7 @@ class CreateProduct extends React.Component {
 			isActive:true,
 			selectedStatus:true,
 		};
+		this.formRef = React.createRef();       
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[ +a-zA-Z0-9-./\\|]+$/;
 		this.regExAlpha = /^[0-9!@#$&()-\\`.+,/\"]+$/;
@@ -121,6 +122,7 @@ class CreateProduct extends React.Component {
 		this.salesCategory();
 		this.purchaseCategory();
 		this.inventoryAccount();
+		this.getProductCode();
 	};
 	initializeData = () => {
 		this.props.productActions.getProductVatCategoryList();
@@ -330,7 +332,7 @@ try {
 			}
 		});
 	};
-
+	
 	ProductvalidationCheck = (value) => {
 		const data = {
 			moduleType: 7,
@@ -350,7 +352,24 @@ try {
 				}
 			});
 	};
+	getProductCode=()=>{
 
+		this.props.productActions.getProductCode().then((res) => {
+			if (res.status === 200) {
+				this.setState({
+					initValue: {
+						...this.state.initValue,
+						...{ productCode: res.data },
+					},
+				});
+				this.formRef.current.setFieldValue('productCode', res.data, true,true
+				// this.validationCheck(res.data)
+				);
+			}
+		});
+	
+	console.log(this.state.employeeCode)
+	}
 	render() {
 		strings.setLanguage(this.state.language);
 		const { vat_list, product_category_list,supplier_list,inventory_account_list} = this.props;
@@ -385,6 +404,7 @@ try {
 									<Row>
 										<Col lg={12}>
 											<Formik
+											ref={this.formRef}
 												initialValues={initValue}
 												onSubmit={(values, { resetForm }) => {
 													this.handleSubmit(values, resetForm);

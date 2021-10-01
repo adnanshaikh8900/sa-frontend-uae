@@ -70,7 +70,7 @@ class DetailCurrencyConvert extends React.Component {
     }
     this.regExAlpha = /^[a-zA-Z ]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
-    this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
+    this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,6}$$/;
 
   }
 

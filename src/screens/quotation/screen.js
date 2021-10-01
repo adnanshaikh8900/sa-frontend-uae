@@ -247,7 +247,9 @@ class Quatation extends React.Component {
 	pODate = (cell, row) => {
 		return row.quotaionExpiration ? row.quotaionExpiration : '';
 	};
-
+	quotationCreatedDate= (cell, row) => {
+		return row.quotationCreatedDate ? row.quotationCreatedDate : '';
+	};
 	toggleActionButton = (index) => {
 		let temp = Object.assign({}, this.state.actionButtons);
 		if (temp[parseInt(index, 10)]) {
@@ -733,7 +735,7 @@ class Quatation extends React.Component {
 						customerName: quotation.customerName,
 						quatationNumber: quotation.quatationNumber,
 						quotaionExpiration: quotation.quotaionExpiration ? quotation.quotaionExpiration : '',
-					
+						quotationCreatedDate:quotation.quotationCreatedDate ? quotation.quotationCreatedDate : '',
 						totalAmount: quotation.totalAmount,
 						totalVatAmount: quotation.totalVatAmount,
 						currencyIsoCode: quotation.currencyIsoCode,
@@ -987,6 +989,23 @@ class Quatation extends React.Component {
 											>
 												{strings.STATUS}
 											</TableHeaderColumn>
+											{/* <TableHeaderColumn
+												dataField="quotationCreatedDate"
+												dataSort
+											//	width="12%"
+												className="table-header-bg"
+											>
+												Created Date
+											</TableHeaderColumn> */}
+											<TableHeaderColumn
+												dataField="quotationCreatedDate"
+												dataSort
+											//	width="7%"
+											 dataFormat={this.quotationCreatedDate}
+												className="table-header-bg"
+											>
+											Created Date
+											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="poApproveDate"
 												dataSort
@@ -996,6 +1015,8 @@ class Quatation extends React.Component {
 											>
 												{strings.EXPIRATIONDATE}
 											</TableHeaderColumn>
+										
+											
 											<TableHeaderColumn
 												dataField="totalAmount"
 												dataSort

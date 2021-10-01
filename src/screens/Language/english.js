@@ -386,7 +386,7 @@ PurchasePrice:"Purchase Price",
 
 EnableInventory:"Enable Inventory",
 InventoryAccount:"Inventory Account",
-PurchaseQuantity:"Purchase Quantity",
+OpeningBalanceQuantity:"Opening Balance Quantity",
 ReOrderLevel:"Re-Order Level",
 	
 //Product Category										

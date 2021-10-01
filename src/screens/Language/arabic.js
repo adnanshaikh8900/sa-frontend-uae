@@ -382,7 +382,7 @@ PurchasePrice:"سعر الشراء",
 
 EnableInventory:"تمكين المخزون",
 InventoryAccount:"حساب المخزون",
-PurchaseQuantity:"كمية الشراء",
+OpeningBalanceQuantity:"كمية الرصيد الافتتاحي",
 ReOrderLevel:"مستوى إعادة الطلب",
 	
 //Product Category										

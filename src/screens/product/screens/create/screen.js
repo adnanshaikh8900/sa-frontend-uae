@@ -1475,7 +1475,7 @@ try {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="inventoryQty">
 																			{/* <span className="text-danger">*</span>{' '} */}
-																			<span className="text-danger">*</span>	 {strings.PurchaseQuantity}
+																			<span className="text-danger">*</span>	 {strings.OpeningBalanceQuantity}
 																			
 																		</Label>
 																		<Input
@@ -1484,7 +1484,7 @@ min="0"
 																			maxLength="10"
 																			id="inventoryQty"
 																			name="inventoryQty"
-																			placeholder={strings.Enter+strings.Quantity}
+																			placeholder={strings.Enter+strings.OpeningBalanceQuantity}
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||

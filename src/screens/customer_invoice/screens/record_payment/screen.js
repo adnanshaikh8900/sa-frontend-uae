@@ -670,7 +670,7 @@ class RecordCustomerPayment extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="depositeTo">
 																			<span className="text-danger">*</span>{' '}
-																			 {strings.DepositTo}
+																			Received Through
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -685,7 +685,7 @@ class RecordCustomerPayment extends React.Component {
 																					props.handleChange('depositeTo')('');
 																				}
 																			}}
-																			placeholder={strings.Select+strings.DepositTo}
+																			placeholder={strings.Select+"Received Through"}
 																			id="depositeTo"
 																			name="depositeTo"
 																			className={

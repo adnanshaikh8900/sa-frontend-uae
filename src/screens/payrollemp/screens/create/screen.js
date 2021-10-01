@@ -169,13 +169,7 @@ class CreateEmployeePayroll extends React.Component {
                 labourCard: '',
                 grossSalary: '',
                 salaryRoleId: '',
-                accountHolderName: '',
-                accountNumber: '',
-                bankName: '',
-                branch: '',
-                iban: '',
                 parentId: '',
-                swiftCode: '',
                 accountHolderName: '',
                 accountNumber: '',
                 bankName: '',
@@ -682,12 +676,21 @@ validationCheck = (value) => {
                         employeeid: res.data,
 
                     })
+                    
+                    if(this.props.location && this.props.location.state && this.props.location.state.goto && this.props.location.state.goto==="Expense"){                    
+                            this.props.history.push(`/admin/expense/expense/create`)                       
+                    }
                     this.toggle(0, '2')
                     this.renderActionForState(this.state.employeeid)
                 }
             }).catch((err) => {
-
-                this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+        
+                let error=err && err.data ? err.data : 'Something Went Wrong';
+                if(err.data && err.data.message !== undefined){
+                    error=err.data.message ? err.data.message :err.data;
+                }
+                
+                this.props.commonActions.tostifyAlert('error',  error)
             })
         }
         else{

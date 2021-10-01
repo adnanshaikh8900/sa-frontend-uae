@@ -358,7 +358,7 @@ export const getProductCodePrefix = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: '/rest/customizeinvoiceprefixsuffix/getListForInvoicePrefixAndSuffix?invoiceType=8',
+			url: '/rest/customizeinvoiceprefixsuffix/getListForInvoicePrefixAndSuffix?invoiceType=9',
 		};
 		return authApi(data)
 			.then((res) => {

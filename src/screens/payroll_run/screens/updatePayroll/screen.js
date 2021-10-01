@@ -152,7 +152,7 @@ calculatePayperioad=()=>{
 				this.setState({
 					loading: false,
 					
-						id: res.data.id ? res.data.id : '',
+					payrollId: res.data.id ? res.data.id : '',
 					approvedBy: res.data.approvedBy ? res.data.approvedBy : '',
 					comment: res.data.comment ? res.data.comment : '',
 					deleteFlag: res.data.deleteFlag ? res.data.deleteFlag : '',
@@ -309,17 +309,30 @@ calculatePayperioad=()=>{
 		// this.setState({payPeriod:diff});
 		this.setState({payPeriod:string});
 		const formData = new FormData();
-		formData.append('payrollSubject', payrollSubject)
+		
+		formData.append('payrollId',this.state.payrollId ? this.state.payrollId :'')
+
+		if(payrollSubject === undefined)
+		{formData.append('payrollSubject', this.state.payrollSubject)}
+		else 
+		{formData.append('payrollSubject', payrollSubject)}
+
 		formData.append('payPeriod', this.state.payPeriod)
 		formData.append('employeeListIds', employeeListIds)
-		formData.append('approverId', payrollApprover)
+		
+		if(payrollApprover === undefined)
+		{formData.append('approverId', this.state.payrollApprover)}
+		else 
+		{formData.append('approverId',parseInt(payrollApprover) )}
+		
 		formData.append('generatePayrollString', JSON.stringify(this.state.allPayrollEmployee));
 		 formData.append('salaryDate',payrollDate)
+
 		console.log(this.state.payPeriod,"JSON.stringify(this.state.allPayrollEmployee)",JSON.stringify(this.state.allPayrollEmployee))
 		
 		if(this.state.apiSelector ==="createPayroll"){
 		this.props.createPayrollActions
-			 .createPayroll(formData)
+			 .updatePayroll(formData)
 			// .createPayroll(JSON.stringify(employeeListIds),payrollSubject,this.state.payPeriod,JSON.stringify(this.state.allPayrollEmployee),payrollDate)
 			.then((res) => {
 				if (res.status === 200) {
@@ -335,7 +348,7 @@ calculatePayperioad=()=>{
 		if(this.state.apiSelector==="createAndSubmitPayroll"){
 
 			this.props.createPayrollActions
-			 .createAndSubmitPayroll(formData)
+			 .updateAndSubmitPayroll(formData)
 			// .createPayroll(JSON.stringify(employeeListIds),payrollSubject,this.state.payPeriod,JSON.stringify(this.state.allPayrollEmployee),payrollDate)
 			.then((res) => {
 				if (res.status === 200) {

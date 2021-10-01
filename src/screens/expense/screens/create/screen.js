@@ -82,6 +82,7 @@ class CreateExpense extends React.Component {
 				vatCategoryId: '',
 				payMode: '',
 				bankAccountId: '',
+				exclusiveVat:false
 			},
 			currentData: {},
 			fileName: '',
@@ -179,8 +180,10 @@ class CreateExpense extends React.Component {
 			vatCategoryId,
 			payMode,
 			bankAccountId,
+			exclusiveVat
 		} = data;
 		let formData = new FormData();
+
 		formData.append('payee', payee ? payee : '');
 		formData.append('expenseDate', expenseDate !== null ? expenseDate : '');
 		formData.append('expenseDescription', expenseDescription);
@@ -207,6 +210,10 @@ class CreateExpense extends React.Component {
 		}
 		if (vatCategoryId && vatCategoryId.value) {
 			formData.append('vatCategoryId', vatCategoryId.value);
+			debugger
+			if(this.state.exclusiveVat !== undefined){
+				formData.append('exclusiveVat', this.state.exclusiveVat );
+			}
 		}
 		if (bankAccountId && bankAccountId.value && payMode.value === 'BANK') {
 			formData.append('bankAccountId', bankAccountId.value);
@@ -809,6 +816,112 @@ min="0"
 																	</FormGroup>
 																</Col>
 														</Row>
+														{/* {props.values.vatCategoryId !=='' && props.values.vatCategoryId.label !=='Select Vat' &&
+														(
+															<Row><Col lg={3}>	<FormGroup check inline className="mb-3">
+																		<Label
+																			className="form-check-label"
+																			check
+																			htmlFor="exclusiveVat"
+																		>
+																			<Input
+																				type="checkbox"
+																				id="exclusiveVat"
+																				name="exclusiveVat"
+																				onChange={(event) => {
+																					
+																						props.handleChange('exclusiveVat')(
+																							event,
+																						);
+																					
+																				}}
+																				checked={props.values.exclusiveVat}
+																				
+																				
+																			/>
+																			Exclusive Vat
+																		</Label>
+																	</FormGroup></Col></Row>
+														)
+														} */}
+														{props.values.vatCategoryId !=='' && props.values.vatCategoryId.label !=='Select Vat' &&
+														(
+															<Row>
+																<Col></Col>
+																	<Col >
+																		<FormGroup className="mb-3">
+																			
+																			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+																				
+																				<FormGroup check inline>
+																					<div className="custom-radio custom-control">
+																						<input
+																							className="custom-control-input"
+																							type="radio"
+																							id="inline-radio2"
+																							name="active"
+																							value={false}
+																							checked={
+																								!this.state.selectedStatus
+																							}
+																							onChange={(e) => {
+																								if (
+																									e.target.value === 'false'
+																								) {
+																									this.setState({
+																										selectedStatus: false,
+																										exclusiveVat: false
+																									});
+																								}
+																							}}
+																						/>
+																						<label
+																							className="custom-control-label"
+																							htmlFor="inline-radio2"
+																						>
+																							Inclusive Vat
+																							</label>
+																					</div>
+																				</FormGroup>
+																				<FormGroup check inline>
+																					<div className="custom-radio custom-control">
+																						<input
+																							className="custom-control-input"
+																							type="radio"
+																							id="inline-radio1"
+																							name="active"
+																							checked={
+																								this.state.selectedStatus
+																							}
+																							value={true}
+																							onChange={(e) => {
+																								if (
+																									e.target.value === 'true'
+																								) {
+																									
+																									this.setState({
+																										selectedStatus: true,
+																										exclusiveVat: true
+																									});
+																								}
+																							}}
+																						/>
+																						<label
+																							className="custom-control-label"
+																							htmlFor="inline-radio1"
+																						>
+																						Exclusive Vat	
+																							</label>
+																					</div>
+																				</FormGroup>
+																		</FormGroup>
+																	</Col>
+																	<Col></Col>
+																	<Col></Col></Row>
+														)
+														} 
+														
+
 														<hr />
 														<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																<Col>

@@ -805,6 +805,7 @@ class BankTransactions extends React.Component {
 											</Row>
 										</div>
 										<div className="d-flex justify-content-end">
+										{  this.props.location.state && this.props.location.state.bankAccountId !== 1001 &&(
 											<ButtonGroup size="sm">
 												{/* <Button
 													color="success"
@@ -842,7 +843,8 @@ class BankTransactions extends React.Component {
 													<i className="fa glyphicon glyphicon-export fa-upload mr-1" />
 													{strings.Importstatement}
 												</Button>
-												{  this.props.location.state && this.props.location.state.bankAccountId !== 1001 &&(
+											
+												
 												<Button
 													color="success"
 													className="btn-square mr-1"
@@ -861,7 +863,8 @@ class BankTransactions extends React.Component {
 												>
 													<i className="fas fa-edit mr-1" />
 													{strings.EditAccount}
-												</Button>)}
+												</Button>
+											
 												<Button
 													color="info"
 													className="btn-square mr-1"
@@ -882,6 +885,7 @@ class BankTransactions extends React.Component {
 													{strings.reconcile}
 												</Button>
 											</ButtonGroup>
+										)}
 										</div>
 										<div className="py-3">
 											<h6>{strings.Filter} : </h6>

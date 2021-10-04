@@ -36,31 +36,53 @@ class RFQTemplate extends Component {
 		}
 	};
 
+	renderQuotationStatus = (status) => {
+		let classname = '';
+		if (status === 'Approved') {
+			classname = 'label-approved';
+		} else if (status === 'Draft') {
+			classname = 'label-draft';
+		} else if (status === 'Closed') {
+			classname = 'label-closed';
+		}else if (status === 'Sent') {
+			classname = 'label-due';
+		} else {
+			classname = 'label-overdue';
+		}
+		return (
+			<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
+				{status}
+			</span>
+		);
+	};
+
 	render() {
+
 		strings.setLanguage(this.state.language);
 		const { QuotationData, currencyData, totalNet, companyData } = this.props;
+
 		return (
 			<div>
 				<Card id="singlePage" className="box">
-					<div
+					{/* <div
 						className={`ribbon ribbon-top-left ${this.getRibbonColor(
 							QuotationData,
 						)}`}
 					>
 						<span>{QuotationData.status}</span>
-					</div>
+					</div> */}
 
 					<CardBody style={{ marginTop: '7rem' }}>
-					<div 
+					<div
 							style={{
 								width: '100%',
-								height:"250px",
+								display: 'flex',
 								border:'1px solid',
 								padding:'7px',borderColor:'#c8ced3'
 							}}
 						>
-							<div className="text-center mt-1 "><h4><b>{strings.Quotation+" "+strings.Details }</b></h4></div>
-							<div className="text-center">
+							<div style={{ width: '150%' }}>
+								<div className="companyDetails">
 									<img
 										src={
 											companyData &&
@@ -71,17 +93,65 @@ class RFQTemplate extends Component {
 										}
 										className=""
 										alt=""
-										style={{ width: ' 250px',height: '100px' }}
-						/>
-					</div>
-					
-						<div className="text-center mt-1"><h5>{companyData && companyData.company
+										style={{ width: ' 100px' }}
+									/>
+									<div className="mb-1 ml-2"><b>{strings.CompanyName}:</b> {companyData.companyName}</div>
+									<div className="mb-1 ml-2"><b>{strings.CompanyRegistrationNo}:</b> {companyData.companyRegistrationNumber}</div>
+									<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo}:</b> {companyData.vatRegistrationNumber}</div>
+									<div className="mb-1 ml-2"><b>{strings.MobileNumber}:</b> {companyData.phoneNumber}</div>
+								</div>
+							</div>
+							<div style={{ width: '130%',justifyContent:'center' }}>
+
+									<div
+										style={{
+											width: '130%',
+											fontSize: '2rem',
+											fontWeight: '700',
+											textTransform: 'uppercase',
+											color: 'black',
+										}}
+									>
+									{strings.Quotation
+									+" "+
+									strings.Details
+									}
+									</div>
+
+							</div>
+							<div
+								style={{
+									width: '70%',
+									display: 'flex',
+									flexDirection: 'column',
+									justifyContent: 'right',
+								}}
+							>
+								<div 	style={{
+									width: '62%',
+									margin:'1.5rem 9.0rem 0.5rem 4rem',
+									// // border:'1px solid',
+									// marginTop:'2.5rem',
+									// marginLeft:'6rem'
+								}}>
+								<h4 className="mb-1 ml-2"><b>{companyData && companyData.company
 											? companyData.company.companyName
-											: ''}</h5>
-											</div>	
-						<div className="text-center"><h4>{QuotationData.quotationNumber}</h4></div>		
-						<div className="text-center mt-1">{QuotationData.customerName}</div>		
-					</div>
+											: ''}</b></h4>
+								<div className="text-center"><h4>{QuotationData.quotationNumber}</h4></div>
+						<div className="text-center mt-1">{QuotationData.organisationName ? QuotationData.organisationName : QuotationData.customerName}</div>
+
+													<span className="mb-1 ml-2">{strings.Status}:  {this.renderQuotationStatus(QuotationData.status)}</span>
+
+													{/* <div
+														className={`ribbon ${this.getRibbonColor(
+															QuotationData,
+														)}`}
+													>
+															<span className="mb-1 ml-2">{QuotationData.status}</span>
+														</div>  */}
+								</div>
+								</div>
+							</div>
 							
 						
 							

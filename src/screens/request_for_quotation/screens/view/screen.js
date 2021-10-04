@@ -76,6 +76,20 @@ class ViewRequestForQuotation extends React.Component {
 	};
 
 	initializeData = () => {
+		this.props.supplierInvoiceDetailActions
+		.getCompanyDetails()
+		.then((res) => {
+			
+			if (res.status === 200) {
+				
+				this.setState(
+					{
+						companyData: res.data,							
+					},
+				
+				);
+			}
+		});
 		if (this.props.location.state && this.props.location.state.id) {
 			this.props.requestForQuotationDetailsAction
 				.getRFQeById(this.props.location.state.id)
@@ -200,7 +214,7 @@ class ViewRequestForQuotation extends React.Component {
 										status={this.props.location.state.status}
 										ref={(el) => (this.componentRef = el)}
 										totalNet={this.state.totalNet}
-										companyData={profile}
+										companyData={this.state && this.state.companyData ?this.state.companyData:''}
 									/>
 								</PDFExport>
 							</div>

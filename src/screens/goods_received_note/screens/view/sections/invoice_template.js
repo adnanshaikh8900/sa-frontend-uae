@@ -57,16 +57,16 @@ class RFQTemplate extends Component {
 					</div> */}
 
 					<CardBody >
-						<div 
+					<div
 							style={{
 								width: '100%',
-								height:"270px",
+								display: 'flex',
 								border:'1px solid',
 								padding:'7px',borderColor:'#c8ced3'
 							}}
 						>
-							<div className="text-center mt-1 "><h4><b> {strings.GoodsReceivedNotes+" "+strings.Details }</b></h4></div>
-							<div className="text-center">
+							<div style={{ width: '150%' }}>
+								<div className="companyDetails">
 									<img
 										src={
 											companyData &&
@@ -77,21 +77,71 @@ class RFQTemplate extends Component {
 										}
 										className=""
 										alt=""
-										style={{ width: ' 250px',height:'100px' }}
-						/>
-					</div>
-					
-						<div className="text-center mt-1"><h5>{companyData && companyData.company
-											? companyData.company.companyName
-											: ''}</h5>
-											</div>	
-											<div className="text-center"><span className="h4">{RFQData.grnNumber} {this.renderRFQStatus(status)} </span></div>		
-						<div className="text-center mt-1 h5">{RFQData.organisationName ? RFQData.organisationName : RFQData.supplierName}</div>	
-						<div className="text-center mt-1 h5">{strings.ReceiveDate } :	{moment(RFQData.grnReceiveDate).format(
-									'DD MMM YYYY',
-								)}</div>		
+										style={{ width: ' 100px' }}
+									/>
+									<div className="mb-1 ml-2"><b>{strings.CompanyName}:</b> {companyData.companyName}</div>
+									<div className="mb-1 ml-2"><b>{strings.CompanyRegistrationNo}:</b> {companyData.companyRegistrationNumber}</div>
+									<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo}:</b> {companyData.vatRegistrationNumber}</div>
+									<div className="mb-1 ml-2"><b>{strings.MobileNumber}:</b> {companyData.phoneNumber}</div>
+								</div>
 							</div>
-							
+							<div style={{ width: '130%',justifyContent:'center' }}>
+
+									<div
+										style={{
+											width: '130%',
+											fontSize: '1.5rem',
+											fontWeight: '700',
+											textTransform: 'uppercase',
+											color: 'black',
+										}}
+									>
+									{strings.GoodsReceivedNotes
+									+" "+
+									strings.Details
+									}
+									</div>
+
+							</div>
+							<div
+								style={{
+									width: '70%',
+									display: 'flex',
+									flexDirection: 'column',
+									justifyContent: 'right',
+								}}
+							>
+								<div 	style={{
+									width: '62%',
+									margin:'1.5rem 9.0rem 0.5rem 4rem',
+									// // border:'1px solid',
+									// marginTop:'2.5rem',
+									// marginLeft:'6rem'
+								}}>
+								<h4 className="mb-1 ml-2"><b>{companyData && companyData.company
+											? companyData.company.companyName
+											: ''}</b></h4>
+								<h6 className="mb-1 ml-2">{RFQData.grnNumber} </h6>
+								<h6 className="mb-1 ml-2">{RFQData.organisationName ? RFQData.organisationName : RFQData.supplierName}</h6>
+								<h6 className="mb-1 ml-2">	{strings.ReceiveDate } :	{moment(RFQData.grnReceiveDate).format(
+									'DD MMM YYYY',
+								)}</h6>
+
+													<span className="mb-1 ml-2">{strings.Status}:  {this.renderRFQStatus(status)}</span>
+
+													{/* <div
+														className={`ribbon ${this.getRibbonColor(
+															RFQData,
+														)}`}
+													>
+															<span className="mb-1 ml-2">{RFQData.status}</span>
+														</div>  */}
+								</div>
+								</div>
+							</div>
+
+
+
 
 						<div
 							style={{

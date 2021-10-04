@@ -800,10 +800,10 @@ min="0"
 			} else {
 				var val = (+obj.unitPrice * vat * obj.quantity) / 100;
 			}
-			obj.subTotal =
-				obj.unitPrice && obj.vatCategoryId ? +obj.unitPrice * obj.quantity : 0;
 			total_net = +(total_net + +obj.unitPrice * obj.quantity);
 			total_vat = +(total_vat + val);
+			obj.subTotal =
+				obj.unitPrice && obj.vatCategoryId ? (+obj.unitPrice * obj.quantity)+total_vat : 0;
 			total = total_vat + total_net;
 			return obj;
 		});

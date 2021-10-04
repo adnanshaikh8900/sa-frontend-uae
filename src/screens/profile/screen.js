@@ -613,8 +613,6 @@ class Profile extends React.Component {
 		const {
 			currency_list,
 			country_list,
-			industry_type_list,
-			company_type_list,
 			role_list,
 			invoicing_state_list,
 			company_state_list,

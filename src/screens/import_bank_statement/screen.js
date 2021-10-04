@@ -419,7 +419,7 @@ class ImportBankStatement extends React.Component {
 																		{strings.Message}
 																</Label>
 															</div>
-														</Form>
+															</Form>
 													)}
 												</Formik>
 											</div>

@@ -987,10 +987,10 @@ this.state.data.map((obj, index) => {
 			} else {
 				var val = (+obj.unitPrice * vat * obj.grnReceivedQuantity) / 100;
 			}
-			obj.subTotal =
-				obj.unitPrice && obj.vatCategoryId ? +obj.unitPrice * obj.grnReceivedQuantity : 0;
-			total_net = +(total_net + +obj.unitPrice * obj.grnReceivedQuantity);
+			total_net = +(total_net + +obj.unitPrice * obj.quantity);
 			total_vat = +(total_vat + val);
+			obj.subTotal =
+				obj.unitPrice && obj.vatCategoryId ? (+obj.unitPrice * obj.quantity)+total_vat : 0;
 			total = total_vat + total_net;
 			return obj;
 		});

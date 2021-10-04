@@ -215,6 +215,16 @@ class ImportBankStatement extends React.Component {
 			});
 	};
 
+	CreateNewTemplate = () => {
+			this.props.history.push(
+				'/admin/banking/upload-statement/transaction',
+				{
+					bankAccountId: this.props.location
+						.state.bankAccountId,
+				},
+			)
+	}
+
 	export = () => {
 		this.props.importBankStatementActions
 			.downloadcsv()
@@ -247,104 +257,10 @@ class ImportBankStatement extends React.Component {
 												<span className="ml-2">{strings.ImportStatement}</span>
 											</div>
 										</Col>
-										<Col lg={4}>
-										<Button
-																		onClick={() =>
-																			this.props.history.push(
-																				'/admin/banking/upload-statement/transaction',
-																				{
-																					bankAccountId: this.props.location
-																						.state.bankAccountId,
-																				},
-																			)
-																		}
-																	>
-																		<i className="fas fa-plus mr-1" />
-																		 {strings.CreateNewTemplate}
-																	</Button></Col>
+									
 									</Row>
 								</CardHeader>
 								<CardBody>
-									{/* <Row>
-                    <Col lg={12}>
-                      <Nav tabs>
-                        <NavItem>
-                          <NavLink
-                            active={true}
-                          >
-                            <Label className="mb-0 text-primary">
-                              Preview for Imported Statement
-                            </Label>
-                          </NavLink>
-                        </NavItem>
-                      </Nav>
-                      <TabContent activeTab={'1'}>
-                        <TabPane tabId="1"> 
-                          <Row>
-                            <Col lg={12}>
-                              <BootstrapTable
-                                search={false}
-                                options={ this.options }
-                                data={bank_transaction_list}
-                                version="4"
-                                hover
-                                pagination
-                                totalSize={ bank_transaction_list ? bank_transaction_list.length : 0}
-                                className="preview-bank-transaction-table"
-                              >
-                                <TableHeaderColumn
-                                  isKey
-                                  dataField="reference_number"
-                                  dataSort
-                                >
-                                  Reference Number
-                                </TableHeaderColumn>
-                                <TableHeaderColumn
-                                  dataField="transaction_type"
-                                  dataFormat={this.renderTransactionType}
-                                  dataSort
-                                >
-                                  Transaction Type
-                                </TableHeaderColumn>
-                                <TableHeaderColumn
-                                  dataField="amount"
-                                  dataSort
-                                >
-                                  Amount
-                                </TableHeaderColumn>
-                                <TableHeaderColumn
-                                  dataField="description"
-                                  dataSort
-                                >
-                                  Description
-                                </TableHeaderColumn>
-                                <TableHeaderColumn
-                                  dataField="transaction_date"
-                                  dataSort
-                                >
-                                  Transaction Date
-                                </TableHeaderColumn>
-                              </BootstrapTable>
-                            </Col>
-                          </Row>
-                        </TabPane>
-                      </TabContent>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col lg={12} className="mt-5">
-                      <FormGroup className="text-right">
-                        <Button type="button" color="primary" className="btn-square mr-3"  
-                         onClick={() => this.props.history.push('/admin/banking/upload-statement/transaction')}>
-                          <i className="fa fa-dot-circle-o"></i> Import
-                        </Button>
-                        <Button color="secondary" className="btn-square" 
-                          onClick={() => this.props.history.push('/admin/banking/bank-account')}>
-                          <i className="fa fa-ban"></i> Cancel
-                        </Button>
-                      </FormGroup>
-                    </Col>
-                  </Row> */}
 									<Row>
 										<Col lg={12}>
 											<div>
@@ -377,7 +293,9 @@ class ImportBankStatement extends React.Component {
 												>
 													{(props) => (
 														<Form onSubmit={props.handleSubmit}>
+														
 															<Row className="align-template">
+																<Col lg={4}></Col>
 																<Col lg={4}>
 																	<label>
 																		<span className="text-danger">*</span>
@@ -425,16 +343,20 @@ class ImportBankStatement extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																<Col>
-																
-																</Col>
+																<Col lg={4}>
+																<h6><a className='myClickableThingy' style={{fontWeight:'400',color:'#20a8d8'}}
+																	onClick={() => {
+																		this.CreateNewTemplate();
+																		}}>	<i className="fas fa-plus mr-1" />{strings.CreateNewTemplate}</a></h6>
+																	
+																		 
+																	</Col>
 															</Row>
 															<Row>
-																<Col>
+															<Col lg={4}></Col>
+																<Col lg={4}>
 															<div 
 																	style={{
-																		width: '30%',
-																		height: '200px',
 																		border:'1px solid grey',
 																	padding:'90px'
 																	}}>
@@ -458,12 +380,15 @@ class ImportBankStatement extends React.Component {
 																			}}
 																		/>
 																	</div>
-																	<h6><a  style={{fontWeight:'400'}} href="#" 	onClick={() => {
+																	
+																	<h6 style={{paddingLeft:'150px'}}>Download: <a  style={{fontWeight:'400'}}
+																	 href="#" 	onClick={() => {
 																			this.export();
 																		}}>Sample Transaction File</a></h6>
 																	</Col>
 															</Row>
 															<Row className="mt-4">
+															<Col lg={4}></Col>
 																<Col>
 																	<Button
 																		color="primary"
@@ -497,125 +422,22 @@ class ImportBankStatement extends React.Component {
 														</Form>
 													)}
 												</Formik>
-												{/* <Row className="mt-5">
-                          <Col lg={3}>
-                            <FormGroup className="">
-                              <Select
-                                type=""
-                                name=""
-                                id=""
-                                rows="6"
-                                placeholder="Transaction Name"
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Col lg={3}>
-                            <FormGroup className="">
-
-                              <Select
-                                type=""
-                                name=""
-                                id=""
-                                rows="6"
-                                placeholder="Transaction Number"
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Col lg={3}>
-                            <FormGroup className="">
-
-                              <Select
-                                type=""
-                                name=""
-                                id=""
-                                rows="6"
-                                placeholder="Transaction Code"
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Col lg={3}>
-                            <FormGroup className="">
-
-                              <Select
-                                type=""
-                                name=""
-                                id=""
-                                rows="6"
-                                placeholder="Transaction Date"
-                              />
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <div>
-                          <BootstrapTable
-                            selectRow={this.selectRowProp}
-                            search={false}
-                            options={this.options}
-                            data={[]}
-                            version="4"
-                            hover
-                            totalSize={0}
-                            className="product-table"
-                            trClassName="cursor-pointer"
-                            csvFileName="product_list.csv"
-                            ref={(node) => this.table = node}
-                          >
-                            <TableHeaderColumn
-                              isKey
-                              dataField="name"
-                              dataSort
-                            >
-                              Name
-                          </TableHeaderColumn>
-                            <TableHeaderColumn
-                              dataField="productCode"
-                              dataSort
-                            >
-                              Transaction Number
-                          </TableHeaderColumn>
-                            <TableHeaderColumn
-                              dataField="Transaction Code"
-                              dataSort
-                            >
-                              Transaction Code
-                          </TableHeaderColumn>
-                            <TableHeaderColumn
-                              dataField="vatPercentage"
-                              dataSort
-                            // dataFormat={this.vatCategoryFormatter}
-                            >
-                             Transaction Date
-                          </TableHeaderColumn> */}
-												{/* <TableHeaderColumn
-                              dataField="unitPrice"
-                              dataSort
-                            // dataFormat={this.vatCategoryFormatter}
-                            >
-                              Unit Price
-                          </TableHeaderColumn> */}
-												{/* </BootstrapTable>
-                        </div> */}
-												{/* <Row>
-                          <Col lg={12} className="mt-2">
-                            <FormGroup className="text-right">
-                              <Button type="button" color="primary" className="btn-square mr-4">
-                                <i className="fa fa-dot-circle-o"></i> Save
-                                    </Button>
-                            </FormGroup>
-                          </Col>
-                        </Row> */}
 											</div>
 										</Col>
 									</Row>
-								<div style={{display : this.state.showMessage === false ? '': 'none'}}>
-									<div className="table-responsive mt-4" style={{
-																		border:'1px solid grey',
-																	}}>
+									
+								<div style={{display : this.state.showMessage === false ? '': 'none',width:'80%',paddingLeft:'25%'}}>
+									<Row>
+									<Col lg={4}></Col>
+
+									<div className="table-responsive mt-4">
+										<Col>
 										{this.state.tableDataKey.length  > 0 ? (
 											<BootstrapTable
 												data={this.state.tableData}
 												keyField={this.state.tableDataKey[0]}
 											//	pagination
+										
 												options={this.options}
 											>
 												{this.state.tableDataKey.map((name, index) => (
@@ -631,7 +453,9 @@ class ImportBankStatement extends React.Component {
 												))}
 											</BootstrapTable>
 										) : null}
+										</Col>
 									</div>
+									</Row>
 									<Row style={{ width: '100%' }}>
 										<Col lg={12} className="mt-2">
 											<FormGroup className="text-right">

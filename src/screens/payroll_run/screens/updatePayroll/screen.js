@@ -392,7 +392,7 @@ calculatePayperioad=()=>{
 
 
 	getAllPayrollEmployee = () => {
-		this.props.createPayrollActions.getAllPayrollEmployee().then((res) => {
+		this.props.createPayrollActions.getAllPayrollEmployee2(this.state.payrollId).then((res) => {
 			if (res.status === 200) {
 				this.setState({
 					allPayrollEmployee: res.data

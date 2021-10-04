@@ -14,7 +14,7 @@ import {
 } from 'reactstrap';
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import { Formik } from 'formik';
+import { Field, Formik } from 'formik';
 import * as Yup from 'yup';
 
 import * as ImportBankStatementActions from './actions';
@@ -358,14 +358,19 @@ class ImportBankStatement extends React.Component {
 															<div 
 																	style={{
 																		border:'1px solid grey',
-																	padding:'90px'
+																	 padding:'90px'
 																	}}>
-																	
+																	<div className="text-center mb-3">
+																	<i class="fas fa-upload  fa-5x"></i>
+
+																	</div>
+																
 																		<input
 																			id="file"
 																			ref={(ref) => {
 																				this.uploadFile = ref;
 																			}}
+																			className='text-center'
 																			multiple
 																			// directory="" 
 																			// webkitdirectory=""
@@ -379,17 +384,20 @@ class ImportBankStatement extends React.Component {
 																				});
 																			}}
 																		/>
+
+															
 																	</div>
 																	
-																	<h6 style={{paddingLeft:'150px'}}>Download: <a  style={{fontWeight:'400'}}
+																	<h6 className="text-center mt-2" >Download: <a  style={{fontWeight:'400'}}
 																	 href="#" 	onClick={() => {
 																			this.export();
 																		}}>Sample Transaction File</a></h6>
 																	</Col>
+																	<Col lg={4}></Col>
 															</Row>
 															<Row className="mt-4">
 															<Col lg={4}></Col>
-																<Col>
+																<Col className="text-center">
 																	<Button
 																		color="primary"
 																		type="button"
@@ -408,7 +416,7 @@ class ImportBankStatement extends React.Component {
 																		 {strings.ParseFile}
 																	</Button>
 																</Col>
-																
+																<Col lg={4}></Col>
 															</Row>
 															<div 
 															style={{display: this.state.showMessage === true ? '': 'none'}}
@@ -426,18 +434,25 @@ class ImportBankStatement extends React.Component {
 										</Col>
 									</Row>
 									
-								<div style={{display : this.state.showMessage === false ? '': 'none',width:'80%',paddingLeft:'25%'}}>
+								<div style={{display : this.state.showMessage === false ? '': 'none',
+								// width:'80%',
+								
+								paddingLeft:'10%',
+								paddingRight:'10%'
+								}}>
 									<Row>
 									<Col lg={4}></Col>
 
-									<div className="table-responsive mt-4">
-										<Col>
+									<div className="table-responsive mt-4"
+									>
+										
 										{this.state.tableDataKey.length  > 0 ? (
+											<Col style={{border:"1px solid grey",}}>
 											<BootstrapTable
 												data={this.state.tableData}
 												keyField={this.state.tableDataKey[0]}
 											//	pagination
-										
+											    className="import-table"
 												options={this.options}
 											>
 												{this.state.tableDataKey.map((name, index) => (
@@ -446,14 +461,16 @@ class ImportBankStatement extends React.Component {
 														dataField={name}
 														dataAlign="center"
 														key={index}
+														className="table-header-bg"
 														columnClassName={this.columnClassNameFormat}
 													>
 														{name}
 													</TableHeaderColumn>
 												))}
 											</BootstrapTable>
+											</Col>
 										) : null}
-										</Col>
+										
 									</div>
 									</Row>
 									<Row style={{ width: '100%' }}>

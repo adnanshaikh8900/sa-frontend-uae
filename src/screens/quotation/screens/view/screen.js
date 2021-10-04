@@ -69,6 +69,20 @@ class ViewQuotation extends React.Component {
 	};
 
 	initializeData = () => {
+		this.props.supplierInvoiceDetailActions
+		.getCompanyDetails()
+		.then((res) => {
+			
+			if (res.status === 200) {
+				
+				this.setState(
+					{
+						companyData: res.data,							
+					},
+				
+				);
+			}
+		});
 		if (this.props.location.state && this.props.location.state.id) {
 			this.props.quotationDetailsAction
 				.getQuotationById(this.props.location.state.id)
@@ -106,6 +120,7 @@ class ViewQuotation extends React.Component {
 						);
 					}
 				});
+				
 		}
 	};
 
@@ -172,9 +187,10 @@ class ViewQuotation extends React.Component {
 									<RFQTemplate
 										QuotationData={QuotationData}
 										currencyData={currencyData}
+										
 										ref={(el) => (this.componentRef = el)}
 										totalNet={this.state.totalNet}
-										companyData={profile}
+										companyData={this.state && this.state.companyData ?this.state.companyData:''}
 									/>
 								</PDFExport>
 							</div>

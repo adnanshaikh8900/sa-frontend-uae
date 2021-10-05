@@ -16,6 +16,7 @@ import Select from 'react-select';
 
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { upperFirst } from 'lodash-es';
 
 import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import { toast } from 'react-toastify';
@@ -238,7 +239,8 @@ errors.mobileNumber =
 																option.target.value === '' ||
 																this.regExAlpha.test(option.target.value)
 															) {
-																props.handleChange('firstName')(option);
+																let option1=	upperFirst(option.target.value)
+																props.handleChange('firstName')(option1);
 															}
 														}}
 														value={props.values.firstName}
@@ -270,7 +272,8 @@ errors.mobileNumber =
 																option.target.value === '' ||
 																this.regExAlpha.test(option.target.value)
 															) {
-																props.handleChange('middleName')(option);
+																let option1=	upperFirst(option.target.value)
+																props.handleChange('middleName')(option1);
 															}
 														}}
 														value={props.values.middleName}
@@ -303,7 +306,8 @@ errors.mobileNumber =
 																option.target.value === '' ||
 																this.regExAlpha.test(option.target.value)
 															) {
-																props.handleChange('lastName')(option);
+																let option1=	upperFirst(option.target.value)
+																props.handleChange('lastName')(option1);
 															}
 														}}
 														value={props.values.lastName}
@@ -395,7 +399,8 @@ errors.mobileNumber =
 																option.target.value === '' ||
 																this.regExAlpha.test(option.target.value)
 															) {
-																props.handleChange('organizationName')(option);
+																let option1=	upperFirst(option.target.value)
+																props.handleChange('organizationName')(option1);
 															}
 														}}
 														value={props.values.organizationName}
@@ -649,7 +654,8 @@ errors.mobileNumber =
 																option.target.value === '' ||
 																this.regExAddress.test(option.target.value)
 															) {
-																props.handleChange('addressLine1')(option);
+																let option1=	upperFirst(option.target.value)
+																props.handleChange('addressLine1')(option1);
 															}
 														}}
 														value={props.values.addressLine1}
@@ -682,7 +688,8 @@ errors.mobileNumber =
 																option.target.value === '' ||
 																this.regExAddress.test(option.target.value)
 															) {
-																props.handleChange('addressLine2')(option);
+																let option1=	upperFirst(option.target.value)
+																props.handleChange('addressLine2')(option1);
 															}
 														}}
 														value={props.values.addressLine2}
@@ -715,7 +722,8 @@ errors.mobileNumber =
 																option.target.value === '' ||
 																this.regExAddress.test(option.target.value)
 															) {
-																props.handleChange('addressLine3')(option);
+																let option1=	upperFirst(option.target.value)
+																props.handleChange('addressLine3')(option1);
 															}
 														}}
 														value={props.values.addressLine3}
@@ -831,7 +839,8 @@ errors.mobileNumber =
 																option.target.value === '' ||
 																this.regExAlpha.test(option.target.value)
 															) {
-																props.handleChange('city')(option);
+																let option1=	upperFirst(option.target.value)
+																props.handleChange('city')(option1);
 															}
 														}}
 														placeholder={strings.Enter+strings.City}

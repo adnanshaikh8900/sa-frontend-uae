@@ -473,7 +473,12 @@ AmountReceived:"Amount Received",
 PaymentDate:"Payment Date",
 PaymentMode:"Payment Mode",
 DepositTo:"Deposit To",
+ReceivedThrough:"Received Through",
 RecordPayment:"Record Payment",
+
+//RecordSupplierPayment
+PaidThrough:"Paid Through",
+
 
 //Dropdown
 Send:"Send",

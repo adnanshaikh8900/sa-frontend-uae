@@ -468,8 +468,14 @@ AmountReceived:"المبلغ المستلم",
 PaymentDate:"تاريخ الدفع",
 PaymentMode:"وضع الدفع",
 DepositTo:"إيداع ل",
+ReceivedThrough:"وردت من خلال",
 DepositFrom:"إيداع من",
 RecordPayment:"سجل دفع",
+
+//RecordSupplierPayment
+PaidThrough:"تدفع عن طريق",
+
+
 
 //Dropdown
 Send:"إرسال",	

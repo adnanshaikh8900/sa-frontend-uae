@@ -17,6 +17,7 @@ class Currency extends React.Component {
 
 		return new Intl.NumberFormat('en', {
 			style: 'currency',
+			minimumFractionDigits:6,
 			currency: currencySymbolMain,
 		}).format(value);
 	}

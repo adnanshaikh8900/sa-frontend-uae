@@ -147,7 +147,7 @@ class DetailSupplierInvoice extends React.Component {
 			'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 		];
 		this.regEx = /^[0-9\b]+$/;
-		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
+		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,6}$$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 	}
 

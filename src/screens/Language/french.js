@@ -466,7 +466,12 @@ AmountReceived:"Montant reçu",
 PaymentDate:"Date de paiement",
 PaymentMode:"Mode de paiement",
 DepositTo:"Déposer à",
+ReceivedThrough:"Reçu par",
 RecordPayment:"Enregistrer le paiement",
+
+//RecordSupplierPayment
+PaidThrough:"Payé par",
+
 
 //Dropdown
 Send:"Envoyer",	

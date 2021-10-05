@@ -371,7 +371,7 @@ class ImportBankStatement extends React.Component {
 																				this.uploadFile = ref;
 																			}}
 																			className='text-center'
-																			multiple
+																			// multiple
 																			// directory="" 
 																			// webkitdirectory=""
 																			type="file"

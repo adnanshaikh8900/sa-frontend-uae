@@ -3,24 +3,33 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
 	Button,
-	Card,
-	CardBody,
 	Col,
-	Form,
 	FormGroup,
-	Label,
-	Row,
+	Card,
 	CardHeader,
+	CardBody,
+	Row,
+	TabContent,
+	TabPane,
+	Nav,
+	NavItem,
+	NavLink,
+	Form,
+	Label,
+
 } from 'reactstrap';
 import Select from 'react-select';
 import { AuthActions, CommonActions } from 'services/global';
 import 'react-toastify/dist/ReactToastify.css';
-
+import * as Yup from "yup";
+import 'react-datepicker/dist/react-datepicker.css'
+import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
 import './style.scss';
 import * as MigrationAction from './actions';
 import { selectOptionsFactory } from 'utils';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import { isDate } from 'lodash-es';
 
 
 
@@ -36,7 +45,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		authActions: bindActionCreators(AuthActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
-		migrationActions: bindActionCreators(MigrationAction,dispatch),
+		migrationActions: bindActionCreators(MigrationAction, dispatch),
 	};
 };
 
@@ -46,41 +55,49 @@ class Import extends React.Component {
 		this.state = {
 			initValue: {},
 			loading: false,
-			fileName:'',
+			fileName: '',
 			disabled: false,
-			product_list:[],
-			version_list:[],
-			productName:'',
-			version:'',
-			type:'',
+			product_list: [],
+			version_list: [],
+			productName: '',
+			version: '',
+			type: '',
 			upload: false,
 			migration: false,
-			migration_list:[],
-			
+			migration_list: [],
+			activeTab: new Array(4).fill('1'),
+			date:''
 		};
 	}
 
 	componentDidMount = () => {
 		this.getInitialData();
-		this.props.migrationActions.migrationProduct() 
-		.then((res) => {
-			if (res.status === 200) {
-				this.setState({ product_list: res.data });
-			}
-		})
-		.catch((err) => {
-			this.props.commonActions.tostifyAlert(
-				'error',
-				err && err.data ? err.data.message : 'Something Went Wrong',
-			);
-			this.setState({ loading: false });
-		});
+		this.props.migrationActions.migrationProduct()
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({ product_list: res.data });
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+				this.setState({ loading: false });
+			});
 	};
 
 	getInitialData = () => {
 	};
 
 
+	toggle = (tabPane, tab) => {
+		const newArray = this.state.activeTab.slice();
+		newArray[parseInt(tabPane, 10)] = tab;
+		this.setState({
+			activeTab: newArray,
+		});
+	};
 
 	handleChange = (key, val) => {
 		this.setState({
@@ -97,93 +114,128 @@ class Import extends React.Component {
 	togglePasswordVisiblity = () => {
 		const { isPasswordShown } = this.state;
 		this.setState({ isPasswordShown: !isPasswordShown });
-	  };
+	};
+
+	saveAccountStartDate=(data,resetForm)=> {
+	const date=	data.date;
+
+	if(isDate(date)){
+	this.props.migrationActions
+	.saveAccountStartDate(date)
+	.then((res) => {
+		if (res.status === 200) {
+			this.setState({
+				disabled: false,
+				upload: true,
+				migration: true,
+				migration_list: res.data
+			});
+			this.props.commonActions.tostifyAlert(
+				'success',
+				'Date saved Successfully.',
+			);
+			this.toggle(0, '2')
+		}
+	})
+	.catch((err) => {
+		this.setState({ disabled: false });
+		this.props.commonActions.tostifyAlert(
+			'error',
+			err && err.data ? err.data.message : 'Something Went Wrong',
+		);
+	});
+}else{
+	alert("please select Date")
+}
+	
+}
 
 	handleSubmit = (data) => {
-		this.setState({ loading: true, disabled: true});
-		if(this.state.type==="upload"){
-		let formData = new FormData();
-		
-		for (const file of this.uploadFile.files) {
-			formData.append('files', file);
-		  }
-		
-		this.props.migrationActions
-			.uploadFolder(formData)
-			.then((res) => {
-				if (res.status === 200) {
-					this.setState({ disabled: false,
-						upload: true,
-						migration: true,
-						migration_list: res.data
-					 });
-					this.props.commonActions.tostifyAlert(
-						'success',
-						'Files Uploaded Successfully.',
-					);
-				
-				}
-			})
-			.catch((err) => {
-				this.setState({ disabled: false });
-				this.props.commonActions.tostifyAlert(
-					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
-				);
-			});
-		}
-			else{
-				const {
-					productName,
-					version
-				} = data;
+		this.setState({ loading: true, disabled: true });
+		if (this.state.type === "upload") {
+			let formData = new FormData();
 
-				let formData = new FormData();
-				formData.append('name',productName ? productName : '');
-				formData.append('version', version ? version : '');
-				 
-				this.props.migrationActions
-					.migrate(formData)
-					.then((res) => {
-						this.setState({ disabled: false });
-						if (res.status === 200) {
-							this.setState({ 
-								migration_list: res.data
-							 });
-							this.props.commonActions.tostifyAlert(
-								'success',
-								'Migration Completed.',
-							);
-							
-						
-						}
-					})
-					.catch((err) => {
-						this.setState({ disabled: false });
-						this.props.commonActions.tostifyAlert(
-							'error',
-							err && err.data ? err.data.message : 'Something Went Wrong',
-						);
-					});
+			for (const file of this.uploadFile.files) {
+				formData.append('files', file);
 			}
-		
+
+			this.props.migrationActions
+				.uploadFolder(formData)
+				.then((res) => {
+					if (res.status === 200) {
+						this.setState({
+							disabled: false,
+							upload: true,
+							migration: true,
+							migration_list: res.data
+						});
+						this.props.commonActions.tostifyAlert(
+							'success',
+							'Files Uploaded Successfully.',
+						);
+
+					}
+				})
+				.catch((err) => {
+					this.setState({ disabled: false });
+					this.props.commonActions.tostifyAlert(
+						'error',
+						err && err.data ? err.data.message : 'Something Went Wrong',
+					);
+				});
+		}
+		else {
+			const {
+				productName,
+				version
+			} = data;
+
+			let formData = new FormData();
+			formData.append('name', productName ? productName : '');
+			formData.append('version', version ? version : '');
+
+			this.props.migrationActions
+				.migrate(formData)
+				.then((res) => {
+					this.setState({ disabled: false });
+					if (res.status === 200) {
+						this.setState({
+							migration_list: res.data
+						});
+						this.props.commonActions.tostifyAlert(
+							'success',
+							'Migration Completed.',
+						);
+
+
+					}
+				})
+				.catch((err) => {
+					this.setState({ disabled: false });
+					this.props.commonActions.tostifyAlert(
+						'error',
+						err && err.data ? err.data.message : 'Something Went Wrong',
+					);
+				});
+		}
+
 	};
 
 
 	versionlist = (productName) => {
-		this.props.migrationActions.getVersionListByPrioductName(productName) 
-		.then((res) => {
-			if (res.status === 200) {
-				this.setState({ version_list: res.data });
-			}
-		})
-		.catch((err) => {
-			this.props.commonActions.tostifyAlert(
-				'error',
-				err && err.data ? err.data.message : 'Something Went Wrong',
-			);
-			this.setState({ loading: false });
-		});;
+		this.props.migrationActions.getVersionListByPrioductName(productName)
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({ version_list: res.data });
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+				this.setState({ loading: false });
+			});;
 
 	}
 
@@ -196,9 +248,9 @@ class Import extends React.Component {
 	};
 
 	render() {
-		const { isPasswordShown,product_list,version_list } = this.state;
-		const { initValue,migration_list } = this.state;
-console.log(migration_list)
+		const { isPasswordShown, product_list, version_list } = this.state;
+		const { initValue, migration_list } = this.state;
+		console.log(migration_list)
 		const customStyles = {
 			control: (base, state) => ({
 				...base,
@@ -226,7 +278,7 @@ console.log(migration_list)
 									</Row>
 								</CardHeader>
 								<CardBody>
-									<Row>
+									{/* <Row>
 										<Col lg={12}>
 											<div>
 												<Formik
@@ -235,11 +287,7 @@ console.log(migration_list)
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values);
 													}}
-													// validationSchema={Yup.object().shape({
-													// 	templateId: Yup.string().required(
-													// 		'Select Template',
-													// 	),
-													// })}
+										
 												>
 													{(props) => (
 														<Form onSubmit={props.handleSubmit}>
@@ -247,7 +295,7 @@ console.log(migration_list)
 																<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="productName">
-																		{/* {strings.PlaceofSupply} */}Application Name
+																	Application Name
 																	</Label>
 																	<Select
 																		styles={customStyles}
@@ -309,7 +357,7 @@ console.log(migration_list)
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="version">
-																		{/* {strings.PlaceofSupply} */}Version
+																	Version
 																	</Label>
 																	<Select
 																		
@@ -374,8 +422,7 @@ console.log(migration_list)
 																				this.uploadFile = ref;
 																			}}
 																			multiple
-																			// directory="" 
-																			// webkitdirectory=""
+																		
 																			type="file"
 																			accept=".csv"
 																			onChange={(e) => {
@@ -455,11 +502,7 @@ console.log(migration_list)
 																			props.handleSubmit();
 																		}}
 																		
-																		// disabled={
-																		// 	this.state.fileName.length === 0
-																		// 		? true
-																		// 		: false
-																		// }
+											
 																	>
 																		<i className="fa fa-dot-circle-o mr-1"></i>
 																		Migrate
@@ -470,7 +513,534 @@ console.log(migration_list)
 												</Formik>
 											</div>
 										</Col>
-									</Row>
+									</Row> */}
+
+
+									{/* added by suraj */}
+									<Nav className="justify-content-center" tabs pills  >
+										<NavItem>
+											<NavLink
+												active={this.state.activeTab[0] === '1'}
+												onClick={() => {
+													this.toggle(0, '1');
+												}}
+											>
+												Step 1
+											</NavLink>
+										</NavItem>
+										<NavItem>
+											<NavLink
+												active={this.state.activeTab[0] === '2'}
+												onClick={() => {
+													this.toggle(0, '2');
+												}}
+											>
+												Step 2
+											</NavLink>
+										</NavItem>
+										<NavItem>
+											<NavLink
+												active={this.state.activeTab[0] === '3'}
+												onClick={() => {
+													this.toggle(0, '3');
+												}}
+											>
+												step 3
+											</NavLink>
+										</NavItem>
+										<NavItem>
+											<NavLink
+												active={this.state.activeTab[0] === '4'}
+												onClick={() => {
+													this.toggle(0, '4');
+												}}
+											>
+												step 4
+											</NavLink>
+										</NavItem>
+									</Nav>
+									<TabContent activeTab={this.state.activeTab[0]}>
+										<TabPane tabId="1">
+
+											<div className="create-employee-screen">
+												<div className="animated fadeIn">
+
+													<Formik
+														initialValues={this.state.initValue}
+														onSubmit={(values, { resetForm }) => {
+															this.saveAccountStartDate(values, resetForm)
+														}}
+														validate={(values) => {
+															let errors = {};
+															debugger
+															if (values.date==='') {
+																errors.date = 'Date is required';
+															}
+															if (values.date=== undefined) {
+																errors.date = 'Date is required';
+															}
+														
+															return errors;
+														}}
+														
+													
+															validationSchema={Yup.object().shape({
+															date: Yup.string().required(
+																'Date is required',
+															),
+														})}
+
+													>
+														{(props) => (
+
+															<Form onSubmit={props.handleSubmit}>
+
+																<FormGroup className="mb-3 mt-3 text-center" style={{ paddingLeft: "35%", paddingRight: "35%" }}>
+																	<Label htmlFor="date"><span className="text-danger">*</span>Date</Label>
+																	<DatePicker
+																		className={`form-control ${props.errors.date && props.touched.date ? "is-invalid" : ""}`}
+																		id="date"
+																		name="date"
+																		placeholderText={"Select Date"}
+																		showMonthDropdown
+																		showYearDropdown
+																		dateFormat="dd/MM/yyyy"
+																		dropdownMode="select"
+																		style={{textAlign:"center"}}
+																		selected={props.values.date}
+																		value={props.values.date}
+																		onChange={(value) => {
+																			props.handleChange("date")(value)
+																			this.setState({date:value})
+																		}}
+																	/>
+																	{props.errors.date && props.touched.date && (
+																		<div className="invalid-feedback">{props.errors.date}</div>
+																	)}
+																</FormGroup>
+																<div className="text-center" ><b>Note : </b><i> Please select date from which you need to migrate into SimpleAccounts.<br/> Please note all data prior to above date will be ignored.</i></div>
+
+																<Row>
+																	<Col lg={12} className="mt-5">
+
+
+																		<Button name="button" color="primary" className="btn-square pull-right"
+																			// onClick={() => {
+																			// 	// this.saveAccountStartDate(this.state.date)
+																			// 	props.handleSubmit()
+																			// }}
+																			onClick={() => {
+																				this.setState({ createMore: false }, () => {
+																					props.handleSubmit()
+																				})
+																			}}
+																		>
+																			Next<i class="far fa-arrow-alt-circle-right ml-1"></i>
+																		</Button>
+
+
+																	</Col>
+																</Row>
+															</Form>
+														)
+														}
+													</Formik>
+
+
+												</div>
+
+											</div>
+										</TabPane>
+										<TabPane tabId="2">
+											<Row>
+												<Col lg={12}>
+													<div>
+														<Formik
+															initialValues={initValue}
+															ref={this.formRef}
+															onSubmit={(values, { resetForm }) => {
+																this.handleSubmit(values);
+															}}
+														// validationSchema={Yup.object().shape({
+														// 	templateId: Yup.string().required(
+														// 		'Select Template',
+														// 	),
+														// })}
+														>
+															{(props) => (
+																<Form onSubmit={props.handleSubmit}>
+																	<Row>
+																		<Col lg={3}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="productName">
+																					{/* {strings.PlaceofSupply} */}Application Name
+																				</Label>
+																				<Select
+																					styles={customStyles}
+																					id="productName"
+																					name="productName"
+																					placeholder="Select Product"
+																					options={
+																						product_list
+																							? selectOptionsFactory.renderOptions(
+																								'label',
+																								'value',
+																								product_list,
+																								'Products list',
+
+																							)
+																							: []
+																					}
+																					value={
+																						product_list &&
+																						selectOptionsFactory
+																							.renderOptions(
+																								'label',
+																								'value',
+																								product_list,
+																								'Products list',
+																							)
+																							.find(
+																								(option) =>
+																									option.value ===
+																									+props.values.productName,
+																							)
+																					}
+																					className={
+																						props.errors.productName &&
+																							props.touched.productName
+																							? 'is-invalid'
+																							: ''
+																					}
+																					onChange={(option) => {
+																						if (option && option.value) {
+																							props.handleChange('productName')(
+																								option.label,
+																								this.versionlist(option.label)
+																							);
+																						} else {
+																							props.handleChange('productName')('');
+																						}
+																					}}
+																				/>
+																				{props.errors.productName &&
+																					props.touched.productName && (
+																						<div className="invalid-feedback">
+																							{props.errors.productName}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+
+																		<Col lg={3}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="version">
+																					{/* {strings.PlaceofSupply} */}Version
+																				</Label>
+																				<Select
+
+																					id="version"
+																					name="version"
+																					placeholder="Select Version"
+																					options={
+																						version_list
+																							? selectOptionsFactory.renderOptions(
+																								'label',
+																								'value',
+																								version_list,
+																								'version list',
+
+																							)
+																							: []
+																					}
+																					value={
+																						version_list &&
+																						selectOptionsFactory
+																							.renderOptions(
+																								'label',
+																								'value',
+																								version_list,
+																								'version',
+																							)
+																							.find(
+																								(option) =>
+																									option.value ===
+																									+props.values.version,
+																							)
+																					}
+																					className={
+																						props.errors.version &&
+																							props.touched.version
+																							? 'is-invalid'
+																							: ''
+																					}
+																					onChange={(option) =>
+																						props.handleChange('version')(
+																							option.label,
+																						)
+																					}
+																				/>
+																				{props.errors.version &&
+																					props.touched.version && (
+																						<div className="invalid-feedback">
+																							{props.errors.version}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+																	</Row>
+																	<div className="mt-4" >
+																		<Row >
+																			<Col lg={3}>
+																				<FormGroup className="">
+
+																					<input
+																						id="file"
+																						ref={(ref) => {
+																							this.uploadFile = ref;
+																						}}
+																						multiple
+																						// directory="" 
+																						// webkitdirectory=""
+																						type="file"
+																						accept=".csv"
+																						onChange={(e) => {
+																							this.setState({
+																								fileName: e.target.value
+																									.split('\\')
+																									.pop(),
+																							});
+																						}}
+																					/>
+
+																				</FormGroup>
+																			</Col>
+																			<Col>
+																				<Button
+
+																					color="primary"
+																					type="button"
+																					className="btn-square"
+																					onClick={() => {
+																						this.setState({ type: "upload" })
+																						props.handleSubmit();
+																					}}
+																					disabled={
+																						this.state.fileName.length === 0
+																							? true
+																							: false
+																					}
+																				>
+																					<i className="fa fa-dot-circle-o mr-1"></i>
+																					Upload
+																				</Button>
+																			</Col>
+																		</Row>
+																	</div>
+
+																	<Row>
+																		<div>
+																			<BootstrapTable
+																				selectRow={this.selectRowProp}
+																				search={false}
+																				options={this.options}
+																				data={
+																					migration_list && migration_list
+																						? migration_list
+																						: []
+																				}
+																				version="4"
+																				hover
+																				remote
+																				// tableStyle={{ width: '800px' }}
+																				className="m-4"
+																				trClassName="cursor-pointer"
+																				csvFileName="summary_list.csv"
+																				ref={(node) => (this.table = node)}
+																			>
+																				<TableHeaderColumn isKey dataField="fileName" dataSort className="table-header-bg">
+																					File name
+																				</TableHeaderColumn >
+																				<TableHeaderColumn dataField="recordCount" dataSort className="table-header-bg">
+																					Record Uploaded
+																				</TableHeaderColumn>
+																				<TableHeaderColumn dataField="recordsMigrated" dataSort className="table-header-bg">
+																					Record Migrated
+																				</TableHeaderColumn >
+																			</BootstrapTable>
+																		</div>
+
+																	</Row>
+																	<FormGroup>
+																		<Button
+																			color="primary"
+																			type="button"
+																			className="btn-square mt-4"
+																			onClick={() => {
+																				this.setState({ type: "migrate" })
+																				props.handleSubmit();
+																			}}
+
+																		// disabled={
+																		// 	this.state.fileName.length === 0
+																		// 		? true
+																		// 		: false
+																		// }
+																		>
+																			<i className="fa fa-dot-circle-o mr-1"></i>
+																			Migrate
+																		</Button>
+																	</FormGroup>
+																</Form>
+															)}
+														</Formik>
+													</div>
+												</Col>
+											</Row>
+											<Row>
+												<Col lg={12} className="mt-5">
+
+
+													<Button name="button" color="primary" className="btn-square pull-right"
+														onClick={() => {
+															this.toggle(0, '3')
+														}}
+
+													>
+														Next<i class="far fa-arrow-alt-circle-right ml-1"></i>
+													</Button>
+
+
+												</Col>
+											</Row>
+
+
+										</TabPane>
+										<TabPane tabId="3">
+											<div className="create-employee-screen">
+												<div className="animated fadeIn">
+													
+											<Formik
+												initialValues={this.state.initValue}
+												onSubmit={(values, { resetForm }) => {
+													this.handleSubmitForSalary(values, resetForm)
+												}}
+												validationSchema={Yup.object().shape({
+
+													// lastName: Yup.string()
+													// .required("Last Name is Required"),
+													// email: Yup.string()
+													// .email("Valid Email Required"),
+													// employeeDesignationId : Yup.string()
+													// .required("Designation is required"),
+													// salaryRoleId :  Yup.string()
+													// .required(" Employee Role is required"),
+													// date: Yup.date()
+													//     .required('date is Required')                   
+												})}
+											>
+												{(props) => (
+
+													<Form onSubmit={props.handleSubmit}>
+
+														<Row>
+															<Col lg={12} className="mt-5">
+
+
+																<Button name="button" color="primary" className="btn-square pull-right"
+																	onClick={() => {
+																		this.toggle(0, '4')
+																	}}
+
+																>
+																	Next<i class="far fa-arrow-alt-circle-right ml-1"></i>
+																</Button>
+
+
+															</Col>
+														</Row>
+													</Form>
+												)
+												}
+											</Formik>
+												</div>
+											</div>
+
+
+											{/* <div className="table-wrapper">
+                                        <FormGroup className="text-center">
+                                            <Button color="secondary" className="btn-square"
+                                                onClick={() => { this.toggle(0, '2') }}>
+                                                <i className="fa fa-ban"></i> Back
+                                      </Button>
+                                            <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
+                                                this.setState({ createMore: false }, () => {
+                                                    //   props.handleSubmit()
+                                                })
+                                            }}>
+                                                <i className="fa fa-dot-circle-o"></i> Save
+                                      </Button>
+                                            <Button name="button" color="primary" className="btn-square mr-3"
+                                                onClick={() => {
+                                                    this.toggle(0, '4')
+                                                }}>
+                                                <i class="far fa-arrow-alt-circle-left mr-1"></i> Next
+                                      </Button>
+
+                                        </FormGroup>
+                                    </div> */}
+										</TabPane>
+										<TabPane tabId="4">
+
+											<Formik
+												initialValues={this.state.initValue}
+												onSubmit={(values, { resetForm }) => {
+													this.handleSubmitForSalary(values, resetForm)
+												}}
+												validationSchema={Yup.object().shape({
+
+													// lastName: Yup.string()
+													// .required("Last Name is Required"),
+													// email: Yup.string()
+													// .email("Valid Email Required"),
+													// employeeDesignationId : Yup.string()
+													// .required("Designation is required"),
+													// salaryRoleId :  Yup.string()
+													// .required(" Employee Role is required"),
+													// date: Yup.date()
+													//     .required('date is Required')                   
+												})}
+											>
+												{(props) => (
+
+													<Form onSubmit={props.handleSubmit}>
+
+														<Row>
+															<Col lg={12} className="mt-5">
+
+
+																<Button name="button" color="primary" className="btn-square pull-right"
+																	onClick={() => {
+																		this.toggle(0, '1')
+																	}}
+
+																>
+																	Finish<i class="far fa-arrow-alt-circle-right ml-1"></i>
+																</Button>
+
+
+															</Col>
+														</Row>
+													</Form>
+												)
+												}
+											</Formik>
+
+										</TabPane>
+
+									</TabContent>
+									{/* added by suraj */}
+
 								</CardBody>
 							</Card>
 						</Col>

@@ -137,9 +137,9 @@ class RFQTemplate extends Component {
 								<h4 className="mb-1 ml-2"><b>{companyData && companyData.company
 											? companyData.company.companyName
 											: ''}</b></h4>
-								<div className="text-center"><h4>{QuotationData.quotationNumber}</h4></div>
-						<div className="text-center mt-1">{QuotationData.organisationName ? QuotationData.organisationName : QuotationData.customerName}</div>
-
+								<div className="mb-1 ml-2"><h4>{QuotationData.quotationNumber}</h4></div>
+						<div className="mb-1 ml-2">{QuotationData.organisationName ? QuotationData.organisationName : QuotationData.customerName}</div>
+						<h6 className="mb-1 ml-2">TRN: {QuotationData.vatRegistrationNumber}</h6>
 													<span className="mb-1 ml-2">{strings.Status}:  {this.renderQuotationStatus(QuotationData.status)}</span>
 
 													{/* <div

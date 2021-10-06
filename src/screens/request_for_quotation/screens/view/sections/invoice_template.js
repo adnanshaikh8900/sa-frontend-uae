@@ -116,8 +116,7 @@ class RFQTemplate extends Component {
 											: ''}</b></h4>
 								<h6 className="mb-1 ml-2">{RFQData.rfqNumber} </h6>
 								<h6 className="mb-1 ml-2">{RFQData.organisationName ? RFQData.organisationName : RFQData.supplierName}</h6>
-
-
+								<div className="mb-1 ml-2">TRN: {RFQData.vatRegistrationNumber}</div>
 													<span className="mb-1 ml-2">{strings.Status}:  {this.renderRFQStatus(status)}</span>
 
 													{/* <div

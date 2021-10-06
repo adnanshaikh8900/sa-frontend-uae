@@ -332,18 +332,17 @@ class UpdatePayroll extends React.Component {
 		
 		formData.append('payrollId',this.state.payrollId ? this.state.payrollId :'')
 
+		formData.append('payPeriod', this.state.payPeriod)
+		formData.append('employeeListIds', employeeListIds)
 		if(payrollSubject === undefined)
-		{formData.append('payrollSubject', this.state.payrollSubject)}
+		{formData.append('payrollSubject', this.state.payrollSubject ? this.state.payrollSubject :null)}
 		else 
 		{formData.append('payrollSubject', payrollSubject)}
 
-		formData.append('payPeriod', this.state.payPeriod)
-		formData.append('employeeListIds', employeeListIds)
-		
 		if(payrollApprover === undefined)
-		{formData.append('approverId', this.state.payrollApprover)}
-		else 
-		{formData.append('approverId',parseInt(payrollApprover) )}
+		{formData.append('approverId', this.state.payrollApprover ?this.state.payrollApprover :null)}
+		else if(payrollApprover!=="")
+		{formData.append('approverId',  parseInt(payrollApprover) )}
 		
 		formData.append('generatePayrollString', JSON.stringify(this.state.allPayrollEmployee));
 		 formData.append('salaryDate',payrollDate)

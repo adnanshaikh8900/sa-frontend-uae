@@ -2453,7 +2453,8 @@ validationCheck = (value) => {
                                                                                 .required("Account Holder Name is Required"),
                                                                             accountNumber: Yup.string()
                                                                             .required("Account Number is Required"),
-                                                                            
+                                                                            iban: Yup.string()
+                                                                            .required("IBAN is Required"),
                                                                                            
                                                                         })}
                                                                     >
@@ -2498,9 +2499,15 @@ validationCheck = (value) => {
                                                                                                         name="accountNumber"
                                                                                                         value={props.values.accountNumber}
                                                                                                         placeholder={strings.Enter+strings.AccountNumber}
-                                                                                                        onChange={(value) => {
-                                                                                                            props.handleChange('accountNumber')(value);
-
+                                                                                                        onChange={(option) => {
+                                                                                                            if (
+                                                                                                                option.target.value === '' ||
+                                                                                                                this.regExBoth.test(option.target.value)
+                                                                                                            ) {
+                                                                                                                props.handleChange('accountNumber')(
+                                                                                                                    option,
+                                                                                                                );
+                                                                                                            }
                                                                                                         }}
                                                                                                         className={props.errors.accountNumber && props.touched.accountNumber ? "is-invalid" : ""}
                                                                                                     />
@@ -2554,11 +2561,12 @@ validationCheck = (value) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select">{strings.IBANNumber}</Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span>{strings.IBANNumber}</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="iban"
                                                                                                         name="iban"
+                                                                                                        max="34"
                                                                                                         value={props.values.iban}
                                                                                                         placeholder={strings.Enter+strings.IBANNumber}
                                                                                                         onChange={(value) => {
@@ -2567,7 +2575,7 @@ validationCheck = (value) => {
                                                                                                         }}
                                                                                                         className={props.errors.iban && props.touched.iban ? "is-invalid" : ""}
                                                                                                     />
-                                                                                                    {props.errors.employeeCode && props.touched.employeeCode && (
+                                                                                                    {props.errors.iban && props.touched.iban && (
                                                                                                         <div className="invalid-feedback">{props.errors.iban}</div>
                                                                                                     )}
                                                                                                 </FormGroup>

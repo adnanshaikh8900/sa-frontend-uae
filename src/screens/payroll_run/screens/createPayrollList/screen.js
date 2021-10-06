@@ -724,7 +724,7 @@ calculatePayperioad=(startDate,endDate)=>{
 
 															<Form onSubmit={props.handleSubmit}>
 																<Row>
-																	<Col lg={3}>
+																	<Col >
 																		<FormGroup>
 																			<Label htmlFor="payrollSubject">	<span className="text-danger">*</span> Payroll Subject</Label>
 																			<Input
@@ -783,7 +783,7 @@ calculatePayperioad=(startDate,endDate)=>{
 																				)}
 																		</FormGroup>
 																	</Col>
-																	<Row >
+																
 
 																	<Col  >
 																	<Label htmlFor="date">
@@ -901,9 +901,9 @@ calculatePayperioad=(startDate,endDate)=>{
 																	</Col>
 
 																	
-																	</Row>
 																	
-																	<Col lg={3}>	<Label htmlFor="due_date">
+																	
+																	<Col >	<Label htmlFor="due_date">
 																				{/* <span className="text-danger">*</span> */}
 																				Payroll Approver
 																			</Label>

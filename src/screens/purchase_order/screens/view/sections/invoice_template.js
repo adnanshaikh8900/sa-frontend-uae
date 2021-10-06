@@ -145,8 +145,7 @@ class RFQTemplate extends Component {
 											: ''}</b></h4>
 								<h6 className="mb-1 ml-2">{POData.poNumber} </h6>
 								<h6 className="mb-1 ml-2">{POData.organisationName ? POData.organisationName : POData.supplierName}</h6>
-
-
+								<h6 className="mb-1 ml-2">TRN: {POData.vatRegistrationNumber}</h6>
 													<span className="mb-1 ml-2">{strings.Status}:  {this.renderRFQStatus(status)}</span>
 
 													{/* <div

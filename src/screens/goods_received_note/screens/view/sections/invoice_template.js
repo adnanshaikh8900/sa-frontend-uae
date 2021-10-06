@@ -123,6 +123,7 @@ class RFQTemplate extends Component {
 											: ''}</b></h4>
 								<h6 className="mb-1 ml-2">{RFQData.grnNumber} </h6>
 								<h6 className="mb-1 ml-2">{RFQData.organisationName ? RFQData.organisationName : RFQData.supplierName}</h6>
+								<h6 className="mb-1 ml-2">TRN: {RFQData.vatRegistrationNumber}</h6>
 								<h6 className="mb-1 ml-2">	{strings.ReceiveDate } :	{moment(RFQData.grnReceiveDate).format(
 									'DD MMM YYYY',
 								)}</h6>

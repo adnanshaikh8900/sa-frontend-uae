@@ -1613,7 +1613,7 @@ min="0"
 																</Col>
 															</Row>
 															<Row>
-																<Col lg={12}>
+																<Col lg={8}>
 																	{props.errors.lineItemsString &&
 																		props.touched.lineItemsString &&
 																		typeof props.errors.lineItemsString ===
@@ -1701,7 +1701,7 @@ min="0"
 																		>
 																			{strings.POQUANTITY}
 																		</TableHeaderColumn>
-																		<TableHeaderColumn
+																		{/* <TableHeaderColumn
 																			dataField="unitPrice"
 																			dataFormat={(cell, rows) =>
 																				this.renderUnitPrice(cell, rows, props)
@@ -1725,7 +1725,7 @@ min="0"
 																			formatExtraData={universal_currency_list}
 																		>
 																			{strings.SUBTOTAL}
-																		</TableHeaderColumn>
+																		</TableHeaderColumn> */}
 																	</BootstrapTable>
 																</Col>
 															</Row>
@@ -1749,91 +1749,12 @@ min="0"
 																	</FormGroup>
 																
 																</Col>
-																<Col lg={4}>
-																		<div className="">
-																		
-																			<div className="total-item p-2">
-																				<Row>
-																					<Col lg={6}>
-																						<h5 className="mb-0 text-right">
-																							 {strings.TotalNet}
-																						</h5>
-																					</Col>
-																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
-																						{/* {universal_currency_list[0] && (
-																						<Currency
-																						value=	{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						currencySymbol={
-																						universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
-																							/>
-																							)} */}
-																							{this.state.supplier_currency_symbol} &nbsp;
-																							{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						</label>
-																					</Col>
-																				</Row>
-																			</div>
-																			<div className="total-item p-2">
-																				<Row>
-																					<Col lg={6}>
-																						<h5 className="mb-0 text-right">
-																							{strings.TotalVat}
-																						</h5>
-																					</Col>
-																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
-																						{/* {universal_currency_list[0] && (
-																						<Currency
-																						value=	{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						currencySymbol={
-																						universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
-																							/>
-																							)} */}
-																							{this.state.supplier_currency_symbol} &nbsp;
-																							{initValue.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						</label>
-																					</Col>
-																				</Row>
-																			</div>
-																			<div className="total-item p-2">
-																				<Row>
-																					<Col lg={6}>
-																						<h5 className="mb-0 text-right">
-																							 {strings.Total}
-																						</h5>
-																					</Col>
-																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
-																						{/* {universal_currency_list[0] && (
-																						<Currency
-																						value=	{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						currencySymbol={
-																						universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
-																							/>
-																							)} */}
-																							{this.state.supplier_currency_symbol} &nbsp;
-																							{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						</label>
-																					</Col>
-																				</Row>
-																			</div>
-																		</div>
-																	</Col>
+															
 																</Row>
 															)}
 															<Row>
 																<Col
-																	lg={12}
+																	lg={8}
 																	className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
 																>
 																	<FormGroup>

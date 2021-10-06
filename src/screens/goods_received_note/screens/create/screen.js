@@ -1722,7 +1722,11 @@ console.log(this.state.data)
 																	<i className="fa fa-plus"></i> {strings.AddASupplier}
 																</Button>
 															</Col>
-															<Col lg={3}>
+														
+															
+														
+														</Row>
+														<Row>	<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
 																		<span className="text-danger">*</span>
@@ -1778,12 +1782,10 @@ console.log(this.state.data)
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>
-															
-														
-														</Row>
+															</Col></Row>
 														<hr />
 														<Row>
+															
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
@@ -1924,7 +1926,7 @@ console.log(this.state.data)
 															</Col>
 														</Row>
 														<Row>
-															<Col lg={12}>
+															<Col lg={8}>
 																{props.errors.lineItemsString &&
 																	props.errors.lineItemsString === 'string' && (
 																		<div
@@ -2007,7 +2009,7 @@ console.log(this.state.data)
 																	>
 																		Received Quantity
 																	</TableHeaderColumn> */}
-																	<TableHeaderColumn
+																	{/* <TableHeaderColumn
 																	width="12%"
 																		dataField="unitPrice"
 																		dataFormat={(cell, rows) =>
@@ -2044,7 +2046,7 @@ console.log(this.state.data)
 																		formatExtraData={universal_currency_list}
 																	>
 																		{strings.SUBTOTAL}
-																	</TableHeaderColumn>
+																	</TableHeaderColumn> */}
 																</BootstrapTable>
 															</Col>
 														</Row>
@@ -2125,99 +2127,10 @@ console.log(this.state.data)
 																			</FormGroup>
 																</Col>
 
-																<Col lg={4}>
-																	<div className="">
-																	
-																		<div className="total-item p-2">
-																			<Row>
-																				<Col lg={6}>
-																					<h5 className="mb-0 text-right">
-																					{strings.TotalNet}
-																					</h5>
-																				</Col>
-																				<Col lg={6} className="text-right">
-																					<label className="mb-0">
-																						{/* {universal_currency_list[0] && (
-																							<Currency
-																								value={initValue.total_net.toFixed(
-																									2,
-																								)}
-																								currencySymbol={
-																									universal_currency_list[0]
-																										? universal_currency_list[0]
-																												.currencyIsoCode
-																										: 'USD'
-																								}
-																							/>
-																						)}*/}
-																						{this.state.supplier_currency_symbol} &nbsp;
-																						{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																					</label>
-																				</Col>
-																			</Row>
-																		</div>
-																		<div className="total-item p-2">
-																			<Row>
-																				<Col lg={6}>
-																					<h5 className="mb-0 text-right">
-																					{strings.TotalVat}
-																					</h5>
-																				</Col>
-																				<Col lg={6} className="text-right">
-																					<label className="mb-0">
-																						{/* {universal_currency_list[0] && (
-																							<Currency
-																								value={initValue.invoiceVATAmount.toFixed(
-																									2,
-																								)}
-																								currencySymbol={
-																									universal_currency_list[0]
-																										? universal_currency_list[0]
-																												.currencyIsoCode
-																										: 'USD'
-																								}
-																							/>
-																						)}*/}
-																						{this.state.supplier_currency_symbol} &nbsp; 
-																						{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																					</label>
-																				</Col>
-																			</Row>
-																		</div>
-																		<div className="total-item p-2">
-																		<Row>
-																				<Col lg={6}>
-																					<h5 className="mb-0 text-right">
-																					{strings.Total}
-																					</h5>
-																				</Col>
-																				<Col lg={6} className="text-right">
-																					<label className="mb-0">
-																						{/* {universal_currency_list[0] && (
-																							<Currency
-																								value={initValue.totalAmount.toFixed(
-																									2,
-																								)}
-																								currencySymbol={
-																									universal_currency_list[0]
-																										? universal_currency_list[0]
-																												.currencyIsoCode
-																										: 'USD'
-																								}
-																							/>
-																						)} */}
-																					{this.state.supplier_currency_symbol} &nbsp;  
-																						{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																					</label>
-																				</Col>
-																			</Row>
-																		</div>
-																	</div>
-																</Col>
 															</Row>
 														) : null}
 														<Row>
-															<Col lg={12} className="mt-5">
+															<Col lg={8} className="mt-5">
 																<FormGroup className="text-right">
 																<Button
 																		type="button"

@@ -168,13 +168,13 @@ class RFQTemplate extends Component {
 									<th className="center" style={{ padding: '0.5rem' }}>
 										{strings.Quantity }
 									</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
+									{/* <th style={{ padding: '0.5rem', textAlign: 'right' }}>
 										{strings.UnitCost }
 									</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Vat}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 										{strings.Total }
-									</th>
+									</th> */}
 								</tr>
 							</thead>
 							<tbody className=" table-bordered table-hover">
@@ -186,32 +186,18 @@ class RFQTemplate extends Component {
 												<td className="center">{index + 1}</td>
 												<td>{item.productName}</td>
 												<td>{item.description}</td>
-												<td>{item.quantity}</td>
-												<td style={{ textAlign: 'right', width: '20%' }}>
-													{/* <Currency
-														value={item.unitPrice}
-														currencySymbol={
-															currencyData[0]
-																? currencyData[0].currencyIsoCode
-																: 'USD'
-														}
-													/> */}
+												<td>{item.grnReceivedQuantity}</td>
+												{/* <td style={{ textAlign: 'right', width: '20%' }}>
+													
 													{RFQData.currencyIsoCode + " " +item.unitPrice}
 												</td>
 												<td
 													style={{ textAlign: 'right' }}
 												>{`${item.vatPercentage}%`}</td>
 												<td style={{ textAlign: 'right' }}>
-													{/* <Currency
-														value={item.subTotal}
-														currencySymbol={
-															currencyData[0]
-																? currencyData[0].currencyIsoCode
-																: 'USD'
-														}
-													/> */}
+												
 													{RFQData.currencyIsoCode + " " +item.subTotal}
-												</td>
+												</td> */}
 											</tr>
 										);
 									})}
@@ -228,223 +214,29 @@ class RFQTemplate extends Component {
 								<div
 								style={{
 									width: '200%',
-									display: 'flex',
-									flexDirection: 'column',
-									justifyContent: 'center',
+									height:'70px',
+									
 								}}
 							>
-								<div className="pb-2">{strings.AmountInWords }:<br/>
+								{/* <div className="pb-2">{strings.AmountInWords }:<br/>
 									<b><u> {RFQData.totalAmount ? upperCase(RFQData.currencyName + " " +(toWords.convert(RFQData.totalAmount))+" ONLY") : " -" }
-									{/* <b> {parseInt(RFQData.dueAmount)} */}
+								
 									</u></b></div>
 								<div className="pb-2">{strings.Vat+" "+strings.AmountInWords }:
 										<br/>
 									<b> {RFQData.totalVatAmount ? (upperCase(RFQData.currencyName + " " +(toWords.convert(RFQData.totalVatAmount))+" ONLY")) : " -" }</b>
-									{/* <b> {RFQData.totalVatAmount}</b> */}
-								</div>
-							<div style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>
+								
+								</div> */}
+						
 
 								<h6 className="mb-0 pt-2">
 									<b>{strings.Notes }:</b>
 								</h6>
 								<h6 className="mb-0">{RFQData.notes}</h6>
-							</div>
+						
 							
 							</div>
-							<div
-								style={{
-									width: '100%',
-									display: 'flex',
-									justifyContent: 'space-between',
-								}}
-							>
-								<div style={{ width: '100%' }}>
-								<Table className="table-clear cal-table">
-									<tbody>
-										<tr >
-											<td style={{ width: '60%' }}>
-												<strong>{strings.SubTotal }</strong>
-											</td>
-											<td
-												style={{
-													display: 'flex',
-													justifyContent: 'space-between',
-												}}
-											>
-												<span style={{ marginLeft: '2rem' }}></span>
-												<span>{RFQData.currencyIsoCode + " " +totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) }
-													{/* {totalNet ? (
-														<Currency
-															value={totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													) : (
-														<Currency
-															value={0}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													)} */}
-												</span>
-											</td>
-										</tr>
-										<tr >
-											{/* <td style={{ width: '60%' }}>
-												<strong>
-													Discount
-													{RFQData.discountPercentage
-														? `(${RFQData.discountPercentage}%)`
-														: ''}
-												</strong>
-											</td>
-											<td
-												style={{
-													display: 'flex',
-													justifyContent: 'space-between',
-												}}
-											>
-												<span style={{ marginLeft: '2rem' }}></span>
-												<span>
-													{RFQData.discount ? (
-														<Currency
-															value={RFQData.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													) : (
-														<Currency
-															value={0}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													)}
-												</span>
-											</td> */}
-										</tr>
-										<tr >
-											<td style={{ width: '60%' }}>
-												<strong>{strings.Vat }</strong>
-											</td>
-											<td
-												style={{
-													display: 'flex',
-													justifyContent: 'space-between',
-												}}
-											>
-												<span style={{ marginLeft: '2rem' }}></span>
-												<span>
-												{RFQData.totalVatAmount?RFQData.currencyIsoCode + " " +RFQData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0}
-													{/* {RFQData.totalVatAmount ? (
-														<Currency
-															value={RFQData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													) : (
-														<Currency
-															value={0}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													)} */}
-												</span>
-											</td>
-										</tr>
-										<tr >
-											<td style={{ width: '60%' }}>
-												<strong>{strings.Total }</strong>
-											</td>
-											<td
-												style={{
-													display: 'flex',
-													justifyContent: 'space-between',
-												}}
-											>
-												<span style={{ marginLeft: '2rem' }}></span>
-												<span>
-												{RFQData.totalAmount?RFQData.currencyIsoCode + " " +RFQData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 }
-													{/* {RFQData.totalAmount ? (
-														<Currency
-															value={RFQData.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													) : (
-														<Currency
-															value={0}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													)} */}
-												</span>
-											</td>
-										</tr>
-										<tr style={{ background: '#f2f2f2' }}>
-											{/* <td style={{ width: '60%' }}>
-												<strong>Balance Due</strong>
-											</td>
-											<td>
-												<b
-													style={{
-														fontWeight: '600',
-														display: 'flex',
-														justifyContent: 'space-between',
-													}}
-												>
-													<span style={{ marginLeft: '2rem' }}></span>
-													<span>
-														{RFQData.dueAmount ? (
-															<Currency
-																value={RFQData.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																currencySymbol={
-																	currencyData[0]
-																		? currencyData[0].currencyIsoCode
-																		: 'USD'
-																}
-															/>
-														) : (
-															<Currency
-																value={0}
-																currencySymbol={
-																	currencyData[0]
-																		? currencyData[0].currencyIsoCode
-																		: 'USD'
-																}
-															/>
-														)}
-													</span>
-												</b>
-											</td> */}
-										</tr>
-									</tbody>
-								</Table>
-								</div>		
-							</div>
+						
 						</div>												
 					</CardBody>
 				</Card>

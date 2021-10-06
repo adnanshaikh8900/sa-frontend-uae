@@ -296,7 +296,7 @@ class RFQTemplate extends Component {
 								}}
 							>
 								<div className="pb-2">{strings.AmountInWords }:<br/>
-									<b> <u>{POData.totalVatAmount ? upperCase(POData.currencyName + " " +(toWords.convert(POData.totalAmount))+" ONLY") : " -"}
+									<b> <u>{POData.totalAmount ? upperCase(POData.currencyName + " " +(toWords.convert(POData.totalAmount))+" ONLY") : " -"}
 									{/* <b> {parseInt(POData.dueAmount)} */}
 									</u></b></div>
 								<div className="pb-2">{strings.Vat+" "+strings.AmountInWords }:

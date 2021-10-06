@@ -35,6 +35,7 @@ import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { AddEmployeesModal } from './sections';
 import moment from 'moment';
+import { DateRangePicker } from 'react-dates';
 
 
 const mapStateToProps = (state) => {
@@ -94,12 +95,13 @@ class UpdatePayroll extends React.Component {
 				onSelectAll: this.onSelectAll,
 			},
 			payrollDate: new Date(),
-			 startDate: new Date(date.getFullYear(), date.getMonth(), 1),
-			 endDate:  new Date(date.getFullYear(), date.getMonth() + 1, 0),
+			//  startDate: new Date(date.getFullYear(), date.getMonth(), 1),
+			//  endDate:  new Date(date.getFullYear(), date.getMonth() + 1, 0),
+			startDate: '',
+			endDate: '',
 			 payPeriod : '',
-			 apiSelector:''
-			// startDate: '',
-			// endDate:''
+			 apiSelector:'',
+			 focusedInput:null
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -115,7 +117,8 @@ class UpdatePayroll extends React.Component {
 			onPageChange: this.onPageChange,
 			sortName: '',
 			sortOrder: '',
-			onSortChange: this.sortColumn
+			onSortChange: this.sortColumn,
+			
 		}
 
 	}
@@ -136,13 +139,20 @@ class UpdatePayroll extends React.Component {
 			this.proceed(payroll_id);
 		}
 		this.tableApiCallsOnStatus();
-     this.calculatePayperioad();
+		this.calculatePayperioad(this.state.startDate ,this.state.endDate);
 	};
-calculatePayperioad=()=>{
-	let diff=	Math.abs(parseInt((this.state.startDate - this.state.endDate) / (1000 * 60 * 60 * 24), 10))+1	
-    this.setState({payPeriod:diff});
-	console.log(this.state.payPeriod,"payPeriod",diff)
-}
+	calculatePayperioad=(startDate,endDate)=>{
+		
+		// let diffDays=	Math.abs(parseInt((this.state.startDate - this.state.endDate) / (1000 * 60 * 60 * 24), 10))+1
+		const diffTime = Math.abs(startDate-endDate);
+		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))+1; 
+		
+		this.setState({paidDays:diffDays});
+		this.getAllPayrollEmployee()
+		console.log(diffTime + " milliseconds");
+		console.log(diffDays + " days");
+		console.log(this.state.paidDays,"paid-Days",diffDays)
+	}
 	proceed = (payroll_id) => {
 		
 		this.props.createPayrollActions.getPayrollById(payroll_id).then((res) => {
@@ -174,7 +184,13 @@ calculatePayperioad=()=>{
 				)
 				this.initializeData();
 				this.tableApiCallsOnStatus();
-
+				let payPeriodString=this.state.payPeriod;
+				let dateArray=payPeriodString.split('-')
+				this.setState({
+					startDate: moment(dateArray[0]),
+					endDate:moment(dateArray[1])
+				})
+				
 
 			}
 		}).catch((err) => {
@@ -305,7 +321,7 @@ calculatePayperioad=()=>{
 		let employeeListIds=this.state.selectedRows ? this.state.selectedRows :'';
 		
 		let diff=	Math.abs(parseInt((startDate - endDate) / (1000 * 60 * 60 * 24), 10))+1	
-		let string =moment(startDate).format('DD/MM/YYYY')+'-'+moment(endDate).format('DD/MM/YYYY')
+		let string =moment(this.state.startDate).format('MM/DD/YYYY')+'-'+moment(this.state.endDate).format('MM/DD/YYYY')
 		// this.setState({payPeriod:diff});
 		this.setState({payPeriod:string});
 		const formData = new FormData();
@@ -336,7 +352,7 @@ calculatePayperioad=()=>{
 			// .createPayroll(JSON.stringify(employeeListIds),payrollSubject,this.state.payPeriod,JSON.stringify(this.state.allPayrollEmployee),payrollDate)
 			.then((res) => {
 				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert('success', 'Payroll created Successfully')				
+					this.props.commonActions.tostifyAlert('success', 'Payroll updated Successfully')				
 					this.tableApiCallsOnStatus()
 					this.props.history.push(`/admin/payroll/payrollrun`);
 					// resetForm(this.state.initValue)
@@ -352,7 +368,7 @@ calculatePayperioad=()=>{
 			// .createPayroll(JSON.stringify(employeeListIds),payrollSubject,this.state.payPeriod,JSON.stringify(this.state.allPayrollEmployee),payrollDate)
 			.then((res) => {
 				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert('success', 'Payroll created And Submitted Successfully')				
+					this.props.commonActions.tostifyAlert('success', 'Payroll updated And Submitted Successfully')				
 					this.tableApiCallsOnStatus()
 					this.props.history.push(`/admin/payroll/payrollrun`);
 					// resetForm(this.state.initValue)
@@ -363,7 +379,10 @@ calculatePayperioad=()=>{
 		}
 	}	
 	}
-
+	handleDatesChange = ({ startDate, endDate }) => {
+		this.setState({startDate:startDate,endDate:endDate})
+		this.calculatePayperioad(startDate, endDate)
+		  };
 	setDate = (props, value) => {
 		const { term } = this.state;
 		const val = term ? term.value.split('_') : '';
@@ -498,13 +517,28 @@ calculatePayperioad=()=>{
 
 
 														if (row.id === data.id) {
+															if(value>data.lopDay)
+														{																
 															data.lopDay = value;
-															data.noOfDays = 30 - value
+															data.noOfDays = data.noOfDays - 1
 															data.grossPay = Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2)
-															data.netPay = Number(((data.grossPay / 30) * (30 - value))).toFixed(2) - (data.deduction || 0)
+															data.netPay = Number(((data.grossPay / 30) * (data.lopDay))).toFixed(2) - (data.deduction || 0)
+														
 															data.payrollId = this.state.payroll_id
 															data.salaryDate = this.state.payrollDate
 														}
+														else	
+															{	
+																data.lopDay = value;
+																data.noOfDays = data.noOfDays + 1
+																data.grossPay = Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2)
+																data.netPay = Number(((data.grossPay / 30) * (data.lopDay))).toFixed(2) - (data.deduction || 0)
+															
+																data.payrollId = this.state.payroll_id
+																data.salaryDate = this.state.payrollDate
+															}
+														}
+														
 														return data
 
 													})
@@ -678,17 +712,19 @@ calculatePayperioad=()=>{
 		if (isSelected) {
 			tempList = Object.assign([], this.state.selectedRows);
 			tempList1 = Object.assign([], this.state.selectedRows1);
-			tempList.push(row.id);
+			tempList.push(row.empId);
 			tempList1.push(row);
 		} else {
 			this.state.selectedRows.map((item) => {
-				if (item !== row.id) {
+				if (item !== row.empId) {
 					tempList.push(item);
 					tempList1.push(item);
 				}
 				return item;
 			});
 		}
+		
+
 		this.setState({
 			selectedRows: tempList,
 			selectedRows1: tempList1,
@@ -700,7 +736,7 @@ calculatePayperioad=()=>{
 		let tempList1 = [];
 		if (isSelected) {
 			rows.map((item) => {
-				tempList.push(item.id);
+				tempList.push(item.empId);
 				tempList1.push(item);
 				return item;
 			});
@@ -836,11 +872,16 @@ calculatePayperioad=()=>{
 																	<div style={{display: "flex"}}>
 																	{/* <FormGroup className="mt-2"><i class="far fa-calendar-alt mt-1"></i>&nbsp;</FormGroup> */}
 																	<FormGroup >
-																			{/* <Label htmlFor="date">
-																				<span className="text-danger">*</span>
-																				Start Date
-																			</Label> */}	
-																			<DatePicker
+																				<DateRangePicker
+																				startDate={this.state.startDate}
+																				startDateId="tata-start-date"
+																				endDate={this.state.endDate}
+																				endDateId="tata-end-date"
+																				onDatesChange={this.handleDatesChange}
+																				focusedInput={this.state.focusedInput}
+																				onFocusChange={(option)=>{this.setState({focusedInput:option})}}
+																				/>																							
+																			{/* <DatePicker
 																			autoComplete="Off"
 																				id="date"
 																				name="startDate"
@@ -858,51 +899,15 @@ calculatePayperioad=()=>{
 
 																				onChange={(value) => {
 																					props.handleChange('startDate')(value);
-
+																					this.calculatePayperioad(value,props.values.endDate)
 																				}}
-																			/>
+																			/> */}
 																			{props.errors.startDate &&
 																				props.touched.startDate && (
 																					<div className="invalid-feedback">
 																						{props.errors.startDate}
 																					</div>
 																				)}
-																		</FormGroup>
-																		
-																		<FormGroup >	<div className='text-center ml-1 mr-1'>_</div></FormGroup>
-																		{/* <FormGroup className="mt-2">&nbsp;<i class="far fa-calendar-alt "></i>&nbsp;</FormGroup> */}
-																		<FormGroup >
-																			{/* <Label htmlFor="due_date">
-																				<span className="text-danger">*</span>
-																				End Date
-																			</Label> */}
-																			<DatePicker
-																				autoComplete="Off"
-																				id="date"
-																				name="endDate"
-																				className={`form-control ${props.errors.endDate &&
-																					props.touched.endDate
-																					? 'is-invalid'
-																					: ''
-																					}`}
-																					placeholderText={"Select End Date"}
-																				selected={props.values.endDate}
-																				showMonthDropdown
-																				showYearDropdown
-																				dropdownMode="select"
-																				dateFormat="dd/MM/yyyy"
-
-																				onChange={(value) => {
-																					props.handleChange('endDate')(value);
-																				}}
-																			/>
-																			{props.errors.endDate &&
-																				props.touched.endDate && (
-																					<div className="invalid-feedback">
-																						{props.errors.endDate}
-																					</div>
-																				)}
-
 																		</FormGroup>
 
 																	</div>
@@ -992,6 +997,7 @@ calculatePayperioad=()=>{
 																<Row>
 
 																	<FormGroup className="pull-left mt-3">
+																		 {/* add and remove */}
 																		<Button type="button" color="primary" className="btn-square ml-3 mr-1 "
 																			disabled={this.disableForAddButton() ? true : false}
 																			onClick={() => {

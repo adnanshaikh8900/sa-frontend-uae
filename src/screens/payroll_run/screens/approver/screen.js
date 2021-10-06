@@ -946,28 +946,7 @@ class PayrollApproverScreen extends React.Component {
 														<Form onSubmit={props.handleSubmit}>
 
 															<Row className="mb-4 ">
-																<Col>
-																
-
-																	{this.state.status && this.state.status!=="Approved" ? 
-																		
-																		(
-																			<Button
-																			type="button"
-																			color="primary"
-																			className="btn-square mt-4 "
-																			onClick={() =>
-																				this.approveAndRunPayroll()
-																			}
-																		>
-																			<i class="fas fa-bullseye mr-1"></i>
-																			Approve & Run Payroll
-																		</Button>
-																		)
-																		:''
-																		
-																		}
-																</Col>
+															
 																<Col>
 																
 																	<FormGroup>
@@ -997,16 +976,6 @@ class PayrollApproverScreen extends React.Component {
 																
 																:''	
 																}
-																		
-																			<Button
-																		color="secondary"
-																		className="btn-square pull-right  mt-4"
-																		onClick={() => {
-																			this.props.history.push('/admin/payroll/payrollrun')
-																		}}
-																	>
-																		<i className="fa fa-ban"></i> {strings.Cancel}
-																	</Button>
 																		{props.errors.comment && props.touched.comment && (
 																			<div className="invalid-feedback">
 																				{props.errors.comment}
@@ -1017,7 +986,7 @@ class PayrollApproverScreen extends React.Component {
 																		(
 																			<Button
 																			color="primary"
-																			className="btn-square mt-4 pull-right"
+																			className="btn-square mt-4 "
 																			// onClick={}
 																			onClick={() =>
 																				this.rejectPayroll()
@@ -1037,6 +1006,41 @@ class PayrollApproverScreen extends React.Component {
 
 
 																</Col>
+
+																<Col>
+																<ButtonGroup className="mt-5 pull-right ">
+																{this.state.status && this.state.status!=="Approved" ? 
+																	
+																	(
+																		<Button
+																		type="button"
+																		color="primary"
+																		className="btn-square mt-5 pull-right "
+																		onClick={() =>
+																			this.approveAndRunPayroll()
+																		}
+																	>
+																		<i class="fas fa-bullseye mr-1"></i>
+																		Approve & Run Payroll
+																	</Button>
+																	)
+																	:''
+																	
+																	}
+																<Button
+																		color="secondary"
+																		className="btn-square  pull-right   mt-5"
+																		onClick={() => {
+																			this.props.history.push('/admin/payroll/payrollrun')
+																		}}
+																	>
+																		<i className="fa fa-ban"></i> {strings.Cancel}
+																	</Button>
+																</ButtonGroup>
+
+																
+																	
+															</Col>
 															</Row>
 
 														</Form>

@@ -184,7 +184,7 @@ import {
 	InvoiceDetails,
 	Import,
 	CreatePayroll,
-	CreatePayrollList,
+
 	PayrollApproverScreen,
 	UpdatePayroll
 } from 'screens';
@@ -569,11 +569,7 @@ const adminRoutes = [
 		component: PayrollRun.screen,
 	},
 
-	{
-		path: '/admin/payroll/createPayroll',
-		name: 'ViewPayroll',
-		component: CreatePayrollList.screen,
-	},
+
 	{
 		path: '/admin/payroll/updatePayroll',
 		name: 'GeneratePayroll',

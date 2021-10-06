@@ -180,7 +180,7 @@ import Refund from './creditNotes/screens/refund'
 import PayrollConfigurations from './payroll_configurations'
 import Import from './import'
 import CreatePayroll from './payroll_run/screens/createPayrollList';
-import CreatePayrollList from './payroll_run/screens/createPayroll';
+
 
 import PayrollApproverScreen from './payroll_run/screens/approver';
 import UpdatePayroll from './payroll_run/screens/updatePayroll';
@@ -346,7 +346,7 @@ export {
 	InvoiceDetails,
 	Import,
 	CreatePayroll,
-	CreatePayrollList,
+	
 	PayrollApproverScreen,
 	UpdatePayroll,
 };

@@ -297,16 +297,19 @@ class PayrollRun extends React.Component {
 		return row.runDate ? moment(row.runDate).format('DD/MM/YYYY') : '-';
 	};
 	renderEmployeeCount = (cell, row) => {
-		return row.employeeCount ? row.employeeCount : '-';
+		let employeeCount= row.employeeCount ? row.employeeCount : '-'
+		return (<div className="text-center">{employeeCount}</div>);
 	};
 	renderPayperiod = (cell, row) => {
 		return row.payPeriod ? row.payPeriod : '-';
 	};
 	renderPayrollApprover = (cell, row) => {
-		return row.payrollApprover ? row.payrollApprover : '-';
+		return row.payrollApproverName ? row.payrollApproverName : '-';
+	};
+	renderGeneratedBy= (cell, row) => {
+		return row.generatedByName ? row.generatedByName : '-';
 	};
 	renderComment = (cell, row) => {
-
 
 		return <label
 			className="mb-0 label-bank"

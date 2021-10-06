@@ -108,3 +108,23 @@ export const uploadFolder = (obj) => {
 		  });
 		}
 	  }
+
+	  
+	export const saveAccountStartDate = (obj) => {
+		return (dispatch) => {
+			let data = {
+				method: 'post',
+				url: '/rest/migration/saveAccountStartDate',
+				data: obj,
+			};
+			return authFileUploadApi(data)
+				.then((res) => {
+					return res
+				
+				})
+				.catch((err) => {
+					throw err;
+				});
+		};
+	};
+	 

@@ -33,6 +33,7 @@ import { data } from '../Language/index'
 import LocalizedStrings from 'react-localization';
 
 import { toast } from 'react-toastify';
+import { Table } from '@material-ui/core';
 
 const mapStateToProps = (state) => {
 
@@ -301,7 +302,14 @@ class PayrollRun extends React.Component {
 		return (<div className="text-center">{employeeCount}</div>);
 	};
 	renderPayperiod = (cell, row) => {
-		return row.payPeriod ? row.payPeriod : '-';
+		let dateArr=row.payPeriod ? row.payPeriod.split("-"):[];
+
+		
+		return(<Table>
+			<Row><Col className="pull-right"><b>Start-Date</b></Col><Col>: {dateArr[0]}</Col></Row>
+			<Row><Col className="pull-right"><b>End-Date</b></Col><Col>: {dateArr[1]}</Col></Row>
+			 </Table>  
+			) ;
 	};
 	renderPayrollApprover = (cell, row) => {
 		return row.payrollApproverName ? row.payrollApproverName : '-';
@@ -708,6 +716,7 @@ class PayrollRun extends React.Component {
 															dataField="payrollDate"
 															dataFormat={this.renderDate}
 															dataSort
+															width="10%"
 														>
 															Payroll Date
 														</TableHeaderColumn>
@@ -723,7 +732,7 @@ class PayrollRun extends React.Component {
 															className="table-header-bg"
 															dataField="payPeriod"
 															dataFormat={this.renderPayperiod}
-															width='12%'
+															width='15%'
 															dataSort
 														>
 															Pay Period
@@ -764,6 +773,7 @@ class PayrollRun extends React.Component {
 															className="table-header-bg"
 															dataField="runDate"
 															dataSort
+															width="10%"
 															dataFormat={this.renderRunDate}
 														>
 															Run Date

@@ -416,11 +416,26 @@ class UpdatePayroll extends React.Component {
 	getAllPayrollEmployee = () => {
 		this.props.createPayrollActions.getAllPayrollEmployee2(this.state.payrollId).then((res) => {
 			if (res.status === 200) {
-				this.setState({
-					allPayrollEmployee: res.data
-				})
+
+				if(res.data.length===0){
+					this.props.createPayrollActions.getAllPayrollEmployee(this.state.payrollId).then((res) => {
+						if (res.status === 200) {
+							
+								this.setState({
+									allPayrollEmployee: res.data
+								})
+							
+						}
+					})	
+					}else{
+						this.setState({
+							allPayrollEmployee: res.data
+						})
+					}
+			
 			}
 		})
+		
 	}
 
 	getPayrollEmployeeList = () => {
@@ -969,19 +984,28 @@ class UpdatePayroll extends React.Component {
 
 																	<FormGroup className="pull-left mt-3">
 																		 {/* add and remove */}
-																		{/* <Button type="button" color="primary" className="btn-square ml-3 mr-1 "
-																			disabled={this.disableForAddButton() ? true : false}
+																		<Button type="button" color="primary" className="btn-square ml-3 mr-1 "
+																			// disabled={this.disableForAddButton() ? true : false}
 																			onClick={() => {
 																				// this.setState(() => {
 																				// 	props.handleSubmit()
 																				// })
-																				this.setState({
-																					openModal: true
-																				})
+																				// this.setState({
+																				// 	openModal: true
+																				// })
+																				this.props.createPayrollActions.getAllPayrollEmployee(this.state.payrollId).then((res) => {
+																					if (res.status === 200) {
+																						
+																							this.setState({
+																								allPayrollEmployee: res.data
+																							})
+																						
+																					}
+																				})	
 																			}}>
-																			<i className="fa fa-dot-circle-o"></i> Add Employees
+																			<i className="fa fa-dot-circle-o"></i> Add All Employees
 																		</Button>
-																		<Button
+																		{/* <Button
 																			color="primary"
 																			className="btn-square ml-3 "
 																			onClick={() => {

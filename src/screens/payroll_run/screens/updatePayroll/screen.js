@@ -998,7 +998,7 @@ class UpdatePayroll extends React.Component {
 
 																	<FormGroup className="pull-left mt-3">
 																		 {/* add and remove */}
-																		<Button type="button" color="primary" className="btn-square ml-3 mr-1 "
+																		{/* <Button type="button" color="primary" className="btn-square ml-3 mr-1 "
 																			disabled={this.disableForAddButton() ? true : false}
 																			onClick={() => {
 																				// this.setState(() => {
@@ -1021,7 +1021,7 @@ class UpdatePayroll extends React.Component {
 																		>
 																			<i class="far fa-trash-alt mr-1"></i>
 																			Remove Employees
-																		</Button>
+																		</Button> */}
 																	</FormGroup>
 
 																	<Col></Col>

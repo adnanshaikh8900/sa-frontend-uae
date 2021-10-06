@@ -350,28 +350,30 @@ class PayrollRun extends React.Component {
 			selectedRows: tempList,
 		});
 	};
+
 	renderStatus = (cell, row) => {
-
-
-		// let classname = '';
-		// if (row.status === "Paid") {
-		//     classname = 'label-success';
-		// } else {
-		//     classname = 'label-draft';
+		let classname = '';
+		
+		if (row.status === 'Approved') {
+			classname = 'label-success';
+		} else if (row.status === 'Draft') {
+			classname = 'label-currency';
+		} else if (row.status === 'Paid') {
+			classname = 'label-approved';
+		}else if (row.status === 'Rejected') {
+			classname = 'label-due';
+		}  if (row.status === 'Submitted') {
+			classname = 'label-sent';
+		}
+		// else {
+		// 	classname = 'label-overdue';
 		// }
 		return (
-			<span>
-				{
-					row.status ?
-						row.status :
-						"-"
-
-				}
+			<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
+				{row.status}
 			</span>
 		);
-
 	};
-
 
 	// bulkDelete = () => {
 	// 	const { selectedRows } = this.state;

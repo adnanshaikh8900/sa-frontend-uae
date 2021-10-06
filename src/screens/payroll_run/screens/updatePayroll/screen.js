@@ -101,7 +101,9 @@ class UpdatePayroll extends React.Component {
 			endDate: '',
 			 payPeriod : '',
 			 apiSelector:'',
-			 focusedInput:null
+			 focusedInput:null,
+			 submitButton:true,
+			 payrollApprover:''
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -140,6 +142,7 @@ class UpdatePayroll extends React.Component {
 		}
 		this.tableApiCallsOnStatus();
 		this.calculatePayperioad(this.state.startDate ,this.state.endDate);
+
 	};
 	calculatePayperioad=(startDate,endDate)=>{
 		
@@ -172,6 +175,7 @@ class UpdatePayroll extends React.Component {
 					isActive: res.data.isActive ? res.data.isActive : '',
 					payPeriod: res.data.payPeriod ? res.data.payPeriod : '',
 					payrollApprover: res.data.payrollApprover ? res.data.payrollApprover : '',
+					submitButton: res.data.payrollApprover ===null ? true : false,
 					payrollDate: res.data.payrollDate
 						? moment(res.data.payrollDate).format('DD/MM/YYYY')
 						: '',
@@ -586,58 +590,27 @@ class UpdatePayroll extends React.Component {
 		)
 	}
 
-	proceed1 = () => {
-		this.props.createPayrollActions.getPayrollById(this.state.payroll_id).then((res) => {
-			if (res.status === 200) {
-				//	 
-				this.setState({
-					loading: false,
-					id: res.data.id ? res.data.id : '',
-					approvedBy: res.data.approvedBy ? res.data.approvedBy : '',
-					comment: res.data.comment ? res.data.comment : '',
-					deleteFlag: res.data.deleteFlag ? res.data.deleteFlag : '',
-					employeeCount: res.data.employeeCount ? res.data.employeeCount : '',
-					generatedBy: res.data.generatedBy ? res.data.generatedBy : '',
 
-					isActive: res.data.isActive ? res.data.isActive : '',
-					payPeriod: res.data.payPeriod ? res.data.payPeriod : '',
-					payrollApprover: res.data.payrollApprover ? res.data.payrollApprover : '',
-					payrollDate: res.data.payrollDate
-																? moment(res.data.payrollDate).format('DD/MM/YYYY')
-																: '',
-					payrollSubject: res.data.payrollSubject ? res.data.payrollSubject : '',
-					runDate: res.data.runDate ? res.data.runDate : '',
-					status: res.data.status ? res.data.status : '',
+	// generate = () => {
+	// 	const formData = new FormData();
+	// 	formData.append('payrollId', this.state.payroll_id)
+	// 	formData.append('salaryDate', this.state.payrollDate)
+	// 	formData.append('generatePayrollString', JSON.stringify(this.state.allPayrollEmployee));
 
-				}
-				)
-			}
-		}).catch((err) => {
-			this.setState({ loading: false })
+	// 	this.props.createPayrollActions
+	// 		.generatePayroll(formData)
+	// 		.then((res) => {
+	// 			if (res.status === 200) {
+	// 				this.props.commonActions.tostifyAlert('success', 'genrated payroll Successfully')
+	// 				this.proceed1()
+	// 				this.tableApiCallsOnStatus()
+	// 				// resetForm(this.state.initValue)
+	// 			}
+	// 		}).catch((err) => {
+	// 			this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+	// 		})
 
-		})
-
-	}
-	generate = () => {
-		const formData = new FormData();
-		formData.append('payrollId', this.state.payroll_id)
-		formData.append('salaryDate', this.state.payrollDate)
-		formData.append('generatePayrollString', JSON.stringify(this.state.allPayrollEmployee));
-
-		this.props.createPayrollActions
-			.generatePayroll(formData)
-			.then((res) => {
-				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert('success', 'genrated payroll Successfully')
-					this.proceed1()
-					this.tableApiCallsOnStatus()
-					// resetForm(this.state.initValue)
-				}
-			}).catch((err) => {
-				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
-			})
-
-	}
+	// }
 	submitPayroll = (data) => {
 
 		const { userId } = data;
@@ -957,7 +930,8 @@ class UpdatePayroll extends React.Component {
 
 																				onChange={(option) => {
 																					if (option && option.value) {
-																						this.setState({ userId: option.value,payrollApprover:option.value })
+																						this.setState({ userId: option.value,payrollApprover:option.value ,	submitButton:false})
+																						
 																					}
 																				}}
 																			/>
@@ -1055,12 +1029,11 @@ class UpdatePayroll extends React.Component {
 																			this.setState({apiSelector:"createAndSubmitPayroll"})
 																				props.handleSubmit()
 																								}}
-																		disabled={this.disableForGenerateButtun() ? true : false}
-
+																								disabled={this.state.submitButton}
 																		// disabled={this.state.allPayrollEmployee && this.state.allPayrollEmployee.length === 0 ?true :false}
 																		title={
-																			this.disable()
-																				? `Please Add employees Before Generate Payroll !`
+																			this.state.submitButton
+																				? `Please Select Approver Before Submitting  Payroll !`
 																				: ''
 																		}
 																	// disabled={selectedRows.length === 0}

@@ -765,7 +765,7 @@ class PayrollApproverScreen extends React.Component {
 																	<Col >
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="date">
-																				<span className="text-danger">*</span>
+																			
 																				Payroll Date
 																			</Label>
 																			<DatePicker

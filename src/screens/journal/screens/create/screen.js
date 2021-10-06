@@ -1036,7 +1036,7 @@ min="0"
 																				{universal_currency_list[0] && (
 																						<Currency
 																						value=
-																						{this.state.initValue.subTotalDebitAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						{this.state.initValue.subTotalDebitAmount}
 																						currencySymbol={
 																						universal_currency_list[0]
 																						? universal_currency_list[0].currencyIsoCode
@@ -1051,7 +1051,7 @@ min="0"
 																				{universal_currency_list[0] && (
 																						<Currency
 																						value=
-																						{this.state.initValue.subTotalCreditAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						{this.state.initValue.subTotalCreditAmount}
 																						currencySymbol={
 																						universal_currency_list[0]
 																						? universal_currency_list[0].currencyIsoCode
@@ -1075,7 +1075,7 @@ min="0"
 																				{universal_currency_list[0] && (
 																						<Currency
 																						value=
-																						{this.state.initValue.subTotalDebitAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						{this.state.initValue.subTotalDebitAmount}
 																						currencySymbol={
 																						universal_currency_list[0]
 																						? universal_currency_list[0].currencyIsoCode
@@ -1090,7 +1090,7 @@ min="0"
 																				{universal_currency_list[0] && (
 																						<Currency
 																						value=
-																						{this.state.initValue.subTotalCreditAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						{this.state.initValue.subTotalCreditAmount}
 																						currencySymbol={
 																						universal_currency_list[0]
 																						? universal_currency_list[0].currencyIsoCode

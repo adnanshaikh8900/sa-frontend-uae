@@ -294,9 +294,9 @@ class ImportBankStatement extends React.Component {
 													{(props) => (
 														<Form onSubmit={props.handleSubmit}>
 														
-															<Row className="align-template">
+															<Row >
 																<Col lg={4}></Col>
-																<Col lg={4}>
+																<Col lg={2}>
 																	<label>
 																		<span className="text-danger">*</span>
 																		 {strings.ParsingTemplate}
@@ -343,37 +343,39 @@ class ImportBankStatement extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																<Col lg={4}>
+																<Col lg={2} className='text-center m-4'>
 																<h6><a className='myClickableThingy' style={{fontWeight:'400',color:'#20a8d8'}}
 																	onClick={() => {
 																		this.CreateNewTemplate();
 																		}}>	<i className="fas fa-plus mr-1" />{strings.CreateNewTemplate}</a></h6>
 																	
 																		 
-																	</Col>
+																</Col>
+																<Col lg={4}></Col>
 															</Row>
 															<Row>
 															<Col lg={4}></Col>
 																<Col lg={4}>
-															<div 
+																<div 
 																	style={{
 																		border:'1px solid grey',
-																	 padding:'90px'
+																	
 																	}}>
-																	<div className="text-center mb-3">
+																	<div className="text-center mb-3 mt-4">
 																	<i class="fas fa-upload  fa-5x"></i>
 
 																	</div>
-																
+																	<div className="text-center mb-3"  style={{
+                                                    					  fontSize: '22px',
+                                                   								 }}>
+																		Drag file to upload ,or
+																		</div>
+																		<div className="text-center mb-3">
 																		<input
 																			id="file"
 																			ref={(ref) => {
 																				this.uploadFile = ref;
 																			}}
-																			className='text-center'
-																			// multiple
-																			// directory="" 
-																			// webkitdirectory=""
 																			type="file"
 																			accept=".csv,.xlsx"
 																			onChange={(e) => {
@@ -382,8 +384,10 @@ class ImportBankStatement extends React.Component {
 																						.split('\\')
 																						.pop(),
 																				});
+																				props.handleSubmit();
 																			}}
 																		/>
+																		</div>
 
 															
 																	</div>
@@ -396,7 +400,7 @@ class ImportBankStatement extends React.Component {
 																	<Col lg={4}></Col>
 															</Row>
 															<Row className="mt-4">
-															<Col lg={4}></Col>
+															{/* <Col lg={4}></Col>
 																<Col className="text-center">
 																	<Button
 																		color="primary"
@@ -415,7 +419,7 @@ class ImportBankStatement extends React.Component {
 																		<i className="fa fa-dot-circle-o mr-1"></i>
 																		 {strings.ParseFile}
 																	</Button>
-																</Col>
+																</Col> */}
 																<Col lg={4}></Col>
 															</Row>
 															<div 
@@ -434,7 +438,17 @@ class ImportBankStatement extends React.Component {
 										</Col>
 									</Row>
 									
-								<div style={{display : this.state.showMessage === false ? '': 'none',
+								
+								</CardBody>
+							</Card>
+						</Col>
+					</Row>
+					<div style={{display : this.state.tableDataKey.length  > 0 ? '': 'none'}}>
+					<Row>
+						<Col lg={12} className="mx-auto">
+					<Card>
+					<CardBody>
+					<div style={{ border:"1px solid grey",
 								// width:'80%',
 								
 								paddingLeft:'10%',
@@ -442,12 +456,17 @@ class ImportBankStatement extends React.Component {
 								}}>
 									<Row>
 									<Col lg={4}></Col>
-
-									<div className="table-responsive mt-4"
+									<div  style={{
+                                                      fontSize: '30px',
+                                                    }}>
+									Preview File: {this.state.fileName}
+									</div>
+									<div className="table-responsive 	"
+									 style={{ border:"1px solid grey"}}
 									>
 										
 										{this.state.tableDataKey.length  > 0 ? (
-											<Col style={{border:"1px solid grey",}}>
+											<Col>
 											<BootstrapTable
 												data={this.state.tableData}
 												keyField={this.state.tableDataKey[0]}
@@ -473,6 +492,7 @@ class ImportBankStatement extends React.Component {
 										
 									</div>
 									</Row>
+									
 									<Row style={{ width: '100%' }}>
 										<Col lg={12} className="mt-2">
 											<FormGroup className="text-right">
@@ -481,7 +501,7 @@ class ImportBankStatement extends React.Component {
 														<Button
 															type="button"
 															color="primary"
-															className="btn-square mr-4"
+															className="btn-square mr-4 pull-left"
 															onClick={this.handleSave}
 															disabled={
 																this.state.errorIndexList.length > 0
@@ -511,13 +531,16 @@ class ImportBankStatement extends React.Component {
 											</FormGroup>
 										</Col>
 									</Row> 
-									</div>
-								</CardBody>
-							</Card>
+</div>
+					</CardBody>
+
+						</Card>
 						</Col>
-					</Row>
+						</Row>
+						</div>
 				</div>
 			</div>
+			
 		);
 	}
 }

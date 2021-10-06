@@ -1006,7 +1006,7 @@ class CreditNotes extends React.Component {
 												<Input
 												maxLength="10"
 													type="number"
-min="0"
+													min="0"
 													value={filterData.amount}
 													placeholder={strings.Amount}
 													onChange={(e) => {
@@ -1014,7 +1014,7 @@ min="0"
 													}}
 												/>
 											</Col>
-											<Col lg={2} className="mb-1">
+											{/* <Col lg={2} className="mb-1">
 												<Select
 													className=""
 													options={
@@ -1037,7 +1037,7 @@ min="0"
 													}}
 													placeholder={strings.Status}
 												/>
-											</Col>
+											</Col> */}
 											<Col lg={2} className="pl-0 pr-0">
 												<Button
 													type="button"

@@ -251,3 +251,19 @@ export const createAndSubmitPayroll = (object) => {
 	  })
 	}
   }
+
+  
+export const deletePayroll = (id) => {
+	return (dispatch) => {
+	  let data = {
+		method: 'DELETE',
+		url: `/rest/payroll/deletePayroll?payrollId=${id}`
+	  }
+  
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }

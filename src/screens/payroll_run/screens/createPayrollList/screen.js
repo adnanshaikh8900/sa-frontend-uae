@@ -94,6 +94,7 @@ class CreatePayrollList extends React.Component {
 				onSelect: this.onRowSelect,
 				onSelectAll: this.onSelectAll,
 			},
+			payrollSubject:'',
 			payrollApprover:'',
 			payrollDate: new Date(),
 			//  startDate: new Date(date.getFullYear(), date.getMonth(), 1),
@@ -457,7 +458,7 @@ calculatePayperioad=(startDate,endDate)=>{
 												value={cell || 0}
 												disabled={this.disableForAddButton() ? true : false}
 												onChange={(evt) => {
-													debugger
+													
 													let value = parseInt(evt.target.value) ;
 
 													if (value > 30 || value < 0) {
@@ -469,7 +470,7 @@ calculatePayperioad=(startDate,endDate)=>{
 
 
 														if (row.id === data.id) {
-															debugger
+															
 														if(value>data.lopDay)
 														{																
 															data.lopDay = value;
@@ -714,10 +715,47 @@ calculatePayperioad=(startDate,endDate)=>{
 
 														initialValues={this.state}
 														onSubmit={(values, { resetForm }) => {
-															this.handleSubmit(values)
+															
+															if(this.state.selectedRows){
+																this.handleSubmit(values)
+															}
+														
 
 														}}
-
+												validationSchema={Yup.object().shape({
+												  payrollSubject: Yup.string()
+												    .required("Payroll Subject is Required"),
+												  payrollDate: Yup.string()
+												    .required("Payroll Date is Required"),
+												// selectedRows: Yup.string()
+												//     .required("At least selection of one employee  is Required for create payroll"),
+												})}
+												validate={(values) => {
+													// let status = false
+													let errors = {};
+													
+													if (!values.payrollSubject) {
+														errors.payrollSubject = 'Payroll Subject is  required';
+													}
+													if (!values.payrollDate) {
+														errors.payrollDate = 'Payroll date is  required';
+													}
+													if(this.state.selectedRows && this.state.selectedRows.length===0)
+													{
+														errors.selectedRows = 'At least selection of one employee  is Required for create payroll';
+													}
+													if (this.state.startDate==='' && this.state.endDate==='') {
+														errors.startDate = 'Start and End Date is  required';
+													}else
+													if (this.state.startDate==='') {
+														errors.startDate = 'Start Date is  required';
+													}else
+													if (this.state.endDate==='') {
+														errors.startDate = 'End Date is  required';
+													}
+												
+													return errors;
+												}}
 													>
 														{(props) => (
 
@@ -731,7 +769,7 @@ calculatePayperioad=(startDate,endDate)=>{
 																				type="text"
 																				id="payrollSubject"
 																				name="payrollSubject"
-																				value={this.state.payrollSubject}
+																				value={props.values.payrollSubject}
 																				disabled={this.disableForAddButton() ? true : false}
 																				placeholder={strings.Enter + " Payroll Subject"}
 																				onChange={(value) => {
@@ -824,7 +862,7 @@ calculatePayperioad=(startDate,endDate)=>{
 																			/> */}
 																			{props.errors.startDate &&
 																				props.touched.startDate && (
-																					<div className="invalid-feedback">
+																					<div className="text-danger">
 																						{props.errors.startDate}
 																					</div>
 																				)}
@@ -985,7 +1023,13 @@ calculatePayperioad=(startDate,endDate)=>{
 
 													
 												{this.getPayrollEmployeeList()}
-
+												<Row><Col>
+														{this.state.selectedRows && (
+																					<div className="text-danger">
+																						{props.errors.selectedRows}
+																					</div>
+																				)}
+												</Col></Row>
 															<Row className="mt-4 ">
 
 

@@ -330,10 +330,10 @@ class ExpenseByCategory extends React.Component {
 													<tr>
 														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.TransactionCategory+" "+strings.Name}</th>
 													
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>
+														<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 														{strings.Amount}
 														</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.Amount+" "+strings.WithTax}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Amount+" "+strings.WithTax}</th>
 
 													</tr>
 												</thead>
@@ -346,7 +346,7 @@ class ExpenseByCategory extends React.Component {
 
 																	<td style={{ textAlign: 'left', width: '60%' }}>{item.transactionCategoryName}</td>
 																
-																	<td style={{ textAlign: 'center', width: '20%' }}>
+																	<td style={{ textAlign: 'right', width: '20%' }}>
 																		<Currency
 																			value={item.expensesAmountWithoutTaxSum}
 																			currencySymbol={
@@ -357,7 +357,7 @@ class ExpenseByCategory extends React.Component {
 																		/>
 																	</td>
 
-																	<td style={{ textAlign: 'center', width: '20%' }}>
+																	<td style={{ textAlign: 'right', width: '20%' }}>
 																		<Currency
 																			value={item.expensesAmountSum}
 																			currencySymbol={
@@ -374,9 +374,9 @@ class ExpenseByCategory extends React.Component {
 												</tbody>
 												<tfoot>
 													<tr style={{ border: "3px solid #dfe9f7" }}>
-													<td style={{ textAlign: 'center', width: '20%' }}><b>{strings.Total}</b></td>
+													<td style={{ textAlign: 'left', width: '20%' }}><b>{strings.Total}</b></td>
 													
-													<td style={{ textAlign: 'center', width: '20%' }}>
+													<td style={{ textAlign: 'right', width: '20%' }}>
 													
 														<b><Currency
 															value={this.state.data.totalAmountWithoutTax}
@@ -389,7 +389,7 @@ class ExpenseByCategory extends React.Component {
 														
 													</td>
 
-													<td style={{ textAlign: 'center', width: '20%' }}>
+													<td style={{ textAlign: 'right', width: '20%' }}>
 													<b>
 													<Currency
 															value={this.state.data.totalAmount}

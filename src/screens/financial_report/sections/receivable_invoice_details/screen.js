@@ -485,7 +485,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 															return (
 																<th
 																	key={index}
-																	style={{ fontWeight: '600' }}
+																	style={{ fontWeight: '600' ,textAlign:'right'}}
 																	className={column.align ? 'text-right' : ''}
 																	className="table-header-color"
 																>
@@ -558,7 +558,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 																									""
 																								) : (
 																									<p
-																									className="text-left"
+																									className="text-right"
 																									// onClick={() =>
 																									// 	this.getInvoice(
 																									// 		row[
@@ -588,7 +588,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 																						<td style={{ width: '12%' }}>
 																							{row.totalAmount > 0 && (
 																								<p
-																									className="text-left"
+																									className="text-right"
 																									// onClick={() =>
 																									// 	this.getInvoice(
 																									// 		row[

@@ -338,8 +338,8 @@ class InvoiceDetails extends React.Component {
 														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.Invoice+" "+strings.Date}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.Invoice+" "+strings.Due+" "+strings.Date}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.Status}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.InvoiceAmount}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.Balance}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.InvoiceAmount}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Balance}</th>
 													</tr>
 												</thead>
 												<tbody className=" table-bordered table-hover">
@@ -358,7 +358,7 @@ class InvoiceDetails extends React.Component {
 																		moment(item.invoiceDueDate).format('DD/MM/YYYY')
 																	) : (" ")}</td>
 																	<td style={{ textAlign: 'center' }}>{item.status}</td>
-																	<td style={{ textAlign: 'center' }}>
+																	<td style={{ textAlign: 'right' }}>
 																		<Currency
 																			value={item.invoiceTotalAmount}
 																			currencySymbol={
@@ -369,7 +369,7 @@ class InvoiceDetails extends React.Component {
 																		/>
 																	</td>
 
-																	<td style={{ textAlign: 'center' }}>
+																	<td style={{ textAlign: 'right' }}>
 																		<Currency
 																			value={item.balance}
 																			currencySymbol={
@@ -388,7 +388,7 @@ class InvoiceDetails extends React.Component {
 													<tr style={{ border: "3px solid #dfe9f7" }}>
 													<td style={{ textAlign: 'center', width: '20%' }}><b>{strings.Total}</b></td>
 													<td></td>	<td></td>	<td></td><td></td>	
-													<td style={{ textAlign: 'center', width: '20%' }}>
+													<td style={{ textAlign: 'right', width: '20%' }}>
 												
 														<b><Currency
 															value={this.state.data.totalAmount}
@@ -402,7 +402,7 @@ class InvoiceDetails extends React.Component {
 													</td>
 
 													
-													<td style={{ textAlign: 'center', width: '20%' }}>
+													<td style={{ textAlign: 'right', width: '20%' }}>
 														
 													<b>
 													<Currency

@@ -1107,6 +1107,7 @@ class RequestForQuotation extends React.Component {
 											</TableHeaderColumn>
 											
 											<TableHeaderColumn
+												dataAlign="right"
 												dataField="totalAmount"
 												dataSort
 											//	width="5%"

@@ -1169,9 +1169,10 @@ min="0"
 												VAT Amount
 											</TableHeaderColumn> */}
 											<TableHeaderColumn
+												dataAlign="right"
 												dataField="totalAmount"
 												dataSort
-											//	width="5%"
+												width="20%"
 												dataFormat={this.renderInvoiceAmount}
 												className="table-header-bg"
 												

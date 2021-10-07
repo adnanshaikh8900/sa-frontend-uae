@@ -331,10 +331,10 @@ class PurchaseByVendor extends React.Component {
 														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.Vendor+" "+strings.Name}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.InvoiceCount}</th>
 
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>
+														<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 															{strings.Purchase+" "+strings.ExcludingTax}
 														</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.Purchase+" "+strings.WithTax}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Purchase+" "+strings.WithTax}</th>
 
 													</tr>
 												</thead>
@@ -347,7 +347,7 @@ class PurchaseByVendor extends React.Component {
 
 																	<td style={{ textAlign: 'center', width: '25%' }}>{item.vendorName}</td>
 																	<td style={{ textAlign: 'center', width: '25%' }}>{item.invoiceCount}</td>
-																	<td style={{ textAlign: 'center', width: '25%' }}>
+																	<td style={{ textAlign: 'right', width: '25%' }}>
 																		<Currency
 																			value={item.salesExcludingvat}
 																			currencySymbol={
@@ -358,7 +358,7 @@ class PurchaseByVendor extends React.Component {
 																		/>
 																	</td>
 
-																	<td style={{ textAlign: 'center', width: '25%' }}>
+																	<td style={{ textAlign: 'right', width: '25%' }}>
 																		<Currency
 																			value={item.getSalesWithvat}
 																			currencySymbol={
@@ -377,7 +377,7 @@ class PurchaseByVendor extends React.Component {
 													<tr style={{ border: "3px solid #dfe9f7" }}>
 													<td style={{ textAlign: 'center', width: '20%' }}><b>{strings.Total}</b></td>
 													<td></td>
-													<td style={{ textAlign: 'center', width: '20%' }}>
+													<td style={{ textAlign: 'right', width: '20%' }}>
 													
 														<b><Currency
 															value={this.state.data.totalExcludingVat}
@@ -390,7 +390,7 @@ class PurchaseByVendor extends React.Component {
 														
 													</td>
 
-													<td style={{ textAlign: 'center', width: '20%' }}>
+													<td style={{ textAlign: 'right', width: '20%' }}>
 													<b>
 													<Currency
 															value={this.state.data.totalAmount}

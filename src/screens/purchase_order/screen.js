@@ -249,14 +249,14 @@ class PurchaseOrder extends React.Component {
 		return(
 			<div>
 								<div>
-						<label className="font-weight-bold mr-2 ">{strings.PurchaseOrder+" "+strings.Amount}: </label>
-						<label>
+						<label className="font-weight-bold mr-2" dataAlign="right">{strings.PurchaseOrder+" "+strings.Amount}: </label>
+						<label dataAlign="right">
 							{row.totalAmount  === 0 ? row.currencyCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 						</label>
 					</div>
 					<div style={{display: row.totalVatAmount === 0 ? 'none' : ''}}>
-					<label className="font-weight-bold mr-2">{strings.VatAmount}: </label>
-					<label>{row.totalVatAmount === 0  ? row.currencyCode +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyCode +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
+					<label className="font-weight-bold mr-2" dataAlign="right">{strings.VatAmount}: </label>
+					<label dataAlign="right">{row.totalVatAmount === 0  ? row.currencyCode +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyCode +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
 					</div>
 					
 					
@@ -1098,9 +1098,10 @@ class PurchaseOrder extends React.Component {
 											</TableHeaderColumn>
 											
 											<TableHeaderColumn
+												dataAlign="right"
 												dataField="totalAmount"
 												dataSort
-											//	width="5%"
+												width="20%"
 												dataFormat={this.renderrfqAmount}
 												className="table-header-bg"
 												formatExtraData={universal_currency_list}

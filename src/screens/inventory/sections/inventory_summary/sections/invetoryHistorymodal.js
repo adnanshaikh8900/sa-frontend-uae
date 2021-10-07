@@ -302,10 +302,10 @@ console.log(inventory_history_list,"inventory_history_list")
 												{/* <TableHeaderColumn  dataField="stockOnHand" dataSort className="table-header-bg">
 											Stock In Hand
 												</TableHeaderColumn > */}
-												<TableHeaderColumn  dataField="unitCost" dataFormat={this.renderUnitCost} dataSort className="table-header-bg">
+												<TableHeaderColumn dataAlign="right" dataField="unitCost" dataFormat={this.renderUnitCost} dataSort className="table-header-bg">
 												 {strings.UnitCost} 
 												</TableHeaderColumn >
-												<TableHeaderColumn  dataField="unitSellingPrice" dataFormat={this.renderunitSellingPrice} dataSort className="table-header-bg">
+												<TableHeaderColumn dataAlign="right" dataField="unitSellingPrice" dataFormat={this.renderunitSellingPrice} dataSort className="table-header-bg">
 												 {strings.UnitSellingPrice}
 												</TableHeaderColumn >
 											</BootstrapTable>

@@ -417,6 +417,9 @@ class DetailExpense extends React.Component {
 														currency: Yup.string().required(
 															'Currency is required',
 														),
+														payMode: Yup.string().required(
+															'Pay Through is required',
+														),
 														expenseAmount: Yup.string()
 															.required('Amount is Required')
 															.matches(
@@ -704,7 +707,7 @@ class DetailExpense extends React.Component {
 																</Col>
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
-																		<Label htmlFor="vatCategoryId">{strings.Tax}</Label>
+																		<Label htmlFor="vatCategoryId"><span className="text-danger">*</span>{strings.Tax}</Label>
 																		<Select
 																			styles={customStyles}
 																			className="select-default-width"
@@ -746,12 +749,13 @@ class DetailExpense extends React.Component {
 																
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
-																			<Label htmlFor="pay_through">
+																			<Label htmlFor="pay_through"><span className="text-danger">*</span>
 																				 {strings.PayThrough}
 																			</Label>
 																			<Select
 																				id="pay_through"
 																				name="pay_through"
+																				placeholder={strings.Select+strings.PayThrough}
 																				options={
 																					pay_mode_list
 																						? selectOptionsFactory.renderOptions(

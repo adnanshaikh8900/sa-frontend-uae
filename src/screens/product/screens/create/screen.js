@@ -422,11 +422,11 @@ try {
 														errors.productCode =
 															'Product Code is already exist';
 													}
-													if (values.inventoryReorderLevel > values.inventoryQty)
-													{
-														errors.inventoryReorderLevel = 
-															'Re-order level should be less than purchase quantity';
-													}
+													// if (values.inventoryReorderLevel > values.inventoryQty)
+													// {
+													// 	errors.inventoryReorderLevel = 
+													// 		'Re-order level should be less than purchase quantity';
+													// }
 													if (values.inventoryPurchasePrice > values.salesUnitPrice) {
 														errors.inventoryPurchasePrice = 
 														'Purchase price cannot be greater than Sales price';
@@ -455,9 +455,9 @@ try {
 														errors.inventoryPurchasePrice = 
 														'Inventory Purchase Price is requied';
 
-														if(values.inventoryReorderLevel ==='')
-														errors.inventoryReorderLevel = 
-														'Inventory Reorder Level is requied';
+														// if(values.inventoryReorderLevel ==='')
+														// errors.inventoryReorderLevel = 
+														// 'Inventory Reorder Level is requied';
 
 														if(values.inventoryQty ==='')
 														errors.inventoryQty = 
@@ -1632,7 +1632,7 @@ min="0"
 																	<Col lg={6}>
 																	<FormGroup className="">
 																		<Label htmlFor="inventoryReorderLevel">
-																		<span className="text-danger">*</span>  {strings.ReOrderLevel}
+																		  {strings.ReOrderLevel}
 																		</Label>
 																		<Input
 																			// readOnly={

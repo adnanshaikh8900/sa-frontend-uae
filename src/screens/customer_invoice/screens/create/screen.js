@@ -884,8 +884,9 @@ min="0"
 			}
 			total_net = +(total_net + +obj.unitPrice * obj.quantity);
 			total_vat = +(total_vat + val);
+			
 			obj.subTotal =
-				obj.unitPrice && obj.vatCategoryId ? +obj.unitPrice * obj.quantity : 0;
+				obj.unitPrice && obj.vatCategoryId ? +obj.unitPrice * obj.quantity + val: 0;
 			total = total_vat + total_net;
 			return obj;
 		});

@@ -476,9 +476,10 @@ min="0"
 													 {strings.RECONCILEDURATION}
 												</TableHeaderColumn>
 												<TableHeaderColumn
+												dataAlign="right"
 													dataField="closingBalance"
 													dataSort
-													// width="15%"
+													 width="15%"
 												>
 												 {strings.ClosingBalance}
 												</TableHeaderColumn>

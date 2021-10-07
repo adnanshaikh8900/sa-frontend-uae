@@ -854,6 +854,7 @@ class BankAccount extends React.Component {
 													{strings.CURRENCY}
 												</TableHeaderColumn>
 												<TableHeaderColumn
+													dataAlign="right"
 													dataField="openingBalance"
 													dataSort
 													width="10%"													
@@ -864,6 +865,7 @@ class BankAccount extends React.Component {
 													{strings.BANKBALANCE}
 												</TableHeaderColumn>
 												<TableHeaderColumn
+													dataAlign="right"
 													dataField="swift_code"
 													export={false}
 													dataSort={false}

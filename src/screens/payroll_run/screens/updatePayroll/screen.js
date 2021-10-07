@@ -94,7 +94,8 @@ class UpdatePayroll extends React.Component {
 				onSelect: this.onRowSelect,
 				onSelectAll: this.onSelectAll,
 			},
-			payrollDate: new Date(),
+			 payrollDate: new Date(),
+			payrollSubject:undefined,
 			//  startDate: new Date(date.getFullYear(), date.getMonth(), 1),
 			//  endDate:  new Date(date.getFullYear(), date.getMonth() + 1, 0),
 			startDate: '',
@@ -103,7 +104,7 @@ class UpdatePayroll extends React.Component {
 			 apiSelector:'',
 			 focusedInput:null,
 			 submitButton:true,
-			 payrollApprover:''
+			 payrollApprover:undefined
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -780,10 +781,45 @@ class UpdatePayroll extends React.Component {
 
 														initialValues={this.state}
 														onSubmit={(values, { resetForm }) => {
-															this.handleSubmit(values)
-
+															if(this.state.selectedRows){
+																this.handleSubmit(values)
+															}
+														
 														}}
-
+														validationSchema={Yup.object().shape({
+															// payrollSubject: Yup.string()
+															//   .required("Payroll Subject is Required"),
+															payrollDate: Yup.string()
+															  .required("Payroll Date is Required"),
+														  // selectedRows: Yup.string()
+														  //     .required("At least selection of one employee  is Required for create payroll"),
+														  })}
+														  validate={(values) => {
+															  // let status = false
+															  let errors = {};
+															  
+															  if (!this.state.payrollSubject) {
+																  errors.payrollSubject = 'Payroll Subject is  required';
+															  }
+															  if (!values.payrollDate) {
+																  errors.payrollDate = 'Payroll date is  required';
+															  }
+															  if(this.state.selectedRows && this.state.selectedRows.length===0)
+															  {
+																  errors.selectedRows = 'At least selection of one employee  is Required for create payroll';
+															  }
+															  if (this.state.startDate==='' && this.state.endDate==='') {
+																  errors.startDate = 'Start and End Date is  required';
+															  }else
+															  if (this.state.startDate==='') {
+																  errors.startDate = 'Start Date is  required';
+															  }else
+															  if (this.state.endDate==='') {
+																  errors.startDate = 'End Date is  required';
+															  }
+														  
+															  return errors;
+														  }}
 													>
 														{(props) => (
 
@@ -802,6 +838,7 @@ class UpdatePayroll extends React.Component {
 																				placeholder={strings.Enter + " Payroll Subject"}
 																				onChange={(value) => {
 																					props.handleChange('payrollSubject')(value);
+																					this.setState({payrollSubject:value.target.value})
 																				}}
 																				className={props.errors.payrollSubject && props.touched.payrollSubject ? "is-invalid" : ""}
 																			/>
@@ -891,7 +928,7 @@ class UpdatePayroll extends React.Component {
 																			/> */}
 																			{props.errors.startDate &&
 																				props.touched.startDate && (
-																					<div className="invalid-feedback">
+																					<div className="text-danger">
 																						{props.errors.startDate}
 																					</div>
 																				)}
@@ -1028,7 +1065,13 @@ class UpdatePayroll extends React.Component {
 
 													
 												{this.getPayrollEmployeeList()}
-											
+												<Row><Col>
+														{this.state.selectedRows && (
+																					<div className="text-danger">
+																						{props.errors.selectedRows}
+																					</div>
+																				)}
+												</Col></Row>
 															<Row className="mt-4 ">
 
 

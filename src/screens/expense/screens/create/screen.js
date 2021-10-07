@@ -444,9 +444,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	</Label>
 																	<Select
 																		styles={customStyles}
-																		id="expenseCategory"
-																		name="expenseCategory"
-																		placeholder={strings.Select+strings.ExpenseCategory}
+																		
 																		options={
 																			expense_categories_list
 																				? selectOptionsFactory.renderOptions(
@@ -458,17 +456,30 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																				: []
 																		}
 																		value={props.values.expenseCategory}
+																		onChange={(option) => {
+																			if (option && option.value) {
+																				props.handleChange('expenseCategory')(
+																					option,
+																				);
+																			} else {
+																				props.handleChange('expenseCategory')('');
+																			}
+																		}}
+																		placeholder={strings.Select+strings.ExpenseCategory}
+																		id="expenseCategory"
+																		name="expenseCategory"
+																		
 																		className={
 																			props.errors.expenseCategory &&
 																			props.touched.expenseCategory
 																				? 'is-invalid'
 																				: ''
 																		}
-																		onChange={(option) =>
-																			props.handleChange('expenseCategory')(
-																				option,
-																			)
-																		}
+																		// onChange={(option) =>
+																		// 	props.handleChange('expenseCategory')(
+																		// 		option,
+																		// 	)
+																		// }
 																	/>
 																	{props.errors.expenseCategory &&
 																		props.touched.expenseCategory && (
@@ -636,9 +647,7 @@ min="0"
 																	<Select
 																		styles={customStyles}
 																		className="select-default-width"
-																		id="vatCategoryId"
-																		name="vatCategoryId"
-																		placeholder={strings.Select+strings.Vat }
+																	
 																		options={
 																			vat_list
 																				? selectOptionsFactory.renderOptions(
@@ -650,11 +659,19 @@ min="0"
 																				: []
 																		}
 																		value={props.values.vatCategoryId}
-																		onChange={(option) =>
-																			props.handleChange('vatCategoryId')(
-																				option,
-																			)
-																		}
+																		onChange={(option) => {
+																			if (option && option.value) {
+																				props.handleChange('vatCategoryId')(
+																					option,
+																				);
+																			} else {
+																				props.handleChange('vatCategoryId')('');
+																			}
+																		}}
+																		
+																		placeholder={strings.Select+strings.Vat }
+																		id="vatCategoryId"
+																		name="vatCategoryId"
 																		className={
 																			props.errors.vatCategoryId &&
 																			props.touched.vatCategoryId
@@ -776,9 +793,7 @@ min="0"
 																		<Label htmlFor="payMode"><span className="text-danger">*</span> {strings.PayThrough}</Label>
 																		<Select
 																			styles={customStyles}
-																			id="payMode"
-																			name="payMode"
-																			placeholder={strings.Select+strings.PayThrough}
+																			
 																			options={
 																				pay_mode_list
 																					? selectOptionsFactory.renderOptions(
@@ -791,15 +806,18 @@ min="0"
 																			}
 																			value={props.values.payMode}
 																			onChange={(option) => {
-																				props.handleChange('payMode')(option);
+																				
 																				if (option && option.value) {
-																					this.setState({
-																						payMode: option,
-																					});
+																					props.handleChange('payMode')(option,);
+																					
 																				} else {
-																					this.setState({ payMode: '' });
+																					props.handleChange('payMode')('');
 																				}
 																			}}
+																			placeholder={strings.Select+strings.PayThrough}
+																			id="payMode"
+																			name="payMode"
+																			
 																			className={
 																				props.errors.payMode &&
 																				props.touched.payMode

@@ -19,7 +19,7 @@ import Select from 'react-select'
 import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
 import * as Yup from "yup";
-import { ImageUploader, Loader } from 'components';
+import { ConfirmDeleteModal, ImageUploader, Loader } from 'components';
 import {
 	CommonActions
 } from 'services/global'
@@ -94,7 +94,8 @@ class UpdatePayroll extends React.Component {
 				onSelect: this.onRowSelect,
 				onSelectAll: this.onSelectAll,
 			},
-			payrollDate: new Date(),
+			 payrollDate: new Date(),
+			payrollSubject:undefined,
 			//  startDate: new Date(date.getFullYear(), date.getMonth(), 1),
 			//  endDate:  new Date(date.getFullYear(), date.getMonth() + 1, 0),
 			startDate: '',
@@ -103,7 +104,8 @@ class UpdatePayroll extends React.Component {
 			 apiSelector:'',
 			 focusedInput:null,
 			 submitButton:true,
-			 payrollApprover:''
+			 payrollApprover:undefined,
+			 dialog: null,
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -734,12 +736,61 @@ class UpdatePayroll extends React.Component {
 		});
 	};
 
+	deletePayroll = () => {
+		const message1 = (
+			<text>
+				<b>Delete Payroll?</b>
+			</text>
+		);
+		const message =
+			'This Payroll will be deleted permanently and cannot be recovered. ';
+		this.setState({
+			dialog: (
+				<ConfirmDeleteModal
+					isOpen={true}
+					okHandler={this.removePayroll}
+					cancelHandler={this.removeDialog}
+					message={message}
+					message1={message1}
+				/>
+			),
+		});
+	};
+
+	removePayroll = () => {
+		this.setState({ disabled1: true });
+		const { current_user_id } = this.state;
+		this.props.createPayrollActions
+			.deletePayroll(this.state.payrollId ? this.state.payrollId :0)
+			.then((res) => {
+				if (res.status === 200) {
+					// this.success('Chart Account Deleted Successfully');
+					this.props.commonActions.tostifyAlert(
+						'success',
+						'Payroll Deleted Successfully',
+					);
+					this.props.history.push(`/admin/payroll/payrollrun`);
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
+	};
+
+	removeDialog = () => {
+		this.setState({
+			dialog: null,
+		});
+	};
 
 	render() {
 		strings.setLanguage(this.state.language);
 
 		const { employee_list, approver_dropdown_list } = this.props
-		const { loading, initValue } = this.state
+		const { loading, initValue,	dialog } = this.state
 		console.log(employee_list.data, "employee_list.data")
 
 		
@@ -760,6 +811,7 @@ class UpdatePayroll extends React.Component {
 									</Row>
 								</CardHeader>
 								<CardBody>
+								{dialog}
 									{loading ? (
 										<Row>
 											<Col lg={12}>
@@ -780,10 +832,45 @@ class UpdatePayroll extends React.Component {
 
 														initialValues={this.state}
 														onSubmit={(values, { resetForm }) => {
-															this.handleSubmit(values)
-
+															if(this.state.selectedRows){
+																this.handleSubmit(values)
+															}
+														
 														}}
-
+														validationSchema={Yup.object().shape({
+															// payrollSubject: Yup.string()
+															//   .required("Payroll Subject is Required"),
+															payrollDate: Yup.string()
+															  .required("Payroll Date is Required"),
+														  // selectedRows: Yup.string()
+														  //     .required("At least selection of one employee  is Required for create payroll"),
+														  })}
+														  validate={(values) => {
+															  // let status = false
+															  let errors = {};
+															  
+															  if (!this.state.payrollSubject) {
+																  errors.payrollSubject = 'Payroll Subject is  required';
+															  }
+															  if (!values.payrollDate) {
+																  errors.payrollDate = 'Payroll date is  required';
+															  }
+															  if(this.state.selectedRows && this.state.selectedRows.length===0)
+															  {
+																  errors.selectedRows = 'At least selection of one employee  is Required for create payroll';
+															  }
+															  if (this.state.startDate==='' && this.state.endDate==='') {
+																  errors.startDate = 'Start and End Date is  required';
+															  }else
+															  if (this.state.startDate==='') {
+																  errors.startDate = 'Start Date is  required';
+															  }else
+															  if (this.state.endDate==='') {
+																  errors.startDate = 'End Date is  required';
+															  }
+														  
+															  return errors;
+														  }}
 													>
 														{(props) => (
 
@@ -802,6 +889,7 @@ class UpdatePayroll extends React.Component {
 																				placeholder={strings.Enter + " Payroll Subject"}
 																				onChange={(value) => {
 																					props.handleChange('payrollSubject')(value);
+																					this.setState({payrollSubject:value.target.value})
 																				}}
 																				className={props.errors.payrollSubject && props.touched.payrollSubject ? "is-invalid" : ""}
 																			/>
@@ -891,7 +979,7 @@ class UpdatePayroll extends React.Component {
 																			/> */}
 																			{props.errors.startDate &&
 																				props.touched.startDate && (
-																					<div className="invalid-feedback">
+																					<div className="text-danger">
 																						{props.errors.startDate}
 																					</div>
 																				)}
@@ -1028,11 +1116,30 @@ class UpdatePayroll extends React.Component {
 
 													
 												{this.getPayrollEmployeeList()}
-											
+												<Row><Col>
+														{this.state.selectedRows && (
+																					<div className="text-danger">
+																						{props.errors.selectedRows}
+																					</div>
+																				)}
+												</Col></Row>
 															<Row className="mt-4 ">
 
 
 																<Col>
+																
+																		<Button
+																			type="button"
+																			color="danger"
+																			className="btn-square"
+																				disabled1={this.state.disabled1}
+																			onClick={this.deletePayroll}
+																		>
+																			<i className="fa fa-trash"></i> {this.state.disabled1
+																			? 'Deleting...'
+																			: strings.Delete }
+																		</Button>
+																	
 																	<Button
 																		color="secondary"
 																		className="btn-square pull-right"

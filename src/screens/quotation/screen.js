@@ -1018,9 +1018,10 @@ class Quatation extends React.Component {
 										
 											
 											<TableHeaderColumn
+												dataAlign="right"
 												dataField="totalAmount"
 												dataSort
-											//	width="5%"
+												width="30%"
 												dataFormat={this.renderrfqAmount}
 												className="table-header-bg"
 												formatExtraData={universal_currency_list}

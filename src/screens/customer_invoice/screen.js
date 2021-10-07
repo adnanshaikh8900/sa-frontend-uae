@@ -1339,9 +1339,10 @@ min="0"
 												VAT Amount
 											</TableHeaderColumn> */}
 										<TableHeaderColumn
+											dataAlign="right"
 											dataField="totalAmount"
 											dataSort
-											//width="5%"
+											width="20%"
 											dataFormat={this.renderInvoiceAmount}
 											formatExtraData={universal_currency_list}
 											className="table-header-bg"

@@ -329,10 +329,10 @@ class SalesByProduct extends React.Component {
 														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.ProductName}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.QuantitySold}</th>
 
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>
+														<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 															{strings.Total+" "+strings.Amount}
 														</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.Average+" "+strings.Amount}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Average+" "+strings.Amount}</th>
 
 													</tr>
 												</thead>
@@ -345,7 +345,7 @@ class SalesByProduct extends React.Component {
 
 																	<td style={{ textAlign: 'center', width: '20%' }}>{item.productName}</td>
 																	<td style={{ textAlign: 'center', width: '20%' }}>{item.quantitySold}</td>
-																	<td style={{ textAlign: 'center', width: '20%' }}>
+																	<td style={{ textAlign: 'right', width: '20%' }}>
 																		<Currency
 																			value={item.totalAmountForAProduct}
 																			currencySymbol={
@@ -356,7 +356,7 @@ class SalesByProduct extends React.Component {
 																		/>
 																	</td>
 
-																	<td style={{ textAlign: 'center', width: '20%' }}>
+																	<td style={{ textAlign: 'right', width: '20%' }}>
 																		<Currency
 																			value={item.averageAmount}
 																			currencySymbol={

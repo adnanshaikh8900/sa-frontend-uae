@@ -1176,9 +1176,10 @@ class CreditNotes extends React.Component {
 												VAT Amount
 											</TableHeaderColumn> */}
 											<TableHeaderColumn
+												dataAlign="right"
 												dataField="totalAmount"
 												dataSort
-												//width="5%"
+												width="30%"
 												dataFormat={this.renderInvoiceAmount}
 												formatExtraData={universal_currency_list}
 												className="table-header-bg"

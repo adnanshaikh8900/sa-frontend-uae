@@ -481,10 +481,10 @@ class ExpenseDetailsReport extends React.Component {
 														<th style={{ padding: '0.5rem', textAlign: 'center'  }}>
 														{strings.Status}
 														</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>
+														<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 														{strings.Amount}
 														</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center'  }}>{strings.Amount+" "+strings.WithTax}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'right'  }}>{strings.Amount+" "+strings.WithTax}</th>
 
 													</tr>
 												</thead>
@@ -499,7 +499,7 @@ class ExpenseDetailsReport extends React.Component {
 																	) : (" ")}</td>
 																	<td style={{ textAlign: 'center' }}>{item.transactionCategoryName}</td>
 																	<td style={{ textAlign: 'center' }}>{item.status}</td>
-																	<td style={{ textAlign: 'center', width: '20%' }}>
+																	<td style={{ textAlign: 'right', width: '20%' }}>
 																		<Currency
 																			value={item.amountWithoutTax}
 																			currencySymbol={
@@ -510,7 +510,7 @@ class ExpenseDetailsReport extends React.Component {
 																		/>
 																	</td>
 
-																	<td style={{ textAlign: 'center' }}>
+																	<td style={{ textAlign: 'right' }}>
 																		<Currency
 																			value={item.expenseAmount}
 																			currencySymbol={
@@ -530,7 +530,7 @@ class ExpenseDetailsReport extends React.Component {
 													<td style={{ textAlign: 'center', width: '20%' }}><b>{strings.Total}</b></td>
 													<td></td>
 													<td></td>
-													<td style={{ textAlign: 'center', width: '20%' }}>
+													<td style={{ textAlign: 'right', width: '20%' }}>
 													
 														<b><Currency
 															value={this.state.expenseDetailsList.totalAmountWithoutTax}
@@ -543,7 +543,7 @@ class ExpenseDetailsReport extends React.Component {
 														
 													</td>
 
-													<td style={{ textAlign: 'center', width: '20%' }}>
+													<td style={{ textAlign: 'right', width: '20%' }}>
 													<b>
 													<Currency
 															value={this.state.expenseDetailsList.totalAmount}

@@ -483,7 +483,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 															return (
 																<th
 																	key={index}
-																	style={{ fontWeight: '600' }}
+																	style={{ fontWeight: '600' ,textAlign:'right'}}
 																	className={column.align ? 'text-right' : ''}
 																	className="table-header-color"
 																>
@@ -544,15 +544,15 @@ class PayablesInvoiceDetailsReport extends React.Component {
 																					<td style={{ width: '10%' }}>
 																						{row['quantity']}
 																					</td>
-																					<td style={{ width: '12%' }}>
+																					<td style={{ width: '12%' ,textAlign:'right'}}>
 																						{row['unitPrice']}
 																					</td>
-																					<td style={{ width: '12%' }}>
+																					<td style={{ width: '12%' ,textAlign:'right'}}>
 																							{row.vatAmount > 0 && (row.unitPrice ? (
 																									""
 																								) : (
 																									<p
-																									className="text-left"
+																									className="text-right"
 																									// onClick={() =>
 																									// 	this.getInvoice(
 																									// 		row[
@@ -579,10 +579,10 @@ class PayablesInvoiceDetailsReport extends React.Component {
 																								
 																							)}
 																						</td>
-																					<td style={{ width: '15%' }}>
+																					<td style={{ width: '15%' ,textAlign:'right'}}>
 																						{row.totalAmount > 0 && (
 																							<p
-																								className="text-left"
+																								className="text-right"
 																							// onClick={() =>
 																							// 	this.getInvoice(
 																							// 		row[

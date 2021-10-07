@@ -853,6 +853,7 @@ class Expense extends React.Component {
 													{strings.CURRENCY}
 												</TableHeaderColumn>
 											<TableHeaderColumn
+												dataAlign="right"
 												thStyle={{ whiteSpace: 'normal' }}
 												dataField="expenseAmount"
 												dataSort

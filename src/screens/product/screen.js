@@ -589,7 +589,7 @@ class Product extends React.Component {
 													 {strings.VatPercentage}
 												</TableHeaderColumn>
 												<TableHeaderColumn
-												dataAlign="right"
+													dataAlign="right"
 													dataField="unitPrice"
 													dataSort
 													dataFormat={this.unitPrice}

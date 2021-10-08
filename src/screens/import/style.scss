@@ -10,6 +10,30 @@
 		}
 	}
 	background-color: #ffffffc7;
+
+	 .nav-tabs .nav-link
+				{
+					// border-top-left-radius: 1.25rem !important;
+					// border-top-right-radius: 1.25rem !important;
+					// border-bottom-left-radius: 1.25rem !important;
+					// border-bottom-right-radius: 1.25rem !important;
+					border-radius: 50% !important;
+					border: grey solid 0.5px !important;
+					
+				}	
+				
+    .nav-pills .nav-link{
+					margin: 30px;
+				.h4{
+						margin: 0 !important;
+				}
+				}
+	.nav-link{
+					padding: 10px 25px;;
+				}
+				.react-datepicker-wrapper{
+					width: 16% !important;
+				}
 }
 .forgot-password-modal {
 	max-width: 40%;

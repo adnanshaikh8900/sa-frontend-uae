@@ -337,7 +337,7 @@ renderName=(cell,row)=>{
 	};
 
 	handleSubmit = (data) => {
-		debugger
+		
 		this.setState({ disabled: true });
 		const { current_product_id } = this.state;
 		const productID = current_product_id;
@@ -360,13 +360,13 @@ renderName=(cell,row)=>{
 		const isActive = this.state.selectedStatus;
 
 		let productPriceType;
-		if (data['productPriceType'].includes('SALES')) {
+		if (data && data['productPriceType'] && data['productPriceType'].includes('SALES')) {
 			productPriceType = 'SALES';
 		}
-		if (data['productPriceType'].includes('PURCHASE')) {
+		if (data && data['productPriceType'] && data['productPriceType'].includes('PURCHASE')) {
 			productPriceType = 'PURCHASE';
 		}
-		if (
+		if ( data['productPriceType'] &&
 			data['productPriceType'].includes('SALES') &&
 			data['productPriceType'].includes('PURCHASE')
 		) {

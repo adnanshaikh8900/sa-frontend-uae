@@ -65,8 +65,8 @@ class Import extends React.Component {
 			upload: false,
 			migration: false,
 			migration_list: [],
-			activeTab: new Array(4).fill('1'),
-			date:''
+			activeTab: new Array(6).fill('1'),
+			date: ''
 		};
 	}
 
@@ -116,39 +116,39 @@ class Import extends React.Component {
 		this.setState({ isPasswordShown: !isPasswordShown });
 	};
 
-	saveAccountStartDate=(data,resetForm)=> {
-	const date=	data.date;
+	saveAccountStartDate = (data, resetForm) => {
+		const date = data.date;
 
-	if(isDate(date)){
-	this.props.migrationActions
-	.saveAccountStartDate(date)
-	.then((res) => {
-		if (res.status === 200) {
-			this.setState({
-				disabled: false,
-				upload: true,
-				migration: true,
-				migration_list: res.data
-			});
-			this.props.commonActions.tostifyAlert(
-				'success',
-				'Date saved Successfully.',
-			);
-			this.toggle(0, '2')
+		if (isDate(date)) {
+			this.props.migrationActions
+				.saveAccountStartDate(date)
+				.then((res) => {
+					if (res.status === 200) {
+						this.setState({
+							disabled: false,
+							upload: true,
+							migration: true,
+							migration_list: res.data
+						});
+						this.props.commonActions.tostifyAlert(
+							'success',
+							'Date saved Successfully.',
+						);
+						this.toggle(0, '2')
+					}
+				})
+				.catch((err) => {
+					this.setState({ disabled: false });
+					this.props.commonActions.tostifyAlert(
+						'error',
+						err && err.data ? err.data.message : 'Something Went Wrong',
+					);
+				});
+		} else {
+			alert("please select Date")
 		}
-	})
-	.catch((err) => {
-		this.setState({ disabled: false });
-		this.props.commonActions.tostifyAlert(
-			'error',
-			err && err.data ? err.data.message : 'Something Went Wrong',
-		);
-	});
-}else{
-	alert("please select Date")
-}
-	
-}
+
+	}
 
 	handleSubmit = (data) => {
 		this.setState({ loading: true, disabled: true });
@@ -277,7 +277,7 @@ class Import extends React.Component {
 										</Col>
 									</Row>
 								</CardHeader>
-								<CardBody>
+								<CardBody className="log-in-screen">
 									{/* <Row>
 										<Col lg={12}>
 											<div>
@@ -525,7 +525,7 @@ class Import extends React.Component {
 													this.toggle(0, '1');
 												}}
 											>
-												Step 1
+												<h4 style={{margin:"4px 2px 4px 2px"}}>1</h4>
 											</NavLink>
 										</NavItem>
 										<NavItem>
@@ -535,7 +535,7 @@ class Import extends React.Component {
 													this.toggle(0, '2');
 												}}
 											>
-												Step 2
+												<h4 style={{margin:"4px 0px 4px 0px"}}>2</h4>
 											</NavLink>
 										</NavItem>
 										<NavItem>
@@ -545,7 +545,7 @@ class Import extends React.Component {
 													this.toggle(0, '3');
 												}}
 											>
-												step 3
+												<h4 style={{margin:"4px 0px 4px 0px"}}>3</h4>
 											</NavLink>
 										</NavItem>
 										<NavItem>
@@ -555,36 +555,55 @@ class Import extends React.Component {
 													this.toggle(0, '4');
 												}}
 											>
-												step 4
+												<h4 style={{margin:"4px 0px 4px 0px"}}>4</h4>
 											</NavLink>
 										</NavItem>
+										{/* <NavItem>
+											<NavLink
+												active={this.state.activeTab[0] === '5'}
+												onClick={() => {
+													this.toggle(0, '5');
+												}}
+											>
+												<h4>5</h4>
+											</NavLink>
+										</NavItem>
+										<NavItem>
+											<NavLink
+												active={this.state.activeTab[0] === '6'}
+												onClick={() => {
+													this.toggle(0, '6');
+												}}
+											>
+												<h4>6</h4>
+											</NavLink>
+										</NavItem> */}
 									</Nav>
 									<TabContent activeTab={this.state.activeTab[0]}>
 										<TabPane tabId="1">
 
 											<div className="create-employee-screen">
 												<div className="animated fadeIn">
-
+													<div className="text-center mb-5"><h3>Pick Migration Beginning Date</h3></div>
 													<Formik
-														initialValues={this.state.initValue}
+														initialValues={this.state}
 														onSubmit={(values, { resetForm }) => {
 															this.saveAccountStartDate(values, resetForm)
 														}}
 														validate={(values) => {
 															let errors = {};
 															debugger
-															if (values.date==='') {
+															if (values.date === '') {
 																errors.date = 'Date is required';
 															}
-															if (values.date=== undefined) {
+															if (values.date === undefined) {
 																errors.date = 'Date is required';
 															}
-														
+
 															return errors;
 														}}
-														
-													
-															validationSchema={Yup.object().shape({
+
+														validationSchema={Yup.object().shape({
 															date: Yup.string().required(
 																'Date is required',
 															),
@@ -593,10 +612,9 @@ class Import extends React.Component {
 													>
 														{(props) => (
 
-															<Form onSubmit={props.handleSubmit}>
-
-																<FormGroup className="mb-3 mt-3 text-center" style={{ paddingLeft: "35%", paddingRight: "35%" }}>
-																	<Label htmlFor="date"><span className="text-danger">*</span>Date</Label>
+															<Form className="mt-3" onSubmit={props.handleSubmit}>
+																<div className="text-center" style={{ display: "flex", marginLeft: "40%" }}>
+																	<div style={{ width: "10%" }}>	<span className="text-danger">*</span>Date	</div>
 																	<DatePicker
 																		className={`form-control ${props.errors.date && props.touched.date ? "is-invalid" : ""}`}
 																		id="date"
@@ -606,25 +624,32 @@ class Import extends React.Component {
 																		showYearDropdown
 																		dateFormat="dd/MM/yyyy"
 																		dropdownMode="select"
-																		style={{textAlign:"center"}}
+																		style={{ textAlign: "center" }}
 																		selected={props.values.date}
 																		value={props.values.date}
 																		onChange={(value) => {
 																			props.handleChange("date")(value)
-																			this.setState({date:value})
+																			this.setState({ date: value })
 																		}}
 																	/>
-																	{props.errors.date && props.touched.date && (
-																		<div className="invalid-feedback">{props.errors.date}</div>
-																	)}
-																</FormGroup>
-																<div className="text-center" ><b>Note : </b><i> Please select date from which you need to migrate into SimpleAccounts.<br/> Please note all data prior to above date will be ignored.</i></div>
+
+
+																</div>
+																<div className="text-center" >
+																{props.errors.date && props.touched.date && (
+																		<div className="text-danger">{props.errors.date}</div>
+																	)}<br></br>
+																	<b>Note : </b><i> Please select date from which you need to migrate into SimpleAccounts.<br /> Please note all data prior to above date will be ignored.</i>
+																	
+																	
+
+																</div>
 
 																<Row>
 																	<Col lg={12} className="mt-5">
 
 
-																		<Button name="button" color="primary" className="btn-square pull-right"
+																		{/* <Button name="button" color="primary" className="btn-square pull-right"
 																			// onClick={() => {
 																			// 	// this.saveAccountStartDate(this.state.date)
 																			// 	props.handleSubmit()
@@ -636,8 +661,25 @@ class Import extends React.Component {
 																			}}
 																		>
 																			Next<i class="far fa-arrow-alt-circle-right ml-1"></i>
-																		</Button>
+																		</Button> */}
+																		<div className="table-wrapper">
+																			<FormGroup className="text-center">
+																				<Button disabled={true} color="secondary" className="btn-square pull-left"
+																					onClick={() => { this.toggle(0, '1') }}>
+																					<i className="far fa-arrow-alt-circle-left"></i> Back
+																				</Button>
 
+																				<Button name="button" color="primary" className="btn-square pull-right mr-3"
+																					onClick={() => {
+																						this.setState({ createMore: false }, () => {
+																							props.handleSubmit()
+																						})
+																					}}>
+																					Next	<i class="far fa-arrow-alt-circle-right mr-1"></i>
+																				</Button>
+
+																			</FormGroup>
+																		</div>
 
 																	</Col>
 																</Row>
@@ -655,6 +697,7 @@ class Import extends React.Component {
 											<Row>
 												<Col lg={12}>
 													<div>
+													<div className="text-center mb-5"><h3>Upload Files</h3></div>
 														<Formik
 															initialValues={initValue}
 															ref={this.formRef}
@@ -899,18 +942,21 @@ class Import extends React.Component {
 											</Row>
 											<Row>
 												<Col lg={12} className="mt-5">
+													<div className="table-wrapper">
+														<FormGroup className="text-center">
+															<Button color="secondary" className="btn-square pull-left"
+																onClick={() => { this.toggle(0, '1') }}>
+																<i className="far fa-arrow-alt-circle-left"></i> Back
+															</Button>
 
-
-													<Button name="button" color="primary" className="btn-square pull-right"
-														onClick={() => {
-															this.toggle(0, '3')
-														}}
-
-													>
-														Next<i class="far fa-arrow-alt-circle-right ml-1"></i>
-													</Button>
-
-
+															<Button name="button" color="primary" className="btn-square pull-right mr-3"
+																onClick={() => {
+																	this.toggle(0, '3')
+																}}>
+																Next	<i class="far fa-arrow-alt-circle-right mr-1"></i>
+															</Button>
+														</FormGroup>
+													</div>
 												</Col>
 											</Row>
 
@@ -919,79 +965,53 @@ class Import extends React.Component {
 										<TabPane tabId="3">
 											<div className="create-employee-screen">
 												<div className="animated fadeIn">
-													
-											<Formik
-												initialValues={this.state.initValue}
-												onSubmit={(values, { resetForm }) => {
-													this.handleSubmitForSalary(values, resetForm)
-												}}
-												validationSchema={Yup.object().shape({
-
-													// lastName: Yup.string()
-													// .required("Last Name is Required"),
-													// email: Yup.string()
-													// .email("Valid Email Required"),
-													// employeeDesignationId : Yup.string()
-													// .required("Designation is required"),
-													// salaryRoleId :  Yup.string()
-													// .required(" Employee Role is required"),
-													// date: Yup.date()
-													//     .required('date is Required')                   
-												})}
-											>
-												{(props) => (
-
-													<Form onSubmit={props.handleSubmit}>
-
-														<Row>
-															<Col lg={12} className="mt-5">
+												<div className="text-center mb-5"><h3>Preview Files</h3></div>
+												
+													<Formik
+														initialValues={this.state.initValue}
+														onSubmit={(values, { resetForm }) => {
+															this.handleSubmitForSalary(values, resetForm)
+														}}
+														validationSchema={Yup.object().shape({
 
 
-																<Button name="button" color="primary" className="btn-square pull-right"
-																	onClick={() => {
-																		this.toggle(0, '4')
-																	}}
+														})}
+													>
+														{(props) => (
 
-																>
-																	Next<i class="far fa-arrow-alt-circle-right ml-1"></i>
-																</Button>
+															<Form onSubmit={props.handleSubmit}>
+
+																<Row>
+																	<Col lg={12} className="mt-5">
+
+																		<div className="table-wrapper">
+																			<FormGroup className="text-center">
+																				<Button color="secondary" className="btn-square pull-left"
+																					onClick={() => { this.toggle(0, '2') }}>
+																					<i className="far fa-arrow-alt-circle-left"></i> Back
+																				</Button>
+
+																				<Button name="button" color="primary" className="btn-square pull-right mr-3"
+																					onClick={() => {
+																						this.toggle(0, '4')
+																					}}>
+																					Next	<i class="far fa-arrow-alt-circle-right mr-1"></i>
+																				</Button>
+																			</FormGroup>
+																		</div>
 
 
-															</Col>
-														</Row>
-													</Form>
-												)
-												}
-											</Formik>
+																	</Col>
+																</Row>
+															</Form>
+														)
+														}
+													</Formik>
 												</div>
 											</div>
-
-
-											{/* <div className="table-wrapper">
-                                        <FormGroup className="text-center">
-                                            <Button color="secondary" className="btn-square"
-                                                onClick={() => { this.toggle(0, '2') }}>
-                                                <i className="fa fa-ban"></i> Back
-                                      </Button>
-                                            <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
-                                                this.setState({ createMore: false }, () => {
-                                                    //   props.handleSubmit()
-                                                })
-                                            }}>
-                                                <i className="fa fa-dot-circle-o"></i> Save
-                                      </Button>
-                                            <Button name="button" color="primary" className="btn-square mr-3"
-                                                onClick={() => {
-                                                    this.toggle(0, '4')
-                                                }}>
-                                                <i class="far fa-arrow-alt-circle-left mr-1"></i> Next
-                                      </Button>
-
-                                        </FormGroup>
-                                    </div> */}
 										</TabPane>
 										<TabPane tabId="4">
-
+										<div className="text-center mb-5"><h3>Set Opening Balances</h3></div>
 											<Formik
 												initialValues={this.state.initValue}
 												onSubmit={(values, { resetForm }) => {
@@ -999,16 +1019,7 @@ class Import extends React.Component {
 												}}
 												validationSchema={Yup.object().shape({
 
-													// lastName: Yup.string()
-													// .required("Last Name is Required"),
-													// email: Yup.string()
-													// .email("Valid Email Required"),
-													// employeeDesignationId : Yup.string()
-													// .required("Designation is required"),
-													// salaryRoleId :  Yup.string()
-													// .required(" Employee Role is required"),
-													// date: Yup.date()
-													//     .required('date is Required')                   
+
 												})}
 											>
 												{(props) => (
@@ -1019,14 +1030,21 @@ class Import extends React.Component {
 															<Col lg={12} className="mt-5">
 
 
-																<Button name="button" color="primary" className="btn-square pull-right"
-																	onClick={() => {
-																		this.toggle(0, '1')
-																	}}
+																<div className="table-wrapper">
+																	<FormGroup className="text-center">
+																		<Button color="secondary" className="btn-square pull-left"
+																			onClick={() => { this.toggle(0, '3') }}>
+																			<i className="far fa-arrow-alt-circle-left"></i> Back
+																		</Button>
 
-																>
-																	Finish<i class="far fa-arrow-alt-circle-right ml-1"></i>
-																</Button>
+																		<Button name="button" color="primary" className="btn-square pull-right mr-3"
+																			onClick={() => {
+																				this.toggle(0, '5')
+																			}}>
+																			Next	<i class="far fa-arrow-alt-circle-right mr-1"></i>
+																		</Button>
+																	</FormGroup>
+																</div>
 
 
 															</Col>
@@ -1037,6 +1055,94 @@ class Import extends React.Component {
 											</Formik>
 
 										</TabPane>
+										{/* <TabPane tabId="5">
+
+											<Formik
+												initialValues={this.state.initValue}
+												onSubmit={(values, { resetForm }) => {
+													this.handleSubmitForSalary(values, resetForm)
+												}}
+												validationSchema={Yup.object().shape({
+
+												})}
+											>
+												{(props) => (
+
+													<Form onSubmit={props.handleSubmit}>
+
+														<Row>
+															<Col lg={12} className="mt-5">
+
+
+																<div className="table-wrapper">
+																	<FormGroup className="text-center">
+																		<Button color="secondary" className="btn-square pull-left"
+																			onClick={() => { this.toggle(0, '4') }}>
+																			<i className="far fa-arrow-alt-circle-left"></i> Back
+																		</Button>
+
+																		<Button name="button" color="primary" className="btn-square pull-right mr-3"
+																			onClick={() => {
+																				this.toggle(0, '6')
+																			}}>
+																			Next	<i class="far fa-arrow-alt-circle-right mr-1"></i>
+																		</Button>
+																	</FormGroup>
+																</div>
+
+
+															</Col>
+														</Row>
+													</Form>
+												)
+												}
+											</Formik>
+
+										</TabPane>
+										<TabPane tabId="6">
+
+											<Formik
+												initialValues={this.state.initValue}
+												onSubmit={(values, { resetForm }) => {
+													this.handleSubmitForSalary(values, resetForm)
+												}}
+												validationSchema={Yup.object().shape({
+
+												})}
+											>
+												{(props) => (
+
+													<Form onSubmit={props.handleSubmit}>
+
+														<Row>
+															<Col lg={12} className="mt-5">
+
+
+																<div className="table-wrapper">
+																	<FormGroup className="text-center">
+																		<Button color="secondary" className="btn-square pull-left"
+																			onClick={() => { this.toggle(0, '5') }}>
+																			<i className="far fa-arrow-alt-circle-left"></i> Back
+																		</Button>
+
+																		<Button name="button" color="primary" className="btn-square pull-right mr-3"
+																			onClick={() => {
+																				this.toggle(0, '1')
+																			}}>
+																			Next	<i class="far fa-arrow-alt-circle-right mr-1"></i>
+																		</Button>
+																	</FormGroup>
+																</div>
+
+
+															</Col>
+														</Row>
+													</Form>
+												)
+												}
+											</Formik>
+
+										</TabPane> */}
 
 									</TabContent>
 									{/* added by suraj */}

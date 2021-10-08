@@ -130,6 +130,7 @@ class DetailExpense extends React.Component {
 								loading: false,
 								current_expense_id: this.props.location.state.expenseId,
 								initValue: {
+									expenseNumber:res.data.expenseNumber,
 									payee: res.data.payee,
 									expenseDate: res.data.expenseDate ? res.data.expenseDate : '',
 									currency: res.data.currencyCode ? res.data.currencyCode : '',
@@ -186,6 +187,7 @@ class DetailExpense extends React.Component {
 		this.setState({ disabled: true });
 		const { current_expense_id } = this.state;
         const {
+			expenseNumber,
 			payee,
 			expenseDate,
 			currency,
@@ -201,6 +203,7 @@ class DetailExpense extends React.Component {
 		} = data;
 
 		let formData = new FormData();
+		formData.append('expenseNumber', expenseNumber);
 		formData.append('expenseId', current_expense_id);
 		formData.append('payee', payee ? payee.value : '');
 		formData.append(
@@ -408,6 +411,9 @@ class DetailExpense extends React.Component {
 														return errors;
 													}}
 													validationSchema={Yup.object().shape({
+														expenseNumber: Yup.string().required(
+															'Expense number is required',
+														),
 														expenseCategory: Yup.string().required(
 															'Expense Category is required',
 														),
@@ -466,6 +472,64 @@ class DetailExpense extends React.Component {
 												>
 													{(props) => (
 														<Form onSubmit={props.handleSubmit}>
+
+<Row>
+														<Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="expenseNumber">
+																			<span className="text-danger">*</span>
+																			Expense Number
+																			{/* <i
+																				id="ProductCodeTooltip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="ProductCodeTooltip"
+																			>
+																				Product Code - Unique identifier code
+																				for the product
+																			</UncontrolledTooltip> */}
+																		</Label>
+																		<Input
+																			type="text"
+																			maxLength="70"
+																			id="expenseNumber"
+																			name="expenseNumber"
+																			placeholder={strings.Enter+" Expense Number"}
+																			onChange={(option) => {
+																				if (
+																					option.target.value === '' ||
+																					this.regExBoth.test(
+																						option.target.value,
+																					)
+																				) {
+																					props.handleChange('expenseNumber')(
+																						option,
+																					);
+																				}
+																				// this.expenseValidationCheck(
+																				// 	option.target.value,
+																				// );
+																			}}
+																			// onBlur={handleBlur}
+																			value={props.values.expenseNumber}
+																			className={
+																				props.errors.expenseNumber &&
+																				props.touched.expenseNumber
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{props.errors.expenseNumber &&
+																			props.touched.expenseNumber && (
+																				<div className="invalid-feedback">
+																					{props.errors.expenseNumber}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
+														</Row>
 															<Row>
 																<Col lg={3}>
 																	<FormGroup className="mb-3" >

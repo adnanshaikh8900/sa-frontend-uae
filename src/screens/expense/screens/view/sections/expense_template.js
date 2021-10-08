@@ -94,6 +94,9 @@ class ExpenseTemplate extends Component {
 
 <Table  striped>
 <tbody  >
+<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.Expense+" "+strings.Number}</b> :</td> 
+	           <td> {expenseData.expenseNumber ?expenseData.expenseNumber :"-" }</td>
+	</tr>
     <tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.PaidBy}</b> :</td> 
 	           <td> {expenseData.payee}</td>
 	</tr>

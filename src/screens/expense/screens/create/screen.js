@@ -120,6 +120,7 @@ class CreateExpense extends React.Component {
 
 	componentDidMount = () => {
 		this.initializeData();
+		this.getExpenseNumber();
 	};
 
 	initializeData = () => {
@@ -165,6 +166,7 @@ class CreateExpense extends React.Component {
 		this.setState({ disabled: true });
 		this.setState({ disabled: true });
 		const {
+			expenseNumber,
 			payee,
 			expenseDate,
 			currency,
@@ -183,7 +185,8 @@ class CreateExpense extends React.Component {
 			exclusiveVat
 		} = data;
 		let formData = new FormData();
-
+		
+		formData.append('expenseNumber', expenseNumber ? expenseNumber : '');
 		formData.append('payee', payee ? payee : '');
 		formData.append('expenseDate', expenseDate !== null ? expenseDate : '');
 		formData.append('expenseDescription', expenseDescription);
@@ -297,7 +300,62 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 			props.setFieldValue('attachmentFile', file, true);
 		}
 	};
+	getExpenseNumber=()=>{
 
+		this.props.expenseCreateActions.getExpenseNumber().then((res) => {
+			if (res.status === 200) {
+				this.setState({
+					initValue: {
+						...this.state.initValue,
+						...{ expenseNumber: res.data },
+					},
+				});
+				this.formRef.current.setFieldValue('expenseNumber', res.data, true,true
+				// this.validationCheck(res.data)
+				);
+			}
+		});
+	
+	console.log(this.state.employeeCode)
+	}
+	
+	validationCheck = (value) => {
+		const data = {
+			moduleType: 1,
+			name: value,
+		};
+		this.props.expenseCreateActions.checkValidation(data).then((response) => {
+			if (response.data === 'Product name already exists') {
+				this.setState({
+					exist: true,
+				});
+			} else {
+				this.setState({
+					exist: false,
+				});
+			}
+		});
+	};
+	
+	expenseValidationCheck = (value) => {
+		const data = {
+			moduleType: 11,
+			productCode: value,
+		};
+		this.props.expenseCreateActions
+			.checkExpenseCodeValidation(data)
+			.then((response) => {
+				if (response.data === 'Expense already exists') {
+					this.setState({
+						ProductExist: true,
+					});
+				} else {
+					this.setState({
+						ProductExist: false,
+					});
+				}
+			});
+	};
 	render() {
 		strings.setLanguage(this.state.language);
 		const { initValue, payMode } = this.state;
@@ -372,6 +430,9 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({
+													expenseNumber: Yup.string().required(
+														'Expense number is required',
+													),
 													expenseCategory: Yup.string().required(
 														'Expense Category is required',
 													),
@@ -435,6 +496,63 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 											>
 												{(props) => (
 													<Form onSubmit={props.handleSubmit}>
+														<Row>
+														<Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="expenseNumber">
+																			<span className="text-danger">*</span>
+																			Expense Number
+																			{/* <i
+																				id="ProductCodeTooltip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="ProductCodeTooltip"
+																			>
+																				Product Code - Unique identifier code
+																				for the product
+																			</UncontrolledTooltip> */}
+																		</Label>
+																		<Input
+																			type="text"
+																			maxLength="70"
+																			id="expenseNumber"
+																			name="expenseNumber"
+																			placeholder={strings.Enter+" Expense Number"}
+																			onChange={(option) => {
+																				if (
+																					option.target.value === '' ||
+																					this.regExBoth.test(
+																						option.target.value,
+																					)
+																				) {
+																					props.handleChange('expenseNumber')(
+																						option,
+																					);
+																				}
+																				// this.expenseValidationCheck(
+																				// 	option.target.value,
+																				// );
+																			}}
+																			// onBlur={handleBlur}
+																			value={props.values.expenseNumber}
+																			className={
+																				props.errors.expenseNumber &&
+																				props.touched.expenseNumber
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{props.errors.expenseNumber &&
+																			props.touched.expenseNumber && (
+																				<div className="invalid-feedback">
+																					{props.errors.expenseNumber}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
+														</Row>
 														<Row>
 															<Col lg={3}>
 																<FormGroup className="mb-3">

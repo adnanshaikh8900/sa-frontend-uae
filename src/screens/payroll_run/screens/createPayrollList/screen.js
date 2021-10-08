@@ -800,9 +800,7 @@ calculatePayperioad=(startDate,endDate)=>{
 																				dateFormat="dd/MM/yyyy"
 																				dropdownMode="select"
 																				selected={props.values.payrollDate}
-																				// disabled={this.disableForAddButton() ? true : false}
-
-
+																			
 																				onChange={(value) => {
 																					props.handleChange('payrollDate')(value);
 
@@ -839,27 +837,7 @@ calculatePayperioad=(startDate,endDate)=>{
 																				focusedInput={this.state.focusedInput}
 																				onFocusChange={(option)=>{this.setState({focusedInput:option})}}
 																				/>																							
-																			{/* <DatePicker
-																			autoComplete="Off"
-																				id="date"
-																				name="startDate"
-																				className={`form-control ${props.errors.startDate &&
-																					props.touched.startDate
-																					? 'is-invalid'
-																					: ''
-																					}`}
-																				placeholderText={"Select Start Date"}
-																				selected={props.values.startDate}
-																				showMonthDropdown
-																				showYearDropdown
-																				dropdownMode="select"
-																				dateFormat="dd/MM/yyyy"
-
-																				onChange={(value) => {
-																					props.handleChange('startDate')(value);
-																					this.calculatePayperioad(value,props.values.endDate)
-																				}}
-																			/> */}
+																			
 																			{props.errors.startDate &&
 																				props.touched.startDate && (
 																					<div className="text-danger">
@@ -867,75 +845,7 @@ calculatePayperioad=(startDate,endDate)=>{
 																					</div>
 																				)}
 																		</FormGroup>
-																	{/* <div style={{display: "flex"}}>
-																	<FormGroup className="mt-2"><i class="far fa-calendar-alt mt-1"></i>&nbsp;</FormGroup>
-																	<FormGroup >
-
-																			<DatePicker
-																			autoComplete="Off"
-																				id="date"
-																				name="startDate"
-																				className={`form-control ${props.errors.startDate &&
-																					props.touched.startDate
-																					? 'is-invalid'
-																					: ''
-																					}`}
-																				placeholderText={"Select Start Date"}
-																				selected={props.values.startDate}
-																				showMonthDropdown
-																				showYearDropdown
-																				dropdownMode="select"
-																				dateFormat="dd/MM/yyyy"
-
-																				onChange={(value) => {
-																					props.handleChange('startDate')(value);
-																					this.calculatePayperioad(value,props.values.endDate)
-																				}}
-																			/>
-																			{props.errors.startDate &&
-																				props.touched.startDate && (
-																					<div className="invalid-feedback">
-																						{props.errors.startDate}
-																					</div>
-																				)}
-																		</FormGroup>
-																		
-																		<FormGroup >	<div className='text-center ml-1 mr-1'>_</div></FormGroup>
-																		<FormGroup className="mt-2">&nbsp;<i class="far fa-calendar-alt "></i>&nbsp;</FormGroup>
-																		<FormGroup >
-																		
-																			<DatePicker
-																				autoComplete="Off"
-																				id="date"
-																				name="endDate"
-																				className={`form-control ${props.errors.endDate &&
-																					props.touched.endDate
-																					? 'is-invalid'
-																					: ''
-																					}`}
-																					placeholderText={"Select End Date"}
-																				selected={props.values.endDate}
-																				showMonthDropdown
-																				showYearDropdown
-																				dropdownMode="select"
-																				dateFormat="dd/MM/yyyy"
-
-																				onChange={(value) => {
-																					props.handleChange('endDate')(value);																					
-																					this.calculatePayperioad(props.values.startDate,value)
-																				}}
-																			/>
-																			{props.errors.endDate &&
-																				props.touched.endDate && (
-																					<div className="invalid-feedback">
-																						{props.errors.endDate}
-																					</div>
-																				)}
-
-																		</FormGroup>
-
-																	</div>
-																		 */}
+																
 																	</Col>
 
 																	
@@ -980,6 +890,7 @@ calculatePayperioad=(startDate,endDate)=>{
 																	</Col>
 																	
 																</Row>
+																<hr/>
 																<Row>
 													
 																</Row>

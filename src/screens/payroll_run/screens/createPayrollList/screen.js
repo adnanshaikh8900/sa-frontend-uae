@@ -107,6 +107,7 @@ class CreatePayrollList extends React.Component {
 			paidDays:0,
 			countForTableApiCall:0,
 			focusedInput:null,
+			currencyIsoCode:"AED"
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -197,38 +198,6 @@ calculatePayperioad=(startDate,endDate)=>{
 			() => { },
 		);
 
-	};
-
-	disable = () => {
-
-		if (this.state.status === '') {
-			return true;
-		}
-		else
-			if (this.state.status === "Submitted") {
-				return true;
-			} else {
-				return false;
-			}
-	};
-	disableForGenerateButtun = () => {
-
-		if (this.state.allPayrollEmployee && this.state.allPayrollEmployee.length === 0) {
-			return true;
-		}
-		else
-			if (this.state.status === "Submitted") {
-				return true;
-			} else {
-				return false;
-			}
-	};
-	disableForAddButton = () => {
-		if (this.state.status === "Submitted") {
-			return true;
-		} else {
-			return false;
-		}
 	};
 
 	addEmployee = (data, resetForm) => {
@@ -456,7 +425,7 @@ calculatePayperioad=(startDate,endDate)=>{
 												id="lopDay"
 												name="lopDay"
 												value={cell || 0}
-												disabled={this.disableForAddButton() ? true : false}
+												
 												onChange={(evt) => {
 													
 													let value = parseInt(evt.target.value) ;
@@ -504,7 +473,19 @@ calculatePayperioad=(startDate,endDate)=>{
 
 										);
 
-									} else {
+									}else if(col.key === 'grossPay'){
+										debugger
+										return  (<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" "+cell.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>)
+									}
+									 else
+									 if(col.key === 'netPay'){
+										return	(<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" "+cell.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>);
+								 }
+								 
+								  else if(col.key === 'deduction'){
+									return (<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" "+cell.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>);
+							 }
+							  else {
 										return (
 											<div>{cell}</div>
 										)
@@ -770,7 +751,7 @@ calculatePayperioad=(startDate,endDate)=>{
 																				id="payrollSubject"
 																				name="payrollSubject"
 																				value={props.values.payrollSubject}
-																				disabled={this.disableForAddButton() ? true : false}
+																			
 																				placeholder={strings.Enter + " Payroll Subject"}
 																				onChange={(value) => {
 																					props.handleChange('payrollSubject')(value);
@@ -858,7 +839,7 @@ calculatePayperioad=(startDate,endDate)=>{
 																		<FormGroup>
 																			
 																			<Select
-																				isDisabled={this.disable() ? true : false}
+																			
 																				styles={customStyles}
 																				id="userId"
 																				name="userId"
@@ -900,7 +881,7 @@ calculatePayperioad=(startDate,endDate)=>{
 																		 {/* add and remove */}
 
 																		{/* <Button type="button" color="primary" className="btn-square ml-3 mr-1 "
-																			disabled={this.disableForAddButton() ? true : false}
+																			
 																			onClick={() => {
 																				// this.setState(() => {
 																				// 	props.handleSubmit()
@@ -918,7 +899,7 @@ calculatePayperioad=(startDate,endDate)=>{
 																				this.removeEmployee()
 																			}}
 
-																			disabled={this.state.selectedRows.length === 0}
+																			
 																		>
 																			<i class="far fa-trash-alt mr-1"></i>
 																			Remove Employees
@@ -998,14 +979,14 @@ calculatePayperioad=(startDate,endDate)=>{
 						</Col>
 					</Row>
 				</div>
-				<AddEmployeesModal
+				{/* <AddEmployeesModal
 					openModal={this.state.openModal}
 					closeModal={(e) => {
 						this.closeModal(e);
 					}}
 
 				// employee_list={employee_list.data}				
-				/>
+				/> */}
 			</div>
 		)
 	}

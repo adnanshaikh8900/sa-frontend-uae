@@ -92,7 +92,8 @@ class PayrollApproverScreen extends React.Component {
 				clickToSelect: false,
 				onSelect: this.onRowSelect,
 				onSelectAll: this.onSelectAll,
-			}
+			},
+			currencyIsoCode : "AED"
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -153,7 +154,7 @@ class PayrollApproverScreen extends React.Component {
 					payrollSubject: res.data.payrollSubject ? res.data.payrollSubject : '',
 					runDate: res.data.runDate ? res.data.runDate : '',
 					status: res.data.status ? res.data.status : '',
-
+					currencyIsoCode : res.data.currencyIsoCode ? res.data.currencyIsoCode : "AED"
 				}
 				)
 
@@ -530,6 +531,18 @@ class PayrollApproverScreen extends React.Component {
 									// 	);
 
 									// } else 
+									 if(col.key === 'grossPay'){
+										
+										return  (<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" "+cell.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>)
+									}
+									 else
+									 if(col.key === 'netPay'){
+										return	(<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" "+cell.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>);
+								 }
+								 
+								  else if(col.key === 'deduction'){
+									return (<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" "+cell.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>);
+							 }
 									{
 										return (
 											<div>{cell}</div>

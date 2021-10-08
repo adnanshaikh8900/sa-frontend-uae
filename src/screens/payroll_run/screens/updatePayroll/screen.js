@@ -106,6 +106,7 @@ class UpdatePayroll extends React.Component {
 			 submitButton:true,
 			 payrollApprover:undefined,
 			 dialog: null,
+			 currencyIsoCode:"AED"
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -184,6 +185,7 @@ class UpdatePayroll extends React.Component {
 					payrollSubject: res.data.payrollSubject ? res.data.payrollSubject : '',
 					runDate: res.data.runDate ? res.data.runDate : '',
 					status: res.data.status ? res.data.status : '',
+					currencyIsoCode:res.data.currencyIsoCode ? res.data.currencyIsoCode : 'AED',
 					
 
 				}
@@ -569,7 +571,18 @@ class UpdatePayroll extends React.Component {
 
 										);
 
-									} else {
+									}else if(col.key === 'grossPay'){
+										
+										return  (<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" "+cell.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>)
+									}
+									 else
+									 if(col.key === 'netPay'){
+										return	(<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" "+cell.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>);
+								 }
+								 
+								  else if(col.key === 'deduction'){
+									return (<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" "+cell.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>);
+							 } else {
 										return (
 											<div>{cell}</div>
 										)

@@ -82,7 +82,8 @@ class CreateExpense extends React.Component {
 				vatCategoryId: '',
 				payMode: '',
 				bankAccountId: '',
-				exclusiveVat:false
+				exclusiveVat:false,
+				exist:false,
 			},
 			currentData: {},
 			fileName: '',
@@ -319,46 +320,46 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 	console.log(this.state.employeeCode)
 	}
 	
-	validationCheck = (value) => {
-		const data = {
-			moduleType: 1,
-			name: value,
-		};
-		this.props.expenseCreateActions.checkValidation(data).then((response) => {
-			if (response.data === 'Product name already exists') {
-				this.setState({
-					exist: true,
-				});
-			} else {
-				this.setState({
-					exist: false,
-				});
-			}
-		});
-	};
+	// validationCheck = (value) => {
+	// 	const data = {
+	// 		moduleType: 18,
+	// 		name: value,
+	// 	};
+	// 	this.props.expenseCreateActions.checkValidation(data).then((response) => {
+	// 		if (response.data === 'Expense Number already exists') {
+	// 			this.setState({
+	// 				exist: true,
+	// 			});
+	// 		} else {
+	// 			this.setState({
+	// 				exist: false,
+	// 			});
+	// 		}
+	// 	});
+	// };
 	
 	expenseValidationCheck = (value) => {
 		const data = {
-			moduleType: 11,
-			productCode: value,
+			moduleType: 18,
+			name: value,
 		};
 		this.props.expenseCreateActions
 			.checkExpenseCodeValidation(data)
 			.then((response) => {
-				if (response.data === 'Expense already exists') {
+				if (response.data === 'Expense Number already exists') {
 					this.setState({
-						ProductExist: true,
+						exist: true,
 					});
 				} else {
 					this.setState({
-						ProductExist: false,
+					    exist: false,
 					});
 				}
 			});
 	};
 	render() {
 		strings.setLanguage(this.state.language);
-		const { initValue, payMode } = this.state;
+		const { initValue, payMode ,exist} = this.state;
 		const {
 			// currency_list,
 			expense_categories_list,
@@ -422,7 +423,10 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 													// ) {
 													// 	errors.bankAccountId = 'Bank Account is Required';
 													// }
-													
+													if (exist === true) {
+														errors.expenseNumber =
+															'Expense Number already exists';
+													}
 													if(values.currency ==='' || values.currency === 150){
 														errors.currency="Currency is required "
 													}
@@ -531,9 +535,9 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																						option,
 																					);
 																				}
-																				// this.expenseValidationCheck(
-																				// 	option.target.value,
-																				// );
+																				this.expenseValidationCheck(
+																					option.target.value,
+																				);
 																			}}
 																			// onBlur={handleBlur}
 																			value={props.values.expenseNumber}

@@ -543,7 +543,9 @@ class Expense extends React.Component {
 			dialog: null,
 		});
 	};
-
+	renderNumber=(cell,row)=>{		
+		return(<div className="text-center">{row && row.expenseNumber ?row.expenseNumber :"-"}</div>);
+	}
 	getCsvData = () => {
 		if (this.state.csvData.length === 0) {
 			let obj = {
@@ -807,10 +809,20 @@ class Expense extends React.Component {
 										>
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}
+												dataField="expenseNumber"
+												dataSort
+											    width="11%"
+												dataFormat={this.renderNumber}
+												className='table-header-bg'
+											>
+												{strings.Expense+" "+strings.No +"."}
+											</TableHeaderColumn>
+											<TableHeaderColumn
+												thStyle={{ whiteSpace: 'normal' }}
 												dataField="expenseDate"
 												dataSort
 												dataFormat={this.renderDate}
-												width="15%"
+												width="12%"
 												className='table-header-bg'
 											>
 												{strings.EXPENSEDATE}
@@ -838,7 +850,7 @@ class Expense extends React.Component {
 												thStyle={{ whiteSpace: 'normal' }}
 												dataField="transactionCategoryName"
 												dataSort
-												width="30%"
+												width="20%"
 												className='table-header-bg'
 											>
 												{strings.EXPENSECATEGORY}

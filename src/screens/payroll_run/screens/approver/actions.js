@@ -87,7 +87,7 @@ export const getAllPayrollEmployee = (_id) => {
 	return (dispatch) => {
 	  let data = {
 		method: 'GET',
-		url: `/rest/payroll/getAllPayrollEmployee?payrollid=${_id}`
+		url: `/rest/payroll/getAllPayrollEmployeeForApprover?payrollid=${_id}`
 	  }
   
 	  return authApi(data).then((res) => {

@@ -319,7 +319,8 @@ class PayrollRun extends React.Component {
 	};
 	renderComment = (cell, row) => {
 
-		return <label
+		if(row.comment !==null)
+		{return( <label
 			className="mb-0 label-bank"
 			id="UnitPriceTooltip1"
 			style={{
@@ -331,10 +332,13 @@ class PayrollRun extends React.Component {
 				placement="bottom"
 				target="UnitPriceTooltip1"
 			>
-				{row.comment}
+				{row.comment ? row.comment:''}
 			</UncontrolledTooltip>
 			Read Here..
-		</label>
+		</label>);}
+		else{
+			return("-");
+		}
 	};
 	onSelectAll = (isSelected, rows) => {
 

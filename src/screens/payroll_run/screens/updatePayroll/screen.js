@@ -148,7 +148,7 @@ class UpdatePayroll extends React.Component {
 
 	};
 	calculatePayperioad=(startDate,endDate)=>{
-		
+
 		// let diffDays=	Math.abs(parseInt((this.state.startDate - this.state.endDate) / (1000 * 60 * 60 * 24), 10))+1
 		const diffTime = Math.abs(startDate-endDate);
 		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))+1; 
@@ -199,7 +199,7 @@ class UpdatePayroll extends React.Component {
 					endDate:moment(dateArray[1])
 				})
 				
-
+				this.calculatePayperioad(this.state.startDate ,this.state.endDate);
 			}
 		}).catch((err) => {
 			this.setState({ loading: false })
@@ -409,7 +409,42 @@ class UpdatePayroll extends React.Component {
 			}
 		})
 	}
+	updateAmounts=(row,value)=>{
+		let newData = [...this.state.allPayrollEmployee]
+			newData = newData.map((data) => {
+											if (row.id === data.id) {
+															debugger
+														if(data.lopDay<value)
+														{		
+																													
+															data.lopDay = value;
+															data.noOfDays = data.noOfDays - 1
+															data.grossPay = Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2)
+															data.netPay =   Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
+														
+															data.payrollId = this.state.payroll_id
+															data.salaryDate = this.state.payrollDate
+														}
+														else if(data.lopDay>value)
+															{	
+																data.lopDay = value;
+																data.noOfDays = data.noOfDays + 1
+																data.grossPay = Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2)
+																data.netPay   = Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
+															
+																data.payrollId = this.state.payroll_id
+																data.salaryDate = this.state.payrollDate}
+														}
+														return data
 
+													})
+													console.log(newData)
+
+													this.setState({
+														allPayrollEmployee: newData
+
+													})
+	}
 
 	getAllPayrollEmployee = () => {
 		if(this.state.payrollId){
@@ -431,7 +466,16 @@ class UpdatePayroll extends React.Component {
 							allPayrollEmployee: res.data
 						})
 					}
-			
+					let newData = [...this.state.allPayrollEmployee]
+					newData = newData.map((data) => {					
+							data.noOfDays =this.state.paidDays					
+						return data
+					})
+					console.log(newData)
+	
+					this.setState({
+						allPayrollEmployee: newData
+					})
 			}
 		})
 	}
@@ -529,43 +573,8 @@ class UpdatePayroll extends React.Component {
 														return;
 													}
 
-													let newData = [...this.state.allPayrollEmployee]
-													newData = newData.map((data) => {
-
-
-														if (row.id === data.id) {
-															if(value>data.lopDay)
-														{																
-															data.lopDay = value;
-															data.noOfDays = data.noOfDays - 1
-															data.grossPay = Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2)
-															data.netPay = Number(((data.grossPay / 30) * (data.lopDay))).toFixed(2) - (data.deduction || 0)
-														
-															data.payrollId = this.state.payroll_id
-															data.salaryDate = this.state.payrollDate
-														}
-														else	
-															{	
-																data.lopDay = value;
-																data.noOfDays = data.noOfDays + 1
-																data.grossPay = Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2)
-																data.netPay = Number(((data.grossPay / 30) * (data.lopDay))).toFixed(2) - (data.deduction || 0)
-															
-																data.payrollId = this.state.payroll_id
-																data.salaryDate = this.state.payrollDate
-															}
-														}
-														
-														return data
-
-													})
-													console.log(newData)
-
-													this.setState({
-														allPayrollEmployee: newData
-
-													})
-
+													this.updateAmounts(row,value)
+												
 												}}
 											/>
 

@@ -97,10 +97,10 @@ class CreatePayrollList extends React.Component {
 			payrollSubject:'',
 			payrollApprover:'',
 			payrollDate: new Date(),
-			//  startDate: new Date(date.getFullYear(), date.getMonth(), 1),
-			//  endDate:  new Date(date.getFullYear(), date.getMonth() + 1, 0),
-			startDate: '',
-			endDate: '',
+			 startDate: moment(new Date(date.getFullYear(), date.getMonth(), 1)),
+			 endDate:  moment(new Date(date.getFullYear(), date.getMonth() + 1, 0)),
+			// startDate: '',
+			// endDate: '',
 			 payPeriod : '',
 			 apiSelector:'',
 			 submitButton:true,
@@ -341,45 +341,45 @@ calculatePayperioad=(startDate,endDate)=>{
 		const cols = [
 			{
 				label: 'Employee No',
-				dataSort: true,
+				// dataSort: true,
 				width: '',
 				key: 'empCode'
 			},
 			{
 				label: 'Employee Name',
-				dataSort: true,
+				// dataSort: true,
 				width: '',
 				key: 'empName'
 
 			},
 			{
 				label: 'LOP',
-				dataSort: true,
+				// dataSort: true,
 				width: '8%',
 				key: 'lopDay'
 			},
 			{
 				label: 'Paid Days',
-				dataSort: true,
+				// dataSort: true,
 				width: '12%',
 				key: 'noOfDays'
 			},
 			{
 				label: 'Gross Pay',
-				dataSort: true,
+				// dataSort: true,
 				width: '',
 				key: 'grossPay'
 			},
 
 			{
 				label: 'Deductions',
-				dataSort: true,
+				// dataSort: true,
 				width: '',
 				key: 'deduction'
 			},
 			{
 				label: 'Net Pay',
-				dataSort: true,
+				// dataSort: true,
 				width: '12%',
 				key: 'netPay'
 
@@ -433,48 +433,14 @@ calculatePayperioad=(startDate,endDate)=>{
 													if (value > 30 || value < 0) {
 														return;
 													}
-
-													let newData = [...this.state.allPayrollEmployee]
-													newData = newData.map((data) => {
-
-
-														if (row.id === data.id) {
-															
-														if(value>data.lopDay)
-														{																
-															data.lopDay = value;
-															data.noOfDays = data.noOfDays - 1
-															data.grossPay = Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2)
-															data.netPay = Number(((data.grossPay / 30) * (data.lopDay))).toFixed(2) - (data.deduction || 0)
-														
-															data.payrollId = this.state.payroll_id
-															data.salaryDate = this.state.payrollDate}
-														else	
-															{	
-																data.lopDay = value;
-																data.noOfDays = data.noOfDays + 1
-																data.grossPay = Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2)
-																data.netPay = Number(((data.grossPay / 30) * (data.lopDay))).toFixed(2) - (data.deduction || 0)
-															
-																data.payrollId = this.state.payroll_id
-																data.salaryDate = this.state.payrollDate}
-														}
-														return data
-
-													})
-													console.log(newData)
-
-													this.setState({
-														allPayrollEmployee: newData
-
-													})
-												}}
+														this.updateAmounts(row,value);
+													}}
 											/>
 
 										);
 
 									}else if(col.key === 'grossPay'){
-										debugger
+										
 										return  (<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" "+cell.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>)
 									}
 									 else
@@ -521,7 +487,42 @@ calculatePayperioad=(startDate,endDate)=>{
 
 		)
 	}
+	updateAmounts=(row,value)=>{
+		let newData = [...this.state.allPayrollEmployee]
+			newData = newData.map((data) => {
+											if (row.id === data.id) {
+															
+														if(data.lopDay<value)
+														{		
+																													
+															data.lopDay = value;
+															data.noOfDays = data.noOfDays - 1
+															data.grossPay = Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2)
+															data.netPay =   Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
+														
+															data.payrollId = this.state.payroll_id
+															data.salaryDate = this.state.payrollDate
+														}
+														else if(data.lopDay>value)
+															{	
+																data.lopDay = value;
+																data.noOfDays = data.noOfDays + 1
+																data.grossPay = Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2)
+																data.netPay   = Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
+															
+																data.payrollId = this.state.payroll_id
+																data.salaryDate = this.state.payrollDate}
+														}
+														return data
 
+													})
+													console.log(newData)
+
+													this.setState({
+														allPayrollEmployee: newData
+
+													})
+	}
 	generate = () => {
 		const formData = new FormData();
 		formData.append('payrollId', this.state.payroll_id)

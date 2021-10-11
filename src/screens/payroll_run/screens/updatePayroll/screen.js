@@ -104,7 +104,7 @@ class UpdatePayroll extends React.Component {
 			 apiSelector:'',
 			 focusedInput:null,
 			 submitButton:true,
-			 payrollApprover:undefined,
+			 payrollApprover:'',
 			 dialog: null,
 			 currencyIsoCode:"AED"
 		}
@@ -343,12 +343,13 @@ class UpdatePayroll extends React.Component {
 		else 
 		{formData.append('payrollSubject', payrollSubject)}
 
-		if(payrollApprover === undefined)
-		{formData.append('approverId', this.state.payrollApprover ?this.state.payrollApprover :null)}
+		if(this.state.payrollApprover !=="")
+		{
+			formData.append('approverId', this.state.payrollApprover ?this.state.payrollApprover :null)}
 		else if(payrollApprover!=="")
 		{formData.append('approverId',  parseInt(payrollApprover) )}
 		
-		formData.append('generatePayrollString', JSON.stringify(this.state.allPayrollEmployee));
+		formData.append('generatePayrollString', JSON.stringify(this.state.selectedRows1));
 		 formData.append('salaryDate',payrollDate)
 
 		console.log(this.state.payPeriod,"JSON.stringify(this.state.allPayrollEmployee)",JSON.stringify(this.state.allPayrollEmployee))

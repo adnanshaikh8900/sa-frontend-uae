@@ -369,7 +369,8 @@ Addnewcontact:"Add New Contact",
 Products:"Products",		 		
 PRODUCTCODE:"PRODUCT CODE",				
 VATPERCENTAGE:"VAT PERCENTAGE",				
-AddnewProduct:"Add New Product",		
+AddnewProduct:"Add New Product",	
+ProductType:"Product Type",	
 
 //Add product
 CreateProduct:"Create Product",		
@@ -389,6 +390,10 @@ InventoryAccount:"Inventory Account",
 OpeningBalanceQuantity:"Opening Balance Quantity",
 ReOrderLevel:"Re-Order Level",
 	
+Enabled:"Enabled",
+Disabled:"Disabled",
+InventoryEnabledDisabled:"Inventory Enabled/Disabled",
+
 //Product Category										
 PRODUCTCATEGORYNAME:"PRODUCT CATEGORY NAME",			
 AddNewProductCategory:"Add New Product Category",

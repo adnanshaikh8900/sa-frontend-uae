@@ -477,6 +477,19 @@ class UpdatePayroll extends React.Component {
 					this.setState({
 						allPayrollEmployee: newData
 					})
+
+					if(this.state.status && this.state.status==="Submitted"){
+
+						this.props.createPayrollActions.getAllPayrollEmployeeForApprover(this.state.payrollId).then((res) => {
+							if (res.status === 200) {
+								
+									this.setState({
+										allPayrollEmployee: res.data
+									})
+								
+							}
+						})	
+					}
 			}
 		})
 	}
@@ -897,6 +910,7 @@ class UpdatePayroll extends React.Component {
 																					props.handleChange('payrollDate')(value);
 
 																				}}
+																				disabled={this.disableForAddButton() ? true : false}
 																				className={`form-control ${props.errors.payrollDate &&
 																					props.touched.payrollDate
 																					? 'is-invalid'
@@ -928,6 +942,7 @@ class UpdatePayroll extends React.Component {
 																				endDateId="tata-end-date"
 																				onDatesChange={this.handleDatesChange}
 																				focusedInput={this.state.focusedInput}
+																				disabled={this.disableForAddButton() ? true : false}
 																				onFocusChange={(option)=>{this.setState({focusedInput:option})}}
 																				/>																							
 																	
@@ -1056,8 +1071,8 @@ class UpdatePayroll extends React.Component {
 
 
 																<Col>
-																
-																		<Button
+																{this.state.status && this.state.status==="Submitted" ?(""):(<>
+																	<Button
 																			type="button"
 																			color="danger"
 																			className="btn-square"
@@ -1068,6 +1083,8 @@ class UpdatePayroll extends React.Component {
 																			? 'Deleting...'
 																			: strings.Delete }
 																		</Button>
+																</>)}
+																		
 																	
 																	<Button
 																		color="secondary"
@@ -1078,6 +1095,9 @@ class UpdatePayroll extends React.Component {
 																	>
 																		<i className="fa fa-ban"></i> {strings.Cancel}
 																	</Button>
+																	{this.state.status && this.state.status==="Submitted" ?(""):
+																	(		<>
+																	
 																	<Button
 																		color="primary"
 																		className="btn-square pull-right"
@@ -1109,6 +1129,11 @@ class UpdatePayroll extends React.Component {
 																	>
 																		<i className="fa fa-dot-circle-o  mr-1"></i> Update
 																	</Button>
+																	</>
+
+
+																	)
+																	}
 
 																</Col>
 															</Row>

@@ -267,3 +267,18 @@ export const deletePayroll = (id) => {
 	  })
 	}
   }
+
+  export const getAllPayrollEmployeeForApprover = (_id) => {
+	return (dispatch) => {
+	  let data = {
+		method: 'GET',
+		url: `/rest/payroll/getAllPayrollEmployeeForApprover?payrollid=${_id}`
+	  }
+  
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+}

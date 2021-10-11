@@ -325,15 +325,16 @@ class PayrollRun extends React.Component {
 			id="UnitPriceTooltip1"
 			style={{
 				cursor: 'pointer',
-				backgroundColor: "yellow !important"
+				// backgroundColor: "yellow !important"
 			}}
 		>
-			<UncontrolledTooltip
-				placement="bottom"
+			{/* <UncontrolledTooltip
+				placement="right"
 				target="UnitPriceTooltip1"
+				key={row.id}
 			>
 				{row.comment ? row.comment:''}
-			</UncontrolledTooltip>
+			</UncontrolledTooltip> */}
 			Read Here..
 		</label>);}
 		else{
@@ -529,6 +530,10 @@ class PayrollRun extends React.Component {
 			},
 		);
 	};
+	 columnHover = (cell, row, enumObject, rowIndex) => {
+
+		return cell
+	  }
 	toggleActionButton = (index) => {
 		let temp = Object.assign({}, this.state.actionButtons);
 		if (temp[parseInt(index, 10)]) {
@@ -786,7 +791,9 @@ class PayrollRun extends React.Component {
 															className="table-header-bg"
 															dataField="comment"
 															dataSort
-															dataFormat={this.renderComment}
+															columnTitle={this.columnHover}
+															 dataFormat={this.renderComment}
+															
 														>
 															comment
 														</TableHeaderColumn>

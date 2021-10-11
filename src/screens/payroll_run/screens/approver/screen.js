@@ -963,7 +963,8 @@ class PayrollApproverScreen extends React.Component {
 																<Col>
 																
 																	<FormGroup>
-																	{this.state.status!=="Approved" ? (
+																	{this.state.status && (this.state.status==="Approved" || this.state.status==="Rejected") ? 
+																''	: (
 																		<div>
 
 																		<Label htmlFor="payrollSubject">Comment </Label>
@@ -987,15 +988,15 @@ class PayrollApproverScreen extends React.Component {
 																		
 																	)
 																
-																:''	
+																
 																}
 																		{props.errors.comment && props.touched.comment && (
 																			<div className="invalid-feedback">
 																				{props.errors.comment}
 																			</div>
 																		)}
-																		{this.state.status && this.state.status!=="Approved" ? 
-																		
+																		{this.state.status && (this.state.status==="Approved" || this.state.status==="Rejected") ? 
+																''	:
 																		(
 																			<Button
 																			color="primary"
@@ -1011,7 +1012,7 @@ class PayrollApproverScreen extends React.Component {
 																			Reject Payroll
 																		</Button>
 																		)
-																		:''
+																		
 																		
 																		}
 																	
@@ -1022,8 +1023,8 @@ class PayrollApproverScreen extends React.Component {
 
 																<Col>
 																<ButtonGroup className="mt-5 pull-right ">
-																{this.state.status && this.state.status!=="Approved" ? 
-																	
+																{this.state.status && (this.state.status==="Approved" || this.state.status==="Rejected") ? 
+																''	:
 																	(
 																		<Button
 																		type="button"
@@ -1037,7 +1038,7 @@ class PayrollApproverScreen extends React.Component {
 																		Approve & Run Payroll
 																	</Button>
 																	)
-																	:''
+																	
 																	
 																	}
 																<Button

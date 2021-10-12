@@ -254,7 +254,8 @@ calculatePayperioad=(startDate,endDate)=>{
 		{formData.append('approverId', this.state.payrollApprover ?this.state.payrollApprover :null)}
 		else if(payrollApprover!=="")
 		{formData.append('approverId',  parseInt(payrollApprover) )}
-		formData.append('generatePayrollString', JSON.stringify(this.state.allPayrollEmployee));
+
+		formData.append('generatePayrollString', JSON.stringify(this.state.selectedRows1));
 		formData.append('salaryDate',payrollDate)
 		console.log(this.state.payPeriod,"JSON.stringify(this.state.allPayrollEmployee)",JSON.stringify(this.state.allPayrollEmployee))
 		

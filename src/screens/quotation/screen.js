@@ -965,9 +965,8 @@ class Quatation extends React.Component {
 										>
 											<TableHeaderColumn
 												dataField="quatationNumber"
-												
 												dataSort
-											//	width="10%"
+												width="15%"
 												className="table-header-bg"
 											>
 												{strings.QUOTATIONNUMBER}
@@ -975,13 +974,13 @@ class Quatation extends React.Component {
 											<TableHeaderColumn
 												dataField="customerName"
 												dataSort
-											//	width="12%"
+												width="20%"
 												className="table-header-bg"
 											>
 												{strings.CUSTOMERNAME}
 											</TableHeaderColumn>
 											<TableHeaderColumn
-											//	width="10%"
+												width="10%"
 												dataField="status"
 												dataFormat={this.renderRFQStatus}
 												dataSort
@@ -1000,7 +999,7 @@ class Quatation extends React.Component {
 											<TableHeaderColumn
 												dataField="quotationCreatedDate"
 												dataSort
-											//	width="7%"
+												width="10%"
 											 dataFormat={this.quotationCreatedDate}
 												className="table-header-bg"
 											>
@@ -1009,7 +1008,7 @@ class Quatation extends React.Component {
 											<TableHeaderColumn
 												dataField="poApproveDate"
 												dataSort
-											//	width="7%"
+												width="10%"
 												dataFormat={this.pODate}
 												className="table-header-bg"
 											>
@@ -1021,7 +1020,7 @@ class Quatation extends React.Component {
 												dataAlign="right"
 												dataField="totalAmount"
 												dataSort
-												width="30%"
+												width="20%"
 												dataFormat={this.renderrfqAmount}
 												className="table-header-bg"
 												formatExtraData={universal_currency_list}

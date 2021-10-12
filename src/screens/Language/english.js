@@ -392,7 +392,6 @@ ReOrderLevel:"Re-Order Level",
 	
 Enabled:"Enabled",
 Disabled:"Disabled",
-InventoryEnabledDisabled:"Inventory Enabled/Disabled",
 
 //Product Category										
 PRODUCTCATEGORYNAME:"PRODUCT CATEGORY NAME",			

@@ -16,6 +16,7 @@ import {
 	NavLink,
 	Form,
 	Label,
+	Table,
 
 } from 'reactstrap';
 import Select from 'react-select';
@@ -30,6 +31,8 @@ import * as MigrationAction from './actions';
 import { selectOptionsFactory } from 'utils';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { isDate } from 'lodash-es';
+
+import styled from 'styled-components';
 
 
 
@@ -49,6 +52,25 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+const TabList = styled.ul`
+  height: 48px;
+  display: flex;
+  width: 100%;
+  background-color: rgba(236, 114, 112, 0.3);
+  padding: 0;
+  margin: 0;
+`;
+const Tab = styled.li`
+  list-style: none;
+  text-align: center;
+  font-family: sans-serif;
+  line-height: 48px;
+  flex: 1 0 auto;
+  height: inherit;
+  background-color: ${(props) =>
+    props.isSelected ? 'rgba(236, 114, 112, 0.9)' : 'rgba(236,114,112,0.3)'};
+`;
+
 class Import extends React.Component {
 	constructor(props) {
 		super(props);
@@ -66,7 +88,9 @@ class Import extends React.Component {
 			migration: false,
 			migration_list: [],
 			activeTab: new Array(6).fill('1'),
-			date: ''
+			date: '',
+			tabs: [],
+			file_data_list:[]
 		};
 	}
 
@@ -128,7 +152,6 @@ class Import extends React.Component {
 							disabled: false,
 							upload: true,
 							migration: true,
-							migration_list: res.data
 						});
 						this.props.commonActions.tostifyAlert(
 							'success',
@@ -149,78 +172,112 @@ class Import extends React.Component {
 		}
 
 	}
-
-	handleSubmit = (data) => {
+	Upload = (data) => {
 		this.setState({ loading: true, disabled: true });
-		if (this.state.type === "upload") {
-			let formData = new FormData();
 
-			for (const file of this.uploadFile.files) {
-				formData.append('files', file);
-			}
-
-			this.props.migrationActions
-				.uploadFolder(formData)
-				.then((res) => {
-					if (res.status === 200) {
-						this.setState({
-							disabled: false,
-							upload: true,
-							migration: true,
-							migration_list: res.data
-						});
-						this.props.commonActions.tostifyAlert(
-							'success',
-							'Files Uploaded Successfully.',
-						);
-
-					}
-				})
-				.catch((err) => {
-					this.setState({ disabled: false });
-					this.props.commonActions.tostifyAlert(
-						'error',
-						err && err.data ? err.data.message : 'Something Went Wrong',
-					);
-				});
+		let formData = new FormData();
+		
+		for (const file of this.uploadFile.files) {
+			formData.append('files', file);
 		}
-		else {
-			const {
-				productName,
-				version
-			} = data;
 
-			let formData = new FormData();
-			formData.append('name', productName ? productName : '');
-			formData.append('version', version ? version : '');
-
-			this.props.migrationActions
-				.migrate(formData)
-				.then((res) => {
-					this.setState({ disabled: false });
-					if (res.status === 200) {
-						this.setState({
-							migration_list: res.data
-						});
-						this.props.commonActions.tostifyAlert(
-							'success',
-							'Migration Completed.',
-						);
-
-
-					}
-				})
-				.catch((err) => {
-					this.setState({ disabled: false });
+		this.props.migrationActions
+			.uploadFolder(formData)
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({
+						disabled: false,
+						upload: true,
+						migration: true,
+						migration_list: res.data
+					});
 					this.props.commonActions.tostifyAlert(
-						'error',
-						err && err.data ? err.data.message : 'Something Went Wrong',
+						'success',
+						'Files Uploaded Successfully.',
 					);
-				});
-		}
+
+				}
+			})
+			.catch((err) => {
+				this.setState({ disabled: false });
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
 
 	};
 
+	listOfTransactionCategory = (data) => {
+		this.props.migrationActions
+			.listOfTransactionCategory()
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({
+						disabled: false,
+						file_data: res.data
+					});
+
+				}
+			})
+			.catch((err) => {
+				this.setState({ disabled: false });
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
+
+	};
+
+	listOfFiles = (data) => {
+		this.props.migrationActions
+			.getListOfAllFiles()
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({
+						disabled: false,
+						tabs: res.data
+					});
+
+				}
+			})
+			.catch((err) => {
+				this.setState({ disabled: false });
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
+
+	};
+	getFileData = (value) => {
+		const data = {
+			fileName: value
+		};
+
+		this.props.migrationActions
+			.getFileData(data)
+			.then((res) => {
+				if (res.status === 200) {
+					
+					this.setState({
+						disabled: false,
+						file_data_list:res.data
+						
+					});
+
+				}
+			})
+			.catch((err) => {
+				this.setState({ disabled: false });
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
+
+	};
 
 	versionlist = (productName) => {
 		this.props.migrationActions.getVersionListByPrioductName(productName)
@@ -239,6 +296,143 @@ class Import extends React.Component {
 
 	}
 
+	getBody=(file_data_list)=>{
+		return(	file_data_list ? (
+			file_data_list.map(
+				(item, index) => {
+					debugger
+					return (
+						<>
+							<tr
+								style={{ background: '#f7f7f7' }}
+								key={index}
+							>
+								<td >
+										{item}
+								</td>
+							</tr>
+						</>
+					);
+				}
+			)
+			
+	
+		): (
+			<tr style={{ borderBottom: '2px solid lightgray' }}>
+				<td style={{ textAlign: 'center' }} colSpan="9">
+					There is no data to display
+				</td>
+			</tr>
+		)
+		)}
+	
+	showTable  = (file_data_list) => {
+		
+		if(Array.isArray(file_data_list) && file_data_list.length!==0){
+				let colDataObject =file_data_list[0] ? file_data_list[0] : {};
+		     	  let	 cols= Object.keys(colDataObject);
+				this.setState({cols:cols})
+				debugger
+
+
+		}
+		// file_data_list=Object.assign({},file_data_list)
+		return(
+			<Table responsive>
+			<thead>
+				<tr className="header-row">
+					{this.state.cols && this.state.cols.map((column, index) => {
+						return (
+							<th
+								key={index}
+								style={{ fontWeight: '600' ,textAlign:'right'}}
+								className={column.align ? 'text-right' : ''}
+								className="table-header-color"
+							>
+								<span>{column}</span>
+					</th>
+						);
+					})}
+				</tr>
+			</thead>
+			<tbody className="data-column">
+				{		
+				file_data_list ? (
+			    file_data_list.map(
+				(item, index) => {
+					debugger
+					return (
+						<>
+							<tr
+								style={{ background: '#f7f7f7' }}
+								key={index}
+							>
+								<td >
+										{item}
+								</td>
+							</tr>
+						</>
+					);
+				}
+			)
+			
+	
+		): (
+			<tr style={{ borderBottom: '2px solid lightgray' }}>
+				<td style={{ textAlign: 'center' }} colSpan="9">
+					There is no data to display
+				</td>
+			</tr>
+		)
+		}
+			</tbody>
+		</Table>
+		);
+	
+		// return (
+		// 	<React.Fragment>
+		// 		<Row>
+
+
+		// 		</Row>
+		// 		<div className={"ml-4 mt-2"}>
+		// 			<BootstrapTable
+		// 				data={file_data_list ? file_data_list: ''}
+		// 				version="4"
+		// 				hover
+		// 				keyField="id"
+		// 				remote
+		// 				className="customer-invoice-table"
+		// 				ref={(node) => this.table = node}
+		// 			>
+						
+		// 				{
+							
+		// 					cols.map((col, index) => {
+
+		// 						return (
+		// 							<TableHeaderColumn
+		// 								key={index}
+		// 								dataField={col.key}
+		// 								dataAlign="center"
+		// 								className="table-header-bg"
+		// 								dataSort={col.dataSort}
+		// 								width={col.width}>
+		// 								{col.label}
+		// 							</TableHeaderColumn>
+
+		// 						)
+		// 					})
+		// 				}
+
+
+		// 			</BootstrapTable>
+		// 		</div>
+		// 	</React.Fragment>
+
+		// )
+	}
+
 	openForgotPasswordModal = () => {
 		this.setState({ openForgotPasswordModal: true });
 	};
@@ -248,9 +442,9 @@ class Import extends React.Component {
 	};
 
 	render() {
-		const { isPasswordShown, product_list, version_list } = this.state;
+		const { isPasswordShown, product_list, version_list,tabs,file_data_list } = this.state;
 		const { initValue, migration_list } = this.state;
-		console.log(migration_list)
+		console.log(tabs)
 		const customStyles = {
 			control: (base, state) => ({
 				...base,
@@ -278,245 +472,6 @@ class Import extends React.Component {
 									</Row>
 								</CardHeader>
 								<CardBody className="log-in-screen">
-									{/* <Row>
-										<Col lg={12}>
-											<div>
-												<Formik
-													initialValues={initValue}
-													ref={this.formRef}
-													onSubmit={(values, { resetForm }) => {
-														this.handleSubmit(values);
-													}}
-										
-												>
-													{(props) => (
-														<Form onSubmit={props.handleSubmit}>
-																<Row>
-																<Col lg={3}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="productName">
-																	Application Name
-																	</Label>
-																	<Select
-																		styles={customStyles}
-																		id="productName"
-																		name="productName"
-																		placeholder= "Select Product" 
-																		options={
-																			product_list
-																				? selectOptionsFactory.renderOptions(
-																						'label',
-																						'value',
-																						product_list,
-																						'Products list',
-																						
-																				  )
-																				: []
-																		}
-																		value={
-																			product_list &&
-																			selectOptionsFactory
-																				.renderOptions(
-																					'label',
-																					'value',
-																					product_list,
-																					'Products list',
-																				)
-																				.find(
-																					(option) =>
-																						option.value ===
-																						+props.values.productName,
-																				)
-																		}
-																		className={
-																			props.errors.productName &&
-																			props.touched.productName
-																				? 'is-invalid'
-																				: ''
-																		}
-																		onChange={(option) => {
-																			if (option && option.value) {
-																				props.handleChange('productName')(
-																					option.label,
-																					this.versionlist(option.label)
-																				);
-																			} else {
-																				props.handleChange('productName')('');
-																			}
-																		}}
-																	/>
-																	{props.errors.productName &&
-																		props.touched.productName && (
-																			<div className="invalid-feedback">
-																				{props.errors.productName}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
-															
-															<Col lg={3}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="version">
-																	Version
-																	</Label>
-																	<Select
-																		
-																		id="version"
-																		name="version"
-																		 placeholder= "Select Version" 
-																		 options={
-																			version_list
-																				? selectOptionsFactory.renderOptions(
-																						'label',
-																						'value',
-																						version_list,
-																						'version list',
-																						
-																				  )
-																				: []
-																		}
-																		value={
-																			version_list &&
-																			selectOptionsFactory
-																				.renderOptions(
-																					'label',
-																					'value',
-																					version_list,
-																					'version',
-																				)
-																				.find(
-																					(option) =>
-																						option.value ===
-																						+props.values.version,
-																				)
-																		}
-																		className={
-																			props.errors.version &&
-																			props.touched.version
-																				? 'is-invalid'
-																				: ''
-																		}
-																		onChange={(option) =>
-																			props.handleChange('version')(
-																				option.label,
-																			)
-																		}
-																	/>
-																	{props.errors.version &&
-																		props.touched.version && (
-																			<div className="invalid-feedback">
-																				{props.errors.version}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
-																</Row>
-														<div className="mt-4" >
-															<Row >
-																<Col lg={3}>
-																	<FormGroup className="">
-																	
-																		<input
-																			id="file"
-																			ref={(ref) => {
-																				this.uploadFile = ref;
-																			}}
-																			multiple
-																		
-																			type="file"
-																			accept=".csv"
-																			onChange={(e) => {
-																				this.setState({
-																					fileName: e.target.value
-																						.split('\\')
-																						.pop(),
-																				});
-																			}}
-																		/>
-																	
-																	</FormGroup>
-																</Col>
-																<Col>
-																	<Button
-																	
-																		color="primary"
-																		type="button"
-																		className="btn-square"
-																		onClick={() => {
-																			this.setState({type:"upload"})
-																			props.handleSubmit();
-																		}}
-																		disabled={
-																			this.state.fileName.length === 0
-																				? true
-																				: false
-																		}
-																	>
-																		<i className="fa fa-dot-circle-o mr-1"></i>
-																		Upload
-																	</Button>
-																</Col>
-															</Row>
-															</div>
-															
-																	<Row>
-																		<div>
-																	<BootstrapTable
-												selectRow={this.selectRowProp}
-												search={false}
-												options={this.options}
-												data={
-													migration_list && migration_list
-														? migration_list
-														: []
-												}
-												version="4"
-												hover
-												remote
-												tableStyle={{width:'800px'}}
-												className="m-4"
-												trClassName="cursor-pointer"
-												csvFileName="summary_list.csv"
-												ref={(node) => (this.table = node)}
-											>
-												<TableHeaderColumn isKey dataField="fileName" dataSort className="table-header-bg">
-												File name
-												</TableHeaderColumn >
-												<TableHeaderColumn dataField="recordCount" dataSort className="table-header-bg">
-												Record Uploaded
-												</TableHeaderColumn>
-												<TableHeaderColumn  dataField="recordsMigrated" dataSort className="table-header-bg">
-												Record Migrated
-												</TableHeaderColumn >
-											</BootstrapTable>
-											</div>
-																
-															</Row>
-															<FormGroup>
-																	<Button
-																		color="primary"
-																		type="button"
-																		className="btn-square mt-4"
-																		onClick={() => {
-																			this.setState({type:"migrate"})
-																			props.handleSubmit();
-																		}}
-																		
-											
-																	>
-																		<i className="fa fa-dot-circle-o mr-1"></i>
-																		Migrate
-																	</Button>
-																	</FormGroup>
-														</Form>
-													)}
-												</Formik>
-											</div>
-										</Col>
-									</Row> */}
-
-
-									{/* added by suraj */}
 									<Nav className="justify-content-center" tabs pills  >
 										<NavItem>
 											<NavLink
@@ -525,7 +480,7 @@ class Import extends React.Component {
 													this.toggle(0, '1');
 												}}
 											>
-												<h4 style={{margin:"4px 2px 4px 2px"}}>1</h4>
+												<h4 style={{ margin: "4px 2px 4px 2px" }}>1</h4>
 											</NavLink>
 										</NavItem>
 										<NavItem>
@@ -535,7 +490,7 @@ class Import extends React.Component {
 													this.toggle(0, '2');
 												}}
 											>
-												<h4 style={{margin:"4px 0px 4px 0px"}}>2</h4>
+												<h4 style={{ margin: "4px 0px 4px 0px" }}>2</h4>
 											</NavLink>
 										</NavItem>
 										<NavItem>
@@ -545,7 +500,7 @@ class Import extends React.Component {
 													this.toggle(0, '3');
 												}}
 											>
-												<h4 style={{margin:"4px 0px 4px 0px"}}>3</h4>
+												<h4 style={{ margin: "4px 0px 4px 0px" }}>3</h4>
 											</NavLink>
 										</NavItem>
 										<NavItem>
@@ -555,29 +510,9 @@ class Import extends React.Component {
 													this.toggle(0, '4');
 												}}
 											>
-												<h4 style={{margin:"4px 0px 4px 0px"}}>4</h4>
+												<h4 style={{ margin: "4px 0px 4px 0px" }}>4</h4>
 											</NavLink>
 										</NavItem>
-										{/* <NavItem>
-											<NavLink
-												active={this.state.activeTab[0] === '5'}
-												onClick={() => {
-													this.toggle(0, '5');
-												}}
-											>
-												<h4>5</h4>
-											</NavLink>
-										</NavItem>
-										<NavItem>
-											<NavLink
-												active={this.state.activeTab[0] === '6'}
-												onClick={() => {
-													this.toggle(0, '6');
-												}}
-											>
-												<h4>6</h4>
-											</NavLink>
-										</NavItem> */}
 									</Nav>
 									<TabContent activeTab={this.state.activeTab[0]}>
 										<TabPane tabId="1">
@@ -592,7 +527,7 @@ class Import extends React.Component {
 														}}
 														validate={(values) => {
 															let errors = {};
-															debugger
+															
 															if (values.date === '') {
 																errors.date = 'Date is required';
 															}
@@ -636,38 +571,20 @@ class Import extends React.Component {
 
 																</div>
 																<div className="text-center" >
-																{props.errors.date && props.touched.date && (
+																	{props.errors.date && props.touched.date && (
 																		<div className="text-danger">{props.errors.date}</div>
 																	)}<br></br>
 																	<b>Note : </b><i> Please select date from which you need to migrate into SimpleAccounts.<br /> Please note all data prior to above date will be ignored.</i>
-																	
-																	
+
+
 
 																</div>
 
 																<Row>
 																	<Col lg={12} className="mt-5">
-
-
-																		{/* <Button name="button" color="primary" className="btn-square pull-right"
-																			// onClick={() => {
-																			// 	// this.saveAccountStartDate(this.state.date)
-																			// 	props.handleSubmit()
-																			// }}
-																			onClick={() => {
-																				this.setState({ createMore: false }, () => {
-																					props.handleSubmit()
-																				})
-																			}}
-																		>
-																			Next<i class="far fa-arrow-alt-circle-right ml-1"></i>
-																		</Button> */}
 																		<div className="table-wrapper">
 																			<FormGroup className="text-center">
-																				<Button disabled={true} color="secondary" className="btn-square pull-left"
-																					onClick={() => { this.toggle(0, '1') }}>
-																					<i className="far fa-arrow-alt-circle-left"></i> Back
-																				</Button>
+
 
 																				<Button name="button" color="primary" className="btn-square pull-right mr-3"
 																					onClick={() => {
@@ -687,8 +604,6 @@ class Import extends React.Component {
 														)
 														}
 													</Formik>
-
-
 												</div>
 
 											</div>
@@ -697,18 +612,14 @@ class Import extends React.Component {
 											<Row>
 												<Col lg={12}>
 													<div>
-													<div className="text-center mb-5"><h3>Upload Files</h3></div>
+														<div className="text-center mb-5"><h3>Upload Files</h3></div>
 														<Formik
 															initialValues={initValue}
 															ref={this.formRef}
 															onSubmit={(values, { resetForm }) => {
 																this.handleSubmit(values);
 															}}
-														// validationSchema={Yup.object().shape({
-														// 	templateId: Yup.string().required(
-														// 		'Select Template',
-														// 	),
-														// })}
+
 														>
 															{(props) => (
 																<Form onSubmit={props.handleSubmit}>
@@ -833,52 +744,51 @@ class Import extends React.Component {
 																		</Col>
 																	</Row>
 																	<div className="mt-4" >
-																		<Row >
-																			<Col lg={3}>
-																				<FormGroup className="">
+																		<Row>
+																			<Col lg={4}></Col>
+																			<Col lg={4}>
+																				<div
+																					style={{
+																						border: '1px solid grey',
 
-																					<input
-																						id="file"
-																						ref={(ref) => {
-																							this.uploadFile = ref;
-																						}}
-																						multiple
-																						// directory="" 
-																						// webkitdirectory=""
-																						type="file"
-																						accept=".csv"
-																						onChange={(e) => {
-																							this.setState({
-																								fileName: e.target.value
-																									.split('\\')
-																									.pop(),
-																							});
-																						}}
-																					/>
+																					}}>
+																					<div className="text-center mb-3 mt-4">
+																						<i class="fas fa-upload  fa-5x"></i>
 
-																				</FormGroup>
+																					</div>
+																					<div className="text-center mb-3" style={{
+																						fontSize: '22px',
+																					}}>
+																						Drag file to upload ,or
+																					</div>
+																					<div className="text-center mb-3">
+																						<input
+																							id="file"
+																							ref={(ref) => {
+																								this.uploadFile = ref;
+																							}}
+																							multiple
+																							// directory="" 
+																							// webkitdirectory=""
+																							type="file"
+																							accept=".csv"
+																							onChange={(e) => {
+																								this.setState({
+																									fileName: e.target.value
+																										.split('\\')
+																										.pop(),
+																								});
+																								this.Upload();
+																							}}
+																						/>
+																					</div>
+
+
+																				</div>
 																			</Col>
-																			<Col>
-																				<Button
-
-																					color="primary"
-																					type="button"
-																					className="btn-square"
-																					onClick={() => {
-																						this.setState({ type: "upload" })
-																						props.handleSubmit();
-																					}}
-																					disabled={
-																						this.state.fileName.length === 0
-																							? true
-																							: false
-																					}
-																				>
-																					<i className="fa fa-dot-circle-o mr-1"></i>
-																					Upload
-																				</Button>
-																			</Col>
+																			<Col lg={4}></Col>
 																		</Row>
+
 																	</div>
 
 																	<Row>
@@ -907,33 +817,11 @@ class Import extends React.Component {
 																				<TableHeaderColumn dataField="recordCount" dataSort className="table-header-bg">
 																					Record Uploaded
 																				</TableHeaderColumn>
-																				<TableHeaderColumn dataField="recordsMigrated" dataSort className="table-header-bg">
-																					Record Migrated
-																				</TableHeaderColumn >
 																			</BootstrapTable>
 																		</div>
 
 																	</Row>
-																	<FormGroup>
-																		<Button
-																			color="primary"
-																			type="button"
-																			className="btn-square mt-4"
-																			onClick={() => {
-																				this.setState({ type: "migrate" })
-																				props.handleSubmit();
-																			}}
 
-																		// disabled={
-																		// 	this.state.fileName.length === 0
-																		// 		? true
-																		// 		: false
-																		// }
-																		>
-																			<i className="fa fa-dot-circle-o mr-1"></i>
-																			Migrate
-																		</Button>
-																	</FormGroup>
 																</Form>
 															)}
 														</Formik>
@@ -952,6 +840,9 @@ class Import extends React.Component {
 															<Button name="button" color="primary" className="btn-square pull-right mr-3"
 																onClick={() => {
 																	this.toggle(0, '3')
+																	this.listOfFiles()
+																	this.listOfTransactionCategory()
+
 																}}>
 																Next	<i class="far fa-arrow-alt-circle-right mr-1"></i>
 															</Button>
@@ -965,8 +856,8 @@ class Import extends React.Component {
 										<TabPane tabId="3">
 											<div className="create-employee-screen">
 												<div className="animated fadeIn">
-												<div className="text-center mb-5"><h3>Preview Files</h3></div>
-												
+													<div className="text-center mb-5"><h3>Preview Files</h3></div>
+
 													<Formik
 														initialValues={this.state.initValue}
 														onSubmit={(values, { resetForm }) => {
@@ -980,7 +871,33 @@ class Import extends React.Component {
 														{(props) => (
 
 															<Form onSubmit={props.handleSubmit}>
+																<Row>
+																	<TabList>
+																		<Tab
+																		id='chartOfAccounts'
+																		isSelected={true}
+																		>
+																	Chart Of Accounts
 
+																			</Tab>
+																		{tabs.map((tab, idx) => (
+																			
+																			<Tab
+																				key={tab}
+																				//  isSelected={this.showTable(file_data_list)}
+																			    onClick={() => 
+																				this.getFileData(tab)}
+																			>
+																				{tab}
+																			</Tab>
+																		))}
+																	</TabList>
+																	<TabContent>
+																		<TabPane>
+																		{this.showTable(file_data_list)}		
+																		</TabPane>
+																	</TabContent>
+																</Row>
 																<Row>
 																	<Col lg={12} className="mt-5">
 
@@ -1011,7 +928,7 @@ class Import extends React.Component {
 											</div>
 										</TabPane>
 										<TabPane tabId="4">
-										<div className="text-center mb-5"><h3>Set Opening Balances</h3></div>
+											<div className="text-center mb-5"><h3>Set Opening Balances</h3></div>
 											<Formik
 												initialValues={this.state.initValue}
 												onSubmit={(values, { resetForm }) => {

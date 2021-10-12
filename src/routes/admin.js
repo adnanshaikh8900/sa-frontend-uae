@@ -186,7 +186,9 @@ import {
 	CreatePayroll,
 
 	PayrollApproverScreen,
-	UpdatePayroll
+	UpdatePayroll,
+	Migrate,
+	MigrateHistory
 } from 'screens';
 
 const adminRoutes = [
@@ -974,6 +976,16 @@ const adminRoutes = [
 		path: '/admin/settings/import',
 		name: 'Migration',
 		component: Import.screen,
+	},
+	{
+		path: '/admin/settings/migrate',
+		name: 'Migration',
+		component: Migrate.screen,
+	},
+	{
+		path: '/admin/settings/migrateHistory',
+		name: 'Migration',
+		component: MigrateHistory.screen,
 	},
 	{
 		path: '/admin/settings/organization',

@@ -1,5 +1,7 @@
-import Temp from './temp'
+import Migrate from './migrate'
+import MigarteHistory from './migrate_history'
 
 export {
-  Temp,
+  Migrate,
+  MigarteHistory,
 }

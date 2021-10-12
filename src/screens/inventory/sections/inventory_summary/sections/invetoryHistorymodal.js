@@ -282,10 +282,10 @@ console.log(inventory_history_list,"inventory_history_list")
 												<TableHeaderColumn isKey dataField="productname" dataSort className="table-header-bg">
 												Product	Name
 												</TableHeaderColumn > */}
-												<TableHeaderColumn isKey  dataField="supplierName" dataSort className="table-header-bg">
+												<TableHeaderColumn width="20%" isKey  dataField="supplierName" dataSort className="table-header-bg">
 												{strings.Supplier} / {strings.Customer}
 												</TableHeaderColumn >
-												<TableHeaderColumn  dataField="date" 
+												<TableHeaderColumn width="8%" dataField="date" 
 												dataSort 
 												dataFormat={this.renderDate} className="table-header-bg">
 												 {strings.Date}
@@ -302,7 +302,7 @@ console.log(inventory_history_list,"inventory_history_list")
 												{/* <TableHeaderColumn  dataField="stockOnHand" dataSort className="table-header-bg">
 											Stock In Hand
 												</TableHeaderColumn > */}
-												<TableHeaderColumn dataAlign="right" dataField="unitCost" dataFormat={this.renderUnitCost} dataSort className="table-header-bg">
+												<TableHeaderColumn width="10%" dataAlign="right" dataField="unitCost" dataFormat={this.renderUnitCost} dataSort className="table-header-bg">
 												 {strings.UnitCost} 
 												</TableHeaderColumn >
 												<TableHeaderColumn dataAlign="right" dataField="unitSellingPrice" dataFormat={this.renderunitSellingPrice} dataSort className="table-header-bg">

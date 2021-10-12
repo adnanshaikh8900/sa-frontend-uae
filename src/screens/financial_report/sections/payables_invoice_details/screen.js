@@ -483,8 +483,8 @@ class PayablesInvoiceDetailsReport extends React.Component {
 															return (
 																<th
 																	key={index}
-																	style={{ fontWeight: '600' ,textAlign:'right'}}
-																	className={column.align ? 'text-right' : ''}
+																	style={{ fontWeight: '600' ,textAlign:'center'}}
+																	className={column.align ? 'text-center' : ''}
 																	className="table-header-color"
 																>
 																	<span>{column.label}</span>
@@ -524,35 +524,35 @@ class PayablesInvoiceDetailsReport extends React.Component {
 																		{item.map((row, index) => {
 																			return (
 																				<tr key={index}>
-																					<td style={{ width: '12%' }}>
+																					<td style={{ width: '12%', textAlign:'center'}}>
 																						{row.invoiceDate ? (
 																							moment(row.invoiceDate).format('DD/MM/YYYY')
 																						) : (" ")}
 																					</td>
-																					<td style={{ width: '12%' }}>
+																					<td style={{ width: '12%', textAlign:'center'}}>
 																						{/* {row.transactionTypeName} */}
 																						{row.invoiceNumber}
 																					</td>
-																					<td style={{ width: '12%' }}>
+																					<td style={{ width: '12%', textAlign:'center'}}>
 																						{/* {row['name']} */}
 																						{row['productName']}
 																					</td>
-																					<td style={{ width: '12%' }}>
+																					<td style={{ width: '12%', textAlign:'center'}}>
 																						{/* {row['postingReferenceTypeEnum']} */}
 																						{row['description']}
 																					</td>
-																					<td style={{ width: '10%' }}>
+																					<td style={{ width: '10%', textAlign:'center'}}>
 																						{row['quantity']}
 																					</td>
-																					<td style={{ width: '12%' ,textAlign:'right'}}>
+																					<td style={{ width: '12%' ,textAlign:'center'}}>
 																						{row['unitPrice']}
 																					</td>
-																					<td style={{ width: '12%' ,textAlign:'right'}}>
+																					<td style={{ width: '12%' ,textAlign:'center'}}>
 																							{row.vatAmount > 0 && (row.unitPrice ? (
 																									""
 																								) : (
 																									<p
-																									className="text-right"
+																									className="text-center"
 																									// onClick={() =>
 																									// 	this.getInvoice(
 																									// 		row[
@@ -579,10 +579,10 @@ class PayablesInvoiceDetailsReport extends React.Component {
 																								
 																							)}
 																						</td>
-																					<td style={{ width: '15%' ,textAlign:'right'}}>
+																					<td style={{ width: '15%' ,textAlign:'center'}}>
 																						{row.totalAmount > 0 && (
 																							<p
-																								className="text-right"
+																								className="text-center"
 																							// onClick={() =>
 																							// 	this.getInvoice(
 																							// 		row[

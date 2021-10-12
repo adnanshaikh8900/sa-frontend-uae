@@ -1113,6 +1113,7 @@ class CreditNotes extends React.Component {
 													{strings.CREDITNOTE}
 											</TableHeaderColumn>
 											<TableHeaderColumn 
+												width="20%"
 												dataField="customerName" 
 											//	dataSort width="10%"
 												className="table-header-bg"
@@ -1179,7 +1180,7 @@ class CreditNotes extends React.Component {
 												dataAlign="right"
 												dataField="totalAmount"
 												dataSort
-												width="30%"
+												width="20%"
 												dataFormat={this.renderInvoiceAmount}
 												formatExtraData={universal_currency_list}
 												className="table-header-bg"

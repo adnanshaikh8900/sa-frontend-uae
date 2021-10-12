@@ -599,13 +599,13 @@ class Product extends React.Component {
 													{strings.PRODUCTCODE}
 												</TableHeaderColumn>
 												<TableHeaderColumn 
-													width="10%"
+													width="20%"
 													isKey dataField="name" 
 													dataSort className="table-header-bg">
 													{strings.NAME}
 												</TableHeaderColumn >
 												<TableHeaderColumn
-													// width="10%"
+													width="8%"
                                                     className="table-header-bg"
                                                     dataField="productType"
                                                     dataSort
@@ -615,20 +615,21 @@ class Product extends React.Component {
 
                           						</TableHeaderColumn>
 												<TableHeaderColumn
-													width="20%"
+													width="10%"
+													dataAlign="center"
                                                     className="table-header-bg"
                                                     dataField="isInventoryEnabled"
                                                     dataSort
                                                     dataFormat={this.renderInventory}
                                                     >
-                                                        {strings.InventoryEnabledDisabled}
+                                                        {strings.Inventory}
 
                           						</TableHeaderColumn>
 												{/* <TableHeaderColumn dataField="description" dataSort>
 													Description
 												</TableHeaderColumn> */}
 												<TableHeaderColumn
-													width="10%"
+													width="8%"
 													dataAlign="right"
 													dataField="vatPercentage"
 													dataSort
@@ -638,7 +639,7 @@ class Product extends React.Component {
 													 {strings.VatPercentage}
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													width="20%"
+													width="10%"
 													dataAlign="right"
 													dataField="unitPrice"
 													dataSort
@@ -650,7 +651,7 @@ class Product extends React.Component {
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													width="10%"
-													dataAlign="right"
+													dataAlign="center"
                                                     className="table-header-bg"
                                                     dataField="isActive"
                                                     dataSort

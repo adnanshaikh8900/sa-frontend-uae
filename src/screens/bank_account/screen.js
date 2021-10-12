@@ -839,7 +839,7 @@ class BankAccount extends React.Component {
 													dataFormat={this.renderAccountType}
 													dataField="bankAccountTypeName"
 													dataSort
-													width="5%"
+													width="7%"
 													className="table-header-bg"
 												>
 													{strings.ACCOUNTTYPE}
@@ -857,7 +857,7 @@ class BankAccount extends React.Component {
 													dataAlign="right"
 													dataField="openingBalance"
 													dataSort
-													width="10%"													
+													width="8%"													
 													dataFormat={this.renderBalance}
 													formatExtraData={universal_currency_list}
 													className="table-header-bg"

@@ -956,7 +956,7 @@ class Import extends React.Component {
 
 																		<Button name="button" color="primary" className="btn-square pull-right mr-3"
 																			onClick={() => {
-																				this.toggle(0, '5')
+																				this.props.history.push('/admin/settings/migrate');
 																			}}>
 																			Next	<i class="far fa-arrow-alt-circle-right mr-1"></i>
 																		</Button>

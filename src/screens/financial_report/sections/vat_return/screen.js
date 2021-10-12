@@ -109,7 +109,7 @@ class VatReturnsReport extends React.Component {
 			totalValueOfDueTaxForThePeriod:'',
 			standardRatedExpensesTotalAmount:'',
 			standardRatedExpensesVatAmount:'',
-			totalValueOfDueTaxForThePeriod:'',
+
 			totalValueOfRecoverableTaxForThePeriod:'',
 			netVatPayableOrReclaimableForThePeriod:'',
 		},
@@ -293,22 +293,22 @@ class VatReturnsReport extends React.Component {
 												>
 												<span>X</span>
 												</div>
-												 {/* <Dropdown isOpen={dropdownOpen} toggle={this.toggle}> 
+												 <Dropdown isOpen={dropdownOpen} toggle={this.toggle}> 
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
-														<DropdownItem onClick={this.exportPDFWithComponent}>
+														{/* <DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf
-														</DropdownItem>
+														</DropdownItem> */}
 														<DropdownItem>
 															<CSVLink
 																data={csvData}
 																className="csv-btn"
-																filename={'Vat Return Report.csv'}
+																filename={'Vat Returns Report.csv'}
 															>
 																CSV (Comma Separated Value)
 															</CSVLink>
 														</DropdownItem>
-														<DropdownItem
+														{/* <DropdownItem
 															onClick={() => {
 																this.exportFile(csvData, 'Vat Return Report', 'xls');
 															}}
@@ -325,9 +325,9 @@ class VatReturnsReport extends React.Component {
 															}}
 														>
 															XLSX (Microsoft Excel)
-														</DropdownItem>
+														</DropdownItem> */}
 													</DropdownMenu>
-												</Dropdown>  */}
+												</Dropdown> 
 											</div>
 										</div>
 									</Col>

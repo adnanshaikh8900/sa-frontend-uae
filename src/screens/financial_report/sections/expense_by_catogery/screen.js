@@ -29,6 +29,8 @@ import './style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization'
+import download from 'downloadjs';
+
 
 const mapStateToProps = (state) => {
 	return {
@@ -108,6 +110,7 @@ class ExpenseByCategory extends React.Component {
 					this.setState({
 						data: res.data,
 						loading: false,
+						
 					});
 				}
 			})
@@ -116,17 +119,18 @@ class ExpenseByCategory extends React.Component {
 			});
 	};
 
-	exportFile = (csvData, fileName, type) => {
-		const fileType =
-			type === 'xls'
-				? 'application/vnd.ms-excel'
-				: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-		const fileExtension = `.${type}`;
-		const ws = XLSX.utils.json_to_sheet(csvData);
-		const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
-		const excelBuffer = XLSX.write(wb, { bookType: type, type: 'array' });
-		const data = new Blob([excelBuffer], { type: fileType });
-		FileSaver.saveAs(data, fileName + fileExtension);
+	exportFile = () => {
+		
+		// let object = Object.assign([],this.state.data.expenseByCategoryList)
+		// let data=[];
+		// for(let i=0;i<object.length;i++){
+		// 		let o=object[i];
+		// 		o=Object.assign([],o);
+		// 		data.push(o);
+		// }
+		// const blob = new Blob(data,{type:'application/csv'});
+		// 			download(blob,'Sample Transaction.csv')
+		return (this.state && this.state.data && this.state.data.expenseByCategoryList ? this.state.data.expenseByCategoryList :'');
 	};
 
 	toggle = () =>
@@ -232,37 +236,37 @@ class ExpenseByCategory extends React.Component {
 												>
 													<span>X</span>
 												</div>
-												{/* <Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
+												<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
-														<DropdownItem onClick={this.exportPDFWithComponent}>
+														{/* <DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf
-														</DropdownItem>
+														</DropdownItem> */}
 														<DropdownItem>
 															<CSVLink
-																data={csvData}
+																data={this.exportFile()}
 																className="csv-btn"
-																filename={'profitloss.csv'}
+																filename={'Expense By Category Report.csv'}
 															>
 																CSV (Comma Separated Value)
 															</CSVLink>
 														</DropdownItem>
-														<DropdownItem
+														{/* <DropdownItem
 															onClick={() => {
-																this.exportFile(csvData, 'profitloss', 'xls');
+																this.exportFile();
 															}}
 														>
 															XLS (Microsoft Excel 1997-2004 Compatible)
-														</DropdownItem>
-														<DropdownItem
+														</DropdownItem> */}
+														{/* <DropdownItem
 															onClick={() => {
 																this.exportFile(csvData, 'profitloss', 'xlsx');
 															}}
 														>
 															XLSX (Microsoft Excel)
-														</DropdownItem>
+														</DropdownItem> */}
 													</DropdownMenu>
-												</Dropdown> */}
+												</Dropdown>
 											</div>
 										</div>
 									</Col>

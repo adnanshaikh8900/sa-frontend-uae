@@ -7,6 +7,11 @@ import {
 	CardBody,
 	Col,
 	Table,
+	Dropdown,
+	DropdownToggle,
+	DropdownMenu,
+	DropdownItem,
+	
 
 } from 'reactstrap';
 
@@ -19,6 +24,7 @@ import './style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
+import { CSVLink } from 'react-csv';
 import { Loader, Currency } from 'components';
 import * as FinancialReportActions from '../../actions';
 import FilterComponent from '../filterComponent';
@@ -241,22 +247,22 @@ class BalanceSheet extends React.Component {
 												>
 												<span>X</span>
 												</div>
-												{/* <Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
+												<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
 													<DropdownToggle caret>Export As</DropdownToggle>
-													<DropdownMenu>
-														<DropdownItem onClick={this.exportPDFWithComponent}>
+													<DropdownMenu> 
+														{/* <DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf
-														</DropdownItem>
+														</DropdownItem> */}
 														<DropdownItem>
 															<CSVLink
 																data={csvData}
 																className="csv-btn"
-																filename={'balancesheet.csv'}
+																filename={'Balance Sheet Report.csv'}
 															>
 																CSV (Comma Separated Value)
 															</CSVLink>
 														</DropdownItem>
-														<DropdownItem
+														{/* <DropdownItem
 															onClick={() => {
 																this.exportFile(csvData, 'balancesheet', 'xls');
 															}}
@@ -273,9 +279,9 @@ class BalanceSheet extends React.Component {
 															}}
 														>
 															XLSX (Microsoft Excel)
-														</DropdownItem>
-													</DropdownMenu>
-												</Dropdown> */}
+														</DropdownItem> */}
+													 </DropdownMenu>
+												</Dropdown> 
 												
 											</div>
 										</div>

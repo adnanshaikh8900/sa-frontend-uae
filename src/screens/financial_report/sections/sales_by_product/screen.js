@@ -231,22 +231,22 @@ class SalesByProduct extends React.Component {
 												>
 												<span>X</span>
 												</div>
-												{/* <Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
+												<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
-														<DropdownItem onClick={this.exportPDFWithComponent}>
+														{/* <DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf
-														</DropdownItem>
+														</DropdownItem> */}
 														<DropdownItem>
 															<CSVLink
 																data={csvData}
 																className="csv-btn"
-																filename={'profitloss.csv'}
+																filename={'Sales By Product Report.csv'}
 															>
 																CSV (Comma Separated Value)
 															</CSVLink>
 														</DropdownItem>
-														<DropdownItem
+														{/* <DropdownItem
 															onClick={() => {
 																this.exportFile(csvData, 'profitloss', 'xls');
 															}}
@@ -259,9 +259,9 @@ class SalesByProduct extends React.Component {
 															}}
 														>
 															XLSX (Microsoft Excel)
-														</DropdownItem>
+														</DropdownItem> */}
 													</DropdownMenu>
-												</Dropdown> */}
+												</Dropdown>
 											</div>
 										</div>
 									</Col>

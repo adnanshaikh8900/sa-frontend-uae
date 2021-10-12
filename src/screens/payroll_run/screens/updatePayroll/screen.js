@@ -104,7 +104,7 @@ class UpdatePayroll extends React.Component {
 			 apiSelector:'',
 			 focusedInput:null,
 			 submitButton:true,
-			 payrollApprover:undefined,
+			 payrollApprover:'',
 			 dialog: null,
 			 currencyIsoCode:"AED"
 		}
@@ -148,7 +148,7 @@ class UpdatePayroll extends React.Component {
 
 	};
 	calculatePayperioad=(startDate,endDate)=>{
-		
+
 		// let diffDays=	Math.abs(parseInt((this.state.startDate - this.state.endDate) / (1000 * 60 * 60 * 24), 10))+1
 		const diffTime = Math.abs(startDate-endDate);
 		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))+1; 
@@ -199,7 +199,7 @@ class UpdatePayroll extends React.Component {
 					endDate:moment(dateArray[1])
 				})
 				
-
+				this.calculatePayperioad(this.state.startDate ,this.state.endDate);
 			}
 		}).catch((err) => {
 			this.setState({ loading: false })
@@ -343,12 +343,13 @@ class UpdatePayroll extends React.Component {
 		else 
 		{formData.append('payrollSubject', payrollSubject)}
 
-		if(payrollApprover === undefined)
-		{formData.append('approverId', this.state.payrollApprover ?this.state.payrollApprover :null)}
+		if(this.state.payrollApprover !=="")
+		{
+			formData.append('approverId', this.state.payrollApprover ?this.state.payrollApprover :null)}
 		else if(payrollApprover!=="")
 		{formData.append('approverId',  parseInt(payrollApprover) )}
 		
-		formData.append('generatePayrollString', JSON.stringify(this.state.allPayrollEmployee));
+		formData.append('generatePayrollString', JSON.stringify(this.state.selectedRows1));
 		 formData.append('salaryDate',payrollDate)
 
 		console.log(this.state.payPeriod,"JSON.stringify(this.state.allPayrollEmployee)",JSON.stringify(this.state.allPayrollEmployee))
@@ -409,7 +410,42 @@ class UpdatePayroll extends React.Component {
 			}
 		})
 	}
+	updateAmounts=(row,value)=>{
+		let newData = [...this.state.allPayrollEmployee]
+			newData = newData.map((data) => {
+											if (row.id === data.id) {
+															debugger
+														if(data.lopDay<value)
+														{		
+																													
+															data.lopDay = value;
+															data.noOfDays = data.noOfDays - 1
+															data.grossPay = Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2)
+															data.netPay =   Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
+														
+															data.payrollId = this.state.payroll_id
+															data.salaryDate = this.state.payrollDate
+														}
+														else if(data.lopDay>value)
+															{	
+																data.lopDay = value;
+																data.noOfDays = data.noOfDays + 1
+																data.grossPay = Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2)
+																data.netPay   = Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
+															
+																data.payrollId = this.state.payroll_id
+																data.salaryDate = this.state.payrollDate}
+														}
+														return data
 
+													})
+													console.log(newData)
+
+													this.setState({
+														allPayrollEmployee: newData
+
+													})
+	}
 
 	getAllPayrollEmployee = () => {
 		if(this.state.payrollId){
@@ -431,7 +467,29 @@ class UpdatePayroll extends React.Component {
 							allPayrollEmployee: res.data
 						})
 					}
-			
+					let newData = [...this.state.allPayrollEmployee]
+					newData = newData.map((data) => {					
+							data.noOfDays =this.state.paidDays					
+						return data
+					})
+					console.log(newData)
+	
+					this.setState({
+						allPayrollEmployee: newData
+					})
+
+					if(this.state.status && this.state.status==="Submitted"){
+
+						this.props.createPayrollActions.getAllPayrollEmployeeForApprover(this.state.payrollId).then((res) => {
+							if (res.status === 200) {
+								
+									this.setState({
+										allPayrollEmployee: res.data
+									})
+								
+							}
+						})	
+					}
 			}
 		})
 	}
@@ -529,43 +587,8 @@ class UpdatePayroll extends React.Component {
 														return;
 													}
 
-													let newData = [...this.state.allPayrollEmployee]
-													newData = newData.map((data) => {
-
-
-														if (row.id === data.id) {
-															if(value>data.lopDay)
-														{																
-															data.lopDay = value;
-															data.noOfDays = data.noOfDays - 1
-															data.grossPay = Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2)
-															data.netPay = Number(((data.grossPay / 30) * (data.lopDay))).toFixed(2) - (data.deduction || 0)
-														
-															data.payrollId = this.state.payroll_id
-															data.salaryDate = this.state.payrollDate
-														}
-														else	
-															{	
-																data.lopDay = value;
-																data.noOfDays = data.noOfDays + 1
-																data.grossPay = Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2)
-																data.netPay = Number(((data.grossPay / 30) * (data.lopDay))).toFixed(2) - (data.deduction || 0)
-															
-																data.payrollId = this.state.payroll_id
-																data.salaryDate = this.state.payrollDate
-															}
-														}
-														
-														return data
-
-													})
-													console.log(newData)
-
-													this.setState({
-														allPayrollEmployee: newData
-
-													})
-
+													this.updateAmounts(row,value)
+												
 												}}
 											/>
 
@@ -887,6 +910,7 @@ class UpdatePayroll extends React.Component {
 																					props.handleChange('payrollDate')(value);
 
 																				}}
+																				disabled={this.disableForAddButton() ? true : false}
 																				className={`form-control ${props.errors.payrollDate &&
 																					props.touched.payrollDate
 																					? 'is-invalid'
@@ -918,6 +942,7 @@ class UpdatePayroll extends React.Component {
 																				endDateId="tata-end-date"
 																				onDatesChange={this.handleDatesChange}
 																				focusedInput={this.state.focusedInput}
+																				disabled={this.disableForAddButton() ? true : false}
 																				onFocusChange={(option)=>{this.setState({focusedInput:option})}}
 																				/>																							
 																	
@@ -1046,8 +1071,8 @@ class UpdatePayroll extends React.Component {
 
 
 																<Col>
-																
-																		<Button
+																{this.state.status && this.state.status==="Submitted" ?(""):(<>
+																	<Button
 																			type="button"
 																			color="danger"
 																			className="btn-square"
@@ -1058,6 +1083,8 @@ class UpdatePayroll extends React.Component {
 																			? 'Deleting...'
 																			: strings.Delete }
 																		</Button>
+																</>)}
+																		
 																	
 																	<Button
 																		color="secondary"
@@ -1068,6 +1095,9 @@ class UpdatePayroll extends React.Component {
 																	>
 																		<i className="fa fa-ban"></i> {strings.Cancel}
 																	</Button>
+																	{this.state.status && this.state.status==="Submitted" ?(""):
+																	(		<>
+																	
 																	<Button
 																		color="primary"
 																		className="btn-square pull-right"
@@ -1099,6 +1129,11 @@ class UpdatePayroll extends React.Component {
 																	>
 																		<i className="fa fa-dot-circle-o  mr-1"></i> Update
 																	</Button>
+																	</>
+
+
+																	)
+																	}
 
 																</Col>
 															</Row>

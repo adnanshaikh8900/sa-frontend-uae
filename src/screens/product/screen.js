@@ -352,6 +352,28 @@ class Product extends React.Component {
         );
     };
 
+	renderInventory = (cell, row) => {
+        let classname = '';
+        if (row.isInventoryEnabled === true) {
+            classname = 'label-success';
+        } else {
+            classname = 'label-due';
+        }
+        return (
+            <span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
+                {
+                    row.isInventoryEnabled === true ?
+                        "Enabled" :
+                        "Disabled"
+                }
+            </span>
+        );
+    };
+
+	productType = (cell, row) => {
+		return row['producttype'] !== null ? row['producttype']['type'] : '';
+	};
+
 	renderActions = (cell, row) => {
 		return (
 			<div>
@@ -570,16 +592,44 @@ class Product extends React.Component {
 												csvFileName="product_list.csv"
 												ref={(node) => (this.table = node)}
 											>
-												<TableHeaderColumn dataField="productCode" dataSort className="table-header-bg">
-													     {strings.PRODUCTCODE}
+												<TableHeaderColumn 
+													width="10%"
+													dataField="productCode" 
+													dataSort className="table-header-bg">
+													{strings.PRODUCTCODE}
 												</TableHeaderColumn>
-												<TableHeaderColumn isKey dataField="name" dataSort className="table-header-bg">
+												<TableHeaderColumn 
+													width="20%"
+													isKey dataField="name" 
+													dataSort className="table-header-bg">
 													{strings.NAME}
 												</TableHeaderColumn >
+												<TableHeaderColumn
+													width="8%"
+                                                    className="table-header-bg"
+                                                    dataField="productType"
+                                                    dataSort
+                                                    dataFormat={this.renderType}
+                                                    >
+                                                        {strings.ProductType}
+
+                          						</TableHeaderColumn>
+												<TableHeaderColumn
+													width="10%"
+													dataAlign="center"
+                                                    className="table-header-bg"
+                                                    dataField="isInventoryEnabled"
+                                                    dataSort
+                                                    dataFormat={this.renderInventory}
+                                                    >
+                                                        {strings.Inventory}
+
+                          						</TableHeaderColumn>
 												{/* <TableHeaderColumn dataField="description" dataSort>
 													Description
 												</TableHeaderColumn> */}
 												<TableHeaderColumn
+													width="8%"
 													dataAlign="right"
 													dataField="vatPercentage"
 													dataSort
@@ -589,6 +639,7 @@ class Product extends React.Component {
 													 {strings.VatPercentage}
 												</TableHeaderColumn>
 												<TableHeaderColumn
+													width="10%"
 													dataAlign="right"
 													dataField="unitPrice"
 													dataSort
@@ -599,6 +650,8 @@ class Product extends React.Component {
 													 {strings.UNITPRICE}
 												</TableHeaderColumn>
 												<TableHeaderColumn
+													width="10%"
+													dataAlign="center"
                                                     className="table-header-bg"
                                                     dataField="isActive"
                                                     dataSort
@@ -606,11 +659,11 @@ class Product extends React.Component {
                                                     >
                                                         {strings.Status}
 
-                          						</TableHeaderColumn>
+                          						</TableHeaderColumn>  
 												<TableHeaderColumn
 											className="text-right"
 											columnClassName="text-right"
-											//	width="5%"
+											width="5%"
 											dataFormat={this.renderActions}
 											className="table-header-bg"
 										></TableHeaderColumn>

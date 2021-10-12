@@ -361,22 +361,22 @@ class DetailedGeneralLedgerReport extends React.Component {
 												<span>X</span>
 												</div>
                                              
-												{/* <Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
+												<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
-														<DropdownItem onClick={this.exportPDFWithComponent}>
+														{/* <DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf
-														</DropdownItem>
+														</DropdownItem> */}
 														<DropdownItem>
 															<CSVLink
 																data={csvData}
 																className="csv-btn"
-																filename={'detailGeneralLedger.csv'}
+																filename={'Detailed General Ledger Report.csv'}
 															>
 																CSV (Comma Separated Value)
 															</CSVLink>
 														</DropdownItem>
-														<DropdownItem
+														{/* <DropdownItem
 															onClick={() => {
 																this.exportFile(
 																	csvData,
@@ -397,9 +397,9 @@ class DetailedGeneralLedgerReport extends React.Component {
 															}}
 														>
 															XLSX (Microsoft Excel)
-														</DropdownItem>
+														</DropdownItem> */}
 													</DropdownMenu>
-												</Dropdown> */}
+												</Dropdown>
 											</div>
 										</div>
 									</Col>
@@ -490,8 +490,8 @@ class DetailedGeneralLedgerReport extends React.Component {
 															return (
 																<th
 																	key={index}
-																	style={{ fontWeight: '600' ,textAlign:'right'}}
-																	className={column.align ? 'text-right' : ''}
+																	style={{ fontWeight: '600' ,textAlign:'center'}}
+																	className={column.align ? 'text-center' : ''}
 																	className="table-header-color"
 																>
 																	<span>{column.label}</span>
@@ -531,28 +531,28 @@ class DetailedGeneralLedgerReport extends React.Component {
 																		{item.map((row, index) => {
 																			return (
 																				<tr key={index}>
-																					<td style={{ width: '12%' }}>
+																					<td style={{ width: '12%', textAlign: 'center'}}>
 																						{row.date}
 																					</td>
-																					<td style={{ width: '18%' }}>
+																					<td style={{ width: '18%', textAlign: 'center'}}>
 																						{/* {row.transactionTypeName} */}
 																						{row['postingReferenceTypeEnum']}
 																					</td>
-																					<td style={{ width: '13%' }}>
+																					<td style={{ width: '13%', textAlign: 'center'}}>
 																						{/* {row['name']} */}
 																						{row['postingReferenceTypeEnum'] !==
 																						'Opening Balance'
 																							? row.transactionTypeName
 																							: ''}
 																					</td>
-																					<td style={{ width: '13%' }}>
+																					<td style={{ width: '13%', textAlign: 'center'}}>
 																						{/* {row['postingReferenceTypeEnum']} */}
 																						{row['name']}
 																					</td>
-																					<td style={{ width: '12%' }}>
+																					<td style={{ width: '12%', textAlign: 'center'}}>
 																						{row['transactonRefNo']}
 																					</td>
-																					<td style={{ width: '8%' }}>
+																					<td style={{ width: '8%', textAlign: 'center'}}>
 																						{row['referenceNo']}
 																					</td>
 																					{row['postingReferenceTypeEnum'] !==
@@ -562,7 +562,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 																						<td style={{ width: '15%' }}>
 																							{row.debitAmount > 0 && (
 																								<p
-																									className="text-right"
+																									className="text-center"
 																									onClick={() =>
 																										this.getInvoice(
 																											row[
@@ -589,7 +589,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 																						<td>
 																							<p
 																								style={{ color: '#000000' }}
-																								className="text-right"
+																								className="text-center"
 																							>
 																								{row.debitAmount !== null ? (
 																									<Currency
@@ -615,7 +615,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 																						<td style={{ width: '15%' }}>
 																							{row.creditAmount > 0 && (
 																								<p
-																									className="text-right"
+																									className="text-center"
 																									onClick={() =>
 																										this.getInvoice(
 																											row[
@@ -642,7 +642,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 																						<td>
 																							<p
 																								style={{ color: '#000000' }}
-																								className="text-right"
+																								className="text-center"
 																							>
 																								{row.creditAmount !== null ? (
 																									<Currency
@@ -665,7 +665,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 																					row['postingReferenceTypeEnum'] !==
 																						'Closing Balance' ? (
 																						<td
-																							className="amount-col text-right"
+																							className="amount-col text-center"
 																							style={{ width: '15%' }}
 																							onClick={() =>
 																								this.getInvoice(

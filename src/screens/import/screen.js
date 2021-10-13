@@ -341,11 +341,7 @@ class Import extends React.Component {
 		if(Array.isArray(file_data_list) && file_data_list.length!==0){
 				let colDataObject =file_data_list[0] ? file_data_list[0] : {};
 		     	  const	 cols=colDataObject? Object.keys(colDataObject) :[];
-				// this.setState({cols:cols})
-				console.log(cols,"cols")
-				console.log(file_data_list,"file_data_list")
 				return(
-					// file_data_list ?JSON.stringify(file_data_list) :"hhhh"
 					<Table responsive>
 					<thead>
 						<tr className="header-row">

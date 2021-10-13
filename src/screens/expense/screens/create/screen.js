@@ -455,6 +455,17 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 														.matches(
 															/^[0-9][0-9]*[.]?[0-9]{0,2}$$/,
 															'Enter a Valid Amount',
+														)
+														.test(
+															'Expense Amount',
+															'Expense Amount should be greater than 1',
+															(value) => {
+																if (value > 0) {
+																	return true;
+																} else {
+																	return false;
+																}
+															},
 														),
 													vatCategoryId: Yup.string().required(
 														'Vat is Required',

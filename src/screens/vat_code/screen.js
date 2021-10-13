@@ -77,10 +77,10 @@ class VatCode extends React.Component {
 			openDeleteModal: false,
 			loading: true,
 			selectedRows: [],
-			filterData: {
-				name: '',
-				vatPercentage: '',
-			},
+			// filterData: {
+			// 	name: '',
+			// 	vatPercentage: '',
+			// },
 			csvData: [],
 			view: false,
 		};
@@ -120,7 +120,7 @@ class VatCode extends React.Component {
 			order: this.options.sortOrder ? this.options.sortOrder : '',
 			sortingCol: this.options.sortName ? this.options.sortName : '',
 		};
-		const postData = { ...filterData, ...paginationData, ...sortingData };
+		 const postData = { ...filterData, ...paginationData, ...sortingData };
 		this.props.vatActions
 			.getVatList(postData)
 			.then((res) => {
@@ -278,13 +278,13 @@ class VatCode extends React.Component {
 		});
 	};
 
-	handleChange = (val, name) => {
-		this.setState({
-			filterData: Object.assign(this.state.filterData, {
-				[name]: val,
-			}),
-		});
-	};
+	// handleChange = (val, name) => {
+	// 	this.setState({
+	// 		filterData: Object.assign(this.state.filterData, {
+	// 			[name]: val,
+	// 		}),
+	// 	});
+	// };
 
 	handleSearch = () => {
 		this.initializeData();
@@ -309,19 +309,19 @@ class VatCode extends React.Component {
 		}
 	};
 
-	clearAll = () => {
-		this.setState(
-			{
-				filterData: {
-					name: '',
-					vatPercentage: '',
-				},
-			},
-			() => {
-				this.initializeData();
-			},
-		);
-	};
+	// clearAll = () => {
+	// 	this.setState(
+	// 		{
+	// 			filterData: {
+	// 				name: '',
+	// 				vatPercentage: '',
+	// 			},
+	// 		},
+	// 		() => {
+	// 			this.initializeData();
+	// 		},
+	// 	);
+	// };
 
 	render() {
 		strings.setLanguage(this.state.language);
@@ -331,7 +331,7 @@ class VatCode extends React.Component {
 			dialog,
 			csvData,
 			view,
-			filterData,
+			// filterData,
 		} = this.state;
 		const { vat_list } = this.props;
 
@@ -382,7 +382,7 @@ class VatCode extends React.Component {
 												</Button> */}
 											</ButtonGroup>
 										</div>
-										<div className="py-3">
+										{/* <div className="py-3">
 											<h5>{strings.Filter} : </h5>
 											<Row>
 												<Col lg={4} className="mb-1">
@@ -399,8 +399,8 @@ class VatCode extends React.Component {
 														}}
 													/>
 													
-												</Col>
-												<Col lg={4} className="mb-1">
+												</Col> */}
+												{/* <Col lg={4} className="mb-1"> */}
 													{/* <Input
 														type="text"
 														value={filterData.vatPercentage}
@@ -413,7 +413,7 @@ class VatCode extends React.Component {
 															);
 														}}
 													/> */}
-													<TextField
+													{/* <TextField
 														id="outlined-basic"
 														variant="outlined"
 														fullWidth
@@ -451,7 +451,7 @@ class VatCode extends React.Component {
 													</Button>
 												</Col>
 											</Row>
-										</div>
+										</div> */}
 										<Button
 											color="primary"
 											className="btn-square pull-right"

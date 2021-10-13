@@ -406,7 +406,7 @@ class CreateUser extends React.Component {
 																			</Label>
 																			<Input
 																				type="text"
-																				maxLength="26"
+																				maxLength="100"
 																				id="firstName"
 																				name="firstName"
 																				value={props.values.firstName}
@@ -446,7 +446,7 @@ class CreateUser extends React.Component {
 																			</Label>
 																			<Input
 																				type="text"
-																				maxLength="26"
+																				maxLength="100"
 																				id="lastName"
 																				name="lastName"
 																				placeholder={strings.LastName}

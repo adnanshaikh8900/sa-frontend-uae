@@ -118,18 +118,25 @@ class PayablesInvoiceSummary extends React.Component {
 			});
 	};
 
-	exportFile = (csvData, fileName, type) => {
-		const fileType =
-			type === 'xls'
-				? 'application/vnd.ms-excel'
-				: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-		const fileExtension = `.${type}`;
-		const ws = XLSX.utils.json_to_sheet(csvData);
-		const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
-		const excelBuffer = XLSX.write(wb, { bookType: type, type: 'array' });
-		const data = new Blob([excelBuffer], { type: fileType });
-		FileSaver.saveAs(data, fileName + fileExtension);
+	exportFile = () => {
+		
+		return (this.state && this.state.data && this.state.data.payableInvoiceSummaryModelList? this.state.data.payableInvoiceSummaryModelList :'');
 	};
+
+
+
+	// exportFile = (csvData, fileName, type) => {
+	// 	const fileType =
+	// 		type === 'xls'
+	// 			? 'application/vnd.ms-excel'
+	// 			: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+	// 	const fileExtension = `.${type}`;
+	// 	const ws = XLSX.utils.json_to_sheet(csvData);
+	// 	const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
+	// 	const excelBuffer = XLSX.write(wb, { bookType: type, type: 'array' });
+	// 	const data = new Blob([excelBuffer], { type: fileType });
+	// 	FileSaver.saveAs(data, fileName + fileExtension);
+	// };
 
 	toggle = () =>
 		this.setState((prevState) => {
@@ -194,7 +201,40 @@ class PayablesInvoiceSummary extends React.Component {
 													<i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
 												</p>
 											</div>
+										
 											<div className="d-flex">
+												<div>
+												<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
+													<DropdownToggle caret>Export As</DropdownToggle>
+													<DropdownMenu>
+														{/* <DropdownItem onClick={this.exportPDFWithComponent}>
+															Pdf
+														</DropdownItem> */}
+														<DropdownItem>
+															<CSVLink
+																data={this.exportFile()}
+																className="csv-btn"
+																filename={'Payables Invoice Summary Report.csv'}
+															>
+																CSV (Comma Separated Value)
+															</CSVLink>
+														</DropdownItem>
+														{/* <DropdownItem
+															onClick={() => {
+																this.exportFile(csvData, 'profitloss', 'xls');
+															}}
+														>
+															XLS (Microsoft Excel 1997-2004 Compatible)
+														</DropdownItem>
+														<DropdownItem
+															onClick={() => {
+																this.exportFile(csvData, 'profitloss', 'xlsx');
+															}}
+														>
+															XLSX (Microsoft Excel)
+														</DropdownItem> */}
+													</DropdownMenu>
+												</Dropdown></div> &nbsp;&nbsp;
 												<div
 													className="mr-2 print-btn-cont"
 													onClick={() => window.print()}
@@ -226,37 +266,7 @@ class PayablesInvoiceSummary extends React.Component {
 												>
 												<span>X</span>
 												</div>
-												<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
-													<DropdownToggle caret>Export As</DropdownToggle>
-													<DropdownMenu>
-														{/* <DropdownItem onClick={this.exportPDFWithComponent}>
-															Pdf
-														</DropdownItem> */}
-														<DropdownItem>
-															<CSVLink
-																data={csvData}
-																className="csv-btn"
-																filename={'Payables Invoice Summary Report.csv'}
-															>
-																CSV (Comma Separated Value)
-															</CSVLink>
-														</DropdownItem>
-														{/* <DropdownItem
-															onClick={() => {
-																this.exportFile(csvData, 'profitloss', 'xls');
-															}}
-														>
-															XLS (Microsoft Excel 1997-2004 Compatible)
-														</DropdownItem>
-														<DropdownItem
-															onClick={() => {
-																this.exportFile(csvData, 'profitloss', 'xlsx');
-															}}
-														>
-															XLSX (Microsoft Excel)
-														</DropdownItem> */}
-													</DropdownMenu>
-												</Dropdown>
+											
 											</div>
 										</div>
 									</Col>

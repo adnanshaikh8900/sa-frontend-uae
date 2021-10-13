@@ -630,7 +630,7 @@ class Product extends React.Component {
 												</TableHeaderColumn> */}
 												<TableHeaderColumn
 													width="8%"
-													dataAlign="right"
+													// dataAlign="right"
 													dataField="vatPercentage"
 													dataSort
 													// dataFormat={this.vatCategoryFormatter}
@@ -639,7 +639,7 @@ class Product extends React.Component {
 													 {strings.VatPercentage}
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													width="10%"
+													width="8%"
 													dataAlign="right"
 													dataField="unitPrice"
 													dataSort

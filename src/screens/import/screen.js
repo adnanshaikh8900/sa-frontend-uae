@@ -30,7 +30,7 @@ import './style.scss';
 import * as MigrationAction from './actions';
 import { selectOptionsFactory } from 'utils';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import { isDate } from 'lodash-es';
+import { isDate, upperFirst } from 'lodash-es';
 
 import styled from 'styled-components';
 
@@ -88,6 +88,7 @@ class Import extends React.Component {
 			migration: false,
 			migration_list: [],
 			activeTab: new Array(6).fill('1'),
+			nestedActiveDefaultTab:false,
 			date: '',
 			tabs: [],
 			file_data_list:[]
@@ -300,7 +301,7 @@ class Import extends React.Component {
 		return(	file_data_list ? (
 			file_data_list.map(
 				(item, index) => {
-					debugger
+					
 					return (
 						<>
 							<tr
@@ -326,57 +327,75 @@ class Import extends React.Component {
 		)
 		)}
 	
-	showTable  = (file_data_list) => {
+
+	showHeader=(s)=>{
 		
+			return upperFirst(s.replace(/([a-z])([A-Z])/g, '$1 $2'));
+	
+	}
+	showTD=(s)=>{
+		return ( s!=="" ?s :"-" )
+	}
+	showTable  = (file_data_list) => {
+
 		if(Array.isArray(file_data_list) && file_data_list.length!==0){
 				let colDataObject =file_data_list[0] ? file_data_list[0] : {};
-		     	  let	 cols= Object.keys(colDataObject);
-				this.setState({cols:cols})
-				debugger
-
-
-		}
-		// file_data_list=Object.assign({},file_data_list)
-		return(
-			<Table responsive>
-			<thead>
-				<tr className="header-row">
-					{this.state.cols && this.state.cols.map((column, index) => {
-						return (
-							<th
-								key={index}
-								style={{ fontWeight: '600' ,textAlign:'right'}}
-								className={column.align ? 'text-right' : ''}
-								className="table-header-color"
-							>
-								<span>{column}</span>
-					</th>
-						);
-					})}
-				</tr>
-			</thead>
-			<tbody className="data-column">
+		     	  const	 cols=colDataObject? Object.keys(colDataObject) :[];
+				// this.setState({cols:cols})
+				console.log(cols,"cols")
+				console.log(file_data_list,"file_data_list")
+				return(
+					// file_data_list ?JSON.stringify(file_data_list) :"hhhh"
+					<Table responsive>
+					<thead>
+						<tr className="header-row">
+							{cols.map((column, index) => {
+								return (
+									<th
+										key={index}																		
+										className="table-header-color"
+									>
+										<span>{this.showHeader(column)}</span>
+							</th>
+								);
+							})}
+						</tr>
+					</thead>
+					<tbody className="data-column">
 				{		
-				file_data_list ? (
+				file_data_list.length!==0 ? (
 			    file_data_list.map(
-				(item, index) => {
-					debugger
-					return (
-						<>
-							<tr
-								style={{ background: '#f7f7f7' }}
-								key={index}
-							>
-								<td >
-										{item}
-								</td>
-							</tr>
-						</>
-					);
-				}
+						(item, index) => {
+							
+							return (
+								<>
+									<tr
+										style={{ background: '#f7f7f7' }}
+										key={index}
+									>
+									
+												{
+												// JSON.stringify(item)
+												cols.map((column, index) => {
+													return (
+														<td
+															key={index}
+															style={{ fontWeight: '600' ,textAlign:'center'}}
+															className={column.align ? 'text-center' : ''}															
+														>
+															<span>{this.showTD(item[column])}</span>
+												</td>
+													);
+												})
+												
+												}
+										
+									</tr>
+								</>
+							);
+						}
 			)
 			
-	
 		): (
 			<tr style={{ borderBottom: '2px solid lightgray' }}>
 				<td style={{ textAlign: 'center' }} colSpan="9">
@@ -386,51 +405,11 @@ class Import extends React.Component {
 		)
 		}
 			</tbody>
-		</Table>
-		);
-	
-		// return (
-		// 	<React.Fragment>
-		// 		<Row>
-
-
-		// 		</Row>
-		// 		<div className={"ml-4 mt-2"}>
-		// 			<BootstrapTable
-		// 				data={file_data_list ? file_data_list: ''}
-		// 				version="4"
-		// 				hover
-		// 				keyField="id"
-		// 				remote
-		// 				className="customer-invoice-table"
-		// 				ref={(node) => this.table = node}
-		// 			>
-						
-		// 				{
-							
-		// 					cols.map((col, index) => {
-
-		// 						return (
-		// 							<TableHeaderColumn
-		// 								key={index}
-		// 								dataField={col.key}
-		// 								dataAlign="center"
-		// 								className="table-header-bg"
-		// 								dataSort={col.dataSort}
-		// 								width={col.width}>
-		// 								{col.label}
-		// 							</TableHeaderColumn>
-
-		// 						)
-		// 					})
-		// 				}
-
-
-		// 			</BootstrapTable>
-		// 		</div>
-		// 	</React.Fragment>
-
-		// )
+					
+					</Table>
+			);
+				
+		}
 	}
 
 	openForgotPasswordModal = () => {
@@ -875,7 +854,10 @@ class Import extends React.Component {
 																	<TabList>
 																		<Tab
 																		id='chartOfAccounts'
-																		isSelected={true}
+																		onClick={()=>{
+																			this.setState({nestedActiveDefaultTab:false})
+																		}}
+																		// isSelected={true}
 																		>
 																	Chart Of Accounts
 
@@ -885,17 +867,23 @@ class Import extends React.Component {
 																			<Tab
 																				key={tab}
 																				//  isSelected={this.showTable(file_data_list)}
-																			    onClick={() => 
-																				this.getFileData(tab)}
+																				onClick={() => {
+																					this.getFileData(tab);
+																					this.setState({nestedActiveDefaultTab:true})
+																				}}
+																			   
 																			>
 																				{tab}
 																			</Tab>
 																		))}
 																	</TabList>
 																	<TabContent>
-																		<TabPane>
-																		{this.showTable(file_data_list)}		
-																		</TabPane>
+																	{this.state.nestedActiveDefaultTab?	
+																		(<TabPane>
+																		<div style={{width:"50%"}} >{this.showTable(file_data_list)}	</div>	
+																		</TabPane>):(<TabPane>
+																	Default		
+																		</TabPane>)}
 																	</TabContent>
 																</Row>
 																<Row>

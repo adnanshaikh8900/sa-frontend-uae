@@ -33,6 +33,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { isDate, upperFirst } from 'lodash-es';
 
 import styled from 'styled-components';
+import { ChartOfAccountsModal } from './modal';
 
 
 
@@ -55,8 +56,7 @@ const mapDispatchToProps = (dispatch) => {
 const TabList = styled.ul`
   height: 48px;
   display: flex;
-  width: 100%;
-  background-color: rgba(236, 114, 112, 0.3);
+
   padding: 0;
   margin: 0;
 `;
@@ -65,10 +65,9 @@ const Tab = styled.li`
   text-align: center;
   font-family: sans-serif;
   line-height: 48px;
-  flex: 1 0 auto;
+  flex: 0.008 0 auto;
   height: inherit;
-  background-color: ${(props) =>
-    props.isSelected ? 'rgba(236, 114, 112, 0.9)' : 'rgba(236,114,112,0.3)'};
+
 `;
 
 class Import extends React.Component {
@@ -88,10 +87,40 @@ class Import extends React.Component {
 			migration: false,
 			migration_list: [],
 			activeTab: new Array(6).fill('1'),
-			nestedActiveDefaultTab:false,
+			nestedActiveDefaultTab: false,
 			date: '',
 			tabs: [],
-			file_data_list:[]
+			file_data_list: [],
+			openModal: false,
+			listOfExist:[],
+			dummylistOfExist:[],
+
+			// listOfExist: [
+
+			// 						{
+			// 						"transactionId": 49,
+			// 						"transactionName": "Cost of Goods Sold",
+			// 						"chartOfAccountName": "Cost Of Goods Sold",
+			// 						"editableFlag": false
+			// 						}
+			// 						,
+
+			// 						{
+			// 						"transactionId": 84,
+			// 						"transactionName": "Sales",
+			// 						"chartOfAccountName": "Income",
+			// 						"editableFlag": false
+			// 						}
+			// 						,
+
+			// 						{
+			// 						"transactionId": 150,
+			// 						"transactionName": "Inventory Asset",
+			// 						"chartOfAccountName": "stock",
+			// 						"editableFlag": false
+			// 						}
+			// 					],
+			dummylistOfNotExist: ["Khan","Pathan"],
 		};
 	}
 
@@ -177,7 +206,7 @@ class Import extends React.Component {
 		this.setState({ loading: true, disabled: true });
 
 		let formData = new FormData();
-		
+
 		for (const file of this.uploadFile.files) {
 			formData.append('files', file);
 		}
@@ -210,13 +239,17 @@ class Import extends React.Component {
 	};
 
 	listOfTransactionCategory = (data) => {
+
 		this.props.migrationActions
 			.listOfTransactionCategory()
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState({
 						disabled: false,
-						file_data: res.data
+						file_data: res.data,
+						listOfExist: res.data.listOfExist,
+						dummylistOfExist: res.data.listOfExist,
+						// listOfNotExist: res.data.listOfNotExist,
 					});
 
 				}
@@ -261,11 +294,11 @@ class Import extends React.Component {
 			.getFileData(data)
 			.then((res) => {
 				if (res.status === 200) {
-					
+
 					this.setState({
 						disabled: false,
-						file_data_list:res.data
-						
+						file_data_list: res.data
+
 					});
 
 				}
@@ -297,11 +330,11 @@ class Import extends React.Component {
 
 	}
 
-	getBody=(file_data_list)=>{
-		return(	file_data_list ? (
+	getBody = (file_data_list) => {
+		return (file_data_list ? (
 			file_data_list.map(
 				(item, index) => {
-					
+
 					return (
 						<>
 							<tr
@@ -309,105 +342,229 @@ class Import extends React.Component {
 								key={index}
 							>
 								<td >
-										{item}
+									{item}
 								</td>
 							</tr>
 						</>
 					);
 				}
 			)
-			
-	
-		): (
+
+
+		) : (
 			<tr style={{ borderBottom: '2px solid lightgray' }}>
 				<td style={{ textAlign: 'center' }} colSpan="9">
 					There is no data to display
 				</td>
 			</tr>
 		)
-		)}
-	
-
-	showHeader=(s)=>{
-		
-			return upperFirst(s.replace(/([a-z])([A-Z])/g, '$1 $2'));
-	
+		)
 	}
-	showTD=(s)=>{
-		return ( s!=="" ?s :"-" )
-	}
-	showTable  = (file_data_list) => {
+	closeModal = (res) => {
+		this.setState({ openModal: false });
+	};
 
-		if(Array.isArray(file_data_list) && file_data_list.length!==0){
-				let colDataObject =file_data_list[0] ? file_data_list[0] : {};
-		     	  const	 cols=colDataObject? Object.keys(colDataObject) :[];
-				return(
-					<Table responsive>
+	showHeader = (s) => {
+
+		return upperFirst(s.replace(/([a-z])([A-Z])/g, '$1 $2'));
+
+	}
+	showTD = (s) => {
+		return (s !== "" ? s : "-")
+	}
+	showTable = (file_data_list) => {
+
+		if (Array.isArray(file_data_list) && file_data_list.length !== 0) {
+			let colDataObject = file_data_list[0] ? file_data_list[0] : {};
+			const cols = colDataObject ? Object.keys(colDataObject) : [];
+			// this.setState({cols:cols})
+			console.log(cols, "cols")
+			console.log(file_data_list, "file_data_list")
+			return (
+				// file_data_list ?JSON.stringify(file_data_list) :"hhhh"
+				<Table responsive>
 					<thead>
 						<tr className="header-row">
 							{cols.map((column, index) => {
 								return (
 									<th
-										key={index}																		
+										key={index}
 										className="table-header-color"
 									>
 										<span>{this.showHeader(column)}</span>
-							</th>
+									</th>
 								);
 							})}
 						</tr>
 					</thead>
 					<tbody className="data-column">
-				{		
-				file_data_list.length!==0 ? (
-			    file_data_list.map(
-						(item, index) => {
-							
-							return (
-								<>
-									<tr
-										style={{ background: '#f7f7f7' }}
-										key={index}
-									>
-									
-												{
-												// JSON.stringify(item)
-												cols.map((column, index) => {
-													return (
-														<td
-															key={index}
-															style={{ fontWeight: '600' ,textAlign:'center'}}
-															className={column.align ? 'text-center' : ''}															
-														>
-															<span>{this.showTD(item[column])}</span>
-												</td>
-													);
-												})
-												
-												}
-										
-									</tr>
-								</>
-							);
+						{
+							file_data_list.length !== 0 ? (
+								file_data_list.map(
+									(item, index) => {
+
+										return (
+											<>
+												<tr
+													style={{ background: '#f7f7f7' }}
+													key={index}
+												>
+
+													{
+														// JSON.stringify(item)
+														cols.map((column, index) => {
+															return (
+																<td
+																	key={index}
+																	style={{ fontWeight: '600', textAlign: 'center' }}
+																	className={column.align ? 'text-center' : ''}
+																>
+																	<span>{this.showTD(item[column])}</span>
+																</td>
+															);
+														})
+
+													}
+
+												</tr>
+											</>
+										);
+									}
+								)
+
+							) : (
+								<tr style={{ borderBottom: '2px solid lightgray' }}>
+									<td style={{ textAlign: 'center' }} colSpan="9">
+										There is no data to display
+									</td>
+								</tr>
+							)
 						}
-			)
-			
-		): (
-			<tr style={{ borderBottom: '2px solid lightgray' }}>
-				<td style={{ textAlign: 'center' }} colSpan="9">
-					There is no data to display
-				</td>
-			</tr>
-		)
-		}
-			</tbody>
-					
-					</Table>
+					</tbody>
+
+				</Table>
 			);
-				
+
 		}
 	}
 
+	showNotExistList = () => {
+		if (this.state && this.state.dummylistOfNotExist) {
+			let listObject=[]
+			// let listObject = this.state.dummylistOfExist ? this.state.dummylistOfExist : []
+
+			debugger
+				let list = this.state.dummylistOfNotExist ? this.state.dummylistOfNotExist : []
+				let listOfNotExist1 = list.map((data, i) => {
+					listObject.push({ chartOfAccountName: data })
+					return data;
+				});
+				let temp = [...this.state.dummylistOfExist]
+				const listOfExist1 =[...temp, ...listObject]
+                 let val=listOfExist1
+				// this.setState({merged:val})
+				console.log(listOfExist1)
+				return (
+					<Row className="text-center">
+					<Col><Row>
+						<div style={{ width: "100%" }}><b>Simple-Accounts</b></div>
+						<div>
+							<BootstrapTable
+								data={this.state && this.state.listOfExist ? this.state.listOfExist : []}
+								version="4"
+								hover
+								keyField="id"
+								remote
+								//   fetchInfo={{ dataTotalSize: salaryRole_list.count ? salaryRole_list.count : 0 }}
+								ref={(node) => this.table = node}
+								className="text-center"
+							>
+								<TableHeaderColumn
+									dataField="transactionId"
+									dataFormat={this.renderCode}
+									className="table-header-bg text-center"
+								>
+									Account Code
+								</TableHeaderColumn>
+								<TableHeaderColumn
+									dataField="chartOfAccountName"
+									dateFormat={this.renderAccountName}
+									className="table-header-bg text-center"
+								>
+									Account Name
+								</TableHeaderColumn>
+
+							</BootstrapTable>
+						</div>
+
+
+
+					</Row></Col>
+					<div style={{ width: "20%" }}>.
+						<BootstrapTable
+						data={listOfExist1 && listOfExist1 ? listOfExist1 : []}
+							// data={this.state && this.state.merged ? this.state.merged : []}
+							version="4"
+							hover
+							keyField="id"
+							remote
+							//   fetchInfo={{ dataTotalSize: salaryRole_list.count ? salaryRole_list.count : 0 }}
+							ref={(node) => this.table = node}
+							className="lockSideBorder"
+						>
+							<TableHeaderColumn
+								dataField="transactionId"
+								dataFormat={this.renderLocks}
+								className=" text-center"
+							>
+								.
+							</TableHeaderColumn>
+						</BootstrapTable>
+					</div>
+					<Col><Row>
+						<div style={{ width: "100%" }}><b>Zoho-Books</b></div>
+						<div>
+							{/* {this.showNotExistList()} */}
+
+							<BootstrapTable
+data={listOfExist1 && listOfExist1 ? listOfExist1 : []}
+version="4"
+hover
+keyField="id"
+remote
+
+//   fetchInfo={{ dataTotalSize: salaryRole_list.count ? salaryRole_list.count : 0 }}
+ref={(node) => this.table = node}
+className="text-center"
+>
+<TableHeaderColumn
+dataField="transactionId"
+dataFormat={this.renderCode1}
+className="table-header-bg text-center"
+>
+Account Code
+</TableHeaderColumn>
+<TableHeaderColumn
+dataField="chartOfAccountName"
+dateFormat={this.renderAccountName1}
+className="table-header-bg text-center"
+>
+Account Name
+</TableHeaderColumn>
+</BootstrapTable>
+						</div>
+					</Row></Col>
+				</Row>
+
+				);
+			}
+
+
+		// console.log(list, "list")
+		// this.setState({ mergedList: list })
+
+
+	}
 	openForgotPasswordModal = () => {
 		this.setState({ openForgotPasswordModal: true });
 	};
@@ -415,9 +572,32 @@ class Import extends React.Component {
 	closeForgotPasswordModal = (res) => {
 		this.setState({ openForgotPasswordModal: false });
 	};
+	renderLocks = (cell,row) => {
 
+		if(row.transactionId){
+		return (<div className=" text-center"><i class="fas fa-lock"></i> </div>);}
+		else
+		{
+			return (<div className=" text-center"> 	<span style={{color:"white",backgroundColor:"#2266d8"}} onClick={() => {
+				this.setState({
+					openModal: true
+				})
+			}}>Create</span> </div>);}
+	}
+	renderCode = (cell, rows) => {
+		return (<div className="text-center">{rows.accountCode ? rows.accountCode : '-'} </div>);
+	};
+	renderAccountName = (cell, rows) => {
+		return (<div className=" text-center !important" style={{ textAlign: "center" }}>{rows.chartOfAccountName ? rows.chartOfAccountName : '-'} </div>);
+	};
+	renderCode1 = (cell, rows) => {
+		return (<div className="text-center">{rows.accountCode ? rows.accountCode : '-'} </div>);
+	};
+	renderAccountName1 = (cell, rows) => {
+		return (<div className=" text-center !important" style={{ textAlign: "center" }}>{rows.chartOfAccountName ? rows.chartOfAccountName : '-'} </div>);
+	};
 	render() {
-		const { isPasswordShown, product_list, version_list,tabs,file_data_list } = this.state;
+		const { isPasswordShown, product_list, version_list, tabs, file_data_list } = this.state;
 		const { initValue, migration_list } = this.state;
 		console.log(tabs)
 		const customStyles = {
@@ -502,7 +682,7 @@ class Import extends React.Component {
 														}}
 														validate={(values) => {
 															let errors = {};
-															
+
 															if (values.date === '') {
 																errors.date = 'Date is required';
 															}
@@ -836,10 +1016,9 @@ class Import extends React.Component {
 													<Formik
 														initialValues={this.state.initValue}
 														onSubmit={(values, { resetForm }) => {
-															this.handleSubmitForSalary(values, resetForm)
+															// this.handleSubmitForSalary(values, resetForm)
 														}}
 														validationSchema={Yup.object().shape({
-
 
 														})}
 													>
@@ -849,37 +1028,48 @@ class Import extends React.Component {
 																<Row>
 																	<TabList>
 																		<Tab
-																		id='chartOfAccounts'
-																		onClick={()=>{
-																			this.setState({nestedActiveDefaultTab:false})
-																		}}
+																			id='chartOfAccounts'
+																			onClick={() => {
+																				this.setState({ nestedActiveDefaultTab: false })
+																			}}
 																		// isSelected={true}
 																		>
-																	Chart Of Accounts
 
-																			</Tab>
+																			<Button className="rounded-left" >Chart Of Accounts</Button>
+																		</Tab>
 																		{tabs.map((tab, idx) => (
-																			
+
 																			<Tab
 																				key={tab}
 																				//  isSelected={this.showTable(file_data_list)}
 																				onClick={() => {
 																					this.getFileData(tab);
-																					this.setState({nestedActiveDefaultTab:true})
+																					this.setState({ nestedActiveDefaultTab: true })
 																				}}
-																			   
+
 																			>
-																				{tab}
+																				<Button className="rounded-left">{tab}</Button>
 																			</Tab>
 																		))}
 																	</TabList>
 																	<TabContent>
-																	{this.state.nestedActiveDefaultTab?	
-																		(<TabPane>
-																		<div style={{width:"50%"}} >{this.showTable(file_data_list)}	</div>	
-																		</TabPane>):(<TabPane>
-																	Default		
-																		</TabPane>)}
+																		<hr />
+																		{this.state.nestedActiveDefaultTab ?
+																			(<TabPane>
+																				<div style={{ width: "50%" }} >{this.showTable(file_data_list)}	</div>
+																			</TabPane>
+																			) : (
+																				<TabPane>
+																					{/* Default start */}
+																					{/* <Button onClick={() => {
+																						this.setState({
+																							openModal: true
+																						})
+																					}}>Create Chart Of Account</Button> */}
+																				{this.showNotExistList()}
+																					{/* Default end */}
+																				</TabPane>
+																			)}
 																	</TabContent>
 																</Row>
 																<Row>
@@ -916,7 +1106,7 @@ class Import extends React.Component {
 											<Formik
 												initialValues={this.state.initValue}
 												onSubmit={(values, { resetForm }) => {
-													this.handleSubmitForSalary(values, resetForm)
+													// this.handleSubmitForSalary(values, resetForm)
 												}}
 												validationSchema={Yup.object().shape({
 
@@ -1053,6 +1243,14 @@ class Import extends React.Component {
 						</Col>
 					</Row>
 				</div>
+				<ChartOfAccountsModal
+					openModal={this.state.openModal}
+					closeModal={(e) => {
+						this.closeModal(e);
+					}}
+
+				// employee_list={employee_list.data}
+				/>
 			</div>
 		);
 	}

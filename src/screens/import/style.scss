@@ -34,6 +34,12 @@
 				.react-datepicker-wrapper{
 					width: 16% !important;
 				}
+				.rounded-left{
+					border-top-right-radius: 5.25rem !important;
+				}
+				.tab-content {
+					border: solid #c8ced3 0.1px;
+				}
 }
 .forgot-password-modal {
 	max-width: 40%;
@@ -81,3 +87,7 @@
 	color: grey;
   }
   
+  .lockSideBorder{
+	border-left: #afc9ed 0.1px solid;
+	border-right: #afc9ed 0.1px solid;
+  }

@@ -218,37 +218,7 @@ class HorizontalBalanceSheet extends React.Component {
 												</p>
 											</div>
 											<div className="d-flex">
-												<div
-													className="mr-2 print-btn-cont"
-													onClick={() => window.print()}
-													style={{
-														cursor: 'pointer',
-														}}
-												>
-													<i className="fa fa-print"></i>
-												</div>
-												<div
-												className="mr-2 print-btn-cont"
-												onClick={() => {
-													this.exportPDFWithComponent();
-												}}
-												style={{
-													cursor: 'pointer',
-													}}
-												>
-												<i className="fa fa-file-pdf-o"></i>
-											</div>
-                                            <div
-													className="mr-2 print-btn-cont"
-                                                    onClick={() => {
-                                                        this.props.history.push('/admin/report/reports-page');
-                                                    }}
-													style={{
-														cursor: 'pointer',
-														}}
-												>
-												<span>X</span>
-												</div>
+											
 												<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
@@ -284,6 +254,39 @@ class HorizontalBalanceSheet extends React.Component {
 														</DropdownItem> */}
 													</DropdownMenu>
 												</Dropdown>
+												
+													&nbsp;&nbsp;
+												<div
+													className="mr-2 print-btn-cont"
+													onClick={() => window.print()}
+													style={{
+														cursor: 'pointer',
+														}}
+												>
+													<i className="fa fa-print"></i>
+												</div>
+												<div
+												className="mr-2 print-btn-cont"
+												onClick={() => {
+													this.exportPDFWithComponent();
+												}}
+												style={{
+													cursor: 'pointer',
+													}}
+												>
+												<i className="fa fa-file-pdf-o"></i>
+											</div>
+                                            <div
+													className="mr-2 print-btn-cont"
+                                                    onClick={() => {
+                                                        this.props.history.push('/admin/report/reports-page');
+                                                    }}
+													style={{
+														cursor: 'pointer',
+														}}
+												>
+												<span>X</span>
+												</div>
 												
 											</div>
 										</div>

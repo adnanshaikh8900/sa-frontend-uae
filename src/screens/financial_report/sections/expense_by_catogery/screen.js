@@ -205,6 +205,37 @@ class ExpenseByCategory extends React.Component {
 												</p>
 											</div>
 											<div className="d-flex">
+											<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
+													<DropdownToggle caret>Export As</DropdownToggle>
+													<DropdownMenu>
+														{/* <DropdownItem onClick={this.exportPDFWithComponent}>
+															Pdf
+														</DropdownItem> */}
+														<DropdownItem>
+															<CSVLink
+																data={this.exportFile()}
+																className="csv-btn"
+																filename={'Expense By Category Report.csv'}
+															>
+																CSV (Comma Separated Value)
+															</CSVLink>
+														</DropdownItem>
+														{/* <DropdownItem
+															onClick={() => {
+																this.exportFile();
+															}}
+														>
+															XLS (Microsoft Excel 1997-2004 Compatible)
+														</DropdownItem> */}
+														{/* <DropdownItem
+															onClick={() => {
+																this.exportFile(csvData, 'profitloss', 'xlsx');
+															}}
+														>
+															XLSX (Microsoft Excel)
+														</DropdownItem> */}
+													</DropdownMenu>
+												</Dropdown>&nbsp;&nbsp;
 												<div
 													className="mr-2 print-btn-cont"
 													onClick={() => window.print()}
@@ -236,37 +267,7 @@ class ExpenseByCategory extends React.Component {
 												>
 													<span>X</span>
 												</div>
-												<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
-													<DropdownToggle caret>Export As</DropdownToggle>
-													<DropdownMenu>
-														{/* <DropdownItem onClick={this.exportPDFWithComponent}>
-															Pdf
-														</DropdownItem> */}
-														<DropdownItem>
-															<CSVLink
-																data={this.exportFile()}
-																className="csv-btn"
-																filename={'Expense By Category Report.csv'}
-															>
-																CSV (Comma Separated Value)
-															</CSVLink>
-														</DropdownItem>
-														{/* <DropdownItem
-															onClick={() => {
-																this.exportFile();
-															}}
-														>
-															XLS (Microsoft Excel 1997-2004 Compatible)
-														</DropdownItem> */}
-														{/* <DropdownItem
-															onClick={() => {
-																this.exportFile(csvData, 'profitloss', 'xlsx');
-															}}
-														>
-															XLSX (Microsoft Excel)
-														</DropdownItem> */}
-													</DropdownMenu>
-												</Dropdown>
+												
 											</div>
 										</div>
 									</Col>

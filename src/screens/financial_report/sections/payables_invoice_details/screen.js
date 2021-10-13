@@ -63,7 +63,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 			language: window['localStorage'].getItem('language'),
 			loading: true,
 			dropdownOpen: false,
-			payableInvoiceDetailsList: {},
+			payableInvoiceDetailsList: '',
 			view: false,
 			initValue: {
 				startDate: moment().startOf('month').format('DD/MM/YYYY'),
@@ -129,18 +129,24 @@ class PayablesInvoiceDetailsReport extends React.Component {
 
 	};
 
-	exportFile = (csvData, fileName, type) => {
-		const fileType =
-			type === 'xls'
-				? 'application/vnd.ms-excel'
-				: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-		const fileExtension = `.${type}`;
-		const ws = XLSX.utils.json_to_sheet(csvData);
-		const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
-		const excelBuffer = XLSX.write(wb, { bookType: type, type: 'array' });
-		const data = new Blob([excelBuffer], { type: fileType });
-		FileSaver.saveAs(data, fileName + fileExtension);
+	exportFile = () => {
+		
+		return (this.state  && this.state.payableInvoiceDetailsList.resultObject? this.state.payableInvoiceDetailsList.resultObject[0] :'');
 	};
+
+
+	// exportFile = (csvData, fileName, type) => {
+	// 	const fileType =
+	// 		type === 'xls'
+	// 			? 'application/vnd.ms-excel'
+	// 			: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+	// 	const fileExtension = `.${type}`;
+	// 	const ws = XLSX.utils.json_to_sheet(csvData);
+	// 	const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
+	// 	const excelBuffer = XLSX.write(wb, { bookType: type, type: 'array' });
+	// 	const data = new Blob([excelBuffer], { type: fileType });
+	// 	FileSaver.saveAs(data, fileName + fileExtension);
+	// };
 
 	toggle = () =>
 		this.setState((prevState) => {
@@ -319,6 +325,45 @@ class PayablesInvoiceDetailsReport extends React.Component {
 												</p>
 											</div>
 											<div className="d-flex">
+											<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
+													<DropdownToggle caret>Export As</DropdownToggle>
+													<DropdownMenu>
+														{/* <DropdownItem onClick={this.exportPDFWithComponent}>
+															Pdf
+														</DropdownItem> */}
+														<DropdownItem>
+															<CSVLink
+																data={this.exportFile()}
+																className="csv-btn"
+																filename={'Payable Invoice Details Report.csv'}
+															>
+																CSV (Comma Separated Value)
+															</CSVLink>
+														</DropdownItem>
+														{/* <DropdownItem
+															onClick={() => {
+																this.exportFile(
+																	csvData,
+																	'detailGeneralLedger',
+																	'xls',
+																);
+															}}
+														>
+															XLS (Microsoft Excel 1997-2004 Compatible)
+														</DropdownItem>
+														<DropdownItem
+															onClick={() => {
+																this.exportFile(
+																	csvData,
+																	'detailGeneralLedger',
+																	'xlsx',
+																);
+															}}
+														>
+															XLSX (Microsoft Excel)
+														</DropdownItem> */}
+													</DropdownMenu>
+												</Dropdown>&nbsp;&nbsp;
 												<div
 													className="mr-2 print-btn-cont"
 													onClick={() => window.print()}
@@ -352,45 +397,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 													<span>X</span>
 												</div>
 
-												<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
-													<DropdownToggle caret>Export As</DropdownToggle>
-													<DropdownMenu>
-														{/* <DropdownItem onClick={this.exportPDFWithComponent}>
-															Pdf
-														</DropdownItem> */}
-														<DropdownItem>
-															<CSVLink
-																data={csvData}
-																className="csv-btn"
-																filename={'Payable Invoice Details Report.csv'}
-															>
-																CSV (Comma Separated Value)
-															</CSVLink>
-														</DropdownItem>
-														{/* <DropdownItem
-															onClick={() => {
-																this.exportFile(
-																	csvData,
-																	'detailGeneralLedger',
-																	'xls',
-																);
-															}}
-														>
-															XLS (Microsoft Excel 1997-2004 Compatible)
-														</DropdownItem>
-														<DropdownItem
-															onClick={() => {
-																this.exportFile(
-																	csvData,
-																	'detailGeneralLedger',
-																	'xlsx',
-																);
-															}}
-														>
-															XLSX (Microsoft Excel)
-														</DropdownItem> */}
-													</DropdownMenu>
-												</Dropdown>
+												
 											</div>
 										</div>
 									</Col>
@@ -483,8 +490,8 @@ class PayablesInvoiceDetailsReport extends React.Component {
 															return (
 																<th
 																	key={index}
-																	style={{ fontWeight: '600' ,textAlign:'center'}}
-																	className={column.align ? 'text-center' : ''}
+																	style={{ fontWeight: '600' ,textAlign:'right'}}
+																	className={column.align ? 'text-right' : ''}
 																	className="table-header-color"
 																>
 																	<span>{column.label}</span>
@@ -524,35 +531,35 @@ class PayablesInvoiceDetailsReport extends React.Component {
 																		{item.map((row, index) => {
 																			return (
 																				<tr key={index}>
-																					<td style={{ width: '12%', textAlign:'center'}}>
+																					<td style={{ width: '12%' }}>
 																						{row.invoiceDate ? (
 																							moment(row.invoiceDate).format('DD/MM/YYYY')
 																						) : (" ")}
 																					</td>
-																					<td style={{ width: '12%', textAlign:'center'}}>
+																					<td style={{ width: '12%' }}>
 																						{/* {row.transactionTypeName} */}
 																						{row.invoiceNumber}
 																					</td>
-																					<td style={{ width: '12%', textAlign:'center'}}>
+																					<td style={{ width: '12%' }}>
 																						{/* {row['name']} */}
 																						{row['productName']}
 																					</td>
-																					<td style={{ width: '12%', textAlign:'center'}}>
+																					<td style={{ width: '12%' }}>
 																						{/* {row['postingReferenceTypeEnum']} */}
 																						{row['description']}
 																					</td>
-																					<td style={{ width: '10%', textAlign:'center'}}>
+																					<td style={{ width: '10%' }}>
 																						{row['quantity']}
 																					</td>
-																					<td style={{ width: '12%' ,textAlign:'center'}}>
+																					<td style={{ width: '12%' ,textAlign:'right'}}>
 																						{row['unitPrice']}
 																					</td>
-																					<td style={{ width: '12%' ,textAlign:'center'}}>
+																					<td style={{ width: '12%' ,textAlign:'right'}}>
 																							{row.vatAmount > 0 && (row.unitPrice ? (
 																									""
 																								) : (
 																									<p
-																									className="text-center"
+																									className="text-right"
 																									// onClick={() =>
 																									// 	this.getInvoice(
 																									// 		row[
@@ -579,10 +586,10 @@ class PayablesInvoiceDetailsReport extends React.Component {
 																								
 																							)}
 																						</td>
-																					<td style={{ width: '15%' ,textAlign:'center'}}>
+																					<td style={{ width: '15%' ,textAlign:'right'}}>
 																						{row.totalAmount > 0 && (
 																							<p
-																								className="text-center"
+																								className="text-right"
 																							// onClick={() =>
 																							// 	this.getInvoice(
 																							// 		row[

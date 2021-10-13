@@ -296,7 +296,7 @@ console.log(inventory_history_list,"inventory_history_list")
 												<TableHeaderColumn  dataField="invoiceNumber" dataSort className="table-header-bg">
 												 {strings.InvoiceNumber}
 												</TableHeaderColumn >
-												<TableHeaderColumn  dataField="quantitySold" dataSort className="table-header-bg">
+												<TableHeaderColumn dataAlign="center" dataField="quantitySold" dataSort className="table-header-bg">
 												Quantity Sold
 												</TableHeaderColumn >
 												{/* <TableHeaderColumn  dataField="stockOnHand" dataSort className="table-header-bg">

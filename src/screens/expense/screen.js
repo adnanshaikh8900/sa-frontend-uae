@@ -329,7 +329,7 @@ class Expense extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		return row.expenseAmount ? row.currencyName +" "+ row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :'';
+		return row.expenseAmount ? row.currencyName+" " + row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyName+" " + row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
 	renderCurrency = (cell, row) => {
 		if (row.currencyName) {
@@ -838,7 +838,7 @@ class Expense extends React.Component {
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}
-												
+												width="8%"
 												dataField="expenseStatus"
 												dataFormat={this.renderExpenseStatus}
 												dataSort
@@ -856,6 +856,7 @@ class Expense extends React.Component {
 												{strings.EXPENSECATEGORY}
 											</TableHeaderColumn>
 											<TableHeaderColumn
+													width="8%"
 													thStyle={{ whiteSpace: 'normal' }}
 													dataSort
 													dataField="currencyName"

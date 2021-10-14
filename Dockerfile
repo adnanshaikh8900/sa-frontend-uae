@@ -2,7 +2,7 @@
 # Production Build
 # ------------------------------------------------------
 FROM nginx:stable-alpine-perl
-COPY ./react-frontend/build /usr/share/nginx/html
+COPY ./build /usr/share/nginx/html
 RUN rm -rf /etc/nginx/conf.d
 COPY nginx /etc/nginx
 EXPOSE 80

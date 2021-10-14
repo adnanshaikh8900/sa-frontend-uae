@@ -431,7 +431,7 @@ class AddEmployeesModal extends React.Component {
 
 		return (
 			<div className="contact-modal-screen">
-				<Modal isOpen={openModal} className="modal-success contact-modal">
+				<Modal isOpen={openModal} className="modal-success chartofaccounts-modal">
 					<ModalHeader>
 					<Row>
 										<Col lg={12}>
@@ -442,8 +442,8 @@ class AddEmployeesModal extends React.Component {
 										</Col>
 									</Row>
 					</ModalHeader>
-					<ModalBody style={{ padding: "15px 0px 0px 0px" }}>
-						<div  style={{ padding: " 0px 1px" }}>
+					<ModalBody >
+						<div>
 							<div >
 								<CardBody>
 									{loading ? (
@@ -454,7 +454,7 @@ class AddEmployeesModal extends React.Component {
 										</Row>
 									) : (
 										<Row>
-										<Col lg={6}>
+										<Col lg={12}>
 											<Formik
 												initialValues={this.state.initValue}
 												onSubmit={(values, { resetForm }) => {
@@ -482,25 +482,7 @@ class AddEmployeesModal extends React.Component {
 											>
 												{(props) => (
 													<Form onSubmit={props.handleSubmit} name="simpleForm">
-														{/* <FormGroup>
-                              <Label htmlFor="transactionCategoryCode">Code</Label>
-                              <Input
-                                type="text"
-                                id="transactionCategoryCode"
-                                name="transactionCategoryCode"
-                                placeholder="Enter Code"
-                                onChange={(val) => { props.handleChange('transactionCategoryCode')(val) }}
-                                value={props.values.transactionCategoryCode}
-                                className={
-                                  props.errors.transactionCategoryCode && props.touched.transactionCategoryCode
-                                    ? "is-invalid"
-                                    : ""
-                                }
-                              />
-                              {props.errors.transactionCategoryCode && props.touched.transactionCategoryCode && (
-                                <div className="invalid-feedback">{props.errors.transactionCategoryCode}</div>
-                              )}
-                            </FormGroup> */}
+													
 														<FormGroup>
 															<Label htmlFor="name">
 																<span className="text-danger">*</span>{strings.Name}
@@ -540,29 +522,7 @@ class AddEmployeesModal extends React.Component {
 															<Label htmlFor="name">
 																<span className="text-danger">*</span>{strings.Type}
 															</Label>
-															{/* <Select
-                                className="select-default-width"
-                                options={transaction_type_list ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list,'Type') : ''}
-                                value={props.values.chartOfAccount}
-                                onChange={(option) => {
-                                  if(option && option.value) {
-                                    props.handleChange('chartOfAccount')(option.value)
-                                  } else {
-                                    props.handleChange('chartOfAccount')('')
-                                  }
-                                }}
-                                placeholder="Select Type"
-                                id="chartOfAccount"
-                                name="chartOfAccount"
-                                className={
-                                  props.errors.chartOfAccount && props.touched.chartOfAccount
-                                    ? "is-invalid"
-                                    : ""
-                                }
-                              />
-                              {props.errors.chartOfAccount && props.touched.chartOfAccount && (
-                                <div className="invalid-feedback">{props.errors.chartOfAccount}</div>
-                              )} */}
+														
 															<Select
 															styles={customStyles}
 																id="chartOfAccount"
@@ -605,20 +565,7 @@ class AddEmployeesModal extends React.Component {
 																			? 'Creating...'
 																			: strings.Create }
 															</Button>
-															<Button
-																name="button"
-																color="primary"
-																className="btn-square mr-3"
-																disabled={this.state.disabled}
-																onClick={() => {
-																	this.setState({ createMore: true });
-																	props.handleSubmit();
-																}}
-															>
-																<i className="fa fa-refresh"></i> {this.state.disabled
-																			? 'Creating...'
-																			: strings.CreateandMore }
-															</Button>
+															
 															<Button
 									color="secondary"
 									className="btn-square"

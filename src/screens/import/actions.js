@@ -124,7 +124,41 @@ export const uploadFolder = (obj) => {
 		  });
 		}
 	  }
-	
+	  export const deleteFiles = (obj) => {
+		return (dispatch) => {
+		  let data = {
+			method: 'DELETE',
+			url: `/rest/migration/deleteFiles`,
+			data: obj,
+		  }
+		  return authApi(data)
+		  .then((res) => {
+			  if (res.status === 200) {
+				  return res;
+			  }
+		  })
+		  .catch((err) => {
+			  throw err;
+		  });
+		}
+	  }
+
+	  export const addOpeningBalance = (obj) => {
+		return (dispatch) => {
+		  let data = {
+			method: 'post',
+			url:`/rest/transactionCategoryBalance/save`,
+			data: obj,
+			contentType: false
+		  }
+		  return authApi(data).then((res) => {
+			return res
+		  }).catch((err) => {
+			throw err
+		  })
+		}
+	  }
+	  
 	  export const getListOfAllFiles = () => {
 		return (dispatch) => {
 		  let data = {

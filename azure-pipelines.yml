@@ -16,6 +16,10 @@ stages:
       timeoutInMinutes: 30
 
       steps:
+      - task: CmdLine@2
+        inputs:
+          script: 'npm i --package-lock-only'
+          
       - task: Cache@2
         inputs:
           key: 'npm | "$(Agent.OS)" | package-lock.json'
@@ -23,8 +27,6 @@ stages:
             npm | "$(Agent.OS)"
           path: $(npm_config_cache)
         displayName: Cache npm
-      - script: npm i --package-lock-only
-        displayName: 'Generate package-lock.json'
       - script: npm ci
 
       - task: NodeTool@0

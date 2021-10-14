@@ -448,6 +448,8 @@ class InventorySummary extends React.Component {
 												className="text-right table-header-bg"
 												columnClassName="text-right"
 												dataFormat={this.renderActions}
+												dataField="purchaseOrder"
+
 												
 											     ></TableHeaderColumn>
 											</BootstrapTable>

@@ -19,7 +19,7 @@ stages:
 
       - task: CmdLine@2
         inputs:
-          script: 'npm i --package-lock-only'
+          script: 'npm install --only=prod --legacy-peer-deps'
 
       - task: NodeTool@0
         inputs:

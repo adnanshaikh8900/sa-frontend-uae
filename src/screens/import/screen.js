@@ -17,7 +17,7 @@ import {
 	Form,
 	Label,
 	Table,
-
+	Input
 } from 'reactstrap';
 import Select from 'react-select';
 import { AuthActions, CommonActions } from 'services/global';
@@ -35,7 +35,7 @@ import { isDate, upperFirst } from 'lodash-es';
 import styled from 'styled-components';
 import { ChartOfAccountsModal } from './modal';
 
-
+import moment from 'moment';
 
 const mapStateToProps = (state) => {
 	return {
@@ -92,35 +92,19 @@ class Import extends React.Component {
 			tabs: [],
 			file_data_list: [],
 			openModal: false,
-			listOfExist:[],
-			dummylistOfExist:[],
-
-			// listOfExist: [
-
-			// 						{
-			// 						"transactionId": 49,
-			// 						"transactionName": "Cost of Goods Sold",
-			// 						"chartOfAccountName": "Cost Of Goods Sold",
-			// 						"editableFlag": false
-			// 						}
-			// 						,
-
-			// 						{
-			// 						"transactionId": 84,
-			// 						"transactionName": "Sales",
-			// 						"chartOfAccountName": "Income",
-			// 						"editableFlag": false
-			// 						}
-			// 						,
-
-			// 						{
-			// 						"transactionId": 150,
-			// 						"transactionName": "Inventory Asset",
-			// 						"chartOfAccountName": "stock",
-			// 						"editableFlag": false
-			// 						}
-			// 					],
-			dummylistOfNotExist: ["Khan","Pathan"],
+			listOfExist: [],
+			dummylistOfExist: [],
+			selectedRows: [],
+			effectiveDate:new Date(),
+			openingBalance:0,
+			dummylistOfNotExist: [],
+		};
+		this.selectRowProp = {
+			mode: 'checkbox',
+			bgColor: 'rgba(0,0,0, 0.05)',
+			clickToSelect: false,
+			onSelect: this.onRowSelect,
+			onSelectAll: this.onSelectAll,
 		};
 	}
 
@@ -140,7 +124,70 @@ class Import extends React.Component {
 				this.setState({ loading: false });
 			});
 	};
+	DeleteFile = () => {
 
+		
+		// const formData = new FormData();
+		// formData.append('fileNames', this.state.selectedRows ? this.state.selectedRows :'');
+
+		const formData = { 'fileNames': this.state.selectedRows ? this.state.selectedRows : '' }
+		console.log(formData)
+		this.props.migrationActions
+			.deleteFiles(formData)
+			.then((res) => {
+				if (res.status === 200) {
+					this.setState({
+						disabled: false,
+						migration_list: res.data
+					});
+					this.props.commonActions.tostifyAlert(
+						'success',
+						'Files Deleted Successfully.',
+					);
+
+				}
+			})
+			.catch((err) => {
+				this.setState({ disabled: false });
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
+	}
+
+	onRowSelect = (row, isSelected, e) => {
+		let tempList = [];
+		if (isSelected) {
+			
+			tempList = Object.assign([], this.state.selectedRows);
+			tempList.push(row.fileName);
+		} else {
+			this.state.selectedRows.map((item) => {
+				
+				if (item !== row.fileName) {
+					tempList.push(item);
+				}
+				return item;
+			});
+		}
+		this.setState({
+			selectedRows: tempList,
+		});
+	};
+
+	onSelectAll = (isSelected, rows) => {
+		let tempList = [];
+		if (isSelected) {
+			rows.map((item) => {
+				tempList.push(item.fileName);
+				return item;
+			});
+		}
+		this.setState({
+			selectedRows: tempList,
+		});
+	};
 	getInitialData = () => {
 	};
 
@@ -202,6 +249,37 @@ class Import extends React.Component {
 		}
 
 	}
+
+	handleSubmitForOpeningBalances = () => {
+		debugger
+		const formData = new FormData()
+
+		formData.append('persistmodel',JSON.stringify(this.state.listOfExist4))
+		this.props.migrationActions
+				.addOpeningBalance(formData)
+				.then((res) => {
+					if (res.status === 200) {
+						this.setState({
+							disabled: false,
+							
+						
+						});
+						this.props.commonActions.tostifyAlert(
+							'success',
+							'Date saved Successfully.',
+						);
+						this.props.history.push('/admin/settings/migrate')
+					
+					}
+				})
+				.catch((err) => {
+					this.setState({ disabled: false });
+					this.props.commonActions.tostifyAlert(
+						'error',
+						err && err.data ? err.data.message : 'Something Went Wrong',
+					);
+				});
+	}
 	Upload = (data) => {
 		this.setState({ loading: true, disabled: true });
 
@@ -248,10 +326,20 @@ class Import extends React.Component {
 						disabled: false,
 						file_data: res.data,
 						listOfExist: res.data.listOfExist,
+						listOfExist4: res.data.listOfExist,
 						dummylistOfExist: res.data.listOfExist,
-						// listOfNotExist: res.data.listOfNotExist,
+						dummylistOfNotExist: res.data.listOfNotExist,
 					});
-
+					let newData = [...this.state.listOfExist4]
+					newData = newData.map((data) => {
+						data.effectiveDate = this.state.effectiveDate
+						data.openingBalance = this.state.openingBalance
+						return data
+					})
+					console.log(newData)
+					this.setState({
+						listOfExist4: newData
+					})
 				}
 			})
 			.catch((err) => {
@@ -261,6 +349,7 @@ class Import extends React.Component {
 					err && err.data ? err.data.message : 'Something Went Wrong',
 				);
 			});
+
 
 	};
 
@@ -330,38 +419,10 @@ class Import extends React.Component {
 
 	}
 
-	getBody = (file_data_list) => {
-		return (file_data_list ? (
-			file_data_list.map(
-				(item, index) => {
 
-					return (
-						<>
-							<tr
-								style={{ background: '#f7f7f7' }}
-								key={index}
-							>
-								<td >
-									{item}
-								</td>
-							</tr>
-						</>
-					);
-				}
-			)
-
-
-		) : (
-			<tr style={{ borderBottom: '2px solid lightgray' }}>
-				<td style={{ textAlign: 'center' }} colSpan="9">
-					There is no data to display
-				</td>
-			</tr>
-		)
-		)
-	}
 	closeModal = (res) => {
 		this.setState({ openModal: false });
+		this.listOfTransactionCategory()
 	};
 
 	showHeader = (s) => {
@@ -381,68 +442,75 @@ class Import extends React.Component {
 			console.log(cols, "cols")
 			console.log(file_data_list, "file_data_list")
 			return (
-				// file_data_list ?JSON.stringify(file_data_list) :"hhhh"
-				<Table responsive>
-					<thead>
-						<tr className="header-row">
-							{cols.map((column, index) => {
-								return (
-									<th
-										key={index}
-										className="table-header-color"
-									>
-										<span>{this.showHeader(column)}</span>
-									</th>
-								);
-							})}
-						</tr>
-					</thead>
-					<tbody className="data-column">
-						{
-							file_data_list.length !== 0 ? (
-								file_data_list.map(
-									(item, index) => {
+				file_data_list.length > 0 ? (
+					<Table >
+						<thead>
+							<tr className="header-row">
+								{cols.map((column, index) => {
+									return (
+										<th
+											key={index}
+											className="table-header-color"
+										>
+											<span>{this.showHeader(column)}</span>
+										</th>
+									);
+								})}
+							</tr>
+						</thead>
+						<tbody className="data-column">
+							{
+								file_data_list.length > 0 ? (
+									file_data_list.map(
+										(item, index) => {
 
-										return (
-											<>
-												<tr
-													style={{ background: '#f7f7f7' }}
-													key={index}
-												>
+											return (
+												<>
+													<tr
+														style={{ background: '#f7f7f7' }}
+														key={index}
+													>
 
-													{
-														// JSON.stringify(item)
-														cols.map((column, index) => {
-															return (
-																<td
-																	key={index}
-																	style={{ fontWeight: '600', textAlign: 'center' }}
-																	className={column.align ? 'text-center' : ''}
-																>
-																	<span>{this.showTD(item[column])}</span>
-																</td>
-															);
-														})
+														{
+															// JSON.stringify(item)
+															cols.map((column, index) => {
+																return (
+																	<td
+																		key={index}
+																		style={{ fontWeight: '600', textAlign: 'center' }}
+																		className={column.align ? 'text-center' : ''}
+																	>
+																		<span>{this.showTD(item[column])}</span>
+																	</td>
+																);
+															})
 
-													}
+														}
 
-												</tr>
-											</>
-										);
-									}
+													</tr>
+												</>
+											);
+										}
+									)
+
+								) : (
+									<tr style={{ borderBottom: '2px solid lightgray' }}>
+										<td style={{ textAlign: 'center' }} colSpan="9">
+											There is no data to display
+										</td>
+									</tr>
 								)
+							}
+						</tbody>
 
-							) : (
-								<tr style={{ borderBottom: '2px solid lightgray' }}>
-									<td style={{ textAlign: 'center' }} colSpan="9">
-										There is no data to display
-									</td>
-								</tr>
-							)
-						}
-					</tbody>
-
-				</Table>
+					</Table>
+				) : (
+					<tr style={{ borderBottom: '2px solid lightgray' }}>
+						<td style={{ textAlign: 'center' }} colSpan="9">
+							There is no data to display
+						</td>
+					</tr>
+				)
 			);
 
 		}
@@ -450,22 +518,22 @@ class Import extends React.Component {
 
 	showNotExistList = () => {
 		if (this.state && this.state.dummylistOfNotExist) {
-			let listObject=[]
+			let listObject = []
 			// let listObject = this.state.dummylistOfExist ? this.state.dummylistOfExist : []
 
-			debugger
-				let list = this.state.dummylistOfNotExist ? this.state.dummylistOfNotExist : []
-				let listOfNotExist1 = list.map((data, i) => {
-					listObject.push({ chartOfAccountName: data })
-					return data;
-				});
-				let temp = [...this.state.dummylistOfExist]
-				const listOfExist1 =[...temp, ...listObject]
-                 let val=listOfExist1
-				// this.setState({merged:val})
-				console.log(listOfExist1)
-				return (
-					<Row className="text-center">
+			
+			let list = this.state.dummylistOfNotExist ? this.state.dummylistOfNotExist : []
+			let listOfNotExist1 = list.map((data, i) => {
+				listObject.push({ transactionName: data })
+				return data;
+			});
+			let temp = [...this.state.dummylistOfExist]
+			const listOfExist1 = [...temp, ...listObject]
+			let val = listOfExist1
+			// this.setState({merged:val})
+			console.log(listOfExist1)
+			return (
+				<Row className="text-center">
 					<Col><Row>
 						<div style={{ width: "100%" }}><b>Simple-Accounts</b></div>
 						<div>
@@ -487,7 +555,7 @@ class Import extends React.Component {
 									Account Code
 								</TableHeaderColumn>
 								<TableHeaderColumn
-									dataField="chartOfAccountName"
+									dataField="transactionName"
 									dateFormat={this.renderAccountName}
 									className="table-header-bg text-center"
 								>
@@ -502,7 +570,7 @@ class Import extends React.Component {
 					</Row></Col>
 					<div style={{ width: "20%" }}>.
 						<BootstrapTable
-						data={listOfExist1 && listOfExist1 ? listOfExist1 : []}
+							data={listOfExist1 && listOfExist1 ? listOfExist1 : []}
 							// data={this.state && this.state.merged ? this.state.merged : []}
 							version="4"
 							hover
@@ -527,37 +595,37 @@ class Import extends React.Component {
 							{/* {this.showNotExistList()} */}
 
 							<BootstrapTable
-data={listOfExist1 && listOfExist1 ? listOfExist1 : []}
-version="4"
-hover
-keyField="id"
-remote
+								data={listOfExist1 && listOfExist1 ? listOfExist1 : []}
+								version="4"
+								hover
+								keyField="id"
+								remote
 
-//   fetchInfo={{ dataTotalSize: salaryRole_list.count ? salaryRole_list.count : 0 }}
-ref={(node) => this.table = node}
-className="text-center"
->
-<TableHeaderColumn
-dataField="transactionId"
-dataFormat={this.renderCode1}
-className="table-header-bg text-center"
->
-Account Code
-</TableHeaderColumn>
-<TableHeaderColumn
-dataField="chartOfAccountName"
-dateFormat={this.renderAccountName1}
-className="table-header-bg text-center"
->
-Account Name
-</TableHeaderColumn>
-</BootstrapTable>
+								//   fetchInfo={{ dataTotalSize: salaryRole_list.count ? salaryRole_list.count : 0 }}
+								ref={(node) => this.table = node}
+								className="text-center"
+							>
+								<TableHeaderColumn
+									dataField="transactionId"
+									dataFormat={this.renderCode1}
+									className="table-header-bg text-center"
+								>
+									Account Code
+								</TableHeaderColumn>
+								<TableHeaderColumn
+									dataField="transactionName"
+									dateFormat={this.renderAccountName1}
+									className="table-header-bg text-center"
+								>
+									Account Name
+								</TableHeaderColumn>
+							</BootstrapTable>
 						</div>
 					</Row></Col>
 				</Row>
 
-				);
-			}
+			);
+		}
 
 
 		// console.log(list, "list")
@@ -572,34 +640,165 @@ Account Name
 	closeForgotPasswordModal = (res) => {
 		this.setState({ openForgotPasswordModal: false });
 	};
-	renderLocks = (cell,row) => {
+	renderLocks = (cell, row) => {
 
-		if(row.transactionId){
-		return (<div className=" text-center"><i class="fas fa-lock"></i> </div>);}
-		else
-		{
-			return (<div className=" text-center"> 	<span style={{color:"white",backgroundColor:"#2266d8"}} onClick={() => {
+		if (row.transactionId) {
+			return (<div className=" text-center"><i class="fas fa-lock"></i> </div>);
+		}
+		else {
+			return (<div className=" text-center"> 	<span style={{ color: "white", backgroundColor: "#2266d8" }} onClick={() => {
 				this.setState({
 					openModal: true
 				})
-			}}>Create</span> </div>);}
+			}}>Create</span> </div>);
+		}
 	}
 	renderCode = (cell, rows) => {
 		return (<div className="text-center">{rows.accountCode ? rows.accountCode : '-'} </div>);
 	};
 	renderAccountName = (cell, rows) => {
-		return (<div className=" text-center !important" style={{ textAlign: "center" }}>{rows.chartOfAccountName ? rows.chartOfAccountName : '-'} </div>);
+		return (<div className=" text-center !important" style={{ textAlign: "center" }}>{rows.transactionName ? rows.transactionName : '-'} </div>);
 	};
 	renderCode1 = (cell, rows) => {
 		return (<div className="text-center">{rows.accountCode ? rows.accountCode : '-'} </div>);
 	};
 	renderAccountName1 = (cell, rows) => {
-		return (<div className=" text-center !important" style={{ textAlign: "center" }}>{rows.chartOfAccountName ? rows.chartOfAccountName : '-'} </div>);
+		return (<div className=" text-center !important" style={{ textAlign: "center" }}>{rows.transactionName ? rows.transactionName : '-'} </div>);
 	};
+
+
+	setDate = (row, value) => {
+		
+		let newData = [...this.state.listOfExist4]
+		 newData.map((data) => {
+			if (row.transactionId === data.transactionId) {
+				data.effectiveDate =value
+				return data
+			}
+		})
+		
+		this.setState({
+			listOfExist4: newData
+		})
+	}
+
+
+	setOpeningBalances = () => {
+		
+		const cols = [
+			{
+				label: 'transaction Name',
+				key: 'transactionName'
+			},
+			{
+				label: 'chart Of AccountName',
+				key: 'chartOfAccountName'
+
+			},
+			{
+				label: 'Effective date',
+				key: 'effectiveDate'
+			},
+
+			{
+				label: 'Opening balance',
+				key: 'openingBalance'
+			},
+
+
+		]
+		return (
+			<React.Fragment>
+				<div >
+					<BootstrapTable
+						search={false}
+						options={this.options}
+						data={this.state.listOfExist4 || []}
+						version="4"
+						hover
+						keyField="id"
+						remote
+						trClassName="cursor-pointer"
+						ref={(node) => this.table = node}
+					>
+						{
+							cols.map((col, index) => {
+								
+								const format = (cell, row) => {
+									if (col.key === 'effectiveDate') {
+										return (
+											<DatePicker
+											id="effectiveDate"
+											name="effectiveDate"
+											showMonthDropdown
+											showYearDropdown
+											dateFormat="dd/MM/yyyy"
+											dropdownMode="select"
+											value={cell}
+											 selected={cell}
+											onChange={(value) => {
+												this.setDate(row, value)
+											}}
+										/>
+										);
+									} if (col.key === 'openingBalance') {
+										return (
+											<Input
+												type="number"
+												id="openingBalance"
+												name="openingBalance"
+												value={cell || 0}
+												onChange={(evt) => {
+													let value = parseInt(evt.target.value);
+													let newData = [...this.state.listOfExist4]
+													newData.map((data) =>{
+														if (row.transactionId === data.transactionId) {
+															data.openingBalance = value
+															return data
+														}
+													})
+													this.setState({
+														listOfExist4: newData
+													})
+												}}
+											/>
+										);
+									}
+									else {
+										return (  
+											<div>{cell}</div>
+										)
+									}
+
+								}
+								return (
+									<TableHeaderColumn
+										key={index}
+										dataFormat={format}
+										dataField={col.key}
+										dataAlign="center"
+										className="table-header-bg"
+									>
+										{col.label}
+									</TableHeaderColumn>
+
+								)
+							})
+						}
+
+
+					</BootstrapTable>
+				</div>
+			</React.Fragment>
+
+		)
+	}
+
+
 	render() {
-		const { isPasswordShown, product_list, version_list, tabs, file_data_list } = this.state;
+		const { isPasswordShown, product_list, version_list, tabs, file_data_list,listOfExist4 } = this.state;
 		const { initValue, migration_list } = this.state;
-		console.log(tabs)
+		console.log(listOfExist4)
 		const customStyles = {
 			control: (base, state) => ({
 				...base,
@@ -976,6 +1175,12 @@ Account Name
 																		</div>
 
 																	</Row>
+																	<Row>
+																		<Button color="primary" className="btn-square pull-left"
+																			onClick={() => { this.DeleteFile() }}>
+																			<i className="far fa-arrow-alt-circle-left"></i> DELETE
+																		</Button>
+																	</Row>
 
 																</Form>
 															)}
@@ -1055,9 +1260,11 @@ Account Name
 																	<TabContent>
 																		<hr />
 																		{this.state.nestedActiveDefaultTab ?
-																			(<TabPane>
-																				<div style={{ width: "50%" }} >{this.showTable(file_data_list)}	</div>
-																			</TabPane>
+																			(
+																				<TabPane>
+																					<div style={{ width: "50%" }} >{this.showTable(file_data_list)}	</div>
+
+																				</TabPane>
 																			) : (
 																				<TabPane>
 																					{/* Default start */}
@@ -1066,7 +1273,7 @@ Account Name
 																							openModal: true
 																						})
 																					}}>Create Chart Of Account</Button> */}
-																				{this.showNotExistList()}
+																					{this.showNotExistList()}
 																					{/* Default end */}
 																				</TabPane>
 																			)}
@@ -1085,6 +1292,7 @@ Account Name
 																				<Button name="button" color="primary" className="btn-square pull-right mr-3"
 																					onClick={() => {
 																						this.toggle(0, '4')
+																						this.listOfTransactionCategory()
 																					}}>
 																					Next	<i class="far fa-arrow-alt-circle-right mr-1"></i>
 																				</Button>
@@ -1106,7 +1314,7 @@ Account Name
 											<Formik
 												initialValues={this.state.initValue}
 												onSubmit={(values, { resetForm }) => {
-													// this.handleSubmitForSalary(values, resetForm)
+													//  this.handleSubmitForOpeningBalances(values, resetForm)
 												}}
 												validationSchema={Yup.object().shape({
 
@@ -1119,6 +1327,8 @@ Account Name
 
 														<Row>
 															<Col lg={12} className="mt-5">
+
+																{this.setOpeningBalances()}
 
 
 																<div className="table-wrapper">
@@ -1130,9 +1340,9 @@ Account Name
 
 																		<Button name="button" color="primary" className="btn-square pull-right mr-3"
 																			onClick={() => {
-																				this.props.history.push('/admin/settings/migrate');
+																				this.handleSubmitForOpeningBalances();
 																			}}>
-																			Next	<i class="far fa-arrow-alt-circle-right mr-1"></i>
+																			Migrate	<i class="far fa-arrow-alt-circle-right mr-1"></i>
 																		</Button>
 																	</FormGroup>
 																</div>
@@ -1146,94 +1356,6 @@ Account Name
 											</Formik>
 
 										</TabPane>
-										{/* <TabPane tabId="5">
-
-											<Formik
-												initialValues={this.state.initValue}
-												onSubmit={(values, { resetForm }) => {
-													this.handleSubmitForSalary(values, resetForm)
-												}}
-												validationSchema={Yup.object().shape({
-
-												})}
-											>
-												{(props) => (
-
-													<Form onSubmit={props.handleSubmit}>
-
-														<Row>
-															<Col lg={12} className="mt-5">
-
-
-																<div className="table-wrapper">
-																	<FormGroup className="text-center">
-																		<Button color="secondary" className="btn-square pull-left"
-																			onClick={() => { this.toggle(0, '4') }}>
-																			<i className="far fa-arrow-alt-circle-left"></i> Back
-																		</Button>
-
-																		<Button name="button" color="primary" className="btn-square pull-right mr-3"
-																			onClick={() => {
-																				this.toggle(0, '6')
-																			}}>
-																			Next	<i class="far fa-arrow-alt-circle-right mr-1"></i>
-																		</Button>
-																	</FormGroup>
-																</div>
-
-
-															</Col>
-														</Row>
-													</Form>
-												)
-												}
-											</Formik>
-
-										</TabPane>
-										<TabPane tabId="6">
-
-											<Formik
-												initialValues={this.state.initValue}
-												onSubmit={(values, { resetForm }) => {
-													this.handleSubmitForSalary(values, resetForm)
-												}}
-												validationSchema={Yup.object().shape({
-
-												})}
-											>
-												{(props) => (
-
-													<Form onSubmit={props.handleSubmit}>
-
-														<Row>
-															<Col lg={12} className="mt-5">
-
-
-																<div className="table-wrapper">
-																	<FormGroup className="text-center">
-																		<Button color="secondary" className="btn-square pull-left"
-																			onClick={() => { this.toggle(0, '5') }}>
-																			<i className="far fa-arrow-alt-circle-left"></i> Back
-																		</Button>
-
-																		<Button name="button" color="primary" className="btn-square pull-right mr-3"
-																			onClick={() => {
-																				this.toggle(0, '1')
-																			}}>
-																			Next	<i class="far fa-arrow-alt-circle-right mr-1"></i>
-																		</Button>
-																	</FormGroup>
-																</div>
-
-
-															</Col>
-														</Row>
-													</Form>
-												)
-												}
-											</Formik>
-
-										</TabPane> */}
 
 									</TabContent>
 									{/* added by suraj */}

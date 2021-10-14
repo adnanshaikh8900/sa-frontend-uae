@@ -19,8 +19,9 @@ stages:
       - task: Npm@1
         inputs:
           # command: 'install'
-          customCommand: 'npm install --only=prod --legacy-peer-deps'
-      - script: npm i --package-lock-only
+          #customCommand: 'npm install --only=prod --legacy-peer-deps'
+          customCommand: 'npm i --package-lock-only'
+      #- script: npm i --package-lock-only
           
       # - task: Cache@2
       #   inputs:

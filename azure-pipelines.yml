@@ -16,22 +16,10 @@ stages:
       timeoutInMinutes: 30
 
       steps:
-      - task: Npm@1
-        inputs:
-          # command: 'install'
-          #customCommand: 'npm install --only=prod --legacy-peer-deps'
-          customCommand: 'npm i --package-lock-only'
-          displayName: 'Generate package-lock'
-      #- script: npm i --package-lock-only
 
-      # - task: Cache@2
-      #   inputs:
-      #     key: 'npm | "$(Agent.OS)" | package-lock.json'
-      #     restoreKeys: |
-      #       npm | "$(Agent.OS)"
-      #     path: $(npm_config_cache)
-      #   displayName: Cache npm
-      # - script: npm ci
+      - task: CmdLine@2
+        inputs:
+          script: 'npm i --package-lock-only'
 
       - task: NodeTool@0
         inputs:

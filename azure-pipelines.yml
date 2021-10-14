@@ -16,9 +16,11 @@ stages:
       timeoutInMinutes: 30
 
       steps:
-      - task: CmdLine@2
+      - task: Npm@1
         inputs:
-          script: 'npm i --package-lock-only'
+          # command: 'install'
+          customCommand: 'npm install --only=prod --legacy-peer-deps && mkdir /react-frontend && mv ./node_modules ./react-frontend'
+      - script: npm i --package-lock-only
           
       - task: Cache@2
         inputs:
@@ -35,7 +37,6 @@ stages:
         displayName: 'Install Node.js'
 
       - script: |
-          npm install
           npm run build
         displayName: 'npm install and build'
 

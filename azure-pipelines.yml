@@ -2,6 +2,9 @@ name: $(TeamProject)_$(Build.DefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd
 trigger:
 - develop
 
+variables:
+  npm_config_cache: $(Pipeline.Workspace)/.npm
+
 stages:
   - stage: ci_build_simplevat
     displayName: CI Build for SimpleVAT
@@ -13,6 +16,43 @@ stages:
       timeoutInMinutes: 30
 
       steps:
+      - task: Npm@1
+        inputs:
+          # command: 'install'
+          customCommand: 'npm install --only=prod --legacy-peer-deps && mkdir /react-frontend && mv ./node_modules ./react-frontend'
+      - script: npm i --package-lock-only
+          
+      - task: Cache@2
+        inputs:
+          key: 'npm | "$(Agent.OS)" | package-lock.json'
+          restoreKeys: |
+            npm | "$(Agent.OS)"
+          path: $(npm_config_cache)
+        displayName: Cache npm
+      - script: npm ci
+
+      - task: NodeTool@0
+        inputs:
+          versionSpec: '10.x'
+        displayName: 'Install Node.js'
+
+      - script: |
+          npm rebuild node-sass
+          npm run build
+        displayName: 'npm install and build'
+
+      - task: Cache@2
+        displayName: Cache task
+        inputs:
+          key: 'docker | "$(Agent.OS)" | cache'
+          path: $(Pipeline.Workspace)/simplevat-frontend-docker
+          cacheHitVar: CACHE_RESTORED                #Variable to set to 'true' when the cache is restored
+        
+      - script: |
+          docker load -i $(Pipeline.Workspace)/simplevat-frontend-docker/simplevat-frontend-docker-cache.tar
+        displayName: Docker restore
+        condition: and(not(canceled()), eq(variables.CACHE_RESTORED, 'true'))
+
       - task: Docker@2
         displayName: Docker Build & Push
         inputs:
@@ -23,6 +63,9 @@ stages:
           tags: |
             0.0.3-alpha-$(Build.BuildId)
 
-
-
+      - script: |
+          mkdir -p $(Pipeline.Workspace)/simplevat-frontend-docker
+          docker save -o $(Pipeline.Workspace)/simplevat-frontend-docker/simplevat-frontend-docker-cache.tar datainn.azurecr.io/simplevat-frontend:0.0.3-alpha-$(Build.BuildId)
+        displayName: Docker save
+        condition: and(not(canceled()), or(failed(), ne(variables.CACHE_RESTORED, 'true')))
 

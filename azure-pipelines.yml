@@ -22,14 +22,14 @@ stages:
           customCommand: 'npm install --only=prod --legacy-peer-deps'
       - script: npm i --package-lock-only
           
-      - task: Cache@2
-        inputs:
-          key: 'npm | "$(Agent.OS)" | package-lock.json'
-          restoreKeys: |
-            npm | "$(Agent.OS)"
-          path: $(npm_config_cache)
-        displayName: Cache npm
-      - script: npm ci
+      # - task: Cache@2
+      #   inputs:
+      #     key: 'npm | "$(Agent.OS)" | package-lock.json'
+      #     restoreKeys: |
+      #       npm | "$(Agent.OS)"
+      #     path: $(npm_config_cache)
+      #   displayName: Cache npm
+      # - script: npm ci
 
       - task: NodeTool@0
         inputs:

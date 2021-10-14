@@ -28,7 +28,7 @@ createDatabase="false"
 
 echo "Test deployment script"
 
-helm $1 $subdomain-frontend simplevat-frontend-reactjs/$helmDir --values simplevat-frontend-reactjs/$helmDir/values.yaml \
+helm upgrade --install $subdomain-frontend simplevat-frontend-reactjs/$helmDir --values simplevat-frontend-reactjs/$helmDir/values.yaml \
 --set simpleVatFrontendRelease=$SVrelease \
 --set image.repository.frontend.tag=$SVrelease \
 --set simpleVatHost=https://$subdomain-api.$maindomain \
@@ -47,7 +47,7 @@ helm $1 $subdomain-frontend simplevat-frontend-reactjs/$helmDir --values simplev
 
 echo "Deploying the scripts"
 
-helm $1 $subdomain-frontend simplevat-frontend-reactjs/$helmDir --values simplevat-frontend-reactjs/$helmDir/values.yaml \
+helm upgrade --install $subdomain-frontend simplevat-frontend-reactjs/$helmDir --values simplevat-frontend-reactjs/$helmDir/values.yaml \
 --set simpleVatFrontendRelease=$SVrelease \
 --set image.repository.frontend.tag=$SVrelease \
 --set simpleVatHost=https://$subdomain-api.$maindomain \
@@ -62,6 +62,6 @@ helm $1 $subdomain-frontend simplevat-frontend-reactjs/$helmDir --values simplev
 --set ingress.tls[0].secretName=wildcard-app-simpleaccounts-io-tls \
 --set database.enabled=$createDatabase \
 -n $nameserver \
---wait
+--wait --debug
 
 echo "Deployment done"

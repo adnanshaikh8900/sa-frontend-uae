@@ -35,6 +35,7 @@ stages:
         displayName: 'Install Node.js'
 
       - script: |
+          npm rebuild node-sass
           npm run build
         displayName: 'npm install and build'
 

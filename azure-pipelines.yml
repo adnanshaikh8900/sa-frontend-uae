@@ -21,8 +21,9 @@ stages:
           # command: 'install'
           #customCommand: 'npm install --only=prod --legacy-peer-deps'
           customCommand: 'npm i --package-lock-only'
+          displayName: 'Generate package-lock'
       #- script: npm i --package-lock-only
-          
+
       # - task: Cache@2
       #   inputs:
       #     key: 'npm | "$(Agent.OS)" | package-lock.json'
@@ -48,7 +49,7 @@ stages:
           key: 'docker | "$(Agent.OS)" | cache'
           path: $(Pipeline.Workspace)/simplevat-frontend-docker
           cacheHitVar: CACHE_RESTORED                #Variable to set to 'true' when the cache is restored
-        
+
       - script: |
           docker load -i $(Pipeline.Workspace)/simplevat-frontend-docker/simplevat-frontend-docker-cache.tar
         displayName: Docker restore

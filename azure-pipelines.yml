@@ -23,10 +23,9 @@ stages:
             npm | "$(Agent.OS)"
           path: $(npm_config_cache)
         displayName: Cache npm
-      - script: |
-          npm i --package-lock-only
-          npm ci
+      - script: npm i --package-lock-only
         displayName: 'Generate package-lock.json'
+      - script: npm ci
 
       - task: NodeTool@0
         inputs:

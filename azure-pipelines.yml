@@ -16,18 +16,18 @@ stages:
       timeoutInMinutes: 30
 
       steps:
-        - task: CmdLine@2
-          inputs:
-            script: 'npm i --package-lock-only'
-
-       - task: Cache@2
-         inputs:
-           key: 'npm | "$(Agent.OS)" | package-lock.json'
-           restoreKeys: |
-             npm | "$(Agent.OS)"
-           path: $(npm_config_cache)
-         displayName: Cache npm
-       - script: npm ci
+      - task: CmdLine@2
+        inputs:
+          script: 'npm i --package-lock-only'
+          
+      - task: Cache@2
+        inputs:
+          key: 'npm | "$(Agent.OS)" | package-lock.json'
+          restoreKeys: |
+            npm | "$(Agent.OS)"
+          path: $(npm_config_cache)
+        displayName: Cache npm
+      - script: npm ci
 
       - task: NodeTool@0
         inputs:
@@ -44,7 +44,7 @@ stages:
           key: 'docker | "$(Agent.OS)" | cache'
           path: $(Pipeline.Workspace)/simplevat-frontend-docker
           cacheHitVar: CACHE_RESTORED                #Variable to set to 'true' when the cache is restored
-
+        
       - script: |
           docker load -i $(Pipeline.Workspace)/simplevat-frontend-docker/simplevat-frontend-docker-cache.tar
         displayName: Docker restore

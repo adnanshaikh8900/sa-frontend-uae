@@ -330,7 +330,7 @@ class Contact extends React.Component {
 	};
 
 	customEmail(cell, row) {
-		if (row.email.length > 15) {
+		if (row.email && row.email.length > 15) {
 			return `${cell}`;
 		}
 	}

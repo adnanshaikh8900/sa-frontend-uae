@@ -87,12 +87,12 @@ class MigarteHistory extends React.Component {
 	}
 
 	componentDidMount = () => {
-		
+		// console.log(this.props.location.)
 		this.props.importActions
 		.getMigrationSummary()
 		.then((res) => {
 			if (res.status === 200) {
-				debugger
+				
 				this.setState({
 					disabled: false,
 					summaryList: res.data,
@@ -111,7 +111,34 @@ class MigarteHistory extends React.Component {
 	initializeData = () => {
 
 	};
-
+	finishMigration=()=>{
+		debugger
+		let formData =new FormData()
+		formData.append("name",this.props.loacation && this.props.loacation.state && this.props.loacation.state.name ? this.props.loacation.state.name :"zoho")
+		formData.append("version",this.props.loacation && this.props.loacation.state &&this.props.loacation.state.version ?this.props.loacation.state.version :"3.4")
+		this.props.importActions
+		.migrate(formData)
+		.then((res) => {
+			if (res.status === 200) {
+				
+				this.setState({
+					disabled: false,
+					// summaryList: res.data,
+				});
+				this.props.commonActions.tostifyAlert(
+					'success',
+					'migration Done Successfully.',
+				);
+			}
+		})
+		.catch((err) => {
+			this.setState({ disabled: false });
+			this.props.commonActions.tostifyAlert(
+				'error',
+				err && err.data ? err.data.message : 'Something Went Wrong',
+			);
+		});
+	}
 	render() {
 		strings.setLanguage(this.state.language);
 		const { vat_list, product_category_list, supplier_list, inventory_account_list } = this.props;
@@ -193,6 +220,7 @@ class MigarteHistory extends React.Component {
 
 											<Button name="button" color="primary" className="btn-square pull-right mr-3"
 												onClick={() => {
+													this.finishMigration()
 													this.props.history.push('/admin/settings/migrateHistory');
 												}}>
 												Finish Migration	<i class="far fa-arrow-alt-circle-right mr-1"></i>

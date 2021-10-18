@@ -2455,6 +2455,16 @@ validationCheck = (value) => {
                                                                             .required("Account Number is Required"),
                                                                             iban: Yup.string()
                                                                             .required("IBAN is Required"),
+                                                                            bankName: Yup.string()
+                                                                            .required("Bank Name is Required"),
+                                                                            branch: Yup.string()
+                                                                            .required("Branch is Required"),
+                                                                            swiftCode: Yup.string()
+                                                                            .required("Swift Code is Required"),
+                                                                            
+                                                                            
+                                                                            
+                                                                            
                                                                                            
                                                                         })}
                                                                     >
@@ -2518,7 +2528,7 @@ validationCheck = (value) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select"> {strings.BankName} </Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span> {strings.BankName} </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="bankName"
@@ -2541,7 +2551,7 @@ validationCheck = (value) => {
                                                                                         <Row className="row-wrapper">
                                                                                             <Col lg={4}>
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select">{strings.Branch}</Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span>{strings.Branch}</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="branch"
@@ -2583,7 +2593,7 @@ validationCheck = (value) => {
 
                                                                                             <Col lg={4}>
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select">{strings.SwiftCode}</Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span>{strings.SwiftCode}</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="swiftCode"

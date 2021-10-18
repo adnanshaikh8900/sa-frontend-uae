@@ -114,8 +114,8 @@ class MigarteHistory extends React.Component {
 	finishMigration=()=>{
 		debugger
 		let formData =new FormData()
-		formData.append("name",this.props.loacation && this.props.loacation.state && this.props.loacation.state.name ? this.props.loacation.state.name :"zoho")
-		formData.append("version",this.props.loacation && this.props.loacation.state &&this.props.loacation.state.version ?this.props.loacation.state.version :"3.4")
+		formData.append("name",this.props.location && this.props.location.state && this.props.location.state.name ? this.props.location.state.name :"zoho")
+		formData.append("version",this.props.location && this.props.location.state &&this.props.location.state.version ?this.props.location.state.version :"3.4")
 		this.props.importActions
 		.migrate(formData)
 		.then((res) => {

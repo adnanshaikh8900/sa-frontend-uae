@@ -464,8 +464,22 @@ calculatePayperioad=(startDate,endDate)=>{
 
 
 
+if(col.key === 'netPay' || col.key === 'deduction' || col.key === 'grossPay'){
+	return (
+	<TableHeaderColumn
+		key={index}
+		dataFormat={format}
+		dataField={col.key}
+		dataAlign="right"
+		className="table-header-bg"
+		dataSort={col.dataSort}
+		width={col.width}>
+		{col.label}
+	</TableHeaderColumn>
 
-								return (
+)}
+else
+								{return (
 									<TableHeaderColumn
 										key={index}
 										dataFormat={format}
@@ -477,7 +491,7 @@ calculatePayperioad=(startDate,endDate)=>{
 										{col.label}
 									</TableHeaderColumn>
 
-								)
+								)}
 							})
 						}
 
@@ -723,10 +737,10 @@ calculatePayperioad=(startDate,endDate)=>{
 													if (!values.payrollDate) {
 														errors.payrollDate = 'Payroll date is  required';
 													}
-													if(this.state.selectedRows && this.state.selectedRows.length===0)
-													{
-														errors.selectedRows = 'At least selection of one employee  is Required for create payroll';
-													}
+													// if(this.state.selectedRows && this.state.selectedRows.length===0)
+													// {
+													// 	errors.selectedRows = 'At least selection of one employee  is Required for create payroll';
+													// }
 													if (this.state.startDate==='' && this.state.endDate==='') {
 														errors.startDate = 'Start and End Date is  required';
 													}else
@@ -945,12 +959,19 @@ calculatePayperioad=(startDate,endDate)=>{
 																			this.setState({apiSelector:"createAndSubmitPayroll"})
 																				props.handleSubmit()
 																								}}																		
-																		disabled={this.state.submitButton}
+																	        disabled={!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
 																			title={
 																			this.state.submitButton
 																				? `Please Select Approver Before Submitting  Payroll !`
 																				: ''
 																		}
+																						
+
+																	// 	title={
+																	// 		this.state.selectedRows && this.state.selectedRows.length !=0
+																	// 		? ''
+																	// 		: `Please Select Employees Before creating  Payroll !`
+																	// }
 																			>
 
 																		<i class="fas fa-check-double  mr-1"></i> Create and Submit
@@ -960,6 +981,13 @@ calculatePayperioad=(startDate,endDate)=>{
 																		this.setState({apiSelector:"createPayroll"})
 																			props.handleSubmit()
 																							}}
+																							
+																							disabled={this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
+																							title={
+																								this.state.selectedRows && this.state.selectedRows.length !=0
+																								? ''
+																								: `Please Select Employees Before creating  Payroll !`
+																						}
 																	>
 																		<i className="fa fa-dot-circle-o  mr-1"></i> Create
 																	</Button>

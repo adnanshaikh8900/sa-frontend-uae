@@ -24,6 +24,7 @@ import LocalizedStrings from 'react-localization';
 
 import '../style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
+import moment from 'moment';
 
 
 const mapStateToProps = (state) => {
@@ -128,7 +129,7 @@ class PaySlipModal extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { openModal, closeModal, id, companyData ,bankDetails} = this.props;
+		const { openModal, closeModal, id, companyData ,bankDetails,salaryDate} = this.props;
 		const { initValue, contentState, data, supplierId } = this.state;
 
 		let tmpSupplier_list = []
@@ -188,7 +189,7 @@ console.log(this.state.Variable,"Variable")
 												ref={(component) => (this.pdfExportComponent = component)}
 												scale={0.8}
 												paperSize="A4"
-
+												fileName={"Payslip of "+salaryDate+".pdf"}
 											>
 											
 												<CardBody  id="section-to-print" style={{}}>
@@ -229,9 +230,6 @@ console.log(this.state.Variable,"Variable")
 
 														</div>
 													
-											
-
-
 													<div
 														style={{
 															width: '100%',
@@ -260,10 +258,10 @@ console.log(this.state.Variable,"Variable")
 
 																	{/* <Row> <Col className='mt-2 mb-2'>Personal Email  </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.email ? this.state.selectedData.email : ('-')}</Col></Row>				 */}
 
-																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.DateOfJoining}</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.dateOfJoining !== '' ? this.state.selectedData.dateOfJoining : ('-')}</Col></Row>
+																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.DateOfJoining}</Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.dateOfJoining !== '' ?  moment(this.state.selectedData.dateOfJoining).format("DD/MM/YYYY")  : ('-')}</Col></Row>
 
 																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.PayPeriod} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.salaryMonth !== '' ? this.state.selectedData.salaryMonth : ('-')}</Col></Row>
-																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.PayDate} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.payDate !== '' ? this.state.selectedData.payDate : ('-')}</Col></Row>
+																	<Row> <Col className='mt-2 mb-2' style={{ fontWeight: "630" }}>{strings.PayDate} </Col><Col className='mt-2 mb-2'>: &nbsp;{this.state.selectedData.payDate !== '' ? moment(this.state.selectedData.payDate).format("DD/MM/YYYY") : ('-')}</Col></Row>
 															
 															</div>
 														</Col>

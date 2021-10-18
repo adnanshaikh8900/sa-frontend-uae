@@ -149,7 +149,7 @@ class ViewEmployee extends React.Component {
 									// this.initializeData();
 									// let v ="Fixed Allowance"
 									this.setState({
-										
+										salaryDate:row.salaryDate,
 										employeename:res.data.employeename,
 										selectedData:res.data,
 										Fixed:res.data.salarySlipResult.Fixed,
@@ -637,6 +637,7 @@ class ViewEmployee extends React.Component {
 				 Deduction={this.state.Deduction}
 				 Variable={this.state.Variable}
 				 companyData={profile}
+				 salaryDate={this.state.salaryDate}
 				/>
 			</div>
 		);

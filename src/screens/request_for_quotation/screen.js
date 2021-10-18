@@ -1110,7 +1110,7 @@ class RequestForQuotation extends React.Component {
 												dataAlign="right"
 												dataField="totalAmount"
 												dataSort
-											//	width="5%"
+												width="20%"
 												dataFormat={this.renderrfqAmount}
 												className="table-header-bg"
 												formatExtraData={universal_currency_list}

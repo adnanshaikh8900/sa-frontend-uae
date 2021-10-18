@@ -35,7 +35,7 @@ import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { AddEmployeesModal } from './sections';
 import moment from 'moment';
-import { DateRangePicker } from 'react-dates';
+import { DateRangePicker,isInclusivelyBeforeDay } from 'react-dates';
 
 
 const mapStateToProps = (state) => {
@@ -959,6 +959,8 @@ class UpdatePayroll extends React.Component {
 																				focusedInput={this.state.focusedInput}
 																				disabled={this.disableForAddButton() ? true : false}
 																				onFocusChange={(option)=>{this.setState({focusedInput:option})}}
+																				isOutsideRange={day => !isInclusivelyBeforeDay(day, moment())}
+																				initialVisibleMonth={() => moment().subtract(1, "month")}
 																				/>																							
 																	
 																			{props.errors.startDate &&

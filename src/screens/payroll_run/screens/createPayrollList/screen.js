@@ -36,7 +36,7 @@ import LocalizedStrings from 'react-localization';
 import { AddEmployeesModal } from './sections';
 import moment from 'moment';
 import "react-dates/initialize";
-import { DateRangePicker } from 'react-dates';
+import { DateRangePicker ,isInclusivelyBeforeDay} from 'react-dates';
 import "react-dates/lib/css/_datepicker.css";
 
 const mapStateToProps = (state) => {
@@ -833,6 +833,8 @@ else
 																				onDatesChange={this.handleDatesChange}
 																				focusedInput={this.state.focusedInput}
 																				onFocusChange={(option)=>{this.setState({focusedInput:option})}}
+																				isOutsideRange={day => !isInclusivelyBeforeDay(day, moment())}
+																				initialVisibleMonth={() => moment().subtract(1, "month")}
 																				/>																							
 																			
 																			{props.errors.startDate &&

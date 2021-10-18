@@ -182,6 +182,7 @@ class CreateSalaryStructure extends React.Component {
                                   <Label htmlFor="select"><span className="text-danger">*</span> {strings.SalaryStructureType}</Label>
                                   <Input
                                     type="text"
+                                    maxLength="30"
                                     id="type"
                                     name="type"
                                     value={props.values.type}
@@ -201,6 +202,7 @@ class CreateSalaryStructure extends React.Component {
                                   <Label htmlFor="select"><span className="text-danger">*</span>{strings.SalaryStructureName}</Label>
                                   <Input
                                     type="text"
+                                    maxLength="30"
                                     id="name"
                                     name="name"
                                     value={props.values.name}

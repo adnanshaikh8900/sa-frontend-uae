@@ -1241,10 +1241,12 @@ validationCheck = (value) => {
                                                                                                     <DatePicker
                                                                                                         className={`form-control ${props.errors.dob && props.touched.dob ? "is-invalid" : ""}`}
                                                                                                         id="dob"
-                                                                                                        name="dob"
+                                                                                                        name="dob"                                                           
                                                                                                         placeholderText={strings.Select+strings.DateOfBirth}
                                                                                                         showMonthDropdown
                                                                                                         showYearDropdown
+                                                                                                        maxDate={new Date()}
+                                                                                                        autoComplete={"off"}
                                                                                                         dateFormat="dd/MM/yyyy"
                                                                                                         dropdownMode="select"
                                                                                                         selected={props.values.dob}
@@ -2283,6 +2285,8 @@ validationCheck = (value) => {
                                                                                                         showYearDropdown
                                                                                                         dateFormat="dd/MM/yyyy"
                                                                                                         dropdownMode="select"
+                                                                                                        maxDate={new Date()}
+                                                                                                        autoComplete={"off"}
                                                                                                         selected={props.values.dateOfJoining}
                                                                                                         value={props.values.dateOfJoining}
                                                                                                         onChange={(value) => {

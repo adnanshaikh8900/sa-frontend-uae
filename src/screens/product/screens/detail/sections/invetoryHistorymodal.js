@@ -295,7 +295,7 @@ console.log(inventory_history_list,"inventory_history_list")
 												<TableHeaderColumn width="20%" isKey  dataField="supplierName" dataSort className="table-header-bg">
 												{strings.Supplier} / {strings.Customer}
 												</TableHeaderColumn >
-												<TableHeaderColumn width="8%" dataField="date" 
+												<TableHeaderColumn width="10%" dataField="date" 
 												dataSort 
 												dataFormat={this.renderDate} className="table-header-bg">
 												 {strings.Date}

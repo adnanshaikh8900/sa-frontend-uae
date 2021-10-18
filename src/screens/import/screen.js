@@ -292,10 +292,10 @@ class Import extends React.Component {
 						});
 						this.props.commonActions.tostifyAlert(
 							'success',
-							'migration Data saved Successfully.',
+							'Migration Data saved Successfully.',
 						);
-						debugger
-						this.props.history.push('/admin/settings/migrate',{name:this.state.name},{version:this.state.version})
+						
+						this.props.history.push('/admin/settings/migrate',{name:this.state.name, version:this.state.version})
 					
 					}
 				})
@@ -1158,6 +1158,7 @@ class Import extends React.Component {
 																							ref={(ref) => {
 																								this.uploadFile = ref;
 																							}}
+																							style={{    marginLeft: "80px"}}
 																							multiple
 																							// directory="" 
 																							// webkitdirectory=""
@@ -1181,13 +1182,7 @@ class Import extends React.Component {
 																		</Row>
 
 																	</div>
-																	<Row><Col>
-																		<Button color="primary" className="btn-square pull-left"
-																			onClick={() => { this.DeleteFile() }}>
-																			<i class="fas fa-trash-alt"></i> 
-																		</Button>
-																		</Col>
-																	</Row>
+																	
 																	<Row>
 																		<div>
 																			<BootstrapTable
@@ -1218,7 +1213,13 @@ class Import extends React.Component {
 																		</div>
 
 																	</Row>
-																	
+																	<Row><Col>
+																		<Button color="primary" className="btn-square pull-left"
+																			onClick={() => { this.DeleteFile() }}>
+																			<i class="fas fa-trash-alt"></i> Delete
+																		</Button>
+																		</Col>
+																	</Row>
 
 																</Form>
 															)}

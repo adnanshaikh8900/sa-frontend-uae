@@ -556,19 +556,34 @@ class PayrollApproverScreen extends React.Component {
 
 
 
-								return (
+								if(col.key === 'netPay' || col.key === 'deduction' || col.key === 'grossPay'){
+									return (
 									<TableHeaderColumn
 										key={index}
 										dataFormat={format}
 										dataField={col.key}
-										dataAlign="center"
+										dataAlign="right"
 										className="table-header-bg"
 										dataSort={col.dataSort}
 										width={col.width}>
 										{col.label}
 									</TableHeaderColumn>
-
-								)
+								
+								)}
+								else
+																{return (
+																	<TableHeaderColumn
+																		key={index}
+																		dataFormat={format}
+																		dataField={col.key}
+																		dataAlign="center"
+																		className="table-header-bg"
+																		dataSort={col.dataSort}
+																		width={col.width}>
+																		{col.label}
+																	</TableHeaderColumn>
+								
+																)}
 							})
 						}
 

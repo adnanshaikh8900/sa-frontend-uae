@@ -614,19 +614,34 @@ class UpdatePayroll extends React.Component {
 
 								}
 
-								return (
+								if(col.key === 'netPay' || col.key === 'deduction' || col.key === 'grossPay'){
+									return (
 									<TableHeaderColumn
 										key={index}
 										dataFormat={format}
 										dataField={col.key}
-										dataAlign="center"
+										dataAlign="right"
 										className="table-header-bg"
 										dataSort={col.dataSort}
 										width={col.width}>
 										{col.label}
 									</TableHeaderColumn>
-
-								)
+								
+								)}
+								else
+																{return (
+																	<TableHeaderColumn
+																		key={index}
+																		dataFormat={format}
+																		dataField={col.key}
+																		dataAlign="center"
+																		className="table-header-bg"
+																		dataSort={col.dataSort}
+																		width={col.width}>
+																		{col.label}
+																	</TableHeaderColumn>
+								
+																)}
 							})
 						}
 
@@ -845,10 +860,10 @@ class UpdatePayroll extends React.Component {
 															  if (!values.payrollDate) {
 																  errors.payrollDate = 'Payroll date is  required';
 															  }
-															  if(this.state.selectedRows && this.state.selectedRows.length===0)
-															  {
-																  errors.selectedRows = 'At least selection of one employee  is Required for create payroll';
-															  }
+															//   if(this.state.selectedRows && this.state.selectedRows.length===0)
+															//   {
+															// 	  errors.selectedRows = 'At least selection of one employee  is Required for create payroll';
+															//   }
 															  if (this.state.startDate==='' && this.state.endDate==='') {
 																  errors.startDate = 'Start and End Date is  required';
 															  }else
@@ -1106,7 +1121,7 @@ class UpdatePayroll extends React.Component {
 																			this.setState({apiSelector:"createAndSubmitPayroll"})
 																				props.handleSubmit()
 																								}}
-																								disabled={this.state.submitButton}
+																								disabled={!this.state.submitButton && this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
 																		// disabled={this.state.allPayrollEmployee && this.state.allPayrollEmployee.length === 0 ?true :false}
 																		title={
 																			this.state.submitButton
@@ -1126,6 +1141,12 @@ class UpdatePayroll extends React.Component {
 																		this.setState({apiSelector:"createPayroll"})
 																			props.handleSubmit()
 																							}}
+																							disabled={this.state.selectedRows && this.state.selectedRows.length !=0 ? false :true}
+																							title={
+																								this.state.selectedRows && this.state.selectedRows.length !=0
+																								? ''
+																								: `Please Select Employees Before creating  Payroll !`
+																						}
 																	>
 																		<i className="fa fa-dot-circle-o  mr-1"></i> Update
 																	</Button>

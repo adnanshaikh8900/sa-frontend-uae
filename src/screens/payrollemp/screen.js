@@ -485,6 +485,15 @@ class PayrollEmployee extends React.Component {
                                                 >
                                                     <TableHeaderColumn
                                                         className="table-header-bg"
+                                                        dataField="employeeCode"
+                                                        dataSort
+                                                        width="12%"
+                                                        // dataFormat={this.fullname}
+                                                    >
+                                                         {strings.EmployeeCode}
+                                               </TableHeaderColumn>
+                                                    <TableHeaderColumn
+                                                        className="table-header-bg"
                                                         dataField="fullName"
                                                         dataSort
                                                         width="20%"
@@ -527,7 +536,7 @@ class PayrollEmployee extends React.Component {
                                                          {strings.Gender}
                           </TableHeaderColumn>
                                                   
-                                                    <TableHeaderColumn
+                                                    {/* <TableHeaderColumn
                                                         className="table-header-bg"
                                                         dataField="city"
                                                         dataSort
@@ -535,7 +544,7 @@ class PayrollEmployee extends React.Component {
                                                     width="10%"
                                                     >
                                                         {strings.City}
-                          </TableHeaderColumn>
+                          </TableHeaderColumn> */}
                                                     <TableHeaderColumn
                                                         className="table-header-bg"
                                                         dataField="isActive"

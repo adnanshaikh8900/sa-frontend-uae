@@ -231,10 +231,12 @@ class AddEmployeesModal extends React.Component {
 			});
 	};
 	handleSubmit = (data, resetForm) => {
-		const { openModal, closeModal, id, companyData, bankDetails, employee_list ,payroll_employee_list} = this.props;
+		const { openModal, closeModal,coaName, id, companyData, bankDetails, employee_list ,payroll_employee_list} = this.props;
 		this.setState({ disabled: true });
 		const postData = {
-			transactionCategoryName: data.transactionCategoryName,
+			transactionCategoryName: coaName
+			// data.transactionCategoryName
+			,
 			chartOfAccount: data.chartOfAccount.value,
 		};
 		this.props.createChartOfAccontActions
@@ -423,7 +425,7 @@ class AddEmployeesModal extends React.Component {
 
 	render() {
 		 strings.setLanguage(this.state.language);
-		const { openModal, closeModal, id, companyData, bankDetails, employee_list ,payroll_employee_list} = this.props;
+		const { openModal, closeModal, id, companyData, coaName, employee_list ,payroll_employee_list} = this.props;
 		const { initValue, contentState, data, loading, selectedRows } = this.state;
 
 		let tmpSupplier_list = []
@@ -471,10 +473,10 @@ class AddEmployeesModal extends React.Component {
 												validationSchema={Yup.object().shape({
 													// transactionCategoryCode: Yup.string()
 													//   .required("Code Name is Required"),
-													transactionCategoryName: Yup.string()
-														.required('Name is Required')
-														.min(2, 'Name Is Too Short!')
-														.max(50, 'Name Is Too Long!'),
+													// transactionCategoryName: Yup.string()
+													// 	.required('Name is Required')
+													// 	.min(2, 'Name Is Too Short!')
+													// 	.max(50, 'Name Is Too Long!'),
 													chartOfAccount: Yup.string().required(
 														'Type is Required',
 													),
@@ -492,6 +494,7 @@ class AddEmployeesModal extends React.Component {
 																id="transactionCategoryName"
 																name="transactionCategoryName"
 																placeholder={strings.Enter+strings.Name}
+																disabled={true}
 																onChange={(option) => {
 																	if (
 																		option.target.value === '' ||
@@ -503,7 +506,7 @@ class AddEmployeesModal extends React.Component {
 																	}
 																	this.validationCheck(option.target.value);
 																}}
-																value={props.values.transactionCategoryName}
+																value={coaName}
 																className={
 																	props.errors.transactionCategoryName &&
 																	props.touched.transactionCategoryName

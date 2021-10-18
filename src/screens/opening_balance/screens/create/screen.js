@@ -18,6 +18,7 @@ import DatePicker from 'react-datepicker';
 import _ from 'lodash';
 import { Loader } from 'components';
 
+import moment from 'moment';
 import { AuthActions,CommonActions } from 'services/global';
 import * as OpeningBalanceActions from '../../actions';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -90,13 +91,18 @@ class CreateOpeningBalance extends React.Component {
 	// Create  Currency conversion
 	handleSubmit = (data,resetForm) =>{
 		this.setState({ disabled: true });
-		const postData = {
-			openingBalance: data.openingBalance,
-			transactionCategoryId: data.transactionCategoryId.value,
-			effectiveDate:data.effectiveDate,
-		};
+		// const postData = {
+		// 	openingBalance: data.openingBalance,
+		// 	transactionCategoryId: data.transactionCategoryId.value,
+		// 	effectiveDate:data.effectiveDate,
+		// };
+		let formData =new FormData()
+			formData.append(`persistModelList[${0}].transactionCategoryId`, data.transactionCategoryId.value);
+		    formData.append(`persistModelList[${0}].effectiveDate`, moment(data.effectiveDate));
+			formData.append(`persistModelList[${0}].openingBalance`, data.openingBalance);
+	
 			this.props.createOpeningBalancesActions
-				.addOpeningBalance(postData)
+				.addOpeningBalance(formData)
 				.then((res) => {
 					this.setState({ disabled: false });
 					if (res.status === 200) {

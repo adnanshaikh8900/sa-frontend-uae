@@ -36,6 +36,7 @@ import styled from 'styled-components';
 import { ChartOfAccountsModal } from './modal';
 
 import moment from 'moment';
+import { Date } from 'core-js';
 
 const mapStateToProps = (state) => {
 	return {
@@ -98,6 +99,7 @@ class Import extends React.Component {
 			effectiveDate:new Date(),
 			openingBalance:0,
 			dummylistOfNotExist: [],
+			coaName:''
 		};
 		this.selectRowProp = {
 			mode: 'checkbox',
@@ -219,10 +221,11 @@ class Import extends React.Component {
 
 	saveAccountStartDate = (data, resetForm) => {
 		const date = data.date;
-
+		let formdata=new FormData()
+		formdata.append('accountStartDate',date)
 		if (isDate(date)) {
 			this.props.migrationActions
-				.saveAccountStartDate(date)
+				.saveAccountStartDate(formdata)
 				.then((res) => {
 					if (res.status === 200) {
 						this.setState({
@@ -251,10 +254,33 @@ class Import extends React.Component {
 	}
 
 	handleSubmitForOpeningBalances = () => {
-		debugger
+		
 		const formData = new FormData()
+		// formData.append('',)
+		let listObject = [
+			  {
+				"effectiveDate": "2021-10-17T12:47:32.753Z",
+				"openingBalance": 50,
+				"transactionCategoryBalanceId": 0,
+				"transactionCategoryId":5
+			  },
+		   {
+				"effectiveDate": "2021-10-17T12:47:32.753Z",
+				"openingBalance": 777,
+				"transactionCategoryBalanceId": 0,
+				"transactionCategoryId": 7
+			  }
+			]
+		  
+		
+		// formData.append('persistModelList',JSON.stringify(this.state.listOfExist4))
 
-		formData.append('persistmodel',JSON.stringify(this.state.listOfExist4))
+		this.state.listOfExist4.forEach((data, index) => {
+			formData.append(`persistModelList[${index}].transactionCategoryId`, data.transactionId);
+		    formData.append(`persistModelList[${index}].effectiveDate`, moment(data.effectiveDate));
+			formData.append(`persistModelList[${index}].openingBalance`, data.openingBalance);
+		});
+		// formData.append('persistModelList',JSON.stringify(listObject))
 		this.props.migrationActions
 				.addOpeningBalance(formData)
 				.then((res) => {
@@ -266,9 +292,10 @@ class Import extends React.Component {
 						});
 						this.props.commonActions.tostifyAlert(
 							'success',
-							'Date saved Successfully.',
+							'migration Data saved Successfully.',
 						);
-						this.props.history.push('/admin/settings/migrate')
+						debugger
+						this.props.history.push('/admin/settings/migrate',{name:this.state.name},{version:this.state.version})
 					
 					}
 				})
@@ -328,7 +355,7 @@ class Import extends React.Component {
 						listOfExist: res.data.listOfExist,
 						listOfExist4: res.data.listOfExist,
 						dummylistOfExist: res.data.listOfExist,
-						dummylistOfNotExist: res.data.listOfNotExist,
+						 dummylistOfNotExist: res.data.listOfNotExist,
 					});
 					let newData = [...this.state.listOfExist4]
 					newData = newData.map((data) => {
@@ -443,7 +470,7 @@ class Import extends React.Component {
 			console.log(file_data_list, "file_data_list")
 			return (
 				file_data_list.length > 0 ? (
-					<Table >
+					<Table responsive>
 						<thead>
 							<tr className="header-row">
 								{cols.map((column, index) => {
@@ -522,8 +549,9 @@ class Import extends React.Component {
 			// let listObject = this.state.dummylistOfExist ? this.state.dummylistOfExist : []
 
 			
-			let list = this.state.dummylistOfNotExist ? this.state.dummylistOfNotExist : []
+			let list = this.state.dummylistOfNotExist && this.state.dummylistOfNotExist !="" ? this.state.dummylistOfNotExist : []
 			let listOfNotExist1 = list.map((data, i) => {
+				
 				listObject.push({ transactionName: data })
 				return data;
 			});
@@ -646,11 +674,12 @@ class Import extends React.Component {
 			return (<div className=" text-center"><i class="fas fa-lock"></i> </div>);
 		}
 		else {
-			return (<div className=" text-center"> 	<span style={{ color: "white", backgroundColor: "#2266d8" }} onClick={() => {
+			return (<div className=" text-center" style={{padding:" 0px !important",height: "21px"}}> 	<button className="btn-sm"style={{ color: "white", backgroundColor: "#2266d8",}} onClick={() => {
 				this.setState({
-					openModal: true
+					openModal: true,
+					coaName:row.transactionName
 				})
-			}}>Create</span> </div>);
+			}}>Create</button> </div>);
 		}
 	}
 	renderCode = (cell, rows) => {
@@ -978,6 +1007,7 @@ class Import extends React.Component {
 															{(props) => (
 																<Form onSubmit={props.handleSubmit}>
 																	<Row>
+																		<Col></Col>
 																		<Col lg={3}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="productName">
@@ -1025,7 +1055,10 @@ class Import extends React.Component {
 																							props.handleChange('productName')(
 																								option.label,
 																								this.versionlist(option.label)
+																								
 																							);
+																							
+																						this.setState({name:option.label})
 																						} else {
 																							props.handleChange('productName')('');
 																						}
@@ -1083,9 +1116,12 @@ class Import extends React.Component {
 																							: ''
 																					}
 																					onChange={(option) =>
-																						props.handleChange('version')(
+																						{props.handleChange('version')(
 																							option.label,
 																						)
+																						
+																						this.setState({version:option.label})
+																						}
 																					}
 																				/>
 																				{props.errors.version &&
@@ -1096,6 +1132,7 @@ class Import extends React.Component {
 																					)}
 																			</FormGroup>
 																		</Col>
+																		<Col></Col>
 																	</Row>
 																	<div className="mt-4" >
 																		<Row>
@@ -1144,7 +1181,13 @@ class Import extends React.Component {
 																		</Row>
 
 																	</div>
-
+																	<Row><Col>
+																		<Button color="primary" className="btn-square pull-left"
+																			onClick={() => { this.DeleteFile() }}>
+																			<i class="fas fa-trash-alt"></i> 
+																		</Button>
+																		</Col>
+																	</Row>
 																	<Row>
 																		<div>
 																			<BootstrapTable
@@ -1175,12 +1218,7 @@ class Import extends React.Component {
 																		</div>
 
 																	</Row>
-																	<Row>
-																		<Button color="primary" className="btn-square pull-left"
-																			onClick={() => { this.DeleteFile() }}>
-																			<i className="far fa-arrow-alt-circle-left"></i> DELETE
-																		</Button>
-																	</Row>
+																	
 
 																</Form>
 															)}
@@ -1370,7 +1408,7 @@ class Import extends React.Component {
 					closeModal={(e) => {
 						this.closeModal(e);
 					}}
-
+					coaName={this.state.coaName}
 				// employee_list={employee_list.data}
 				/>
 			</div>

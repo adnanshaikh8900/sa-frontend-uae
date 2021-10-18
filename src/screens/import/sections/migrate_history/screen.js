@@ -120,7 +120,7 @@ class MigarteHistory extends React.Component {
 		
 				let data=this.state.summaryList && this.state.summaryList[0] ?this.state.summaryList[0] :[];
 
-debugger
+
 		const migrationBeginningDate =data && data.migrationBeginningDate ? data.migrationBeginningDate :"-"
 		const sourceApplication ="Zoho Books xxx.xx.xxx"
 		const executionDate=data &&  data.executionDate ? data.executionDate :"-"

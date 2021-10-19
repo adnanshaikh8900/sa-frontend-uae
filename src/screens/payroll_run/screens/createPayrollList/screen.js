@@ -558,6 +558,9 @@ else
 			})
 
 	}
+	
+
+
 	submitPayroll = (data) => {
 
 		const { userId } = data;
@@ -669,6 +672,8 @@ else
 	this.setState({startDate:startDate,endDate:endDate})
 	this.calculatePayperioad(startDate, endDate)
 	  };
+handleDateChange = ({ startDate, endDate }) =>    this.setState({ startDate, endDate });
+handleFocusChange = focusedInput => this.setState({ focusedInput });
 	render() {
 		strings.setLanguage(this.state.language);
 
@@ -825,7 +830,17 @@ else
 																			</Label>
 
 																			<FormGroup >
-																				<DateRangePicker
+																			<DateRangePicker
+																				endDate={this.state.endDate}
+																				endDateId="endDate"
+																				focusedInput={this.state.focusedInput}
+																				isOutsideRange={() => null}
+																				onDatesChange={this.handleDateChange}
+																				onFocusChange={this.handleFocusChange}
+																				startDate={this.state.startDate}
+																				startDateId="startDate"
+																				/>
+																{/* <DateRangePicker
 																				startDate={this.state.startDate}
 																				startDateId="tata-start-date"
 																				endDate={this.state.endDate}
@@ -835,7 +850,7 @@ else
 																				onFocusChange={(option)=>{this.setState({focusedInput:option})}}
 																				isOutsideRange={day => !isInclusivelyBeforeDay(day, moment())}
 																				initialVisibleMonth={() => moment().subtract(1, "month")}
-																				/>																							
+																				/>																							 */}
 																			
 																			{props.errors.startDate &&
 																				props.touched.startDate && (

@@ -68,7 +68,8 @@ class UpdateEmployeePersonal extends React.Component {
             userPhoto: [],
 			showIcon: false,
 			userPhotoFile: {},
-            current_employee_id: null
+            current_employee_id: null,
+            checkmobileNumberParam:false,
         }
 
         this.regExAlpha = /^[a-zA-Z ]+$/;
@@ -380,7 +381,7 @@ class UpdateEmployeePersonal extends React.Component {
     }
     render() {
         strings.setLanguage(this.state.language);
-        const { loading, initValue, dialog } = this.state
+        const { loading, initValue, dialog ,checkmobileNumberParam} = this.state
         const { designation_dropdown, country_list, state_list, employee_list_dropdown,salary_role_dropdown } = this.props
 
         return (
@@ -409,6 +410,15 @@ class UpdateEmployeePersonal extends React.Component {
                                                     onSubmit={(values) => {
                                                         this.handleSubmit(values)
                                                     }}
+                                                    validate={(values) => {
+														let errors = {};
+	
+														if (checkmobileNumberParam === true) {
+														errors.mobileNumber =
+														'Invalid mobile number';
+														}
+														return errors;
+													}}
                                                     validationSchema={Yup.object().shape({
                                                         firstName: Yup.string()
                                                             .required("first Name is Required"),
@@ -424,6 +434,8 @@ class UpdateEmployeePersonal extends React.Component {
                                                         //     .required('status is Required'),
                                                         employeeDesignationId: Yup.string()
                                                             .required('Designation is Required'),
+                                                            mobileNumber: Yup.string()
+															.required('Mobile Number is required'),
                                                     })}
 
                                                 >
@@ -545,7 +557,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         <Col md="4">
                                                                             <FormGroup>
                                                                                 <Label htmlFor="mobileNumber">
-                                                                                    {strings.MobileNumber}
+                                                                                <span className="text-danger">*</span>  {strings.MobileNumber}
                                                                                 </Label>
                                                                                 <PhoneInput
                                                                                     id="mobileNumber"
@@ -560,16 +572,17 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                         props.handleChange('mobileNumber')(
                                                                                             option,
                                                                                         );
+                                                                                        option.length!==12 ?  this.setState({checkmobileNumberParam:true}) :this.setState({checkmobileNumberParam:false});
                                                                                     }}
-                                                                                    className={
-                                                                                        props.errors.mobileNumber &&
-                                                                                            props.touched.mobileNumber
-                                                                                            ? 'is-invalid'
-                                                                                            : ''
-                                                                                    }
+                                                                                    // className={
+                                                                                    //     props.errors.mobileNumber &&
+                                                                                    //         props.touched.mobileNumber
+                                                                                    //         ? 'is-invalid'
+                                                                                    //         : ''
+                                                                                    // }
                                                                                 />
                                                                                 {props.errors.mobileNumber && props.touched.mobileNumber && (
-                                                                                    <div className="invalid-feedback">{props.errors.mobileNumber}</div>
+                                                                                    <div style={{color:"red"}}>{props.errors.mobileNumber}</div>
                                                                                 )}
 
                                                                             </FormGroup>

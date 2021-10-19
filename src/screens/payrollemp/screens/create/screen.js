@@ -2493,8 +2493,14 @@ validationCheck = (value) => {
                                                                                                         name="accountHolderName"
                                                                                                         value={props.values.accountHolderName}
                                                                                                         placeholder={strings.Enter+strings.AccountHolderName}
-                                                                                                        onChange={(value) => {
-                                                                                                            props.handleChange('accountHolderName')(value);
+                                                                                                        onChange={(option) => {
+                                                                                                            
+                                                                                                            if (
+                                                                                                                option.target.value === '' ||
+                                                                                                                this.regExAlpha.test(option.target.value)
+                                                                                                            ) {
+                                                                                                                props.handleChange('accountHolderName')(option);
+                                                                                                            }
 
                                                                                                         }}
                                                                                                         className={props.errors.accountHolderName && props.touched.accountHolderName ? "is-invalid" : ""}
@@ -2539,8 +2545,14 @@ validationCheck = (value) => {
                                                                                                         name="bankName"
                                                                                                         value={props.values.bankName}
                                                                                                         placeholder={strings.Enter+strings.BankName}
-                                                                                                        onChange={(value) => {
-                                                                                                            props.handleChange('bankName')(value);
+                                                                                                        onChange={(option) => {
+                                                                                                          
+                                                                                                            if (
+                                                                                                                option.target.value === '' ||
+                                                                                                                this.regExAlpha.test(option.target.value)
+                                                                                                            ) {
+                                                                                                                props.handleChange('bankName')(option);
+                                                                                                            }
 
                                                                                                         }}
                                                                                                         className={props.errors.bankName && props.touched.bankName ? "is-invalid" : ""}

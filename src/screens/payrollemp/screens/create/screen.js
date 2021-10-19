@@ -204,6 +204,7 @@ class CreateEmployeePayroll extends React.Component {
             prefix: '',
             exist: false,
             selectedStatus:true,
+            checkmobileNumberParam:false,
         }        
         this.formRef = React.createRef();       
         this.regEx = /^[0-9\d]+$/;
@@ -1017,7 +1018,7 @@ validationCheck = (value) => {
     }
     render() {
         strings.setLanguage(this.state.language);
-        const {	exist}=this.state
+        const {	exist,checkmobileNumberParam}=this.state
         const { salary_role_dropdown, designation_dropdown, country_list, state_list, employee_list_dropdown } = this.props
         return (
             <div className="financial-report-screen">
@@ -1093,7 +1094,29 @@ validationCheck = (value) => {
                                                                         onSubmit={(values, { resetForm }) => {
                                                                             this.handleSubmit(values, resetForm)
                                                                         }}
-                                                                      
+                                                                        validate={(values) => {
+                                                                            let errors = {};
+                        
+                                                                            if (checkmobileNumberParam === true) {
+                                                                            errors.mobileNumber =
+                                                                            'Invalid mobile number';
+                                                                            }
+                                                                            
+                                                                            // if( values.stateId ===''){
+                                                                            //     errors.stateId =
+                                                                            //     'State is Required';
+                                                                            // }
+                                                                            // if( values.stateId.label && values.stateId.label ==='Select State'){
+                                                                            //     errors.stateId =
+                                                                            //     'State is Required';
+                                                                            // }
+                                                                            
+                                                                            // if (param === true) {
+                                                                            // 	errors.discount =
+                                                                            // 		'Discount amount Cannot be greater than Invoice Total Amount';
+                                                                            // }
+                                                                            return errors;
+                                                                        }}
                                                                         validationSchema={Yup.object().shape({
                                                                             firstName: Yup.string()
                                                                                 .required("First Name is Required"),
@@ -1278,6 +1301,7 @@ validationCheck = (value) => {
                                                                                                             props.handleChange('mobileNumber')(
                                                                                                                 option,
                                                                                                             );
+                                                                                                            option.length!==12 ?  this.setState({checkmobileNumberParam:true}) :this.setState({checkmobileNumberParam:false});
                                                                                                         }}
                                                                                                         className={
                                                                                                             props.errors.mobileNumber &&

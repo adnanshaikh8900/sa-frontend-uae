@@ -234,7 +234,7 @@ class RFQTemplate extends Component {
 									</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Vat}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
-										{strings.Total}
+									{strings.subTotal }
 									</th>
 								</tr>
 							</thead>

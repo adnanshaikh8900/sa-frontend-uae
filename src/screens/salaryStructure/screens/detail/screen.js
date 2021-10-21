@@ -121,7 +121,7 @@ class DetailSalaryStructure extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'salary Structure Updated Successfully.',
+					'Salary Structure Updated Successfully.',
 				);
 				this.props.history.push('/admin/payroll/config',{tabNo:'2'});
 			})
@@ -205,6 +205,8 @@ class DetailSalaryStructure extends React.Component {
                               // resetForm(this.state.initValue)
                             }}
                             validationSchema={Yup.object().shape({
+                              salaryStructureType: Yup.string()
+                              .required("Salary Structure Type is Required"),
                               salaryStructureName: Yup.string()
                                 .required("salary Structure Name is Required"),
                             

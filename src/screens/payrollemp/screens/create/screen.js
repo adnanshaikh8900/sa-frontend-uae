@@ -1184,6 +1184,7 @@ validationCheck = (value) => {
                                                                                                     <Label htmlFor="select"><span className="text-danger">*</span> {strings.FirstName}</Label>
                                                                                                     <Input
                                                                                                         type="text"
+                                                                                                        maxLength="26"
                                                                                                         id="firstName"
                                                                                                         name="firstName"
                                                                                                         value={props.values.firstName}
@@ -1204,6 +1205,7 @@ validationCheck = (value) => {
                                                                                                     <Label htmlFor="select">{strings.MiddleName}</Label>
                                                                                                     <Input
                                                                                                         type="text"
+                                                                                                        maxLength="26"
                                                                                                         id="middleName"
                                                                                                         name="middleName"
                                                                                                         value={props.values.middleName}
@@ -1223,6 +1225,7 @@ validationCheck = (value) => {
                                                                                                     <Label htmlFor="select"><span className="text-danger">*</span>{strings.LastName}</Label>
                                                                                                     <Input
                                                                                                         type="text"
+                                                                                                        maxLength="26"
                                                                                                         id="lastName"
                                                                                                         name="lastName"
                                                                                                         value={props.values.lastName}
@@ -1245,6 +1248,7 @@ validationCheck = (value) => {
                                                                                                     <Label htmlFor="select"><span className="text-danger">*</span> {strings.Email}</Label>
                                                                                                     <Input
                                                                                                         type="text"
+                                                                                                        maxLength="80"
                                                                                                         id="email"
                                                                                                         name="email"
                                                                                                         value={props.values.email}

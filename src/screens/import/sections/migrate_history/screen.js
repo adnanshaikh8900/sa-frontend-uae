@@ -122,7 +122,7 @@ class MigarteHistory extends React.Component {
 
 
 		const migrationBeginningDate =data && data.migrationBeginningDate ? data.migrationBeginningDate :"-"
-		const sourceApplication ="Zoho Books xxx.xx.xxx"
+		const sourceApplication ="Zoho Books"
 		const executionDate=data &&  data.executionDate ? data.executionDate :"-"
 		return (
 			<div className="transactions-report-screen">
@@ -131,10 +131,10 @@ class MigarteHistory extends React.Component {
 <CardHeader>	<h5>Migarte History</h5> </CardHeader>
 <CardBody style={{margin:"0px 176px 0px 176px"}}><h1 className="text-center">Migration Summary</h1>
 <br></br>
-<Row className="mb-2 mt-2">
-<Col> <b>Migration Beginning Date:</b>{moment(migrationBeginningDate).format('MM/DD/YYYY')}</Col>
-<Col><b>Source Application:</b>{sourceApplication} </Col>
-<Col><b>Execution Date:</b> {moment(executionDate).format('MM/DD/YYYY')}</Col>
+<Row lg={12} className="mb-4 mt-2">
+<Col  lg={4} className="pull-left"> <b>Migration Beginning Date: </b>{moment(migrationBeginningDate).format('DD/MM/YYYY')}</Col>
+<Col  lg={4} ><b>Source Application: </b>{sourceApplication} </Col>
+<Col  lg={4} className="pull-right"><b>Execution Date: </b> {moment(executionDate).format('DD/MM/YYYY')}</Col>
 </Row>				
 				
 						<div>
@@ -145,48 +145,34 @@ class MigarteHistory extends React.Component {
 								hover
 								keyField="id"
 								remote
-								//   fetchInfo={{ dataTotalSize: salaryRole_list.count ? salaryRole_list.count : 0 }}
 								ref={(node) => this.table = node}
 								className="text-center"
 							>
-								{/* <TableHeaderColumn
-									dataField="srNo"
-									// dataFormat={this.renderCode}
-									className="table-header-bg text-center"
-								>
-									Sr No
-								</TableHeaderColumn> */}
+							
 								<TableHeaderColumn
+									dataAlign="center"
 									dataField="fileName"
-									// dateFormat={this.renderAccountName}
 									className="table-header-bg text-center"
 								>
 								File Name
 								</TableHeaderColumn>
 								<TableHeaderColumn
+									dataAlign="center"
 									dataField="recordCount"
-									// dateFormat={this.renderAccountName}
 									className="table-header-bg text-center"
 								>
 								Number of Record
 								</TableHeaderColumn>
-								{/* <TableHeaderColumn
-									dataField="status"
-									// dateFormat={this.renderAccountName}
-									className="table-header-bg text-center"
-								>
-								Status
-								</TableHeaderColumn> */}
 								<TableHeaderColumn
+									dataAlign="center"
 									dataField="recordsMigrated"
-									// dateFormat={this.renderAccountName}
 									className="table-header-bg text-center"
 								>
 								Migrated Records
 								</TableHeaderColumn>
 								<TableHeaderColumn
+									dataAlign="center"
 									dataField="recordsRemoved"
-									// dateFormat={this.renderAccountName}
 									className="table-header-bg text-center"
 								>
 								 Rejected Records
@@ -194,27 +180,6 @@ class MigarteHistory extends React.Component {
 
 							</BootstrapTable>
 						</div>
-							{/* <Row>
-								<Col lg={12} className="mt-5">
-									<div className="table-wrapper">
-										<FormGroup className="text-center">
-											<Button color="secondary" className="btn-square pull-left"
-												onClick={() => { this.toggle(0, '1') }}>
-												<i className="far fa-arrow-alt-circle-left"></i> RollBack Migration
-											</Button>
-
-											<Button name="button" color="primary" className="btn-square pull-right mr-3"
-												onClick={() => {
-													this.props.history.push('/admin/settings/migrateHistory');
-												}}>
-												Finish Migration	<i class="far fa-arrow-alt-circle-right mr-1"></i>
-											</Button>
-										</FormGroup>
-									</div>
-								</Col>
-							</Row> */}
-
-
 						</CardBody>
 						</Card>
 			</div>

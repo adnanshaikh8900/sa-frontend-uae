@@ -875,7 +875,7 @@ class UpdatePayroll extends React.Component {
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="nav-icon fas fa-user-tie" />
-												<span className="ml-2">Update </span>
+												<span className="ml-2">Update Payroll</span>
 											</div>
 										</Col>
 									</Row>

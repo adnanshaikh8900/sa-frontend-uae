@@ -1130,6 +1130,8 @@ validationCheck = (value) => {
                                                                             // .required(" Employee Role is required"),
                                                                             dob: Yup.date()
                                                                             .required('DOB is Required') ,
+                                                                            gender: Yup.string()
+                                                                            .required('Gender is Required') ,
                                                                           
                                                                             active : Yup.string()
                                                                             .required('status is Required') ,  
@@ -1461,7 +1463,7 @@ validationCheck = (value) => {
                                                                                         <Row>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="gender">{strings.Gender}</Label>
+                                                                                                    <Label htmlFor="gender"><span className="text-danger">*</span>{strings.Gender}</Label>
                                                                                                     <Select
 
                                                                                                         options={

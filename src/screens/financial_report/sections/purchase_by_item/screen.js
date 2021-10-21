@@ -209,9 +209,7 @@ language: window['localStorage'].getItem('language'),
 											<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
-														{/* <DropdownItem onClick={this.exportPDFWithComponent}>
-															Pdf
-														</DropdownItem> */}
+														
 														<DropdownItem>
 															<CSVLink
 																data={this.exportFile()}
@@ -220,6 +218,9 @@ language: window['localStorage'].getItem('language'),
 															>
 																CSV (Comma Separated Value)
 															</CSVLink>
+														</DropdownItem>
+														<DropdownItem onClick={this.exportPDFWithComponent}>
+															Pdf
 														</DropdownItem>
 														{/* <DropdownItem
 															onClick={() => {
@@ -246,7 +247,7 @@ language: window['localStorage'].getItem('language'),
 												>
 													<i className="fa fa-print"></i>
 												</div>
-												<div
+												{/* <div
 												className="mr-2 print-btn-cont"
 												onClick={() => {
 													this.exportPDFWithComponent();
@@ -256,7 +257,7 @@ language: window['localStorage'].getItem('language'),
 													}}
 												>
 												<i className="fa fa-file-pdf-o"></i>
-											</div>
+											</div> */}
 												<div
 													className="mr-2 print-btn-cont"
                                                     onClick={() => {

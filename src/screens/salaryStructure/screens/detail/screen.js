@@ -121,7 +121,7 @@ class DetailSalaryStructure extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'salary Structure Updated Successfully.',
+					'Salary Structure Updated Successfully.',
 				);
 				this.props.history.push('/admin/payroll/config',{tabNo:'2'});
 			})
@@ -205,6 +205,8 @@ class DetailSalaryStructure extends React.Component {
                               // resetForm(this.state.initValue)
                             }}
                             validationSchema={Yup.object().shape({
+                              salaryStructureType: Yup.string()
+                              .required("Salary Structure Type is Required"),
                               salaryStructureName: Yup.string()
                                 .required("salary Structure Name is Required"),
                             
@@ -227,6 +229,7 @@ class DetailSalaryStructure extends React.Component {
                                   <Label htmlFor="select"><span className="text-danger">*</span>{strings.SalaryStructureType}</Label>
                                   <Input
                                     type="text"
+                                    maxLength="30"
                                     id="salaryStructureType"
                                     name="salaryStructureType"
                                     value={props.values.salaryStructureType}
@@ -246,6 +249,7 @@ class DetailSalaryStructure extends React.Component {
                                   <Label htmlFor="select"><span className="text-danger">*</span>{strings.SalaryStructureName}</Label>
                                   <Input
                                     type="text"
+                                    maxLength="30"
                                     id="salaryStructureName"
                                     name="salaryStructureName"
                                     value={props.values.salaryStructureName}

@@ -87,12 +87,12 @@ class MigarteHistory extends React.Component {
 	}
 
 	componentDidMount = () => {
-		
+		// console.log(this.props.location.)
 		this.props.importActions
 		.getMigrationSummary()
 		.then((res) => {
 			if (res.status === 200) {
-				debugger
+				
 				this.setState({
 					disabled: false,
 					summaryList: res.data,
@@ -111,7 +111,34 @@ class MigarteHistory extends React.Component {
 	initializeData = () => {
 
 	};
-
+	finishMigration=()=>{
+		debugger
+		let formData =new FormData()
+		formData.append("name",this.props.location && this.props.location.state && this.props.location.state.name ? this.props.location.state.name :"zoho")
+		formData.append("version",this.props.location && this.props.location.state &&this.props.location.state.version ?this.props.location.state.version :"3.4")
+		this.props.importActions
+		.migrate(formData)
+		.then((res) => {
+			if (res.status === 200) {
+				
+				this.setState({
+					disabled: false,
+					// summaryList: res.data,
+				});
+				this.props.commonActions.tostifyAlert(
+					'success',
+					'migration Done Successfully.',
+				);
+			}
+		})
+		.catch((err) => {
+			this.setState({ disabled: false });
+			this.props.commonActions.tostifyAlert(
+				'error',
+				err && err.data ? err.data.message : 'Something Went Wrong',
+			);
+		});
+	}
 	render() {
 		strings.setLanguage(this.state.language);
 		const { vat_list, product_category_list, supplier_list, inventory_account_list } = this.props;
@@ -123,9 +150,10 @@ class MigarteHistory extends React.Component {
 					<Card>
 						<CardHeader><h5>Migrate</h5></CardHeader>
 						<CardBody style={{margin:"0px 176px 0px 176px"}}>
-							<div 	className="text-center mb-2 mt-2 " > <h1>Migration Summary</h1></div>
-						<div>
-						
+							<div 	className="text-center mb-4 mt-2 " > <h1>Migration Summary</h1></div>
+							<div
+									 style={{ border:"1px solid grey"}}
+									>
 							<BootstrapTable
 								data={this.state && this.state.summaryList ? this.state.summaryList : []}
 								version="4"
@@ -136,44 +164,30 @@ class MigarteHistory extends React.Component {
 								ref={(node) => this.table = node}
 								className="text-center"
 							>
-								{/* <TableHeaderColumn
-									dataField="srNo"
-									// dataFormat={this.renderCode}
-									className="table-header-bg text-center"
-								>
-									Sr No
-								</TableHeaderColumn> */}
 								<TableHeaderColumn
+								dataAlign="center"
 									dataField="fileName"
-									// dateFormat={this.renderAccountName}
 									className="table-header-bg text-center"
 								>
 								File Name
 								</TableHeaderColumn>
 								<TableHeaderColumn
+									dataAlign="center"
 									dataField="recordCount"
-									// dateFormat={this.renderAccountName}
 									className="table-header-bg text-center"
 								>
 								Number of Record
 								</TableHeaderColumn>
-								{/* <TableHeaderColumn
-									dataField="status"
-									// dateFormat={this.renderAccountName}
-									className="table-header-bg text-center"
-								>
-								Status
-								</TableHeaderColumn> */}
 								<TableHeaderColumn
+									dataAlign="center"
 									dataField="recordsMigrated"
-									// dateFormat={this.renderAccountName}
 									className="table-header-bg text-center"
 								>
 								Migrated Records
 								</TableHeaderColumn>
 								<TableHeaderColumn
+									dataAlign="center"
 									dataField="recordsRemoved"
-									// dateFormat={this.renderAccountName}
 									className="table-header-bg text-center"
 								>
 								 Rejected Records
@@ -193,6 +207,7 @@ class MigarteHistory extends React.Component {
 
 											<Button name="button" color="primary" className="btn-square pull-right mr-3"
 												onClick={() => {
+													this.finishMigration()
 													this.props.history.push('/admin/settings/migrateHistory');
 												}}>
 												Finish Migration	<i class="far fa-arrow-alt-circle-right mr-1"></i>

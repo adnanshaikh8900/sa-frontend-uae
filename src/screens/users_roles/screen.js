@@ -32,6 +32,7 @@ import './style.scss';
 import * as RolesActions from './actions';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
+import { CommonActions } from 'services/global';
 
 const mapStateToProps = (state) => {
 	return {
@@ -40,6 +41,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
+		commonActions: bindActionCreators(CommonActions, dispatch),
 		rolesActions: bindActionCreators(RolesActions, dispatch),
 	};
 };
@@ -77,6 +79,7 @@ class UsersRoles extends React.Component {
 			],
 		};
 		this.options = {
+
 			onRowClick: this.goToDetail,
 		};
 
@@ -100,10 +103,13 @@ class UsersRoles extends React.Component {
 	};
 
 	goToDetail = (row) => {
-		this.props.history.push('/admin/settings/user-role/update', {
+		{row.roleCode === 1 ? 
+			this.props.commonActions.tostifyAlert('error', 'You cannot edit Admin Role')
+			 :
+			this.props.history.push('/admin/settings/user-role/update', {
 			id: row.roleCode,
 		});
-	};
+	}};
 
 	getUserName = (cell, row) => {
 		return (

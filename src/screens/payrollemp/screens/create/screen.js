@@ -204,6 +204,7 @@ class CreateEmployeePayroll extends React.Component {
             prefix: '',
             exist: false,
             selectedStatus:true,
+            checkmobileNumberParam:false,
         }        
         this.formRef = React.createRef();       
         this.regEx = /^[0-9\d]+$/;
@@ -1017,7 +1018,7 @@ validationCheck = (value) => {
     }
     render() {
         strings.setLanguage(this.state.language);
-        const {	exist}=this.state
+        const {	exist,checkmobileNumberParam}=this.state
         const { salary_role_dropdown, designation_dropdown, country_list, state_list, employee_list_dropdown } = this.props
         return (
             <div className="financial-report-screen">
@@ -1093,7 +1094,29 @@ validationCheck = (value) => {
                                                                         onSubmit={(values, { resetForm }) => {
                                                                             this.handleSubmit(values, resetForm)
                                                                         }}
-                                                                      
+                                                                        validate={(values) => {
+                                                                            let errors = {};
+                        
+                                                                            if (checkmobileNumberParam === true) {
+                                                                            errors.mobileNumber =
+                                                                            'Invalid mobile number';
+                                                                            }
+                                                                            
+                                                                            // if( values.stateId ===''){
+                                                                            //     errors.stateId =
+                                                                            //     'State is Required';
+                                                                            // }
+                                                                            // if( values.stateId.label && values.stateId.label ==='Select State'){
+                                                                            //     errors.stateId =
+                                                                            //     'State is Required';
+                                                                            // }
+                                                                            
+                                                                            // if (param === true) {
+                                                                            // 	errors.discount =
+                                                                            // 		'Discount amount Cannot be greater than Invoice Total Amount';
+                                                                            // }
+                                                                            return errors;
+                                                                        }}
                                                                         validationSchema={Yup.object().shape({
                                                                             firstName: Yup.string()
                                                                                 .required("First Name is Required"),
@@ -1161,6 +1184,7 @@ validationCheck = (value) => {
                                                                                                     <Label htmlFor="select"><span className="text-danger">*</span> {strings.FirstName}</Label>
                                                                                                     <Input
                                                                                                         type="text"
+                                                                                                        maxLength="26"
                                                                                                         id="firstName"
                                                                                                         name="firstName"
                                                                                                         value={props.values.firstName}
@@ -1181,6 +1205,7 @@ validationCheck = (value) => {
                                                                                                     <Label htmlFor="select">{strings.MiddleName}</Label>
                                                                                                     <Input
                                                                                                         type="text"
+                                                                                                        maxLength="26"
                                                                                                         id="middleName"
                                                                                                         name="middleName"
                                                                                                         value={props.values.middleName}
@@ -1200,6 +1225,7 @@ validationCheck = (value) => {
                                                                                                     <Label htmlFor="select"><span className="text-danger">*</span>{strings.LastName}</Label>
                                                                                                     <Input
                                                                                                         type="text"
+                                                                                                        maxLength="26"
                                                                                                         id="lastName"
                                                                                                         name="lastName"
                                                                                                         value={props.values.lastName}
@@ -1222,6 +1248,7 @@ validationCheck = (value) => {
                                                                                                     <Label htmlFor="select"><span className="text-danger">*</span> {strings.Email}</Label>
                                                                                                     <Input
                                                                                                         type="text"
+                                                                                                        maxLength="80"
                                                                                                         id="email"
                                                                                                         name="email"
                                                                                                         value={props.values.email}
@@ -1241,10 +1268,12 @@ validationCheck = (value) => {
                                                                                                     <DatePicker
                                                                                                         className={`form-control ${props.errors.dob && props.touched.dob ? "is-invalid" : ""}`}
                                                                                                         id="dob"
-                                                                                                        name="dob"
+                                                                                                        name="dob"                                                           
                                                                                                         placeholderText={strings.Select+strings.DateOfBirth}
                                                                                                         showMonthDropdown
                                                                                                         showYearDropdown
+                                                                                                        maxDate={new Date()}
+                                                                                                        autoComplete={"off"}
                                                                                                         dateFormat="dd/MM/yyyy"
                                                                                                         dropdownMode="select"
                                                                                                         selected={props.values.dob}
@@ -1276,6 +1305,7 @@ validationCheck = (value) => {
                                                                                                             props.handleChange('mobileNumber')(
                                                                                                                 option,
                                                                                                             );
+                                                                                                            option.length!==12 ?  this.setState({checkmobileNumberParam:true}) :this.setState({checkmobileNumberParam:false});
                                                                                                         }}
                                                                                                         className={
                                                                                                             props.errors.mobileNumber &&
@@ -2283,6 +2313,8 @@ validationCheck = (value) => {
                                                                                                         showYearDropdown
                                                                                                         dateFormat="dd/MM/yyyy"
                                                                                                         dropdownMode="select"
+                                                                                                        maxDate={new Date()}
+                                                                                                        autoComplete={"off"}
                                                                                                         selected={props.values.dateOfJoining}
                                                                                                         value={props.values.dateOfJoining}
                                                                                                         onChange={(value) => {
@@ -2455,6 +2487,16 @@ validationCheck = (value) => {
                                                                             .required("Account Number is Required"),
                                                                             iban: Yup.string()
                                                                             .required("IBAN is Required"),
+                                                                            bankName: Yup.string()
+                                                                            .required("Bank Name is Required"),
+                                                                            branch: Yup.string()
+                                                                            .required("Branch is Required"),
+                                                                            swiftCode: Yup.string()
+                                                                            .required("Swift Code is Required"),
+                                                                            
+                                                                            
+                                                                            
+                                                                            
                                                                                            
                                                                         })}
                                                                     >
@@ -2479,8 +2521,14 @@ validationCheck = (value) => {
                                                                                                         name="accountHolderName"
                                                                                                         value={props.values.accountHolderName}
                                                                                                         placeholder={strings.Enter+strings.AccountHolderName}
-                                                                                                        onChange={(value) => {
-                                                                                                            props.handleChange('accountHolderName')(value);
+                                                                                                        onChange={(option) => {
+                                                                                                            
+                                                                                                            if (
+                                                                                                                option.target.value === '' ||
+                                                                                                                this.regExAlpha.test(option.target.value)
+                                                                                                            ) {
+                                                                                                                props.handleChange('accountHolderName')(option);
+                                                                                                            }
 
                                                                                                         }}
                                                                                                         className={props.errors.accountHolderName && props.touched.accountHolderName ? "is-invalid" : ""}
@@ -2518,15 +2566,21 @@ validationCheck = (value) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select"> {strings.BankName} </Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span> {strings.BankName} </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="bankName"
                                                                                                         name="bankName"
                                                                                                         value={props.values.bankName}
                                                                                                         placeholder={strings.Enter+strings.BankName}
-                                                                                                        onChange={(value) => {
-                                                                                                            props.handleChange('bankName')(value);
+                                                                                                        onChange={(option) => {
+                                                                                                          
+                                                                                                            if (
+                                                                                                                option.target.value === '' ||
+                                                                                                                this.regExAlpha.test(option.target.value)
+                                                                                                            ) {
+                                                                                                                props.handleChange('bankName')(option);
+                                                                                                            }
 
                                                                                                         }}
                                                                                                         className={props.errors.bankName && props.touched.bankName ? "is-invalid" : ""}
@@ -2541,7 +2595,7 @@ validationCheck = (value) => {
                                                                                         <Row className="row-wrapper">
                                                                                             <Col lg={4}>
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select">{strings.Branch}</Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span>{strings.Branch}</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="branch"
@@ -2583,7 +2637,7 @@ validationCheck = (value) => {
 
                                                                                             <Col lg={4}>
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select">{strings.SwiftCode}</Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span>{strings.SwiftCode}</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="swiftCode"

@@ -36,6 +36,7 @@ import styled from 'styled-components';
 import { ChartOfAccountsModal } from './modal';
 
 import moment from 'moment';
+import { Date } from 'core-js';
 
 const mapStateToProps = (state) => {
 	return {
@@ -98,6 +99,7 @@ class Import extends React.Component {
 			effectiveDate:new Date(),
 			openingBalance:0,
 			dummylistOfNotExist: [],
+			coaName:''
 		};
 		this.selectRowProp = {
 			mode: 'checkbox',
@@ -110,19 +112,7 @@ class Import extends React.Component {
 
 	componentDidMount = () => {
 		this.getInitialData();
-		this.props.migrationActions.migrationProduct()
-			.then((res) => {
-				if (res.status === 200) {
-					this.setState({ product_list: res.data });
-				}
-			})
-			.catch((err) => {
-				this.props.commonActions.tostifyAlert(
-					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
-				);
-				this.setState({ loading: false });
-			});
+		
 	};
 	DeleteFile = () => {
 
@@ -219,10 +209,11 @@ class Import extends React.Component {
 
 	saveAccountStartDate = (data, resetForm) => {
 		const date = data.date;
-
+		let formdata=new FormData()
+		formdata.append('accountStartDate',date ? date : null)
 		if (isDate(date)) {
 			this.props.migrationActions
-				.saveAccountStartDate(date)
+				.saveAccountStartDate(formdata)
 				.then((res) => {
 					if (res.status === 200) {
 						this.setState({
@@ -251,10 +242,14 @@ class Import extends React.Component {
 	}
 
 	handleSubmitForOpeningBalances = () => {
-		debugger
+		
 		const formData = new FormData()
-
-		formData.append('persistmodel',JSON.stringify(this.state.listOfExist4))
+		this.state.listOfExist4.forEach((data, index) => {
+			formData.append(`persistModelList[${index}].transactionCategoryId`, data.transactionId);
+		    formData.append(`persistModelList[${index}].effectiveDate`, moment(data.effectiveDate));
+			formData.append(`persistModelList[${index}].openingBalance`, data.openingBalance);
+		});
+		// formData.append('persistModelList',JSON.stringify(listObject))
 		this.props.migrationActions
 				.addOpeningBalance(formData)
 				.then((res) => {
@@ -266,9 +261,10 @@ class Import extends React.Component {
 						});
 						this.props.commonActions.tostifyAlert(
 							'success',
-							'Date saved Successfully.',
+							'Migration Data saved Successfully.',
 						);
-						this.props.history.push('/admin/settings/migrate')
+						
+						this.props.history.push('/admin/settings/migrate',{name:this.state.name, version:this.state.version})
 					
 					}
 				})
@@ -328,7 +324,7 @@ class Import extends React.Component {
 						listOfExist: res.data.listOfExist,
 						listOfExist4: res.data.listOfExist,
 						dummylistOfExist: res.data.listOfExist,
-						dummylistOfNotExist: res.data.listOfNotExist,
+						 dummylistOfNotExist: res.data.listOfNotExist,
 					});
 					let newData = [...this.state.listOfExist4]
 					newData = newData.map((data) => {
@@ -401,8 +397,23 @@ class Import extends React.Component {
 			});
 
 	};
-
+	productList = () => {
+	this.props.migrationActions.migrationProduct()
+	.then((res) => {
+		if (res.status === 200) {
+			this.setState({ product_list: res.data });
+		}
+	})
+	.catch((err) => {
+		this.props.commonActions.tostifyAlert(
+			'error',
+			err && err.data ? err.data.message : 'Something Went Wrong',
+		);
+		this.setState({ loading: false });
+	});
+}
 	versionlist = (productName) => {
+		debugger
 		this.props.migrationActions.getVersionListByPrioductName(productName)
 			.then((res) => {
 				if (res.status === 200) {
@@ -438,12 +449,9 @@ class Import extends React.Component {
 		if (Array.isArray(file_data_list) && file_data_list.length !== 0) {
 			let colDataObject = file_data_list[0] ? file_data_list[0] : {};
 			const cols = colDataObject ? Object.keys(colDataObject) : [];
-			// this.setState({cols:cols})
-			console.log(cols, "cols")
-			console.log(file_data_list, "file_data_list")
 			return (
 				file_data_list.length > 0 ? (
-					<Table >
+					<Table responsive>
 						<thead>
 							<tr className="header-row">
 								{cols.map((column, index) => {
@@ -522,8 +530,9 @@ class Import extends React.Component {
 			// let listObject = this.state.dummylistOfExist ? this.state.dummylistOfExist : []
 
 			
-			let list = this.state.dummylistOfNotExist ? this.state.dummylistOfNotExist : []
+			let list = this.state.dummylistOfNotExist && this.state.dummylistOfNotExist !="" ? this.state.dummylistOfNotExist : []
 			let listOfNotExist1 = list.map((data, i) => {
+				
 				listObject.push({ transactionName: data })
 				return data;
 			});
@@ -646,11 +655,12 @@ class Import extends React.Component {
 			return (<div className=" text-center"><i class="fas fa-lock"></i> </div>);
 		}
 		else {
-			return (<div className=" text-center"> 	<span style={{ color: "white", backgroundColor: "#2266d8" }} onClick={() => {
+			return (<div className=" text-center" style={{padding:" 0px !important",height: "21px"}}> 	<button className="btn-sm"style={{ color: "white", backgroundColor: "#2266d8",}} onClick={() => {
 				this.setState({
-					openModal: true
+					openModal: true,
+					coaName:row.transactionName
 				})
-			}}>Create</span> </div>);
+			}}>Create</button> </div>);
 		}
 	}
 	renderCode = (cell, rows) => {
@@ -747,7 +757,7 @@ class Import extends React.Component {
 												type="number"
 												id="openingBalance"
 												name="openingBalance"
-												value={cell || 0}
+												value={cell}
 												onChange={(evt) => {
 													let value = parseInt(evt.target.value);
 													let newData = [...this.state.listOfExist4]
@@ -882,7 +892,7 @@ class Import extends React.Component {
 														validate={(values) => {
 															let errors = {};
 
-															if (values.date === '') {
+															if (values.date === '' && values.date === null) {
 																errors.date = 'Date is required';
 															}
 															if (values.date === undefined) {
@@ -903,7 +913,7 @@ class Import extends React.Component {
 
 															<Form className="mt-3" onSubmit={props.handleSubmit}>
 																<div className="text-center" style={{ display: "flex", marginLeft: "40%" }}>
-																	<div style={{ width: "10%" }}>	<span className="text-danger">*</span>Date	</div>
+																	<div className="mt-2" style={{ width: "10%" }}>	<span className="text-danger">*</span>Date	</div>
 																	<DatePicker
 																		className={`form-control ${props.errors.date && props.touched.date ? "is-invalid" : ""}`}
 																		id="date"
@@ -916,6 +926,7 @@ class Import extends React.Component {
 																		style={{ textAlign: "center" }}
 																		selected={props.values.date}
 																		value={props.values.date}
+																		maxDate={new Date}
 																		onChange={(value) => {
 																			props.handleChange("date")(value)
 																			this.setState({ date: value })
@@ -945,6 +956,7 @@ class Import extends React.Component {
 																						this.setState({ createMore: false }, () => {
 																							props.handleSubmit()
 																						})
+																						this.productList();
 																					}}>
 																					Next	<i class="far fa-arrow-alt-circle-right mr-1"></i>
 																				</Button>
@@ -978,6 +990,7 @@ class Import extends React.Component {
 															{(props) => (
 																<Form onSubmit={props.handleSubmit}>
 																	<Row>
+																		<Col></Col>
 																		<Col lg={3}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="productName">
@@ -995,8 +1008,8 @@ class Import extends React.Component {
 																								'value',
 																								product_list,
 																								'Products list',
-
 																							)
+																							
 																							: []
 																					}
 																					value={
@@ -1013,23 +1026,31 @@ class Import extends React.Component {
 																									option.value ===
 																									+props.values.productName,
 																							)
+																							
 																					}
+																					
+																				
+																					onChange={(option) => {
+																						if (option.value != null) {
+																							debugger
+																							props.handleChange('productName')(
+																								option.label,
+																								
+																								this.versionlist(option.label)
+																								
+																							);
+																							
+																					this.setState({name:option.label})
+																						} else {
+																							props.handleChange('productName')('');
+																						}
+																					}}
 																					className={
 																						props.errors.productName &&
 																							props.touched.productName
 																							? 'is-invalid'
 																							: ''
 																					}
-																					onChange={(option) => {
-																						if (option && option.value) {
-																							props.handleChange('productName')(
-																								option.label,
-																								this.versionlist(option.label)
-																							);
-																						} else {
-																							props.handleChange('productName')('');
-																						}
-																					}}
 																				/>
 																				{props.errors.productName &&
 																					props.touched.productName && (
@@ -1083,9 +1104,12 @@ class Import extends React.Component {
 																							: ''
 																					}
 																					onChange={(option) =>
-																						props.handleChange('version')(
+																						{props.handleChange('version')(
 																							option.label,
 																						)
+																						
+																						this.setState({version:option.label})
+																						}
 																					}
 																				/>
 																				{props.errors.version &&
@@ -1096,6 +1120,7 @@ class Import extends React.Component {
 																					)}
 																			</FormGroup>
 																		</Col>
+																		<Col></Col>
 																	</Row>
 																	<div className="mt-4" >
 																		<Row>
@@ -1121,6 +1146,7 @@ class Import extends React.Component {
 																							ref={(ref) => {
 																								this.uploadFile = ref;
 																							}}
+																							style={{marginLeft: "80px"}}
 																							multiple
 																							// directory="" 
 																							// webkitdirectory=""
@@ -1144,7 +1170,7 @@ class Import extends React.Component {
 																		</Row>
 
 																	</div>
-
+																	
 																	<Row>
 																		<div>
 																			<BootstrapTable
@@ -1175,11 +1201,12 @@ class Import extends React.Component {
 																		</div>
 
 																	</Row>
-																	<Row>
-																		<Button color="primary" className="btn-square pull-left"
+																	<Row><Col>
+																	{this.state.selectedRows.length < 0 ? (	<Button color="primary" className="btn-square pull-left"
 																			onClick={() => { this.DeleteFile() }}>
-																			<i className="far fa-arrow-alt-circle-left"></i> DELETE
-																		</Button>
+																			<i className="far fa-arrow-alt-circle-left"></i> Delete
+																		</Button>) : ''}
+																		</Col>
 																	</Row>
 
 																</Form>
@@ -1237,7 +1264,7 @@ class Import extends React.Component {
 																			onClick={() => {
 																				this.setState({ nestedActiveDefaultTab: false })
 																			}}
-																		// isSelected={true}
+																	
 																		>
 
 																			<Button className="rounded-left" >Chart Of Accounts</Button>
@@ -1262,7 +1289,7 @@ class Import extends React.Component {
 																		{this.state.nestedActiveDefaultTab ?
 																			(
 																				<TabPane>
-																					<div style={{ width: "50%" }} >{this.showTable(file_data_list)}	</div>
+																					<div style={{ width: "80%",marginLeft:'10%' }} >{this.showTable(file_data_list)}	</div>
 
 																				</TabPane>
 																			) : (
@@ -1370,7 +1397,7 @@ class Import extends React.Component {
 					closeModal={(e) => {
 						this.closeModal(e);
 					}}
-
+					coaName={this.state.coaName}
 				// employee_list={employee_list.data}
 				/>
 			</div>

@@ -166,7 +166,9 @@ class CreateDesignation extends React.Component {
                          }}
                         validationSchema={Yup.object().shape({
                           designationName: Yup.string()
-                            .required("Designation Name is Required"),                   
+                            .required("Designation Name is Required"),  
+                            designationId: Yup.string()
+                            .required("Designation Id is Required"),                  
                         })}
                       >
                         {(props) => (

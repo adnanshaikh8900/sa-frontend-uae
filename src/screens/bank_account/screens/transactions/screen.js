@@ -220,6 +220,7 @@ class BankTransactions extends React.Component {
 					currentBalance: res.currentBalance,
 					closingBalance: res.closingBalance,
 					accounName: res.bankAccountName,
+					transactionCount: res.transactionCount
 				});
 			})
 			.catch((err) => {
@@ -698,6 +699,7 @@ class BankTransactions extends React.Component {
 			transaction_type_list,
 			universal_currency_list,
 		} = this.props;
+		console.log(this.state.transactionCount)
 		const columns = [
 			{
 				dataField: 'transactionDate',
@@ -844,7 +846,7 @@ class BankTransactions extends React.Component {
 													{strings.Importstatement}
 												</Button>
 											
-												
+												{this.state.transactionCount > 0  ? '':
 												<Button
 													color="success"
 													className="btn-square mr-1"
@@ -863,8 +865,8 @@ class BankTransactions extends React.Component {
 												>
 													<i className="fas fa-edit mr-1" />
 													{strings.EditAccount}
-												</Button>
-											
+												</Button> 
+											}
 												<Button
 													color="info"
 													className="btn-square mr-1"

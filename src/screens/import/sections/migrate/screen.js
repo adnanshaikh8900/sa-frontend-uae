@@ -150,9 +150,10 @@ class MigarteHistory extends React.Component {
 					<Card>
 						<CardHeader><h5>Migrate</h5></CardHeader>
 						<CardBody style={{margin:"0px 176px 0px 176px"}}>
-							<div 	className="text-center mb-2 mt-2 " > <h1>Migration Summary</h1></div>
-						<div>
-						
+							<div 	className="text-center mb-4 mt-2 " > <h1>Migration Summary</h1></div>
+							<div
+									 style={{ border:"1px solid grey"}}
+									>
 							<BootstrapTable
 								data={this.state && this.state.summaryList ? this.state.summaryList : []}
 								version="4"
@@ -163,44 +164,30 @@ class MigarteHistory extends React.Component {
 								ref={(node) => this.table = node}
 								className="text-center"
 							>
-								{/* <TableHeaderColumn
-									dataField="srNo"
-									// dataFormat={this.renderCode}
-									className="table-header-bg text-center"
-								>
-									Sr No
-								</TableHeaderColumn> */}
 								<TableHeaderColumn
+								dataAlign="center"
 									dataField="fileName"
-									// dateFormat={this.renderAccountName}
 									className="table-header-bg text-center"
 								>
 								File Name
 								</TableHeaderColumn>
 								<TableHeaderColumn
+									dataAlign="center"
 									dataField="recordCount"
-									// dateFormat={this.renderAccountName}
 									className="table-header-bg text-center"
 								>
 								Number of Record
 								</TableHeaderColumn>
-								{/* <TableHeaderColumn
-									dataField="status"
-									// dateFormat={this.renderAccountName}
-									className="table-header-bg text-center"
-								>
-								Status
-								</TableHeaderColumn> */}
 								<TableHeaderColumn
+									dataAlign="center"
 									dataField="recordsMigrated"
-									// dateFormat={this.renderAccountName}
 									className="table-header-bg text-center"
 								>
 								Migrated Records
 								</TableHeaderColumn>
 								<TableHeaderColumn
+									dataAlign="center"
 									dataField="recordsRemoved"
-									// dateFormat={this.renderAccountName}
 									className="table-header-bg text-center"
 								>
 								 Rejected Records

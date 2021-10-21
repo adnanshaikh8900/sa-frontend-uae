@@ -112,19 +112,7 @@ class Import extends React.Component {
 
 	componentDidMount = () => {
 		this.getInitialData();
-		this.props.migrationActions.migrationProduct()
-			.then((res) => {
-				if (res.status === 200) {
-					this.setState({ product_list: res.data });
-				}
-			})
-			.catch((err) => {
-				this.props.commonActions.tostifyAlert(
-					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
-				);
-				this.setState({ loading: false });
-			});
+		
 	};
 	DeleteFile = () => {
 
@@ -222,7 +210,7 @@ class Import extends React.Component {
 	saveAccountStartDate = (data, resetForm) => {
 		const date = data.date;
 		let formdata=new FormData()
-		formdata.append('accountStartDate',date)
+		formdata.append('accountStartDate',date ? date : null)
 		if (isDate(date)) {
 			this.props.migrationActions
 				.saveAccountStartDate(formdata)
@@ -256,25 +244,6 @@ class Import extends React.Component {
 	handleSubmitForOpeningBalances = () => {
 		
 		const formData = new FormData()
-		// formData.append('',)
-		let listObject = [
-			  {
-				"effectiveDate": "2021-10-17T12:47:32.753Z",
-				"openingBalance": 50,
-				"transactionCategoryBalanceId": 0,
-				"transactionCategoryId":5
-			  },
-		   {
-				"effectiveDate": "2021-10-17T12:47:32.753Z",
-				"openingBalance": 777,
-				"transactionCategoryBalanceId": 0,
-				"transactionCategoryId": 7
-			  }
-			]
-		  
-		
-		// formData.append('persistModelList',JSON.stringify(this.state.listOfExist4))
-
 		this.state.listOfExist4.forEach((data, index) => {
 			formData.append(`persistModelList[${index}].transactionCategoryId`, data.transactionId);
 		    formData.append(`persistModelList[${index}].effectiveDate`, moment(data.effectiveDate));
@@ -428,8 +397,23 @@ class Import extends React.Component {
 			});
 
 	};
-
+	productList = () => {
+	this.props.migrationActions.migrationProduct()
+	.then((res) => {
+		if (res.status === 200) {
+			this.setState({ product_list: res.data });
+		}
+	})
+	.catch((err) => {
+		this.props.commonActions.tostifyAlert(
+			'error',
+			err && err.data ? err.data.message : 'Something Went Wrong',
+		);
+		this.setState({ loading: false });
+	});
+}
 	versionlist = (productName) => {
+		debugger
 		this.props.migrationActions.getVersionListByPrioductName(productName)
 			.then((res) => {
 				if (res.status === 200) {
@@ -465,9 +449,6 @@ class Import extends React.Component {
 		if (Array.isArray(file_data_list) && file_data_list.length !== 0) {
 			let colDataObject = file_data_list[0] ? file_data_list[0] : {};
 			const cols = colDataObject ? Object.keys(colDataObject) : [];
-			// this.setState({cols:cols})
-			console.log(cols, "cols")
-			console.log(file_data_list, "file_data_list")
 			return (
 				file_data_list.length > 0 ? (
 					<Table responsive>
@@ -776,7 +757,7 @@ class Import extends React.Component {
 												type="number"
 												id="openingBalance"
 												name="openingBalance"
-												value={cell || 0}
+												value={cell}
 												onChange={(evt) => {
 													let value = parseInt(evt.target.value);
 													let newData = [...this.state.listOfExist4]
@@ -911,7 +892,7 @@ class Import extends React.Component {
 														validate={(values) => {
 															let errors = {};
 
-															if (values.date === '') {
+															if (values.date === '' && values.date === null) {
 																errors.date = 'Date is required';
 															}
 															if (values.date === undefined) {
@@ -932,7 +913,7 @@ class Import extends React.Component {
 
 															<Form className="mt-3" onSubmit={props.handleSubmit}>
 																<div className="text-center" style={{ display: "flex", marginLeft: "40%" }}>
-																	<div style={{ width: "10%" }}>	<span className="text-danger">*</span>Date	</div>
+																	<div className="mt-2" style={{ width: "10%" }}>	<span className="text-danger">*</span>Date	</div>
 																	<DatePicker
 																		className={`form-control ${props.errors.date && props.touched.date ? "is-invalid" : ""}`}
 																		id="date"
@@ -945,6 +926,7 @@ class Import extends React.Component {
 																		style={{ textAlign: "center" }}
 																		selected={props.values.date}
 																		value={props.values.date}
+																		maxDate={new Date}
 																		onChange={(value) => {
 																			props.handleChange("date")(value)
 																			this.setState({ date: value })
@@ -974,6 +956,7 @@ class Import extends React.Component {
 																						this.setState({ createMore: false }, () => {
 																							props.handleSubmit()
 																						})
+																						this.productList();
 																					}}>
 																					Next	<i class="far fa-arrow-alt-circle-right mr-1"></i>
 																				</Button>
@@ -1025,8 +1008,8 @@ class Import extends React.Component {
 																								'value',
 																								product_list,
 																								'Products list',
-
 																							)
+																							
 																							: []
 																					}
 																					value={
@@ -1043,26 +1026,31 @@ class Import extends React.Component {
 																									option.value ===
 																									+props.values.productName,
 																							)
+																							
 																					}
+																					
+																				
+																					onChange={(option) => {
+																						if (option.value != null) {
+																							debugger
+																							props.handleChange('productName')(
+																								option.label,
+																								
+																								this.versionlist(option.label)
+																								
+																							);
+																							
+																					this.setState({name:option.label})
+																						} else {
+																							props.handleChange('productName')('');
+																						}
+																					}}
 																					className={
 																						props.errors.productName &&
 																							props.touched.productName
 																							? 'is-invalid'
 																							: ''
 																					}
-																					onChange={(option) => {
-																						if (option && option.value) {
-																							props.handleChange('productName')(
-																								option.label,
-																								this.versionlist(option.label)
-																								
-																							);
-																							
-																						this.setState({name:option.label})
-																						} else {
-																							props.handleChange('productName')('');
-																						}
-																					}}
 																				/>
 																				{props.errors.productName &&
 																					props.touched.productName && (
@@ -1158,7 +1146,7 @@ class Import extends React.Component {
 																							ref={(ref) => {
 																								this.uploadFile = ref;
 																							}}
-																							style={{    marginLeft: "80px"}}
+																							style={{marginLeft: "80px"}}
 																							multiple
 																							// directory="" 
 																							// webkitdirectory=""
@@ -1214,10 +1202,10 @@ class Import extends React.Component {
 
 																	</Row>
 																	<Row><Col>
-																		<Button color="primary" className="btn-square pull-left"
+																	{this.state.selectedRows.length < 0 ? (	<Button color="primary" className="btn-square pull-left"
 																			onClick={() => { this.DeleteFile() }}>
-																			<i class="fas fa-trash-alt"></i> Delete
-																		</Button>
+																			<i className="far fa-arrow-alt-circle-left"></i> Delete
+																		</Button>) : ''}
 																		</Col>
 																	</Row>
 
@@ -1276,7 +1264,7 @@ class Import extends React.Component {
 																			onClick={() => {
 																				this.setState({ nestedActiveDefaultTab: false })
 																			}}
-																		// isSelected={true}
+																	
 																		>
 
 																			<Button className="rounded-left" >Chart Of Accounts</Button>
@@ -1301,7 +1289,7 @@ class Import extends React.Component {
 																		{this.state.nestedActiveDefaultTab ?
 																			(
 																				<TabPane>
-																					<div style={{ width: "50%" }} >{this.showTable(file_data_list)}	</div>
+																					<div style={{ width: "80%",marginLeft:'10%' }} >{this.showTable(file_data_list)}	</div>
 
 																				</TabPane>
 																			) : (

@@ -90,7 +90,7 @@ class UpdatePayroll extends React.Component {
 			selectRowProp: {
 				mode: 'checkbox',
 				bgColor: 'rgba(0,0,0, 0.05)',
-				clickToSelect: false,
+				clickToSelect: true,
 				onSelect: this.onRowSelect,
 				onSelectAll: this.onSelectAll,
 			},
@@ -106,7 +106,8 @@ class UpdatePayroll extends React.Component {
 			 submitButton:true,
 			 payrollApprover:'',
 			 dialog: null,
-			 currencyIsoCode:"AED"
+			 currencyIsoCode:"AED",
+			 count:0
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -164,7 +165,9 @@ class UpdatePayroll extends React.Component {
 		this.props.createPayrollActions.getPayrollById(payroll_id).then((res) => {
 			if (res.status === 200) {
 				//	 
-				
+				let payPeriodString=res.data.payPeriod;
+				let dateArray=payPeriodString.split('-')
+			
 				this.setState({
 					loading: false,
 					
@@ -186,20 +189,23 @@ class UpdatePayroll extends React.Component {
 					runDate: res.data.runDate ? res.data.runDate : '',
 					status: res.data.status ? res.data.status : '',
 					currencyIsoCode:res.data.currencyIsoCode ? res.data.currencyIsoCode : 'AED',
-					
+					selected:res.data.existEmpList ?res.data.existEmpList :[],
+					// selectRowProp: {
+					// 	mode: 'checkbox',
+					//     selected:res.data.existEmpList ?res.data.existEmpList :[],
+					// 	bgColor: 'rgba(0,0,0, 0.05)',
+					// 	clickToSelect: true,
+					// 	onSelect: this.onRowSelect,
+					// 	onSelectAll: this.onSelectAll,
+					// },
+					startDate: moment(dateArray[0]),
+					endDate:moment(dateArray[1])
 
 				}
 				)
-				this.initializeData();
 				this.tableApiCallsOnStatus();
-				let payPeriodString=this.state.payPeriod;
-				let dateArray=payPeriodString.split('-')
-				this.setState({
-					startDate: moment(dateArray[0]),
-					endDate:moment(dateArray[1])
-				})
-				
 				this.calculatePayperioad(this.state.startDate ,this.state.endDate);
+			
 			}
 		}).catch((err) => {
 			this.setState({ loading: false })
@@ -416,8 +422,8 @@ class UpdatePayroll extends React.Component {
 											if (row.id === data.id) {
 															debugger
 														if(data.lopDay<value)
-														{		
-																													
+														{
+
 															data.lopDay = value;
 															data.noOfDays = data.noOfDays - 1
 															data.grossPay = Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2)
@@ -455,7 +461,7 @@ class UpdatePayroll extends React.Component {
 				if(res.data.length===0){
 					this.props.createPayrollActions.getAllPayrollEmployee(this.state.payrollId).then((res) => {
 						if (res.status === 200) {
-							
+
 								this.setState({
 									allPayrollEmployee: res.data
 								})
@@ -494,8 +500,43 @@ class UpdatePayroll extends React.Component {
 		})
 	}
 	}
+	defaultSelect=()=>{
+		if(this.state.count===0 && this.state.allPayrollEmployee){
+		let tempList = [];
+		let tempList1 = [];
 
+		 this.state.allPayrollEmployee.map((row)=>{
+			 
+			for(let i=0;i<this.state.selected.length;i++){
+				if(row.empId==this.state.selected[i]){		
+					tempList1.push(row);					
+				}//if
+			}
+		})
+		
+		//
+		this.setState({
+			selectedRows: this.state.selected,
+			selectedRows1: tempList1,
+			count:1
+		});
+		console.log(this.state.selectedRows,"LIST")
+	}
+	let data =this.state.allPayrollEmployee || []
+		return data
+		
+	}
 	getPayrollEmployeeList = () => {
+		const 	selectRowProp= {
+			mode: 'checkbox',
+			bgColor: 'rgba(0,0,0, 0.05)',
+			selected:this.state.selected,
+			clickToSelect: true,
+			onSelect: this.onRowSelect,
+			onSelectAll: this.onSelectAll,
+		}
+		
+		
 		const cols = [
 			{
 				label: 'Employee No',
@@ -552,13 +593,14 @@ class UpdatePayroll extends React.Component {
 				</Row>
 				<div >
 					<BootstrapTable
-						selectRow={this.state.selectRowProp}
+						selectRow={selectRowProp}
 						search={false}
 						options={this.options}
-						data={this.state.allPayrollEmployee || []}
+						// data={this.state.allPayrollEmployee || []}
+						data={this.defaultSelect()}
 						version="4"
 						hover
-						keyField="id"
+						keyField="empId"
 						remote
 						trClassName="cursor-pointer"
 						csvFileName="payroll_employee_list.csv"
@@ -711,12 +753,19 @@ class UpdatePayroll extends React.Component {
 			tempList1 = Object.assign([], this.state.selectedRows1);
 			tempList.push(row.empId);
 			tempList1.push(row);
+			this.setState(() => ({
+				selected: [...this.state.selected, row.empId]
+			  }));
 		} else {
+
 			this.state.selectedRows.map((item) => {
 				if (item !== row.empId) {
 					tempList.push(item);
 					tempList1.push(item);
 				}
+				this.setState(() => ({
+					selected: this.state.selected.filter(x => x !== row.empId)
+				  }));
 				return item;
 			});
 		}
@@ -726,6 +775,8 @@ class UpdatePayroll extends React.Component {
 			selectedRows: tempList,
 			selectedRows1: tempList1,
 		});
+		
+		console.log(this.state.selectedRows,"this.state.selectedRows")
 	};
 	onSelectAll = (isSelected, rows) => {
 
@@ -736,7 +787,14 @@ class UpdatePayroll extends React.Component {
 				tempList.push(item.empId);
 				tempList1.push(item);
 				return item;
-			});
+			});   
+			this.setState(() => ({
+				selected: tempList
+			  }));
+		} else {
+			this.setState(() => ({
+			  selected: []
+			}));
 		}
 		this.setState({
 			selectedRows: tempList,
@@ -798,7 +856,14 @@ class UpdatePayroll extends React.Component {
 
 		const { employee_list, approver_dropdown_list } = this.props
 		const { loading, initValue,	dialog } = this.state
-		
+	    const 	selectRowProp= {
+					mode: 'checkbox',
+					bgColor: 'rgba(0,0,0, 0.05)',
+					selected:this.state.selected,
+					clickToSelect: true,
+					onSelect: this.onRowSelect,
+					onSelectAll: this.onSelectAll,
+				}
 		return (
 			<div className="create-employee-screen">
 				<div className="animated fadeIn">

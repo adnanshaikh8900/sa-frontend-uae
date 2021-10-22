@@ -74,6 +74,17 @@ class UpdateRole extends React.Component {
 
 	initializeData = () => {
 		if (this.props.location.state && this.props.location.state.id) {
+			//For inactive role
+			let initcount=0
+			this.props.RoleCommonActions.getUsersCountForRole(this.props.location.state.id).then((res) => {
+				if (res.status === 200) {				
+					// if (res.data === 0){
+					// 	this.setState({count:0});
+					// }
+					initcount= res.data
+				}
+			});
+			//getbyid
 			this.setState({current_role_id:this.props.location.state.id});
 			this.props.RoleCommonActions.getModuleList(this.props.location.state.id)
 				.then((res) => {
@@ -94,6 +105,7 @@ class UpdateRole extends React.Component {
 								isActive: res.data ? res.data[0].isActive : '',
 								selectedStatus: res.data ? res.data[0].isActive : '',
 								loading: false,
+								count:initcount
 							},
 							() => {},
 						);
@@ -103,21 +115,7 @@ class UpdateRole extends React.Component {
 					this.props.history.push('/admin/settings/user-role');
 				});
 
-				this.props.RoleCommonActions.getUsersCountForRole(this.props.location.state.id).then((res) => {
-					if (res.status === 200) {
-						
-						if (res.data === 0){
-							this.setState({count:0});
-						}
-						// var result = res.data.map(function (el) {
-						// 	var o = Object.assign({}, el);
-						// 	o.value = el.moduleId;
-						// 	o.label = el.moduleName;
-						// 	return o;
-						// });
-						// this.list_to_tree(result);
-					}
-				});
+				
 		} else {
 			this.props.history.push('/admin/settings/user-role');
 		}
@@ -300,6 +298,7 @@ class UpdateRole extends React.Component {
 			  ,
 			},
 		  ];
+		  
 		return (
 			<div className="role-create-screen">
 				<div className="animated fadeIn">
@@ -322,8 +321,15 @@ class UpdateRole extends React.Component {
 												<Formik
 													initialValues={initValue}
 													onSubmit={(values, { resetForm }) => {
-														this.handleSubmit(values, resetForm);
-														// resetForm(this.state.initValue)
+														
+														if (this.state.count >0 && this.state.selectedStatus===false) {
+															this.props.commonActions.tostifyAlert(
+																'error',
+																'This role is in use , you are not allowed to inactive this role',
+															);
+														}else{
+															this.handleSubmit(values, resetForm);
+														}
 													}}
 													validate={(values) => {
 														// let status = false
@@ -543,7 +549,7 @@ class UpdateRole extends React.Component {
 							</Card>
 						</Col>
 					</Row>
-					{loading ? <Loader></Loader> : ''}
+
 				</div>
 			</div>
 		);

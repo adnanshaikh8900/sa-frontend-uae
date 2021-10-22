@@ -285,7 +285,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                                             option.target.value === '' ||
                                                                                             this.regExBoth.test(option.target.value)
                                                                                         ) {
-                                                                                            props.handleChange('accountNumber')(
+                                                                                            props.handleChange('bankName')(
                                                                                                 option,
                                                                                             );
                                                                                         }

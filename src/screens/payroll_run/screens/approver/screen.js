@@ -753,7 +753,7 @@ class PayrollApproverScreen extends React.Component {
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<i className="nav-icon fas fa-user-tie" />
-												<span className="ml-2"> Payroll Approval</span>
+												<span className="ml-2"> Approve Payroll</span>
 											</div>
 										</Col>
 									</Row>

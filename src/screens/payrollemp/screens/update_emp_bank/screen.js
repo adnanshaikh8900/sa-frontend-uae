@@ -215,6 +215,12 @@ class UpdateEmployeeBank extends React.Component {
                                                             .required("Account Holder Name is Required"),
                                                         accountNumber: Yup.string()
                                                         .required("Account Number is Required"),
+                                                        bankName: Yup.string()
+                                                        .required("Bank Name is Required"),
+                                                        swiftCode: Yup.string()
+                                                        .required("Swift Code is Required"),
+                                                        branch: Yup.string()
+                                                        .required("Branch is Required"),
                                                         iban: Yup.string()
                                                         .required("IBAN is Required"),
                                                                        
@@ -273,7 +279,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                         </Col>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select">{strings.BankName} </Label>
+                                                                                <Label htmlFor="select"><span className="text-danger">*</span>{strings.BankName} </Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="bankName"
@@ -302,7 +308,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                     <Row className="row-wrapper">
                                                                         <Col lg={4}>
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select">{strings.Branch}</Label>
+                                                                                <Label htmlFor="select"><span className="text-danger">*</span>{strings.Branch}</Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="branch"
@@ -344,7 +350,7 @@ class UpdateEmployeeBank extends React.Component {
 
                                                                         <Col lg={4}>
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select">{strings.SwiftCode}</Label>
+                                                                                <Label htmlFor="select"><span className="text-danger">*</span>{strings.SwiftCode}</Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="swiftCode"

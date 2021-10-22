@@ -709,13 +709,13 @@ class RecordSupplierPayment extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="referenceCode">
-																					{strings.ReferenceNumber}
+																					{strings.ReceiptNumber}
 																				</Label>
 																				<Input
 																					type="text"
 																					id="referenceCode"
 																					name="referenceCode"
-																					placeholder={strings.Enter+strings.ReferenceNumber}
+																					placeholder={strings.Enter+strings.ReceiptNumber}
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||

@@ -231,6 +231,7 @@ class DetailDesignation extends React.Component {
                                     type="text"
                                     id="designationId"
                                     name="designationId"
+                                    maxLength="9"
                                     value={props.values.designationId}
                                     placeholder={strings.Enter+strings.designationId}
                                     onChange={(option) => {
@@ -250,6 +251,7 @@ class DetailDesignation extends React.Component {
                                     type="text"
                                     id="designationName"
                                     name="designationName"
+                                    maxLength="30"
                                     value={props.values.designationName}
                                     placeholder="Enter Designation Name"
                                     onChange={(option) => {

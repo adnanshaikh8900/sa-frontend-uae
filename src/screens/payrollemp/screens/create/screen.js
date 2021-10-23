@@ -203,6 +203,7 @@ class CreateEmployeePayroll extends React.Component {
             componentTotal: '',
             prefix: '',
             exist: false,
+            existForAccountNumber: false,
             selectedStatus:true,
             checkmobileNumberParam:false,
         }        
@@ -330,6 +331,31 @@ validationCheck = (value) => {
             } else {
                 this.setState({
                     exist: false,
+                });
+            }
+        });
+};
+
+existForAccountNumber = (value) => {
+    const data = {
+        moduleType: 19,
+        name: value,
+    };
+    this.props.createPayrollEmployeeActions
+        .checkValidation(data)
+        .then((response) => {
+            if (response.data === 'accountNumber already exists') {
+                this.setState(
+                    {
+                        existForAccountNumber: true,
+                    },
+                    
+                    () => {},
+                );
+            
+            } else {
+                this.setState({
+                    existForAccountNumber: false,
                 });
             }
         });
@@ -1018,7 +1044,7 @@ validationCheck = (value) => {
     }
     render() {
         strings.setLanguage(this.state.language);
-        const {	exist,checkmobileNumberParam}=this.state
+        const {	exist,checkmobileNumberParam,existForAccountNumber}=this.state
         const { salary_role_dropdown, designation_dropdown, country_list, state_list, employee_list_dropdown } = this.props
         return (
             <div className="financial-report-screen">
@@ -2482,6 +2508,14 @@ validationCheck = (value) => {
                                                                         onSubmit={(values, { resetForm }) => {
                                                                             this.handleSubmitForFinancial(values, resetForm)
                                                                         }}
+                                                                        validate={(values) => {
+                                                                            let errors = {};
+                                                                            if (existForAccountNumber === true) {
+                                                                                errors.accountNumber =
+                                                                                    'Account Number already exists';
+                                                                            }
+                                                                            return errors;
+                                                                        }}
                                                                         validationSchema={Yup.object().shape({
                                                                             accountHolderName: Yup.string()
                                                                                 .required("Account Holder Name is Required"),
@@ -2557,6 +2591,7 @@ validationCheck = (value) => {
                                                                                                                 props.handleChange('accountNumber')(
                                                                                                                     option,
                                                                                                                 );
+                                                                                                                this.existForAccountNumber(option.target.value);
                                                                                                             }
                                                                                                         }}
                                                                                                         className={props.errors.accountNumber && props.touched.accountNumber ? "is-invalid" : ""}

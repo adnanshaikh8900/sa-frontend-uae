@@ -904,7 +904,7 @@ class DetailUser extends React.Component {
 															</Row>
 															
 															<Row>
-																<Col
+																{/* <Col
 																	lg={12}
 																	className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
 															>
@@ -925,7 +925,7 @@ class DetailUser extends React.Component {
 																		</Button>
 																	</FormGroup>
 																	)}
-													
+													 */}
 																	<FormGroup className="text-right w-100" >
 																		{/* <Button
 																			type="submit"
@@ -963,7 +963,7 @@ class DetailUser extends React.Component {
 																			: strings.Cancel }
 																		</Button>
 																	</FormGroup>
-																</Col>
+																
 															</Row>
 														</Form>
 													)}

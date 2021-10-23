@@ -353,7 +353,7 @@ class InvoiceTemplate extends Component {
 									</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' ,   width: "60px" }}>{strings.Vat }</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
-									{strings.subTotal }
+									{strings.SubTotal }
 									</th>
 								</tr>
 							</thead>

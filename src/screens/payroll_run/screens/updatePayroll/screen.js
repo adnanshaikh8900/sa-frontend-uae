@@ -420,28 +420,25 @@ class UpdatePayroll extends React.Component {
 		let newData = [...this.state.allPayrollEmployee]
 			newData = newData.map((data) => {
 											if (row.id === data.id) {
-															debugger
-														if(data.lopDay<value)
-														{
 
+														if(data.lopDay<value)
+														{																															
 															data.lopDay = value;
 															data.noOfDays = data.noOfDays - 1
-															data.grossPay = Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2)
-															data.netPay =   Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
-														
-															data.payrollId = this.state.payroll_id
-															data.salaryDate = this.state.payrollDate
+														    data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
+															data.netPay =   Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
+																												
 														}
 														else if(data.lopDay>value)
 															{	
 																data.lopDay = value;
 																data.noOfDays = data.noOfDays + 1
-																data.grossPay = Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2)
-																data.netPay   = Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
-															
-																data.payrollId = this.state.payroll_id
-																data.salaryDate = this.state.payrollDate}
+																data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
+																data.netPay   = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
+													         }
 														}
+														data.payrollId = this.state.payroll_id
+														data.salaryDate = this.state.payrollDate
 														return data
 
 													})
@@ -449,7 +446,6 @@ class UpdatePayroll extends React.Component {
 
 													this.setState({
 														allPayrollEmployee: newData
-
 													})
 	}
 
@@ -475,7 +471,9 @@ class UpdatePayroll extends React.Component {
 					}
 					let newData = [...this.state.allPayrollEmployee]
 					newData = newData.map((data) => {					
-							data.noOfDays =this.state.paidDays					
+							data.noOfDays =this.state.paidDays
+							data.originalGrossPay=data.grossPay		
+					        data.perDaySal=data.originalGrossPay / data.noOfDays					
 						return data
 					})
 					console.log(newData)
@@ -652,8 +650,6 @@ class UpdatePayroll extends React.Component {
 											<div>{cell}</div>
 										)
 									}
-
-
 								}
 
 								if(col.key === 'netPay' || col.key === 'deduction' || col.key === 'grossPay'){

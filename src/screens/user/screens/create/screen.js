@@ -272,7 +272,12 @@ class CreateUser extends React.Component {
 		const { timezone } = this.state;
 		const { isPasswordShown } = this.state;
 
-
+		let active_roles_list=[];
+		role_list && role_list.length!==0 && role_list.map(row => {	
+			if(row.isActive==true){			active_roles_list.push(row)}					
+		})
+		console.log(role_list,"role_list")
+		console.log(active_roles_list,"temp_role_list")
 		// emlpoyee_list.map(item => {
 		// 	let obj = {label: item.label.fullName, value: item.value}
 		// 	tmpEmployee_list.push(obj)
@@ -671,11 +676,11 @@ class CreateUser extends React.Component {
 																			<Select
 																				styles={customStyles}
 																				options={
-																					role_list
+																					active_roles_list
 																						? selectOptionsFactory.renderOptions(
 																							'roleName',
 																							'roleCode',
-																							role_list,
+																							active_roles_list,
 																							'Role',
 																						)
 																						: []

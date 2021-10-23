@@ -324,7 +324,9 @@ calculatePayperioad=(startDate,endDate)=>{
 
 				let newData = [...this.state.allPayrollEmployee]
 				newData = newData.map((data) => {					
-						data.noOfDays =this.state.paidDays					
+						data.noOfDays =this.state.paidDays	
+						data.originalGrossPay=data.grossPay		
+					    data.perDaySal=data.originalGrossPay / data.noOfDays		
 					return data
 				})
 				console.log(newData)
@@ -506,28 +508,26 @@ else
 		let newData = [...this.state.allPayrollEmployee]
 			newData = newData.map((data) => {
 											if (row.id === data.id) {
-															
+
 														if(data.lopDay<value)
 														{		
 																													
 															data.lopDay = value;
 															data.noOfDays = data.noOfDays - 1
-															data.grossPay = Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2)
-															data.netPay =   Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
-														
-															data.payrollId = this.state.payroll_id
-															data.salaryDate = this.state.payrollDate
+														    data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
+															data.netPay =   Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
+																												
 														}
 														else if(data.lopDay>value)
 															{	
 																data.lopDay = value;
 																data.noOfDays = data.noOfDays + 1
-																data.grossPay = Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2)
-																data.netPay   = Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
-															
-																data.payrollId = this.state.payroll_id
-																data.salaryDate = this.state.payrollDate}
+																data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
+																data.netPay   = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
+													         }
 														}
+														data.payrollId = this.state.payroll_id
+														data.salaryDate = this.state.payrollDate
 														return data
 
 													})
@@ -670,9 +670,10 @@ else
 
 	 handleDatesChange = ({ startDate, endDate }) => {
 	this.setState({startDate:startDate,endDate:endDate})
-	this.calculatePayperioad(startDate, endDate)
+	
 	  };
-handleDateChange = ({ startDate, endDate }) =>    this.setState({ startDate, endDate });
+ handleDateChange = ({ startDate, endDate }) =>   { this.setState({ startDate, endDate })
+ this.calculatePayperioad(startDate, endDate)};
 handleFocusChange = focusedInput => this.setState({ focusedInput });
 	render() {
 		strings.setLanguage(this.state.language);

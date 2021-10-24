@@ -130,8 +130,11 @@ class PayablesInvoiceDetailsReport extends React.Component {
 	};
 
 	exportFile = () => {
-		
-		return (this.state  && this.state.payableInvoiceDetailsList.resultObject? this.state.payableInvoiceDetailsList.resultObject[0] :'');
+		let data=this.state  && this.state.payableInvoiceDetailsList.resultObject?
+		 this.state.payableInvoiceDetailsList.resultObject 
+		 :[];
+		let	singleResultArray=data.flat()
+		return (singleResultArray);
 	};
 
 

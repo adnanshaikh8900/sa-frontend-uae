@@ -158,6 +158,7 @@ class CreateCreditNote extends React.Component {
 			// exchangeRate:'',		
 			basecurrency:[],
 			inventoryList:[],
+			invoiceSelected:false,
 		};
 
 		this.formRef = React.createRef();
@@ -1502,7 +1503,7 @@ min="0"
 																			if (option && option.value) {
 																				 this.getInvoiceDetails(option, option.value, props)
 																				 props.handleChange('invoiceNumber')(option);
-
+																				this.setState({invoiceSelected :true})
 																			} else {
 
 																				props.handleChange('invoiceNumber')('');
@@ -1592,6 +1593,8 @@ min="0"
 																				: []
 																		}
 																		value={props.values.contactId}
+																		
+																		isDisabled={this.state.invoiceSelected}
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);

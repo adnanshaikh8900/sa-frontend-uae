@@ -1423,7 +1423,7 @@ class Profile extends React.Component {
 																								onChange={(option) => {
 																									if (
 																										option.target.value === '' ||
-																										this.regExBoth.test(
+																										this.regEx.test(
 																											option.target.value,
 																										)
 																									) {

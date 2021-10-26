@@ -130,12 +130,22 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 				this.setState({ loading: false });
 			});
 	};
+
+
+	
+	exportFile = () => {
+		let data=this.state  && this.state.receivbaleInvoiceDetailsList.resultObject?
+		 this.state.receivbaleInvoiceDetailsList.resultObject 
+		 :[];
+		let	singleResultArray=data.flat()
+		return (singleResultArray);
+	};
      
 
-	exportFile = () => {
+	// exportFile = () => {
 		
-		return (this.state  && this.state.receivbaleInvoiceDetailsList.resultObject? this.state.receivbaleInvoiceDetailsList.resultObject[0] :'');
-	};
+	// 	return (this.state  && this.state.receivbaleInvoiceDetailsList.resultObject? this.state.receivbaleInvoiceDetailsList.resultObject[0] :'');
+	// };
 
 	// exportFile = (csvData, fileName, type) => {
 	// 	const fileType =

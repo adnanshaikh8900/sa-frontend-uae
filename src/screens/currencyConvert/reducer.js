@@ -2,7 +2,8 @@ import { CURRENCYCONVERT } from 'constants/types'
 
 const initState = {
   currency_convert_list:[],
-  currency_list : []
+  currency_list : [],
+  currency_converstion_list: []
 }
 
 const CurrencyConReducer = (state = initState, action) => {
@@ -20,6 +21,11 @@ const CurrencyConReducer = (state = initState, action) => {
           ...state,
           currency_list: Object.assign([], payload)
         }
+        case CURRENCYCONVERT.CURRENCY_CONVERTION_LIST :
+          return {
+            ...state,
+            currency_converstion_list: Object.assign([], payload)
+          }
     
     // Vat Data By ID
     // case VAT.VAT_ROW:

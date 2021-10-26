@@ -439,7 +439,7 @@ errors.mobileNumber =
 														onChange={(option) => {
 															if (
 																option.target.value === '' ||
-																this.regExBoth.test(option.target.value)
+																this.regEx.test(option.target.value)
 															) {
 																props.handleChange('vatRegistrationNumber')(
 																	option,

@@ -200,6 +200,10 @@ class Expense extends React.Component {
 		return moment(rows.expenseDate).format('DD/MM/YYYY');
 	};
 
+	expenseType = (cell, row) => {
+		return row['expensetype'] !== null ? row['expensetype']['type'] : '';
+	};
+
 	renderActions = (cell, row) => {
 		return (
 			<div>
@@ -329,8 +333,44 @@ class Expense extends React.Component {
 		// ) : (
 		// 	''
 		// );
-		return row.expenseAmount ? row.currencyName+" " + row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyName+" " + row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		// return row.expenseAmount ? row.currencyName+" " + row.expenseAmount : row.currencyName+" " + row.expenseAmount;
+		return(
+		<div>
+			<div>
+					<label className="font-weight-bold mr-2 ">{strings.ActualExpenseAmount} : </label>
+					<label>
+						{row.expenseAmount === 0 ? row.currencyName +" "+ row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }): row.currencyName +" "+ row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+					
+					</label>
+			</div>
+			<div style={{ display: row.expenseVatAmount === 0 ? 'none' : '' }}>
+					<label className="font-weight-bold mr-2">{strings.VatAmount} : </label>
+					<label>{row.expenseVatAmount === 0 ? row.currencyName  +" "+ row.expenseVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyName  +" "+ row.expenseVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
+			</div>
+			<div style={{ display: row.expenseAmount === 0 ? 'none' : '' }}>
+					<label className="font-weight-bold mr-2">{strings.ExpenseAmount} : </label>
+					<label>{row.expenseAmount === 0 ? row.currencyName  +" "+(row.expenseAmount-row.expenseVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 }): row.currencyName  +" "+(row.expenseAmount-row.expenseVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
+			</div>
+		</div>
+		
+		);
 	};
+
+	renderVatAmount = (cell, row, extraData) => {
+		// return row.vatAmount === 0 ? (
+		// 	<Currency
+		// 		value={row.vatAmount}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// ) : (
+		// 	<Currency
+		// 		value={row.vatAmount}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// );
+		return row.vatAmount === 0 ? row.currencySymbol + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol + row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+	};
+
 	renderCurrency = (cell, row) => {
 		if (row.currencyName) {
 			return (
@@ -564,7 +604,10 @@ class Expense extends React.Component {
 			this.csvLink.current.link.click();
 		}
 	};
-
+	renderType=(cell,row)=>{		
+		let type =row && row.exclusiveVat ===true?"Exclusive Vat" :"Inclusive Vat";
+		return(<div className="text-center">{type}</div>);
+	}
 	clearAll = () => {
 		this.setState(
 			{
@@ -811,7 +854,7 @@ class Expense extends React.Component {
 												thStyle={{ whiteSpace: 'normal' }}
 												dataField="expenseNumber"
 												dataSort
-											    width="11%"
+											    width="13%"
 												dataFormat={this.renderNumber}
 												className='table-header-bg'
 											>
@@ -822,7 +865,7 @@ class Expense extends React.Component {
 												dataField="expenseDate"
 												dataSort
 												dataFormat={this.renderDate}
-												width="12%"
+												width="15%"
 												className='table-header-bg'
 											>
 												{strings.EXPENSEDATE}
@@ -838,7 +881,7 @@ class Expense extends React.Component {
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}
-												width="8%"
+												width="10%"
 												dataField="expenseStatus"
 												dataFormat={this.renderExpenseStatus}
 												dataSort
@@ -856,7 +899,17 @@ class Expense extends React.Component {
 												{strings.EXPENSECATEGORY}
 											</TableHeaderColumn>
 											<TableHeaderColumn
-													width="8%"
+													width="15%"
+                                                    className="table-header-bg"
+                                                    dataField="exclusiveVat"
+                                                    dataSort
+                                                    dataFormat={this.renderType}
+                                                    >
+                                                        {strings.ExpenseType}
+
+                          					</TableHeaderColumn>
+											<TableHeaderColumn
+													width="13%"
 													thStyle={{ whiteSpace: 'normal' }}
 													dataSort
 													dataField="currencyName"
@@ -872,7 +925,7 @@ class Expense extends React.Component {
 												dataSort
 												dataFormat={this.renderAmount}
 												formatExtraData={universal_currency_list}
-												width="15%"
+												width="37%"
 												className='table-header-bg'
 											>
 												{strings.EXPENSEAMOUNT}

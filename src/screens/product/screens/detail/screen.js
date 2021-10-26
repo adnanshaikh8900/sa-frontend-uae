@@ -145,6 +145,12 @@ class DetailProduct extends React.Component {
 
 	initializeData = () => {
 		if (this.props.location.state && this.props.location.state.id) {
+			//inactive check disable
+			let initCount=0
+			this.props.productActions
+			.getInvoicesCountProduct(this.props.location.state.id)
+			.then((res1) => {initCount=res1.data});
+          //getbyid
 			this.props.detailProductActions
 				.getProductById(this.props.location.state.id)
 				.then((res) => {
@@ -214,6 +220,7 @@ class DetailProduct extends React.Component {
 								transactionCategoryId: res.data.transactionCategoryId ? res.data.transactionCategoryId : '',
 								inventoryId: res.data.inventoryId ? res.data.inventoryId : '',
 							},
+							count:initCount,
 							isInventoryEnabled: res.data.isInventoryEnabled ? res.data.isInventoryEnabled : '',
 							selectedStatus: res.data.isActive ? true : false,
 						});
@@ -673,7 +680,16 @@ renderName=(cell,row)=>{
 												<Formik
 													initialValues={this.state.initValue}
 													onSubmit={(values, { resetForm }) => {
-														this.handleSubmit(values);
+
+																	if (this.state.count >0 && this.state.selectedStatus===false) {
+																		this.props.commonActions.tostifyAlert(
+																			'error',
+																			'You need to delete invoices to delete the Product',
+																		);
+																	}else{
+																		this.handleSubmit(values);
+																	}
+														
 														// resetForm(this.state.initValue)
 
 														// this.setState({

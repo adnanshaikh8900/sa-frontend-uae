@@ -287,6 +287,13 @@ class DetailUser extends React.Component {
 		const { loading, dialog, timezone,current_user_id } = this.state;
 		const { role_list,employee_list } = this.props;
 		const { isPasswordShown } = this.state;
+
+		let active_roles_list=[];
+		role_list && role_list.length!==0 && role_list.map(row => {	
+			if(row.isActive==true){			active_roles_list.push(row)}					
+		})
+		console.log(role_list,"role_list")
+		console.log(active_roles_list,"temp_role_list")
 		return (
 			<div className="create-user-screen">
 				<div className="animated fadeIn">
@@ -691,11 +698,11 @@ class DetailUser extends React.Component {
 																				<Select
 																					styles={customStyles}
 																					options={
-																						role_list
+																						active_roles_list
 																							? selectOptionsFactory.renderOptions(
 																									'roleName',
 																									'roleCode',
-																									role_list,
+																									active_roles_list,
 																									'Role',
 																							  )
 																							: []
@@ -904,7 +911,7 @@ class DetailUser extends React.Component {
 															</Row>
 															
 															<Row>
-																<Col
+																{/* <Col
 																	lg={12}
 																	className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
 															>
@@ -925,7 +932,7 @@ class DetailUser extends React.Component {
 																		</Button>
 																	</FormGroup>
 																	)}
-													
+													 */}
 																	<FormGroup className="text-right w-100" >
 																		{/* <Button
 																			type="submit"
@@ -963,7 +970,7 @@ class DetailUser extends React.Component {
 																			: strings.Cancel }
 																		</Button>
 																	</FormGroup>
-																</Col>
+																
 															</Row>
 														</Form>
 													)}

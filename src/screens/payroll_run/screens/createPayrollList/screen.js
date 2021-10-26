@@ -324,7 +324,9 @@ calculatePayperioad=(startDate,endDate)=>{
 
 				let newData = [...this.state.allPayrollEmployee]
 				newData = newData.map((data) => {					
-						data.noOfDays =this.state.paidDays					
+						data.noOfDays =this.state.paidDays	
+						data.originalGrossPay=data.grossPay		
+					    data.perDaySal=data.originalGrossPay / data.noOfDays		
 					return data
 				})
 				console.log(newData)
@@ -506,28 +508,26 @@ else
 		let newData = [...this.state.allPayrollEmployee]
 			newData = newData.map((data) => {
 											if (row.id === data.id) {
-															
+
 														if(data.lopDay<value)
 														{		
 																													
 															data.lopDay = value;
 															data.noOfDays = data.noOfDays - 1
-															data.grossPay = Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2)
-															data.netPay =   Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
-														
-															data.payrollId = this.state.payroll_id
-															data.salaryDate = this.state.payrollDate
+														    data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
+															data.netPay =   Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
+																												
 														}
 														else if(data.lopDay>value)
 															{	
 																data.lopDay = value;
 																data.noOfDays = data.noOfDays + 1
-																data.grossPay = Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2)
-																data.netPay   = Number(((data.grossPay / 30) * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
-															
-																data.payrollId = this.state.payroll_id
-																data.salaryDate = this.state.payrollDate}
+																data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
+																data.netPay   = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
+													         }
 														}
+														data.payrollId = this.state.payroll_id
+														data.salaryDate = this.state.payrollDate
 														return data
 
 													})
@@ -558,6 +558,9 @@ else
 			})
 
 	}
+	
+
+
 	submitPayroll = (data) => {
 
 		const { userId } = data;
@@ -667,8 +670,11 @@ else
 
 	 handleDatesChange = ({ startDate, endDate }) => {
 	this.setState({startDate:startDate,endDate:endDate})
-	this.calculatePayperioad(startDate, endDate)
+	
 	  };
+ handleDateChange = ({ startDate, endDate }) =>   { this.setState({ startDate, endDate })
+ this.calculatePayperioad(startDate, endDate)};
+handleFocusChange = focusedInput => this.setState({ focusedInput });
 	render() {
 		strings.setLanguage(this.state.language);
 
@@ -825,7 +831,17 @@ else
 																			</Label>
 
 																			<FormGroup >
-																				<DateRangePicker
+																			<DateRangePicker
+																				endDate={this.state.endDate}
+																				endDateId="endDate"
+																				focusedInput={this.state.focusedInput}
+																				isOutsideRange={() => null}
+																				onDatesChange={this.handleDateChange}
+																				onFocusChange={this.handleFocusChange}
+																				startDate={this.state.startDate}
+																				startDateId="startDate"
+																				/>
+																{/* <DateRangePicker
 																				startDate={this.state.startDate}
 																				startDateId="tata-start-date"
 																				endDate={this.state.endDate}
@@ -835,7 +851,7 @@ else
 																				onFocusChange={(option)=>{this.setState({focusedInput:option})}}
 																				isOutsideRange={day => !isInclusivelyBeforeDay(day, moment())}
 																				initialVisibleMonth={() => moment().subtract(1, "month")}
-																				/>																							
+																				/>																							 */}
 																			
 																			{props.errors.startDate &&
 																				props.touched.startDate && (

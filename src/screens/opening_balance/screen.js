@@ -594,7 +594,7 @@ class OpeningBalance extends React.Component {
 												{strings.EFFECTIVEDATE}
 											</TableHeaderColumn>
 											<TableHeaderColumn
-												width="10%"
+												width="20%"
 												dataAlign="right"
 												dataField="openingBalance"
 												dataFormat={this.renderAmount}
@@ -603,7 +603,7 @@ class OpeningBalance extends React.Component {
 											>
 												{strings.OPENINGBALANCE}
 											</TableHeaderColumn>
-											<TableHeaderColumn
+											{/* <TableHeaderColumn
 										dataAlign="right"
 											dataField="currency"
 											width="15%"
@@ -611,7 +611,7 @@ class OpeningBalance extends React.Component {
 											formatExtraData={universal_currency_list}
 											className="table-header-bg"
 										>{strings.CURRENCY}
-										</TableHeaderColumn>
+										</TableHeaderColumn> */}
 										<TableHeaderColumn
 												className="text-right"
 												columnClassName="text-right"

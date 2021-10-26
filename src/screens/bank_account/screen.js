@@ -335,7 +335,7 @@ class BankAccount extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-					{row.name !== 'PettyCash' && (
+					{row.name !== 'PettyCash' && row.transactionCount === 0 && (
 						<DropdownItem
 							onClick={() =>
 								this.props.history.push('/admin/banking/bank-account/detail', {

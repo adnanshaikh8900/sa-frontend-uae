@@ -74,8 +74,9 @@ class DetailContact extends React.Component {
 			selectedStatus: false,
 			isActive: false,
 		};
-		// this.regEx = /^[0-9\d]+$/;
-		this.regEx =/[a-zA-Z0-9]+$/;
+		
+		this.regEx = /^[0-9\d]+$/;
+		// this.regEx =/[a-zA-Z0-9]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 	}
@@ -1176,7 +1177,7 @@ class DetailContact extends React.Component {
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
-																					this.regExBoth.test(
+																					this.regEx.test(
 																						option.target.value,
 																					)
 																				) {

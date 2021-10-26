@@ -34,7 +34,7 @@ export const getCurrencyConversion = (obj) => {
 		return authApi(data)
 			.then((res) => {
 				dispatch({
-					type: CURRENCYCONVERT.CURRENCY_CONVERT_LIST,
+					type: CURRENCYCONVERT.CURRENCY_CONVERTION_LIST,
 					payload: res.data,
 				});
 				return res;

@@ -103,9 +103,17 @@ class ProductCategory extends React.Component {
 	//--------------------------
 
 	goToDetail = (row) => {
-		this.props.history.push(`/admin/master/currencyConvert/detail`, {
+		{row.currencyConversionId === 1 ? (	
+			this.props.commonActions.tostifyAlert(
+			'error',
+			'Cannot edit Base Currency'
+		)) : (
+				this.props.history.push(`/admin/master/currencyConvert/detail`, {
 			id: row.currencyConversionId,
-		});
+		})
+		)
+	}
+	
 	};
 
 	// Show Success Toast
@@ -137,7 +145,7 @@ class ProductCategory extends React.Component {
 		};
 		const postData = { ...filterData, ...paginationData, ...sortingData };
 		this.props.currencyConvertActions
-			.getCurrencyConversionList(postData)
+			.getCurrencyConversion(postData)
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState({ loading: false });

@@ -283,7 +283,7 @@ class CreateOpeningBalance extends React.Component {
 																	</Label>
 																	<Input
 																		type="number"
-min="0"
+
 																		maxLength="10"
 																		name="openingBalance"
 																		id="openingBalance"
@@ -295,16 +295,19 @@ min="0"
 																				: ''
 																		}
 																		onChange={(option) => {
-																			if (
-																				option.target.value === '' ||
-																				this.regDecimal.test(
-																					option.target.value,
-																				)
-																			) {
-																				props.handleChange('openingBalance')(
-																					option,
-																				);
-																			}
+																			// if (
+																			// 	option.target.value === '' ||
+																			// 	this.regDecimal.test(
+																			// 		option.target.value,
+																			// 	)
+																			// ) {
+																			// 	props.handleChange('openingBalance')(
+																			// 		option,
+																			// 	);
+																			// }
+																			props.handleChange('openingBalance')(
+																				option,
+																			);
 																		}}
 																		value={props.values.openingBalance}
 																		placeholder={strings.Enter+strings.Amount}

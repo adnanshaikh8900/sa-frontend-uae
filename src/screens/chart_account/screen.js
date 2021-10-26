@@ -233,11 +233,11 @@ class ChartAccount extends React.Component {
 		};
 		this.props.chartOfAccountActions
 			.removeBulk(obj)
-			.then(() => {
+			.then((res) => {
 				this.initializeData();
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Chart of Accounts Deleted Successfully',
+					res.data.message
 				);
 				if (
 					transaction_category_list &&
@@ -252,7 +252,7 @@ class ChartAccount extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data.message
 				);
 			});
 	};

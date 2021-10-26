@@ -222,7 +222,7 @@ class DetailContact extends React.Component {
 					resetForm();
 					this.props.commonActions.tostifyAlert(
 						'success',
-					res.message
+					res.data.message
 					);
 					this.props.history.push('/admin/master/contact');
 				}
@@ -232,7 +232,7 @@ class DetailContact extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-				err.message
+				err.data.message
 				);
 				// this.props.history.push('/admin/master/contact');
 			});

@@ -283,7 +283,6 @@ class CreateOpeningBalance extends React.Component {
 																	</Label>
 																	<Input
 																		type="number"
-
 																		maxLength="10"
 																		name="openingBalance"
 																		id="openingBalance"
@@ -295,16 +294,6 @@ class CreateOpeningBalance extends React.Component {
 																				: ''
 																		}
 																		onChange={(option) => {
-																			// if (
-																			// 	option.target.value === '' ||
-																			// 	this.regDecimal.test(
-																			// 		option.target.value,
-																			// 	)
-																			// ) {
-																			// 	props.handleChange('openingBalance')(
-																			// 		option,
-																			// 	);
-																			// }
 																			props.handleChange('openingBalance')(
 																				option,
 																			);

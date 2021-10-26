@@ -7,6 +7,27 @@ export const getCurrencyConversionList = (obj) => {
 	return (dispatch) => {
 		let data = {
 			method: 'GET',
+			url: `/rest/currencyConversion/getActiveCurrencyConversionList`,
+		};
+
+		return authApi(data)
+			.then((res) => {
+				dispatch({
+					type: CURRENCYCONVERT.CURRENCY_CONVERT_LIST,
+					payload: res.data,
+				});
+				return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const getCurrencyConversion = (obj) => {
+	return (dispatch) => {
+		let data = {
+			method: 'GET',
 			url: `/rest/currencyConversion/getCurrencyConversionList`,
 		};
 

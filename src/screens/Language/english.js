@@ -198,6 +198,8 @@ Relationship2:"Relationship 2",
       EXPENSEAMOUNT:"EXPENSE AMOUNT",		
       AddNewExpense:"Add New Expense",
       UpdateExpense:"Update Expense",
+      ExpenseType: "Expense Type",
+      ActualExpenseAmount: "Actual Expense Amount",
 
 //Add expense		
 CreateExpense:"Create Expense",		

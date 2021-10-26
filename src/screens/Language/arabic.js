@@ -191,6 +191,8 @@ RecieptNumber:"عدد إيصال",
       EXPENSEAMOUNT:"مبلغ المصروفات",		
       AddNewExpense:"إضافة مصروفات جديدة",
       UpdateExpense:"تحديث مصروف",
+      ExpenseType: "نوع المصاريف",
+      ActualExpenseAmount: "مبلغ المصاريف الفعلي",
 
 //Add expense		
 CreateExpense:"إنشاء مصروفات",		

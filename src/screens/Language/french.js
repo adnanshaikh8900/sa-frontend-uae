@@ -194,6 +194,8 @@ RecieptNumber:"Numéro de reçu",
       EXPENSEAMOUNT:"MONTANT DES DÉPENSES",		
       AddNewExpense:"Ajouter de nouvelles dépenses",
       UpdateExpense:"Mise à jour des dépenses",
+      ExpenseType: "Type de dépense",
+      ActualExpenseAmount: "Montant réel des dépenses",
 
 //Add expense		
 CreateExpense:"Créer des dépenses",		

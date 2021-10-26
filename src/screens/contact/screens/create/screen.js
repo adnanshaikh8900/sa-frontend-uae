@@ -92,7 +92,9 @@ class CreateContact extends React.Component {
 			isActive: true,
 
 		};
-		this.regEx = /[a-zA-Z0-9]+$/;
+
+		this.regEx = /^[0-9\d]+$/;
+		// this.regEx = /[a-zA-Z0-9]+$/;
 		this.regExTelephone = /^[0-9-]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
@@ -604,7 +606,7 @@ class CreateContact extends React.Component {
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regEx.test(option.target.value)
+																				this.regExBoth.test(option.target.value)
 																			) {
 																				props.handleChange('poBoxNumber')(
 																					option,
@@ -968,7 +970,7 @@ class CreateContact extends React.Component {
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regEx.test(option.target.value)
+																				this.regExBoth.test(option.target.value)
 																			) {
 																				props.handleChange('postZipCode')(
 																					option,
@@ -1040,7 +1042,7 @@ class CreateContact extends React.Component {
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regEx.test(option.target.value)
+																				this.regExBoth.test(option.target.value)
 																			) {
 																				props.handleChange('contractPoNumber')(
 																					option,
@@ -1079,7 +1081,7 @@ class CreateContact extends React.Component {
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regExBoth.test(option.target.value)
+																				this.regEx.test(option.target.value)
 																			) {
 																				props.handleChange(
 																					'vatRegistrationNumber',

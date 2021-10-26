@@ -30,7 +30,8 @@ import LocalizedStrings from 'react-localization';
 const mapStateToProps = (state) => {
 	return {
 		
-		currency_convert_list: state.currencyConvert.currency_convert_list
+		currency_convert_list: state.currencyConvert.currency_convert_list,
+		currency_converstion_list: state.currencyConvert.currency_converstion_list
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -368,7 +369,7 @@ class ProductCategory extends React.Component {
 			view,
 			filterData,
 		} = this.state;
-		const { currency_convert_list } = this.props;
+		const { currency_converstion_list } = this.props;
 
 		// let display_data = this.filterVatList(vatList)
 
@@ -490,7 +491,7 @@ class ProductCategory extends React.Component {
 											 {strings.AddNewCurrencyConversion}
 										</Button>
 										<BootstrapTable
-											data={currency_convert_list}
+											data={currency_converstion_list}
 											hover
 											pagination
 											version="4"

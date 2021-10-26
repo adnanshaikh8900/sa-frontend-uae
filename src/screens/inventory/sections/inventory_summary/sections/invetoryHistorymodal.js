@@ -282,7 +282,7 @@ console.log(inventory_history_list,"inventory_history_list")
 												<TableHeaderColumn isKey dataField="productname" dataSort className="table-header-bg">
 												Product	Name
 												</TableHeaderColumn > */}
-												<TableHeaderColumn width="20%" isKey  dataField="supplierName" dataSort className="table-header-bg">
+												<TableHeaderColumn width="18%" isKey  dataField="supplierName" dataSort className="table-header-bg">
 												{strings.Supplier} / {strings.Customer}
 												</TableHeaderColumn >
 												<TableHeaderColumn width="10%" dataField="date" 
@@ -293,7 +293,7 @@ console.log(inventory_history_list,"inventory_history_list")
 												<TableHeaderColumn  dataField="transactionType" dataSort className="table-header-bg">
 												{strings.TransactionType}
 												</TableHeaderColumn >
-												<TableHeaderColumn  dataField="invoiceNumber" dataSort className="table-header-bg">
+												<TableHeaderColumn  width="15%" dataField="invoiceNumber" dataSort className="table-header-bg">
 												 {strings.InvoiceNumber}
 												</TableHeaderColumn >
 												<TableHeaderColumn dataAlign="center" dataField="quantitySold" dataSort className="table-header-bg">

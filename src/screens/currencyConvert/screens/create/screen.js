@@ -145,7 +145,7 @@ class CreateCurrencyConvert extends React.Component {
 					this.setState({ createDisabled: false });
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'New Currency Conversion is Created Successfully!',
+						res.data.message
 					);
 
 					if (this.state.createMore) {
@@ -162,7 +162,7 @@ class CreateCurrencyConvert extends React.Component {
 				this.setState({ createDisabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					 err.data.message
 				);
 			});
 			

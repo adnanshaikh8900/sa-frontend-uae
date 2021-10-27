@@ -183,19 +183,6 @@ class TrailBalances extends React.Component {
 		   return (exportData);
 	 }
 
-	// exportFile = (csvData, fileName, type) => {
-	// 	const fileType =
-	// 		type === 'xls'
-	// 			? 'application/vnd.ms-excel'
-	// 			: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-	// 	const fileExtension = `.${type}`;
-	// 	const ws = XLSX.utils.json_to_sheet(csvData);
-	// 	const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
-	// 	const excelBuffer = XLSX.write(wb, { bookType: type, type: 'array' });
-	// 	const data = new Blob([excelBuffer], { type: fileType });
-	// 	FileSaver.saveAs(data, fileName + fileExtension);
-	// };
-
 	toggle = () =>
 		this.setState((prevState) => {
 			return { dropdownOpen: !prevState.dropdownOpen };

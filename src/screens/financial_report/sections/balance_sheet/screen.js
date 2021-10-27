@@ -179,32 +179,6 @@ class BalanceSheet extends React.Component {
 	}
 
 
-	// exportFile = () => {
-	
-	// 	let exportData
-	 
-	// 		 let singleResultArray=this.state && this.state.data  
-	// 		 ? Object.entries(this.state.data)     :[];
-		// 	 let 	 csvdata=new Array(Object.values(this.state.data))
-		// 	 let 	 headers=Object.keys(this.state.data)
-			 
-		// 	 this.state.data  && 
-		// 	Object.values(this.state.data).forEach((val )=>
-		// 		{debugger
-		// 			if(typeof val==="object"){
-		// 				Object
-		// 			}
-		// 		console.log(val)});
-	 	//  const { Parser, transforms: { unwind, flatten } } = require('json2csv');
-		//  const json2csvParser = new Parser({data:this.state.data});
-		//   exportData = json2csvParser.parse(this.state.data);
-	 	 
-		//    return (exportData);
-
-	// 	const papa = require('papaparse');                                                               
-	// exportData=	jsonToCSV(singleResultArray)
-	// return (exportData)
-	// }
 	
 
 	toggle = () =>

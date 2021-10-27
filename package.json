@@ -31,6 +31,7 @@
     "font-awesome": "^4.7.0",
     "formik": "^1.5.1",
     "html2canvas": "^1.0.0-rc.5",
+    "json2csv": "^5.0.6",
     "jspdf": "^1.5.3",
     "lodash": "^4.17.15",
     "moment": "2.24.0",

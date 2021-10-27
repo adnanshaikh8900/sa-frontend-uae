@@ -591,7 +591,7 @@ class Receipt extends React.Component {
 												>
 													{strings.RECEIPTNUMBER}
 												</TableHeaderColumn>
-												  <TableHeaderColumn
+												  {/* <TableHeaderColumn
 												  width="10%" 
 											  dataField="currencyIsoCode" 
 										 	 dataSort
@@ -599,7 +599,7 @@ class Receipt extends React.Component {
 											  dataFormat={this.renderCurrency}
 												  >
 												{strings.Currency}
-												</TableHeaderColumn>
+												</TableHeaderColumn> */}
 												<TableHeaderColumn
 													width="10%"
 													dataAlign="right"

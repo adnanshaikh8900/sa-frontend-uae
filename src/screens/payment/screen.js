@@ -536,7 +536,7 @@ min="0"
 												<TableHeaderColumn dataField="paymentId" dataSort className="table-header-bg">
 												{strings.PAYMENTNUMBER}
 												</TableHeaderColumn>
-												<TableHeaderColumn 
+												{/* <TableHeaderColumn 
 												width="10%"
 												dataField="currencyIsoCode" 
 												dataSort 
@@ -544,7 +544,7 @@ min="0"
 												dataFormat={this.renderCurrency}
 												>
 													{strings.CURRENCY}
-												</TableHeaderColumn>
+												</TableHeaderColumn> */}
 												<TableHeaderColumn
 												width="10%"
 													dataAlign="right"

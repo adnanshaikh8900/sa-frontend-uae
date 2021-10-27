@@ -877,7 +877,8 @@ min="0"
 			} else if (props.values.discountType.value === 'FIXED') {
 				console.log(obj.unitPrice - discountAmount);
 				var val =
-					(obj.unitPrice * obj.quantity - discountAmount / data.length) *
+					// (obj.unitPrice * obj.quantity - discountAmount / data.length) * As per ticket 1340
+					(obj.unitPrice * obj.quantity) *
 					(vat / 100);
 			} else {
 				var val = (+obj.unitPrice * vat * obj.quantity) / 100;
@@ -1118,6 +1119,7 @@ min="0"
 	// };
 	
 	getCurrentUser = (data) => {
+		debugger
 		let option;
 		if (data.label || data.value) {
 			option = data;

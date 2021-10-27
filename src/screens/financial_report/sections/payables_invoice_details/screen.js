@@ -647,7 +647,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 											</Table>
 										</div>
 									)}
-									<div style={{ textAlignLast: 'center' }}> {strings.PoweredBy}<b>SimpleAccounts</b></div>
+									<div style={{ textAlignLast: 'center' }}> {strings.PoweredBy} <b>SimpleAccounts</b></div>
 								</PDFExport>
 							</CardBody>
 						</div>

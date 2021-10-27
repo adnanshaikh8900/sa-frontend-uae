@@ -510,6 +510,7 @@ class DetailExpense extends React.Component {
 																			id="expenseNumber"
 																			name="expenseNumber"
 																			placeholder={strings.Enter+" Expense Number"}
+																			disabled
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||

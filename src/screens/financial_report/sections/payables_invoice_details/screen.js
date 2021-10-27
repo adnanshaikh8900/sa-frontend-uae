@@ -426,7 +426,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 
 									<div className="text-center" style={{
 										display: 'flex',
-										justifyContent: 'center',
+										justifyContent: 'space-between',
 										marginBottom: '1rem'
 									}}>
 										<div className="logo-container" style={{

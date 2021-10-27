@@ -159,18 +159,53 @@ class BalanceSheet extends React.Component {
 			});
 	};
 	
-	exportFile = (csvData, fileName, type) => {
-		const fileType =
-			type === 'xls'
-				? 'application/vnd.ms-excel'
-				: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-		const fileExtension = `.${type}`;
-		const ws = XLSX.utils.json_to_sheet(csvData);
-		const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
-		const excelBuffer = XLSX.write(wb, { bookType: type, type: 'array' });
-		const data = new Blob([excelBuffer], { type: fileType });
-		FileSaver.saveAs(data, fileName + fileExtension);
-	};
+
+	
+	exportFile = () => {
+
+		let exportData
+	 
+			 let singleResultArray=this.state && this.state.data 
+	 
+			 ?
+	 
+			 Object.entries(this.state.data)     :[];
+	     const { Parser, transforms: { unwind, flatten } } = require('json2csv');
+		 const json2csvParser = new Parser({ transforms: [unwind({ blankOut: true }), flatten('__')] });
+		  exportData = json2csvParser.parse(singleResultArray);
+	 
+	 
+		   return (exportData);
+	}
+
+
+	// exportFile = () => {
+	
+	// 	let exportData
+	 
+	// 		 let singleResultArray=this.state && this.state.data  
+	// 		 ? Object.entries(this.state.data)     :[];
+		// 	 let 	 csvdata=new Array(Object.values(this.state.data))
+		// 	 let 	 headers=Object.keys(this.state.data)
+			 
+		// 	 this.state.data  && 
+		// 	Object.values(this.state.data).forEach((val )=>
+		// 		{debugger
+		// 			if(typeof val==="object"){
+		// 				Object
+		// 			}
+		// 		console.log(val)});
+	 	//  const { Parser, transforms: { unwind, flatten } } = require('json2csv');
+		//  const json2csvParser = new Parser({data:this.state.data});
+		//   exportData = json2csvParser.parse(this.state.data);
+	 	 
+		//    return (exportData);
+
+	// 	const papa = require('papaparse');                                                               
+	// exportData=	jsonToCSV(singleResultArray)
+	// return (exportData)
+	// }
+	
 
 	toggle = () =>
 		this.setState((prevState) => {
@@ -223,7 +258,7 @@ class BalanceSheet extends React.Component {
 													
 														<DropdownItem>
 															<CSVLink
-																data={csvData}
+																data={this.exportFile()}
 																className="csv-btn"
 																filename={'Balance Sheet Report.csv'}
 															>

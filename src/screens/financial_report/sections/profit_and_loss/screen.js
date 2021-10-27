@@ -144,18 +144,36 @@ class ProfitAndLossReport extends React.Component {
 			});
 	};
 
-	exportFile = (csvData, fileName, type) => {
-		const fileType =
-			type === 'xls'
-				? 'application/vnd.ms-excel'
-				: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-		const fileExtension = `.${type}`;
-		const ws = XLSX.utils.json_to_sheet(csvData);
-		const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
-		const excelBuffer = XLSX.write(wb, { bookType: type, type: 'array' });
-		const data = new Blob([excelBuffer], { type: fileType });
-		FileSaver.saveAs(data, fileName + fileExtension);
-	};
+	
+	exportFile = () => {
+
+		let exportData
+	 
+			 let singleResultArray=this.state && this.state.data 
+	 
+			 ?
+	 
+			 Object.entries(this.state.data)     :[];
+	     const { Parser, transforms: { unwind, flatten } } = require('json2csv');
+		 const json2csvParser = new Parser({ transforms: [unwind({ blankOut: true }), flatten('__')] });
+		  exportData = json2csvParser.parse(singleResultArray);
+	 
+	 
+		   return (exportData);
+	}
+
+	// exportFile = (csvData, fileName, type) => {
+	// 	const fileType =
+	// 		type === 'xls'
+	// 			? 'application/vnd.ms-excel'
+	// 			: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+	// 	const fileExtension = `.${type}`;
+	// 	const ws = XLSX.utils.json_to_sheet(csvData);
+	// 	const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
+	// 	const excelBuffer = XLSX.write(wb, { bookType: type, type: 'array' });
+	// 	const data = new Blob([excelBuffer], { type: fileType });
+	// 	FileSaver.saveAs(data, fileName + fileExtension);
+	// };
 
 	toggle = () =>
 		this.setState((prevState) => {
@@ -207,7 +225,7 @@ class ProfitAndLossReport extends React.Component {
 													
 														<DropdownItem>
 															<CSVLink
-																data={csvData}
+																data={this.exportFile()}
 																className="csv-btn"
 																filename={'Profit & Loss Report.csv'}
 															>

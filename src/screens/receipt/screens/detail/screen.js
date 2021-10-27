@@ -137,11 +137,11 @@ class DetailReceipt extends React.Component {
     }
     this.props.receiptDetailActions.updateReceipt(postData).then((res) => {
       if (res.status === 200) {
-        this.props.commonActions.tostifyAlert('success', 'Reeceipt Updated successfully!')
+        this.props.commonActions.tostifyAlert('success', res.data.message)
         this.props.history.push('/admin/revenue/receipt')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
+      this.props.commonActions.tostifyAlert('error',  err.data.message )
     })
   }
 
@@ -166,11 +166,11 @@ class DetailReceipt extends React.Component {
     const {current_receipt_id} = this.state;
     this.props.receiptDetailActions.deleteReceipt(current_receipt_id).then((res) => {
       if (res.status === 200) {
-        this.props.commonActions.tostifyAlert('success', 'Receipt Deleted Successfully');
+        this.props.commonActions.tostifyAlert('success', res.data.message);
         this.props.history.push('/admin/revenue/receipt')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
+      this.props.commonActions.tostifyAlert('error', err.data.message )
     })
   }
 

@@ -949,7 +949,7 @@ debugger
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Invoice Updated Successfully.',
+					res.data.message
 				);
 				this.props.history.push('/admin/income/customer-invoice');
 			})
@@ -957,7 +957,7 @@ debugger
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					 err.data.message
 				);
 			});
 	};
@@ -1095,7 +1095,7 @@ debugger
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Data Deleted Successfully',
+						res.data.message,
 					);
 					this.props.history.push('/admin/income/customer-invoice');
 				}
@@ -1103,7 +1103,7 @@ debugger
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data.message,
 				);
 			});
 	};

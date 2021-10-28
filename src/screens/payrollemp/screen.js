@@ -183,8 +183,12 @@ class PayrollEmployee extends React.Component {
 					}}
 				onClick={
                     () =>{ 
-					this.props.history.push('/admin/payroll/employee/viewEmployee',
-                    { id: row.id })}
+					// this.props.history.push('/admin/payroll/employee/viewEmployee',
+                    // { id: row.id })
+                	this.props.history.push('/admin/master/employee/viewEmployee',
+                    { id: row.id })
+                }
+                    
 				}
                 
 
@@ -195,7 +199,9 @@ class PayrollEmployee extends React.Component {
 	};
 
     goToDetail = (row) => {
-        this.props.history.push('/admin/payroll/employee/viewEmployee',
+        // this.props.history.push('/admin/payroll/employee/viewEmployee',
+        // { id: row.id })
+        this.props.history.push('/admin/master/employee/viewEmployee',
         { id: row.id })
     }
 
@@ -422,7 +428,10 @@ class PayrollEmployee extends React.Component {
                                                                 color="primary"
                                                                 className="btn-square pull-right mb-2 mr-4"
                                                                 style={{ marginBottom: '10px' }}
-                                                                onClick={() => this.props.history.push(`/admin/payroll/employee/create`)}
+                                                                onClick={() =>
+                                                                    //  this.props.history.push(`/admin/payroll/employee/create`)
+                                                                     this.props.history.push(`/admin/master/employee/create`)  
+                                                                    }
 
                                                             >
                                                                 <i className="fas fa-plus mr-1" />

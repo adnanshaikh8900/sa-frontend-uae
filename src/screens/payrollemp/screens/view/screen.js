@@ -248,7 +248,8 @@ class ViewEmployee extends React.Component {
 
 
 		} else {
-			this.props.history.push('/admin/payroll/employee');
+			// this.props.history.push('/admin/payroll/employee');
+			this.props.history.push('/admin/master/employee');
 		}
 	};
 
@@ -281,7 +282,7 @@ class ViewEmployee extends React.Component {
 										 {strings.OverView}
 									</NavLink>
 								</NavItem>
-								<NavItem>
+								{/* <NavItem>
 									<NavLink
 										active={this.state.activeTab[0] === '2'}
 										onClick={() => {
@@ -300,7 +301,7 @@ class ViewEmployee extends React.Component {
 									>
 										 {strings.Payslips}
 									</NavLink>
-								</NavItem>
+								</NavItem> */}
 
 							</Nav>
 							<TabContent activeTab={this.state.activeTab[0]}>
@@ -320,8 +321,13 @@ class ViewEmployee extends React.Component {
 																	color="primary"
 																	className="btn-square pull-right mb-2"
 																	style={{ marginBottom: '10px' }}
-																	onClick={() => this.props.history.push(`/admin/payroll/employee/updateEmployeeEmployement`,
-																		{ id: this.state.current_employee_id })}
+																	onClick={() => 
+																		// this.props.history.push(`/admin/payroll/employee/updateEmployeeEmployement`,
+																		// { id: this.state.current_employee_id })
+																		this.props.history.push(`/admin/master/employee/updateEmployeeEmployement`,
+																		{ id: this.state.current_employee_id })
+																	
+																	}
 																>
 																	<i class="far fa-edit"></i>
 																</Button>
@@ -380,8 +386,12 @@ class ViewEmployee extends React.Component {
 																			color="primary"
 																			className="btn-square pull-right mb-2"
 																			style={{ marginBottom: '10px' }}
-																			onClick={() => this.props.history.push(`/admin/payroll/employee/updateEmployeePersonal`,
-																				{ id: this.state.current_employee_id })}
+																			onClick={() => 
+																				// this.props.history.push(`/admin/payroll/employee/updateEmployeePersonal`,
+																				// { id: this.state.current_employee_id })
+																				this.props.history.push(`/admin/master/employee/updateEmployeePersonal`,
+																				{ id: this.state.current_employee_id })
+																			}
 																		>
 																			<i class="far fa-edit"></i>
 																		</Button>
@@ -418,8 +428,12 @@ class ViewEmployee extends React.Component {
 																			color="primary"
 																			className="btn-square pull-right mb-2"
 																			style={{ marginBottom: '10px' }}
-																			onClick={() => this.props.history.push(`/admin/payroll/employee/updateEmployeeBank`,
-																				{ id: this.state.current_employee_id })}
+																			onClick={() =>
+																				//  this.props.history.push(`/admin/payroll/employee/updateEmployeeBank`,
+																				// { id: this.state.current_employee_id })
+																				this.props.history.push(`/admin/master/employee/updateEmployeeBank`,
+																				{ id: this.state.current_employee_id })
+																			}
 																		>
 																			<i class="far fa-edit"></i>
 																		</Button>
@@ -446,8 +460,8 @@ class ViewEmployee extends React.Component {
 								</TabPane>
 
 
-
-								<TabPane tabId="2">
+{/* salary EDIT */}
+								{/* <TabPane tabId="2">
 									<div className="table-wrapper">
 										<Row>
 											<Col>
@@ -571,14 +585,13 @@ class ViewEmployee extends React.Component {
 													this.state.salarySlipList ? this.state.salarySlipList : []}
 												version="4"
 												hover
-												// pagination={salarySlipList && salarySlipList.data
-												//     && salarySlipList.data.length > 0 ? true : false}
+		
 												keyField="id"
 												remote
-												// fetchInfo={{ dataTotalSize: salarySlipList.count ? salarySlipList.count : 0 }}
+
 												className="employee-table"
 												trClassName="cursor-pointer"
-												// csvFileName="payroll_employee_list.csv"
+
 												ref={(node) => this.table = node}
 											>
 												<TableHeaderColumn
@@ -602,21 +615,14 @@ class ViewEmployee extends React.Component {
 												>
 													 {strings.Payslips}
 													</TableHeaderColumn>
-												{/* <TableHeaderColumn
-                                                        className="table-header-bg"
-														dataFormat={this.renderActions}
-                                                        dataSort
 
-                                                    >
-                                                      TDS SHEET
-                       						   </TableHeaderColumn> */}
 											</BootstrapTable>
 
 
 									
 
 									</div>
-								</TabPane>
+								</TabPane> */}
 
 							</TabContent>
 

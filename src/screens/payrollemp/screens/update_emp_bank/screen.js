@@ -117,10 +117,12 @@ class UpdateEmployeeBank extends React.Component {
                 }
             }).catch((err) => {
                 this.setState({ loading: false })
-                this.props.history.push('/admin/payroll/employee')
+                // this.props.history.push('/admin/payroll/employee')
+                this.props.history.push('/admin/master/employee')
             })
         } else {
-            this.props.history.push('/admin/payroll/employee')
+            // this.props.history.push('/admin/payroll/employee')
+            this.props.history.push('/admin/master/employee')
         }
     }
 
@@ -171,7 +173,8 @@ class UpdateEmployeeBank extends React.Component {
         this.props.detailEmployeeBankAction.updateEmployeeBank(formData).then((res) => {
             if (res.status === 200) {
                 this.props.commonActions.tostifyAlert('success', 'Employee Updated Successfully!')
-                this.props.history.push('/admin/payroll/employee')
+                // this.props.history.push('/admin/payroll/employee')
+                  this.props.history.push('/admin/master/employee')
             }
         }).catch((err) => {
             this.props.commonActions.tostifyAlert('error', err.data.message)
@@ -391,8 +394,11 @@ class UpdateEmployeeBank extends React.Component {
                                                                         color="secondary"
                                                                         className="btn-square"
                                                                         onClick={() => {
+                                                                            // this.props.history.push(
+                                                                            //     '/admin/payroll/employee',
+                                                                            // );
                                                                             this.props.history.push(
-                                                                                '/admin/payroll/employee',
+                                                                                '/admin/master/employee',
                                                                             );
                                                                         }}
                                                                     >

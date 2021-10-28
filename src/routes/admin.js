@@ -530,23 +530,43 @@ const adminRoutes = [
 		pathTo: '/admin/expense/expense',
 		name: 'Expense',
 	},
+	// {
+	// 	path: '/admin/payroll/employee/viewEmployee',
+	// 	name: 'OverviewEmployee',
+	// 	component: ViewEmployee.screen,
+	// },
 	{
-		path: '/admin/payroll/employee/viewEmployee',
+		path: '/admin/master/employee/viewEmployee',
 		name: 'OverviewEmployee',
 		component: ViewEmployee.screen,
 	},
+	// {
+	// 	path: '/admin/payroll/employee/updateEmployeePersonal',
+	// 	name: 'UpdateEmployee',
+	// 	component: UpdateEmployeePersonal.screen,
+	// },
 	{
-		path: '/admin/payroll/employee/updateEmployeePersonal',
+		path: '/admin/master/employee/updateEmployeePersonal',
 		name: 'UpdateEmployee',
 		component: UpdateEmployeePersonal.screen,
 	},
+	// {
+	// 	path: '/admin/payroll/employee/updateEmployeeBank',
+	// 	name: 'UpdateEmployee',
+	// 	component: UpdateEmployeeBank.screen,
+	// },
 	{
-		path: '/admin/payroll/employee/updateEmployeeBank',
+		path: '/admin/master/employee/updateEmployeeBank',
 		name: 'UpdateEmployee',
 		component: UpdateEmployeeBank.screen,
 	},
+	// {
+	// 	path: '/admin/payroll/employee/updateEmployeeEmployement',
+	// 	name: 'UpdateEmployee',
+	// 	component: UpdateEmployeeEmployment.screen,
+	// },
 	{
-		path: '/admin/payroll/employee/updateEmployeeEmployement',
+		path: '/admin/master/employee/updateEmployeeEmployement',
 		name: 'UpdateEmployee',
 		component: UpdateEmployeeEmployment.screen,
 	},
@@ -555,13 +575,23 @@ const adminRoutes = [
 		name: 'UpdateEmployee',
 		component: UpdateSalaryComponent.screen,
 	},
+	// {
+	// 	path: '/admin/payroll/employee/create',
+	// 	name: 'AddEmployee',
+	// 	component: CreatePayrollEmployee.screen,
+	// },
 	{
-		path: '/admin/payroll/employee/create',
+		path: '/admin/master/employee/create',
 		name: 'AddEmployee',
 		component: CreatePayrollEmployee.screen,
 	},
+	// {
+	// 	path: '/admin/payroll/employee',
+	// 	name: 'ViewEmployee',
+	// 	component: PayrollEmployee.screen,
+	// },
 	{
-		path: '/admin/payroll/employee',
+		path: '/admin/master/employee',
 		name: 'ViewEmployee',
 		component: PayrollEmployee.screen,
 	},

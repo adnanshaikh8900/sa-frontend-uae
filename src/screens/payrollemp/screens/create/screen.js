@@ -393,7 +393,8 @@ existForAccountNumber = (value) => {
                         'success',
                         ' Finacial details saved Successfully')
                     this.getSalaryComponentByEmployeeId();
-                    this.props.history.push('/admin/payroll/employee');
+                    // this.props.history.push('/admin/payroll/employee');
+                    this.props.history.push('/admin/master/employee');
                 }
             }).catch((err) => {
 

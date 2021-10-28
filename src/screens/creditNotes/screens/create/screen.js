@@ -936,6 +936,7 @@ min="0"
 		const formData = new FormData();
 		if (invoiceNumber && invoiceNumber.value) {
 			formData.append('invoiceId', invoiceNumber.value);
+			formData.append('cnCreatedOnPaidInvoice','1');
 		}
 
 			// formData.append('invoiceNumber',this.state.referenceNumber !== null ? this.state.selectedData.referenceNumber : '');

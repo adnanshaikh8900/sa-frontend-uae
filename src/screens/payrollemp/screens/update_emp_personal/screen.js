@@ -233,10 +233,12 @@ class UpdateEmployeePersonal extends React.Component {
 
             ).catch((err) => {
                 this.setState({ loading: false })
-                this.props.history.push('/admin/payroll/employee')
+                // this.props.history.push('/admin/payroll/employee')
+                this.props.history.push('/admin/master/employee')
             })
         } else {
-            this.props.history.push('/admin/payroll/employee')
+            // this.props.history.push('/admin/payroll/employee')
+            this.props.history.push('/admin/master/employee')
         }
     }
 
@@ -374,7 +376,8 @@ class UpdateEmployeePersonal extends React.Component {
         this.props.detailEmployeePersonalAction.updateEmployeePersonal(formData).then((res) => {
             if (res.status === 200) {
                 this.props.commonActions.tostifyAlert('success', 'Employee Updated Successfully!')
-                this.props.history.push('/admin/payroll/employee')
+                // this.props.history.push('/admin/payroll/employee')
+                this.props.history.push('/admin/master/employee')
             }
         }).catch((err) => {
             this.props.commonActions.tostifyAlert('error', err.data.message)
@@ -1386,8 +1389,11 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         color="secondary"
                                                                         className="btn-square"
                                                                         onClick={() => {
+                                                                            // this.props.history.push(
+                                                                            //     '/admin/payroll/employee/viewEmployee',
+                                                                            // );
                                                                             this.props.history.push(
-                                                                                '/admin/payroll/employee/viewEmployee',
+                                                                                '/admin/master/employee/viewEmployee',
                                                                             );
                                                                         }}
                                                                     >

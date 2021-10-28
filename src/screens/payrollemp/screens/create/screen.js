@@ -207,6 +207,7 @@ class CreateEmployeePayroll extends React.Component {
             selectedStatus:true,
             checkmobileNumberParam:false,
             checkmobileNumberParam1:false,
+            checkmobileNumberParam2:false,
         }        
         this.formRef = React.createRef();       
         this.regEx = /^[0-9\d]+$/;
@@ -1046,7 +1047,7 @@ existForAccountNumber = (value) => {
     }
     render() {
         strings.setLanguage(this.state.language);
-        const {	exist,checkmobileNumberParam,checkmobileNumberParam1,existForAccountNumber}=this.state
+        const {	exist,checkmobileNumberParam,checkmobileNumberParam1,checkmobileNumberParam2,existForAccountNumber}=this.state
         const { salary_role_dropdown, designation_dropdown, country_list, state_list, employee_list_dropdown } = this.props
         return (
             <div className="financial-report-screen">
@@ -1134,7 +1135,12 @@ existForAccountNumber = (value) => {
                                                                             if (checkmobileNumberParam1 === true) {
                                                                                 errors.emergencyContactNumber1 =
                                                                                 'Invalid mobile number';
-                                                                                }
+                                                                            }
+
+                                                                             if (checkmobileNumberParam2 === true) {
+                                                                                    errors.emergencyContactNumber2 =
+                                                                                    'Invalid mobile number';
+                                                                            }
                                                                                 
                                                                             
                                                                             // if( values.stateId ===''){
@@ -2075,19 +2081,21 @@ existForAccountNumber = (value) => {
                                                                                                             props.handleChange('emergencyContactNumber2')(
                                                                                                                 option,
                                                                                                             );
+                                                                                                            option.length!==12 ?  this.setState({checkmobileNumberParam2:true}) :this.setState({checkmobileNumberParam2:false});
                                                                                                         }}
                                                                                                         className={
                                                                                                             props.errors.emergencyContactNumber2 &&
                                                                                                                 props.touched.emergencyContactNumber2
-                                                                                                                ? 'is-invalid'
+                                                                                                                ? 'text-danger'
                                                                                                                 : ''
                                                                                                         }
                                                                                                     />
-                                                                                                     {props.errors.emergencyContactNumber2 && props.touched.memergencyContactNumber2 && (
-                                                                                                        <div className="invalid-feedback">{props.errors.emergencyContactNumber2}</div>
+                                                                                                     {props.errors.emergencyContactNumber2 && props.touched.emergencyContactNumber2 && (
+                                                                                                        <div className="text-danger">{props.errors.emergencyContactNumber2}</div>
                                                                                                     )}
                                                                                                    
                                                                                                 </FormGroup>
+                                                                                                    
                                                                                             </Col>
 
                                                                                             <Col md="4">

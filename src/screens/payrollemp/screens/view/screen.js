@@ -252,7 +252,15 @@ class ViewEmployee extends React.Component {
 			this.props.history.push('/admin/master/employee');
 		}
 	};
+getPhoto=()=>{
+	// let image ="data:image/png;base64, "+ this.state.userPhoto[0];
+	 let image =this.state.userPhoto.length !==0 
+	  ?  "data:image/png;base64, "+ 
+	      this.state.userPhoto[0] 
+	  :avatar;
 
+	return image;
+}
 	render() {
 		strings.setLanguage(this.state.language);
 		console.log(this.state.Fixed)
@@ -337,7 +345,7 @@ class ViewEmployee extends React.Component {
 														<div className='text-center'>
 
 															<img
-																src={this.state.userPhoto !== '' ? avatar : this.state.userPhoto}
+																src={this.getPhoto()}
 																className="img-avatar mr-2"
 																style={{ width: '200px', height: '200px' }}
 																alt=""
@@ -345,7 +353,7 @@ class ViewEmployee extends React.Component {
 
 
 														</div>
-														<div className='text-center' >
+														<div className='text-center mt-4' >
 															<h3>{upperFirst(this.state.EmployeeDetails.fullName)} {' '}
 															({this.state.EmployeeDetails.employeeCode  ?  this.state.EmployeeDetails.employeeCode :'-' }{ })</h3>
 

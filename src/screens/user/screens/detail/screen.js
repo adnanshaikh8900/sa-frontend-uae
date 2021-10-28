@@ -384,7 +384,6 @@ class DetailUser extends React.Component {
 																			onChange={this.uploadImage}
 																			imgExtension={[
 																				'jpg',
-																				'gif',
 																				'png',
 																				'jpeg',
 																			]}

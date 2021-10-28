@@ -673,7 +673,7 @@ existForAccountNumber = (value) => {
                 emergencyContactRelationship2 != null ?emergencyContactRelationship2:'',
             );
         if (this.state.userPhotoFile.length > 0) {
-            formData.append('profilePic ', this.state.userPhotoFile[0]);
+            formData.append('profileImageBinary ', this.state.userPhotoFile[0]);
         }
         if (gender && gender.value) {
             formData.append('gender', gender.value);
@@ -1193,7 +1193,7 @@ existForAccountNumber = (value) => {
                                                                                                 // withIcon={true}
                                                                                                 buttonText="Choose image"
                                                                                                 onChange={this.uploadImage}
-                                                                                                imgExtension={['jpg', 'gif', 'png', 'jpeg']}
+                                                                                                imgExtension={['jpg', 'png', 'jpeg']}
                                                                                                 maxFileSize={11048576}
                                                                                                 withPreview={true}
                                                                                                 singleImage={true}
@@ -2873,7 +2873,7 @@ existForAccountNumber = (value) => {
                                                                                     <td style={{border:"3px solid #c8ced3"}}>
                                                                                         <Input
                                                                                             type="number"
-min="0"
+                                                                                            min="0"
                                                                                             size="30"
                                                                                             style={{textAlign:"center"}}
                                                                                             id="formula"
@@ -2986,7 +2986,7 @@ min="0"
                                                                                     <td style={{border:"3px solid  #c8ced3"}}>
                                                                                         <Input
                                                                                             type="number"
-min="0"
+                                                                                            min="0"
                                                                                             style={{textAlign:"center"}}
                                                                                             size="30"
                                                                                             onChange={(option) => {

@@ -1202,8 +1202,7 @@ class Profile extends React.Component {
 																						buttonText="Choose images"
 																						onChange={this.uploadUserImage}
 																						imgExtension={[
-																							'jpg',
-																							'gif',
+																							'jpg',																							
 																							'png',
 																							'jpeg',
 																						]}

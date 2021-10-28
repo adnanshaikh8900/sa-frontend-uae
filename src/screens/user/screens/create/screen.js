@@ -376,7 +376,7 @@ class CreateUser extends React.Component {
 																		// withIcon={true}
 																		buttonText="Choose images"
 																		onChange={this.uploadImage}
-																		imgExtension={['jpg', 'gif', 'png', 'jpeg']}
+																		imgExtension={['jpg', 'png', 'jpeg']}
 																		maxFileSize={11048576}
 																		withPreview={true}
 																		singleImage={true}

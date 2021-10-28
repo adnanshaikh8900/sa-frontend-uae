@@ -1920,7 +1920,7 @@ class Profile extends React.Component {
 																								});
 																							}
 																						}}
-																						placeholder={strings.Select+strings.Currency}
+																						placeholder={strings.Select+strings.CountryCode}
 																						id="invoicingCountryCode"
 																						name="invoicingCountryCode"
 																						className={
@@ -2340,7 +2340,7 @@ class Profile extends React.Component {
 																								)('');
 																							}
 																						}}
-																						placeholder={strings.Select+strings.Country}
+																						placeholder={strings.Select+strings.CountryCode}
 																						id="companyCountryCode"
 																						name="companyCountryCode"
 																						className={

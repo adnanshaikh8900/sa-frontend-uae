@@ -251,7 +251,7 @@ class Contact extends React.Component {
 				this.initializeData();
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Contacts Deleted Successfully',
+					 res.data.message
 				);
 				if (contact_list && contact_list.data && contact_list.data.length > 0) {
 					this.setState({
@@ -262,7 +262,7 @@ class Contact extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err !== null ? err.data.message : 'Something Went Wrong',
+					err.data.message
 				);
 				this.setState({ isLoading: false });
 			});

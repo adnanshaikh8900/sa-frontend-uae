@@ -256,7 +256,7 @@ class VatCode extends React.Component {
 				this.initializeData();
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Vat Category Deleted Successfully',
+					res.data.message
 				);
 				if (vat_list && vat_list.data && vat_list.data.length > 0) {
 					this.setState({
@@ -267,7 +267,7 @@ class VatCode extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data.message
 				);
 			});
 	};

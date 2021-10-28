@@ -212,7 +212,7 @@ class ProductCategory extends React.Component {
 				this.initializeData();
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Product Category Deleted Successfully',
+					res.data.message
 				);
 				if (
 					product_category_list &&
@@ -227,7 +227,7 @@ class ProductCategory extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					 err.data.message
 				);
 			});
 	};

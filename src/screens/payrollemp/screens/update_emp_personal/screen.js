@@ -70,6 +70,7 @@ class UpdateEmployeePersonal extends React.Component {
 			userPhotoFile: {},
             current_employee_id: null,
             checkmobileNumberParam:false,
+            checkmobileNumberParam1:false,
         }
 
         this.regExAlpha = /^[a-zA-Z ]+$/;
@@ -232,10 +233,12 @@ class UpdateEmployeePersonal extends React.Component {
 
             ).catch((err) => {
                 this.setState({ loading: false })
-                this.props.history.push('/admin/payroll/employee')
+                // this.props.history.push('/admin/payroll/employee')
+                this.props.history.push('/admin/master/employee')
             })
         } else {
-            this.props.history.push('/admin/payroll/employee')
+            // this.props.history.push('/admin/payroll/employee')
+            this.props.history.push('/admin/master/employee')
         }
     }
 
@@ -373,7 +376,8 @@ class UpdateEmployeePersonal extends React.Component {
         this.props.detailEmployeePersonalAction.updateEmployeePersonal(formData).then((res) => {
             if (res.status === 200) {
                 this.props.commonActions.tostifyAlert('success', 'Employee Updated Successfully!')
-                this.props.history.push('/admin/payroll/employee')
+                // this.props.history.push('/admin/payroll/employee')
+                this.props.history.push('/admin/master/employee')
             }
         }).catch((err) => {
             this.props.commonActions.tostifyAlert('error', err.data.message)
@@ -381,7 +385,7 @@ class UpdateEmployeePersonal extends React.Component {
     }
     render() {
         strings.setLanguage(this.state.language);
-        const { loading, initValue, dialog ,checkmobileNumberParam} = this.state
+        const { loading, initValue, dialog ,checkmobileNumberParam,checkmobileNumberParam1} = this.state
         const { designation_dropdown, country_list, state_list, employee_list_dropdown,salary_role_dropdown } = this.props
 
         return (
@@ -417,6 +421,13 @@ class UpdateEmployeePersonal extends React.Component {
 														errors.mobileNumber =
 														'Invalid mobile number';
 														}
+
+                                                        
+                                                        if (checkmobileNumberParam1 === true) {
+                                                            errors.emergencyContactNumber1 =
+                                                            'Invalid mobile number';
+                                                            }
+
 														return errors;
 													}}
                                                     validationSchema={Yup.object().shape({
@@ -436,6 +447,13 @@ class UpdateEmployeePersonal extends React.Component {
                                                             .required('Designation is Required'),
                                                             mobileNumber: Yup.string()
 															.required('Mobile Number is required'),
+                                                            emergencyContactName1: Yup.string()
+                                                           .required('Contact Name 1 is Required') ,
+                                                            emergencyContactNumber1:Yup.string()
+                                                           .required("Contact Number 1 is Required"),
+                                                            emergencyContactRelationship1: Yup.string()
+                                                           .required('Relationship 1 is Required') ,
+                                                                          
                                                     })}
 
                                                 >
@@ -1198,29 +1216,30 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                     
                                                                                           <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="emergencyContactName1">{strings.ContactName1}</Label>
+                                                                                                    <Label htmlFor="emergencyContactName1"><span className="text-danger">*</span>{strings.ContactName1}</Label>
                                                                                                     <Input
                                                                                                         type="text"
+                                                                                                        maxLength="26"
                                                                                                         id="emergencyContactName1"
                                                                                                         name="emergencyContactName1"
-                                                                                                        placeholder={strings.Enter+strings.ContactName1}
-                                                                                                        onChange={(value) => { props.handleChange("emergencyContactName1")(value) }}
                                                                                                         value={props.values.emergencyContactName1}
-                                                                                                        className={
-                                                                                                            props.errors.emergencyContactName1 && props.touched.emergencyContactName1
-                                                                                                                ? "is-invalid"
-                                                                                                                : ""
-                                                                                                        }
+                                                                                                        placeholder={strings.Enter+strings.ContactName1}
+
+                                                                                                        onChange={(option) => {
+                                                                                                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('emergencyContactName1')(option) }
+                                                                                                        }}
+                                                                                                        className={props.errors.emergencyContactName1 && props.touched.emergencyContactName1 ? "is-invalid" : ""}
                                                                                                     />
-                                                                                                    {props.emergencyContactName1 && props.touched.emergencyContactName1 && (
+                                                                                                    {props.errors.emergencyContactName1 && props.touched.emergencyContactName1 && (
                                                                                                         <div className="invalid-feedback">{props.errors.emergencyContactName1}</div>
                                                                                                     )}
                                                                                                 </FormGroup>
+                          
                                                                                             </Col>
 
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="emergencyContactNumber1"> {strings.ContactNumber1} </Label>
+                                                                                                    <Label htmlFor="emergencyContactNumber1"><span className="text-danger">*</span>{strings.ContactNumber1} </Label>
                                                                                                     <PhoneInput
                                                                                                         id="emergencyContactNumber1"
                                                                                                         name="emergencyContactNumber1"
@@ -1234,42 +1253,43 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                             props.handleChange('emergencyContactNumber1')(
                                                                                                                 option,
                                                                                                             );
+                                                                                                            option.length!==12 ?  this.setState({checkmobileNumberParam1:true}) :this.setState({checkmobileNumberParam1:false});
                                                                                                         }}
                                                                                                         className={
                                                                                                             props.errors.emergencyContactNumber1 &&
                                                                                                                 props.touched.emergencyContactNumber1
-                                                                                                                ? 'is-invalid'
+                                                                                                                ? 'text-danger'
                                                                                                                 : ''
                                                                                                         }
                                                                                                     />
-                                                                                                     {props.errors.emergencyContactNumber1 && props.touched.memergencyContactNumber1 && (
-                                                                                                        <div className="invalid-feedback">{props.errors.emergencyContactNumber1}</div>
+                                                                                                     {props.errors.emergencyContactNumber1 && props.touched.emergencyContactNumber1 && (
+                                                                                                        <div className="text-danger">{props.errors.emergencyContactNumber1}</div>
                                                                                                     )}
                                                                                                    
-
                                                                                                 </FormGroup>
                                                                                             </Col>
 
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="emergencyContactRelationship1"> {strings.Relationship1} </Label>
+                                                                                                    <Label htmlFor="emergencyContactRelationship1"><span className="text-danger">*</span> {strings.Relationship1} </Label>
                                                                                                     <Input
                                                                                                         type="text"
+                                                                                                        maxLength="26"
                                                                                                         id="emergencyContactRelationship1"
                                                                                                         name="emergencyContactRelationship1"
-                                                                                                        placeholder={strings.Enter+strings.Relationship1}
-                                                                                                        onChange={(value) => { props.handleChange("emergencyContactRelationship1")(value) }}
                                                                                                         value={props.values.emergencyContactRelationship1}
-                                                                                                        className={
-                                                                                                            props.errors.emergencyContactRelationship1 && props.touched.emergencyContactRelationship1
-                                                                                                                ? "is-invalid"
-                                                                                                                : ""
-                                                                                                        }
+                                                                                                        placeholder={strings.Enter+strings.Relationship1}
+
+                                                                                                        onChange={(option) => {
+                                                                                                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('emergencyContactRelationship1')(option) }
+                                                                                                        }}
+                                                                                                        className={props.errors.emergencyContactRelationship1 && props.touched.emergencyContactRelationship1 ? "is-invalid" : ""}
                                                                                                     />
-                                                                                                    {props.emergencyContactRelationship1 && props.touched.emergencyContactRelationship1 && (
+                                                                                                    {props.errors.emergencyContactRelationship1 && props.touched.emergencyContactRelationship1 && (
                                                                                                         <div className="invalid-feedback">{props.errors.emergencyContactRelationship1}</div>
                                                                                                     )}
                                                                                                 </FormGroup>
+                     
                                                                                             </Col>
                                                                                            
                                                                                           <Col md="4">
@@ -1369,8 +1389,11 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         color="secondary"
                                                                         className="btn-square"
                                                                         onClick={() => {
+                                                                            // this.props.history.push(
+                                                                            //     '/admin/payroll/employee/viewEmployee',
+                                                                            // );
                                                                             this.props.history.push(
-                                                                                '/admin/payroll/employee/viewEmployee',
+                                                                                '/admin/master/employee/viewEmployee',
                                                                             );
                                                                         }}
                                                                     >

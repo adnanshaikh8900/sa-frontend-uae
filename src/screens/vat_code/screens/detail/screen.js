@@ -93,7 +93,7 @@ class DetailVatCode extends React.Component {
 					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Vat Category Updated Successfully!',
+						res.data.message
 					);
 					this.props.history.push('/admin/master/vat-category');
 				}
@@ -144,7 +144,7 @@ class DetailVatCode extends React.Component {
 					// this.success('Chart Account Deleted Successfully');
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Vat category Deleted Successfully',
+						res.data.message,
 					);
 					this.props.history.push('/admin/master/vat-category');
 				}
@@ -152,7 +152,7 @@ class DetailVatCode extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data.message 
 				);
 			});
 	};

@@ -339,17 +339,17 @@ class Expense extends React.Component {
 			<div>
 					<label className="font-weight-bold mr-2 ">{strings.ActualExpenseAmount} : </label>
 					<label>
-						{row.expenseAmount === 0 ? row.currencySymbol +" "+ row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }): row.currencySymbol +" "+ row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+						{row.expenseAmount === 0 ? row.currencyName +" "+ row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }): row.currencyName +" "+ row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 					
 					</label>
 			</div>
 			<div style={{ display: row.expenseVatAmount === 0 ? 'none' : '' }}>
 					<label className="font-weight-bold mr-2">{strings.VatAmount} : </label>
-					<label>{row.expenseVatAmount === 0 ? row.currencySymbol  +" "+ row.expenseVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol  +" "+ row.expenseVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
+					<label>{row.expenseVatAmount === 0 ? row.currencyName  +" "+ row.expenseVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyName  +" "+ row.expenseVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
 			</div>
 			<div style={{ display: row.expenseAmount === 0 ? 'none' : '' }}>
 					<label className="font-weight-bold mr-2">{strings.ExpenseAmount} : </label>
-					<label>{row.expenseAmount === 0 ? row.currencySymbol  +" "+(row.expenseAmount-row.expenseVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 }): row.currencySymbol  +" "+(row.expenseAmount-row.expenseVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
+					<label>{row.expenseAmount === 0 ? row.currencyName  +" "+(row.expenseAmount-row.expenseVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 }): row.currencyName  +" "+(row.expenseAmount-row.expenseVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
 			</div>
 		</div>
 		
@@ -854,7 +854,7 @@ class Expense extends React.Component {
 												thStyle={{ whiteSpace: 'normal' }}
 												dataField="expenseNumber"
 												dataSort
-											    width="11%"
+											    width="13%"
 												dataFormat={this.renderNumber}
 												className='table-header-bg'
 											>
@@ -865,7 +865,7 @@ class Expense extends React.Component {
 												dataField="expenseDate"
 												dataSort
 												dataFormat={this.renderDate}
-												width="12%"
+												width="15%"
 												className='table-header-bg'
 											>
 												{strings.EXPENSEDATE}
@@ -881,7 +881,7 @@ class Expense extends React.Component {
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												thStyle={{ whiteSpace: 'normal' }}
-												width="8%"
+												width="10%"
 												dataField="expenseStatus"
 												dataFormat={this.renderExpenseStatus}
 												dataSort
@@ -893,13 +893,13 @@ class Expense extends React.Component {
 												thStyle={{ whiteSpace: 'normal' }}
 												dataField="transactionCategoryName"
 												dataSort
-												width="15%"
+												width="20%"
 												className='table-header-bg'
 											>
 												{strings.EXPENSECATEGORY}
 											</TableHeaderColumn>
 											<TableHeaderColumn
-													width="10%"
+													width="15%"
                                                     className="table-header-bg"
                                                     dataField="exclusiveVat"
                                                     dataSort
@@ -909,7 +909,7 @@ class Expense extends React.Component {
 
                           					</TableHeaderColumn>
 											<TableHeaderColumn
-													width="8%"
+													width="13%"
 													thStyle={{ whiteSpace: 'normal' }}
 													dataSort
 													dataField="currencyName"
@@ -925,7 +925,7 @@ class Expense extends React.Component {
 												dataSort
 												dataFormat={this.renderAmount}
 												formatExtraData={universal_currency_list}
-												width="20%"
+												width="37%"
 												className='table-header-bg'
 											>
 												{strings.EXPENSEAMOUNT}

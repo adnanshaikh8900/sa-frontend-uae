@@ -107,7 +107,7 @@ class CreateProductCategory extends React.Component {
 					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'New Product Category is Created Successfully!',
+						res.data.message
 					);
 
 					if (this.state.createMore) {

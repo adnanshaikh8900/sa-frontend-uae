@@ -1,6 +1,6 @@
 nameserver="simpleaccounts-app"
 maindomain="app.simpleaccounts.io"
-subdomain="load-me"
+subdomain="dev"
 helmDir="simpleaccounts-frontend"
 SVrelease="0.0.3-alpha-408"
 

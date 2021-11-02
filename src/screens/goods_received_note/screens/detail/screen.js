@@ -435,8 +435,8 @@ class DetailGoodsReceivedNote extends React.Component {
 				render={({ field, form }) => (
 					<div>
 						<Input
-							type="number"
-min="0"
+							type="text"
+							min="0"
 							value={row['grnReceivedQuantity'] !== 0 ? row['grnReceivedQuantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {

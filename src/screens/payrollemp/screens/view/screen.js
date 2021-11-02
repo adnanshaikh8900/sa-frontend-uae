@@ -290,7 +290,7 @@ getPhoto=()=>{
 										 {strings.OverView}
 									</NavLink>
 								</NavItem>
-								{/* <NavItem>
+								<NavItem>
 									<NavLink
 										active={this.state.activeTab[0] === '2'}
 										onClick={() => {
@@ -309,7 +309,7 @@ getPhoto=()=>{
 									>
 										 {strings.Payslips}
 									</NavLink>
-								</NavItem> */}
+								</NavItem>
 
 							</Nav>
 							<TabContent activeTab={this.state.activeTab[0]}>
@@ -469,7 +469,7 @@ getPhoto=()=>{
 
 
 {/* salary EDIT */}
-								{/* <TabPane tabId="2">
+								<TabPane tabId="2">
 									<div className="table-wrapper">
 										<Row>
 											<Col>
@@ -630,7 +630,7 @@ getPhoto=()=>{
 									
 
 									</div>
-								</TabPane> */}
+								</TabPane>
 
 							</TabContent>
 

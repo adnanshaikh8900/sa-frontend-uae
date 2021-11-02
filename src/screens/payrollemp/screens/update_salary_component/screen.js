@@ -134,10 +134,10 @@ handleChange = (evt) => {
                 }
             }).catch((err) => {
                 this.setState({ loading: false })
-                this.props.history.push('/admin/payroll/employee')
+                this.props.history.push('/admin/master/employee')
             })
         } else {
-            this.props.history.push('/admin/payroll/employee')
+            this.props.history.push('/admin/master/employee')
         }
     }
     openSalaryComponentFixed = (props) => {
@@ -194,7 +194,7 @@ handleChange = (evt) => {
         this.props.detailSalaryComponentAction.updateEmployeeBank(formData).then((res) => {
             if (res.status === 200) {
                 this.props.commonActions.tostifyAlert('success', 'Employee Updated Successfully!')
-                this.props.history.push('/admin/payroll/employee')
+                this.props.history.push('/admin/master/employee')
             }
         }).catch((err) => {
             this.props.commonActions.tostifyAlert('error', err.data.message)
@@ -956,7 +956,7 @@ min="0"
                                                                         className="btn-square"
                                                                         onClick={() => {
                                                                             this.props.history.push(
-                                                                                '/admin/payroll/employee',
+                                                                                '/admin/master/employee',
                                                                             );
                                                                         }}
                                                                     >

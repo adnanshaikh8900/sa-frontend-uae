@@ -840,19 +840,7 @@ handleFocusChange = focusedInput => this.setState({ focusedInput });
 																				onFocusChange={this.handleFocusChange}
 																				startDate={this.state.startDate}
 																				startDateId="startDate"
-																				/>
-																{/* <DateRangePicker
-																				startDate={this.state.startDate}
-																				startDateId="tata-start-date"
-																				endDate={this.state.endDate}
-																				endDateId="tata-end-date"
-																				onDatesChange={this.handleDatesChange}
-																				focusedInput={this.state.focusedInput}
-																				onFocusChange={(option)=>{this.setState({focusedInput:option})}}
-																				isOutsideRange={day => !isInclusivelyBeforeDay(day, moment())}
-																				initialVisibleMonth={() => moment().subtract(1, "month")}
-																				/>																							 */}
-																			
+																				/>																			
 																			{props.errors.startDate &&
 																				props.touched.startDate && (
 																					<div className="text-danger">

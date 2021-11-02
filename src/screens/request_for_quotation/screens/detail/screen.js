@@ -901,14 +901,14 @@ min="0"
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Request For Quotation Updated Successfully.',
+					res.data.message
 				);
 				this.props.history.push('/admin/expense/request-for-quotation');
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data.message
 				);
 			});
 	};
@@ -941,7 +941,7 @@ min="0"
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Request For Quotation Deleted Successfully',
+						res.data.message
 					);
 					this.props.history.push('/admin/expense/request-for-quotation');
 				}
@@ -949,7 +949,7 @@ min="0"
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data.message
 				);
 			});
 	};

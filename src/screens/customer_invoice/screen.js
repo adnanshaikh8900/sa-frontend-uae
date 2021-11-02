@@ -229,7 +229,7 @@ class CustomerInvoice extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Posted Successfully',
+						res.data.message
 					);
 					this.setState({
 						loading: false,
@@ -241,7 +241,7 @@ class CustomerInvoice extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data.message
 				);
 				this.setState({
 					loading: false,
@@ -264,7 +264,7 @@ class CustomerInvoice extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Moved To Draft Successfully',
+						res.data.message,
 					);
 					this.setState({
 						loading: false,
@@ -276,7 +276,7 @@ class CustomerInvoice extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data.message
 				);
 				this.setState({
 					loading: false,
@@ -653,7 +653,7 @@ class CustomerInvoice extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Send Successfully',
+						res.data.message
 					);
 					this.setState({ openEmailModal: false });
 				}
@@ -661,7 +661,7 @@ class CustomerInvoice extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					'Please First fill The Mail Configuration Detail',
+					err.data.message
 				);
 			});
 	};
@@ -739,7 +739,7 @@ class CustomerInvoice extends React.Component {
 					this.initializeData();
 					this.props.commonActions.tostifyAlert(
 						'success',
-						' Customer invoice deleted successfully ',
+						res.data.message
 					);
 					if (customer_invoice_list && customer_invoice_list.length > 0) {
 						this.setState({
@@ -751,7 +751,7 @@ class CustomerInvoice extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data.message
 				);
 			});
 	};
@@ -830,14 +830,14 @@ class CustomerInvoice extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Invoice Deleted Successfully',
+					res.data.message
 				);
 				this.initializeData();
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data.message
 				);
 			});
 	};

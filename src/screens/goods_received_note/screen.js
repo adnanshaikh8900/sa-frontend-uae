@@ -362,6 +362,7 @@ class GoodsReceivedNote extends React.Component {
 			if (res.status === 200) {
 				this.props.commonActions.tostifyAlert(
 					'success',
+					res.data.message
 					// 'Purchase Order Created Successfull',
 				);
 				this.props.goodsReceivedNoteAction
@@ -370,6 +371,7 @@ class GoodsReceivedNote extends React.Component {
 					if (res.status === 200) {
 						this.props.commonActions.tostifyAlert(
 							'success',
+							res.data.message
 
 						);
 						this.setState({
@@ -385,6 +387,7 @@ class GoodsReceivedNote extends React.Component {
 		.catch((err) => {
 			this.props.commonActions.tostifyAlert(
 				'error',
+				err.data.message
 			);
 		});
 	
@@ -397,7 +400,7 @@ class GoodsReceivedNote extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Goods Received Note Sent Successfully',
+						res.data.message
 					);
 					this.setState({
 						loading: false,
@@ -408,7 +411,7 @@ class GoodsReceivedNote extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					'Please First fill The Mail Configuration Detail',
+					err.data.message
 				);
 			});
 	};
@@ -419,7 +422,7 @@ class GoodsReceivedNote extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Goods Received Note Posted Successfully',
+						res.data.message
 					);
 					this.setState({
 						loading: false,
@@ -430,7 +433,7 @@ class GoodsReceivedNote extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					'Something Went Wrong',
+					err.data.message
 				);
 			});
 	};
@@ -441,7 +444,7 @@ class GoodsReceivedNote extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Goods Received Note Closed Successfully',
+						res.data.message
 					);
 					this.setState({
 						loading: false,
@@ -452,7 +455,7 @@ class GoodsReceivedNote extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					'Something Went Wrong',
+					err.data.message
 				);
 			});
 	};
@@ -543,7 +546,7 @@ class GoodsReceivedNote extends React.Component {
 				this.initializeData(filterData);
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Supplier Invoice Deleted Successfully',
+					res.data.message
 				);
 				if (supplier_invoice_list && supplier_invoice_list.length > 0) {
 					this.setState({
@@ -554,7 +557,7 @@ class GoodsReceivedNote extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data.message
 				);
 			});
 	};
@@ -592,7 +595,7 @@ class GoodsReceivedNote extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Posted Successfully',
+						res.data.message
 					);
 					this.setState({
 						loading: false,
@@ -604,7 +607,7 @@ class GoodsReceivedNote extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data.message
 				);
 				this.setState({
 					loading: false,
@@ -627,7 +630,7 @@ class GoodsReceivedNote extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Moved To Draft Successfully',
+						res.data.message
 					);
 					this.setState({
 						loading: false,
@@ -639,7 +642,7 @@ class GoodsReceivedNote extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data.message
 				);
 				this.setState({
 					loading: false,
@@ -713,14 +716,14 @@ class GoodsReceivedNote extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Invoice Deleted Successfully',
+					res.data.message
 				);
 				this.initializeData();
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data.message
 				);
 			});
 	};

@@ -31,7 +31,7 @@ import LocalizedStrings from 'react-localization';
   
 import { selectOptionsFactory } from 'utils'
 import moment from 'moment'
-
+import * as CreatePayrollEmployeeActions from '../create/actions'
 
 
 
@@ -46,6 +46,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return ({
         commonActions: bindActionCreators(CommonActions, dispatch),
+        createPayrollEmployeeActions: bindActionCreators(CreatePayrollEmployeeActions, dispatch),
         detailEmployeeBankAction: bindActionCreators(DetailEmployeeBankAction, dispatch),
     })
 }
@@ -73,6 +74,11 @@ class UpdateEmployeeBank extends React.Component {
     }
 
     componentDidMount = () => {
+        this.props.createPayrollEmployeeActions.getBankListForEmployees()
+        .then((response) => {
+            this.setState({bankList:response.data
+        });
+        });
         if (this.props.location.state && this.props.location.state.id) {
             this.props.detailEmployeeBankAction.getEmployeeById(this.props.location.state.id).then((res) => {
                 if (res.status === 200) {
@@ -108,6 +114,9 @@ class UpdateEmployeeBank extends React.Component {
                                 res.data.branch && res.data.branch !== null
                                     ? res.data.branch
                                     : '',
+                            bankId: res.data.bankId && res.data.bankId !== null
+                            ? res.data.bankId
+                            : '',
 
 
                         },
@@ -139,7 +148,8 @@ class UpdateEmployeeBank extends React.Component {
             iban,
             bankName,
             branch,
-            swiftCode
+            swiftCode,
+            bankId,
 
         } = data;
 
@@ -158,10 +168,16 @@ class UpdateEmployeeBank extends React.Component {
             'iban',
             iban !== null ? iban : '',
         );
-        formData.append(
-            'bankName',
-            bankName !== null ? bankName : '',
-        );
+        // formData.append(
+        //     'bankName',
+        //     bankName !== null ? bankName : '',
+        // );
+        if (bankId && bankId.value) {
+            formData.append('bankId', bankId.value);
+        }
+        if (bankId && bankId.label) {
+            formData.append('bankName', bankId.label);
+        }
         formData.append(
             'branch',
             branch !== null ? branch : '',
@@ -182,7 +198,7 @@ class UpdateEmployeeBank extends React.Component {
     }
     render() {
         strings.setLanguage(this.state.language);
-        const { loading, initValue, dialog } = this.state
+        const { loading, initValue, dialog ,bankList } = this.state
         const { designation_dropdown, country_list, state_list, employee_list_dropdown } = this.props
         console.log(this.state.gender, "gender")
         console.log(this.state.bloodGroup, "blood")
@@ -218,8 +234,10 @@ class UpdateEmployeeBank extends React.Component {
                                                             .required("Account Holder Name is Required"),
                                                         accountNumber: Yup.string()
                                                         .required("Account Number is Required"),
-                                                        bankName: Yup.string()
-                                                        .required("Bank Name is Required"),
+                                                        // bankName: Yup.string()
+                                                        // .required("Bank Name is Required"),
+                                                        bankId: Yup.string()
+                                                        .required('Bank is Required') ,
                                                         swiftCode: Yup.string()
                                                         .required("Swift Code is Required"),
                                                         branch: Yup.string()
@@ -281,6 +299,60 @@ class UpdateEmployeeBank extends React.Component {
                                                                             </FormGroup>
                                                                         </Col>
                                                                         <Col md="4">
+                                                                                                <FormGroup>
+                                                                                                <Label htmlFor="select"><span className="text-danger">*</span> {strings.BankName} </Label>
+                                                                                                    <Select
+
+                                                                                                        options={
+                                                                                                            bankList
+                                                                                                                ? selectOptionsFactory.renderOptions(
+                                                                                                                    'bankName',
+                                                                                                                    'bankId',
+                                                                                                                    bankList,
+                                                                                                                    'Bank',
+                                                                                                                )
+                                                                                                                : []
+                                                                                                        }
+                                                                                                        value={props.values.bankId}
+                                                                                                        value={bankList &&
+                                                                                                            selectOptionsFactory
+                                                                                                                .renderOptions(
+                                                                                                                    'bankName',
+                                                                                                                    'bankId',
+                                                                                                                    bankList,
+                                                                                                                    'Bank',
+                                                                                                                )
+                                                                                                                .find(
+                                                                                                                    (option) =>
+                                                                                                                        option.value ===
+                                                                                                                        props.values.bankId,
+                                                                                                                )}
+                                                                                                        onChange={(option) => {
+                                                                                                            if (option && option.value) {
+                                                                                                                props.handleChange('bankId')(option);
+                                                                                                            } else {
+                                                                                                                props.handleChange('bankId')('');
+                                                                                                            }
+                                                                                                        }}
+                                                                                                        placeholder={strings.Select+strings.BankName}
+                                                                                                        id="bankId"
+                                                                                                        name="bankId"
+                                                                                                        className={
+                                                                                                            props.errors.bankId &&
+                                                                                                                props.touched.bankId
+                                                                                                                ? 'is-invalid'
+                                                                                                                : ''
+                                                                                                        }
+                                                                                                    />
+                                                                                                    {props.errors.bankId &&
+                                                                                                        props.touched.bankId && (
+                                                                                                            <div className="invalid-feedback">
+                                                                                                                {props.errors.bankId}
+                                                                                                            </div>
+                                                                                                        )}
+                                                                                                </FormGroup>
+                                                                                            </Col>
+                                                                        {/* <Col md="4">
                                                                             <FormGroup>
                                                                                 <Label htmlFor="select"><span className="text-danger">*</span>{strings.BankName} </Label>
                                                                                 <Input
@@ -305,7 +377,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                                     <div className="invalid-feedback">{props.errors.bankName}</div>
                                                                                 )}
                                                                             </FormGroup>
-                                                                        </Col>
+                                                                        </Col> */}
                                                                     </Row>
 
                                                                     <Row className="row-wrapper">

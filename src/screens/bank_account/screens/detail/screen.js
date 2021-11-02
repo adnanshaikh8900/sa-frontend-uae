@@ -522,11 +522,8 @@ class DetailBankAccount extends React.Component {
 																			props.handleChange('opening_balance')(
 																				option,
 																			);
-																		} else {
-																			props.handleChange('opening_balance')(
-																				option,
-																			);
-																		}
+																		} 
+																		
 																	}}
 																	className={
 																		props.errors.opening_balance &&

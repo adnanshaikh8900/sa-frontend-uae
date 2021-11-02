@@ -433,7 +433,7 @@ errors.mobileNumber =
 													</Label>
 													<Input
 														type="text"
-														maxLength="20"
+														maxLength="15"
 														id="vatRegistrationNumber"
 														name="vatRegistrationNumber"
 														onChange={(option) => {

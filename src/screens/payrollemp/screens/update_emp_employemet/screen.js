@@ -275,6 +275,8 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                     placeholderText={strings.Select+strings.DateOfJoining}
                                                                                     showMonthDropdown
                                                                                     showYearDropdown
+                                                                                    maxDate={new Date()}
+                                                                                    autoComplete={"off"}
                                                                                     dateFormat="dd/MM/yyyy"
                                                                                     dropdownMode="select"
                                                                                     selected={props.values.dateOfJoining}

@@ -104,7 +104,7 @@ class CreatePayrollList extends React.Component {
 			 payPeriod : '',
 			 apiSelector:'',
 			 submitButton:true,
-			paidDays:0,
+			paidDays:30,
 			countForTableApiCall:0,
 			focusedInput:null,
 			currencyIsoCode:"AED"
@@ -323,10 +323,17 @@ calculatePayperioad=(startDate,endDate)=>{
 				})
 
 				let newData = [...this.state.allPayrollEmployee]
-				newData = newData.map((data) => {					
-						data.noOfDays =this.state.paidDays	
+				newData = newData.map((data) => {	
+					let tmpPaidDay=this.state.paidDays > 30 ?30	:this.state.paidDays				
+						data.noOfDays =tmpPaidDay
+						data.originalNoOfDays =tmpPaidDay
 						data.originalGrossPay=data.grossPay		
-					    data.perDaySal=data.originalGrossPay / data.noOfDays		
+					    data.perDaySal=data.originalGrossPay / 30	
+					
+						data.lopDay = 30-tmpPaidDay;
+						data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
+						data.netPay   = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
+						
 					return data
 				})
 				console.log(newData)
@@ -422,16 +429,17 @@ calculatePayperioad=(startDate,endDate)=>{
 										return (
 											
 											<Input
+												className="spinboxDisable"
 												type="number"
-												min="0"
-												max={30}
+												min={0}
+												max={this.state.paidDays}
 												id="lopDay"
 												name="lopDay"
 												value={cell || 0}
 												
 												onChange={(evt) => {
 													
-													let value = parseInt(evt.target.value) ;
+													let value = parseInt(evt.target.value ==="" ? "0":evt.target.value) ;
 
 													if (value > 30 || value < 0) {
 														return;
@@ -508,29 +516,16 @@ else
 		let newData = [...this.state.allPayrollEmployee]
 			newData = newData.map((data) => {
 											if (row.id === data.id) {
+												data.lopDay = value;
+												data.noOfDays = 30 - value
+												data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
+												data.netPay   = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
+											}
+											data.payrollId = this.state.payroll_id
+											data.salaryDate = this.state.payrollDate
+								    return  data
 
-														if(data.lopDay<value)
-														{		
-																													
-															data.lopDay = value;
-															data.noOfDays = data.noOfDays - 1
-														    data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
-															data.netPay =   Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
-																												
-														}
-														else if(data.lopDay>value)
-															{	
-																data.lopDay = value;
-																data.noOfDays = data.noOfDays + 1
-																data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
-																data.netPay   = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
-													         }
-														}
-														data.payrollId = this.state.payroll_id
-														data.salaryDate = this.state.payrollDate
-														return data
-
-													})
+									})
 													console.log(newData)
 
 													this.setState({

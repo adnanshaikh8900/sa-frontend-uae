@@ -87,13 +87,13 @@ class UpdatePayroll extends React.Component {
 			openModal: false,
 			selectedRows: [],
 			selectedRows1: [],
-			selectRowProp: {
-				mode: 'checkbox',
-				bgColor: 'rgba(0,0,0, 0.05)',
-				clickToSelect: true,
-				onSelect: this.onRowSelect,
-				onSelectAll: this.onSelectAll,
-			},
+			// selectRowProp: {
+			// 	mode: 'checkbox',
+			// 	bgColor: 'rgba(0,0,0, 0.05)',
+			// 	clickToSelect: true,
+			// 	onSelect: this.onRowSelect,
+			// 	onSelectAll: this.onSelectAll,
+			// },
 			 payrollDate: new Date(),
 			payrollSubject:undefined,
 			//  startDate: new Date(date.getFullYear(), date.getMonth(), 1),
@@ -107,7 +107,8 @@ class UpdatePayroll extends React.Component {
 			 payrollApprover:'',
 			 dialog: null,
 			 currencyIsoCode:"AED",
-			 count:0
+			 count:0,
+			 paidDays:30
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -419,23 +420,11 @@ class UpdatePayroll extends React.Component {
 	updateAmounts=(row,value)=>{
 		let newData = [...this.state.allPayrollEmployee]
 			newData = newData.map((data) => {
-											if (row.id === data.id) {
-
-														if(data.lopDay<value)
-														{																															
+														if (row.id === data.id) {
 															data.lopDay = value;
-															data.noOfDays = data.noOfDays - 1
-														    data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
-															data.netPay =   Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
-																												
-														}
-														else if(data.lopDay>value)
-															{	
-																data.lopDay = value;
-																data.noOfDays = data.noOfDays + 1
-																data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
-																data.netPay   = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
-													         }
+															data.noOfDays = 30 - value
+															data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
+															data.netPay   = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
 														}
 														data.payrollId = this.state.payroll_id
 														data.salaryDate = this.state.payrollDate
@@ -471,9 +460,18 @@ class UpdatePayroll extends React.Component {
 					}
 					let newData = [...this.state.allPayrollEmployee]
 					newData = newData.map((data) => {					
-							data.noOfDays =this.state.paidDays
+							// data.noOfDays =this.state.paidDays
+							// data.originalGrossPay=data.grossPay		
+					        // data.perDaySal=data.originalGrossPay / data.noOfDays			
+							let tmpPaidDay=this.state.paidDays > 30 ?30	:this.state.paidDays				
+							data.noOfDays =tmpPaidDay
+							data.originalNoOfDays =tmpPaidDay
 							data.originalGrossPay=data.grossPay		
-					        data.perDaySal=data.originalGrossPay / data.noOfDays					
+							data.perDaySal=data.originalGrossPay / 30	
+						
+							data.lopDay = 30-tmpPaidDay;
+							data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
+							data.netPay   = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)		
 						return data
 					})
 					console.log(newData)
@@ -529,7 +527,7 @@ class UpdatePayroll extends React.Component {
 			mode: 'checkbox',
 			bgColor: 'rgba(0,0,0, 0.05)',
 			selected:this.state.selected,
-			clickToSelect: true,
+			clickToSelect: false,
 			onSelect: this.onRowSelect,
 			onSelectAll: this.onSelectAll,
 		}
@@ -613,15 +611,15 @@ class UpdatePayroll extends React.Component {
 										return (
 											<Input
 												type="number"
-												min="0"
-												max={30}
+												min={0}
+												max={this.state.paidDays}
 												id="lopDay"
 												name="lopDay"
 												value={cell || 0}
 												disabled={this.disableForAddButton() ? true : false}
 												onChange={(evt) => {
 
-													let value = evt.target.value;
+													let value = parseInt(evt.target.value ==="" ? "0":evt.target.value) ;
 
 													if (value > 30 || value < 0) {
 														return;
@@ -1012,16 +1010,15 @@ class UpdatePayroll extends React.Component {
 																	{/* <FormGroup className="mt-2"><i class="far fa-calendar-alt mt-1"></i>&nbsp;</FormGroup> */}
 																	<FormGroup >
 																				<DateRangePicker
-																				startDate={this.state.startDate}
-																				startDateId="tata-start-date"
-																				endDate={this.state.endDate}
-																				endDateId="tata-end-date"
-																				onDatesChange={this.handleDatesChange}
-																				focusedInput={this.state.focusedInput}
-																				disabled={this.disableForAddButton() ? true : false}
-																				onFocusChange={(option)=>{this.setState({focusedInput:option})}}
-																				isOutsideRange={day => !isInclusivelyBeforeDay(day, moment())}
-																				initialVisibleMonth={() => moment().subtract(1, "month")}
+																					startDate={this.state.startDate}
+																					startDateId="tata-start-date"
+																					endDate={this.state.endDate}
+																					endDateId="tata-end-date"
+																					onDatesChange={this.handleDatesChange}
+																					focusedInput={this.state.focusedInput}
+																					disabled={this.disableForAddButton() ? true : false}
+																					onFocusChange={(option)=>{this.setState({focusedInput:option})}}
+																					isOutsideRange={() => null}
 																				/>																							
 																	
 																			{props.errors.startDate &&

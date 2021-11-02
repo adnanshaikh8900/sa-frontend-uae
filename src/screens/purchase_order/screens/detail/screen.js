@@ -889,14 +889,14 @@ min="0"
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'purchase Order Updated Successfully.',
+					res.data.message
 				);
 				this.props.history.push('/admin/expense/purchase-order');
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data.message
 				);
 			});
 	};
@@ -929,7 +929,7 @@ min="0"
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Purchase Order Deleted Successfully',
+						res.data.message
 					);
 					this.props.history.push('/admin/expense/purchase-order');
 				}
@@ -937,7 +937,7 @@ min="0"
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data.message
 				);
 			});
 	};

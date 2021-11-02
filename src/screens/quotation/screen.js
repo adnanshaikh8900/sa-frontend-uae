@@ -355,7 +355,7 @@ class Quatation extends React.Component {
 			if (res.status === 200) {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Quotation Closed Successfully',
+					res.data.message
 				);
 
 
@@ -369,6 +369,7 @@ class Quatation extends React.Component {
 .catch((err) => {
 	this.props.commonActions.tostifyAlert(
 		'error',
+		err,data.message
 	);
 });
 
@@ -381,7 +382,7 @@ class Quatation extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Quotation Send Successfully',
+						res.data.message
 					);
 					this.setState({
 						loading: false,
@@ -392,7 +393,7 @@ class Quatation extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					'Something When Wrong',
+					err.data.message
 				);
 			});
 	};
@@ -483,7 +484,7 @@ class Quatation extends React.Component {
 				this.initializeData(filterData);
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Supplier Invoice Deleted Successfully',
+					res.data.message
 				);
 				if (supplier_invoice_list && supplier_invoice_list.length > 0) {
 					this.setState({
@@ -494,7 +495,7 @@ class Quatation extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data.message
 				);
 			});
 	};
@@ -532,7 +533,7 @@ class Quatation extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Posted Successfully',
+						res.data.message
 					);
 					this.setState({
 						loading: false,
@@ -544,7 +545,7 @@ class Quatation extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data.message
 				);
 				this.setState({
 					loading: false,
@@ -567,7 +568,7 @@ class Quatation extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Moved To Draft Successfully',
+						res.data.message
 					);
 					this.setState({
 						loading: false,
@@ -579,7 +580,7 @@ class Quatation extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data.message
 				);
 				this.setState({
 					loading: false,
@@ -653,14 +654,14 @@ class Quatation extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Invoice Deleted Successfully',
+					res.data.message
 				);
 				this.initializeData();
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data.message
 				);
 			});
 	};

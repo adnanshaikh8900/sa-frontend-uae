@@ -177,15 +177,7 @@ class CreateContact extends React.Component {
 	getStateList = (countryCode) => {
 		this.props.contactActions.getStateList(countryCode);
 	};
-	checkMobileNumber=(mobileNumber)=>{
-		// mobileNumber.length!=12 ?  this.setState({checkmobileNumberParam:true}) :this.setState({checkmobileNumberParam:false});
-		// if(mobileNumber.length!=12){
-		// 	 this.setState({checkmobileNumberParam:true})
-		// }
-		// else{
-		// 	this.setState({checkmobileNumberParam:false})
-		// }
-	}
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
@@ -712,7 +704,7 @@ class CreateContact extends React.Component {
 																			props.handleChange('mobileNumber')(
 																				option,
 																			);
-																			// this.checkMobileNumber(option)
+																			
 																			option.length!==12 ?  this.setState({checkmobileNumberParam:true}) :this.setState({checkmobileNumberParam:false});
 																		}}
 																		isValid

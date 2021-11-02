@@ -370,7 +370,7 @@ min="0"
 	};
 
 		renderSubTotal = (cell, row,extraData) => {
-			return row.subTotal === 0 ? this.state.customer_currency_symbol +" "+  row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2 }): this.state.customer_currency_symbol + row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2 });
+			return row.subTotal === 0 ? this.state.customer_currency_symbol +" "+  row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2 }): this.state.customer_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2 });
 
 }
 	setDate = (props, value) => {
@@ -869,15 +869,17 @@ min="0"
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 			if (props.values.discountType.value === 'PERCENTAGE') {
 				var val =
-					((+obj.unitPrice -
-						(+((obj.unitPrice * discountPercentage)) / 100)) *
+					((+obj.unitPrice
+						//  -
+						//  (+((obj.unitPrice * discountPercentage)) / 100)  #As per ticket 1340
+						 ) *  
 						vat *
 						obj.quantity) /
 					100;
 			} else if (props.values.discountType.value === 'FIXED') {
 				console.log(obj.unitPrice - discountAmount);
 				var val =
-					// (obj.unitPrice * obj.quantity - discountAmount / data.length) * As per ticket 1340
+					// (obj.unitPrice * obj.quantity - discountAmount / data.length) * #As per ticket 1340
 					(obj.unitPrice * obj.quantity) *
 					(vat / 100);
 			} else {

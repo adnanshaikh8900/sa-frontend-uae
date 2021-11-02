@@ -1319,15 +1319,7 @@ min="0"
 										>
 											{strings.DUEDATE}
 										</TableHeaderColumn>
-										<TableHeaderColumn
-											dataSort
-											dataField="currencyName"
-											//	width="4%"
-											dataFormat={this.renderCurrency}
-											className="table-header-bg"
-										>
-											{strings.CURRENCY}
-										</TableHeaderColumn>
+										
 										{/* <TableHeaderColumn
 												dataField="totalVatAmount"
 												dataSort

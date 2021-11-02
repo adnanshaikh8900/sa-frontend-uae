@@ -844,15 +844,7 @@ class BankAccount extends React.Component {
 												>
 													{strings.ACCOUNTTYPE}
 												</TableHeaderColumn>
-												<TableHeaderColumn
-													dataFormat={this.renderCurrency}
-													dataSort
-													dataField="currancyName"
-													width="5%"
-													className="table-header-bg"
-												>
-													{strings.CURRENCY}
-												</TableHeaderColumn>
+												
 												<TableHeaderColumn
 													dataAlign="right"
 													dataField="openingBalance"

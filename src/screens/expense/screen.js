@@ -908,16 +908,7 @@ class Expense extends React.Component {
                                                         {strings.ExpenseType}
 
                           					</TableHeaderColumn>
-											<TableHeaderColumn
-													width="13%"
-													thStyle={{ whiteSpace: 'normal' }}
-													dataSort
-													dataField="currencyName"
-													dataFormat={this.renderCurrency}
-													className='table-header-bg'
-												>
-													{strings.CURRENCY}
-												</TableHeaderColumn>
+											
 											<TableHeaderColumn
 												dataAlign="right"
 												thStyle={{ whiteSpace: 'normal' }}

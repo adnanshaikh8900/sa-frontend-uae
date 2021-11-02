@@ -239,6 +239,9 @@ class CreateContact extends React.Component {
 													firstName: Yup.string().required(
 														'First Name is Required',
 													),
+													lastName: Yup.string().required(
+														'Last Name is Required',
+													),
 													// lastName: Yup.string().required(
 													//   'Last Name is Required',
 													// ),
@@ -463,7 +466,7 @@ class CreateContact extends React.Component {
 															</Col>
 															<Col md="4">
 																<FormGroup>
-																	<Label htmlFor="lastName">{strings.LastName}</Label>
+																	<Label htmlFor="lastName"><span className="text-danger">*</span>{strings.LastName}</Label>
 																	<Input
 																		type="text"
 																		maxLength="26"

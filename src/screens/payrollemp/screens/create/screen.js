@@ -130,6 +130,7 @@ class CreateEmployeePayroll extends React.Component {
                 },
             ],
             list: [],
+            BankList: [],
             isDisabled:false,
             loading: false,
             createMore: false,
@@ -186,6 +187,7 @@ class CreateEmployeePayroll extends React.Component {
                 emergencyContactRelationship1:'',
                 emergencyContactNumber1:'',
                 emergencyContactName2:'',
+                bankId:''
                 
             },
             userPhoto: [],
@@ -255,6 +257,11 @@ class CreateEmployeePayroll extends React.Component {
         this.props.createPayrollEmployeeActions.getEmployeeDesignationForDropdown();
         this.props.createPayrollEmployeeActions.getEmployeesForDropdown();
         this.props.createPayrollEmployeeActions.getSalaryRolesForDropdown();
+        this.props.createPayrollEmployeeActions.getBankListForEmployees()
+            .then((response) => {
+            	this.setState({bankList:response.data
+            });
+            });
         // this.props.employeeActions.getEmployeesForDropdown();
         this.setState({ showIcon: false });
 
@@ -421,7 +428,8 @@ existForAccountNumber = (value) => {
             bankName,
             branch,
             iban,
-            swiftCode
+            swiftCode,
+            bankId
         } = data;
 
 
@@ -435,10 +443,17 @@ existForAccountNumber = (value) => {
             'accountNumber',
             accountNumber != null ? accountNumber : '',
         )
-        formData.append(
-            'bankName',
-            bankName != null ? bankName : '',
-        )
+        // formData.append(
+        //     'bankName',
+        //     bankName != null ? bankName : '',
+        // )
+        
+        if (bankId && bankId.value) {
+            formData.append('bankId', bankId.value);
+        }
+        if (bankId && bankId.label) {
+            formData.append('bankName', bankId.label);
+        }
         formData.append(
             'branch',
             branch != null ? branch : '',
@@ -1047,7 +1062,7 @@ existForAccountNumber = (value) => {
     }
     render() {
         strings.setLanguage(this.state.language);
-        const {	exist,checkmobileNumberParam,checkmobileNumberParam1,checkmobileNumberParam2,existForAccountNumber}=this.state
+        const {	exist,checkmobileNumberParam,checkmobileNumberParam1,checkmobileNumberParam2,existForAccountNumber,bankList}=this.state
         const { salary_role_dropdown, designation_dropdown, country_list, state_list, employee_list_dropdown } = this.props
         return (
             <div className="financial-report-screen">
@@ -2564,8 +2579,10 @@ existForAccountNumber = (value) => {
                                                                             .required("Account Number is Required"),
                                                                             iban: Yup.string()
                                                                             .required("IBAN is Required"),
-                                                                            bankName: Yup.string()
-                                                                            .required("Bank Name is Required"),
+                                                                            // bankName: Yup.string()
+                                                                            // .required("Bank Name is Required"),
+                                                                            bankId: Yup.string()
+                                                                            .required('Bank is Required') ,
                                                                             branch: Yup.string()
                                                                             .required("Branch is Required"),
                                                                             swiftCode: Yup.string()
@@ -2644,6 +2661,47 @@ existForAccountNumber = (value) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
+                                                                                                <Label htmlFor="select"><span className="text-danger">*</span> {strings.BankName} </Label>
+                                                                                                    <Select
+
+                                                                                                        options={
+                                                                                                            bankList
+                                                                                                                ? selectOptionsFactory.renderOptions(
+                                                                                                                    'bankName',
+                                                                                                                    'bankId',
+                                                                                                                    bankList,
+                                                                                                                    'Bank',
+                                                                                                                )
+                                                                                                                : []
+                                                                                                        }
+                                                                                                        value={props.values.bankId}
+                                                                                                        onChange={(option) => {
+                                                                                                            if (option && option.value) {
+                                                                                                                props.handleChange('bankId')(option);
+                                                                                                            } else {
+                                                                                                                props.handleChange('bankId')('');
+                                                                                                            }
+                                                                                                        }}
+                                                                                                        placeholder={strings.Select+strings.BankName}
+                                                                                                        id="bankId"
+                                                                                                        name="bankId"
+                                                                                                        className={
+                                                                                                            props.errors.bankId &&
+                                                                                                                props.touched.bankId
+                                                                                                                ? 'is-invalid'
+                                                                                                                : ''
+                                                                                                        }
+                                                                                                    />
+                                                                                                    {props.errors.bankId &&
+                                                                                                        props.touched.bankId && (
+                                                                                                            <div className="invalid-feedback">
+                                                                                                                {props.errors.bankId}
+                                                                                                            </div>
+                                                                                                        )}
+                                                                                                </FormGroup>
+                                                                                            </Col>
+                                                                                            {/* <Col md="4">
+                                                                                                <FormGroup>
                                                                                                     <Label htmlFor="select"><span className="text-danger">*</span> {strings.BankName} </Label>
                                                                                                     <Input
                                                                                                         type="text"
@@ -2667,7 +2725,7 @@ existForAccountNumber = (value) => {
                                                                                                         <div className="invalid-feedback">{props.errors.bankName}</div>
                                                                                                     )}
                                                                                                 </FormGroup>
-                                                                                            </Col>
+                                                                                            </Col> */}
                                                                                         </Row>
 
                                                                                         <Row className="row-wrapper">

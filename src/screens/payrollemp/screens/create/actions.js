@@ -345,3 +345,19 @@ export const saveSalaryComponent = (obj) => {
     }
   }
   
+  export const getBankListForEmployees = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'GET',
+			url: `/rest/bank/getBankNameList`,
+		};
+
+		return authApi(data)
+			.then((res) => {
+				return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

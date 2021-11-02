@@ -375,6 +375,9 @@ class DetailContact extends React.Component {
 														firstName: Yup.string().required(
 															'First Name is Required',
 														),
+														lastName: Yup.string().required(
+															'Last Name is Required',
+														),
 														contactType: Yup.string().required(
 															'Contact Type is Required',
 														),
@@ -550,7 +553,7 @@ class DetailContact extends React.Component {
 																</Col>
 																<Col md="4">
 																	<FormGroup>
-																		<Label htmlFor="lastName">{strings.LastName}</Label>
+																		<Label htmlFor="lastName">	<span className="text-danger">*</span>{strings.LastName}</Label>
 																		<Input
 																			type="text"
 																			id="lastName"

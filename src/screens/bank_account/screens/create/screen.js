@@ -287,7 +287,7 @@ class CreateBankAccount extends React.Component {
 													let errors = {};
 													if (this.state.exist === true) {
 														errors.account_number =
-															'Account Number is already exist';
+															'Account Number already exists';
 													}
 													return errors;
 												}}

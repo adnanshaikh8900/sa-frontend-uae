@@ -1075,7 +1075,7 @@ class CreateContact extends React.Component {
 																	</Label>
 																	<Input
 																		type="text"
-																		maxLength="20"
+																		maxLength="15"
 																		id="vatRegistrationNumber"
 																		name="vatRegistrationNumber"
 																		placeholder={strings.Enter+strings.TaxRegistrationNumber}

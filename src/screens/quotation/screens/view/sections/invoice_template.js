@@ -45,7 +45,7 @@ class RFQTemplate extends Component {
 		} else if (status === 'Closed') {
 			classname = 'label-closed';
 		}else if (status === 'Sent') {
-			classname = 'label-due';
+			classname = 'label-sent';
 		} else {
 			classname = 'label-overdue';
 		}

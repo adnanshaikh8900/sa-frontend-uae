@@ -894,11 +894,14 @@ class DetailSupplierInvoice extends React.Component {
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 			// let val = (((+obj.unitPrice) * vat) / 100)
 			if (props.values.discountType === 'PERCENTAGE') {
-				var val =	((+obj.unitPrice -
-					(+((obj.unitPrice * discountPercentage)) / 100)) *
-						vat *
-						obj.quantity) /
-					100;
+				var val =
+				((+obj.unitPrice
+					//  -
+					//  (+((obj.unitPrice * discountPercentage)) / 100)  #As per ticket 1340
+					 ) *  
+					vat *
+					obj.quantity) /
+				100;
 			} else if (props.values.discountType === 'FIXED') {
 				var val =
 						// (obj.unitPrice * obj.quantity - discountAmount / data.length) * As per ticket 1340

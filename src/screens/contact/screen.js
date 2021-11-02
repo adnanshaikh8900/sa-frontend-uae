@@ -251,7 +251,7 @@ class Contact extends React.Component {
 				this.initializeData();
 				this.props.commonActions.tostifyAlert(
 					'success',
-					 res.data.message
+					res.data.message,
 				);
 				if (contact_list && contact_list.data && contact_list.data.length > 0) {
 					this.setState({

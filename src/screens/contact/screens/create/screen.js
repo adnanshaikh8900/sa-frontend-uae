@@ -154,7 +154,7 @@ class CreateContact extends React.Component {
 					this.props.commonActions.tostifyAlert(
 						'success',
 						// res.data.message
-						"Contact Saved Successfully"
+						"Contact Created Successfully"
 					);
 					if (this.state.createMore) {
 						resetForm(this.state.initValue);

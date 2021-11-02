@@ -186,7 +186,7 @@ class DetailContact extends React.Component {
 					this.setState({ loading: false });
 					this.props.commonActions.tostifyAlert(
 						'error',
-						err && err.data ? err.data.message : 'Something Went Wrong',
+						err.data.message
 					);
 				});
 		} else {
@@ -222,7 +222,7 @@ class DetailContact extends React.Component {
 					resetForm();
 					this.props.commonActions.tostifyAlert(
 						'success',
-					res.data.message
+						'Contact Updated Successfully',
 					);
 					this.props.history.push('/admin/master/contact');
 				}
@@ -232,7 +232,7 @@ class DetailContact extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-				err.data.message
+					err.data.message
 				);
 				// this.props.history.push('/admin/master/contact');
 			});

@@ -742,8 +742,8 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		<span className="text-danger">*</span>{strings.Amount}
 																	</Label>
 																	<Input
-																		type="number"
-min="0"
+																		type="text"
+																		min="0"
 																		maxLength="10"
 																		name="expenseAmount"
 																		id="expenseAmount"

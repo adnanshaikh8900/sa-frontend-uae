@@ -750,7 +750,7 @@ class DetailExpense extends React.Component {
 																			{strings.Amount}
 																		</Label>
 																		<Input
-																			type="number"
+																			type="text"
 																			// min="0"
 																			name="expenseAmount"
 																			id="expenseAmount"

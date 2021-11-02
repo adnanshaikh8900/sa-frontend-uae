@@ -1033,7 +1033,7 @@ try {
 																			</UncontrolledTooltip>
 																		</Label>
 																		<Input
-																			type="number"
+																			type="text"
 																			maxLength="10"
 																			id="salesUnitPrice"
 																			name="salesUnitPrice"
@@ -1234,7 +1234,7 @@ try {
 																			</UncontrolledTooltip>
 																		</Label>
 																		<Input
-																		type="number"
+																		type="text"
 																			maxLength="10"
 																			id="purchaseUnitPrice"
 																			name="purchaseUnitPrice"
@@ -1479,8 +1479,8 @@ try {
 																			
 																		</Label>
 																		<Input
-																		type="number"
-min="0"
+																		type="text"
+																		min="0"
 																			maxLength="10"
 																			id="inventoryQty"
 																			name="inventoryQty"
@@ -1529,8 +1529,8 @@ min="0"
 																			<span className="text-danger">*</span>	{strings.PurchasePrice}
 																		</Label>
 																		<Input
-																		type="number"
-min="0"
+																		type="text"
+																		min="0"
 																			maxLength="10"
 																			id="inventoryPurchasePrice"
 																			name="inventoryPurchasePrice"
@@ -1642,7 +1642,7 @@ min="0"
 																			// 		? false
 																			// 		: true
 																			// }
-																			type="number"
+																			type="text"
 																			min="0"
 																			max="1000"
 																			maxLength="5"

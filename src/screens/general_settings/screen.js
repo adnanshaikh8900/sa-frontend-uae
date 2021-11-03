@@ -96,9 +96,15 @@ class GeneralSettings extends React.Component {
 			
 		
 	testMail = () => {
-		this.props.generalSettingActions.getTestUserMailById(this.state.userId ? this.state.userId:1);
-		// toast.info("Test mail Sent .... !");
-		// alert("Test mail Sent .... !");
+		this.props.generalSettingActions.getTestUserMailById(this.state.userId ? this.state.userId:1)	.then((res) => {
+			if (res.status === 200) {
+				this.props.commonActions.tostifyAlert(
+					'success',
+					'Test Mail Sent Successfully',
+				);
+			}
+		})
+	
 	}
 	initializeData = () => {
 		this.props.generalSettingActions
@@ -247,21 +253,21 @@ class GeneralSettings extends React.Component {
 														this.handleSubmit(values, resetForm);
 													}}
 													validationSchema={Yup.object().shape({
-														invoicingReferencePattern: Yup.string().required(
-															'Invoice Reference Number is Required',
-														),
-														mailingHost: Yup.string().required(
-															'Mailing Host is Required',
-														),
-														mailingPort: Yup.string().required(
-															'Mailing Port is Required',
-														),
-														mailingUserName: Yup.string().required(
-															'Mailing Username is Required',
-														),
-														mailingPassword: Yup.string().required(
-															'Mailing Password is Required',
-														),
+														// invoicingReferencePattern: Yup.string().required(
+														// 	'Invoice Reference Number is Required',
+														// ),
+														// mailingHost: Yup.string().required(
+														// 	'Mailing Host is Required',
+														// ),
+														// mailingPort: Yup.string().required(
+														// 	'Mailing Port is Required',
+														// ),
+														// mailingUserName: Yup.string().required(
+														// 	'Mailing Username is Required',
+														// ),
+														// mailingPassword: Yup.string().required(
+														// 	'Mailing Password is Required',
+														// ),
 													})}
 												>
 													{(props) => (

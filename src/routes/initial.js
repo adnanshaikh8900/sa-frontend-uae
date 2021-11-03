@@ -1,4 +1,4 @@
-import { LogIn, ResetPassword, Register, LogInTwo } from 'screens';
+import { LogIn, ResetPassword, Register, LogInTwo,NewPassword } from 'screens';
 
 const initialRoutes = [
 	{
@@ -15,6 +15,11 @@ const initialRoutes = [
 		path: '/reset-password',
 		name: 'Reset Password',
 		component: ResetPassword.screen,
+	},
+	{
+		path: '/new-password',
+		name: 'New Password',
+		component: NewPassword.screen,
 	},
 	{
 		path: '/register',

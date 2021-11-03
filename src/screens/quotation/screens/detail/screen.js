@@ -914,7 +914,7 @@ min="0"
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						"status changed"
 					);
 					this.props.history.push('/admin/income/quotation');
 				}

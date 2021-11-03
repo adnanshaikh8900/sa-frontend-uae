@@ -229,7 +229,7 @@ class CustomerInvoice extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						'Invoice Posted Successfully'
 					);
 					this.setState({
 						loading: false,

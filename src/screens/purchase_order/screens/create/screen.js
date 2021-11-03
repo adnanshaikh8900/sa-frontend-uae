@@ -973,7 +973,7 @@ class CreatePurchaseOrder extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Purchase Order Created Successfully.',
+					res.data.message
 				);
 				if (this.state.createMore) {
 					this.setState(

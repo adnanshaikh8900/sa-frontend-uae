@@ -1069,7 +1069,7 @@ this.state.data.map((obj, index) => {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Goods Received Notes Created Successfully.',
+					res.data.message
 				);
 				if (this.state.createMore) {
 					this.setState(

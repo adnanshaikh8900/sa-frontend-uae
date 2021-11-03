@@ -423,8 +423,12 @@ class UpdatePayroll extends React.Component {
 														if (row.id === data.id) {
 															data.lopDay = value;
 															data.noOfDays = 30 - value
+														
+															let deduction=data.noOfDays==0 ? 0:data.deduction;
+
 															data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
-															data.netPay   = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
+															data.netPay   = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (deduction || 0)
+															
 														}
 														data.payrollId = this.state.payroll_id
 														data.salaryDate = this.state.payrollDate

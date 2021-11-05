@@ -458,7 +458,7 @@ class Import extends React.Component {
 									return (
 										<th
 											key={index}
-											className="table-header-color"
+										style={{backgroundColor: '#dfe9f7'}}
 										>
 											<span>{this.showHeader(column)}</span>
 										</th>
@@ -1122,6 +1122,7 @@ class Import extends React.Component {
 																		</Col>
 																		<Col></Col>
 																	</Row>
+																	<div style={{display: props.values.version != undefined ? '' : 'none'}}>
 																	<div className="mt-4" >
 																		<Row>
 																			<Col lg={4}></Col>
@@ -1208,7 +1209,7 @@ class Import extends React.Component {
 																		</Button>) : ''}
 																		</Col>
 																	</Row>
-
+																	</div>
 																</Form>
 															)}
 														</Formik>
@@ -1266,7 +1267,6 @@ class Import extends React.Component {
 																			}}
 																	
 																		>
-
 																			<Button className="rounded-left" >Chart Of Accounts</Button>
 																		</Tab>
 																		{tabs.map((tab, idx) => (
@@ -1284,12 +1284,11 @@ class Import extends React.Component {
 																			</Tab>
 																		))}
 																	</TabList>
-																	<TabContent>
-																		<hr />
+																	<TabContent style={{maxWidth:'95%',marginLeft:'2.5%'}}>
 																		{this.state.nestedActiveDefaultTab ?
 																			(
 																				<TabPane>
-																					<div style={{ width: "80%",marginLeft:'10%' }} >{this.showTable(file_data_list)}	</div>
+																					<div >{this.showTable(file_data_list)}	</div>
 
 																				</TabPane>
 																			) : (

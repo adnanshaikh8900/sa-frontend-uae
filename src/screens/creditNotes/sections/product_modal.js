@@ -83,13 +83,41 @@ class ProductModal extends React.Component {
 			isActive:true,
 			selectedStatus:true,
 		};
+		this.formRef = React.createRef();  
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9-./\\|]+$/;
 		// this.regExBoth = /[a-zA-Z0-9 ]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 	}
+	getProductCode=()=>{
+		const {
+			openProductModal,		
+		} = this.props;
+		this.props.productActions.getProductCode().then((res) => {
+			if (res.status === 200) {
+				this.setState({
+					initValue: {
+						...this.state.initValue,
+						...{ productCode: res.data },
+					},
+				});
+				if(openProductModal===true)
+				this.formRef.current.setFieldValue('productCode', res.data, true,true
+				// this.validationCheck(res.data)
+				);
+			}
+		});
+	
+	console.log(this.state.employeeCode)
+	}
 
+	componentDidMount = () => {
+		this.initializeData();
+	};
+	initializeData = () => {
+		this.getProductCode();
+	};
 	getData = (data) => {
 		let temp = {};
 		for (let item in data) {
@@ -235,6 +263,7 @@ class ProductModal extends React.Component {
 					className="modal-success contact-modal"
 				>
 					<Formik
+						ref={this.formRef}
 						initialValues={initValue}
 						onSubmit={(values, { resetForm }) => {
 							this.handleSubmit(values, resetForm);

@@ -64,7 +64,8 @@ class UpdateEmployeeBank extends React.Component {
             selectedStatus: '',
             gender: '',
             bloodGroup: '',
-            current_employee_id: null
+            current_employee_id: null,
+            existForAccountNumber: false,
         }
         this.regExAlpha = /^[a-zA-Z ]+$/;
         this.regExBoth = /[a-zA-Z0-9]+$/;
@@ -135,7 +136,30 @@ class UpdateEmployeeBank extends React.Component {
         }
     }
 
-
+    existForAccountNumber = (value) => {
+        const data = {
+            moduleType: 19,
+            name: value,
+        };
+        this.props.createPayrollEmployeeActions
+            .checkValidation(data)
+            .then((response) => {
+                if (response.data === 'accountNumber already exists') {
+                    this.setState(
+                        {
+                            existForAccountNumber: true,
+                        },
+                        
+                        () => {},
+                    );
+                
+                } else {
+                    this.setState({
+                        existForAccountNumber: false,
+                    });
+                }
+            });
+    };
   
     // Create or Edit Vat
     handleSubmit = (data) => {
@@ -198,7 +222,7 @@ class UpdateEmployeeBank extends React.Component {
     }
     render() {
         strings.setLanguage(this.state.language);
-        const { loading, initValue, dialog ,bankList } = this.state
+        const { loading, initValue, dialog ,bankList ,existForAccountNumber } = this.state
         const { designation_dropdown, country_list, state_list, employee_list_dropdown } = this.props
         console.log(this.state.gender, "gender")
         console.log(this.state.bloodGroup, "blood")
@@ -228,6 +252,14 @@ class UpdateEmployeeBank extends React.Component {
                                                     ref={this.formRef}
                                                     onSubmit={(values) => {
                                                         this.handleSubmit(values)
+                                                    }}
+                                                    validate={(values) => {
+                                                        let errors = {};
+                                                        if (existForAccountNumber === true) {
+                                                            errors.accountNumber =
+                                                                'Account Number already exists';
+                                                        }
+                                                        return errors;
                                                     }}
                                                     validationSchema={Yup.object().shape({
                                                         accountHolderName: Yup.string()
@@ -287,9 +319,16 @@ class UpdateEmployeeBank extends React.Component {
                                                                                     name="accountNumber"
                                                                                     value={props.values.accountNumber}
                                                                                     placeholder={strings.Enter+strings.AccountNumber}
-                                                                                    onChange={(value) => {
-                                                                                        props.handleChange('accountNumber')(value);
-
+                                                                                    onChange={(option) => {
+                                                                                        if (
+                                                                                            option.target.value === '' ||
+                                                                                            this.regExBoth.test(option.target.value)
+                                                                                        ) {
+                                                                                            props.handleChange('accountNumber')(
+                                                                                                option,
+                                                                                            );
+                                                                                            this.existForAccountNumber(option.target.value);
+                                                                                        }
                                                                                     }}
                                                                                     className={props.errors.accountNumber && props.touched.accountNumber ? "is-invalid" : ""}
                                                                                 />

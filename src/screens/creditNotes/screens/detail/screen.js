@@ -1037,7 +1037,7 @@ min="0"
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						'Credit note deleted successfully'
 					);
 					this.props.history.push('/admin/income/credit-notes');
 				}

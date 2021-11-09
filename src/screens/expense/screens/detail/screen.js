@@ -259,7 +259,7 @@ class DetailExpense extends React.Component {
 					// resetValue({});
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Expense Updated Successfully.',
+						res.data.message
 					);
 					this.props.history.push('/admin/expense/expense');
 				}
@@ -268,7 +268,7 @@ class DetailExpense extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data.message
 				);
 			});
 	};
@@ -320,7 +320,7 @@ class DetailExpense extends React.Component {
 					// this.success('Chart Account Deleted Successfully');
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Expense Deleted Successfully',
+						res.data.message
 					);
 					this.props.history.push('/admin/expense/expense');
 				}
@@ -328,7 +328,7 @@ class DetailExpense extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data.message
 				);
 			});
 	};

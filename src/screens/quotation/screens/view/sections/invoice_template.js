@@ -45,7 +45,7 @@ class RFQTemplate extends Component {
 		} else if (status === 'Closed') {
 			classname = 'label-closed';
 		}else if (status === 'Sent') {
-			classname = 'label-due';
+			classname = 'label-sent';
 		} else {
 			classname = 'label-overdue';
 		}
@@ -156,8 +156,7 @@ class RFQTemplate extends Component {
 						
 							
 
-						<div className="text-center">
-						
+						{/* <div className="text-center">						
 						<div className="text-center"			>
 								<h6
 								style={{textAlign: 'center'}}
@@ -168,9 +167,48 @@ class RFQTemplate extends Component {
 								)}
 								</h6>
 								</div>
-						
-							
-						</div>
+						</div> */}
+							<div
+								style={{
+									width: '100%',
+									display: 'flex',
+									justifyContent: 'space-between',
+									height: '50px'
+								}}
+							>
+								<div
+								style={{
+									width: '50%',
+									// display: 'flex',
+									justifyContent: 'space-between',
+									
+								}}>
+								<h6
+								style={{textAlign: 'center'}}
+								className={'mt-3 mb-2'}
+								>	Created Date:{' '}
+								{moment(QuotationData.createdDate).format(
+									'DD MMM YYYY',
+								)}
+								</h6>
+								</div>
+								<div
+								style={{
+									width: '50%',
+									// display: 'flex',
+									justifyContent: 'space-between',
+									
+								}}>
+								<h6
+								style={{textAlign: 'center'}}
+								className={'mt-3 mb-2'}
+								>	{strings.ExpirationDate }:{' '}
+								{moment(QuotationData.quotaionExpiration).format(
+									'DD MMM YYYY',
+								)}
+								</h6>
+								</div>
+							</div>
 						<Table  >
 							<thead className="header-row">
 								<tr>

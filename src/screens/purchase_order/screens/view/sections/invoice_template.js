@@ -314,7 +314,7 @@ class RFQTemplate extends Component {
 							</div>
 							<div
 								style={{
-									width: '100%',
+									width: '150%',
 									display: 'flex',
 									justifyContent: 'space-between',
 								}}

@@ -186,7 +186,7 @@ class DetailContact extends React.Component {
 					this.setState({ loading: false });
 					this.props.commonActions.tostifyAlert(
 						'error',
-						err && err.data ? err.data.message : 'Something Went Wrong',
+						err.data.message
 					);
 				});
 		} else {
@@ -222,7 +222,7 @@ class DetailContact extends React.Component {
 					resetForm();
 					this.props.commonActions.tostifyAlert(
 						'success',
-					res.data.message
+						'Contact Updated Successfully',
 					);
 					this.props.history.push('/admin/master/contact');
 				}
@@ -374,6 +374,9 @@ class DetailContact extends React.Component {
 													validationSchema={Yup.object().shape({
 														firstName: Yup.string().required(
 															'First Name is Required',
+														),
+														lastName: Yup.string().required(
+															'Last Name is Required',
 														),
 														contactType: Yup.string().required(
 															'Contact Type is Required',
@@ -550,7 +553,7 @@ class DetailContact extends React.Component {
 																</Col>
 																<Col md="4">
 																	<FormGroup>
-																		<Label htmlFor="lastName">{strings.LastName}</Label>
+																	<Label htmlFor="lastName">	<span className="text-danger">*</span>{strings.LastName}</Label>
 																		<Input
 																			type="text"
 																			id="lastName"
@@ -1171,6 +1174,7 @@ class DetailContact extends React.Component {
 																		</Label>
 																		<Input
 																			type="text"
+																			maxLength="15"
 																			id="vatRegistrationNumber"
 																			name="vatRegistrationNumber"
 																			placeholder={strings.Enter+strings.TaxRegistrationNumber}

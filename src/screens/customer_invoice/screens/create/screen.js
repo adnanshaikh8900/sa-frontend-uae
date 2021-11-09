@@ -273,7 +273,7 @@ class CreateCustomerInvoice extends React.Component {
 				render={({ field, form }) => (
 					<div>
 						<Input
-							type="number"
+							type="text"
 							min="0"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
@@ -332,7 +332,7 @@ class CreateCustomerInvoice extends React.Component {
 				name={`lineItemsString.${idx}.unitPrice`}
 				render={({ field, form }) => (
 					<Input
-					type="number"
+					type="text"
 min="0"
 						maxLength="10"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
@@ -369,8 +369,8 @@ min="0"
 		);
 	};
 
-		renderSubTotal = (cell, row,extraData) => {
-			return row.subTotal === 0 ? this.state.customer_currency_symbol +" "+  row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2 }): this.state.customer_currency_symbol + row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2 });
+	renderSubTotal = (cell, row,extraData) => {
+		return row.subTotal === 0 ? this.state.customer_currency_symbol +" "+  row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2 }): this.state.customer_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2 });
 
 }
 	setDate = (props, value) => {
@@ -1330,7 +1330,7 @@ min="0"
 																	.required('Value is Required')
 																	.test(
 																		'quantity',
-																		'Quantity Should be Greater than 1',
+																		'Quantity field is required and should not be 0',
 																		(value) => {
 																			if (value > 0) {
 																				return true;

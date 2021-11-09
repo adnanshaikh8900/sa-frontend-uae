@@ -2,7 +2,7 @@ import LogIn from './log_in';
 import LogInTwo from './log_in/screen-two';
 import Register from './register';
 import ResetPassword from './reset_password';
-
+import NewPassword from './new_password';
 import Dashboard from './dashboard';
 import DashboardTwo from './dashboard/screen-two';
 
@@ -188,6 +188,7 @@ export {
 	LogIn,
 	LogInTwo,
 	Register,
+	NewPassword,
 	ResetPassword,
 	Dashboard,
 	DashboardTwo,

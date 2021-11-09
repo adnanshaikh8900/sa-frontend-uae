@@ -368,7 +368,7 @@ class DetailBankAccount extends React.Component {
 												let errors = {};
 												if (this.state.exist === true) {
 													errors.account_number =
-														'Account Number is already exist';
+														'Account Number  already exists';
 												}
 												return errors;
 											}}
@@ -519,10 +519,6 @@ class DetailBankAccount extends React.Component {
 																			option.target.value === '' ||
 																			this.regEx.test(option.target.value)
 																		) {
-																			props.handleChange('opening_balance')(
-																				option,
-																			);
-																		} else {
 																			props.handleChange('opening_balance')(
 																				option,
 																			);

@@ -130,6 +130,7 @@ class CreateEmployeePayroll extends React.Component {
                 },
             ],
             list: [],
+            BankList: [],
             isDisabled:false,
             loading: false,
             createMore: false,
@@ -186,7 +187,7 @@ class CreateEmployeePayroll extends React.Component {
                 emergencyContactRelationship1:'',
                 emergencyContactNumber1:'',
                 emergencyContactName2:'',
-                
+                bankId:''
             },
             userPhoto: [],
             userPhotoFile: [],
@@ -255,6 +256,11 @@ class CreateEmployeePayroll extends React.Component {
         this.props.createPayrollEmployeeActions.getEmployeeDesignationForDropdown();
         this.props.createPayrollEmployeeActions.getEmployeesForDropdown();
         this.props.createPayrollEmployeeActions.getSalaryRolesForDropdown();
+        this.props.createPayrollEmployeeActions.getBankListForEmployees()
+        .then((response) => {
+            this.setState({bankList:response.data
+        });
+        });
         // this.props.employeeActions.getEmployeesForDropdown();
         this.setState({ showIcon: false });
 
@@ -421,7 +427,8 @@ existForAccountNumber = (value) => {
             bankName,
             branch,
             iban,
-            swiftCode
+            swiftCode,
+            bankId
         } = data;
 
 
@@ -435,10 +442,17 @@ existForAccountNumber = (value) => {
             'accountNumber',
             accountNumber != null ? accountNumber : '',
         )
-        formData.append(
-            'bankName',
-            bankName != null ? bankName : '',
-        )
+                // formData.append(
+        //     'bankName',
+        //     bankName != null ? bankName : '',
+        // )
+        
+        if (bankId && bankId.value) {
+            formData.append('bankId', bankId.value);
+        }
+        if (bankId && bankId.label) {
+            formData.append('bankName', bankId.label);
+        }
         formData.append(
             'branch',
             branch != null ? branch : '',
@@ -1047,7 +1061,7 @@ existForAccountNumber = (value) => {
     }
     render() {
         strings.setLanguage(this.state.language);
-        const {	exist,checkmobileNumberParam,checkmobileNumberParam1,checkmobileNumberParam2,existForAccountNumber}=this.state
+        const {	exist,checkmobileNumberParam,checkmobileNumberParam1,checkmobileNumberParam2,existForAccountNumber,bankList}=this.state
         const { salary_role_dropdown, designation_dropdown, country_list, state_list, employee_list_dropdown } = this.props
         return (
             <div className="financial-report-screen">
@@ -1173,6 +1187,16 @@ existForAccountNumber = (value) => {
                                                                             .required('DOB is Required') ,
                                                                             gender: Yup.string()
                                                                             .required('Gender is Required') ,
+                                                                            presentAddress: Yup.string()
+                                                                            .required('Present Address is Required') ,
+                                                                            pincode: Yup.string()
+                                                                            .required('Pin Code is Required') ,
+                                                                            countryId: Yup.string()
+                                                                            .required('Country is Required') ,
+                                                                            stateId: Yup.string()
+                                                                            .required('State is Required') ,
+                                                                            city: Yup.string()
+                                                                            .required('City is Required') ,
                                                                           
                                                                             active : Yup.string()
                                                                             .required('status is Required') ,  
@@ -1734,42 +1758,42 @@ existForAccountNumber = (value) => {
                                                                                         <Row className="row-wrapper">
                                                                                             <Col md="8">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="gender"> {strings.PresentAddress} </Label>
+                                                                                                <Label htmlFor="gender"><span className="text-danger">*</span> {strings.PresentAddress} </Label>
                                                                                                     <Input
                                                                                                         type="text"
+                                                                                                        maxLength="26"
                                                                                                         id="presentAddress"
                                                                                                         name="presentAddress"
-                                                                                                        placeholder={strings.Enter+strings.PresentAddress}
-                                                                                                        onChange={(value) => { props.handleChange("presentAddress")(value) }}
+                                                                                                      
+                                                                                                    
                                                                                                         value={props.values.presentAddress}
-                                                                                                        className={
-                                                                                                            props.errors.presentAddress && props.touched.presentAddress
-                                                                                                                ? "is-invalid"
-                                                                                                                : ""
-                                                                                                        }
+                                                                                                        placeholder={strings.Enter+strings.PresentAddress}
+                                                                                                        onChange={(option) => {
+                                                                                                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('presentAddress')(option) }
+                                                                                                        }}
+                                                                                                        className={props.errors.presentAddress && props.touched.presentAddress ? "is-invalid" : ""}
                                                                                                     />
-                                                                                                    {props.presentAddress && props.touched.presentAddress && (
+                                                                                                    {props.errors.presentAddress && props.touched.presentAddress && (
                                                                                                         <div className="invalid-feedback">{props.errors.presentAddress}</div>
                                                                                                     )}
                                                                                                 </FormGroup>
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="city"> {strings.PinCode} </Label>
+                                                                                                <Label htmlFor="city"><span className="text-danger">*</span>{strings.PinCode} </Label>
                                                                                                     <Input
                                                                                                         type="text"
+                                                                                                        maxLength="8"
                                                                                                         id="pincode"
                                                                                                         name="pincode"
-                                                                                                        placeholder={strings.Enter+strings.PinCode}
-                                                                                                        onChange={(value) => { props.handleChange("pincode")(value) }}
                                                                                                         value={props.values.pincode}
-                                                                                                        className={
-                                                                                                            props.errors.pincode && props.touched.pincode
-                                                                                                                ? "is-invalid"
-                                                                                                                : ""
-                                                                                                        }
+                                                                                                        placeholder={strings.Enter+strings.PinCode}
+                                                                                                        onChange={(option) => {
+                                                                                                            if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('pincode')(option) }
+                                                                                                        }}
+                                                                                                        className={props.errors.pincode && props.touched.pincode ? "is-invalid" : ""}
                                                                                                     />
-                                                                                                    {props.pincode && props.touched.pincode && (
+                                                                                                     {props.errors.pincode && props.touched.pincode && (
                                                                                                         <div className="invalid-feedback">{props.errors.pincode}</div>
                                                                                                     )}
                                                                                                 </FormGroup>
@@ -1780,7 +1804,7 @@ existForAccountNumber = (value) => {
                                                                                         <Row className="row-wrapper">
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="countryId">{strings.Country}</Label>
+                                                                                                <Label htmlFor="countryId"><span className="text-danger">*</span>{strings.Country}</Label>
                                                                                                     <Select
                                                                                                         options={
                                                                                                             country_list
@@ -1826,7 +1850,7 @@ existForAccountNumber = (value) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="stateId">{strings.StateRegion}</Label>
+                                                                                                <Label htmlFor="stateId"><span className="text-danger">*</span>{strings.StateRegion}</Label>
                                                                                                     <Select
 
                                                                                                         options={
@@ -1867,21 +1891,20 @@ existForAccountNumber = (value) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="state">{strings.City}     </Label>
+                                                                                                <Label htmlFor="state"><span className="text-danger">*</span>{strings.City} </Label>
                                                                                                     <Input
                                                                                                         type="text"
+                                                                                                        maxLength="20"
                                                                                                         id="city"
                                                                                                         name="city"
-                                                                                                        placeholder={strings.Enter+strings.City}
-                                                                                                        onChange={(value) => { props.handleChange("city")(value) }}
                                                                                                         value={props.values.city}
-                                                                                                        className={
-                                                                                                            props.errors.city && props.touched.city
-                                                                                                                ? "is-invalid"
-                                                                                                                : ""
-                                                                                                        }
+                                                                                                        placeholder={strings.Enter+strings.City}
+                                                                                                        onChange={(option) => {
+                                                                                                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('city')(option) }
+                                                                                                        }}
+                                                                                                        className={props.errors.city && props.touched.city ? "is-invalid" : ""}
                                                                                                     />
-                                                                                                    {props.city && props.touched.city && (
+                                                                                                 {props.errors.city && props.touched.city && (
                                                                                                         <div className="invalid-feedback">{props.errors.city}</div>
                                                                                                     )}
                                                                                                 </FormGroup>
@@ -2551,8 +2574,10 @@ existForAccountNumber = (value) => {
                                                                             .required("Account Number is Required"),
                                                                             iban: Yup.string()
                                                                             .required("IBAN is Required"),
-                                                                            bankName: Yup.string()
-                                                                            .required("Bank Name is Required"),
+                                                                            // bankName: Yup.string()
+                                                                            // .required("Bank Name is Required"),
+                                                                            bankId: Yup.string()
+                                                                            .required('Bank is Required') ,
                                                                             branch: Yup.string()
                                                                             .required("Branch is Required"),
                                                                             swiftCode: Yup.string()
@@ -2631,6 +2656,47 @@ existForAccountNumber = (value) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
+                                                                                                <Label htmlFor="select"><span className="text-danger">*</span> {strings.BankName} </Label>
+                                                                                                    <Select
+
+                                                                                                        options={
+                                                                                                            bankList
+                                                                                                                ? selectOptionsFactory.renderOptions(
+                                                                                                                    'bankName',
+                                                                                                                    'bankId',
+                                                                                                                    bankList,
+                                                                                                                    'Bank',
+                                                                                                                )
+                                                                                                                : []
+                                                                                                        }
+                                                                                                        value={props.values.bankId}
+                                                                                                        onChange={(option) => {
+                                                                                                            if (option && option.value) {
+                                                                                                                props.handleChange('bankId')(option);
+                                                                                                            } else {
+                                                                                                                props.handleChange('bankId')('');
+                                                                                                            }
+                                                                                                        }}
+                                                                                                        placeholder={strings.Select+strings.BankName}
+                                                                                                        id="bankId"
+                                                                                                        name="bankId"
+                                                                                                        className={
+                                                                                                            props.errors.bankId &&
+                                                                                                                props.touched.bankId
+                                                                                                                ? 'is-invalid'
+                                                                                                                : ''
+                                                                                                        }
+                                                                                                    />
+                                                                                                    {props.errors.bankId &&
+                                                                                                        props.touched.bankId && (
+                                                                                                            <div className="invalid-feedback">
+                                                                                                                {props.errors.bankId}
+                                                                                                            </div>
+                                                                                                        )}
+                                                                                                </FormGroup>
+                                                                                            </Col>
+                                                                                            {/* <Col md="4">
+                                                                                                <FormGroup>
                                                                                                     <Label htmlFor="select"><span className="text-danger">*</span> {strings.BankName} </Label>
                                                                                                     <Input
                                                                                                         type="text"
@@ -2654,7 +2720,7 @@ existForAccountNumber = (value) => {
                                                                                                         <div className="invalid-feedback">{props.errors.bankName}</div>
                                                                                                     )}
                                                                                                 </FormGroup>
-                                                                                            </Col>
+                                                                                            </Col> */}
                                                                                         </Row>
 
                                                                                         <Row className="row-wrapper">

@@ -154,7 +154,7 @@ class CreateContact extends React.Component {
 					this.props.commonActions.tostifyAlert(
 						'success',
 						// res.data.message
-						"Contact Saved Successfully"
+						"Contact Created Successfully"
 					);
 					if (this.state.createMore) {
 						resetForm(this.state.initValue);
@@ -246,6 +246,9 @@ class CreateContact extends React.Component {
 												validationSchema={Yup.object().shape({
 													firstName: Yup.string().required(
 														'First Name is Required',
+													),
+													lastName: Yup.string().required(
+														'Last Name is Required',
 													),
 													// lastName: Yup.string().required(
 													//   'Last Name is Required',
@@ -471,7 +474,7 @@ class CreateContact extends React.Component {
 															</Col>
 															<Col md="4">
 																<FormGroup>
-																	<Label htmlFor="lastName">{strings.LastName}</Label>
+																<Label htmlFor="lastName"><span className="text-danger">*</span>{strings.LastName}</Label>
 																	<Input
 																		type="text"
 																		maxLength="26"
@@ -1075,7 +1078,7 @@ class CreateContact extends React.Component {
 																	</Label>
 																	<Input
 																		type="text"
-																		maxLength="20"
+																		maxLength="15"
 																		id="vatRegistrationNumber"
 																		name="vatRegistrationNumber"
 																		placeholder={strings.Enter+strings.TaxRegistrationNumber}

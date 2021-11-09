@@ -341,7 +341,7 @@ class DetailCreditNote extends React.Component {
 				render={({ field, form }) => (
 					<div>
 						<Input
-							type="number"
+							type="text"
 min="0"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
@@ -403,7 +403,7 @@ min="0"
 				name={`lineItemsString.${idx}.unitPrice`}
 				render={({ field, form }) => (
 					<Input
-					type="number"
+					type="text"
 
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {

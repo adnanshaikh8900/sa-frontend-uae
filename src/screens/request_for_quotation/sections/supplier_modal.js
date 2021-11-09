@@ -170,6 +170,7 @@ errors.mobileNumber =
 
 						validationSchema={Yup.object().shape({
 							firstName: Yup.string().required('First Name is Required'),
+							lastName: Yup.string().required('Last Name is Required'),
 							vatRegistrationNumber: Yup.string().required('	Tax Registration Number is Required'),
 							// lastName: Yup.string().required('Last Name is Required'),
 							// middleName: Yup.string().required('Middle Name is Required'),
@@ -299,7 +300,7 @@ errors.mobileNumber =
 											</Col>
 											<Col md="4">
 												<FormGroup>
-													<Label htmlFor="lastName">{strings.LastName}</Label>
+												<Label htmlFor="lastName"><span className="text-danger">*</span>{strings.LastName}</Label>
 													<Input
 														type="text"
 														maxLength="26"
@@ -431,7 +432,7 @@ errors.mobileNumber =
 													</Label>
 													<Input
 														type="text"
-														maxLength="20"
+														maxLength="15"
 														id="vatRegistrationNumber"
 														name="vatRegistrationNumber"
 														onChange={(option) => {

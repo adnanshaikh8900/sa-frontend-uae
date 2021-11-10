@@ -264,7 +264,7 @@ class CustomerInvoice extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Moved To Draft Successfully',
+						res.data.message ?res.data.message:   'Invoice Moved To Draft Successfully',
 					);
 					this.setState({
 						loading: false,

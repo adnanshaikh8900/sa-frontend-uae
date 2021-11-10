@@ -13,7 +13,7 @@ const { ToWords } = require('to-words');
 const toWords = new ToWords({
 	localeCode: 'en-IN',
 	converterOptions: {
-	//   currency: true,
+  currency: true,
 	  ignoreDecimal: false,
 	  ignoreZeroCurrency: false,
 	  doNotAddOnly: false,
@@ -220,12 +220,12 @@ class RFQTemplate extends Component {
 								}}
 							>
 								{/* <div className="pb-2">{strings.AmountInWords }:<br/>
-									<b><u> {RFQData.totalAmount ? upperCase(RFQData.currencyName + " " +(toWords.convert(RFQData.totalAmount))+" ONLY") : " -" }
+									<b><u> {RFQData.totalAmount ? upperCase(RFQData.currencyName + " " +(toWords.convert(RFQData.totalAmount))+" ") : " -" }
 								
 									</u></b></div>
 								<div className="pb-2">{strings.Vat+" "+strings.AmountInWords }:
 										<br/>
-									<b> {RFQData.totalVatAmount ? (upperCase(RFQData.currencyName + " " +(toWords.convert(RFQData.totalVatAmount))+" ONLY")) : " -" }</b>
+									<b> {RFQData.totalVatAmount ? (upperCase(RFQData.currencyName + " " +(toWords.convert(RFQData.totalVatAmount))+" ")) : " -" }</b>
 								
 								</div> */}
 						

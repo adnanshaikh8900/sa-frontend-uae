@@ -416,7 +416,7 @@ class Expense extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Expense Posted Successfully',
+						"Expense Posted Successfully"
 					);
 					this.setState({
 						loading: false,
@@ -427,7 +427,7 @@ class Expense extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data.message
 				);
 				this.setState({
 					loading: false,
@@ -451,7 +451,7 @@ class Expense extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Expense Moved To Draft Successfully',
+						"Expense moved to Draft Successfully"
 					);
 					this.setState({
 						loading: false,
@@ -462,7 +462,7 @@ class Expense extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data.message
 				);
 				this.setState({
 					loading: false,
@@ -567,14 +567,14 @@ class Expense extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Expense Deleted Successfully',
+					res.data.message
 				);
 				this.initializeData();
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data.message
 				);
 			});
 	};

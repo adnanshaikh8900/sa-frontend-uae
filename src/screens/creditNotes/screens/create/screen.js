@@ -1015,7 +1015,7 @@ min="0"
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'New Tax Credit Note Created Successfully.',
+					'New Tax Credit Note Created Successfully.'
 				);
 				if (this.state.createMore) {
 					this.setState(

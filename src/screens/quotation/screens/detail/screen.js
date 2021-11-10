@@ -914,7 +914,7 @@ min="0"
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						"status changed"
+						"Deleted Successfully"
 					);
 					this.props.history.push('/admin/income/quotation');
 				}

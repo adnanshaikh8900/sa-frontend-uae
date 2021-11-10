@@ -237,7 +237,7 @@ class CreateExpense extends React.Component {
 					resetForm(this.state.initValue);
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'New Expense Created Successfully.',
+						res.data.message
 					);
 					if (this.state.createMore) {
 						this.setState({
@@ -252,7 +252,7 @@ class CreateExpense extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data.message
 				);
 			});
 	};

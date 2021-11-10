@@ -186,7 +186,7 @@ class CreateUser extends React.Component {
 		//formData.append('dob', dob ? dob : '');
 		formData.append('roleId', roleId ? roleId.value : '');
 		formData.append('active', this.state.useractive);
-		formData.append('password', password ? password : '');
+		// formData.append('password', password ? password : '');
 		formData.append('timeZone', timezone ? timezone.value : '');
 		formData.append('companyId', companyId ? companyId : '');
 		if (this.state.userPhotoFile.length > 0) {
@@ -197,7 +197,7 @@ class CreateUser extends React.Component {
 		formData.append('designationId',designationId ? designationId.value :'');
 		formData.append('salaryRoleId',salaryRoleId ? salaryRoleId.value : '');
 		formData.append('employeeId',employeeId ? employeeId.value : '');
-
+		formData.append('url',window.location.origin);
 		this.props.userCreateActions
 			.createUser(formData)
 			.then((res) => {
@@ -349,20 +349,20 @@ class CreateUser extends React.Component {
 													// employeeId:Yup.string().required(
 													// 	'Employee is Required',
 													// ),
-													password: Yup.string()
-														.required('Password is Required')
-													.min(8, "Password Too Short")
-													.matches(
-														/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
+													// password: Yup.string()
+													// 	.required('Password is Required')
+													// .min(8, "Password Too Short")
+													// .matches(
+													// 	/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
 														
-													),
+													// ),
 													
-													confirmPassword: Yup.string()
-														.required('Confirm Password is Required')
-														.oneOf(
-															[Yup.ref('password'), null],
-															'Passwords must match',
-														),
+													// confirmPassword: Yup.string()
+													// 	.required('Confirm Password is Required')
+													// 	.oneOf(
+													// 		[Yup.ref('password'), null],
+													// 		'Passwords must match',
+													// 	),
 													//	dob: Yup.date().required('DOB is Required'),
 												})}
 											>
@@ -832,98 +832,7 @@ class CreateUser extends React.Component {
                                   </Col> */}
 																</Row>
 																<Row></Row>
-																<Row>
-																	<Col lg={6}>
-																		<FormGroup>
-																			<Label htmlFor="select">
-																				<span className="text-danger">*</span>
-																				 {strings.Password}
-																			</Label>
-																			<div>
-																				<Input
-																					type={
-																						this.state.isPasswordShown
-																							? 'text'
-																							: 'password'
-																					}
-																					id="password"
-																					name="password"
-																					placeholder={strings.Enter + strings.Password}
-																					value={props.values.password}
-																					onChange={(option) => {
-																						props.handleChange('password')(
-																							option,
-																						);
-																					}}
-																					className={
-																						props.errors.password &&
-																							props.touched.password
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				<i className={`fa ${isPasswordShown ? "fa-eye-slash" : "fa-eye"} password-icon fa-lg`}
-																					onClick={this.togglePasswordVisiblity}
-																				>
-																					{/* <img 
-																			src={eye}
-																			style={{ width: '20px' }}
-																		/> */}
-																				</i>
-																			</div>
-																			{props.errors.password &&
-																				props.touched.password && (
-																					<div className="invalid-feedback">
-																						{props.errors.password}
-																					</div>
-																				)}
-																			<PasswordChecklist
-																				rules={["length", "specialChar", "number", "capital"]}
-																				minLength={5}
-																				value={props.values.password}
-																				valueAgain={props.values.confirmPassword}
-																			/>
-																		</FormGroup>
-																	</Col>
-																	<Col lg={6}>
-																		<FormGroup>
-																			<Label htmlFor="select">
-																				<span className="text-danger">*</span>
-																				 {strings.ConfirmPassword}
-																			</Label>
-																			<Input
-																				type="password"
-																				id="confirmPassword"
-																				name="confirmPassword"
-																				value={props.values.confirmPassword}
-																				placeholder={strings.Enter + strings.ConfirmPassword}
-																				onChange={(value) => {
-																					props.handleChange('confirmPassword')(
-																						value,
-																					);
-																				}}
-																				className={
-																					props.errors.confirmPassword &&
-																						props.touched.confirmPassword
-																						? 'is-invalid'
-																						: ''
-																				}
-																			/>
-																			{props.errors.confirmPassword &&
-																				props.touched.confirmPassword && (
-																					<div className="invalid-feedback">
-																						{props.errors.confirmPassword}
-																					</div>
-																				)}
-																				<PasswordChecklist
-																				rules={[ "match"]}
-																				minLength={5}
-																				value={props.values.password}
-																				valueAgain={props.values.confirmPassword}
-																			/>
-																		</FormGroup>
-																	</Col>
-																</Row>
+														
 															{/* <Row>
 																<Col>
 																<Label>	<span className="text-danger">*</span>{strings.SelectLinkOrCreateEmployee} </Label>

@@ -1165,7 +1165,7 @@ renderName=(cell,row)=>{
 																			 {strings.SellingPrice}
 																		</Label>
 																		<Input
-																			type="number"
+																			type="text"
 																			// min="0.00"
 																			maxLength = "10"
 																			id="salesUnitPrice"
@@ -1365,7 +1365,7 @@ renderName=(cell,row)=>{
 																		</Label>
 																		<Input
 																		disabled={props.values.isInventoryEnabled===true }
-																			type="number"
+																			type="text"
 																			// min="0"
 																			maxLength = "10"
 																			id="purchaseUnitPrice"

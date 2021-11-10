@@ -1157,15 +1157,7 @@ class CreditNotes extends React.Component {
 											>
 												Due Date
 											</TableHeaderColumn> */}
-											<TableHeaderColumn
-													dataSort
-													dataField="currencyName"
-												//	width="4%"
-													dataFormat={this.renderCurrency}
-													className="table-header-bg"
-												>
-													 {strings.CURRENCY}
-												</TableHeaderColumn>
+											
 											{/* <TableHeaderColumn
 												dataField="totalVatAmount"
 												dataSort

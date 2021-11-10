@@ -434,7 +434,7 @@ class DetailSupplierInvoice extends React.Component {
 				render={({ field, form }) => (
 					<div>
 						<Input
-							type="number"
+							type="text"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -495,7 +495,7 @@ class DetailSupplierInvoice extends React.Component {
 				name={`lineItemsString.${idx}.unitPrice`}
 				render={({ field, form }) => (
 					<Input
-					type="number"
+					type="text"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (

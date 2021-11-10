@@ -427,30 +427,30 @@ try {
 													// 	errors.inventoryReorderLevel = 
 													// 		'Re-order level should be less than purchase quantity';
 													// }
-													if (values.inventoryPurchasePrice > values.salesUnitPrice) {
-														errors.inventoryPurchasePrice = 
-														'Purchase price cannot be greater than Sales price';
-													}
-													else if (values.purchaseUnitPrice > values.salesUnitPrice) {
-														errors.purchaseUnitPrice = 
-														'Purchase price cannot be greater than Sales price';
-													}
+													// if (values.inventoryPurchasePrice > values.salesUnitPrice) {
+													// 	errors.inventoryPurchasePrice = 
+													// 	'Purchase price cannot be greater than Sales price';
+													// }
+													// else if (values.purchaseUnitPrice > values.salesUnitPrice) {
+													// 	errors.purchaseUnitPrice = 
+													// 	'Purchase price cannot be greater than Sales price';
+													// }
 
-													 if (values.salesUnitPrice < values.purchaseUnitPrice) {
+													//  if (values.salesUnitPrice < values.purchaseUnitPrice) {
 
-                                                        errors.salesUnitPrice= 
+                                                    //     errors.salesUnitPrice= 
 
-                                                        'Purchase price cannot be less than Sales price';
+                                                    //     'Purchase price cannot be less than Sales price';
 
-                                                    }
+                                                    // }
 													if(values.isInventoryEnabled===true){
-														if (values.salesUnitPrice < values.inventoryPurchasePrice) {
+														// if (values.salesUnitPrice < values.inventoryPurchasePrice) {
 
-															errors.salesUnitPrice= 
+														// 	errors.salesUnitPrice= 
 	
-															'Purchase price cannot be less than Sales price';
+														// 	'Purchase price cannot be less than Sales price';
 	
-														}														
+														// }														
 														if(values.inventoryPurchasePrice ==='')
 														errors.inventoryPurchasePrice = 
 														'Inventory Purchase Price is requied';
@@ -1033,7 +1033,7 @@ try {
 																			</UncontrolledTooltip>
 																		</Label>
 																		<Input
-																			type="number"
+																			type="text"
 																			maxLength="10"
 																			id="salesUnitPrice"
 																			name="salesUnitPrice"
@@ -1234,7 +1234,7 @@ try {
 																			</UncontrolledTooltip>
 																		</Label>
 																		<Input
-																		type="number"
+																		type="text"
 																			maxLength="10"
 																			id="purchaseUnitPrice"
 																			name="purchaseUnitPrice"
@@ -1479,7 +1479,7 @@ try {
 																			
 																		</Label>
 																		<Input
-																		type="number"
+																		type="text"
 min="0"
 																			maxLength="10"
 																			id="inventoryQty"
@@ -1529,7 +1529,7 @@ min="0"
 																			<span className="text-danger">*</span>	{strings.PurchasePrice}
 																		</Label>
 																		<Input
-																		type="number"
+																		type="text"
 min="0"
 																			maxLength="10"
 																			id="inventoryPurchasePrice"
@@ -1642,7 +1642,7 @@ min="0"
 																			// 		? false
 																			// 		: true
 																			// }
-																			type="number"
+																			type="text"
 																			min="0"
 																			max="1000"
 																			maxLength="5"

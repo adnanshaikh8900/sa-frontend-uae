@@ -379,9 +379,9 @@ min="0"
 				render={({ field, form }) => (
 					<div>
 							<Input
-					type="number"
+					type="text"
 							min="0"
-							type="number"
+							//type="number"
 							maxLength="10"
 							value={row['grnReceivedQuantity'] !== 0 ? row['grnReceivedQuantity'] : 0}
 							onChange={(e) => {

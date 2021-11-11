@@ -891,7 +891,7 @@ min="0"
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Tax Credit Note Updated Successfully.',
+					res.data.message? res.data.message :"Tax Credit Note Updated Successfully"
 				);
 				this.props.history.push('/admin/income/credit-notes');
 			})
@@ -1037,7 +1037,7 @@ min="0"
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Tax Credit Note Deleted Successfully',
+						"Tax Credit Note Deleted Successfully"
 					);
 					this.props.history.push('/admin/income/credit-notes');
 				}

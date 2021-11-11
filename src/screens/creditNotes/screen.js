@@ -211,7 +211,7 @@ class CreditNotes extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Tax Credit Note Posted Successfully',
+						res.data.message?res.data.message:    'Tax Credit Note Posted Successfully',
 					);
 					this.setState({
 						loading: false,
@@ -245,7 +245,7 @@ class CreditNotes extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Moved To Draft Successfully',
+						res.data.message?res.data.message:    'Tax Credit Note Posted Successfully',
 					);
 					this.setState({
 						loading: false,

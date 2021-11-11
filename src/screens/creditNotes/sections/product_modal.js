@@ -164,6 +164,7 @@ class ProductModal extends React.Component {
 			productPriceType,
 			vatCategoryId,
 			vatIncluded,
+			isActive,
 
 			...(salesUnitPrice.length !== 0 && {
 				salesUnitPrice,

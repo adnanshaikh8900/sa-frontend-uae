@@ -77,7 +77,7 @@ stages:
 
           - script: |
               mkdir -p $(Pipeline.Workspace)/simpleaccounts-frontend-docker
-              docker save -o $(Pipeline.Workspace)/simpleaccounts-frontend-docker/simpleaccounts-frontend-docker-cache.tar $(containerRegistryName).azurecr.io/simpleaccounts-frontend:0.0.3-alpha-$(Build.BuildId)
+              docker save -o $(Pipeline.Workspace)/simpleaccounts-frontend-docker/simpleaccounts-frontend-docker-cache.tar $(containerRegistryName).azurecr.io/simpleaccounts-frontend:$(tag)
             displayName: Docker save
             condition: and(not(canceled()), or(failed(), ne(variables.CACHE_RESTORED, 'true')))
 

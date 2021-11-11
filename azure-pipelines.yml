@@ -53,17 +53,17 @@ stages:
               npm run build
             displayName: 'npm install and build'
 
-          # - task: Cache@2
-          #   displayName: Cache task
-          #   inputs:
-          #     key: 'docker | "$(Agent.OS)" | cache'
-          #     path: $(Pipeline.Workspace)/simpleaccounts-frontend-docker
-          #     cacheHitVar: CACHE_RESTORED                #Variable to set to 'true' when the cache is restored
+          - task: Cache@2
+            displayName: Cache task
+            inputs:
+              key: 'docker | "$(Agent.OS)" | cache'
+              path: $(Pipeline.Workspace)/simpleaccounts-frontend-docker
+              cacheHitVar: CACHE_RESTORED                #Variable to set to 'true' when the cache is restored
 
-          # - script: |
-          #     docker load -i $(Pipeline.Workspace)/simpleaccounts-frontend-docker/simpleaccounts-frontend-docker-cache.tar
-          #   displayName: Docker restore
-          #   condition: and(not(canceled()), eq(variables.CACHE_RESTORED, 'true'))
+          - script: |
+              docker load -i $(Pipeline.Workspace)/simpleaccounts-frontend-docker/simpleaccounts-frontend-docker-cache.tar
+            displayName: Docker restore
+            condition: and(not(canceled()), eq(variables.CACHE_RESTORED, 'true'))
 
           - task: Docker@2
             displayName: Docker Build & Push

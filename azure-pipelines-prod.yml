@@ -33,7 +33,7 @@ stages:
       inputs:
         command: 'install'
         verbose: true
-    - script: npm build   
+    - script: npm run build   
 
     - task: Docker@2
       displayName: Build and push an image to container registry

@@ -11,9 +11,9 @@ variables:
   ${{ else }}:
     containerRegistryName: 'datainn'
   ${{ if eq(variables['Build.SourceBranchName'], 'master') }}:
-    containerRegistryName: 'SimpleAccountsAzureContainerRegistryConnection'
+    containerRegistryConnection: 'SimpleAccountsAzureContainerRegistryConnection'
   ${{ else }}:
-    containerRegistryName: 'DataInnAzureContainerRegistryConnection'
+    containerRegistryConnection: 'DataInnAzureContainerRegistryConnection'
   npm_config_cache: $(Pipeline.Workspace)/.npm
   tag: 0.0.3-alpha-$(Build.BuildId)
 

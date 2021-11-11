@@ -5,10 +5,13 @@
 trigger:
   branches:
     include:
-    - 'master'
+      - 'master'
   tags:
     include:
-    - '*-beta*'
+      - '*-beta*'
+  paths:
+    exclude:
+      - '/*.
 
 resources:
 - repo: self

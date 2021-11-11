@@ -6,10 +6,17 @@ trigger:
       - develop
 
 variables:
+  ${{ if eq(variables['Build.SourceBranchName'], 'master') }}:
+    containerRegistryName: 'simpleaccounts'
+  ${{ else }}:
+    containerRegistryName: 'datainn'
   npm_config_cache: $(Pipeline.Workspace)/.npm
   tag: 0.0.3-alpha-$(Build.BuildId)
-  containerRegistryConnection: $[replace(variables['Build.SourceBranch'], 'refs/tags/', '') eq 'master']
-  containerRegistryName: $[replace(variables['Build.SourceBranch'], 'refs/tags/', '') eq 'master']
+
+  # containerRegistryConnection: ${{ if eq(variables['Build.SourceBranchName'], 'master') }}: value: ''
+  #                               ${{ else }}:
+  #                                 value: ''
+  # containerRegistryName: ''
 
 stages:
   - stage: ci_build_simpleaccounts

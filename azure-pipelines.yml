@@ -8,8 +8,8 @@ trigger:
 variables:
   npm_config_cache: $(Pipeline.Workspace)/.npm
   tag: 0.0.3-alpha-$(Build.BuildId)
-  containerRegistryConnection: $[(variables['Build.SourceBranch'].StartsWith('refs/heads/master'))]
-  containerRegistryName: $[(variables['Build.SourceBranch'].StartsWith('refs/heads/master'))]
+  containerRegistryConnection: $[variables['Build.SourceBranch']]
+  containerRegistryName: $[variables['Build.SourceBranch']]
 
 stages:
   - stage: ci_build_simpleaccounts

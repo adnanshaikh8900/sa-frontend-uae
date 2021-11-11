@@ -10,13 +10,12 @@ variables:
     containerRegistryName: 'simpleaccounts'
   ${{ else }}:
     containerRegistryName: 'datainn'
+  ${{ if eq(variables['Build.SourceBranchName'], 'master') }}:
+    containerRegistryName: 'SimpleAccountsAzureContainerRegistryConnection'
+  ${{ else }}:
+    containerRegistryName: 'DataInnAzureContainerRegistryConnection'
   npm_config_cache: $(Pipeline.Workspace)/.npm
   tag: 0.0.3-alpha-$(Build.BuildId)
-
-  # containerRegistryConnection: ${{ if eq(variables['Build.SourceBranchName'], 'master') }}: value: ''
-  #                               ${{ else }}:
-  #                                 value: ''
-  # containerRegistryName: ''
 
 stages:
   - stage: ci_build_simpleaccounts

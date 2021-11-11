@@ -22,7 +22,8 @@ variables:
   imageRepository: 'simpleaccountsfrontend'
   containerRegistry: 'simpleaccounts.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
-  tag: '$(Build.BuildId)'
+  # tag: '$(Build.BuildId)'
+  tag: $[replace(variables['Build.SourceBranch'], 'refs/tags/', '')]
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'

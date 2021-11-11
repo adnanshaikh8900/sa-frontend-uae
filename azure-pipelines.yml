@@ -8,8 +8,8 @@ trigger:
 variables:
   npm_config_cache: $(Pipeline.Workspace)/.npm
   tag: 0.0.3-alpha-$(Build.BuildId)
-  containerRegistryConnection: $[replace(variables['Build.SourceBranch'], 'refs/tags/', '') -eq 'master']
-  containerRegistryName: $[replace(variables['Build.SourceBranch'], 'refs/tags/', '') -eq 'master']
+  containerRegistryConnection: $[replace(variables['Build.SourceBranch'], 'refs/tags/', '') = 'master']
+  containerRegistryName: $[replace(variables['Build.SourceBranch'], 'refs/tags/', '') eq 'master']
 
 stages:
   - stage: ci_build_simpleaccounts

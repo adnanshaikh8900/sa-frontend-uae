@@ -131,6 +131,7 @@ class CreateCreditNote extends React.Component {
 				creditNoteNumber: '',
 				total_net: 0,
 				invoiceVATAmount: 0,
+				totalVatAmount: 0,
 				totalAmount: 0,
 				notes: '',
 				email:'',
@@ -888,7 +889,7 @@ min="0"
 					...this.state.initValue,
 					...{
 						total_net: discount ? total_net - discount : total_net,
-						invoiceVATAmount: total_vat,
+						totalVatAmount: total_vat,
 						discount: total_net > discount ? discount : 0,
 						totalAmount: total_net > discount ? total - discount : total,
 					},
@@ -981,7 +982,7 @@ min="0"
 		formData.append('email', email !== null ? email : '');
 		formData.append('type', 7);
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
-		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
+		formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
 		formData.append('discount', discount);
 		if (discountType && discountType.value) {
@@ -1039,7 +1040,7 @@ min="0"
 								...this.state.initValue,
 								...{
 									total_net: 0,
-									invoiceVATAmount: 0,
+									totalVatAmount: 0,
 									totalAmount: 0,
 									discountType: '',
 									discount: 0,
@@ -2428,14 +2429,14 @@ min="0"
 																					<label className="mb-0">
 																					{/* {universal_currency_list[0] && (
 																						<Currency
-																						value={initValue.invoiceVATAmount.toFixed(
+																						value={initValue.totalVatAmount.toFixed(
 																									2,
 																							)}
 																							currencySymbol={this.state.customer_currency_IsoCode}
 																							/>
 																							)} */}
 																							{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																							{initValue.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>

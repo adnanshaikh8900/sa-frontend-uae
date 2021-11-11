@@ -8,8 +8,8 @@ trigger:
 variables:
   npm_config_cache: $(Pipeline.Workspace)/.npm
   tag: 0.0.3-alpha-$(Build.BuildId)
-  containerRegistryConnection: [(startsWith(variables['Build.SourceBranch'], 'refs/heads/master')) ? "SimpleAccountsAzureContainerRegistryConnection" : "DataInnAzureContainerRegistryConnection"]
-  containerRegistryName: [(startsWith(variables['Build.SourceBranch'], 'refs/heads/master')) ? "simpleaccounts" : "datainn"]
+  containerRegistryConnection: [($(Build.SourceBranch).StartsWith('refs/heads/master')) ? "SimpleAccountsAzureContainerRegistryConnection" : "DataInnAzureContainerRegistryConnection"]
+  containerRegistryName: [($(Build.SourceBranch).StartsWith('refs/heads/master')) ? "simpleaccounts" : "datainn"]
 
 stages:
   - stage: ci_build_simpleaccounts

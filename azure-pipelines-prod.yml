@@ -5,21 +5,25 @@
 trigger:
   branches:
     include:
-    - 'develop'
+      - master
   tags:
     include:
-    - '*-beta*'
-    
+      - '*-beta*'
+  paths:
+    exclude:
+      - '*'
+
 resources:
 - repo: self
 
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: 'd4f512e8-8532-4e02-8d36-da6c515ef9e8'
-  imageRepository: 'simpleaccounts-frontend'
+  imageRepository: 'simpleaccountsfrontend'
   containerRegistry: 'simpleaccounts.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
-  tag: '$(Build.BuildId)'
+  # tag: '$(Build.BuildId)'
+  tag: $[replace(variables['Build.SourceBranch'], 'refs/tags/', '')]
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
@@ -33,12 +37,12 @@ stages:
     pool:
       vmImage: $(vmImageName)
     steps:
-    
+
     - task: Npm@1
       inputs:
         command: 'install'
         verbose: true
-    - script: npm run build   
+    - script: npm run build
 
     - task: Docker@2
       displayName: Build and push an image to container registry

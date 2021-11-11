@@ -8,14 +8,16 @@ trigger:
 variables:
   ${{ if eq(variables['Build.SourceBranchName'], 'master') }}:
     containerRegistryName: 'simpleaccounts'
+    tag: latest
   ${{ else }}:
     containerRegistryName: 'datainn'
+    tag: 0.0.3-alpha-$(Build.BuildId)
   ${{ if eq(variables['Build.SourceBranchName'], 'master') }}:
     containerRegistryConnection: 'SimpleAccountsAzureContainerRegistryConnection'
   ${{ else }}:
     containerRegistryConnection: 'DataInnAzureContainerRegistryConnection'
   npm_config_cache: $(Pipeline.Workspace)/.npm
-  tag: 0.0.3-alpha-$(Build.BuildId)
+  
 
 stages:
   - stage: ci_build_simpleaccounts

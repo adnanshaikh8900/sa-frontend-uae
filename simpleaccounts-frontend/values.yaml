@@ -5,7 +5,7 @@ replicaCount: 1
 image:
   repository:
     frontend:
-      imageName: datainn.azurecr.io/simplevat-frontend
+      imageName: datainn.azurecr.io/simpleaccounts-frontend
       tag: "Unknown"
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.

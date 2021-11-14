@@ -7,7 +7,7 @@ spec:
   duration: 2160h # 90d
   renewBefore: 360h # 15d
   issuerRef:
-	# The issuer created previously
+  # The issuer created previously
 	name: simbiz-app-letsencrypt-staging
 	kind: ClusterIssuer
   commonName: simbiz.app

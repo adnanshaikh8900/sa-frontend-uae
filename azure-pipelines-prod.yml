@@ -19,7 +19,7 @@ resources:
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '72dc3bde-33e2-4f8c-bedf-353fdf6cb208'
-  imageRepository: 'simpleaccountsfrontend'
+  imageRepository: 'simpleaccounts-frontend'
   containerRegistry: 'simpleaccounts.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   # tag: '$(Build.BuildId)'

@@ -7,9 +7,8 @@ spec:
   duration: 2160h # 90d
   renewBefore: 360h # 15d
   issuerRef:
-	# The issuer created previously
-	name: {{ .Values.clusterIssuer }}
-	kind: ClusterIssuer
+    name: {{ .Values.clusterIssuer }}
+    kind: ClusterIssuer
   commonName: {{ .Values.maindomain }}
   {{- range .Values.ingress.tls }}
   secretName: {{ .secretName }}

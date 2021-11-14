@@ -8,9 +8,9 @@ spec:
   renewBefore: 360h # 15d
   issuerRef:
   # The issuer created previously
-    name: simbiz-app-letsencrypt-staging
+    name: {{ .Values.clusterIssuer }}
     kind: ClusterIssuer
-  commonName: simbiz.app
+  commonName: {{ .Values.maindomain }}
   {{- range .Values.ingress.tls }}
   secretName: {{ .secretName }}
   dnsNames:

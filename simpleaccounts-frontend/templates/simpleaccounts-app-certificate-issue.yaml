@@ -13,6 +13,6 @@ spec:
     kind: ClusterIssuer
   commonName: {{ .Values.maindomain }}
   dnsNames:
-  {{- range .Values.ingress.hosts }}
+	{{- range .Values.ingress.hosts }}
 	- {{ .host | quote }}
-  {{- end }}
+	{{- end }}

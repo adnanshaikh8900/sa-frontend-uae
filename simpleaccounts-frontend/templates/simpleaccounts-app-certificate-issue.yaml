@@ -8,8 +8,8 @@ spec:
   renewBefore: 360h # 15d
   issuerRef:
   # The issuer created previously
-	name: simbiz-app-letsencrypt-staging
-	kind: ClusterIssuer
+    name: simbiz-app-letsencrypt-staging
+    kind: ClusterIssuer
   commonName: simbiz.app
   {{- range .Values.ingress.tls }}
   secretName: {{ .secretName }}

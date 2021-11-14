@@ -15,7 +15,7 @@ spec:
   secretName: {{ .secretName }}
   dnsNames:
 	{{- range .hosts }}
-  - {{ . | quote }}
+  	- {{ . | quote }}
 	{{- end }}
   {{- end }}
 

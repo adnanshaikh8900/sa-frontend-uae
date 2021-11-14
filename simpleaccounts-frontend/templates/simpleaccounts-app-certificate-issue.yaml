@@ -4,15 +4,22 @@ metadata:
   name: {{ include "helm-frontend.fullname" . }}-certificate
   namespace: default
 spec:
-  secretName: {{ .secretName }}
   duration: 2160h # 90d
   renewBefore: 360h # 15d
   issuerRef:
-    # The issuer created previously
-    name: {{ .Values.clusterIssuer }}
-    kind: ClusterIssuer
+	# The issuer created previously
+	name: {{ .Values.clusterIssuer }}
+	kind: ClusterIssuer
   commonName: {{ .Values.maindomain }}
+  {{- range .Values.ingress.tls }}
+  secretName: {{ .secretName }}
   dnsNames:
 	{{- range .hosts }}
-	- {{ . | quote }}
-  	{{- end }}
+  - {{ . | quote }}
+	{{- end }}
+  {{- end }}
+
+
+
+
+

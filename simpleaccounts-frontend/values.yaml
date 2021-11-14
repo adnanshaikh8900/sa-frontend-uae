@@ -13,6 +13,9 @@ image:
 azureACRServicePrinciple:
   enabled: false
 
+clusterIssuer: simpleaccounts-io-letsencrypt-staging
+maindomain: app.simpleaccounts.io
+
 simpleVatFrontendRelease: "Unknown"
 simpleVatHost: https://demo-api.app.simplevat.com
 simpleVatDB:

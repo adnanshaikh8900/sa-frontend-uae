@@ -173,7 +173,7 @@ RecieptNumber:"عدد إيصال",
       Quotation:"اقتباس",				
       QUOTATIONNUMBER:"رقم عرض الأسعار",						
       EXPIRATIONDATE:"تاريخ انتهاء الصلاحية",				
-      AddNewRequest:"إضافة طلب جديد",
+      AddNewRequest:"أضف عرض أسعار جديد",
 
       //Create Quotation
       CreateQuotation:"إنشاء عرض أسعار",		

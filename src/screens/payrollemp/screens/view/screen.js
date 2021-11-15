@@ -523,7 +523,9 @@ getPhoto=()=>{
 																			this.state.Fixed
 																		).map((item) => (
 																			<tr className="p-1">
-																					<td  className="text-left" style={{border:"3px solid #dfe9f7"}} >{item.description}<div className=''>{item.description === 'Basic SALARY' ? '% of CTC' : '% of Baisc'}</div></td>
+																					<td  className="text-left" style={{border:"3px solid #dfe9f7"}} >{item.description}<div className=''>
+																						{/* {item.description === 'Basic SALARY' ? '% of CTC' : '% of Baisc'} */}
+																					</div></td>
 																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.monthlyAmount ? item.monthlyAmount.toLocaleString() : '' }</td>
 																				<td className="text-right" style={{border:"3px solid #dfe9f7"}} >{item.yearlyAmount ? item.yearlyAmount.toLocaleString() :''}</td>
 																			</tr>

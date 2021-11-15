@@ -237,6 +237,7 @@ class DetailProductCategory extends React.Component {
                                   <Label htmlFor="productCategoryCode"><span className="text-danger">*</span>{strings.ProductCategoryCode}</Label>
                                   <Input
                                     type="text"
+                                    maxLength='20'
                                     id="productCategoryCode"
                                     name="productCategoryCode"
                                     placeholder={strings.Enter+strings.ProductCategoryCode}

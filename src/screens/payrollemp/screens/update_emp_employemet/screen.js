@@ -299,13 +299,13 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                 <Label htmlFor="labourCard">{strings.LabourCard}</Label>
                                                                                 <Input
                                                                                     type="text"
+                                                                                    maxLength="14"
                                                                                     id="labourCard"
                                                                                     name="labourCard"
                                                                                     value={props.values.labourCard}
                                                                                     placeholder={strings.Enter+strings.LabourCard}
-                                                                                    onChange={(value) => {
-                                                                                        props.handleChange('labourCard')(value);
-
+                                                                                    onChange={(option) => {
+                                                                                        if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('labourCard')(option) }
                                                                                     }}
                                                                                     className={props.errors.labourCard && props.touched.labourCard ? "is-invalid" : ""}
                                                                                 />
@@ -348,13 +348,11 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                     id="passportNumber"
                                                                                     name="passportNumber"
                                                                                     placeholder={strings.Enter+strings.PassportNumber}
-                                                                                    onChange={(value) => { props.handleChange("passportNumber")(value) }}
                                                                                     value={props.values.passportNumber}
-                                                                                    className={
-                                                                                        props.errors.passportNumber && props.touched.passportNumber
-                                                                                            ? "is-invalid"
-                                                                                            : ""
-                                                                                    }
+                                                                                    onChange={(option) => {
+                                                                                        if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('passportNumber')(option) }
+                                                                                    }}
+                                                                                    className={props.errors.passportNumber && props.touched.passportNumber ? "is-invalid" : ""}
                                                                                 />
                                                                                 {props.passportNumber && props.touched.passportNumber && (
                                                                                     <div className="invalid-feedback">{props.errors.passportNumber}</div>
@@ -390,16 +388,15 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                 <Label htmlFor="gender"> {strings.VisaNumber} </Label>
                                                                                 <Input
                                                                                     type="text"
+                                                                                    maxLength="8"
                                                                                     id="visaNumber"
                                                                                     name="visaNumber"
                                                                                     placeholder={strings.Enter+strings.VisaNumber}
-                                                                                    onChange={(value) => { props.handleChange("visaNumber")(value) }}
                                                                                     value={props.values.visaNumber}
-                                                                                    className={
-                                                                                        props.errors.visaNumber && props.touched.visaNumber
-                                                                                            ? "is-invalid"
-                                                                                            : ""
-                                                                                    }
+                                                                                    onChange={(option) => {
+                                                                                        if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('visaNumber')(option) }
+                                                                                    }}
+                                                                                    className={props.errors.visaNumber && props.touched.visaNumber ? "is-invalid" : ""}
                                                                                 />
                                                                                 {props.visaNumber && props.touched.visaNumber && (
                                                                                     <div className="invalid-feedback">{props.errors.visaNumber}</div>

@@ -295,6 +295,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                                 <Label htmlFor="select"><span className="text-danger">*</span>{strings.AccountHolderName} </Label>
                                                                                 <Input
                                                                                     type="text"
+                                                                                    maxLength="60"
                                                                                     id="accountHolderName"
                                                                                     name="accountHolderName"
                                                                                     value={props.values.accountHolderName}
@@ -315,6 +316,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                                 <Label htmlFor="select"><span className="text-danger">*</span> {strings.AccountNumber}</Label>
                                                                                 <Input
                                                                                     type="text"
+                                                                                    maxLength="25"
                                                                                     id="accountNumber"
                                                                                     name="accountNumber"
                                                                                     value={props.values.accountNumber}
@@ -425,6 +427,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                                 <Label htmlFor="select"><span className="text-danger">*</span>{strings.Branch}</Label>
                                                                                 <Input
                                                                                     type="text"
+                                                                                    maxLength="30"
                                                                                     id="branch"
                                                                                     name="branch"
                                                                                     value={props.values.branch}
@@ -447,7 +450,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                                     type="text"
                                                                                     id="iban"
                                                                                     name="iban"
-                                                                                    max="34"
+                                                                                    maxLength="34"
                                                                                     value={props.values.iban}
                                                                                     placeholder={strings.Enter+strings.IBANNumber}
                                                                                     onChange={(value) => {
@@ -467,17 +470,16 @@ class UpdateEmployeeBank extends React.Component {
                                                                                 <Label htmlFor="select"><span className="text-danger">*</span>{strings.SwiftCode}</Label>
                                                                                 <Input
                                                                                     type="text"
+                                                                                    maxLength="11"
                                                                                     id="swiftCode"
                                                                                     name="swiftCode"
                                                                                     value={props.values.swiftCode}
                                                                                     placeholder={strings.Enter+strings.SwiftCode}
-                                                                                    onChange={(value) => {
-                                                                                        props.handleChange('swiftCode')(value);
-
+                                                                                    onChange={(option) => {
+                                                                                        if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('swiftCode')(option) }
                                                                                     }}
                                                                                     className={props.errors.swiftCode && props.touched.swiftCode ? "is-invalid" : ""}
-                                                                                />
-                                                                                {props.errors.swiftCode && props.touched.swiftCode && (
+                                                                                />                                                     {props.errors.swiftCode && props.touched.swiftCode && (
                                                                                     <div className="invalid-feedback">{props.errors.swiftCode}</div>
                                                                                 )}
                                                                             </FormGroup>

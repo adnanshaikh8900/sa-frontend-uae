@@ -233,7 +233,7 @@ class DetailDesignation extends React.Component {
                                     name="designationId"
                                     maxLength="9"
                                     value={props.values.designationId}
-                                    placeholder={strings.Enter+strings.designationId}
+                                    placeholder={strings.Enter+strings.DESIGNATIONID}
                                     onChange={(option) => {
                                       if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('designationId')(option) }
                                     }}

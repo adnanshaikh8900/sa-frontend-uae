@@ -1293,6 +1293,45 @@ class Profile extends React.Component {
 															//   lastName: Yup.()
 															//     .required("Last Name is Required"),
 															// })}
+															validationSchema={Yup.object().shape({
+																companyName: Yup.string().required(
+																	'Company Name is required',
+																),
+																companyRegistrationNumber: Yup.string().required(
+																	'Company Registration Number is required',
+																),
+																vatRegistrationNumber: Yup.string().required(
+																	'Vat Registration Number is required',
+																),
+																phoneNumber: Yup.string().required(
+																	'Mobile Number is required',
+																),
+																companyAddressLine1: Yup.string().required(
+																	'Company Address Line 1 is required',
+																),
+																companyAddressLine2: Yup.string().required(
+																	'Company Address Line 2 is required',
+																),
+																companyAddressLine3: Yup.string().required(
+																	'Company Address Line 3 is required',
+																),
+																companyCountryCode: Yup.string().required(
+																	'Country is required',
+																)
+																.nullable(),
+																companyStateRegion: Yup.string().required(
+																	'State is required',
+																),
+																companyCity: Yup.string().required(
+																	'City is required',
+																),
+																companyPoBoxNumber: Yup.string().required(
+																	'PO Box Number is required',
+																),
+																companyPostZipCode: Yup.string().required(
+																	'Post Zip Code is required',
+																),
+															})}
 															>
 																{(props) => (
 																	<Form onSubmit={props.handleSubmit}>
@@ -1352,6 +1391,7 @@ class Profile extends React.Component {
 																					<Col lg={4}>
 																						<FormGroup className="mb-3">
 																							<Label htmlFor="product_code">
+																							<span className="text-danger">*</span>
 																								 {strings.CompanyName}
 																						</Label>
 																							<Input
@@ -1372,12 +1412,26 @@ class Profile extends React.Component {
 																										)(option);
 																									}
 																								}}
+																								value={props.values.companyName}
+																								className={
+																									props.errors.companyName &&
+																									props.touched.companyName
+																										? 'is-invalid'
+																										: ''
+																								}
 																							/>
+																							{props.errors.companyName &&
+																								props.touched.companyName && (
+																									<div className="invalid-feedback">
+																										{props.errors.companyName}
+																									</div>
+																								)}
 																						</FormGroup>
 																					</Col>
 																					<Col lg={4}>
 																						<FormGroup className="mb-3">
 																							<Label htmlFor="product_code">
+																							<span className="text-danger">*</span>
 																								 {strings.CompanyRegistrationNo}
 																						</Label>
 																							<Input
@@ -1403,12 +1457,26 @@ class Profile extends React.Component {
 																										);
 																								}}
 																							}
+																							value={props.values.companyRegistrationNumber}
+																								className={
+																									props.errors.companyRegistrationNumber &&
+																									props.touched.companyRegistrationNumber
+																										? 'is-invalid'
+																										: ''
+																								}
 																							/>
+																							{props.errors.companyRegistrationNumber &&
+																								props.touched.companyRegistrationNumber && (
+																									<div className="invalid-feedback">
+																										{props.errors.companyRegistrationNumber}
+																									</div>
+																								)}
 																						</FormGroup>
 																					</Col>
 																					<Col lg={4}>
 																						<FormGroup className="mb-3">
 																							<Label htmlFor="product_code">
+																							<span className="text-danger">*</span>
 																							 {strings.VATRegistrationNo}
 																						</Label>
 																							<Input
@@ -1435,7 +1503,20 @@ class Profile extends React.Component {
 																										);
 																								}}
 																							}
+																							value={props.values.vatRegistrationNumber}
+																								className={
+																									props.errors.vatRegistrationNumber &&
+																									props.touched.vatRegistrationNumber
+																										? 'is-invalid'
+																										: ''
+																								}
 																							/>
+																							{props.errors.vatRegistrationNumber &&
+																								props.touched.vatRegistrationNumber && (
+																									<div className="invalid-feedback">
+																										{props.errors.vatRegistrationNumber}
+																									</div>
+																								)}
 																						</FormGroup>
 																					</Col>
 																				</Row>
@@ -1482,6 +1563,7 @@ class Profile extends React.Component {
 																					<Col lg={4}>
 																						<FormGroup className="mb-3">
 																							<Label htmlFor="phoneNumber">
+																							<span className="text-danger">*</span>
 																							 {strings.MobileNumber}
 																						</Label>
 																							<PhoneInput
@@ -1495,16 +1577,17 @@ class Profile extends React.Component {
 																										'phoneNumber',
 																									)(option);
 																								}}
-																								className={
-																									props.errors.phoneNumber &&
-																										props.touched.phoneNumber
-																										? 'is-invalid'
-																										: ''
-																								}
+																								isValid
+																								// className={
+																								// 	props.errors.phoneNumber &&
+																								// 		props.touched.phoneNumber
+																								// 		? 'is-invalid'
+																								// 		: ''
+																								// }
 																							/>
 																							{props.errors.phoneNumber &&
 																								props.touched.phoneNumber && (
-																									<div className="invalid-feedback">
+																									<div style={{color:"red"}}>
 																										{props.errors.phoneNumber}
 																									</div>
 																								)}
@@ -2200,6 +2283,7 @@ class Profile extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="product_code">
+																					<span className="text-danger">*</span>
 																						 {strings.CompanyAddressLine1}
 																				</Label>
 																					<Input
@@ -2219,12 +2303,26 @@ class Profile extends React.Component {
 																								'companyAddressLine1',
 																							)(option);
 																						}}
+																						value={props.values.companyAddressLine1}
+																						className={
+																							props.errors.companyAddressLine1 &&
+																							props.touched.companyAddressLine1
+																							? 'is-invalid'
+																							: ''
+																						}
 																					/>
+																					{props.errors.companyAddressLine1 &&
+																								props.touched.companyAddressLine1 && (
+																									<div className="invalid-feedback">
+																										{props.errors.companyAddressLine1}
+																									</div>
+																								)}
 																				</FormGroup>
 																			</Col>
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="companyAddressLine2">
+																					<span className="text-danger">*</span>
 																						 {strings.CompanyAddressLine2}
 																				</Label>
 																					<Input
@@ -2244,12 +2342,26 @@ class Profile extends React.Component {
 																								'companyAddressLine2',
 																							)(option);
 																						}}
+																						value={props.values.companyAddressLine2}
+																						className={
+																							props.errors.companyAddressLine2 &&
+																							props.touched.companyAddressLine2
+																							? 'is-invalid'
+																							: ''
+																						}
 																					/>
+																					{props.errors.companyAddressLine2 &&
+																								props.touched.companyAddressLine2 && (
+																									<div className="invalid-feedback">
+																										{props.errors.companyAddressLine2}
+																									</div>
+																								)}
 																				</FormGroup>
 																			</Col>
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="companyAddressLine3">
+																					<span className="text-danger">*</span>
 																						 {strings.CompanyAddressLine3}
 																				</Label>
 																					<Input
@@ -2269,7 +2381,20 @@ class Profile extends React.Component {
 																								'companyAddressLine3',
 																							)(option);
 																						}}
+																						value={props.values.companyAddressLine3}
+																						className={
+																							props.errors.companyAddressLine3 &&
+																							props.touched.companyAddressLine3
+																							? 'is-invalid'
+																							: ''
+																						}
 																					/>
+																					{props.errors.companyAddressLine3 &&
+																								props.touched.companyAddressLine3 && (
+																									<div className="invalid-feedback">
+																										{props.errors.companyAddressLine3}
+																									</div>
+																								)}
 																				</FormGroup>
 																			</Col>
 																		</Row>
@@ -2278,6 +2403,7 @@ class Profile extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup>
 																					<Label htmlFor="companyCountryCode">
+																					<span className="text-danger">*</span>
 																						{strings.CountryCode}
 																				</Label>
 																					<Select
@@ -2364,6 +2490,7 @@ class Profile extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="product_code">
+																					<span className="text-danger">*</span>
 																						 {strings.StateRegion}
 																				</Label>
 																					{/* <Input
@@ -2433,6 +2560,7 @@ class Profile extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="companyCity">
+																					<span className="text-danger">*</span>
 																						 {strings.City}
 																				</Label>
 																					<Input
@@ -2451,7 +2579,20 @@ class Profile extends React.Component {
 																								option,
 																							);
 																						}}
+																						value={props.values.companyCity}
+																						className={
+																							props.errors.companyCity &&
+																							props.touched.companyCity
+																							? 'is-invalid'
+																							: ''
+																						}
 																					/>
+																					{props.errors.companyCity &&
+																						props.touched.companyCity && (
+																						<div className="invalid-feedback">
+																							{props.errors.companyCity}
+																						</div>
+																					)}
 																				</FormGroup>
 																			</Col>
 																		</Row>
@@ -2459,6 +2600,7 @@ class Profile extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="companyPoBoxNumber">
+																					<span className="text-danger">*</span>
 																						 {strings.POBoxNumber}
 																				</Label>
 																					<Input
@@ -2480,16 +2622,30 @@ class Profile extends React.Component {
 																								)
 																							) {
 																								props.handleChange(
-																									'companyRevenueBudget',
+																									'companyPoBoxNumber',
 																								)(option);
 																							}
 																						}}
+																						value={props.values.companyPoBoxNumber}
+																						className={
+																							props.errors.companyPoBoxNumber &&
+																							props.touched.companyPoBoxNumber
+																							? 'is-invalid'
+																							: ''
+																						}
 																					/>
+																					{props.errors.companyPoBoxNumber &&
+																						props.touched.companyPoBoxNumber && (
+																						<div className="invalid-feedback">
+																							{props.errors.companyPoBoxNumber}
+																						</div>
+																					)}
 																				</FormGroup>
 																			</Col>
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="companyPostZipCode">
+																					<span className="text-danger">*</span>
 																						 {strings.PostZipCode}
 																				</Label>
 																					<Input
@@ -2511,11 +2667,24 @@ class Profile extends React.Component {
 																								)
 																							) {
 																								props.handleChange(
-																									'companyRevenueBudget',
+																									'companyPostZipCode',
 																								)(option);
 																							}
 																						}}
+																						value={props.values.companyPostZipCode}
+																						className={
+																							props.errors.companyPostZipCode &&
+																							props.touched.companyPostZipCode
+																							? 'is-invalid'
+																							: ''
+																						}
 																					/>
+																					{props.errors.companyPostZipCode &&
+																						props.touched.companyPostZipCode && (
+																						<div className="invalid-feedback">
+																							{props.errors.companyPostZipCode}
+																						</div>
+																					)}
 																				</FormGroup>
 																			</Col>
 																		</Row>

@@ -70,7 +70,9 @@ class DetailChartAccount extends React.Component {
 			disabled: false,
 			disabled1:false,
 		};
-		this.regExAlpha = /^[a-zA-Z]+$/;
+		// this.regExAlpha = /^[a-zA-Z]+$/;
+		this.regExAlpha = /^[A-Za-z0-9 !@#$%^&*)(+=._-]+$/;
+
 	}
 
 	componentDidMount = () => {
@@ -318,6 +320,7 @@ class DetailChartAccount extends React.Component {
 																</Label>
 																<Input
 																	type="text"
+																	maxLength='50'
 																	id="transactionCategoryName"
 																	name="transactionCategoryName"
 																	placeholder={strings.Enter+strings.Name}

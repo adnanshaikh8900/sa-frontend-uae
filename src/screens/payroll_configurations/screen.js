@@ -197,14 +197,18 @@ class PayrollConfigurations extends React.Component {
 		return (
 			<Row>
 			<div>
-				<Button
-				className="btn btn-sm pdf-btn"
-				onClick={(e, ) => {
-					this.props.history.push('/admin/payroll/config/detailSalaryRoles', { id: row.salaryRoleId })
-				}}
-				>
-				<i class="far fa-edit fa-lg"></i>
-				</Button>
+			{
+				row.salaryRoleId==1 ?"":(
+					<Button
+					className="btn btn-sm pdf-btn"
+					onClick={(e, ) => {
+						this.props.history.push('/admin/payroll/config/detailSalaryRoles', { id: row.salaryRoleId })
+					}}
+					>
+					<i class="far fa-edit fa-lg"></i>
+					</Button>
+				)
+			}
 			</div>
 		
 			</Row>
@@ -215,7 +219,11 @@ class PayrollConfigurations extends React.Component {
 	goToDetailForStructure = (cell, row) => {
 		return (
 			<Row>
-			<div>
+			<div>{
+				row.salaryStructureId ==1 || row.salaryStructureId ==2 || row.salaryStructureId ==3 || row.salaryStructureId ==4 ?
+				""
+				:
+				(
 				<Button
 				className="btn btn-sm pdf-btn"
 				onClick={(e, ) => {
@@ -225,6 +233,9 @@ class PayrollConfigurations extends React.Component {
 				>
 				<i class="far fa-edit fa-lg"></i>
 				</Button>
+				)
+				}
+				
 			</div>
 		
 			</Row>
@@ -238,14 +249,17 @@ class PayrollConfigurations extends React.Component {
 		return (
 			<Row>
 			<div>
-				<Button
-				className="btn btn-sm pdf-btn"
-				onClick={(e, ) => {
-					this.props.history.push('/admin/payroll/config/detailEmployeeDesignation', { id: row.id })
-				}}
-				>
-				<i class="far fa-edit fa-lg"></i>
-				</Button>
+				{row.id==1 ||row.id==2 ||row.id==3  ? ""
+				:
+					(<Button
+						className="btn btn-sm pdf-btn"
+						onClick={(e, ) => {
+							this.props.history.push('/admin/payroll/config/detailEmployeeDesignation', { id: row.id })
+						}}
+						>
+						<i class="far fa-edit fa-lg"></i>
+						</Button>)
+				}
 			</div>
 		
 			</Row>

@@ -188,7 +188,7 @@ class CreateSalaryStructure extends React.Component {
                                     value={props.values.type}
                                     placeholder={strings.Enter+strings.SalaryStructureType}
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('type')(option) }
+                                      if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('type')(option) }
                                     }}
                                     className={props.errors.type && props.touched.type ? "is-invalid" : ""}
                                   />

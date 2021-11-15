@@ -114,8 +114,8 @@ class DetailSalaryStructure extends React.Component {
 
 		let formData = new FormData();
 		formData.append('id', current_salary_structure_id);
-    formData.append('salaryStructureType', salaryStructureType ? salaryStructureType : '');
-		formData.append('salaryStructureName', salaryStructureName ? salaryStructureName : '');
+    formData.append('type', salaryStructureType ? salaryStructureType : '');
+		formData.append('name', salaryStructureName ? salaryStructureName : '');
 		this.props.salarayStructureDetailActions
 			.updateSalaryStructure(formData)
 			.then((res) => {
@@ -235,7 +235,7 @@ class DetailSalaryStructure extends React.Component {
                                     value={props.values.salaryStructureType}
                                     placeholder="Enter Salary Structure Type"
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('salaryStructureType')(option) }
+                                      if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('salaryStructureType')(option) }
                                     }}
                                     className={props.errors.salaryStructureType && props.touched.salaryStructureType ? "is-invalid" : ""}
                                   />

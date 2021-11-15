@@ -176,7 +176,7 @@ RecieptNumber:"Numéro de reçu",
       Quotation:"Citation",				
       QUOTATIONNUMBER:"NUMÉRO DE DEVIS",						
       EXPIRATIONDATE:"DATE D'EXPIRATION",				
-      AddNewRequest:"Ajouter une nouvelle demande",
+      AddNewRequest:"Ajouter un nouveau devis",
 
       //Create Quotation
       CreateQuotation:"Créer une citation",		

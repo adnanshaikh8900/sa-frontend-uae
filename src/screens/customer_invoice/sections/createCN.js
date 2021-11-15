@@ -629,6 +629,12 @@ class CreateCreditNoteModal extends React.Component {
 		e.preventDefault();
 		const data = this.state.selectedData.invoiceLineItems;
 		newData = data.filter((obj) => obj.id !== id);
+		let selectedData = {...this.state.selectedData}
+												selectedData.invoiceLineItems = newData;
+												this.setState({
+													selectedData:selectedData
+												})
+		this.props.updateParentSelelectedData(selectedData);
 		props.setFieldValue('invoiceLineItems', newData, true);
 		this.updateAmount(newData, props);
 	};

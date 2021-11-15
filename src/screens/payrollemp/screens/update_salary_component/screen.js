@@ -485,7 +485,7 @@ handleChange = (evt) => {
                                 <CardHeader>
                                     <div className="h4 mb-0 d-flex align-items-center">
                                         <i className="nav-icon icon-briefcase" />
-                                        <span className="ml-2"> {strings.UpdateEmployementDetails}</span>
+                                        <span className="ml-2"> {strings.Update +" "+strings.SalaryDetails}</span>
                                     </div>
                                 </CardHeader>
                                 <CardBody>

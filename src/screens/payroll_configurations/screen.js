@@ -200,7 +200,7 @@ class PayrollConfigurations extends React.Component {
 				<Button
 				className="btn btn-sm pdf-btn"
 				onClick={(e, ) => {
-					this.props.history.push('/admin/payroll/salaryRoles/detail', { id: row.salaryRoleId })
+					this.props.history.push('/admin/payroll/config/detailSalaryRoles', { id: row.salaryRoleId })
 				}}
 				>
 				<i class="far fa-edit fa-lg"></i>
@@ -220,7 +220,7 @@ class PayrollConfigurations extends React.Component {
 				className="btn btn-sm pdf-btn"
 				onClick={(e, ) => {
 					
-					this.props.history.push('/admin/payroll/salaryStructure/detail', { id: row.salaryStructureId })
+					this.props.history.push('/admin/payroll/config/detailSalaryStructure', { id: row.salaryStructureId })
 				}}
 				>
 				<i class="far fa-edit fa-lg"></i>
@@ -241,7 +241,7 @@ class PayrollConfigurations extends React.Component {
 				<Button
 				className="btn btn-sm pdf-btn"
 				onClick={(e, ) => {
-					this.props.history.push('/admin/payroll/employeeDesignation/detail', { id: row.id })
+					this.props.history.push('/admin/payroll/config/detailEmployeeDesignation', { id: row.id })
 				}}
 				>
 				<i class="far fa-edit fa-lg"></i>
@@ -568,7 +568,7 @@ class PayrollConfigurations extends React.Component {
 																					color="primary"
 																					className="btn-square pull-right mb-2 mr-2"
 																					style={{ marginBottom: '10px' }}
-																					onClick={() => this.props.history.push(`/admin/payroll/salaryRoles/create`)}
+																					onClick={() => this.props.history.push(`/admin/payroll/config/createSalaryRoles`)}
 
 																				>
 																					<i className="fas fa-plus mr-1" />
@@ -697,7 +697,7 @@ class PayrollConfigurations extends React.Component {
 																					color="primary"
 																					className="btn-square pull-right mb-2 mr-2"
 																					style={{ marginBottom: '10px' }}
-																					onClick={() => this.props.history.push(`/admin/payroll/salaryStructure/create`)}
+																					onClick={() => this.props.history.push(`/admin/payroll/config/createSalaryStructure`)}
 
 																				>
 																					<i className="fas fa-plus mr-1" />
@@ -838,7 +838,7 @@ class PayrollConfigurations extends React.Component {
 																					color="primary"
 																					className="btn-square pull-right mb-2 mr-2"
 																					style={{ marginBottom: '10px' }}
-																					onClick={() => this.props.history.push(`/admin/payroll/employeeDesignation/create`)}
+																					onClick={() => this.props.history.push(`/admin/payroll/config/createEmployeeDesignation`)}
 
 																				>
 																					<i className="fas fa-plus mr-1" />

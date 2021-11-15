@@ -125,7 +125,7 @@ class SalaryRoles extends React.Component {
   }
 
   goToDetail = (row) => {
-    this.props.history.push('/admin/payroll/salaryRoles/detail', { id: row.salaryRoleId })
+    this.props.history.push('/admin/payroll/config/detailSalaryRoles', { id: row.salaryRoleId })
   }
 
   sortColumn = (sortName, sortOrder) => {
@@ -372,7 +372,7 @@ console.log("strings",strings)
                                                                 color="primary"
                                                                 className="btn-square pull-right mb-2 mr-2"
                                                                 style={{ marginBottom: '10px' }}
-                                                                onClick={() => this.props.history.push(`/admin/payroll/salaryRoles/create`)}
+                                                                onClick={() => this.props.history.push(`/admin/payroll/config/createSalaryRoles`)}
 
                                                             >
                                                                 <i className="fas fa-plus mr-1" />

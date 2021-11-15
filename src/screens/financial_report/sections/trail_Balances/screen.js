@@ -170,17 +170,26 @@ class TrailBalances extends React.Component {
 
 	exportFile = () => {
 
-		let exportData
+		// let exportData
 	 
-			 let singleResultArray=this.state && this.state.data 
-	 			 ?	 
-			 Object.entries(this.state.data)     :[];	 
-		 const { Parser, transforms: { unwind, flatten } } = require('json2csv');
-		 const json2csvParser = new Parser({ transforms: [unwind({ blankOut: true }), flatten('__')] });
-		  exportData = json2csvParser.parse(singleResultArray);
+		// 	 let singleResultArray=this.state && this.state.data 
+	 	// 		 ?	 
+		// 	 Object.entries(this.state.data)     :[];	 
+		//  const { Parser, transforms: { unwind, flatten } } = require('json2csv');
+		//  const json2csvParser = new Parser({ transforms: [unwind({ blankOut: true }), flatten('__')] });
+		//   exportData = json2csvParser.parse(singleResultArray);
 	 
 	 
-		   return (exportData);
+		//    return (exportData);
+		let dl =""
+		let fn =""
+		let type="csv"
+		var elt = document.getElementById('tbl_exporttable_to_xls');												
+		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
+		return dl ?
+		  XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+		  XLSX.writeFile(wb, fn || ('Trial Balance Report.'+ (type || 'csv')));
+
 	 }
 
 	toggle = () =>
@@ -234,13 +243,21 @@ class TrailBalances extends React.Component {
 													<DropdownMenu>
 													
 														<DropdownItem>
-															<CSVLink
+															{/* <CSVLink
 																data={this.exportFile()}
 																className="csv-btn"
 																filename={'Trial Balance Report.csv'}
 															>
 																CSV (Comma Separated Value)
-															</CSVLink>
+															</CSVLink> */}
+															<span
+															style={{
+																border: 0,
+    															padding: 0,
+																backgroundColor:"white !important"
+															}}
+														     onClick={()=>{this.exportFile()}}
+															>CSV (Comma Separated Value)</span>
 														</DropdownItem>
 															<DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf
@@ -358,7 +375,7 @@ class TrailBalances extends React.Component {
 										<Loader />
 									) : (
 										<div className="table-wrapper">
-											<Table responsive className="table-bordered">
+											<Table id="tbl_exporttable_to_xls" responsive className="table-bordered">
 												<thead className="thead-dark ">
 													<tr className="header-row">
 														{this.columnHeader.map((column, index) => {

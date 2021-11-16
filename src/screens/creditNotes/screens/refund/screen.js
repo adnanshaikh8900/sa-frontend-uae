@@ -19,7 +19,7 @@ import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import * as CustomerRecordPaymentActions from './actions';
-import * as CustomerInvoiceActions from '../../actions';
+import * as CnActions from '../../actions';
 
 import { CustomerModal } from '../../sections';
 import { Loader, ConfirmDeleteModal } from 'components';
@@ -45,8 +45,8 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
-		customerInvoiceActions: bindActionCreators(
-			CustomerInvoiceActions,
+		cnActions: bindActionCreators(
+			CnActions,
 			dispatch,
 		),
 		CustomerRecordPaymentActions: bindActionCreators(
@@ -93,6 +93,7 @@ class Refund extends React.Component {
 				attachmentFile: '',
 				paidInvoiceListStr: [],
 			},
+			amount: this.props.location.state.id.dueAmount,
 			invoiceId: this.props.location.state.id.id,
 			contactType: 2,
 			openCustomerModal: false,
@@ -103,6 +104,8 @@ class Refund extends React.Component {
 			discountAmount: 0,
 			fileName: '',
 			disabled: false,
+			invoiceNumber:"-",
+			showInvoiceNumber:false
 		};
 
 		// this.options = {
@@ -158,11 +161,27 @@ class Refund extends React.Component {
 			},
 		});
 		Promise.all([
-			this.props.customerInvoiceActions.getDepositList(),
-			this.props.customerInvoiceActions.getPaymentMode(),
-			this.props.customerInvoiceActions.getCustomerList(this.state.contactType),
+			this.props.cnActions.getDepositList(),
+			this.props.cnActions.getPaymentMode(),
+			this.props.cnActions.getCustomerList(this.state.contactType),
 		]);
 		this.getReceiptNo();
+		//INV number
+		this.props.cnActions
+			.getInvoicesForCNById(this.props.location.state.id.id)
+			.then((res) => {
+				
+				if (res.status === 200) {
+					if(res.data.length && res.data.length !=0 )
+					this.setState(
+						{
+							invoiceNumber: res.data[0].invoiceNumber,
+							showInvoiceNumber:true
+						},
+						() => {	},
+					);
+				}
+			})
 	};
 
 	getReceiptNo = () => {
@@ -230,7 +249,27 @@ class Refund extends React.Component {
 			props.setFieldValue('attachmentFile', file, true);
 		}
 	};
+	showInvoiceNumber=()=>{
 
+		return(
+			this.state.showInvoiceNumber &&(
+			<Col lg={4}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="project">
+																			
+																			 {strings.InvoiceNumber}
+																		</Label>
+																		<Input
+																			
+																			disabled
+																			id="invoiceNumber"
+																			name="invoiceNumber"
+																			value={this.state.invoiceNumber}
+																		/>
+																	</FormGroup>
+																</Col>)
+		)
+	}
 	handleSubmit = (data) => {
 		this.setState({ disabled: true });
 		const { invoiceId } = this.state;
@@ -318,7 +357,7 @@ class Refund extends React.Component {
 
 	closeCustomerModal = (res) => {
 		if (res) {
-			this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
+			this.props.cnActions.getCustomerList(this.state.contactType);
 		}
 		this.setState({ openCustomerModal: false });
 	};
@@ -495,6 +534,7 @@ class Refund extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
+																{this.showInvoiceNumber()}
 																{/* <Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="project">
@@ -537,7 +577,7 @@ class Refund extends React.Component {
 																		</Label>
 																		<Input
 																			type="number"
-																			
+																			max={this.state.amount}
 																			id="amount"
 																			name="amount"
 																			value={props.values.amount}
@@ -870,10 +910,10 @@ class Refund extends React.Component {
 						this.closeCustomerModal(e);
 					}}
 					getCurrentUser={(e) => this.getCurrentUser(e)}
-					createCustomer={this.props.customerInvoiceActions.createCustomer}
+					createCustomer={this.props.cnActions.createCustomer}
 					currency_list={this.props.currency_list}
 					country_list={this.props.country_list}
-					getStateList={this.props.customerInvoiceActions.getStateList}
+					getStateList={this.props.cnActions.getStateList}
 				/>
 			</div>
 		);

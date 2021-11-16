@@ -846,6 +846,6 @@ ExcludingTax:"Hors tax",
 WithTax:"Avec tax",
 By:"Par",										
 Number:"Nombre",										
-
+SalesReturn:"retour des ventes",
 }
   export {fr};

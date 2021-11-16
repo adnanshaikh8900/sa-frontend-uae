@@ -319,7 +319,7 @@ class CreateCreditNoteModal extends React.Component {
 					<div>
 						<Input
 							type="number"
-							
+							disabled
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -380,7 +380,8 @@ class CreateCreditNoteModal extends React.Component {
 				name={`invoiceLineItems.${idx}.unitPrice`}
 				render={({ field, form }) => (
 					<Input
-					type="number"
+					    type="number"
+						disabled
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (
@@ -436,6 +437,7 @@ class CreateCreditNoteModal extends React.Component {
 				name={`invoiceLineItems.${idx}.vatCategoryId`}
 				render={({ field, form }) => (
 					<Select
+					isDisabled={true}
 						styles={customStyles}
 						options={
 							vat_list
@@ -512,6 +514,7 @@ class CreateCreditNoteModal extends React.Component {
 				name={`invoiceLineItems.${idx}.productId`}
 				render={({ field, form }) => (
 					<Select
+						isDisabled={true}
 						styles={customStyles}
 						options={
 							product_list

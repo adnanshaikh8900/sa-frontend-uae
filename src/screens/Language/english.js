@@ -865,6 +865,7 @@ SalesExcludingTax:"Sales Excluding Tax",
 ExcludingTax:"Excluding Tax",
 WithTax:"With Tax",
 By:"By",
-Number:"Number",										
+Number:"Number",
+SalesReturn:"Sales Return",
 }
 export { en }

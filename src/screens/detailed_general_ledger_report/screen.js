@@ -145,18 +145,31 @@ class DetailedGeneralLedgerReport extends React.Component {
 			});
 	};
 
-	exportFile = (csvData, fileName, type) => {
-		const fileType =
-			type === 'xls'
-				? 'application/vnd.ms-excel'
-				: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-		const fileExtension = `.${type}`;
-		const ws = XLSX.utils.json_to_sheet(csvData);
-		const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
-		const excelBuffer = XLSX.write(wb, { bookType: type, type: 'array' });
-		const data = new Blob([excelBuffer], { type: fileType });
-		FileSaver.saveAs(data, fileName + fileExtension);
-	};
+	exportFile = () => {
+
+	
+		let dl =""
+		let fn =""
+		let type="csv"
+		var elt = document.getElementById('tbl_exporttable_to_xls');												
+		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
+		return dl ?
+		  XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+		  XLSX.writeFile(wb, fn || ('Detailed General Ledger Report.'+ (type || 'csv')));
+
+	   }
+
+	   exportExcelFile  = () => 
+	   {   let dl =""
+		   let fn =""
+		   let type="xlsx"
+		   var elt = document.getElementById('tbl_exporttable_to_xls');												
+		   var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
+		   return dl ?
+			 XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+			 XLSX.writeFile(wb, fn || ('Detailed General Ledger Report.'+ (type || 'xlsx')));
+   
+	   }
 
 	toggle = () =>
 		this.setState((prevState) => {
@@ -332,14 +345,27 @@ class DetailedGeneralLedgerReport extends React.Component {
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
 														
+													<DropdownItem>
+															
+															<span
+															style={{
+																border: 0,
+    															padding: 0,
+																backgroundColor:"white !important"
+															}}
+														     onClick={()=>{this.exportFile()}}
+															>CSV (Comma Separated Value)</span>
+														</DropdownItem>
 														<DropdownItem>
-															<CSVLink
-																data={csvData}
-																className="csv-btn"
-																filename={'Detailed General Ledger Report.csv'}
-															>
-																CSV (Comma Separated Value)
-															</CSVLink>
+															
+															<span
+															style={{
+																border: 0,
+    															padding: 0,
+																backgroundColor:"white !important"
+															}}
+														     onClick={()=>{this.exportExcelFile()}}
+															>Excel</span>
 														</DropdownItem>
 														<DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf
@@ -484,7 +510,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 									{loading ? (
 										<Loader />
 									) : (
-										<div className="table-wrapper">
+										<div id="tbl_exporttable_to_xls" className="table-wrapper">
 											<Table responsive>
 												<thead>
 													<tr className="header-row">

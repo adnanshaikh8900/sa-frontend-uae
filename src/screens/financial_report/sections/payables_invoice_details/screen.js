@@ -130,13 +130,30 @@ class PayablesInvoiceDetailsReport extends React.Component {
 	};
 
 	exportFile = () => {
-		let data=this.state  && this.state.payableInvoiceDetailsList.resultObject?
-		 this.state.payableInvoiceDetailsList.resultObject 
-		 :[];
-		let	singleResultArray=data.flat()
-		return (singleResultArray);
-	};
 
+	
+		let dl =""
+		let fn =""
+		let type="csv"
+		var elt = document.getElementById('tbl_exporttable_to_xls');												
+		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
+		return dl ?
+		  XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+		  XLSX.writeFile(wb, fn || ('Payables Invoice Details Report.'+ (type || 'csv')));
+
+	   }
+
+	   exportExcelFile  = () => 
+	   {   let dl =""
+		   let fn =""
+		   let type="xlsx"
+		   var elt = document.getElementById('tbl_exporttable_to_xls');												
+		   var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
+		   return dl ?
+			 XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+			 XLSX.writeFile(wb, fn || ('Payables Invoice Details Report.'+ (type || 'xlsx')));
+   
+	   }
 
 	// exportFile = (csvData, fileName, type) => {
 	// 	const fileType =
@@ -332,14 +349,27 @@ class PayablesInvoiceDetailsReport extends React.Component {
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
 														
+													<DropdownItem>
+															
+															<span
+															style={{
+																border: 0,
+    															padding: 0,
+																backgroundColor:"white !important"
+															}}
+														     onClick={()=>{this.exportFile()}}
+															>CSV (Comma Separated Value)</span>
+														</DropdownItem>
 														<DropdownItem>
-															<CSVLink
-																data={this.exportFile()}
-																className="csv-btn"
-																filename={'Payable Invoice Details Report.csv'}
-															>
-																CSV (Comma Separated Value)
-															</CSVLink>
+															
+															<span
+															style={{
+																border: 0,
+    															padding: 0,
+																backgroundColor:"white !important"
+															}}
+														     onClick={()=>{this.exportExcelFile()}}
+															>Excel</span>
 														</DropdownItem>
 														<DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf
@@ -486,7 +516,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 									{loading ? (
 										<Loader />
 									) : (
-										<div className="table-wrapper">
+										<div id="tbl_exporttable_to_xls" className="table-wrapper">
 											<Table responsive>
 												<thead>
 													<tr className="header-row">

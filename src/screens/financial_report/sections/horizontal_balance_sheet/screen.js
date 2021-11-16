@@ -186,6 +186,18 @@ class HorizontalBalanceSheet extends React.Component {
 
 	   }
 
+	   exportExcelFile  = () => 
+	{   let dl =""
+		let fn =""
+		let type="xlsx"
+		var elt = document.getElementById('tbl_exporttable_to_xls');												
+		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
+		return dl ?
+		  XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+		  XLSX.writeFile(wb, fn || ('Horizontal Balance Sheet Report.'+ (type || 'xlsx')));
+
+	}
+
 	
 	toggle = () =>
 		this.setState((prevState) => {
@@ -237,13 +249,7 @@ class HorizontalBalanceSheet extends React.Component {
 													<DropdownMenu>
 														
 														<DropdownItem>
-															{/* <CSVLink
-																data={this.exportFile()}
-																className="csv-btn"
-																filename={'Horizontal Balance sheet Report.csv'}
-															>
-																CSV (Comma Separated Value)
-															</CSVLink> */}
+															
 															<span
 															style={{
 																border: 0,
@@ -253,9 +259,21 @@ class HorizontalBalanceSheet extends React.Component {
 														     onClick={()=>{this.exportFile()}}
 															>CSV (Comma Separated Value)</span>
 														</DropdownItem>
+														<DropdownItem>
+															
+															<span
+															style={{
+																border: 0,
+    															padding: 0,
+																backgroundColor:"white !important"
+															}}
+														     onClick={()=>{this.exportExcelFile()}}
+															>Excel</span>
+														</DropdownItem>
 														<DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf
 														</DropdownItem>
+														
 														{/* <DropdownItem
 															onClick={() => {
 																this.exportFile(csvData, 'balancesheet', 'xls');

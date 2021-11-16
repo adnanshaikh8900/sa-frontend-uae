@@ -853,5 +853,6 @@ WithTax:"مع الضرائب",
 By:"بواسطة",										
 Number:"عدد",										
 
+SalesReturn:"عائد المبيعات",
   }
   export {ar};

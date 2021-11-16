@@ -556,3 +556,17 @@ export const getInvoiceListForDropdown = (id) => {
 			});
 	};
 };
+
+export const getInvoicesForCNById = (_id) => {
+	return (dispatch) => {
+	  let data = {
+		method: 'GET',
+		url: `/rest/creditNote/getInvoiceByCreditNoteId?id=${_id}`
+	  }
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  };

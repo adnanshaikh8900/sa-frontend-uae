@@ -1546,6 +1546,7 @@ min="0"
 																		 {strings.CreditNoteNumber}
 																	</Label>
 																	<Input
+																		maxLength="15"
 																		type="text"
 																		id="creditNoteNumber"
 																		name="creditNoteNumber"

@@ -179,7 +179,7 @@ class PayrollRun extends React.Component {
 		var userLabel = user_approver_generater_dropdown_list.length ? user_approver_generater_dropdown_list[0].label : '';
 
 		if (userValue.toString() === row.generatedBy && userLabel === "Payroll Generator") {
-			this.props.history.push('/admin/payroll/updatePayroll', { id: row.id })
+			this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
 		}
 		else
 			if (userValue === row.payrollApprover && userLabel === "Payroll Approver") {
@@ -187,7 +187,7 @@ class PayrollRun extends React.Component {
 			}
 			else
 			if ( userLabel === "Admin" && row.status==="Draft") {
-				this.props.history.push('/admin/payroll/updatePayroll', { id: row.id })
+				this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
 			}
 			else
 			
@@ -199,7 +199,7 @@ class PayrollRun extends React.Component {
 				}
 				else
 				if ( userLabel === "Admin" && row.status==="Rejected") {
-					this.props.history.push('/admin/payroll/updatePayroll', { id: row.id })
+					this.props.history.push('/admin/payroll/payrollrun/updatePayroll', { id: row.id })
 				}
 		        else{
 				let list = [...this.state.payroll_employee_list1];
@@ -691,7 +691,7 @@ class PayrollRun extends React.Component {
 																className="btn-square mt-2 pull-right"
 																// onClick={}
 																onClick={() =>
-																	this.props.history.push('/admin/payroll/createPayrollList')
+																	this.props.history.push('/admin/payroll/payrollrun/createPayrollList')
 																}
 															// disabled={selectedRows.length === 0}
 															>

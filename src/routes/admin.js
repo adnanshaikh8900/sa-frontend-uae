@@ -603,12 +603,12 @@ const adminRoutes = [
 
 
 	{
-		path: '/admin/payroll/updatePayroll',
+		path: '/admin/payroll/payrollrun/updatePayroll',
 		name: 'GeneratePayroll',
 		component: UpdatePayroll.screen,
 	},
 	{
-		path: '/admin/payroll/createPayrollList',
+		path: '/admin/payroll/payrollrun/createPayrollList',
 		name: 'GeneratePayroll',
 		component: CreatePayroll.screen,
 	},
@@ -639,17 +639,17 @@ const adminRoutes = [
 	// },
 
 	{
-		path: '/admin/payroll/salaryRoles/create',
+		path: '/admin/payroll/config/createSalaryRoles',
 		name: 'CreateSalaryRole',
 		component: CreateSalaryRoles.screen,
 	},
 	{
-		path: '/admin/payroll/salaryRoles/detail',
+		path: '/admin/payroll/config/detailSalaryRoles',
 		name: 'UpdateSalaryRole',
 		component: DetailSalaryRole.screen,
 	},
 	{
-		path: '/admin/payroll/salaryStructure/detail',
+		path: '/admin/payroll/config/detailSalaryStructure',
 		name: 'UpdateSalaryStructure',
 		component: DetailSalaryStructure.screen,
 	},
@@ -680,7 +680,7 @@ const adminRoutes = [
 		component: SalaryTemplate.screen,
 	},
 	{
-		path: '/admin/payroll/salaryStructure/create',
+		path: '/admin/payroll/config/createSalaryStructure',
 		name: 'CreateSalaryStructure',
 		component: CreateSalaryStucture.screen,
 	},
@@ -690,12 +690,12 @@ const adminRoutes = [
 		component: SalaryStucture.screen,
 	},
 	{
-		path: '/admin/payroll/employeeDesignation/create',
+		path: '/admin/payroll/config/createEmployeeDesignation',
 		name: 'CreateEmployeeDesignation',
 		component: CreateDesignation.screen,
 	},
 	{
-		path: '/admin/payroll/employeeDesignation/detail',
+		path: '/admin/payroll/config/detailEmployeeDesignation',
 		name: 'UpdateEmployeeDesignation',
 		component: DetailDesignation.screen,
 	},

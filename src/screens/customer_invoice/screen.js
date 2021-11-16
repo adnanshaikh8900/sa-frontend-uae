@@ -333,6 +333,10 @@ class CustomerInvoice extends React.Component {
 		console.log(totalAmount,"00000000")
 		console.log(totalVatAmount,"00000000")
 	};
+	updateParentSelelectedData= (data) => {
+		this.setState({selectedData:data})
+		console.log(data,"NEW DATA...")
+	};
 	renderInvoiceAmount = (cell, row, extraData) => {
 		return (
 			<div>
@@ -1381,6 +1385,10 @@ min="0"
 				updateParentAmount={
 					(e,e1) => {
 						this.updateParentAmount(e,e1);
+				}}
+				updateParentSelelectedData={
+					(e) => {
+						this.updateParentSelelectedData(e);
 				}}
 				invoiceNumber={this.state.invoiceNumber}
 				id={this.state.rowId}

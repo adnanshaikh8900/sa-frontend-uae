@@ -181,7 +181,7 @@ Relationship2:"Relationship 2",
       Quotation:"Quotation",				
       QUOTATIONNUMBER:"QUOTATION NUMBER",						
       EXPIRATIONDATE:"EXPIRATION DATE",				
-      AddNewRequest:"Add New Request",
+      AddNewRequest:"Add New Quotation",
 
       //Create Quotation
       CreateQuotation:"Create Quotation",		

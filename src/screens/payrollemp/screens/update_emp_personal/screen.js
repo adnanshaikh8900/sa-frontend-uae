@@ -408,7 +408,7 @@ class UpdateEmployeePersonal extends React.Component {
                                     ) : (
 
                                         <Row>
-                                            <Col lg={8}>
+                                            <Col lg={12}>
                                                 <Formik
                                                     initialValues={initValue}
                                                     ref={this.formRef}
@@ -478,7 +478,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                     {(props) => (
                                                         <Form onSubmit={props.handleSubmit} name="simpleForm">
                                                             <Row>
-                                                                {/* <Col xs="4" md="4" lg={2}>
+                                                                <Col xs="4" md="4" lg={2}>
                                                                                         <FormGroup className="mb-3 text-center">
                                                                                             <ImageUploader
                                                                                                 // withIcon={true}
@@ -508,9 +508,9 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                 }
                                                                                             />
                                                                                         </FormGroup>
-                                                                                    </Col> */}
+                                                                                    </Col>
 
-                                                                <Col  lg={12}>
+                                                                <Col  xs="4" md="4" lg={10}>
                                                                     <Row className="row-wrapper">
 
                                                                         <Col lg={4}>
@@ -985,7 +985,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                         value={props.values.presentAddress}
                                                                                                         placeholder={strings.Enter+strings.PresentAddress}
                                                                                                         onChange={(option) => {
-                                                                                                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('presentAddress')(option) }
+                                                                                                            if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('presentAddress')(option) }
                                                                                                         }}
                                                                                                         className={props.errors.presentAddress && props.touched.presentAddress ? "is-invalid" : ""}
                                                                                                     />
@@ -1171,6 +1171,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                     <Label htmlFor="university"> {strings.University} </Label>
                                                                                                     <Input
                                                                                                         type="text"
+                                                                                                        maxLength="100"
                                                                                                         id="university"
                                                                                                         name="university"
                                                                                                         placeholder={strings.Enter+strings.University}
@@ -1193,6 +1194,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                     <Label htmlFor="qualification"> {strings.qualification} </Label>
                                                                                                     <Input
                                                                                                         type="text"
+                                                                                                        maxLength="50"
                                                                                                         id="qualification"
                                                                                                         name="qualification"
                                                                                                         placeholder={strings.Enter+strings.qualification}
@@ -1215,6 +1217,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                     <Label htmlFor="qualificationYearOfCompletionDate"> {strings.qualificationYearOfCompletionDate} </Label>
                                                                                                     <Input
                                                                                                         type="text"
+                                                                                                        maxLength="10"
                                                                                                         id="qualificationYearOfCompletionDate"
                                                                                                         name="qualificationYearOfCompletionDate"
                                                                                                         placeholder={strings.Enter+strings.qualificationYearOfCompletionDate}

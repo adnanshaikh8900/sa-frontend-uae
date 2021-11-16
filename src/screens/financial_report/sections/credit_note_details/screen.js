@@ -378,7 +378,9 @@ class CreditNoteDetailsReport extends React.Component {
 														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.CustomerName}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.Credit+" "+strings.Date}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.Status}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.InvoiceAmount}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.SalesReturn}
+															{/* {strings.InvoiceAmount} */}
+														</th>
 														<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Balance}</th>
 													</tr>
 												</thead>

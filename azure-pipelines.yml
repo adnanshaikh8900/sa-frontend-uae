@@ -17,7 +17,7 @@ variables:
   ${{ else }}:
     containerRegistryConnection: 'DataInnAzureContainerRegistryConnection'
   npm_config_cache: $(Pipeline.Workspace)/.npm
-  
+
 
 stages:
   - stage: ci_build_simpleaccounts
@@ -60,10 +60,10 @@ stages:
               path: $(Pipeline.Workspace)/simpleaccounts-frontend-docker
               cacheHitVar: CACHE_RESTORED                #Variable to set to 'true' when the cache is restored
 
-          # - script: |
-          #     docker load -i $(Pipeline.Workspace)/simpleaccounts-frontend-docker/simpleaccounts-frontend-docker-cache.tar
-          #   displayName: Docker restore
-          #   condition: and(not(canceled()), eq(variables.CACHE_RESTORED, 'true'))
+          - script: |
+             docker load -i $(Pipeline.Workspace)/simpleaccounts-frontend-docker/simpleaccounts-frontend-docker-cache.tar
+           displayName: Docker restore
+           condition: and(not(canceled()), eq(variables.CACHE_RESTORED, 'true'))
 
           - task: Docker@2
             displayName: Docker Build & Push

@@ -120,18 +120,30 @@ class ExpenseByCategory extends React.Component {
 	};
 
 	exportFile = () => {
-		
-		// let object = Object.assign([],this.state.data.expenseByCategoryList)
-		// let data=[];
-		// for(let i=0;i<object.length;i++){
-		// 		let o=object[i];
-		// 		o=Object.assign([],o);
-		// 		data.push(o);
-		// }
-		// const blob = new Blob(data,{type:'application/csv'});
-		// 			download(blob,'Sample Transaction.csv')
-		return (this.state && this.state.data && this.state.data.expenseByCategoryList ? this.state.data.expenseByCategoryList :'');
-	};
+
+	
+		let dl =""
+		let fn =""
+		let type="csv"
+		var elt = document.getElementById('tbl_exporttable_to_xls');												
+		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
+		return dl ?
+		  XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+		  XLSX.writeFile(wb, fn || ('Expense By Category Report.'+ (type || 'csv')));
+
+	   }
+
+	   exportExcelFile  = () => 
+	   {   let dl =""
+		   let fn =""
+		   let type="xlsx"
+		   var elt = document.getElementById('tbl_exporttable_to_xls');												
+		   var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
+		   return dl ?
+			 XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+			 XLSX.writeFile(wb, fn || ('Expense By Category Report.'+ (type || 'xlsx')));
+   
+	   }
 
 	toggle = () =>
 		this.setState((prevState) => {
@@ -209,15 +221,29 @@ class ExpenseByCategory extends React.Component {
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
 														
-														<DropdownItem>
-															<CSVLink
-																data={this.exportFile()}
-																className="csv-btn"
-																filename={'Expense By Category Report.csv'}
-															>
-																CSV (Comma Separated Value)
-															</CSVLink>
+													<DropdownItem>
+															
+															<span
+															style={{
+																border: 0,
+    															padding: 0,
+																backgroundColor:"white !important"
+															}}
+														     onClick={()=>{this.exportFile()}}
+															>CSV (Comma Separated Value)</span>
 														</DropdownItem>
+														<DropdownItem>
+															
+															<span
+															style={{
+																border: 0,
+    															padding: 0,
+																backgroundColor:"white !important"
+															}}
+														     onClick={()=>{this.exportExcelFile()}}
+															>Excel</span>
+														</DropdownItem>
+
 														<DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf
 														</DropdownItem>
@@ -330,7 +356,7 @@ class ExpenseByCategory extends React.Component {
 									{loading ? (
 										<Loader />
 									) : (
-										<div className="table-wrapper">
+										<div  id="tbl_exporttable_to_xls" className="table-wrapper">
 											<Table  >
 												<thead className="header-row" >
 													<tr>

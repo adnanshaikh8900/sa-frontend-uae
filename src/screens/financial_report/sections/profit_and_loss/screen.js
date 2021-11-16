@@ -169,6 +169,19 @@ class ProfitAndLossReport extends React.Component {
 		  XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
 		  XLSX.writeFile(wb, fn || ('Profit & Loss Report.'+ (type || 'csv')));
 	}
+
+	exportExcelFile  = () => 
+	{   let dl =""
+		let fn =""
+		let type="xlsx"
+		var elt = document.getElementById('tbl_exporttable_to_xls');												
+		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
+		return dl ?
+		  XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+		  XLSX.writeFile(wb, fn || ('Profit & Loss Report.'+ (type || 'xlsx')));
+
+	}
+
 	toggle = () =>
 		this.setState((prevState) => {
 			return { dropdownOpen: !prevState.dropdownOpen };
@@ -233,6 +246,17 @@ class ProfitAndLossReport extends React.Component {
 															}}
 														     onClick={()=>{this.exportFile()}}
 															>CSV (Comma Separated Value)</span>
+														</DropdownItem>
+														<DropdownItem>
+															
+															<span
+															style={{
+																border: 0,
+    															padding: 0,
+																backgroundColor:"white !important"
+															}}
+														     onClick={()=>{this.exportExcelFile()}}
+															>Excel</span>
 														</DropdownItem>
 															<DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf

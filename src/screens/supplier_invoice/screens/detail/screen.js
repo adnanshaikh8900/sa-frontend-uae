@@ -1335,11 +1335,11 @@ class DetailSupplierInvoice extends React.Component {
 																	// description: Yup.string().required(
 																	// 	'Value is Required',
 																	// ),
-																	quantity: Yup.number()
+																	quantity: Yup.string()
 																		.required('Value is Required')
 																		.test(
 																			'quantity',
-																			'Quantity Should be Greater than 1',
+																			'Quantity field is required and should not be 0',
 																			(value) => value > 0,
 																		),
 																	unitPrice: Yup.number().required(

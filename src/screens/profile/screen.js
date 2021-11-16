@@ -213,6 +213,7 @@ class Profile extends React.Component {
 								lastName: res.data.lastName ? res.data.lastName : '',
 								email: res.data.email ? res.data.email : '',
 								password: '',
+								confirmPassword:'',
 								dob: res.data.dob
 									? moment(res.data.dob, 'DD-MM-YYYY').toDate()
 									: '',
@@ -252,6 +253,7 @@ class Profile extends React.Component {
 			email,
 			dob,
 			password,
+			confirmPassword,
 			roleId,
 			timezone,
 		} = data;
@@ -270,6 +272,10 @@ class Profile extends React.Component {
 
 		if (password.length > 0) {
 			formData.append('password ', password);
+		}
+		
+		if (confirmPassword.length > 0) {
+			formData.append('confirmPassword ', confirmPassword);
 		}
 		if (this.state.userPhotoFile.length > 0) {
 			formData.append('profilePic', userPhotoFile[0]);
@@ -685,15 +691,18 @@ class Profile extends React.Component {
 																	email: Yup.string()
 																		.required('Email is Required')
 																		.email('Invalid Email'),
+																	roleId: Yup.string().required(
+																		'Role is Required',
+																	),
 																	password: Yup.string()
-																		// .required("Password is Required")
+																		 .required("Password is Required")
 																		// .min(8, "Password Too Short")
 																		.matches(
 																			/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
 																			'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
 																		),
 																	confirmPassword: Yup.string()
-																		// .required('Confirm Password is Required')
+																		 .required('Confirm Password is Required')
 																		.oneOf(
 																			[Yup.ref('password'), null],
 																			'Passwords must match',
@@ -875,7 +884,10 @@ class Profile extends React.Component {
 																				<Row>
 																					<Col lg={6}>
 																						<FormGroup>
-																							<Label htmlFor="roleId">{strings.Role}</Label>
+																							<Label htmlFor="roleId">
+																							<span className="text-danger">
+																									*
+																							</span>{strings.Role}</Label>
 																							<Select
 																								styles={customStyles}
 																								options={
@@ -1054,6 +1066,9 @@ class Profile extends React.Component {
 																					<Col lg={6}>
 																						<FormGroup>
 																							<Label htmlFor="select">
+																							<span className="text-danger">
+																									*
+																							</span>
 																								 {strings.Password}
 																						</Label>
 																							<Input
@@ -1092,6 +1107,9 @@ class Profile extends React.Component {
 																					<Col lg={6}>
 																						<FormGroup>
 																							<Label htmlFor="select">
+																							<span className="text-danger">
+																									*
+																							</span>
 																								{strings.ConfirmPassword}
 																						</Label>
 																							<Input

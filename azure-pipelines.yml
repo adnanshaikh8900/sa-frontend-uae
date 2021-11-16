@@ -29,7 +29,7 @@ stages:
         displayName: Build & Push simpleaccounts Application
         timeoutInMinutes: 30
 
-       steps:
+        steps:
 #          - task: CmdLine@2
 #            inputs:
 #              script: 'npm i --package-lock-only'

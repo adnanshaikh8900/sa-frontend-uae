@@ -21,7 +21,7 @@ import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import * as CreditNotesDetailActions from './actions';
 import * as ProductActions from '../../../product/actions';
-import * as CustomerInvoiceActions from '../../actions';
+import * as CnActions from '../../actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 
 import { CustomerModal ,ProductModal } from '../../sections';
@@ -54,8 +54,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		currencyConvertActions: bindActionCreators(CurrencyConvertActions, dispatch),
-		customerInvoiceActions: bindActionCreators(
-			CustomerInvoiceActions,
+		cnActions: bindActionCreators(
+			CnActions,
 			dispatch,
 		),
 		creditNotesDetailActions: bindActionCreators(
@@ -107,6 +107,7 @@ class DetailCreditNote extends React.Component {
 			fileName: '',
 			basecurrency:[],
 			customer_currency: '',
+			showInvoiceNumber:false
 		};
 
 		// this.options = {
@@ -172,18 +173,35 @@ class DetailCreditNote extends React.Component {
 	initializeData = () => {
 
 		if (this.props.location.state && this.props.location.state.id) {
+		//INV number
+		this.props.cnActions
+		.getInvoicesForCNById(this.props.location.state.id)
+		.then((res) => {
+			
+			if (res.status === 200) {
+				if(res.data.length && res.data.length !=0 )
+				this.setState(
+					{
+						invoiceNumber: res.data[0].invoiceNumber,
+						showInvoiceNumber:true
+					},
+					() => {	},
+				);
+			}
+		})
+		//CN details
 			this.props.creditNotesDetailActions
 				.getCreditNoteById(this.props.location.state.id)
 				.then((res) => {
 					if (res.status === 200) {
 						this.getCompanyCurrency();
-						this.props.customerInvoiceActions.getVatList();
-						this.props.customerInvoiceActions.getCustomerList(
+						this.props.cnActions.getVatList();
+						this.props.cnActions.getCustomerList(
 							this.state.contactType,
 						);
 						this.props.currencyConvertActions.getCurrencyConversionList();
-						this.props.customerInvoiceActions.getCountryList();
-						this.props.customerInvoiceActions.getProductList();
+						this.props.cnActions.getCountryList();
+						this.props.cnActions.getProductList();
 
 						this.setState(
 							{
@@ -930,7 +948,7 @@ min="0"
 
 	closeCustomerModal = (res) => {
 		if (res) {
-			this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
+			this.props.cnActions.getCustomerList(this.state.contactType);
 		}
 		this.setState({ openCustomerModal: false });
 	};
@@ -940,7 +958,7 @@ min="0"
 	};
 
 	getCurrentProduct = () => {
-		this.props.customerInvoiceActions.getProductList().then((res) => {
+		this.props.cnActions.getProductList().then((res) => {
 			this.setState(
 				{
 					data: [
@@ -1074,7 +1092,26 @@ min="0"
 	
 		return customer_currencyCode;
 	}
+	showInvoiceNumber=()=>{
 
+		return(
+			
+			this.state.showInvoiceNumber &&(<Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="project">
+																		<span className="text-danger">*</span>
+																			 {strings.InvoiceNumber}
+																		</Label>
+																		<Input																			
+																			disabled
+																			id="invoiceNumber"
+																			name="invoiceNumber"
+																			value={this.state.invoiceNumber}
+																		/>
+																	</FormGroup>
+																</Col>)
+		)
+	}
 	render() {
 		strings.setLanguage(this.state.language);
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
@@ -1218,6 +1255,7 @@ min="0"
 												>
 													{(props) => (
 														<Form onSubmit={props.handleSubmit}>
+															<Row>{this.showInvoiceNumber()}  </Row>
 															<Row>
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
@@ -2211,10 +2249,10 @@ min="0"
 						this.closeCustomerModal(e);
 					}}
 					getCurrentUser={(e) => this.getCurrentUser(e)}
-					createCustomer={this.props.customerInvoiceActions.createCustomer}
+					createCustomer={this.props.cnActions.createCustomer}
 					currency_list={this.props.currency_list}
 					country_list={this.props.country_list}
-					getStateList={this.props.customerInvoiceActions.getStateList}
+					getStateList={this.props.cnActions.getStateList}
 				/>
 				<ProductModal
 					openProductModal={this.state.openProductModal}

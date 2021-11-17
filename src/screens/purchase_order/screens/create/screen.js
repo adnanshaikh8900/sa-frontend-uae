@@ -973,7 +973,7 @@ class CreatePurchaseOrder extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data.message
+					res.data ? res.data.message : 'Purchase Order Created Successfully'
 				);
 				if (this.state.createMore) {
 					this.setState(
@@ -1023,7 +1023,7 @@ class CreatePurchaseOrder extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Purchase Order Created Unsuccessfully',
 				);
 			});
 	};

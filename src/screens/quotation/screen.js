@@ -534,7 +534,7 @@ class Quatation extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Posted Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -546,7 +546,7 @@ class Quatation extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Posted Unsuccessfully'
 				);
 				this.setState({
 					loading: false,
@@ -569,7 +569,7 @@ class Quatation extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Unposted Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -581,7 +581,7 @@ class Quatation extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Unposted Unsuccessfully'
 				);
 				this.setState({
 					loading: false,

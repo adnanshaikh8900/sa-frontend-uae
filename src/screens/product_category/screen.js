@@ -111,7 +111,7 @@ class ProductCategory extends React.Component {
 
 	// Show Success Toast
 	success = () => {
-		return toast.success('Product Category Deleted Successfully... ', {
+		return toast.success('Product Category Deleted Successfully.', {
 			position: toast.POSITION.TOP_RIGHT,
 		});
 	};
@@ -142,7 +142,7 @@ class ProductCategory extends React.Component {
 				this.setState({ loading: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : '',
+					err && err.data ? err.data.message : 'Product Category Deleted Unsuccessfully.',
 				);
 			});
 	};

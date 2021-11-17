@@ -907,7 +907,7 @@ min="0"
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'New Quotation Created Successfully.',
+					res.data ? res.data.message :'New Quotation Created Successfully.',
 				);
 				if (this.state.createMore) {
 					this.setState(
@@ -957,7 +957,7 @@ min="0"
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'New Quotation Created Unsuccessfully',
 				);
 			});
 	};

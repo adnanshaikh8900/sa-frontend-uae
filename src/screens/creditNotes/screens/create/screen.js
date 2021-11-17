@@ -1383,6 +1383,9 @@ min="0"
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({
+													invoiceNumber: Yup.string().required(
+														'Invoice Number is Required',
+													),
 													creditNoteNumber: Yup.string().required(
 														'Tax Credit Note Number is Required',
 													),
@@ -1481,7 +1484,7 @@ min="0"
 														<Row>
 														<Col lg={3}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="invoiceNumber">
+																	<Label htmlFor="invoiceNumber"><span className="text-danger">*</span>
 																	{strings.InvoiceNumber}
 																	</Label>
 																	<Select

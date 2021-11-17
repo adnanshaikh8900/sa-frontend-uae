@@ -222,7 +222,7 @@ class DetailContact extends React.Component {
 					resetForm();
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Contact Updated Successfully',
+						res.data ? res.data.message : 'Contact Updated Successfully',
 					);
 					this.props.history.push('/admin/master/contact');
 				}
@@ -232,7 +232,7 @@ class DetailContact extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Contact Updated Unsuccessfully'
 				);
 				// this.props.history.push('/admin/master/contact');
 			});
@@ -287,7 +287,7 @@ class DetailContact extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Contact Deleted Successfully',
+						res.data ? res.data.message : 'Contact Deleted Successfully',
 					);
 					
 					this.props.history.push('/admin/master/contact');
@@ -296,7 +296,7 @@ class DetailContact extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					'Contact Deleted Unsuccessfully',
+					err.data ? err.data.message : 'Contact Deleted Unsuccessfully',
 				);
 			});
 	};

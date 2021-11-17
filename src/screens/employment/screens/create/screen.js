@@ -161,8 +161,7 @@ class CreateEmployment extends React.Component {
     .then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert(
-          'success',
-           res.data.message)
+          'success', res.data ? res.data.message :'Created Successfully')
         if (this.state.createMore) {
           this.setState({
             createMore: false
@@ -173,7 +172,7 @@ class CreateEmployment extends React.Component {
         }
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err.data.message)
+      this.props.commonActions.tostifyAlert('error', err.data.message ? err.data.message :'Created Unsuccessfully')
     })
   }
 

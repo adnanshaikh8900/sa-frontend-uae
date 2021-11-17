@@ -2,14 +2,14 @@
 # Production Build
 # ------------------------------------------------------
 FROM nginx:stable-alpine-perl
-COPY ./build /usr/share/nginx/html
+# Copy .env file and shell script to container
+WORKDIR /usr/share/nginx/html
+
+COPY ./build .
 RUN rm -rf /etc/nginx/conf.d
 COPY nginx /etc/nginx
 EXPOSE 80
 #CMD ["nginx", "-g", "daemon off;"]
-
-# Copy .env file and shell script to container
-WORKDIR /usr/share/nginx/html
 COPY ./env.sh .
 COPY .env .
 

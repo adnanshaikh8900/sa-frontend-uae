@@ -416,7 +416,7 @@ class Expense extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						"Expense Posted Successfully"
+						res.data ? res.data.message : "Expense Posted Successfully"
 					);
 					this.setState({
 						loading: false,
@@ -427,7 +427,7 @@ class Expense extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Expense Posted Unsuccessfully'
 				);
 				this.setState({
 					loading: false,
@@ -451,7 +451,7 @@ class Expense extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						"Expense moved to Draft Successfully"
+						res.data ? res.data.message : "Expense moved to Draft Successfully"
 					);
 					this.setState({
 						loading: false,
@@ -462,7 +462,7 @@ class Expense extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Expense moved to Draft Unsuccessfully'
 				);
 				this.setState({
 					loading: false,
@@ -506,11 +506,11 @@ class Expense extends React.Component {
 		};
 		this.props.expenseActions
 			.removeBulkExpenses(obj)
-			.then(() => {
+			.then((res) => {
 				this.initializeData();
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Expense Deleted Successfully',
+					res.data ? res.data.message : 'Expense Deleted Successfully',
 				);
 				if (expense_list && expense_list.data && expense_list.data.length > 0) {
 					this.setState({
@@ -521,7 +521,7 @@ class Expense extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Expense Deleted Unsuccessfully',
 				);
 			});
 	};
@@ -567,14 +567,16 @@ class Expense extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data.message
+					res.data ? res.data.message : 'Expense Deleted Successfully'
+
 				);
 				this.initializeData();
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Expense Deleted Unsuccessfully'
+
 				);
 			});
 	};

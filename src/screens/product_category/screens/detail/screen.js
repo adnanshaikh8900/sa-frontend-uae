@@ -115,7 +115,7 @@ class DetailProductCategory extends React.Component {
     this.props.detailProductCategoryAction.updateProductCategory(postData).then((res) => {
       if (res.status === 200) {
         this.setState({ disabled: false });
-        this.props.commonActions.tostifyAlert('success', res.data.message)
+        this.props.commonActions.tostifyAlert('success',res.data ? res.data.message : 'Product Category Updated Successfully')
         this.props.history.push('/admin/master/product-category')
       }
     }).catch((err) => {
@@ -146,11 +146,11 @@ class DetailProductCategory extends React.Component {
     this.props.detailProductCategoryAction.deleteProductCategory(current_product_category_id).then((res) => {
       if (res.status === 200) {
         // this.success('Chart Account Deleted Successfully');
-        this.props.commonActions.tostifyAlert('success', res.data.message)
+        this.props.commonActions.tostifyAlert('success', res.data ? res.data.message : 'Product Category Deleted Successfully')
         this.props.history.push('/admin/master/product-category')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error',err.data.message )
+      this.props.commonActions.tostifyAlert('error',err.data ? err.data.message : 'Product Category Deleted Unsuccessfully' )
     })
   }
 

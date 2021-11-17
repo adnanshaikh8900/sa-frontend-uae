@@ -293,7 +293,7 @@ try {
 					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Product Created Successfully'
 					);
 					if (this.state.createMore) {
 						this.setState({
@@ -310,7 +310,7 @@ try {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Product Created Unsuccessfully'
 				);
 			});
 	};

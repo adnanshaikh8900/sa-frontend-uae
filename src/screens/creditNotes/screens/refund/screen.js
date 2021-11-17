@@ -322,7 +322,7 @@ class Refund extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'The Refund information for this tax credit note has been saved Successfully.',
+					res.data ? res.data.message : 'The Refund information for this tax credit note has been saved Successfully.',
 				);
 				this.props.history.push('/admin/income/credit-notes');
 			})
@@ -389,7 +389,7 @@ class Refund extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Data Deleted Successfully',
+						res.data ? res.data.message :'Invoice Deleted Successfully',
 					);
 					this.props.history.push('/admin/income/credit-notes');
 				}
@@ -397,7 +397,7 @@ class Refund extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Invoice Deleted Unsuccessfully',
 				);
 			});
 	};

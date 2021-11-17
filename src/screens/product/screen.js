@@ -217,7 +217,7 @@ class Product extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Product Deleted Successfully',
+						res.data ? res.data.message : 'Product Deleted Successfully',
 					);
 					this.initializeData();
 					if (
@@ -234,7 +234,7 @@ class Product extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Product Deleted Unsuccessfully',
 				);
 			});
 	};

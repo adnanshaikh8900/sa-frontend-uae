@@ -874,14 +874,14 @@ min="0"
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data.message
+					res.data ? res.data.message : 'Quotation Updated Successfully'
 				);
 				this.props.history.push('/admin/income/quotation');
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Quotation Updated Unsuccessfully'
 				);
 			});
 	};
@@ -914,7 +914,7 @@ min="0"
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						"Deleted Successfully"
+						res.data ? res.data.message : "Quotation Deleted Successfully"
 					);
 					this.props.history.push('/admin/income/quotation');
 				}
@@ -922,7 +922,7 @@ min="0"
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Quotation Deleted Unsuccessfully'
 				);
 			});
 	};

@@ -809,6 +809,11 @@ class GeneralSettings extends React.Component {
 																			name="submit"
 																			color="primary"
 																			className="btn-square"
+																			onClick={() => {
+																				this.props.history.push(
+																					'/admin/dashboard',
+																				);
+																			}}
 
 
 																		>
@@ -823,6 +828,7 @@ class GeneralSettings extends React.Component {
 																					'/admin/dashboard',
 																				);
 																			}}
+																		
 																		>
 																			<i className="fa fa-ban"></i>  {strings.Cancel}
 																		</Button>

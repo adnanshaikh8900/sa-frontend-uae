@@ -1193,7 +1193,7 @@ class DetailPurchaseOrder extends React.Component {
 																		.required('Value is Required')
 																		.test(
 																			'quantity',
-																			'Quantity Should be Greater than 1',
+																			'Quantity field is required and should not be 0',
 																			(value) => {
 																				if (value > 0) {
 																					return true;

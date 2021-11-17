@@ -48,4 +48,4 @@ simplevat-frontend-reactjs/simpleaccounts-frontend/simpleaccounts-frontend.sh in
 simplevat-frontend-reactjs/simpleaccounts-frontend/simpleaccounts-frontend.sh install foreverrich 0.0.3-alpha-632 >> ~/simpleaccounts-frontend-deployment.log
 
 simplevat-frontend-reactjs/simpleaccounts-frontend/update-simpleaccount-frontend-release.bash 0.0.3-alpha-621
-********************
+*********************

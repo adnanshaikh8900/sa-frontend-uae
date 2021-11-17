@@ -1115,6 +1115,47 @@ console.log(this.state.supplier_currency)
 														this.handleSubmit(values);
 													}}
 													validationSchema={Yup.object().shape({
+														
+														lineItemsString: Yup.array()
+														.required(
+															'Atleast one invoice sub detail is mandatory',
+														)
+														.of(
+															Yup.object().shape({
+																quantity: Yup.string()
+																	.required('Value is Required')
+																	.test(
+																		'quantity',
+																		'Quantity field is required and should not be 0',
+																		(value) => {
+																			if (value > 0) {
+																				return true;
+																			} else {
+																				return false;
+																			}
+																		},
+																	),
+																unitPrice: Yup.string()
+																	.required('Value is Required')
+																	.test(
+																		'Unit Price',
+																		'Unit Price Should be Greater than 1',
+																		(value) => {
+																			if (value > 0) {
+																				return true;
+																			} else {
+																				return false;
+																			}
+																		},
+																	),
+																vatCategoryId: Yup.string().required(
+																	'Value is Required',
+																),
+																productId: Yup.string().required(
+																	'Product is Required',
+																),
+															}),
+														),
 														// invoice_number: Yup.string().required(
 														// 	'Invoice Number is Required',
 														// ),

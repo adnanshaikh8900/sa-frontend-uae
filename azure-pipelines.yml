@@ -17,7 +17,7 @@ variables:
   ${{ else }}:
     containerRegistryConnection: 'DataInnAzureContainerRegistryConnection'
   npm_config_cache: $(Pipeline.Workspace)/.npm
-  
+
 
 stages:
   - stage: ci_build_simpleaccounts
@@ -30,35 +30,36 @@ stages:
         timeoutInMinutes: 30
 
         steps:
-          - task: CmdLine@2
-            inputs:
-              script: 'npm i --package-lock-only'
+#          - task: CmdLine@2
+#            inputs:
+#              script: 'npm i --package-lock-only'
 
-          - task: Cache@2
-            inputs:
-              key: 'npm | "$(Agent.OS)" | package-lock.json'
-              restoreKeys: |
-                npm | "$(Agent.OS)"
-              path: $(npm_config_cache)
-            displayName: Cache npm
-          - script: npm ci
+#          - task: Cache@2
+#            inputs:
+#              key: 'npm | "$(Agent.OS)" | package-lock.json'
+#              restoreKeys: |
+#                npm | "$(Agent.OS)"
+#              path: $(npm_config_cache)
+#            displayName: Cache npm
+#          - script: npm ci
 
           - task: NodeTool@0
             inputs:
-              versionSpec: '10.x'
+              versionSpec: '14.x'
             displayName: 'Install Node.js'
 
           - script: |
+              npm install
               npm rebuild node-sass
               npm run build
             displayName: 'npm install and build'
 
-          - task: Cache@2
-            displayName: Cache task
-            inputs:
-              key: 'docker | "$(Agent.OS)" | cache'
-              path: $(Pipeline.Workspace)/simpleaccounts-frontend-docker
-              cacheHitVar: CACHE_RESTORED                #Variable to set to 'true' when the cache is restored
+#          - task: Cache@2
+#            displayName: Cache task
+#            inputs:
+#              key: 'docker | "$(Agent.OS)" | cache'
+#              path: $(Pipeline.Workspace)/simpleaccounts-frontend-docker
+#              cacheHitVar: CACHE_RESTORED                #Variable to set to 'true' when the cache is restored
 
           # - script: |
           #     docker load -i $(Pipeline.Workspace)/simpleaccounts-frontend-docker/simpleaccounts-frontend-docker-cache.tar
@@ -75,9 +76,9 @@ stages:
               tags: |
                 $(tag)
 
-          - script: |
-              mkdir -p $(Pipeline.Workspace)/simpleaccounts-frontend-docker
-              docker save -o $(Pipeline.Workspace)/simpleaccounts-frontend-docker/simpleaccounts-frontend-docker-cache.tar $(containerRegistryName).azurecr.io/simpleaccounts-frontend:$(tag)
-            displayName: Docker save
-            condition: and(not(canceled()), or(failed(), ne(variables.CACHE_RESTORED, 'true')))
+#          - script: |
+#              mkdir -p $(Pipeline.Workspace)/simpleaccounts-frontend-docker
+#              docker save -o $(Pipeline.Workspace)/simpleaccounts-frontend-docker/simpleaccounts-frontend-docker-cache.tar $(containerRegistryName).azurecr.io/simpleaccounts-frontend:$(tag)
+#            displayName: Docker save
+#            condition: and(not(canceled()), or(failed(), ne(variables.CACHE_RESTORED, 'true')))
 

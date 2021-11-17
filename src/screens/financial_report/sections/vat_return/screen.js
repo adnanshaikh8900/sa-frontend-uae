@@ -205,26 +205,32 @@ class VatReturnsReport extends React.Component {
 			});
 	 };
      
+	
 	 exportFile = () => {
 
-   let exportData
+	
+		let dl =""
+		let fn =""
+		let type="csv"
+		var elt = document.getElementById('tbl_exporttable_to_xls');												
+		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
+		return dl ?
+		  XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+		  XLSX.writeFile(wb, fn || ('Vat Return Report.'+ (type || 'csv')));
 
-        let singleResultArray=this.state && this.state.data 
+	   }
 
-        ?
-
-        Object.entries(this.state.data)     :[];
-
-	const { Parser, transforms: { unwind, flatten } } = require('json2csv');
-	const json2csvParser = new Parser({ transforms: [unwind({ blankOut: true }), flatten('__')] });
-	 exportData = json2csvParser.parse(singleResultArray);
-
-
-	  return (exportData);
-	 }
-
-
-
+	   exportExcelFile  = () => 
+	   {   let dl =""
+		   let fn =""
+		   let type="xlsx"
+		   var elt = document.getElementById('tbl_exporttable_to_xls');												
+		   var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
+		   return dl ?
+			 XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+			 XLSX.writeFile(wb, fn || ('Vat Return  Report.'+ (type || 'xlsx')));
+   
+	   }
      
 
 	toggle = () =>
@@ -277,14 +283,27 @@ class VatReturnsReport extends React.Component {
 													<DropdownToggle caret>Export As</DropdownToggle>
 													<DropdownMenu>
 													
+													<DropdownItem>
+															
+															<span
+															style={{
+																border: 0,
+    															padding: 0,
+																backgroundColor:"white !important"
+															}}
+														     onClick={()=>{this.exportFile()}}
+															>CSV (Comma Separated Value)</span>
+														</DropdownItem>
 														<DropdownItem>
-															<CSVLink
-																data={this.exportFile()}
-																className="csv-btn"
-																filename={'Vat Returns Report.csv'}
-															>
-																CSV (Comma Separated Value)
-															</CSVLink>
+															
+															<span
+															style={{
+																border: 0,
+    															padding: 0,
+																backgroundColor:"white !important"
+															}}
+														     onClick={()=>{this.exportExcelFile()}}
+															>Excel</span>
 														</DropdownItem>
 															<DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf
@@ -397,7 +416,7 @@ class VatReturnsReport extends React.Component {
 									{loading ? (
 										<Loader />
 									) : (
-										<div className="table-wrapper">
+										<div id="tbl_exporttable_to_xls" className="table-wrapper">
 											<p><b>{strings.VATonSalesandallotherOutputs}</b></p>
 											<Table responsive className="table-bordered">
 												<thead className="thead-dark ">

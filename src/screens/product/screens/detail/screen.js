@@ -439,7 +439,7 @@ renderName=(cell,row)=>{
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Product Updated Successfully'
 					);
 					this.props.history.push('/admin/master/product');
 				}
@@ -448,7 +448,7 @@ renderName=(cell,row)=>{
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message ,
+					err.data ? err.data.message : 'Product Updated Unsuccessfully',
 				);
 			});
 	};
@@ -514,14 +514,14 @@ renderName=(cell,row)=>{
 			.deleteProduct(current_product_id)
 			.then((res) => {
 				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert('success', res.data.message)
+					this.props.commonActions.tostifyAlert('success', res.data ? res.data.message : 'Product Deleted Successfully')
 					this.props.history.push('/admin/master/product');
 				}
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message ,
+					err.data ? err.data.message : 'Product Deleted Unsuccessfully' ,
 				);
 			});
 	};

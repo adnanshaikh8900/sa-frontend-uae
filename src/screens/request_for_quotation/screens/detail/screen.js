@@ -941,7 +941,7 @@ class DetailRequestForQuotation extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Request For Quotation Deleted Successfully'
 					);
 					this.props.history.push('/admin/expense/request-for-quotation');
 				}
@@ -949,7 +949,7 @@ class DetailRequestForQuotation extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Request For Quotation Deleted Unsuccessfully'
 				);
 			});
 	};

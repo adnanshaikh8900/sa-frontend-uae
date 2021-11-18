@@ -939,7 +939,7 @@ handleSubmit=(data)=>{
 			this.initializeData();
 			this.props.commonActions.tostifyAlert(
 				'success',
-				'Tax Credit Note Applied to Invoices Successfully',
+				res.data ? res.data.message :'Tax Credit Note Applied to Invoices Successfully',
 			);
 			if (this.state.invoice_list && this.state.invoice_list.length > 0) {
 				this.setState({
@@ -1087,7 +1087,7 @@ handleSubmit=(data)=>{
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Data Deleted Successfully',
+						res.data ? res.data.message :'Invoice Deleted Successfully',
 					);
 					this.props.history.push('/admin/income/credit-notes');
 				}
@@ -1095,7 +1095,7 @@ handleSubmit=(data)=>{
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Invoice Deleted Unsuccessfully',
 				);
 			});
 	};

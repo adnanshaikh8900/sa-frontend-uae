@@ -153,8 +153,7 @@ class CreateContact extends React.Component {
 					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
 						'success',
-						// res.data.message
-						"Contact Created Successfully"
+						res.data ? res.data.message : "Contact Created Successfully"
 					);
 					if (this.state.createMore) {
 						resetForm(this.state.initValue);
@@ -169,7 +168,7 @@ class CreateContact extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					 err.data.message,
+					err.data ? err.data.message : 'Contact Created Unsuccessfully',
 				);
 			});
 	};

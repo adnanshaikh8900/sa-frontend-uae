@@ -889,14 +889,14 @@ class DetailPurchaseOrder extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data.message
+					res.data ? res.data.message : 'Purchase Order Updated Successfully'
 				);
 				this.props.history.push('/admin/expense/purchase-order');
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Purchase Order Updated Unsuccessfully'
 				);
 			});
 	};
@@ -929,7 +929,7 @@ class DetailPurchaseOrder extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Purchase Order Deleted Successfully'
 					);
 					this.props.history.push('/admin/expense/purchase-order');
 				}
@@ -937,7 +937,7 @@ class DetailPurchaseOrder extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Purchase Order Deleted Unsuccessfully'
 				);
 			});
 	};

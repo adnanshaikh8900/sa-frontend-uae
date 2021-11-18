@@ -909,7 +909,7 @@ min="0"
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data.message
+					res.data ? res.data.message : 'Credit Note Updated Successfully'
 				);
 				this.props.history.push('/admin/income/credit-notes');
 			})
@@ -917,7 +917,8 @@ min="0"
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Credit Note Updated Unsuccessfully'
+
 				);
 			});
 	};
@@ -1055,7 +1056,7 @@ min="0"
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Credit note deleted successfully'
+						res.data ? res.data.message : 'Invoice Deleted successfully'
 					);
 					this.props.history.push('/admin/income/credit-notes');
 				}
@@ -1063,7 +1064,7 @@ min="0"
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Invoice Deleted Unsuccessfully'
 				);
 			});
 	};

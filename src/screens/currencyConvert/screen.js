@@ -118,8 +118,11 @@ class ProductCategory extends React.Component {
 	};
 
 	// Show Success Toast
-	success = () => {
-		return toast.success('Product Category Deleted Successfully... ', {
+	success = (res) => {
+		return toast.success(
+			'success',
+			res.data ? res.data.message : '	Currency conversion Deleted Successfully.', 
+			{
 			position: toast.POSITION.TOP_RIGHT,
 		});
 	};
@@ -156,7 +159,7 @@ class ProductCategory extends React.Component {
 				this.setState({ loading: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : '',
+					err && err.data ? err.data.message : 'Currency conversion Deleted Unsuccessfully',
 				);
 			});
 	};

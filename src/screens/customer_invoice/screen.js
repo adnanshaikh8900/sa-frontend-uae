@@ -657,7 +657,7 @@ class CustomerInvoice extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Email Send Successfully'
 					);
 					this.setState({ openEmailModal: false });
 				}
@@ -665,7 +665,7 @@ class CustomerInvoice extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Email Send Unsuccessfully'
 				);
 			});
 	};
@@ -743,7 +743,7 @@ class CustomerInvoice extends React.Component {
 					this.initializeData();
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Customer Invoice Deleted Successfully'
 					);
 					if (customer_invoice_list && customer_invoice_list.length > 0) {
 						this.setState({
@@ -755,7 +755,7 @@ class CustomerInvoice extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Customer Invoice Deleted Unsuccessfully'
 				);
 			});
 	};
@@ -834,14 +834,14 @@ class CustomerInvoice extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data.message
+					res.data ? res.data.message : 'Customer Invoice Deleted Successfully'
 				);
 				this.initializeData();
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Customer Invoice Deleted Unsuccessfully'
 				);
 			});
 	};

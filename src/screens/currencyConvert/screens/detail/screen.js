@@ -153,11 +153,15 @@ class DetailCurrencyConvert extends React.Component {
       if (res.status === 200) {
         this.setState({ disabled: false });
         resetForm();
-        this.props.commonActions.tostifyAlert('success', res.data ? res.data.message : 'Currency Convert Updated Successfully')
+        this.props.commonActions.tostifyAlert(
+			'success', 
+			res.data ? res.data.message : 'Currency Convert Updated Successfully')
         this.props.history.push('/admin/master/CurrencyConvert')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : 'Currency Convert Updated Unsuccessfully')
+      this.props.commonActions.tostifyAlert(
+		  'error',
+		   err.data ? err.data.message : 'Currency Convert Updated Unsuccessfully')
     })
   }
 

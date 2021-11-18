@@ -237,7 +237,7 @@ class ChartAccount extends React.Component {
 				this.initializeData();
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data.message
+					res.data ? res.data.message :'Chart Of Account Deleted successfully'
 				);
 				if (
 					transaction_category_list &&
@@ -252,7 +252,7 @@ class ChartAccount extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message :'Chart Of Account Deleted Unsuccessfully'
 				);
 			});
 	};

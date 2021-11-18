@@ -269,3 +269,26 @@ export const getBalanceReport = (postData) => {
 				});
 		};
 	};
+
+	
+
+	export const getPayrollSummaryReport = (postData) => {
+		const { startDate, endDate } = postData;
+		let url = `/rest/simpleaccountReports/getPayrollSummary?startDate=${startDate}&endDate=${endDate}`;
+	
+		return (dispatch) => {
+			let data = {
+				method: 'get',
+				url,
+			};
+			return authApi(data)
+				.then((res) => {
+					if (res.status === 200) {
+						return res;
+					}
+				})
+				.catch((err) => {
+					throw err;
+				});
+		};
+	};

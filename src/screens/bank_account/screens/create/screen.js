@@ -113,7 +113,9 @@ class CreateBankAccount extends React.Component {
 				countrycode: '',
 				openingDate: new Date(),
 				account_is_for: '',
+				bankId:''
 			},
+			BankList: [],
 			currentData: {},
 			language: window['localStorage'].getItem('language'),
 		};
@@ -132,6 +134,11 @@ class CreateBankAccount extends React.Component {
 
 	componentDidMount = () => {
 		this.initializeData();
+		this.props.createBankAccountActions.getBankList()
+            .then((response) => {
+            	this.setState({bankList:response.data
+            });
+          });
 	};
 
 	initializeData = () => {
@@ -212,6 +219,7 @@ class CreateBankAccount extends React.Component {
 			countrycode,
 			account_is_for,
 			openingDate,
+			bankId
 		} = data;
 		let obj = {
 			bankAccountName: account_name,
@@ -219,13 +227,15 @@ class CreateBankAccount extends React.Component {
 			openingBalance: opening_balance,
 			openingDate: openingDate ? openingDate : null,
 			bankAccountType: account_type ? account_type : '',
-			bankName: bank_name,
+			bankName: bankId && bankId.label ? bankId.label : "",
 			accountNumber: account_number,
 			ifscCode: ifsc_code,
 			swiftCode: swift_code,
 			bankCountry: countrycode ? countrycode : '',
 			personalCorporateAccountInd: account_is_for ? account_is_for : '',
+			// bankId:bankId ? bankId : "",
 		};
+		debugger
 		this.props.createBankAccountActions
 			.createBankAccount(obj)
 			.then((res) => {
@@ -257,7 +267,7 @@ class CreateBankAccount extends React.Component {
 		strings.setLanguage(this.state.language);
 		const { account_type_list, currency_list,currency_convert_list, country_list } = this.props;
 
-		const { initialVals } = this.state;
+		const { initialVals ,bankList} = this.state;
 		return (
 			<div className="create-bank-account-screen">
 				<div className="animated fadeIn">
@@ -308,10 +318,11 @@ class CreateBankAccount extends React.Component {
 													account_type: Yup.string().required(
 														'Account Type is required',
 													),
-													bank_name: Yup.string()
-														.required('Bank Name is Required')
-														.min(2, 'Bank Name Is Too Short!')
-														.max(30, 'Bank Name Is Too Long!'),
+													// bank_name: Yup.string()
+													// 	.required('Bank Name is Required')
+													// 	.min(2, 'Bank Name Is Too Short!')
+													// 	.max(30, 'Bank Name Is Too Long!'),
+													bankId: Yup.string().required('Bank Name is Required') ,
 													account_number: Yup.string()
 														.required('Account Number is Required')
 														.min(2, 'Account Number Is Too Short!')
@@ -577,7 +588,48 @@ class CreateBankAccount extends React.Component {
 														</Row>
 														<hr />
 														<Row>
-															<Col lg={4}>
+														<Col md="4">
+                                                                                                <FormGroup>
+                                                                                                <Label htmlFor="select"><span className="text-danger">*</span> {strings.BankName} </Label>
+                                                                                                    <Select
+
+                                                                                                        options={
+                                                                                                            bankList
+                                                                                                                ? selectOptionsFactory.renderOptions(
+                                                                                                                    'bankName',
+                                                                                                                    'bankId',
+                                                                                                                    bankList,
+                                                                                                                    'Bank',
+                                                                                                                )
+                                                                                                                : []
+                                                                                                        }
+                                                                                                        value={props.values.bankId}
+                                                                                                        onChange={(option) => {
+                                                                                                            if (option && option.value) {
+                                                                                                                props.handleChange('bankId')(option);
+                                                                                                            } else {
+                                                                                                                props.handleChange('bankId')('');
+                                                                                                            }
+                                                                                                        }}
+                                                                                                        placeholder={strings.Select+strings.BankName}
+                                                                                                        id="bankId"
+                                                                                                        name="bankId"
+                                                                                                        className={
+                                                                                                            props.errors.bankId &&
+                                                                                                                props.touched.bankId
+                                                                                                                ? 'is-invalid'
+                                                                                                                : ''
+                                                                                                        }
+                                                                                                    />
+                                                                                                    {props.errors.bankId &&
+                                                                                                        props.touched.bankId && (
+                                                                                                            <div className="invalid-feedback">
+                                                                                                                {props.errors.bankId}
+                                                                                                            </div>
+                                                                                                        )}
+                                                                                                </FormGroup>
+                                                                                            </Col>
+															{/* <Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="bank_name">
 																		<span className="text-danger">*</span>{strings.BankName}
@@ -611,7 +663,7 @@ class CreateBankAccount extends React.Component {
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>
+															</Col> */}
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="account_number">

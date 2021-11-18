@@ -96,7 +96,7 @@ import CreditNoteDetailsReport from './financial_report/sections/credit_note_det
 import ExpenseDetailsReport from './financial_report/sections/expense_details';
 import ExpenseByCategory from './financial_report/sections/expense_by_catogery';
 import InvoiceDetails from './financial_report/sections/invoice_details';
-
+import PayrollSummaryReport from './financial_report/sections/payroll_summary';
 import ChartAccount from './chart_account';
 import CreateChartAccount from './chart_account/screens/create';
 import DetailChartAccount from './chart_account/screens/detail';
@@ -351,5 +351,6 @@ export {
 	PayrollApproverScreen,
 	UpdatePayroll,
 	MigrateHistory,
-	Migrate
+	Migrate,
+	PayrollSummaryReport,
 };

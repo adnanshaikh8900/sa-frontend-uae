@@ -97,6 +97,7 @@ import {
 	ReceivableInvoiceSummary,
 	PayablesInvoiceDetailsReport,
 	PayablesInvoiceSummary,
+	PayrollSummaryReport,
 
 
 	// Master Screens
@@ -818,6 +819,11 @@ const adminRoutes = [
 		name: 'PayableInvoiceSummary',
 		component: PayablesInvoiceSummary.screen,
 	},
+	{
+		path: '/admin/report/payroll-summary',
+		name: 'PayrollSummaryReport',
+		component: PayrollSummaryReport.screen,
+	},	
 	{
 		path: '/admin/report/expense-details',
 		name: 'ExpenseDetails',

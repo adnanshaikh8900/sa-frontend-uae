@@ -154,7 +154,8 @@ class PayrollApproverScreen extends React.Component {
 					payrollSubject: res.data.payrollSubject ? res.data.payrollSubject : '',
 					runDate: res.data.runDate ? res.data.runDate : '',
 					status: res.data.status ? res.data.status : '',
-					currencyIsoCode : res.data.currencyIsoCode ? res.data.currencyIsoCode : "AED"
+					currencyIsoCode : res.data.currencyIsoCode ? res.data.currencyIsoCode : "AED",
+					existEmpList:res.data.existEmpList ? res.data.existEmpList:[]
 				}
 				)
 
@@ -253,6 +254,19 @@ class PayrollApproverScreen extends React.Component {
 			})
 
 	}
+
+	generateSifFile= () => {
+		this.props.createPayrollActions
+			.generateSifFile(this.state.payroll_id,this.state.existEmpList)
+			.then((res) => {
+				if (res.status === 200) {
+					this.props.commonActions.tostifyAlert('success', 'SIF File generated Successfully')
+				}
+			}).catch((err) => {
+				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+			})
+	}
+
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true });
 		const {
@@ -1039,7 +1053,21 @@ class PayrollApproverScreen extends React.Component {
 																<Col>
 																<ButtonGroup className="mt-5 pull-right ">
 																{this.state.status && (this.state.status==="Approved" || this.state.status==="Rejected") ? 
-																''	:
+																(
+																	<Button
+																	type="button"
+																	color="primary"
+																	className="btn-square mt-5 pull-right "
+																	onClick={() =>
+																	{	
+																		// this.exportExcelFile()
+																		this.generateSifFile()}
+																	}
+																>
+																	<i class="fas fa-file-invoice-dollar"></i>
+																	{"  "}SIF File
+																</Button>
+																)	:
 																	(
 																		<Button
 																		type="button"

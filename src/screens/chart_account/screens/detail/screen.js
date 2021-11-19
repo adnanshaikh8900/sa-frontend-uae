@@ -191,7 +191,7 @@ class DetailChartAccount extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Chart Of Account Deleted Successfully'
 					);
 					this.props.history.push('/admin/master/chart-account');
 				}
@@ -199,7 +199,7 @@ class DetailChartAccount extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Chart Of Account Deleted Unsuccessfully'
 				);
 			});
 	};
@@ -227,7 +227,8 @@ class DetailChartAccount extends React.Component {
 					resetForm();
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Chart Of Account Updated Successfully'
+
 					);
 					this.props.history.push('/admin/master/chart-account');
 				}
@@ -235,7 +236,7 @@ class DetailChartAccount extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Chart Of Account Updated Unsuccessfully'
 				);
 			});
 	};

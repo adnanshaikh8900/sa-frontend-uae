@@ -182,7 +182,7 @@ class CreateCurrencyConvert extends React.Component {
 				})
 				this.props.commonActions.tostifyAlert(
 					'error',
-				 'Currency Already exists',
+				 	'Currency Already exists',
 				);
 			} else {
 				this.setState({

@@ -157,6 +157,21 @@ export const generatePayroll = (payrollId,string,date) => {
 	  })
 	}
   }
- 
- 
+
+  export const generateSifFile = (payrollId,ids) => {
+	
+	return (dispatch) => {
+	  let data = {
+		method: 'get',
+		url: `/rest/payroll/generteSifFile?payrollId=${payrollId}&id=${ids}`,
+		// data: obj
+	  }
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }
+  
   

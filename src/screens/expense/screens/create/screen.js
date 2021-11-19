@@ -98,7 +98,7 @@ class CreateExpense extends React.Component {
 			paginationPosition: 'top',
 		};
 		this.regEx = /^[0-9\b]+$/;
-		this.regExAlpha = /^[a-zA-Z ]+$/;
+		this.regExAlpha = /^[a-zA-Z0-9!@#$&()-\\`.+,/\"]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 
@@ -1194,7 +1194,7 @@ min="0"
 																				onChange={(option) => {
 																					if (
 																						option.target.value === '' ||
-																						this.regExBoth.test(
+																						this.regExAlpha.test(
 																							option.target.value,
 																						)
 																					) {

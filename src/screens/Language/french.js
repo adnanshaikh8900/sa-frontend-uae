@@ -491,8 +491,8 @@ Last3Months:"Les 3 derniers mois",
 
 //credit notes
 CreditNotes:"Notes de crédit d'impôt",	
-CREDITNOTE:"NOTE DE CRÉDIT D'IMPT",	
-AddCreditNote:"Ajouter une note de crédit d'impôt",	
+CREDITNOTE:"NUMÉRO DE CRÉDIT D'IMPT",	
+AddCreditNote:"Ajouter une nouvelle note de crédit d'impôt",	
 CreateCreditNote:"Créer une note de crédit d'impôt",	
 CreditNoteNumber:"Numéro de note de crédit d'impôt",	
 CreditNoteDate:"Date de la note de crédit d'impôt",	

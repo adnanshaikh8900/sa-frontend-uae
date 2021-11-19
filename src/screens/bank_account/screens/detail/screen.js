@@ -514,6 +514,7 @@ class DetailBankAccount extends React.Component {
 																</Label>
 																<Input
 																	type="text"
+																	maxLength="12"
 																	id="opening_balance"
 																	name="opening_balance"
 																	readOnly={

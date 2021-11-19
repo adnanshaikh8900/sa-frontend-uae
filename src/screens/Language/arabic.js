@@ -496,8 +496,8 @@ Last3Months:"آخر 3 أشهر",
 
 //credit notes
 CreditNotes:"إشعارات الائتمان الضريبي",	
-CREDITNOTE:"مذكرة الائتمان الضريبي",	
-AddCreditNote:"إضافة مذكرة الائتمان الضريبي",	
+CREDITNOTE:"رقم مذكرة الائتمان الضريبي",	
+AddCreditNote:"إضافة إشعار ائتمان ضريبي جديد",	
 CreateCreditNote:"إنشاء مذكرة ائتمان ضريبي",	
 CreditNoteNumber:"رقم مذكرة الائتمان الضريبي",	
 CreditNoteDate:"تاريخ مذكرة الائتمان الضريبي",	

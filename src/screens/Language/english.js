@@ -504,8 +504,8 @@ Last3Months:"Last 3 Months",
 
 //credit notes
 CreditNotes:" Tax Credit Notes",
-CREDITNOTE:"TAX CREDIT NOTE",
-AddCreditNote:"Add Tax Credit Note",
+CREDITNOTE:"TAX CREDIT NOTE NUMBER",
+AddCreditNote:"Add New Tax Credit Note",
 CreateCreditNote:"Create Tax Credit Note",
 CreditNoteNumber:"Tax Credit Note Number",
 CreditNoteDate:"Tax Credit Note Date",

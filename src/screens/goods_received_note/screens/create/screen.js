@@ -1069,7 +1069,7 @@ this.state.data.map((obj, index) => {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data.message
+					res.data ? res.data.message : 'Goods Received Note Created Successfully'
 				);
 				if (this.state.createMore) {
 					this.setState(
@@ -1120,7 +1120,7 @@ this.state.data.map((obj, index) => {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Goods Received Note Created Unsuccessfully',
 				);
 			});
 	};

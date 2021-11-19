@@ -595,7 +595,7 @@ class GoodsReceivedNote extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Goods Received Note Posted Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -607,7 +607,7 @@ class GoodsReceivedNote extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Goods Received Note Posted Unsuccessfully'
 				);
 				this.setState({
 					loading: false,
@@ -630,7 +630,7 @@ class GoodsReceivedNote extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Goods Received Note Unposted Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -642,7 +642,7 @@ class GoodsReceivedNote extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Goods Received Note Posted Unsuccessfully'
 				);
 				this.setState({
 					loading: false,
@@ -716,14 +716,14 @@ class GoodsReceivedNote extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data.message
+					res.data ? res.data.message : 'Goods Received Note Deleted Successfully'
 				);
 				this.initializeData();
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Goods Received Note Deleted Unsuccessfully'
 				);
 			});
 	};

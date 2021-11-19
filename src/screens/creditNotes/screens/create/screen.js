@@ -160,6 +160,7 @@ class CreateCreditNote extends React.Component {
 			basecurrency:[],
 			inventoryList:[],
 			invoiceSelected:false,
+			quantityExceeded:'',
 		};
 
 		this.formRef = React.createRef();
@@ -230,6 +231,7 @@ class CreateCreditNote extends React.Component {
 				name={`lineItemsString.${idx}.description`}
 				render={({ field, form }) => (
 					<Input
+					disabled
 						type="text"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
@@ -268,7 +270,7 @@ class CreateCreditNote extends React.Component {
 					<div>
 						<Input
 							type="text"
-min="0"
+							min="0"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -280,7 +282,10 @@ min="0"
 										field,
 										props,
 									);
+
+									this.setState({currentRow:row})
 								}
+
 							}}
 							placeholder={strings.Quantity}
 							className={`form-control  ${props.errors.lineItemsString &&
@@ -325,6 +330,7 @@ min="0"
 				name={`lineItemsString.${idx}.unitPrice`}
 				render={({ field, form }) => (
 					<Input
+					disabled
 					type="text"
 					min="0"
 						maxLength="10"
@@ -594,6 +600,7 @@ min="0"
 				name={`lineItemsString.${idx}.vatCategoryId`}
 				render={({ field, form }) => (
 					<Select
+					isDisabled
 						styles={customStyles}
 						options={
 							vat_list
@@ -693,6 +700,7 @@ min="0"
 				name={`lineItemsString.${idx}.productId`}
 				render={({ field, form }) => (
 					<Select
+					isDisabled
 						styles={customStyles}
 						options={
 							product_list
@@ -1281,6 +1289,7 @@ min="0"
 					data:response.data.invoiceLineItems ,
 					totalAmount:response.data.totalAmount,
 					customer_currency:response.data.currencyCode,
+					remainingInvoiceAmount:response.data.remainingInvoiceAmount,
 					initValue: {
 						...this.state.initValue,
 						...{
@@ -1316,6 +1325,8 @@ min="0"
 	
 				);
 				this.formRef.current.setFieldValue('contactId', this.state.option, true);
+				this.formRef.current.setFieldValue('remainingInvoiceAmount', this.state.remainingInvoiceAmount, true);
+				
 				this.formRef.current.setFieldValue('currencyCode', this.state.customer_currency, true);
 				this.getCurrency(this.state.option.value)	
 				console.log(this.state.data,"api")
@@ -1376,10 +1387,15 @@ min="0"
 												}}
 												validate={(values) => {
 													let errors = {};
-													if (exist === true) {
-														errors.creditNoteNumber =
-															'Tax Credit Note Number cannot be same';
-													}
+													debugger
+													if (exist === true) 
+													{
+														errors.creditNoteNumber ='Tax Credit Note Number cannot be same';
+													}													
+													if(this.state.invoiceSelected && this.state.initValue.totalAmount>this.state.remainingInvoiceAmount)
+													{
+														errors.remainingInvoiceAmount =	'Invoice Total Amount Cannot be greater than  Remaining Invoice Amount';
+													}													
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({
@@ -1510,7 +1526,7 @@ min="0"
 																				 props.handleChange('invoiceNumber')(option);
 																				this.setState({invoiceSelected :true})
 																			} else {
-
+																				this.setState({invoiceSelected :false})
 																				props.handleChange('invoiceNumber')('');
 																			}
 
@@ -1625,7 +1641,7 @@ min="0"
 																		)}
 																</FormGroup>
 															</Col>
-															<Col>
+															{/* <Col>
 																<Label
 																	htmlFor="contactId"
 																	style={{ display: 'block' }}
@@ -1642,7 +1658,7 @@ min="0"
 																>
 																	<i className="fa fa-plus"></i> {strings.AddACustomer}
 																</Button>
-															</Col>
+															</Col> */}
 															{/* <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
@@ -1895,6 +1911,34 @@ min="0"
 																		)}
 																</FormGroup>
 															</Col>
+															<Col lg={3} style={{display:this.state.invoiceSelected===true ? '':'none'}}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="remainingInvoiceAmount">
+																
+																	Remaining Invoice Amount
+																	</Label>
+																	<Input
+																		type="text"
+																		id="remainingInvoiceAmount"
+																		name="remainingInvoiceAmount"
+																		disabled={true}
+																		value={this.state.remainingInvoiceAmount}
+																		// onBlur={props.handleBlur('currencyCode')}
+																		// onChange={(value) => {
+																		// 	props.handleChange('currencyCode')(
+																		// 		value,
+																		// 	);
+																		// }}
+																	
+																	/>
+																	{props.errors.remainingInvoiceAmount &&
+																	 (
+																			<div className="text-danger">
+																				{props.errors.remainingInvoiceAmount}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
 															{/* <Col lg={3}>
 												<FormGroup>
 													<Label htmlFor="email">
@@ -1997,8 +2041,8 @@ min="0"
 																			/>
 														</Col>
 														</Row> */}
-														<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
-														<Col lg={8} className="mb-3">
+													
+														{/* <Col lg={8} className="mb-3">
 															<Button
 																color="primary"
 																className={`btn-square mr-3 ${
@@ -2024,7 +2068,7 @@ min="0"
 															>
 																<i className="fa fa-plus"></i> {strings.Addproduct}
 															</Button>
-														</Col>
+														</Col> */}
 														<Row>
 															{props.errors.lineItemsString &&
 																typeof props.errors.lineItemsString ===

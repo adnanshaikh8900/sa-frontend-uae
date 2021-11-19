@@ -355,7 +355,7 @@ class Quatation extends React.Component {
 			if (res.status === 200) {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data.message
+					res.data ? res.data.message : 'Status Changed Successfully'
 				);
 
 
@@ -369,7 +369,7 @@ class Quatation extends React.Component {
 .catch((err) => {
 	this.props.commonActions.tostifyAlert(
 		'error',
-		err,data.message
+		err.data ? err.data.message : 'Status Changed Unsuccessfully'
 	);
 });
 
@@ -382,7 +382,7 @@ class Quatation extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Email Send Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -393,7 +393,7 @@ class Quatation extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Email Send Unsuccessfully'
 				);
 			});
 	};
@@ -484,7 +484,7 @@ class Quatation extends React.Component {
 				this.initializeData(filterData);
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data.message
+					res.data ? res.data.message : 'Quotation Deleted Successfully'
 				);
 				if (supplier_invoice_list && supplier_invoice_list.length > 0) {
 					this.setState({
@@ -495,7 +495,7 @@ class Quatation extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Quotation Deleted Unsuccessfully'
 				);
 			});
 	};
@@ -534,7 +534,7 @@ class Quatation extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data ? res.data.message : 'Posted Successfully'
+						res.data ? res.data.message : 'Quotation Posted Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -546,7 +546,7 @@ class Quatation extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data ? err.data.message : 'Posted Unsuccessfully'
+					err.data ? err.data.message : 'Quotation Posted Unsuccessfully'
 				);
 				this.setState({
 					loading: false,
@@ -569,7 +569,7 @@ class Quatation extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data ? res.data.message : 'Unposted Successfully'
+						res.data ? res.data.message : 'Quotation Unposted Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -581,7 +581,7 @@ class Quatation extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data ? err.data.message : 'Unposted Unsuccessfully'
+					err.data ? err.data.message : 'Quotation Unposted Unsuccessfully'
 				);
 				this.setState({
 					loading: false,
@@ -655,14 +655,14 @@ class Quatation extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data.message
+					res.data ? res.data.message : 'Deleted Successfully'
 				);
 				this.initializeData();
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Deleted Unsuccessfully'
 				);
 			});
 	};

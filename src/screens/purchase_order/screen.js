@@ -203,7 +203,7 @@ class PurchaseOrder extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data? res.data.message: 'Status Changed Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -214,7 +214,7 @@ class PurchaseOrder extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data? err.data.message: ' Status Changed Unsuccessfully '
 				);
 			});
 	};
@@ -412,7 +412,7 @@ class PurchaseOrder extends React.Component {
 					if (res.status === 200) {
 						this.props.commonActions.tostifyAlert(
 							'success',
-							res.data.message
+							res.data? res.data.message: 'Status Changed Successfully'
 
 						);
 						this.setState({
@@ -424,7 +424,7 @@ class PurchaseOrder extends React.Component {
 		.catch((err) => {
 			this.props.commonActions.tostifyAlert(
 				'error',
-				err.data.message
+				err.data? err.data.message: ' Status Changed Unsuccessfully '
 			);
 		});
 	
@@ -468,7 +468,7 @@ class PurchaseOrder extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Email Send Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -479,7 +479,7 @@ class PurchaseOrder extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Email Send Unsuccessfully'
 				);
 			});
 	};
@@ -570,7 +570,7 @@ class PurchaseOrder extends React.Component {
 				this.initializeData(filterData);
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data.message
+					res.data ? res.data.message : 'Purchase Order Deleted Successfully'
 				);
 				if (supplier_invoice_list && supplier_invoice_list.length > 0) {
 					this.setState({
@@ -581,7 +581,7 @@ class PurchaseOrder extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Purchase Order 	Deleted Unsuccessfully'
 				);
 			});
 	};

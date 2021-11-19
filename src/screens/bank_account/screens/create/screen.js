@@ -242,7 +242,7 @@ class CreateBankAccount extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'New Bank Account Created Successfully.',
+					res.data ? res.data.message : 'New Bank Account Created Successfully.',
 				);
 				if (this.state.createMore) {
 					this.setState({
@@ -258,7 +258,7 @@ class CreateBankAccount extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data? err.data.message: 'New Bank Account Created Unsuccessfully'
 				);
 			});
 	};

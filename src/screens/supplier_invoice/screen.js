@@ -391,14 +391,14 @@ class SupplierInvoice extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Send Successfully',
+						res.data ? res.data.message :'Invoice Send Successfully',
 					);
 				}
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					'Please First fill The Mail Configuration Detail',
+					err.data ? err.data.message :'Please First fill The Mail Configuration Detail',
 				);
 			});
 	};
@@ -489,7 +489,7 @@ class SupplierInvoice extends React.Component {
 				this.initializeData(filterData);
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Supplier Invoice Deleted Successfully',
+					res.data ? res.data.message : 'Supplier Invoice Deleted Successfully',
 				);
 				if (supplier_invoice_list && supplier_invoice_list.length > 0) {
 					this.setState({
@@ -500,7 +500,7 @@ class SupplierInvoice extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Supplier Invoice Deleted Unsuccessfully',
 				);
 			});
 	};
@@ -538,7 +538,7 @@ class SupplierInvoice extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Posted Successfully',
+						res.data ? res.data.message : 'Invoice Posted Successfully',
 					);
 					this.setState({
 						loading: false,
@@ -550,7 +550,7 @@ class SupplierInvoice extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Invoice Posted Unsuccessfully',
 				);
 				this.setState({
 					loading: false,
@@ -573,7 +573,7 @@ class SupplierInvoice extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Moved To Draft Successfully',
+						res.data ? res.data.message : 'Invoice Moved To Draft Successfully',
 					);
 					this.setState({
 						loading: false,
@@ -585,7 +585,7 @@ class SupplierInvoice extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Invoice Moved To Draft Unsuccessfully',
 				);
 				this.setState({
 					loading: false,
@@ -659,14 +659,14 @@ class SupplierInvoice extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Invoice Deleted Successfully',
+					res.data ? res.data.message : 'Invoice Deleted Successfully',
 				);
 				this.initializeData();
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Invoice deleted Unsuccessfully',
 				);
 			});
 	};

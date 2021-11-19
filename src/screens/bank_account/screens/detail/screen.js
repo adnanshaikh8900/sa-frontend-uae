@@ -227,7 +227,7 @@ class DetailBankAccount extends React.Component {
 					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Bank Account Details Updated Successfully',
+						res.data ? res.data.message : 'Bank Account Details Updated Successfully',
 					);
 					this.props.history.push('/admin/banking/bank-account');
 				}
@@ -235,7 +235,7 @@ class DetailBankAccount extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Bank Account Details Updated Unsuccessfully',
 				);
 			});
 	};
@@ -282,18 +282,18 @@ class DetailBankAccount extends React.Component {
 		this.removeDialog();
 		this.props.detailBankAccountActions
 			.removeBankAccountByID(current_bank_account_id)
-			.then(() => {
+			.then((res) => {
 				this.setState({ disabled1: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Bank Account Deleted Successfully',
+					res.data ? res.data.message : 'Bank Account Deleted Successfully',
 				);
 				this.props.history.push('/admin/banking/bank-account');
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Bank Account Deleted Unsuccessfully',
 				);
 			});
 	};

@@ -981,14 +981,14 @@ min="0"
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data.message
+					res.data ? res.data.message : 'Goods Received Note Updated Successfully'
 				);
 				this.props.history.push('/admin/expense/goods-received-note');
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Goods Received Note Updated Unsuccessfully'
 				);
 			});
 	};
@@ -1021,7 +1021,7 @@ min="0"
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Goods Received Note Deleted Successfully'
 					);
 					this.props.history.push('/admin/expense/goods-received-note');
 				}
@@ -1029,7 +1029,7 @@ min="0"
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Goods Received Note Deleted Unsuccessfully'
 				);
 			});
 	};

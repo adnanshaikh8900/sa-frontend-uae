@@ -411,10 +411,10 @@ class BankAccount extends React.Component {
 		this.removeDialog();
 		this.props.bankAccountActions
 			.removeBankAccountByID(_id)
-			.then(() => {
+			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Bank account deleted successfully  ',
+					res.data? res.data.message: 'Bank account Deleted Successfully  ',
 				);
 				this.initializeData();
 				let tempList = [];
@@ -431,7 +431,7 @@ class BankAccount extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Bank Account Deleted Unsuccessfully',
 				);
 			});
 	};
@@ -531,10 +531,10 @@ class BankAccount extends React.Component {
 		};
 		this.props.bankAccountActions
 			.removeBulkBankAccount(obj)
-			.then(() => {
+			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Bank Account Deleted Successfully',
+					res.data ? res.data.message : 'Bank Account Deleted Successfully',
 				);
 				this.initializeData();
 				this.setState({
@@ -544,7 +544,7 @@ class BankAccount extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Bank Account Deleted Unsuccessfully',
 				);
 			});
 	};

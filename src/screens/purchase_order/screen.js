@@ -203,7 +203,7 @@ class PurchaseOrder extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data? res.data.message: 'Status Changed Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -214,7 +214,7 @@ class PurchaseOrder extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data? err.data.message: ' Status Changed Unsuccessfully '
 				);
 			});
 	};
@@ -412,7 +412,7 @@ class PurchaseOrder extends React.Component {
 					if (res.status === 200) {
 						this.props.commonActions.tostifyAlert(
 							'success',
-							res.data.message
+							res.data? res.data.message: 'Status Changed Successfully'
 
 						);
 						this.setState({
@@ -424,7 +424,7 @@ class PurchaseOrder extends React.Component {
 		.catch((err) => {
 			this.props.commonActions.tostifyAlert(
 				'error',
-				err.data.message
+				err.data? err.data.message: ' Status Changed Unsuccessfully '
 			);
 		});
 	
@@ -468,7 +468,7 @@ class PurchaseOrder extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Email Send Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -479,7 +479,7 @@ class PurchaseOrder extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Email Send Unsuccessfully'
 				);
 			});
 	};
@@ -570,7 +570,7 @@ class PurchaseOrder extends React.Component {
 				this.initializeData(filterData);
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data.message
+					res.data ? res.data.message : 'Purchase Order Deleted Successfully'
 				);
 				if (supplier_invoice_list && supplier_invoice_list.length > 0) {
 					this.setState({
@@ -581,7 +581,7 @@ class PurchaseOrder extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Purchase Order 	Deleted Unsuccessfully'
 				);
 			});
 	};
@@ -1059,7 +1059,7 @@ class PurchaseOrder extends React.Component {
 												dataField="poNumber"
 												
 												dataSort
-											//	width="10%"
+												width="10%"
 												className="table-header-bg"
 											>
 												{strings.PONUMBER} 
@@ -1067,13 +1067,13 @@ class PurchaseOrder extends React.Component {
 											<TableHeaderColumn
 												dataField="supplierName"
 												// dataSort
-											//	width="12%"
+												width="15%"
 												className="table-header-bg"
 											>
 												{strings.SUPPLIERNAME} 
 											</TableHeaderColumn>
 											<TableHeaderColumn
-											//	width="10%"
+												width="10%"
 												dataField="status"
 												dataFormat={this.renderRFQStatus}
 												dataSort
@@ -1084,7 +1084,7 @@ class PurchaseOrder extends React.Component {
 											<TableHeaderColumn
 												dataField="poApproveDate"
 												dataSort
-											//	width="7%"
+												width="10%"
 												dataFormat={this.pODate}
 												className="table-header-bg"
 											>
@@ -1093,7 +1093,7 @@ class PurchaseOrder extends React.Component {
 											<TableHeaderColumn
 												dataField="poReceiveDate"
 												dataSort
-											//	width="7%"
+												width="10%"
 												dataFormat={this.rfqDueDate}
 												className="table-header-bg"
 											>
@@ -1104,7 +1104,7 @@ class PurchaseOrder extends React.Component {
 												dataAlign="right"
 												dataField="totalAmount"
 												dataSort
-												width="20%"
+												width="25%"
 												dataFormat={this.renderrfqAmount}
 												className="table-header-bg"
 												formatExtraData={universal_currency_list}
@@ -1123,7 +1123,7 @@ class PurchaseOrder extends React.Component {
 											<TableHeaderColumn
 												className="text-right"
 												columnClassName="text-right"
-												//width="5%"
+												width="5%"
 												dataFormat={this.renderActions}
 												className="table-header-bg"
 											></TableHeaderColumn>

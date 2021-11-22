@@ -477,7 +477,7 @@ class RequestForQuotation extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Email Send Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -488,7 +488,7 @@ class RequestForQuotation extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Email Send Unsuccessfully'
 				);
 			});
 	};
@@ -580,7 +580,7 @@ class RequestForQuotation extends React.Component {
 				this.initializeData(filterData);
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data.message
+					res.data ? res.data.message : 'Request For Quotation Deleted Successfully'
 				);
 				if (supplier_invoice_list && supplier_invoice_list.length > 0) {
 					this.setState({
@@ -591,7 +591,7 @@ class RequestForQuotation extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Request For Quotation Deleted Unsuccessfully'
 				);
 			});
 	};
@@ -629,7 +629,7 @@ class RequestForQuotation extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Request For Quotation Posted Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -641,7 +641,7 @@ class RequestForQuotation extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Request For Quotation Posted Unsuccessfully'
 				);
 				this.setState({
 					loading: false,
@@ -664,7 +664,7 @@ class RequestForQuotation extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Request For Quotation Unposted Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -676,7 +676,7 @@ class RequestForQuotation extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Request For Quotation Unosted Unsuccessfully'
 				);
 				this.setState({
 					loading: false,
@@ -740,14 +740,14 @@ class RequestForQuotation extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data.message
+					res.data ? res.data.message : 'Request For Quotation Deleted Successfully'
 				);
 				this.initializeData();
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Request For Quotation Deleted Unsuccessfully'
 				);
 			});
 	};

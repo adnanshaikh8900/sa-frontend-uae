@@ -238,6 +238,7 @@ class CreateCreditNoteModal extends React.Component {
 				name={`invoiceLineItems.${idx}.description`}
 				render={({ field, form }) => (
 					<Input
+					disabled
 					type="text"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
@@ -319,7 +320,7 @@ class CreateCreditNoteModal extends React.Component {
 					<div>
 						<Input
 							type="number"
-							disabled
+							// disabled
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -976,7 +977,24 @@ class CreateCreditNoteModal extends React.Component {
 						ref={this.formikRef}
 						initialValues={initValue}
 						onSubmit={(values, { resetForm }) => {
-							this.handleSubmit(values, resetForm);
+							if(this.state.selectedData && this.state.totalAmount<this.state.selectedData.remainingInvoiceAmount){
+								this.handleSubmit(values, resetForm);
+							}
+							
+						}}
+						validate={(values)=>{
+							let errors = {};
+							
+							if(this.state.selectedData && this.state.totalAmount>this.state.selectedData.remainingInvoiceAmount)
+							{
+								errors.remainingInvoiceAmount =	'Invoice Total Amount Cannot be greater than  Remaining Invoice Amount';
+							}
+							else{
+								errors.remainingInvoiceAmount =	'';
+							}
+												
+													return errors;
+									
 						}}
 						validationSchema={Yup.object().shape(
 							{
@@ -1205,6 +1223,40 @@ class CreateCreditNoteModal extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
+															<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="remainingInvoiceAmount">
+																
+																	Remaining Invoice Amount
+																	</Label>
+																	<Input
+																		type="text"
+																		id="remainingInvoiceAmount"
+																		name="remainingInvoiceAmount"
+																		disabled={true}
+																		value={this.state.selectedData.remainingInvoiceAmount}
+																		// onBlur={props.handleBlur('currencyCode')}
+																		// onChange={(value) => {
+																		// 	props.handleChange('currencyCode')(
+																		// 		value,
+																		// 	);
+																		// }}
+																		// className={
+																		// 	props.errors.remainingInvoiceAmount &&
+																		// 	props.touched.remainingInvoiceAmount
+																		// 		? 'is-invalid'
+																		// 		: ''
+																		// }
+																	/>
+																	{props.errors.remainingInvoiceAmount &&
+																	 (
+																			<div className="text-danger">
+																				{props.errors.remainingInvoiceAmount}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+
 															{/* <Col lg={3}>
 												<FormGroup>
 													<Label htmlFor="email">

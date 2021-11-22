@@ -473,7 +473,7 @@ class CustomerInvoice extends React.Component {
 								<i className="fa fa-send" /> Send Custom Email
 							</DropdownItem>
 						)} */}
-							 {row.statusEnum === 'Paid'  && row.cnCreatedOnPaidInvoice !==true && ( 
+							 {row.statusEnum === 'Paid'  && row.remainingInvoiceAmount !==true && ( 
 							<DropdownItem
 							onClick={() => {
 							this.renderActionForState(row.id);

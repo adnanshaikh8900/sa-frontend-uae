@@ -105,11 +105,15 @@ class DetailEmployee extends React.Component {
     }
     this.props.employeeDetailActions.updateEmployee(postData).then((res) => {
       if (res.status === 200) {
-        this.props.commonActions.tostifyAlert('success', res.data ? res.data.message : 'Employee Updated Successfully')
+        this.props.commonActions.tostifyAlert(
+          'success',
+           res.data ? res.data.message : 'Employee Updated Successfully')
         this.props.history.push('/admin/master/employee')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+      this.props.commonActions.tostifyAlert(
+        'error', 
+        err && err.data ? err.data.message : 'Employee Updated Unsuccessfully')
     })
   }
 
@@ -134,11 +138,15 @@ class DetailEmployee extends React.Component {
     const { current_employee_id } = this.state;
     this.props.employeeDetailActions.deleteEmployee(current_employee_id).then((res) => {
       if (res.status === 200) {
-        this.props.commonActions.tostifyAlert('success', res.data ? res.data.message : 'Employee Deleted Successfully !!')
+        this.props.commonActions.tostifyAlert(
+          'success',
+           res.data ? res.data.message : 'Employee Deleted Successfully !!')
         this.props.history.push('/admin/master/employee')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Employee Deleted Unsuccessfully')
+      this.props.commonActions.tostifyAlert(
+        'error',
+         err && err.data ? err.data.message : 'Employee Deleted Unsuccessfully')
     })
   }
 

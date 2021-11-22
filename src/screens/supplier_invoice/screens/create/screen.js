@@ -195,7 +195,7 @@ class CreateSupplierInvoice extends React.Component {
 			{ label: 'Sharjah', value: '3' },
 			{ label: 'Ajman', value: '4' },
 			{ label: 'Umm Al Quwain', value: '5' },
-			{ label: 'Ras Al Khalmah', value: '6' },
+			{ label: 'Ras al-Khaimah', value: '6' },
 			{ label: 'Fujairah', value: '7' },
 		];
 		this.regEx = /^[0-9\b]+$/;
@@ -917,8 +917,8 @@ min="0"
 					100;
 			} else if (props.values.discountType.value === 'FIXED') {
 				var val =
-						// (obj.unitPrice * obj.quantity - discountAmount / data.length) * As per ticket 1340
-						(obj.unitPrice * obj.quantity) *
+						(obj.unitPrice * obj.quantity - discountAmount / data.length) * 
+						// (obj.unitPrice * obj.quantity) *
 					(vat / 100);
 			} else {
 				var val = (+obj.unitPrice * vat * obj.quantity) / 100;
@@ -1625,18 +1625,35 @@ min="0"
 																				Terms- The duration given to a buyer for
 																				payment.
 																			</p>
+
 																			<p>
-																				Net 7 – payment due in 7 days from
+																				Net 7 – Payment due in 7 days after
+																				invoice date{' '}
+																			</p>
+
+																			<p>
+																				{' '}
+																				Net 10 – Payment due in 10 days after
 																				invoice date{' '}
 																			</p>
 																			<p>
 																				{' '}
-																				Net 10 – payment due in 10 days from
+																				Net 15 – Payment due in 15 days after
 																				invoice date{' '}
 																			</p>
 																			<p>
 																				{' '}
-																				Net 30 – payment due in 30 days from
+																				Net 30 – Payment due in 30 days after
+																				invoice date{' '}
+																			</p>
+																			<p>
+																				{' '}
+																				Net 45 – Payment due in 45 days after
+																				invoice date{' '}
+																			</p>
+																			<p>
+																				{' '}
+																				Net 60 – Payment due in 60 days after
 																				invoice date{' '}
 																			</p>
 																		</UncontrolledTooltip>
@@ -2226,7 +2243,7 @@ min="0"
 																								id="discountPercentage"
 																								name="discountPercentage"
 																								min="0"
-																								max="99"
+																								max="99.99"
 																								 step="0.01"
 																								placeholder={strings.DiscountPercentage}
 																								type="number"

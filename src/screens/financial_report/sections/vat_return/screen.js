@@ -623,7 +623,7 @@ class VatReturnsReport extends React.Component {
 																{/* RasAlKhalmah */}
 																<tr className="mainLable">
 																<td className="mainLable ">1e</td>
-																<td className="pt-0 pb-0">Standard rated supplies in Ras Al Khalmah</td>
+																<td className="pt-0 pb-0">Standard rated supplies in Ras al-Khaimah</td>
 																<td className="pt-0 pb-0 ">
 																				{this.state.data[
 																				'totalAmountForRasAlKhalmah'

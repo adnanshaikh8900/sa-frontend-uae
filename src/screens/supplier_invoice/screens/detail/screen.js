@@ -132,7 +132,7 @@ class DetailSupplierInvoice extends React.Component {
 			{ label: 'Sharjah', value: '3' },
 			{ label: 'Ajman', value: '4' },
 			{ label: 'Umm Al Quwain', value: '5' },
-			{ label: 'Ras Al Khalmah', value: '6' },
+			{ label: 'Ras al-Khaimah', value: '6' },
 			{ label: 'Fujairah', value: '7' },
 		];
 
@@ -901,8 +901,8 @@ class DetailSupplierInvoice extends React.Component {
 					100;
 			} else if (props.values.discountType === 'FIXED') {
 				var val =
-						// (obj.unitPrice * obj.quantity - discountAmount / data.length) * As per ticket 1340
-						(obj.unitPrice * obj.quantity) *
+					(obj.unitPrice * obj.quantity - discountAmount / data.length) * 
+						// (obj.unitPrice * obj.quantity) *
 					(vat / 100);
 			} else {
 				var val = (+obj.unitPrice * vat * obj.quantity) / 100;
@@ -2130,6 +2130,9 @@ class DetailSupplierInvoice extends React.Component {
 																								<Input
 																								id="discountPercentage"
 																								name="discountPercentage"
+																								min="0"
+																								max="99.99"
+																								 step="0.01"
 																								placeholder={strings.DiscountPercentage}
 																								type="number"
 																								maxLength="5"

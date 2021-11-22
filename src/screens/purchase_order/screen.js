@@ -1059,7 +1059,7 @@ class PurchaseOrder extends React.Component {
 												dataField="poNumber"
 												
 												dataSort
-											//	width="10%"
+												width="10%"
 												className="table-header-bg"
 											>
 												{strings.PONUMBER} 
@@ -1067,13 +1067,13 @@ class PurchaseOrder extends React.Component {
 											<TableHeaderColumn
 												dataField="supplierName"
 												// dataSort
-											//	width="12%"
+												width="15%"
 												className="table-header-bg"
 											>
 												{strings.SUPPLIERNAME} 
 											</TableHeaderColumn>
 											<TableHeaderColumn
-											//	width="10%"
+												width="10%"
 												dataField="status"
 												dataFormat={this.renderRFQStatus}
 												dataSort
@@ -1084,7 +1084,7 @@ class PurchaseOrder extends React.Component {
 											<TableHeaderColumn
 												dataField="poApproveDate"
 												dataSort
-											//	width="7%"
+												width="10%"
 												dataFormat={this.pODate}
 												className="table-header-bg"
 											>
@@ -1093,7 +1093,7 @@ class PurchaseOrder extends React.Component {
 											<TableHeaderColumn
 												dataField="poReceiveDate"
 												dataSort
-											//	width="7%"
+												width="10%"
 												dataFormat={this.rfqDueDate}
 												className="table-header-bg"
 											>
@@ -1104,7 +1104,7 @@ class PurchaseOrder extends React.Component {
 												dataAlign="right"
 												dataField="totalAmount"
 												dataSort
-												width="20%"
+												width="25%"
 												dataFormat={this.renderrfqAmount}
 												className="table-header-bg"
 												formatExtraData={universal_currency_list}
@@ -1123,7 +1123,7 @@ class PurchaseOrder extends React.Component {
 											<TableHeaderColumn
 												className="text-right"
 												columnClassName="text-right"
-												//width="5%"
+												width="5%"
 												dataFormat={this.renderActions}
 												className="table-header-bg"
 											></TableHeaderColumn>

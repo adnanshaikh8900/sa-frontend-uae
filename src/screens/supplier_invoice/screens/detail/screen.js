@@ -132,7 +132,7 @@ class DetailSupplierInvoice extends React.Component {
 			{ label: 'Sharjah', value: '3' },
 			{ label: 'Ajman', value: '4' },
 			{ label: 'Umm Al Quwain', value: '5' },
-			{ label: 'Ras Al Khalmah', value: '6' },
+			{ label: 'Ras al-Khaimah', value: '6' },
 			{ label: 'Fujairah', value: '7' },
 		];
 

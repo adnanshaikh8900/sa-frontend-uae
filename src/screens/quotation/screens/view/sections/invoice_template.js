@@ -95,10 +95,10 @@ class RFQTemplate extends Component {
 										alt=""
 										style={{ width: ' 100px' }}
 									/>
-									<div className="mb-1 ml-2"><b>{strings.CompanyName}:</b> {companyData.companyName}</div>
-									<div className="mb-1 ml-2"><b>{strings.CompanyRegistrationNo}:</b> {companyData.companyRegistrationNumber}</div>
-									<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo}:</b> {companyData.vatRegistrationNumber}</div>
-									<div className="mb-1 ml-2"><b>{strings.MobileNumber}:</b> {companyData.phoneNumber}</div>
+									<div className="mb-1 ml-2"><b>{strings.CompanyName} :</b> {companyData.companyName}</div>
+									<div className="mb-1 ml-2"><b>{strings.CompanyRegistrationNo} :</b> {companyData.companyRegistrationNumber}</div>
+									<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo} :</b> {companyData.vatRegistrationNumber}</div>
+									<div className="mb-1 ml-2"><b>{strings.MobileNumber} :</b> {companyData.phoneNumber}</div>
 								</div>
 							</div>
 							<div style={{ width: '130%',justifyContent:'center' }}>

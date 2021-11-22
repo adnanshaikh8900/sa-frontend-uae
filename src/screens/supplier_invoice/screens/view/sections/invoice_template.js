@@ -102,10 +102,10 @@ class InvoiceTemplate extends Component {
 										alt=""
 										style={{ width: ' 100px' }}
 									/>
-									<div className="mb-1 ml-2"><b>{strings.CompanyName}:</b> {companyData.companyName}</div>
-									<div className="mb-1 ml-2"><b>{strings.CompanyRegistrationNo}:</b> {companyData.companyRegistrationNumber}</div>
-									<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo}:</b> {companyData.vatRegistrationNumber}</div>
-									<div className="mb-1 ml-2"><b>{strings.MobileNumber}:</b> {companyData.phoneNumber}</div>
+									<div className="mb-1 ml-2"><b>{strings.CompanyName} :</b> {companyData.companyName}</div>
+									<div className="mb-1 ml-2"><b>{strings.CompanyRegistrationNo} :</b> {companyData.companyRegistrationNumber}</div>
+									<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo} :</b> {companyData.vatRegistrationNumber}</div>
+									<div className="mb-1 ml-2"><b>{strings.MobileNumber} :</b> {companyData.phoneNumber}</div>
 									{/* <h3 style={{ fontWeight: '600' }} className="mb-0">
 										{companyData && companyData.company
 											? companyData.company.companyName
@@ -293,11 +293,11 @@ class InvoiceTemplate extends Component {
 								<h6 style={{ fontWeight: '600' }} className="mb-1 mt-1 ml-2">
 									<b>{strings.BillTo },</b>
 								</h6>
-								<h6 className="mb-1 ml-2"><b>{strings.Name }:</b> {invoiceData.organisationName ? invoiceData.organisationName : invoiceData.name}</h6>
-								<div className="mb-1 ml-2"><b>TRN:</b> {invoiceData.taxRegistrationNo}</div>
+								<h6 className="mb-1 ml-2"><b>{strings.Name } :</b> {invoiceData.organisationName ? invoiceData.organisationName : invoiceData.name}</h6>
+								<div className="mb-1 ml-2"><b>TRN :</b> {invoiceData.taxRegistrationNo}</div>
 								{/* <h6 className="mb-1 ml-2"><b>{strings.Company }:</b> {invoiceData.organisationName}</h6> */}
-								<h6 className="mb-1 ml-2"><b>{strings.Email }:</b> {invoiceData.email}</h6>
-								<h6 className="mb-3 ml-2"><b>{strings.Address }:</b> {invoiceData.address}</h6>
+								<h6 className="mb-1 ml-2"><b>{strings.Email } :</b> {invoiceData.email}</h6>
+								<h6 className="mb-3 ml-2"><b>{strings.Address } :</b> {invoiceData.address}</h6>
 							</div>
 							</div>
 							<div

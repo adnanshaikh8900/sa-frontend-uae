@@ -233,12 +233,12 @@ class InvoiceTemplate extends Component {
 									<div style={{ fontWeight: '600' }} className="mb-1 mt-1 ml-2">
 										<b>{strings.BillTo },</b>
 									</div>
-									<div className="mb-1 ml-2"><b>{strings.Name}:</b> {invoiceData.organisationName ? invoiceData.organisationName : invoiceData.name}</div>
-									<div className="mb-1 ml-2"><b>TRN:</b> {invoiceData.taxRegistrationNo}</div>
+									<div className="mb-1 ml-2"><b>{strings.Name} :</b> {invoiceData.organisationName ? invoiceData.organisationName : invoiceData.name}</div>
+									<div className="mb-1 ml-2"><b>TRN :</b> {invoiceData.taxRegistrationNo}</div>
 									{/* <div className="mb-1 ml-2"><b>{strings.Company }:</b> {invoiceData.organisationName}</div> */}
 									
-									<div className="mb-1 ml-2"><b>{strings.Email}:</b> {invoiceData.email}</div>
-									<div className="mb-3 ml-2"><b>{strings.Address}:</b> {invoiceData.address}</div>
+									<div className="mb-1 ml-2"><b>{strings.Email} : </b> {invoiceData.email}</div>
+									<div className="mb-3 ml-2"><b>{strings.Address} : </b> {invoiceData.address}</div>
 								</div>
 							</div>
 							<div

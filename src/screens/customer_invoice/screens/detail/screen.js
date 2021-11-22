@@ -2043,7 +2043,7 @@ debugger
 																												id="discountPercentage"
 																												name="discountPercentage"
 																												min="0"
-																												max="99"
+																												max="99.99"
 																												 step="0.01"
 																												placeholder={strings.DiscountPercentage}
 																												type="number"

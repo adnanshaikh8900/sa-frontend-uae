@@ -416,7 +416,7 @@ class Expense extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data ? res.data.message : "Expense Posted Successfully"
+						"Expense Posted Successfully"
 					);
 					this.setState({
 						loading: false,
@@ -427,7 +427,7 @@ class Expense extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data ? err.data.message : 'Expense Posted Unsuccessfully'
+					'Expense Posted Unsuccessfully'
 				);
 				this.setState({
 					loading: false,
@@ -451,7 +451,7 @@ class Expense extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data ? res.data.message : "Expense moved to Draft Successfully"
+						"Expense moved to Draft Successfully"
 					);
 					this.setState({
 						loading: false,
@@ -462,7 +462,7 @@ class Expense extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data ? err.data.message : 'Expense moved to Draft Unsuccessfully'
+					'Expense moved to Draft Unsuccessfully'
 				);
 				this.setState({
 					loading: false,

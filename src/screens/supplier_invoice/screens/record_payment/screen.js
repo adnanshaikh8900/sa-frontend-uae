@@ -284,14 +284,14 @@ class RecordSupplierPayment extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Payment Recorded Successfully.',
+					res.data ? res.data.message : 'Payment Recorded Successfully.',
 				);
 				this.props.history.push('/admin/expense/supplier-invoice');
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Payment Recorded Unsuccessfully.',
 				);
 			});
 	};
@@ -351,7 +351,7 @@ class RecordSupplierPayment extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Data Deleted Successfully',
+						res.data ? res.data.message : 'Data Deleted Successfully',
 					);
 					this.props.history.push('/admin/revenue/customer-invoice');
 				}

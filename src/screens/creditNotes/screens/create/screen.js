@@ -1074,7 +1074,7 @@ class CreateCreditNote extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'New Tax Credit Note Created Unsuccessfully.',
 				);
 			});
 	};

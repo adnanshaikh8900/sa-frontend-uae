@@ -264,7 +264,7 @@ class CustomerInvoice extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message,
+						'Customer Invoice Moved To Draft Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -276,7 +276,7 @@ class CustomerInvoice extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					'Customer Invoice Moved To Draft Unsuccessfully'
 				);
 				this.setState({
 					loading: false,
@@ -657,7 +657,7 @@ class CustomerInvoice extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data ? res.data.message : 'Email Send Successfully'
+						res.data ? res.data.message : 'Invoice Posted Successfully.'
 					);
 					this.setState({ openEmailModal: false });
 				}
@@ -665,7 +665,7 @@ class CustomerInvoice extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data ? err.data.message : 'Email Send Unsuccessfully'
+					err.data ? err.data.message : 'Invoice Posted Successfully.'
 				);
 			});
 	};

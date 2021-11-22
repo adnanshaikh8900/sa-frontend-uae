@@ -360,12 +360,12 @@ class ExpenseByCategory extends React.Component {
 											<Table  >
 												<thead className="header-row" >
 													<tr>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.TransactionCategory+" "+strings.Name}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.TransactionCategory+" "+strings.Name}</th>
 													
-														<th style={{ padding: '0.5rem', textAlign: 'right' }}>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>
 														{strings.Amount}
 														</th>
-														<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Amount+" "+strings.WithTax}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.Amount+" "+strings.WithTax}</th>
 
 													</tr>
 												</thead>

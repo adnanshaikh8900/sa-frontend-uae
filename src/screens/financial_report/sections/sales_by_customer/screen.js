@@ -356,13 +356,13 @@ class SalesByCustomer extends React.Component {
 											<Table  >
 												<thead className="header-row" >
 													<tr>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.CustomerName}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.InvoiceCount}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.CustomerName}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.InvoiceCount}</th>
 
-														<th style={{ padding: '0.5rem', textAlign: 'right' }}>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>
 															{strings.SalesExcludingTax} 
 														</th>
-														<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.SalesWithTax}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.SalesWithTax}</th>
 
 													</tr>
 												</thead>

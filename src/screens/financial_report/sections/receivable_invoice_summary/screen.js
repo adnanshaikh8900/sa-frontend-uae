@@ -345,16 +345,16 @@ class ReceivableInvoiceSummary extends React.Component {
 											<Table >
 												<thead className="header-row" >
 													<tr>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.InvoiceNumber}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.CustomerName}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.InvoiceDate}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.InvoiceDueDate}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.Status}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.InvoiceNumber}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.CustomerName}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.InvoiceDate}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.InvoiceDueDate}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.Status}</th>
 
-														<th style={{ padding: '0.5rem', textAlign: 'right' }}>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>
 														{strings.InvoiceAmount}
 														</th>
-														<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Balance}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.Balance}</th>
 
 													</tr>
 												</thead>

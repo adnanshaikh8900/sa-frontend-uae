@@ -354,13 +354,13 @@ class SalesByProduct extends React.Component {
 													<Table  >
 												<thead className="header-row" >
 													<tr>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.ProductName}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.QuantitySold}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.ProductName}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.QuantitySold}</th>
 
-														<th style={{ padding: '0.5rem', textAlign: 'right' }}>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>
 															{strings.Total+" "+strings.Amount}
 														</th>
-														<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Average+" "+strings.Amount}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.Average+" "+strings.Amount}</th>
 
 													</tr>
 												</thead>

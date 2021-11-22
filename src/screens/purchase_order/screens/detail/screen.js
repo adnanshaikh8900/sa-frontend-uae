@@ -131,13 +131,13 @@ class DetailPurchaseOrder extends React.Component {
 			{ label: 'Net 30 Days', value: 'NET_30' },
 			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
 		];
-		this.placelist = [
+			this.placelist = [
 			{ label: 'Abu Dhabi', value: '1' },
 			{ label: 'Dubai', value: '2' },
 			{ label: 'Sharjah', value: '3' },
 			{ label: 'Ajman', value: '4' },
 			{ label: 'Umm Al Quwain', value: '5' },
-			{ label: 'Ras Al Khalmah', value: '6' },
+			{ label: 'Ras al-Khaimah', value: '6' },
 			{ label: 'Fujairah', value: '7' },
 		];
 

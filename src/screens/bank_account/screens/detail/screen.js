@@ -210,7 +210,7 @@ class DetailBankAccount extends React.Component {
 			bankAccountCurrency: data.currency,
 			personalCorporateAccountInd: data.account_is_for,
 			// bankName: data.bank_name,
-			bankName:data.bank_name && data.bank_name.label ? data.bank_name.label : "",
+			bankName:data.bank_name && data.bank_name.label ?data.bank_name.label :data.bank_name,
 			accountNumber: data.account_number,
 			ifscCode: data.ifsc_code,
 			swiftCode: data.swift_code,

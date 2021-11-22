@@ -287,12 +287,12 @@ class RFQTemplate extends Component {
 								}}
 							>
 								<div className="pb-2">{strings.AmountInWords }:<br/>
-									<b><u> {QuotationData.totalAmount ? upperCase(QuotationData.currencyName + " " +(toWords.convert(QuotationData.totalAmount))+" ONLY") : " -" }
+									<b><u> {QuotationData.totalAmount ? upperCase(QuotationData.currencyName + " " +(toWords.convert(QuotationData.totalAmount))+" ONLY").replace("POINT","AND") : " -" }
 									{/* <b> {parseInt(POData.dueAmount)} */}
 									</u></b></div>
 								<div className="pb-2">{strings.Vat+" "+strings.AmountInWords }:
 										<br/>
-									<b><u>{QuotationData.totalVatAmount ? (upperCase(QuotationData.currencyName + " " +(toWords.convert(QuotationData.totalVatAmount))+" ONLY")) : " -" }</u></b>
+									<b><u>{QuotationData.totalVatAmount ? (upperCase(QuotationData.currencyName + " " +(toWords.convert(QuotationData.totalVatAmount))+" ONLY")).replace("POINT","AND") : " -" }</u></b>
 									{/* <b> {POData.totalVatAmount}</b> */}
 								</div>
 							<div style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>

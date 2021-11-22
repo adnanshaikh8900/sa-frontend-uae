@@ -374,14 +374,14 @@ class CreditNoteDetailsReport extends React.Component {
 												<Table >
 												<thead className="header-row" >
 													<tr>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.Credit+" "+strings.Number}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.CustomerName}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.Credit+" "+strings.Date}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.Status}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.SalesReturn}
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.Credit+" "+strings.Number}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.CustomerName}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.Credit+" "+strings.Date}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.Status}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.SalesReturn}
 															{/* {strings.InvoiceAmount} */}
 														</th>
-														<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Balance}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.Balance}</th>
 													</tr>
 												</thead>
 												<tbody className=" table-bordered table-hover">

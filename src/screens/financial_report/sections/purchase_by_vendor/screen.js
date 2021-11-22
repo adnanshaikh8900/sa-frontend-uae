@@ -357,13 +357,13 @@ class PurchaseByVendor extends React.Component {
 											<Table  >
 												<thead className="header-row" >
 													<tr>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.Vendor+" "+strings.Name}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center' }}>{strings.InvoiceCount}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.Vendor+" "+strings.Name}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.InvoiceCount}</th>
 
-														<th style={{ padding: '0.5rem', textAlign: 'right' }}>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>
 															{strings.Purchase+" "+strings.ExcludingTax}
 														</th>
-														<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Purchase+" "+strings.WithTax}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.Purchase+" "+strings.WithTax}</th>
 
 													</tr>
 												</thead>

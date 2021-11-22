@@ -536,7 +536,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 															return (
 																<th
 																	key={index}
-																	style={{ fontWeight: '600' ,textAlign:'center'}}
+																	style={{ fontWeight: '600' ,textAlign:'center', color:'black'}}
 																	className={column.align ? 'text-center' : ''}
 																	className="table-header-color"
 																>

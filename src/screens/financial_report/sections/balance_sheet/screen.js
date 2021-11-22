@@ -293,6 +293,7 @@ class BalanceSheet extends React.Component {
 													 </DropdownMenu>
 												</Dropdown> 
 												&nbsp;&nbsp;
+										
 												<div
 													className="mr-2 print-btn-cont"
 													onClick={() => window.print()}
@@ -397,7 +398,8 @@ class BalanceSheet extends React.Component {
 															return (
 																<th
 																	key={index}
-																	style={{ fontWeight: '600' }}
+																	style={{ fontWeight: '600', color:'black'
+																 }}
 																	className={column.align ? 'text-right' : ''}
 																	className="table-header-color"
 																>

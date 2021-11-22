@@ -240,10 +240,10 @@ class ViewRequestForQuotation extends React.Component {
 									<th className="center" style={{ padding: '0.5rem' }}>
 										{strings.POExpiryDate}
 									</th>
-									<th style={{ padding: '0.5rem', textAlign: 'left' }}>
+									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 									{strings.Total+" "+strings.Amount}
 									</th>
-									<th style={{ padding: '0.5rem', textAlign: 'left' }}>
+									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 									{strings.TotalVat+" "+strings.Amount}
 									</th>
 								
@@ -265,8 +265,8 @@ class ViewRequestForQuotation extends React.Component {
 									<td>{moment(item.poReceiveDate).format(
 									'DD MMM YYYY',
 								)}</td>
-												<td>{item.totalAmount}</td>
-												<td>{item.totalVatAmount}</td>
+												<td align="right">{item.totalAmount}</td>
+												<td align="right">{item.totalVatAmount}</td>
 											
 											</tr>
 										);

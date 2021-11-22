@@ -504,15 +504,15 @@ class ExpenseDetailsReport extends React.Component {
 											<Table  >
 											<thead className="header-row" >
 													<tr>
-														<th style={{ padding: '0.5rem', textAlign: 'center'  }}>{strings.ExpenseDate}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center'  }}>{strings.ExpenseCategory}</th>
-														<th style={{ padding: '0.5rem', textAlign: 'center'  }}>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black'  }}>{strings.ExpenseDate}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black'  }}>{strings.ExpenseCategory}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black'  }}>
 														{strings.Status}
 														</th>
-														<th style={{ padding: '0.5rem', textAlign: 'right' }}>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>
 														{strings.Amount}
 														</th>
-														<th style={{ padding: '0.5rem', textAlign: 'right'  }}>{strings.Amount+" "+strings.WithTax}</th>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black'  }}>{strings.Amount+" "+strings.WithTax}</th>
 
 													</tr>
 												</thead>

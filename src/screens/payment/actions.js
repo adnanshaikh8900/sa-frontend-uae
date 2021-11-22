@@ -112,7 +112,7 @@ export const getPaymentList = (obj) => {
   return (dispatch) => {
     let param = `/rest/payment/getlist?supplierId=${supplierId}&invoiceAmount=${invoiceAmount}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
     if (paymentDate) {
-      let date = moment(paymentDate).format('DD-MM-YYYY')
+      let date = moment(paymentDate).format('YYYY-MM-DD')
       param = param + `&paymentDate=${date}`
     }
     let data = {

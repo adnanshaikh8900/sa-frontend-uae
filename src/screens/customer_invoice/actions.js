@@ -21,11 +21,11 @@ export const getCustomerInvoiceList = (postObj) => {
 	return (dispatch) => {
 		let param = `/rest/invoice/getList?contact=${customerName}&type=${contactType}&referenceNumber=${referenceNumber}&amount=${amount}&status=${status}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`;
 		if (invoiceDate) {
-			let date = moment(invoiceDate).format('DD-MM-YYYY');
+			let date = moment(invoiceDate).format('YYYY-MM-DD');
 			param = param + `&invoiceDate=${date}`;
 		}
 		if (invoiceDueDate) {
-			let date = moment(invoiceDueDate).format('DD-MM-YYYY');
+			let date = moment(invoiceDueDate).format('YYYY-MM-DD');
 			param = param + `&invoiceDueDate=${date}`;
 		}
 		let data = {

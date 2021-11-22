@@ -159,11 +159,11 @@ class InvoiceTemplate extends Component {
 									<h6 style={{ fontWeight: '600' }} className="mb-1 mt-1 ml-2">
 										<b>{strings.BillTo },</b>
 									</h6>
-									<h6 className="mb-1 ml-2"><b>{strings.Name }:</b> {invoiceData.organisationName ? invoiceData.organisationName : invoiceData.name}</h6>
-									<div className="mb-1 ml-2"><b>TRN:</b> {invoiceData.taxRegistrationNo}</div>
+									<h6 className="mb-1 ml-2"><b>{strings.Name } :</b> {invoiceData.organisationName ? invoiceData.organisationName : invoiceData.name}</h6>
+									<div className="mb-1 ml-2"><b>TRN :</b> {invoiceData.taxRegistrationNo}</div>
 									{/* <h6 className="mb-1 ml-2"><b>{strings.Company }:</b> {invoiceData.organisationName}</h6> */}
-									<h6 className="mb-1 ml-2"><b>{strings.Email }:</b> {invoiceData.email}</h6>
-									<h6 className="mb-3 ml-2"><b>{strings.Address }:</b> {invoiceData.address}</h6>
+									<h6 className="mb-1 ml-2"><b>{strings.Email } :</b> {invoiceData.email}</h6>
+									<h6 className="mb-3 ml-2"><b>{strings.Address } :</b> {invoiceData.address}</h6>
 								</div>
 							</div>
 							<div

@@ -636,9 +636,9 @@ else
 			tempList.push(row.empId);
 			tempList1.push(row);
 		} else {
-			this.state.selectedRows.map((item) => {
-				if (item !== row.empId) {
-					tempList.push(item);
+			this.state.selectedRows1.map((item) => {
+				if (item.empId !== row.empId) {
+					tempList.push(item.empId);
 					tempList1.push(item);
 				}
 				return item;

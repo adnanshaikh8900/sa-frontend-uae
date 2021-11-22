@@ -411,7 +411,7 @@ console.log(this.state.Variable,"Variable")
 														</h5>
 														<h5>	
 															 {/* (	{	upperFirst(converter.toWords(toInteger(this.state.selectedData.netPay)))} ) */}
-														 {this.state.selectedData.netPay ? (upperCase((toWords.convert(this.state.selectedData.netPay)))) : " -" }
+														 {this.state.selectedData.netPay ? (upperCase((toWords.convert(this.state.selectedData.netPay))).replace("POINT","AND")) : " -" }
 														</h5>
 													</div>
 												</CardBody>

@@ -1,69 +1,81 @@
 name: $(TeamProject)_$(Build.DefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 trigger:
-- develop
+  branches:
+    include:
+      - master
+      - develop
 
 variables:
+  ${{ if eq(variables['Build.SourceBranchName'], 'master') }}:
+    containerRegistryName: 'simpleaccounts'
+    tag: latest
+  ${{ else }}:
+    containerRegistryName: 'datainn'
+    tag: 0.0.3-alpha-$(Build.BuildId)
+  ${{ if eq(variables['Build.SourceBranchName'], 'master') }}:
+    containerRegistryConnection: 'SimpleAccountsAzureContainerRegistryConnection'
+  ${{ else }}:
+    containerRegistryConnection: 'DataInnAzureContainerRegistryConnection'
   npm_config_cache: $(Pipeline.Workspace)/.npm
 
+
 stages:
-  - stage: ci_build_simplevat
-    displayName: CI Build for SimpleVAT
+  - stage: ci_build_simpleaccounts
+    displayName: CI Build for simpleaccounts
     pool:
       vmImage: 'ubuntu-latest'
     jobs:
-    - job: build
-      displayName: Build & Push SimpleVAT Application
-      timeoutInMinutes: 30
+      - job: build
+        displayName: Build & Push simpleaccounts Application
+        timeoutInMinutes: 30
 
-      steps:
-      - task: CmdLine@2
-        inputs:
-          script: 'npm i --package-lock-only'
-          
-      - task: Cache@2
-        inputs:
-          key: 'npm | "$(Agent.OS)" | package-lock.json'
-          restoreKeys: |
-            npm | "$(Agent.OS)"
-          path: $(npm_config_cache)
-        displayName: Cache npm
-      - script: npm ci
+        steps:
+          - task: CmdLine@2
+            inputs:
+              script: 'npm i --package-lock-only'
+            displayName: 'Generate package-lock.json'
 
-      - task: NodeTool@0
-        inputs:
-          versionSpec: '10.x'
-        displayName: 'Install Node.js'
+          - task: Cache@2
+            inputs:
+              key: 'npm | "$(Agent.OS)" | package-lock.json'
+              restoreKeys: |
+                npm | "$(Agent.OS)"
+              path: $(npm_config_cache)
+            displayName: Cache npm
+          - script: npm ci
 
-      - script: |
-          npm rebuild node-sass
-          npm run build
-        displayName: 'npm install and build'
+          - task: CmdLine@2
+            inputs:
+              script: |
+                npm i --package-lock-only
+                npm rebuild node-sass
+                npm run build
+            displayName: 'npm install and build'
 
-      - task: Cache@2
-        displayName: Cache task
-        inputs:
-          key: 'docker | "$(Agent.OS)" | cache'
-          path: $(Pipeline.Workspace)/simplevat-frontend-docker
-          cacheHitVar: CACHE_RESTORED                #Variable to set to 'true' when the cache is restored
-        
-      - script: |
-          docker load -i $(Pipeline.Workspace)/simplevat-frontend-docker/simplevat-frontend-docker-cache.tar
-        displayName: Docker restore
-        condition: and(not(canceled()), eq(variables.CACHE_RESTORED, 'true'))
+          - task: Cache@2
+            displayName: Cache task
+            inputs:
+              key: 'docker | "$(Agent.OS)" | cache'
+              path: $(Pipeline.Workspace)/simpleaccounts-frontend-docker
+              cacheHitVar: CACHE_RESTORED                #Variable to set to 'true' when the cache is restored
 
-      - task: Docker@2
-        displayName: Docker Build & Push
-        inputs:
-          containerRegistry: 'DataInnAzureContainerRegistryConnection'
-          repository: 'simplevat-frontend'
-          command: 'buildAndPush'
-          Dockerfile: '**/Dockerfile'
-          tags: |
-            0.0.3-alpha-$(Build.BuildId)
+          # - script: |
+          #     docker load -i $(Pipeline.Workspace)/simpleaccounts-frontend-docker/simpleaccounts-frontend-docker-cache.tar
+          #   displayName: Docker restore
+          #   condition: and(not(canceled()), eq(variables.CACHE_RESTORED, 'true'))
 
-      - script: |
-          mkdir -p $(Pipeline.Workspace)/simplevat-frontend-docker
-          docker save -o $(Pipeline.Workspace)/simplevat-frontend-docker/simplevat-frontend-docker-cache.tar datainn.azurecr.io/simplevat-frontend:0.0.3-alpha-$(Build.BuildId)
-        displayName: Docker save
-        condition: and(not(canceled()), or(failed(), ne(variables.CACHE_RESTORED, 'true')))
+          - task: Docker@2
+            displayName: Docker Build & Push
+            inputs:
+              containerRegistry: $(containerRegistryConnection)
+              repository: 'simpleaccounts-frontend'
+              command: 'buildAndPush'
+              Dockerfile: '**/Dockerfile'
+              tags: |
+                $(tag)
 
+          - script: |
+              mkdir -p $(Pipeline.Workspace)/simpleaccounts-frontend-docker
+              docker save -o $(Pipeline.Workspace)/simpleaccounts-frontend-docker/simpleaccounts-frontend-docker-cache.tar $(containerRegistryName).azurecr.io/simpleaccounts-frontend:$(tag)
+            displayName: Docker save
+            condition: and(not(canceled()), or(failed(), ne(variables.CACHE_RESTORED, 'true')))

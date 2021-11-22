@@ -14,7 +14,7 @@ export const getJournalList = (obj) => {
 
 	let url = `/rest/journal/getList?journalReferenceNo=${journalReferenceNo}&description=${description}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`;
 	if (journalDate) {
-		let date = moment(journalDate).format('DD-MM-YYYY');
+		let date = moment(journalDate).format('YYYY-MM-DD');
 		url = url + `&journalDate=${date}`;
 	}
 	return (dispatch) => {

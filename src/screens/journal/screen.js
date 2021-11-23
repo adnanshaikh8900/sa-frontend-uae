@@ -350,7 +350,7 @@ class Journal extends React.Component {
 					this.initializeData();
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Journal Deleted Successfully',
+						res.data ? res.data.message :'Journal Deleted Successfully',
 					);
 					if (journal_list && journal_list.length > 0) {
 						this.setState({
@@ -362,7 +362,7 @@ class Journal extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Journal Deleted Unsuccessfully',
 				);
 			});
 	};

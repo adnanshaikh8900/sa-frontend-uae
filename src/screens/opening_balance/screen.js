@@ -374,7 +374,7 @@ class OpeningBalance extends React.Component {
 						let text = save ? 'added' : 'updated';
 						this.props.commonActions.tostifyAlert(
 							'success',
-							`Opening Balance ${text} Successfully.`,
+							res.data? res.data.message: `Opening Balance ${text} Successfully.`,
 						);
 						this.initializeData();
 						this.setState({

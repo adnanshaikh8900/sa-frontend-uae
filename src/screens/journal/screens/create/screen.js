@@ -624,7 +624,7 @@ min="0"
 					if (res.status === 200) {
 						this.props.commonActions.tostifyAlert(
 							'success',
-							'New Journal Created Successfully',
+							res.data ? res.data.message : 'New Journal Created Successfully',
 						);
 						if (this.state.createMore) {
 							this.setState(
@@ -690,7 +690,7 @@ min="0"
 					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
 						'error',
-						err && err.data ? err.data.message : 'Something Went Wrong',
+						err.data ? err.data.message : 'Journal Created Unsuccessfully'
 					);
 				});
 		}

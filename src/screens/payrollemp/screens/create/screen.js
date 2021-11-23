@@ -398,7 +398,9 @@ existForAccountNumber = (value) => {
             .then((res) => {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(
-                        'success', res.data ? res.data.mesg : ' Finacial details saved Successfully')
+                        'success', 
+                        ' Finacial details saved Successfully'
+                        )
                     this.getSalaryComponentByEmployeeId();
                     // this.props.history.push('/admin/payroll/employee');
                     this.props.history.push('/admin/master/employee');
@@ -712,7 +714,9 @@ existForAccountNumber = (value) => {
             .then((res) => {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(
-                        'success', res.data ? res.data.mesg : 'Basic Details Saved Successfully')
+                        'success', 
+                        'Basic Details Saved Successfully'
+                        )
                     this.setState({
                         employeeid: res.data,
 
@@ -737,12 +741,18 @@ existForAccountNumber = (value) => {
         else{
             this.props.detailEmployeePersonalAction.updateEmployeePersonal(formData).then((res) => {
                 if (res.status === 200) {
-                    this.props.commonActions.tostifyAlert('success', res.data ? res.data.message : 'Employee Updated Successfully!')
+                    this.props.commonActions.tostifyAlert(
+                        'success',
+                        res.data ? res.data.message : 'Employee Updated Successfully!'
+                        )
                     this.toggle(0, '2')
                     this.renderActionForState(this.state.employeeid)
                 }
             }).catch((err) => {
-                this.props.commonActions.tostifyAlert('error',  err.data ? err.data.mesg : 'Employee Updated Unsuccessfully')
+                this.props.commonActions.tostifyAlert(
+                    'error',  
+                    err.data ? err.data.mesg : 'Employee Updated Unsuccessfully'
+                )
             })
         }
     }

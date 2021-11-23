@@ -398,15 +398,14 @@ existForAccountNumber = (value) => {
             .then((res) => {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(
-                        'success',
-                        ' Finacial details saved Successfully')
+                        'success', res.data ? res.data.mesg : ' Finacial details saved Successfully')
                     this.getSalaryComponentByEmployeeId();
                     // this.props.history.push('/admin/payroll/employee');
                     this.props.history.push('/admin/master/employee');
                 }
             }).catch((err) => {
 
-                this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+                this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Finacial details saved Unsuccessfully')
             })
     }
     removeComponent=(ComponentId)=>{
@@ -472,26 +471,25 @@ existForAccountNumber = (value) => {
             .then((res) => {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(
-                        'success',
-                        ' Finacial details saved Successfully')
+                        'success', res.data ? res.data.mesg : ' Finacial details saved Successfully')
                     this.toggle(0, '4')
                     this.getSalaryComponentByEmployeeId();
                     this.renderActionForState(this.state.employeeid)
                 }
             }).catch((err) => {
 
-                this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+                this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Finacial details saved Unuccessfully')
             })
         }else{
             this.props.detailEmployeeBankAction.updateEmployeeBank(formData).then((res) => {
                 if (res.status === 200) {
-                    this.props.commonActions.tostifyAlert('success', 'Employee Updated Successfully!')
+                    this.props.commonActions.tostifyAlert('success', res.data ? res.data.mesg : 'Employee Updated Successfully!')
                     this.toggle(0, '4')
                     this.getSalaryComponentByEmployeeId();
                     this.renderActionForState(this.state.employeeid)
                 }
             }).catch((err) => {
-                this.props.commonActions.tostifyAlert('error', err.data.message)
+                this.props.commonActions.tostifyAlert('error',  err.data.message ? err.data.message :'Updated Unssccessfully')
             })
         }
       
@@ -554,24 +552,23 @@ existForAccountNumber = (value) => {
             .then((res) => {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(
-                        'success',
-                        ' Employment details saved Successfully')
+                        'success', res.data ? res.data.mesg : 'Employment details saved Successfully')
                     this.toggle(0, '3')
                     this.renderActionForState(this.state.employeeid)
                 }
             }).catch((err) => {
 
-                this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+                this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Employment details saved Unsuccessfully')
             })
         }else{
             this.props.detailEmployeeEmployementAction.updateEmployment(formData).then((res) => {
                 if (res.status === 200) {
-                    this.props.commonActions.tostifyAlert('success', 'Employee Updated Successfully!')
+                    this.props.commonActions.tostifyAlert('success', res.data ? res.data.mesg : 'Employee Updated Successfully!')
                     this.toggle(0, '3')
                     this.renderActionForState(this.state.employeeid)
                 }
             }).catch((err) => {
-                this.props.commonActions.tostifyAlert('error', err.data.message)
+                this.props.commonActions.tostifyAlert('error',  err.data.message ? err.data.message :'Created Unssccessfully')
             })
         }
 
@@ -715,8 +712,7 @@ existForAccountNumber = (value) => {
             .then((res) => {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(
-                        'success',
-                        'Basic Details Saved Successfully')
+                        'success', res.data ? res.data.mesg : 'Basic Details Saved Successfully')
                     this.setState({
                         employeeid: res.data,
 
@@ -741,12 +737,12 @@ existForAccountNumber = (value) => {
         else{
             this.props.detailEmployeePersonalAction.updateEmployeePersonal(formData).then((res) => {
                 if (res.status === 200) {
-                    this.props.commonActions.tostifyAlert('success', 'Employee Updated Successfully!')
+                    this.props.commonActions.tostifyAlert('success', res.data ? res.data.message : 'Employee Updated Successfully!')
                     this.toggle(0, '2')
                     this.renderActionForState(this.state.employeeid)
                 }
             }).catch((err) => {
-                this.props.commonActions.tostifyAlert('error', err.data.message)
+                this.props.commonActions.tostifyAlert('error',  err.data ? err.data.mesg : 'Employee Updated Unsuccessfully')
             })
         }
     }

@@ -193,11 +193,11 @@ handleChange = (evt) => {
         formData.append('salaryComponentString', JSON.stringify(this.state.list));
         this.props.detailSalaryComponentAction.updateEmployeeBank(formData).then((res) => {
             if (res.status === 200) {
-                this.props.commonActions.tostifyAlert('success', 'Employee Updated Successfully!')
+                this.props.commonActions.tostifyAlert('success', res.data ? res.data.message :'Employee Updated Successfully!')
                 this.props.history.push('/admin/master/employee')
             }
         }).catch((err) => {
-            this.props.commonActions.tostifyAlert('error', err.data.message)
+            this.props.commonActions.tostifyAlert('error', err.data.message ? err.data.message :'Updated Unsuccessfully')
         })
     }
 

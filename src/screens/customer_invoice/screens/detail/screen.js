@@ -822,7 +822,7 @@ min="0"
 		const { term } = this.state;
 		const val = term.split('_');
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
-		debugger
+		
 		const values = value
 			? value
 			: props.values.invoiceDate1
@@ -870,7 +870,7 @@ min="0"
 			discountType,
 			discountPercentage,
 		} = data;
-debugger
+
 		let formData = new FormData();
 		formData.append('type', 2);
 		formData.append('invoiceId', current_customer_id);
@@ -937,8 +937,9 @@ debugger
 		if (currencyCode ) {
 			formData.append('currencyCode', currencyCode);
 		}
-		if (placeOfSupplyId && placeOfSupplyId.value) {
-			formData.append('placeOfSupplyId', placeOfSupplyId.value);
+		
+		if (placeOfSupplyId) {
+			formData.append('placeOfSupplyId', placeOfSupplyId.value ?placeOfSupplyId.value :placeOfSupplyId);
 		}
 		if (project) {
 			formData.append('projectId', project);
@@ -1188,6 +1189,14 @@ debugger
 														if (param === true) {
 															errors.discount =
 																'Discount amount Cannot be greater than Invoice Total Amount';
+														}
+														if (values.placeOfSupplyId && values.placeOfSupplyId.label &&( values.placeOfSupplyId.label === "Select Place of Supply"))
+														 {
+															errors.placeOfSupplyId ='Place of supply is Required';
+														}else
+														if (values.placeOfSupplyId === "")
+														 {
+															errors.placeOfSupplyId ='Place of supply is Required';
 														}
 														return errors;
 													}}

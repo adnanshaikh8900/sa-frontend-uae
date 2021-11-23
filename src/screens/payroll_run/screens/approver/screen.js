@@ -254,16 +254,45 @@ class PayrollApproverScreen extends React.Component {
 			})
 
 	}
-
+	renderStatus = (status) => {
+		let classname = '';
+		
+		if (status === 'Approved') {
+			classname = 'label-success';
+		}if (status === 'Paid') {
+			classname = 'label-sent';
+		 } else
+		 if (status === 'UnPaid') {
+			classname = 'label-closed';
+		 } else  if (status === 'Draft') {
+			classname = 'label-currency';
+		} else if (status === 'Paid') {
+			classname = 'label-approved';
+		}else if (status === 'Rejected') {
+			classname = 'label-due';
+		}  if (status === 'Submitted') {
+			classname = 'label-sent';
+		}else if (status === 'Partially Paid') {
+			classname = 'label-PartiallyPaid';
+		}
+		// else {
+		// 	classname = 'label-overdue';
+		// }
+		return (
+			<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
+				{status}
+			</span>
+		);
+	};
 	generateSifFile= () => {
 		this.props.createPayrollActions
 			.generateSifFile(this.state.payroll_id,this.state.existEmpList)
 			.then((res) => {
 				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert('success', 'SIF File generated Successfully')
+					this.props.commonActions.tostifyAlert('success', 'SIF File Downloaded Successfully')
 				}
 			}).catch((err) => {
-				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+				this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'File Already Opened please close file')
 			})
 	}
 
@@ -477,6 +506,29 @@ class PayrollApproverScreen extends React.Component {
 					Remove Employees
 				</Button>
 			</Col> */}
+			<Col>		
+			<Label> Status : <span style={{fontSize: "larger"}}>  {this.renderStatus(this.state.status)}</span></Label>					
+			</Col>
+			<Col>
+			{this.state.status && (this.state.status==="Approved") ? 
+																(
+																	<Button
+																	type="button"
+																	color="primary"
+																	className="btn-square mb-3 pull-right "
+																	onClick={() =>
+																	{	
+																		// this.exportExcelFile()
+																		this.generateSifFile()}
+																	}
+																>
+																	<i class="fas fa-file-invoice-dollar"></i>
+																	{"  "}Download SIF file
+																</Button>
+																)	:
+																	""	
+																	}
+																	</Col>
 
 				</Row>
 				<div >
@@ -1053,21 +1105,7 @@ class PayrollApproverScreen extends React.Component {
 																<Col>
 																<ButtonGroup className="mt-5 pull-right ">
 																{this.state.status && (this.state.status==="Approved" || this.state.status==="Rejected") ? 
-																(
-																	<Button
-																	type="button"
-																	color="primary"
-																	className="btn-square mt-5 pull-right "
-																	onClick={() =>
-																	{	
-																		// this.exportExcelFile()
-																		this.generateSifFile()}
-																	}
-																>
-																	<i class="fas fa-file-invoice-dollar"></i>
-																	{"  "}SIF File
-																</Button>
-																)	:
+																""	:
 																	(
 																		<Button
 																		type="button"

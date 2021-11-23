@@ -526,6 +526,37 @@ class UpdatePayroll extends React.Component {
 		return data
 		
 	}
+
+	renderStatus = (status) => {
+		let classname = '';
+		
+		if (status === 'Approved') {
+			classname = 'label-success';
+		}if (status === 'Paid') {
+			classname = 'label-sent';
+		 } else
+		 if (status === 'UnPaid') {
+			classname = 'label-closed';
+		 } else  if (status === 'Draft') {
+			classname = 'label-currency';
+		} else if (status === 'Paid') {
+			classname = 'label-approved';
+		}else if (status === 'Rejected') {
+			classname = 'label-due';
+		}  if (status === 'Submitted') {
+			classname = 'label-sent';
+		}else if (status === 'Partially Paid') {
+			classname = 'label-PartiallyPaid';
+		}
+		// else {
+		// 	classname = 'label-overdue';
+		// }
+		return (
+			<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
+				{status}
+			</span>
+		);
+	};
 	getPayrollEmployeeList = () => {
 		const 	selectRowProp= {
 			mode: 'checkbox',
@@ -1088,7 +1119,9 @@ class UpdatePayroll extends React.Component {
 																	</Col>
 																</Row>
 																<Row>
-								
+																	<Col>		
+																				<Label> Status : <span style={{fontSize: "larger"}}>  {this.renderStatus(this.state.status)}</span></Label>					
+																	</Col>
 																</Row>
 																<hr/>
 																<Row>

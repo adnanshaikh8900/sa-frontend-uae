@@ -366,7 +366,7 @@ class PayrollSummaryReport extends React.Component {
 												: ''}
 											</h2>	
 											<br style={{ marginBottom: '5px' }} />
-											<b style ={{ fontSize: '18px'}}>{strings.Payroll+" "+strings.Summary}</b>
+											<b style ={{ fontSize: '18px'}}>{strings.Payroll+"s  "+strings.Summary}</b>
 											<br style={{ marginBottom: '5px' }} />
 											{strings.From } {initValue.startDate} {strings.To } {initValue.endDate}
 											

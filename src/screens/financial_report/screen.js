@@ -301,10 +301,10 @@ class FinancialReport extends React.Component {
 											className="ml-2 mr-2 mt-2 mb-2 "
 											src={Vat}
 											style={{height:'25px'}}
-											></img>	<h5 className="mb-3 mt-2">{strings.Payroll +" "+strings.Report}</h5></div>
+											></img>	<h5 className="mb-3 mt-2">{strings.Payroll +"s"}</h5></div>
 											<div className="mt-2 ml-4">
 											<h6><a  style={{fontWeight:'400'}} href="#" onClick={() =>
-											this.props.history.push('/admin/report/payroll-summary')}>{strings.Payroll+" "+strings.Summary}</a></h6>	
+											this.props.history.push('/admin/report/payroll-summary')}>{strings.Payroll+"s  "+strings.Summary}</a></h6>	
 									</div>
 									</Col>
 									<Col  className="report-section ml-4">

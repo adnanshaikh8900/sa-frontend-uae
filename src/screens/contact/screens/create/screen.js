@@ -99,6 +99,7 @@ class CreateContact extends React.Component {
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExAddress = /^[a-zA-Z0-9\s,'-/]+$/;
+		this.regExAlpha1 = /^[a-zA-Z0-9!@#$&()-\\`.+,/\"]+$/;
 		
 		this.formRef = React.createRef();
 	}
@@ -572,7 +573,7 @@ class CreateContact extends React.Component {
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regExAlpha.test(
+																				this.regExAlpha1.test(
 																					option.target.value,
 																				)
 																			) {

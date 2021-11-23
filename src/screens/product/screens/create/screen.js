@@ -290,7 +290,7 @@ try {
 			.then((res) => {
 				this.setState({ disabled: false });
 				if (res.status === 200) {
-					this.setState({ disabled: false });
+					// this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
 						'success',
 						res.data ? res.data.message : 'Product Created Successfully'

@@ -96,6 +96,7 @@ class DetailExpense extends React.Component {
 		this.regExAlpha = /^[a-zA-Z]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
+		this.regExAlpha1 = /^[a-zA-Z0-9!@#$&()-\\`.+,/\"]+$/;
 
 		this.supported_format = [
 			'image/png',
@@ -1126,11 +1127,18 @@ class DetailExpense extends React.Component {
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					placeholder={strings.Enter+strings.ReceiptNumber}
-																					onChange={(option) =>
-																						props.handleChange('receiptNumber')(
-																							option,
-																						)
-																					}
+																					onChange={(option) => {
+																						if (
+																							option.target.value === '' ||
+																							this.regExAlpha1.test(
+																								option.target.value,
+																							)
+																						) {
+																							props.handleChange('receiptNumber')(
+																								option,
+																							);
+																						}
+																					}}
 																					value={props.values.receiptNumber}
 																				/>
 																			</FormGroup>

@@ -17,7 +17,7 @@ export const getExpenseList = (obj) => {
 	return (dispatch) => {
 		let param = `/rest/expense/getList?payee=${payee}&transactionCategoryId=${transactionCategoryId}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`;
 		if (expenseDate) {
-			let date = moment(expenseDate).format('DD-MM-YYYY');
+			let date = moment(expenseDate).format('YYYY-MM-DD');
 			param = param + `&expenseDate=${date}`;
 		}
 		let data = {

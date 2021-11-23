@@ -36,6 +36,7 @@ const mapStateToProps = (state) => {
 		vendor_list: state.bank_account.vendor_list,
 		vat_list: state.bank_account.vat_list,
 		currency_convert_list: state.currencyConvert.currency_convert_list,
+		UnPaidPayrolls_List:state.bank_account.UnPaidPayrolls_List
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -82,7 +83,8 @@ class ExplainTrasactionDetail extends React.Component {
 			customer_invoice_list_state: [],
 			supplier_invoice_list_state: [],
 			moneyCategoryList:[],
-			count:0
+			count:0,
+			payrollListIds:'',
 		};
 
 		this.file_size = 1024000;
@@ -103,6 +105,7 @@ class ExplainTrasactionDetail extends React.Component {
 
 	componentDidMount = () => {
 		if (this.props.selectedData) {
+			this.props.transactionDetailActions.getUnPaidPayrollsList();
 			this.initializeData();
 		}
 	};
@@ -165,6 +168,7 @@ class ExplainTrasactionDetail extends React.Component {
 							invoiceError: '',
 							expenseCategory: res.data.expenseCategory,
 							currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
+							payrollListIds:res.data.payrollDropdownList?res.data.payrollDropdownList:[],
 						},
 						unexplainValue: {
 							bankId: bankId,
@@ -464,6 +468,7 @@ class ExplainTrasactionDetail extends React.Component {
 			// userId,
 			transactionId,
 			expenseCategory,
+			payrollListIds,
 		} = data;
 
 
@@ -477,6 +482,17 @@ class ExplainTrasactionDetail extends React.Component {
 				type: o.type,
 			}));
 		}
+
+		if (
+			payrollListIds &&
+			expenseCategory &&
+			expenseCategory === 34
+		 ) {
+			var result1 = payrollListIds.map((o) => ({
+			   payrollId: o.value,
+			}));
+			console.log(result1);
+		 }
 		let id;
 		if (coaCategoryId && coaCategoryId.value === 100) {
 			id = 10;
@@ -579,7 +595,17 @@ class ExplainTrasactionDetail extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachment', this.uploadFile.files[0]);
 		}
-
+		if (
+			payrollListIds &&
+			expenseCategory &&
+			expenseCategory === 34
+		 ) {
+			
+			formData.append(
+			   'payrollListIds',
+			   payrollListIds ? JSON.stringify(result1) : '',
+			);
+		 }
 		this.props.transactionDetailActions
 			.updateTransaction(formData)
 			.then((res) => {
@@ -622,7 +648,44 @@ class ExplainTrasactionDetail extends React.Component {
 			),
 		});
 	};
-
+	payrollList = (option) => {
+		this.setState({
+		   initValue: {
+			  ...this.state.initValue,
+			  ...{
+				 payrollListIds: option,
+			  },
+		   },
+		});
+		this.formRef.current.setFieldValue('payrollListIds', option, true);
+	 };
+	 getPayrollList=(UnPaidPayrolls_List,props)=>{   
+		return(<Col lg={3}>
+		   <FormGroup className="mb-3">
+			  <Label htmlFor="payrollListIds">
+				 Payolls
+			  </Label>
+			  <Select
+				 styles={customStyles}
+				 isMulti
+				 value={props.values.payrollListIds}
+				 className="select-default-width"
+				 options={
+					UnPaidPayrolls_List &&
+					UnPaidPayrolls_List
+					   ? UnPaidPayrolls_List
+					   : []
+				 }
+				 id="payrollListIds"
+				 onChange={(option) => {
+					props.handleChange('payrollListIds')(
+					   option,
+					);
+					this.payrollList(option);
+				 }}/>
+		   </FormGroup>
+		</Col>);
+	 }
 	UnexplainTransaction = (id) => {
 		let formData = new FormData();
 		for (var key in this.state.unexplainValue) {
@@ -790,6 +853,7 @@ class ExplainTrasactionDetail extends React.Component {
 			vendor_list,
 			vat_list,
 			currency_convert_list,
+			UnPaidPayrolls_List,
 		} = this.props;
 
 		let tmpSupplier_list = []
@@ -1201,9 +1265,14 @@ min="0"
 																						)}
 																				</FormGroup>
 																			</Col>
+																		
+																			{props.values.expenseCategory  && props.values.expenseCategory==34 &&
+																				(
+																				this.getPayrollList(UnPaidPayrolls_List,props)
+																				)}
 																			{props.values.coaCategoryId &&
 																				props.values.coaCategoryId.label ===
-																				'Expense' && (
+																				'Expense' &&  props.values.expenseCategory !==34 &&(
 																					<Col lg={3}>
 																						<FormGroup className="mb-3">
 																							<Label htmlFor="vatId">{strings.Vat}</Label>

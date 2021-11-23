@@ -465,7 +465,30 @@ export const changeTransaction = (obj) => {
 			});
 	};
 };
-
+export const getUnPaidPayrollsList = () => {
+	console.log("getUnPaidPayrollsList");
+	return (dispatch) => {
+	   let data = {
+		  method: 'get',
+		  url: `/rest/payroll/getUnpaidPayrollList`,
+	   };
+	   return authApi(data)
+		  .then((res) => {
+			 if (res.status === 200) {
+				dispatch({
+				   type: BANK_ACCOUNT.UNPAID_PAYROLLS,
+				   payload: {
+					  data: res.data,
+				   },
+				});
+				return res;
+			 }
+		  })
+		  .catch((err) => {
+			 throw err;
+		  });
+	};
+ };
 // data: [{
 //   transaction_type: 'Debit',
 //   amount: 3453246,

@@ -905,9 +905,12 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																				)
 																		}
 																		onChange={(option) => {
+																			if(option.label!=="Select currency")
+																			{
 																			props.handleChange('currency')(option);
 																			this.setExchange(option.value);
 																			this.setCurrency(option.value);
+																		     }
 																		   }}
 																		// className={
 																		// 	props.errors.currency &&

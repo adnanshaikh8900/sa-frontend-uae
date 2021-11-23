@@ -770,7 +770,7 @@ min="0"
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Journal Deleted Successfully',
+						res.data ? res.data.message :'Journal Deleted Successfully',
 					);
 					this.props.history.push('/admin/accountant/journal');
 				}
@@ -778,7 +778,7 @@ min="0"
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Journal Deleted Unsuccessfully',
 				);
 			});
 	};
@@ -835,7 +835,7 @@ min="0"
 							this.setState({ disabled2: false });
 						this.props.commonActions.tostifyAlert(
 							'success',
-							'Journal Updated Successfully',
+							res.data ? res.data.message :'Journal Updated Successfully',
 						);
 						this.props.history.push('/admin/accountant/journal');
 					}
@@ -843,7 +843,7 @@ min="0"
 				.catch((err) => {
 					this.props.commonActions.tostifyAlert(
 						'error',
-						err && err.data ? err.data.message : 'Something Went Wrong',
+						err.data ? err.data.message : 'Journal Updated Unsuccessfully'
 					);
 				});
 		}

@@ -1365,6 +1365,10 @@ min="0"
 														errors.invoice_number =
 															'Invoice Number already exists';
 													}
+													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
+													{
+                                                        errors.placeOfSupplyId ='Place of supply is Required';
+                                                   }
 													if (param === true) {
 														errors.discount =
 															'Discount amount Cannot be greater than Invoice Total Amount';

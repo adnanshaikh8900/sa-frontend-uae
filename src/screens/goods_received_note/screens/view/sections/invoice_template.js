@@ -231,7 +231,7 @@ class RFQTemplate extends Component {
 						
 
 								<h6 className="mb-0 pt-2">
-									<b>{strings.Notes }:</b>
+									<b>{strings.GRNREMARKS }:</b>
 								</h6>
 								<h6 className="mb-0">{RFQData.notes}</h6>
 						

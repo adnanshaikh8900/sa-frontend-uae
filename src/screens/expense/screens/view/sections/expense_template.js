@@ -131,8 +131,12 @@ class ExpenseTemplate extends Component {
 	</tr>
 
 	<tr>      <td className="ml-3" style={{width:'245px'}}>	<b>{strings.PostedDate }</b> : </td> 
-	          <td>{moment(expenseData.lastUpdateDate).format('DD/MM/YYYY')}</td>
-	</tr>
+	          <td>
+			  {expenseData.expenseStatus === "Posted" ?    
+				  moment(expenseData.lastUpdateDate).format('DD/MM/YYYY')
+				  :"-"}</td>
+	</tr> 
+ 
 </tbody>
 </Table>
                                   

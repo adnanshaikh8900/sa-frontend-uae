@@ -297,6 +297,24 @@ class PayrollRun extends React.Component {
 	renderRunDate = (cell, row) => {
 		return row.runDate ? moment(row.runDate).format('DD/MM/YYYY') : '-';
 	};
+	renderPayrolltotalAmount= (cell, row) => {
+		return (
+			<div style={{fontSize:"11px"}}>
+				<div>
+					<label className="font-weight-bold mr-2 ">{strings.Payroll +" "+strings.Amount}: </label>
+					<label>
+						{row.totalAmountPayroll === 0 ?  "AED "+ row.totalAmountPayroll.toLocaleString(navigator.language, { minimumFractionDigits: 2 }): "AED "+ row.totalAmountPayroll.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+					
+					</label>
+				</div>
+				
+				<div style={{ display: row.dueAmountPayroll === 0 ? 'none' : '' }}>
+					<label className="font-weight-bold mr-2">{strings.DueAmount} : </label>
+					<label>{row.dueAmountPayroll === 0 ? row.dueAmountPayroll +" "+ row.dueAmountPayroll.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : "AED "+ row.dueAmountPayroll.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
+				</div>
+
+			</div>);
+	};
 	renderEmployeeCount = (cell, row) => {
 		let employeeCount= row.employeeCount ? row.employeeCount : '-'
 		return (<div className="text-center">{employeeCount}</div>);
@@ -369,7 +387,12 @@ class PayrollRun extends React.Component {
 		
 		if (row.status === 'Approved') {
 			classname = 'label-success';
-		} else if (row.status === 'Draft') {
+		}if (row.status === 'Paid') {
+			classname = 'label-sent';
+		 } else
+		 if (row.status === 'UnPaid') {
+			classname = 'label-closed';
+		 } else  if (row.status === 'Draft') {
 			classname = 'label-currency';
 		} else if (row.status === 'Paid') {
 			classname = 'label-approved';
@@ -377,6 +400,8 @@ class PayrollRun extends React.Component {
 			classname = 'label-due';
 		}  if (row.status === 'Submitted') {
 			classname = 'label-sent';
+		}else if (row.status === 'Partially Paid') {
+			classname = 'label-PartiallyPaid';
 		}
 		// else {
 		// 	classname = 'label-overdue';
@@ -705,6 +730,7 @@ class PayrollRun extends React.Component {
 												</Row>
 												<div >
 													<BootstrapTable
+													
 														//  selectRow={this.selectRowProp}
 														search={false}
 														options={this.options}
@@ -786,6 +812,16 @@ class PayrollRun extends React.Component {
 															dataFormat={this.renderRunDate}
 														>
 															Run Date
+														</TableHeaderColumn>
+														<TableHeaderColumn
+													    	dataAlign="right"
+															className="table-header-bg"
+															dataField="totalAmountPayroll"
+															dataSort
+															width="15%"
+															dataFormat={this.renderPayrolltotalAmount}
+														>
+															Amount
 														</TableHeaderColumn>
 														<TableHeaderColumn
 															className="table-header-bg"

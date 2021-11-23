@@ -45,6 +45,8 @@ const mapStateToProps = (state) => {
 		vendor_list: state.bank_account.vendor_list,
 		vat_list: state.bank_account.vat_list,
 		currency_convert_list: state.currencyConvert.currency_convert_list,
+		UnPaidPayrolls_List:state.bank_account.UnPaidPayrolls_List
+
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -96,6 +98,7 @@ class CreateBankTransaction extends React.Component {
 				attachment: '',
 				customerId: '',
 				invoiceIdList: '',
+				payrollListIds:'',
 				vatId: '',
 				vendorId: '',
 				employeeId: '',
@@ -191,6 +194,7 @@ class CreateBankTransaction extends React.Component {
 	}
 
 	componentDidMount = () => {
+		this.props.transactionActions.getUnPaidPayrollsList();
 		this.initializeData();
 	};
 
@@ -271,6 +275,7 @@ class CreateBankTransaction extends React.Component {
 			coaCategoryId,
 			transactionCategoryId,
 			invoiceIdList,
+			payrollListIds,
 			reference,
 			exchangeRate,
 			customerId,
@@ -292,6 +297,16 @@ class CreateBankTransaction extends React.Component {
 			}));
 			console.log(result);
 		}
+		if (
+			payrollListIds &&
+			expenseCategory.value &&
+			expenseCategory.label === 'Salaries and Employee Wages'
+		 ) {
+			var result1 = payrollListIds.map((o) => ({
+			   payrollId: o.value,
+			}));
+			console.log(result1);
+		 }
 		let formData = new FormData();
 		formData.append('bankId ', bankAccountId ? bankAccountId : '');
 		formData.append(
@@ -357,6 +372,17 @@ class CreateBankTransaction extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
+		if (
+			payrollListIds &&
+			expenseCategory.value &&
+			expenseCategory.label === 'Salaries and Employee Wages'
+		 ) {
+			
+			formData.append(
+			   'payrollListIds',
+			   payrollListIds ? JSON.stringify(result1) : '',
+			);
+		 }
 		this.props.transactionCreateActions
 			.createTransaction(formData)
 			.then((res) => {
@@ -462,6 +488,47 @@ class CreateBankTransaction extends React.Component {
 		});
 		this.formRef.current.setFieldValue('invoiceIdList', option, true);
 	};
+	payrollList = (option) => {
+		this.setState({
+		   initValue: {
+			  ...this.state.initValue,
+			  ...{
+				 payrollListIds: option,
+			  },
+		   },
+		});
+		this.formRef.current.setFieldValue('payrollListIds', option, true);
+	 };
+	 getPayrollList=(UnPaidPayrolls_List,props)=>{
+   
+		return(<Col lg={3}>
+		   <FormGroup className="mb-3">
+			  <Label htmlFor="payrollListIds">
+				 Payolls
+			  </Label>
+			  <Select
+				 styles={customStyles}
+				 isMulti
+				 className="select-default-width"
+				 options={
+					UnPaidPayrolls_List &&
+					UnPaidPayrolls_List
+					   ? UnPaidPayrolls_List
+					   : []
+				 }
+				 // options={
+				 //     invoice_list ? invoice_list.data : []
+				 // }
+				 id="payrollListIds"
+				 onChange={(option) => {
+					props.handleChange('payrollListIds')(
+					   option,
+					);
+					this.payrollList(option);
+				 }}/>
+		   </FormGroup>
+		</Col>);
+	 }
 	getCompanyCurrency = (basecurrency) => {
 		this.props.currencyConvertActions
 			.getCompanyCurrency()
@@ -572,6 +639,7 @@ class CreateBankTransaction extends React.Component {
 			vendor_list,
 			vat_list,
 			currency_convert_list,
+			UnPaidPayrolls_List,
 		} = this.props;
 		return (
 			<div className="create-bank-transaction-screen">
@@ -867,9 +935,13 @@ min="0"
 																				)}
 																		</FormGroup>
 																	</Col>
+																	{props.values.expenseCategory && props.values.expenseCategory.value && props.values.expenseCategory.value==34 &&
+																		(
+																		this.getPayrollList(UnPaidPayrolls_List,props)
+																		)}
 																	{props.values.coaCategoryId &&
 																		props.values.coaCategoryId.label ===
-																			'Expense' && (
+																			'Expense'  && props.values.expenseCategory && props.values.expenseCategory.value !==34 && (
 																			<Col lg={3}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="vatId">Vat</Label>

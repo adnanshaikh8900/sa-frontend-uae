@@ -1152,16 +1152,24 @@ existForAccountNumber = (value) => {
                                                                                     errors.emergencyContactNumber2 =
                                                                                     'Invalid mobile number';
                                                                             }
+                                                                            if (values.gender && values.gender.label && values.gender.label === "Select Gender") {
+                                                                                errors.gender =
+                                                                                'Gender is Required';
+                                                                            }
+                                                                            if (values.employeeDesignationId && values.employeeDesignationId.label && values.employeeDesignationId.label === "Select Employee Designation") {
+                                                                                errors.employeeDesignationId =
+                                                                                'Designation is Required';
+                                                                            }
                                                                                 
                                                                             
                                                                             // if( values.stateId ===''){
                                                                             //     errors.stateId =
                                                                             //     'State is Required';
                                                                             // }
-                                                                            // if( values.stateId.label && values.stateId.label ==='Select State'){
-                                                                            //     errors.stateId =
-                                                                            //     'State is Required';
-                                                                            // }
+                                                                            if( values.stateId.label && values.stateId.label ==='Select State'){
+                                                                                errors.stateId =
+                                                                                'State is Required';
+                                                                            }
                                                                             
                                                                             // if (param === true) {
                                                                             // 	errors.discount =

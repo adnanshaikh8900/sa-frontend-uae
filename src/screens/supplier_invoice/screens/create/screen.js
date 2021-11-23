@@ -1369,6 +1369,9 @@ min="0"
 													{
                                                         errors.placeOfSupplyId ='Place of supply is Required';
                                                    }
+												   if (values.term && values.term.label && values.term.label === "Select Terms") {
+													errors.term ='Term is Required';
+												}
 													if (param === true) {
 														errors.discount =
 															'Discount amount Cannot be greater than Invoice Total Amount';

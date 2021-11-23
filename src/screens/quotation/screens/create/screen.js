@@ -1237,7 +1237,7 @@ min="0"
 																	.required('Value is Required')
 																	.test(
 																		'quantity',
-																		'Quantity field is required and should not be 0',
+																		'Quantity should be greater than 0',
 																		(value) => {
 																			if (value > 0) {
 																				return true;

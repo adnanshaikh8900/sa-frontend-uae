@@ -1309,7 +1309,11 @@ class CreateCustomerInvoice extends React.Component {
 														errors.placeOfSupplyId =
 														'Place of supply is Required';
 													}
-													return errors;
+													if (values.term && values.term.label && values.term.label === "Select Terms") {
+														errors.term =
+														'Term is Required';
+													}
+														return errors;
 												}}
 												validationSchema={Yup.object().shape({
 													invoice_number: Yup.string().required(

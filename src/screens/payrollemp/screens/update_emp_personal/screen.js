@@ -433,6 +433,11 @@ class UpdateEmployeePersonal extends React.Component {
                                                                 errors.emergencyContactNumber2 =
                                                                 'Invalid mobile number';
                                                                 }
+                                                            
+                                                            if (values.employeeDesignationId && values.employeeDesignationId.label && values.employeeDesignationId.label === "Select Employee Designation") {
+                                                                    errors.employeeDesignationId =
+                                                                    'Designation is Required';
+                                                                }
 
 														return errors;
 													}}

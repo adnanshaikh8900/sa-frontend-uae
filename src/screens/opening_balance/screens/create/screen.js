@@ -180,6 +180,10 @@ class CreateOpeningBalance extends React.Component {
 														errors.openingBalance =
 															'Amount is  required';
 													}
+													if (values.transactionCategoryId && values.transactionCategoryId.label && values.transactionCategoryId.label === "Select Transaction Category") {
+														errors.transactionCategoryId =
+														'Transaction Category is Required';
+													}
 													return errors;
 												}}
 											>

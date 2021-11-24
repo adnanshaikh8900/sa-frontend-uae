@@ -398,7 +398,7 @@ existForAccountNumber = (value) => {
             .then((res) => {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(
-                        'success', 
+                        'success',
                         ' Finacial details saved Successfully'
                         )
                     this.getSalaryComponentByEmployeeId();
@@ -714,7 +714,7 @@ existForAccountNumber = (value) => {
             .then((res) => {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(
-                        'success', 
+                        'success',
                         'Basic Details Saved Successfully'
                         )
                     this.setState({
@@ -750,7 +750,7 @@ existForAccountNumber = (value) => {
                 }
             }).catch((err) => {
                 this.props.commonActions.tostifyAlert(
-                    'error',  
+                    'error',
                     err.data ? err.data.mesg : 'Employee Updated Unsuccessfully'
                 )
             })
@@ -2975,8 +2975,11 @@ existForAccountNumber = (value) => {
                                                                                             name="formula"
                                                                                             value={item.formula}
                                                                                             onChange={(option) => {
-                                                                                                if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
-                                                                                                this.updateSalary1(this.state.CTC,option.target.value,item.id);
+                                                                                                if (option.target.value === '' || this.regEx.test(option.target.value)) { 
+                                                                                                    props.handleChange('formula')(option)
+                                                                                                    this.updateSalary1(this.state.CTC,option.target.value,item.id); 
+                                                                                                }
+                                                                                               
     
                                                                                             }}        
                                                                                         />{item.description !== 'Basic SALARY' ? ( ' % of Basic') : ( ' % of CTC')}
@@ -3003,10 +3006,12 @@ existForAccountNumber = (value) => {
                                                                                             size="30"
                                                                                             style={{textAlign:"center"}}
                                                                                             onChange={(option) => {
-                                                                                                if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
-                                                                                                this.updateSalary1(this.state.CTC,undefined,item.id,option.target.value);
-    
-                                                                                            }}  
+                                                                                                if (option.target.value === '' || this.regEx.test(option.target.value)) 
+                                                                                                { 
+                                                                                                    props.handleChange('formula')(option)
+                                                                                                    this.updateSalary1(this.state.CTC,undefined,item.id,option.target.value);
+                                                                                                }
+                                                                                              }}  
                                                                                             value={item.flatAmount}
                                                                                             id='' />
                                                                                     </td>
@@ -3085,8 +3090,12 @@ existForAccountNumber = (value) => {
                                                                                             style={{textAlign:"center"}}
                                                                                             size="30"
                                                                                             onChange={(option) => {
-                                                                                                if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
-                                                                                                this.updateSalary1(this.state.CTC,option.target.value,item.id);
+                                                                                                if (option.target.value === '' || this.regEx.test(option.target.value))
+                                                                                                 {
+                                                                                                      props.handleChange('formula')(option)
+                                                                                                      this.updateSalary1(this.state.CTC,option.target.value,item.id);
+                                                                                                 }
+                                                                                                
     
                                                                                             }}   
                                                                                             value={item.formula}
@@ -3115,8 +3124,12 @@ existForAccountNumber = (value) => {
                                                                                             size="30"
                                                                                             style={{textAlign:"center"}}
                                                                                             onChange={(option) => {
-                                                                                                if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
-                                                                                                this.updateSalary1(this.state.CTC,undefined,item.id,option.target.value);
+                                                                                                if (option.target.value === '' || this.regEx.test(option.target.value)) 
+                                                                                                {
+                                                                                                     props.handleChange('formula')(option)
+                                                                                                     this.updateSalary1(this.state.CTC,undefined,item.id,option.target.value);
+                                                                                                }
+                                                                                             
     
                                                                                             }}  
                                                                                             value={item.flatAmount}
@@ -3201,8 +3214,12 @@ min="0"
                                                                                             className="text-center"
                                                                                             value={item.formula}
                                                                                             onChange={(option) => {
-                                                                                                if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
-                                                                                                this.updateSalary1(this.state.CTC,option.target.value,item.id);
+                                                                                                if (option.target.value === '' || this.regEx.test(option.target.value))
+                                                                                                 { 
+                                                                                                     props.handleChange('formula')(option) 
+                                                                                                     this.updateSalary1(this.state.CTC,option.target.value,item.id);
+                                                                                                 }
+                                                                                               
     
                                                                                             }}        
                                                                                         />{' '}% of Basic
@@ -3228,8 +3245,12 @@ min="0"
                                                                                             size="30"
                                                                                             style={{textAlign:"center"}}
                                                                                             onChange={(option) => {
-                                                                                                if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
-                                                                                                this.updateSalary1(this.state.CTC,undefined,item.id,option.target.value);
+                                                                                                if (option.target.value === '' || this.regEx.test(option.target.value))
+                                                                                                 {
+                                                                                                      props.handleChange('formula')(option)
+                                                                                                      this.updateSalary1(this.state.CTC,undefined,item.id,option.target.value); 
+                                                                                                 }
+                                                                                               
     
                                                                                             }}  
                                                                                             value={item.flatAmount}

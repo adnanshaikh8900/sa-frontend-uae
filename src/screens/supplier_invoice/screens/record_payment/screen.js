@@ -120,6 +120,7 @@ class RecordSupplierPayment extends React.Component {
 		this.regEx = /^[0-9\b]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
+		this.regExAlpha = /^[a-zA-Z0-9!@#$&()-\\`.+,/\"]+$/;
 
 		this.file_size = 1024000;
 		this.supported_format = [
@@ -719,7 +720,7 @@ class RecordSupplierPayment extends React.Component {
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||
-																							this.regExBoth.test(
+																							this.regExAlpha.test(
 																								option.target.value,
 																							)
 																						) {

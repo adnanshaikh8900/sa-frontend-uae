@@ -934,7 +934,7 @@ debugger
 		if (currencyCode ) {
 			formData.append('currencyCode', currencyCode);
 		}
-		if (placeOfSupplyId && placeOfSupplyId.value) {
+		if (placeOfSupplyId) {
 			formData.append('placeOfSupplyId', placeOfSupplyId.value);
 		}
 		if (project) {

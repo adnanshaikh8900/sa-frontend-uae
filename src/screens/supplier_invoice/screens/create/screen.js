@@ -202,6 +202,7 @@ class CreateSupplierInvoice extends React.Component {
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 		this.regDec1=/^\d{1,2}\.\d{1,2}$|^\d{1,2}$/;
+		this.regExAlpha = /^[a-zA-Z0-9!@#$&()-\\`.+,/\"]+$/;
 	}
 
 	renderProductName = (cell, row) => {
@@ -2092,7 +2093,7 @@ min="0"
 																					onChange={(option) => {
 																						if (
 																							option.target.value === '' ||
-																							this.regExBoth.test(
+																							this.regExAlpha.test(
 																								option.target.value,
 																							)
 																						) {

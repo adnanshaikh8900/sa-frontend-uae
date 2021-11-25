@@ -226,7 +226,7 @@ class SalaryComponentVariable extends React.Component {
 									}
 						}
 						else if(this.state.selectDisable===true){
-							   errors.id="Component already exists"
+							   errors.id="Component is required"
 						}
 							return errors;
 						}}

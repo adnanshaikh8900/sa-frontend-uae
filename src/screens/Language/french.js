@@ -681,6 +681,7 @@ FlatAmount:"Montant Forfaitaire",
 CreateFixedComponent:"Créer Composant Fixe",	
 CreateVariableComponent:"Créer Composant Variable",	
 SalaryComponent:"Composante Salariale",
+AddNewComponent:"Ajouter un nouveau composant",
 
 SalaryStructure:"Structure Salariale",		
 SALARYSTRUCTURETYPE:"TYPE DE STRUCTURE SALARIALE",		

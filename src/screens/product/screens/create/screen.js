@@ -1695,6 +1695,7 @@ min="0"
 																			type="button"
 																			color="primary"
 																			className="btn-square mr-3"
+																			disabled={this.state.disabled}
 																			onClick={() => {
 																				this.setState(
 																					{ createMore: false },

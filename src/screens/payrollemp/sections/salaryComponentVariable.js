@@ -225,7 +225,7 @@ class SalaryComponentVariable extends React.Component {
 										errors.flatAmount="Flat Amount is required"
 									}
 						}
-						else if(this.state.selectDisable===true){
+						else if(this.state.selectDisable===true && (!values.id || values.id.label== "Select Type") ){
 							   errors.id="Component is required"
 						}
 							return errors;

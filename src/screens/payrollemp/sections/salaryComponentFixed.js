@@ -206,7 +206,7 @@ class SalaryComponentFixed extends React.Component {
 										errors.flatAmount="Flat Amount is required"
 									}
 						}
-						else if(this.state.selectDisable===true){
+						else if(this.state.selectDisable===true && (!values.id || values.id.label== "Select description")){
 							   errors.id="Component is required"
 						}
 							return errors;

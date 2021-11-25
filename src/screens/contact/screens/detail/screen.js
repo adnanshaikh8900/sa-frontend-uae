@@ -287,7 +287,7 @@ class DetailContact extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data ? res.data.message : 'Contact Deleted Successfully',
+						'Contact Deleted Successfully',
 					);
 					
 					this.props.history.push('/admin/master/contact');
@@ -296,7 +296,7 @@ class DetailContact extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data ? err.data.message : 'Contact Deleted Unsuccessfully',
+					'Contact Deleted Unsuccessfully',
 				);
 			});
 	};

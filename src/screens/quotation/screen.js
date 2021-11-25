@@ -655,14 +655,14 @@ class Quatation extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data ? res.data.message : 'Deleted Successfully'
+					res.data ? res.data.message : 'Quotation Deleted Successfully'
 				);
 				this.initializeData();
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data ? err.data.message : 'Deleted Unsuccessfully'
+					err.data ? err.data.message : 'Quotation Deleted Unsuccessfully'
 				);
 			});
 	};

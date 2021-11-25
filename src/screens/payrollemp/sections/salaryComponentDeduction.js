@@ -225,7 +225,7 @@ class SalaryComponentDeduction extends React.Component {
 									}
 						}
 						else if(this.state.selectDisable===true){
-							   errors.id="Component is required"
+							   errors.id="Component already exists"
 						}
 							return errors;
 						}}

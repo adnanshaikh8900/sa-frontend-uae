@@ -399,7 +399,7 @@ existForAccountNumber = (value) => {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(
                         'success',
-                        ' Finacial details saved Successfully'
+                        ' New Employee Created Successfully'
                         )
                     this.getSalaryComponentByEmployeeId();
                     // this.props.history.push('/admin/payroll/employee');
@@ -407,7 +407,7 @@ existForAccountNumber = (value) => {
                 }
             }).catch((err) => {
 
-                this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Finacial details saved Unsuccessfully')
+                this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'New Employee Created Unsuccessfully')
             })
     }
     removeComponent=(ComponentId)=>{
@@ -715,7 +715,7 @@ existForAccountNumber = (value) => {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(
                         'success',
-                        'Basic Details Saved Successfully'
+                        'Employee Basic Details Saved Successfully'
                         )
                     this.setState({
                         employeeid: res.data,
@@ -730,7 +730,7 @@ existForAccountNumber = (value) => {
                 }
             }).catch((err) => {
         
-                let error=err && err.data ? err.data : 'Something Went Wrong';
+                let error=err && err.data ? err.data : 'Employee Basic Details Saved Unsuccessfully';
                 if(err.data && err.data.message !== undefined){
                     error=err.data.message ? err.data.message :err.data;
                 }

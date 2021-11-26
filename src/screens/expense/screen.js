@@ -325,7 +325,7 @@ class Expense extends React.Component {
 	};
 
 	renderAmount = (cell, row, extraData) => {
-		debugger
+		
 		// return row.expenseAmount ? (
 		// 	<Currency
 		// 		value={row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}

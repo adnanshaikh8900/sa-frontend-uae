@@ -325,6 +325,7 @@ class Expense extends React.Component {
 	};
 
 	renderAmount = (cell, row, extraData) => {
+		debugger
 		// return row.expenseAmount ? (
 		// 	<Currency
 		// 		value={row.expenseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
@@ -344,10 +345,13 @@ class Expense extends React.Component {
 					
 					</label>
 			</div>
-		{row.expenseVatAmount &&	(
-			<div style={{ display: row.expenseVatAmount === 0 ? 'none' : '' }}>
+		{row.expenseVatAmount !=null &&(
+			<div >
 			    <label className="font-weight-bold mr-2">{strings.VatAmount} : </label>
-				<label>{row.expenseVatAmount === 0 ? row.currencyName  +" "+ row.expenseVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyName  +" "+ row.expenseVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
+				<label>{row.expenseVatAmount === 0 ?
+				 row.currencyName  +" "+ row.expenseVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) 
+				 :
+				 row.currencyName  +" "+ row.expenseVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
 			</div>
 		)}
 			<div style={{ display: row.expenseAmount === 0 ? 'none' : '' }}>

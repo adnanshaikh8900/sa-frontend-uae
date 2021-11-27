@@ -221,14 +221,14 @@ class CreateReceipt extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Invoice Updated Successfully.',
+					res.data ? res.data.message : 'Payment Recorded Successfully',
 				);
 				this.props.history.push('/admin/income/customer-invoice');
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err.data ? err.data.message : 'Payment Recorded Unsuccessfully'
 				);
 			});
 	};
@@ -490,7 +490,7 @@ min="0"
 																					</Label>
 																					<Input
 																						type="number"
-min="0"
+																						min="0"
 																						id="amount"
 																						name="amount"
 																						readOnly

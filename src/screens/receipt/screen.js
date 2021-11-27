@@ -261,7 +261,7 @@ class Receipt extends React.Component {
 				this.initializeData();
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data.message,
+					res.data ? res.data.message : 'Deleted Successfully'
 				);
 				if (receipt_list && receipt_list.length > 0) {
 					this.setState({
@@ -272,7 +272,7 @@ class Receipt extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message,
+					err.data ? err.data.message : 'Deleted Unsuccessfully'
 				);
 			});
 	};

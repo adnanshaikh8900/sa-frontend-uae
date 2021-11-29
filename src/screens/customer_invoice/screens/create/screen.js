@@ -987,15 +987,15 @@ class CreateCustomerInvoice extends React.Component {
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
-		formData.append('discount', discount);
+		formData.append('discount', discount ? discount : '');
 		if (discountType && discountType.value) {
 			formData.append('discountType', discountType.value);
 		}
 		if (term && term.value) {
 			formData.append('term', term.value);
 		}
-		if (discountType.value === 'PERCENTAGE') {
-			formData.append('discountPercentage', discountPercentage);
+		if (discountType.value === 'PERCENTAGE' && discountPercentage != null) {
+			formData.append('discountPercentage', discountPercentage ? discountPercentage : '');
 		}
 		if (contactId && contactId.value) {
 			formData.append('contactId', contactId.value);

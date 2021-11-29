@@ -257,8 +257,11 @@ calculatePayperioad=(startDate,endDate)=>{
 
 		formData.append('generatePayrollString', JSON.stringify(this.state.selectedRows1));
 		formData.append('salaryDate',payrollDate)
-		console.log(this.state.payPeriod,"JSON.stringify(this.state.allPayrollEmployee)",JSON.stringify(this.state.allPayrollEmployee))
-		
+		//Payroll total  amount
+		let totalAmountPayroll=0;
+		this.state.selectedRows1.map((row)=>{totalAmountPayroll +=parseFloat(row.grossPay)})
+		formData.append('totalAmountPayroll', totalAmountPayroll);
+
 		if(this.state.apiSelector ==="createPayroll"){
 		this.props.createPayrollActions
 			 .createPayroll(formData)
@@ -529,12 +532,7 @@ else
 								    return  data
 
 									})
-													console.log(newData)
-
-													this.setState({
-														allPayrollEmployee: newData
-
-													})
+								this.setState({	allPayrollEmployee: newData})
 	}
 	generate = () => {
 		const formData = new FormData();
@@ -673,6 +671,27 @@ else
  handleDateChange = ({ startDate, endDate }) =>   { this.setState({ startDate, endDate })
  this.calculatePayperioad(startDate, endDate)};
 handleFocusChange = focusedInput => this.setState({ focusedInput });
+showTotal=()=>{
+	let totalAmountPayroll=0;
+	this.state.selectedRows1.map((row)=>{totalAmountPayroll +=parseFloat(row.grossPay)})
+	return(
+		<div className="p-2" style={{    borderBottom: "1px solid #c8ced3", width: "25%"}}>
+								<Row>
+								<Col >
+									<h5 className="mb-0">
+										{strings.Total+" "+strings.Amount}
+									</h5>
+								</Col>
+								<Col  className="text-right">
+									<label className="mb-0">
+									AED &nbsp;
+									{totalAmountPayroll.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}				
+									</label>
+								</Col>
+								</Row>
+								</div>
+	)
+}	
 	render() {
 		strings.setLanguage(this.state.language);
 
@@ -830,6 +849,7 @@ handleFocusChange = focusedInput => this.setState({ focusedInput });
 
 																			<FormGroup >
 																			<DateRangePicker
+																			displayFormat="DD/MM/YYYY"
 																				endDate={this.state.endDate}
 																				endDateId="endDate"
 																				focusedInput={this.state.focusedInput}
@@ -942,6 +962,17 @@ handleFocusChange = focusedInput => this.setState({ focusedInput });
 																					</div>
 																				)}
 												</Col></Row>
+
+												
+																			<Row>
+																			<Col ></Col>
+																			<Col ></Col>
+												{
+												// this.showTotal()
+												}
+																				
+																			</Row>
+																		
 															<Row className="mt-4 ">
 
 

@@ -36,6 +36,7 @@ import LocalizedStrings from 'react-localization';
 import { AddEmployeesModal } from './sections';
 import moment from 'moment';
 import { DateRangePicker,isInclusivelyBeforeDay } from 'react-dates';
+import RoleReducer from 'screens/users_roles/screens/create/reducer';
 
 
 const mapStateToProps = (state) => {
@@ -108,7 +109,8 @@ class UpdatePayroll extends React.Component {
 			 dialog: null,
 			 currencyIsoCode:"AED",
 			 count:0,
-			 paidDays:30
+			 paidDays:30,
+			 checkForLopSetting:false
 		}
 
 		this.regEx = /^[0-9\d]+$/;
@@ -359,8 +361,11 @@ class UpdatePayroll extends React.Component {
 		formData.append('generatePayrollString', JSON.stringify(this.state.selectedRows1));
 		 formData.append('salaryDate',payrollDate)
 
-		console.log(this.state.payPeriod,"JSON.stringify(this.state.allPayrollEmployee)",JSON.stringify(this.state.allPayrollEmployee))
-		
+			//Payroll total  amount
+			let totalAmountPayroll=0;
+			this.state.selectedRows1.map((row)=>{totalAmountPayroll +=parseFloat(row.grossPay)})
+			formData.append('totalAmountPayroll', totalAmountPayroll);
+	debugger
 		if(this.state.apiSelector ==="createPayroll"){
 		this.props.createPayrollActions
 			 .updatePayroll(formData)
@@ -395,7 +400,7 @@ class UpdatePayroll extends React.Component {
 	}	
 	}
 	handleDatesChange = ({ startDate, endDate }) => {
-		this.setState({startDate:startDate,endDate:endDate})
+		this.setState({startDate:startDate,endDate:endDate,checkForLopSetting:true})
 		this.calculatePayperioad(startDate, endDate)
 		  };
 	setDate = (props, value) => {
@@ -440,6 +445,24 @@ class UpdatePayroll extends React.Component {
 													this.setState({
 														allPayrollEmployee: newData
 													})
+													
+													let tempList1 = [];
+
+													this.state.allPayrollEmployee.map((row)=>{
+														
+														for(let i=0;i<this.state.selected.length;i++){
+															if(row.empId==this.state.selected[i]){		
+																tempList1.push(row);					
+															}//if
+														}
+													})
+													
+													//
+													this.setState({
+													
+														selectedRows1: tempList1,
+														
+													});
 	}
 
 	getAllPayrollEmployee = () => {
@@ -467,12 +490,13 @@ class UpdatePayroll extends React.Component {
 							// data.noOfDays =this.state.paidDays
 							// data.originalGrossPay=data.grossPay		
 					        // data.perDaySal=data.originalGrossPay / data.noOfDays			
-							let tmpPaidDay=this.state.paidDays > 30 ?30	:this.state.paidDays				
+							let tmpPaidDay=this.state.paidDays > 30 ?30	:this.state.paidDays	
+							if(this.state.checkForLopSetting===true)			
 							data.noOfDays =tmpPaidDay
 							data.originalNoOfDays =tmpPaidDay
 							data.originalGrossPay=data.grossPay		
 							data.perDaySal=data.originalGrossPay / 30	
-						
+							if(this.state.checkForLopSetting===true)
 							data.lopDay = 30-tmpPaidDay;
 							data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
 							data.netPay   = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)		
@@ -785,16 +809,16 @@ class UpdatePayroll extends React.Component {
 			this.setState(() => ({
 				selected: [...this.state.selected, row.empId]
 			  }));
-		} else {
-
-			this.state.selectedRows.map((item) => {
-				if (item !== row.empId) {
-					tempList.push(item);
+		} else
+		{
+			this.state.selectedRows1.map((item) => {
+				if (item.empId !== row.empId) {
+					tempList.push(item.empId);
 					tempList1.push(item);
 				}
 				this.setState(() => ({
-					selected: this.state.selected.filter(x => x !== row.empId)
-				  }));
+								selected: this.state.selected.filter(x => x !== row.empId)
+							  }));
 				return item;
 			});
 		}
@@ -1045,6 +1069,7 @@ class UpdatePayroll extends React.Component {
 																	{/* <FormGroup className="mt-2"><i class="far fa-calendar-alt mt-1"></i>&nbsp;</FormGroup> */}
 																	<FormGroup >
 																				<DateRangePicker
+																				displayFormat="DD/MM/YYYY"
 																					startDate={this.state.startDate}
 																					startDateId="tata-start-date"
 																					endDate={this.state.endDate}

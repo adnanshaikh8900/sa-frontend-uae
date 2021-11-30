@@ -408,7 +408,7 @@ class PurchaseOrder extends React.Component {
 				this.props.purchaseOrderAction
 				.changeStatus(id)
 				.then((res) => {
-					debugger
+					 
 					if (res.status === 200) {
 						this.props.commonActions.tostifyAlert(
 							'success',

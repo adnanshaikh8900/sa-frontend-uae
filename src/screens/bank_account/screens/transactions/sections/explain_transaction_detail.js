@@ -1495,7 +1495,7 @@ min="0"
 																						onChange={(option) => {
 																							if (option && option.value) {
 																								this.formRef.current.setFieldValue('currencyCode', this.getCurrency(option.value), true);
-																								debugger
+																								 
 																								this.setExchange( this.getCurrency(option.value) );
 																								props.handleChange('customerId')(
 																									option.value,

@@ -235,7 +235,7 @@ class CreateBankAccount extends React.Component {
 			personalCorporateAccountInd: account_is_for ? account_is_for : '',
 			// bankId:bankId ? bankId : "",
 		};
-		debugger
+		 
 		this.props.createBankAccountActions
 			.createBankAccount(obj)
 			.then((res) => {

@@ -181,3 +181,18 @@ export const getStateList = (countryCode,type) => {
     })
   }
 }
+export const getCompanyTypeList = () => {
+  return (dispatch) => {
+    let data = {
+      method: 'get',
+      url: `/rest/datalist/getCompanyType`
+    }
+    return authApi(data).then((res) => {
+      if (res.status === 200) {
+        return res;
+      }
+    }).catch((err) => {
+      throw err
+    })
+  }
+}

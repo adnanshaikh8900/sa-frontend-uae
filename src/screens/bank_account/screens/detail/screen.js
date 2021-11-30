@@ -219,7 +219,7 @@ class DetailBankAccount extends React.Component {
 			bankCountry: data.countryId,
 			bankAccountType: data.account_type,
 		};
-		debugger
+		 
 		this.props.detailBankAccountActions
 			.updateBankAccount(obj)
 			.then((res) => {

@@ -304,7 +304,7 @@ class AddEmployeesModal extends React.Component {
 		Object.keys(this.state.selectedRows).forEach(key => {
 		 employeeList.push(this.state.selectedRows[key]) 
 		});}
-	debugger
+	 
 
 		this.props.createPayrollActions
 			.addMultipleEmployees( this.state.payroll_id,employeeList)

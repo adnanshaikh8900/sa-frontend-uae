@@ -46,7 +46,7 @@ class NewPassword extends React.Component {
      }
    
   handleSubmit = (val) => {
-    debugger
+     
    let obj = {
       password: val.password,
       token: val.token

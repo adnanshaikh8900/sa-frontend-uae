@@ -38,7 +38,7 @@ class SalaryComponentDeduction extends React.Component {
 			initValue: {
 				employeeId:'',
 				salaryStructure: 1,
-				type: '',
+				type: {value:1},
 				flatAmount: '',
 				email: '',
 				dob: new Date(),
@@ -385,7 +385,7 @@ class SalaryComponentDeduction extends React.Component {
 												<FormGroup>
 													<Label htmlFor="gender">	<span className="text-danger">*</span>{strings.Type}</Label>
 													<Select
-
+														isDisabled
 														options={
 															this.type
 																? selectOptionsFactory.renderOptions(
@@ -399,7 +399,17 @@ class SalaryComponentDeduction extends React.Component {
 														id="type"
 														name="type"
 														placeholder={strings.Select+strings.Type}
-														value={this.state.gender}
+														value={this.type
+															&& selectOptionsFactory.renderOptions(
+																'label',
+																'value',
+																this.type,
+																'Type',
+															).find(
+																   (option) =>
+																	   option.value ===
+																	   +props.values.type.value,
+															   )}
 														onChange={(value) => {
 															props.handleChange('type')(value);
 

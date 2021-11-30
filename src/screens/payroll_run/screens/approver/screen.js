@@ -35,6 +35,7 @@ import { data } from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { AddEmployeesModal } from './sections';
 import moment from 'moment';
+import download from 'downloadjs';
 
 
 const mapStateToProps = (state) => {
@@ -289,6 +290,8 @@ class PayrollApproverScreen extends React.Component {
 			.generateSifFile(this.state.payroll_id,this.state.existEmpList)
 			.then((res) => {
 				if (res.status === 200) {
+					const blob = new Blob([res.data],{type:'application/sif'});
+					download(blob,this.state.payrollSubject ?this.state.payrollSubject+'.SIF':"payroll.SIF")
 					this.props.commonActions.tostifyAlert('success', 'SIF File Downloaded Successfully')
 				}
 			}).catch((err) => {

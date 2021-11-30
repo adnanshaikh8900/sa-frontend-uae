@@ -181,7 +181,7 @@ export const getStateList = (countryCode,type) => {
     })
   }
 }
-export const getCompanyTypeList = () => {
+export const getCompanyTypeList2 = () => {
   return (dispatch) => {
     let data = {
       method: 'get',

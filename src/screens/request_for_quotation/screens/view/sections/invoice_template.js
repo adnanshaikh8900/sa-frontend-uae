@@ -12,7 +12,7 @@ const { ToWords } = require('to-words');
 const toWords = new ToWords({
 	localeCode: 'en-IN',
 	converterOptions: {
-  currency: true,
+	//   currency: true,
 	  ignoreDecimal: false,
 	  ignoreZeroCurrency: false,
 	  doNotAddOnly: false,
@@ -262,12 +262,12 @@ class RFQTemplate extends Component {
 								}}
 							>
 								<div className="pb-2">{strings.AmountInWords }:<br/>
-									<b><u> {RFQData.totalAmount ? upperCase(RFQData.currencyName + " " +(toWords.convert(RFQData.totalAmount))+" ") : " -" }
+									<b><u> {RFQData.totalAmount ? upperCase(RFQData.currencyName + " " +(toWords.convert(RFQData.totalAmount))+" ONLY").replace("POINT","AND") : " -" }
 									{/* <b> {parseInt(RFQData.dueAmount)} */}
 									</u></b></div>
 								<div className="pb-2">{strings.Vat+" "+strings.AmountInWords }:
 										<br/>
-									<b>{RFQData.totalVatAmount ? (upperCase(RFQData.currencyName + " " +(toWords.convert(RFQData.totalVatAmount))+" ")) : " -" }</b>
+									<b>{RFQData.totalVatAmount ? (upperCase(RFQData.currencyName + " " +(toWords.convert(RFQData.totalVatAmount))+" ONLY")).replace("POINT","AND") : " -" }</b>
 									{/* <b> {RFQData.totalVatAmount}</b> */}
 								</div>
 							<div style={{borderTop:'1px solid',borderColor:'#c8ced3'}}>

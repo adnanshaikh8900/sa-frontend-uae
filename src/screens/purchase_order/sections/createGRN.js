@@ -119,7 +119,7 @@ class CreateGoodsReceivedNote extends React.Component {
 				term: '',
 				totalAmount: 0,
 				totalVatAmount: 0,
-				notes: '',
+				grnRemarks: '',
 				type: 4,
 				supplierReferenceNumber: '',
 				// grnReceivedQuantityError:'Please Enter Quantity'
@@ -802,7 +802,7 @@ min="0"
 			supplierId,
             poNumber,
 			grn_number,
-			notes,
+			grnRemarks,
 			supplierReferenceNumber,
 		} = data;
 		const postData = this.getData(data);
@@ -829,7 +829,7 @@ min="0"
 		);
 		formData.append('grnReceiveDate', grnReceiveDate ? grnReceiveDate : '');
 	
-		formData.append('notes', notes ? notes : '');
+		formData.append('grnRemarks', grnRemarks ? grnRemarks : '');
 		formData.append('type', 5);
 		formData.append('lineItemsString', JSON.stringify(this.state.selectedData.poQuatationLineItemRequestModelList));
 		formData.append('totalAmount', this.state.initValue.totalAmount);
@@ -1266,6 +1266,7 @@ min="0"
 																		 {strings.PRODUCT}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
+																	width='10%'
 																		dataField="description"
 																		dataFormat={(cell, rows) =>
 																			this.renderDescription(cell, rows, props)
@@ -1275,7 +1276,7 @@ min="0"
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="poQuantity"
-																		width="10%"
+																		width="20%"
 																		dataFormat={(cell, rows) =>
 																			this.renderGRNQuantity(cell, rows, props)
 																		}
@@ -1285,49 +1286,14 @@ min="0"
 																
 																	<TableHeaderColumn
 																		dataField="quantity"
-																		width="100"
+																		width="10%"
 																		dataFormat={(cell, rows) =>
 																			this.renderQuantity(cell, rows, props)
 																		}
 																	>
 																	 {strings.POQUANTITY}
 																	</TableHeaderColumn>
-																	<TableHeaderColumn
-																		dataField="unitPrice"
-																		dataFormat={(cell, rows) =>
-																			this.renderUnitPrice(cell, rows, props)
-																		}
-																	>
-																		{strings.UNITPRICE}
-																		<i
-																			id="UnitPriceToolTip"
-																			className="fa fa-question-circle ml-1"
-																		></i>
-																		<UncontrolledTooltip
-																			placement="right"
-																			target="UnitPriceToolTip"
-																		>
-																			Unit Price – Price of a single product or
-																			service
-																		</UncontrolledTooltip>
-																	</TableHeaderColumn>
-																	<TableHeaderColumn
-																		dataField="vat"
-																		dataFormat={(cell, rows) =>
-																			this.renderVat(cell, rows, props)
-																		}
-																	>
-																		{strings.VAT}
-																	</TableHeaderColumn>
-																	<TableHeaderColumn
-																		dataField="sub_total"
-																		dataFormat={this.renderSubTotal}
-																		className="text-right"
-																		columnClassName="text-right"
 																	
-																	>
-																		{strings.SUBTOTAL}
-																	</TableHeaderColumn>
 																</BootstrapTable>
 															</Col>
 														</Row>
@@ -1341,14 +1307,14 @@ min="0"
 																		<Input
 																			type="textarea"
 																			maxLength="255"
-																			name="notes"
-																			id="notes"
+																			name="grnRemarks"
+																			id="grnRemarks"
 																			rows="6"
 																			placeholder={strings.Notes}
 																			onChange={(option) =>
-																				props.handleChange('notes')(option)
+																				props.handleChange('grnRemarks')(option)
 																			}
-																			value={props.values.notes}
+																			value={props.values.grnRemarks}
 																		/>
 																	</FormGroup>
 																

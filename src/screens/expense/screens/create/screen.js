@@ -101,6 +101,7 @@ class CreateExpense extends React.Component {
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
+		this.regExAlpha1 = /^[a-zA-Z0-9!@#$&()-\\`.+,/\"]+$/;
 
 		this.file_size = 1024000;
 		this.supported_format = [
@@ -1194,7 +1195,7 @@ min="0"
 																				onChange={(option) => {
 																					if (
 																						option.target.value === '' ||
-																						this.regExBoth.test(
+																						this.regExAlpha1.test(
 																							option.target.value,
 																						)
 																					) {

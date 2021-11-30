@@ -290,7 +290,6 @@ try {
 			.then((res) => {
 				this.setState({ disabled: false });
 				if (res.status === 200) {
-					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
 						'success',
 						res.data.message
@@ -1696,6 +1695,7 @@ min="0"
 																			type="button"
 																			color="primary"
 																			className="btn-square mr-3"
+																			disabled={this.state.disabled}
 																			onClick={() => {
 																				this.setState(
 																					{ createMore: false },

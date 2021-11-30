@@ -17,7 +17,7 @@ variables:
   ${{ else }}:
     containerRegistryConnection: 'DataInnAzureContainerRegistryConnection'
   npm_config_cache: $(Pipeline.Workspace)/.npm
-  
+
 
 stages:
   - stage: ci_build_simpleaccounts
@@ -33,6 +33,7 @@ stages:
           - task: CmdLine@2
             inputs:
               script: 'npm i --package-lock-only'
+            displayName: 'Generate package-lock.json'
 
           - task: Cache@2
             inputs:
@@ -43,14 +44,12 @@ stages:
             displayName: Cache npm
           - script: npm ci
 
-          - task: NodeTool@0
+          - task: CmdLine@2
             inputs:
-              versionSpec: '10.x'
-            displayName: 'Install Node.js'
-
-          - script: |
-              npm rebuild node-sass
-              npm run build
+              script: |
+                npm i --package-lock-only
+                npm rebuild node-sass
+                npm run build
             displayName: 'npm install and build'
 
           - task: Cache@2
@@ -60,10 +59,10 @@ stages:
               path: $(Pipeline.Workspace)/simpleaccounts-frontend-docker
               cacheHitVar: CACHE_RESTORED                #Variable to set to 'true' when the cache is restored
 
-          - script: |
-              docker load -i $(Pipeline.Workspace)/simpleaccounts-frontend-docker/simpleaccounts-frontend-docker-cache.tar
-            displayName: Docker restore
-            condition: and(not(canceled()), eq(variables.CACHE_RESTORED, 'true'))
+          # - script: |
+          #     docker load -i $(Pipeline.Workspace)/simpleaccounts-frontend-docker/simpleaccounts-frontend-docker-cache.tar
+          #   displayName: Docker restore
+          #   condition: and(not(canceled()), eq(variables.CACHE_RESTORED, 'true'))
 
           - task: Docker@2
             displayName: Docker Build & Push
@@ -77,7 +76,6 @@ stages:
 
           - script: |
               mkdir -p $(Pipeline.Workspace)/simpleaccounts-frontend-docker
-              docker save -o $(Pipeline.Workspace)/simpleaccounts-frontend-docker/simpleaccounts-frontend-docker-cache.tar $(containerRegistryName).azurecr.io/simpleaccounts-frontend:0.0.3-alpha-$(Build.BuildId)
+              docker save -o $(Pipeline.Workspace)/simpleaccounts-frontend-docker/simpleaccounts-frontend-docker-cache.tar $(containerRegistryName).azurecr.io/simpleaccounts-frontend:$(tag)
             displayName: Docker save
             condition: and(not(canceled()), or(failed(), ne(variables.CACHE_RESTORED, 'true')))
-

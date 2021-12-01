@@ -163,7 +163,7 @@ class Profile extends React.Component {
 	componentDidMount = () => {
 		this.getUserData();
 		this.props.profileActions
-				.getCompanyTypeList()
+				.getCompanyTypeList2()
 				.then((res) => {
 					if (res.status === 200) {
 						this.setState({

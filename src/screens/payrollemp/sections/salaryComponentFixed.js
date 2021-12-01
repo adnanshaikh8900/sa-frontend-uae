@@ -62,6 +62,7 @@ class SalaryComponentFixed extends React.Component {
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regExAlpha = /^[a-zA-Z][a-zA-Z ]*$/;
 		this.regExAddress = /^[a-zA-Z0-9\s,'-]+$/;
+		this.regDec1=/^\d{1,2}\.\d{1,2}$|^\d{1,2}$/;
 		this.type = [
 			{ label: 'Flat Amount', value: 1 },
 			{ label: '% of Basic', value: 2 }
@@ -379,13 +380,17 @@ class SalaryComponentFixed extends React.Component {
 													 {strings.Percentage}
 													</Label>
 													<Input
-														type="text"
+														type="number"
 														id="formula"
 														name="formula"
+														min="0"
+														max="99"
+															step="0.01"
 														value={props.values.formula}
+														maxLength={2}
 														placeholder={strings.Enter+strings.Percentage}
 														onChange={(option) => {
-															if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
+															if (option.target.value === '' || this.regDec1.test(option.target.value)) { props.handleChange('formula')(option) }
 														}}
 														className={props.errors.formula && props.touched.formula ? "is-invalid" : ""}
 													/>
@@ -402,6 +407,7 @@ class SalaryComponentFixed extends React.Component {
 														 {strings.FlatAmount}
 													</Label>
 													<Input
+														maxLength="8"
 														type="text"
 														id="flatAmount"
 														name="flatAmount"

@@ -572,7 +572,7 @@ handleChange = (evt) => {
                                                                                     <td style={{border:"1px solid #c8ced3"}}>
                                                                                         <Input
                                                                                             type="number"
-min="0"
+                                                                                            // min="0"
                                                                                             size="30"
                                                                                             style={{textAlign:"center"}}
                                                                                             id="formula"
@@ -609,7 +609,7 @@ min="0"
                                                                                 ) : (
                                                                                     <td style={{border:"1px solid #c8ced3"}} >
                                                                                         <Input
-                                                                                  
+                                                                                            maxLength="8"
                                                                                             type="text"
                                                                                             size="30"
                                                                                             style={{textAlign:"center"}}
@@ -692,7 +692,7 @@ min="0"
                                                                                     <td style={{border:"1px solid  #c8ced3"}}>
                                                                                         <Input
                                                                                             type="number"
-min="0"
+                                                                                            // min="0"
                                                                                             style={{textAlign:"center"}}
                                                                                             size="30"
                                                                                             onChange={(option) => {
@@ -726,6 +726,7 @@ min="0"
                                                                                 ) : (
                                                                                     <td style={{border:"1px solid  #c8ced3"}} >
                                                                                         <Input
+                                                                                        maxLength="8"
                                                                                             type="text"
                                                                                             size="30"
                                                                                             style={{textAlign:"center"}}
@@ -810,7 +811,7 @@ min="0"
                                                                                     <td style={{border:"1px solid #c8ced3"}}>
                                                                                         <Input
                                                                                             type="number"
-min="0"
+                                                                                            // min="0"
                                                                                             size="30"
                                                                                             className="text-center"
                                                                                             value={item.formula}
@@ -838,6 +839,7 @@ min="0"
                                                                                 ) : (
                                                                                     <td style={{border:"1px solid #c8ced3"}} >
                                                                                         <Input
+                                                                                        maxLength="8"
                                                                                             type="text"
                                                                                             size="30"
                                                                                             onChange={(option) => {

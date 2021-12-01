@@ -1387,7 +1387,7 @@ class CreateCreditNote extends React.Component {
 												}}
 												validate={(values) => {
 													let errors = {};
-													debugger
+													 
 													if (exist === true) 
 													{
 														errors.creditNoteNumber ='Tax Credit Note Number cannot be same';

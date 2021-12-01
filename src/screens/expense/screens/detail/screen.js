@@ -237,7 +237,7 @@ class DetailExpense extends React.Component {
 		// if (vatCategoryId && vatCategoryId.value) {
 		// 	formData.append('vatCategoryId', vatCategoryId.value);
 		// }
-		debugger 
+		  
 		if (vatCategoryId ) {
 			formData.append('vatCategoryId',  vatCategoryId.value ? vatCategoryId.value :vatCategoryId);
 			

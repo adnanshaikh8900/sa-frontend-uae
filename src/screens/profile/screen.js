@@ -127,7 +127,7 @@ class Profile extends React.Component {
 				companyAddressLine2: '',
 				companyAddressLine3: '',
 				companyCity: '',
-				companyStateRegion: '',
+				companyStateCode: '',
 				companyPostZipCode: '',
 				companyPoBoxNumber: '',
 				companyCountryCode: '',
@@ -162,6 +162,23 @@ class Profile extends React.Component {
 	};
 	componentDidMount = () => {
 		this.getUserData();
+		this.props.profileActions
+				.getCompanyTypeList2()
+				.then((res) => {
+					if (res.status === 200) {
+						this.setState({
+							companyTypeList: res.data,
+						});
+					}
+				})
+				.catch((err) => {
+					this.props.commonActions.tostifyAlert(
+						'error',
+						err && err.data ? err.data.message : 'Something Went Wrong',
+					);
+					
+				});
+		
 	};
 
 	uploadUserImage = (picture, file) => {
@@ -389,6 +406,12 @@ class Profile extends React.Component {
 										? res.data.companyRevenueBudget
 										: '',
 									dateFormat: res.data.dateFormat ? res.data.dateFormat : '',
+									isDesignatedZone: res.data.isDesignatedZone ? res.data.isDesignatedZone : '',
+									isRegisteredVat: res.data.isRegisteredVat ? res.data.isRegisteredVat : '',
+									companyStateCode: res.data.companyStateCode ? res.data.companyStateCode :'',
+									vatRegistrationDate: res.data.vatRegistrationDate
+									? res.data.vatRegistrationDate
+									: '',
 								},
 								companyLogo: res.data.companyLogoByteArray
 									? this.state.companyLogo.concat(res.data.companyLogoByteArray)
@@ -496,6 +519,15 @@ class Profile extends React.Component {
 			companyExpenseBudget,
 			companyRevenueBudget,
 			dateFormat,
+			isDesignatedZone,
+			isRegisteredVat,
+			companyStateCode,
+			vatRegistrationDate,
+			fax,
+			telephoneNumber,
+			
+
+
 		} = data;
 		const { companyAddress, isSame } = this.state;
 		let formData = new FormData();
@@ -553,6 +585,30 @@ class Profile extends React.Component {
 		formData.append(
 			'invoicingCountryCode',
 			invoicingCountryCode ? invoicingCountryCode : '',
+		);
+		formData.append(
+			'companyStateCode',
+			companyStateCode ? companyStateCode : '',
+		);
+		formData.append(
+			'isDesignatedZone',
+			isDesignatedZone ? isDesignatedZone : '',
+		);
+		formData.append(
+			'isRegisteredVat',
+			isRegisteredVat ? isRegisteredVat : '',
+		);
+		formData.append(
+			'vatRegistrationDate',
+			vatRegistrationDate !== null ? moment(vatRegistrationDate) : '',
+		);
+		formData.append(
+			'fax',
+			fax ? fax : '',
+		);
+		formData.append(
+			'phoneNumber',
+			telephoneNumber ? telephoneNumber : '',
 		);
 		formData.append('currencyCode', currencyCode ? currencyCode : '');
 		formData.append('dateFormat', dateFormat ? dateFormat : '');
@@ -615,7 +671,7 @@ class Profile extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, isSame, timezone } = this.state;
+		const { loading, isSame, timezone ,companyTypeList} = this.state;
 		const {
 			currency_list,
 			country_list,
@@ -1327,25 +1383,25 @@ class Profile extends React.Component {
 																companyAddressLine1: Yup.string().required(
 																	'Company Address Line 1 is required',
 																),
-																companyAddressLine2: Yup.string().required(
-																	'Company Address Line 2 is required',
-																),
-																companyAddressLine3: Yup.string().required(
-																	'Company Address Line 3 is required',
-																),
+																// companyAddressLine2: Yup.string().required(
+																// 	'Company Address Line 2 is required',
+																// ),
+																// companyAddressLine3: Yup.string().required(
+																// 	'Company Address Line 3 is required',
+																// ),
 																companyCountryCode: Yup.string().required(
 																	'Country is required',
 																)
 																.nullable(),
-																companyStateRegion: Yup.string().required(
+																companyStateCode: Yup.string().required(
 																	'State is required',
 																),
-																companyCity: Yup.string().required(
-																	'City is required',
-																),
-																companyPoBoxNumber: Yup.string().required(
-																	'PO Box Number is required',
-																),
+																// companyCity: Yup.string().required(
+																// 	'City is required',
+																// ),
+																// companyPoBoxNumber: Yup.string().required(
+																// 	'PO Box Number is required',
+																// ),
 																companyPostZipCode: Yup.string().required(
 																	'Post Zip Code is required',
 																),
@@ -1406,7 +1462,7 @@ class Profile extends React.Component {
 																			</Col>
 																			<Col lg={10}>
 																				<Row>
-																					<Col lg={4}>
+																					<Col lg={3}>
 																						<FormGroup className="mb-3">
 																							<Label htmlFor="product_code">
 																							<span className="text-danger">*</span>
@@ -1446,7 +1502,7 @@ class Profile extends React.Component {
 																								)}
 																						</FormGroup>
 																					</Col>
-																					<Col lg={4}>
+																					<Col lg={3}>
 																						<FormGroup className="mb-3">
 																							<Label htmlFor="product_code">
 																							<span className="text-danger">*</span>
@@ -1491,147 +1547,26 @@ class Profile extends React.Component {
 																								)}
 																						</FormGroup>
 																					</Col>
-																					<Col lg={4}>
-																						<FormGroup className="mb-3">
-																							<Label htmlFor="product_code">
-																							<span className="text-danger">*</span>
-																							 {strings.VATRegistrationNo}
-																						</Label>
-																							<Input
-																								type="text"
-																								id="vatRegistrationNumber"
-																								maxLength="15"
-																								name="vatRegistrationNumber"
-																								placeholder={strings.Enter+strings.VATRegistrationNo}
-																								value={
-																									props.values
-																										.vatRegistrationNumber
-																								}
-																								onChange={(option) => {
-																									if (
-																										option.target.value === '' ||
-																										this.regEx.test(option.target.value)
-																									) {
-																										props.handleChange('vatRegistrationNumber')(
-																											option,
-																										);
-																									} else {
-																										props.handleChange('vatRegistrationNumber')(
-																											option,
-																										);
-																								}}
-																							}
-																							value={props.values.vatRegistrationNumber}
-																								className={
-																									props.errors.vatRegistrationNumber &&
-																									props.touched.vatRegistrationNumber
-																										? 'is-invalid'
-																										: ''
-																								}
-																							/>
-																							{props.errors.vatRegistrationNumber &&
-																								props.touched.vatRegistrationNumber && (
-																									<div className="invalid-feedback">
-																										{props.errors.vatRegistrationNumber}
-																									</div>
-																								)}
-																						</FormGroup>
-																					</Col>
-																				</Row>
-																				
-																				<Row>
-																					<Col lg={4}>
-																						<FormGroup className="mb-3">
-																							<Label htmlFor="product_code">
-																								{strings.Website}
-																						</Label>
-																							<Input
-																								type="text"
-																								id="website"
-																								name="website"
-																								placeholder={strings.Enter+strings.Website}
-																								value={props.values.website}
-																								onChange={(option) => {
-																									props.handleChange('website')(
-																										option,
-																									);
-																								}}
-																							/>
-																						</FormGroup>
-																					</Col>
-																					<Col lg={4}>
-																						<FormGroup className="mb-3">
-																							<Label htmlFor="product_code">
-																								 {strings.EmailAddress}
-																						</Label>
-																							<Input
-																								type="text"
-																								id="emailAddress"
-																								name="emailAddress"
-																								placeholder={strings.Enter+strings.Email}
-																								value={props.values.emailAddress}
-																								onChange={(option) => {
-																									props.handleChange(
-																										'emailAddress',
-																									)(option);
-																								}}
-																							/>
-																						</FormGroup>
-																					</Col>
-																					<Col lg={4}>
-																						<FormGroup className="mb-3">
-																							<Label htmlFor="phoneNumber">
-																							<span className="text-danger">*</span>
-																							 {strings.MobileNumber}
-																						</Label>
-																							<PhoneInput
-																								country={"ae"}
-																								enableSearch={true}
-																								international
-																								value={props.values.phoneNumber}
-																								placeholder={strings.Enter+strings.MobileNumber}
-																								onChange={(option) => {
-																									props.handleChange(
-																										'phoneNumber',
-																									)(option);
-																								}}
-																								isValid
-																								// className={
-																								// 	props.errors.phoneNumber &&
-																								// 		props.touched.phoneNumber
-																								// 		? 'is-invalid'
-																								// 		: ''
-																								// }
-																							/>
-																							{props.errors.phoneNumber &&
-																								props.touched.phoneNumber && (
-																									<div style={{color:"red"}}>
-																										{props.errors.phoneNumber}
-																									</div>
-																								)}
-																						</FormGroup>
-																					</Col>
-																				</Row>
-																				<Row>
-																					{/* <Col lg={4}>
+																					<Col lg={3}>
 																						<FormGroup>
 																							<Label htmlFor="companyId">
-																								 {strings.CompanyTypeCode}
+																							<span className="text-danger">*</span>
+																								 Company /Business Type
 																						</Label>
 																							<Select
 																								options={
-																									company_type_list
+																									companyTypeList
 																										? selectOptionsFactory.renderOptions(
 																											'label',
 																											'value',
-																											company_type_list,
+																											companyTypeList,
 																											'Company Type Code',
 																										)
 																										: []
 																								}
 																								value={
-																									company_type_list &&
-																									company_type_list.find(
+																									companyTypeList &&
+																									companyTypeList.find(
 																										(option) =>
 																											option.value ===
 																											+props.values
@@ -1667,67 +1602,33 @@ class Profile extends React.Component {
 																								)}
 																						</FormGroup>
 																					</Col>
-																					<Col lg={4}>
-																						<FormGroup>
-																							<Label htmlFor="industryTypeCode">
-																								 {strings.IndustryTypeCode}
+																					<Col lg={3}>
+																						<FormGroup className="mb-3">
+																							<Label htmlFor="product_code">
+																							<span className="text-danger">*</span>
+																								 {strings.EmailAddress}
 																						</Label>
-																							<Select
-																								options={
-																									industry_type_list
-																										? selectOptionsFactory.renderOptions(
-																											'label',
-																											'value',
-																											industry_type_list,
-																											'Industry Type Code',
-																										)
-																										: []
-																								}
-																								value={
-																									industry_type_list &&
-																									industry_type_list.find(
-																										(option) =>
-																											option.value ===
-																											+props.values
-																												.industryTypeCode,
-																									)
-																								}
+																							<Input
+																								type="text"
+																								id="emailAddress"
+																								name="emailAddress"
+																								placeholder={strings.Enter+strings.Email}
+																								value={props.values.emailAddress}
 																								onChange={(option) => {
-																									if (option && option.value) {
-																										props.handleChange(
-																											'industryTypeCode',
-																										)(option.value);
-																									} else {
-																										props.handleChange(
-																											'industryTypeCode',
-																										)('');
-																									}
+																									props.handleChange(
+																										'emailAddress',
+																									)(option);
 																								}}
-																								placeholder={strings.Select+strings.IndustryTypeCode}
-																								id="industryTypeCode"
-																								name="industryTypeCode"
-																								className={
-																									props.errors.industryTypeCode &&
-																										props.touched.industryTypeCode
-																										? 'is-invalid'
-																										: ''
-																								}
 																							/>
-																							{props.errors.industryTypeCode &&
-																								props.touched
-																									.industryTypeCode && (
-																									<div className="invalid-feedback">
-																										{
-																											props.errors
-																												.industryTypeCode
-																										}
-																									</div>
-																								)}
 																						</FormGroup>
-																					</Col> */}
-																					<Col lg={4}>
+																					</Col>
+																				</Row>
+																				
+																				<Row>
+																				<Col lg={3}>
 																						<FormGroup>
 																							<Label htmlFor="currencyCode">
+																							<span className="text-danger">*</span>
 																							   {strings.CurrencyCode}
 																						</Label>
 																							<Select
@@ -1787,11 +1688,760 @@ class Profile extends React.Component {
 																								)}
 																						</FormGroup>
 																					</Col>
+																					<Col lg={3}>
+																						<FormGroup className="mb-3">
+																							<Label htmlFor="product_code">
+																								{strings.Website}
+																						</Label>
+																							<Input
+																								type="text"
+																								id="website"
+																								name="website"
+																								placeholder={strings.Enter+strings.Website}
+																								value={props.values.website}
+																								onChange={(option) => {
+																									props.handleChange('website')(
+																										option,
+																									);
+																								}}
+																							/>
+																						</FormGroup>
+																					</Col>
+																					
+																					<Col lg={3}>
+																				<FormGroup className="mb-3">
+																					<Label htmlFor="telephoneNumber">
+																						Telephone
+																				</Label>
+																					<Input
+																						type="text"
+																						id="telephoneNumber"
+																						name="telephoneNumber"
+																						placeholder={strings.Enter+"Telephone Number"}
+																						value={ props.values.telephoneNumber
+																						}
+																						onChange={(option) => {
+																							if (
+																								option.target.value === '' ||
+																								this.regEx.test(
+																									option.target.value,
+																								)
+																							) {
+																								props.handleChange(
+																									'telephoneNumber',
+																								)(option);
+																							}
+																						}}
+																						value={props.values.telephoneNumber}
+																						className={
+																							props.errors.telephoneNumber &&
+																							props.touched.telephoneNumber
+																							? 'is-invalid'
+																							: ''
+																						}
+																					/>
+																					{props.errors.telephoneNumber &&
+																						props.touched.telephoneNumber && (
+																						<div className="invalid-feedback">
+																							{props.errors.telephoneNumber}
+																						</div>
+																					)}
+																				</FormGroup>
+																				</Col>
+																				<Col lg={3}>
+																						<FormGroup className="mb-3">
+																							<Label htmlFor="phoneNumber">
+																							<span className="text-danger">*</span>
+																							 {strings.MobileNumber}
+																						</Label>
+																							<PhoneInput
+																								country={"ae"}
+																								enableSearch={true}
+																								international
+																								value={props.values.phoneNumber}
+																								placeholder={strings.Enter+strings.MobileNumber}
+																								onChange={(option) => {
+																									props.handleChange(
+																										'phoneNumber',
+																									)(option);
+																								}}
+																								isValid
+																								// className={
+																								// 	props.errors.phoneNumber &&
+																								// 		props.touched.phoneNumber
+																								// 		? 'is-invalid'
+																								// 		: ''
+																								// }
+																							/>
+																							{props.errors.phoneNumber &&
+																								props.touched.phoneNumber && (
+																									<div style={{color:"red"}}>
+																										{props.errors.phoneNumber}
+																									</div>
+																								)}
+																						</FormGroup>
+																					</Col>
 																				</Row>
+																				<Row>
+																				
+
+																					
+																					
+																			
+																			
+																					{/* <Col lg={4}>
+																						<FormGroup>
+																							<Label htmlFor="industryTypeCode">
+																								 {strings.IndustryTypeCode}
+																						</Label>
+																							<Select
+																								options={
+																									industry_type_list
+																										? selectOptionsFactory.renderOptions(
+																											'label',
+																											'value',
+																											industry_type_list,
+																											'Industry Type Code',
+																										)
+																										: []
+																								}
+																								value={
+																									industry_type_list &&
+																									industry_type_list.find(
+																										(option) =>
+																											option.value ===
+																											+props.values
+																												.industryTypeCode,
+																									)
+																								}
+																								onChange={(option) => {
+																									if (option && option.value) {
+																										props.handleChange(
+																											'industryTypeCode',
+																										)(option.value);
+																									} else {
+																										props.handleChange(
+																											'industryTypeCode',
+																										)('');
+																									}
+																								}}
+																								placeholder={strings.Select+strings.IndustryTypeCode}
+																								id="industryTypeCode"
+																								name="industryTypeCode"
+																								className={
+																									props.errors.industryTypeCode &&
+																										props.touched.industryTypeCode
+																										? 'is-invalid'
+																										: ''
+																								}
+																							/>
+																							{props.errors.industryTypeCode &&
+																								props.touched
+																									.industryTypeCode && (
+																									<div className="invalid-feedback">
+																										{
+																											props.errors
+																												.industryTypeCode
+																										}
+																									</div>
+																								)}
+																						</FormGroup>
+																					</Col>
+																					 */}
+																				</Row>
+																				
+																				<Row>
+																				<Col lg={12}>
+																			<h5 className="mt-3 mb-3">{strings.CompanyAddress}</h5>
+																			</Col>
+																		</Row>
+																		<Row style={{ display: props.values.countryName !== 1 ? '' : 'none' }}>
+																		<Col lg={3}>
+																				<FormGroup className="mb-3">
+																					<Label htmlFor="product_code">
+																					<span className="text-danger">*</span>
+																						 {strings.CompanyAddressLine1}
+																				</Label>
+																					<Input
+																						type="text"
+																						id="companyAddressLine1"
+																						name="companyAddressLine1"
+																						placeholder={strings.Enter+strings.CompanyAddressLine1}
+																						rows="5"
+																						value={
+																							isSame
+																								? this.state.companyAddress
+																									.companyAddressLine1
+																								: props.values.companyAddressLine1
+																						}
+																						onChange={(option) => {
+																							props.handleChange(
+																								'companyAddressLine1',
+																							)(option);
+																						}}
+																						value={props.values.companyAddressLine1}
+																						className={
+																							props.errors.companyAddressLine1 &&
+																							props.touched.companyAddressLine1
+																							? 'is-invalid'
+																							: ''
+																						}
+																					/>
+																					{props.errors.companyAddressLine1 &&
+																								props.touched.companyAddressLine1 && (
+																									<div className="invalid-feedback">
+																										{props.errors.companyAddressLine1}
+																									</div>
+																								)}
+																				</FormGroup>
+																			</Col>
+
+																			<Col lg={3}>
+																				<FormGroup className="mb-3">
+																					<Label htmlFor="product_code">
+																					{/* <span className="text-danger">*</span> */}
+																						 {strings.CompanyAddressLine2}
+																				</Label>
+																					<Input
+																						type="text"
+																						id="companyAddressLine2"
+																						name="companyAddressLine2"
+																						placeholder={strings.Enter+strings.CompanyAddressLine2}
+																						rows="5"
+																						value={
+																							isSame
+																								? this.state.companyAddress
+																									.companyAddressLine2
+																								: props.values.companyAddressLine2
+																						}
+																						onChange={(option) => {
+																							props.handleChange(
+																								'companyAddressLine2',
+																							)(option);
+																						}}
+																						value={props.values.companyAddressLine2}
+																						className={
+																							props.errors.companyAddressLine2 &&
+																							props.touched.companyAddressLine2
+																							? 'is-invalid'
+																							: ''
+																						}
+																					/>
+																					{props.errors.companyAddressLine2 &&
+																								props.touched.companyAddressLine2 && (
+																									<div className="invalid-feedback">
+																										{props.errors.companyAddressLine2}
+																									</div>
+																								)}
+																				</FormGroup>
+																			</Col>
+																			
+
+																			<Col lg={3}>
+																				<FormGroup>
+																					<Label htmlFor="companyCountryCode">
+																					<span className="text-danger">*</span>
+																						{strings.CountryCode}
+																						{/* <Col> */}
+																				
+																			{/* </Col> */}
+																				</Label>
+																					<Select
+																						options={
+																							country_list
+																								? selectOptionsFactory.renderOptions(
+																									'countryName',
+																									'countryCode',
+																									country_list,
+																									'Country',
+																								)
+																								: []
+																						}
+																						value={
+																							isSame
+																								? country_list &&
+																								selectOptionsFactory
+																									.renderOptions(
+																										'countryName',
+																										'countryCode',
+																										country_list,
+																										'Country',
+																									)
+																									.find(
+																										(option) =>
+																											option.value ===
+																											+this.state.companyAddress
+																												.companyCountryCode,
+																									)
+																								: country_list &&
+																								selectOptionsFactory
+																									.renderOptions(
+																										'countryName',
+																										'countryCode',
+																										country_list,
+																										'Country',
+																									)
+																									.find(
+																										(option) =>
+																											option.value ===
+																											+props.values
+																												.companyCountryCode,
+																									)
+																						}
+																						onChange={(option) => {
+																							if (option && option.value) {
+																								props.handleChange(
+																									'companyCountryCode',
+																								)(option.value, 'company');
+																								props.handleChange(
+																									'companyStateCode',
+																								)('');
+																								this.getStateList(
+																									option.value,
+																									'company',
+																								);
+																							} else {
+																								props.handleChange(
+																									'companyCountryCode',
+																								)('');
+																								props.handleChange(
+																									'companyStateCode',
+																								)('');
+																							}
+																						}}
+																						placeholder={strings.Select+strings.CountryCode}
+																						id="companyCountryCode"
+																						name="companyCountryCode"
+																						className={
+																							props.errors.companyCountryCode &&
+																								props.touched.companyCountryCode
+																								? 'is-invalid'
+																								: ''
+																						}
+																					/>
+																					{props.errors.companyCountryCode &&
+																						props.touched.companyCountryCode && (
+																							<div className="invalid-feedback">
+																								{props.errors.companyCountryCode}
+																							</div>
+																						)}
+																				</FormGroup>
+																			</Col>
+																			<Col lg={3}>
+																				<FormGroup className="mb-3">
+																					<Label htmlFor="product_code">
+																					<span className="text-danger">*</span>
+																						{props.values.companyCountryCode === 229 ? strings.Emirates : strings.StateRegion}
+																				</Label>
+																					<Select
+																						options={selectOptionsFactory.renderOptions(
+																							'label',
+																							'value',
+																							isSame
+																								? invoicing_state_list
+																								: company_state_list,
+																							'State/Province',
+																						)}
+																						value={
+																							isSame
+																								? invoicing_state_list.find(
+																									(option) =>
+																										option.value ===
+																										+this.state.companyAddress
+																											.companyStateCode,
+																								)
+																								: company_state_list.find(
+																									(option) =>
+																										option.value ===
+																										+props.values
+																											.companyStateCode,
+																								)
+																						}
+																						onChange={(option) => {
+																							if (option && option.value) {
+																								props.handleChange(
+																									'companyStateCode',
+																								)(option.value);
+																							} else {
+																								props.handleChange(
+																									'companyStateCode',
+																								)('');
+																							}
+																						}}
+																						placeholder={strings.Select+strings.StateRegion}
+																						id="companyStateCode"
+																						name="companyStateCode"
+																						className={
+																							props.errors.companyStateCode &&
+																								props.touched.companyStateCode
+																								? 'is-invalid'
+																								: ''
+																						}
+																					/>
+																					{props.errors.companyStateCode &&
+																						props.touched.companyStateCode && (
+																							<div className="invalid-feedback">
+																								{props.errors.companyStateRegion}
+																							</div>
+																						)}
+																				</FormGroup>
+																			</Col>
+																			
+																		</Row>
+																		
+																		<Row>
+																		<Col lg={3}>
+																				<FormGroup className="mb-3">
+																					<Label htmlFor="companyCity">
+																					<span className="text-danger">*</span>
+																						 {strings.City}
+																				</Label>
+																					<Input
+																						type="text"
+																						id="companyCity"
+																						name="companyCity"
+																						placeholder={strings.Enter+strings.City}
+																						value={
+																							isSame
+																								? this.state.companyAddress
+																									.companyCity
+																								: props.values.companyCity
+																						}
+																						onChange={(option) => {
+																							props.handleChange('companyCity')(
+																								option,
+																							);
+																						}}
+																						value={props.values.companyCity}
+																						className={
+																							props.errors.companyCity &&
+																							props.touched.companyCity
+																							? 'is-invalid'
+																							: ''
+																						}
+																					/>
+																					{props.errors.companyCity &&
+																						props.touched.companyCity && (
+																						<div className="invalid-feedback">
+																							{props.errors.companyCity}
+																						</div>
+																					)}
+																				</FormGroup>
+																			</Col>
+																			<Col lg={3}>
+																				<FormGroup className="mb-3">
+																					<Label htmlFor="companyPostZipCode">
+																					<span className="text-danger">*</span>
+																						 {strings.PostZipCode}
+																				</Label>
+																					<Input
+																						type="text"
+																						id="companyPostZipCode"
+																						name="companyPostZipCode"
+																						placeholder={strings.Enter+strings.PostZipCode}
+																						value={
+																							isSame
+																								? this.state.companyAddress
+																									.companyPostZipCode
+																								: props.values.companyPostZipCode
+																						}
+																						onChange={(option) => {
+																							if (
+																								option.target.value === '' ||
+																								this.regEx.test(
+																									option.target.value,
+																								)
+																							) {
+																								props.handleChange(
+																									'companyPostZipCode',
+																								)(option);
+																							}
+																						}}
+																						value={props.values.companyPostZipCode}
+																						className={
+																							props.errors.companyPostZipCode &&
+																							props.touched.companyPostZipCode
+																							? 'is-invalid'
+																							: ''
+																						}
+																					/>
+																					{props.errors.companyPostZipCode &&
+																						props.touched.companyPostZipCode && (
+																						<div className="invalid-feedback">
+																							{props.errors.companyPostZipCode}
+																						</div>
+																					)}
+																				</FormGroup>
+																			</Col>
+																			<Col lg={3}>
+																				<FormGroup className="mb-3">
+																					<Label htmlFor="companyPoBoxNumber">
+																					{/* <span className="text-danger">*</span> */}
+																						 {strings.POBoxNumber}
+																				</Label>
+																					<Input
+																						type="text"
+																						id="companyPoBoxNumber"
+																						name="companyPoBoxNumber"
+																						placeholder={strings.Enter+strings.POBoxNumber}
+																						value={
+																							isSame
+																								? this.state.companyAddress
+																									.companyPoBoxNumber
+																								: props.values.companyPoBoxNumber
+																						}
+																						onChange={(option) => {
+																							if (
+																								option.target.value === '' ||
+																								this.regExBoth.test(
+																									option.target.value,
+																								)
+																							) {
+																								props.handleChange(
+																									'companyPoBoxNumber',
+																								)(option);
+																							}
+																						}}
+																						value={props.values.companyPoBoxNumber}
+																						className={
+																							props.errors.companyPoBoxNumber &&
+																							props.touched.companyPoBoxNumber
+																							? 'is-invalid'
+																							: ''
+																						}
+																					/>
+																					{props.errors.companyPoBoxNumber &&
+																						props.touched.companyPoBoxNumber && (
+																						<div className="invalid-feedback">
+																							{props.errors.companyPoBoxNumber}
+																						</div>
+																					)}
+																				</FormGroup>
+																				
+																			</Col>
+																			<Col lg={3}>
+																				<FormGroup className="mb-3">
+																					<Label htmlFor="fax">
+																					{/* <span className="text-danger">*</span> */}
+																					{strings.Fax}
+																				</Label>
+																					<Input
+																						type="text"
+																						id="fax"
+																						name="fax"
+																						placeholder={strings.Enter+"Fax"}
+																						rows="5"
+																						
+																						onChange={(option) => {
+																							props.handleChange(
+																								'fax',
+																							)(option);
+																						}}
+																						value={props.values.fax}
+																				
+																					/>
+																				
+																				</FormGroup>
 																			</Col>
 																		</Row>
 
-																		<h5 className="mt-3 mb-3">{strings.CompanyCost}</h5>
+
+																		<Row className={"mt-4"}>
+																			<Col lg={3}>
+																				<FormGroup className="mb-3" check inline >
+																					<div>
+																						<Input
+																							// className="custom-control-input"
+																							type="checkbox"
+																							id="inline-radio2"
+																							name="SMTP-auth"
+																							// value={props.values.isDesignatedZone}
+																							checked={props.values.isDesignatedZone}
+																							onChange={(value) => {
+																								if(value != null){
+																								props.handleChange('IsDesignatedZone')(
+																									value,
+																								);
+																								}else{
+																									props.handleChange('IsDesignatedZone')(
+																										'',
+																									);
+																								}
+																							}}
+																						/>
+																						<label htmlFor="inline-radio2">
+																						{strings.CompanyLoatedInDesignatedZone}
+																					</label>
+																					</div>
+																				</FormGroup>
+																				</Col>
+																				<Col lg={4}>
+																				<FormGroup check inline className="mb-3">
+																					<div>
+																						<Input
+																							// className="custom-control-input"
+																							type="checkbox"
+																							id="inline-radio1"
+																							name="SMTP-auth"
+																							checked={props.values.isRegisteredVat}
+																							onChange={(value) => {
+																								if(value != null){
+																								props.handleChange('isRegisteredVat')(
+																									value,
+																								);
+																								}else{
+																									props.handleChange('isRegisteredVat')(
+																										'',
+																									);
+																								}
+																							}}
+																						/>
+																						<label htmlFor="inline-radio1">
+																						{strings.CompanyVatRegistered}
+																					</label>
+																					</div>
+																				</FormGroup>
+																			</Col>
+																		</Row>
+																		
+																		<Row style={{display: props.values.isRegisteredVat === true ? '' : 'none'}}>
+																			<Col lg={3}>
+																						<FormGroup className="mb-3">
+																							<Label htmlFor="product_code">
+																							<span className="text-danger">*</span>
+																							 {strings.TaxRegistrationNumber}
+																						</Label>
+																							<Input
+																								type="text"
+																								id="vatRegistrationNumber"
+																								maxLength="15"
+																								name="vatRegistrationNumber"
+																								placeholder={strings.Enter+strings.TaxRegistrationNumber}
+																								value={
+																									props.values
+																										.vatRegistrationNumber
+																								}
+																								onChange={(option) => {
+																									if (
+																										option.target.value === '' ||
+																										this.regEx.test(option.target.value)
+																									) {
+																										props.handleChange('vatRegistrationNumber')(
+																											option,
+																										);
+																									} else {
+																										props.handleChange('vatRegistrationNumber')(
+																											option,
+																										);
+																								}}
+																							}
+																							value={props.values.vatRegistrationNumber}
+																								className={
+																									props.errors.vatRegistrationNumber &&
+																									props.touched.vatRegistrationNumber
+																										? 'is-invalid'
+																										: ''
+																								}
+																							/>
+																							{props.errors.vatRegistrationNumber &&
+																								props.touched.vatRegistrationNumber && (
+																									<div className="invalid-feedback">
+																										{props.errors.vatRegistrationNumber}
+																									</div>
+																								)}
+																								<div className="VerifyTRN">
+																		<br/>
+																		<b>	<a target="_blank" rel="noopener noreferrer"  href="https://eservices.tax.gov.ae/en-us/trn-verify" style={{ color: '#2266d8' }}  >{strings.VerifyTRN}</a></b>
+														</div>
+																						</FormGroup>
+																					</Col>
+																					<Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="expense_date">
+																			<span className="text-danger">*</span>
+																			{strings.VatRegisteredOn}
+																		</Label>
+																		<DatePicker
+																			id="date"
+																			name="vatRegistrationDate"
+																			className={`form-control ${
+																				props.errors.vatRegistrationDate &&
+																				props.touched.vatRegistrationDate
+																					? 'is-invalid'
+																					: ''
+																			}`}
+																			
+																			value={moment(
+																				props.values.vatRegistrationDate,
+																			).format('DD/MM/YYYY')}
+																			showMonthDropdown
+																			showYearDropdown
+																			dropdownMode="select"
+																			dateFormat="dd/MM/yyyy"
+																		 maxDate={new Date()}
+																			onChange={(value) => {
+																				props.handleChange('vatRegistrationDate')(
+																					value,
+																				);
+																			}}
+																		/>
+																		{props.errors.vatRegistrationDate &&
+																			props.touched.vatRegistrationDate && (
+																				<div className="invalid-feedback">
+																					{props.errors.vatRegistrationDate}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
+																					{/* <Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="date">
+																			<span className="text-danger">*</span>
+																			Vat Registration Date
+																		</Label>
+																		<DatePicker
+																			id="vatRegistrationDate"
+																			name="vatRegistrationDate"
+																			showMonthDropdown
+																			showYearDropdown
+																			dateFormat="dd/MM/yyyy"
+																			dropdownMode="select"
+																			 value={props.values.vatRegistrationDate}
+																			 selected={new Date(props.values.vatRegistrationDate)} 
+																			
+																			onChange={(value) => {
+																			
+																				props.handleChange('vatRegistrationDate')(
+																					value
+																				);
+																				this.setDate(props, value);
+																			}}
+																			className={`form-control ${
+																				props.errors.vatRegistrationDate &&
+																				props.touched.vatRegistrationDate
+																					? 'is-invalid'
+																					: ''
+																			}`}
+																		/>
+																		{props.errors.vatRegistrationDate &&
+																			props.touched.vatRegistrationDate && (
+																				<div className="invalid-feedback">
+																					{props.errors.vatRegistrationDate}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col> */}
+																			
+																			
+																		
+																		</Row>
+
+																		
+																		
+																			</Col>
+																		</Row>
+
+																		{/* <h5 className="mt-3 mb-3">{strings.CompanyCost}</h5>
 																		<Row>
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
@@ -1849,9 +2499,9 @@ class Profile extends React.Component {
 																					/>
 																				</FormGroup>
 																			</Col>
-																		</Row>
+																		</Row> */}
 
-																		<h5 className="mt-3 mb-3">
+																		{/* <h5 className="mt-3 mb-3">
 																			{strings.InvoicingAddress}
 																	</h5>
 																		<Row>
@@ -2045,12 +2695,12 @@ class Profile extends React.Component {
 																							</div>
 																						)}
 																				</FormGroup>
-																			</Col>
-																			<Col lg={4}>
+																			</Col> */}
+																			{/* <Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="product_code">
 																						 {strings.StateRegion}
-																				</Label>
+																				</Label> */}
 																					{/* <Input
                                             type="text"
                                             id="invoicingStateRegion"
@@ -2068,7 +2718,7 @@ class Profile extends React.Component {
                                               })
                                             }}
                                           /> */}
-																					<Select
+																					{/* <Select
 																						options={
 																							invoicing_state_list
 																								? selectOptionsFactory.renderOptions(
@@ -2209,9 +2859,9 @@ class Profile extends React.Component {
 																						}}
 																					/>
 																				</FormGroup>
-																			</Col>
-																			<Col lg={4}>
-																				<FormGroup className="mb-3">
+																			</Col> */}
+																			{/* <Col lg={4}> */}
+																				{/* <FormGroup className="mb-3">
 																					<Label htmlFor="invoicingPostZipCode">
 																						{strings.PostZipCode}
 																				</Label>
@@ -2247,7 +2897,7 @@ class Profile extends React.Component {
 																						}}
 																					/>
 																				</FormGroup>
-																			</Col>
+																			</Col> */}
 																			{/* <Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="dateFormat">
@@ -2271,10 +2921,40 @@ class Profile extends React.Component {
 																					/>
 																				</FormGroup>
 																			</Col> */}
-																		</Row>
+																		{/* </Row> */}
 
-																		<h5 className="mt-3 mb-3">{strings.CompanyAddress}</h5>
-																		<Row>
+																	
+																		{/* <Row className={"mt-4"}>
+																		<Col lg={12}>
+																		<FormGroup check inline >
+																					<div>
+																						<Input
+																							// className="custom-control-input"
+																							type="checkbox"
+																							id="inline-radio2"
+																							name="SMTP-auth"
+																							// value={props.values.isDesignatedZone}
+																							checked={props.values.isDesignatedZone}
+																							onChange={(value) => {
+																								if(value != null){
+																								props.handleChange('IsDesignatedZone')(
+																									value,
+																								);
+																								}else{
+																									props.handleChange('IsDesignatedZone')(
+																										'',
+																									);
+																								}
+																							}}
+																						/>
+																						<label htmlFor="inline-radio2">
+																						{strings.CompanyLoatedInDesignatedZone}
+																					</label>
+																					</div>
+																				</FormGroup>
+																				</Col>
+																		</Row> */}
+																		{/* <Row>
 																			<Col lg={12}>
 																				<FormGroup check inline className="mb-3">
 																					<div>
@@ -2283,29 +2963,166 @@ class Profile extends React.Component {
 																							type="checkbox"
 																							id="inline-radio1"
 																							name="SMTP-auth"
-																							checked={this.state.isSame}
-																							onChange={(e) => {
-																								this.setState({
-																									isSame: !this.state.isSame,
-																								});
+																							checked={props.values.isRegisteredVat}
+																							onChange={(value) => {
+																								if(value != null){
+																								props.handleChange('isRegisteredVat')(
+																									value,
+																								);
+																								}else{
+																									props.handleChange('isRegisteredVat')(
+																										'',
+																									);
+																								}
 																							}}
 																						/>
 																						<label htmlFor="inline-radio1">
-																						{strings.CompanyAddressIsSameAsInvoicingAddress}
+																						{strings.CompanyVatRegistered}
 																					</label>
 																					</div>
 																				</FormGroup>
 																			</Col>
-																		</Row>
-																		<Row>
+																		</Row> */}
+
+																		{/* <Row style={{display: props.values.isRegisteredVat === true ? '' : 'none'}}>
 																			<Col lg={4}>
+																						<FormGroup className="mb-3">
+																							<Label htmlFor="product_code">
+																							<span className="text-danger">*</span>
+																							 {strings.TaxRegistrationNumber}
+																						</Label>
+																							<Input
+																								type="text"
+																								id="vatRegistrationNumber"
+																								maxLength="15"
+																								name="vatRegistrationNumber"
+																								placeholder={strings.Enter+strings.TaxRegistrationNumber}
+																								value={
+																									props.values
+																										.vatRegistrationNumber
+																								}
+																								onChange={(option) => {
+																									if (
+																										option.target.value === '' ||
+																										this.regEx.test(option.target.value)
+																									) {
+																										props.handleChange('vatRegistrationNumber')(
+																											option,
+																										);
+																									} else {
+																										props.handleChange('vatRegistrationNumber')(
+																											option,
+																										);
+																								}}
+																							}
+																							value={props.values.vatRegistrationNumber}
+																								className={
+																									props.errors.vatRegistrationNumber &&
+																									props.touched.vatRegistrationNumber
+																										? 'is-invalid'
+																										: ''
+																								}
+																							/>
+																							{props.errors.vatRegistrationNumber &&
+																								props.touched.vatRegistrationNumber && (
+																									<div className="invalid-feedback">
+																										{props.errors.vatRegistrationNumber}
+																									</div>
+																								)}
+																						</FormGroup>
+																					</Col>
+																					<Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="expense_date">
+																			<span className="text-danger">*</span>
+																			Vat Registered On 
+																		</Label>
+																		<DatePicker
+																			id="date"
+																			name="vatRegistrationDate"
+																			className={`form-control ${
+																				props.errors.vatRegistrationDate &&
+																				props.touched.vatRegistrationDate
+																					? 'is-invalid'
+																					: ''
+																			}`}
+																			
+																			value={moment(
+																				props.values.vatRegistrationDate,
+																			).format('DD/MM/YYYY')}
+																			showMonthDropdown
+																			showYearDropdown
+																			dropdownMode="select"
+																			dateFormat="dd/MM/yyyy"
+																		 maxDate={new Date()}
+																			onChange={(value) => {
+																				props.handleChange('vatRegistrationDate')(
+																					value,
+																				);
+																			}}
+																		/>
+																		{props.errors.vatRegistrationDate &&
+																			props.touched.vatRegistrationDate && (
+																				<div className="invalid-feedback">
+																					{props.errors.vatRegistrationDate}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col> */}
+																					{/* <Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="date">
+																			<span className="text-danger">*</span>
+																			Vat Registration Date
+																		</Label>
+																		<DatePicker
+																			id="vatRegistrationDate"
+																			name="vatRegistrationDate"
+																			showMonthDropdown
+																			showYearDropdown
+																			dateFormat="dd/MM/yyyy"
+																			dropdownMode="select"
+																			 value={props.values.vatRegistrationDate}
+																			 selected={new Date(props.values.vatRegistrationDate)} 
+																			
+																			onChange={(value) => {
+																			
+																				props.handleChange('vatRegistrationDate')(
+																					value
+																				);
+																				this.setDate(props, value);
+																			}}
+																			className={`form-control ${
+																				props.errors.vatRegistrationDate &&
+																				props.touched.vatRegistrationDate
+																					? 'is-invalid'
+																					: ''
+																			}`}
+																		/>
+																		{props.errors.vatRegistrationDate &&
+																			props.touched.vatRegistrationDate && (
+																				<div className="invalid-feedback">
+																					{props.errors.vatRegistrationDate}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col> */}
+																			{/* </Row> */}
+																		{/* <h5 className="mt-3 mb-3">{strings.CompanyAddress}</h5>
+																		<Row>
+																			
+																		
+																		</Row> */}
+
+																		{/* <Row style={{ display: props.values.countryName !== 1 ? '' : 'none' }}>
+																		<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="product_code">
 																					<span className="text-danger">*</span>
 																						 {strings.CompanyAddressLine1}
 																				</Label>
 																					<Input
-																						type="textarea"
+																						type="text"
 																						id="companyAddressLine1"
 																						name="companyAddressLine1"
 																						placeholder={strings.Enter+strings.CompanyAddressLine1}
@@ -2337,93 +3154,17 @@ class Profile extends React.Component {
 																								)}
 																				</FormGroup>
 																			</Col>
-																			<Col lg={4}>
-																				<FormGroup className="mb-3">
-																					<Label htmlFor="companyAddressLine2">
-																					<span className="text-danger">*</span>
-																						 {strings.CompanyAddressLine2}
-																				</Label>
-																					<Input
-																						type="textarea"
-																						id="companyAddressLine2"
-																						name="companyAddressLine2"
-																						placeholder={strings.Enter+strings.CompanyAddressLine2}
-																						rows="5"
-																						value={
-																							isSame
-																								? this.state.companyAddress
-																									.companyAddressLine2
-																								: props.values.companyAddressLine2
-																						}
-																						onChange={(option) => {
-																							props.handleChange(
-																								'companyAddressLine2',
-																							)(option);
-																						}}
-																						value={props.values.companyAddressLine2}
-																						className={
-																							props.errors.companyAddressLine2 &&
-																							props.touched.companyAddressLine2
-																							? 'is-invalid'
-																							: ''
-																						}
-																					/>
-																					{props.errors.companyAddressLine2 &&
-																								props.touched.companyAddressLine2 && (
-																									<div className="invalid-feedback">
-																										{props.errors.companyAddressLine2}
-																									</div>
-																								)}
-																				</FormGroup>
-																			</Col>
-																			<Col lg={4}>
-																				<FormGroup className="mb-3">
-																					<Label htmlFor="companyAddressLine3">
-																					<span className="text-danger">*</span>
-																						 {strings.CompanyAddressLine3}
-																				</Label>
-																					<Input
-																						type="textarea"
-																						id="companyAddressLine3"
-																						name="companyAddressLine3"
-																						placeholder={strings.Enter+strings.CompanyAddressLine3}
-																						rows="5"
-																						value={
-																							isSame
-																								? this.state.companyAddress
-																									.companyAddressLine3
-																								: props.values.companyAddressLine3
-																						}
-																						onChange={(option) => {
-																							props.handleChange(
-																								'companyAddressLine3',
-																							)(option);
-																						}}
-																						value={props.values.companyAddressLine3}
-																						className={
-																							props.errors.companyAddressLine3 &&
-																							props.touched.companyAddressLine3
-																							? 'is-invalid'
-																							: ''
-																						}
-																					/>
-																					{props.errors.companyAddressLine3 &&
-																								props.touched.companyAddressLine3 && (
-																									<div className="invalid-feedback">
-																										{props.errors.companyAddressLine3}
-																									</div>
-																								)}
-																				</FormGroup>
-																			</Col>
-																		</Row>
+																			
 
-																		<Row>
 																			<Col lg={4}>
 																				<FormGroup>
 																					<Label htmlFor="companyCountryCode">
 																					<span className="text-danger">*</span>
-																						{strings.CountryCode}
-																				</Label>
+																						{strings.CountryCode} */}
+																						{/* <Col> */}
+																				
+																			{/* </Col> */}
+																				{/* </Label>
 																					<Select
 																						options={
 																							country_list
@@ -2472,7 +3213,7 @@ class Profile extends React.Component {
 																									'companyCountryCode',
 																								)(option.value, 'company');
 																								props.handleChange(
-																									'companyStateRegion',
+																									'companyStateCode',
 																								)('');
 																								this.getStateList(
 																									option.value,
@@ -2483,7 +3224,7 @@ class Profile extends React.Component {
 																									'companyCountryCode',
 																								)('');
 																								props.handleChange(
-																									'companyStateRegion',
+																									'companyStateCode',
 																								)('');
 																							}
 																						}}
@@ -2509,19 +3250,8 @@ class Profile extends React.Component {
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="product_code">
 																					<span className="text-danger">*</span>
-																						 {strings.StateRegion}
+																						{props.values.companyCountryCode === 229 ? strings.Emirates : strings.StateRegion}
 																				</Label>
-																					{/* <Input
-                                            type="text"
-                                            id="companyStateRegion"
-                                            name="companyStateRegion"
-                                            placeholder="Enter State Region"
-                                            value={isSame ? this.state.companyAddress.companyStateRegion : props.values.companyStateRegion}
-
-                                            onChange={(option) => {
-                                              props.handleChange('companyStateRegion')(option)
-                                            }}
-                                          /> */}
 																					<Select
 																						options={selectOptionsFactory.renderOptions(
 																							'label',
@@ -2529,7 +3259,7 @@ class Profile extends React.Component {
 																							isSame
 																								? invoicing_state_list
 																								: company_state_list,
-																							'State',
+																							'State/Province',
 																						)}
 																						value={
 																							isSame
@@ -2537,45 +3267,48 @@ class Profile extends React.Component {
 																									(option) =>
 																										option.value ===
 																										+this.state.companyAddress
-																											.companyStateRegion,
+																											.companyStateCode,
 																								)
 																								: company_state_list.find(
 																									(option) =>
 																										option.value ===
 																										+props.values
-																											.companyStateRegion,
+																											.companyStateCode,
 																								)
 																						}
 																						onChange={(option) => {
 																							if (option && option.value) {
 																								props.handleChange(
-																									'companyStateRegion',
+																									'companyStateCode',
 																								)(option.value);
 																							} else {
 																								props.handleChange(
-																									'companyStateRegion',
+																									'companyStateCode',
 																								)('');
 																							}
 																						}}
 																						placeholder={strings.Select+strings.StateRegion}
-																						id="companyStateRegion"
-																						name="companyStateRegion"
+																						id="companyStateCode"
+																						name="companyStateCode"
 																						className={
-																							props.errors.companyStateRegion &&
-																								props.touched.companyStateRegion
+																							props.errors.companyStateCode &&
+																								props.touched.companyStateCode
 																								? 'is-invalid'
 																								: ''
 																						}
 																					/>
-																					{props.errors.companyStateRegion &&
-																						props.touched.companyStateRegion && (
+																					{props.errors.companyStateCode &&
+																						props.touched.companyStateCode && (
 																							<div className="invalid-feedback">
 																								{props.errors.companyStateRegion}
 																							</div>
 																						)}
 																				</FormGroup>
 																			</Col>
-																			<Col lg={4}>
+																			
+																		</Row> */}
+																		{/* <Row>
+																		<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="companyCity">
 																					<span className="text-danger">*</span>
@@ -2609,53 +3342,6 @@ class Profile extends React.Component {
 																						props.touched.companyCity && (
 																						<div className="invalid-feedback">
 																							{props.errors.companyCity}
-																						</div>
-																					)}
-																				</FormGroup>
-																			</Col>
-																		</Row>
-																		<Row>
-																			<Col lg={4}>
-																				<FormGroup className="mb-3">
-																					<Label htmlFor="companyPoBoxNumber">
-																					<span className="text-danger">*</span>
-																						 {strings.POBoxNumber}
-																				</Label>
-																					<Input
-																						type="text"
-																						id="companyPoBoxNumber"
-																						name="companyPoBoxNumber"
-																						placeholder={strings.Enter+strings.POBoxNumber}
-																						value={
-																							isSame
-																								? this.state.companyAddress
-																									.companyPoBoxNumber
-																								: props.values.companyPoBoxNumber
-																						}
-																						onChange={(option) => {
-																							if (
-																								option.target.value === '' ||
-																								this.regExBoth.test(
-																									option.target.value,
-																								)
-																							) {
-																								props.handleChange(
-																									'companyPoBoxNumber',
-																								)(option);
-																							}
-																						}}
-																						value={props.values.companyPoBoxNumber}
-																						className={
-																							props.errors.companyPoBoxNumber &&
-																							props.touched.companyPoBoxNumber
-																							? 'is-invalid'
-																							: ''
-																						}
-																					/>
-																					{props.errors.companyPoBoxNumber &&
-																						props.touched.companyPoBoxNumber && (
-																						<div className="invalid-feedback">
-																							{props.errors.companyPoBoxNumber}
 																						</div>
 																					)}
 																				</FormGroup>
@@ -2705,7 +3391,31 @@ class Profile extends React.Component {
 																					)}
 																				</FormGroup>
 																			</Col>
-																		</Row>
+																			<Col lg={4}>
+																				<FormGroup className="mb-3">
+																					<Label htmlFor="fax"> */}
+																					{/* <span className="text-danger">*</span> */}
+																						{/* Fax
+																				</Label>
+																					<Input
+																						type="text"
+																						id="fax"
+																						name="fax"
+																						placeholder={strings.Enter+"Fax"}
+																						rows="5"
+																						
+																						onChange={(option) => {
+																							props.handleChange(
+																								'fax',
+																							)(option);
+																						}}
+																						value={props.values.fax}
+																				
+																					/>
+																				
+																				</FormGroup>
+																			</Col>
+																		</Row> */}
 
 																		<Row>
 																			<Col lg={12} className="mt-5">

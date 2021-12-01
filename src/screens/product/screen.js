@@ -369,7 +369,26 @@ class Product extends React.Component {
             </span>
         );
     };
-
+	exciseSlabFormatter  = (cell, row) => {
+        let exciseTax='';
+		if(row.exciseTaxId !=null){
+			exciseTax=row.exciseTax
+		}
+		else{
+			exciseTax="-"
+		}
+        return exciseTax;
+    };
+	renderType  = (cell, row) => {
+        let type='';
+		if(row.exciseTaxId !=null){
+			type="EXCISE "+row.productType
+		}
+		else{
+			type=row.productType
+		}
+        return type;
+    };
 	productType = (cell, row) => {
 		return row['producttype'] !== null ? row['producttype']['type'] : '';
 	};
@@ -629,14 +648,23 @@ class Product extends React.Component {
 													Description
 												</TableHeaderColumn> */}
 												<TableHeaderColumn
-													width="8%"
+													width="18%"
 													// dataAlign="right"
 													dataField="vatPercentage"
 													dataSort
 													// dataFormat={this.vatCategoryFormatter}
 													className="table-header-bg"
 												>
-													 {strings.VatPercentage}
+													 {strings.Vat+" "+strings.Type}
+												</TableHeaderColumn>
+												<TableHeaderColumn
+													 dataAlign="center"
+													dataField="exciseTax"
+													dataSort
+												    dataFormat={this.exciseSlabFormatter}
+													className="table-header-bg"
+												>
+													 Excise Slab
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													width="8%"

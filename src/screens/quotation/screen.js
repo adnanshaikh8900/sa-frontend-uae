@@ -530,7 +530,7 @@ class Quatation extends React.Component {
 		this.props.purchaseOrderAction
 			.postInvoice(postingRequestModel)
 			.then((res) => {
-				debugger
+				 
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',

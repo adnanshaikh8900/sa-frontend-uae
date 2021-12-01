@@ -94,7 +94,10 @@ class DetailProduct extends React.Component {
 			openModal:false,
 			inventory_history_list:[],
 			inventory_list:[],
-			isActive:false
+			isActive:false,
+			exciseTaxId:'',
+			exciseTaxList:[],
+			exciseTaxCheck:false
 		};
 
 		this.selectRowProp = {
@@ -123,6 +126,13 @@ class DetailProduct extends React.Component {
 
 	componentDidMount = () => {
 		this.initializeData();
+		this.props.productActions.getExciseTaxList().then((res) => {
+			if (res.status === 200) {
+				this.setState({
+					exciseTaxList:res.data
+				});
+			}
+		});
 	};
 	
 	onRowSelect = (row, isSelected, e) => {
@@ -219,10 +229,13 @@ class DetailProduct extends React.Component {
 								contactId: res.data.contactId ? res.data.contactId : '',
 								transactionCategoryId: res.data.transactionCategoryId ? res.data.transactionCategoryId : '',
 								inventoryId: res.data.inventoryId ? res.data.inventoryId : '',
+								exciseTaxId:res.data.exciseTaxId ?res.data.exciseTaxId :'',
 							},
+							exciseTaxCheck:res.data.exciseTaxId ?true :false,
 							count:initCount,
 							isInventoryEnabled: res.data.isInventoryEnabled ? res.data.isInventoryEnabled : '',
 							selectedStatus: res.data.isActive ? true : false,
+							salesProductCheck:res.data.productType=="SERVICE" ? true : false,
 						});
 					} else {
 						this.setState({ loading: false });
@@ -357,6 +370,7 @@ renderName=(cell,row)=>{
 		const purchaseUnitPrice = data['purchaseUnitPrice'];
 		const vatCategoryId = data['vatCategoryId'];
 		const vatIncluded = data['vatIncluded'];
+		const exciseTaxId = data['exciseTaxId'];
 		const inventoryPurchasePrice = data['inventoryPurchasePrice'];
 		const inventoryQty = data['inventoryQty'];
 		const inventoryReorderLevel = data['inventoryReorderLevel'];
@@ -388,6 +402,7 @@ renderName=(cell,row)=>{
 			productType,
 			productPriceType,
 			vatCategoryId,
+			exciseTaxId,
 			vatIncluded,
 			isInventoryEnabled,
 			contactId,
@@ -642,7 +657,7 @@ renderName=(cell,row)=>{
 	render() {
 		strings.setLanguage(this.state.language);
 		const { vat_list, product_category_list,supplier_list,inventory_list } = this.props;
-		const { loading, dialog, purchaseCategory, salesCategory, inventoryAccount } = this.state;
+		const { loading, dialog, purchaseCategory, salesCategory, inventoryAccount ,exciseTaxList} = this.state;
 		let tmpSupplier_list = []
 
 		supplier_list.map(item => {
@@ -703,6 +718,9 @@ renderName=(cell,row)=>{
 														if (values.purchaseUnitPrice > values.salesUnitPrice) {
 															errors.purchaseUnitPrice = 
 															'Purchase price cannot be greater than Sales price';
+														}
+														if(this.state.exciseTaxCheck===true && values.exciseTaxId=='' ){
+															errors.exciseTaxId = 'Excise Tax is requied';
 														}
 														return errors;
 													}}
@@ -1020,7 +1038,7 @@ renderName=(cell,row)=>{
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="vatCategoryId">
 																			<span className="text-danger">*</span>
-																			 {strings.VatPercentage}
+																			{strings.VAT+" "+strings.Type}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -1103,7 +1121,106 @@ renderName=(cell,row)=>{
 																	</FormGroup>
 																</Col>
 															</Row> */}
+	<Row style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}		>
+																<Col lg={4}>
+																<FormGroup check inline className="mb-3">
+																		<Label
+																			className="form-check-label"
+																			check
+																			htmlFor="exciseTaxCheck"
+																		>
+																			<Input
+																				type="checkbox"
+																				id="exciseTaxCheck"
+																				name="exciseTaxCheck"
+																				onChange={(event) => {
+																				let edit=props.values.exciseTaxId!='' ?true:false
+																					if(!edit)
+																					{
+																					if (this.state.exciseTaxCheck===true)
+																					 	this.setState({exciseTaxCheck:false})
+																					else 
+																						this.setState({exciseTaxCheck:true})
+																					}
+																				
+																				}}
+																				checked={this.state.exciseTaxCheck}
+																				
+																			/>
+																			Excise Product ?
+																		</Label>
+																	</FormGroup>
+																</Col>
+																
+																{this.state.exciseTaxCheck===true&&(	
+															
+																<Col  style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}} lg={4}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="exciseTaxId">
+																			<span className="text-danger">*</span>
+																			Excise Tax Type
+																		</Label>
+																		<Select
+																		isDisabled={props.values.exciseTaxId!='' ?true:false}
+																			styles={customStyles}
+																			options={
+																				exciseTaxList
+																					? selectOptionsFactory.renderOptions(
+																							'name',
+																							'id',
+																							exciseTaxList,
+																							'Excise Tax Slab',
+																					  )
+																					: []
+																			}
+																			id="exciseTaxId"
+																			name="exciseTaxId"
+																			placeholder={strings.Select+ "Excise Tax Slab"}
+																			value={
+																				exciseTaxList
+																				&& selectOptionsFactory.renderOptions(
+																							'name',
+																							'id',
+																							exciseTaxList,
+																							'Excise Tax Slab',
+																					  )
+																					.find(
+																						(option) =>
+																							option.value ===
+																							+props.values.exciseTaxId,
+																					)
+																			}
+																			onChange={(option) => {
+																				
+																				if (option && option.value) {
+																					props.handleChange('exciseTaxId')(
+																						option,
+																					);
+																				} else {
+																					props.handleChange('exciseTaxId')(
+																						'',
+																					);
+																				}
+																			}}
+																			className={
+																				props.errors.exciseTaxId &&
+																				props.touched.exciseTaxId
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{props.errors.exciseTaxId &&
+																			props.touched.exciseTaxId && (
+																				<div className="invalid-feedback">
+																					{props.errors.exciseTaxId}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
 
+															)}
+																</Row>
+														
 															<Row className="secondary-info">
 																<Col lg={8}>
 																	<FormGroup check inline className="mb-3">
@@ -1520,7 +1637,7 @@ renderName=(cell,row)=>{
 
 																			}}>
 															
-																	<Col lg={8}>
+																	<Col lg={8} style={{display: props.values.isInventoryEnabled === false ? '' : 'none'}}>
 																	<FormGroup check inline className="mb-3">
 																		<Label
 																			className="form-check-label"

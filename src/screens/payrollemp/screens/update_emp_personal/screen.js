@@ -439,6 +439,11 @@ class UpdateEmployeePersonal extends React.Component {
                                                                     'Designation is Required';
                                                                 }
 
+                                                                if (values.salaryRoleId && values.salaryRoleId.label && values.salaryRoleId.label === "Select Salary Role") {
+                                                                    errors.salaryRoleId =
+                                                                    'Salary Role is Required';
+                                                                }
+
 														return errors;
 													}}
                                                     validationSchema={Yup.object().shape({
@@ -468,6 +473,8 @@ class UpdateEmployeePersonal extends React.Component {
                                                         //     .required('status is Required'),
                                                         employeeDesignationId: Yup.string()
                                                             .required('Designation is Required'),
+                                                            salaryRoleId : Yup.string()
+                                                            .required('Salary Role is Required'),
                                                             mobileNumber: Yup.string()
 															.required('Mobile Number is required'),
                                                             emergencyContactName1: Yup.string()
@@ -859,7 +866,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                     <Col md="4">
                                                                             <FormGroup>
 
-                                                                                <Label htmlFor="salaryRoleId">{strings.SalaryRole} </Label>
+                                                                                <Label htmlFor="salaryRoleId"><span className="text-danger">*</span> {strings.SalaryRole} </Label>
                                                                                 <Select
 
                                                                                     options={

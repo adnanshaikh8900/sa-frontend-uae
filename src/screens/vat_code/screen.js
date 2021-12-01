@@ -107,6 +107,17 @@ class VatCode extends React.Component {
 	}
 
 	componentDidMount = () => {
+		this.props.vatActions.getCompanyDetails().then((res) => {
+			if (res.status === 200) {
+				this.setState({ companyDetails: res.data });
+			}
+		})
+		.catch((err) => {
+			this.props.commonActions.tostifyAlert(
+				'error',
+				err && err.data ? err.data.message : 'Something Went Wrong',
+			);
+		});
 		this.initializeData();
 	};
 
@@ -258,7 +269,7 @@ class VatCode extends React.Component {
 					'success',
 					res.data.message
 				);
-				if (vat_list && vat_list.data && vat_list.data.length > 0) {
+				if (vat_list && vat_list && vat_list.length > 0) {
 					this.setState({
 						selectedRows: [],
 					});
@@ -335,6 +346,13 @@ class VatCode extends React.Component {
 		} = this.state;
 		const { vat_list } = this.props;
 
+		var vat_list_data =[];
+
+		for(let i=0;i<vat_list.count;i++){
+			if(vat_list.data[i].id ==3 || vat_list.data[i].id==4)
+				continue;
+				vat_list_data.push(vat_list.data[i])
+		}
 		return (
 			<div className="vat-code-screen">
 				<div className="animated fadeIn">
@@ -452,7 +470,7 @@ class VatCode extends React.Component {
 												</Col>
 											</Row>
 										</div> */}
-										<Button
+										{this.state.companyDetails && this.state.companyDetails.isRegisteredVat===true &&(<Button
 											color="primary"
 											className="btn-square pull-right"
 											style={{ marginBottom: '10px' }}
@@ -464,17 +482,17 @@ class VatCode extends React.Component {
 										>
 											<i className="fas fa-plus mr-1" />
 											{strings.AddNewVat}
-										</Button>
+										</Button>)}
 										<BootstrapTable
 											data={
-												vat_list && vat_list.data && vat_list.data.length > 0
-													? vat_list.data
+												vat_list_data &&  vat_list_data.length > 0
+													? vat_list_data
 													: []
 											}
 											hover
 											version="4"
 											pagination={
-												vat_list && vat_list.data && vat_list.data.length > 0
+												vat_list_data &&  vat_list_data.length > 0
 													? true
 													: false
 											}

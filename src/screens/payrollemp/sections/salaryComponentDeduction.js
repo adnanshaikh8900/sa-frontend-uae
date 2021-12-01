@@ -38,7 +38,7 @@ class SalaryComponentDeduction extends React.Component {
 			initValue: {
 				employeeId:'',
 				salaryStructure: 1,
-				type: '',
+				type: {value:1},
 				flatAmount: '',
 				email: '',
 				dob: new Date(),
@@ -62,6 +62,7 @@ class SalaryComponentDeduction extends React.Component {
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 		this.regExAlpha = /^[a-zA-Z][a-zA-Z ]*$/;
 		this.regExAddress = /^[a-zA-Z0-9\s,'-]+$/;
+		this.regDec1=/^\d{1,2}\.\d{1,2}$|^\d{1,2}$/;
 		this.type = [
 			{ label: 'Flat Amount', value: 1 },
 			{ label: '% of Basic', value: 2 }
@@ -216,13 +217,16 @@ class SalaryComponentDeduction extends React.Component {
 									if (values.type=="") {
 										errors.type = 'Type is Required';
 									}
-
-									if(values.type.label && values.type.label ==="% of Basic" && values.formula==""){
-										errors.formula="Percentage is required"
-									}else
-									if(values.type.label && values.type.label ==="Flat Amount" && values.flatAmount==""){
-										errors.flatAmount="Flat Amount is required"
+									if (values.flatAmount=="") {
+										errors.flatAmount = 'Flat Amount is Required';
 									}
+
+									// if(values.type.label && values.type.label ==="% of Basic" && values.formula==""){
+									// 	errors.formula="Percentage is required"
+									// }else
+									// if(values.type.label && values.type.label ==="Flat Amount" && values.flatAmount==""){
+									// 	errors.flatAmount="Flat Amount is required"
+									// }
 						}
 						else if(this.state.selectDisable===true && (!values.id || values.id.label== "Select Type")){
 							   errors.id="Component is required"
@@ -385,7 +389,7 @@ class SalaryComponentDeduction extends React.Component {
 												<FormGroup>
 													<Label htmlFor="gender">	<span className="text-danger">*</span>{strings.Type}</Label>
 													<Select
-
+														isDisabled
 														options={
 															this.type
 																? selectOptionsFactory.renderOptions(
@@ -399,7 +403,17 @@ class SalaryComponentDeduction extends React.Component {
 														id="type"
 														name="type"
 														placeholder={strings.Select+strings.Type}
-														value={this.state.gender}
+														value={this.type
+															&& selectOptionsFactory.renderOptions(
+																'label',
+																'value',
+																this.type,
+																'Type',
+															).find(
+																   (option) =>
+																	   option.value ===
+																	   +props.values.type.value,
+															   )}
 														onChange={(value) => {
 															props.handleChange('type')(value);
 
@@ -426,13 +440,17 @@ class SalaryComponentDeduction extends React.Component {
 													<span className="text-danger">*</span>	{strings.Percentage}
 													</Label>
 													<Input
-														type="text"
+														type="number"
 														id="formula"
 														name="formula"
+														min="0"
+														max="99"
+															step="0.01"
 														value={props.values.formula}
+														maxLength={2}
 														placeholder={strings.Enter+strings.Percentage}
 														onChange={(option) => {
-															if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
+															if (option.target.value === '' || this.regDec1.test(option.target.value)) { props.handleChange('formula')(option) }
 														}}
 														className={props.errors.formula && props.touched.formula ? "is-invalid" : ""}
 													/>
@@ -449,6 +467,7 @@ class SalaryComponentDeduction extends React.Component {
 													<span className="text-danger">*</span>	  {strings.FlatAmount}
 													</Label>
 													<Input
+													maxLength="8"
 														type="text"
 														id="flatAmount"
 														name="flatAmount"

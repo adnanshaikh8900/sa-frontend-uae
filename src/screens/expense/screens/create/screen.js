@@ -214,7 +214,7 @@ class CreateExpense extends React.Component {
 		}
 		if (vatCategoryId && vatCategoryId.value) {
 			formData.append('vatCategoryId', vatCategoryId.value);
-			debugger
+			 
 			if(this.state.exclusiveVat !== undefined){
 				formData.append('exclusiveVat', this.state.exclusiveVat );
 			}

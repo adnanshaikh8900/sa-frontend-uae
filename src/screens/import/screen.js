@@ -413,7 +413,7 @@ class Import extends React.Component {
 	});
 }
 	versionlist = (productName) => {
-		debugger
+		 
 		this.props.migrationActions.getVersionListByPrioductName(productName)
 			.then((res) => {
 				if (res.status === 200) {
@@ -1032,7 +1032,7 @@ class Import extends React.Component {
 																				
 																					onChange={(option) => {
 																						if (option.value != null) {
-																							debugger
+																							 
 																							props.handleChange('productName')(
 																								option.label,
 																								

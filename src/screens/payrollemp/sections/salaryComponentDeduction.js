@@ -217,13 +217,16 @@ class SalaryComponentDeduction extends React.Component {
 									if (values.type=="") {
 										errors.type = 'Type is Required';
 									}
-
-									if(values.type.label && values.type.label ==="% of Basic" && values.formula==""){
-										errors.formula="Percentage is required"
-									}else
-									if(values.type.label && values.type.label ==="Flat Amount" && values.flatAmount==""){
-										errors.flatAmount="Flat Amount is required"
+									if (values.flatAmount=="") {
+										errors.flatAmount = 'Flat Amount is Required';
 									}
+
+									// if(values.type.label && values.type.label ==="% of Basic" && values.formula==""){
+									// 	errors.formula="Percentage is required"
+									// }else
+									// if(values.type.label && values.type.label ==="Flat Amount" && values.flatAmount==""){
+									// 	errors.flatAmount="Flat Amount is required"
+									// }
 						}
 						else if(this.state.selectDisable===true && (!values.id || values.id.label== "Select Type")){
 							   errors.id="Component is required"

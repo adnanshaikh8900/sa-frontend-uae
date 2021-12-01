@@ -1170,6 +1170,10 @@ existForAccountNumber = (value) => {
                                                                                 errors.employeeDesignationId =
                                                                                 'Designation is Required';
                                                                             }
+                                                                            if (values.salaryRoleId && values.salaryRoleId.label && values.salaryRoleId.label === "Select Salary Role") {
+                                                                                errors.salaryRoleId =
+                                                                                'Salary Role is Required';
+                                                                            }
                                                                                 
                                                                             
                                                                             // if( values.stateId ===''){
@@ -1214,7 +1218,9 @@ existForAccountNumber = (value) => {
                                                                             .required('City is Required') ,
                                                                           
                                                                             active : Yup.string()
-                                                                            .required('status is Required') ,  
+                                                                            .required('status is Required') , 
+                                                                            salaryRoleId : Yup.string()
+                                                                            .required('Salary Role is Required'),
                                                                             employeeDesignationId : Yup.string()
                                                                             .required('Designation is Required') ,
                                                                             emergencyContactName1: Yup.string()
@@ -1661,7 +1667,7 @@ existForAccountNumber = (value) => {
                                                                                         <Row>
                                                                                         <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="salaryRoleId">{strings.SalaryRole} </Label>
+                                                                                                    <Label htmlFor="salaryRoleId"><span className="text-danger">*</span> {strings.SalaryRole} </Label>
                                                                                                     <Select
 
                                                                                                         options={

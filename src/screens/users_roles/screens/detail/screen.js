@@ -57,6 +57,8 @@ class UpdateRole extends React.Component {
 			count:'',
 			selectedStatus: false,
 			isActive: false,
+			isChecked: true,
+			validationForSelect:0,
 			current_role_id:null,
 			dialog: null,
 			expanded: ["SelectAll"],
@@ -105,7 +107,8 @@ class UpdateRole extends React.Component {
 								isActive: res.data ? res.data[0].isActive : '',
 								selectedStatus: res.data ? res.data[0].isActive : '',
 								loading: false,
-								count:initcount
+								count:initcount,
+								validationForSelect:res.data.length
 							},
 							() => {},
 						);
@@ -220,7 +223,24 @@ class UpdateRole extends React.Component {
 		this.setState({ checked }, () => {
 			console.log(this.state.checked);
 		});
+		if(Array.isArray(checked) && checked.length !== 0 )
+		this.setState({validationForSelect:checked[0]})
+		else
+		this.setState({validationForSelect:checked.length})
 	};
+
+	// toggleChange = () => {
+	// 	// 	this.setState({
+	// 	// 	  isChecked: !this.state.isChecked,
+	// 	// 	});
+			
+	// 	//   }
+	getvalidation=()=>{
+	
+		let msg = this.state && this.state.validationForSelect && this.state.validationForSelect!=0 ?
+																		 "" :  "Please select atleast 1 module"
+																		 return<div className="text-danger">{msg}</div> 
+}
 
 	onExpand = (expanded) => {
 		this.setState({ expanded });
@@ -328,7 +348,7 @@ class UpdateRole extends React.Component {
 																'This role is in use , you are not allowed to inactive this role',
 															);
 														}else{
-															this.handleSubmit(values, resetForm);
+															if(this.state.validationForSelect > 0){	this.handleSubmit(values, resetForm);}
 														}
 													}}
 													validate={(values) => {
@@ -470,18 +490,26 @@ class UpdateRole extends React.Component {
 																/>
 															</FormGroup>
 															<FormGroup>
-																<Label htmlFor="name">Modules {strings.Modules  }</Label>
+																<Label><span className="text-danger">*</span>{strings.Modules}</Label>
 																<CheckboxTree
+																	id="RoleList"
+																	name="RoleList"
 																    nodes={nodes}
 																	checked={checked}
 																	expanded={expanded}
 																	iconsClass="fa5"
-																	// checkModel="all"
+																	checkModel="all"
 																	// nodes={this.state.roleList}
 																	onCheck={this.onCheck}
 																	onExpand={this.onExpand}
+																	type="checkbox"
+																defaultChecked={this.state.isChecked}
+																onChange={this.toggleChange}
 																/>
 															</FormGroup>
+															{
+																this.getvalidation()
+															}
 															<FormGroup  className="mt-5">
 																<Row>
 

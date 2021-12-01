@@ -407,7 +407,10 @@ existForAccountNumber = (value) => {
                 }
             }).catch((err) => {
 
-                this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'New Employee Created Unsuccessfully')
+                this.props.commonActions.tostifyAlert(
+                    'error',
+                     err && err.data ? err.data.message : 'New Employee Created Unsuccessfully'
+                     )
             })
     }
     removeComponent=(ComponentId)=>{
@@ -473,19 +476,27 @@ existForAccountNumber = (value) => {
             .then((res) => {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(
-                        'success', res.data ? res.data.mesg : ' Finacial details saved Successfully')
+                        'success', 
+                        res.data ? res.data.mesg : ' Finacial details saved Successfully'
+                        )
                     this.toggle(0, '4')
                     this.getSalaryComponentByEmployeeId();
                     this.renderActionForState(this.state.employeeid)
                 }
             }).catch((err) => {
 
-                this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Finacial details saved Unuccessfully')
+                this.props.commonActions.tostifyAlert(
+                    'error',
+                     err && err.data ? err.data.message : 'Finacial details saved Unuccessfully'
+                     )
             })
         }else{
             this.props.detailEmployeeBankAction.updateEmployeeBank(formData).then((res) => {
                 if (res.status === 200) {
-                    this.props.commonActions.tostifyAlert('success', res.data ? res.data.mesg : 'Employee Updated Successfully!')
+                    this.props.commonActions.tostifyAlert(
+                        'success',
+                         res.data ? res.data.mesg : 'Employee Updated Successfully'
+                         )
                     this.toggle(0, '4')
                     this.getSalaryComponentByEmployeeId();
                     this.renderActionForState(this.state.employeeid)
@@ -554,23 +565,34 @@ existForAccountNumber = (value) => {
             .then((res) => {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(
-                        'success', res.data ? res.data.mesg : 'Employment details saved Successfully')
+                        'success',
+                         res.data ? res.data.mesg : 'Employment Details Saved Successfully'
+                        )
                     this.toggle(0, '3')
                     this.renderActionForState(this.state.employeeid)
                 }
             }).catch((err) => {
 
-                this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Employment details saved Unsuccessfully')
+                this.props.commonActions.tostifyAlert(
+                    'error',
+                     err && err.data ? err.data.message : 'Employment Details Saved Unsuccessfully'
+                     )
             })
         }else{
             this.props.detailEmployeeEmployementAction.updateEmployment(formData).then((res) => {
                 if (res.status === 200) {
-                    this.props.commonActions.tostifyAlert('success', res.data ? res.data.mesg : 'Employee Updated Successfully!')
+                    this.props.commonActions.tostifyAlert(
+                        'success',
+                         res.data ? res.data.mesg : 'Employment Details Updated Successfully'
+                         )
                     this.toggle(0, '3')
                     this.renderActionForState(this.state.employeeid)
                 }
             }).catch((err) => {
-                this.props.commonActions.tostifyAlert('error',  err.data.message ? err.data.message :'Created Unssccessfully')
+                this.props.commonActions.tostifyAlert(
+                    'error',
+                      err.data.message ? err.data.message :'Employment Details Saved Unsuccessfully'
+                      )
             })
         }
 

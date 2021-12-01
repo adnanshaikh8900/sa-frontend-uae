@@ -529,7 +529,10 @@ renderName=(cell,row)=>{
 			.deleteProduct(current_product_id)
 			.then((res) => {
 				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert('success', res.data ? res.data.message : 'Product Deleted Successfully')
+					this.props.commonActions.tostifyAlert(
+						'success',
+						 res.data ? res.data.message : 'Product Deleted Successfully' ,
+						 )
 					this.props.history.push('/admin/master/product');
 				}
 			})

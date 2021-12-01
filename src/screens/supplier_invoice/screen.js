@@ -538,7 +538,7 @@ class SupplierInvoice extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Supplier Invoice Posted Successfully',
+						res.data ? res.data.message : 'Supplier Invoice Posted Successfully',
 					);
 					this.setState({
 						loading: false,
@@ -550,7 +550,7 @@ class SupplierInvoice extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					'Supplier Invoice Posted Unsuccessfully',
+					err.data ? err.data.message : 'Supplier Invoice Posted Unsuccessfully',
 				);
 				this.setState({
 					loading: false,
@@ -573,7 +573,7 @@ class SupplierInvoice extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Supplier Invoice Moved To Draft Successfully',
+						res.data ? res.data.message : 'Supplier Invoice Moved To Draft Successfully',
 					);
 					this.setState({
 						loading: false,
@@ -585,7 +585,7 @@ class SupplierInvoice extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					'Supplier Invoice Moved To Draft Unsuccessfully',
+					err.data ? err.data.message : 'Supplier Invoice Moved To Draft Unsuccessfully',
 				);
 				this.setState({
 					loading: false,
@@ -628,7 +628,7 @@ class SupplierInvoice extends React.Component {
 		if (status === 'Paid') {
 			this.props.commonActions.tostifyAlert(
 				'error',
-				'Please delete the receipt first to delete the invoice',
+				'Please Delete The Receipt First To Delete The Invoice',
 			);
 		} else {
 			const message1 = (

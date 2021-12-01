@@ -400,7 +400,7 @@ class GoodsReceivedNote extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Send Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -411,7 +411,8 @@ class GoodsReceivedNote extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Send Unsuccessfully'
+
 				);
 			});
 	};
@@ -422,7 +423,7 @@ class GoodsReceivedNote extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Send Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -433,7 +434,7 @@ class GoodsReceivedNote extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Send Unsuccessfully'
 				);
 			});
 	};
@@ -444,7 +445,7 @@ class GoodsReceivedNote extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data.message
+						res.data ? res.data.message : 'Status Changed Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -455,7 +456,7 @@ class GoodsReceivedNote extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Status Changed Unsuccessfully'
 				);
 			});
 	};

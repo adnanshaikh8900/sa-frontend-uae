@@ -1283,7 +1283,7 @@ class CreateCreditNote extends React.Component {
 				this.setState(
 					{
 						option : {
-							label: response.data.name,
+							label: response.data.organisationName === '' ?  response.data.name: response.data.organisationName,
 							value: response.data.contactId,
 						},
 					data:response.data.invoiceLineItems ,

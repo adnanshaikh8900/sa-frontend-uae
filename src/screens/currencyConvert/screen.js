@@ -121,7 +121,7 @@ class ProductCategory extends React.Component {
 	success = (res) => {
 		return toast.success(
 			'success',
-			res.data ? res.data.message : '	Currency conversion Deleted Successfully.', 
+			res.data ? res.data.message : '	Currency Conversion Deleted Successfully.', 
 			{
 			position: toast.POSITION.TOP_RIGHT,
 		});
@@ -159,7 +159,7 @@ class ProductCategory extends React.Component {
 				this.setState({ loading: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Currency conversion Deleted Unsuccessfully',
+					err && err.data ? err.data.message : 'Currency Conversion Deleted Unsuccessfully',
 				);
 			});
 	};

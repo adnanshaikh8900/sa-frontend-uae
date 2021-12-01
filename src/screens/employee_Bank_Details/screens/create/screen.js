@@ -176,7 +176,9 @@ class CreateEmployeeFinancial extends React.Component {
     .then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert(
-          'success', res.data ? res.data.message : 'New Employee Created Successfully')
+          'success', 
+          res.data ? res.data.message : 'New Employee Created Successfully'
+          )
         if (this.state.createMore) {
           this.setState({
             createMore: false
@@ -187,7 +189,9 @@ class CreateEmployeeFinancial extends React.Component {
         }
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Employee Created Unsuccessfully')
+      this.props.commonActions.tostifyAlert('error', 
+      err && err.data ? err.data.message : 'Employee Created Unsuccessfully'
+      )
     })
   }
 

@@ -39,6 +39,7 @@ import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { string } from 'prop-types';
 import { toast } from 'react-toastify';
+import { ErrorSharp } from '@material-ui/icons';
 
 const mapStateToProps = (state) => {
 	return {
@@ -1019,7 +1020,7 @@ class CreateCustomerInvoice extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data ? res.data.message : 'New Invoice Created Successfully.',
+					res.data ? res.data.message : 'Invoice Created Successfully.',
 				);
 				if (this.state.createMore) {
 					this.setState(
@@ -1069,7 +1070,7 @@ class CreateCustomerInvoice extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'New Invoice Created Unsuccessfully',
+					err && err.data ? err.data.message : 'Invoice Created Unsuccessfully',
 				);
 			});
 	};
@@ -1313,6 +1314,8 @@ class CreateCustomerInvoice extends React.Component {
 														errors.term =
 														'Term is Required';
 													}
+													if (values.discountType.value === 'PERCENTAGE' && values.discountPercentage === '')
+													errors.discountPercentage = 'discount percentage cannot be empty'
 														return errors;
 												}}
 												validationSchema={Yup.object().shape({
@@ -2189,8 +2192,16 @@ class CreateCustomerInvoice extends React.Component {
 																										);
 																									}
 																								}}
-																							/> <span className = "percentSymbol">%</span></div>
 																						
+																								className={props.errors.discountPercentage && props.touched.discountPercentage ? "is-invalid" : ""}
+
+																						/><span className = "percentSymbol">%</span></div>
+																						{props.errors.discountPercentage &&
+																									props.touched.discountPercentage && (
+																										<div className="invalid-feedback">
+																											{props.errors.discountPercentage}
+																										</div>
+																										)}
 																						</FormGroup>
 																					</Col>
 																				) : null}

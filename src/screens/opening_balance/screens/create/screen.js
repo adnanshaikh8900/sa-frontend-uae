@@ -109,7 +109,7 @@ class CreateOpeningBalance extends React.Component {
 						resetForm(this.state.initValue);
 						this.props.commonActions.tostifyAlert(
 							'success',
-							'New Opening balance Created Successfully.',
+							res.data ? res.data.message : 'New Opening Balance Created Successfully.',
 						);
 						if (this.state.createMore) {
 							this.setState({
@@ -124,7 +124,7 @@ class CreateOpeningBalance extends React.Component {
 					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert(
 						'error',
-						err && err.data ? err.data.message : 'Something Went Wrong',
+						err.data ? err.data.message : 'New Opening Balance Created Unsuccessfully',
 					);
 				});
 		
@@ -287,7 +287,7 @@ class CreateOpeningBalance extends React.Component {
 																	</Label>
 																	<Input
 																		type="number"
-																		maxLength="10"
+																		maxLength="15"
 																		name="openingBalance"
 																		id="openingBalance"
 																		rows="5"

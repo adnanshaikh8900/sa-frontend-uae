@@ -75,6 +75,7 @@ class CreateProduct extends React.Component {
 				productDescription: '',
 				productCode: '',
 				vatCategoryId: '',
+				exciseTaxId:'',
 				productCategoryId: '',
 				productWarehouseId: '',
 				vatIncluded: false,
@@ -98,6 +99,7 @@ class CreateProduct extends React.Component {
 				disabled: false,
 				isInventoryEnabled: false,
 				transactionCategoryId:{value: 150, label: 'Inventory Asset'},
+				exciseTaxId:''
 			},
 			purchaseCategory: [],
 			salesCategory: [],
@@ -108,6 +110,8 @@ class CreateProduct extends React.Component {
 			productActive: true,
 			isActive:true,
 			selectedStatus:true,
+			exciseTaxList:[],
+			exciseTaxCheck:false
 		};
 		this.formRef = React.createRef();       
 		this.regEx = /^[0-9\d]+$/;
@@ -126,6 +130,13 @@ class CreateProduct extends React.Component {
 	};
 	initializeData = () => {
 		this.props.productActions.getProductVatCategoryList();
+		this.props.productActions.getExciseTaxList().then((res) => {
+			if (res.status === 200) {
+				this.setState({
+					exciseTaxList:res.data
+				});
+			}
+		});
 	//	this.props.productActions.getTransactionCategoryListForInventory();
 		this.props.productActions.getProductCategoryList();
 		this.props.supplierInvoiceActions.getSupplierList(this.state.contactType);
@@ -219,6 +230,7 @@ try {
 		const purchaseTransactionCategoryId = data['purchaseTransactionCategoryId'];
 		const purchaseUnitPrice = data['purchaseUnitPrice'];
 		const vatCategoryId = data['vatCategoryId'];
+		const exciseTaxId = data['exciseTaxId'];
 		const vatIncluded = data['vatIncluded'];
 		const inventoryPurchasePrice = data['inventoryPurchasePrice'];
 		const inventoryQty = data['inventoryQty'];
@@ -250,6 +262,7 @@ try {
 			productType,
 			productPriceType,
 			vatCategoryId,
+			exciseTaxId,
 			vatIncluded,
 			isInventoryEnabled,
 			contactId,
@@ -373,7 +386,7 @@ try {
 	render() {
 		strings.setLanguage(this.state.language);
 		const { vat_list, product_category_list,supplier_list,inventory_account_list} = this.props;
-		const { initValue, purchaseCategory, salesCategory,inventoryAccount } = this.state;
+		const { initValue, purchaseCategory, salesCategory,inventoryAccount,exciseTaxList } = this.state;
 
 		let tmpSupplier_list = []
 
@@ -463,6 +476,10 @@ try {
 														errors.inventoryQty = 
 														'Inventory Quantity is requied';
 														
+													}
+
+													if(this.state.exciseTaxCheck===true && values.exciseTaxId=='' ){
+														errors.exciseTaxId = 'Excise Tax is requied';
 													}
 													return errors;
 												}}
@@ -810,7 +827,7 @@ try {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="vatCategoryId">
-																			<span className="text-danger">*</span>{strings.VatPercentage}
+																			<span className="text-danger">*</span>{strings.VAT+" "+strings.Type}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -858,6 +875,91 @@ try {
 																	</FormGroup>
 																</Col>
 															</Row>
+															<Row style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}		>
+																<Col lg={4}>
+																<FormGroup check inline className="mb-3">
+																		<Label
+																			className="form-check-label"
+																			check
+																			htmlFor="exciseTaxCheck"
+																		>
+																			<Input
+																				type="checkbox"
+																				id="exciseTaxCheck"
+																				name="exciseTaxCheck"
+																				onChange={(event) => {
+																					if (
+																						this.state.exciseTaxCheck===true
+																						)
+																					 {
+																						this.setState({exciseTaxCheck:false})
+																					} else {
+																						this.setState({exciseTaxCheck:true})
+																					}
+																				}}
+																				checked={this.state.exciseTaxCheck}
+																				
+																			/>
+																			Excise Product ?
+																		</Label>
+																	</FormGroup>
+																</Col>
+																{this.state.exciseTaxCheck===true&&(	
+													
+																<Col  style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}	 lg={4}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="exciseTaxId">
+																			<span className="text-danger">*</span>
+																			Excise Tax Type
+																		</Label>
+																		<Select
+																			styles={customStyles}
+																			options={
+																				exciseTaxList
+																					? selectOptionsFactory.renderOptions(
+																							'name',
+																							'id',
+																							exciseTaxList,
+																							'Excise Tax Slab',
+																					  )
+																					: []
+																			}
+																			id="exciseTaxId"
+																			name="exciseTaxId"
+																			placeholder={strings.Select+ "excise Tax Slab"}
+																			value={props.values.exciseTaxId}
+																			onChange={(option) => {
+																				
+																				if (option && option.value) {
+																					props.handleChange('exciseTaxId')(
+																						option,
+																					);
+																				} else {
+																					props.handleChange('exciseTaxId')(
+																						'',
+																					);
+																				}
+																			}}
+																			className={
+																				props.errors.exciseTaxId &&
+																				props.touched.exciseTaxId
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{props.errors.exciseTaxId &&
+																			props.touched.exciseTaxId && (
+																				<div className="invalid-feedback">
+																					{props.errors.exciseTaxId}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
+
+															)}
+																
+																</Row>
+															
 															<hr></hr>
 															{/* <Row>
 															<Col lg={12}>

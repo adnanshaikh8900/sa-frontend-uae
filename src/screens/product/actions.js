@@ -102,10 +102,31 @@ export const getProductVatCategoryList = () => {
 		};
 			return authApi(data)
 				.then((res) => {
+					let array=[]
+					res.data.map((item)=>{if(item.id!=4)	array.push(item)})
+
 					dispatch({
 						type: PRODUCT.PRODUCT_VAT_CATEGORY,
-						payload: res.data,
+						payload: array,
 					});
+					return res;
+				})
+				.catch((err) => {
+					throw err;
+				});
+	};
+};
+
+// Get Product exciseTax
+export const getExciseTaxList = () => {
+	return (dispatch, getState) => {
+
+		let data = {
+			method: 'GET',
+			url: '/rest/datalist/exciseTax',
+		};
+			return authApi(data)
+				.then((res) => {
 					return res;
 				})
 				.catch((err) => {

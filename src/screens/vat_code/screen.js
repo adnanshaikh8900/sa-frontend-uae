@@ -470,7 +470,7 @@ class VatCode extends React.Component {
 												</Col>
 											</Row>
 										</div> */}
-										{this.state.companyDetails && this.state.companyDetails.isRegisteredVat===true &&(<Button
+										{this.state.companyDetails && this.state.companyDetails.isRegisteredVat!==true &&(<Button
 											color="primary"
 											className="btn-square pull-right"
 											style={{ marginBottom: '10px' }}

@@ -75,6 +75,7 @@ class Register extends React.Component {
 				IsRegistered:'',
 				TaxRegistrationNumber:'',
 				vatRegistrationDate:'',
+				companyAddress1:'',
 				
 
 			},
@@ -145,7 +146,8 @@ class Register extends React.Component {
 				IsRegistered,
 				TaxRegistrationNumber,
 				vatRegistrationDate,
-				companyAddress
+				companyAddress1,
+                companyAddress2
 
 		} = data;
 		let obj = {
@@ -191,9 +193,8 @@ class Register extends React.Component {
 		
 		
 	
-		formData.append('companyAddressLine1',companyAddress ? companyAddress : '')
-		formData.append('companyAddressLine2',companyAddress ? companyAddress : '')
-
+		formData.append('companyAddressLine1',companyAddress1 ? companyAddress1 : '')
+        formData.append('companyAddressLine2',companyAddress2 ? companyAddress2 : '')
 		formData.append('loginUrl', window.location.origin);
 		this.props.authActions
 			.register(formData)
@@ -277,8 +278,14 @@ class Register extends React.Component {
 															currencyCode: Yup.string().required(
 																'Currency is required',
 															),
-															companyAddress: Yup.string().required(
+															companyAddress1: Yup.string().required(
 																'Company Address is required',
+															),
+															countryId: Yup.string().required(
+																'Country is required',
+															),
+															stateId: Yup.string().required(
+																'State is required',
 															),
 															firstName: Yup.string().required(
 																'First Name is required',
@@ -331,7 +338,7 @@ class Register extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="companyName">
-																					 
+
 																					Company Name
 																				</Label>
 																				<Input
@@ -364,7 +371,7 @@ class Register extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="currencyCode">
-																					 
+
 																					Currency
 																				</Label>
 																				<Select
@@ -428,66 +435,66 @@ class Register extends React.Component {
 																	<Row className="row-wrapper">
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
-																				<Label htmlFor="companyAddress">
-																					 
+																				<Label htmlFor="companyAddress1">
+
 																				Company Address Line1
 																				</Label>
 																				<Input
 																					type="text"
 																				 maxLength="150"
-																					id="companyAddress"
-																					name="companyAddress"
+																					id="companyAddress1"
+																					name="companyAddress1"
 																					placeholder="Enter Company Address"
 																					value={props.values.account_name}
 																					onChange={(option) => {
-																						props.handleChange('companyAddress')(
+																						props.handleChange('companyAddress1')(
 																							option,
 																						);
 																					}}
 																					className={
-																						props.errors.companyAddress &&
-																						props.touched.companyAddress
+																						props.errors.companyAddress1 &&
+																						props.touched.companyAddress1
 																							? 'is-invalid'
 																							: ''
 																					}
 																				/>
-																				{props.errors.companyAddress &&
-																					props.touched.companyAddress && (
+																				{props.errors.companyAddress1 &&
+																					props.touched.companyAddress1 && (
 																						<div className="invalid-feedback">
-																							{props.errors.companyAddress}
+																							{props.errors.companyAddress1}
 																						</div>
 																					)}
 																			</FormGroup>
 																		</Col>
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
-																				<Label htmlFor="companyAddress">
+																				<Label htmlFor="companyAddress2">
 																					 
 																				Company Address Line2
 																				</Label>
 																				<Input
 																					type="text"
 																				 maxLength="150"
-																					id="companyAddress"
-																					name="companyAddress"
+																					id="companyAddress2"
+																					name="companyAddress2"
 																					placeholder="Enter Company Address"
 																					value={props.values.account_name}
 																					onChange={(option) => {
-																						props.handleChange('companyAddress')(
+																						props.handleChange('companyAddress2')(
 																							option,
 																						);
 																					}}
 																					className={
-																						props.errors.companyAddress &&
-																						props.touched.companyAddress
+																						props.errors.companyAddress2 &&
+																						props.touched.companyAddress2
 																							? 'is-invalid'
 																							: ''
 																					}
 																				/>
-																				{props.errors.companyAddress &&
-																					props.touched.companyAddress && (
+																				{props.errors.companyAddress2 &&
+																					props.touched.companyAddress2 && (
 																						<div className="invalid-feedback">
-																							{props.errors.companyAddress}
+																							{props.errors.companyAddress2}
 																						</div>
 																					)}
 																			</FormGroup>
@@ -675,12 +682,13 @@ class Register extends React.Component {
 														<Row className="row-wrapper" style={{display:props.values.IsRegistered === true ? '': 'none'}}>
 																<Col lg={6}>
 																<FormGroup >
-																	<Label htmlFor="TaxRegistrationNumber">								
+																	<Label htmlFor="TaxRegistrationNumber">
 																	Tax Registration Number
 																	</Label>
 																	<Input
 																		type="text"
 																		maxLength="15"
+																		placeholder="Enter Tax Registration Number"
 																		id="TaxRegistrationNumber"
 																		name="TaxRegistrationNumber"
 																		// placeholder={strings.Enter+strings.TaxRegistrationNumber}
@@ -722,7 +730,9 @@ class Register extends React.Component {
 																	<DatePicker
 																		autoComplete="off"
 																		id="vatRegistrationDate"
+																		minDate={new Date("01/01/2018")}
 																		name="vatRegistrationDate"
+																		placeholderText="Select Vat Registered Date"
 																		maxDate={new Date()}
 																		showMonthDropdown
 																		showYearDropdown
@@ -761,7 +771,7 @@ class Register extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="firstName">
-																					 
+
 																					First Name
 																				</Label>
 																				<Input
@@ -794,7 +804,7 @@ class Register extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="lastName">
-																					 
+
 																					Last Name
 																				</Label>
 																				<Input
@@ -829,7 +839,7 @@ class Register extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="email">
-																					 
+
 																					Email Address
 																				</Label>
 																				<Input

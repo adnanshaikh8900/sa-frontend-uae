@@ -195,7 +195,7 @@ class NewPassword extends React.Component {
 																				id="confirmPassword"
 																				name="confirmPassword"
 																				value={props.values.confirmPassword}
-																				placeholder="Confrim Password"
+																				placeholder="Confirm Password"
 																				onChange={(value) => {
 																					props.handleChange('confirmPassword')(
 																						value,

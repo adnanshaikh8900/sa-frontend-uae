@@ -212,12 +212,18 @@ class UpdateEmployeeBank extends React.Component {
         );
         this.props.detailEmployeeBankAction.updateEmployeeBank(formData).then((res) => {
             if (res.status === 200) {
-                this.props.commonActions.tostifyAlert('success', res.data ? res.data.message : 'Employee Bank Updated Successfully!')
+                this.props.commonActions.tostifyAlert(
+                    'success',
+                     res.data ? res.data.message : 'Employee Bank Updated Successfully'
+                     )
                 // this.props.history.push('/admin/payroll/employee')
                   this.props.history.push('/admin/master/employee')
             }
         }).catch((err) => {
-            this.props.commonActions.tostifyAlert('error',  err.data.message ? err.data.message :'Employee Bank Updated Unsuccessfully')
+            this.props.commonActions.tostifyAlert(
+                'error',
+                  err.data.message ? err.data.message :'Employee Bank Updated Unsuccessfully'
+                  )
         })
     }
     render() {

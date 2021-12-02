@@ -116,11 +116,16 @@ class DetailOpeningBalance extends React.Component {
       this.props.detailOpeningBalancesAction.updateOpeningBalance(postData).then((res) => {
       if (res.status === 200) {
         resetForm();
-        this.props.commonActions.tostifyAlert('success', 'Opening Balance Updated Successfully!')
+        this.props.commonActions.tostifyAlert(
+          'success',
+          res.data ? res.data.message : 'Opening Balance Updated Successfully!')
         this.props.history.push('/admin/accountant/opening-balance')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err.data.message)
+      this.props.commonActions.tostifyAlert(
+        'error',
+        err.data ? err.data.message : 'Opening Balance Updated Unsuccessfully'
+        )
     })
   }
 

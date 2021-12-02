@@ -581,7 +581,7 @@ class PurchaseOrder extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data ? err.data.message : 'Purchase Order 	Deleted Unsuccessfully'
+					err.data ? err.data.message : 'Purchase Order Deleted Unsuccessfully'
 				);
 			});
 	};
@@ -619,7 +619,7 @@ class PurchaseOrder extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data ? res.data.message : 'Purchase Order posted Successfully'
+						res.data ? res.data.message : 'Purchase Order Posted Successfully'
 					);
 					this.setState({
 						loading: false,
@@ -667,7 +667,7 @@ class PurchaseOrder extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data ? err.data.message : 'Purchase Order Posted Unsuccessfully'
+					err.data ? err.data.message : 'Purchase Order Unposted Unsuccessfully'
 				);
 				this.setState({
 					loading: false,

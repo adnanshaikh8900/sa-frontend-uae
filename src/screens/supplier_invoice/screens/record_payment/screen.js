@@ -351,7 +351,7 @@ class RecordSupplierPayment extends React.Component {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data ? res.data.message : 'Data Deleted Successfully',
+						res.data ? res.data.message : 'Supplier Invoice Deleted Successfully',
 					);
 					this.props.history.push('/admin/revenue/customer-invoice');
 				}
@@ -359,7 +359,7 @@ class RecordSupplierPayment extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+					err && err.data ? err.data.message : 'Supplier Invoice Deleted Unsuccessfully',
 				);
 			});
 	};

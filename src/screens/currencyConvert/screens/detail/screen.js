@@ -155,13 +155,13 @@ class DetailCurrencyConvert extends React.Component {
         resetForm();
         this.props.commonActions.tostifyAlert(
 			'success', 
-			res.data ? res.data.message : 'Currency Convert Updated Successfully')
+			res.data ? res.data.message : 'Currency Conversion Updated Successfully')
         this.props.history.push('/admin/master/CurrencyConvert')
       }
     }).catch((err) => {
       this.props.commonActions.tostifyAlert(
 		  'error',
-		   err.data ? err.data.message : 'Currency Convert Updated Unsuccessfully')
+		   err.data ? err.data.message : 'Currency Conversion Updated Unsuccessfully')
     })
   }
 
@@ -205,11 +205,15 @@ class DetailCurrencyConvert extends React.Component {
     this.props.detailCurrencyConvertAction.deleteCurrencyConvert(current_currency_convert_id).then((res) => {
       if (res.status === 200) {
         // this.success('Chart Account Deleted Successfully');
-        this.props.commonActions.tostifyAlert('success', res.data ? res.data.message : 'Currency Conversion Deleted Successfully')
+        this.props.commonActions.tostifyAlert('success', 
+			res.data ? res.data.message : 'Currency Conversion Deleted Successfully'
+			)
         this.props.history.push('/admin/master/CurrencyConvert')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Currency Conversion Deleted Unsuccessfully' )
+      this.props.commonActions.tostifyAlert('error', 
+	  err && err.data ? err.data.message : 'Currency Conversion Deleted Unsuccessfully' 
+	  )
     })
   }
 

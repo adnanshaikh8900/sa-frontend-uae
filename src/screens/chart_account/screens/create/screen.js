@@ -138,7 +138,7 @@ class CreateChartAccount extends React.Component {
 					this.setState({ disabled: false });
 					this.props.commonActions.tostifyAlert
 						(
-						'success', res.data ? res.data.message :'New Chart of Account Created Successfully',
+						'success', res.data ? res.data.message :'New Chart Of Account Created Successfully',
 						);
 					if (this.state.createMore) {
 						this.setState({
@@ -154,7 +154,7 @@ class CreateChartAccount extends React.Component {
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err && err.data ? err.data.message : 'New Chart of Account Created Unsuccessfully',
+					err && err.data ? err.data.message : 'New Chart Of Account Created Unsuccessfully',
 					);
 			});
 	};

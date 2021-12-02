@@ -1056,7 +1056,7 @@ min="0"
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data ? res.data.message : 'Invoice Deleted successfully'
+						res.data ? res.data.message : 'Invoice Deleted Successfully'
 					);
 					this.props.history.push('/admin/income/credit-notes');
 				}
@@ -1094,9 +1094,7 @@ min="0"
 		return customer_currencyCode;
 	}
 	showInvoiceNumber=()=>{
-
 		return(
-			
 			this.state.showInvoiceNumber &&(<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="project">

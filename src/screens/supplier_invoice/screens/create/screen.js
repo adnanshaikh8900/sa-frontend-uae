@@ -1045,7 +1045,7 @@ min="0"
 				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data ? res.data.message : 'New Invoice Created Successfully.',
+					res.data ? res.data.message : 'Invoice Created Successfully.',
 				);
 				if (this.state.createMore) {
 					this.setState(
@@ -1376,6 +1376,8 @@ min="0"
 														errors.discount =
 															'Discount amount Cannot be greater than Invoice Total Amount';
 													}
+													if (values.discountType.value === 'PERCENTAGE' && values.discountPercentage === '')
+													errors.discountPercentage = 'discount percentage cannot be empty'
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({
@@ -2269,7 +2271,15 @@ min="0"
 																										);
 																									}
 																								}}
+																								className={props.errors.discountPercentage && props.touched.discountPercentage ? "is-invalid" : ""}
+
 																							/><span className="percentSymbol">%</span></div>
+																							{props.errors.discountPercentage &&
+																										props.touched.discountPercentage && (
+																											<div className="invalid-feedback">
+																												{props.errors.discountPercentage}
+																											</div>
+																											)}
 																						</FormGroup>
 																					</Col>
 																				) : null}

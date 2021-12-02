@@ -300,7 +300,10 @@ class PayrollEmployee extends React.Component {
         }
         this.props.employeeActions.removeBulkEmployee(obj).then((res) => {
             if (res.status === 200) {
-                this.props.commonActions.tostifyAlert('success', 'Employees Deleted Successfully')
+                this.props.commonActions.tostifyAlert(
+                    'success',
+                     'Employees Deleted Successfully'
+                     )
                 this.initializeData();
                 if (payroll_employee_list && payroll_employee_list.data && payroll_employee_list.data.length > 0) {
                     this.setState({
@@ -309,7 +312,10 @@ class PayrollEmployee extends React.Component {
                 }
             }
         }).catch((err) => {
-            this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
+            this.props.commonActions.tostifyAlert(
+                'error',
+                 err && err.data ? err.data.message : 'Something Went Wrong'
+                 )
         })
     }
 

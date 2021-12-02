@@ -901,14 +901,14 @@ class DetailRequestForQuotation extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					res.data.message
+					res.data ? res.data.message : 'Request For Quotation Updated Successfully'
 				);
 				this.props.history.push('/admin/expense/request-for-quotation');
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data.message
+					err.data ? err.data.message : 'Request For Quotation Updated Unsuccessfully'
 				);
 			});
 	};

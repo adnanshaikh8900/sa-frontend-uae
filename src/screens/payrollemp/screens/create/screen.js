@@ -477,7 +477,7 @@ existForAccountNumber = (value) => {
                 if (res.status === 200) {
                     this.props.commonActions.tostifyAlert(
                         'success', 
-                        res.data ? res.data.mesg : ' Finacial details saved Successfully'
+                        res.data ? res.data.mesg : ' Finacial Details Saved Successfully'
                         )
                     this.toggle(0, '4')
                     this.getSalaryComponentByEmployeeId();
@@ -487,7 +487,7 @@ existForAccountNumber = (value) => {
 
                 this.props.commonActions.tostifyAlert(
                     'error',
-                     err && err.data ? err.data.message : 'Finacial details saved Unuccessfully'
+                     err && err.data ? err.data.message : 'Finacial Details Saved Unuccessfully'
                      )
             })
         }else{

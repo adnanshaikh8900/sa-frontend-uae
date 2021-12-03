@@ -212,8 +212,8 @@ class CreateRole extends React.Component {
 getvalidation=()=>{
 	
 		let msg=	this.state && this.state.validationForSelect && this.state.validationForSelect!=0 ?
-																		 "" :  "Please select atleast 1 module"
-																		 return<div className="text-danger">{msg}</div> 
+																		 "" :  "Note: Please select atleast 1 module"
+																		 return<div><b>{msg}</b></div> 
 }
 	render() {
 		strings.setLanguage(this.state.language);
@@ -428,7 +428,11 @@ getvalidation=()=>{
 															/>
 														</FormGroup>
 														<FormGroup>
-															<Label ><span className="text-danger">*</span> {strings.Modules}</Label>
+															<Label ><span className="text-danger">*</span> {strings.Modules} 
+															{
+																this.getvalidation()
+															}
+															</Label>
 															<CheckboxTree
 																id="RoleList"
 																name="RoleList"
@@ -486,9 +490,7 @@ getvalidation=()=>{
 																Delete
 															</Label>
 														</FormGroup> */}
-														{
-															this.getvalidation()
-														}
+														
 														<FormGroup className="text-right mt-5">
 															<Button
 																type="button"

@@ -490,7 +490,11 @@ class UpdateRole extends React.Component {
 																/>
 															</FormGroup>
 															<FormGroup>
-																<Label><span className="text-danger">*</span>{strings.Modules}</Label>
+																<Label><span className="text-danger">*</span>{strings.Modules}
+																{
+																	this.getvalidation()
+																}
+																</Label>
 																<CheckboxTree
 																	id="RoleList"
 																	name="RoleList"
@@ -507,9 +511,7 @@ class UpdateRole extends React.Component {
 																onChange={this.toggleChange}
 																/>
 															</FormGroup>
-															{
-																this.getvalidation()
-															}
+															
 															<FormGroup  className="mt-5">
 																<Row>
 

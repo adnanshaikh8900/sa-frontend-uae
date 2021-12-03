@@ -2405,7 +2405,7 @@ min="0"
 																									<i className="fa fa-dot-circle-o"></i>{' '}
 																						         {strings.Explain}
 																					</Button>
-																								<Button
+																						{props.values.explinationStatusEnum !== "PARTIAL"&&	(<Button
 																									color="secondary"
 																									className="btn-square"
 																									onClick={() =>
@@ -2415,7 +2415,7 @@ min="0"
 																									}
 																								>
 																									<i className="fa fa-ban"></i> {strings.Delete}
-																					</Button>
+																					</Button>)}
 																							</div>
 																						) : (
 																							<div>

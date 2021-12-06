@@ -186,7 +186,7 @@ class UpdatePayroll extends React.Component {
 					payrollApprover: res.data.payrollApprover ? res.data.payrollApprover : '',
 					submitButton: res.data.payrollApprover ===null ? true : false,
 					payrollDate: res.data.payrollDate
-						? moment(res.data.payrollDate).format('DD/MM/YYYY')
+						? new Date(res.data.payrollDate)
 						: '',
 					payrollSubject: res.data.payrollSubject ? res.data.payrollSubject : '',
 					runDate: res.data.runDate ? res.data.runDate : '',
@@ -359,7 +359,7 @@ class UpdatePayroll extends React.Component {
 		{formData.append('approverId',  parseInt(payrollApprover) )}
 		
 		formData.append('generatePayrollString', JSON.stringify(this.state.selectedRows1));
-		 formData.append('salaryDate',payrollDate)
+		 formData.append('salaryDate',this.state.payrollDate)
 
 			//Payroll total  amount
 			let totalAmountPayroll=0;
@@ -1041,10 +1041,10 @@ class UpdatePayroll extends React.Component {
 																				showYearDropdown
 																				dateFormat="dd/MM/yyyy"
 																				dropdownMode="select"
-																				selected={props.values.payrollDate}
+																				selected={this.state.payrollDate}
 																				onChange={(value) => {
 																					props.handleChange('payrollDate')(value);
-
+																					this.setState({payrollDate:value})
 																				}}
 																				disabled={this.disableForAddButton() ? true : false}
 																				className={`form-control ${props.errors.payrollDate &&

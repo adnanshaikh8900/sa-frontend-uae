@@ -1190,7 +1190,7 @@ min="0"
 																			</Label>
 																			<Input
 																				type="text"
-																				maxLength="50"
+																				maxLength="20"
 																				id="receiptNumber"
 																				name="receiptNumber"
 																				placeholder={strings.Enter+strings.ReceiptNumber}

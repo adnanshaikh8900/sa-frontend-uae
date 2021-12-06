@@ -695,9 +695,9 @@ class UpdatePayroll extends React.Component {
 										);
 
 									}else if(col.key === 'grossPay'){
-										
-										return  (<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" "+cell.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>)
-									}
+										let grossPay=parseFloat(cell)
+										return  (<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" "+grossPay.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>)
+					                	}
 									 else
 									 if(col.key === 'netPay'){
 										return	(<div>{this.state.currencyIsoCode ? this.state.currencyIsoCode : "AED"}{" "+cell.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</div>);

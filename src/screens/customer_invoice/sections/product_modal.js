@@ -782,7 +782,17 @@ class ProductModal extends React.Component {
 																	: ''
 															}
 														/>
-														{strings.SalesInformation}
+														{strings.SalesInformation} 
+														<i
+															id="SalesInfoTooltip"
+															className="fa fa-question-circle ml-1"
+														></i>
+														<UncontrolledTooltip
+															placement="right"
+															target="SalesInfoTooltip"
+														>
+															 If you select Sales-Info then product will available in INCOME 
+														</UncontrolledTooltip>
 														{props.errors.productPriceType &&
 															props.touched.productPriceType && (
 																<div className="invalid-feedback">
@@ -951,6 +961,16 @@ min="0"
 															}
 														/>
 														{strings.PurchaseInformation}
+														<i
+															id="PurchaseInfoTooltip"
+															className="fa fa-question-circle ml-1"
+														></i>
+														<UncontrolledTooltip
+															placement="right"
+															target="PurchaseInfoTooltip"
+														>
+															 If you select Purchase-Info then product will available in EXPENSE
+														</UncontrolledTooltip>
 														{props.errors.productPriceType &&
 															props.touched.productPriceType && (
 																<div className="invalid-feedback">

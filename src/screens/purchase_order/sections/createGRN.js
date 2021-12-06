@@ -132,7 +132,6 @@ class CreateGoodsReceivedNote extends React.Component {
 			viewEditor: false,
 			message: '',
 			productId:'',
-			prefixData:'',
 			grnReceivedQuantity:0,
 			grnReceivedQuantityError:"Please Enter Quantity"
 		};
@@ -921,6 +920,35 @@ min="0"
 							}
 							
 						}}
+
+						validationSchema={Yup.object().shape(
+							{
+								poQuatationLineItemRequestModelList: Yup.array()
+								.required(
+									'Atleast one invoice sub detail is mandatory',
+								)
+								.of(
+									Yup.object().shape({
+										unitPrice: Yup.string()
+											.required('Value is Required')
+											.test(
+												'Unit Price',
+												'Unit Price Should be Greater than 1',
+												(value) => {
+													if (value > 0) {
+														return true;
+													} else {
+														return false;
+													}
+												},
+											),
+								
+									
+									}),
+								),
+						}
+						)
+					}
 					
 					>
 						{(props) => {

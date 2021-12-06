@@ -429,6 +429,7 @@ class UpdatePayroll extends React.Component {
 															data.lopDay = value;
 															data.noOfDays = 30 - value
 														
+															data.deduction=	((data.originalDeduction/30) * data.noOfDays).toFixed(2)
 															let deduction=data.noOfDays==0 ? 0:data.deduction;
 
 															data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
@@ -491,13 +492,15 @@ class UpdatePayroll extends React.Component {
 							// data.originalGrossPay=data.grossPay		
 					        // data.perDaySal=data.originalGrossPay / data.noOfDays			
 							let tmpPaidDay=this.state.paidDays > 30 ?30	:this.state.paidDays	
-							if(this.state.checkForLopSetting===true)			
-							data.noOfDays =tmpPaidDay
+							if(this.state.checkForLopSetting===true)		data.noOfDays =tmpPaidDay
+
+							data.originalDeduction=data.deduction
+							data.deduction=	((data.originalDeduction/30) * data.noOfDays).toFixed(2)
 							data.originalNoOfDays =tmpPaidDay
 							data.originalGrossPay=data.grossPay		
 							data.perDaySal=data.originalGrossPay / 30	
-							if(this.state.checkForLopSetting===true)
-							data.lopDay = 30-tmpPaidDay;
+
+							if(this.state.checkForLopSetting===true)		data.lopDay = 30-tmpPaidDay;
 							data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
 							data.netPay   = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)		
 						return data

@@ -330,9 +330,11 @@ calculatePayperioad=(startDate,endDate)=>{
 					let tmpPaidDay=this.state.paidDays > 30 ?30	:this.state.paidDays				
 						data.noOfDays =tmpPaidDay
 						data.originalNoOfDays =tmpPaidDay
-						data.originalGrossPay=data.grossPay		
+						data.originalGrossPay=data.grossPay
+						data.originalDeduction=data.deduction
+						data.deduction=	((data.originalDeduction/30) * data.noOfDays).toFixed(2)
 					    data.perDaySal=data.originalGrossPay / 30	
-					
+
 						data.lopDay = 30-tmpPaidDay;
 						data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)
 						data.netPay   = Number((data.perDaySal * (data.noOfDays))).toFixed(2) - (data.deduction || 0)
@@ -521,7 +523,7 @@ else
 											if (row.id === data.id) {
 												data.lopDay = value;
 												data.noOfDays = 30 - value
-
+												data.deduction=	((data.originalDeduction/30) * data.noOfDays).toFixed(2)
 												let deduction=data.noOfDays==0 ? 0:data.deduction;
 
 												data.grossPay = Number((data.perDaySal * (data.noOfDays))).toFixed(2)

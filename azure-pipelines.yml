@@ -17,7 +17,7 @@ variables:
   ${{ else }}:
     containerRegistryConnection: 'DataInnAzureContainerRegistryConnection'
   npm_config_cache: $(Pipeline.Workspace)/.npm
-  docker_cashe_path: simpleaccounts-frontend-$(SourceBranchName)
+  docker_cashe_path: simpleaccounts-frontend-$(Build.SourceBranchName)
 
 
 stages:

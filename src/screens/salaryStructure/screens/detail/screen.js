@@ -208,7 +208,7 @@ class DetailSalaryStructure extends React.Component {
                               salaryStructureType: Yup.string()
                               .required("Salary Structure Type is Required"),
                               salaryStructureName: Yup.string()
-                                .required("salary Structure Name is Required"),
+                                .required("Salary Structure Name is Required"),
                             
                             })}
                           >
@@ -259,7 +259,7 @@ class DetailSalaryStructure extends React.Component {
                                     }}
                                     className={props.errors.salaryStructureName && props.touched.salaryStructureName ? "is-invalid" : ""}
                                   />
-                                  {props.errors.firstName && props.touched.firstName && (
+                                  {props.errors.salaryStructureName && props.touched.salaryStructureName && (
                                     <div className="invalid-feedback">{props.errors.salaryStructureName}</div>
                                   )}
                                 </FormGroup>

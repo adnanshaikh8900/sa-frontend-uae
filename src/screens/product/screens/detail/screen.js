@@ -1640,7 +1640,7 @@ renderName=(cell,row)=>{
 
 																			}}>
 															
-																	<Col lg={8} style={{display: props.values.isInventoryEnabled === false ? '' : 'none'}}>
+																	<Col lg={8} style={{display: props.values.isInventoryEnabled != true ? 'none' : ''}}>
 																	<FormGroup check inline className="mb-3">
 																		<Label
 																			className="form-check-label"

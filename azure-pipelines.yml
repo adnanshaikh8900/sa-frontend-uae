@@ -30,6 +30,11 @@ stages:
         timeoutInMinutes: 30
 
         steps:
+          - task: NodeTool@0
+            displayName: Install Node.js
+            inputs:
+              versionSpec: 'Your version e.g. 14.x'
+              
           - task: CmdLine@2
             inputs:
               script: 'npm i --package-lock-only'

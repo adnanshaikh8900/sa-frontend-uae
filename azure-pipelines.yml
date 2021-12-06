@@ -47,7 +47,8 @@ stages:
           - task: CmdLine@2
             inputs:
               script: |
-                npm i --package-lock-only
+                # npm i --package-lock-only
+                npm install
                 # npm rebuild node-sass
                 npm run build
             displayName: 'npm install and build'

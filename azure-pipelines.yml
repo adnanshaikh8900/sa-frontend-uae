@@ -35,18 +35,19 @@ stages:
               script: 'npm i --package-lock-only'
             displayName: 'Generate package-lock.json'
 
-          - task: Cache@2
-            inputs:
-              key: 'npm | "$(Agent.OS)" | package-lock.json'
-              restoreKeys: |
-                npm | "$(Agent.OS)"
-              path: $(npm_config_cache)
-            displayName: Cache npm
-          - script: npm ci
+          # - task: Cache@2
+          #   inputs:
+          #     key: 'npm | "$(Agent.OS)" | package-lock.json'
+          #     restoreKeys: |
+          #       npm | "$(Agent.OS)"
+          #     path: $(npm_config_cache)
+          #   displayName: Cache npm
+          # - script: npm ci
 
           - task: CmdLine@2
             inputs:
               script: |
+                npm install
                 npm rebuild node-sass
                 npm run build
             displayName: 'npm install and build'

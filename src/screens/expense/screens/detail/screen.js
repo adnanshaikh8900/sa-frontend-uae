@@ -1100,6 +1100,7 @@ class DetailExpense extends React.Component {
 																			type="textarea"
 																			name="expenseDescription"
 																			id="expenseDescription"
+																			maxLength="255"
 																			rows="5"
 																			placeholder={strings.Expense+" "+strings.Description}
 																			onChange={(option) =>
@@ -1125,6 +1126,7 @@ class DetailExpense extends React.Component {
 																					type="text"
 																					id="receiptNumber"
 																					name="receiptNumber"
+																					maxLength="20"
 																					placeholder={strings.Enter+strings.ReceiptNumber}
 																					onChange={(option) =>
 																						props.handleChange('receiptNumber')(
@@ -1146,6 +1148,7 @@ class DetailExpense extends React.Component {
 																					type="textarea"
 																					name="receiptAttachmentDescription"
 																					id="receiptAttachmentDescription"
+																					maxLength='255'
 																					rows="5"
 																					placeholder={strings.Description}
 																					onChange={(option) =>

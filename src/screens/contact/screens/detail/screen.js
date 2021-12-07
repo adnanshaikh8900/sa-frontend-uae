@@ -218,7 +218,7 @@ class DetailContact extends React.Component {
 								shippingCountryId:
 										res.data.shippingCountryId && res.data.shippingCountryId !== null
 											? res.data.shippingCountryId
-											: '',
+											: 229,
 								shippingStateId:
 										res.data.shippingStateId && res.data.shippingStateId !== null
 											? res.data.shippingStateId

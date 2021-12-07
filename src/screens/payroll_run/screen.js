@@ -322,10 +322,12 @@ class PayrollRun extends React.Component {
 	renderPayperiod = (cell, row) => {
 		let dateArr=row.payPeriod ? row.payPeriod.split("-"):[];
 
+				let  startDate= moment(dateArr[0]).format('DD/MM/YYYY')
+				let	 endDate=moment(dateArr[1]).format('DD/MM/YYYY')
 		
 		return(<Table>
-			<Row><Col className="pull-right"><b>Start-Date</b></Col><Col>: {dateArr[0]}</Col></Row>
-			<Row><Col className="pull-right"><b>End-Date</b></Col><Col>: {dateArr[1]}</Col></Row>
+			<Row><Col className="pull-right"><b>Start-Date</b></Col><Col>: {startDate}</Col></Row>
+			<Row><Col className="pull-right"><b>End-Date</b></Col><Col>: {endDate}</Col></Row>
 			 </Table>  
 			) ;
 	};

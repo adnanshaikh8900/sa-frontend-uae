@@ -1638,6 +1638,7 @@ min="0"
 																	<TableHeaderColumn
 																		dataField="quantity"
 																		width="100"
+																		maxLength='10'
 																		dataFormat={(cell, rows) =>
 																			this.renderQuantity(cell, rows, props)
 																		}

@@ -1189,25 +1189,18 @@ min="0"
 																			{strings.ReceiptNumber}  
 																			</Label>
 																			<Input
-																				type="text"
-																				maxLength="20"
-																				id="receiptNumber"
-																				name="receiptNumber"
-																				placeholder={strings.Enter+strings.ReceiptNumber}
-																				onChange={(option) => {
-																					if (
-																						option.target.value === '' ||
-																						this.regExAlpha.test(
-																							option.target.value,
-																						)
-																					) {
+																					type="text"
+																					id="receiptNumber"
+																					name="receiptNumber"
+																					maxLength="20"
+																					placeholder={strings.Enter+strings.ReceiptNumber}
+																					onChange={(option) =>
 																						props.handleChange('receiptNumber')(
 																							option,
-																						);
+																						)
 																					}
-																				}}
-																				value={props.values.receiptNumber}
-																			/>
+																					value={props.values.receiptNumber}
+																				/>
 																		</FormGroup>
 																	</Col>
 																</Row>

@@ -261,6 +261,10 @@ getPhoto=()=>{
 
 	return image;
 }
+renderSalaryDate=(cell,row)=>{
+	let salaryDateString=moment(row.salaryDate).format('DD/MM/YYYY')	
+	return salaryDateString
+}
 	render() {
 		strings.setLanguage(this.state.language);
 		console.log(this.state.Fixed)
@@ -608,6 +612,7 @@ getPhoto=()=>{
 													className="table-header-bg"
 													dataField="salaryDate"
 													width="15%"
+													dataFormat={this.renderSalaryDate}
 												>
 													 {strings.SalaryDate}
 													</TableHeaderColumn>

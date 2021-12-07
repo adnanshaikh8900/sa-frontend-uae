@@ -136,7 +136,10 @@ class PayrollApproverScreen extends React.Component {
 	proceed = (payroll_id) => {
 		this.props.createPayrollActions.getPayrollById(payroll_id).then((res) => {
 			if (res.status === 200) {
-				//	 
+			//pay period date format 
+let dateArr=res.data.payPeriod.split("-");
+let payPeriodString=moment(dateArr[0]).format('DD/MM/YYYY')+" - "+moment(dateArr[1]).format('DD/MM/YYYY')
+
 				this.setState({
 					loading: false,
 					id: res.data.id ? res.data.id : '',
@@ -147,7 +150,7 @@ class PayrollApproverScreen extends React.Component {
 					generatedBy: res.data.generatedBy ? res.data.generatedBy : '',
 
 					isActive: res.data.isActive ? res.data.isActive : '',
-					payPeriod: res.data.payPeriod ? res.data.payPeriod : '',
+					payPeriod: payPeriodString,
 					payrollApprover: res.data.payrollApprover ? res.data.payrollApprover : '',
 					payrollDate: res.data.payrollDate
 						? moment(res.data.payrollDate).format('DD/MM/YYYY')

@@ -718,10 +718,10 @@ renderName=(cell,row)=>{
 													}}
 													validate={(values) => {
 														let errors = {};
-														if (values.purchaseUnitPrice > values.salesUnitPrice) {
-															errors.purchaseUnitPrice = 
-															'Purchase price cannot be greater than Sales price';
-														}
+														// if (values.purchaseUnitPrice > values.salesUnitPrice) {
+														// 	errors.purchaseUnitPrice = 
+														// 	'Purchase price cannot be greater than Sales price';
+														// }
 														if(this.state.exciseTaxCheck===true && values.exciseTaxId=='' ){
 															errors.exciseTaxId = 'Excise Tax is requied';
 														}

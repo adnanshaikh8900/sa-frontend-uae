@@ -62,7 +62,7 @@ class ProductModal extends React.Component {
 				productType: 'GOODS',
 				salesUnitPrice: '',
 				purchaseUnitPrice: '',
-				productPriceType: ['SALES'],
+				productPriceType: ['SALES','PURCHASE'],
 				salesTransactionCategoryId: { value: 84, label: 'Sales' },
 				purchaseTransactionCategoryId: {
 					value: 49,

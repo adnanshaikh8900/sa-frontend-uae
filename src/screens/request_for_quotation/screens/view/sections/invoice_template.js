@@ -78,7 +78,7 @@ class RFQTemplate extends Component {
 									<div className="mb-1 ml-2"><b>{strings.MobileNumber} :</b> {companyData.phoneNumber}</div>
 								</div>
 							</div>
-							<div style={{ width: '130%',justifyContent:'center' }}>
+							<div style={{ width: '200%',justifyContent:'center' }}>
 
 									<div
 										style={{

@@ -219,11 +219,20 @@ class CreateContact extends React.Component {
 						'success',
 						"Contact Created Successfully"
 					);
+					// this.gotoParentUrl() this.props.history.push(this.props.location.state.goto)
 					if (this.state.createMore) {
 						resetForm(this.state.initValue);
 						this.setState({ createMore: false });
 					} else {
-						this.props.history.push('/admin/master/contact');
+						
+						if(this.props.location
+							&& this.props.location.state
+							&& this.props.location.state.gotoParentURL
+						)
+						    this.props.history.push(this.props.location.state.gotoParentURL)
+						else
+						    this.props.history.push('/admin/master/contact');
+
 					}
 				}
 			})

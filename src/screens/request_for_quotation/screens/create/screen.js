@@ -1401,22 +1401,28 @@ min="0"
 																		)}
 																</FormGroup>
 															</Col>
+														
 															<Col>
-																<Label
-																	htmlFor="supplierId"
+															<Label
+																	htmlFor="contactId"
 																	style={{ display: 'block' }}
 																>
-																	{strings.AddNewSupplier}
+																	{strings.AddNewSupplier} 
 																</Label>
-																<Button
-																	type="button"
-																	color="primary"
-																	className="btn-square"
-																	onClick={this.openSupplierModal}
-																>
-																	<i className="fa fa-plus"></i> {strings.AddASupplier} 
-																</Button>
-															</Col>
+															<Button
+                                                                color="primary"
+                                                                className="btn-square"
+                                                                // style={{ marginBottom: '40px' }}
+                                                                onClick={() =>
+																	//  this.props.history.push(`/admin/payroll/employee/create`,{goto:"Expense"})
+																this.props.history.push(`/admin/master/contact/create`,{gotoParentURL:"/admin/expense/request-for-quotation/create"})
+																	}
+
+                                                            >
+                                                                <i className="fas fa-plus mr-1" />
+                                         {strings.AddASupplier}
+									</Button></Col>
+													
 															
 															<Col lg={3}>
 																<FormGroup className="mb-3">

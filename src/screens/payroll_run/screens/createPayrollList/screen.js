@@ -81,7 +81,6 @@ class CreatePayrollList extends React.Component {
 			language: window['localStorage'].getItem('language'),
 			loading: false,
 			createMore: false,
-			loading: false,
 			initValue: {},
 			employeeListIds: [],
 			openModal: false,
@@ -792,7 +791,7 @@ showTotal=()=>{
 																				id="payrollSubject"
 																				name="payrollSubject"
 																				value={props.values.payrollSubject}
-																			
+																			    maxLength="100"
 																				placeholder={strings.Enter + " Payroll Subject"}
 																				onChange={(value) => {
 																					props.handleChange('payrollSubject')(value);

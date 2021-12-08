@@ -378,7 +378,7 @@ class CreateCustomerInvoice extends React.Component {
 		const { term } = this.state;
 		const val = term ? term.value.split('_') : '';
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
-		debugger
+		
 		const values = value
 			? value
 			: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
@@ -1122,7 +1122,7 @@ class CreateCustomerInvoice extends React.Component {
 	// };
 	
 	getCurrentUser = (data) => {
-		debugger
+		
 		let option;
 		if (data.label || data.value) {
 			option = data;
@@ -1505,7 +1505,8 @@ class CreateCustomerInvoice extends React.Component {
 																	color="primary"
 																	className="btn-square mr-3 mb-3"
 																	onClick={(e, props) => {
-																		this.openCustomerModal(props);
+																		// this.openCustomerModal(props);
+																		this.props.history.push(`/admin/master/contact/create`,{gotoParentURL:"/admin/income/customer-invoice/create"})
 																	}}
 																>
 																	<i className="fa fa-plus"></i> {strings.AddACustomer}

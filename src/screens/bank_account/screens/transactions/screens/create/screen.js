@@ -1360,6 +1360,12 @@ min="0"
 																					);
 																				}}
 																			/>
+																			{props.errors.employeeId &&
+																			props.touched.employeeId &&  (
+																					<div className="invalid-feedback">
+																						{props.errors.employeeId}
+																					</div>
+																				)}
 																		</FormGroup>
 																	</Col>
 																)}
@@ -1388,6 +1394,12 @@ min="0"
 																					);
 																				}}
 																			/>
+																			{props.errors.employeeId &&
+																				props.touched.employeeId && (
+																					<div className="invalid-feedback">
+																						{props.errors.employeeId}
+																					</div>
+																				)}
 																		</FormGroup>
 																	</Col>
 																)}

@@ -62,7 +62,7 @@ class ProductModal extends React.Component {
 				productType: 'GOODS',
 				salesUnitPrice: '',
 				purchaseUnitPrice: '',
-				productPriceType: ['SALES'],
+				productPriceType: ['SALES','PURCHASE'],
 				salesTransactionCategoryId: { value: 84, label: 'Sales' },
 				purchaseTransactionCategoryId: {
 					value: 49,
@@ -84,7 +84,7 @@ class ProductModal extends React.Component {
 		};
 		this.formRef = React.createRef();       
 		this.regEx = /^[0-9\d]+$/;
-		this.regExBoth = /[a-zA-Z0-9-./\\|]+$/;
+		this.regExBoth = /[ +a-zA-Z0-9-./\\|]+$/;
 		// this.regExBoth = /[a-zA-Z0-9 ]+$/;
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;

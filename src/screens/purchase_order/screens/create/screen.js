@@ -223,6 +223,7 @@ class CreatePurchaseOrder extends React.Component {
 				render={({ field, form }) => (
 					<Input
 						type="text"
+						maxLength="255"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(

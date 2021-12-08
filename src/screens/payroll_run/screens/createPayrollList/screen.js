@@ -36,7 +36,7 @@ import LocalizedStrings from 'react-localization';
 import { AddEmployeesModal } from './sections';
 import moment from 'moment';
 import "react-dates/initialize";
-import { DateRangePicker ,isInclusivelyBeforeDay} from 'react-dates';
+import { DateRangePicker ,isInclusivelyAfterDay,isInclusivelyBeforeDay} from 'react-dates';
 import "react-dates/lib/css/_datepicker.css";
 
 const mapStateToProps = (state) => {
@@ -699,6 +699,7 @@ showTotal=()=>{
 		const { employee_list, approver_dropdown_list } = this.props
 		const { loading, initValue } = this.state
 		console.log(employee_list.data, "employee_list.data")
+		var today = new Date();
 		return (
 			<div className="create-employee-screen">
 				<div className="animated fadeIn">
@@ -854,7 +855,10 @@ showTotal=()=>{
 																				endDate={this.state.endDate}
 																				endDateId="endDate"
 																				focusedInput={this.state.focusedInput}
-																				isOutsideRange={() => null}
+																				isOutsideRange={
+																					// () => null
+																					day => isInclusivelyBeforeDay(day, moment(new Date(today.getFullYear(), today.getMonth(),0)))
+																				}
 																				onDatesChange={this.handleDateChange}
 																				onFocusChange={this.handleFocusChange}
 																				startDate={this.state.startDate}

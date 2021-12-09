@@ -318,7 +318,7 @@ console.log(this.state.Variable,"Variable")
 																		<tr key={index}>
 																			{/* <td className="center">{index + 1}</td> */}
 																			<td>{item.componentName}</td>
-																			<td>{item.componentValue}</td>
+																			<td style={{ textAlign:'right' }}>{item.componentValue}</td>
 																			
 																		</tr>
 																	);
@@ -330,7 +330,7 @@ console.log(this.state.Variable,"Variable")
 																		<tr key={index}>
 																			{/* <td className="center">{index + 1}</td> */}
 																			<td>{item.componentName}</td>
-																			<td>{item.componentValue}</td>
+																			<td style={{ textAlign:'right' }}>{item.componentValue}</td>
 																			
 																		</tr>
 																	);
@@ -343,7 +343,7 @@ console.log(this.state.Variable,"Variable")
 																		<tr key={index}>
 																			{/* <td className="center">{index + 1}</td> */}
 																			<td>{item.componentName}</td>
-																			<td>{item.componentValue}</td>
+																			<td style={{ textAlign:'right' }}>{item.componentValue}</td>
 																			
 																		</tr>
 																	);
@@ -353,7 +353,7 @@ console.log(this.state.Variable,"Variable")
 															<tr>
 																{/* <td></td> */}
 																<td><b>{strings.Gross+" "+strings.Earnings}</b></td>
-																<td>{this.state.selectedData.earnings}</td>
+																<td style={{ textAlign:'right' }}>{this.state.selectedData.earnings}</td>
 															</tr>
 														</tfoot>
 															</Table>
@@ -379,7 +379,7 @@ console.log(this.state.Variable,"Variable")
 																		<tr key={index}>
 																			{/* <td className="center">{index + 1}</td> */}
 																			<td>{item.componentName}</td>
-																			<td>{item.componentValue}</td>
+																			<td style={{ textAlign:'right' }}>{item.componentValue}</td>
 																			
 																		</tr>
 																	);
@@ -389,7 +389,7 @@ console.log(this.state.Variable,"Variable")
 															<tr>
 																{/* <td></td> */}
 																<td><b>{strings.Total+" "+strings.Deductions}</b></td>
-																<td>{this.state.selectedData.deductions ? this.state.selectedData.deductions : 0}</td>
+																<td style={{textAlign:'right' }}>{this.state.selectedData.deductions ? this.state.selectedData.deductions : 0}</td>
 															</tr>
 														</tfoot>
 															</Table>

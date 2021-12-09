@@ -411,7 +411,7 @@ min="0"
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="customer_name">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.CustomerName} 
 																	</Label>
 																	<Select
@@ -483,10 +483,7 @@ min="0"
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="amount">
-																						<span className="text-danger">
-																							*
-																						</span>
-																						 {strings.AmountReceived} 
+																						<span className="text-danger">* </span>{strings.AmountReceived} 
 																					</Label>
 																					<Input
 																						type="number"

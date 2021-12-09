@@ -407,7 +407,7 @@ class CreateUser extends React.Component {
 																	<Col lg={6}>
 																		<FormGroup>
 																			<Label htmlFor="select">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																				 {strings.FirstName}
 																			</Label>
 																			<Input
@@ -447,7 +447,7 @@ class CreateUser extends React.Component {
 																	<Col lg={6}>
 																		<FormGroup>
 																			<Label htmlFor="select">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																				 {strings.LastName}
 																			</Label>
 																			<Input
@@ -489,7 +489,7 @@ class CreateUser extends React.Component {
 																	<Col lg={6}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="email">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																				 {strings.EmailID}
 																			</Label>
 																			<Input
@@ -625,7 +625,7 @@ class CreateUser extends React.Component {
 																	<Col lg={6}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="contactId">
-																				{/* <span className="text-danger">*</span> */}
+																				{/* <span className="text-danger">* </span> */}
 																				{strings.Employee}
 																			</Label>
 																			<Select
@@ -671,7 +671,7 @@ class CreateUser extends React.Component {
 																	<Col lg={6}>
 																		<FormGroup>
 																			<Label htmlFor="roleId">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																				 {strings.Role}
 																			</Label>
 																			<Select
@@ -717,7 +717,7 @@ class CreateUser extends React.Component {
 																	<Col lg={6}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="timezone">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																				 {strings.TimeZonePreference}
 																			</Label>
 																			<Select
@@ -836,7 +836,7 @@ class CreateUser extends React.Component {
 																
 															{/* <Row>
 																<Col>
-																<Label>	<span className="text-danger">*</span>{strings.SelectLinkOrCreateEmployee} </Label>
+																<Label>	<span className="text-danger">* </span>{strings.SelectLinkOrCreateEmployee} </Label>
 																</Col>
 															</Row> */}
 																<Row>
@@ -957,7 +957,7 @@ class CreateUser extends React.Component {
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="contactId">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																		 {strings.Designation}
 																	</Label>
 																			<Select

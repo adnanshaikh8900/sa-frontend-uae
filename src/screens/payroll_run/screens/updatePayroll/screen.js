@@ -1006,7 +1006,7 @@ class UpdatePayroll extends React.Component {
 																<Row>
 																	<Col >
 																		<FormGroup>
-																			<Label htmlFor="payrollSubject">	<span className="text-danger">*</span> Payroll Subject</Label>
+																			<Label htmlFor="payrollSubject">	<span className="text-danger">* </span> Payroll Subject</Label>
 																			<Input
 																				type="text"
 																				id="payrollSubject"
@@ -1031,7 +1031,7 @@ class UpdatePayroll extends React.Component {
 																	<Col >
 																		<FormGroup>
 																			<Label htmlFor="date">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																				Payroll Date
 																			</Label>
 																			<DatePicker
@@ -1066,7 +1066,7 @@ class UpdatePayroll extends React.Component {
 
 																	<Col  >
 																	<Label htmlFor="date">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																				Pay-period (Start date - End Date)
 																			</Label>
 																	<div style={{display: "flex"}}>

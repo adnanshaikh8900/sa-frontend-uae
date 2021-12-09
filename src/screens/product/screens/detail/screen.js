@@ -842,7 +842,7 @@ renderName=(cell,row)=>{
 																</Col>
 																<Col lg={4}>
 																<FormGroup check inline className="mb-3">
-																	<Label className="productlabel"><span className="text-danger">*</span>{strings.Status}</Label>
+																	<Label className="productlabel"><span className="text-danger">* </span>{strings.Status}</Label>
 																	<div className="wrapper">
 																	<Label
 																		className="form-check-label"
@@ -905,7 +905,7 @@ renderName=(cell,row)=>{
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="productName">
-																			<span className="text-danger">*</span> {strings.Name}
+																			<span className="text-danger">* </span> {strings.Name}
 																		</Label>
 																		<Input
 																			type="text"
@@ -944,7 +944,7 @@ renderName=(cell,row)=>{
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="productCode">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			 {strings.ProductCode}
 																		</Label>
 																		<Input
@@ -1040,7 +1040,7 @@ renderName=(cell,row)=>{
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="vatCategoryId">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			{strings.VAT+" "+strings.Type}
 																		</Label>
 																		<Select
@@ -1160,7 +1160,7 @@ renderName=(cell,row)=>{
 																<Col  style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}} lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="exciseTaxId">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			Excise Tax Type
 																		</Label>
 																		<Select
@@ -1281,7 +1281,7 @@ renderName=(cell,row)=>{
 																	<Row><Col>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="salesUnitPrice">
-																			<span className="text-danger">*</span>{' '}
+																			<span className="text-danger">* </span>{' '}
 																			 {strings.SellingPrice}
 																		</Label>
 																		<Input
@@ -1480,7 +1480,7 @@ renderName=(cell,row)=>{
 																	<Row><Col>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="salesUnitPrice">
-																			<span className="text-danger">*</span>{' '}
+																			<span className="text-danger">* </span>{' '}
 																			 {strings.PurchasePrice}
 																		</Label>
 																		<Input

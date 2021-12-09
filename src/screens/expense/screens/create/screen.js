@@ -515,7 +515,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 														<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="expenseNumber">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			Expense Number
 																			{/* <i
 																				id="ProductCodeTooltip"
@@ -572,7 +572,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="expenseCategoryId">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.ExpenseCategory}
 																	</Label>
 																	<Select
@@ -625,7 +625,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="expense_date">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.ExpenseDate}  
 																	</Label>
 																	<DatePicker
@@ -660,7 +660,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="payee">
-																		<span className="text-danger">*</span>{strings.PaidBy}  
+																		<span className="text-danger">* </span>{strings.PaidBy}  
 																	</Label>
 																	<Select
 																		styles={customStyles}
@@ -739,7 +739,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="expenseAmount">
-																		<span className="text-danger">*</span>{strings.Amount}
+																		<span className="text-danger">* </span>{strings.Amount}
 																	</Label>
 																	<Input
 																		type="text"
@@ -779,7 +779,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 															</Col>
 															<Col lg={3}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="vatCategoryId"><span className="text-danger">*</span>{strings.Vat}</Label>
+																	<Label htmlFor="vatCategoryId"><span className="text-danger">* </span>{strings.Vat}</Label>
 																	<Select
 																		styles={customStyles}
 																		className="select-default-width"
@@ -830,7 +830,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="bankAccountId">
-																			<span className="text-danger">*</span>Bank
+																			<span className="text-danger">* </span>Bank
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -871,7 +871,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.Currency}  
 																	</Label>
 																	<Select
@@ -929,7 +929,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 															</Col>
 															<Col lg={3}>
 																	<FormGroup className="mb-3">
-																		<Label htmlFor="payMode"><span className="text-danger">*</span> {strings.PayThrough}</Label>
+																		<Label htmlFor="payMode"><span className="text-danger">* </span> {strings.PayThrough}</Label>
 																		<Select
 																			styles={customStyles}
 																			

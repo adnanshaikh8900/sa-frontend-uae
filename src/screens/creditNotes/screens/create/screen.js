@@ -1283,7 +1283,7 @@ class CreateCreditNote extends React.Component {
 				this.setState(
 					{
 						option : {
-							label: response.data.organisationName === '' ?  response.data.name: response.data.organisationName,
+							label: response.data.organisationName === '' ?  response.data.name : response.data.organisationName,
 							value: response.data.contactId,
 						},
 					data:response.data.invoiceLineItems ,
@@ -1500,7 +1500,7 @@ class CreateCreditNote extends React.Component {
 														<Row>
 														<Col lg={3}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="invoiceNumber"><span className="text-danger">*</span>
+																	<Label htmlFor="invoiceNumber"><span className="text-danger">* </span>
 																	{strings.InvoiceNumber}
 																	</Label>
 																	<Select
@@ -1561,7 +1561,7 @@ class CreateCreditNote extends React.Component {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="creditNoteNumber">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.CreditNoteNumber}
 																	</Label>
 																	<Input
@@ -1596,7 +1596,7 @@ class CreateCreditNote extends React.Component {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="contactId">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.CustomerName}
 																	</Label>
 																	<Select
@@ -1794,7 +1794,7 @@ class CreateCreditNote extends React.Component {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.CreditNoteDate}
 																	</Label>
 																	<DatePicker
@@ -1856,7 +1856,7 @@ class CreateCreditNote extends React.Component {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.Currency}
 																	</Label>
 																	<Select

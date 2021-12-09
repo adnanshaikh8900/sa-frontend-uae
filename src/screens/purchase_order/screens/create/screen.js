@@ -1498,7 +1498,7 @@ getrfqDetails = (e, row, props,form,field) => {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="po_number">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.PONumber}
 																	</Label>
 																	<Input
@@ -1536,7 +1536,7 @@ getrfqDetails = (e, row, props,form,field) => {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="supplierId">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.SupplierName}
 																	</Label>
 
@@ -1611,7 +1611,7 @@ getrfqDetails = (e, row, props,form,field) => {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.Currency}
 																	</Label>
 																	<Select
@@ -1671,7 +1671,7 @@ getrfqDetails = (e, row, props,form,field) => {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.PODate}
 																	</Label>
 																	<DatePicker
@@ -1705,7 +1705,7 @@ getrfqDetails = (e, row, props,form,field) => {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="due_date">
-																	<span className="text-danger">*</span>
+																	<span className="text-danger">* </span>
 																	{strings.PODueDate}
 																	</Label>
 																	<DatePicker

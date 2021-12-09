@@ -909,7 +909,7 @@ min="0"
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			{strings.JournalDate}
 																		</Label>
 																		<DatePicker

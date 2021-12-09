@@ -319,7 +319,7 @@ class ReconcileTransaction extends React.Component {
 															<Row>
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
-																		<Label htmlFor="date"><span className="text-danger">*</span>{strings.BankClosingDate}</Label>
+																		<Label htmlFor="date"><span className="text-danger">* </span>{strings.BankClosingDate}</Label>
 																		<DatePicker
 																			id="date"
 																			name="date"
@@ -355,7 +355,7 @@ class ReconcileTransaction extends React.Component {
 																</Col>
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
-																		<Label htmlFor="closingBalance"><span className="text-danger">*</span>
+																		<Label htmlFor="closingBalance"><span className="text-danger">* </span>
 																			 {strings.ClosingBalance} 
 																		</Label>
 																		<Input

@@ -235,7 +235,7 @@ class DetailOpeningBalance extends React.Component {
                                         <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="effectiveDate">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																  {strings.EffectiveDate}
 																	</Label>
                                   <DatePicker
@@ -271,7 +271,7 @@ class DetailOpeningBalance extends React.Component {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="openingBalance">
-																		<span className="text-danger">*</span>{strings.Amount}
+																		<span className="text-danger">* </span>{strings.Amount}
 																	</Label>
 																	<Input
 																		type="number"

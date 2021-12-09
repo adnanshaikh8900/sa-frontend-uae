@@ -331,7 +331,7 @@ class DetailPayment extends React.Component {
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="supplier">
-                                        <span className="text-danger">*</span>
+                                        <span className="text-danger">* </span>
                                         {strings.SupplierName}
                                     </Label>
                                       <Select
@@ -376,7 +376,7 @@ class DetailPayment extends React.Component {
                                   </Col>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="invoiceId"><span className="text-danger">*</span>{strings.Invoice}#</Label>
+                                      <Label htmlFor="invoiceId"><span className="text-danger">* </span>{strings.Invoice}#</Label>
                                       <Select
                                       styles={customStyles}
                                         id="invoiceId"
@@ -412,7 +412,7 @@ class DetailPayment extends React.Component {
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="invoiceAmount">
-                                        <span className="text-danger">*</span>
+                                        <span className="text-danger">* </span>
                                          {strings.InvoiceAmount}
                                     </Label>
                                       <Input
@@ -444,7 +444,7 @@ min="0"
                                 <Row>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="currency"><span className="text-danger">*</span>{strings.Currency}</Label>
+                                      <Label htmlFor="currency"><span className="text-danger">* </span>{strings.Currency}</Label>
                                       <Select
                                       styles={customStyles}
                                         id="currency"
@@ -511,7 +511,7 @@ min="0"
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="payment_date">
-                                        <span className="text-danger">*</span>
+                                        <span className="text-danger">* </span>
                                          {strings.PaymentDate}
                                     </Label>
                                       <div>

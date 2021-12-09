@@ -270,7 +270,7 @@ class CreateEmployment extends React.Component {
                               </Col>
                               <Col md="4">
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="dateOfJoining"><span className="text-danger">*</span>Date Of Joining</Label>
+                                  <Label htmlFor="dateOfJoining"><span className="text-danger">* </span>Date Of Joining</Label>
                                   <DatePicker
                                     className={`form-control ${props.errors.dateOfJoining && props.touched.dateOfJoining ? "is-invalid" : ""}`}
                                     id="dateOfJoining"
@@ -404,7 +404,7 @@ class CreateEmployment extends React.Component {
                               </Col> 
                               <Col md="4">
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="passportExpiryDate"><span className="text-danger">*</span>Passport expiry Date</Label>
+                                  <Label htmlFor="passportExpiryDate"><span className="text-danger">* </span>Passport expiry Date</Label>
                                   <DatePicker
                                     className={`form-control ${props.errors.dateOfJoining && props.touched.dateOfJoining ? "is-invalid" : ""}`}
                                     id="passportExpiryDate"
@@ -450,7 +450,7 @@ class CreateEmployment extends React.Component {
                               </Col>
                               <Col md="4">
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="visaExpiryDate"><span className="text-danger">*</span>Visa ExpiryDate</Label>
+                                  <Label htmlFor="visaExpiryDate"><span className="text-danger">* </span>Visa ExpiryDate</Label>
                                   <DatePicker 
                                     className={`form-control ${props.errors.visaExpiryDate && props.touched.visaExpiryDate ? "is-invalid" : ""}`}
                                     id="visaExpiryDate"

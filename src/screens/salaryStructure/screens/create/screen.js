@@ -179,7 +179,7 @@ class CreateSalaryStructure extends React.Component {
                               
                               <Col lg={4}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span> {strings.SalaryStructureType}</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span> {strings.SalaryStructureType}</Label>
                                   <Input
                                     type="text"
                                     maxLength="30"
@@ -199,7 +199,7 @@ class CreateSalaryStructure extends React.Component {
                               </Col>
                               <Col lg={4}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>{strings.SalaryStructureName}</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>{strings.SalaryStructureName}</Label>
                                   <Input
                                     type="text"
                                     maxLength="30"

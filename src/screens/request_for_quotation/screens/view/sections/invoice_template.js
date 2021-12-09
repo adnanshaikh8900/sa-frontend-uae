@@ -115,9 +115,9 @@ class RFQTemplate extends Component {
 											? companyData.company.companyName
 											: ''}</b></h4>
 								<h6 className="mb-1 ml-2">{RFQData.rfqNumber} </h6>
-								<h6 className="mb-1 ml-2">{RFQData.organisationName ? RFQData.organisationName : RFQData.supplierName}</h6>
-								<div className="mb-1 ml-2">TRN: {RFQData.vatRegistrationNumber}</div>
-													<span className="mb-1 ml-2">{strings.Status}:  {this.renderRFQStatus(status)}</span>
+								<h6 className="mb-1 ml-2"><b>Name: </b>{RFQData.organisationName ? RFQData.organisationName : RFQData.supplierName}</h6>
+								<div className="mb-1 ml-2"><b>TRN: </b>{RFQData.vatRegistrationNumber}</div>
+													<span className="mb-1 ml-2"><b>{strings.Status}:  </b>{this.renderRFQStatus(status)}</span>
 
 													{/* <div
 														className={`ribbon ${this.getRibbonColor(

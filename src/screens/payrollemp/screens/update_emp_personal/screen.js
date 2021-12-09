@@ -533,7 +533,7 @@ class UpdateEmployeePersonal extends React.Component {
 
                                                                         <Col lg={4}>
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select"><span className="text-danger">*</span> {strings.FirstName}</Label>
+                                                                                <Label htmlFor="select"><span className="text-danger">* </span> {strings.FirstName}</Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="firstName"
@@ -571,7 +571,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         </Col>
                                                                         <Col lg={4}>
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select"><span className="text-danger">*</span>{strings.LastName}</Label>
+                                                                                <Label htmlFor="select"><span className="text-danger">* </span>{strings.LastName}</Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="lastName"
@@ -593,7 +593,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                     <Row>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select"><span className="text-danger">*</span>{strings.Email}</Label>
+                                                                                <Label htmlFor="select"><span className="text-danger">* </span>{strings.Email}</Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="email"
@@ -611,7 +611,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         <Col md="4">
                                                                             <FormGroup>
                                                                                 <Label htmlFor="mobileNumber">
-                                                                                <span className="text-danger">*</span>  {strings.MobileNumber}
+                                                                                <span className="text-danger">* </span>  {strings.MobileNumber}
                                                                                 </Label>
                                                                                 <PhoneInput
                                                                                     id="mobileNumber"
@@ -643,7 +643,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         </Col>
                                                                         <Col md="4">
                                                                             <FormGroup className="mb-3">
-                                                                                <Label htmlFor="date"><span className="text-danger">*</span>{strings.DateOfBirth}</Label>
+                                                                                <Label htmlFor="date"><span className="text-danger">* </span>{strings.DateOfBirth}</Label>
                                                                                 <DatePicker
                                                                                     className={`form-control ${props.errors.dob && props.touched.dob ? "is-invalid" : ""}`}
                                                                                     id="dob"
@@ -668,7 +668,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         </Col>
                                                                         <Col md="4">
                                                                             <FormGroup className="mb-3">
-                                                                                <Label htmlFor="active"><span className="text-danger">*</span> {strings.Status}</Label>
+                                                                                <Label htmlFor="active"><span className="text-danger">* </span> {strings.Status}</Label>
                                                                                 <div>
                                                                                     <FormGroup check inline>
                                                                                         <div className="custom-radio custom-control">
@@ -738,7 +738,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                     <Row>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="gender"><span className="text-danger">*</span>{strings.Gender}</Label>
+                                                                                <Label htmlFor="gender"><span className="text-danger">* </span>{strings.Gender}</Label>
                                                                                 <Select
 
                                                                                     options={
@@ -872,7 +872,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                     <Col md="4">
                                                                             <FormGroup>
 
-                                                                                <Label htmlFor="salaryRoleId"><span className="text-danger">*</span> {strings.SalaryRole} </Label>
+                                                                                <Label htmlFor="salaryRoleId"><span className="text-danger">* </span> {strings.SalaryRole} </Label>
                                                                                 <Select
 
                                                                                     options={
@@ -927,7 +927,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                        
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="employeeDesignationId"><span className="text-danger">*</span>{strings.Designation}</Label>
+                                                                                <Label htmlFor="employeeDesignationId"><span className="text-danger">* </span>{strings.Designation}</Label>
                                                                                 <Select
 
                                                                                     options={
@@ -994,7 +994,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                     <Row className="row-wrapper">
                                                                         <Col md="8">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="gender"><span className="text-danger">*</span> {strings.PresentAddress} </Label>
+                                                                                <Label htmlFor="gender"><span className="text-danger">* </span> {strings.PresentAddress} </Label>
                                                                                 <Input
                                                                                                         type="text"
                                                                                                         maxLength="26"
@@ -1100,7 +1100,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                         </Col>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="stateId"><span className="text-danger">*</span>{strings.StateRegion}</Label>
+                                                                                <Label htmlFor="stateId"><span className="text-danger">* </span>{strings.StateRegion}</Label>
                                                                                 <Select
 
                                                                                     options={
@@ -1157,7 +1157,7 @@ class UpdateEmployeePersonal extends React.Component {
 
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="state"><span className="text-danger">*</span>{strings.City} </Label>
+                                                                                <Label htmlFor="state"><span className="text-danger">* </span>{strings.City} </Label>
                                                                                 <Input
                                                                                                         type="text"
                                                                                                         maxLength="20"
@@ -1261,7 +1261,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                     
                                                                                           <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="emergencyContactName1"><span className="text-danger">*</span>{strings.ContactName1}</Label>
+                                                                                                    <Label htmlFor="emergencyContactName1"><span className="text-danger">* </span>{strings.ContactName1}</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         maxLength="26"
@@ -1284,7 +1284,7 @@ class UpdateEmployeePersonal extends React.Component {
 
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="emergencyContactNumber1"><span className="text-danger">*</span>{strings.ContactNumber1} </Label>
+                                                                                                    <Label htmlFor="emergencyContactNumber1"><span className="text-danger">* </span>{strings.ContactNumber1} </Label>
                                                                                                     <PhoneInput
                                                                                                         id="emergencyContactNumber1"
                                                                                                         name="emergencyContactNumber1"
@@ -1316,7 +1316,7 @@ class UpdateEmployeePersonal extends React.Component {
 
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="emergencyContactRelationship1"><span className="text-danger">*</span> {strings.Relationship1} </Label>
+                                                                                                    <Label htmlFor="emergencyContactRelationship1"><span className="text-danger">* </span> {strings.Relationship1} </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         maxLength="26"

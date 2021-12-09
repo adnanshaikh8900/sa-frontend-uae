@@ -207,7 +207,7 @@ class CreateVatCode extends React.Component {
 													<Form onSubmit={props.handleSubmit} name="simpleForm">
 														<FormGroup>
 															<Label htmlFor="name">
-																<span className="text-danger">*</span>
+																<span className="text-danger">* </span>
 																 {strings.VatCategoryName}
 																<i
 																	id="VatCodeTooltip"
@@ -252,7 +252,7 @@ class CreateVatCode extends React.Component {
 														</FormGroup>
 														<FormGroup>
 															<Label htmlFor="name">
-																<span className="text-danger">*</span>{strings.Percentage}
+																<span className="text-danger">* </span>{strings.Percentage}
 																<i
 																	id="VatPercentTooltip"
 																	className="fa fa-question-circle ml-1"

@@ -298,7 +298,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                     <Row  >
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select"><span className="text-danger">*</span>{strings.AccountHolderName} </Label>
+                                                                                <Label htmlFor="select"><span className="text-danger">* </span>{strings.AccountHolderName} </Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     maxLength="60"
@@ -319,7 +319,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                         </Col>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select"><span className="text-danger">*</span> {strings.AccountNumber}</Label>
+                                                                                <Label htmlFor="select"><span className="text-danger">* </span> {strings.AccountNumber}</Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     maxLength="25"
@@ -347,7 +347,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                         </Col>
                                                                         <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                <Label htmlFor="select"><span className="text-danger">*</span> {strings.BankName} </Label>
+                                                                                                <Label htmlFor="select"><span className="text-danger">* </span> {strings.BankName} </Label>
                                                                                                     <Select
 
                                                                                                         options={
@@ -430,7 +430,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                     <Row className="row-wrapper">
                                                                         <Col lg={4}>
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select"><span className="text-danger">*</span>{strings.Branch}</Label>
+                                                                                <Label htmlFor="select"><span className="text-danger">* </span>{strings.Branch}</Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     maxLength="30"
@@ -451,7 +451,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                         </Col>
                                                                         <Col md="4">
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select"> <span className="text-danger">*</span>{strings.IBANNumber}</Label>
+                                                                                <Label htmlFor="select"> <span className="text-danger">* </span>{strings.IBANNumber}</Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     id="iban"
@@ -473,7 +473,7 @@ class UpdateEmployeeBank extends React.Component {
 
                                                                         <Col lg={4}>
                                                                             <FormGroup>
-                                                                                <Label htmlFor="select"><span className="text-danger">*</span>{strings.SwiftCode}</Label>
+                                                                                <Label htmlFor="select"><span className="text-danger">* </span>{strings.SwiftCode}</Label>
                                                                                 <Input
                                                                                     type="text"
                                                                                     maxLength="11"

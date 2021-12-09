@@ -207,7 +207,7 @@ class DetailVatCode extends React.Component {
 														>
 															<FormGroup>
 																<Label htmlFor="name">
-																	<span className="text-danger">*</span>
+																	<span className="text-danger">* </span>
 																	{strings.VatCategoryName}
 																</Label>
 																<Input
@@ -238,7 +238,7 @@ class DetailVatCode extends React.Component {
 															</FormGroup>
 															<FormGroup>
 																<Label htmlFor="name">
-																	<span className="text-danger">*</span>
+																	<span className="text-danger">* </span>
 																 {strings.Percentage}
 																</Label>
 																<Input

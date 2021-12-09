@@ -1373,7 +1373,7 @@ min="0"
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="grnNumber">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			 {strings.GRNNumber}
 																		</Label>
 																		<Input
@@ -1409,7 +1409,7 @@ min="0"
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="supplierId">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			{strings.SupplierName}
 																		</Label>
 																		<Select
@@ -1501,7 +1501,7 @@ min="0"
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																		     {strings.ReceiveDate}
 																		</Label>
 																		<DatePicker
@@ -1537,7 +1537,7 @@ min="0"
 																<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.Currency}
 																	</Label>
 																	<Select

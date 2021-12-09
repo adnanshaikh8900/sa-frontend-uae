@@ -418,7 +418,7 @@ class DetailUser extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup>
 																				<Label htmlFor="select">
-																					<span className="text-danger">*</span>
+																					<span className="text-danger">* </span>
 																					 {strings.FirstName}
 																				</Label>
 																				<Input
@@ -457,7 +457,7 @@ class DetailUser extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup>
 																				<Label htmlFor="select">
-																					<span className="text-danger">*</span>
+																					<span className="text-danger">* </span>
 																					 {strings.LastName}
 																				</Label>
 																				<Input
@@ -498,7 +498,7 @@ class DetailUser extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="email">
-																					<span className="text-danger">*</span>
+																					<span className="text-danger">* </span>
 																					 {strings.EmailID}
 																				</Label>
 																				<Input
@@ -691,7 +691,7 @@ class DetailUser extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup>
 																				<Label htmlFor="roleId">
-																					<span className="text-danger">*</span>
+																					<span className="text-danger">* </span>
 																					 {strings.Role}
 																				</Label>
 																				<Select
@@ -744,7 +744,7 @@ class DetailUser extends React.Component {
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="timeZone">
-																					<span className="text-danger">*</span>
+																					<span className="text-danger">* </span>
 																					 {strings.TimeZonePreference}
 																				</Label>
 																				<Select

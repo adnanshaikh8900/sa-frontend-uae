@@ -202,7 +202,7 @@ class CreateOpeningBalance extends React.Component {
 																<Col lg={4}>
 																<FormGroup className="mb-3">
 																<Label htmlFor="transactionCategoryBalanceId">
-																<span className="text-danger">*</span>
+																<span className="text-danger">* </span>
 																{strings.TransactionCategory}
 																</Label>
 																		<Select
@@ -245,7 +245,7 @@ class CreateOpeningBalance extends React.Component {
 																<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="effectiveDate">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.OpeningDate}
 																	</Label>
 																	<DatePicker
@@ -283,7 +283,7 @@ class CreateOpeningBalance extends React.Component {
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="openingBalance">
-																		<span className="text-danger">*</span>{strings.Amount}
+																		<span className="text-danger">* </span>{strings.Amount}
 																	</Label>
 																	<Input
 																		type="number"

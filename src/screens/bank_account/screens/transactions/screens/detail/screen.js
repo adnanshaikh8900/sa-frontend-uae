@@ -363,7 +363,7 @@ class DetailBankTransaction extends React.Component {
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="chartOfAccountId">
-                                      <span className="text-danger">*</span>
+                                      <span className="text-danger">* </span>
                                      {strings.TransactionType}
                                     </Label>
                                     <Select
@@ -425,7 +425,7 @@ class DetailBankTransaction extends React.Component {
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="date">
-                                      <span className="text-danger">*</span>
+                                      <span className="text-danger">* </span>
                                       {strings.TransactionDate}
                                     </Label>
                                     <DatePicker
@@ -467,7 +467,7 @@ class DetailBankTransaction extends React.Component {
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="transactionAmount">
-                                      <span className="text-danger">*</span>
+                                      <span className="text-danger">* </span>
                                      {strings.Total+" "+strings.Amount }
                                     </Label>
                                     <Input

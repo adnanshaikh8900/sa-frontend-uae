@@ -317,7 +317,7 @@ class DetailChartAccount extends React.Component {
                                 </FormGroup> */}
 															<FormGroup>
 																<Label htmlFor="transactionCategoryName">
-																	<span className="text-danger">*</span> {strings.Name}
+																	<span className="text-danger">* </span> {strings.Name}
 																</Label>
 																<Input
 																	type="text"
@@ -352,7 +352,7 @@ class DetailChartAccount extends React.Component {
 															</FormGroup>
 															<FormGroup>
 																<Label htmlFor="chartOfAccount">
-																	<span className="text-danger">*</span>{strings.Type}
+																	<span className="text-danger">* </span>{strings.Type}
 																</Label>
 																{/* <Select
                                     className="select-default-width"

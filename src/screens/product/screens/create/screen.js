@@ -599,7 +599,7 @@ try {
 
 																<Col lg={4}>
 																<FormGroup check inline className="mb-3">
-																	<Label className="productlabel"><span className="text-danger">*</span>{strings.Status}</Label>
+																	<Label className="productlabel"><span className="text-danger">* </span>{strings.Status}</Label>
 																	<div className="wrapper">
 																	<Label
 																		className="form-check-label"
@@ -664,7 +664,7 @@ try {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="productName">
-																			<span className="text-danger">*</span>{strings.Name}
+																			<span className="text-danger">* </span>{strings.Name}
 																		</Label>
 																		<Input
 																			type="text"
@@ -708,7 +708,7 @@ try {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="productCode">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			{strings.ProductCode}
 																			<i
 																				id="ProductCodeTooltip"
@@ -827,7 +827,7 @@ try {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="vatCategoryId">
-																			<span className="text-danger">*</span>{strings.VAT+" "+strings.Type}
+																			<span className="text-danger">* </span>{strings.VAT+" "+strings.Type}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -909,7 +909,7 @@ try {
 																<Col  style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}	 lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="exciseTaxId">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			Excise Tax Type
 																		</Label>
 																		<Select
@@ -1120,7 +1120,7 @@ try {
 																	<Col>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="salesUnitPrice">
-																			<span className="text-danger">*</span>{' '}
+																			<span className="text-danger">* </span>{' '}
 																			{strings.SellingPrice}
 																			<i
 																				id="SalesTooltip"
@@ -1177,7 +1177,7 @@ try {
 																	<Col>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="transactionCategoryId">
-																			<span className="text-danger">*</span>{' '}
+																			<span className="text-danger">* </span>{' '}
 																			{strings.Account}
 																		</Label>
 																		<Select
@@ -1321,7 +1321,7 @@ try {
 																	<Col>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="salesUnitPrice">
-																			<span className="text-danger">*</span>{' '}
+																			<span className="text-danger">* </span>{' '}
 																			{strings.PurchasePrice}
 																			<i
 																				id="PurchaseTooltip"
@@ -1382,7 +1382,7 @@ try {
 																	<Col>	
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="salesUnitPrice">
-																			<span className="text-danger">*</span>{' '}
+																			<span className="text-danger">* </span>{' '}
 																			{strings.Account}
 																		</Label>
 																		<Select
@@ -1519,8 +1519,8 @@ try {
 																	<Col>	
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="salesUnitPrice">
-																			{/* <span className="text-danger">*</span>{' '} */}
-																			<span className="text-danger">*</span> {strings.InventoryAccount}
+																			{/* <span className="text-danger">* </span>{' '} */}
+																			<span className="text-danger">* </span> {strings.InventoryAccount}
 																		</Label>
 																		<Select
 																			styles={customStyles}
@@ -1576,8 +1576,8 @@ try {
 																	<Col>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="inventoryQty">
-																			{/* <span className="text-danger">*</span>{' '} */}
-																			<span className="text-danger">*</span>	 {strings.OpeningBalanceQuantity}
+																			{/* <span className="text-danger">* </span>{' '} */}
+																			<span className="text-danger">* </span>	 {strings.OpeningBalanceQuantity}
 																			
 																		</Label>
 																		<Input
@@ -1627,8 +1627,8 @@ try {
 																<Col>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="inventoryPurchasePrice">
-																			{/* <span className="text-danger">*</span>{' '} */}
-																			<span className="text-danger">*</span>	{strings.PurchasePrice}
+																			{/* <span className="text-danger">* </span>{' '} */}
+																			<span className="text-danger">* </span>	{strings.PurchasePrice}
 																		</Label>
 																		<Input
 																		type="text"
@@ -1678,7 +1678,7 @@ try {
 																	<Col>
 																	<FormGroup className="mb-3">
 																	<Label htmlFor="contactId">
-																		{/* <span className="text-danger">*</span> */}
+																		{/* <span className="text-danger">* </span> */}
 																		  {strings.SupplierName}
 																	</Label>
 																	<Select

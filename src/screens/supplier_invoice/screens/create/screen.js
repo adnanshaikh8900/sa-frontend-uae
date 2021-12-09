@@ -1480,7 +1480,7 @@ min="0"
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="invoice_number">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.InvoiceNumber}
 																	</Label>
 																	<Input
@@ -1514,7 +1514,7 @@ min="0"
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="contactId">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.SupplierName} 
 																	</Label>
 																	<Select
@@ -1582,7 +1582,7 @@ min="0"
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.PlaceofSupply} 
 																	</Label>
 																	<Select
@@ -1628,7 +1628,7 @@ min="0"
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="term">
-																		<span className="text-danger">*</span>{strings.Terms}{' '}
+																		<span className="text-danger">* </span>{strings.Terms}{' '}
 																		<i
 																			id="UncontrolledTooltipExample"
 																			className="fa fa-question-circle ml-1"
@@ -1711,7 +1711,7 @@ min="0"
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.InvoiceDate} 
 																	</Label>
 																	<DatePicker
@@ -1783,7 +1783,7 @@ min="0"
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.Currency}
 																	</Label>
 																	<Select

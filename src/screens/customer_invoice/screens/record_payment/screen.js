@@ -479,7 +479,7 @@ class RecordCustomerPayment extends React.Component {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="contactId">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																		{strings.CustomerName}
 																		</Label>
 																		<Select
@@ -514,7 +514,7 @@ class RecordCustomerPayment extends React.Component {
 																{/* <Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="project">
-																			<span className="text-danger">*</span>{' '}
+																			<span className="text-danger">* </span>{' '}
 																			Payment
 																		</Label>
 																		<Input
@@ -548,7 +548,7 @@ class RecordCustomerPayment extends React.Component {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="project">
-																			<span className="text-danger">*</span>{' '}
+																			<span className="text-danger">* </span>{' '}
 																			{strings.AmountReceived}
 																		</Label>
 																		<Input
@@ -587,7 +587,7 @@ class RecordCustomerPayment extends React.Component {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			 {strings.PAYMENTDATE}
 																		</Label>
 																		<DatePicker
@@ -625,7 +625,7 @@ class RecordCustomerPayment extends React.Component {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="payMode">
-																			<span className="text-danger">*</span>{' '}
+																			<span className="text-danger">* </span>{' '}
 																			 {strings.PaymentMode}
 																		</Label>
 																		<Select
@@ -669,7 +669,7 @@ class RecordCustomerPayment extends React.Component {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="depositeTo">
-																			<span className="text-danger">*</span>{' '}
+																			<span className="text-danger">* </span>{' '}
 																			{strings.ReceivedThrough}
 																		</Label>
 																		<Select

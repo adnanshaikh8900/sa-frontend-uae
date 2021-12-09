@@ -1098,7 +1098,7 @@ min="0"
 			this.state.showInvoiceNumber &&(<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="project">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																			 {strings.InvoiceNumber}
 																		</Label>
 																		<Input																			
@@ -1259,7 +1259,7 @@ min="0"
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="invoice_number">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 															        {strings.CreditNoteNumber}
 																		</Label>
 																		<Input
@@ -1292,7 +1292,7 @@ min="0"
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="contactId">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			 {strings.CustomerName}
 																		</Label>
 																		<Select
@@ -1493,7 +1493,7 @@ min="0"
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			 {strings.CreditNoteDate}
 																		</Label>
 																		<DatePicker
@@ -1567,7 +1567,7 @@ min="0"
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="currencyCode">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			{strings.Currency}
 																		</Label>
 																		<Select

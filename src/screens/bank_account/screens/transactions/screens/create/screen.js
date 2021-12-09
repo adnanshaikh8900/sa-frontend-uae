@@ -811,7 +811,7 @@ class CreateBankTransaction extends React.Component {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.TransactionDate}
 																	</Label>
 																	<DatePicker
@@ -850,7 +850,7 @@ class CreateBankTransaction extends React.Component {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="transactionAmount">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.Amount}
 																	</Label>
 																	<Input
@@ -897,7 +897,7 @@ min="0"
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="expenseCategory">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																				Expense Category
 																			</Label>
 																			<Select
@@ -996,7 +996,7 @@ min="0"
 																	<Row>
 																		<Col lg={3}>
 																				<FormGroup className="mb-3">
-																					<Label htmlFor="currencyCode"><span className="text-danger">*</span>
+																					<Label htmlFor="currencyCode"><span className="text-danger">* </span>
 																						Currency
 																					</Label>
 																					<Select
@@ -1247,7 +1247,7 @@ min="0"
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="transactionCategoryId">
-																				<span className="text-danger">*</span>
+																				<span className="text-danger">* </span>
 																				Category
 																			</Label>
 																			<Select
@@ -1343,7 +1343,7 @@ min="0"
 																{props.values.coaCategoryId.value === 6 && (
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
-																			<Label htmlFor="employeeId"><span className="text-danger">*</span>User
+																			<Label htmlFor="employeeId"><span className="text-danger">* </span>User
 																			</Label>
 																			<Select
 																				styles={customStyles}
@@ -1372,7 +1372,7 @@ min="0"
 																{props.values.coaCategoryId.value === 12 && (
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
-																			<Label htmlFor="employeeId"><span className="text-danger">*</span>User</Label>
+																			<Label htmlFor="employeeId"><span className="text-danger">* </span>User</Label>
 																			<Select
 																				styles={customStyles}
 																				className="select-default-width"

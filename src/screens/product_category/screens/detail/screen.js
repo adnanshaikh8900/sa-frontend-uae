@@ -246,7 +246,7 @@ class DetailProductCategory extends React.Component {
                             {(props) => (
                               <Form onSubmit={props.handleSubmit} name="simpleForm">
                                 <FormGroup>
-                                  <Label htmlFor="productCategoryCode"><span className="text-danger">*</span>{strings.ProductCategoryCode}</Label>
+                                  <Label htmlFor="productCategoryCode"><span className="text-danger">* </span>{strings.ProductCategoryCode}</Label>
                                   <Input
                                     type="text"
                                     maxLength='20'
@@ -266,7 +266,7 @@ class DetailProductCategory extends React.Component {
                                   )}
                                 </FormGroup>
                                 <FormGroup>
-                                  <Label htmlFor="productCategoryName"><span className="text-danger">*</span>{strings.ProductCategoryName}</Label>
+                                  <Label htmlFor="productCategoryName"><span className="text-danger">* </span>{strings.ProductCategoryName}</Label>
                                   <Input
                                     type="text" maxLength='50'
                                     id="productCategoryName"

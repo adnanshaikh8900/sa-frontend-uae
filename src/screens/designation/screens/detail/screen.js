@@ -226,7 +226,7 @@ class DetailDesignation extends React.Component {
                             <Row  className="row-wrapper">
                             <Col lg={4}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>{strings.DESIGNATIONID}</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>{strings.DESIGNATIONID}</Label>
                                   <Input
                                     type="text"
                                     id="designationId"
@@ -246,7 +246,7 @@ class DetailDesignation extends React.Component {
                               </Col>
                               <Col lg={4}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>{strings.DesignationName}</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>{strings.DesignationName}</Label>
                                   <Input
                                     type="text"
                                     id="designationName"

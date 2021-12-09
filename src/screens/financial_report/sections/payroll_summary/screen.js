@@ -143,7 +143,7 @@ class PayrollSummaryReport extends React.Component {
 		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
 		return dl ?
 		  XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
-		  XLSX.writeFile(wb, fn || ('PayablesInvoice Summary Report.'+ (type || 'csv')));
+		  XLSX.writeFile(wb, fn || ('Payroll Summary Report.'+ (type || 'csv')));
 
 	   }
 
@@ -173,7 +173,20 @@ class PayrollSummaryReport extends React.Component {
 	// 	const data = new Blob([excelBuffer], { type: fileType });
 	// 	FileSaver.saveAs(data, fileName + fileExtension);
 	// };
+	renderPayperiod = (row) => {
+		let dateArr=row.payPeriod ? row.payPeriod.split("-"):[];
 
+				let  startDate= moment(dateArr[0]).format('DD/MM/YYYY')
+				let	 endDate=moment(dateArr[1]).format('DD/MM/YYYY')
+		
+		return(
+			<div>{startDate}<b>&nbsp;to&nbsp;</b>{endDate}</div>
+		// <Table>
+		// 	<Row><Col className="pull-right"><b>Start-Date</b></Col><Col>: {startDate}</Col></Row>
+		// 	<Row><Col className="pull-right"><b>End-Date</b></Col><Col>: {endDate}</Col></Row>
+		// 	 </Table>  
+			) ;
+	};
 	toggle = () =>
 		this.setState((prevState) => {
 			return { dropdownOpen: !prevState.dropdownOpen };
@@ -422,7 +435,7 @@ class PayrollSummaryReport extends React.Component {
 																	) : (" ")}</td>
 																	
 																	<td style={{ textAlign: 'center'}}>{item.payrollSubject}</td>
-																	<td style={{ textAlign: 'center'}}>{item.payPeriod}</td>
+																	<td style={{ textAlign: 'center'}}>{this.renderPayperiod(item)}</td>
 																	<td style={{ textAlign: 'center' }}>{item.employeeCount}</td>
 																	<td style={{ textAlign: 'center'}}>{item.generatedByName}</td>
 																	<td style={{ textAlign: 'center'}}>{item.payrollApproverName}</td>

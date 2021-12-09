@@ -519,6 +519,7 @@ handleChange = (evt) => {
                                                                 id="CTC"
                                                                 size="30"
                                                                 name="CTC"
+                                                                maxLength='10'
                                                                 style={{textAlign:"center"}}
                                                                 value={this.state.CTC ? this.state.CTC : props.values.CTC}
                                                                 placeholder={strings.Enter+"CTC"}

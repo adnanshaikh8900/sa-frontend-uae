@@ -283,10 +283,14 @@ class SalaryComponentFixed extends React.Component {
 												</FormGroup>
 											</Col>
 											<Col>
-											<ButtonGroup>
+											{/* <ButtonGroup> */}
 											<Button
+											style={{
+												width:80,
+												borderRadius:50,
+											  }}
 											color="primary"
-											className="btn-square mr-3 mb-3"
+											className="btn-square mr-3 mt-4"
 											 onClick={this._showDetails.bind(null, true)}
 											 disabled={
 												this._showDetails === true
@@ -294,7 +298,7 @@ class SalaryComponentFixed extends React.Component {
 										 >	<i className="fa fa-plus"></i> {strings.AddNewComponent}
 											 </Button>
 
-											</ButtonGroup>
+											{/* </ButtonGroup> */}
 											</Col>
 										</Row>
 										)}

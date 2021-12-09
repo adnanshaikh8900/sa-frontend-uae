@@ -715,7 +715,7 @@ FlatAmount:"Flat Amount",
 CreateFixedComponent:"Create Fixed Component",	
 CreateVariableComponent:"Create Variable Component",	
 SalaryComponent:"Salary Component",
-AddNewComponent:"Add New Component",
+AddNewComponent:"Add",
 		
 SALARYSTRUCTURETYPE:"SALARY STRUCTURE TYPE",		
 SALARYSTRUCTURENAME:"SALARY STRUCTURE NAME",		

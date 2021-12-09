@@ -694,7 +694,7 @@ FlatAmount:"مبلغ مقطوع",
 CreateFixedComponent:"إنشاء مكون ثابت",	
 CreateVariableComponent:"إنشاء مكون متغير",	
 SalaryComponent:"عنصر المرتبات",
-AddNewComponent:"إضافة مكون جديد",
+AddNewComponent:"يضيف",
 
 	
 SALARYSTRUCTURETYPE:"نوع هيكل الراتب",		

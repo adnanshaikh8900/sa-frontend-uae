@@ -920,6 +920,7 @@ class UpdatePayroll extends React.Component {
 					onSelect: this.onRowSelect,
 					onSelectAll: this.onSelectAll,
 				}
+		var today = new Date();
 		return (
 			<div className="create-employee-screen">
 				<div className="animated fadeIn">
@@ -1081,7 +1082,10 @@ class UpdatePayroll extends React.Component {
 																					focusedInput={this.state.focusedInput}
 																					disabled={this.disableForAddButton() ? true : false}
 																					onFocusChange={(option)=>{this.setState({focusedInput:option})}}
-																					isOutsideRange={() => null}
+																					isOutsideRange={
+																						// () => null
+																						day => isInclusivelyBeforeDay(day, moment(new Date(today.getFullYear(), today.getMonth(),0)))
+																					}
 																				/>																							
 																	
 																			{props.errors.startDate &&

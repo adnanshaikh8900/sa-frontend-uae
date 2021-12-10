@@ -37,6 +37,8 @@ import { ChartOfAccountsModal } from './modal';
 
 import moment from 'moment';
 import { Date } from 'core-js';
+import download from 'downloadjs';
+import { align } from '@progress/kendo-drawing';
 
 const mapStateToProps = (state) => {
 	return {
@@ -87,6 +89,7 @@ class Import extends React.Component {
 			upload: false,
 			migration: false,
 			migration_list: [],
+			ParentActiveTab: new Array(2).fill('1'),
 			activeTab: new Array(6).fill('1'),
 			nestedActiveDefaultTab: false,
 			date: '',
@@ -99,7 +102,15 @@ class Import extends React.Component {
 			effectiveDate:new Date(),
 			openingBalance:0,
 			dummylistOfNotExist: [],
-			coaName:''
+			coaName:'',
+			csvFileNamesData:[
+				{srNo:1,fileName:"Chart Of Accounts.csv",download:true},
+				{srNo:2,fileName:"Opening Balances.csv",download:true},
+				{srNo:3,fileName:"Contacts.csv",download:true},
+				{srNo:4,fileName:"Product.csv",download:true},
+				{srNo:5,fileName:"Invoice.csv",download:true},
+				{srNo:6,fileName:"Credit Note.csv",download:true},
+				]
 		};
 		this.selectRowProp = {
 			mode: 'checkbox',
@@ -189,7 +200,45 @@ class Import extends React.Component {
 			activeTab: newArray,
 		});
 	};
-
+	toggleParent = (tabPane, tab) => {
+		const newArray = this.state.ParentActiveTab.slice();
+		newArray[parseInt(tabPane, 10)] = tab;
+		this.setState({
+			ParentActiveTab: newArray,
+		});
+	};
+	exportAll=()=>{
+		this.export("Chart Of Accounts.csv")
+		this.export("Contacts.csv")
+		this.export("Credit Note.csv")
+		this.export("Invoice.csv")
+		this.export("Opening Balances.csv")
+		this.export("Product.csv")
+	}
+	export=(filename)=>{
+	   this.props.migrationActions
+		.downloadcsv(filename)
+		.then((res) => {
+			if (res.status === 200) {
+				// this.setState({
+				// 	fileLink: res
+				// });
+				const blob = new Blob([res.data],{type:'application/csv'});
+				download(blob,filename)
+				// this.props.commonActions.tostifyAlert(
+				// 	'success',
+				// 	'File downloaded successfully.',
+				// );
+			
+			}
+		})
+		.catch((err) => {
+			this.props.commonActions.tostifyAlert(
+				'error',
+				err && err.data ? err.data.message : 'Something Went Wrong',
+			);
+		});
+	}
 	handleChange = (key, val) => {
 		this.setState({
 			[key]: val,
@@ -692,6 +741,16 @@ class Import extends React.Component {
 		})
 	}
 
+	renderDownloadActions=(cell,row)=>{
+		return(
+			<Button name="button"  className="btn-square mr-3"
+								   onClick={() => {
+												this.export(row.fileName);
+													}}>
+													<i class="fas fa-download"></i>
+				</Button>
+		)
+	}
 
 	setOpeningBalances = () => {
 		
@@ -806,7 +865,7 @@ class Import extends React.Component {
 
 
 	render() {
-		const { isPasswordShown, product_list, version_list, tabs, file_data_list,listOfExist4 } = this.state;
+		const { isPasswordShown, product_list, version_list, tabs, file_data_list,listOfExist4,csvFileNamesData } = this.state;
 		const { initValue, migration_list } = this.state;
 		console.log(listOfExist4)
 		const customStyles = {
@@ -835,7 +894,33 @@ class Import extends React.Component {
 										</Col>
 									</Row>
 								</CardHeader>
-								<CardBody className="log-in-screen">
+								<Nav tabs pills className="m-2 mt-3">
+								<NavItem>
+									<NavLink
+										active={this.state.ParentActiveTab[0] === '1'}
+										onClick={() => {
+											this.toggleParent(0, '1');
+										}}
+									>
+									Import
+									</NavLink>
+								</NavItem>
+								<NavItem>
+									<NavLink
+										active={this.state.ParentActiveTab[0] === '2'}
+										onClick={() => {
+											this.toggleParent(0, '2');
+										}}
+									>
+									Download CSV-Templates
+									</NavLink>
+								</NavItem>
+							</Nav>
+							<TabContent activeTab={this.state.ParentActiveTab[0]}>
+	{/* PARENT TAB 2 */}
+								<TabPane tabId="1">
+									<div className="table-wrapper">
+									<CardBody className="log-in-screen">
 									<Nav className="justify-content-center" tabs pills  >
 										<NavItem>
 											<NavLink
@@ -878,6 +963,7 @@ class Import extends React.Component {
 											</NavLink>
 										</NavItem>
 									</Nav>
+	{/* Child TABs  */}
 									<TabContent activeTab={this.state.activeTab[0]}>
 										<TabPane tabId="1">
 
@@ -912,7 +998,7 @@ class Import extends React.Component {
 														{(props) => (
 
 															<Form className="mt-3" onSubmit={props.handleSubmit}>
-																<div className="text-center" style={{ display: "flex", marginLeft: "40%" }}>
+																<div className="text-center dateWidth" style={{ display: "flex", marginLeft: "40%" }}>
 																	<div className="mt-2" style={{ width: "10%" }}>	<span className="text-danger">*</span>Date	</div>
 																	<DatePicker
 																		className={`form-control ${props.errors.date && props.touched.date ? "is-invalid" : ""}`}
@@ -1384,9 +1470,66 @@ class Import extends React.Component {
 										</TabPane>
 
 									</TabContent>
-									{/* added by suraj */}
+									
 
 								</CardBody>
+									</div>
+								</TabPane>
+
+{/* PARENT TAB 2 */}
+
+								<TabPane tabId="2">
+								  <div style={{    width: "30%"}} className="table-wrapper">
+												<div className="pull-right mb-2">
+												<Button name="button" color="primary" className="btn-square "
+																								onClick={() => {
+																									this.exportAll();
+																								}}>
+																								Download All &nbsp;
+																								<i class="fas fa-download"></i>
+																							</Button>
+												</div>
+										<BootstrapTable
+											
+											search={false}										
+											data={csvFileNamesData}
+											version="4"
+											hover
+											keyField="id"
+											remote
+											
+											trClassName="cursor-pointer"
+											ref={(node) => this.table = node}
+										>
+											<TableHeaderColumn
+												className="table-header-bg"
+												dataField="srNo"
+												dataAlign="center"
+												 width="20%"
+											>
+												Sl. No
+												</TableHeaderColumn>
+											<TableHeaderColumn
+											
+												className="table-header-bg"
+												dataField="fileName"
+											>
+											  Sample File Name
+												</TableHeaderColumn>
+											<TableHeaderColumn
+											 width="20%"
+												dataField="download"
+												className="table-header-bg"
+												dataFormat={this.renderDownloadActions}
+											>												 
+												</TableHeaderColumn>
+										</BootstrapTable>
+								</div>
+								</TabPane>
+							</TabContent>
+
+								<div>							
+								</div>
 							</Card>
 						</Col>
 					</Row>

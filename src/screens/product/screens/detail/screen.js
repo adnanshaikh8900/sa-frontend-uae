@@ -468,6 +468,42 @@ renderName=(cell,row)=>{
 			});
 	};
 
+	ProductvalidationCheck = (value) => {
+		const data = {
+			moduleType: 7,
+			productCode: value,
+		};
+		this.props.productActions
+			.checkProductNameValidation(data)
+			.then((response) => {
+				if (response.data === 'Product code already exists') {
+					this.setState({
+						ProductExist: true,
+					});
+				} else {
+					this.setState({
+						ProductExist: false,
+					});
+				}
+			});
+	};
+	
+	getProductCode=()=>{
+
+		this.props.productActions.getProductCode().then((res) => {
+			if (res.status === 200) {
+				this.setState({
+					initValue: {
+						...this.state.initValue,
+						...{ productCode: res.data },
+					},
+				});
+				this.formRef.current.setFieldValue('productCode', res.data, true,true
+				// this.validationCheck(res.data)
+				);
+			}
+		});
+	}
 	showWarehouseModal = () => {
 		this.setState({ openWarehouseModal: true });
 	};
@@ -725,6 +761,10 @@ renderName=(cell,row)=>{
 														if(this.state.exciseTaxCheck===true && values.exciseTaxId=='' ){
 															errors.exciseTaxId = 'Excise Tax is requied';
 														}
+														if (this.state.ProductExist === true) {
+															errors.productCode =
+																'Product Code is already exist';
+														}
 														return errors;
 													}}
 													validationSchema={Yup.object().shape({
@@ -964,6 +1004,9 @@ renderName=(cell,row)=>{
 																						option,
 																					);
 																				}
+																				this.ProductvalidationCheck(
+																					option.target.value,
+																				);
 																			}}
 																			className={
 																				props.errors.productCode &&

@@ -107,7 +107,7 @@ class CreateGoodsReceivedNote extends React.Component {
 						id: 0,
 						description: '',
 						quantity: 1,
-						unitPrice: '',
+						unitPrice: 1,
 						vatCategoryId: '',
 						subTotal: 0,
 						productId: '',

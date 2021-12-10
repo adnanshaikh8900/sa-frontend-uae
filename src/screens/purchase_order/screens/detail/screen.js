@@ -1268,7 +1268,7 @@ class DetailPurchaseOrder extends React.Component {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="poNumber">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			 {strings.PONumber}
 																		</Label>
 																		<Input
@@ -1304,7 +1304,7 @@ class DetailPurchaseOrder extends React.Component {
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="supplierId">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			{strings.SupplierName}
 																		</Label>
 																		<Select
@@ -1391,7 +1391,7 @@ class DetailPurchaseOrder extends React.Component {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																	{strings.Currency}
 																	</Label>
 																	<Select
@@ -1457,7 +1457,7 @@ class DetailPurchaseOrder extends React.Component {
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			 {strings.PODate}
 																		</Label>
 																		<DatePicker
@@ -1493,7 +1493,7 @@ class DetailPurchaseOrder extends React.Component {
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="due_date">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.PODueDate}
 																		</Label>
 																		<div>

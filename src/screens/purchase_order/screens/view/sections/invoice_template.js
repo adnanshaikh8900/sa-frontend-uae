@@ -144,9 +144,9 @@ class RFQTemplate extends Component {
 											? companyData.company.companyName
 											: ''}</b></h4>
 								<h6 className="mb-1 ml-2">{POData.poNumber} </h6>
-								<h6 className="mb-1 ml-2">{POData.organisationName ? POData.organisationName : POData.supplierName}</h6>
-								<h6 className="mb-1 ml-2">TRN: {POData.vatRegistrationNumber}</h6>
-													<span className="mb-1 ml-2">{strings.Status}:  {this.renderRFQStatus(status)}</span>
+								<h6 className="mb-1 ml-2"><b>Name: </b>{POData.organisationName ? POData.organisationName : POData.supplierName}</h6>
+								<h6 className="mb-1 ml-2"><b>TRN: </b>{POData.vatRegistrationNumber}</h6>
+													<span className="mb-1 ml-2"><b>{strings.Status}:  </b>{this.renderRFQStatus(status)}</span>
 
 													{/* <div
 														className={`ribbon ${this.getRibbonColor(

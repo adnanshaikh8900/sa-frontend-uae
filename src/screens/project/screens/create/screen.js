@@ -202,7 +202,7 @@ class CreateProject extends React.Component {
                             <Row>
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="projectName"><span className="text-danger">*</span>Project Name</Label>
+                                  <Label htmlFor="projectName"><span className="text-danger">* </span>Project Name</Label>
                                   <Input
                                     type="text"
                                     id="name"
@@ -225,7 +225,7 @@ class CreateProject extends React.Component {
                               </Col>
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="contactId"><span className="text-danger">*</span>Contact</Label>
+                                  <Label htmlFor="contactId"><span className="text-danger">* </span>Contact</Label>
                                   <Select
                                     options={contact_list ? selectOptionsFactory.renderOptions('label', 'value', contact_list, 'Contact Name') : []}
                                     onChange={(option) => {
@@ -310,7 +310,7 @@ class CreateProject extends React.Component {
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="currency">
-                                    <span className="text-danger">*</span>Currency
+                                    <span className="text-danger">* </span>Currency
                                       </Label>
                                   <Select
                                     options={currency_list ? selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}

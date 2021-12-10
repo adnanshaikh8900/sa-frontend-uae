@@ -1245,7 +1245,7 @@ class DetailRequestForQuotation extends React.Component {
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="rfqNumber">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			{strings.RFQNumber}
 																		</Label>
 																		<Input
@@ -1278,7 +1278,7 @@ class DetailRequestForQuotation extends React.Component {
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="supplierId">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			{strings.SupplierName}
 																		</Label>
 																		<Select
@@ -1333,7 +1333,7 @@ class DetailRequestForQuotation extends React.Component {
 																<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																	{strings.Currency}
 																	</Label>
 																	<Select
@@ -1393,7 +1393,7 @@ class DetailRequestForQuotation extends React.Component {
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			 {strings.RFQDate}
 																		</Label>
 																		<DatePicker

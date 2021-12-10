@@ -195,7 +195,7 @@ class CreateEmployee extends React.Component {
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>Email</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>Email</Label>
                                   <Input
                                     type="text"
                                     id="email"
@@ -214,7 +214,7 @@ class CreateEmployee extends React.Component {
                             <Row className="row-wrapper">
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>First Name</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>First Name</Label>
                                   <Input
                                     type="text"
                                     id="firstName"
@@ -233,7 +233,7 @@ class CreateEmployee extends React.Component {
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>Middle Name</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>Middle Name</Label>
                                   <Input
                                     type="text"
                                     id="middleName"
@@ -252,7 +252,7 @@ class CreateEmployee extends React.Component {
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>Last Name</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>Last Name</Label>
                                   <Input
                                     type="text"
                                     id="lastName"
@@ -273,7 +273,7 @@ class CreateEmployee extends React.Component {
                             <Row className="row-wrapper">
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>Password</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>Password</Label>
                                   <Input
                                     type="password"
                                     id="password"
@@ -291,7 +291,7 @@ class CreateEmployee extends React.Component {
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>Confirm Password</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>Confirm Password</Label>
                                   <Input
                                     type="password"
                                     id="confirmPassword"
@@ -308,7 +308,7 @@ class CreateEmployee extends React.Component {
                               </Col>
                               <Col md="4">
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="date"><span className="text-danger">*</span>Date Of Birth</Label>
+                                  <Label htmlFor="date"><span className="text-danger">* </span>Date Of Birth</Label>
                                   <DatePicker
                                     className={`form-control ${props.errors.dob && props.touched.dob ? "is-invalid" : ""}`}
                                     id="dob"

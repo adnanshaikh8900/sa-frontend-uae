@@ -1244,7 +1244,7 @@ console.log(this.state.supplier_currency)
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="quotationNumber">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			{strings.QuotationNumber}
 																		</Label>
 																		<Input
@@ -1277,7 +1277,7 @@ console.log(this.state.supplier_currency)
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="customerId">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																				{strings.CustomerName}
 																		</Label>
 																		<Select
@@ -1351,7 +1351,7 @@ console.log(this.state.supplier_currency)
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			{strings.ExpirationDate}
 																		</Label>
 																		<DatePicker
@@ -1387,7 +1387,7 @@ console.log(this.state.supplier_currency)
 																<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.Currency}
 																	</Label>
 																	<Select

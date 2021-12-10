@@ -490,7 +490,7 @@ class DetailExpense extends React.Component {
 														<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="expenseNumber">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			Expense Number
 																			{/* <i
 																				id="ProductCodeTooltip"
@@ -548,7 +548,7 @@ class DetailExpense extends React.Component {
 																<Col lg={3}>
 																	<FormGroup className="mb-3" >
 																		<Label htmlFor="expenseCategoryId">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			 {strings.ExpenseCategory}
 																		</Label>
 																		<Select
@@ -602,7 +602,7 @@ class DetailExpense extends React.Component {
 																</Col>
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
-																		<Label htmlFor="payee">	<span className="text-danger">*</span>{strings.PaidBy}</Label>
+																		<Label htmlFor="payee">	<span className="text-danger">* </span>{strings.PaidBy}</Label>
 																		<Select
 																			styles={customStyles}
 																			options={
@@ -653,7 +653,7 @@ class DetailExpense extends React.Component {
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="expense_date">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			 {strings.ExpenseDate}
 																		</Label>
 																		<DatePicker
@@ -691,7 +691,7 @@ class DetailExpense extends React.Component {
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="currency">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			{strings.Currency}
 																		</Label>
 																		<Select
@@ -746,7 +746,7 @@ class DetailExpense extends React.Component {
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="expenseAmount">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			{strings.Amount}
 																		</Label>
 																		<Input
@@ -785,7 +785,7 @@ class DetailExpense extends React.Component {
 																</Col>
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
-																		<Label htmlFor="vatCategoryId"><span className="text-danger">*</span>{strings.Tax}</Label>
+																		<Label htmlFor="vatCategoryId"><span className="text-danger">* </span>{strings.Tax}</Label>
 																		<Select
 																			styles={customStyles}
 																			className="select-default-width"
@@ -827,7 +827,7 @@ class DetailExpense extends React.Component {
 																
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
-																			<Label htmlFor="pay_through"><span className="text-danger">*</span>
+																			<Label htmlFor="pay_through"><span className="text-danger">* </span>
 																				 {strings.PayThrough}
 																			</Label>
 																			<Select

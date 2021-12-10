@@ -1277,7 +1277,7 @@ min="0"
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="quotation_Number">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.QuotationNumber}
 																	</Label>
 																	<Input
@@ -1311,7 +1311,7 @@ min="0"
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="customerId">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.CustomerName}
 																	</Label>
 																	<Select
@@ -1391,7 +1391,7 @@ min="0"
 															{/* <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		Start Date
 																	</Label>
 																	<DatePicker
@@ -1425,7 +1425,7 @@ min="0"
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="due_date">
-																	<span className="text-danger">*</span>
+																	<span className="text-danger">* </span>
 																	{strings.ExpirationDate}
 																	</Label>
 																	<DatePicker
@@ -1460,7 +1460,7 @@ min="0"
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.Currency}
 																	</Label>
 																	<Select

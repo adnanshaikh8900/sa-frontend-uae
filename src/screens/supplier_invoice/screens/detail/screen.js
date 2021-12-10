@@ -1397,7 +1397,7 @@ class DetailSupplierInvoice extends React.Component {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="invoice_number">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			 {strings.InvoiceNumber}
 																		</Label>
 																		<Input
@@ -1430,7 +1430,7 @@ class DetailSupplierInvoice extends React.Component {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="contactId">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																		{strings.SupplierName}
 																		</Label>
 																		<Select
@@ -1485,7 +1485,7 @@ class DetailSupplierInvoice extends React.Component {
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			 {strings.PlaceofSupply}
 																		</Label>
 																		<Select
@@ -1548,7 +1548,7 @@ class DetailSupplierInvoice extends React.Component {
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="term">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			Terms{' '}
 																			<i className="fa fa-question-circle"></i>
 																		</Label>
@@ -1613,7 +1613,7 @@ class DetailSupplierInvoice extends React.Component {
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			 {strings.InvoiceDate}
 																		</Label>
 																		<DatePicker
@@ -1687,7 +1687,7 @@ class DetailSupplierInvoice extends React.Component {
 																<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.Currency}
 																	</Label>
 																	<Select

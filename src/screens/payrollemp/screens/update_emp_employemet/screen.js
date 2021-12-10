@@ -252,7 +252,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                     <Row  >
                                                                     <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span> {strings.EmployeeCode}  </Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">* </span> {strings.EmployeeCode}  </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="employeeCode"
@@ -273,7 +273,7 @@ class UpdateEmployeeEmployment extends React.Component {
 
                                                                         <Col md="4">
                                                                             <FormGroup className="mb-3">
-                                                                                <Label htmlFor="dateOfJoining"><span className="text-danger">*</span> {strings.DateOfJoining}</Label>
+                                                                                <Label htmlFor="dateOfJoining"><span className="text-danger">* </span> {strings.DateOfJoining}</Label>
                                                                                 <DatePicker
                                                                                     className={`form-control ${props.errors.dateOfJoining && props.touched.dateOfJoining ? "is-invalid" : ""}`}
                                                                                     id="dateOfJoining"

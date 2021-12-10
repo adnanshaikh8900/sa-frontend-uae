@@ -1299,7 +1299,7 @@ existForAccountNumber = (value) => {
 
                                                                                             <Col lg={4}>
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span> {strings.FirstName}</Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">* </span> {strings.FirstName}</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         maxLength="26"
@@ -1340,7 +1340,7 @@ existForAccountNumber = (value) => {
                                                                                             </Col>
                                                                                             <Col lg={4}>
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span>{strings.LastName}</Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">* </span>{strings.LastName}</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         maxLength="26"
@@ -1363,7 +1363,7 @@ existForAccountNumber = (value) => {
                                                                                         <Row>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span> {strings.Email}</Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">* </span> {strings.Email}</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         maxLength="80"
@@ -1382,7 +1382,7 @@ existForAccountNumber = (value) => {
                                                                                           
                                                                                             <Col md="4">
                                                                                                 <FormGroup className="mb-3">
-                                                                                                    <Label htmlFor="date"><span className="text-danger">*</span>{strings.DateOfBirth}</Label>
+                                                                                                    <Label htmlFor="date"><span className="text-danger">* </span>{strings.DateOfBirth}</Label>
                                                                                                     <DatePicker
                                                                                                         className={`form-control ${props.errors.dob && props.touched.dob ? "is-invalid" : ""}`}
                                                                                                         id="dob"
@@ -1407,7 +1407,7 @@ existForAccountNumber = (value) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="mobileNumber"><span className="text-danger">*</span>
+                                                                                                    <Label htmlFor="mobileNumber"><span className="text-danger">* </span>
                                                                                                          {strings.MobileNumber}
 															                                    		</Label>
                                                                                                     <PhoneInput
@@ -1440,7 +1440,7 @@ existForAccountNumber = (value) => {
                                                                                             </Col>
                                                                                             {/* <Col md="4">
                                                                                                 <FormGroup className="mb-3">
-                                                                                                    <Label htmlFor="active"><span className="text-danger">*</span>{strings.Status}</Label>
+                                                                                                    <Label htmlFor="active"><span className="text-danger">* </span>{strings.Status}</Label>
                                                                                                     <div>
                                                                                                         <FormGroup check inline>
                                                                                                             <div className="custom-radio custom-control">
@@ -1509,7 +1509,7 @@ existForAccountNumber = (value) => {
                                                                                         </Row>
                                                                                         <Row> <Col md="4">
                                                                                                 <FormGroup className="mb-3">
-                                                                                                    <Label htmlFor="active"><span className="text-danger">*</span>{strings.Status}</Label>
+                                                                                                    <Label htmlFor="active"><span className="text-danger">* </span>{strings.Status}</Label>
                                                                                                     <div>
                                                                                                         <FormGroup check inline>
                                                                                                             <div className="custom-radio custom-control">
@@ -1579,7 +1579,7 @@ existForAccountNumber = (value) => {
                                                                                         <Row>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="gender"><span className="text-danger">*</span>{strings.Gender}</Label>
+                                                                                                    <Label htmlFor="gender"><span className="text-danger">* </span>{strings.Gender}</Label>
                                                                                                     <Select
 
                                                                                                         options={
@@ -1689,7 +1689,7 @@ existForAccountNumber = (value) => {
                                                                                         <Row>
                                                                                         <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="salaryRoleId"><span className="text-danger">*</span> {strings.SalaryRole} </Label>
+                                                                                                    <Label htmlFor="salaryRoleId"><span className="text-danger">* </span> {strings.SalaryRole} </Label>
                                                                                                     <Select
 
                                                                                                         options={
@@ -1743,7 +1743,7 @@ existForAccountNumber = (value) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="employeeDesignationId"><span className="text-danger">*</span>{strings.Designation}</Label>
+                                                                                                    <Label htmlFor="employeeDesignationId"><span className="text-danger">* </span>{strings.Designation}</Label>
                                                                                                     <Select
 
                                                                                                         options={
@@ -1801,7 +1801,7 @@ existForAccountNumber = (value) => {
                                                                                         <Row className="row-wrapper">
                                                                                             <Col md="8">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="gender"><span className="text-danger">*</span> {strings.PresentAddress} </Label>
+                                                                                                    <Label htmlFor="gender"><span className="text-danger">* </span> {strings.PresentAddress} </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         maxLength="26"
@@ -1822,7 +1822,7 @@ existForAccountNumber = (value) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="city"><span className="text-danger">*</span>{strings.PinCode} </Label>
+                                                                                                    <Label htmlFor="city"><span className="text-danger">* </span>{strings.PinCode} </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         maxLength="8"
@@ -1848,7 +1848,7 @@ existForAccountNumber = (value) => {
                                                                                         <Row className="row-wrapper">
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="countryId"><span className="text-danger">*</span>{strings.Country}</Label>
+                                                                                                    <Label htmlFor="countryId"><span className="text-danger">* </span>{strings.Country}</Label>
                                                                                                     <Select
                                                                                                         options={
                                                                                                             country_list
@@ -1894,7 +1894,7 @@ existForAccountNumber = (value) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="stateId"><span className="text-danger">*</span>{strings.StateRegion}</Label>
+                                                                                                    <Label htmlFor="stateId"><span className="text-danger">* </span>{strings.StateRegion}</Label>
                                                                                                     <Select
 
                                                                                                         options={
@@ -1935,7 +1935,7 @@ existForAccountNumber = (value) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="state"><span className="text-danger">*</span>{strings.City} </Label>
+                                                                                                    <Label htmlFor="state"><span className="text-danger">* </span>{strings.City} </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         maxLength="20"
@@ -2039,7 +2039,7 @@ existForAccountNumber = (value) => {
                                                                                     
                                                                                           <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="emergencyContactName1"><span className="text-danger">*</span>{strings.ContactName1}</Label>
+                                                                                                    <Label htmlFor="emergencyContactName1"><span className="text-danger">* </span>{strings.ContactName1}</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         maxLength="26"
@@ -2062,7 +2062,7 @@ existForAccountNumber = (value) => {
 
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="emergencyContactNumber1"><span className="text-danger">*</span> {strings.ContactNumber1} </Label>
+                                                                                                    <Label htmlFor="emergencyContactNumber1"><span className="text-danger">* </span> {strings.ContactNumber1} </Label>
                                                                                                     <PhoneInput
                                                                                                         id="emergencyContactNumber1"
                                                                                                         name="emergencyContactNumber1"
@@ -2095,7 +2095,7 @@ existForAccountNumber = (value) => {
 
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="emergencyContactRelationship1"> <span className="text-danger">*</span>{strings.Relationship1} </Label>
+                                                                                                    <Label htmlFor="emergencyContactRelationship1"> <span className="text-danger">* </span>{strings.Relationship1} </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         maxLength="26"
@@ -2282,7 +2282,7 @@ existForAccountNumber = (value) => {
                                                                                         <Row>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span> {strings.EmployeeCode}  </Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">* </span> {strings.EmployeeCode}  </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="employeeCode"
@@ -2431,7 +2431,7 @@ existForAccountNumber = (value) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup className="mb-3">
-                                                                                                    <Label htmlFor="dateOfJoining"><span className="text-danger">*</span>{strings.DateOfJoining}</Label>
+                                                                                                    <Label htmlFor="dateOfJoining"><span className="text-danger">* </span>{strings.DateOfJoining}</Label>
                                                                                                     <DatePicker
                                                                                                         className={`form-control ${props.errors.dateOfJoining && props.touched.dateOfJoining ? "is-invalid" : ""}`}
                                                                                                         id="dateOfJoining"
@@ -2649,7 +2649,7 @@ existForAccountNumber = (value) => {
                                                                                         <Row  >
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span>{strings.AccountHolderName}  </Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">* </span>{strings.AccountHolderName}  </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         maxLength="60"
@@ -2676,7 +2676,7 @@ existForAccountNumber = (value) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span> {strings.AccountNumber}</Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">* </span> {strings.AccountNumber}</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         maxLength="25"
@@ -2704,7 +2704,7 @@ existForAccountNumber = (value) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                <Label htmlFor="select"><span className="text-danger">*</span> {strings.BankName} </Label>
+                                                                                                <Label htmlFor="select"><span className="text-danger">* </span> {strings.BankName} </Label>
                                                                                                     <Select
 
                                                                                                         options={
@@ -2774,7 +2774,7 @@ existForAccountNumber = (value) => {
                                                                                         <Row className="row-wrapper">
                                                                                             <Col lg={4}>
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span>{strings.Branch}</Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">* </span>{strings.Branch}</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         maxLength="30"
@@ -2795,7 +2795,7 @@ existForAccountNumber = (value) => {
                                                                                             </Col>
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span>{strings.IBANNumber}</Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">* </span>{strings.IBANNumber}</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         id="iban"
@@ -2817,7 +2817,7 @@ existForAccountNumber = (value) => {
 
                                                                                             <Col lg={4}>
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">*</span>{strings.SwiftCode}</Label>
+                                                                                                    <Label htmlFor="select"><span className="text-danger">* </span>{strings.SwiftCode}</Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         maxLength="11"
@@ -2928,7 +2928,7 @@ existForAccountNumber = (value) => {
                                              
                                                 <div style={{textAlign:"center"}}>
                                                         <FormGroup className="mt-3"   style={{textAlign:"center",display: "inline-grid"}} >
-                                                         <Label><span className="text-danger">*</span>  CTC : </Label>
+                                                         <Label><span className="text-danger">* </span>  CTC : </Label>
                                                             <Input
                                                                 type="text"
                                                                 id="CTC"

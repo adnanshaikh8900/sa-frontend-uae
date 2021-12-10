@@ -190,7 +190,7 @@ class CreateSalaryTemplate extends React.Component {
                               
                               <Col lg={4}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>Salary Description</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>Salary Description</Label>
                                   <Input
                                     type="text"
                                     id="description"
@@ -209,7 +209,7 @@ class CreateSalaryTemplate extends React.Component {
                               </Col>
                               <Col lg={4}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>Formula</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>Formula</Label>
                                   <Input
                                     type="text"
                                     id="formula"
@@ -231,7 +231,7 @@ class CreateSalaryTemplate extends React.Component {
                               
                               <Col lg={4}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>Salary Role</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>Salary Role</Label>
                                   <Select
 																		styles={customStyles}
 																		options={
@@ -267,7 +267,7 @@ class CreateSalaryTemplate extends React.Component {
                               </Col>
                               <Col lg={4}>
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>Salary Structure</Label>
+                                  <Label htmlFor="select"><span className="text-danger">* </span>Salary Structure</Label>
                                   <Select
 																		styles={customStyles}
 																		options={

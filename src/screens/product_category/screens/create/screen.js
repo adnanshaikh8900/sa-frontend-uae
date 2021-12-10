@@ -195,7 +195,7 @@ class CreateProductCategory extends React.Component {
 														<form onSubmit={handleSubmit}>
 															<FormGroup>
 																<Label htmlFor="productCategoryCode">
-																	<span className="text-danger">*</span>
+																	<span className="text-danger">* </span>
 																	 {strings.ProductCategoryCode}
 																	<i
 																		id="ProductcatcodeTooltip"
@@ -241,7 +241,7 @@ class CreateProductCategory extends React.Component {
 															</FormGroup>
 															<FormGroup>
 																<Label htmlFor="name">
-																	<span className="text-danger">*</span>
+																	<span className="text-danger">* </span>
 																	{strings.ProductCategoryName}
 																</Label>
 																<Input

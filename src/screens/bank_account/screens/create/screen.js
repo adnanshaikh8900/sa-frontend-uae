@@ -341,7 +341,7 @@ class CreateBankAccount extends React.Component {
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="account_name">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.AccountName}
 																	</Label>
 																	<Input
@@ -381,7 +381,7 @@ class CreateBankAccount extends React.Component {
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.Currency}
 																	</Label>
 																	<Select
@@ -441,7 +441,7 @@ class CreateBankAccount extends React.Component {
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="opening_balance">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.OpeningBalance}
 																	</Label>
 																	<Input
@@ -483,7 +483,7 @@ class CreateBankAccount extends React.Component {
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="expense_date">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.OpeningDate}
 																	</Label>
 																	<DatePicker
@@ -530,7 +530,7 @@ class CreateBankAccount extends React.Component {
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="account_type">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.AccountType}
 																	</Label>
 																	<Select
@@ -591,7 +591,7 @@ class CreateBankAccount extends React.Component {
 														<Row>
 														<Col md="4">
                                                                                                 <FormGroup>
-                                                                                                <Label htmlFor="select"><span className="text-danger">*</span> {strings.BankName} </Label>
+                                                                                                <Label htmlFor="select"><span className="text-danger">* </span> {strings.BankName} </Label>
                                                                                                     <Select
 
                                                                                                         options={
@@ -668,7 +668,7 @@ class CreateBankAccount extends React.Component {
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="account_number">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.AccountNumber}
 																	</Label>
 																	<Input
@@ -863,7 +863,7 @@ class CreateBankAccount extends React.Component {
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="account_is_for">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.Accountisfor}
 																	</Label>
 																	<Select

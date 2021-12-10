@@ -257,7 +257,7 @@ class DetailReceipt extends React.Component {
                                   </Col>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="receipt_date"><span className="text-danger">*</span>{strings.ReceiptDate} </Label>
+                                      <Label htmlFor="receipt_date"><span className="text-danger">* </span>{strings.ReceiptDate} </Label>
                                       <DatePicker
                                         id="date"
                                         name="receiptDate"
@@ -281,7 +281,7 @@ class DetailReceipt extends React.Component {
                                 <Row>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="referenceCode"><span className="text-danger">*</span>{strings.ReferenceNumber} </Label>
+                                      <Label htmlFor="referenceCode"><span className="text-danger">* </span>{strings.ReferenceNumber} </Label>
                                       <Input
                                         type="text"
                                         id="referenceCode"
@@ -300,7 +300,7 @@ class DetailReceipt extends React.Component {
                                   </Col>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="customer_name"><span className="text-danger">*</span>{strings.CustomerName} </Label>
+                                      <Label htmlFor="customer_name"><span className="text-danger">* </span>{strings.CustomerName} </Label>
                                       <Select
                                         options={contact_list ? selectOptionsFactory.renderOptions('label', 'value', contact_list, 'Customer Name') : []}
                                         placeholder={strings.CustomerName}
@@ -360,7 +360,7 @@ class DetailReceipt extends React.Component {
                                 <Row>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="amount"><span className="text-danger">*</span>{strings.Amount} </Label>
+                                      <Label htmlFor="amount"><span className="text-danger">* </span>{strings.Amount} </Label>
                                       <Input
                                       type="number"
 min="0"

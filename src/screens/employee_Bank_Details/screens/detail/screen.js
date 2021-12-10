@@ -253,7 +253,7 @@ class DetailEmployeePayroll extends React.Component {
                                   </Col>
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="select"><span className="text-danger">*</span>Email</Label>
+                                      <Label htmlFor="select"><span className="text-danger">* </span>Email</Label>
                                       <Input
                                         type="email"
                                         id="email"
@@ -268,7 +268,7 @@ class DetailEmployeePayroll extends React.Component {
                                 <Row className="row-wrapper">
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="select"><span className="text-danger">*</span>First Name</Label>
+                                      <Label htmlFor="select"><span className="text-danger">* </span>First Name</Label>
                                       <Input
                                         type="text"
                                         id="firstName"
@@ -287,7 +287,7 @@ class DetailEmployeePayroll extends React.Component {
                                   </Col>
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="select"><span className="text-danger">*</span>Middle Name</Label>
+                                      <Label htmlFor="select"><span className="text-danger">* </span>Middle Name</Label>
                                       <Input
                                         type="text"
                                         id="middleName"
@@ -306,7 +306,7 @@ class DetailEmployeePayroll extends React.Component {
                                   </Col>
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="select"><span className="text-danger">*</span>Last Name</Label>
+                                      <Label htmlFor="select"><span className="text-danger">* </span>Last Name</Label>
                                       <Input
                                         type="text"
                                         id="lastName"

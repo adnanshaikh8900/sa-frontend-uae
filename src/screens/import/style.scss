@@ -40,6 +40,12 @@
 				.tab-content {
 					border: solid #c8ced3 0.1px;
 				}
+				.dateWidth{
+					.form-control{
+						width: 15% !important;
+					}
+				}
+				
 }
 .forgot-password-modal {
 	max-width: 40%;

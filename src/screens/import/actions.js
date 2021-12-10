@@ -227,4 +227,20 @@ export const uploadFolder = (obj) => {
 		  });
 		}
 	  }
-	 
+
+	  export const downloadcsv = (filename) => {
+		return (dispatch) => {
+			let data = {
+				method: 'get',
+				url: `/rest/migration/downloadFile/${filename}`,
+				data: filename,
+			};
+			return authApi(data)
+				.then((res) => {
+					return res;
+				})
+				.catch((err) => {
+					throw err;
+				});
+		};
+	};

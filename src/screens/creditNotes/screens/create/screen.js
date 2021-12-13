@@ -2201,6 +2201,22 @@ min="0"
 																					maxLength="100"
 																					id="receiptNumber"
 																					name="receiptNumber"
+																					value={props.values.receiptNumber}
+																					placeholder={strings.ReceiptNumber}
+																					onChange={(value) => {
+																						props.handleChange('receiptNumber')(value);
+
+																					}}
+																					className={props.errors.receiptNumber && props.touched.receiptNumber ? "is-invalid" : " "}
+																				/>
+																				{props.errors.receiptNumber && props.touched.receiptNumber && (
+																					<div className="invalid-feedback">{props.errors.receiptNumber}</div>
+																				)}
+																				{/* <Input
+																					type="text"
+																					maxLength="100"
+																					id="receiptNumber"
+																					name="receiptNumber"
 																					placeholder={strings.ReceiptNumber}
 																					onChange={(option) => {
 																						if (
@@ -2215,7 +2231,7 @@ min="0"
 																						}
 																					}}
 																					value={props.values.receiptNumber}
-																				/>
+																				/> */}
 																			</FormGroup>
 																		</Col>
 																		<Col lg={6}>

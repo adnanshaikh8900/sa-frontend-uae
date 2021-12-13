@@ -230,9 +230,10 @@ export const uploadFolder = (obj) => {
 
 	  export const downloadcsv = (filename) => {
 		return (dispatch) => {
+			filename=filename.replaceAll(" ","_")
 			let data = {
 				method: 'get',
-				url: `/rest/migration/downloadFile/${filename}`,
+				url: `/rest/migration/downloadcsv/${filename}`,
 				data: filename,
 			};
 			return authApi(data)

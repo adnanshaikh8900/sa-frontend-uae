@@ -908,7 +908,7 @@ existForAccountNumber = (value) => {
                 var salaryMonthy = obj.flatAmount;
                 obj.monthlyAmount = salaryMonthy;
                 obj.yearlyAmount = salaryMonthy * 12;
-                totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
+                // totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
             }
 
             return obj;
@@ -1054,7 +1054,7 @@ existForAccountNumber = (value) => {
                 var salaryMonthy = obj.flatAmount;
                 obj.monthlyAmount = salaryMonthy;
                 obj.yearlyAmount = salaryMonthy * 12;
-                totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
+                // totalFixedSalary = totalFixedSalary + parseInt(salaryMonthy);
             }
 
             return obj;

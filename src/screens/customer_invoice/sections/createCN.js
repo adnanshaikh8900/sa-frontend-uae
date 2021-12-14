@@ -977,7 +977,8 @@ class CreateCreditNoteModal extends React.Component {
 						ref={this.formikRef}
 						initialValues={initValue}
 						onSubmit={(values, { resetForm }) => {
-							if(this.state.selectedData && this.state.totalAmount<this.state.selectedData.remainingInvoiceAmount){
+							
+							if(this.state.selectedData && this.state.totalAmount<=this.state.selectedData.remainingInvoiceAmount){
 								this.handleSubmit(values, resetForm);
 							}
 							
@@ -989,9 +990,7 @@ class CreateCreditNoteModal extends React.Component {
 							{
 								errors.remainingInvoiceAmount =	'Invoice Total Amount Cannot be greater than  Remaining Invoice Amount';
 							}
-							else{
-								errors.remainingInvoiceAmount =	'';
-							}
+						
 												
 													return errors;
 									

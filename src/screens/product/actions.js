@@ -103,7 +103,7 @@ export const getProductVatCategoryList = () => {
 			return authApi(data)
 				.then((res) => {
 					let array=[]
-					res.data.map((item)=>{if(item.id!=4)	array.push(item)})
+					res.data.map((item)=>{if(item.id!=4 && item.id!=10 )	array.push(item)})
 
 					dispatch({
 						type: PRODUCT.PRODUCT_VAT_CATEGORY,
@@ -392,3 +392,18 @@ export const getProductCodePrefix = () => {
 			});
 	};
 };
+
+export const getCompanyDetails = () => {
+	return (dispatch) => {
+	  let data = {
+		method: 'GET',
+		url: `/rest/company/getCompanyDetails`
+	  }
+  
+	  return authApi(data).then((res) => {
+		return res
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }

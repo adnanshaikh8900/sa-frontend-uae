@@ -74,7 +74,7 @@ class CreateProduct extends React.Component {
 				productName: '',
 				productDescription: '',
 				productCode: '',
-				vatCategoryId: '',
+				vatCategoryId:'',
 				exciseTaxId:'',
 				productCategoryId: '',
 				productWarehouseId: '',
@@ -121,12 +121,34 @@ class CreateProduct extends React.Component {
 		this.regDecimal5 =/^\d{1,5}$/;
 	}
 
+	getcompanyDetails=()=>{
+		this.props.productActions.getCompanyDetails().then((res) => {
+			if (res.status === 200)
+			 {
+				 this.setState({
+				 companyDetails: res.data,				
+				//  initValue: {
+				// 			...this.state.initValue,
+				// 			...{ vatCategoryId:{label: "ZERO RATED TAX (0%)", value: 2} },
+				// 			}, 
+				});
+				if(res.data && res.data.isRegisteredVat==false)
+					{
+						this.formRef.current.setFieldValue('vatCategoryId', {label: "N/A", value: 10}, true,true);
+					}
+		}
+		})
+		.catch((err) => {		
+			this.props.commonActions.tostifyAlert(	'error',	err && err.data ? err.data.message : 'Something Went Wrong',	);
+		});
+	}
 	componentDidMount = () => {
 		this.initializeData();
 		this.salesCategory();
 		this.purchaseCategory();
 		this.inventoryAccount();
 		this.getProductCode();
+		this.getcompanyDetails();
 	};
 	initializeData = () => {
 		this.props.productActions.getProductVatCategoryList();
@@ -830,6 +852,7 @@ try {
 																			<span className="text-danger">* </span>{strings.VAT+" "+strings.Type}
 																		</Label>
 																		<Select
+																	    	 isDisabled={this.state.companyDetails && !this.state.companyDetails.isRegisteredVat}
 																			styles={customStyles}
 																			options={
 																				vat_list
@@ -841,6 +864,7 @@ try {
 																					  )
 																					: []
 																			}
+																			
 																			id="vatCategoryId"
 																			name="vatCategoryId"
 																			placeholder={strings.Select+strings.VATCategory}
@@ -876,7 +900,7 @@ try {
 																</Col>
 															</Row>
 															<Row style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}		>
-																<Col lg={4}>
+																{this.state.companyDetails && this.state.companyDetails.isRegisteredVat===true &&(<Col lg={4}>
 																<FormGroup check inline className="mb-3">
 																		<Label
 																			className="form-check-label"
@@ -903,7 +927,7 @@ try {
 																			Excise Product ?
 																		</Label>
 																	</FormGroup>
-																</Col>
+																</Col>)}
 																{this.state.exciseTaxCheck===true&&(	
 													
 																<Col  style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}	 lg={4}>

@@ -349,7 +349,7 @@ class VatCode extends React.Component {
 		var vat_list_data =[];
 
 		for(let i=0;i<vat_list.count;i++){
-			if(vat_list.data[i].id ==3 || vat_list.data[i].id==4)
+			if(vat_list.data[i].id ==3 || vat_list.data[i].id==4 || vat_list.data[i].id==10)
 				continue;
 				vat_list_data.push(vat_list.data[i])
 		}

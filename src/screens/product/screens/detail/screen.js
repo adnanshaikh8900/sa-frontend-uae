@@ -133,8 +133,23 @@ class DetailProduct extends React.Component {
 				});
 			}
 		});
+		this.getcompanyDetails();
 	};
-	
+	getcompanyDetails=()=>{
+		this.props.productActions.getCompanyDetails().then((res) => {
+			if (res.status === 200) {this.setState({ companyDetails: res.data });
+		
+			// if(res.data && res.data.isRegisteredVat==false)
+			// 		{
+			// 			this.formRef.current.setFieldValue('vatCategoryId',  5, true,true);
+			// 		}
+		}
+
+		})
+		.catch((err) => {		
+			this.props.commonActions.tostifyAlert(	'error',	err && err.data ? err.data.message : 'Something Went Wrong',	);
+		});
+	}
 	onRowSelect = (row, isSelected, e) => {
 		let tempList = [];
 		if (isSelected) {
@@ -699,6 +714,14 @@ renderName=(cell,row)=>{
 		const { loading, dialog, purchaseCategory, salesCategory, inventoryAccount ,exciseTaxList} = this.state;
 		let tmpSupplier_list = []
 
+		var vat_list_data =[];
+
+		for(let i=0;i<vat_list.length;i++){
+			vat_list_data.push(vat_list[i])			
+		}
+		// if(this.state.companyDetails && this.state.companyDetails.isRegisteredVat==false)		
+			vat_list_data.push({ id: 10,name: "N/A",vat:0})
+
 		supplier_list.map(item => {
 			let obj = {label: item.label.contactName, value: item.value}
 			tmpSupplier_list.push(obj)
@@ -1087,6 +1110,7 @@ renderName=(cell,row)=>{
 																			{strings.VAT+" "+strings.Type}
 																		</Label>
 																		<Select
+																		 isDisabled={this.state.companyDetails && !this.state.companyDetails.isRegisteredVat}
 																			styles={customStyles}
 																			options={
 																				vat_list
@@ -1101,12 +1125,13 @@ renderName=(cell,row)=>{
 																			id="vatCategoryId"
 																			name="vatCategoryId"
 																			value={
-																				vat_list &&
+
+																				vat_list_data &&
 																				selectOptionsFactory
 																					.renderOptions(
 																						'name',
 																						'id',
-																						vat_list,
+																						vat_list_data,
 																						'Vat',
 																					)
 																					.find(
@@ -1168,7 +1193,7 @@ renderName=(cell,row)=>{
 																</Col>
 															</Row> */}
 	<Row style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}		>
-																<Col lg={4}>
+																{this.state.companyDetails && this.state.companyDetails.isRegisteredVat===true &&(<Col lg={4}>
 																<FormGroup check inline className="mb-3">
 																		<Label
 																			className="form-check-label"
@@ -1196,7 +1221,7 @@ renderName=(cell,row)=>{
 																			Excise Product ?
 																		</Label>
 																	</FormGroup>
-																</Col>
+																</Col>)}
 																
 																{this.state.exciseTaxCheck===true&&(	
 															

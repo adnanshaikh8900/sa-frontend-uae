@@ -39,6 +39,7 @@ import './style.scss';
 import API_ROOT_URL from '../../../../constants/config';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import { Checkbox } from '@material-ui/core';
 
 const mapStateToProps = (state) => {
 	return {
@@ -89,8 +90,17 @@ class DetailExpense extends React.Component {
 			disabled: false,
 			disabled1:false,
 			exclusiveVat:true,
+			isReverseChargeEnabled:false,
 		};
-
+		this.placelist = [
+			{ label: 'Abu Dhabi', value: '1' },
+			{ label: 'Dubai', value: '2' },
+			{ label: 'Sharjah', value: '3' },
+			{ label: 'Ajman', value: '4' },
+			{ label: 'Umm Al Quwain', value: '5' },
+			{ label: 'Ras al-Khaimah', value: '6' },
+			{ label: 'Fujairah', value: '7' },
+		];
 		this.file_size = 1024000;
 		this.regEx = /^[0-9\b]+$/;
 		this.regExAlpha = /^[a-zA-Z]+$/;
@@ -110,8 +120,26 @@ class DetailExpense extends React.Component {
 
 	componentDidMount = () => {
 		this.initializeData();
+		this.getTaxTreatmentList();		
 	};
+	getTaxTreatmentList=()=>{
+		this.props.expenseActions
+			.getTaxTreatment()
+			.then((res) => {
 
+				if (res.status === 200) {
+					this.setState({ taxTreatmentList: res.data });
+				}
+			})
+			.catch((err) => {
+
+				this.setState({ disabled: false });
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err.data ? err.data.message : 'ERROR',
+				);
+			});
+	}
 	initializeData = () => {
 		if (this.props.location.state && this.props.location.state.expenseId) {
 			this.props.expenseActions.getVatList();
@@ -159,7 +187,12 @@ class DetailExpense extends React.Component {
 									filePath: res.data.receiptAttachmentPath
 										? res.data.receiptAttachmentPath
 										: '',
+									isReverseChargeEnabled:res.data.isReverseChargeEnabled ?res.data.isReverseChargeEnabled:false,
+									placeOfSupplyId:res.data.placeOfSupplyId ?res.data.placeOfSupplyId:'',
+									taxTreatmentId:res.data.taxTreatmentId ?res.data.taxTreatmentId:'',
+
 								},
+								isReverseChargeEnabled:res.data.isReverseChargeEnabled ?res.data.isReverseChargeEnabled:false,
 								selectedStatus: res.data.exclusiveVat ? true : false,
 								view:
 									this.props.location.state && this.props.location.state.view
@@ -204,6 +237,8 @@ class DetailExpense extends React.Component {
 			vatCategoryId,
 			payMode,
 			bankAccountId,
+			placeOfSupplyId,
+			taxTreatmentId,
 		} = data;
 		const exclusiveVat = this.state.selectedStatus;
 
@@ -222,8 +257,8 @@ class DetailExpense extends React.Component {
 			receiptAttachmentDescription,
 		);
 		formData.append('expenseAmount', expenseAmount);
-		if (payMode && payMode.value) {
-			formData.append('payMode', payMode.value);
+		if (payMode) {
+			formData.append('payMode', payMode.value ?payMode.value :payMode);
 		}
 		if (expenseCategory && expenseCategory.value) {
 			formData.append('expenseCategory', expenseCategory.value);
@@ -251,6 +286,15 @@ class DetailExpense extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
+		if (placeOfSupplyId && placeOfSupplyId.value) {
+			formData.append('placeOfSupplyId', placeOfSupplyId.value);
+		}
+		
+		if (taxTreatmentId && taxTreatmentId.value) {
+			formData.append('taxTreatmentId', taxTreatmentId.value);
+		}
+		formData.append("isReverseChargeEnabled",this.state.isReverseChargeEnabled)
+
 		this.props.expenseDetailActions
 			.updateExpense(formData)
 			.then((res) => {
@@ -368,7 +412,7 @@ class DetailExpense extends React.Component {
 			pay_to_list,
 			currency_convert_list,
 		} = this.props;
-		const { initValue, loading, dialog } = this.state;
+		const { initValue, loading, dialog ,taxTreatmentList} = this.state;
 
 		return (
 			<div className="detail-expense-screen">
@@ -543,6 +587,134 @@ class DetailExpense extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
+
+																<Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="taxTreatmentId">
+																			<span className="text-danger">* </span>{strings.TaxTreatment}
+																		</Label>
+																		<Select
+																			styles={customStyles}
+																			options={
+																				taxTreatmentList
+																					? selectOptionsFactory.renderOptions(
+																						'name',
+																						'id',
+																						taxTreatmentList,
+																						'tax',
+																					)
+																					: []
+																			}
+																			id="taxTreatmentId"
+																			name="taxTreatmentId"
+																			placeholder={strings.Select + strings.TaxTreatment}
+																			value={
+																				taxTreatmentList &&
+																				selectOptionsFactory.renderOptions(
+																					'name',
+																					'id',
+																					taxTreatmentList,
+																					'tax',
+																				)
+																					.find(
+																						(option) =>
+																							option.value ===
+																							+props.values.taxTreatmentId,
+																					)
+																				}
+																			
+																			onChange={(option) => {
+																				// this.setState({
+																				//   selectedVatCategory: option.value
+																				// })
+																				if (option && option.value) {
+
+																					props.handleChange('taxTreatmentId')(
+																						option,
+																					);
+																					if(option.value === 1 ||option.value === 3 ||option.value === 5 )
+																					this.setState({isRegisteredForVat:true})
+																					else
+																					this.setState({isRegisteredForVat:false})
+																				} else {
+																					props.handleChange('taxTreatmentId')(
+																						'',
+																					);
+																				}
+																			}}
+																			className={
+																				props.errors.taxTreatmentId &&
+																					props.touched.taxTreatmentId
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{props.errors.taxTreatmentId &&
+																			props.touched.taxTreatmentId && (
+																				<div className="invalid-feedback">
+																					{props.errors.taxTreatmentId}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
+																<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="placeOfSupplyId">
+																		<span className="text-danger">*</span>
+																		{strings.PlaceofSupply}
+																	</Label>
+																	<Select
+																		styles={customStyles}
+																		id="placeOfSupplyId"
+																		name="placeOfSupplyId"
+																		placeholder={strings.Select+strings.PlaceofSupply}
+																		options={
+																			this.placelist
+																				? selectOptionsFactory.renderOptions(
+																						'label',
+																						'value',
+																						this.placelist,
+																						'Place of Supply',
+																						
+																				  )
+																				: []
+																		}
+
+																		value={
+																			this.placelist &&
+																			selectOptionsFactory.renderOptions(
+																				'label',
+																				'value',
+																				this.placelist,
+																				'Place of Supply',
+																		  ).find(
+																									(option) =>
+																										option.value ===
+																										props.values
+																											.placeOfSupplyId.toString(),
+																								)
+																						}
+																		className={
+																			props.errors.placeOfSupplyId &&
+																			props.touched.placeOfSupplyId
+																				? 'is-invalid'
+																				: ''
+																		}
+																		onChange={(option) =>
+																			props.handleChange('placeOfSupplyId')(
+																				option,
+																			)
+																		}
+																	/>
+																	{props.errors.placeOfSupplyId &&
+																		props.touched.placeOfSupplyId && (
+																			<div className="invalid-feedback">
+																				{props.errors.placeOfSupplyId}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+															
 														</Row>
 															<Row>
 																<Col lg={3}>
@@ -1013,6 +1185,18 @@ class DetailExpense extends React.Component {
 																	<Col></Col></Row>
 														)
 														}
+																				<Row>
+														<Col >
+															<Checkbox
+																id="isReverseChargeEnabled"
+																checked={this.state.isReverseChargeEnabled}
+																onChange={(option)=>{
+																		this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled})
+																}}
+															/>
+															<Label>Reverse Charge</Label>
+															</Col>
+														</Row>
 															<hr />
 															<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																<Col>

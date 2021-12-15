@@ -593,7 +593,7 @@ class Expense extends React.Component {
 		});
 	};
 	renderNumber=(cell,row)=>{		
-		return(<div className="text-center">{row && row.expenseNumber ?row.expenseNumber :"-"}</div>);
+		return(<div className="text-left">{row && row.expenseNumber ?row.expenseNumber :"-"}</div>);
 	}
 	getCsvData = () => {
 		if (this.state.csvData.length === 0) {
@@ -615,7 +615,7 @@ class Expense extends React.Component {
 	};
 	renderType=(cell,row)=>{		
 		let type =row && row.exclusiveVat ===true?"Exclusive Vat" :"Inclusive Vat";
-		return(<div className="text-center">{type}</div>);
+		return(<div className="text-left">{type}</div>);
 	}
 	clearAll = () => {
 		this.setState(
@@ -908,6 +908,7 @@ class Expense extends React.Component {
 												{strings.EXPENSECATEGORY}
 											</TableHeaderColumn>
 											<TableHeaderColumn
+													thStyle={{ whiteSpace: 'normal' }}
 													width="15%"
                                                     className="table-header-bg"
                                                     dataField="exclusiveVat"

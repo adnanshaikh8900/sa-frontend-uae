@@ -388,7 +388,7 @@ class SalaryComponentDeduction extends React.Component {
 
 									
 										</Row>
-										<Row>
+										{/* <Row>
 											<Col md="8">
 												<FormGroup>
 													<Label htmlFor="gender">	<span className="text-danger">*</span>{strings.Type}</Label>
@@ -434,7 +434,7 @@ class SalaryComponentDeduction extends React.Component {
 													)}
 												</FormGroup>
 											</Col>
-										</Row>
+										</Row> */}
 
 
 										<Row style={{ display: props.values.type.value !== 2 ? 'none' : '' }}>

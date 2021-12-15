@@ -78,6 +78,7 @@ class DetailUser extends React.Component {
 			disabled: false,
 			disabled1:false,
 			timezone: [],
+			exist: false,
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 	}
@@ -281,7 +282,24 @@ class DetailUser extends React.Component {
 				});
 		}
 	};
-
+	validationCheck = (value) => {
+		const data = {
+			moduleType: 9,
+			name: value,
+		};
+		this.props.userDetailActions.checkValidation(data).then((response) => {
+			if (response.data === 'User already exists') {
+				this.setState({
+					exist: true,
+					 disabled: false,
+				})
+			} else {
+				this.setState({
+					exist: false,
+				});
+			}
+		});
+	};
 	render() {
 		strings.setLanguage(this.state.language);
 		const { loading, dialog, timezone,current_user_id } = this.state;
@@ -329,6 +347,22 @@ class DetailUser extends React.Component {
 														//   selectedCurrency: null,
 														//   selectedInvoiceLanguage: null
 														// })
+													}}
+													validate={(values) => {
+														let errors = {};
+														
+														if (this.state.exist === true) {
+															errors.email =
+																'User already exists';
+														}
+	
+														if (errors.length) {
+															this.setState({
+																 disabled: false,
+															})
+														}
+	
+														return errors;
 													}}
 													validationSchema={Yup.object().shape({
 														firstName: Yup.string().required(
@@ -509,6 +543,9 @@ class DetailUser extends React.Component {
 																					value={props.values.email}
 																					onChange={(value) => {
 																						props.handleChange('email')(value);
+																						this.validationCheck(
+																							value.target.value,
+																						);
 																					}}
 																					className={
 																						props.errors.email &&

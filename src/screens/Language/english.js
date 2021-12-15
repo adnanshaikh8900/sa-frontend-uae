@@ -190,13 +190,13 @@ Relationship2:"Relationship 2",
       //Quotation
       Quotation:"Quotation",				
       QUOTATIONNUMBER:"QUOTATION NUMBER",						
-      EXPIRATIONDATE:"EXPIRATION DATE",				
+      EXPIRATIONDATE:"EXPIRY DATE",				
       AddNewRequest:"Add New Quotation",
 
       //Create Quotation
       CreateQuotation:"Create Quotation",		
       QuotationNumber:"Quotation Number",					
-      ExpirationDate:"Expiration Date",			
+      ExpirationDate:"Expiry Date",			
       CreateSupplier:"Create Supplier",		
 
       //Expenses

@@ -314,7 +314,7 @@ export const getBalanceReport = (postData) => {
 	
 	export const getSOA = (postData) => {
 		const { startDate, endDate,customerId } = postData;
-		let url = `/rest/simpleaccountReports/statementOfAccount?startDate=${startDate}&endDate=${endDate}&customerId=${customerId}`;
+		let url = `/rest/simpleaccountReports/StatementOfAccountReport?startDate=${startDate}&endDate=${endDate}&customerId=${customerId}`;
 	
 		return (dispatch) => {
 			let data = {

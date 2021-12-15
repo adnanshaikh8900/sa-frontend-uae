@@ -189,7 +189,8 @@ import {
 	PayrollApproverScreen,
 	UpdatePayroll,
 	Migrate,
-	MigrateHistory
+	MigrateHistory,
+	SOAReport
 } from 'screens';
 
 const adminRoutes = [
@@ -824,6 +825,11 @@ const adminRoutes = [
 		name: 'PayrollSummaryReport',
 		component: PayrollSummaryReport.screen,
 	},	
+	{
+		path: '/admin/report/statementOfAccount',
+		name: 'StatementOfAccount',
+		component: SOAReport.screen,
+	},		
 	{
 		path: '/admin/report/expense-details',
 		name: 'ExpenseDetails',

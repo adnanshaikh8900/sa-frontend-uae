@@ -33,6 +33,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import { Checkbox } from '@material-ui/core';
 
 const mapStateToProps = (state) => {
 	return {
@@ -68,6 +69,7 @@ class CreateExpense extends React.Component {
 			disabled: false,
 			initValue: {
 				payee: '',
+				placeOfSupplyId:'',
 				expenseDate: '',
 				currency: '',
 				project: '',
@@ -84,7 +86,9 @@ class CreateExpense extends React.Component {
 				bankAccountId: '',
 				exclusiveVat:false,
 				exist:false,
+				taxTreatmentId:'',
 			},
+			isReverseChargeEnabled:false,
 			currentData: {},
 			fileName: '',
 			payMode: '',
@@ -92,11 +96,21 @@ class CreateExpense extends React.Component {
 			basecurrency:[],
 			// disabled: false,
 			language: window['localStorage'].getItem('language'),
+			taxTreatmentList:[],
 		};
 		this.formRef = React.createRef();
 		this.options = {
 			paginationPosition: 'top',
 		};
+		this.placelist = [
+			{ label: 'Abu Dhabi', value: '1' },
+			{ label: 'Dubai', value: '2' },
+			{ label: 'Sharjah', value: '3' },
+			{ label: 'Ajman', value: '4' },
+			{ label: 'Umm Al Quwain', value: '5' },
+			{ label: 'Ras al-Khaimah', value: '6' },
+			{ label: 'Fujairah', value: '7' },
+		];
 		this.regEx = /^[0-9\b]+$/;
 		this.regExAlpha = /^[a-zA-Z0-9!@#$&()-\\`.+,/\"]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
@@ -160,15 +174,35 @@ class CreateExpense extends React.Component {
 		this.props.expenseActions.getPaymentMode();
 		this.props.expenseActions.getUserForDropdown();
 		this.getCompanyCurrency();
+		this.getTaxTreatmentList();
 
 	};
 
+	getTaxTreatmentList=()=>{
+		this.props.expenseActions
+			.getTaxTreatment()
+			.then((res) => {
+
+				if (res.status === 200) {
+					this.setState({ taxTreatmentList: res.data });
+				}
+			})
+			.catch((err) => {
+
+				this.setState({ disabled: false });
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err.data ? err.data.message : 'ERROR',
+				);
+			});
+	}
 	handleSubmit = (data, resetForm) => {
 		this.setState({ disabled: true });
 		this.setState({ disabled: true });
 		const {
 			expenseNumber,
 			payee,
+			placeOfSupplyId,
 			expenseDate,
 			currency,
 			project,
@@ -183,7 +217,8 @@ class CreateExpense extends React.Component {
 			vatCategoryId,
 			payMode,
 			bankAccountId,
-			exclusiveVat
+			exclusiveVat,
+			taxTreatmentId
 		} = data;
 		let formData = new FormData();
 		
@@ -206,6 +241,14 @@ class CreateExpense extends React.Component {
 		if (employee && employee.value) {
 			formData.append('employeeId', employee.value);
 		}
+		if (placeOfSupplyId && placeOfSupplyId.value) {
+			formData.append('placeOfSupplyId', placeOfSupplyId.value);
+		}
+		
+		if (taxTreatmentId && taxTreatmentId.value) {
+			formData.append('taxTreatmentId', taxTreatmentId.value);
+		}
+		formData.append("isReverseChargeEnabled",this.state.isReverseChargeEnabled)
 		if (exchangeRate ) {
 			formData.append('exchangeRate', exchangeRate);
 		}
@@ -359,7 +402,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 	};
 	render() {
 		strings.setLanguage(this.state.language);
-		const { initValue, payMode ,exist} = this.state;
+		const { initValue, payMode ,exist,taxTreatmentList} = this.state;
 		const {
 			// currency_list,
 			expense_categories_list,
@@ -567,6 +610,105 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																			)}
 																	</FormGroup>
 																</Col>
+																	<Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="taxTreatmentId">
+																			<span className="text-danger">* </span>{strings.TaxTreatment}
+																		</Label>
+																		<Select
+																			styles={customStyles}
+																			options={
+																				taxTreatmentList
+																					? selectOptionsFactory.renderOptions(
+																						'name',
+																						'id',
+																						taxTreatmentList,
+																						'Vat',
+																					)
+																					: []
+																			}
+																			id="taxTreatmentId"
+																			name="taxTreatmentId"
+																			placeholder={strings.Select + strings.TaxTreatment}
+																			value={props.values.taxTreatmentId}
+																			onChange={(option) => {
+																				// this.setState({
+																				//   selectedVatCategory: option.value
+																				// })
+																				if (option && option.value) {
+
+																					props.handleChange('taxTreatmentId')(
+																						option,
+																					);
+																					if(option.value === 1 ||option.value === 3 ||option.value === 5 )
+																					this.setState({isRegisteredForVat:true})
+																					else
+																					this.setState({isRegisteredForVat:false})
+																				} else {
+																					props.handleChange('taxTreatmentId')(
+																						'',
+																					);
+																				}
+																			}}
+																			className={
+																				props.errors.taxTreatmentId &&
+																					props.touched.taxTreatmentId
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{props.errors.taxTreatmentId &&
+																			props.touched.taxTreatmentId && (
+																				<div className="invalid-feedback">
+																					{props.errors.taxTreatmentId}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
+																<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="placeOfSupplyId">
+																		<span className="text-danger">*</span>
+																		{strings.PlaceofSupply}
+																	</Label>
+																	<Select
+																		styles={customStyles}
+																		id="placeOfSupplyId"
+																		name="placeOfSupplyId"
+																		placeholder={strings.Select+strings.PlaceofSupply}
+																		options={
+																			this.placelist
+																				? selectOptionsFactory.renderOptions(
+																						'label',
+																						'value',
+																						this.placelist,
+																						'Place of Supply',
+																						
+																				  )
+																				: []
+																		}
+																		value={this.state.placelist}
+																		className={
+																			props.errors.placeOfSupplyId &&
+																			props.touched.placeOfSupplyId
+																				? 'is-invalid'
+																				: ''
+																		}
+																		onChange={(option) =>
+																			props.handleChange('placeOfSupplyId')(
+																				option,
+																			)
+																		}
+																	/>
+																	{props.errors.placeOfSupplyId &&
+																		props.touched.placeOfSupplyId && (
+																			<div className="invalid-feedback">
+																				{props.errors.placeOfSupplyId}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+															
 														</Row>
 														<Row>
 															<Col lg={3}>
@@ -660,7 +802,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="payee">
-																		<span className="text-danger">* </span>{strings.PaidBy}  
+																		<span className="text-danger">* </span>{strings.PaidBy}
 																	</Label>
 																	<Select
 																		styles={customStyles}
@@ -1078,7 +1220,27 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 														)
 														} 
 														
-
+														<Row>
+														<Col >
+															{/* <Input
+															type="checkbox"
+															id="isReverseChargeEnabled"
+															checked={this.state.isReverseChargeEnabled}
+															onChange={(option)=>{
+															
+																this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled})
+															}}
+															/> */}
+															<Checkbox
+																id="isReverseChargeEnabled"
+																checked={this.state.isReverseChargeEnabled}
+																onChange={(option)=>{
+																		this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled})
+																}}
+															/>
+															<Label>Reverse Charge</Label>
+															</Col>
+														</Row>
 														<hr />
 														<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																<Col>

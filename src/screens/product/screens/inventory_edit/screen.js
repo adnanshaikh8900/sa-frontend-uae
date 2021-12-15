@@ -652,17 +652,27 @@ min="0"
 																			// 		? false
 																			// 		: true
 																			// }
-																			type="number"
-min="0"
-																			maxLength="200"
+																			type="text"
+																			min="0"
+																			max="2000"
+																			maxLength='10'
 																			name="inventoryReorderLevel"
 																			id="inventoryReorderLevel"
 																			rows="3"
 																			placeholder={strings.InventoryReorderLevel}
 																			onChange={(value) => {
-																				props.handleChange(
-																					'inventoryReorderLevel',
-																				)(value);
+																
+																				if (
+																					value.target.value === '' ||
+																					this.regDecimal.test(
+																						value.target.value,
+																					)
+																				) {
+																					props.handleChange(
+																						'inventoryReorderLevel',
+																					)(value);
+																				}
+
 																			}}
 																			value={props.values.inventoryReorderLevel}
 																		/>

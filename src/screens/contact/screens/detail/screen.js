@@ -891,7 +891,7 @@ class DetailContact extends React.Component {
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
-																					this.regExAlpha.test(
+																					this.regExAddress.test(
 																						option.target.value,
 																					)
 																				) {

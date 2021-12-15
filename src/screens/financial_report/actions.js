@@ -292,3 +292,43 @@ export const getBalanceReport = (postData) => {
 				});
 		};
 	};
+
+	export const getCustomerList = () => {
+		return (dispatch) => {
+			let data = {
+				method: 'get',
+				url: `/rest/contact/getContactsForDropdown?contactType=2`,
+			};
+			return authApi(data)
+				.then((res) => {
+					if (res.status === 200) {
+						return res.data;
+					}
+					return res;
+				})
+				.catch((err) => {
+					throw err;
+				});
+		};
+	};
+	
+	export const getSOA = (postData) => {
+		const { startDate, endDate,customerId } = postData;
+		let url = `/rest/simpleaccountReports/statementOfAccount?startDate=${startDate}&endDate=${endDate}&customerId=${customerId}`;
+	
+		return (dispatch) => {
+			let data = {
+				method: 'get',
+				url,
+			};
+			return authApi(data)
+				.then((res) => {
+					if (res.status === 200) {
+						return res;
+					}
+				})
+				.catch((err) => {
+					throw err;
+				});
+		};
+	};

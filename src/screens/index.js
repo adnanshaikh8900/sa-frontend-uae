@@ -185,6 +185,7 @@ import Migrate from './import/sections/migrate';
 import MigrateHistory from './import/sections/migrate_history';
 import PayrollApproverScreen from './payroll_run/screens/approver';
 import UpdatePayroll from './payroll_run/screens/updatePayroll';
+import SOAReport from './financial_report/sections/soa_statementsOfAccounts'
 export {
 	LogIn,
 	LogInTwo,
@@ -353,4 +354,5 @@ export {
 	MigrateHistory,
 	Migrate,
 	PayrollSummaryReport,
+	SOAReport,
 };

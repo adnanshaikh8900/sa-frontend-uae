@@ -136,10 +136,10 @@ class Import extends React.Component {
 		this.props.migrationActions
 			.deleteFiles(formData)
 			.then((res) => {
-				if (res.status === 200) {
+				if (res.status === 200) {					
 					this.setState({
 						disabled: false,
-						migration_list: res.data
+						migration_list: res.data=='No Files Available'?[]:res.data
 					});
 					this.props.commonActions.tostifyAlert(
 						'success',
@@ -385,6 +385,15 @@ class Import extends React.Component {
 					this.setState({
 						listOfExist4: newData
 					})
+					if(res.data.listOfExist.length ===0)
+					{	
+						this.props.commonActions.tostifyAlert(
+							'success',
+							'Migration Data saved Successfully.',
+						);
+					
+						this.props.history.push('/admin/settings/migrate',{name:this.state.name, version:this.state.version})
+					}
 				}
 			})
 			.catch((err) => {
@@ -1289,7 +1298,7 @@ class Import extends React.Component {
 
 																	</Row>
 																	<Row><Col>
-																	{this.state.selectedRows.length < 0 ? (	<Button color="primary" className="btn-square pull-left"
+																	{this.state.selectedRows.length > 0 ? (	<Button color="primary" className="btn-square pull-left"
 																			onClick={() => { this.DeleteFile() }}>
 																			<i className="far fa-arrow-alt-circle-left"></i> Delete
 																		</Button>) : ''}

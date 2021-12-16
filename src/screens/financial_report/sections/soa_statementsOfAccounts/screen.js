@@ -102,6 +102,7 @@ class SOAReport extends React.Component {
 				totalBalance: 0.00,
 				totalInvoicedAmount: 0.00,
 				transactionsModelList:[],
+				customerName:''
 		};
 
 	}
@@ -113,7 +114,7 @@ class SOAReport extends React.Component {
 					startDate: moment(value.startDate).format('DD/MM/YYYY'),
 					endDate: moment(value.endDate).format('DD/MM/YYYY'),
 				},
-
+				customerName:this.state.contactId && this.state.contactId.label ? this.state.contactId.label:'',
 			},
 			// () => {
 			// 	this.initializeData();
@@ -179,7 +180,7 @@ this.props.financialReportActions
 		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
 		return dl ?
 			XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
-			XLSX.writeFile(wb, fn || ('Payroll Summary Report.' + (type || 'csv')));
+			XLSX.writeFile(wb, fn || ('Statement Of Account( '+this.state.customerName+' ).' + (type || 'csv')));
 
 	}
 
@@ -191,7 +192,7 @@ this.props.financialReportActions
 		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
 		return dl ?
 			XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
-			XLSX.writeFile(wb, fn || ('PayablesInvoice Summary Report.' + (type || 'xlsx')));
+			XLSX.writeFile(wb, fn || ('Statement Of Account( '+this.state.customerName+' ).' + (type || 'xlsx')));
 
 	}
 
@@ -405,12 +406,7 @@ this.props.financialReportActions
 																		placeholder={strings.Select+strings.CustomerName} 
 																		options={
 																			tmpCustomer_list
-																				? selectOptionsFactory.renderOptions(
-																						'label',
-																						'value',
-																						tmpCustomer_list,
-																						'Customer',
-																				  )
+																				? tmpCustomer_list
 																				: []
 																		}
 																		value={this.state.contactId}
@@ -503,7 +499,7 @@ this.props.financialReportActions
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
 									paperSize="A3"
-									fileName="Payables Invoice Summary.pdf"
+									fileName={'Statement Of Account ( '+this.state.customerName+' ).pdf'}
 								>
 									<div style={{
 
@@ -535,7 +531,7 @@ this.props.financialReportActions
 													: ''}
 											</h2>
 											<br style={{ marginBottom: '5px' }} />
-											<b style={{ fontSize: '18px' }}>Statement of Account (SOA)</b>
+											<b style={{ fontSize: '18px' }}>Statement of Account ( {this.state.customerName} )</b>
 											<br style={{ marginBottom: '5px' }} />
 											{strings.From} {initValue.startDate} {strings.To} {initValue.endDate}
 

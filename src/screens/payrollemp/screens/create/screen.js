@@ -1832,7 +1832,7 @@ existForAccountNumber = (value) => {
                                                                                                         placeholder={strings.Enter+strings.PinCode}
 
                                                                                                         onChange={(option) => {
-                                                                                                            if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('pincode')(option) }
+                                                                                                            if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('pincode')(option) }
                                                                                                         }}
                                                                                                         className={props.errors.pincode && props.touched.pincode ? "is-invalid" : ""}
                                                                                                     />

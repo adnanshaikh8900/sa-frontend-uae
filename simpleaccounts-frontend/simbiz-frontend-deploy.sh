@@ -34,16 +34,16 @@ helm upgrade --install $subdomain-frontend simplevat-frontend-reactjs/$helmDir -
 --set simpleVatFrontendRelease=$SVrelease \
 --set image.repository.frontend.tag=$SVrelease \
 --set image.repository.frontend.imageName=simpleaccounts.azurecr.io/simpleaccounts-frontend \
---set maindomain=$subdomain-api.$maindomain \
+--set maindomain=$subdomain.$maindomain \
 --set simpleVatHost=https://$subdomain-api.$maindomain \
 --set fullnameOverride=$subdomain-frontend \
 --set serviceAccount.name=$subdomain-deploy-robot-frontend \
---set ingress.hosts[0].host=$subdomain-api.$maindomain \
+--set ingress.hosts[0].host=$subdomain.$maindomain \
 --set ingress.hosts[0].paths[0]="/*" \
 --set clusterIssuer=$clusterIssuer \
 --set ingress.annotations."cert-manager\.io/clusterissuer"=ae-simbiz-app-letsencrypt-prod \
 --set ingress.tls[0].secretName=$secretName \
---set ingress.tls[0].hosts[0]=$subdomain-api.$maindomain \
+--set ingress.tls[0].hosts[0]=$subdomain.$maindomain \
 --dry-run --debug --namespace $nameserver --create-namespace --wait
 
 echo "Deploying the scripts"
@@ -52,16 +52,16 @@ helm upgrade --install $subdomain-frontend simplevat-frontend-reactjs/$helmDir -
 --set simpleVatFrontendRelease=$SVrelease \
 --set image.repository.frontend.tag=$SVrelease \
 --set image.repository.frontend.imageName=simpleaccounts.azurecr.io/simpleaccounts-frontend \
---set maindomain=$subdomain-api.$maindomain \
+--set maindomain=$subdomain.$maindomain \
 --set simpleVatHost=https://$subdomain-api.$maindomain \
 --set fullnameOverride=$subdomain-frontend \
 --set serviceAccount.name=$subdomain-deploy-robot-frontend \
---set ingress.hosts[0].host=$subdomain-api.$maindomain \
+--set ingress.hosts[0].host=$subdomain.$maindomain \
 --set ingress.hosts[0].paths[0]="/*" \
 --set clusterIssuer=$clusterIssuer \
 --set ingress.annotations."cert-manager\.io/clusterissuer"=ae-simbiz-app-letsencrypt-prod \
 --set ingress.tls[0].secretName=$secretName \
---set ingress.tls[0].hosts[0]=$subdomain-api.$maindomain \
+--set ingress.tls[0].hosts[0]=$subdomain.$maindomain \
 --namespace $nameserver --create-namespace --wait
 
 echo "Deployment done"

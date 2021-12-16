@@ -81,6 +81,7 @@ class UpdateSalaryComponent extends React.Component {
         this.regEx = /^[0-9\d]+$/;
         this.regExBoth = /[a-zA-Z0-9]+$/;
         this.regExAlpha = /^[a-zA-Z ]+$/;
+        this.regDec1=/^\d{1,2}\.\d{1,2}$|^\d{1,2}$/;
 
         this.formRef = React.createRef();
 
@@ -579,16 +580,22 @@ handleChange = (evt) => {
                                                                                     <td style={{border:"1px solid #c8ced3"}}>
                                                                                         <Input
                                                                                             type="number"
-                                                                                            // min="0"
+                                                                                            min="0"
+                                                                                            max="99"
+															                                step="0.01"
                                                                                             size="30"
+                                                                                            maxLength={2}
                                                                                             style={{textAlign:"center"}}
                                                                                             id="formula"
                                                                                             name="formula"
                                                                                             value={item.formula}
                                                                                            // onChange={(e)=>{this.handleChange(e)}}   
                                                                                            onChange={(option) => {
-                                                                                            if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
-                                                                                            this.updateSalary1(this.state.CTC,option.target.value,item.id);
+                                                                                            if (option.target.value === '' || this.regDec1.test(option.target.value)) {
+                                                                                                 props.handleChange('formula')(option) 
+                                                                                                 this.updateSalary1(this.state.CTC,option.target.value,item.id);
+                                                                                        }
+                                                                                            
 
                                                                                         }}                                  
                                                                                                 />
@@ -700,11 +707,17 @@ handleChange = (evt) => {
                                                                                         <Input
                                                                                             type="number"
                                                                                             // min="0"
+                                                                                            min="0"
+                                                                                             max="99"
+                                                                                            step="0.01"
+                                                                                            maxLength={2}
                                                                                             style={{textAlign:"center"}}
                                                                                             size="30"
                                                                                             onChange={(option) => {
-                                                                                                if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
+                                                                                                if (option.target.value === '' || this.regDec1.test(option.target.value)) { props.handleChange('formula')(option)
                                                                                                 this.updateSalary1(this.state.CTC,option.target.value,item.id);
+                                                                                             }
+                                                                                               
     
                                                                                             }}     
                                                                                             value={item.formula}
@@ -819,12 +832,18 @@ handleChange = (evt) => {
                                                                                         <Input
                                                                                             type="number"
                                                                                             // min="0"
+                                                                                            min="0"
+                                                                                            max="99"
+                                                                                            step="0.01"
+                                                                                            maxLength={2}
                                                                                             size="30"
                                                                                             className="text-center"
                                                                                             value={item.formula}
                                                                                             onChange={(option) => {
-                                                                                                if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('formula')(option) }
+                                                                                                if (option.target.value === '' || this.regDec1.test(option.target.value)) { props.handleChange('formula')(option) 
                                                                                                 this.updateSalary1(this.state.CTC,option.target.value,item.id);
+                                                                                            }
+                                                                                               
     
                                                                                             }}   
                                                                                         />{' '}% of Basic

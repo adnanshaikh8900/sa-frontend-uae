@@ -337,7 +337,7 @@ class DetailCustomerInvoice extends React.Component {
 					<Select
 						styles={customStyles}
 						isDisabled={row.exciseTaxId === 0 || this.state.exciseType === 'Inclusive'}
-						
+
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -349,7 +349,7 @@ class DetailCustomerInvoice extends React.Component {
 								: []
 						}
 						value={
-				
+
 							excise_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', excise_list, 'Excise')
@@ -367,7 +367,7 @@ class DetailCustomerInvoice extends React.Component {
 								field,
 								props,
 							);
-							
+
 							this.updateAmount(
 								this.state.data,
 								props,
@@ -390,7 +390,7 @@ class DetailCustomerInvoice extends React.Component {
 		);
 	};
 
-	
+
 	renderDiscount = (cell, row, props) => {
         const { discountOptions } = this.state;
        let idx;
@@ -423,15 +423,15 @@ class DetailCustomerInvoice extends React.Component {
                                    props,
                                );
                            }
-                       
+
                                this.updateAmount(
                                    this.state.data,
                                    props,
                                );
-                       
+
                        }}
                        placeholder={strings.discount}
-                       className={`form-control 
+                       className={`form-control
            ${
                            props.errors.lineItemsString &&
                            props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -577,7 +577,8 @@ class DetailCustomerInvoice extends React.Component {
 					<div>
 						<Input
 							type="text"
-min="0"
+							min="0"
+							maxLength="10"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -639,6 +640,8 @@ min="0"
 				render={({ field, form }) => (
 					<Input
 					type="text"
+					min="0"
+					maxLength="10"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (
@@ -1014,7 +1017,7 @@ debugger
 			if (obj.discountType === 'PERCENTAGE') {
 				var val =
 				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) *  
+				 (+((net_value * obj.discount)) / 100)) *
 					vat *
 					obj.quantity) /
 				100;
@@ -1028,8 +1031,8 @@ debugger
 					(vat / 100);
 
 					var val1 =
-					((net_value * obj.quantity )- obj.discount ) 
-			  
+					((net_value * obj.quantity )- obj.discount )
+
 			} else {
 				var val = (+net_value * vat * obj.quantity) / 100;
 				var val1 = net_value
@@ -1063,7 +1066,7 @@ debugger
 						totalAmount: total_net > discount ? total - discount : total - discount,
 						total_excise: total_excise
 					},
-					
+
 				},
 			},
 			() => {
@@ -1183,12 +1186,12 @@ debugger
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
-	
+
 		formData.append('totalExciseAmount', this.state.initValue.total_excise);
 		formData.append('exciseType', this.state.exciseType);
 		formData.append('term', term);
 		//formData.append('placeOfSupplyId',placeOfSupplyId.value);
-		
+
 		if (contactId) {
 			formData.append('contactId', contactId);
 		}
@@ -2162,7 +2165,7 @@ debugger
 																		}
 																	>
 																	Excise
-																	</TableHeaderColumn> 
+																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																	width="12%"
 																		dataField="discount"
@@ -2219,7 +2222,7 @@ debugger
 																				</Label>
 																				<Input
 																					type="text"
-																					maxLength="100"
+																					maxLength="50"
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					value={props.values.receiptNumber}
@@ -2323,7 +2326,7 @@ debugger
 																</Col>
 																	<Col lg={4}>
 																		<div className="">
-																			
+
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>

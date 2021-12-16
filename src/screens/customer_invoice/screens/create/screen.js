@@ -1683,6 +1683,7 @@ debugger
 																	</Label>
 																	<Input
 																		type="text"
+																		maxLength='30'
 																		id="invoice_number"
 																		name="invoice_number"
 																		placeholder={strings.InvoiceNumber}

@@ -1768,7 +1768,7 @@ debugger
 																	color="primary"
 																	className="btn-square mr-3 mb-3"
 																	onClick={(e, props) => {
-																		this.openCustomerModal(props);
+																		this.props.history.push(`/admin/master/contact/create`,{gotoParentURL:"/admin/income/customer-invoice/create"})
 																	}}
 																>
 																	<i className="fa fa-plus"></i> {strings.AddACustomer}

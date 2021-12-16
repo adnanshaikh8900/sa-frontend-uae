@@ -1682,6 +1682,7 @@ renderName=(cell,row)=>{
 																			type="textarea"
 																			name="purchaseDescription"
 																			id="purchaseDescription"
+																			maxLength='255'
 																			rows="3"
 																			placeholder={strings.Description}
 																			onChange={(value) => {
@@ -1987,7 +1988,7 @@ min="0"
 																			// 		: true
 																			// }
 																			type="number"
-min="0"
+																			min="0"
 																			maxLength="200"
 																			name="inventoryReorderLevel"
 																			id="inventoryReorderLevel"

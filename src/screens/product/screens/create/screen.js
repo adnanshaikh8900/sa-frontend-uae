@@ -457,6 +457,12 @@ try {
 														errors.productCode =
 															'Product Code is already exist';
 													}
+													if (values.productName==='') {
+														errors.productName = 'Product Name is required';
+													}
+													if (values.productCode==='') {
+														errors.productCode = 'Product Code is required';
+													}
 													// if (values.inventoryReorderLevel > values.inventoryQty)
 													// {
 													// 	errors.inventoryReorderLevel = 
@@ -1268,7 +1274,7 @@ try {
 																					: true
 																			}
 																			type="textarea"
-																			maxLength="50"
+																			maxLength="255"
 																			name="salesDescription"
 																			id="salesDescription"
 																			rows="3"
@@ -1473,7 +1479,7 @@ try {
 																					: true
 																			}
 																			type="textarea"
-																			maxLength="50"
+																			maxLength="255"
 																			name="purchaseDescription"
 																			id="purchaseDescription"
 																			rows="3"
@@ -1771,7 +1777,7 @@ try {
 																			type="text"
 																			min="0"
 																			max="1000"
-																			maxLength="5"
+																			maxLength="10"
 																			name="inventoryReorderLevel"
 																			id="inventoryReorderLevel"
 																			rows="3"

@@ -28,6 +28,8 @@ import PasswordChecklist from "react-password-checklist"
 
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
+import {data}  from '../Language/index'
+import LocalizedStrings from 'react-localization';
 
 const mapStateToProps = (state) => {
 	return {
@@ -35,6 +37,7 @@ const mapStateToProps = (state) => {
 		state_list: state.common.state_list,
 		version: state.common.version,
 		universal_currency_list :state.common.universal_currency_list,
+		company_type_list : state.common.company_type_list
 	};
 };
 const eye = require('assets/images/settings/eye.png');
@@ -49,6 +52,8 @@ const options = [
 	{ value: 'strawberry', label: 'Strawberry' },
 	{ value: 'vanilla', label: 'Vanilla' },
 ];
+
+let strings = new LocalizedStrings(data);
 class Register extends React.Component {
 	constructor(props) {
 		super(props);
@@ -56,6 +61,24 @@ class Register extends React.Component {
 			isPasswordShown: false,
 			alert: null,
 			currencyList: [
+			],
+			country_list:[
+				{
+					countryCode: 229,
+					countryDescription: '',
+					countryFullName: "United Arab Emirates - (null)",
+					countryName: "United Arab Emirates",
+					createdBy: '',
+					createdDate: '',
+					currencyCode: '',
+					defaltFlag: "Y",
+					deleteFlag: false,
+					isoAlpha3Code: '',
+					lastUpdateBy: '',
+					lastUpdateDate: '',
+					orderSequence: '',
+					versionNumber: 1,
+				}
 			],
 			success: false,
 			initValue: {
@@ -67,9 +90,9 @@ class Register extends React.Component {
 				lastName: '',
 				email: '',
 				password: '',
-				confirmPassword: '',
-				timeZone: '',
-				countryId: '',
+				confirmPassword: '',  
+				timeZone: {	label: "Asia/Dubai",value: "Asia/Dubai"	},
+				countryId: 229,
 				stateId: '',
 				IsDesignatedZone:'',
 				IsRegistered:'',
@@ -83,7 +106,8 @@ class Register extends React.Component {
 			show: false,
 			togglePassword: '***********',
 			loading: false,
-			timezone: [],
+			// timeZone: "Asia/Dubai",
+			// timezone: {	label: "Asia/Dubai",value: "Asia/Dubai"	},
 		};
 
 		this.regEx = /^[0-9\d]+$/;
@@ -93,7 +117,7 @@ class Register extends React.Component {
 		this.getInitialData();
 	};
 	getStateList = (countryCode) => {
-		this.props.commonActions.getStateList(countryCode);
+		this.props.commonActions.getStateList(229);
 	};
 	getInitialData = () => {
 		this.props.authActions.getTimeZoneList().then((response) => {
@@ -102,7 +126,10 @@ class Register extends React.Component {
 			});
 			this.setState({ timezone: output });
 		});
-		this.props.commonActions.getCountryList();
+		
+		this.props.commonActions.getStateList();
+		// this.props.commonActions.getCountryList();
+		this.props.commonActions.getCompanyTypeListRegister();
 
 		this.props.authActions.getCurrencyList();
 		this.props.authActions.getCompanyCount().then((response) => {
@@ -128,7 +155,7 @@ class Register extends React.Component {
 	};
 
 	handleSubmit = (data, resetForm) => {
-		 
+
 		this.setState({ loading: true });
 		const {
 			companyName,
@@ -175,8 +202,8 @@ class Register extends React.Component {
 		formData.append('firstName', firstName ? firstName :'')
 		formData.append('lastName', lastName ? lastName :'')
 		formData.append('email', email ? email : '')
-		formData.append('timeZone', timeZone)
-		formData.append('countryId', countryId ? countryId.value : '')
+		formData.append('timeZone', 'Asia/Dubai')
+		formData.append('countryId', countryId ? countryId : '229')
 		formData.append('stateId', stateId ? stateId.value : '')
 		if (IsDesignatedZone) {
 			formData.append('IsDesignatedZone', IsDesignatedZone);
@@ -190,9 +217,7 @@ class Register extends React.Component {
 		if (vatRegistrationDate) {
 			formData.append('vatRegistrationDate', vatRegistrationDate);
 		}
-		
-		
-	
+		formData.append('companyTypeCode', companyTypeCode ? companyTypeCode : '');
 		formData.append('companyAddressLine1',companyAddress1 ? companyAddress1 : '')
         formData.append('companyAddressLine2',companyAddress2 ? companyAddress2 : '')
 		formData.append('loginUrl', window.location.origin);
@@ -200,8 +225,9 @@ class Register extends React.Component {
 			.register(formData)
 			.then((res) => {
 				this.setState({ loading: true });
-				toast.success('Register Successfully please log in to continue', {
+				toast.success('Please check you email to set your password', {
 					position: toast.POSITION.TOP_RIGHT,
+					autoClose:15000,
 				});
 			
 				this.setState({
@@ -217,7 +243,7 @@ class Register extends React.Component {
 				this.setState({ loading: true });
 				toast.error(
 					err && err.data
-						? 'Log in failed. Please try again'
+						? 'Login failed. Please try again'
 						: 'Something Went Wrong',
 					{
 						position: toast.POSITION.TOP_RIGHT,
@@ -227,7 +253,7 @@ class Register extends React.Component {
 	};
 
 	render() {
-		const { isPasswordShown } = this.state;
+		const { isPasswordShown, companyTypeList } = this.state;
 		const customStyles = {
 			control: (base, state) => ({
 				...base,
@@ -240,9 +266,9 @@ class Register extends React.Component {
 			}),
 		};
 	
-		const { initValue, currencyList, userDetail, timezone } = this.state;
-		const {universal_currency_list,country_list,state_list} = this.props;
-		console.log(country_list)
+		const { initValue, currencyList, userDetail, timezone,country_list } = this.state;
+		const {universal_currency_list,state_list,company_type_list} = this.props;
+		console.log(company_type_list)
 		return (
 			<div className="log-in-screen">
 				<ToastContainer
@@ -255,7 +281,7 @@ class Register extends React.Component {
 						<Container>
 							{userDetail === false && (
 								<Row className="justify-content-center">
-									<Col md="8">
+									<Col lg={10} className="mx-auto">
 										<CardGroup>
 											<Card className="p-4">
 												<CardBody>
@@ -277,6 +303,9 @@ class Register extends React.Component {
 															),
 															currencyCode: Yup.string().required(
 																'Currency is required',
+															),
+															companyTypeCode: Yup.string().required(
+																'Company/Business Type is required',
 															),
 															companyAddress1: Yup.string().required(
 																'Company Address is required',
@@ -305,6 +334,17 @@ class Register extends React.Component {
 																	is: (value) => value === true,
 																	then: Yup.string().required(
 																		'Tax Registration Number is Required',
+																	)
+																	.test(
+																		'TaxRegistrationNumber',
+																		'Invalid TRN',
+																		(value) => {
+																			if (value > 15) {
+																				return true;
+																			} else {
+																				return false;
+																			}
+																		},
 																	),
 																	otherwise: Yup.string(),
 																},
@@ -335,7 +375,7 @@ class Register extends React.Component {
 																	<h4 className="">Company Details</h4>
 																	</div>
 																	<Row className="mt-2">
-																		<Col lg={6}>
+																		<Col lg={4}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="companyName">
 
@@ -368,7 +408,7 @@ class Register extends React.Component {
 																					)}
 																			</FormGroup>
 																		</Col>
-																		<Col lg={6}>
+																		<Col lg={4}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="currencyCode">
 
@@ -429,11 +469,65 @@ class Register extends React.Component {
 																					)}
 																			</FormGroup>
 																		</Col>
-																		
+																		<Col lg={4}>
+																						<FormGroup>
+																							<Label htmlFor="companyId">
+																							{/* <span className="text-danger">*</span> */}
+																								 Company /Business Type
+																						</Label>
+																							<Select
+																								options={
+																									company_type_list
+																										? selectOptionsFactory.renderOptions(
+																											'label',
+																											'value',
+																											company_type_list,
+																											'Company Type Code',
+																										)
+																										: []
+																								}
+																								value={
+																									company_type_list &&
+																									company_type_list.find(
+																										(option) =>
+																											option.value ===
+																											+props.values
+																												.companyTypeCode,
+																									)
+																								}
+																								onChange={(option) => {
+																									if (option && option.value) {
+																										props.handleChange(
+																											'companyTypeCode',
+																										)(option.value);
+																									} else {
+																										props.handleChange(
+																											'companyTypeCode',
+																										)('');
+																									}
+																								}}
+																								placeholder={strings.Enter+strings.CompanyName}
+																								id="companyTypeCode"
+																								name="companyTypeCode"
+																								className={
+																									props.errors.companyTypeCode &&
+																										props.touched.companyTypeCode
+																										? 'is-invalid'
+																										: ''
+																								}
+																							/>
+																							{props.errors.companyTypeCode &&
+																								props.touched.companyTypeCode && (
+																									<div className="invalid-feedback">
+																										{props.errors.companyTypeCode}
+																									</div>
+																								)}
+																						</FormGroup>
+																					</Col>
 															
 																		</Row>
 																	<Row className="row-wrapper">
-																		<Col lg={6}>
+																		<Col lg={4}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="companyAddress1">
 
@@ -466,7 +560,7 @@ class Register extends React.Component {
 																					)}
 																			</FormGroup>
 																		</Col>
-																		<Col lg={6}>
+																		<Col lg={4}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="companyAddress2">
 																					 
@@ -499,12 +593,53 @@ class Register extends React.Component {
 																					)}
 																			</FormGroup>
 																		</Col>
+																		<Col lg={4}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="timeZone">
+																					Time Zone Preference
+																				</Label>
+																				<Select
+																					isDisabled
+																					styles={customStyles}
+																					id="timeZone"
+																					name="timeZone"
+																					options={timezone ? timezone : []}
+																					value={props.values.timeZone}
+																					onChange={(option) => {
+																						if (option && option.value) {
+																							debugger
+																							props.handleChange('timeZone')(
+																								option.value,
+																							);
+																						} else {
+																							props.handleChange('timeZone')(
+																								'',
+																							);
+																						}
+																					}}
+																					className={
+																						props.errors.timeZone &&
+																							props.touched.timeZone
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																				{props.errors.timeZone &&
+																					props.touched.timeZone && (
+																						<div className="invalid-feedback">
+																							{props.errors.timeZone}
+																						</div>
+																					)}
+																			</FormGroup>
+																		</Col>
+																		
 																			</Row>
 																		<Row className="row-wrapper">
-															<Col lg={6}>
+															<Col lg={4}>
 																<FormGroup>
 																	<Label htmlFor="countryId"> Country</Label>
 																	<Select
+																		isDisabled
 																		styles={customStyles}
 																		options={
 																			
@@ -517,7 +652,21 @@ class Register extends React.Component {
 																				  )
 																				: []
 																		}
-																		value={props.values.countryId}
+																		// value={props.values.countryId}
+																		value={
+																			country_list &&
+																			selectOptionsFactory.renderOptions(
+																				'countryName',
+																				'countryCode',
+																				country_list,
+																				'Country',
+																				)
+																				.find(
+																					(option) =>
+																						option.value ===
+																						+props.values.countryId,
+																				)
+																		}
 																		onChange={(option) => {
 																			 
 																			if (option && option.value) {
@@ -550,9 +699,10 @@ class Register extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
-															<Col lg={6}>
+															<Col lg={4}>
 																<FormGroup>
-																	<Label htmlFor="stateId"> {props.values.countryId.value === 229 ? "Emirates" : "State/Provinces"}</Label>
+																	{/* <Label htmlFor="stateId"> {props.values.countryId.value === 229 ? "Emirates" : "State/Provinces"}</Label> */}
+																	<Label htmlFor="stateId"> Emirates</Label>
 																	<Select
 																		styles={customStyles}
 																		options={
@@ -561,11 +711,20 @@ class Register extends React.Component {
 																						'label',
 																						'value',
 																						state_list,
-																						'State',
+																						'Emirates',
 																				  )
 																				: []
 																		}
-																		value={props.values.stateId}
+																		// value={props.values.stateId}
+																		value={
+																			state_list &&
+																			state_list.find(
+																				(option) =>
+																					option.value ===
+																					+props.values
+																						.stateId,
+																			)
+																		}
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				props.handleChange('stateId')(option);
@@ -593,8 +752,9 @@ class Register extends React.Component {
 															</Col>
 													
 															</Row>
-															<Row style={{display:props.values.countryId.value === 229 ? '' : 'none'}}>
-															<Col lg={6} >
+															{/* style={{display:props.values.countryId.value === 229 ? '' : 'none'}} */}
+															<Row >
+															<Col lg={5} >
 																<FormGroup check inline className="mt-1">
 																		<Label
 																			className="form-check-label mt-3"
@@ -635,8 +795,9 @@ class Register extends React.Component {
 																	</FormGroup>
 																	</Col>
 															</Row>
-															<Row className="mb-4" style={{display:props.values.countryId.value === 229 ? '' : 'none'}}>
-															<Col lg={6}>
+															{/* style={{display:props.values.countryId.value === 229 ? '' : 'none'}} */}
+															<Row className="mb-4" >
+															<Col lg={5}>
 																<FormGroup check inline className="mt-1">
 																		<Label
 																			className="form-check-label mt-3"
@@ -680,13 +841,14 @@ class Register extends React.Component {
 																	</Col>
 															</Row>
 														<Row className="row-wrapper" style={{display:props.values.IsRegistered === true ? '': 'none'}}>
-																<Col lg={6}>
+																<Col lg={4}>
 																<FormGroup >
 																	<Label htmlFor="TaxRegistrationNumber">
 																	Tax Registration Number
 																	</Label>
 																	<Input
 																		type="text"
+																		minLength="15"
 																		maxLength="15"
 																		placeholder="Enter Tax Registration Number"
 																		id="TaxRegistrationNumber"
@@ -722,7 +884,7 @@ class Register extends React.Component {
 																	</div>
 																</FormGroup>
 															</Col>
-															<Col lg={6}>
+															<Col lg={4}>
 																<FormGroup>
 																	<Label htmlFor="date">
 																	Vat Registered On
@@ -768,7 +930,7 @@ class Register extends React.Component {
 																	</div>
 														
 																		<Row>
-																		<Col lg={6}>
+																		<Col lg={4}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="firstName">
 
@@ -801,7 +963,7 @@ class Register extends React.Component {
 																					)}
 																			</FormGroup>
 																		</Col>
-																		<Col lg={6}>
+																		<Col lg={4}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="lastName">
 
@@ -834,9 +996,7 @@ class Register extends React.Component {
 																					)}
 																			</FormGroup>
 																		</Col>
-																		</Row>
-																		<Row>
-																		<Col lg={6}>
+																		<Col lg={4}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="email">
 
@@ -866,44 +1026,7 @@ class Register extends React.Component {
 																					)}
 																			</FormGroup>
 																		</Col>
-																		<Col lg={6}>
-																			<FormGroup className="mb-3">
-																				<Label htmlFor="timeZone">
-																					Time Zone Preference
-																				</Label>
-																				<Select
-																					styles={customStyles}
-																					id="timeZone"
-																					name="timeZone"
-																					options={timezone ? timezone : []}
-																					value={props.values.timezone}
-																					onChange={(option) => {
-																						if (option && option.value) {
-																							props.handleChange('timeZone')(
-																								option.value,
-																							);
-																						} else {
-																							props.handleChange('timeZone')(
-																								'',
-																							);
-																						}
-																					}}
-																					className={
-																						props.errors.timeZone &&
-																							props.touched.timeZone
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																				{props.errors.timeZone &&
-																					props.touched.timeZone && (
-																						<div className="invalid-feedback">
-																							{props.errors.timeZone}
-																						</div>
-																					)}
-																			</FormGroup>
-																		</Col>
-																	</Row>
+																		</Row>
 																	<Row>
 																		<Col className="text-center">
 																			<Button

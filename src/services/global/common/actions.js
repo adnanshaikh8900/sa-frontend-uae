@@ -85,9 +85,9 @@ export const getStateList = (countryCode) => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: '/rest/company/getState?countryCode=' + countryCode,
+			url: '/rest/company/getState?countryCode=' + 229,
 		};
-		if (countryCode) {
+		if (229) {
 			return api(data)
 				.then((res) => {
 					if (res.status === 200) {
@@ -129,6 +129,28 @@ export const getCountryList = () => {
 			});
 	};
 };
+export const getCompanyTypeListRegister = () => {
+	debugger
+	return (dispatch) => {
+	  let data = {
+		method: 'get',
+		url: `/rest/company/getCompanyType`
+	  }
+	  return api(data)
+	  .then((res) => {
+		  if (res.status === 200) {
+			  dispatch({
+				  type: COMMON.COMPANY_TYPE,
+				  payload: res.data,
+			  });
+		  }
+		  console.log(res)
+	  })
+	  .catch((err) => {
+		  throw err;
+	  });
+};
+  };
 export const getCurrencyList = () => {
 	return (dispatch) => {
 		let data = {

@@ -112,7 +112,7 @@ class Profile extends React.Component {
 				companyStateRegion: '',
 				companyPostZipCode: '',
 				companyPoBoxNumber: '',
-				companyCountryCode: '',
+				companyCountryCode: 229,
 				companyExpenseBudget: '',
 				companyRevenueBudget: '',
 				dateFormat: '',
@@ -130,7 +130,7 @@ class Profile extends React.Component {
 				companyStateCode: '',
 				companyPostZipCode: '',
 				companyPoBoxNumber: '',
-				companyCountryCode: '',
+				companyCountryCode: 229,
 			},
 			timezone: [],
 		};
@@ -642,7 +642,7 @@ class Profile extends React.Component {
 		);
 		formData.append(
 			'companyCountryCode',
-			isSame ? companyAddress.companyCountryCode : companyCountryCode,
+			isSame ? companyAddress.companyCountryCode : '229',
 		);
 		// formData.append("isSame", isSame);
 
@@ -749,6 +749,9 @@ class Profile extends React.Component {
 																		.email('Invalid Email'),
 																	roleId: Yup.string().required(
 																		'Role is Required',
+																	),
+																	timezone: Yup.string().required(
+																		'Time Zone is Required',
 																	),
 																	password: Yup.string()
 																		 .required("Password is Required")
@@ -1009,6 +1012,7 @@ class Profile extends React.Component {
 																							{strings.TimeZonePreference}
 																						</Label>
 																							<Select
+																								isDisabled
 																								styles={customStyles}
 																								options={timezone ? timezone : []}
 																								value={
@@ -1375,8 +1379,18 @@ class Profile extends React.Component {
 																	'Company Registration Number is required',
 																),
 																vatRegistrationNumber: Yup.string().required(
-																	'Vat Registration Number is required',
-																),
+																	'Tax Registration Number is required')
+																	.test(
+																		'vatRegistrationNumber',
+																		'Invalid TRN',
+																		(value) => {
+																			if (value > 15) {
+																				return true;
+																			} else {
+																				return false;
+																			}
+																		},
+																	),
 																emailAddress: Yup.string()
 																	.required('Email is Required')
 																	.email('Invalid Email'),
@@ -1560,6 +1574,7 @@ class Profile extends React.Component {
 																								 Company /Business Type
 																						</Label>
 																							<Select
+																							// isDisabled
 																								options={
 																									companyTypeList
 																										? selectOptionsFactory.renderOptions(
@@ -2008,6 +2023,7 @@ class Profile extends React.Component {
 																			{/* </Col> */}
 																				</Label>
 																					<Select
+																						isDisabled
 																						options={
 																							country_list
 																								? selectOptionsFactory.renderOptions(
@@ -2101,7 +2117,7 @@ class Profile extends React.Component {
 																							isSame
 																								? invoicing_state_list
 																								: company_state_list,
-																							'State/Province',
+																							'Emirates',
 																						)}
 																						value={
 																							isSame
@@ -2331,6 +2347,7 @@ class Profile extends React.Component {
 																							<Input
 																								type="text"
 																								id="vatRegistrationNumber"
+																								minLength="15"
 																								maxLength="15"
 																								name="vatRegistrationNumber"
 																								placeholder={strings.Enter+strings.TaxRegistrationNumber}

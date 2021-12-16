@@ -400,7 +400,7 @@ class DetailSupplierInvoice extends React.Component {
 					<Select
 						styles={customStyles}
 						isDisabled={row.exciseTaxId === 0 || this.state.exciseType === 'Inclusive'}
-						
+
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -412,7 +412,7 @@ class DetailSupplierInvoice extends React.Component {
 								: []
 						}
 						value={
-				
+
 							excise_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', excise_list, 'Excise')
@@ -430,7 +430,7 @@ class DetailSupplierInvoice extends React.Component {
 								field,
 								props,
 							);
-							
+
 							this.updateAmount(
 								this.state.data,
 								props,
@@ -467,6 +467,7 @@ class DetailSupplierInvoice extends React.Component {
 				render={({ field, form }) => (
 					<Input
 					type="text"
+					maxLength="255"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(
@@ -513,6 +514,7 @@ class DetailSupplierInvoice extends React.Component {
 					<div>
 						<Input
 							type="text"
+							maxLength="10"
 							min="0"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
@@ -575,6 +577,7 @@ class DetailSupplierInvoice extends React.Component {
 				render={({ field, form }) => (
 					<Input
 					type="text"
+					maxLength="10"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (
@@ -644,15 +647,15 @@ class DetailSupplierInvoice extends React.Component {
                                    props,
                                );
                            }
-                       
+
                                this.updateAmount(
                                    this.state.data,
                                    props,
                                );
-                       
+
                        }}
                        placeholder={strings.discount}
-                       className={`form-control 
+                       className={`form-control
            ${
                            props.errors.lineItemsString &&
                            props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -1141,7 +1144,7 @@ debugger
 			if (obj.discountType === 'PERCENTAGE') {
 				var val =
 				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) *  
+				 (+((net_value * obj.discount)) / 100)) *
 					vat *
 					obj.quantity) /
 				100;
@@ -1155,8 +1158,8 @@ debugger
 					(vat / 100);
 
 					var val1 =
-					((net_value * obj.quantity )- obj.discount ) 
-			  
+					((net_value * obj.quantity )- obj.discount )
+
 			} else {
 				var val = (+net_value * vat * obj.quantity) / 100;
 				var val1 = net_value
@@ -1190,7 +1193,7 @@ debugger
 						totalAmount: total_net > discount ? total - discount : total - discount,
 						total_excise: total_excise
 					},
-					
+
 				},
 			},
 			() => {
@@ -1273,13 +1276,13 @@ debugger
         formData.append('totalExciseAmount', this.state.initValue.total_excise);
 		formData.append('exciseType', this.state.exciseType);
 		formData.append('isReverseChargeEnabled',this.state.isReverseChargeEnabled);
-	
+
 		formData.append('term', term);
 		formData.append('exchangeRate',  exchangeRate ? exchangeRate : '');
 		if (placeOfSupplyId) {
             formData.append('placeOfSupplyId', placeOfSupplyId.value ?placeOfSupplyId.value :placeOfSupplyId);
         }	
-	
+
 		if (contactId) {
 			formData.append('contactId', contactId);
 		}
@@ -1372,7 +1375,7 @@ debugger
 		const { term } = this.state;
 		const val = term.split('_');
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
-		 
+
 		const values = value
 			? value
 			: props.values.invoiceDate1
@@ -1659,7 +1662,7 @@ debugger
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="invoice_number">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			 {strings.InvoiceNumber}
 																		</Label>
 																		<Input
@@ -1692,7 +1695,7 @@ debugger
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="contactId">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																		{strings.SupplierName}
 																		</Label>
 																		<Select
@@ -1747,7 +1750,7 @@ debugger
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			 {strings.PlaceofSupply}
 																		</Label>
 																		<Select
@@ -1810,7 +1813,7 @@ debugger
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="term">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			Terms{' '}
 																			<i className="fa fa-question-circle"></i>
 																		</Label>
@@ -1875,7 +1878,7 @@ debugger
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="date">
-																			<span className="text-danger">*</span>
+																			<span className="text-danger">* </span>
 																			 {strings.InvoiceDate}
 																		</Label>
 																		<DatePicker
@@ -1949,7 +1952,7 @@ debugger
 																<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.Currency}
 																	</Label>
 																	<Select
@@ -2205,7 +2208,7 @@ debugger
 																			this.renderAccount(cell, rows, props)
 																		}
 																	>
-																		{strings.Account} 
+																		{strings.Account}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="description"
@@ -2213,7 +2216,7 @@ debugger
 																			this.renderDescription(cell, rows, props)
 																		}
 																	>
-																		{strings.DESCRIPTION} 
+																		{strings.DESCRIPTION}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="quantity"
@@ -2222,7 +2225,7 @@ debugger
 																			this.renderQuantity(cell, rows, props)
 																		}
 																	>
-																		{strings.QUANTITY} 
+																		{strings.QUANTITY}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																	width="10%"
@@ -2233,7 +2236,7 @@ debugger
 																	>
 																		Unit Price
 																	</TableHeaderColumn>
-																	
+
 																	<TableHeaderColumn
 																	width="10%"
 																		dataField="exciseTaxId"
@@ -2242,7 +2245,7 @@ debugger
 																		}
 																	>
 																	Excise
-																	</TableHeaderColumn> 
+																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																	width="12%"
 																		dataField="discount"

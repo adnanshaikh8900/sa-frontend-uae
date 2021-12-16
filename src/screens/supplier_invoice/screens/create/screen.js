@@ -156,7 +156,7 @@ class CreateSupplierInvoice extends React.Component {
 				discountPercentage: 0,
 				discountType:'',
 				total_excise: 0,
-				
+
 			},
 			discountType : {value: 'FIXED', label: 'FIXED' },
 			excisetype: { value: 'Inclusive', label: 'Inclusive' },
@@ -242,6 +242,7 @@ class CreateSupplierInvoice extends React.Component {
 				render={({ field, form }) => (
 					<Input
 						type="text"
+						maxLength="255"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(
@@ -604,15 +605,15 @@ class CreateSupplierInvoice extends React.Component {
 									props,
 								);
 							}
-						
+
 								this.updateAmount(
 									this.state.data,
 									props,
 								);
-						
+
 						}}
 						placeholder={strings.discount}
-						className={`form-control 
+						className={`form-control
             ${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -769,7 +770,7 @@ class CreateSupplierInvoice extends React.Component {
 					<Select
 						styles={customStyles}
 						isDisabled={row.exciseTaxId === 0 || this.state.excisetype.value === 'Inclusive'}
-						
+
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -781,7 +782,7 @@ class CreateSupplierInvoice extends React.Component {
 								: []
 						}
 						value={
-				
+
 							excise_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', excise_list, 'Excise')
@@ -799,7 +800,7 @@ class CreateSupplierInvoice extends React.Component {
 								field,
 								props,
 							);
-							
+
 							this.updateAmount(
 								this.state.data,
 								props,
@@ -1163,7 +1164,7 @@ debugger
 			if (obj.discountType === 'PERCENTAGE') {
 				var val =
 				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) *  
+				 (+((net_value * obj.discount)) / 100)) *
 					vat *
 					obj.quantity) /
 				100;
@@ -1177,8 +1178,8 @@ debugger
 					(vat / 100);
 
 					var val1 =
-					((net_value * obj.quantity )- obj.discount ) 
-			  
+					((net_value * obj.quantity )- obj.discount )
+
 			} else {
 				var val = (+net_value * vat * obj.quantity) / 100;
 				var val1 = net_value
@@ -1212,7 +1213,7 @@ debugger
 						totalAmount: total_net > discount ? total - discount : total - discount,
 						total_excise: total_excise
 					},
-					
+
 				},
 			},
 			() => {
@@ -1751,7 +1752,7 @@ debugger
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="invoice_number">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.InvoiceNumber}
 																	</Label>
 																	<Input
@@ -1785,7 +1786,7 @@ debugger
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="contactId">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.SupplierName} 
 																	</Label>
 																	<Select
@@ -1875,7 +1876,7 @@ debugger
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.PlaceofSupply} 
 																	</Label>
 																	<Select
@@ -1921,7 +1922,7 @@ debugger
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="term">
-																		<span className="text-danger">*</span>{strings.Terms}{' '}
+																		<span className="text-danger">* </span>{strings.Terms}{' '}
 																		<i
 																			id="UncontrolledTooltipExample"
 																			className="fa fa-question-circle ml-1"
@@ -2004,7 +2005,7 @@ debugger
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.InvoiceDate} 
 																	</Label>
 																	<DatePicker
@@ -2076,7 +2077,7 @@ debugger
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.Currency}
 																	</Label>
 																	<Select
@@ -2373,7 +2374,7 @@ debugger
 																		}
 																	>
 																	Excise
-																	</TableHeaderColumn> 
+																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																	width="12%"
 																		dataField="discount"
@@ -2460,21 +2461,17 @@ debugger
 																					maxLength="50"
 																					id="receiptNumber"
 																					name="receiptNumber"
-																					placeholder={strings.ReceiptNumber}
-																					onChange={(option) => {
-																						if (
-																							option.target.value === '' ||
-																							this.regExBoth.test(
-																								option.target.value,
-																							)
-																						) {
-																							props.handleChange(
-																								'receiptNumber',
-																							)(option);
-																						}
-																					}}
 																					value={props.values.receiptNumber}
+																					placeholder={strings.ReceiptNumber}
+																					onChange={(value) => {
+																						props.handleChange('receiptNumber')(value);
+
+																					}}
+																					className={props.errors.receiptNumber && props.touched.receiptNumber ? "is-invalid" : ""}
 																				/>
+																				{props.errors.receiptNumber && props.touched.receiptNumber && (
+																					<div className="invalid-feedback">{props.errors.receiptNumber}</div>
+																				)}
 																			</FormGroup>
 																		</Col>
 																		<Col lg={6}>
@@ -2561,7 +2558,7 @@ debugger
 																</Col>
 
 																<Col lg={4}>
-																	<div className="">																		
+																	<div className="">
 																		<div className="total-item p-2" style={{display:this.state.excisetype.value === 'Exclusive' ? '':'none'}}>
 																			<Row>
 																				<Col lg={6}>
@@ -2571,7 +2568,7 @@ debugger
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																					
+
 																						{this.state.supplier_currency_symbol} &nbsp;
 																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																					</label>
@@ -2582,7 +2579,7 @@ debugger
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																					{strings.Discount} 
+																					{strings.Discount}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
@@ -2610,7 +2607,7 @@ debugger
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																					{strings.TotalNet} 
+																					{strings.TotalNet}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">

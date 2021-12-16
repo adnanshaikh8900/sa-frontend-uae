@@ -291,6 +291,7 @@ class CreateCustomerInvoice extends React.Component {
 						<Input
 							type="text"
 							min="0"
+							maxLength='10'
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -397,7 +398,7 @@ renderVatAmount = (cell, row,extraData) => {
 		const { term } = this.state;
 		const val = term ? term.value.split('_') : '';
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
-		 
+
 		const values = value
 			? value
 			: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
@@ -645,15 +646,15 @@ renderVatAmount = (cell, row,extraData) => {
 								   props,
 							   );
 						   }
-					   
+
 							   this.updateAmount(
 								   this.state.data,
 								   props,
 							   );
-					   
+
 					   }}
 					   placeholder={strings.discount}
-					   className={`form-control 
+					   className={`form-control
 		   ${
 						   props.errors.lineItemsString &&
 						   props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -812,7 +813,7 @@ renderVatAmount = (cell, row,extraData) => {
 					<Select
 						styles={customStyles}
 						isDisabled={row.exciseTaxId === 0 || this.state.excisetype.value === 'Inclusive'}
-						
+
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -824,7 +825,7 @@ renderVatAmount = (cell, row,extraData) => {
 								: []
 						}
 						value={
-				
+
 							excise_list &&
 							selectOptionsFactory
 								.renderOptions('name', 'id', excise_list, 'Excise')
@@ -842,7 +843,7 @@ renderVatAmount = (cell, row,extraData) => {
 								field,
 								props,
 							);
-							
+
 							this.updateAmount(
 								this.state.data,
 								props,
@@ -1022,7 +1023,7 @@ renderVatAmount = (cell, row,extraData) => {
 		// }
 	};
 
-	
+
 	deleteRow = (e, row, props) => {
 		const id = row['id'];
 		let newData = [];
@@ -1114,7 +1115,7 @@ debugger
 			if (obj.discountType === 'PERCENTAGE') {
 				var val =
 				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) *  
+				 (+((net_value * obj.discount)) / 100)) *
 					vat *
 					obj.quantity) /
 				100;
@@ -1128,8 +1129,8 @@ debugger
 					(vat / 100);
 
 					var val1 =
-					((net_value * obj.quantity )- obj.discount ) 
-			  
+					((net_value * obj.quantity )- obj.discount )
+
 			} else {
 				var val = (+net_value * vat * obj.quantity) / 100;
 				var val1 = net_value
@@ -1163,7 +1164,7 @@ debugger
 						totalAmount: total_net > discount ? total - discount : total - discount,
 						total_excise: total_excise
 					},
-					
+
 				},
 			},
 			() => {
@@ -1245,12 +1246,12 @@ debugger
 		formData.append('totalAmount', this.state.initValue.totalAmount);
 		formData.append('totalExciseAmount', this.state.initValue.total_excise);
 		formData.append('exciseType', this.state.excisetype.value);
-	
-		
+
+
 		if (term && term.value) {
 			formData.append('term', term.value);
 		}
-	
+
 		if (contactId && contactId.value) {
 			formData.append('contactId', contactId.value);
 		}
@@ -1376,7 +1377,7 @@ debugger
 	// };
 	
 	getCurrentUser = (data) => {
-		 
+
 		let option;
 		if (data.label || data.value) {
 			option = data;
@@ -1677,7 +1678,7 @@ debugger
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="invoice_number">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.InvoiceNumber}
 																	</Label>
 																	<Input
@@ -1711,7 +1712,7 @@ debugger
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="contactId">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																	{strings.CustomerName}
 																	</Label>
 																	<Select
@@ -1775,7 +1776,7 @@ debugger
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select
@@ -1821,7 +1822,7 @@ debugger
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="term">
-																		<span className="text-danger">*</span>{strings.Terms}{' '}
+																		<span className="text-danger">* </span>{strings.Terms}{' '}
 																		<i
 																			id="UncontrolledTooltipExample"
 																			className="fa fa-question-circle ml-1"
@@ -1907,7 +1908,7 @@ debugger
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.InvoiceDate}
 																	</Label>
 																	<DatePicker
@@ -1973,7 +1974,7 @@ debugger
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		{strings.Currency}
 																	</Label>
 																	<Select
@@ -2274,7 +2275,7 @@ debugger
 																		}
 																	>
 																	Excise
-																	</TableHeaderColumn> 
+																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		width="12%"
 																		dataField="discount"
@@ -2341,7 +2342,7 @@ debugger
 																				</Label>
 																				<Input
 																					type="text"
-																					maxLength="100"
+																					maxLength="50"
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					value={props.values.receiptNumber}
@@ -2442,10 +2443,10 @@ debugger
 																		/>
 																	</FormGroup>
 																</Col>
-																
-																	
+
+
 																<Col lg={4}>
-																	<div className="">																		
+																	<div className="">
 																		<div className="total-item p-2" style={{display:this.state.excisetype.value === 'Exclusive' ? '':'none'}}>
 																			<Row>
 																				<Col lg={6}>
@@ -2455,7 +2456,7 @@ debugger
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																					
+
 																						{this.state.customer_currency_symbol} &nbsp;
 																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																					</label>
@@ -2466,7 +2467,7 @@ debugger
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																					{strings.Discount} 
+																					{strings.Discount}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
@@ -2494,7 +2495,7 @@ debugger
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																					{strings.TotalNet} 
+																					{strings.TotalNet}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">
@@ -2529,7 +2530,7 @@ debugger
 																					<label className="mb-0">
 																						{this.state.supplier_currency_symbol} &nbsp;
 																						{this.state.initValue.discount  ? '-'+initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })
-																									 
+
 																							}
 																					</label>
 																				</Col>
@@ -2539,7 +2540,7 @@ debugger
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
-																					{strings.TotalVat} 
+																					{strings.TotalVat}
 																					</h5>
 																				</Col>
 																				<Col lg={6} className="text-right">

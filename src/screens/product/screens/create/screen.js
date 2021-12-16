@@ -115,7 +115,7 @@ class CreateProduct extends React.Component {
 		};
 		this.formRef = React.createRef();       
 		this.regEx = /^[0-9\d]+$/;
-		this.regExBoth = /[ +a-zA-Z0-9-./\\|]+$/;
+		this.regExBoth = /[ +a-zA-Z0-9-./\\|!@#$%^&*()_<>,]+$/;
 		this.regExAlpha = /^[0-9!@#$&()-\\`.+,/\"]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 		this.regDecimal5 =/^\d{1,5}$/;

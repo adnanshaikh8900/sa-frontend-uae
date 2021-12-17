@@ -198,6 +198,7 @@ class CreateEmployee extends React.Component {
                                   <Label htmlFor="select"><span className="text-danger">* </span>Email</Label>
                                   <Input
                                     type="text"
+                                    maxLength='80'
                                     id="email"
                                     name="email"
                                     value={props.values.email}

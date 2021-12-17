@@ -201,9 +201,34 @@ class UpdateEmployeeEmployment extends React.Component {
                  )
         })
     }
+
+   employeeValidationCheck = (value) => {
+    const data = {
+        moduleType: 15,
+        name: value,
+    };
+    this.props.createPayrollEmployeeActions
+        .checkValidation(data)
+        .then((response) => {
+            if (response.data === 'employeeCode already exists') {
+                this.setState(
+                    {
+                        exist: true,
+                    },
+                    
+                    () => {},
+                );
+            
+            } else {
+                this.setState({
+                    exist: false,
+                });
+            }
+        });
+};
     render() {
         strings.setLanguage(this.state.language);
-        const { loading, initValue, dialog } = this.state
+        const { loading, initValue, dialog,exist } = this.state
         const { salary_role_dropdown } = this.props
 
         return (
@@ -230,6 +255,14 @@ class UpdateEmployeeEmployment extends React.Component {
                                                     ref={this.formRef}
                                                     onSubmit={(values) => {
                                                         this.handleSubmit(values)
+                                                    }}
+                                                    validate={(values) => {
+                                                        let errors = {};
+                                                        if (exist === true) {
+                                                            errors.employeeCode =
+                                                                'employee Code Number already exists';
+                                                        }
+                                                        return errors;
                                                     }}
                                                     validationSchema={Yup.object().shape({
                                                         employeeCode: Yup.string()
@@ -261,7 +294,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                                         placeholder={strings.Enter+strings.EmployeeCode}
                                                                                                         onChange={(value) => {
                                                                                                             props.handleChange('employeeCode')(value);
-
+                                                                                                            this.employeeValidationCheck(value.target.value);
                                                                                                         }}
                                                                                                         className={props.errors.employeeCode && props.touched.employeeCode ? "is-invalid" : ""}
                                                                                                     />

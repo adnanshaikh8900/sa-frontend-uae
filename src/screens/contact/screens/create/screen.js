@@ -136,7 +136,12 @@ class CreateContact extends React.Component {
 			.then((res) => {
 
 				if (res.status === 200) {
-					this.setState({ taxTreatmentList: res.data });
+					let array=[]
+					res.data.map((row)=>{
+						if(row.id!==8)
+							array.push(row);
+					})
+					this.setState({ taxTreatmentList: array });
 				}
 			})
 			.catch((err) => {

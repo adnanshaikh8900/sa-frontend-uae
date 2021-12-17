@@ -252,6 +252,7 @@ class DetailEmployee extends React.Component {
                                       <Label htmlFor="select"><span className="text-danger">*</span>Email</Label>
                                       <Input
                                         type="email"
+                                        maxLength='80'
                                         id="email"
                                         name="email"
                                         placeholder="Enter Email Address"
@@ -387,6 +388,7 @@ class DetailEmployee extends React.Component {
                                       <Label htmlFor="billingEmail">Billing Email</Label>
                                       <Input
                                         type="text"
+                                        maxLength='80'
                                         id="billingEmail"
                                         name="billingEmail"
                                         value={props.values.billingEmail}
@@ -408,6 +410,7 @@ class DetailEmployee extends React.Component {
                                       <Label htmlFor="poBoxNumber">Contract PO Number</Label>
                                       <Input
                                         type="text"
+                                        maxLength='8'
                                         id="poBoxNumber"
                                         name="poBoxNumber"
                                         placeholder="Enter Contract PO Number"

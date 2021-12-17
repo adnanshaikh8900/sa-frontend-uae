@@ -75,6 +75,7 @@ class UpdateEmployeePersonal extends React.Component {
         }
 
         this.regExAlpha = /^[a-zA-Z ]+$/;
+        this.regEx = /^[0-9\d]+$/;
         this.regExBoth = /[a-zA-Z0-9]+$/;
         this.regExSpaceBoth = /[a-zA-Z0-9 ]+$/;
 
@@ -1025,7 +1026,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                                         placeholder={strings.Enter+strings.PinCode}
 
                                                                                                         onChange={(option) => {
-                                                                                                            if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('pincode')(option) }
+                                                                                                            if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('pincode')(option) }
                                                                                                         }}
                                                                                                         className={props.errors.pincode && props.touched.pincode ? "is-invalid" : ""}
                                                                                                     />

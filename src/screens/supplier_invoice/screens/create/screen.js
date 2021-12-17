@@ -1842,7 +1842,9 @@ debugger
 																	type="button"
 																	color="primary"
 																	className="btn-square"
-																	onClick={this.openSupplierModal}
+																	onClick={(e, props) => {
+																		this.props.history.push(`/admin/master/contact/create`,{gotoParentURL:"/admin/expense/supplier-invoice/create"})
+																	}}
 																>
 																	<i className="fa fa-plus"></i> {strings.AddASupplier}
 																</Button>

@@ -34,6 +34,7 @@ import * as Yup from 'yup';
 import * as ProfileActions from './actions';
 import { CommonActions, AuthActions } from 'services/global';
 import './style.scss';
+import { upperFirst } from 'lodash-es';
 
 import 'react-datepicker/dist/react-datepicker.css';
 // import 'react-images-uploader/styles.css'
@@ -116,6 +117,8 @@ class Profile extends React.Component {
 				companyExpenseBudget: '',
 				companyRevenueBudget: '',
 				dateFormat: '',
+				telephoneNumber:'',
+				fax:'',
 			},
 			// companyId: '',
 			imageState: true,
@@ -136,8 +139,10 @@ class Profile extends React.Component {
 		};
 
 		this.regEx = /^[0-9\d]+$/;
-		this.regExBoth = /[a-zA-Z0-9]+$/;
-		this.regExAlpha = /^[a-zA-Z ]+$/;
+		this.regExBoth = /[a-zA-Z0-9-\d]+$/;
+		this.regExAlpha = /^[a-zA-Z0-9_\-@#$&*().''<>/ ]+$/;
+		this.regExTelephone = /^[0-9-\d]+$/;
+		this.regExAlpha1 = /^[a-zA-Z ]+$/;
 	}
 
 	toggle = (tabPane, tab) => {
@@ -783,8 +788,7 @@ class Profile extends React.Component {
 																							<Label htmlFor="select">
 																								<span className="text-danger">
 																									*
-																							</span>
-																							{strings.FirstName}
+																							</span> {strings.FirstName}
 																						</Label>
 																							<Input
 																								type="text"
@@ -823,8 +827,7 @@ class Profile extends React.Component {
 																							<Label htmlFor="select">
 																								<span className="text-danger">
 																									*
-																							</span>
-																							 {strings.LastName}
+																							</span> {strings.LastName}
 																						</Label>
 																							<Input
 																								type="text"
@@ -865,8 +868,7 @@ class Profile extends React.Component {
 																							<Label htmlFor="email">
 																								<span className="text-danger">
 																									*
-																							</span>
-																							{strings.EmailID}
+																							</span> {strings.EmailID}
 																						</Label>
 																							<Input
 																								type="text"
@@ -899,8 +901,7 @@ class Profile extends React.Component {
 																							<Label htmlFor="date">
 																								<span className="text-danger">
 																									*
-																							</span>
-																							{strings.DateOfBirth}
+																							</span> {strings.DateOfBirth}
 																						</Label>
 																							<DatePicker
 																								className={`form-control ${props.errors.dob &&
@@ -946,7 +947,7 @@ class Profile extends React.Component {
 																							<Label htmlFor="roleId">
 																							<span className="text-danger">
 																									*
-																							</span>{strings.Role}</Label>
+																							</span> {strings.Role}</Label>
 																							<Select
 																								styles={customStyles}
 																								options={
@@ -1008,8 +1009,7 @@ class Profile extends React.Component {
 																							<Label htmlFor="roleId">
 																								<span className="text-danger">
 																									*
-																							</span>
-																							{strings.TimeZonePreference}
+																							</span> {strings.TimeZonePreference}
 																						</Label>
 																							<Select
 																								isDisabled
@@ -1128,8 +1128,7 @@ class Profile extends React.Component {
 																							<Label htmlFor="select">
 																							<span className="text-danger">
 																									*
-																							</span>
-																								 {strings.Password}
+																							</span> {strings.Password}
 																						</Label>
 																							<Input
 																								type="password"
@@ -1169,8 +1168,7 @@ class Profile extends React.Component {
 																							<Label htmlFor="select">
 																							<span className="text-danger">
 																									*
-																							</span>
-																								{strings.ConfirmPassword}
+																							</span> {strings.ConfirmPassword}
 																						</Label>
 																							<Input
 																								type="password"
@@ -1485,10 +1483,10 @@ class Profile extends React.Component {
 																					<Col lg={4}>
 																						<FormGroup className="mb-3">
 																							<Label htmlFor="product_code">
-																							<span className="text-danger">*</span>
-																								 {strings.CompanyName}
+																							<span className="text-danger">*</span> {strings.CompanyName}
 																						</Label>
 																							<Input
+																								maxLength={150}
 																								type="text"
 																								id="companyName"
 																								name="companyName"
@@ -1525,10 +1523,10 @@ class Profile extends React.Component {
 																					<Col lg={4}>
 																						<FormGroup className="mb-3">
 																							<Label htmlFor="product_code">
-																							<span className="text-danger">*</span>
-																								 {strings.CompanyRegistrationNo}
+																							<span className="text-danger">*</span> {strings.CompanyRegistrationNo}
 																						</Label>
 																							<Input
+																								maxLength={20}
 																								type="text"
 																								id="companyRegistrationNumber"
 																								name="companyRegistrationNumber"
@@ -1545,11 +1543,8 @@ class Profile extends React.Component {
 																										props.handleChange('companyRegistrationNumber')(
 																											option,
 																										);
-																									} else {
-																										props.handleChange('companyRegistrationNumber')(
-																											option,
-																										);
-																								}}
+																									} 
+																								}
 																							}
 																							value={props.values.companyRegistrationNumber}
 																								className={
@@ -1570,8 +1565,7 @@ class Profile extends React.Component {
 																					<Col lg={4}>
 																						<FormGroup>
 																							<Label htmlFor="companyId">
-																							<span className="text-danger">*</span>
-																								 Company /Business Type
+																							<span className="text-danger">*</span> {strings.CompanyBusinessType}
 																						</Label>
 																							<Select
 																							// isDisabled
@@ -1581,7 +1575,7 @@ class Profile extends React.Component {
 																											'label',
 																											'value',
 																											companyTypeList,
-																											'Company Type Code',
+																											'Company Type',
 																										)
 																										: []
 																								}
@@ -1626,10 +1620,10 @@ class Profile extends React.Component {
 																					<Col lg={4}>
 																						<FormGroup className="mb-3">
 																							<Label htmlFor="product_code">
-																							<span className="text-danger">*</span>
-																								 {strings.EmailAddress}
+																							<span className="text-danger">*</span> {strings.EmailAddress}
 																						</Label>
 																							<Input
+																								maxLength={80}
 																								type="text"
 																								id="emailAddress"
 																								name="emailAddress"
@@ -1658,8 +1652,7 @@ class Profile extends React.Component {
 																					<Col lg={4}>
 																						<FormGroup>
 																							<Label htmlFor="currencyCode">
-																							<span className="text-danger">*</span>
-																							   {strings.CurrencyCode}
+																							<span className="text-danger">*</span> {strings.CurrencyCode}
 																						</Label>
 																							<Select
 																								isDisabled
@@ -1724,6 +1717,7 @@ class Profile extends React.Component {
 																								{strings.Website}
 																						</Label>
 																							<Input
+																								maxLength={50}
 																								type="text"
 																								id="website"
 																								name="website"
@@ -1743,9 +1737,10 @@ class Profile extends React.Component {
 																					<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="telephoneNumber">
-																						Telephone
+																					{strings.Telephone}
 																				</Label>
 																					<Input
+																						maxLength={15}
 																						type="text"
 																						id="telephoneNumber"
 																						name="telephoneNumber"
@@ -1755,7 +1750,7 @@ class Profile extends React.Component {
 																						onChange={(option) => {
 																							if (
 																								option.target.value === '' ||
-																								this.regEx.test(
+																								this.regExTelephone.test(
 																									option.target.value,
 																								)
 																							) {
@@ -1783,8 +1778,7 @@ class Profile extends React.Component {
 																				<Col lg={4}>
 																						<FormGroup className="mb-3">
 																							<Label htmlFor="phoneNumber">
-																							<span className="text-danger">*</span>
-																							 {strings.MobileNumber}
+																							<span className="text-danger">*</span> {strings.MobileNumber}
 																						</Label>
 																							<PhoneInput
 																								country={"ae"}
@@ -1891,10 +1885,10 @@ class Profile extends React.Component {
 																		<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="product_code">
-																					<span className="text-danger">*</span>
-																						 {strings.CompanyAddressLine1}
+																					<span className="text-danger">*</span> {strings.CompanyAddressLine1}
 																				</Label>
 																					<Input
+																						maxLength={255}
 																						type="text"
 																						id="companyAddressLine1"
 																						name="companyAddressLine1"
@@ -1935,6 +1929,7 @@ class Profile extends React.Component {
 																						 {strings.CompanyAddressLine2}
 																				</Label>
 																					<Input
+																						maxLength={255}
 																						type="text"
 																						id="companyAddressLine2"
 																						name="companyAddressLine2"
@@ -1970,10 +1965,10 @@ class Profile extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="companyPostZipCode">
-																					<span className="text-danger">*</span>
-																						 {strings.PostZipCode}
+																					<span className="text-danger">*</span> {strings.PostZipCode}
 																				</Label>
 																					<Input
+																						maxLength={8}
 																						type="text"
 																						id="companyPostZipCode"
 																						name="companyPostZipCode"
@@ -2016,8 +2011,7 @@ class Profile extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup>
 																					<Label htmlFor="companyCountryCode">
-																					<span className="text-danger">*</span>
-																						{strings.CountryCode}
+																					<span className="text-danger">*</span> {strings.CountryCode}
 																						{/* <Col> */}
 																				
 																			{/* </Col> */}
@@ -2107,8 +2101,7 @@ class Profile extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="product_code">
-																					<span className="text-danger">*</span>
-																						{props.values.companyCountryCode === 229 ? strings.Emirates : strings.StateRegion}
+																					<span className="text-danger">*</span> {props.values.companyCountryCode === 229 ? strings.Emirates : strings.StateRegion}
 																				</Label>
 																					<Select
 																						options={selectOptionsFactory.renderOptions(
@@ -2145,7 +2138,7 @@ class Profile extends React.Component {
 																								)('');
 																							}
 																						}}
-																						placeholder={strings.Select+strings.StateRegion}
+																						placeholder={strings.Select+strings.Emirates}
 																						id="companyStateCode"
 																						name="companyStateCode"
 																						className={
@@ -2166,10 +2159,10 @@ class Profile extends React.Component {
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="companyCity">
-																					<span className="text-danger">*</span>
-																						 {strings.City}
+																					<span className="text-danger">*</span> {strings.City}
 																				</Label>
 																					<Input
+																						maxLength={20}
 																						type="text"
 																						id="companyCity"
 																						name="companyCity"
@@ -2181,9 +2174,15 @@ class Profile extends React.Component {
 																								: props.values.companyCity
 																						}
 																						onChange={(option) => {
-																							props.handleChange('companyCity')(
-																								option,
-																							);
+																							if (
+																								option.target.value === '' ||
+																								this.regExAlpha1.test(
+																									option.target.value,
+																								)
+																							) {
+																								option = upperFirst(option.target.value)
+																								props.handleChange('companyCity')(option);
+																							}
 																						}}
 																						value={props.values.companyCity}
 																						className={
@@ -2213,6 +2212,7 @@ class Profile extends React.Component {
 																						 {strings.POBoxNumber}
 																				</Label>
 																					<Input
+																						maxLength={6}
 																						type="text"
 																						id="companyPoBoxNumber"
 																						name="companyPoBoxNumber"
@@ -2226,7 +2226,7 @@ class Profile extends React.Component {
 																						onChange={(option) => {
 																							if (
 																								option.target.value === '' ||
-																								this.regExBoth.test(
+																								this.regEx.test(
 																									option.target.value,
 																								)
 																							) {
@@ -2259,16 +2259,23 @@ class Profile extends React.Component {
 																					{strings.Fax}
 																				</Label>
 																					<Input
+																						maxLength={8}
 																						type="text"
 																						id="fax"
 																						name="fax"
 																						placeholder={strings.Enter+"Fax"}
 																						rows="5"
-																						
+
 																						onChange={(option) => {
-																							props.handleChange(
-																								'fax',
-																							)(option);
+																							if (
+																								option.target.value === '' ||
+																								this.regEx.test(
+																									option.target.value,
+																								)
+																							) {
+																								option = upperFirst(option.target.value)
+																								props.handleChange('fax')(option);
+																							}
 																						}}
 																						value={props.values.fax}
 																				
@@ -2292,11 +2299,11 @@ class Profile extends React.Component {
 																							checked={props.values.isDesignatedZone}
 																							onChange={(value) => {
 																								if(value != null){
-																								props.handleChange('IsDesignatedZone')(
+																								props.handleChange('isDesignatedZone')(
 																									value,
 																								);
 																								}else{
-																									props.handleChange('IsDesignatedZone')(
+																									props.handleChange('isDesignatedZone')(
 																										'',
 																									);
 																								}
@@ -2341,8 +2348,7 @@ class Profile extends React.Component {
 																			<Col lg={4}>
 																						<FormGroup className="mb-3">
 																							<Label htmlFor="product_code">
-																							<span className="text-danger">*</span>
-																							 {strings.TaxRegistrationNumber}
+																							<span className="text-danger">*</span> {strings.TaxRegistrationNumber}
 																						</Label>
 																							<Input
 																								type="text"
@@ -2392,8 +2398,7 @@ class Profile extends React.Component {
 																					<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="expense_date">
-																			<span className="text-danger">*</span>
-																			{strings.VatRegisteredOn}
+																			<span className="text-danger">*</span> {strings.VatRegisteredOn}
 																		</Label>
 																		<DatePicker
 																			id="date"

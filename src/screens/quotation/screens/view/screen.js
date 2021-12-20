@@ -116,6 +116,18 @@ class ViewQuotation extends React.Component {
 								// 			}
 								// 		});
 								// }
+								if(this.state.QuotationData.customerId)
+								{	
+							   this.props.supplierInvoiceDetailActions
+							   .getContactById(this.state.QuotationData.customerId)
+							   .then((res) => {
+								   if (res.status === 200) {									
+									   this.setState({
+										   contactData: res.data,
+									   });
+								   }
+							   });
+							   }
 							},
 						);
 					}
@@ -129,7 +141,7 @@ class ViewQuotation extends React.Component {
 	};
 
 	render() {
-		const { QuotationData, currencyData, id } = this.state;
+		const { QuotationData, currencyData, id, contactData } = this.state;
 
 		const { profile } = this.props;
 		return (
@@ -191,6 +203,7 @@ class ViewQuotation extends React.Component {
 										ref={(el) => (this.componentRef = el)}
 										totalNet={this.state.totalNet}
 										companyData={this.state && this.state.companyData ?this.state.companyData:''}
+										contactData={this.state.contactData}
 									/>
 								</PDFExport>
 							</div>

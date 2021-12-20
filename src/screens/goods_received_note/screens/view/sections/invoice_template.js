@@ -44,7 +44,8 @@ class RFQTemplate extends Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { RFQData, currencyData, totalNet, companyData,status } = this.props;
+		const { RFQData, currencyData, totalNet, companyData,status,contactData } = this.props;
+		console.log(contactData,"contactData")
 		return (
 			<div>
 				<Card id="singlePage" className="box">
@@ -77,15 +78,20 @@ class RFQTemplate extends Component {
 										}
 										className=""
 										alt=""
-										style={{ width: ' 100px' }}
+										style={{ width: ' 240px' }}
 									/>
-									<div className="mb-1 ml-2"><b>{strings.CompanyName} :</b> {companyData.companyName}</div>
-									<div className="mb-1 ml-2"><b>{strings.CompanyRegistrationNo} :</b> {companyData.companyRegistrationNumber}</div>
-									<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo} :</b> {companyData.vatRegistrationNumber}</div>
-									<div className="mb-1 ml-2"><b>{strings.MobileNumber} :</b> {companyData.phoneNumber}</div>
+									</div>
+									<div style={{ marginTop: '3.5rem' }}>
+									<div className="mb-1 ml-2"><b>{strings.CompanyName} : </b> {companyData.companyName}</div>
+									<div className="mb-1 ml-2"><b>{strings.CompanyAddress} : </b>{companyData.companyAddressLine1+","+companyData.companyAddressLine2}</div>
+									<div className="mb-1 ml-2"><b>{strings.PinCode} : </b> {companyData.companyPostZipCode}</div>
+									<div className="mb-1 ml-2"><b>{strings.StateRegion} : </b>{companyData.companyStateName}</div>
+									<div className="mb-1 ml-2"><b>{strings.Country} : </b>{companyData.companyCountryName}</div>
+									<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo} : </b> {companyData.vatRegistrationNumber}</div>
+									<div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b> {companyData.phoneNumber}</div>
 								</div>
 							</div>
-							<div style={{ width: '130%',justifyContent:'center' }}>
+							<div style={{ width: '200%',justifyContent:'center',marginTop:'5rem' }}>
 
 									<div
 										style={{
@@ -115,20 +121,23 @@ class RFQTemplate extends Component {
 									width: '62%',
 									margin:'1.5rem 9.0rem 0.5rem 4rem',
 									// // border:'1px solid',
-									// marginTop:'2.5rem',
-									// marginLeft:'6rem'
+									marginTop:'6.6rem',
+								    marginLeft:'6.5rem'
 								}}>
 								<h4 className="mb-1 ml-2"><b>{companyData && companyData.company
 											? companyData.company.companyName
 											: ''}</b></h4>
-								<h6 className="mb-1 ml-2">{RFQData.grnNumber} </h6>
-								<h6 className="mb-1 ml-2"><b>Name: </b>{RFQData.organisationName ? RFQData.organisationName : RFQData.supplierName}</h6>
-								<h6 className="mb-1 ml-2"><b>TRN: </b>{RFQData.vatRegistrationNumber}</h6>
-								<h6 className="mb-1 ml-2"><b>{strings.ReceiveDate }: </b>{moment(RFQData.grnReceiveDate).format(
-									'DD MMM YYYY',
-								)}</h6>
-
-													<span className="mb-1 ml-2"><b>{strings.Status}:  </b>{this.renderRFQStatus(status)}</span>
+								<h4 className="mb-1 ml-2">{RFQData.grnNumber} </h4><br/>
+								<h6 className="mb-1 ml-2"><b>Received From,</b></h6>
+								<h6 className="mb-1 ml-2"><b>Name : </b>{RFQData.organisationName ? RFQData.organisationName : RFQData.supplierName}</h6>
+								{contactData && contactData.addressLine1 &&(<div className="mb-1 ml-2"><b>{strings.BillingAddress} : </b> {contactData.addressLine1}</div>)}
+								{contactData && contactData.postZipCode &&(	<div className="mb-1 ml-2"><b>{strings.PinCode} : </b> {contactData.postZipCode}</div>)}
+								{contactData&&contactData.billingStateName&&(<div className="mb-1 ml-2"><b>{strings.StateRegion} : </b> {contactData.billingStateName}</div>)}
+								{contactData && contactData.billingCountryName &&(<div className="mb-1 ml-2"><b>{strings.Country} : </b> {contactData.billingCountryName}</div>)}
+								<h6 className="mb-1 ml-2"><b>TRN : </b>{RFQData.vatRegistrationNumber}</h6>
+								{contactData&&contactData.mobileNumber&&(<div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b> {contactData.mobileNumber}</div>)}
+								
+													<span className="mb-1 ml-2"><b>{strings.Status} :  </b>{this.renderRFQStatus(status)}</span>
 
 													{/* <div
 														className={`ribbon ${this.getRibbonColor(
@@ -140,6 +149,41 @@ class RFQTemplate extends Component {
 								</div>
 								</div>
 							</div>
+
+							<div
+							style={{
+								width: '100%',
+								display: 'flex',
+								justifyContent: 'space-between',
+								marginBottom: '1rem',
+								borderLeft:'1px solid',
+									borderRight:'1px solid',
+									borderBottom:'1px solid',borderColor:'#c8ced3'
+							}}
+						>
+							<div
+								style={{
+									width: '100%',
+									display: 'flex',
+									justifyContent: 'space-between',
+									height: '50px'
+								}}
+							>
+
+							<div
+								style={{
+									width: '50%',
+									display: 'flex',
+									justifyContent: 'space-between',
+									
+								}}>
+								<h6 style={{textAlign: 'center',marginLeft:'15px'}} className={'mt-3 mb-2'}><b>{strings.ReceiveDate } : </b>{moment(RFQData.grnReceiveDate).format(
+									'DD MMM YYYY',
+								)}</h6>
+
+								</div>
+								</div>
+								</div>
 
 
 

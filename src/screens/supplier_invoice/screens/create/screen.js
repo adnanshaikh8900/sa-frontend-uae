@@ -113,7 +113,7 @@ class CreateSupplierInvoice extends React.Component {
 					unitPrice: '',
 					vatCategoryId: '',
 					exciseTaxId:'',
-					discountType : { value: 'FIXED', label: 'Fixed' },
+					discountType : 'FIXED',
 					exciseAmount:'',
 					discount: 0,
 					subTotal: 0,

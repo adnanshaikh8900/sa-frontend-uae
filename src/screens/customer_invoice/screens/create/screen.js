@@ -109,7 +109,7 @@ class CreateCustomerInvoice extends React.Component {
 					unitPrice: '',
 					vatCategoryId: '',
 					exciseTaxId:'',
-					discountType : { value: 'FIXED', label: 'Fixed' },
+					discountType :'FIXED',
 					exciseAmount:'',
 					discount: 0,
 					subTotal: 0,
@@ -683,30 +683,7 @@ renderVatAmount = (cell, row,extraData) => {
 																								   .renderOptions('label', 'value', discountOptions, 'discount')
 																								   .find((option) => option.value === +row.discountType)
 																						   }
-																						   // onChange={(item) => {
-																						   // 	props.handleChange(
-																						   // 		'discountType',
-																						   // 	)(item);
-																						   // 	props.handleChange(
-																						   // 		'discountPercentage',
-																						   // 	)('');
-																						   // 	props.setFieldValue(
-																						   // 		'discount',
-																						   // 		0,
-																						   // 	);
-																						   // 	this.setState(
-																						   // 		{
-																						   // 			discountPercentage: '',
-																						   // 			discountAmount: 0,
-																						   // 		},
-																						   // 		() => {
-																						   // 			this.updateAmount(
-																						   // 				this.state.data,
-																						   // 				props,
-																						   // 			);
-																						   // 		},
-																						   // 	);
-																						   // }}
+
 																						   onChange={(e) => {
 																							   this.selectItem(
 																								   e.value,

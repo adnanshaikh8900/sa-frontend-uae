@@ -97,20 +97,24 @@ class CreateExpense extends React.Component {
 			// disabled: false,
 			language: window['localStorage'].getItem('language'),
 			taxTreatmentList:[],
+			placelist : [
+				{ label: 'Abu Dhabi', value: '1' },
+				{ label: 'Dubai', value: '2' },
+				{ label: 'Sharjah', value: '3' },
+				{ label: 'Ajman', value: '4' },
+				{ label: 'Umm Al Quwain', value: '5' },
+				{ label: 'Ras Al-Khaimah', value: '6' },
+				{ label: 'Fujairah', value: '7' },
+			],
+			showPlacelist:false,
+			lockPlacelist:false,
+			userStateName:''
 		};
 		this.formRef = React.createRef();
 		this.options = {
 			paginationPosition: 'top',
 		};
-		this.placelist = [
-			{ label: 'Abu Dhabi', value: '1' },
-			{ label: 'Dubai', value: '2' },
-			{ label: 'Sharjah', value: '3' },
-			{ label: 'Ajman', value: '4' },
-			{ label: 'Umm Al Quwain', value: '5' },
-			{ label: 'Ras al-Khaimah', value: '6' },
-			{ label: 'Fujairah', value: '7' },
-		];
+
 		this.regEx = /^[0-9\b]+$/;
 		this.regExAlpha = /^[a-zA-Z0-9!@#$&()-\\`.+,/\"]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
@@ -175,9 +179,19 @@ class CreateExpense extends React.Component {
 		this.props.expenseActions.getUserForDropdown();
 		this.getCompanyCurrency();
 		this.getTaxTreatmentList();
-
+		this.getcurentCompanyUser()
 	};
-
+	getcurentCompanyUser=()=>{
+	this.props.expenseCreateActions.checkAuthStatus().then((response) => {
+		let userStateName    = response.data.company.companyStateCode.stateName ?response.data.company.companyStateCode.stateName:'';
+		let isDesignatedZone =response.data.company.isDesignatedZone?response.data.company.isDesignatedZone:false;
+			
+			this.setState({
+				userStateName:userStateName,
+				isDesignatedZone:isDesignatedZone})
+	
+	});
+}
 	getTaxTreatmentList=()=>{
 		this.props.expenseActions
 			.getTaxTreatment()
@@ -241,8 +255,8 @@ class CreateExpense extends React.Component {
 		if (employee && employee.value) {
 			formData.append('employeeId', employee.value);
 		}
-		if (placeOfSupplyId && placeOfSupplyId.value) {
-			formData.append('placeOfSupplyId', placeOfSupplyId.value);
+		if (placeOfSupplyId  ) {
+			formData.append('placeOfSupplyId', placeOfSupplyId.value ?placeOfSupplyId.value :placeOfSupplyId);
 		}
 		
 		if (taxTreatmentId && taxTreatmentId.value) {
@@ -363,23 +377,6 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 	console.log(this.state.employeeCode)
 	}
 	
-	// validationCheck = (value) => {
-	// 	const data = {
-	// 		moduleType: 18,
-	// 		name: value,
-	// 	};
-	// 	this.props.expenseCreateActions.checkValidation(data).then((response) => {
-	// 		if (response.data === 'Expense Number already exists') {
-	// 			this.setState({
-	// 				exist: true,
-	// 			});
-	// 		} else {
-	// 			this.setState({
-	// 				exist: false,
-	// 			});
-	// 		}
-	// 	});
-	// };
 	
 	expenseValidationCheck = (value) => {
 		const data = {
@@ -400,13 +397,273 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 				}
 			});
 	};
+	placelistSetting=(option,props)=>{
+
+		this.setState({showPlacelist:true,lockPlacelist:false})
+		if(option.value === 6)
+		this.setState({placelist:
+			[
+				{ label: 'Abu Dhabi', value: '1' },
+				{ label: 'Dubai', value: '2' },
+				{ label: 'Sharjah', value: '3' },
+				{ label: 'Ajman', value: '4' },
+				{ label: 'Umm Al Quwain', value: '5' },
+				{ label: 'Ras Al-Khaimah', value: '6' },
+				{ label: 'Fujairah', value: '7' },
+				{ label: 'BAHRAIN', value: '8' },
+				{ label: 'SAUDI ARABIA', value: '9' },
+				{ label: 'OMAN', value: '10' },
+				{ label: 'KUWAIT', value: '11' },
+				{ label: 'QATAR', value: '12' },
+			]
+		})
+		else
+		if(option.value === 5)
+		this.setState({placelist:
+			[
+				{ label: 'Abu Dhabi', value: '1' },
+				{ label: 'Dubai', value: '2' },
+				{ label: 'Sharjah', value: '3' },
+				{ label: 'Ajman', value: '4' },
+				{ label: 'Umm Al Quwain', value: '5' },
+				{ label: 'Ras Al-Khaimah', value: '6' },
+				{ label: 'Fujairah', value: '7' },
+				{ label: 'BAHRAIN', value: '8' },
+				{ label: 'SAUDI ARABIA', value: '9' },
+				{ label: 'OMAN', value: '10' },
+				// { label: 'KUWAIT', value: '11' },
+				// { label: 'QATAR', value: '12' },
+			]
+		})
+		else 
+		if(option.value===8)
+		{
+			props.handleChange('placeOfSupplyId')('')
+			this.setState({showPlacelist:false})
+		}else
+		if(option.value===7){
+			let placeOfSupplyId=this.state.placelist.find(
+														(option) =>
+															option.label === this.state.userStateName,
+													    )				
+			props.handleChange('placeOfSupplyId')(placeOfSupplyId.value)
+			this.setState({lockPlacelist:true})
+		}
+		else
+		this.setState({placelist:
+			[
+				{ label: 'Abu Dhabi', value: '1' },
+				{ label: 'Dubai', value: '2' },
+				{ label: 'Sharjah', value: '3' },
+				{ label: 'Ajman', value: '4' },
+				{ label: 'Umm Al Quwain', value: '5' },
+				{ label: 'Ras Al-Khaimah', value: '6' },
+				{ label: 'Fujairah', value: '7' },
+				// { label: 'BAHRAIN', value: '8' },
+				// { label: 'SAUDI ARABIA', value: '9' },
+				// { label: 'OMAN', value: '10' },
+				// { label: 'KUWAIT', value: '11' },
+				// { label: 'QATAR', value: '12' },
+			]
+		})		
+
+	}
+
+	ReverseChargeSetting=(option,props)=>{
+		if(this.state.isDesignatedZone==true)
+			switch(option.value){
+
+				case 1: 
+				case 2: 
+				case 3: 
+				case 4: 
+				case 8: 
+				this.setState({
+					showReverseCharge:false,
+				})
+				break;
+
+				case 5: 
+				case 6: 
+				case 7: 
+				this.setState({
+					showReverseCharge:true,
+				})
+				break;
+				
+			
+			}
+		else
+//Not Designated Zone		
+			if(this.state.isDesignatedZone==false)
+			switch(option.value){
+
+				case 1: 
+				case 2: 
+				case 4: 
+				case 5: 
+				case 6: 
+				case 7: 
+				this.setState({
+					showReverseCharge:true,
+				})
+						break;
+
+				case 3: 
+				case 8: 
+				this.setState({
+					showReverseCharge:false,
+				})
+						break;
+			}
+	}
+
+	renderVat=(props)=>{
+		let vat_list=[]
+		let vatIds=[]
+		if(this.state.isDesignatedZone==true)
+			switch(props.values.taxTreatmentId.value ?props.values.taxTreatmentId.value:''){
+
+				case 1: 
+				case 3: 
+					if(this.state.isReverseChargeEnabled==false)
+					vatIds=[1,2,3]
+										
+				break;
+
+				case 2: 
+				case 4:
+				case 8:  
+				if(this.state.isReverseChargeEnabled==false)
+				vatIds=[4]
+			
+				break;
+
+				case 5: 
+				case 6: 
+				case 7: 
+					if(this.state.isReverseChargeEnabled==false)
+					vatIds=[3]
+					else if(this.state.isReverseChargeEnabled==true)
+					vatIds=[1,2]
+				break;
+				
+				case 8: 
+				if(this.state.isReverseChargeEnabled==false)
+					vatIds=[4]
+					
+				break;
+			}
+		else
+//Not Designated Zone		
+			if(this.state.isDesignatedZone==false)
+			switch(props.values.taxTreatmentId.value ?props.values.taxTreatmentId.value:''){
+
+				case 1: 
+					if(this.state.isReverseChargeEnabled==false)
+					vatIds=[1,2,3]
+					else if(this.state.isReverseChargeEnabled==true)
+					vatIds=[1,2]
+				break;
+
+				case 3: 
+					if(this.state.isReverseChargeEnabled==false)
+					vatIds=[1,2,3]
+					
+				break;
+
+				case 2: 
+				case 4: 
+				case 5:
+				case 6: 
+				case 7: 
+					if(this.state.isReverseChargeEnabled==false)
+					vatIds=[3]
+					else if(this.state.isReverseChargeEnabled==true)
+					vatIds=[1,2]
+				break;
+
+				case 8: 
+				if(this.state.isReverseChargeEnabled==false)
+				vatIds=[4]
+					
+				break;
+			}
+
+			vat_list=this.getVatListByIds(vatIds)
+//vat column
+			return (
+				<Col lg={3}>
+				<FormGroup className="mb-3">
+					<Label htmlFor="vatCategoryId"><span className="text-danger">* </span>{strings.Vat}</Label>
+					<Select
+						// styles={customStyles}
+						className="select-default-width"
+					
+						options={
+							vat_list
+								? selectOptionsFactory.renderOptions(
+										'name',
+										'id',
+										vat_list,
+										'Vat',
+								  )
+								: []
+						}
+						value={props.values.vatCategoryId}
+						onChange={(option) => {
+							if (option && option.value) {
+								props.handleChange('vatCategoryId')(
+									option,
+								);
+							} else {
+								props.handleChange('vatCategoryId')('');
+							}
+						}}
+						
+						placeholder={strings.Select+strings.Vat }
+						id="vatCategoryId"
+						name="vatCategoryId"
+						className={
+							props.errors.vatCategoryId &&
+							props.touched.vatCategoryId
+								? 'is-invalid'
+								: ''
+						}
+					/>
+					{props.errors.vatCategoryId &&
+						props.touched.vatCategoryId && (
+							<div className="invalid-feedback">
+								{props.errors.vatCategoryId}
+							</div>
+						)}
+					
+				</FormGroup>
+			</Col>
+			)
+	}
+	getVatListByIds=(vatIds)=>{
+		const	{vat_list}=this.props	
+
+		let array=[]
+
+		vat_list.map((row)=>{
+			vatIds.map((id)=>{
+				if(row.id===id){
+					array.push(row)
+				}
+			})
+		})
+
+		return array;
+	}
 	render() {
 		strings.setLanguage(this.state.language);
-		const { initValue, payMode ,exist,taxTreatmentList} = this.state;
+		const { initValue, payMode ,exist,taxTreatmentList,placelist,vat_list} = this.state;
 		const {
 			// currency_list,
 			expense_categories_list,
-			vat_list,
+			// vat_list,
 			// profile,
 			// user_list,
 			pay_mode_list,
@@ -473,12 +730,18 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 													if(values.currency ==='' || values.currency === 150){
 														errors.currency="Currency is required "
 													}
+													if(this.state.showPlacelist===true && values.placeOfSupplyId ===''){
+														errors.placeOfSupplyId="Place Of Supply is required"
+													}
 												
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({
 													expenseNumber: Yup.string().required(
 														'Expense number is required',
+													),
+													taxTreatmentId: Yup.string().required(
+														'Tax Treatment is required',
 													),
 													expenseCategory: Yup.string().required(
 														'Expense Category is required',
@@ -623,7 +886,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																						'name',
 																						'id',
 																						taxTreatmentList,
-																						'Vat',
+																						'Tax Treatment',
 																					)
 																					: []
 																			}
@@ -640,10 +903,18 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																					props.handleChange('taxTreatmentId')(
 																						option,
 																					);
-																					if(option.value === 1 ||option.value === 3 ||option.value === 5 )
-																					this.setState({isRegisteredForVat:true})
-																					else
-																					this.setState({isRegisteredForVat:false})
+																					props.handleChange('placeOfSupplyId')({
+																						label: 'Select Place Of Supply',
+																						value: '',
+																					});
+																							// for resetting Vat
+																					props.handleChange('vatCategoryId')('');
+																					//placelist Setup
+																					this.placelistSetting(option,props)
+																					// ReverseCharge setup
+																					this.ReverseChargeSetting(option,props)
+																					this.setState({isReverseChargeEnabled:false})
+																																																													
 																				} else {
 																					props.handleChange('taxTreatmentId')(
 																						'',
@@ -665,29 +936,37 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																			)}
 																	</FormGroup>
 																</Col>
-																<Col lg={3}>
+															{this.state.showPlacelist==true&& (	<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
 																		<span className="text-danger">*</span>
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select
+																	isDisabled={this.state.lockPlacelist}
 																		styles={customStyles}
 																		id="placeOfSupplyId"
 																		name="placeOfSupplyId"
 																		placeholder={strings.Select+strings.PlaceofSupply}
 																		options={
-																			this.placelist
+																			placelist
 																				? selectOptionsFactory.renderOptions(
 																						'label',
 																						'value',
-																						this.placelist,
-																						'Place of Supply',
+																						placelist,
+																						'Place Of Supply',
 																						
 																				  )
 																				: []
 																		}
-																		value={this.state.placelist}
+																		value={
+																			placelist 
+																			&& placelist.find(
+																				(option) =>
+																					option.value ===
+																					props.values.placeOfSupplyId,
+																			)
+																		}
 																		className={
 																			props.errors.placeOfSupplyId &&
 																			props.touched.placeOfSupplyId
@@ -707,7 +986,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>
+															</Col>)}
 															
 														</Row>
 														<Row>
@@ -918,55 +1197,8 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>
-															<Col lg={3}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="vatCategoryId"><span className="text-danger">* </span>{strings.Vat}</Label>
-																	<Select
-																		styles={customStyles}
-																		className="select-default-width"
-																	
-																		options={
-																			vat_list
-																				? selectOptionsFactory.renderOptions(
-																						'name',
-																						'id',
-																						vat_list,
-																						'Vat',
-																				  )
-																				: []
-																		}
-																		value={props.values.vatCategoryId}
-																		onChange={(option) => {
-																			if (option && option.value) {
-																				props.handleChange('vatCategoryId')(
-																					option,
-																				);
-																			} else {
-																				props.handleChange('vatCategoryId')('');
-																			}
-																		}}
-																		
-																		placeholder={strings.Select+strings.Vat }
-																		id="vatCategoryId"
-																		name="vatCategoryId"
-																		className={
-																			props.errors.vatCategoryId &&
-																			props.touched.vatCategoryId
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.vatCategoryId &&
-																		props.touched.vatCategoryId && (
-																			<div className="invalid-feedback">
-																				{props.errors.vatCategoryId}
-																			</div>
-																		)}
-																	
-																</FormGroup>
-															</Col>
-																
+															</Col>													
+															{this.renderVat(props)}	
 															
 															{!props.values.payee && payMode.value === 'BANK' && (
 																<Col lg={3}>
@@ -1220,7 +1452,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 														)
 														} 
 														
-														<Row>
+													{this.state.showReverseCharge==true &&(	<Row>
 														<Col >
 															{/* <Input
 															type="checkbox"
@@ -1236,11 +1468,13 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																checked={this.state.isReverseChargeEnabled}
 																onChange={(option)=>{
 																		this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled})
+																		// for resetting Vat
+																		props.handleChange('vatCategoryId')('');
 																}}
 															/>
 															<Label>Reverse Charge</Label>
 															</Col>
-														</Row>
+														</Row>)}
 														<hr />
 														<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
 																<Col>

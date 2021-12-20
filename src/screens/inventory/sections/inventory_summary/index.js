@@ -357,7 +357,7 @@ class InventorySummary extends React.Component {
 								
 									
 									</div>			
-									<div style={{textAlign:'center'}} >
+									<div style={{textAlign:'right'}} >
 								
 										<h2>
 										{company_profile &&
@@ -455,7 +455,7 @@ class InventorySummary extends React.Component {
 											</BootstrapTable>
 										</div>
 									)}
-									<div style={{ textAlignLast:'center'}}> {strings.PoweredBy} <b>SimpleAccounts</b></div> 
+									<div style={{ textAlignLast:'right'}}> {strings.PoweredBy} <b>SimpleAccounts</b></div> 
 								</PDFExport>
 						
 						</div>

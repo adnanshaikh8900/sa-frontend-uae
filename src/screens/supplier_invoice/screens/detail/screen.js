@@ -36,6 +36,7 @@ import './style.scss';
 import moment from 'moment';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import Switch from "react-switch";
 
 const mapStateToProps = (state) => {
 	return {
@@ -240,9 +241,11 @@ class DetailSupplierInvoice extends React.Component {
 									placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 									fileName: res.data.fileName ? res.data.fileName : '',
 									filePath: res.data.filePath ? res.data.filePath : '',
-                                    isReverseChargeEnabled: res.data.isReverseChargeEnabled ? true : false
+                                    isReverseChargeEnabled: res.data.isReverseChargeEnabled ? true : false,
+									checked: res.data.exciseType ? res.data.exciseType : '',
+									total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
 								},
-                                exciseType: res.data.exciseType ? res.data.exciseType : '',
+								checked: res.data.exciseType ? res.data.exciseType : '',
 								invoiceDateNoChange :res.data.invoiceDate
 								? moment(res.data.invoiceDate)
 								: '',
@@ -399,8 +402,8 @@ class DetailSupplierInvoice extends React.Component {
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						isDisabled={row.exciseTaxId === 0 || this.state.exciseType === 'Inclusive'}
-
+						isDisabled={row.exciseTaxId === 0 || this.state.checked === false}
+						
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -1124,7 +1127,7 @@ debugger
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 
 			//Excise calculation
-			if(this.state.exciseType && this.state.exciseType === 'Exclusive'){
+			if(this.state.checked === true){
 				if(obj.exciseTaxId === 1){
 				const value = (obj.unitPrice * obj.quantity) / 2 ;
 					net_value = parseFloat(obj.unitPrice) +  value ;
@@ -1138,8 +1141,19 @@ debugger
 					net_value = obj.unitPrice
 				}
 			}	else{
+				if(obj.exciseTaxId === 1){
+					const value = obj.unitPrice / 3
+				obj.exciseAmount = value;
+				net_value = obj.unitPrice}
+				else if (obj.exciseTaxId === 2){
+					const value = obj.unitPrice / 2
+				obj.exciseAmount = value;
+				net_value = obj.unitPrice}
+				else{
 					net_value = obj.unitPrice
+				}
 			}
+
 			//vat calculation
 			if (obj.discountType === 'PERCENTAGE') {
 				var val =
@@ -1196,11 +1210,7 @@ debugger
 
 				},
 			},
-			() => {
-				if (props.values.discountType.value === 'PERCENTAGE') {
-					this.formRef.current.setFieldValue('discount', discount);
-				}
-			},
+
 		);
 	};
 
@@ -1274,7 +1284,7 @@ debugger
 		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
         formData.append('totalExciseAmount', this.state.initValue.total_excise);
-		formData.append('exciseType', this.state.exciseType);
+		formData.append('exciseType', this.state.checked);
 		formData.append('isReverseChargeEnabled',this.state.isReverseChargeEnabled);
 
 		formData.append('term', term);
@@ -1659,7 +1669,7 @@ debugger
 													{(props) => (
 														<Form onSubmit={props.handleSubmit}>
 															<Row>
-																<Col lg={4}>
+																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="invoice_number">
 																			<span className="text-danger">* </span>
@@ -1692,7 +1702,9 @@ debugger
 																			)}
 																	</FormGroup>
 																</Col>
-																<Col lg={4}>
+																</Row>
+																<Row>
+																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="contactId">
 																			<span className="text-danger">* </span>
@@ -2083,7 +2095,7 @@ debugger
 														</Row>
 															<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
 															<Row>
-																<Col lg={12} className="mb-3">
+																<Col lg={8} className="mb-3">
 																	<Button
 																		color="primary"
 																		className={`btn-square mr-3 ${
@@ -2100,58 +2112,43 @@ debugger
 																		<i className="fa fa-plus"></i>  {strings.Addmore}
 																	</Button>
 																</Col>
-															</Row>
-                                                            <Row>
-															<Col lg={3}>
+																<Col lg={3}>
 																					<FormGroup>
-																						<Label htmlFor="exciseType">
-																						Excise Type
-																						</Label>
-																						<Select
-																							styles={customStyles}
-																							className="select-default-width"
-																							// options={this.state.exciseTypeOption}
-																							options={
-																								this.state.exciseTypeOption
-																									? selectOptionsFactory.renderOptions(
-																											'label',
-																											'value',
-																											this.state.exciseTypeOption,
-																											'exciseType',
-																									  )
-																									: []
-																							}
-																							id="exciseType"
-																							name="exciseType"
-                                                                                            value={
-                                                                                                this.state.exciseTypeOption&&
-                                                                                                this.state.exciseTypeOption.find(
-                                                                                                    (option) =>
-                                                                                                        option.value === props.values.exciseType,
-                                                                                                )
-                                                                                            }
-																								onChange={(option) => {
-																										props.handleChange('exciseType')(option.value);
-																									if (option.value === '') {
-																										this.setState({
-																											exciseType: option.value,
-																										});
-																										this.updateAmount(data,props)
-																									} else {
-																										this.setState(
-																											{
-																												exciseType: option.value,
-																											},
-																											() => {
-																												this.updateAmount(data, props);
-																											},
-																										);
-																									}
-																								}}
-																						/>
+
+																						<span className='mr-4'>Inclusive</span>
+																						<Switch
+            checked={this.state.checked}
+			onChange={(checked) => {
+
+				props.handleChange('checked')(checked);
+				this.setState(
+					{
+						checked,
+					},
+					() => {
+						this.updateAmount(data, props);
+					},
+				);
+
+			}}
+            onColor="#2064d8"
+            onHandleColor="#2693e6"
+            handleDiameter={25}
+            uncheckedIcon={false}
+            checkedIcon={false}
+            boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+            activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+            height={20}
+            width={48}
+            className="react-switch "
+
+          />
+		  <span  className='ml-4'>Exclusive</span>
+
 																					</FormGroup>
 																				</Col>
-														</Row>
+															</Row>
+
 															<Row>
 																<Col lg={12}>
 																	{props.errors.lineItemsString &&
@@ -2433,6 +2430,22 @@ debugger
 																</Col>
 																	<Col lg={4}>
 																		<div className="">
+																		<div className="total-item p-2" style={{display:this.state.checked === true ? '':'none'}}>
+																			<Row>
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																					Total Excise
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																					<label className="mb-0">
+
+																						{this.state.customer_currency_symbol} &nbsp;
+																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					</label>
+																				</Col>
+																			</Row>
+																		</div>
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>

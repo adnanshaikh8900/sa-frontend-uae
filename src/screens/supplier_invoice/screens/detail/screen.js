@@ -1176,7 +1176,7 @@ debugger
 
 			} else {
 				var val = (+net_value * vat * obj.quantity) / 100;
-				var val1 = net_value
+				var val1 = net_value * obj.quantity
 			}
 
 			//discount calculation

@@ -21,7 +21,7 @@ import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import * as CreditNotesDetailActions from './actions';
 import * as ProductActions from '../../../product/actions';
-import * as CnActions from '../../actions';
+import * as CreditNotesActions from '../../actions';
 import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 
 import { CustomerModal ,ProductModal } from '../../sections';
@@ -37,6 +37,8 @@ import moment from 'moment';
 import API_ROOT_URL from '../../../../constants/config';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import Switch from "react-switch";
+
 
 const mapStateToProps = (state) => {
 	return {
@@ -45,6 +47,7 @@ const mapStateToProps = (state) => {
 		currency_list: state.customer_invoice.currency_list,
 		vat_list: state.customer_invoice.vat_list,
 		product_list: state.customer_invoice.product_list,
+		excise_list: state.customer_invoice.excise_list,
 		customer_list: state.customer_invoice.customer_list,
 		country_list: state.customer_invoice.country_list,
 		universal_currency_list: state.common.universal_currency_list,
@@ -54,8 +57,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		currencyConvertActions: bindActionCreators(CurrencyConvertActions, dispatch),
-		cnActions: bindActionCreators(
-			CnActions,
+		creditNotesActions: bindActionCreators(
+			CreditNotesActions,
 			dispatch,
 		),
 		creditNotesDetailActions: bindActionCreators(
@@ -174,7 +177,7 @@ class DetailCreditNote extends React.Component {
 
 		if (this.props.location.state && this.props.location.state.id) {
 		//INV number
-		this.props.cnActions
+		this.props.creditNotesActions
 		.getInvoicesForCNById(this.props.location.state.id)
 		.then((res) => {
 			
@@ -195,13 +198,14 @@ class DetailCreditNote extends React.Component {
 				.then((res) => {
 					if (res.status === 200) {
 						this.getCompanyCurrency();
-						this.props.cnActions.getVatList();
-						this.props.cnActions.getCustomerList(
+						this.props.creditNotesActions.getVatList();
+						this.props.creditNotesActions.getCustomerList(
 							this.state.contactType,
 						);
+						this.props.creditNotesActions.getExciseList();
 						this.props.currencyConvertActions.getCurrencyConversionList();
-						this.props.cnActions.getCountryList();
-						this.props.cnActions.getProductList();
+						this.props.creditNotesActions.getCountryList();
+						this.props.creditNotesActions.getProductList();
 
 						this.setState(
 							{
@@ -252,6 +256,7 @@ class DetailCreditNote extends React.Component {
 									fileName: res.data.fileName ? res.data.fileName : '',
 									filePath: res.data.filePath ? res.data.filePath : '',
 								},
+								checked: res.data.exciseType ? res.data.exciseType : '',
 								discountAmount: res.data.discount ? res.data.discount : 0,
 								discountPercentage: res.data.discountPercentage
 									? res.data.discountPercentage
@@ -320,6 +325,7 @@ class DetailCreditNote extends React.Component {
 				name={`lineItemsString.${idx}.description`}
 				render={({ field, form }) => (
 					<Input
+					disabled
 						type="text"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
@@ -335,6 +341,75 @@ class DetailCreditNote extends React.Component {
 							props.touched.lineItemsString &&
 							props.touched.lineItemsString[parseInt(idx, 10)] &&
 							props.touched.lineItemsString[parseInt(idx, 10)].description
+								? 'is-invalid'
+								: ''
+						}`}
+					/>
+				)}
+			/>
+		);
+	};
+
+	renderExcise = (cell, row, props) => {
+		const { excise_list } = this.props;
+		let idx;
+		this.state.data.map((obj, index) => {
+			if (obj.id === row.id) {
+				idx = index;
+			}
+			return obj;
+		});
+
+		return (
+			<Field
+				name={`lineItemsString.${idx}.exciseTaxId`}
+				render={({ field, form }) => (
+					<Select
+						styles={customStyles}
+						isDisabled
+						options={
+							excise_list
+								? selectOptionsFactory.renderOptions(
+										'name',
+										'id',
+										excise_list,
+										'Excise',
+								  )
+								: []
+						}
+						value={
+				
+							excise_list &&
+							selectOptionsFactory
+								.renderOptions('name', 'id', excise_list, 'Excise')
+								.find((option) => option.value === +row.exciseTaxId)
+						}
+						id="exciseTaxId"
+						placeholder={strings.Select+strings.Vat}
+						onChange={(e) => {
+							debugger
+							this.selectItem(
+								e.value,
+								row,
+								'exciseTaxId',
+								form,
+								field,
+								props,
+							);
+							
+							this.updateAmount(
+								this.state.data,
+								props,
+							);
+						}}
+						className={`${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].exciseTaxId &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].exciseTaxId
 								? 'is-invalid'
 								: ''
 						}`}
@@ -422,7 +497,7 @@ min="0"
 				render={({ field, form }) => (
 					<Input
 					type="text"
-
+					disabled
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (
@@ -547,6 +622,7 @@ min="0"
 				name={`lineItemsString.${idx}.vatCategoryId`}
 				render={({ field, form }) => (
 					<Select
+					isDisabled
 						styles={customStyles}
 						options={
 							vat_list
@@ -603,6 +679,7 @@ min="0"
 				obj['unitPrice'] = parseInt(result.unitPrice);
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
+				obj['exciseTaxId'] = result.exciseTaxId;
 				idx = index;
 			}
 			return obj;
@@ -620,6 +697,11 @@ min="0"
 		form.setFieldValue(
 			`lineItemsString.${idx}.description`,
 			result.description,
+			true,
+		);
+		form.setFieldValue(
+			`lineItemsString.${idx}.exciseTaxId`,
+			result.exciseTaxId,
 			true,
 		);
 		this.updateAmount(data, props);
@@ -656,6 +738,7 @@ min="0"
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
+						isDisabled
 						options={
 							product_list
 								? selectOptionsFactory.renderOptions(
@@ -736,44 +819,91 @@ min="0"
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list } = this.props;
+		const { vat_list , excise_list} = this.props;
+		const { discountPercentage, discountAmount } = this.state;
 		let total_net = 0;
+		let total_excise = 0;
 		let total = 0;
 		let total_vat = 0;
-		const { discountPercentage, discountAmount } = this.state;
-
+		let net_value = 0;
+		let discount = 0;
 		data.map((obj) => {
+debugger
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-			if (props.values.discountType === 'PERCENTAGE') {
-				var val =
-					((+obj.unitPrice -
-						+((obj.unitPrice * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })) *
-						vat *
-						obj.quantity) /
-					100;
-			} else if (props.values.discountType === 'FIXED') {
-				var val =
-					(obj.unitPrice * obj.quantity - discountAmount / data.length) *
-					(vat / 100);
-			} else {
-				var val = (+obj.unitPrice * vat * obj.quantity) / 100;
+
+			//Excise calculation
+			if(this.state.checked === true){
+				if(obj.exciseTaxId === 1){
+				const value = (obj.unitPrice * obj.quantity) / 2 ;
+					net_value = parseFloat(obj.unitPrice) +  value ;
+				obj.exciseAmount = value;
+				}else if (obj.exciseTaxId === 2){
+					const value = obj.unitPrice * obj.quantity;
+					net_value = parseFloat(obj.unitPrice) +  value ;
+					obj.exciseAmount = value;
+				}
+				else{
+					net_value = obj.unitPrice
+				}
+			}	else{
+				if(obj.exciseTaxId === 1){
+					const value = obj.unitPrice / 3
+				obj.exciseAmount = value;
+				net_value = obj.unitPrice}
+				else if (obj.exciseTaxId === 2){
+					const value = obj.unitPrice / 2
+				obj.exciseAmount = value;
+				net_value = obj.unitPrice}
+				else{
+					net_value = obj.unitPrice
+				}
 			}
-			total_net = +(total_net + +obj.unitPrice * obj.quantity);
+
+			//vat calculation
+			if (obj.discountType === 'PERCENTAGE') {
+				var val =
+				((+net_value -
+				 (+((net_value * obj.discount)) / 100)) *
+					vat *
+					obj.quantity) /
+				100;
+
+				var val1 =
+				((+net_value -
+				 (+((net_value * obj.discount)) / 100)) ) ;
+			} else if (obj.discountType === 'FIXED') {
+				var val =
+						 (net_value * obj.quantity - obj.discount ) *
+					(vat / 100);
+
+					var val1 =
+					((net_value * obj.quantity )- obj.discount )
+
+			} else {
+				var val = (+net_value * vat * obj.quantity) / 100;
+				var val1 = net_value* obj.quantity
+			}
+
+			//discount calculation
+			discount = +(discount +(net_value * obj.quantity)) - val1
+			total_net = +(total_net + net_value * obj.quantity);
 			total_vat = +(total_vat + val);
+			obj.vatAmount = val
 			obj.subTotal =
-				obj.unitPrice && obj.vatCategoryId ? (+obj.unitPrice * obj.quantity)+total_vat : 0;
+			net_value && obj.vatCategoryId ? val1  + val : 0;
+			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
 		});
-		const discount =
-			props.values.discountType === 'PERCENTAGE'
-				? (total_net * discountPercentage) / 100
-				: discountAmount;
 
+		// const discount =
+		// 	props.values.discountType.value === 'PERCENTAGE'
+		// 		? +((total_net * discountPercentage) / 100)
+		// 		: discountAmount;
 		this.setState(
 			{
 				data,
@@ -782,19 +912,16 @@ min="0"
 					...{
 						total_net: discount ? total_net - discount : total_net,
 						invoiceVATAmount: total_vat,
-						discount: total_net > discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : total,
+						discount:  discount ? discount : 0,
+						totalAmount: total_net > discount ? total - discount : total - discount,
+						total_excise: total_excise
 					},
+
 				},
 			},
-			() => {
-				if (props.values.discountType === 'PERCENTAGE') {
-					this.formRef.current.setFieldValue('discount', discount);
-				}
-			},
+
 		);
 	};
-
 	setDate = (props, value) => {
 		const { term } = this.state;
 		const val = term.split('_');
@@ -881,13 +1008,15 @@ min="0"
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
-		formData.append('discount', discount);
-		formData.append('discountType', discountType);
-		formData.append('term', term);
+		formData.append('totalExciseAmount', this.state.initValue.total_excise);
+		formData.append('exciseType', this.state.checked);
+		// formData.append('discount', discount);
+		// formData.append('discountType', discountType);
+		// formData.append('term', term);
 		//formData.append('placeOfSupplyId',placeOfSupplyId.value);
-		if (discountType === 'PERCENTAGE') {
-			formData.append('discountPercentage', discountPercentage);
-		}
+		// if (discountType === 'PERCENTAGE') {
+		// 	formData.append('discountPercentage', discountPercentage);
+		// }
 		if (contactId) {
 			formData.append('contactId', contactId);
 		}
@@ -949,7 +1078,7 @@ min="0"
 
 	closeCustomerModal = (res) => {
 		if (res) {
-			this.props.cnActions.getCustomerList(this.state.contactType);
+			this.props.creditNotesActions.getCustomerList(this.state.contactType);
 		}
 		this.setState({ openCustomerModal: false });
 	};
@@ -959,7 +1088,7 @@ min="0"
 	};
 
 	getCurrentProduct = () => {
-		this.props.cnActions.getProductList().then((res) => {
+		this.props.creditNotesActions.getProductList().then((res) => {
 			this.setState(
 				{
 					data: [
@@ -1699,7 +1828,7 @@ min="0"
 																			/>
 														</Col>
 														</Row> */}
-															<hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
+															{/* <hr style={{display: props.values.exchangeRate === 1 ? 'none' : ''}} />
 															<Row>
 																<Col lg={12} className="mb-3">
 																	<Button
@@ -1718,6 +1847,44 @@ min="0"
 																		<i className="fa fa-plus"></i> {strings.Addmore}
 																	</Button>
 																</Col>
+															</Row> */}
+															<Row>
+														<Col lg={3}>
+																					<FormGroup>
+																						
+																						<span className='mr-4'>Inclusive</span>
+																						<Switch
+            checked={this.state.checked}
+			disabled
+			onChange={(checked) => {
+				
+				props.handleChange('checked')(checked);
+				this.setState(
+					{
+						checked,
+					},
+					() => {
+						this.updateAmount(data, props);
+					},
+				);
+				
+			}}
+            onColor="#2064d8"
+            onHandleColor="#2693e6"
+            handleDiameter={25}
+            uncheckedIcon={false}
+            checkedIcon={false}
+            boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+            activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+            height={20}
+            width={48}
+            className="react-switch "
+            
+          />
+		  <span  className='ml-4'>Exclusive</span>
+																						
+																					</FormGroup>
+																				</Col>
 															</Row>
 															<Row>
 																{props.errors.lineItemsString &&
@@ -1795,6 +1962,15 @@ min="0"
 																			{strings.UNITPRICE}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
+																	width="10%"
+																		dataField="exciseTaxId"
+																		dataFormat={(cell, rows) =>
+																			this.renderExcise(cell, rows, props)
+																		}
+																	>
+																	Excise
+																	</TableHeaderColumn>
+																		<TableHeaderColumn
 																			dataField="vat"
 																			dataFormat={(cell, rows) =>
 																				this.renderVat(cell, rows, props)
@@ -1802,6 +1978,7 @@ min="0"
 																		>
 																			{strings.VAT}
 																		</TableHeaderColumn>
+																		
 																		<TableHeaderColumn
 																			dataField="sub_total"
 																			dataFormat={this.renderSubTotal}
@@ -2264,10 +2441,10 @@ min="0"
 						this.closeCustomerModal(e);
 					}}
 					getCurrentUser={(e) => this.getCurrentUser(e)}
-					createCustomer={this.props.cnActions.createCustomer}
+					createCustomer={this.props.creditNotesActions.createCustomer}
 					currency_list={this.props.currency_list}
 					country_list={this.props.country_list}
-					getStateList={this.props.cnActions.getStateList}
+					getStateList={this.props.creditNotesActions.getStateList}
 				/>
 				<ProductModal
 					openProductModal={this.state.openProductModal}

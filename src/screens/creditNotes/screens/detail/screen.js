@@ -828,7 +828,7 @@ min="0"
 		let net_value = 0;
 		let discount = 0;
 		data.map((obj) => {
-debugger
+
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
@@ -836,31 +836,36 @@ debugger
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 
 			//Excise calculation
-			if(this.state.checked === true){
-				if(obj.exciseTaxId === 1){
-				const value = (obj.unitPrice * obj.quantity) / 2 ;
-					net_value = parseFloat(obj.unitPrice) +  value ;
-				obj.exciseAmount = value;
-				}else if (obj.exciseTaxId === 2){
-					const value = obj.unitPrice * obj.quantity;
-					net_value = parseFloat(obj.unitPrice) +  value ;
+			if(obj.exciseTaxId !=  0){
+				if(this.state.checked === true){
+					if(obj.exciseTaxId === 1){
+					const value = (obj.unitPrice * obj.quantity) / 2 ;
+						net_value = parseFloat(obj.unitPrice) +  value ;
 					obj.exciseAmount = value;
+					}else if (obj.exciseTaxId === 2){
+						const value = obj.unitPrice * obj.quantity;
+						net_value = parseFloat(obj.unitPrice) +  value ;
+						obj.exciseAmount = value;
+					}
+					else{
+						net_value = obj.unitPrice
+					}
+				}	else{
+					if(obj.exciseTaxId === 1){
+						const value = obj.unitPrice / 3
+					obj.exciseAmount = value;
+					net_value = obj.unitPrice}
+					else if (obj.exciseTaxId === 2){
+						const value = obj.unitPrice / 2
+					obj.exciseAmount = value;
+					net_value = obj.unitPrice}
+					else{
+						net_value = obj.unitPrice
+					}
 				}
-				else{
-					net_value = obj.unitPrice
-				}
-			}	else{
-				if(obj.exciseTaxId === 1){
-					const value = obj.unitPrice / 3
-				obj.exciseAmount = value;
-				net_value = obj.unitPrice}
-				else if (obj.exciseTaxId === 2){
-					const value = obj.unitPrice / 2
-				obj.exciseAmount = value;
-				net_value = obj.unitPrice}
-				else{
-					net_value = obj.unitPrice
-				}
+			}else{
+				net_value = obj.unitPrice;
+				obj.exciseAmount = 0
 			}
 
 			//vat calculation
@@ -885,7 +890,7 @@ debugger
 
 			} else {
 				var val = (+net_value * vat * obj.quantity) / 100;
-				var val1 = net_value* obj.quantity
+				var val1 = net_value * obj.quantity
 			}
 
 			//discount calculation
@@ -922,6 +927,7 @@ debugger
 
 		);
 	};
+
 	setDate = (props, value) => {
 		const { term } = this.state;
 		const val = term.split('_');

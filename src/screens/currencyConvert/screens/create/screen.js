@@ -228,7 +228,7 @@ class CreateCurrencyConvert extends React.Component {
 												}}
 												validationSchema={Yup.object().shape({
 													currencyCode: Yup.string().required(
-														'Currency is required',
+														'Exchange Currency is required',
 													),
 													exchangeRate: Yup.string().required(
 														'Exchange Rate is Required',
@@ -388,10 +388,10 @@ class CreateCurrencyConvert extends React.Component {
 																									: ''
 																							}
 																						/>
-																						{props.errors.exchangecurrencyCode &&
-																							props.touched.exchangecurrencyCode && (
+																						{props.errors.currencyCode &&
+																							props.touched.currencyCode && (
 																								<div className="invalid-feedback">
-																									{props.errors.exchangecurrencyCode}
+																									{props.errors.currencyCode}
 																								</div>
 																							)}
 																			</FormGroup>

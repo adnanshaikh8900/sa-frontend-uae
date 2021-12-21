@@ -457,27 +457,7 @@ renderVatAmount = (cell, row,extraData) => {
 
 	getInitialData = () => {
 		this.getInvoiceNo();
-		this.props.customerInvoiceActions
-			.getTaxTreatment()
-			.then((res) => {
 
-				if (res.status === 200) {
-					let array=[]
-					res.data.map((row)=>{
-						if(row.id!==8)
-							array.push(row);
-					})
-					this.setState({ taxTreatmentList: array });
-				}
-			})
-			.catch((err) => {
-
-				this.setState({ disabled: false });
-				this.props.commonActions.tostifyAlert(
-					'error',
-					err.data ? err.data.message : 'ERROR',
-				);
-			});
 		this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
 		this.props.customerInvoiceActions.getCountryList();
 		this.props.customerInvoiceActions.getExciseList();
@@ -1081,7 +1061,7 @@ renderVatAmount = (cell, row,extraData) => {
 		let net_value = 0;
 		let discount = 0;
 		data.map((obj) => {
-
+debugger
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
@@ -1089,6 +1069,7 @@ renderVatAmount = (cell, row,extraData) => {
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 
 			//Excise calculation
+			if(obj.exciseTaxId !=  0){
 			if(this.state.checked === true){
 				if(obj.exciseTaxId === 1){
 				const value = (obj.unitPrice * obj.quantity) / 2 ;
@@ -1115,7 +1096,10 @@ renderVatAmount = (cell, row,extraData) => {
 					net_value = obj.unitPrice
 				}
 			}
-
+		}else{
+			net_value = obj.unitPrice;
+			obj.exciseAmount = 0
+		}
 			//vat calculation
 			if (obj.discountType === 'PERCENTAGE') {
 				var val =

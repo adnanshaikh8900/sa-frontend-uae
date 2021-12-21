@@ -935,7 +935,7 @@ debugger
 			formData.append('currencyCode', currencyCode);
 		}
 		if (placeOfSupplyId) {
-			formData.append('placeOfSupplyId', placeOfSupplyId.value);
+			formData.append('placeOfSupplyId', placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);
 		}
 		if (project) {
 			formData.append('projectId', project);
@@ -1185,6 +1185,14 @@ debugger
 														if (param === true) {
 															errors.discount =
 																'Discount amount Cannot be greater than Invoice Total Amount';
+														}
+														if (values.placeOfSupplyId && values.placeOfSupplyId.label &&( values.placeOfSupplyId.label === "Select Place of Supply"))
+														{
+															errors.placeOfSupplyId ='Place of supply is Required';
+														}else
+														if (values.placeOfSupplyId === "")
+														{
+															errors.placeOfSupplyId ='Place of supply is Required';
 														}
 														return errors;
 													}}

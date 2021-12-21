@@ -60,6 +60,7 @@ class ViewRequestForQuotation extends React.Component {
 			totalNet: 0,
 			currencyData: {},
 			id: '',
+			contactData:{}
 		};
 
 		this.formRef = React.createRef();
@@ -73,6 +74,7 @@ class ViewRequestForQuotation extends React.Component {
 
 	componentDidMount = () => {
 		this.initializeData();
+	
 	};
 
 	initializeData = () => {
@@ -107,22 +109,18 @@ class ViewRequestForQuotation extends React.Component {
 								id: this.props.location.state.id,
 							},
 							() => {
-								// if (this.state.RFQData.currencyCode) {
-								// 	this.props.supplierInvoiceActions
-								// 		.getCurrencyList()
-								// 		.then((res) => {
-								// 			if (res.status === 200) {
-								// 				const temp = res.data.filter(
-								// 					(item) =>
-								// 						item.currencyCode ===
-								// 						this.state.invoiceData.currencyCode,
-								// 				);
-								// 				this.setState({
-								// 					currencyData: temp,
-								// 				});
-								// 			}
-								// 		});
-								// }
+								if(this.state.RFQData.supplierId)
+								{	
+							   this.props.requestForQuotationViewAction
+							   .getContactById(this.state.RFQData.supplierId)
+							   .then((res) => {
+								   if (res.status === 200) {									
+									   this.setState({
+										   contactData: res.data,
+									   });
+								   }
+							   });
+							   }
 							},
 						);
 					}
@@ -139,7 +137,7 @@ class ViewRequestForQuotation extends React.Component {
 								id: this.props.location.state.id,
 							},
 							() => {
-								
+							
 							},
 						);
 					}
@@ -153,7 +151,7 @@ class ViewRequestForQuotation extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { RFQData, PoDataList,currencyData, id } = this.state;
+		const { RFQData, PoDataList,currencyData, id, contactData } = this.state;
 
 		const { profile } = this.props;
 		return (
@@ -215,6 +213,7 @@ class ViewRequestForQuotation extends React.Component {
 										ref={(el) => (this.componentRef = el)}
 										totalNet={this.state.totalNet}
 										companyData={this.state && this.state.companyData ?this.state.companyData:''}
+										contactData={this.state.contactData}
 									/>
 								</PDFExport>
 							</div>

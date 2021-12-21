@@ -95,6 +95,18 @@ class ViewGoodsReceivedNote extends React.Component {
 								id: this.props.location.state.id,
 							},
 							() => {
+								if(this.state.RFQData.supplierId)
+								{	
+							   this.props.supplierInvoiceDetailActions
+							   .getContactById(this.state.RFQData.supplierId)
+							   .then((res) => {
+								   if (res.status === 200) {									
+									   this.setState({
+										   contactData: res.data,
+									   });
+								   }
+							   });
+							   }
 								// if (this.state.RFQData.currencyCode) {
 								// 	this.props.supplierInvoiceActions
 								// 		.getCurrencyList()
@@ -123,7 +135,7 @@ class ViewGoodsReceivedNote extends React.Component {
 	};
 
 	render() {
-		const { RFQData, currencyData, id } = this.state;
+		const { RFQData, currencyData, id , contactData} = this.state;
 
 		const { profile } = this.props;
 		return (
@@ -183,6 +195,7 @@ class ViewGoodsReceivedNote extends React.Component {
 										ref={(el) => (this.componentRef = el)}
 										totalNet={this.state.totalNet}
 										companyData={this.state && this.state.companyData ?this.state.companyData:''}
+										contactData={this.state.contactData}
 										status={this.props.location.state.status}
 									/>
 								</PDFExport>

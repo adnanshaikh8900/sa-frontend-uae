@@ -38,9 +38,7 @@ import moment from 'moment';
 
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
-import { string } from 'prop-types';
-import { toast } from 'react-toastify';
-import { ErrorSharp } from '@material-ui/icons';
+
 
 const mapStateToProps = (state) => {
 	return {
@@ -459,6 +457,27 @@ renderVatAmount = (cell, row,extraData) => {
 
 	getInitialData = () => {
 		this.getInvoiceNo();
+		this.props.customerInvoiceActions
+			.getTaxTreatment()
+			.then((res) => {
+
+				if (res.status === 200) {
+					let array=[]
+					res.data.map((row)=>{
+						if(row.id!==8)
+							array.push(row);
+					})
+					this.setState({ taxTreatmentList: array });
+				}
+			})
+			.catch((err) => {
+
+				this.setState({ disabled: false });
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err.data ? err.data.message : 'ERROR',
+				);
+			});
 		this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
 		this.props.customerInvoiceActions.getCountryList();
 		this.props.customerInvoiceActions.getExciseList();
@@ -683,7 +702,6 @@ renderVatAmount = (cell, row,extraData) => {
 																								   .renderOptions('label', 'value', discountOptions, 'discount')
 																								   .find((option) => option.value === +row.discountType)
 																						   }
-
 																						   onChange={(e) => {
 																							   this.selectItem(
 																								   e.value,
@@ -1120,7 +1138,7 @@ renderVatAmount = (cell, row,extraData) => {
 
 			} else {
 				var val = (+net_value * vat * obj.quantity) / 100;
-				var val1 = net_value
+				var val1 = net_value * obj.quantity
 			}
 
 			//discount calculation
@@ -1377,6 +1395,7 @@ renderVatAmount = (cell, row,extraData) => {
 		
 	    this.formRef.current.setFieldValue('currency', result[0].currencyCode, true);
 		this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true);
+		this.formRef.current.setFieldValue('taxTreatmentid', result[0].taxTreatmentid, true);
 		
 		this.setState({
 			customer_currency: data.currencyCode,
@@ -1479,6 +1498,26 @@ renderVatAmount = (cell, row,extraData) => {
 		let customer_currencyCode = 0;
 		let customer_item_currency = ''
 		this.props.customer_list.map(item => {
+			if(item.label.contactId == opt) {
+				this.setState({
+					customer_currency: item.label.currency.currencyCode,
+					customer_currency_des: item.label.currency.currencyName,
+					customer_currency_symbol: item.label.currency.currencyIsoCode,
+				});
+
+				customer_currencyCode = item.label.currency.currencyCode;
+				customer_item_currency = item.label.currency
+			}
+		})
+	
+		return customer_currencyCode;
+	}
+
+
+	getTaxTreatment= (opt) => {
+		let customer_currencyCode = 0;
+		let customer_item_currency = ''
+		this.state.taxTreatmentList.map(item => {
 			if(item.label.contactId == opt) {
 				this.setState({
 					customer_currency: item.label.currency.currencyCode,
@@ -1721,6 +1760,7 @@ renderVatAmount = (cell, row,extraData) => {
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
+																				// this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
 																				this.setExchange( this.getCurrency(option.value) );
 																				props.handleChange('contactId')(option);
 																			} else {

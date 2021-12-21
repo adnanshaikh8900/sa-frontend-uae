@@ -241,9 +241,7 @@ class DetailCustomerInvoice extends React.Component {
 										? res.data.invoiceLineItems
 										: [],
 									discount: res.data.discount ? res.data.discount : 0,
-									discountPercentage: res.data.discountPercentage
-										? res.data.discountPercentage
-										: '',
+									
 									discountType: res.data.discountType
 										? res.data.discountType
 										: '',
@@ -1044,7 +1042,7 @@ min="0"
 			  
 			} else {
 				var val = (+net_value * vat * obj.quantity) / 100;
-				var val1 = net_value
+				var val1 = net_value * obj.quantity
 			}
 
 			//discount calculation

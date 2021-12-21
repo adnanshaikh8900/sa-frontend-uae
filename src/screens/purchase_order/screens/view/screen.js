@@ -127,6 +127,18 @@ class ViewPurchaseOrder extends React.Component {
 								// 			}
 								// 		});
 								// }
+								if(this.state.POData.supplierId)
+								{	
+							   this.props.supplierInvoiceDetailActions
+							   .getContactById(this.state.POData.supplierId)
+							   .then((res) => {
+								   if (res.status === 200) {									
+									   this.setState({
+										   contactData: res.data,
+									   });
+								   }
+							   });
+							   }
 							},
 						);
 					}
@@ -157,7 +169,7 @@ class ViewPurchaseOrder extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { POData, currencyData, id,	PoDataList } = this.state;
+		const { POData, currencyData, id,	PoDataList, contactData } = this.state;
 
 		const { profile } = this.props;
 		return (
@@ -218,6 +230,7 @@ class ViewPurchaseOrder extends React.Component {
 										ref={(el) => (this.componentRef = el)}
 										totalNet={this.state.totalNet}
 										companyData={this.state && this.state.companyData ?this.state.companyData:''}
+										contactData={this.state.contactData}
 										status={this.props.location.state.status}
 									/>
 								</PDFExport>

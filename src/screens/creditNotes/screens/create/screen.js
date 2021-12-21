@@ -35,6 +35,7 @@ import './style.scss';
 import moment from 'moment';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
+import Switch from "react-switch";
 
 const mapStateToProps = (state) => {
 	return {
@@ -43,6 +44,7 @@ const mapStateToProps = (state) => {
 		vat_list: state.customer_invoice.vat_list,
 		product_list: state.customer_invoice.product_list,
 		customer_list: state.customer_invoice.customer_list,
+		excise_list: state.customer_invoice.excise_list,
 		country_list: state.customer_invoice.country_list,
 		product_category_list: state.product.product_category_list,
 		universal_currency_list: state.common.universal_currency_list,
@@ -99,7 +101,10 @@ class CreateCreditNote extends React.Component {
 					quantity: 1,
 					unitPrice: '',
 					vatCategoryId: '',
+					exciseTaxId:'',
+					exciseAmount:'',
 					subTotal: 0,
+					vatAmount:0,
 					productId: '',
 				},
 			],
@@ -139,6 +144,8 @@ class CreateCreditNote extends React.Component {
 				discountPercentage: '',
 				discountType: { value: 'FIXED', label: 'Fixed' },
 			},
+			total_excise: 0,
+			// excisetype: { value: 'Inclusive', label: 'Inclusive' },
 			currentData: {},
 			contactType: 2,
 			openMultiSupplierProductModal: false,
@@ -433,6 +440,7 @@ class CreateCreditNote extends React.Component {
 		this.props.creditNotesActions.getInvoiceListForDropdown();
 		this.props.creditNotesActions.getCustomerList(this.state.contactType);
 		this.props.creditNotesActions.getCountryList();
+		this.props.creditNotesActions.getExciseList();
 		this.props.creditNotesActions.getVatList();
 		this.props.creditNotesActions.getProductList();
 		this.props.productActions.getProductCategoryList();
@@ -519,6 +527,74 @@ class CreateCreditNote extends React.Component {
 		}
 	};
 
+	renderExcise = (cell, row, props) => {
+		const { excise_list } = this.props;
+		let idx;
+		this.state.data.map((obj, index) => {
+			if (obj.id === row.id) {
+				idx = index;
+			}
+			return obj;
+		});
+
+		return (
+			<Field
+				name={`lineItemsString.${idx}.exciseTaxId`}
+				render={({ field, form }) => (
+					<Select
+						styles={customStyles}
+						isDisabled
+						options={
+							excise_list
+								? selectOptionsFactory.renderOptions(
+										'name',
+										'id',
+										excise_list,
+										'Excise',
+								  )
+								: []
+						}
+						value={
+				
+							excise_list &&
+							selectOptionsFactory
+								.renderOptions('name', 'id', excise_list, 'Excise')
+								.find((option) => option.value === +row.exciseTaxId)
+						}
+						id="exciseTaxId"
+						placeholder={strings.Select+strings.Vat}
+						onChange={(e) => {
+							debugger
+							this.selectItem(
+								e.value,
+								row,
+								'exciseTaxId',
+								form,
+								field,
+								props,
+							);
+							
+							this.updateAmount(
+								this.state.data,
+								props,
+							);
+						}}
+						className={`${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].exciseTaxId &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].exciseTaxId
+								? 'is-invalid'
+								: ''
+						}`}
+					/>
+				)}
+			/>
+		);
+	};
 	addRow = () => {
 		const data = [...this.state.data];
 		this.setState(
@@ -656,6 +732,7 @@ class CreateCreditNote extends React.Component {
 				obj['unitPrice'] = result.unitPrice;
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
+				obj['exciseTaxId'] = result.exciseTaxId;
 				idx = index;
 			}
 			return obj;
@@ -668,6 +745,11 @@ class CreateCreditNote extends React.Component {
 		form.setFieldValue(
 			`lineItemsString.${idx}.unitPrice`,
 			result.unitPrice,
+			true,
+		);
+		form.setFieldValue(
+			`lineItemsString.${idx}.exciseTaxId`,
+			result.exciseTaxId,
 			true,
 		);
 		form.setFieldValue(
@@ -852,44 +934,91 @@ class CreateCreditNote extends React.Component {
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list } = this.props;
+		const { vat_list , excise_list} = this.props;
 		const { discountPercentage, discountAmount } = this.state;
 		let total_net = 0;
+		let total_excise = 0;
 		let total = 0;
 		let total_vat = 0;
+		let net_value = 0;
+		let discount = 0;
 		data.map((obj) => {
+
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-			if (props.values.discountType.value === 'PERCENTAGE') {
-				var val =
-					((+obj.unitPrice -
-						+((obj.unitPrice * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })) *
-						vat *
-						obj.quantity) /
-					100;
-			} else if (props.values.discountType.value === 'FIXED') {
-				console.log(obj.unitPrice - discountAmount);
-				var val =
-					(obj.unitPrice * obj.quantity - discountAmount / data.length) *
-					(vat / 100);
-			} else {
-				var val = (+obj.unitPrice * vat * obj.quantity) / 100;
+
+			//Excise calculation
+			if(this.state.checked === true){
+				if(obj.exciseTaxId === 1){
+				const value = (obj.unitPrice * obj.quantity) / 2 ;
+					net_value = parseFloat(obj.unitPrice) +  value ;
+				obj.exciseAmount = value;
+				}else if (obj.exciseTaxId === 2){
+					const value = obj.unitPrice * obj.quantity;
+					net_value = parseFloat(obj.unitPrice) +  value ;
+					obj.exciseAmount = value;
+				}
+				else{
+					net_value = obj.unitPrice
+				}
+			}	else{
+				if(obj.exciseTaxId === 1){
+					const value = obj.unitPrice / 3
+				obj.exciseAmount = value;
+				net_value = obj.unitPrice}
+				else if (obj.exciseTaxId === 2){
+					const value = obj.unitPrice / 2
+				obj.exciseAmount = value;
+				net_value = obj.unitPrice}
+				else{
+					net_value = obj.unitPrice
+				}
 			}
-			total_net = +(total_net + +obj.unitPrice * obj.quantity);
+
+			//vat calculation
+			if (obj.discountType === 'PERCENTAGE') {
+				var val =
+				((+net_value -
+				 (+((net_value * obj.discount)) / 100)) *
+					vat *
+					obj.quantity) /
+				100;
+
+				var val1 =
+				((+net_value -
+				 (+((net_value * obj.discount)) / 100)) ) ;
+			} else if (obj.discountType === 'FIXED') {
+				var val =
+						 (net_value * obj.quantity - obj.discount ) *
+					(vat / 100);
+
+					var val1 =
+					((net_value * obj.quantity )- obj.discount )
+
+			} else {
+				var val = (+net_value * vat * obj.quantity) / 100;
+				var val1 = net_value * obj.quantity
+			}
+
+			//discount calculation
+			discount = +(discount +(net_value * obj.quantity)) - val1
+			total_net = +(total_net + net_value * obj.quantity);
 			total_vat = +(total_vat + val);
+			obj.vatAmount = val
 			obj.subTotal =
-				obj.unitPrice && obj.vatCategoryId ? (+obj.unitPrice * obj.quantity)+total_vat : 0;
+			net_value && obj.vatCategoryId ? val1  + val : 0;
+			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
 		});
 
-		const discount =
-			props.values.discountType.value === 'PERCENTAGE'
-				? +((total_net * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })
-				: discountAmount;
+		// const discount =
+		// 	props.values.discountType.value === 'PERCENTAGE'
+		// 		? +((total_net * discountPercentage) / 100)
+		// 		: discountAmount;
 		this.setState(
 			{
 				data,
@@ -897,19 +1026,18 @@ class CreateCreditNote extends React.Component {
 					...this.state.initValue,
 					...{
 						total_net: discount ? total_net - discount : total_net,
-						totalVatAmount: total_vat,
-						discount: total_net > discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : total,
+						invoiceVATAmount: total_vat,
+						discount:  discount ? discount : 0,
+						totalAmount: total_net > discount ? total - discount : total - discount,
+						total_excise: total_excise
 					},
+
 				},
 			},
-			() => {
-				if (props.values.discountType.value === 'PERCENTAGE') {
-					this.formRef.current.setFieldValue('discount', discount);
-				}
-			},
+
 		);
 	};
+
 	handleFileChange = (e, props) => {
 		e.preventDefault();
 		let reader = new FileReader();
@@ -993,15 +1121,13 @@ class CreateCreditNote extends React.Component {
 		formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
 		formData.append('discount', discount);
-		if (discountType && discountType.value) {
-			formData.append('discountType', discountType.value);
-		}
+		
+		formData.append('totalExciseAmount', this.state.initValue.total_excise);
+		formData.append('exciseType', this.state.checked);
 		// if (term && term.value) {
 		// 	formData.append('term', term.value);
 		// }
-		if (discountType.value === 'PERCENTAGE') {
-			formData.append('discountPercentage', discountPercentage);
-		}
+	
 		if (contactId && contactId.value) {
 			formData.append('contactId', contactId.value);
 		}
@@ -1290,6 +1416,7 @@ class CreateCreditNote extends React.Component {
 					totalAmount:response.data.totalAmount,
 					customer_currency:response.data.currencyCode,
 					remainingInvoiceAmount:response.data.remainingInvoiceAmount,
+					checked : response.data.exciseType,
 					initValue: {
 						...this.state.initValue,
 						...{
@@ -2070,6 +2197,44 @@ min="0"
 															</Button>
 														</Col> */}
 														<Row>
+														<Col lg={3}>
+																					<FormGroup>
+																						
+																						<span className='mr-4'>Inclusive</span>
+																						<Switch
+            checked={this.state.checked}
+			disabled
+			onChange={(checked) => {
+				
+				props.handleChange('checked')(checked);
+				this.setState(
+					{
+						checked,
+					},
+					() => {
+						this.updateAmount(data, props);
+					},
+				);
+				
+			}}
+            onColor="#2064d8"
+            onHandleColor="#2693e6"
+            handleDiameter={25}
+            uncheckedIcon={false}
+            checkedIcon={false}
+            boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+            activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+            height={20}
+            width={48}
+            className="react-switch "
+            
+          />
+		  <span  className='ml-4'>Exclusive</span>
+																						
+																					</FormGroup>
+																				</Col>
+															</Row>
+														<Row>
 															{props.errors.lineItemsString &&
 																typeof props.errors.lineItemsString ===
 																	'string' && (
@@ -2152,6 +2317,15 @@ min="0"
 																			service
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
+																	<TableHeaderColumn
+																	width="10%"
+																		dataField="exciseTaxId"
+																		dataFormat={(cell, rows) =>
+																			this.renderExcise(cell, rows, props)
+																		}
+																	>
+																	Excise
+																	</TableHeaderColumn> 
 																	<TableHeaderColumn
 																		dataField="vat"
 																		dataFormat={(cell, rows) =>

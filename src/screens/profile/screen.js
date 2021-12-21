@@ -2369,11 +2369,8 @@ class Profile extends React.Component {
 																										props.handleChange('vatRegistrationNumber')(
 																											option,
 																										);
-																									} else {
-																										props.handleChange('vatRegistrationNumber')(
-																											option,
-																										);
-																								}}
+																									} 
+																								}
 																							}
 																							value={props.values.vatRegistrationNumber}
 																								className={

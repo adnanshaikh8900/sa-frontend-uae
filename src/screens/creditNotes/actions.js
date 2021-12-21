@@ -76,6 +76,28 @@ export const getProjectList = () => {
 	};
 };
 
+export const getExciseList = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/datalist/exciseTax',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+						type: CUSTOMER_INVOICE.EXCISE_LIST,
+						payload: {
+							data: res.data,
+						},
+					});
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
 export const getCustomerList = (nameCode) => {
 	let contactType = nameCode ? nameCode : '';
 	return (dispatch) => {

@@ -45,3 +45,19 @@ export const getCompanyDetails = () => {
 	  })
 	}
   }
+
+  export const getContactById = (id) => {
+    return (dispatch) => {
+      let data = {
+        method: 'get',
+        url: `/rest/contact/getContactById?contactId=${id}`,
+      }
+  
+      return authApi(data).then((res) => {
+        return res
+      }).catch((err) => {
+        throw err
+      })
+    }
+  }
+  

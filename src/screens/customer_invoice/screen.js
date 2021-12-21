@@ -500,6 +500,7 @@ class CustomerInvoice extends React.Component {
 	};
 	renderActionForState = (id) => {
 		this.props.customerInvoiceActions.getVatList();
+		this.props.customerInvoiceActions.getExciseList();
 		this.props.customerInvoiceActions.getProductList();
 
 

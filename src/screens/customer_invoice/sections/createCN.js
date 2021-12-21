@@ -32,6 +32,7 @@ import * as CurrencyConvertActions from '../../currencyConvert/actions';
 import { toast } from 'react-toastify';
 import {data}  from '../../Language/index'
 import LocalizedStrings from 'react-localization';
+import Switch from "react-switch";
 
 
 const mapStateToProps = (state) => {
@@ -47,7 +48,8 @@ const mapStateToProps = (state) => {
 		product_category_list: state.product.product_category_list,
 		universal_currency_list: state.common.universal_currency_list,
 		currency_convert_list: state.currencyConvert.currency_convert_list,
-		rfqReceiveDate: state.rfqReceiveDate
+		rfqReceiveDate: state.rfqReceiveDate,
+		excise_list: state.customer_invoice.excise_list,
 	};
 	
 };
@@ -476,6 +478,69 @@ class CreateCreditNoteModal extends React.Component {
 							props.touched.invoiceLineItems &&
 							props.touched.invoiceLineItems[parseInt(idx, 10)] &&
 							props.touched.invoiceLineItems[parseInt(idx, 10)].vatCategoryId
+								? 'is-invalid'
+								: ''
+						}`}
+					/>
+				)}
+			/>
+		);
+	}
+
+	renderExcise = (cell, row, props) => {
+		const { excise_list } = this.props;
+
+		let idx;
+		this.state.selectedData.invoiceLineItems.map((obj, index) => {
+			if (obj.id === row.id) {
+				idx = index;
+			}
+			return obj;
+		});
+
+		return (
+			<Field
+				name={`invoiceLineItems.${idx}.exciseTaxId`}
+				render={({ field, form }) => (
+					<Select
+					isDisabled={true}
+						styles={customStyles}
+						options={
+							excise_list
+								? selectOptionsFactory.renderOptions(
+										'name',
+										'id',
+										excise_list,
+										'Excise Tax',
+								  )
+								: []
+						}
+						value={
+							excise_list &&
+							selectOptionsFactory
+								.renderOptions('name', 'id', excise_list, 'Excise Tax')
+								.find((option) => option.value === +row.exciseTaxId)
+						}
+						id="exciseTaxId"
+						placeholder={strings.Select+strings.Vat}
+						onChange={(e) => {
+							this.selectItem(
+								e.value,
+								row,
+								'exciseTaxId',
+								form,
+								field,
+								props,
+							);
+						}}
+						className={`${
+							props.errors.invoiceLineItems &&
+							props.errors.invoiceLineItems[parseInt(idx, 10)] &&
+							props.errors.invoiceLineItems[parseInt(idx, 10)].exciseTaxId &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.invoiceLineItems &&
+							props.touched.invoiceLineItems[parseInt(idx, 10)] &&
+							props.touched.invoiceLineItems[parseInt(idx, 10)].exciseTaxId
 								? 'is-invalid'
 								: ''
 						}`}
@@ -1287,6 +1352,42 @@ class CreateCreditNoteModal extends React.Component {
 														</Row>
 													
 														<Row>
+														<Col lg={3}>
+																					<FormGroup>
+																						
+																						<span className='mr-4'>Inclusive</span>
+																						<Switch
+																						disabled
+																							 checked={this.state.selectedData.exciseType}
+																							// onChange={(checked) => {
+																								
+																							// 	props.handleChange('checked')(checked);
+																							// 	this.setState(
+																							// 		{
+																							// 			checked,
+																							// 		},
+																							// 		() => {
+																							// 			this.updateAmount(data, props);
+																							// 		},
+																							// 	);
+																								
+																							// }}
+																							onColor="#2064d8"
+																							onHandleColor="#2693e6"
+																							handleDiameter={25}
+																							uncheckedIcon={false}
+																							checkedIcon={false}
+																							boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																							activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																							height={20}
+																							width={48}
+																							className="react-switch "
+																							
+																						/>
+																						<span  className='ml-4'>Exclusive</span>
+																																										
+																					</FormGroup>
+																				</Col>
 															<Col lg={12} className="mb-3">
 																{/* <Button
 																	color="primary"
@@ -1390,6 +1491,15 @@ class CreateCreditNoteModal extends React.Component {
 																		{strings.VAT}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
+																		dataField="vat"
+																		dataFormat={(cell, rows) =>
+																			this.renderExcise(cell, rows, props)
+																		}
+																	>
+																	Excise Tax
+																	</TableHeaderColumn>
+																	
+																	<TableHeaderColumn
 																		dataField="sub_total"
 																		dataFormat={this.renderSubTotal}
 																		className="text-right"
@@ -1403,7 +1513,7 @@ class CreateCreditNoteModal extends React.Component {
 														</Row>
 														<hr />
 													
-														{this.state.selectedData.invoiceLineItems.length > 0 && (
+														{this.state.selectedData.invoiceLineItems &&this.state.selectedData.invoiceLineItems.length > 0 && (
 																<Row>
 																		<Col lg={8}>
 																	<FormGroup className="py-2">

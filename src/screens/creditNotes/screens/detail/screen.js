@@ -256,7 +256,7 @@ class DetailCreditNote extends React.Component {
 									fileName: res.data.fileName ? res.data.fileName : '',
 									filePath: res.data.filePath ? res.data.filePath : '',
 								},
-								checked: res.data.exciseType ? res.data.exciseType : '',
+								checked: res.data.exciseType ? res.data.exciseType : res.data.exciseType,
 								discountAmount: res.data.discount ? res.data.discount : 0,
 								discountPercentage: res.data.discountPercentage
 									? res.data.discountPercentage

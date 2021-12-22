@@ -12,6 +12,7 @@ const initState = {
 	deposit_list: [],
 	pay_mode: [],
 	request_for_quotation_list: [],
+	excise_list: [],
 };
 
 const RequestForQuotationReducer = (state = initState, action) => {
@@ -59,7 +60,11 @@ const RequestForQuotationReducer = (state = initState, action) => {
 				...state,
 				pay_mode: Object.assign([], payload.data),
 			};
-
+		case REQUEST_FOR_QUOTATION.EXCISE_LIST:
+			return {
+				...state,
+				excise_list:  Object.assign([], payload.data),
+			};
 		case REQUEST_FOR_QUOTATION.PRODUCT_LIST:
 			return {
 				...state,

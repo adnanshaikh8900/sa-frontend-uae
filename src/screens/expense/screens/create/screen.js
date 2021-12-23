@@ -446,7 +446,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 														(option) =>
 															option.label === this.state.userStateName,
 													    )				
-			props.handleChange('placeOfSupplyId')(placeOfSupplyId.value)
+			props.handleChange('placeOfSupplyId')(placeOfSupplyId)
 			this.setState({lockPlacelist:true})
 		}
 		else
@@ -903,10 +903,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																					props.handleChange('taxTreatmentId')(
 																						option,
 																					);
-																					props.handleChange('placeOfSupplyId')({
-																						label: 'Select Place Of Supply',
-																						value: '',
-																					});
+																					props.handleChange('placeOfSupplyId')('');
 																							// for resetting Vat
 																					props.handleChange('vatCategoryId')('');
 																					//placelist Setup
@@ -955,17 +952,18 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																						'value',
 																						placelist,
 																						'Place Of Supply',
-																						
+
 																				  )
 																				: []
 																		}
 																		value={
-																			placelist 
-																			&& placelist.find(
-																				(option) =>
-																					option.value ===
-																					props.values.placeOfSupplyId,
-																			)
+																			// placelist 
+																			// && placelist.find(
+																 			// 	(option) =>
+																			// 		option.value ===
+																			// 		props.values.placeOfSupplyId,
+																			// )
+																			props.values.placeOfSupplyId
 																		}
 																		className={
 																			props.errors.placeOfSupplyId &&

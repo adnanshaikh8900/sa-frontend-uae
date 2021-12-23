@@ -249,11 +249,11 @@ class DetailCustomerInvoice extends React.Component {
 									placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 									fileName: res.data.fileName ? res.data.fileName : '',
 									filePath: res.data.filePath ? res.data.filePath : '',
-									checked: res.data.exciseType ? res.data.exciseType : '',
+									checked: res.data.exciseType ? res.data.exciseType :res.data.exciseType,
 									total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
 
 								},
-								checked: res.data.exciseType ? res.data.exciseType : '',
+								checked: res.data.exciseType ? res.data.exciseType : res.data.exciseType,
 								invoiceDateNoChange :res.data.invoiceDate
 								? moment(res.data.invoiceDate)
 								: '',
@@ -328,7 +328,7 @@ class DetailCustomerInvoice extends React.Component {
 			}
 			return obj;
 		});
-
+debugger
 		return (
 			<Field
 				name={`lineItemsString.${idx}.exciseTaxId`}
@@ -2050,7 +2050,7 @@ min="0"
 																						<Switch
             checked={this.state.checked}
 			onChange={(checked) => {
-				
+				debugger
 				props.handleChange('checked')(checked);
 				this.setState(
 					{

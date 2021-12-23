@@ -60,7 +60,11 @@ const RequestForQuotationReducer = (state = initState, action) => {
 				...state,
 				pay_mode: Object.assign([], payload.data),
 			};
-
+		case PURCHASE_ORDER.EXCISE_LIST:
+			return {
+				...state,
+				excise_list: Object.assign([], payload.data),
+			}
 		case PURCHASE_ORDER.PRODUCT_LIST:
 			return {
 				...state,

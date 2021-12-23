@@ -303,7 +303,7 @@ class RFQTemplate extends Component {
 							</div>
 							<div
 								style={{
-									width: '150%',
+									width: '120%',
 									display: 'flex',
 									justifyContent: 'space-between',
 								}}
@@ -312,7 +312,7 @@ class RFQTemplate extends Component {
 								<Table className="table-clear cal-table">
 									<tbody>
 										<tr >
-											<td style={{ width: '60%' }}>
+											<td style={{ width: '40%' }}>
 												<strong>{strings.SubTotal }</strong>
 											</td>
 											<td
@@ -348,7 +348,7 @@ class RFQTemplate extends Component {
 										</tr>
 										
 										<tr >
-											<td style={{ width: '60%' }}>
+											<td style={{ width: '40%' }}>
 												<strong>{strings.Vat }</strong>
 											</td>
 											<td
@@ -383,7 +383,7 @@ class RFQTemplate extends Component {
 											</td>
 										</tr>
 										<tr >
-											<td style={{ width: '60%' }}>
+											<td style={{ width: '40%' }}>
 												<strong>{strings.Total }</strong>
 											</td>
 											<td

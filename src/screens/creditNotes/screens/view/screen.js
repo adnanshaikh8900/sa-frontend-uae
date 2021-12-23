@@ -111,6 +111,18 @@ class ViewCreditNote extends React.Component {
 											}
 										});
 								}
+								if(this.state.invoiceData.contactId)
+						     {	
+							this.props.supplierInvoiceDetailActions
+							.getContactById(this.state.invoiceData.contactId)
+							.then((res) => {
+								if (res.status === 200) {									
+									this.setState({
+										contactData: res.data,
+									});
+								}
+							});
+							}
 							},
 						);
 					}
@@ -143,7 +155,7 @@ this.props.supplierInvoiceDetailActions
 	};	
 	render() {
 		strings.setLanguage(this.state.language);
-		const { invoiceData, currencyData,InvoiceDataList,  } = this.state;
+		const { invoiceData, currencyData,InvoiceDataList,contactData  } = this.state;
 		const { profile } = this.props;
 
 		return (
@@ -204,6 +216,7 @@ this.props.supplierInvoiceDetailActions
 										ref={(el) => (this.componentRef = el)}
 										totalNet={this.state.totalNet}
 										companyData={this.state && this.state.companyData ?this.state.companyData:''}
+										contactData={contactData}
 									/>
 								</PDFExport>
 							</div>

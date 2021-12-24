@@ -1045,6 +1045,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                             <FormGroup>
                                                                                 <Label htmlFor="countryId"><span className="text-danger">*</span>{strings.Country}</Label>
                                                                                 <Select
+                                                                                isDisabled
                                                                                     options={
                                                                                         country_list
                                                                                             ? selectOptionsFactory.renderOptions(

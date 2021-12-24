@@ -145,13 +145,13 @@ class CreateEmployeePayroll extends React.Component {
                 referenceCode: '',
                 title: '',
                 billingEmail: '',
-                countryId: '',
+                countryId:  {label: "UAE Dirham - AED", value: 150},
                 permanentAddress: '',
                 presentAddress: '',
                 bloodGroup: '',
                 mobileNumber: '',
                 vatRegestationNo: '',
-                currencyCode: '',
+                currencyCode:'',
                 poBoxNumber: '',
                 employeeRole: '',
                 stateId: '',
@@ -1850,6 +1850,7 @@ existForAccountNumber = (value) => {
                                                                                                 <FormGroup>
                                                                                                     <Label htmlFor="countryId"><span className="text-danger">* </span>{strings.Country}</Label>
                                                                                                     <Select
+                                                                                                    isDisabled
                                                                                                         options={
                                                                                                             country_list
                                                                                                                 ? selectOptionsFactory.renderOptions(

@@ -68,7 +68,7 @@ class CreateContact extends React.Component {
 				contactType: '',
 				
 				countryId: '',
-				currencyCode: '',
+				currencyCode:{label: "UAE Dirham - AED", value: 150},
 				email: '',
 				firstName: '',
 				shippingAddress: '',
@@ -90,11 +90,14 @@ class CreateContact extends React.Component {
 				billingcountryId: '',
                 billingCity:'',
 				billingPostZipCode:'',
+				billingPhoneNumber:'',
 				
                 shippingCountryId:'',
 				shippingStateId:'',
+				shippingTelephone:'',
 				shippingPostZipCode:'',
 				shippingCity:'',
+				shippingFax:'',
 				taxTreatmentId:'',
 
 
@@ -754,6 +757,7 @@ class CreateContact extends React.Component {
 																		{strings.Currency}
 																	</Label>
 																	<Select
+																	isDisabled
 																		styles={customStyles}
 																		options={
 																			currency_list
@@ -777,7 +781,7 @@ class CreateContact extends React.Component {
 																				.find(
 																					(option) =>
 																						option.value ===
-																						+props.values.currencyCode,
+																						+props.values.currencyCode.value,
 																				)
 																		}
 																		onChange={(option) => {
@@ -890,7 +894,7 @@ class CreateContact extends React.Component {
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regExTelephone.test(option.target.value)
+																				this.regEx.test(option.target.value)
 																			) {
 																				props.handleChange('poBoxNumber')(
 																					option,
@@ -1140,7 +1144,7 @@ class CreateContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="stateId"><span className="text-danger">* </span>
 																		{/* {strings.StateRegion} */}
-																		{props.values.billingcountryId.value === 229 ? "Emirates" : "State/Provinces"}
+																		{props.values.billingcountryId.value === 229 ? "Emirates" : "State / Provinces"}
 																	</Label>
 																	<Select
 																		styles={customStyles}
@@ -1150,7 +1154,7 @@ class CreateContact extends React.Component {
 																					'label',
 																					'value',
 																					state_list,
-																					props.values.billingcountryId.value === 229 ? "Emirates" : "State/Provinces",
+																					props.values.billingcountryId.value === 229 ? "Emirates" : "State / Provinces",
 																				)
 																				: []
 																		}
@@ -1162,7 +1166,7 @@ class CreateContact extends React.Component {
 																				props.handleChange('stateId')('');
 																			}
 																		}}
-																		placeholder={strings.Select + props.values.billingcountryId === 229 ? "Emirates" : "State/Provinces"}
+																		placeholder={strings.Select + props.values.billingcountryId === 229 ? "Emirates" : "State / Provinces"}
 																		id="stateId"
 																		name="stateId"
 																		className={
@@ -1263,7 +1267,7 @@ class CreateContact extends React.Component {
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regExTelephone.test(option.target.value)
+																				this.regEx.test(option.target.value)
 																			) {
 																				props.handleChange('billingPostZipCode')(
 																					option,
@@ -1301,21 +1305,21 @@ class CreateContact extends React.Component {
 																				option.target.value === '' ||
 																				this.regExTelephone.test(option.target.value)
 																			) {
-																				props.handleChange('telephone')(option);
+																				props.handleChange('billingPhoneNumber')(option);
 																			}
 																		}}
-																		value={props.values.telephone}
+																		value={props.values.billingPhoneNumber}
 																		className={
-																			props.errors.telephone &&
-																				props.touched.telephone
+																			props.errors.billingPhoneNumber &&
+																				props.touched.billingPhoneNumber
 																				? 'is-invalid'
 																				: ''
 																		}
 																	/>
-																	{props.errors.telephone &&
-																		props.touched.telephone && (
+																	{props.errors.billingPhoneNumber &&
+																		props.touched.billingPhoneNumber && (
 																			<div className="invalid-feedback">
-																				{props.errors.telephone}
+																				{props.errors.billingPhoneNumber}
 																			</div>
 																		)}
 																</FormGroup>
@@ -1334,7 +1338,7 @@ class CreateContact extends React.Component {
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regExTelephone.test(option.target.value)
+																				this.regEx.test(option.target.value)
 																			) {
 																				props.handleChange('billingFax')(
 																					option,
@@ -1519,7 +1523,7 @@ class CreateContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="shippingStateId"><span className="text-danger">* </span>
 																		{/* {strings.StateRegion} */}
-																		{props.values.billingcountryId === 229 ? "Emirites" : "State/Provinces"}
+																		{props.values.billingcountryId === 229 ? "Emirites" : "State / Provinces"}
 																	</Label>
 																	<Select
 																		styles={customStyles}
@@ -1529,7 +1533,7 @@ class CreateContact extends React.Component {
 																					'label',
 																					'value',
 																					state_list_for_shipping,
-																					props.values.billingcountryId === 229 ? "Emirites" : "State/Provinces",
+																					props.values.billingcountryId === 229 ? "Emirites" : "State / Provinces",
 																				)
 																				: []
 																		}
@@ -1546,7 +1550,7 @@ class CreateContact extends React.Component {
 																				props.handleChange('shippingStateId')('');
 																			}
 																		}}
-																		placeholder={strings.Select + props.values.billingcountryId === 229 ? "Emirites" : "State/Provinces"}
+																		placeholder={strings.Select + props.values.billingcountryId === 229 ? "Emirites" : "State / Provinces"}
 																		id="shippingStateId"
 																		name="shippingStateId"
 																		className={
@@ -1616,7 +1620,7 @@ class CreateContact extends React.Component {
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regExTelephone.test(option.target.value)
+																				this.regEx.test(option.target.value)
 																			) {
 																				props.handleChange('shippingPostZipCode')(
 																					option.target.value,
@@ -1656,21 +1660,21 @@ class CreateContact extends React.Component {
 																				option.target.value === '' ||
 																				this.regExTelephone.test(option.target.value)
 																			) {
-																				props.handleChange('telephone')(option);
+																				props.handleChange('shippingTelephone')(option);
 																			}
 																		}}
-																		value={props.values.telephone}
+																		value={props.values.shippingTelephone}
 																		className={
-																			props.errors.telephone &&
-																				props.touched.telephone
+																			props.errors.shippingTelephone &&
+																				props.touched.shippingTelephone
 																				? 'is-invalid'
 																				: ''
 																		}
 																	/>
-																	{props.errors.telephone &&
-																		props.touched.telephone && (
+																	{props.errors.shippingTelephone &&
+																		props.touched.shippingTelephone && (
 																			<div className="invalid-feedback">
-																				{props.errors.telephone}
+																				{props.errors.shippingTelephone}
 																			</div>
 																		)}
 																</FormGroup>
@@ -1690,27 +1694,27 @@ class CreateContact extends React.Component {
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regExTelephone.test(option.target.value)
+																				this.regEx.test(option.target.value)
 																			) {
-																				props.handleChange('billingFax')(
+																				props.handleChange('shippingFax')(
 																					option,
 																				);
 																			}
 																	
 
-																		}}
-																		value={props.values.billingFax}
+																			}}
+																		value={props.values.shippingFax}
 																		className={
-																			props.errors.billingFax &&
-																				props.touched.billingFax
+																			props.errors.shippingFax &&
+																				props.touched.shippingFax
 																				? 'is-invalid'
 																				: ''
 																		}
 																	/>
-																	{props.errors.billingFax &&
-																		props.touched.billingFax && (
+																	{props.errors.shippingFax &&
+																		props.touched.shippingFax && (
 																			<div className="invalid-feedback">
-																				{props.errors.billingFax}
+																				{props.errors.shippingFax}
 																			</div>
 																		)}
 																</FormGroup>

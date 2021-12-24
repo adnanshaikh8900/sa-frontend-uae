@@ -349,7 +349,7 @@ class CreateCustomerInvoice extends React.Component {
 					<Input
 					type="text"
 					min="0"
-						maxLength="10"
+						maxLength="14,2"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (
@@ -630,11 +630,11 @@ renderVatAmount = (cell, row,extraData) => {
 			   <div>
 			   <div  class="input-group">
 				   <Input
-				   type="text"
-				   min="0"
-					   maxLength="10"
-					   value={row['discount'] !== 0 ? row['discount'] : 0}
-					   onChange={(e) => {
+	 					type="text"
+				   	    min="0"
+					    maxLength="14,2"
+					    value={row['discount'] !== 0 ? row['discount'] : 0}
+					    onChange={(e) => {
 						   if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
 							   this.selectItem(
 								   e.target.value,
@@ -1689,7 +1689,7 @@ debugger
 																	</Label>
 																	<Input
 																		type="text"
-																		maxLength='30'
+																		maxLength='50'
 																		id="invoice_number"
 																		name="invoice_number"
 																		placeholder={strings.InvoiceNumber}
@@ -2328,7 +2328,7 @@ debugger
 																		<Label htmlFor="notes">{strings.Notes}</Label>
 																		<Input
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="notes"
 																			id="notes"
 																			rows="6"
@@ -2431,7 +2431,7 @@ debugger
 																		</Label>
 																		<Input
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
 																			rows="5"

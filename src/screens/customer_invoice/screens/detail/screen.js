@@ -576,7 +576,7 @@ debugger
 					<div>
 						<Input
 							type="text"
-min="0"
+							min="0"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -1583,6 +1583,7 @@ min="0"
 																		</Label>
 																		<Input
 																			type="text"
+																			maxLength='50'
 																			id="invoice_number"
 																			name="invoice_number"
 																			placeholder={strings.InvoiceNumber}
@@ -1997,7 +1998,7 @@ min="0"
 																		<Input
 																			type="number"
 																			//min="0"
-																			maxLength='20'
+																			maxLength="14,2"
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"
@@ -2203,7 +2204,7 @@ min="0"
 																		<Label htmlFor="notes">{strings.Notes}</Label>
 																		<Input
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="notes"
 																			id="notes"
 																			rows="6"
@@ -2222,7 +2223,7 @@ min="0"
 																				</Label>
 																				<Input
 																					type="text"
-																					maxLength="100"
+																					maxLength="50"
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					value={props.values.receiptNumber}
@@ -2307,7 +2308,7 @@ min="0"
 																		</Label>
 																		<Input
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
 																			rows="5"

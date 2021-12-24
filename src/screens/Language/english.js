@@ -224,7 +224,8 @@ Attachment:"Attachment",
 //Supplier Invoice
 SupplierInvoices:"Supplier Invoices",						
 SUPPLIERNAME:"SUPPLIER NAME",										
-INVOICEAMOUNT:"INVOICE AMOUNT",		
+INVOICEAMOUNT:"INVOICE AMOUNT",
+BillFrom:"Bill From",		
 		
 //Create invoice
 SupplierName:"Supplier Name",			
@@ -852,6 +853,8 @@ RemainingBalance:"Remaining Balance",
 //View
 BalanceDue:"Balance Due",	
 BillTo:"Bill To",	
+CreditTo:"Credit To",
+TaxCreditDate:"Tax Credit Date",
 Company:"Company",	
 AmountInWords:"Amount In Words",	
 Details:"Details",

@@ -722,6 +722,7 @@ class DetailContact extends React.Component {
 																			type="text"
 																			id="firstName"
 																			name="firstName"
+																			maxLength="100"
 																			placeholder={strings.Enter+strings.FirstName}
 																			onChange={(option) => {
 																				if (
@@ -760,6 +761,7 @@ class DetailContact extends React.Component {
 																			type="text"
 																			id="middleName"
 																			name="middleName"
+																			maxLength="100"
 																			placeholder={strings.Enter+strings.MiddleName}
 																			onChange={(option) => {
 																				if (
@@ -796,6 +798,7 @@ class DetailContact extends React.Component {
 																			type="text"
 																			id="lastName"
 																			name="lastName"
+																			maxLength="100"
 																			placeholder={strings.Enter+strings.LastName}
 																			onChange={(option) => {
 																				if (
@@ -1103,7 +1106,7 @@ class DetailContact extends React.Component {
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
-																					this.regExBoth.test(
+																					this.regEx.test(
 																						option.target.value,
 																					)
 																				) {
@@ -1137,7 +1140,7 @@ class DetailContact extends React.Component {
 																		type="text"
 																		id="website"
 																		name="website"
-																		maxLength="225"
+																		maxLength="100"
 																		placeholder={strings.Enter + strings.Website}
 																		onChange={(option) => {
 																			if (
@@ -1388,7 +1391,7 @@ class DetailContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="stateId"><span className="text-danger">* </span>
 																		{/* {strings.StateRegion} */}
-																		{props.values.billingcountryId.value === 229 ? "Emirites" : "State/Provinces"}
+																		{props.values.billingcountryId.value === 229 ? "Emirites" : "State / Provinces"}
 																	</Label>
 																	<Select
 																		styles={customStyles}
@@ -1398,7 +1401,7 @@ class DetailContact extends React.Component {
 																					'label',
 																					'value',
 																					state_list,
-																					props.values.billingcountryId.value === 229 ? "Emirites" : "State/Provinces",
+																					props.values.billingcountryId.value === 229 ? "Emirites" : "State / Provinces",
 																				)
 																				: []
 																		}
@@ -1408,7 +1411,7 @@ class DetailContact extends React.Component {
 																				'label',
 																				'value',
 																				state_list,
-																				props.values.billingcountryId.value === 229 ? "Emirites" : "State/Provinces",
+																				props.values.billingcountryId.value === 229 ? "Emirites" : "State / Provinces",
 																			).find(
 																			(option) =>
 																				option.value ===
@@ -1423,7 +1426,7 @@ class DetailContact extends React.Component {
 																				props.handleChange('stateId')('');
 																			}
 																		}}
-																		placeholder={strings.Select + props.values.billingcountryId === 229 ? "Emirites" : "State/Provinces"}
+																		placeholder={strings.Select + props.values.billingcountryId === 229 ? "Emirites" : "State / Provinces"}
 																		id="stateId"
 																		name="stateId"
 																		className={
@@ -1480,7 +1483,7 @@ class DetailContact extends React.Component {
 																		id="billingCity"
 																		name="billingCity"
 																		type="text"
-																		maxLength="20"
+																		maxLength="100"
 																		value={props.values.billingCity}
 																		onChange={(option) => {
 																			if (
@@ -1523,7 +1526,7 @@ class DetailContact extends React.Component {
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regExBoth.test(option.target.value)
+																				this.regEx.test(option.target.value)
 																			) {
 																				props.handleChange('billingPostZipCode')(
 																					option,
@@ -1595,7 +1598,7 @@ class DetailContact extends React.Component {
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regExBoth.test(option.target.value)
+																				this.regEx.test(option.target.value)
 																			) {
 																				props.handleChange('billingFax')(
 																					option,
@@ -1784,7 +1787,7 @@ class DetailContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="shippingStateId"><span className="text-danger">* </span>
 																		{/* {strings.StateRegion} */}
-																		{props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229? "Emirites" : "State/Provinces"}
+																		{props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229? "Emirites" : "State / Provinces"}
 																	</Label>
 																	<Select
 																		
@@ -1795,7 +1798,7 @@ class DetailContact extends React.Component {
 																					'label',
 																					'value',
 																					state_list_for_shipping,
-																					props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229? "Emirites" : "State/Provinces",
+																					props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229? "Emirites" : "State / Provinces",
 																				)
 																				: []
 																		}
@@ -1813,7 +1816,7 @@ class DetailContact extends React.Component {
 																				props.handleChange('shippingStateId')('');
 																			}
 																		}}
-																		placeholder={strings.Select + props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229 ? "Emirites" : "State/Provinces"}
+																		placeholder={strings.Select + props.values.shippingCountryId === 229 || props.values.shippingCountryId.value === 229 ? "Emirites" : "State / Provinces"}
 																		id="shippingStateId"
 																		name="shippingStateId"
 																		className={
@@ -1851,7 +1854,7 @@ class DetailContact extends React.Component {
 																		id="shippingCity"
 																		name="shippingCity"
 																		type="text"
-																		maxLength="20"
+																		maxLength="100"
 																		className={
 																			props.errors.shippingCity && props.touched.shippingCity
 																				? 'is-invalid'
@@ -1881,7 +1884,7 @@ class DetailContact extends React.Component {
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regExBoth.test(option.target.value)
+																				this.regEx.test(option.target.value)
 																			) {
 																				props.handleChange('shippingPostZipCode')(
 																					option,
@@ -1959,7 +1962,7 @@ class DetailContact extends React.Component {
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regExBoth.test(option.target.value)
+																				this.regEx.test(option.target.value)
 																			) {
 																				props.handleChange('shippingFax')(
 																					option,

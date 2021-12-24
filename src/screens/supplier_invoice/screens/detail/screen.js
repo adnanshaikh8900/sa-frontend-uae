@@ -236,7 +236,7 @@ class DetailSupplierInvoice extends React.Component {
 									discountType: res.data.discountType
 										? res.data.discountType
 										: '',
-                                    exciseType: res.data.exciseType ? res.data.exciseType : '',
+                                    
 									term: res.data.term ? res.data.term : '',
 									placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 									fileName: res.data.fileName ? res.data.fileName : '',
@@ -245,7 +245,7 @@ class DetailSupplierInvoice extends React.Component {
 									checked: res.data.exciseType ? res.data.exciseType : '',
 									total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
 								},
-								checked: res.data.exciseType ? res.data.exciseType : '',
+								checked: res.data.exciseType ? res.data.exciseType : res.data.exciseType,
 								invoiceDateNoChange :res.data.invoiceDate
 								? moment(res.data.invoiceDate)
 								: '',

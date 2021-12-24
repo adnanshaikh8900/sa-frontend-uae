@@ -256,6 +256,9 @@ class DetailCurrencyConvert extends React.Component {
                               exchangeRate: Yup.string().required(
                                 'Exchange Rate is Required',
                               ),
+							  currencyCode: Yup.string().required(
+								'Exchange Currency is Required',
+							),
                           })}
                           >
                             {(props) => (

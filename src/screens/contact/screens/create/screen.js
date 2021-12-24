@@ -515,7 +515,7 @@ class CreateContact extends React.Component {
 																	</Label>
 																	<Input
 																		type="text"
-																		maxLength="26"
+																		maxLength="100"
 																		id="firstName"
 																		name="firstName"
 																		placeholder={strings.Enter + strings.FirstName}
@@ -554,7 +554,7 @@ class CreateContact extends React.Component {
 																	</Label>
 																	<Input
 																		type="text"
-																		maxLength="26"
+																		maxLength="100"
 																		id="middleName "
 																		name="middleName "
 																		placeholder={strings.Enter + strings.MiddleName}
@@ -592,7 +592,7 @@ class CreateContact extends React.Component {
 																	<Label htmlFor="lastName"><span className="text-danger">* </span>{strings.LastName}</Label>
 																	<Input
 																		type="text"
-																		maxLength="26"
+																		maxLength="100"
 																		id="lastName"
 																		name="lastName"
 																		placeholder={strings.Enter + strings.LastName}
@@ -681,7 +681,7 @@ class CreateContact extends React.Component {
 																	</Label>
 																	<Input
 																		type="text"
-																		maxLength="50"
+																		maxLength="100"
 																		id="organization"
 																		name="organization"
 																		placeholder={strings.Enter + strings.OrganizationName}
@@ -890,7 +890,7 @@ class CreateContact extends React.Component {
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regExBoth.test(option.target.value)
+																				this.regExTelephone.test(option.target.value)
 																			) {
 																				props.handleChange('poBoxNumber')(
 																					option,
@@ -924,7 +924,7 @@ class CreateContact extends React.Component {
 																		type="text"
 																		id="website"
 																		name="website"
-																		maxLength="225"
+																		maxLength="100"
 																		placeholder={strings.Enter + strings.Website}
 																		onChange={(option) => {
 																			if (
@@ -1219,7 +1219,7 @@ class CreateContact extends React.Component {
 																		id="billingCity"
 																		name="billingCity"
 																		type="text"
-																		maxLength="20"
+																		maxLength="100"
 																		value={props.values.billingCity}
 																		onChange={(option) => {
 																			if (
@@ -1263,7 +1263,7 @@ class CreateContact extends React.Component {
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regExBoth.test(option.target.value)
+																				this.regExTelephone.test(option.target.value)
 																			) {
 																				props.handleChange('billingPostZipCode')(
 																					option,
@@ -1301,22 +1301,21 @@ class CreateContact extends React.Component {
 																				option.target.value === '' ||
 																				this.regExTelephone.test(option.target.value)
 																			) {
-																				props.handleChange('billingPhoneNumber')(option);
+																				props.handleChange('telephone')(option);
 																			}
-																		
 																		}}
-																		value={props.values.billingPhoneNumber}
+																		value={props.values.telephone}
 																		className={
-																			props.errors.billingPhoneNumber &&
-																				props.touched.billingPhoneNumber
+																			props.errors.telephone &&
+																				props.touched.telephone
 																				? 'is-invalid'
 																				: ''
 																		}
 																	/>
-																	{props.errors.billingPhoneNumber &&
-																		props.touched.billingPhoneNumber && (
+																	{props.errors.telephone &&
+																		props.touched.telephone && (
 																			<div className="invalid-feedback">
-																				{props.errors.billingPhoneNumber}
+																				{props.errors.telephone}
 																			</div>
 																		)}
 																</FormGroup>
@@ -1335,7 +1334,7 @@ class CreateContact extends React.Component {
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regExBoth.test(option.target.value)
+																				this.regExTelephone.test(option.target.value)
 																			) {
 																				props.handleChange('billingFax')(
 																					option,
@@ -1587,7 +1586,7 @@ class CreateContact extends React.Component {
 																		id="shippingCity"
 																		name="shippingCity"
 																		type="text"
-																		maxLength="20"
+																		maxLength="100"
 																		className={
 																			props.errors.shippingCity && props.touched.shippingCity
 																				? 'is-invalid'
@@ -1617,7 +1616,7 @@ class CreateContact extends React.Component {
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regExBoth.test(option.target.value)
+																				this.regExTelephone.test(option.target.value)
 																			) {
 																				props.handleChange('shippingPostZipCode')(
 																					option.target.value,
@@ -1657,22 +1656,21 @@ class CreateContact extends React.Component {
 																				option.target.value === '' ||
 																				this.regExTelephone.test(option.target.value)
 																			) {
-																				props.handleChange('shippingTelephone')(option.target.value);
+																				props.handleChange('telephone')(option);
 																			}
 																		}}
-																		
-																		value={props.values.shippingTelephone}
+																		value={props.values.telephone}
 																		className={
-																			props.errors.shippingTelephone &&
-																				props.touched.shippingTelephone
+																			props.errors.telephone &&
+																				props.touched.telephone
 																				? 'is-invalid'
 																				: ''
 																		}
 																	/>
-																	{props.errors.shippingTelephone &&
-																		props.touched.shippingTelephone && (
+																	{props.errors.telephone &&
+																		props.touched.telephone && (
 																			<div className="invalid-feedback">
-																				{props.errors.shippingTelephone}
+																				{props.errors.telephone}
 																			</div>
 																		)}
 																</FormGroup>
@@ -1683,31 +1681,36 @@ class CreateContact extends React.Component {
 																	<Label htmlFor="shippingFax">
 																		{strings.Fax}
 																	</Label>
-																	<Input																	
+																	<Input
 																		type="text"
 																		maxLength="8"
 																		id="shippingFax"
 																		name="shippingFax"
-																		value={props.values.shippingFax}
 																		placeholder={strings.Enter + strings.Fax}
 																		onChange={(option) => {
-																				props.handleChange('shippingFax')(
-																					option.target.value,
+																			if (
+																				option.target.value === '' ||
+																				this.regExTelephone.test(option.target.value)
+																			) {
+																				props.handleChange('billingFax')(
+																					option,
 																				);
-																			
+																			}
+																	
+
 																		}}
-																		//value={ props.values.shippingFax}
+																		value={props.values.billingFax}
 																		className={
-																			props.errors.shippingFax &&
-																				props.touched.shippingFax
+																			props.errors.billingFax &&
+																				props.touched.billingFax
 																				? 'is-invalid'
 																				: ''
 																		}
 																	/>
-																	{props.errors.shippingFax &&
-																		props.touched.shippingFax && (
+																	{props.errors.billingFax &&
+																		props.touched.billingFax && (
 																			<div className="invalid-feedback">
-																				{props.errors.shippingFax}
+																				{props.errors.billingFax}
 																			</div>
 																		)}
 																</FormGroup>

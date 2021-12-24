@@ -601,7 +601,7 @@ class Profile extends React.Component {
 		);
 		formData.append(
 			'isRegisteredVat',
-			isRegisteredVat ? isRegisteredVat : '',
+			isRegisteredVat ? isRegisteredVat : 0,
 		);
 		formData.append(
 			'vatRegistrationDate',

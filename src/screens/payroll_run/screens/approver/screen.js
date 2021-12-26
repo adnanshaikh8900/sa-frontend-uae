@@ -1050,7 +1050,7 @@ let payPeriodString=moment(dateArr[0]).format('DD/MM/YYYY')+" - "+moment(dateArr
 																<Col>
 																
 																	<FormGroup>
-																	{this.state.status && (this.state.status==="Approved" || this.state.status==="Rejected") ? 
+																	{this.state.status && (this.state.status==="Approved" || this.state.status==="Rejected" ||this.state.status==="Partially Paid"  ||this.state.status==="Paid" ) ? 
 																''	: (
 																		<div>
 
@@ -1082,7 +1082,7 @@ let payPeriodString=moment(dateArr[0]).format('DD/MM/YYYY')+" - "+moment(dateArr
 																				{props.errors.comment}
 																			</div>
 																		)}
-																		{this.state.status && (this.state.status==="Approved" || this.state.status==="Rejected") ? 
+																		{this.state.status && (this.state.status==="Approved" ||this.state.status==="Partially Paid"  ||this.state.status==="Paid" ) ? 
 																''	:
 																		(
 																			<Button
@@ -1110,7 +1110,7 @@ let payPeriodString=moment(dateArr[0]).format('DD/MM/YYYY')+" - "+moment(dateArr
 
 																<Col>
 																<ButtonGroup className="mt-5 pull-right ">
-																{this.state.status && (this.state.status==="Approved" || this.state.status==="Rejected") ? 
+																{this.state.status && (this.state.status==="Approved"  ||this.state.status==="Partially Paid"  ||this.state.status==="Paid" ) ? 
 																""	:
 																	(
 																		<Button

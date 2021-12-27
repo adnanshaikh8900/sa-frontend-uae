@@ -416,6 +416,7 @@ class DetailBankAccount extends React.Component {
 																</Label>
 																<Input
 																	type="text"
+																	maxLength="100"
 																	id="account_name"
 																	name="account_name"
 																	placeholder={strings.Enter + strings.AccountName}
@@ -514,7 +515,7 @@ class DetailBankAccount extends React.Component {
 																</Label>
 																<Input
 																	type="text"
-																	maxLength="12"
+																	maxLength="17,3"
 																	id="opening_balance"
 																	name="opening_balance"
 																	readOnly={

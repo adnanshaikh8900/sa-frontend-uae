@@ -837,7 +837,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																		</Label>
 																		<Input
 																			type="text"
-																			maxLength="70"
+																			maxLength="50"
 																			id="expenseNumber"
 																			name="expenseNumber"
 																			placeholder={strings.Enter+" Expense Number"}
@@ -1163,7 +1163,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	<Input
 																		type="text"
 																		min="0"
-																		maxLength="10"
+																		maxLength="17,3"
 																		name="expenseAmount"
 																		id="expenseAmount"
 																		rows="5"
@@ -1558,7 +1558,7 @@ min="0"
 																	</Label>
 																	<Input
 																		type="textarea"
-																		maxLength="255"
+																		maxLength="250"
 																		name="expenseDescription"
 																		id="expenseDescription"
 																		rows="5"
@@ -1586,7 +1586,7 @@ min="0"
 																					type="text"
 																					id="receiptNumber"
 																					name="receiptNumber"
-																					maxLength="20"
+																					maxLength="100"
 																					placeholder={strings.Enter+strings.ReceiptNumber}
 																					onChange={(option) =>
 																						props.handleChange('receiptNumber')(
@@ -1606,7 +1606,7 @@ min="0"
 																			</Label>
 																			<Input
 																				type="textarea"
-																				maxLength="255"
+																				maxLength="250"
 																				name="receiptAttachmentDescription"
 																				id="receiptAttachmentDescription"
 																				rows="5"

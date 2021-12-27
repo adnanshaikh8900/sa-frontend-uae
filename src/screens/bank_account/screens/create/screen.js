@@ -346,7 +346,7 @@ class CreateBankAccount extends React.Component {
 																	</Label>
 																	<Input
 																		type="text"
-																		maxLength="50"
+																		maxLength="100"
 																		id="account_name"
 																		name="account_name"
 																		placeholder={strings.Enter+strings.AccountName}
@@ -446,7 +446,7 @@ class CreateBankAccount extends React.Component {
 																	</Label>
 																	<Input
 																		type="type"
-																		maxLength="12"
+																		maxLength="17,3"
 																		id="opening_balance"
 																		name="opening_balance"
 																		placeholder={strings.Enter+strings.OpeningBalance}
@@ -673,7 +673,7 @@ class CreateBankAccount extends React.Component {
 																	</Label>
 																	<Input
 																		type="text"
-																		maxLength="50"
+																		maxLength="100"
 																		id="account_number"
 																		name="account_number"
 																		placeholder={strings.Enter+strings.AccountNumber}

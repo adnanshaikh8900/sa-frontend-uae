@@ -349,7 +349,7 @@ class CreateCustomerInvoice extends React.Component {
 					<Input
 					type="text"
 					min="0"
-						maxLength="10"
+						maxLength="17,3"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (
@@ -630,11 +630,11 @@ renderVatAmount = (cell, row,extraData) => {
 			   <div>
 			   <div  class="input-group">
 				   <Input
-				   type="text"
-				   min="0"
-					   maxLength="10"
-					   value={row['discount'] !== 0 ? row['discount'] : 0}
-					   onChange={(e) => {
+	 					type="text"
+				   	    min="0"
+					    maxLength="17,3"
+					    value={row['discount'] !== 0 ? row['discount'] : 0}
+					    onChange={(e) => {
 						   if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
 							   this.selectItem(
 								   e.target.value,
@@ -1061,7 +1061,6 @@ renderVatAmount = (cell, row,extraData) => {
 		let net_value = 0;
 		let discount = 0;
 		data.map((obj) => {
-debugger
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
@@ -1072,11 +1071,11 @@ debugger
 			if(obj.exciseTaxId !=  0){
 			if(this.state.checked === true){
 				if(obj.exciseTaxId === 1){
-				const value = (obj.unitPrice * obj.quantity) / 2 ;
+				const value = +(obj.unitPrice) / 2 ;
 					net_value = parseFloat(obj.unitPrice) +  value ;
 				obj.exciseAmount = value;
 				}else if (obj.exciseTaxId === 2){
-					const value = obj.unitPrice * obj.quantity;
+					const value = obj.unitPrice;
 					net_value = parseFloat(obj.unitPrice) +  value ;
 					obj.exciseAmount = value;
 				}
@@ -1111,7 +1110,7 @@ debugger
 
 				var val1 =
 				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) ) ;
+				 (+((net_value * obj.discount)) / 100)) * obj.quantity ) ;
 			} else if (obj.discountType === 'FIXED') {
 				var val =
 						 (net_value * obj.quantity - obj.discount ) *
@@ -1689,7 +1688,7 @@ debugger
 																	</Label>
 																	<Input
 																		type="text"
-																		maxLength='30'
+																		maxLength='50'
 																		id="invoice_number"
 																		name="invoice_number"
 																		placeholder={strings.InvoiceNumber}
@@ -2328,7 +2327,7 @@ debugger
 																		<Label htmlFor="notes">{strings.Notes}</Label>
 																		<Input
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="notes"
 																			id="notes"
 																			rows="6"
@@ -2431,7 +2430,7 @@ debugger
 																		</Label>
 																		<Input
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
 																			rows="5"

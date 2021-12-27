@@ -470,7 +470,7 @@ class DetailSupplierInvoice extends React.Component {
 				render={({ field, form }) => (
 					<Input
 					type="text"
-					maxLength="255"
+					maxLength="250"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(
@@ -580,7 +580,7 @@ class DetailSupplierInvoice extends React.Component {
 				render={({ field, form }) => (
 					<Input
 					type="text"
-					maxLength="10"
+					maxLength="17,3"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (
@@ -637,7 +637,7 @@ class DetailSupplierInvoice extends React.Component {
                    <Input
                    type="text"
                    min="0"
-                       maxLength="10"
+                       maxLength="17,3"
                        value={row['discount'] !== 0 ? row['discount'] : 0}
                        onChange={(e) => {
                            if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -1118,7 +1118,6 @@ class DetailSupplierInvoice extends React.Component {
 		let total_vat = 0;
 		let net_value = 0;
 		let discount = 0;
-debugger
 		data.map((obj) => {
 			const index =
 				obj.vatCategoryId !== ''
@@ -1128,37 +1127,36 @@ debugger
 
 			//Excise calculation
 			if(obj.exciseTaxId !=  0){
-				if(this.state.checked === true){
-					if(obj.exciseTaxId === 1){
-					const value = (obj.unitPrice * obj.quantity) / 2 ;
-						net_value = parseFloat(obj.unitPrice) +  value ;
+			if(this.state.checked === true){
+				if(obj.exciseTaxId === 1){
+				const value = +(obj.unitPrice) / 2 ;
+					net_value = parseFloat(obj.unitPrice) +  value ;
+				obj.exciseAmount = value;
+				}else if (obj.exciseTaxId === 2){
+					const value = obj.unitPrice;
+					net_value = parseFloat(obj.unitPrice) +  value ;
 					obj.exciseAmount = value;
-					}else if (obj.exciseTaxId === 2){
-						const value = obj.unitPrice * obj.quantity;
-						net_value = parseFloat(obj.unitPrice) +  value ;
-						obj.exciseAmount = value;
-					}
-					else{
-						net_value = obj.unitPrice
-					}
-				}	else{
-					if(obj.exciseTaxId === 1){
-						const value = obj.unitPrice / 3
-					obj.exciseAmount = value;
-					net_value = obj.unitPrice}
-					else if (obj.exciseTaxId === 2){
-						const value = obj.unitPrice / 2
-					obj.exciseAmount = value;
-					net_value = obj.unitPrice}
-					else{
-						net_value = obj.unitPrice
-					}
 				}
-			}else{
-				net_value = obj.unitPrice;
-				obj.exciseAmount = 0
+				else{
+					net_value = obj.unitPrice
+				}
+			}	else{
+				if(obj.exciseTaxId === 1){
+					const value = obj.unitPrice / 3
+				obj.exciseAmount = value;
+				net_value = obj.unitPrice}
+				else if (obj.exciseTaxId === 2){
+					const value = obj.unitPrice / 2
+				obj.exciseAmount = value;
+				net_value = obj.unitPrice}
+				else{
+					net_value = obj.unitPrice
+				}
 			}
-
+		}else{
+			net_value = obj.unitPrice;
+			obj.exciseAmount = 0
+		}
 			//vat calculation
 			if (obj.discountType === 'PERCENTAGE') {
 				var val =
@@ -1170,7 +1168,7 @@ debugger
 
 				var val1 =
 				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) ) ;
+				 (+((net_value * obj.discount)) / 100)) * obj.quantity ) ;
 			} else if (obj.discountType === 'FIXED') {
 				var val =
 						 (net_value * obj.quantity - obj.discount ) *
@@ -2311,7 +2309,7 @@ debugger
 																		<Label htmlFor="notes"> {strings.Notes}</Label>
 																		<Input
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="notes"
 																			id="notes"
 																			rows="6"
@@ -2416,7 +2414,7 @@ debugger
 																		</Label>
 																		<Input
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
 																			rows="5"

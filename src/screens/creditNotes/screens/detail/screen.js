@@ -828,7 +828,6 @@ min="0"
 		let net_value = 0;
 		let discount = 0;
 		data.map((obj) => {
-
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
@@ -837,37 +836,36 @@ min="0"
 
 			//Excise calculation
 			if(obj.exciseTaxId !=  0){
-				if(this.state.checked === true){
-					if(obj.exciseTaxId === 1){
-					const value = (obj.unitPrice * obj.quantity) / 2 ;
-						net_value = parseFloat(obj.unitPrice) +  value ;
+			if(this.state.checked === true){
+				if(obj.exciseTaxId === 1){
+				const value = +(obj.unitPrice) / 2 ;
+					net_value = parseFloat(obj.unitPrice) +  value ;
+				obj.exciseAmount = value;
+				}else if (obj.exciseTaxId === 2){
+					const value = obj.unitPrice;
+					net_value = parseFloat(obj.unitPrice) +  value ;
 					obj.exciseAmount = value;
-					}else if (obj.exciseTaxId === 2){
-						const value = obj.unitPrice * obj.quantity;
-						net_value = parseFloat(obj.unitPrice) +  value ;
-						obj.exciseAmount = value;
-					}
-					else{
-						net_value = obj.unitPrice
-					}
-				}	else{
-					if(obj.exciseTaxId === 1){
-						const value = obj.unitPrice / 3
-					obj.exciseAmount = value;
-					net_value = obj.unitPrice}
-					else if (obj.exciseTaxId === 2){
-						const value = obj.unitPrice / 2
-					obj.exciseAmount = value;
-					net_value = obj.unitPrice}
-					else{
-						net_value = obj.unitPrice
-					}
 				}
-			}else{
-				net_value = obj.unitPrice;
-				obj.exciseAmount = 0
+				else{
+					net_value = obj.unitPrice
+				}
+			}	else{
+				if(obj.exciseTaxId === 1){
+					const value = obj.unitPrice / 3
+				obj.exciseAmount = value;
+				net_value = obj.unitPrice}
+				else if (obj.exciseTaxId === 2){
+					const value = obj.unitPrice / 2
+				obj.exciseAmount = value;
+				net_value = obj.unitPrice}
+				else{
+					net_value = obj.unitPrice
+				}
 			}
-
+		}else{
+			net_value = obj.unitPrice;
+			obj.exciseAmount = 0
+		}
 			//vat calculation
 			if (obj.discountType === 'PERCENTAGE') {
 				var val =
@@ -879,7 +877,7 @@ min="0"
 
 				var val1 =
 				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) ) ;
+				 (+((net_value * obj.discount)) / 100)) * obj.quantity ) ;
 			} else if (obj.discountType === 'FIXED') {
 				var val =
 						 (net_value * obj.quantity - obj.discount ) *

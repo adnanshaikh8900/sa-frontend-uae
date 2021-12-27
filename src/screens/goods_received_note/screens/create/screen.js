@@ -239,6 +239,7 @@ class CreateGoodsReceivedNote extends React.Component {
 				render={({ field, form }) => (
 					<Input
 						type="text"
+						maxLength="250"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(
@@ -319,8 +320,8 @@ class CreateGoodsReceivedNote extends React.Component {
 						<Input
 						disabled
 							type="number"
-min="0"
-							maxLength="10"
+							min="0"
+							maxLength="100"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -453,7 +454,7 @@ this.state.data.map((obj, index) => {
 				render={({ field, form }) => (
 					<Input
 					type="number"
-						maxLength="10"
+						maxLength="17,3"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -1626,6 +1627,7 @@ console.log(this.state.data)
 																	</Label>
 																	<Input
 																		type="text"
+																		maxLength="50"
 																		id="grn_Number"
 																		name="grn_Number"
 																		placeholder={strings.InvoiceNumber}
@@ -2062,7 +2064,7 @@ console.log(this.state.data)
 																		<Label htmlFor="grnRemarks">{strings.GRNREMARKS}</Label>
 																		<Input
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="grnRemarks"
 																			id="grnRemarks"
 																			rows="6"

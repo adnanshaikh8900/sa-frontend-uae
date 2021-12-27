@@ -348,6 +348,7 @@ class DetailQuotation extends React.Component {
 				render={({ field, form }) => (
 					<Input
 					type="text"
+					maxLength="250"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(
@@ -1577,7 +1578,7 @@ console.log(this.state.supplier_currency)
 																		<Label htmlFor="notes">{strings.Notes}</Label>
 																		<Input
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="notes"
 																			id="notes"
 																			rows="6"

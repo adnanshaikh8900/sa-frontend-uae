@@ -1888,7 +1888,7 @@ class Profile extends React.Component {
 																					<span className="text-danger">*</span> {strings.CompanyAddressLine1}
 																				</Label>
 																					<Input
-																						maxLength={255}
+																						maxLength={100}
 																						type="text"
 																						id="companyAddressLine1"
 																						name="companyAddressLine1"
@@ -1929,7 +1929,7 @@ class Profile extends React.Component {
 																						 {strings.CompanyAddressLine2}
 																				</Label>
 																					<Input
-																						maxLength={255}
+																						maxLength={100}
 																						type="text"
 																						id="companyAddressLine2"
 																						name="companyAddressLine2"

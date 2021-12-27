@@ -1061,7 +1061,6 @@ renderVatAmount = (cell, row,extraData) => {
 		let net_value = 0;
 		let discount = 0;
 		data.map((obj) => {
-debugger
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
@@ -1072,11 +1071,11 @@ debugger
 			if(obj.exciseTaxId !=  0){
 			if(this.state.checked === true){
 				if(obj.exciseTaxId === 1){
-				const value = (obj.unitPrice * obj.quantity) / 2 ;
+				const value = +(obj.unitPrice) / 2 ;
 					net_value = parseFloat(obj.unitPrice) +  value ;
 				obj.exciseAmount = value;
 				}else if (obj.exciseTaxId === 2){
-					const value = obj.unitPrice * obj.quantity;
+					const value = obj.unitPrice;
 					net_value = parseFloat(obj.unitPrice) +  value ;
 					obj.exciseAmount = value;
 				}
@@ -1111,7 +1110,7 @@ debugger
 
 				var val1 =
 				((+net_value -
-				 (+((net_value * obj.discount)) / 100)) ) ;
+				 (+((net_value * obj.discount)) / 100)) * obj.quantity ) ;
 			} else if (obj.discountType === 'FIXED') {
 				var val =
 						 (net_value * obj.quantity - obj.discount ) *

@@ -1283,7 +1283,7 @@ class CreateQuotation extends React.Component {
 																	</Label>
 																	<Input
 																		type="text"
-																		maxLength="100"
+																		maxLength="50"
 																		id="quotation_Number"
 																		name="quotation_Number"
 																		placeholder={strings.InvoiceNumber}

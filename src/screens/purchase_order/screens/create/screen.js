@@ -227,7 +227,7 @@ class CreatePurchaseOrder extends React.Component {
 				render={({ field, form }) => (
 					<Input
 						type="text"
-						maxLength="255"
+						maxLength="250"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(
@@ -404,7 +404,7 @@ class CreatePurchaseOrder extends React.Component {
 					<Input
 					type="text"
 					min="0"
-						maxLength="10"
+						maxLength="17,3"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -1651,6 +1651,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																	</Label>
 																	<Input
 																		type="text"
+																		maxLength="50"
 																		id="po_number"
 																		name="po_number"
 																		placeholder={strings.InvoiceNumber}
@@ -2152,7 +2153,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		<Label htmlFor="notes">{strings.Notes}</Label>
 																		<Input
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="notes"
 																			id="notes"
 																			rows="6"

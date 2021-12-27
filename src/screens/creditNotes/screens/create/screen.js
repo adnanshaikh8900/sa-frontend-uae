@@ -1697,7 +1697,7 @@ class CreateCreditNote extends React.Component {
 																		 {strings.CreditNoteNumber}
 																	</Label>
 																	<Input
-																		maxLength="100"
+																		maxLength="50"
 																		type="text"
 																		id="creditNoteNumber"
 																		name="creditNoteNumber"

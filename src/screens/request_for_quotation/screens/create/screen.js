@@ -1457,7 +1457,7 @@ class CreateRequestForQuotation extends React.Component {
 																	</Label>
 																	<Input
 																		type="text"
-																		maxLength="100"
+																		maxLength="50"
 																		id="rfq_number"
 																		name="rfq_number"
 																		placeholder={strings.InvoiceNumber}

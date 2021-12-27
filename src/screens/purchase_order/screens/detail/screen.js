@@ -428,7 +428,7 @@ class DetailPurchaseOrder extends React.Component {
 				render={({ field, form }) => (
 					<Input
 					type="text"
-					maxLength="255"
+					maxLength="250"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(
@@ -538,7 +538,7 @@ class DetailPurchaseOrder extends React.Component {
 				render={({ field, form }) => (
 					<Input
 					type="text"
-					maxLength="10"
+					maxLength="17,3"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (
@@ -1406,6 +1406,7 @@ class DetailPurchaseOrder extends React.Component {
 																		</Label>
 																		<Input
 																			type="text"
+																			maxLength="100"
 																			id="poNumber"
 																			name="poNumber"
 																			placeholder=""
@@ -1904,7 +1905,7 @@ class DetailPurchaseOrder extends React.Component {
 																		<Label htmlFor="notes"> {strings.Notes}</Label>
 																		<Input
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="notes"
 																			id="notes"
 																			rows="6"

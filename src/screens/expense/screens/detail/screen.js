@@ -40,7 +40,7 @@ import API_ROOT_URL from '../../../../constants/config';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { Checkbox } from '@material-ui/core';
-
+import Switch from "react-switch";
 const mapStateToProps = (state) => {
 	return {
 		expense_detail: state.expense.expense_detail,
@@ -91,6 +91,19 @@ class DetailExpense extends React.Component {
 			disabled1:false,
 			exclusiveVat:true,
 			isReverseChargeEnabled:false,
+			showReverseCharge:false,
+			lockPlacelist:false,
+			isDesignatedZone:true,
+			taxTreatmentList:[],
+			placelist : [
+				{ label: 'Abu Dhabi', value: '1' },
+				{ label: 'Dubai', value: '2' },
+				{ label: 'Sharjah', value: '3' },
+				{ label: 'Ajman', value: '4' },
+				{ label: 'Umm Al Quwain', value: '5' },
+				{ label: 'Ras Al-Khaimah', value: '6' },
+				{ label: 'Fujairah', value: '7' },
+			],
 		};
 		this.placelist = [
 			{ label: 'Abu Dhabi', value: '1' },
@@ -119,8 +132,10 @@ class DetailExpense extends React.Component {
 	}
 
 	componentDidMount = () => {
+		this.getTaxTreatmentList();	
+		this.getcurentCompanyUser();
 		this.initializeData();
-		this.getTaxTreatmentList();		
+	
 	};
 	getTaxTreatmentList=()=>{
 		this.props.expenseActions
@@ -154,6 +169,22 @@ class DetailExpense extends React.Component {
 						this.props.expenseActions.getPaymentMode();
 						this.props.expenseActions.getUserForDropdown();
 						this.props.expenseCreateActions.getPaytoList();
+						debugger
+						const {vat_list}=this.props
+					let vatCategoryId=
+						vat_list ?
+							selectOptionsFactory
+								.renderOptions(
+									'name',
+									'id',
+									vat_list,
+									'Tax',
+								)
+								.find(
+									(option) =>
+										option.value ===
+										+res.data.vatCategoryId,
+								)	:""
 						this.setState(
 							{
 								loading: false,
@@ -168,9 +199,7 @@ class DetailExpense extends React.Component {
 										? res.data.expenseCategory
 										: '',
 									expenseAmount: res.data.expenseAmount,
-									vatCategoryId: res.data.vatCategoryId
-										? res.data.vatCategoryId
-										: '',
+									vatCategoryId: vatCategoryId,
 									payMode: res.data.payMode ? res.data.payMode : '',
 									bankAccountId: res.data.bankAccountId
 										? res.data.bankAccountId
@@ -190,16 +219,19 @@ class DetailExpense extends React.Component {
 									isReverseChargeEnabled:res.data.isReverseChargeEnabled ?res.data.isReverseChargeEnabled:false,
 									placeOfSupplyId:res.data.placeOfSupplyId ?res.data.placeOfSupplyId:'',
 									taxTreatmentId:res.data.taxTreatmentId ?res.data.taxTreatmentId:'',
-
+									
 								},
+								showPlacelist:res.data.taxTreatmentId !=8?true:false,
+								lockPlacelist:res.data.taxTreatmentId ==7?true:false,
 								isReverseChargeEnabled:res.data.isReverseChargeEnabled ?res.data.isReverseChargeEnabled:false,
-								selectedStatus: res.data.exclusiveVat ? true : false,
+								exclusiveVat: res.data.exclusiveVat==true ? true : false,
 								view:
 									this.props.location.state && this.props.location.state.view
 										? true
 										: false,
 							},
 							() => {
+								
 								if (
 									this.props.location.state &&
 									this.props.location.state.view
@@ -210,7 +242,9 @@ class DetailExpense extends React.Component {
 								}
 							},
 						);
+						this.ReverseChargeSetting(res.data.taxTreatmentId,"")
 					}
+
 				})
 				.catch((err) => {
 					this.setState({ loading: false });
@@ -246,10 +280,7 @@ class DetailExpense extends React.Component {
 		formData.append('expenseNumber', expenseNumber);
 		formData.append('expenseId', current_expense_id);
 		formData.append('payee', payee ? payee.value : '');
-		formData.append(
-			'expenseDate',
-			expenseDate !== null ? moment(expenseDate) : '',
-		);
+		formData.append('expenseDate',expenseDate !== null ? moment(expenseDate) : '');
 		formData.append('expenseDescription', expenseDescription);
 		formData.append('receiptNumber', receiptNumber);
 		formData.append(
@@ -286,8 +317,8 @@ class DetailExpense extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
-		if (placeOfSupplyId && placeOfSupplyId.value) {
-			formData.append('placeOfSupplyId', placeOfSupplyId.value);
+		if (placeOfSupplyId  ) {
+			formData.append('placeOfSupplyId', placeOfSupplyId.value ?placeOfSupplyId.value :placeOfSupplyId);
 		}
 		
 		if (taxTreatmentId && taxTreatmentId.value) {
@@ -399,7 +430,273 @@ class DetailExpense extends React.Component {
 			props.setFieldValue('attachmentFile', file, true);
 		}
 	};
+	getcurentCompanyUser=()=>{
+		this.props.expenseCreateActions.checkAuthStatus().then((response) => {
+			debugger
+			let userStateName    = response.data.company.companyStateCode.stateName ?response.data.company.companyStateCode.stateName:'';
+			let isDesignatedZone =response.data.company.isDesignatedZone?response.data.company.isDesignatedZone:false;
+				
+				this.setState({
+					userStateName:userStateName,
+					isDesignatedZone:isDesignatedZone})
+		
+		});
+	}
+	placelistSetting=(option,props)=>{
 
+		this.setState({showPlacelist:true,lockPlacelist:false})
+		if(option.value === 6)
+		this.setState({placelist:
+			[
+				{ label: 'Abu Dhabi', value: '1' },
+				{ label: 'Dubai', value: '2' },
+				{ label: 'Sharjah', value: '3' },
+				{ label: 'Ajman', value: '4' },
+				{ label: 'Umm Al Quwain', value: '5' },
+				{ label: 'Ras Al-Khaimah', value: '6' },
+				{ label: 'Fujairah', value: '7' },
+				{ label: 'BAHRAIN', value: '8' },
+				{ label: 'SAUDI ARABIA', value: '9' },
+				{ label: 'OMAN', value: '10' },
+				{ label: 'KUWAIT', value: '11' },
+				{ label: 'QATAR', value: '12' },
+			]
+		})
+		else
+		if(option.value === 5)
+		this.setState({placelist:
+			[
+				{ label: 'Abu Dhabi', value: '1' },
+				{ label: 'Dubai', value: '2' },
+				{ label: 'Sharjah', value: '3' },
+				{ label: 'Ajman', value: '4' },
+				{ label: 'Umm Al Quwain', value: '5' },
+				{ label: 'Ras Al-Khaimah', value: '6' },
+				{ label: 'Fujairah', value: '7' },
+				{ label: 'BAHRAIN', value: '8' },
+				{ label: 'SAUDI ARABIA', value: '9' },
+				{ label: 'OMAN', value: '10' },
+				// { label: 'KUWAIT', value: '11' },
+				// { label: 'QATAR', value: '12' },
+			]
+		})
+		else 
+		if(option.value===8)
+		{
+			props.handleChange('placeOfSupplyId')('')
+			this.setState({showPlacelist:false})
+		}else
+		if(option.value===7){
+			let placeOfSupplyId=this.state.placelist.find(
+														(option) =>
+															option.label === this.state.userStateName,
+													    )				
+			props.handleChange('placeOfSupplyId')(placeOfSupplyId.value)
+			this.setState({lockPlacelist:true})
+		}
+		else
+		this.setState({placelist:
+			[
+				{ label: 'Abu Dhabi', value: '1' },
+				{ label: 'Dubai', value: '2' },
+				{ label: 'Sharjah', value: '3' },
+				{ label: 'Ajman', value: '4' },
+				{ label: 'Umm Al Quwain', value: '5' },
+				{ label: 'Ras Al-Khaimah', value: '6' },
+				{ label: 'Fujairah', value: '7' },
+				// { label: 'BAHRAIN', value: '8' },
+				// { label: 'SAUDI ARABIA', value: '9' },
+				// { label: 'OMAN', value: '10' },
+				// { label: 'KUWAIT', value: '11' },
+				// { label: 'QATAR', value: '12' },
+			]
+		})		
+
+	}
+
+	ReverseChargeSetting=(option,props)=>{
+		
+		if(this.state.isDesignatedZone==true)
+			switch(option){
+
+				case 1: 
+				case 2: 
+				case 3: 
+				case 4: 
+				case 8: 
+				this.setState({
+					showReverseCharge:false,
+				})
+				break;
+
+				case 5: 
+				case 6: 
+				case 7: 
+				this.setState({
+					showReverseCharge:true,
+				})
+				break;		
+			}
+		else
+//Not Designated Zone		
+			if(this.state.isDesignatedZone==false)
+			switch(option){
+
+				case 1: 
+				case 2: 
+				case 4: 
+				case 5: 
+				case 6: 
+				case 7: 
+				this.setState({
+					showReverseCharge:true,
+				})
+						break;
+
+				case 3: 
+				case 8: 
+				this.setState({
+					showReverseCharge:false,
+				})
+						break;
+			}
+	}
+
+	renderVat=(props)=>{
+		let vat_list=[]
+		let vatIds=[]		
+		if(this.state.isDesignatedZone==true)
+			switch(props.values.taxTreatmentId.value ?props.values.taxTreatmentId.value:props.values.taxTreatmentId){
+
+				case 1: 
+				case 3: 
+					if(this.state.isReverseChargeEnabled==false)
+					vatIds=[1,2,3]										
+				break;
+
+				case 2: 
+				case 4:
+				case 8:  
+				if(this.state.isReverseChargeEnabled==false)
+				vatIds=[4]
+			
+				break;
+
+				case 5: 
+				case 6: 
+				case 7: 
+					if(this.state.isReverseChargeEnabled==false)
+					vatIds=[3]
+					else if(this.state.isReverseChargeEnabled==true)
+					vatIds=[1,2]
+				break;
+				
+				case 8: 
+				if(this.state.isReverseChargeEnabled==false)
+					vatIds=[4]
+					
+				break;
+			}
+		else
+//Not Designated Zone		
+			if(this.state.isDesignatedZone==false)
+			switch(props.values.taxTreatmentId.value ?props.values.taxTreatmentId.value:''){
+
+				case 1: 
+					if(this.state.isReverseChargeEnabled==false)
+					vatIds=[1,2,3]
+					else if(this.state.isReverseChargeEnabled==true)
+					vatIds=[1,2]
+				break;
+
+				case 3: 
+					if(this.state.isReverseChargeEnabled==false)
+					vatIds=[1,2,3]
+					
+				break;
+
+				case 2: 
+				case 4: 
+				case 5:
+				case 6: 
+				case 7: 
+					if(this.state.isReverseChargeEnabled==false)
+					vatIds=[3]
+					else if(this.state.isReverseChargeEnabled==true)
+					vatIds=[1,2]
+				break;
+
+				case 8: 
+				if(this.state.isReverseChargeEnabled==false)
+				vatIds=[4]
+					
+				break;
+			}
+
+			vat_list=this.getVatListByIds(vatIds)
+//vat column
+			return (
+			
+				<Col lg={3}>
+				<FormGroup className="mb-3">
+					<Label htmlFor="vatCategoryId"><span className="text-danger">* </span>{strings.Tax}</Label>
+					<Select
+						styles={customStyles}
+						className="select-default-width"
+						id="vatCategoryId"
+						name="vatCategoryId"
+						options={
+							vat_list
+								? selectOptionsFactory.renderOptions(
+										'name',
+										'id',
+										vat_list,
+										'Tax',
+								  )
+								: []
+						}
+						value={
+							// vat_list &&
+							// selectOptionsFactory
+							// 	.renderOptions(
+							// 		'name',
+							// 		'id',
+							// 		vat_list,
+							// 		'Tax',
+							// 	)
+							// 	.find(
+							// 		(option) =>
+							// 			option.value ===
+							// 			+props.values.vatCategoryId,
+							// 	)		
+							props.values.vatCategoryId	
+						}
+						onChange={(option) =>
+							props.handleChange('vatCategoryId')(
+								option,
+							)
+						}
+					/>
+				</FormGroup>
+			</Col>
+			
+			)
+	}
+	getVatListByIds=(vatIds)=>{
+		const	{vat_list}=this.props	
+
+		let array=[]
+
+		vat_list.map((row)=>{
+			vatIds.map((id)=>{
+				if(row.id===id){
+					array.push(row)
+				}
+			})
+		})
+
+		return array;
+	}
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
@@ -412,7 +709,7 @@ class DetailExpense extends React.Component {
 			pay_to_list,
 			currency_convert_list,
 		} = this.props;
-		const { initValue, loading, dialog ,taxTreatmentList} = this.state;
+		const { initValue, loading, dialog ,taxTreatmentList,placelist} = this.state;
 
 		return (
 			<div className="detail-expense-screen">
@@ -465,6 +762,10 @@ class DetailExpense extends React.Component {
 														) {
 															errors.bankAccountId = 'Bank Account is Required';
 														}
+
+														if(this.state.showPlacelist===true && values.placeOfSupplyId ===''){
+															errors.placeOfSupplyId="Place Of Supply is required"
+														}
 														return errors;
 													}}
 													validationSchema={Yup.object().shape({
@@ -476,6 +777,9 @@ class DetailExpense extends React.Component {
 														),
 														expenseDate: Yup.date().required(
 															'Expense Date is Required',
+														),
+														taxTreatmentId: Yup.string().required(
+															'Tax Treatment is required',
 														),
 														currency: Yup.string().required(
 															'Currency is required',
@@ -601,7 +905,7 @@ class DetailExpense extends React.Component {
 																						'name',
 																						'id',
 																						taxTreatmentList,
-																						'tax',
+																						'Tax Treatment',
 																					)
 																					: []
 																			}
@@ -614,7 +918,7 @@ class DetailExpense extends React.Component {
 																					'name',
 																					'id',
 																					taxTreatmentList,
-																					'tax',
+																					'Tax Treatment',
 																				)
 																					.find(
 																						(option) =>
@@ -632,10 +936,15 @@ class DetailExpense extends React.Component {
 																					props.handleChange('taxTreatmentId')(
 																						option,
 																					);
-																					if(option.value === 1 ||option.value === 3 ||option.value === 5 )
-																					this.setState({isRegisteredForVat:true})
-																					else
-																					this.setState({isRegisteredForVat:false})
+																					props.handleChange('placeOfSupplyId')('');
+																							// for resetting Vat
+																					props.handleChange('vatCategoryId')('');
+																					//placelist Setup
+																					this.placelistSetting(option,props)
+																					// ReverseCharge setup
+																					this.ReverseChargeSetting(option.value,props)
+																					this.setState({isReverseChargeEnabled:false})
+																																
 																				} else {
 																					props.handleChange('taxTreatmentId')(
 																						'',
@@ -657,23 +966,24 @@ class DetailExpense extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																<Col lg={3}>
+															{this.state.showPlacelist==true&& (	<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
 																		<span className="text-danger">*</span>
 																		{strings.PlaceofSupply}
 																	</Label>
 																	<Select
+																	isDisabled={this.state.lockPlacelist}
 																		styles={customStyles}
 																		id="placeOfSupplyId"
 																		name="placeOfSupplyId"
 																		placeholder={strings.Select+strings.PlaceofSupply}
 																		options={
-																			this.placelist
+																			placelist
 																				? selectOptionsFactory.renderOptions(
 																						'label',
 																						'value',
-																						this.placelist,
+																						placelist,
 																						'Place of Supply',
 																						
 																				  )
@@ -713,7 +1023,7 @@ class DetailExpense extends React.Component {
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>
+															</Col>)}
 															
 														</Row>
 															<Row>
@@ -955,48 +1265,8 @@ class DetailExpense extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																<Col lg={3}>
-																	<FormGroup className="mb-3">
-																		<Label htmlFor="vatCategoryId"><span className="text-danger">* </span>{strings.Tax}</Label>
-																		<Select
-																			styles={customStyles}
-																			className="select-default-width"
-																			id="vatCategoryId"
-																			name="vatCategoryId"
-																			options={
-																				vat_list
-																					? selectOptionsFactory.renderOptions(
-																							'name',
-																							'id',
-																							vat_list,
-																							'Tax',
-																					  )
-																					: []
-																			}
-																			value={
-																				vat_list &&
-																				selectOptionsFactory
-																					.renderOptions(
-																						'name',
-																						'id',
-																						vat_list,
-																						'Tax',
-																					)
-																					.find(
-																						(option) =>
-																							option.value ===
-																							+props.values.vatCategoryId,
-																					)
-																			}
-																			onChange={(option) =>
-																				props.handleChange('vatCategoryId')(
-																					option,
-																				)
-																			}
-																		/>
-																	</FormGroup>
-																</Col>
-																
+																{this.renderVat(props)}	
+											
 																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="pay_through"><span className="text-danger">* </span>
@@ -1114,7 +1384,29 @@ class DetailExpense extends React.Component {
 															<Row>
 																<Col></Col>
 																	<Col >
-																		<FormGroup className="mb-3">
+																	<FormGroup>
+																				<span className='mr-4'>Inclusive Vat</span>
+																				<Switch
+																					checked={ this.state.exclusiveVat}
+																					onChange={() => {
+																							this.setState({																						
+																								exclusiveVat: ! this.state.exclusiveVat
+																							});
+																					}}
+																					onColor="#2064d8"
+																					onHandleColor="#2693e6"
+																					handleDiameter={25}
+																					uncheckedIcon={false}
+																					checkedIcon={false}
+																					boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																					activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																					height={20}
+																					width={48}
+																					className="react-switch "																					/>
+																					<span  className='ml-4'>Exclusive Vat</span>
+
+																		</FormGroup>
+																		{/* <FormGroup className="mb-3">
 																			
 																			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 																				
@@ -1179,23 +1471,25 @@ class DetailExpense extends React.Component {
 																							</label>
 																					</div>
 																				</FormGroup>
-																		</FormGroup>
+																		</FormGroup> */}
 																	</Col>
 																	<Col></Col>
 																	<Col></Col></Row>
 														)
 														}
 																				<Row>
-														<Col >
+														{this.state.showReverseCharge==true &&(<Col >
 															<Checkbox
 																id="isReverseChargeEnabled"
 																checked={this.state.isReverseChargeEnabled}
 																onChange={(option)=>{
 																		this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled})
-																}}
+																										// for resetting Vat
+																										props.handleChange('vatCategoryId')('');
+																	}}
 															/>
 															<Label>Reverse Charge</Label>
-															</Col>
+															</Col>)}
 														</Row>
 															<hr />
 															<Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>

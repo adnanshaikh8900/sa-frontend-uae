@@ -34,6 +34,7 @@ import './style.scss';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { Checkbox } from '@material-ui/core';
+import Switch from "react-switch";
 
 const mapStateToProps = (state) => {
 	return {
@@ -1378,71 +1379,27 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 															<Row>
 																<Col></Col>
 																	<Col >
-																		<FormGroup className="mb-3">
-																			
-																			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-																				
-																				<FormGroup check inline>
-																					<div className="custom-radio custom-control">
-																						<input
-																							className="custom-control-input"
-																							type="radio"
-																							id="inline-radio2"
-																							name="active"
-																							value={false}
-																							checked={
-																								!this.state.selectedStatus
-																							}
-																							onChange={(e) => {
-																								if (
-																									e.target.value === 'false'
-																								) {
-																									this.setState({
-																										selectedStatus: false,
-																										exclusiveVat: false
-																									});
-																								}
-																							}}
-																						/>
-																						<label
-																							className="custom-control-label"
-																							htmlFor="inline-radio2"
-																						>
-																							Inclusive Vat
-																							</label>
-																					</div>
-																				</FormGroup>
-																				<FormGroup check inline>
-																					<div className="custom-radio custom-control">
-																						<input
-																							className="custom-control-input"
-																							type="radio"
-																							id="inline-radio1"
-																							name="active"
-																							checked={
-																								this.state.selectedStatus
-																							}
-																							value={true}
-																							onChange={(e) => {
-																								if (
-																									e.target.value === 'true'
-																								) {
-																									
-																									this.setState({
-																										selectedStatus: true,
-																										exclusiveVat: true
-																									});
-																								}
-																							}}
-																						/>
-																						<label
-																							className="custom-control-label"
-																							htmlFor="inline-radio1"
-																						>
-																						Exclusive Vat	
-																							</label>
-																					</div>
-																				</FormGroup>
+																	<FormGroup>
+																				<span className='mr-4'>Inclusive Vat</span>
+																				<Switch
+																					checked={ this.state.exclusiveVat}
+																					onChange={(checked) => {
+																							this.setState({																						
+																								exclusiveVat: ! this.state.exclusiveVat
+																							});
+																					}}
+																					onColor="#2064d8"
+																					onHandleColor="#2693e6"
+																					handleDiameter={25}
+																					uncheckedIcon={false}
+																					checkedIcon={false}
+																					boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																					activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																					height={20}
+																					width={48}
+																					className="react-switch "																					/>
+																					<span  className='ml-4'>Exclusive Vat</span>
+
 																		</FormGroup>
 																	</Col>
 																	<Col></Col>

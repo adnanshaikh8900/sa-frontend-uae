@@ -1254,7 +1254,7 @@ min="0"
 															</Col>
 														</Row>
 														<Row>
-															<Col lg={12}>
+															<Col lg={9}>
 																{props.errors.poQuatationLineItemRequestModelList &&
 																	props.errors.poQuatationLineItemRequestModelList === 'string' && (
 																		<div
@@ -1298,6 +1298,7 @@ min="0"
 																		dataFormat={(cell, rows) =>
 																			this.renderDescription(cell, rows, props)
 																		}
+																		width='10%'
 																	>
 																		 {strings.DESCRIPTION}
 																	</TableHeaderColumn>
@@ -1313,14 +1314,14 @@ min="0"
 																
 																	<TableHeaderColumn
 																		dataField="quantity"
-																		width="100"
+																		width="10%"
 																		dataFormat={(cell, rows) =>
 																			this.renderQuantity(cell, rows, props)
 																		}
 																	>
 																	 {strings.POQUANTITY}
 																	</TableHeaderColumn>
-																	<TableHeaderColumn
+																	{/* <TableHeaderColumn
 																		dataField="unitPrice"
 																		dataFormat={(cell, rows) =>
 																			this.renderUnitPrice(cell, rows, props)
@@ -1355,7 +1356,7 @@ min="0"
 																	
 																	>
 																		{strings.SUBTOTAL}
-																	</TableHeaderColumn>
+																	</TableHeaderColumn> */}
 																</BootstrapTable>
 															</Col>
 														</Row>
@@ -1363,7 +1364,7 @@ min="0"
 													
 														{this.state.selectedData.poQuatationLineItemRequestModelList.length > 0 && (
 																<Row>
-																		<Col lg={8}>
+																		<Col lg={9}>
 																	<FormGroup className="py-2">
 																		<Label htmlFor="notes">{strings.Notes}</Label>
 																		<Input
@@ -1384,7 +1385,7 @@ min="0"
 																	<Col lg={4}>
 																		<div className="">
 																		
-																			<div className="total-item p-2">
+																			{/* <div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
 																						<h5 className="mb-0 text-right">
@@ -1392,7 +1393,7 @@ min="0"
 																						</h5>
 																					</Col>
 																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
+																						<label className="mb-0"> */}
 																						{/* {universal_currency_list[0] && (
 																						<Currency
 																						value=	{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
@@ -1404,13 +1405,13 @@ min="0"
 																							/>
 																							)} */}
 																							{/* {this.getTotalNet()} */}
-																							{this.state.selectedData.currencyIsoCode}  &nbsp;
+																							{/* {this.state.selectedData.currencyIsoCode}  &nbsp;
 																								{this.getTotalNet().toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
-																			</div>
-																			<div className="total-item p-2">
+																			</div> */}
+																			{/* <div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
 																						<h5 className="mb-0 text-right">
@@ -1418,7 +1419,7 @@ min="0"
 																						</h5>
 																					</Col>
 																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
+																						<label className="mb-0"> */}
 																						{/* {universal_currency_list[0] && (
 																						<Currency
 																						value=	{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
@@ -1430,13 +1431,13 @@ min="0"
 																							/>
 																							)} */}
 																							{/* {this.state.initValue.totalVatAmount	} */}
-																							{this.state.selectedData.currencyIsoCode} &nbsp;
+																							{/* {this.state.selectedData.currencyIsoCode} &nbsp;
 																							{this.state.initValue.totalVatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
-																			</div>
-																			<div className="total-item p-2">
+																			</div> */}
+																			{/* <div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
 																						<h5 className="mb-0 text-right">
@@ -1444,7 +1445,7 @@ min="0"
 																						</h5>
 																					</Col>
 																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
+																						<label className="mb-0"> */}
 																						{/* {universal_currency_list[0] && (
 																						<Currency
 																						value=	{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
@@ -1456,12 +1457,12 @@ min="0"
 																							/>
 																							)} */}
 																							{/* {this.state.initValue.totalAmount} */}
-																							{this.state.selectedData.currencyIsoCode} &nbsp;
+																							{/* {this.state.selectedData.currencyIsoCode} &nbsp;
 																							{this.state.initValue.totalAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>
-																			</div>
+																			</div> */}
 																		</div>
 																	</Col>
 																</Row>

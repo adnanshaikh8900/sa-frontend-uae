@@ -240,6 +240,7 @@ class CreateCreditNote extends React.Component {
 					<Input
 					disabled
 						type="text"
+						maxLength="250"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(e.target.value, row, 'description', form, field);
@@ -278,6 +279,7 @@ class CreateCreditNote extends React.Component {
 						<Input
 							type="text"
 							min="0"
+							maxLength="10"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -340,7 +342,7 @@ class CreateCreditNote extends React.Component {
 					disabled
 					type="text"
 					min="0"
-						maxLength="10"
+						maxLength="17,3"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (
@@ -1697,7 +1699,7 @@ class CreateCreditNote extends React.Component {
 																		 {strings.CreditNoteNumber}
 																	</Label>
 																	<Input
-																		maxLength="15"
+																		maxLength="100"
 																		type="text"
 																		id="creditNoteNumber"
 																		name="creditNoteNumber"
@@ -2358,7 +2360,7 @@ min="0"
 																		<Label htmlFor="notes">{strings.Notes}</Label>
 																		<Input
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="notes"
 																			id="notes"
 																			rows="6"
@@ -2478,7 +2480,7 @@ min="0"
 																		</Label>
 																		<Input
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
 																			rows="5"

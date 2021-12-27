@@ -349,7 +349,7 @@ class CreateCustomerInvoice extends React.Component {
 					<Input
 					type="text"
 					min="0"
-						maxLength="14,2"
+						maxLength="17,3"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (
@@ -632,7 +632,7 @@ renderVatAmount = (cell, row,extraData) => {
 				   <Input
 	 					type="text"
 				   	    min="0"
-					    maxLength="14,2"
+					    maxLength="17,3"
 					    value={row['discount'] !== 0 ? row['discount'] : 0}
 					    onChange={(e) => {
 						   if (e.target.value === '' || this.regDecimal.test(e.target.value)) {

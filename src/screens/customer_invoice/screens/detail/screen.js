@@ -1998,7 +1998,7 @@ debugger
 																		<Input
 																			type="number"
 																			//min="0"
-																			maxLength="14,2"
+																			maxLength="17,3"
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"

@@ -352,7 +352,7 @@ class CreateSupplierInvoice extends React.Component {
 					<Input
 					type="text"
 					min="0"
-						maxLength="10"
+						maxLength="17,3"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -593,7 +593,7 @@ class CreateSupplierInvoice extends React.Component {
 					<Input
 					type="text"
 					min="0"
-						maxLength="10"
+						maxLength="17,3"
 						value={row['discount'] !== 0 ? row['discount'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -1767,6 +1767,7 @@ class CreateSupplierInvoice extends React.Component {
 																	</Label>
 																	<Input
 																		type="text"
+																		maxLength="50"
 																		id="invoice_number"
 																		name="invoice_number"
 																		placeholder={strings.InvoiceNumber}
@@ -2445,7 +2446,7 @@ class CreateSupplierInvoice extends React.Component {
 																		<Label htmlFor="notes">{strings.Notes}</Label>
 																		<Input
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="notes"
 																			id="notes"
 																			rows="6"
@@ -2550,7 +2551,7 @@ class CreateSupplierInvoice extends React.Component {
 																		</Label>
 																		<Input
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
 																			rows="5"

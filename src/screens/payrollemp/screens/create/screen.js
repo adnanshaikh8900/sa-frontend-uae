@@ -145,7 +145,7 @@ class CreateEmployeePayroll extends React.Component {
                 referenceCode: '',
                 title: '',
                 billingEmail: '',
-                countryId:  {label: "UAE Dirham - AED", value: 150},
+                countryId: {label: "United Arab Emirates", value: 229},
                 permanentAddress: '',
                 presentAddress: '',
                 bloodGroup: '',
@@ -270,7 +270,7 @@ class CreateEmployeePayroll extends React.Component {
 
     initializeData = () => {
         this.getEmployeeCode();
-        
+        this.getStateList(this.state.initValue.countryId.value ?this.state.initValue.countryId.value:'');
         // this.props.createPayrollEmployeeActions.getInvoicePrefix().then((response) => {
 		// 	this.setState({prefixData:response.data
 		// });

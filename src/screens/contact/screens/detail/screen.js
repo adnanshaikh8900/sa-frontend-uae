@@ -961,7 +961,6 @@ class DetailContact extends React.Component {
 																			 {strings.CurrencyCode}
 																		</Label>
 																		<Select
-																			isDisabled={true}
 																			styles={customStyles}
 																			options={
 																				currency_list

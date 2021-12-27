@@ -284,7 +284,7 @@ class CreateRequestForQuotation extends React.Component {
 				render={({ field, form }) => (
 					<Input
 						type="text"
-						maxLength={50}
+						maxLength="250"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(
@@ -331,7 +331,7 @@ class CreateRequestForQuotation extends React.Component {
 					<div>
 						<Input
 							type="text"
-min="0"
+							min="0"
 							maxLength="10"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
@@ -393,7 +393,7 @@ min="0"
 					<Input
 					type="text"
 					min="0"
-						maxLength="10"
+						maxLength="17,3"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -1457,6 +1457,7 @@ min="0"
 																	</Label>
 																	<Input
 																		type="text"
+																		maxLength="100"
 																		id="rfq_number"
 																		name="rfq_number"
 																		placeholder={strings.InvoiceNumber}
@@ -1861,7 +1862,6 @@ min="0"
 																	<TableHeaderColumn
 																		dataField="quantity"
 																		width="100"
-																		maxLength='10'
 																		dataFormat={(cell, rows) =>
 																			this.renderQuantity(cell, rows, props)
 																		}
@@ -1924,7 +1924,7 @@ min="0"
 																		<Label htmlFor="notes">{strings.Notes}</Label>
 																		<Input
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="notes"
 																			id="notes"
 																			rows="6"

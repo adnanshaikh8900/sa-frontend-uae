@@ -390,6 +390,7 @@ class DetailGoodsReceivedNote extends React.Component {
 				render={({ field, form }) => (
 					<Input
 					type="text"
+					maxLength="250"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(
@@ -436,6 +437,7 @@ class DetailGoodsReceivedNote extends React.Component {
 					<div>
 						<Input
 							type="text"
+							maxLength="10"
 							min="0"
 							value={row['grnReceivedQuantity'] !== 0 ? row['grnReceivedQuantity'] : 0}
 							onChange={(e) => {
@@ -1378,6 +1380,7 @@ min="0"
 																		</Label>
 																		<Input
 																			type="text"
+																			maxLength="100"
 																			id="grnNumber"
 																			name="grnNumber"
 																			placeholder=""
@@ -1736,7 +1739,7 @@ min="0"
 																		<Label htmlFor="grnRemarks">{strings.GRNREMARKS}</Label>
 																		<Input
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="grnRemarks"
 																			id="grnRemarks"
 																			rows="6"

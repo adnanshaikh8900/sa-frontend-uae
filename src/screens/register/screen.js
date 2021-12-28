@@ -535,7 +535,7 @@ class Register extends React.Component {
 																				</Label>
 																				<Input
 																					type="text"
-																				 maxLength="150"
+																					maxLength="100"
 																					id="companyAddress1"
 																					name="companyAddress1"
 																					placeholder="Enter Company Address"
@@ -568,7 +568,7 @@ class Register extends React.Component {
 																				</Label>
 																				<Input
 																					type="text"
-																				 maxLength="150"
+																				 	maxLength="100"
 																					id="companyAddress2"
 																					name="companyAddress2"
 																					placeholder="Enter Company Address"

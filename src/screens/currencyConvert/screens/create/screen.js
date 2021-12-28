@@ -230,9 +230,19 @@ class CreateCurrencyConvert extends React.Component {
 													currencyCode: Yup.string().required(
 														'Exchange Currency is Required',
 													),
-													exchangeRate: Yup.string().required(
-														'Exchange Rate is Required',
-													),
+													exchangeRate: Yup.string()
+														.required('Exchange Rate is Required')
+														.test(
+														'exchangeRate',
+														'Exchange Rate should not be equal to 1',
+														(value) => {
+															if (value != 1) {
+																return true;
+															} else {
+																return false;
+																}
+															},
+														),
 												
 												
 												})}

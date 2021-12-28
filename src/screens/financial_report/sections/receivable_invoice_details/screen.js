@@ -199,8 +199,8 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 				initValue: {
 					startDate: moment(value.startDate).format('DD/MM/YYYY'),
 					endDate: moment(value.endDate).format('DD/MM/YYYY'),
-					reportBasis: value.reportBasis.value,
-					chartOfAccountId: value.chartOfAccountId.value,
+					// reportBasis: value.reportBasis.value,
+					// chartOfAccountId: value.chartOfAccountId.value,
 				},
 				loading: true,
 				view: !this.state.view,

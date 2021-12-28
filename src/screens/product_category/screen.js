@@ -22,6 +22,10 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
+import { AgGridReact,AgGridColumn } from 'ag-grid-react/lib/agGridReact';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+
 
 import * as ProductCategoryActions from './actions';
 import { CSVLink } from 'react-csv';
@@ -55,6 +59,7 @@ class ProductCategory extends React.Component {
 				productCategoryCode: '',
 				productCategoryName: '',
 			},
+			paginationPageSize:10,
 			csvData: [],
 			view: false,
 		};
@@ -106,6 +111,12 @@ class ProductCategory extends React.Component {
 	goToDetail = (row) => {
 		this.props.history.push(`/admin/master/product-category/detail`, {
 			id: row.id,
+		});
+	};
+
+	goToCategoryDetail = (categoryId) => {
+		this.props.history.push(`/admin/master/product-category/detail`, {
+			id: categoryId,
 		});
 	};
 
@@ -368,8 +379,21 @@ class ProductCategory extends React.Component {
 													Bulk Delete
 												</Button> */}
 											</ButtonGroup>
+											<Button
+											color="primary"
+											className="btn-square pull-right"
+											style={{ marginBottom: '10px' }}
+											onClick={() =>
+												this.props.history.push(
+													`/admin/master/product-category/create`,
+												)
+											}
+										>
+											<i className="fas fa-plus mr-1" />
+											 {strings.AddNewProductCategory}
+										</Button>
 										</div>
-										<div className="py-3">
+										{/* <div className="py-3">
 											<h5>{strings.Filter} : </h5>
 											<form onSubmit={this.handleSubmit}>
 												<Row>
@@ -425,21 +449,9 @@ class ProductCategory extends React.Component {
 													</Col>
 												</Row>
 											</form>
-										</div>
-										<Button
-											color="primary"
-											className="btn-square pull-right"
-											style={{ marginBottom: '10px' }}
-											onClick={() =>
-												this.props.history.push(
-													`/admin/master/product-category/create`,
-												)
-											}
-										>
-											<i className="fas fa-plus mr-1" />
-											 {strings.AddNewProductCategory}
-										</Button>
-										<BootstrapTable
+										</div> */}
+										
+										{/* <BootstrapTable
 											selectRow={this.selectRowProp}
 											search={false}
 											options={this.options}
@@ -483,7 +495,67 @@ class ProductCategory extends React.Component {
 											>
 												 {strings.ProductCategoryName}
 											</TableHeaderColumn>
-										</BootstrapTable>
+										</BootstrapTable> */}
+
+<div className="ag-theme-alpine mb-3" style={{ height: 590,width:"100%" }}>
+	<div className="example-header mb-1">
+					Page Size:
+					<select onChange={() => this.onPageSizeChanged()} id="page-size">
+					<option value="10" selected={true}>10</option>
+					<option value="100">100</option>
+					<option value="500">500</option>
+					<option value="1000">1000</option>
+					</select>
+				</div>     
+			<AgGridReact
+				rowData={product_category_list &&
+					product_category_list.data 
+					? product_category_list.data
+						: []}
+					//  suppressDragLeaveHidesColumns={true}
+				// pivotMode={true}
+				// suppressPaginationPanel={false}
+				pagination={true}
+				rowSelection="multiple"
+				// paginationPageSize={10}
+				// paginationAutoPageSize={true}
+				paginationPageSize={this.state.paginationPageSize}
+					floatingFilter={true}
+					defaultColDef={{ 
+								resizable: true,
+								flex: 1,
+								sortable: true
+							}}
+				sideBar="columns"
+				onGridReady={this.onGridReady}
+					>
+
+				<AgGridColumn field="productCategoryCode" 
+				headerName=   {strings.CODE}
+				sortable={ true } 
+				filter={ true } 
+				enablePivot={true} 
+				cellRendererFramework={(params) => <label
+					className="mb-0 label-bank"
+					style={{
+						cursor: 'pointer',
+						}}
+					onClick={()=>this.goToCategoryDetail(params.data.id) }                                                             
+		>
+		{params.value}
+		</label>
+}
+				></AgGridColumn>
+
+				<AgGridColumn field="productCategoryName" 
+				headerName= {strings.ProductCategoryName}
+				sortable={ true }
+				filter={ true }
+				enablePivot={true}
+				></AgGridColumn>  			
+			</AgGridReact>  
+																						
+		</div>	
 									</Col>
 								</Row>
 							)}

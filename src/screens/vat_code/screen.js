@@ -29,6 +29,10 @@ import PropTypes from "prop-types";
 import TextField from "@material-ui/core/TextField";
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
+import { AgGridReact,AgGridColumn } from 'ag-grid-react/lib/agGridReact';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+
 
 function NumberFormatCustom(props) {
 	const { inputRef, onChange, ...other } = props;
@@ -81,6 +85,7 @@ class VatCode extends React.Component {
 			// 	name: '',
 			// 	vatPercentage: '',
 			// },
+			paginationPageSize:10,
 			csvData: [],
 			view: false,
 		};
@@ -399,6 +404,19 @@ class VatCode extends React.Component {
 													Bulk Delete
 												</Button> */}
 											</ButtonGroup>
+											{/* <Button
+											color="primary"
+											className="btn-square pull-right"
+											style={{ marginBottom: '10px' }}
+											onClick={() =>
+												this.props.history.push(
+													`/admin/master/vat-category/create`,
+												)
+											}
+										>
+											<i className="fas fa-plus mr-1" />
+											{strings.AddNewVat}
+										</Button> */}
 										</div>
 										{/* <div className="py-3">
 											<h5>{strings.Filter} : </h5>
@@ -483,7 +501,7 @@ class VatCode extends React.Component {
 											<i className="fas fa-plus mr-1" />
 											{strings.AddNewVat}
 										</Button>)}
-										<BootstrapTable
+										{/* <BootstrapTable
 											data={
 												vat_list_data &&  vat_list_data.length > 0
 													? vat_list_data
@@ -520,7 +538,63 @@ class VatCode extends React.Component {
 											>
 												{strings.VATPERCENTAGE}
 											</TableHeaderColumn>
-										</BootstrapTable>
+										</BootstrapTable> */}
+
+<div className="ag-theme-alpine mb-3" style={{ height: 590,width:"100%" }}>
+	  
+			<AgGridReact
+				rowData={vat_list_data &&
+					vat_list_data 
+					? vat_list_data
+						: []}
+					//  suppressDragLeaveHidesColumns={true}
+				// pivotMode={true}
+				// suppressPaginationPanel={false}
+				pagination={true}
+				rowSelection="multiple"
+				// paginationPageSize={10}
+				// paginationAutoPageSize={true}
+				paginationPageSize={this.state.paginationPageSize}
+					floatingFilter={true}
+					defaultColDef={{ 
+								resizable: true,
+								flex: 1,
+								sortable: true
+							}}
+				sideBar="columns"
+				onGridReady={this.onGridReady}
+					>
+
+				<AgGridColumn field="name" 
+				headerName=   {strings.VATNAME}
+				sortable={ true } 
+				filter={ true } 
+				enablePivot={true} 
+				
+				></AgGridColumn>
+
+				<AgGridColumn field="vat" 
+				headerName= {strings.VATPERCENTAGE}
+				sortable={ true }
+				filter={ true }
+				enablePivot={true}
+				></AgGridColumn>  
+
+
+			</AgGridReact>  
+			<div className="example-header mt-1">
+					Page Size:
+					<select onChange={() => this.onPageSizeChanged()} id="page-size">
+					<option value="10" selected={true}>10</option>
+					<option value="100">100</option>
+					<option value="500">500</option>
+					<option value="1000">1000</option>
+					</select>
+				</div>   																		
+		</div>	
+
+
+
 									</Col>
 								</Row>
 							)}

@@ -1055,7 +1055,7 @@ debugger
 			obj.vatAmount = val
 			obj.subTotal =
 			net_value && obj.vatCategoryId ? val1  + val : 0;
-			total_excise = +(total_excise + obj.exciseAmount)
+			total_excise = +((total_excise + obj.exciseAmount) * obj.quantity)
 			total = total_vat + total_net;
 			return obj;
 		});

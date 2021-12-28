@@ -519,7 +519,10 @@ class Product extends React.Component {
 															placeholder={strings.Name}
 															value={filterData.name}
 															onChange={(e) => {
-																this.handleChange(e.target.value, 'name');
+																this.handleChange(
+																	e.target.value,
+																	'name'
+																);
 															}}
 														/>
 													</Col>

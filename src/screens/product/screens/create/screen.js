@@ -119,6 +119,7 @@ class CreateProduct extends React.Component {
 		this.regExAlpha = /^[0-9!@#$&()-\\`.+,/\"]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 		this.regDecimal5 =/^\d{1,5}$/;
+		this.regExAlpha2 = /^[a-zA-Z ]+$/;
 	}
 
 	getcompanyDetails=()=>{
@@ -696,13 +697,13 @@ try {
 																		</Label>
 																		<Input
 																			type="text"
-																			maxLength="70"
+																			maxLength="100"
 																			id="productName"
 																			name="productName"
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
-																					this.regExBoth.test(
+																					this.regExAlpha2.test(
 																						option.target.value,
 																					)
 																				) {
@@ -752,7 +753,7 @@ try {
 																		</Label>
 																		<Input
 																			type="text"
-																			maxLength="70"
+																			maxLength="50"
 																			id="productCode"
 																			name="productCode"
 																			placeholder={strings.Enter+strings.ProductCode}
@@ -1101,6 +1102,7 @@ try {
 																		>
 																			<Input
 																				type="checkbox"
+																				max="17,3"
 																				id="productPriceTypeOne"
 																				name="productPriceTypeOne"
 																				onChange={(event) => {
@@ -1166,7 +1168,7 @@ try {
 																		</Label>
 																		<Input
 																			type="text"
-																			maxLength="10"
+																			maxLength="17,3"
 																			id="salesUnitPrice"
 																			name="salesUnitPrice"
 																			placeholder={strings.Enter+strings.SellingPrice}
@@ -1274,7 +1276,7 @@ try {
 																					: true
 																			}
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="salesDescription"
 																			id="salesDescription"
 																			rows="3"
@@ -1302,6 +1304,7 @@ try {
 																			<Input
 																				type="checkbox"
 																				id="productPriceTypetwo"
+																				maxLength="17,3"
 																				name="productPriceTypetwo"
 																				onChange={(event) => {
 																					if (
@@ -1367,7 +1370,7 @@ try {
 																		</Label>
 																		<Input
 																		type="text"
-																			maxLength="10"
+																			maxLength="17,3"
 																			id="purchaseUnitPrice"
 																			name="purchaseUnitPrice"
 																			
@@ -1479,7 +1482,7 @@ try {
 																					: true
 																			}
 																			type="textarea"
-																			maxLength="255"
+																			maxLength="250"
 																			name="purchaseDescription"
 																			id="purchaseDescription"
 																			rows="3"
@@ -1611,8 +1614,8 @@ try {
 																			
 																		</Label>
 																		<Input
-																		type="text"
-																		min="0"
+																			type="text"
+																			min="0"
 																			maxLength="10"
 																			id="inventoryQty"
 																			name="inventoryQty"
@@ -1661,9 +1664,9 @@ try {
 																			<span className="text-danger">* </span>	{strings.PurchasePrice}
 																		</Label>
 																		<Input
-																		type="text"
-																		min="0"
-																			maxLength="10"
+																			type="text"
+																			min="0"
+																			maxLength="17,3"
 																			id="inventoryPurchasePrice"
 																			name="inventoryPurchasePrice"
 																			placeholder={strings.Enter+strings.PurchasePrice}

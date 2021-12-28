@@ -37,7 +37,7 @@ import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 
 import './style.scss';
 import moment from 'moment';
-import API_ROOT_URL from '../../../../constants/config';
+import Switch from "react-switch";
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 const mapStateToProps = (state) => {
@@ -47,6 +47,7 @@ const mapStateToProps = (state) => {
 		currency_list: state.request_for_quotation.currency_list,
 		vat_list: state.request_for_quotation.vat_list,
 		product_list: state.customer_invoice.product_list,
+		excise_list: state.request_for_quotation.excise_list,
 		supplier_list: state.request_for_quotation.supplier_list,
 		country_list: state.request_for_quotation.country_list,
 		product_category_list: state.product.product_category_list,
@@ -184,6 +185,7 @@ class DetailQuotation extends React.Component {
 						this.props.requestForQuotationAction.getSupplierList(
 							this.state.contactType,
 						);
+						this.props.requestForQuotationAction.getExciseList();
 						this.props.currencyConvertActions.getCurrencyConversionList();
 						this.props.requestForQuotationAction.getCountryList();
 						this.props.requestForQuotationAction.getProductList();
@@ -208,10 +210,14 @@ class DetailQuotation extends React.Component {
 									lineItemsString: res.data.poQuatationLineItemRequestModelList
 										? res.data.poQuatationLineItemRequestModelList
 										: [],
-								
+										checked: res.data.exciseType ? res.data.exciseType : res.data.exciseType,
+										placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+										total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
 								
 								},
-								
+								checked: res.data.exciseType ? res.data.exciseType : res.data.exciseType,
+								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
+								total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
 								data: res.data.poQuatationLineItemRequestModelList
 									? res.data.poQuatationLineItemRequestModelList
 									: [],
@@ -378,7 +384,74 @@ class DetailQuotation extends React.Component {
 			/>
 		);
 	};
+	renderExcise = (cell, row, props) => {
+		const { excise_list } = this.props;
+		let idx;
+		this.state.data.map((obj, index) => {
+			if (obj.id === row.id) {
+				idx = index;
+			}
+			return obj;
+		});
 
+		return (
+			<Field
+				name={`lineItemsString.${idx}.exciseTaxId`}
+				render={({ field, form }) => (
+					<Select
+						styles={customStyles}
+						isDisabled={row.exciseTaxId === 0 || this.state.checked === false}
+						options={
+							excise_list
+								? selectOptionsFactory.renderOptions(
+										'name',
+										'id',
+										excise_list,
+										'Excise',
+								  )
+								: []
+						}
+						value={
+				
+							excise_list &&
+							selectOptionsFactory
+								.renderOptions('name', 'id', excise_list, 'Excise')
+								.find((option) => option.value === +row.exciseTaxId)
+						}
+						id="exciseTaxId"
+						placeholder={"Select Excise"}
+						onChange={(e) => {
+							debugger
+							this.selectItem(
+								e.value,
+								row,
+								'exciseTaxId',
+								form,
+								field,
+								props,
+							);
+							
+							this.updateAmount(
+								this.state.data,
+								props,
+							);
+						}}
+						className={`${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].exciseTaxId &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].exciseTaxId
+								? 'is-invalid'
+								: ''
+						}`}
+					/>
+				)}
+			/>
+		);
+	};
 	renderQuantity = (cell, row, props) => {
 		let idx;
 		this.state.data.map((obj, index) => {
@@ -544,7 +617,8 @@ min="0"
 		if (
 			name === 'unitPrice' ||
 			name === 'vatCategoryId' ||
-			name === 'quantity'
+			name === 'quantity'||
+			name === 'exciseTaxId'
 		) {
 			form.setFieldValue(
 				field.name,
@@ -636,6 +710,7 @@ min="0"
 			if (obj.id === row.id) {
 				obj['unitPrice'] = parseInt(result.unitPrice);
 				obj['vatCategoryId'] = parseInt(result.vatCategoryId);
+				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['description'] = result.description;
 				idx = index;
 			}
@@ -656,7 +731,11 @@ min="0"
 			result.description,
 			true,
 		);
-	
+		form.setFieldValue(
+			`lineItemsString.${idx}.exciseTaxId`,
+			result.exciseTaxId,
+			true,
+		);
 		this.updateAmount(data, props);
 	};
 	renderAddProduct = (cell, rows, props) => {
@@ -774,44 +853,94 @@ min="0"
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list } = this.props;
+		const { vat_list , excise_list} = this.props;
+		const { discountPercentage, discountAmount } = this.state;
 		let total_net = 0;
+		let total_excise = 0;
 		let total = 0;
 		let total_vat = 0;
-		const { discountPercentage, discountAmount } = this.state;
-
+		let net_value = 0;
+		let discount = 0;
 		data.map((obj) => {
 			const index =
 				obj.vatCategoryId !== ''
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-			// let val = (((+obj.unitPrice) * vat) / 100)
-			if (props.values.discountType === 'PERCENTAGE') {
-				var val =
-					((+obj.unitPrice -
-						+((obj.unitPrice * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })) *
-						vat *
-						obj.quantity) /
-					100;
-			} else if (props.values.discountType === 'FIXED') {
-				var val =
-					(obj.unitPrice * obj.quantity - discountAmount / data.length) *
-					(vat / 100);
-			} else {
-				var val = (+obj.unitPrice * vat * obj.quantity) / 100;
+
+			//Excise calculation
+			if(obj.exciseTaxId !=  0){
+			if(this.state.checked === true){
+				if(obj.exciseTaxId === 1){
+				const value = +(obj.unitPrice) / 2 ;
+					net_value = parseFloat(obj.unitPrice) +  value ;
+				obj.exciseAmount = value;
+				}else if (obj.exciseTaxId === 2){
+					const value = obj.unitPrice;
+					net_value = parseFloat(obj.unitPrice) +  value ;
+					obj.exciseAmount = value;
+				}
+				else{
+					net_value = obj.unitPrice
+				}
+			}	else{
+				if(obj.exciseTaxId === 1){
+					const value = obj.unitPrice / 3
+				obj.exciseAmount = value;
+				net_value = obj.unitPrice}
+				else if (obj.exciseTaxId === 2){
+					const value = obj.unitPrice / 2
+				obj.exciseAmount = value;
+				net_value = obj.unitPrice}
+				else{
+					net_value = obj.unitPrice
+				}
 			}
-			total_net = +(total_net + +obj.unitPrice * obj.quantity);
+		}else{
+			net_value = obj.unitPrice;
+			obj.exciseAmount = 0
+		}
+			//vat calculation
+			if (obj.discountType === 'PERCENTAGE') {
+				var val =
+				((+net_value -
+				 (+((net_value * obj.discount)) / 100)) *
+					vat *
+					obj.quantity) /
+				100;
+
+				var val1 =
+				((+net_value -
+				 (+((net_value * obj.discount)) / 100)) * obj.quantity ) ;
+			} else if (obj.discountType === 'FIXED') {
+				var val =
+						 (net_value * obj.quantity - obj.discount ) *
+					(vat / 100);
+
+					var val1 =
+					((net_value * obj.quantity )- obj.discount )
+
+			} else {
+				var val = (+net_value * vat * obj.quantity) / 100;
+				var val1 = net_value * obj.quantity
+			}
+
+			//discount calculation
+			discount = +(discount +(net_value * obj.quantity)) - val1
+			total_net = +(total_net + net_value * obj.quantity);
 			total_vat = +(total_vat + val);
+			obj.vatAmount = val
 			obj.subTotal =
-				obj.unitPrice && obj.vatCategoryId ? (+obj.unitPrice * obj.quantity)+total_vat : 0;
+			net_value && obj.vatCategoryId ? val1  + val : 0;
+			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
 		});
-		const discount =
-			props.values.discountType === 'PERCENTAGE'
-				? +((total_net * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })
-				: discountAmount;
+
+		// const discount =
+		// 	props.values.discountType.value === 'PERCENTAGE'
+		// 		? +((total_net * discountPercentage) / 100)
+		// 		: discountAmount;
 		this.setState(
 			{
 				data,
@@ -819,17 +948,15 @@ min="0"
 					...this.state.initValue,
 					...{
 						total_net: discount ? total_net - discount : total_net,
-						totalVatAmount: total_vat,
-						discount: total_net > discount ? discount : 0,
-						totalAmount: total_net > discount ? total - discount : total,
+						invoiceVATAmount: total_vat,
+						discount:  discount ? discount : 0,
+						totalAmount: total_net > discount ? total - discount : total - discount,
+						total_excise: total_excise
 					},
+
 				},
 			},
-			() => {
-				if (props.values.discountType === 'PERCENTAGE') {
-					this.formRef.current.setFieldValue('discount', discount);
-				}
-			},
+
 		);
 	};
 
@@ -845,6 +972,7 @@ min="0"
 			totalVatAmount,
 			totalAmount,
 			currency,
+			placeOfSupplyId
 		} = data;
 
 		let formData = new FormData();
@@ -863,7 +991,10 @@ min="0"
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
-	
+		formData.append('totalExciseAmount', this.state.initValue.total_excise);
+        if(placeOfSupplyId){
+		formData.append('placeOfSupplyId' , placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);}
+		formData.append('exciseType', this.state.checked);
 		if (customerId) {
 			formData.append('customerId', customerId);
 		}
@@ -1275,6 +1406,8 @@ console.log(this.state.supplier_currency)
 																			)}
 																	</FormGroup>
 																</Col>
+																</Row>
+																<Row>
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="customerId">
@@ -1344,7 +1477,69 @@ console.log(this.state.supplier_currency)
 																			)}
 																	</FormGroup>
 																</Col>
-																				
+																<Col lg={3}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="placeOfSupplyId">
+																			<span className="text-danger">* </span>
+																			{strings.PlaceofSupply}
+																		</Label>
+																		<Select
+																			styles={customStyles}
+																			options={
+																				this.placelist
+																					? selectOptionsFactory.renderOptions(
+																							'label',
+																							'value',
+																							this.placelist,
+																							'Place of Supply',
+																					  )
+																					: []
+																			}
+																			id="placeOfSupplyId"
+																			name="placeOfSupplyId"
+																			value={
+																				this.placelist &&
+																				selectOptionsFactory.renderOptions(
+																					'label',
+																					'value',
+																					this.placelist,
+																					'Place of Supply',
+																			  ).find(
+																										(option) =>
+																											option.value ===
+																											props.values
+																												.placeOfSupplyId.toString(),
+																									)
+																							}
+																							onChange={(options) => {
+																								if (options && options.value) {
+																									props.handleChange(
+																										'placeOfSupplyId',
+																									)(options.value);
+																								} else {
+																									props.handleChange(
+																										'placeOfSupplyId',
+																									)('');
+																								}
+																							}}
+																			className={`${
+																				props.errors.placeOfSupplyId &&
+																				props.touched.placeOfSupplyId
+																					? 'is-invalid'
+																					: ''
+																			}`}
+																		/>
+																		{props.errors.placeOfSupplyId &&
+																			props.touched.placeOfSupplyId && (
+																				<div className="invalid-feedback">
+																					{props.errors.placeOfSupplyId}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
+															
+																
+																	
 															</Row>
 															<hr />
 															<Row>
@@ -1463,6 +1658,41 @@ console.log(this.state.supplier_currency)
 																		<i className="fa fa-plus"></i> {strings.Addmore}
 																	</Button>
 																</Col>
+																<Col lg={3}>
+																					<FormGroup>
+
+																						<span className='mr-4'>Inclusive</span>
+																						<Switch
+            checked={this.state.checked}
+			onChange={(checked) => {
+
+				props.handleChange('checked')(checked);
+				this.setState(
+					{
+						checked,
+					},
+					() => {
+						this.updateAmount(data, props);
+					},
+				);
+
+			}}
+            onColor="#2064d8"
+            onHandleColor="#2693e6"
+            handleDiameter={25}
+            uncheckedIcon={false}
+            checkedIcon={false}
+            boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+            activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+            height={20}
+            width={48}
+            className="react-switch "
+
+          />
+		  <span  className='ml-4'>Exclusive</span>
+
+																					</FormGroup>
+																				</Col>
 															</Row>
 															<Row>
 																<Col lg={12}>
@@ -1552,6 +1782,15 @@ console.log(this.state.supplier_currency)
 																			{strings.UNITPRICE}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
+																	width="10%"
+																		dataField="exciseTaxId"
+																		dataFormat={(cell, rows) =>
+																			this.renderExcise(cell, rows, props)
+																		}
+																	>
+																	Excise
+																	</TableHeaderColumn> 
+																		<TableHeaderColumn
 																			dataField="vat"
 																			dataFormat={(cell, rows) =>
 																				this.renderVat(cell, rows, props)
@@ -1593,7 +1832,22 @@ console.log(this.state.supplier_currency)
 																</Col>
 																	<Col lg={4}>
 																		<div className="">
-																		
+																		<div className="total-item p-2" style={{display:this.state.checked === true ? '':'none'}}>
+																			<Row>
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																					Total Excise
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																				<label className="mb-0">
+
+																						{this.state.supplier_currency_symbol} &nbsp;
+																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					</label>
+																				</Col>
+																			</Row>
+																		</div>
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>

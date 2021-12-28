@@ -138,8 +138,6 @@ class CreateCustomerInvoice extends React.Component {
 						unitPrice: '',
 						vatCategoryId: '',
 						productId: '',
-						vatAmount:0,
-						subTotal: 0,
 					},
 				],
 				invoice_number: '',
@@ -1131,7 +1129,7 @@ renderVatAmount = (cell, row,extraData) => {
 			obj.vatAmount = val
 			obj.subTotal =
 			net_value && obj.vatCategoryId ? val1  + val : 0;
-			total_excise = +(total_excise + obj.exciseAmount)
+			total_excise = +((total_excise + obj.exciseAmount) * obj.quantity)
 			total = total_vat + total_net;
 			return obj;
 		});
@@ -1405,12 +1403,14 @@ renderVatAmount = (cell, row,extraData) => {
 							id: 0,
 							description: res.data[0].description,
 							quantity: 1,
+							discount:0,
 							unitPrice: res.data[0].unitPrice,
 							vatCategoryId: res.data[0].vatCategoryId,
 							exciseTaxId: res.data[0].exciseTaxId,
 							vatAmount:res.data[0].vatAmount,
 							subTotal: res.data[0].unitPrice,
 							productId: res.data[0].id,
+							discountType: res.data[0].discountType,
 						},
 					],
 				},
@@ -1428,6 +1428,16 @@ renderVatAmount = (cell, row,extraData) => {
 			);
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.quantity`,
+				1,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.discount`,
+				1,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.discountType`,
 				1,
 				true,
 			);
@@ -1563,6 +1573,7 @@ renderVatAmount = (cell, row,extraData) => {
 													this.handleSubmit(values, resetForm);
 												}}
 												validate={(values) => {
+													debugger
 													let errors = {};
 													if (exist === true) {
 														errors.invoice_number =
@@ -1581,8 +1592,7 @@ renderVatAmount = (cell, row,extraData) => {
 														errors.term =
 														'Term is Required';
 													}
-													if (values.discountType.value === 'PERCENTAGE' && values.discountPercentage === '')
-													errors.discountPercentage = 'discount percentage cannot be empty'
+												
 														return errors;
 												}}
 												validationSchema={Yup.object().shape({
@@ -1607,6 +1617,7 @@ renderVatAmount = (cell, row,extraData) => {
 														)
 														.of(
 															Yup.object().shape({
+														
 																quantity: Yup.string()
 																	.required('Value is Required')
 																	.test(
@@ -1639,6 +1650,14 @@ renderVatAmount = (cell, row,extraData) => {
 																productId: Yup.string().required(
 																	'Product is Required',
 																),
+																discountType:Yup.string().required(
+																	'Discount type is Required',
+																),
+																discount:Yup.string().required(
+																	'Discount is Required',
+																	
+																),
+
 															}),
 														),
 													attachmentFile: Yup.mixed()

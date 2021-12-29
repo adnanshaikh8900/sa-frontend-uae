@@ -965,11 +965,11 @@ class CreatePurchaseOrder extends React.Component {
 			if(this.state.checked === true){
 				if(obj.exciseTaxId === 1){
 				const value = +(obj.unitPrice) / 2 ;
-					net_value = parseFloat(obj.unitPrice) +  value ;
+					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
 				obj.exciseAmount = value;
 				}else if (obj.exciseTaxId === 2){
 					const value = obj.unitPrice;
-					net_value = parseFloat(obj.unitPrice) +  value ;
+					net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
 					obj.exciseAmount = value;
 				}
 				else{
@@ -1018,13 +1018,13 @@ class CreatePurchaseOrder extends React.Component {
 			}
 
 			//discount calculation
-			discount = +(discount +(net_value * obj.quantity)) - val1
+			discount = +(discount +(net_value * obj.quantity)) - parseFloat(val1)
 			total_net = +(total_net + net_value * obj.quantity);
 			total_vat = +(total_vat + val);
 			obj.vatAmount = val
 			obj.subTotal =
-			net_value && obj.vatCategoryId ? val1  + val : 0;
-			total_excise = +((total_excise + obj.exciseAmount) * obj.quantity)
+			net_value && obj.vatCategoryId ? parseFloat(val1) + parseFloat(val) : 0;
+			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
 		});

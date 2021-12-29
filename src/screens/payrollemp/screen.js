@@ -521,7 +521,7 @@ class PayrollEmployee extends React.Component {
                                                     </Row>
                                                 </form>
                                             </div> */}
-                                            								<div className="mobileNumberCSS ag-theme-alpine" style={{ height: 600,width:"100%" }}>
+                                            								<div className="mobileNumberCSS ag-theme-alpine mb-3" style={{ height: 590,width:"100%" }}>
                                                                             <div className="example-header mb-1">
                                                                                             Page Size:
                                                                                             <select onChange={() => this.onPageSizeChanged()} id="page-size">

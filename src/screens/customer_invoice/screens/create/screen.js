@@ -1651,13 +1651,7 @@ renderVatAmount = (cell, row,extraData) => {
 																productId: Yup.string().required(
 																	'Product is Required',
 																),
-																discountType:Yup.string().required(
-																	'Discount type is Required',
-																),
-																discount:Yup.string().required(
-																	'Discount is Required',
-																	
-																),
+																
 
 															}),
 														),

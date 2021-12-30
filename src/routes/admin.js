@@ -98,6 +98,10 @@ import {
 	PayablesInvoiceDetailsReport,
 	PayablesInvoiceSummary,
 	PayrollSummaryReport,
+	VatReports,
+	VatPaymentRecord,
+	RecordTaxClaim,
+	RecordVatPayment,
 
 
 	// Master Screens
@@ -761,10 +765,31 @@ const adminRoutes = [
 		component: TrailBalances.screen,
 	},
 	{
-		path: '/admin/report/vatreturns',
-		name: 'VatReturnReport',
+		path: '/admin/report/vatreport/view',
+		name: 'HorizontalBalanceSheet',
 		component: VatReturnsReport.screen,
 	},
+	{
+		path: '/admin/report/vatreturns',
+		name: 'VatReturnReport',
+		component: VatReports.screen,
+	},	
+	
+	{
+		path: '/admin/report/vatpaymentrecordhistory',
+		name: 'VatReturnReport',
+		component: VatPaymentRecord.screen,
+	},	
+	{
+		path: '/admin/report/recordclaimtax',
+		name: 'TrialBalance',
+		component: RecordTaxClaim.screen,
+	},	
+	{
+		path: '/admin/report/recordtaxpayment',
+		name: 'SalesByProduct',
+		component: RecordVatPayment.screen,
+	},	
 	{
 		path: '/admin/report/salesbycustomer',
 		name: 'SalesByCustomer',

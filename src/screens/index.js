@@ -186,6 +186,10 @@ import MigrateHistory from './import/sections/migrate_history';
 import PayrollApproverScreen from './payroll_run/screens/approver';
 import UpdatePayroll from './payroll_run/screens/updatePayroll';
 import SOAReport from './financial_report/sections/soa_statementsOfAccounts'
+import VatReports from './financial_report/sections/vat_reports'
+import VatPaymentRecord from './financial_report/sections/vat_reports/screens/vatPaymentRecord'
+import RecordTaxClaim from './financial_report/sections/vat_reports/screens/record_claim_tax'
+import RecordVatPayment from './financial_report/sections/vat_reports/screens/record_tax_payment'
 export {
 	LogIn,
 	LogInTwo,
@@ -355,4 +359,8 @@ export {
 	Migrate,
 	PayrollSummaryReport,
 	SOAReport,
+	VatReports,
+	VatPaymentRecord,
+	RecordTaxClaim,
+	RecordVatPayment,
 };

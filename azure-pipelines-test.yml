@@ -14,7 +14,10 @@ variables:
   imageRepository: 'simplevatfrontendreactjs'
   containerRegistry: 'datainn.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
-  tag: '$(Build.BuildId)'
+
+  npm_config_cache: $(Pipeline.Workspace)/.npm
+  docker_cashe_path: simpleaccounts-frontend-$(Build.SourceBranchName)
+
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
@@ -29,9 +32,10 @@ stages:
       vmImage: $(vmImageName)
     steps:
     
-    - task: Npm@1
+    - task: NodeTool@0
+      displayName: Install Node.js
       inputs:
-        command: 'install'
+        versionSpec: '14.x'    
     - task: CmdLine@2
       inputs:
         script: |

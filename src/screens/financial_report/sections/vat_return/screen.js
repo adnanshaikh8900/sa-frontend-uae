@@ -187,9 +187,21 @@ class VatReturnsReport extends React.Component {
 	initializeData = () => {
 		const { initValue } = this.state;
 		const postData = {
-			startDate:initValue.startDate,
-			endDate: initValue.endDate,
+			startDate:this.props.location.state.startDate,
+			endDate: this.props.location.state.endDate,
 		};
+		this.setState(
+			{
+				initValue: {
+					startDate: this.props.location.state.startDate,
+					endDate:this.props.location.state.endDate,
+				},
+				loading: true,
+			},
+			() => {
+				// this.initializeData();
+			},
+		);
 		this.props.financialReportActions
 			.getVatReturnsReport(postData)
 			.then((res) => {
@@ -266,7 +278,7 @@ class VatReturnsReport extends React.Component {
 											style={{ justifyContent: 'space-between' }}
 										>
 											<div>
-												<p
+												{/* <p
 													className="mb-0"
 													style={{
 														cursor: 'pointer',
@@ -276,7 +288,7 @@ class VatReturnsReport extends React.Component {
 													onClick={this.viewFilter}
 												>
 													<i className="fa fa-cog mr-2"></i>{strings.CustomizeReport}
-												</p>
+												</p> */}
 											</div>
 											<div className="d-flex">
 											<Dropdown isOpen={dropdownOpen} toggle={this.toggle}> 
@@ -348,7 +360,7 @@ class VatReturnsReport extends React.Component {
                                             <div
 													className="mr-2 print-btn-cont"
                                                     onClick={() => {
-                                                        this.props.history.push('/admin/report/reports-page');
+                                                        this.props.history.push('/admin/report/vatreturns');
                                                     }}
 													style={{
 														cursor: 'pointer',
@@ -1148,7 +1160,7 @@ class VatReturnsReport extends React.Component {
 												</Table>
 											
 											<div >
-												<p><b>{strings.Net+" "+strings.Vat+" "|+strings.Due}</b></p>
+												<p><b>{strings.Net+" "+strings.Vat+" "+strings.Due}</b></p>
 												<Table responsive className="table-bordered">
 												<thead className="thead-dark ">
 													<tr className="header-row">

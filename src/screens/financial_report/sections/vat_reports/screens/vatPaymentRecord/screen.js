@@ -4,46 +4,28 @@ import { bindActionCreators } from 'redux';
 import {
 	Button,
 	Col,
-	FormGroup,
 	Card,
 	CardHeader,
 	CardBody,
 	Row,
-	TabContent,
-	TabPane,
-	Nav,
-	NavItem,
-	NavLink,
-	Form,
-	Label,
-	Table,
-	Input
 } from 'reactstrap';
-import Select from 'react-select';
+
 import { AuthActions, CommonActions } from 'services/global';
 import 'react-toastify/dist/ReactToastify.css';
-import * as Yup from "yup";
 import 'react-datepicker/dist/react-datepicker.css'
-import DatePicker from 'react-datepicker'
-import { Formik } from 'formik';
 import './style.scss';
 import * as VatreportAction from './actions';
-import { selectOptionsFactory } from 'utils';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import { isDate, upperFirst } from 'lodash-es';
 
 import logo from 'assets/images/brand/logo.png';
-import styled from 'styled-components';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import moment from 'moment';
-import { Date } from 'core-js';
-import download from 'downloadjs';
-import { align } from '@progress/kendo-drawing';
+import * as FinancialReportActions from '../../../../actions';
 import { AgGridReact, AgGridColumn } from 'ag-grid-react/lib/agGridReact';
 const mapStateToProps = (state) => {
 	return {
 		version: state.common.version,
+		company_profile: state.reports.company_profile,
 	};
 };
 
@@ -52,6 +34,10 @@ const mapDispatchToProps = (dispatch) => {
 		authActions: bindActionCreators(AuthActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 		vatreport: bindActionCreators(VatreportAction, dispatch),
+		financialReportActions: bindActionCreators(
+			FinancialReportActions,
+			dispatch,
+		),
 	};
 };
 
@@ -105,7 +91,7 @@ class VatPaymentRecord extends React.Component {
       };
 	componentDidMount = () => {
 		this.getInitialData();
-
+		this.props.financialReportActions.getCompany();
 	};
 
 	getInitialData = () => {
@@ -134,7 +120,8 @@ class VatPaymentRecord extends React.Component {
 
 
 	render() {
-		const { vatReportDataList, csvFileNamesData ,company_profile} = this.state;
+		const { vatReportDataList } = this.state;
+		const { company_profile} = this.props;
 		return (
 			<div className="import-bank-statement-screen">
 				<div className="animated fadeIn">

@@ -884,11 +884,11 @@ class DetailPurchaseOrder extends React.Component {
 				if(obj.exciseTaxId === 1){
 				const value = +(obj.unitPrice) / 2 ;
 					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
-				obj.exciseAmount = value;
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
 				}else if (obj.exciseTaxId === 2){
 					const value = obj.unitPrice;
 					net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
-					obj.exciseAmount = value;
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
 				}
 				else{
 					net_value = obj.unitPrice
@@ -896,11 +896,11 @@ class DetailPurchaseOrder extends React.Component {
 			}	else{
 				if(obj.exciseTaxId === 1){
 					const value = obj.unitPrice / 3
-				obj.exciseAmount = value;
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
 				net_value = obj.unitPrice}
 				else if (obj.exciseTaxId === 2){
 					const value = obj.unitPrice / 2
-				obj.exciseAmount = value;
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
 				net_value = obj.unitPrice}
 				else{
 					net_value = obj.unitPrice

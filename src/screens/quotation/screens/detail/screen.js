@@ -873,12 +873,12 @@ min="0"
 			if(this.state.checked === true){
 				if(obj.exciseTaxId === 1){
 				const value = +(obj.unitPrice) / 2 ;
-					net_value = parseFloat(obj.unitPrice) +  value ;
-				obj.exciseAmount = value;
+					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
 				}else if (obj.exciseTaxId === 2){
 					const value = obj.unitPrice;
-					net_value = parseFloat(obj.unitPrice) +  value ;
-					obj.exciseAmount = value;
+					net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
 				}
 				else{
 					net_value = obj.unitPrice
@@ -886,11 +886,11 @@ min="0"
 			}	else{
 				if(obj.exciseTaxId === 1){
 					const value = obj.unitPrice / 3
-				obj.exciseAmount = value;
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
 				net_value = obj.unitPrice}
 				else if (obj.exciseTaxId === 2){
 					const value = obj.unitPrice / 2
-				obj.exciseAmount = value;
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
 				net_value = obj.unitPrice}
 				else{
 					net_value = obj.unitPrice
@@ -926,13 +926,13 @@ min="0"
 			}
 
 			//discount calculation
-			discount = +(discount +(net_value * obj.quantity)) - val1
+			discount = +(discount +(net_value * obj.quantity)) - parseFloat(val1)
 			total_net = +(total_net + net_value * obj.quantity);
 			total_vat = +(total_vat + val);
 			obj.vatAmount = val
 			obj.subTotal =
-			net_value && obj.vatCategoryId ? val1  + val : 0;
-			total_excise = +((total_excise + obj.exciseAmount) * obj.quantity)
+			net_value && obj.vatCategoryId ? parseFloat(val1) + parseFloat(val) : 0;
+			total_excise = +(total_excise + obj.exciseAmount)
 			total = total_vat + total_net;
 			return obj;
 		});

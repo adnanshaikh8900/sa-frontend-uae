@@ -184,7 +184,7 @@ class RecordVatPayment extends React.Component {
 					'success',
 					res.data ? res.data.message : 'Tax Claim Recorded Successfully',
 				);
-				this.props.history.push('/admin/report/vatreturns');
+				this.props.history.push('/admin/report/vatreports');
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
@@ -648,7 +648,7 @@ class RecordVatPayment extends React.Component {
 																			className="btn-square"
 																			onClick={() => {
 																				this.props.history.push(
-																					'/admin/report/vatreturns',
+																					'/admin/report/vatreports',
 																				);
 																			}}
 																		>

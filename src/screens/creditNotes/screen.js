@@ -36,7 +36,18 @@ import { selectOptionsFactory } from 'utils';
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
+import { upperCase } from 'lodash';
 
+const { ToWords } = require('to-words');
+const toWords = new ToWords({
+	localeCode: 'en-IN',
+	converterOptions: {
+	//   currency: true,
+	  ignoreDecimal: false,
+	  ignoreZeroCurrency: false,
+	  doNotAddOnly: false,
+	}
+  });
 const mapStateToProps = (state) => {
 	return {
 		customer_invoice_list: state.customer_invoice.customer_invoice_list,
@@ -204,6 +215,8 @@ class CreditNotes extends React.Component {
 			amount: row.invoiceAmount,
 			postingRefId: row.id,
 			postingRefType: 'CREDIT_NOTE',
+			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.invoiceAmount))+" ONLY" ).replace("POINT","AND"),
+			vatInWords:row.totalVatAmount ? upperCase(row.currencyName + " " +(toWords.convert(row.totalVatAmount))+" ONLY" ).replace("POINT","AND") :"-"
 		};
 		this.props.creditNotesActions
 			.creditNoteposting(postingRequestModel)
@@ -352,18 +365,18 @@ class CreditNotes extends React.Component {
 	};
 
 	renderVatAmount = (cell, row, extraData) => {
-		// return row.vatAmount === 0 ? (
+		// return row.totalVatAmount === 0 ? (
 		// 	<Currency
-		// 		value={row.vatAmount}
+		// 		value={row.totalVatAmount}
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// ) : (
 		// 	<Currency
-		// 		value={row.vatAmount}
+		// 		value={row.totalVatAmount}
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.vatAmount === 0  ? row.currencyName +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyName +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.totalVatAmount === 0  ? row.currencyName +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyName +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
 
 	renderDueAmount =(cell,row,extraData) => {
@@ -762,7 +775,7 @@ class CreditNotes extends React.Component {
 						currencyName:customer.currencyName ? customer.currencyName:'',
 						currencySymbol:customer.currencySymbol ? customer.currencySymbol:'',
 						invoiceAmount: customer.totalAmount,
-						vatAmount: customer.totalVatAmount,
+						totalVatAmount: customer.totalVatAmount,
 						cnCreatedOnPaidInvoice: customer.cnCreatedOnPaidInvoice,
 				  }))
 				: '';

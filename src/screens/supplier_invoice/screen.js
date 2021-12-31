@@ -39,7 +39,18 @@ import { selectOptionsFactory } from 'utils';
 import './style.scss';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
+import { upperCase } from 'lodash';
 
+const { ToWords } = require('to-words');
+const toWords = new ToWords({
+	localeCode: 'en-IN',
+	converterOptions: {
+	//   currency: true,
+	  ignoreDecimal: false,
+	  ignoreZeroCurrency: false,
+	  doNotAddOnly: false,
+	}
+  });
 const mapStateToProps = (state) => {
 	return {
 		supplier_invoice_list: state.supplier_invoice.supplier_invoice_list,
@@ -531,6 +542,8 @@ class SupplierInvoice extends React.Component {
 			amount: row.invoiceAmount,
 			postingRefId: row.id,
 			postingRefType: 'INVOICE',
+			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.invoiceAmount))+" ONLY" ).replace("POINT","AND"),
+			vatInWords:row.vatAmount ?upperCase(row.currencyName + " " +(toWords.convert(row.vatAmount))+" ONLY" ).replace("POINT","AND") :"-"
 		};
 		this.props.supplierInvoiceActions
 			.postInvoice(postingRequestModel)

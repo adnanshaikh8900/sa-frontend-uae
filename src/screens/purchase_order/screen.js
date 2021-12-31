@@ -41,7 +41,18 @@ import './style.scss';
 import CreateGoodsReceivedNote from './sections/createGRN';
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
+import { upperCase } from 'lodash';
 
+const { ToWords } = require('to-words');
+const toWords = new ToWords({
+	localeCode: 'en-IN',
+	converterOptions: {
+	//   currency: true,
+	  ignoreDecimal: false,
+	  ignoreZeroCurrency: false,
+	  doNotAddOnly: false,
+	}
+  });
 const mapStateToProps = (state) => {
 	return {
 		supplier_list: state.purchase_order.supplier_list,
@@ -345,7 +356,7 @@ class PurchaseOrder extends React.Component {
 							{row.status === "Approved" && (
 							<DropdownItem
 								onClick={() => {
-									this.sendMail(row.id);
+									this.sendMail(row);
 								}}
 							>
 								<i className="fas fa-send" /> {strings.Send}
@@ -461,28 +472,28 @@ class PurchaseOrder extends React.Component {
 			console.log('selecteddata ',this.state.selectedData)
 		});
 	}
-	sendMail = (id,status) => {
-		this.props.purchaseOrderAction
-			.sendMail(id)
-			.then((res) => {
-				if (res.status === 200) {
-					this.props.commonActions.tostifyAlert(
-						'success',
-						res.data ? res.data.message : 'Email Send Successfully'
-					);
-					this.setState({
-						loading: false,
-					});
-					this.initializeData();
-				}
-			})
-			.catch((err) => {
-				this.props.commonActions.tostifyAlert(
-					'error',
-					err.data ? err.data.message : 'Email Send Unsuccessfully'
-				);
-			});
-	};
+	// sendMail = (id,status) => {
+	// 	this.props.purchaseOrderAction
+	// 		.sendMail(id)
+	// 		.then((res) => {
+	// 			if (res.status === 200) {
+	// 				this.props.commonActions.tostifyAlert(
+	// 					'success',
+	// 					res.data ? res.data.message : 'Email Send Successfully'
+	// 				);
+	// 				this.setState({
+	// 					loading: false,
+	// 				});
+	// 				this.initializeData();
+	// 			}
+	// 		})
+	// 		.catch((err) => {
+	// 			this.props.commonActions.tostifyAlert(
+	// 				'error',
+	// 				err.data ? err.data.message : 'Email Send Unsuccessfully'
+	// 			);
+	// 		});
+	// };
 
 	onSizePerPageList = (sizePerPage) => {
 		if (this.options.sizePerPage !== sizePerPage) {
@@ -604,17 +615,19 @@ class PurchaseOrder extends React.Component {
 		this.initializeData();
 	};
 
-	postInvoice = (row) => {
+	sendMail = (row) => {
 		this.setState({
 			loading: true,
 		});
 		const postingRequestModel = {
-			amount: row.invoiceAmount,
+		
 			postingRefId: row.id,
-			postingRefType: 'INVOICE',
+		
+			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.totalAmount)) ).replace("POINT","AND"),
+			vatInWords:row.totalVatAmount ? upperCase(row.currencyName + " " +(toWords.convert(row.totalVatAmount)) ).replace("POINT","AND") :"-"
 		};
 		this.props.purchaseOrderAction
-			.postInvoice(postingRequestModel)
+			.sendMail(postingRequestModel)
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
@@ -624,7 +637,6 @@ class PurchaseOrder extends React.Component {
 					this.setState({
 						loading: false,
 					});
-					this.getOverdue();
 					this.initializeData();
 				}
 			})
@@ -636,6 +648,7 @@ class PurchaseOrder extends React.Component {
 				this.setState({
 					loading: false,
 				});
+				this.initializeData();
 			});
 	};
 
@@ -828,6 +841,7 @@ class PurchaseOrder extends React.Component {
 						totalAmount: supplier.totalAmount,
 						totalVatAmount: supplier.totalVatAmount,
 						currencyCode: supplier.currencyCode,
+						currencyName:supplier.currencyName,
 				  }))
 				: '';
 

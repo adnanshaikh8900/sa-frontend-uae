@@ -79,6 +79,7 @@ class ViewInvoice extends React.Component {
 				.then((res) => {
 					let val = 0;
 					if (res.status === 200) {
+						if(res.data.invoiceLineItems&&res.data.invoiceLineItems.length !=0 )
 						res.data.invoiceLineItems.map((item) => {
 							val = val + item.subTotal;
 							return item;

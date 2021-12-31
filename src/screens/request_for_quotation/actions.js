@@ -409,11 +409,12 @@ export const getStateList = (countryCode) => {
 	};
 };
 
-export const sendMail = (id) => {
+export const sendMail = (obj) => {
 	return (dispatch) => {
 		let data = {
 			method: 'post',
-			url: `/rest/poquatation/sendrfq?id=${id}`,
+			url: `/rest/poquatation/sendrfq`,
+			data:obj
 		};
 		return authApi(data)
 			.then((res) => {

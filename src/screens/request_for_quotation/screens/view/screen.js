@@ -98,6 +98,7 @@ class ViewRequestForQuotation extends React.Component {
 				.then((res) => {
 					let val = 0;
 					if (res.status === 200) {
+						if(res.data.poQuatationLineItemRequestModelList&&res.data.poQuatationLineItemRequestModelList.length !=0 )
 						res.data.poQuatationLineItemRequestModelList.map((item) => {
 							val = val + item.subTotal;
 							return item;

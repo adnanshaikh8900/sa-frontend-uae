@@ -428,11 +428,12 @@ export const getStateList = (countryCode) => {
 	};
 };
 
-export const sendMail = (id) => {
+export const sendMail = (obj) => {
 	return (dispatch) => {
 		let data = {
 			method: 'post',
-			url: `/rest/poquatation/sendPO?id=${id}`,
+			url: `/rest/poquatation/sendPO`,
+			data:obj
 		};
 		return authApi(data)
 			.then((res) => {

@@ -765,29 +765,29 @@ const adminRoutes = [
 		component: TrailBalances.screen,
 	},
 	{
-		path: '/admin/report/vatreport/view',
-		name: 'HorizontalBalanceSheet',
+		path: '/admin/report/vatreports/view',
+		name: 'View Vat Report',
 		component: VatReturnsReport.screen,
 	},
 	{
-		path: '/admin/report/vatreturns',
-		name: 'VatReturnReport',
+		path: '/admin/report/vatreports',
+		name: 'Vat Reports',
 		component: VatReports.screen,
 	},	
 	
 	{
-		path: '/admin/report/vatpaymentrecordhistory',
-		name: 'VatReturnReport',
+		path: '/admin/report/vatreports/vatpaymentrecordhistory',
+		name: 'Vat Payment History',
 		component: VatPaymentRecord.screen,
 	},	
 	{
-		path: '/admin/report/recordclaimtax',
-		name: 'TrialBalance',
+		path: '/admin/report/vatreports/recordclaimtax',
+		name: 'Record Tax Claim',
 		component: RecordTaxClaim.screen,
 	},	
 	{
-		path: '/admin/report/recordtaxpayment',
-		name: 'SalesByProduct',
+		path: '/admin/report/vatreports/recordtaxpayment',
+		name: 'Record Tax Payment',
 		component: RecordVatPayment.screen,
 	},	
 	{

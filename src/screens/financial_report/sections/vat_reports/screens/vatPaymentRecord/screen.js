@@ -168,7 +168,7 @@ class VatPaymentRecord extends React.Component {
 											<Button
 												className="mr-2 print-btn-cont"
 												onClick={() => {
-													this.props.history.push('/admin/report/vatreturns');
+													this.props.history.push('/admin/report/vatreports');
 												}}
 												style={{cursor: 'pointer'}}
 											>

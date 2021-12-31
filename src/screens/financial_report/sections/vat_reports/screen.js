@@ -239,7 +239,7 @@ class VatReports extends React.Component {
 	// 		onClick={() => {
 	// 					this.setState({current_report_id:params.data.id})
 	// 					let dateArr = params.data.taxReturns ? params.data.taxReturns.split("-") : [];
-	// 					this.props.history.push('/admin/report/vatreport/view',{startDate:dateArr[0] ?dateArr[0] :'',endDate:dateArr[1] ?dateArr[1] :''})
+	// 					this.props.history.push('/admin/report/vatreports/view',{startDate:dateArr[0] ?dateArr[0] :'',endDate:dateArr[1] ?dateArr[1] :''})
 	// 		}}
 	// 				>
 	// 					<i className="fas fa-eye" /> View
@@ -324,7 +324,7 @@ class VatReports extends React.Component {
 				onClick={() => {
 					this.setState({current_report_id:params.data.id})
 					let dateArr = params.data.taxReturns ? params.data.taxReturns.split("-") : [];
-					this.props.history.push('/admin/report/vatreport/view',{startDate:dateArr[0] ?dateArr[0] :'',endDate:dateArr[1] ?dateArr[1] :''})
+					this.props.history.push('/admin/report/vatreports/view',{startDate:dateArr[0] ?dateArr[0] :'',endDate:dateArr[1] ?dateArr[1] :''})
 				}}
 			>	<i className="fas fa-eye" /> </Button>&nbsp;&nbsp;
 
@@ -351,11 +351,11 @@ class VatReports extends React.Component {
 					onClick={() => {
 						this.setState({current_report_id:params.data.id})
 							if (params.data.totalTaxReclaimable != 0)
-								this.props.history.push('/admin/report/recordclaimtax',{id:params.data.id,
+								this.props.history.push('/admin/report/vatreports/recordclaimtax',{id:params.data.id,
 																						totalTaxReclaimable:params.data.totalTaxReclaimable,
 																						taxReturns:params.data.taxReturns,})
 							else
-								this.props.history.push('/admin/report/recordtaxpayment',{id:params.data.id,
+								this.props.history.push('/admin/report/vatreports/recordtaxpayment',{id:params.data.id,
 																						taxReturns:params.data.taxReturns,
 																						totalTaxPayable:params.data.totalTaxPayable,
 																						balanceDue:params.data.balanceDue,																	
@@ -574,7 +574,7 @@ class VatReports extends React.Component {
 										<FormGroup className="text-center">
 											<Button color="primary" className="btn-square  pull-right"
 												onClick={() => {
-													this.props.history.push('/admin/report/vatpaymentrecordhistory')
+													this.props.history.push('/admin/report/vatreports/vatpaymentrecordhistory')
 												}}>
 												<i className="fas fa-history"></i> Vat Payment Record
 											</Button>

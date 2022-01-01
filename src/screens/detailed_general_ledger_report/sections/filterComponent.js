@@ -73,7 +73,7 @@ class FilterComponent extends Component {
 										<Col lg={4}>
 											<FormGroup className="mb-3">
 												<Label htmlFor="startDate">
-													{strings.From}
+													{strings.StartDate}
                                   </Label>
 												<DatePicker
 													id="date"
@@ -98,7 +98,7 @@ class FilterComponent extends Component {
 										<Col lg={4}>
 											<FormGroup className="mb-3">
 												<Label htmlFor="endDate">
-													{strings.To}
+													{strings.EndDate}
                                   </Label>
 												<DatePicker
 													id="date"

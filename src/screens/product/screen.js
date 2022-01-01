@@ -393,11 +393,11 @@ class Product extends React.Component {
 	}
 	renderType  = (cell, row) => {
         let type='';
-		if(row.exciseTaxId !=null){
-			type="EXCISE "+row.productType
+		if(row.data.exciseTaxId !=null){
+			type="EXCISE "+row.data.productType
 		}
 		else{
-			type=row.productType
+			type=row.data.productType
 		}
         return type;
     };
@@ -690,8 +690,7 @@ class Product extends React.Component {
 						cursor: 'pointer',
 						}}
 					
-						onClick={()=>{
-							debugger
+						onClick={()=>{							
 							this.goToProductDetail(params.data.id) }}                                                                  
 		>
 		{params.value}
@@ -705,7 +704,7 @@ class Product extends React.Component {
 				sortable={ true }
 				enablePivot={true} 
 				filter={ true }
-				
+				cellRendererFramework={(params)=><>{this.renderType(params.value,params)}</>}
 				></AgGridColumn>  
 
 			

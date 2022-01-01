@@ -68,7 +68,7 @@ class CreateContact extends React.Component {
 				contactType: '',
 				
 				countryId: '',
-				currencyCode:'',
+				currencyCode:{label: "UAE Dirham - AED", value: 150},
 				email: '',
 				firstName: '',
 				shippingAddress: '',
@@ -781,7 +781,7 @@ class CreateContact extends React.Component {
 																				.find(
 																					(option) =>
 																						option.value ===
-																						+props.values.currencyCode,
+																						+props.values.currencyCode.value,
 																				)
 																		}
 																		onChange={(option) => {

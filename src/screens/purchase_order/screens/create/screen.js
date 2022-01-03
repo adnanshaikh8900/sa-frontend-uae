@@ -1484,6 +1484,9 @@ getrfqDetails = (e, row, props,form,field) => {
 														errors.po_number =
 															'PO Number already exists';
 													}
+													if (values.po_number==='') {
+														errors.po_number = 'PO Number is required';
+													}
 													return errors;
 												}}
 												validationSchema={Yup.object().shape(

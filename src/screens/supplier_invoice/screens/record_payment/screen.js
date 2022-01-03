@@ -552,7 +552,7 @@ class RecordSupplierPayment extends React.Component {
 																		</Label>
 																		<Input
 																		type="number"
-																		
+																		maxLength="17,2"
 																		id="amount"
 																			name="amount"
 																			value={props.values.amount}
@@ -713,6 +713,7 @@ class RecordSupplierPayment extends React.Component {
 																				</Label>
 																				<Input
 																					type="text"
+																					maxLength="50"
 																					id="referenceCode"
 																					name="referenceCode"
 																					placeholder={strings.Enter+strings.ReceiptNumber}
@@ -739,6 +740,7 @@ class RecordSupplierPayment extends React.Component {
 																				<Label htmlFor="notes">{strings.Notes}</Label>
 																				<Input
 																					type="textarea"
+																					maxLength="250"
 																					name="notes"
 																					id="notes"
 																					rows="5"

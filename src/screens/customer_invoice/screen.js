@@ -1196,7 +1196,7 @@ class CustomerInvoice extends React.Component {
 											<Col lg={2} className="mb-1">
 												<Input
 													type="number"
-													maxLength="17,3"
+													maxLength="17,2"
 													min="0"
 													value={filterData.amount}
 													placeholder={strings.Amount}

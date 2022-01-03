@@ -156,7 +156,7 @@ class InvoiceTemplate extends Component {
 									<div className="mb-1 ml-2"><b>{strings.StateRegion} : </b> {companyData.companyStateName}</div>
 									<div className="mb-1 ml-2"><b>{strings.Country} : </b> {companyData.companyCountryName}</div>
 									<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo} : </b> {companyData.vatRegistrationNumber}</div>
-									<div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b> {this.companyMobileNumber(companyData.phoneNumber?companyData.phoneNumber:'')}</div>
+									<div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b> {this.companyMobileNumber(companyData.phoneNumber?"+"+companyData.phoneNumber:'')}</div>
 							</div>
 							</div>
 							<div style={{ width: '200%',justifyContent:'center',marginTop:'5rem'}}>
@@ -183,7 +183,7 @@ class InvoiceTemplate extends Component {
 								}}
 							>
 								<div 	style={{
-									width: '62%',
+									width: '70%',
 									margin:'1.5rem 9.0rem 0.5rem 4rem',
 									// // border:'1px solid',
 									marginTop:'6.5rem',
@@ -193,6 +193,16 @@ class InvoiceTemplate extends Component {
 											? companyData.company.companyName
 											: ''}</b></h4>
 								<h4 className="mb-1 ml-2"><b>{strings.Invoice } # {invoiceData.referenceNumber}</b></h4>
+							    <br/>
+								<h6 className="mb-1 ml-2"><b>{strings.BillTo} ,</b></h6>
+								<div className="mb-1 ml-2"><b>{strings.Name} : </b>{invoiceData.organisationName ? invoiceData.organisationName : invoiceData.name}</div>
+								{contactData && contactData.addressLine1 &&(<div className="mb-1 ml-2"><b>{strings.BillingAddress} : </b> {contactData.addressLine1}</div>)}
+								{contactData && contactData.postZipCode &&(	<div className="mb-1 ml-2"><b>{strings.PinCode} : </b> {contactData.postZipCode}</div>)}
+								{contactData&&contactData.billingStateName&&(<div className="mb-1 ml-2"><b>{strings.StateRegion} : </b> {contactData.billingStateName}</div>)}
+								{contactData && contactData.billingCountryName &&(<div className="mb-1 ml-2"><b>{strings.Country} : </b> {contactData.billingCountryName}</div>)}
+								<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo} : </b> {invoiceData.taxRegistrationNo}</div>
+								{contactData&&contactData.mobileNumber&&(   <div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b>+{contactData.mobileNumber}</div>)}
+								<span className="mb-1 ml-2"><b>{strings.Status} : </b> {this.renderInvoiceStatus(invoiceData.status)}</span>
 								<div className="mb-1 ml-2" style={{marginLeft:'8rem'}}><b>{strings.BalanceDue} : {invoiceData.dueAmount ? (
 														<Currency
 															value={invoiceData.dueAmount}
@@ -212,16 +222,6 @@ class InvoiceTemplate extends Component {
 															}
 														/>
 													)}</b></div>
-								<br/>
-								<h6 className="mb-1 ml-2"><b>{strings.BillTo} ,</b></h6>
-								<div className="mb-1 ml-2"><b>{strings.Name} : </b>{invoiceData.organisationName ? invoiceData.organisationName : invoiceData.name}</div>
-								{contactData && contactData.addressLine1 &&(<div className="mb-1 ml-2"><b>{strings.BillingAddress} : </b> {contactData.addressLine1}</div>)}
-								{contactData && contactData.postZipCode &&(	<div className="mb-1 ml-2"><b>{strings.PinCode} : </b> {contactData.postZipCode}</div>)}
-								{contactData&&contactData.billingStateName&&(<div className="mb-1 ml-2"><b>{strings.StateRegion} : </b> {contactData.billingStateName}</div>)}
-								{contactData && contactData.billingCountryName &&(<div className="mb-1 ml-2"><b>{strings.Country} : </b> {contactData.billingCountryName}</div>)}
-								<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo} : </b> {invoiceData.taxRegistrationNo}</div>
-								{contactData&&contactData.mobileNumber&&(   <div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b> {contactData.mobileNumber}</div>)}
-								<span className="mb-1 ml-2"><b>{strings.Status} : </b> {this.renderInvoiceStatus(invoiceData.status)}</span>
 								
 													{/* <div
 														className={`ribbon ${this.getRibbonColor(

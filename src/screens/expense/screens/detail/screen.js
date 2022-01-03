@@ -1380,6 +1380,9 @@ class DetailExpense extends React.Component {
 																	)}
 															</Row>
 															{props.values.vatCategoryId !=='' && props.values.vatCategoryId.label !=='Select Vat' &&
+															props.values.vatCategoryId.value !==3 && 
+															props.values.vatCategoryId.value !==4 && 
+															props.values.vatCategoryId.value !==10 &&
 														(
 															<Row>
 																<Col></Col>

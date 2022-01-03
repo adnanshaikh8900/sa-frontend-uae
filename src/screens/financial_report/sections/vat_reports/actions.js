@@ -128,3 +128,20 @@ export const recordVatPayment = (obj) => {
 			});
 	};
 };
+export const getCompany = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: 'rest/company/getById?id=1',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

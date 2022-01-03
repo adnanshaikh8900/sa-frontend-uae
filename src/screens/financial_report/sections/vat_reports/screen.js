@@ -383,7 +383,12 @@ class VatReports extends React.Component {
 				color="secondary"
 				className=" btn-sm"
 				onClick={() => {
-					this.setState({ openFileTaxRetrunModal: true, current_report_id: params.data.id });
+					let dateArr = params.data.taxReturns ? params.data.taxReturns.split("-") : [];
+					let endDate = moment(dateArr[1]).format('DD/MM/YYYY')		
+
+					this.setState({ openFileTaxRetrunModal: true,
+						 			current_report_id: params.data.id ,
+									endDate:endDate});
 				}}
 			>	<i class="fas fa-link" /></Button>) : ""}
 	</>
@@ -745,6 +750,7 @@ class VatReports extends React.Component {
 				<FileTaxReturnModal
 					openModal={this.state.openFileTaxRetrunModal}
 					current_report_id={this.state.current_report_id}
+					endDate={this.state.endDate}
 					closeModal={(e) => {
 						this.closeFileTaxRetrunModal(e);
 						this.getInitialData();

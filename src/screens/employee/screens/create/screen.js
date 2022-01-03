@@ -218,6 +218,7 @@ class CreateEmployee extends React.Component {
                                   <Label htmlFor="select"><span className="text-danger">* </span>First Name</Label>
                                   <Input
                                     type="text"
+                                    maxLength="100"
                                     id="firstName"
                                     name="firstName"
                                     value={props.values.firstName}
@@ -237,6 +238,7 @@ class CreateEmployee extends React.Component {
                                   <Label htmlFor="select"><span className="text-danger">* </span>Middle Name</Label>
                                   <Input
                                     type="text"
+                                    maxLength="100"
                                     id="middleName"
                                     name="middleName"
                                     value={props.values.middleName}
@@ -256,6 +258,7 @@ class CreateEmployee extends React.Component {
                                   <Label htmlFor="select"><span className="text-danger">* </span>Last Name</Label>
                                   <Input
                                     type="text"
+                                    maxLength="100"
                                     id="lastName"
                                     name="lastName"
                                     value={props.values.lastName}
@@ -340,6 +343,7 @@ class CreateEmployee extends React.Component {
                                   <Label htmlFor="billingEmail">Billing Email</Label>
                                   <Input
                                     type="text"
+                                    maxLength="80"
                                     id="billingEmail"
                                     name="billingEmail"
                                     placeholder="Enter Billing Email Address"
@@ -361,6 +365,7 @@ class CreateEmployee extends React.Component {
                                   <Label htmlFor="poBoxNumber">Contract PO Number</Label>
                                   <Input
                                     type="text"
+                                    maxLength="8"
                                     id="poBoxNumber"
                                     name="poBoxNumber"
                                     placeholder="Enter Contract PO Number"
@@ -387,6 +392,7 @@ class CreateEmployee extends React.Component {
                                   <Label htmlFor="vatRegestationNo">Tax Registration Number</Label>
                                   <Input
                                     type="text"
+                                    maxLength="15"
                                     id="vatRegestationNo"
                                     name="vatRegestationNo"
                                     placeholder="Enter Tax Registration Number"

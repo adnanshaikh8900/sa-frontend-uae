@@ -1575,11 +1575,13 @@ renderVatAmount = (cell, row,extraData) => {
 													this.handleSubmit(values, resetForm);
 												}}
 												validate={(values) => {
-													debugger
 													let errors = {};
 													if (exist === true) {
 														errors.invoice_number =
 															'Invoice Number already exists';
+													}
+													if (values.invoice_number==='') {
+														errors.invoice_number = 'Invoice Number is required';
 													}
 													if (param === true) {
 														errors.discount =

@@ -1348,6 +1348,9 @@ class CreateRequestForQuotation extends React.Component {
 														errors.rfq_number =
 															'RFQ number already exists';
 													}
+													if (values.rfq_number==='') {
+														errors.rfq_number = 'RFQ Number is required';
+													}
 													return errors;
 												}}
 												validationSchema={Yup.object().shape(

@@ -734,7 +734,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 													if(this.state.showPlacelist===true && values.placeOfSupplyId ===''){
 														errors.placeOfSupplyId="Place Of Supply is required"
 													}
-												
+
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({
@@ -1375,6 +1375,9 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 														)
 														} */}
 														{props.values.vatCategoryId !=='' && props.values.vatCategoryId.label !=='Select Vat' &&
+														props.values.vatCategoryId.value !==3 && 
+														props.values.vatCategoryId.value !==4 && 
+														props.values.vatCategoryId.value !==10 &&
 														(
 															<Row>
 																<Col></Col>

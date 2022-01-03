@@ -273,6 +273,7 @@ class CreateEmployeeFinancial extends React.Component {
                                   <Label htmlFor="select">Account Holder Name </Label>
                                   <Input
                                     type="text"
+                                    maxLength="100"
                                     id="accountHolderName"
                                     name="accountHolderName"
                                     value={props.values.accountHolderName}
@@ -292,6 +293,7 @@ class CreateEmployeeFinancial extends React.Component {
                                   <Label htmlFor="select">Account Number</Label>
                                   <Input
                                     type="text"
+                                    maxLength="23"
                                     id="accountNumber"
                                     name="accountNumber"
                                     value={props.values.accountNumber}
@@ -314,6 +316,7 @@ class CreateEmployeeFinancial extends React.Component {
                                   <Label htmlFor="select">IBAN Number</Label>
                                   <Input 
                                     type="text"
+                                    maxLength="23"
                                     id="ibanNumber"
                                     name="ibanNumber"
                                     value={props.values.ibanNumber}
@@ -333,6 +336,7 @@ class CreateEmployeeFinancial extends React.Component {
                                   <Label htmlFor="labourCard">Bank Name</Label>
                                   <Input
                                     type="text"
+                                    maxLength="100"
                                     id="bankName"
                                     name="bankName"
                                     value={props.values.bankName}
@@ -358,6 +362,7 @@ class CreateEmployeeFinancial extends React.Component {
                                   <Label htmlFor="select">Branch</Label>
                                   <Input 
                                     type="text"
+                                    maxLength="100"
                                     id="branch"
                                     name="branch"
                                     value={props.values.branch}
@@ -377,6 +382,7 @@ class CreateEmployeeFinancial extends React.Component {
                                   <Label htmlFor="select">Swift Code</Label>
                                   <Input 
                                     type="text"
+                                    maxLength="11"
                                     id="swiftCode"
                                     name="swiftCode"
                                     value={props.values.swiftCode}
@@ -446,7 +452,8 @@ class CreateEmployeeFinancial extends React.Component {
                                 <FormGroup>
                                   <Label htmlFor="gender">Visa Number </Label>
                                   <Input 
-                                    type="text" 
+                                    type="text"
+                                    maxLength="16"
                                     id="visaNumber"
                                     name="visaNumber"
                                     placeholder="Enter Present Address "

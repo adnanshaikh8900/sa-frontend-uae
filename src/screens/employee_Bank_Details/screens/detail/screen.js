@@ -256,6 +256,7 @@ class DetailEmployeePayroll extends React.Component {
                                       <Label htmlFor="select"><span className="text-danger">* </span>Email</Label>
                                       <Input
                                         type="email"
+                                        maxLength="80"
                                         id="email"
                                         name="email"
                                         placeholder="Enter Email Address"
@@ -271,6 +272,7 @@ class DetailEmployeePayroll extends React.Component {
                                       <Label htmlFor="select"><span className="text-danger">* </span>First Name</Label>
                                       <Input
                                         type="text"
+                                        maxLength="100"
                                         id="firstName"
                                         name="firstName"
                                         value={props.values.firstName}
@@ -290,6 +292,7 @@ class DetailEmployeePayroll extends React.Component {
                                       <Label htmlFor="select"><span className="text-danger">* </span>Middle Name</Label>
                                       <Input
                                         type="text"
+                                        maxLength="100"
                                         id="middleName"
                                         name="middleName"
                                         value={props.values.middleName}
@@ -309,6 +312,7 @@ class DetailEmployeePayroll extends React.Component {
                                       <Label htmlFor="select"><span className="text-danger">* </span>Last Name</Label>
                                       <Input
                                         type="text"
+                                        maxLength="100"
                                         id="lastName"
                                         name="lastName"
                                         value={props.values.lastName}
@@ -391,6 +395,7 @@ class DetailEmployeePayroll extends React.Component {
                                       <Label htmlFor="billingEmail">Billing Email</Label>
                                       <Input
                                         type="text"
+                                        maxLength="80"
                                         id="billingEmail"
                                         name="billingEmail"
                                         value={props.values.billingEmail}
@@ -412,6 +417,7 @@ class DetailEmployeePayroll extends React.Component {
                                       <Label htmlFor="poBoxNumber">Contract PO Number</Label>
                                       <Input
                                         type="text"
+                                        maxLength="8"
                                         id="poBoxNumber"
                                         name="poBoxNumber"
                                         placeholder="Enter Contract PO Number"
@@ -438,6 +444,7 @@ class DetailEmployeePayroll extends React.Component {
                                       <Label htmlFor="vatRegestationNo">Tax Registration Number</Label>
                                       <Input
                                         type="text"
+                                        maxLength="15"
                                         id="vatRegestationNo"
                                         name="vatRegestationNo"
                                         placeholder="Enter Tax Registration Number"

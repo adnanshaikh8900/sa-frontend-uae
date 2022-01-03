@@ -72,21 +72,26 @@ export const fileVatReport = (obj) => {
 	};
 };
 
-export const markItUnfiled = (id) => {
+
+export const markItUnfiled = (obj) => {
 	return (dispatch) => {
 		let data = {
 			method: 'post',
-			url: `/rest/vatReport/markItUnfiled?id=${id}`,
+			url: '/rest/vatReport/undoFiledVatReport',
+			data: obj,
 		};
-		return authFileUploadApi(data)
+		return authApi(data)
 			.then((res) => {
-				return res			
+				if (res.status === 200) {
+					return res;
+				}
 			})
 			.catch((err) => {
 				throw err;
 			});
 	};
 };
+
 export const getDepositList = () => {
 	return (dispatch) => {
 		let data = {
@@ -122,6 +127,23 @@ export const recordVatPayment = (obj) => {
 		return authFileUploadApi(data)
 			.then((res) => {
 				return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+export const getCompany = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: 'rest/company/getById?id=1',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
 			})
 			.catch((err) => {
 				throw err;

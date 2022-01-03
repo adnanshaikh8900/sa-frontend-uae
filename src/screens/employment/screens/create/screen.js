@@ -254,6 +254,7 @@ class CreateEmployment extends React.Component {
                                   <Label htmlFor="select">Department </Label>
                                   <Input
                                     type="text"
+                                    maxLength="100"
                                     id="department"
                                     name="department"
                                     value={props.values.department}
@@ -299,6 +300,7 @@ class CreateEmployment extends React.Component {
                                   <Label htmlFor="select">Employee Code </Label>
                                   <Input 
                                     type="text"
+                                    maxLength="50"
                                     id="employeeCode"
                                     name="employeeCode"
                                     value={props.values.employeeRole}
@@ -386,6 +388,7 @@ class CreateEmployment extends React.Component {
                                   <Label htmlFor="gender">Passport Number </Label>
                                   <Input 
                                     type="text"
+                                    maxLength="9"
                                     id="passportNumber"
                                     name="passportNumber"
                                     placeholder="Enter Present Address "
@@ -432,6 +435,7 @@ class CreateEmployment extends React.Component {
                                   <Label htmlFor="gender">Visa Number </Label>
                                   <Input 
                                     type="text" 
+                                    maxLength="9"
                                     id="visaNumber"
                                     name="visaNumber"
                                     placeholder="Enter Present Address "
@@ -476,7 +480,8 @@ class CreateEmployment extends React.Component {
                                 <FormGroup>
                                   <Label htmlFor="gender">Gross Salary </Label>
                                   <Input  
-                                    type="text" 
+                                    type="text"
+                                    maxLength="17,2"
                                     id="grossSalary"
                                     name="grossSalary"
                                     placeholder="Enter  grossSalary "

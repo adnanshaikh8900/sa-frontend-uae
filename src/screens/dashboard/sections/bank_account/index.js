@@ -126,7 +126,7 @@ class BankAccount extends Component {
 			labels: this.props.bank_account_graph.labels,
 			datasets: [
 				{
-					label: "Delta of" + this.props.bank_account_graph.account_name,
+					label: "Delta of " + this.props.bank_account_graph.account_name,
 					fill: true,
 					lineTension: 0.1,
 					backgroundColor: 'rgba(32, 100, 216, 0.4)',

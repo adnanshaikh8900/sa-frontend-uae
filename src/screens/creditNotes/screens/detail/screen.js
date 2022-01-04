@@ -256,6 +256,7 @@ class DetailCreditNote extends React.Component {
 									fileName: res.data.fileName ? res.data.fileName : '',
 									filePath: res.data.filePath ? res.data.filePath : '',
 								},
+								customer_taxTreatment_des : res.data.taxTreatment ? res.data.taxTreatment : '',
 								checked: res.data.exciseType ? res.data.exciseType : res.data.exciseType,
 								discountAmount: res.data.discount ? res.data.discount : 0,
 								discountPercentage: res.data.discountPercentage
@@ -842,11 +843,11 @@ class DetailCreditNote extends React.Component {
 				if(obj.exciseTaxId === 1){
 				const value = +(obj.unitPrice) / 2 ;
 					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
-				obj.exciseAmount = value;
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
 				}else if (obj.exciseTaxId === 2){
 					const value = obj.unitPrice;
 					net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
-					obj.exciseAmount = value;
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
 				}
 				else{
 					net_value = obj.unitPrice
@@ -854,11 +855,11 @@ class DetailCreditNote extends React.Component {
 			}	else{
 				if(obj.exciseTaxId === 1){
 					const value = obj.unitPrice / 3
-				obj.exciseAmount = value;
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
 				net_value = obj.unitPrice}
 				else if (obj.exciseTaxId === 2){
 					const value = obj.unitPrice / 2
-				obj.exciseAmount = value;
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
 				net_value = obj.unitPrice}
 				else{
 					net_value = obj.unitPrice
@@ -1228,6 +1229,25 @@ class DetailCreditNote extends React.Component {
 	
 		return customer_currencyCode;
 	}
+	getTaxTreatment= (opt) => {
+		
+		let customer_taxTreatmentId = 0;
+		let customer_item_taxTreatment = ''
+		this.props.customer_list.map(item => {
+			if(item.label.contactId == opt) {
+				this.setState({
+					customer_taxTreatment: item.label.taxTreatment.id,
+					customer_taxTreatment_des: item.label.taxTreatment.taxTreatment,
+					// customer_currency_symbol: item.label.currency.currencyIsoCode,
+				});
+
+				customer_taxTreatmentId = item.label.taxTreatment.id;
+				customer_item_taxTreatment = item.label.currency
+			}
+		})
+	
+		return customer_taxTreatmentId;
+	}
 	showInvoiceNumber=()=>{
 		return(
 			this.state.showInvoiceNumber &&(<Col lg={3}>
@@ -1480,6 +1500,40 @@ class DetailCreditNote extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
+																<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="taxTreatmentid">
+																		Tax Treatment
+																	</Label>
+																	<Input
+																	disabled
+																		styles={customStyles}
+																		id="taxTreatmentid"
+																		name="taxTreatmentid"
+																		value={
+																		this.state.customer_taxTreatment_des
+																	 	
+																		}
+																		className={
+																			props.errors.taxTreatmentid &&
+																			props.touched.taxTreatmentid
+																				? 'is-invalid'
+																				: ''
+																		}
+																		onChange={(option) => {
+																		props.handleChange('taxTreatmentid')(option);
+																		
+																	    }}
+
+																	/>
+																	{props.errors.taxTreatmentid &&
+																		props.touched.taxTreatmentid && (
+																			<div className="invalid-feedback">
+																				{props.errors.taxTreatmentid}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
 																{/* <Col>
 																	<Label
 																		htmlFor="contactId"

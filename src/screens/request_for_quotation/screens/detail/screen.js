@@ -233,6 +233,7 @@ class DetailRequestForQuotation extends React.Component {
 										placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 										total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
 								},
+								customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
 								checked: res.data.exciseType ? res.data.exciseType : res.data.exciseType,
 								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 								total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
@@ -1238,7 +1239,25 @@ class DetailRequestForQuotation extends React.Component {
 
 		return supplier_currencyCode;
 	}
+	getTaxTreatment= (opt) => {
+		
+		let customer_taxTreatmentId = 0;
+		let customer_item_taxTreatment = ''
+		this.props.supplier_list.map(item => {
+			if(item.label.contactId == opt) {
+				this.setState({
+					customer_taxTreatment: item.label.taxTreatment.id,
+					customer_taxTreatment_des: item.label.taxTreatment.taxTreatment,
+					// customer_currency_symbol: item.label.currency.currencyIsoCode,
+				});
 
+				customer_taxTreatmentId = item.label.taxTreatment.id;
+				customer_item_taxTreatment = item.label.currency
+			}
+		})
+	
+		return customer_taxTreatmentId;
+	}
 	render() {
 		strings.setLanguage(this.state.language);
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
@@ -1447,7 +1466,7 @@ class DetailRequestForQuotation extends React.Component {
 																			onChange={(option) => {
 																				if (option && option.value) {
 																					this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
-																					
+																					this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
 																					props.handleChange('supplierId')(option);
 																				} else {
 	
@@ -1469,7 +1488,40 @@ class DetailRequestForQuotation extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
+																<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="taxTreatmentid">
+																		Tax Treatment
+																	</Label>
+																	<Input
+																	disabled
+																		styles={customStyles}
+																		id="taxTreatmentid"
+																		name="taxTreatmentid"
+																		value={
+																		this.state.customer_taxTreatment_des
+																	 	
+																		}
+																		className={
+																			props.errors.taxTreatmentid &&
+																			props.touched.taxTreatmentid
+																				? 'is-invalid'
+																				: ''
+																		}
+																		onChange={(option) => {
+																		props.handleChange('taxTreatmentid')(option);
+																		
+																	    }}
 
+																	/>
+																	{props.errors.taxTreatmentid &&
+																		props.touched.taxTreatmentid && (
+																			<div className="invalid-feedback">
+																				{props.errors.taxTreatmentid}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">

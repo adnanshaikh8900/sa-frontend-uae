@@ -787,7 +787,7 @@ renderVatAmount = (cell, row,extraData) => {
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						 isDisabled={row.exciseTaxId === 0 || this.state.checked === false}
+						 isDisabled={row.exciseTaxId === 0 }
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -1510,33 +1510,33 @@ renderVatAmount = (cell, row,extraData) => {
 
 
 	getTaxTreatment= (opt) => {
-		let customer_currencyCode = 0;
-		let customer_item_currency = ''
-		this.state.taxTreatmentList.map(item => {
+
+		let customer_taxTreatmentId = 0;
+		let customer_item_taxTreatment = ''
+		this.props.customer_list.map(item => {
 			if(item.label.contactId == opt) {
 				this.setState({
-					customer_currency: item.label.currency.currencyCode,
-					customer_currency_des: item.label.currency.currencyName,
-					customer_currency_symbol: item.label.currency.currencyIsoCode,
+					customer_taxTreatment: item.label.taxTreatment.id,
+					customer_taxTreatment_des: item.label.taxTreatment.taxTreatment,
+					// customer_currency_symbol: item.label.currency.currencyIsoCode,
 				});
 
-				customer_currencyCode = item.label.currency.currencyCode;
-				customer_item_currency = item.label.currency
+				customer_taxTreatmentId = item.label.taxTreatment.id;
+				customer_item_taxTreatment = item.label.currency
 			}
 		})
 	
-		return customer_currencyCode;
+		return customer_taxTreatmentId;
 	}
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { data, discountOptions, initValue, exist, param,prefix } = this.state;
+		const { data, discountOptions, initValue, exist, param,prefix ,tax_treatment_list} = this.state;
 		const {
 			customer_list,
 			universal_currency_list,
 			currency_convert_list,
 		} = this.props;
-
 		
 		let tmpCustomer_list = []
 
@@ -1760,7 +1760,7 @@ renderVatAmount = (cell, row,extraData) => {
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
-																				// this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
+																				 this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
 																				this.setExchange( this.getCurrency(option.value) );
 																				props.handleChange('contactId')(option);
 																			} else {
@@ -1800,7 +1800,41 @@ renderVatAmount = (cell, row,extraData) => {
 																	<i className="fa fa-plus"></i> {strings.AddACustomer}
 																</Button>
 															</Col>
-															<Col lg={3}></Col>
+															{this.state.customer_taxTreatment_des ?
+															<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="taxTreatmentid">
+																		Tax Treatment
+																	</Label>
+																	<Input
+																	disabled
+																		styles={customStyles}
+																		id="taxTreatmentid"
+																		name="taxTreatmentid"
+																		value={
+																		this.state.customer_taxTreatment_des
+
+																		}
+																		className={
+																			props.errors.taxTreatmentid &&
+																			props.touched.taxTreatmentid
+																				? 'is-invalid'
+																				: ''
+																		}
+																		onChange={(option) => {
+																		props.handleChange('taxTreatmentid')(option);
+
+																	    }}
+
+																	/>
+																	{props.errors.taxTreatmentid &&
+																		props.touched.taxTreatmentid && (
+																			<div className="invalid-feedback">
+																				{props.errors.taxTreatmentid}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>: ''}
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">
@@ -2166,41 +2200,7 @@ renderVatAmount = (cell, row,extraData) => {
 															</Button>
 														</Col>
 
-															<Col lg={3}>
-																					<FormGroup>
 
-																						<span className='mr-4'>Inclusive</span>
-																						<Switch
-            checked={this.state.checked}
-			onChange={(checked) => {
-
-				props.handleChange('checked')(checked);
-				this.setState(
-					{
-						checked,
-					},
-					() => {
-						this.updateAmount(data, props);
-					},
-				);
-
-			}}
-            onColor="#2064d8"
-            onHandleColor="#2693e6"
-            handleDiameter={25}
-            uncheckedIcon={false}
-            checkedIcon={false}
-            boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-            activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-            height={20}
-            width={48}
-            className="react-switch "
-
-          />
-		  <span  className='ml-4'>Exclusive</span>
-
-																					</FormGroup>
-																				</Col>
 																				</Row>
 														<Row>
 															{props.errors.lineItemsString &&

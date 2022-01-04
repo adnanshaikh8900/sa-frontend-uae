@@ -463,12 +463,12 @@ class CreateCreditNote extends React.Component {
 			// 	true,
 			// );
 		});
-		this.props.creditNotesActions.getInvoicePrefix().then((response) => {
-			this.setState({
-				prefixData: response.data
+		// this.props.creditNotesActions.getInvoicePrefix().then((response) => {
+		// 	this.setState({
+		// 		prefixData: response.data
 
-			});
-		});
+		// 	});
+		// });
 		this.getCompanyCurrency();
 		this.salesCategory();
 		this.purchaseCategory();
@@ -1369,6 +1369,25 @@ class CreateCreditNote extends React.Component {
 	
 		return customer_currencyCode;
 	}
+	getTaxTreatment= (opt) => {
+		
+		let customer_taxTreatmentId = 0;
+		let customer_item_taxTreatment = ''
+		this.props.customer_list.map(item => {
+			if(item.label.contactId == opt) {
+				this.setState({
+					customer_taxTreatment: item.label.taxTreatment.id,
+					customer_taxTreatment_des: item.label.taxTreatment.taxTreatment,
+					// customer_currency_symbol: item.label.currency.currencyIsoCode,
+				});
+
+				customer_taxTreatmentId = item.label.taxTreatment.id;
+				customer_item_taxTreatment = item.label.currency
+			}
+		})
+	
+		return customer_taxTreatmentId;
+	}
 
 	invoiceValue = (e, row, name, form, field, props) => {
 		const { invoice_list } = this.props;
@@ -1461,6 +1480,7 @@ class CreateCreditNote extends React.Component {
 				
 				this.formRef.current.setFieldValue('currencyCode', this.state.customer_currency, true);
 				this.getCurrency(this.state.option.value)	
+				this.getTaxTreatment(this.state.option.value)	
 				console.log(this.state.data,"api")
 				console.log("option ",this.state.option)
 				console.log(this.state.initValue.totalAmount,"this.state.initValue.totalAmount+++++++")
@@ -1752,6 +1772,7 @@ class CreateCreditNote extends React.Component {
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
+																				this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
 																				// this.setExchange( this.getCurrency(option.value) );
 																				props.handleChange('contactId')(option);
 																			} else {
@@ -1773,6 +1794,42 @@ class CreateCreditNote extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
+															
+															<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="taxTreatmentid">
+																		Tax Treatment
+																	</Label>
+																	<Input
+																	disabled
+																		styles={customStyles}
+																		id="taxTreatmentid"
+																		name="taxTreatmentid"
+																		value={
+																		this.state.customer_taxTreatment_des
+																	 	
+																		}
+																		className={
+																			props.errors.taxTreatmentid &&
+																			props.touched.taxTreatmentid
+																				? 'is-invalid'
+																				: ''
+																		}
+																		onChange={(option) => {
+																		props.handleChange('taxTreatmentid')(option);
+																		
+																	    }}
+
+																	/>
+																	{props.errors.taxTreatmentid &&
+																		props.touched.taxTreatmentid && (
+																			<div className="invalid-feedback">
+																				{props.errors.taxTreatmentid}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
+
 															{/* <Col>
 																<Label
 																	htmlFor="contactId"

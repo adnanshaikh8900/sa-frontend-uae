@@ -352,7 +352,7 @@ class CreateSupplierInvoice extends React.Component {
 					<Input
 					type="text"
 					min="0"
-						maxLength="17,3"
+						maxLength="17,2"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -593,7 +593,7 @@ class CreateSupplierInvoice extends React.Component {
 					<Input
 					type="text"
 					min="0"
-						maxLength="17,3"
+						maxLength="17,2"
 						value={row['discount'] !== 0 ? row['discount'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -1646,6 +1646,9 @@ class CreateSupplierInvoice extends React.Component {
 													if (this.state.exist === true) {
 														errors.invoice_number =
 															'Invoice Number already exists';
+													}
+													if (values.invoice_number==='') {
+														errors.invoice_number = 'Invoice Number is required';
 													}
 													if (values.placeOfSupplyId && values.placeOfSupplyId.label && values.placeOfSupplyId.label === "Select Place of Supply")
 													{

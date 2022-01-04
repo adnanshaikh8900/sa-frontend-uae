@@ -121,9 +121,13 @@ class VatReports extends React.Component {
 		this.getInitialData();
 	};
 
-	markItUnfiled=(id)=>{
+	markItUnfiled=(row)=>{
+		const postingRequestModel = {
+			postingRefId: row.id,
+			postingRefType: 'PUBLISH',
+		};
 		this.props.vatreport
-			.markItUnfiled(id)
+			.markItUnfiled(postingRequestModel)
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
@@ -131,6 +135,7 @@ class VatReports extends React.Component {
 						res.data && res.data.message?res.data.message: 
 						' Vat UnFiled Successfully'
 					);
+					this.getInitialData()
 				}
 			})
 			.catch((err) => {
@@ -372,7 +377,7 @@ class VatReports extends React.Component {
 				className=" btn-sm"
 				onClick={() => {
 					this.setState({current_report_id:params.data.id})
-					this.markItUnfiled(params.data.id)
+					this.markItUnfiled(params.data)
 				}}
 			>	<i class="fas fa-unlink" /> </Button>) : ""}
 			{params.data.status === "Filed" ? (<>&nbsp;&nbsp;</>) : ''}
@@ -383,7 +388,12 @@ class VatReports extends React.Component {
 				color="secondary"
 				className=" btn-sm"
 				onClick={() => {
-					this.setState({ openFileTaxRetrunModal: true, current_report_id: params.data.id });
+					let dateArr = params.data.taxReturns ? params.data.taxReturns.split("-") : [];
+					let endDate = moment(dateArr[1]).format('DD/MM/YYYY')		
+
+					this.setState({ openFileTaxRetrunModal: true,
+						 			current_report_id: params.data.id ,
+									endDate:endDate});
 				}}
 			>	<i class="fas fa-link" /></Button>) : ""}
 	</>
@@ -745,6 +755,7 @@ class VatReports extends React.Component {
 				<FileTaxReturnModal
 					openModal={this.state.openFileTaxRetrunModal}
 					current_report_id={this.state.current_report_id}
+					endDate={this.state.endDate}
 					closeModal={(e) => {
 						this.closeFileTaxRetrunModal(e);
 						this.getInitialData();

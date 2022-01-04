@@ -409,7 +409,7 @@ debugger
                    <Input
                    type="text"
                    min="0"
-                       maxLength="17,3"
+                       maxLength="17,2"
                        value={row['discount'] !== 0 ? row['discount'] : 0}
                        onChange={(e) => {
                            if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -1992,7 +1992,7 @@ debugger
 																		<Input
 																			type="number"
 																			//min="0"
-																			maxLength="17,3"
+																			maxLength="17,2"
 																			className="form-control"
 																			id="exchangeRate"
 																			name="exchangeRate"

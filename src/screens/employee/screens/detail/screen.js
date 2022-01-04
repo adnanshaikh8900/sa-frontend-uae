@@ -437,6 +437,7 @@ class DetailEmployee extends React.Component {
                                       <Label htmlFor="vatRegestationNo">Tax Registration Number</Label>
                                       <Input
                                         type="text"
+                                        maxLength="15"
                                         id="vatRegestationNo"
                                         name="vatRegestationNo"
                                         placeholder="Enter Tax Registration Number"

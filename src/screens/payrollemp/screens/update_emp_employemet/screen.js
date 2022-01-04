@@ -260,18 +260,18 @@ class UpdateEmployeeEmployment extends React.Component {
                                                         let errors = {};
                                                         if (exist === true) {
                                                             errors.employeeCode =
-                                                                'employee Code Number already exists';
+                                                                'Employee Code Number Already Exists';
                                                         }
                                                         return errors;
                                                     }}
                                                     validationSchema={Yup.object().shape({
                                                         employeeCode: Yup.string()
-                                                            .required("employee Code is Required"),
+                                                            .required("Employee Code is Required"),
                                                         //     salaryRoleId: Yup.string()
                                                         // .required("salary Role is Required"),
                                             
                                                         dateOfJoining: Yup.date()
-                                                            .required('date Of Joining is Required')                   
+                                                            .required('Date of Joining is Required')                   
                                                     })}
 
                                                 >
@@ -288,6 +288,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                                     <Label htmlFor="select"><span className="text-danger">* </span> {strings.EmployeeCode}  </Label>
                                                                                                     <Input
                                                                                                         type="text"
+                                                                                                        maxLength="50"
                                                                                                         id="employeeCode"
                                                                                                         name="employeeCode"
                                                                                                         value={props.values.employeeCode}

@@ -1462,6 +1462,9 @@ console.log(this.state.data)
 														errors.grn_Number =
 															'GRN Number already exists';
 													}
+													if (values.grn_Number==='') {
+														errors.grn_Number = 'GRN Number is required';
+													}
 													return errors;
 												}}
 												validationSchema={Yup.object().shape(

@@ -288,6 +288,7 @@ class CreateCustomerInvoice extends React.Component {
 					<div>
 						<Input
 							type="text"
+							maxLength="10"
 							min="0"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
@@ -348,7 +349,7 @@ class CreateCustomerInvoice extends React.Component {
 					<Input
 					type="text"
 					min="0"
-						maxLength="17,3"
+						maxLength="17,2"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (
@@ -631,7 +632,7 @@ renderVatAmount = (cell, row,extraData) => {
 				   <Input
 	 					type="text"
 				   	    min="0"
-					    maxLength="17,3"
+					    maxLength="17,2"
 					    value={row['discount'] !== 0 ? row['discount'] : 0}
 					    onChange={(e) => {
 						   if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -1574,11 +1575,13 @@ renderVatAmount = (cell, row,extraData) => {
 													this.handleSubmit(values, resetForm);
 												}}
 												validate={(values) => {
-													debugger
 													let errors = {};
 													if (exist === true) {
 														errors.invoice_number =
 															'Invoice Number already exists';
+													}
+													if (values.invoice_number==='') {
+														errors.invoice_number = 'Invoice Number is required';
 													}
 													if (param === true) {
 														errors.discount =

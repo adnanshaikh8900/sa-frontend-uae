@@ -78,7 +78,7 @@ class UpdateEmployeePersonal extends React.Component {
         this.regEx = /^[0-9\d]+$/;
         this.regExBoth = /[a-zA-Z0-9]+$/;
         this.regExSpaceBoth = /[a-zA-Z0-9 ]+$/;
-
+		this.regExAddress = /^[a-zA-Z0-9\s\D,'-/ ]+$/;
         this.formRef = React.createRef();
         this.gender = [
             { label: 'Male', value: 'Male' },
@@ -998,13 +998,20 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                 <Label htmlFor="gender"><span className="text-danger">* </span> {strings.PresentAddress} </Label>
                                                                                 <Input
                                                                                                         type="text"
-                                                                                                        maxLength="26"
+                                                                                                        maxLength="100"
                                                                                                         id="presentAddress"
                                                                                                         name="presentAddress"
                                                                                                         value={props.values.presentAddress}
                                                                                                         placeholder={strings.Enter+strings.PresentAddress}
                                                                                                         onChange={(option) => {
-                                                                                                            if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('presentAddress')(option) }
+                                                                                                            if (
+                                                                                                                option.target.value === '' ||
+                                                                                                                this.regExAddress.test(
+                                                                                                                    option.target.value,
+                                                                                                                )
+                                                                                                            ){
+                                                                                                                props.handleChange('presentAddress')(option.target.value);																			
+                                                                                                            }
                                                                                                         }}
                                                                                                         className={props.errors.presentAddress && props.touched.presentAddress ? "is-invalid" : ""}
                                                                                                     />

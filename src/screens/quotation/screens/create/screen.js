@@ -1345,6 +1345,9 @@ class CreateQuotation extends React.Component {
 														errors.quotation_Number =
 															'Quotation Number already exists';
 													}
+													if (values.quotation_Number==='') {
+														errors.quotation_Number = 'Quotation Number is required';
+													}
 													return errors;
 												}}
 												validationSchema={Yup.object().shape(

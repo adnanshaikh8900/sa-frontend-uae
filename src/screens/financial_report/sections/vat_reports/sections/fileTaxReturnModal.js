@@ -150,12 +150,15 @@ class FileTaxReturnModal extends React.Component {
 
 
 	componentDidMount = () => {
-
+		this.props.vatreportActions.getCompany().then((res)=>{
+			if(res.status==200)
+			this.setState({initValue:{vatRegistrationNumber:res.data.vatRegistrationNumber}})
+		});
 	};
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { openModal, closeModal ,current_report_id} = this.props;
+		const { openModal, closeModal ,current_report_id,endDate} = this.props;
 		const { initValue, loading, reporting_period_list } = this.state;
 
 		return (
@@ -180,9 +183,10 @@ class FileTaxReturnModal extends React.Component {
 						}}
 
 						validationSchema={Yup.object().shape({
-							
-							// firstName: Yup.string().required('First Name is Required'),
-							// lastName: Yup.string().required('Last Name is Required'),
+							taxAgentName: Yup.string().required('Tax Agent Name is Required'),
+							taxablePersonNameInEnglish: Yup.string().required('Taxable Person Name In English is Required'),
+							taxablePersonNameInArabic: Yup.string().required('Taxable Person Name In Arabic is Required'),
+							taxAgentApprovalNumber: Yup.string().required('Tax Agent Approval Number is Required'),
 							vatRegistrationNumber: Yup.string().required('Tax Registration Number is required'),
 										})}
 					>
@@ -213,6 +217,12 @@ class FileTaxReturnModal extends React.Component {
 																	}
 																	defaultValue={props.values.taxablePersonNameInEnglish}
 																/>
+																{props.errors.taxablePersonNameInEnglish &&												
+																(
+																		<div className='text-danger' >
+																			{props.errors.taxablePersonNameInEnglish}
+																		</div>
+																	)}
 															</FormGroup>
 														</Col>
 														<Col lg={4}>
@@ -228,6 +238,12 @@ class FileTaxReturnModal extends React.Component {
 																	}
 																	defaultValue={props.values.taxablePersonNameInArabic}
 																/>
+																{props.errors.taxablePersonNameInArabic &&												
+																(
+																		<div className='text-danger' >
+																			{props.errors.taxablePersonNameInArabic}
+																		</div>
+																	)}
 															</FormGroup>
 														</Col>
 														<Col lg={4}>
@@ -243,6 +259,13 @@ class FileTaxReturnModal extends React.Component {
 																	}
 																	defaultValue={props.values.taxAgentName}
 																/>
+																
+													{props.errors.taxAgentName &&												
+																(
+																		<div className='text-danger' >
+																			{props.errors.taxAgentName}
+																		</div>
+																	)}
 															</FormGroup>
 														</Col>
 													</Row>
@@ -270,9 +293,17 @@ class FileTaxReturnModal extends React.Component {
 																	type="text"
 																	name="taxAgencyNumber"
 																	id="taxAgencyNumber"
+																	maxLength={10}
 																	placeholder={"Enter Tax Agency Number (TAN)"}
 																	onChange={(option) =>
-																		props.handleChange('taxAgencyNumber')(option)
+																		{
+																		if (option.target.value === '' ||
+																				this.regExAlpha.test(option.target.value)
+																			) {
+																				props.handleChange('taxAgencyNumber')(option)
+																			}
+																		}
+																		
 																	}
 																	defaultValue={props.values.taxAgencyNumber}
 																/>
@@ -285,12 +316,26 @@ class FileTaxReturnModal extends React.Component {
 																	type="text"
 																	name="taxAgentApprovalNumber"
 																	id="taxAgentApprovalNumber"
+																	maxLength={8}
 																	placeholder={"Enter Agenct Approval Number"}
-																	onChange={(option) =>
-																		props.handleChange('taxAgentApprovalNumber')(option)
-																	}
+															
+																	onChange={(option) => {
+																		
+																		if (
+																			option.target.value === '' ||
+																			this.regExTelephone.test(option.target.value)
+																		) {
+																			props.handleChange('taxAgentApprovalNumber')(option);
+																		}
+																	}}
 																	defaultValue={props.values.taxAgentApprovalNumber}
 																/>
+																{props.errors.taxAgentApprovalNumber &&												
+																		(
+																				<div className='text-danger' >
+																					{props.errors.taxAgentApprovalNumber}
+																				</div>
+																			)}
 															</FormGroup>
 														</Col>
 
@@ -302,6 +347,7 @@ class FileTaxReturnModal extends React.Component {
 																	{strings.TaxRegistrationNumber}
 																</Label>
 																<Input
+																disabled
 																	type="text"
 																	maxLength="15"
 																	id="vatRegistrationNumber"
@@ -348,6 +394,7 @@ class FileTaxReturnModal extends React.Component {
 																		showYearDropdown
 																		dateFormat="dd/MM/yyyy"
 																		dropdownMode="select"
+																		minDate={new Date(endDate)}
 																		value={props.values.taxFiledOn}
 																		selected={props.values.taxFiledOn}
 																		onChange={(value) => {																			

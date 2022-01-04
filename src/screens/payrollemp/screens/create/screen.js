@@ -215,6 +215,9 @@ class CreateEmployeePayroll extends React.Component {
         this.regEx = /^[0-9\d]+$/;
         this.regExBoth = /[a-zA-Z0-9]+$/;
         this.regExAlpha = /^[a-zA-Z ]+$/;
+        this.regExAddress = /^[a-zA-Z0-9\s\D,'-/ ]+$/;
+        this.regExQualification = /^[a-zA-Z,'-/ ]+$/;
+        this.regExQualificationYear = /^[0-9,'-/ ]+$/;
 
         this.gender = [
             { label: 'Male', value: 'Male' },
@@ -1302,7 +1305,7 @@ existForAccountNumber = (value) => {
                                                                                                     <Label htmlFor="select"><span className="text-danger">* </span> {strings.FirstName}</Label>
                                                                                                     <Input
                                                                                                         type="text"
-                                                                                                        maxLength="26"
+                                                                                                        maxLength="100"
                                                                                                         id="firstName"
                                                                                                         name="firstName"
                                                                                                         value={props.values.firstName}
@@ -1323,7 +1326,7 @@ existForAccountNumber = (value) => {
                                                                                                     <Label htmlFor="select">{strings.MiddleName}</Label>
                                                                                                     <Input
                                                                                                         type="text"
-                                                                                                        maxLength="26"
+                                                                                                        maxLength="100"
                                                                                                         id="middleName"
                                                                                                         name="middleName"
                                                                                                         value={props.values.middleName}
@@ -1343,7 +1346,7 @@ existForAccountNumber = (value) => {
                                                                                                     <Label htmlFor="select"><span className="text-danger">* </span>{strings.LastName}</Label>
                                                                                                     <Input
                                                                                                         type="text"
-                                                                                                        maxLength="26"
+                                                                                                        maxLength="100"
                                                                                                         id="lastName"
                                                                                                         name="lastName"
                                                                                                         value={props.values.lastName}
@@ -1804,13 +1807,13 @@ existForAccountNumber = (value) => {
                                                                                                     <Label htmlFor="gender"><span className="text-danger">* </span> {strings.PresentAddress} </Label>
                                                                                                     <Input
                                                                                                         type="text"
-                                                                                                        maxLength="26"
+                                                                                                        maxLength="100"
                                                                                                         id="presentAddress"
                                                                                                         name="presentAddress"
                                                                                                         value={props.values.presentAddress}
                                                                                                         placeholder={strings.Enter+strings.PresentAddress}
                                                                                                         onChange={(option) => {
-                                                                                                            if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('presentAddress')(option) }
+                                                                                                            if (option.target.value === '' || this.regExAddress.test(option.target.value)) { props.handleChange('presentAddress')(option) }
                                                                                                         }}
                                                                                                         className={props.errors.presentAddress && props.touched.presentAddress ? "is-invalid" : ""}
                                                                                                     />
@@ -1939,7 +1942,7 @@ existForAccountNumber = (value) => {
                                                                                                     <Label htmlFor="state"><span className="text-danger">* </span>{strings.City} </Label>
                                                                                                     <Input
                                                                                                         type="text"
-                                                                                                        maxLength="20"
+                                                                                                        maxLength="100"
                                                                                                         id="city"
                                                                                                         name="city"
                                                                                                         value={props.values.city}
@@ -1994,8 +1997,10 @@ existForAccountNumber = (value) => {
                                                                                                         maxLength="50"
                                                                                                         id="qualification"
                                                                                                         name="qualification"
-                                                                                                       placeholder={strings.Enter+strings.qualification}
-                                                                                                        onChange={(value) => { props.handleChange("qualification")(value) }}
+                                                                                                        placeholder={strings.Enter+strings.qualification}
+                                                                                                        onChange={(option) => {
+                                                                                                            if (option.target.value === '' || this.regExQualification.test(option.target.value)) { props.handleChange('qualification')(option) }
+                                                                                                          }}
                                                                                                         value={props.values.qualification}
                                                                                                         className={
                                                                                                             props.errors.qualification && props.touched.qualification
@@ -2018,7 +2023,9 @@ existForAccountNumber = (value) => {
                                                                                                         id="qualificationYearOfCompletionDate"
                                                                                                         name="qualificationYearOfCompletionDate"
                                                                                                         placeholder={strings.Enter+strings.qualificationYearOfCompletionDate}
-                                                                                                        onChange={(value) => { props.handleChange("qualificationYearOfCompletionDate")(value) }}
+                                                                                                        onChange={(option) => {
+                                                                                                            if (option.target.value === '' || this.regExQualificationYear.test(option.target.value)) { props.handleChange('qualificationYearOfCompletionDate')(option) }
+                                                                                                          }}
                                                                                                         value={props.values.qualificationYearOfCompletionDate}
                                                                                                         className={
                                                                                                             props.errors.qualificationYearOfCompletionDate && props.touched.qualificationYearOfCompletionDate
@@ -2043,7 +2050,7 @@ existForAccountNumber = (value) => {
                                                                                                     <Label htmlFor="emergencyContactName1"><span className="text-danger">* </span>{strings.ContactName1}</Label>
                                                                                                     <Input
                                                                                                         type="text"
-                                                                                                        maxLength="26"
+                                                                                                        maxLength="100"
                                                                                                         id="emergencyContactName1"
                                                                                                         name="emergencyContactName1"
                                                                                                         value={props.values.emergencyContactName1}
@@ -2099,7 +2106,7 @@ existForAccountNumber = (value) => {
                                                                                                     <Label htmlFor="emergencyContactRelationship1"> <span className="text-danger">* </span>{strings.Relationship1} </Label>
                                                                                                     <Input
                                                                                                         type="text"
-                                                                                                        maxLength="26"
+                                                                                                        maxLength="100"
                                                                                                         id="emergencyContactRelationship1"
                                                                                                         name="emergencyContactRelationship1"
                                                                                                         value={props.values.emergencyContactRelationship1}
@@ -2122,6 +2129,7 @@ existForAccountNumber = (value) => {
                                                                                                     <Label htmlFor="emergencyContactName2"> {strings.ContactName2}</Label>
                                                                                                     <Input
                                                                                                         type="text"
+                                                                                                        maxLength="100"
                                                                                                         id="emergencyContactName2"
                                                                                                         name="emergencyContactName2"
                                                                                                         placeholder={strings.Enter+strings.ContactName2}
@@ -2177,6 +2185,7 @@ existForAccountNumber = (value) => {
                                                                                                     <Label htmlFor="emergencyContactRelationship2"> {strings.Relationship2} </Label>
                                                                                                     <Input
                                                                                                         type="text"
+                                                                                                        maxLength={"100"}
                                                                                                         id="emergencyContactRelationship2"
                                                                                                         name="emergencyContactRelationship2"
                                                                                                          placeholder={strings.Enter+strings.Relationship2}
@@ -2258,18 +2267,18 @@ existForAccountNumber = (value) => {
                                                                             let errors = {};
                                                                             if (exist === true) {
                                                                                 errors.employeeCode =
-                                                                                    'employeeCode Number already exists';
+                                                                                'Employee Code Number Already Exists';
                                                                             }
                                                                             return errors;
                                                                         }}
                                                                         validationSchema={Yup.object().shape({
                                                                             employeeCode: Yup.string()
-                                                                                .required("employee Code is Required"),
+                                                                                .required("Employee Code is Required"),
                                                                             //     salaryRoleId: Yup.string()
                                                                             // .required("salary Role is Required"),
                                                                 
                                                                             dateOfJoining: Yup.date()
-                                                                                .required('date Of Joining is Required')                   
+                                                                                .required('Date of Joining is Required')                   
                                                                         })}
                                                                     >
                                                                         {(props) => (
@@ -2286,6 +2295,7 @@ existForAccountNumber = (value) => {
                                                                                                     <Label htmlFor="select"><span className="text-danger">* </span> {strings.EmployeeCode}  </Label>
                                                                                                     <Input
                                                                                                         type="text"
+                                                                                                        maxLength="50"
                                                                                                         id="employeeCode"
                                                                                                         name="employeeCode"
                                                                                                         value={props.values.employeeCode}
@@ -3238,7 +3248,7 @@ existForAccountNumber = (value) => {
                                                                                     <td style={{border:"3px solid #c8ced3"}}>
                                                                                         <Input
                                                                                             type="number"
-min="0"
+                                                                                            min="0"
                                                                                             size="30"
                                                                                             className="text-center"
                                                                                             value={item.formula}

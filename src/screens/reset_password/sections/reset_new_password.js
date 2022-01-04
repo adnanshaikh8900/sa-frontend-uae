@@ -173,8 +173,8 @@ class ResetNewPassword extends React.Component {
 																					</div>
 																				)}
 																			<PasswordChecklist
-																				rules={["length", "specialChar", "number", "capital"]}
-																				minLength={5}
+																				rules={["minLength", "specialChar", "number", "capital"]}
+																				minLength={8}
 																				value={props.values.password}
 																				valueAgain={props.values.confirmPassword}
 																			/>
@@ -212,7 +212,7 @@ class ResetNewPassword extends React.Component {
 																				)}
 																				<PasswordChecklist
 																				rules={[ "match"]}
-																				minLength={5}
+																				minLength={8}
 																				value={props.values.password}
 																				valueAgain={props.values.confirmPassword}
 																			/>

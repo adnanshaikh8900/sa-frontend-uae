@@ -615,6 +615,26 @@ class CreatePurchaseOrder extends React.Component {
 
 		return supplier_currencyCode;
 	}
+	getTaxTreatment= (opt) => {
+		
+		let customer_taxTreatmentId = 0;
+		let customer_item_taxTreatment = ''
+		this.props.supplier_list.map(item => {
+			if(item.label.contactId == opt) {
+				this.setState({
+					customer_taxTreatment: item.label.taxTreatment.id,
+					customer_taxTreatment_des: item.label.taxTreatment.taxTreatment,
+					// customer_currency_symbol: item.label.currency.currencyIsoCode,
+				});
+
+				customer_taxTreatmentId = item.label.taxTreatment.id;
+				customer_item_taxTreatment = item.label.currency
+			}
+		})
+	
+		return customer_taxTreatmentId;
+	}
+
 
 	selectItem = (e, row, name, form, field, props) => {
 		//e.preventDefault();
@@ -966,11 +986,11 @@ class CreatePurchaseOrder extends React.Component {
 				if(obj.exciseTaxId === 1){
 				const value = +(obj.unitPrice) / 2 ;
 					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
-				obj.exciseAmount = value;
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
 				}else if (obj.exciseTaxId === 2){
 					const value = obj.unitPrice;
 					net_value = parseFloat(obj.unitPrice) +  parseFloat(value) ;
-					obj.exciseAmount = value;
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
 				}
 				else{
 					net_value = obj.unitPrice
@@ -978,11 +998,11 @@ class CreatePurchaseOrder extends React.Component {
 			}	else{
 				if(obj.exciseTaxId === 1){
 					const value = obj.unitPrice / 3
-				obj.exciseAmount = value;
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
 				net_value = obj.unitPrice}
 				else if (obj.exciseTaxId === 2){
 					const value = obj.unitPrice / 2
-				obj.exciseAmount = value;
+					obj.exciseAmount = parseFloat(value) * obj.quantity;
 				net_value = obj.unitPrice}
 				else{
 					net_value = obj.unitPrice
@@ -1419,7 +1439,8 @@ getrfqDetails = (e, row, props,form,field) => {
 			this.formRef.current.setFieldValue('currencyCode', this.state.supplier_currency, true);
 			this.formRef.current.setFieldValue('placeOfSupplyId', this.state.placelist, true);
 
-			this.getCurrency(this.state.option.value)	
+			this.getCurrency(this.state.option.value);
+			this.getTaxTreatment(this.state.option.value);	
         });
     }
 }
@@ -1717,6 +1738,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
+																				this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
 																				this.setExchange( this.getCurrency(option.value) );
 																				props.handleChange('supplierId')(option);
 																			} else {
@@ -1760,6 +1782,42 @@ getrfqDetails = (e, row, props,form,field) => {
                                                                 <i className="fas fa-plus mr-1" />
                                          {strings.AddASupplier}
 									</Button></Col>
+									{this.state.customer_taxTreatment_des ? 
+															<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="taxTreatmentid">
+																		Tax Treatment
+																	</Label>
+																	<Input
+																	disabled
+																		styles={customStyles}
+																		id="taxTreatmentid"
+																		name="taxTreatmentid"
+																		value={
+																		this.state.customer_taxTreatment_des
+																	 	
+																		}
+																		className={
+																			props.errors.taxTreatmentid &&
+																			props.touched.taxTreatmentid
+																				? 'is-invalid'
+																				: ''
+																		}
+																		onChange={(option) => {
+																		props.handleChange('taxTreatmentid')(option);
+																		
+																	    }}
+
+																	/>
+																	{props.errors.taxTreatmentid &&
+																		props.touched.taxTreatmentid && (
+																			<div className="invalid-feedback">
+																				{props.errors.taxTreatmentid}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>: ''}
+
 									<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="placeOfSupplyId">

@@ -91,7 +91,7 @@ class RFQTemplate extends Component {
 									<div className="mb-1 ml-2"><b>{strings.StateRegion} : </b>  {companyData.companyStateName}</div>
 									<div className="mb-1 ml-2"><b>{strings.Country} : </b>{companyData.companyCountryName}</div>
 									<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo} : </b> {companyData.vatRegistrationNumber}</div>
-									<div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b> {this.companyMobileNumber(companyData.phoneNumber?companyData.phoneNumber:'')}</div>
+									<div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b> {this.companyMobileNumber(companyData.phoneNumber?"+"+companyData.phoneNumber:'')}</div>
 								</div>
 							</div>
 							<div style={{ width: '200%',justifyContent:'center',marginTop:'5rem' }}>
@@ -138,7 +138,7 @@ class RFQTemplate extends Component {
 								{contactData&&contactData.billingStateName&&(<div className="mb-1 ml-2"><b>{strings.StateRegion} : </b> {contactData.billingStateName}</div>)}
 								{contactData && contactData.billingCountryName &&(<div className="mb-1 ml-2"><b>{strings.Country} : </b> {contactData.billingCountryName}</div>)}
 								<div className="mb-1 ml-2"><b>TRN : </b>{RFQData.vatRegistrationNumber}</div>
-								{contactData&&contactData.mobileNumber&&(<div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b> {contactData.mobileNumber}</div>)}
+								{contactData&&contactData.mobileNumber&&(<div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b>+{contactData.mobileNumber}</div>)}
 													<span className="mb-1 ml-2"><b>{strings.Status} :  </b>{this.renderRFQStatus(status)}</span>
 
 													{/* <div

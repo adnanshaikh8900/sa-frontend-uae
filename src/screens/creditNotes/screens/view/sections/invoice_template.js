@@ -84,7 +84,7 @@ class InvoiceTemplate extends Component {
 								padding:'7px',borderColor:'#c8ced3'
 							}}
 						>
-							<div style={{ width: '77%' }}>
+							<div style={{ width: '200%' }}>
 								<div className="companyDetails">
 									<img
 										src={
@@ -101,12 +101,12 @@ class InvoiceTemplate extends Component {
 									</div>
 									<div style={{ marginTop: '4.2rem' }}>
 										<div className="mb-1 ml-2"><b>{strings.CompanyName} : </b> {companyData.companyName}</div>
-									<div className="mb-1 ml-2"><b>{strings.CompanyAddress}&nbsp; : </b> {companyData.companyAddressLine1+","+companyData.companyAddressLine2}</div>
+									<div className="mb-1 ml-2"><b>{strings.CompanyAddress} : </b> {companyData.companyAddressLine1+","+companyData.companyAddressLine2}</div>
 									<div className="mb-1 ml-2"><b>{strings.PinCode} : </b> {companyData.companyPostZipCode}</div>
 									<div className="mb-1 ml-2"><b>{strings.StateRegion} : </b> {companyData.companyStateName}</div>
 									<div className="mb-1 ml-2"><b>{strings.Country} : </b> {companyData.companyCountryName}</div>
-									<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo}&nbsp; : </b> {companyData.vatRegistrationNumber}</div>
-									<div className="mb-1 ml-2"><b>{strings.MobileNumber} :&nbsp;</b> {this.companyMobileNumber(companyData.phoneNumber?companyData.phoneNumber:'')}</div>
+									<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo} : </b> {companyData.vatRegistrationNumber}</div>
+									<div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b> {this.companyMobileNumber(companyData.phoneNumber?"+"+companyData.phoneNumber:'')}</div>
 								</div>
 							</div>
 							<div className="text-center" style={{ width: '200%',justifyContent:'center' }}>
@@ -133,7 +133,7 @@ class InvoiceTemplate extends Component {
 								}}
 							>
 								<div 	style={{
-									width: '62%',
+									width: '70%',
 									margin:'1.5rem 9.0rem 0.5rem 4rem',
 									marginTop:'6.5rem',
 									marginLeft:'8rem'
@@ -144,12 +144,12 @@ class InvoiceTemplate extends Component {
 								<h5 className="mb-1 ml-2">{strings.CreditNote } #{invoiceData.referenceNumber}</h5><br/>
 								<h6 className="mb-1 ml-2"><b>{strings.CreditTo} ,</b></h6>
 								<div className="mb-1 ml-2"><b>{strings.Name} : </b>{invoiceData.organisationName ? invoiceData.organisationName : invoiceData.name}</div>
-								{contactData && contactData.addressLine1 &&(<div className="mb-1 ml-2"><b>{strings.BillingAddress}&nbsp; : </b> {contactData.addressLine1}</div>)}
+								{contactData && contactData.addressLine1 &&(<div className="mb-1 ml-2"><b>{strings.BillingAddress} : </b> {contactData.addressLine1}</div>)}
 								{contactData && contactData.postZipCode &&(	<div className="mb-1 ml-2"><b>{strings.PinCode} : </b> {contactData.postZipCode}</div>)}
 								{contactData&&contactData.billingStateName&&(<div className="mb-1 ml-2"><b>{strings.StateRegion} : </b> {contactData.billingStateName}</div>)}
 								{contactData && contactData.billingCountryName &&(<div className="mb-1 ml-2"><b>{strings.Country} : </b> {contactData.billingCountryName}</div>)}
-								<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo}&nbsp; : </b> {invoiceData.taxRegistrationNo}</div>
-								{contactData&&contactData.mobileNumber&&(   <div className="mb-1 ml-2"><b>{strings.MobileNumber} :&nbsp;</b> {contactData.mobileNumber}</div>)}
+								<div className="mb-1 ml-2"><b>{strings.VATRegistrationNo} : </b> {invoiceData.taxRegistrationNo}</div>
+								{contactData&&contactData.mobileNumber&&(   <div className="mb-1 ml-2"><b>{strings.MobileNumber} : </b>+{contactData.mobileNumber}</div>)}
 								
 													<span className="mb-1 ml-2"><b>{strings.Status }&nbsp; : </b> {this.renderInvoiceStatus(status)}</span>
 													

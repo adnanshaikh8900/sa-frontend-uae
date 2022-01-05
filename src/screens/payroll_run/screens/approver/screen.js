@@ -1058,6 +1058,7 @@ let payPeriodString=moment(dateArr[0]).format('DD/MM/YYYY')+" - "+moment(dateArr
 																		<Input
 																			// className="mt-4 pull-right"
 																			type="text"
+																			maxLength="250"
 																			id="comment"
 																			name="comment"
 																			value={this.state.comment}

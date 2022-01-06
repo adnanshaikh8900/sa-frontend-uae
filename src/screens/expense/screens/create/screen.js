@@ -911,7 +911,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																					this.placelistSetting(option,props)
 																					// ReverseCharge setup
 																					this.ReverseChargeSetting(option,props)
-																					this.setState({isReverseChargeEnabled:false})
+																					this.setState({isReverseChargeEnabled:false,exclusiveVat:false})
 																																																													
 																				} else {
 																					props.handleChange('taxTreatmentId')(
@@ -1375,9 +1375,9 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 														)
 														} */}
 														{props.values.vatCategoryId !=='' && props.values.vatCategoryId.label !=='Select Vat' &&
-														props.values.vatCategoryId.value !==3 && 
-														props.values.vatCategoryId.value !==4 && 
-														props.values.vatCategoryId.value !==10 &&
+														props.values.vatCategoryId.value ===1 && 
+														// props.values.vatCategoryId.value !==4 && 
+														// props.values.vatCategoryId.value !==10 &&
 														(
 															<Row>
 																<Col></Col>
@@ -1425,7 +1425,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																id="isReverseChargeEnabled"
 																checked={this.state.isReverseChargeEnabled}
 																onChange={(option)=>{
-																		this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled})
+																		this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled,exclusiveVat:false})
 																		// for resetting Vat
 																		props.handleChange('vatCategoryId')('');
 																}}

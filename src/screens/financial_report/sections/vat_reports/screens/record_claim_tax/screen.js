@@ -170,7 +170,7 @@ class RecordTaxClaim extends React.Component {
 				this.props.history.push('/admin/report/vatreports');
 			})
 			.catch((err) => {
-				this.props.commonActions.tostifyAlert(
+				this.props.commonActions.tostifyAlert( 
 					'error',
 					err && err.data ? err.data.message : 'Payment Recorded Unsuccessfully',
 				);
@@ -238,7 +238,7 @@ class RecordTaxClaim extends React.Component {
 														amount: Yup.mixed()
 														.test(
 															'amount',
-															'Amount cannot be greater than invoice amount',
+															'Amount  should be equal to total tax reclaimable amount',
 															(value) => {
 																if (
 																	!value 

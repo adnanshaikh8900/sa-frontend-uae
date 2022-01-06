@@ -22,6 +22,7 @@ import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import moment from 'moment';
 import * as FinancialReportActions from '../../../../actions';
 import { AgGridReact, AgGridColumn } from 'ag-grid-react/lib/agGridReact';
+import { Currency } from 'components';
 const mapStateToProps = (state) => {
 	return {
 		version: state.common.version,
@@ -117,7 +118,27 @@ class VatPaymentRecord extends React.Component {
 			.format('LL')
 			: '-';
 	};
+	renderAmount = (amount, params) => {
+		if (amount != null && amount != 0)
+			return (
+				<>
+					<Currency
+						value={amount}
+						currencySymbol={params.data.currency}
+					/>
+				</>
+			)
+		else
+			return ("---")
+	}
+	renderTaxReturns = (cell, row) => {
+		let dateArr = cell ? cell.split(" ") : [];
 
+		let startDate = moment(dateArr[0]).format('DD/MM/YYYY')
+		let endDate = moment(dateArr[1]).format('DD/MM/YYYY')
+
+		return (<>{dateArr[0]}</>);
+	};
 
 	render() {
 		const { vatReportDataList } = this.state;
@@ -231,8 +252,13 @@ class VatPaymentRecord extends React.Component {
 										headerName="Tax Return"
 										sortable={true}
 										filter={true}
-										checkboxSelection={true}
+										// checkboxSelection={true}
 										enablePivot={true}
+										cellRendererFramework={(params) =>
+											<>
+												{this.renderTaxReturns(params.value, params)}
+											</>
+										}
 									></AgGridColumn>
 
 									<AgGridColumn field="dateOfFiling"
@@ -252,6 +278,11 @@ class VatPaymentRecord extends React.Component {
 										sortable={true}
 										filter={true}
 										enablePivot={true}
+										cellRendererFramework={(params) =>
+											<>
+												{this.renderAmount(params.value, params)}
+											</>
+										}	
 									></AgGridColumn>
 
 									<AgGridColumn field="amountReclaimed"
@@ -260,6 +291,11 @@ class VatPaymentRecord extends React.Component {
 										sortable={true}
 										enablePivot={true}
 										filter={true}
+										cellRendererFramework={(params) =>
+											<>
+												{this.renderAmount(params.value, params)}
+											</>
+										}
 						
 									></AgGridColumn>
 

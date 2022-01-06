@@ -73,6 +73,11 @@ const customStyles = {
 let strings = new LocalizedStrings(data);
 class GenerateVatReportModal extends React.Component {
 	constructor(props) {
+
+		var date = new Date();
+		var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+		var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
 		super(props);
 		this.state = {
 			language: window['localStorage'].getItem('language'),
@@ -89,7 +94,8 @@ class GenerateVatReportModal extends React.Component {
 				email: ''
 			},
 			csvData: [],
-			view: false
+			view: false,
+			lastDayOfCurrentMonth:lastDay
 		};
 	}
 	static getDerivedStateFromProps(nextProps, prevState) {
@@ -195,6 +201,7 @@ class GenerateVatReportModal extends React.Component {
 																	showMonthDropdown
 																	showYearDropdown
 																	autoComplete="off"
+																	minDate={new Date("01/01/2018")}
 																	maxDate={new Date()}
 																	value={moment(props.values.startDate).format(
 																		'DD/MM/YYYY',
@@ -226,7 +233,7 @@ class GenerateVatReportModal extends React.Component {
 																	name="endDate"
 																	className={`form-control`}
 																	autoComplete="off"
-																	maxDate={new Date()}
+																	maxDate={this.state.lastDayOfCurrentMonth}
 																	placeholderText="From"
 																	showMonthDropdown
 																	showYearDropdown

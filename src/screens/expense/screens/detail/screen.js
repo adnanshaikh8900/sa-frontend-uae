@@ -943,7 +943,7 @@ class DetailExpense extends React.Component {
 																					this.placelistSetting(option,props)
 																					// ReverseCharge setup
 																					this.ReverseChargeSetting(option.value,props)
-																					this.setState({isReverseChargeEnabled:false})
+																					this.setState({isReverseChargeEnabled:false,exclusiveVat:false})
 																																
 																				} else {
 																					props.handleChange('taxTreatmentId')(
@@ -1380,9 +1380,9 @@ class DetailExpense extends React.Component {
 																	)}
 															</Row>
 															{props.values.vatCategoryId !=='' && props.values.vatCategoryId.label !=='Select Vat' &&
-															props.values.vatCategoryId.value !==3 && 
-															props.values.vatCategoryId.value !==4 && 
-															props.values.vatCategoryId.value !==10 &&
+															props.values.vatCategoryId.value ===1 && 
+															// props.values.vatCategoryId.value !==4 && 
+															// props.values.vatCategoryId.value !==10 &&
 														(
 															<Row>
 																<Col></Col>
@@ -1486,7 +1486,7 @@ class DetailExpense extends React.Component {
 																id="isReverseChargeEnabled"
 																checked={this.state.isReverseChargeEnabled}
 																onChange={(option)=>{
-																		this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled})
+																		this.setState({isReverseChargeEnabled:!this.state.isReverseChargeEnabled,exclusiveVat:false})
 																										// for resetting Vat
 																										props.handleChange('vatCategoryId')('');
 																	}}

@@ -297,7 +297,7 @@ class UpdateRole extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, initValue,dialog } = this.state;
+		const { loading, initValue,dialog ,current_role_id} = this.state;
 		const { checked, expanded } = this.state;
 		const nodes = [
 			{
@@ -517,6 +517,9 @@ class UpdateRole extends React.Component {
 
 																<Col>
 																{this.state.count === 0 &&
+																//default roles should not be deleted
+																 current_role_id !=1   &&current_role_id !=2   &&current_role_id!=3 &&
+																 current_role_id !=104 &&current_role_id !=105 &&
 																	  (
 																		
 																		<Button

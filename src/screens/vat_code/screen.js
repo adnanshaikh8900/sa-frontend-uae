@@ -208,6 +208,15 @@ class VatCode extends React.Component {
 		}
 	};
 
+	onPageSizeChanged = (newPageSize) => {
+		var value = document.getElementById('page-size').value;
+		this.gridApi.paginationSetPageSize(Number(value));
+	};
+	onGridReady = (params) => {
+		this.gridApi = params.api;
+		this.gridColumnApi = params.columnApi;
+	};
+
 	onPageChange = (page) => {
 		if (this.options.page !== page) {
 			this.options.page = page;

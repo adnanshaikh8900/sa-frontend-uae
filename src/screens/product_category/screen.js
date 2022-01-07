@@ -165,6 +165,15 @@ class ProductCategory extends React.Component {
 		}
 	};
 
+	onPageSizeChanged = (newPageSize) => {
+		var value = document.getElementById('page-size').value;
+		this.gridApi.paginationSetPageSize(Number(value));
+	};
+	onGridReady = (params) => {
+		this.gridApi = params.api;
+		this.gridColumnApi = params.columnApi;
+	};
+
 	onPageChange = (page, sizePerPage) => {
 		if (this.options.page !== page) {
 			this.options.page = page;
@@ -498,15 +507,7 @@ class ProductCategory extends React.Component {
 										</BootstrapTable> */}
 
 <div className="ag-theme-alpine mb-3" style={{ height: 590,width:"100%" }}>
-	<div className="example-header mb-1">
-					Page Size:
-					<select onChange={() => this.onPageSizeChanged()} id="page-size">
-					<option value="10" selected={true}>10</option>
-					<option value="100">100</option>
-					<option value="500">500</option>
-					<option value="1000">1000</option>
-					</select>
-				</div>     
+	     
 			<AgGridReact
 				rowData={product_category_list &&
 					product_category_list.data 
@@ -554,6 +555,15 @@ class ProductCategory extends React.Component {
 				enablePivot={true}
 				></AgGridColumn>  			
 			</AgGridReact>  
+			<div className="example-header mt-1">
+					Page Size:
+					<select onChange={() => this.onPageSizeChanged()} id="page-size">
+					<option value="10" selected={true}>10</option>
+					<option value="100">100</option>
+					<option value="500">500</option>
+					<option value="1000">1000</option>
+					</select>
+				</div>
 																						
 		</div>	
 									</Col>

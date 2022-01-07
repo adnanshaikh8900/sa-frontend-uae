@@ -367,7 +367,8 @@ CODE:"CODE",
 Code:"Code",		
 NAME:"NAME",		
 				
-AddnewAccount:"Add new Account",		
+AddnewAccount:"Add new Account",
+Print:"Print",		
 
 //Add Chart of Accounts
 NewChartAccount:"New Chart Account",		

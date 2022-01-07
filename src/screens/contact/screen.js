@@ -104,6 +104,7 @@ class Contact extends React.Component {
 			selectedRows: [],
 		});
 	};
+    
 
 	initializeData = (search) => {
 		let { filterData } = this.state;
@@ -132,6 +133,15 @@ class Contact extends React.Component {
 				);
 				this.setState({ loading: false });
 			});
+	};
+      
+	onPageSizeChanged = (newPageSize) => {
+		var value = document.getElementById('page-size').value;
+		this.gridApi.paginationSetPageSize(Number(value));
+	};
+	onGridReady = (params) => {
+		this.gridApi = params.api;
+		this.gridColumnApi = params.columnApi;
 	};
 
 	onSizePerPageList = (sizePerPage) => {

@@ -424,7 +424,7 @@ class CreateCurrencyConvert extends React.Component {
 																	</Label>
 																	<Input
 																	type="number"
-																	maxLength='20'
+																	maxLength="17,2"
 																	id="exchangeRate"
 																	name="exchangeRate"
 																	placeholder={strings.Enter+strings.Exchangerate}

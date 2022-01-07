@@ -332,12 +332,12 @@ class DetailCurrencyConvert extends React.Component {
 																			
 																		</FormGroup>
 																	</Col></Row>
-                                <Row>
-                                <Col lg={1}>
+                                									<Row>
+                               										 <Col lg={1}>
 																	<FormGroup className="mt-2">
 																	<Label>
-																							 {strings.Value}
-																						</Label>
+																		 {strings.Value}
+																		</Label>
 																	<Input
 																			disabled
 																				id="1"
@@ -347,9 +347,9 @@ class DetailCurrencyConvert extends React.Component {
 																				
 																			/>
 																			</FormGroup>
-                                      </Col>
-																<Col lg={4}>
-                                <FormGroup className="mt-2">
+                                     										 </Col>
+																				<Col lg={4}>
+                                														<FormGroup className="mt-2">
 																						<Label htmlFor="currencyCode">
 																							 {strings.ExchangeCurrency}
 																						</Label>
@@ -408,8 +408,8 @@ class DetailCurrencyConvert extends React.Component {
 																								</div>
 																							)}
 																					</FormGroup>
-                                          </Col>
-                                          <Col lg={4}>
+                                            							</Col>
+                                            							<Col lg={4}>
 															        	<FormGroup className="mt-2">
 															        	<Label htmlFor="productCategoryCode">
 																	 {strings.Exchangerate}
@@ -426,7 +426,7 @@ class DetailCurrencyConvert extends React.Component {
 																</Label>
 																<Input
 																	type="number"
-                                  maxLength='20'
+                                    								maxLength="17,2"
 																	id="exchangeRate"
 																	name="exchangeRate"
 																	placeholder={strings.Enter+strings.Exchangerate}

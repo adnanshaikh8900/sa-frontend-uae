@@ -522,15 +522,7 @@ class PayrollEmployee extends React.Component {
                                                 </form>
                                             </div> */}
                                             								<div className="mobileNumberCSS ag-theme-alpine mb-3" style={{ height: 590,width:"100%" }}>
-                                                                            <div className="example-header mb-1">
-                                                                                            Page Size:
-                                                                                            <select onChange={() => this.onPageSizeChanged()} id="page-size">
-                                                                                            <option value="10" selected={true}>10</option>
-                                                                                            <option value="100">100</option>
-                                                                                            <option value="500">500</option>
-                                                                                            <option value="1000">1000</option>
-                                                                                            </select>
-                                                                                        </div>     
+                                                                            
                                                                                     <AgGridReact
                                                                                         rowData={payroll_employee_list &&
                                                                                             payroll_employee_list.data 
@@ -632,6 +624,15 @@ class PayrollEmployee extends React.Component {
                                                                                         ></AgGridColumn>  
                                                                                   
                                                                                     </AgGridReact>  
+                                                                                    <div className="example-header mt-1">
+                                                                                            Page Size:
+                                                                                            <select onChange={() => this.onPageSizeChanged()} id="page-size">
+                                                                                            <option value="10" selected={true}>10</option>
+                                                                                            <option value="100">100</option>
+                                                                                            <option value="500">500</option>
+                                                                                            <option value="1000">1000</option>
+                                                                                            </select>
+                                                                                        </div>     
                                                                                                                                                               
                                                                                 </div>										
                                         </Col>

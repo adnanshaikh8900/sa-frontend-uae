@@ -146,6 +146,7 @@ class CreateSupplierInvoice extends React.Component {
 						subTotal: 0,
 						productId: '',
 						transactionCategoryId: '',
+						isExciseTaxExclusive:''
 					},
 				],
 				invoice_number: '',
@@ -770,7 +771,7 @@ class CreateSupplierInvoice extends React.Component {
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						isDisabled={row.exciseTaxId === 0 || this.state.checked === false}
+						isDisabled={row.exciseTaxId === 0 || row.isExciseTaxExclusive === false}
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -835,6 +836,7 @@ class CreateSupplierInvoice extends React.Component {
 				obj['description'] = result.description;
 				obj['transactionCategoryId'] = result.transactionCategoryId;
 				obj['transactionCategoryLabel'] = result.transactionCategoryLabel;
+				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
 				idx = index;
 			}
 			return obj;
@@ -1144,7 +1146,7 @@ class CreateSupplierInvoice extends React.Component {
 
 			//Excise calculation
 			if(obj.exciseTaxId !=  0){
-			if(this.state.checked === true){
+			if(obj.isExciseTaxExclusive === true){
 				if(obj.exciseTaxId === 1){
 				const value = +(obj.unitPrice) / 2 ;
 					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
@@ -2312,41 +2314,7 @@ class CreateSupplierInvoice extends React.Component {
 																</Button>
 															</Col>
 
-															<Col lg={3}>
-																					<FormGroup>
-
-																						<span className='mr-4'>Inclusive</span>
-																						<Switch
-            checked={this.state.checked}
-			onChange={(checked) => {
-
-				props.handleChange('checked')(checked);
-				this.setState(
-					{
-						checked,
-					},
-					() => {
-						this.updateAmount(data, props);
-					},
-				);
-
-			}}
-            onColor="#2064d8"
-            onHandleColor="#2693e6"
-            handleDiameter={25}
-            uncheckedIcon={false}
-            checkedIcon={false}
-            boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-            activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-            height={20}
-            width={48}
-            className="react-switch "
-
-          />
-		  <span  className='ml-4'>Exclusive</span>
-
-																					</FormGroup>
-																				</Col>
+															
 																				</Row>
 														<Row>
 															<Col lg={12}>
@@ -2439,6 +2407,17 @@ class CreateSupplierInvoice extends React.Component {
 																		}
 																	>
 																	Excise
+																	<i
+																			id="ExiseTooltip"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="ExiseTooltip"
+																		>
+																			If Exise Type for a product is Inclusive
+																			then the Excise dropdown will be Disabled
+																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																	width="12%"
@@ -2628,7 +2607,7 @@ class CreateSupplierInvoice extends React.Component {
 
 																<Col lg={4}>
 																	<div className="">																		
-																	<div className="total-item p-2" style={{display:this.state.checked === true ? '':'none'}}>
+																	<div className="total-item p-2" >
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">

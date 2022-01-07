@@ -13,6 +13,7 @@ import {
 	Input,
 	Label,
 	NavLink,
+	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
@@ -210,12 +211,11 @@ class DetailQuotation extends React.Component {
 									lineItemsString: res.data.poQuatationLineItemRequestModelList
 										? res.data.poQuatationLineItemRequestModelList
 										: [],
-										checked: res.data.exciseType ? res.data.exciseType : res.data.exciseType,
 										placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 										total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
 								
 								},
-								checked: res.data.exciseType ? res.data.exciseType : res.data.exciseType,
+								customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
 								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 								total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
 								data: res.data.poQuatationLineItemRequestModelList
@@ -400,7 +400,7 @@ class DetailQuotation extends React.Component {
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						isDisabled={row.exciseTaxId === 0 || this.state.checked === false}
+						isDisabled={row.exciseTaxId === 0 || row.isExciseTaxExclusive === false}
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -712,6 +712,7 @@ min="0"
 				obj['vatCategoryId'] = parseInt(result.vatCategoryId);
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['description'] = result.description;
+				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
 				idx = index;
 			}
 			return obj;
@@ -870,7 +871,7 @@ min="0"
 
 			//Excise calculation
 			if(obj.exciseTaxId !=  0){
-			if(this.state.checked === true){
+			if(obj.isExciseTaxExclusive === true){
 				if(obj.exciseTaxId === 1){
 				const value = +(obj.unitPrice) / 2 ;
 					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
@@ -1204,6 +1205,25 @@ min="0"
 
 		return supplier_currencyCode;
 	}
+	getTaxTreatment= (opt) => {
+
+		let customer_taxTreatmentId = 0;
+		let customer_item_taxTreatment = ''
+		this.props.supplier_list.map(item => {
+			if(item.label.contactId == opt) {
+				this.setState({
+					customer_taxTreatment: item.label.taxTreatment.id,
+					customer_taxTreatment_des: item.label.taxTreatment.taxTreatment,
+					// customer_currency_symbol: item.label.currency.currencyIsoCode,
+				});
+
+				customer_taxTreatmentId = item.label.taxTreatment.id;
+				customer_item_taxTreatment = item.label.currency
+			}
+		})
+	
+		return customer_taxTreatmentId;
+	}
 	render() {
 		strings.setLanguage(this.state.language);
 		const { data, discountOptions, initValue, loading, dialog } = this.state;
@@ -1454,6 +1474,7 @@ console.log(this.state.supplier_currency)
 																			}
 																			onChange={(option) => {
 																				if (option && option.value) {
+																					this.formRef.current.setFieldValue('taxTreatmentid', this.getTaxTreatment(option.value), true);
 																					this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
 																					this.setExchange( this.getCurrency(option.value) );
 																					props.handleChange('customerId')(option);
@@ -1477,6 +1498,40 @@ console.log(this.state.supplier_currency)
 																			)}
 																	</FormGroup>
 																</Col>
+																<Col lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="taxTreatmentid">
+																		Tax Treatment
+																	</Label>
+																	<Input
+																	disabled
+																		styles={customStyles}
+																		id="taxTreatmentid"
+																		name="taxTreatmentid"
+																		value={
+																		this.state.customer_taxTreatment_des
+
+																		}
+																		className={
+																			props.errors.taxTreatmentid &&
+																			props.touched.taxTreatmentid
+																				? 'is-invalid'
+																				: ''
+																		}
+																		onChange={(option) => {
+																		props.handleChange('taxTreatmentid')(option);
+
+																	    }}
+
+																	/>
+																	{props.errors.taxTreatmentid &&
+																		props.touched.taxTreatmentid && (
+																			<div className="invalid-feedback">
+																				{props.errors.taxTreatmentid}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>
 																<Col lg={3}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="placeOfSupplyId">
@@ -1658,41 +1713,7 @@ console.log(this.state.supplier_currency)
 																		<i className="fa fa-plus"></i> {strings.Addmore}
 																	</Button>
 																</Col>
-																<Col lg={3}>
-																					<FormGroup>
-
-																						<span className='mr-4'>Inclusive</span>
-																						<Switch
-            checked={this.state.checked}
-			onChange={(checked) => {
-
-				props.handleChange('checked')(checked);
-				this.setState(
-					{
-						checked,
-					},
-					() => {
-						this.updateAmount(data, props);
-					},
-				);
-
-			}}
-            onColor="#2064d8"
-            onHandleColor="#2693e6"
-            handleDiameter={25}
-            uncheckedIcon={false}
-            checkedIcon={false}
-            boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-            activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-            height={20}
-            width={48}
-            className="react-switch "
-
-          />
-		  <span  className='ml-4'>Exclusive</span>
-
-																					</FormGroup>
-																				</Col>
+																
 															</Row>
 															<Row>
 																<Col lg={12}>
@@ -1789,6 +1810,17 @@ console.log(this.state.supplier_currency)
 																		}
 																	>
 																	Excise
+																	<i
+																			id="ExiseTooltip"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="ExiseTooltip"
+																		>
+																			If Exise Type for a product is Inclusive
+																			then the Excise dropdown will be Disabled
+																		</UncontrolledTooltip>
 																	</TableHeaderColumn> 
 																		<TableHeaderColumn
 																			dataField="vat"

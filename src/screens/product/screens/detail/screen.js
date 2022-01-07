@@ -41,6 +41,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import { InventoryHistoryModal} from './sections';
+import Switch from 'react-switch';
 
 
 const mapStateToProps = (state) => {
@@ -120,7 +121,7 @@ class DetailProduct extends React.Component {
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9-./\\|]+$/;
 		// this.regExBoth = /[a-zA-Z0-9]+$/;
-		this.regExAlpha = /^[a-zA-Z ]+$/;
+		this.regExAlpha = /[ +a-zA-Z0-9-./\\|!@#$%^&*()_<>,]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,6}$$/;
 	}
 
@@ -247,6 +248,7 @@ class DetailProduct extends React.Component {
 								exciseTaxId:res.data.exciseTaxId ?res.data.exciseTaxId :'',
 							},
 							exciseTaxCheck:res.data.exciseTaxId ?true :false,
+							exciseType:res.data.exciseType ?true :false,
 							count:initCount,
 							isInventoryEnabled: res.data.isInventoryEnabled ? res.data.isInventoryEnabled : '',
 							selectedStatus: res.data.isActive ? true : false,
@@ -394,7 +396,7 @@ renderName=(cell,row)=>{
 		const transactionCategoryId = this.state.inventoryAccount ? this.state.inventoryAccount[0].value : '';
 		const inventoryId = this.state.inventoryId;
 		const isActive = this.state.selectedStatus;
-
+		const exciseType = this.state.exciseType;
 		let productPriceType;
 		if (data && data['productPriceType'] && data['productPriceType'].includes('SALES')) {
 			productPriceType = 'SALES';
@@ -424,7 +426,7 @@ renderName=(cell,row)=>{
 			transactionCategoryId,
 			inventoryId,
 			isActive,
-
+			exciseType,
 			...(salesUnitPrice.length !== 0 &&
 				data['productPriceType'].includes('SALES') && {
 					salesUnitPrice,
@@ -892,6 +894,8 @@ renderName=(cell,row)=>{
 																						props.handleChange('productType')(
 																							value,
 																						);
+																						this.setState({exciseTaxCheck:false,exciseType:false})
+																						props.handleChange('exciseTaxId')('',);
 																					}}
 																					checked={
 																						props.values.productType ===
@@ -977,7 +981,7 @@ renderName=(cell,row)=>{
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
-																					this.regExBoth.test(
+																					this.regExAlpha.test(
 																						option.target.value,
 																					)
 																				) {
@@ -1204,16 +1208,29 @@ renderName=(cell,row)=>{
 																				type="checkbox"
 																				id="exciseTaxCheck"
 																				name="exciseTaxCheck"
+																				// onChange={(event) => {
+																				// let edit=props.values.exciseTaxId!='' ?true:false
+																				// 	if(!edit)
+																				// 	{
+																				// 	if (this.state.exciseTaxCheck===true)
+																				// 	 	this.setState({exciseTaxCheck:false})
+																				// 	else 
+																				// 		this.setState({exciseTaxCheck:true})
+																				// 	}
+																				
+																				// }}
 																				onChange={(event) => {
-																				let edit=props.values.exciseTaxId!='' ?true:false
-																					if(!edit)
-																					{
-																					if (this.state.exciseTaxCheck===true)
-																					 	this.setState({exciseTaxCheck:false})
-																					else 
+																					if (
+																						this.state.exciseTaxCheck===true
+																						)
+																					 {
+																						this.setState({exciseTaxCheck:false,exciseType:false})
+																						props.handleChange('exciseTaxId')(
+																							'',
+																						);
+																					} else {
 																						this.setState({exciseTaxCheck:true})
 																					}
-																				
 																				}}
 																				checked={this.state.exciseTaxCheck}
 																				
@@ -1232,7 +1249,7 @@ renderName=(cell,row)=>{
 																			Excise Tax Type
 																		</Label>
 																		<Select
-																		isDisabled={props.values.exciseTaxId!='' ?true:false}
+																		// isDisabled={props.values.exciseTaxId!='' ?true:false}
 																			styles={customStyles}
 																			options={
 																				exciseTaxList
@@ -1291,7 +1308,35 @@ renderName=(cell,row)=>{
 
 															)}
 																</Row>
-														
+																{this.state.exciseTaxCheck===true&&(	<Row style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}>
+															<Col >
+																<label className='mr-4'><b>Excise Type</b></label>
+																	{this.state.exciseType === false ?
+																	 <span style={{color : "#0069d9"}} className='mr-4'><b>Inclusive</b></span> :
+																	 <span className='mr-4'>Inclusive</span>}
+																	<Switch
+																		checked={this.state.exciseType}
+																		onChange={(exciseType) => {
+																			props.handleChange('exciseType')(exciseType);
+																			this.setState({exciseType,},	() => {},);
+																		}}
+																		onColor="#2064d8"
+																		onHandleColor="#2693e6"
+																		handleDiameter={25}
+																		uncheckedIcon={false}
+																		checkedIcon={false}
+																		boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																		activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																		height={20}
+																		width={48}
+																	className="react-switch "
+																	/>
+																	{this.state.exciseType === true ? 
+																	<span style={{color : "#0069d9"}} className='ml-4'><b>Exclusive</b></span>
+																	 : <span className='ml-4'>Exclusive</span>
+																	}	
+																</Col>
+															</Row>)}
 															<Row className="secondary-info">
 																<Col lg={8}>
 																	<FormGroup check inline className="mb-3">
@@ -1395,6 +1440,7 @@ renderName=(cell,row)=>{
 																	</Col><Col>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="transactionCategoryId">
+																		<span className="text-danger">* </span>{' '}
 																		{strings.Account}
 																		</Label>
 																		<Select
@@ -1597,6 +1643,7 @@ renderName=(cell,row)=>{
 																	<Col>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="transactionCategoryId">
+																		<span className="text-danger">* </span>{' '}
 																		{strings.Account}
 																		</Label>
 																		<Select

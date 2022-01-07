@@ -395,7 +395,7 @@ class Product extends React.Component {
     };
 
 	goToProductDetail = (productId) => {
-		debugger
+		
 				this.props.history.push('/admin/master/product/detail', {
 			id: productId,
 		})
@@ -403,7 +403,7 @@ class Product extends React.Component {
 	}
 	renderType  = (cell, row) => {
         let type='';
-		if(row.data.exciseTaxId !=null){
+		if(row.data.exciseTaxId !=null  && row.data.exciseTaxId !=""){
 			type="EXCISE "+row.data.productType
 		}
 		else{

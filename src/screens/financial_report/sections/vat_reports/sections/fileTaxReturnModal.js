@@ -93,6 +93,7 @@ class FileTaxReturnModal extends React.Component {
 				taxAgentName: '',
 				taxablePersonNameInArabic: '',
 			},
+			isTANMandetory:false,
 			dialog: null,
 			filterData: {
 				name: '',
@@ -127,6 +128,7 @@ class FileTaxReturnModal extends React.Component {
 						res.data.message?res.data.message:'Vat Report Filed Successfully',
 					);
 					resetForm();
+					this.setState({isTANMandetory:false})
 					this.props.closeModal(true);
 				}
 			})
@@ -155,10 +157,17 @@ class FileTaxReturnModal extends React.Component {
 			this.setState({initValue:{vatRegistrationNumber:res.data.vatRegistrationNumber}})
 		});
 	};
+dateLimit=()=>{
+	const { endDate} = this.props;
 
+		if(endDate){
+			var datearray = endDate.split("/");
+			return	new Date(parseInt(datearray[2]),parseInt(datearray[1])-1,parseInt(datearray[0]))
+		}
+	}
 	render() {
 		strings.setLanguage(this.state.language);
-		const { openModal, closeModal ,current_report_id,endDate} = this.props;
+		const { openModal, closeModal ,current_report_id,endDate,taxReturns} = this.props;
 		const { initValue, loading, reporting_period_list } = this.state;
 
 		return (
@@ -169,7 +178,7 @@ class FileTaxReturnModal extends React.Component {
 							<Col lg={12}>
 								<div className="h4 mb-0 d-flex align-items-center">
 									<i className="nav-icon fas fa-user-tie" />
-									<span className="ml-2">File The Report For Vat Return</span>
+									<span className="ml-2">File The Report For Vat Return ( {taxReturns} )</span>
 								</div>
 							</Col>
 						</Row>
@@ -181,13 +190,25 @@ class FileTaxReturnModal extends React.Component {
 						onSubmit={(values, { resetForm, setSubmitting }) => {
 							this.handleSubmit(values, resetForm);
 						}}
-
+						validate={(values) => {
+							let errors = {};
+							 
+							if (this.state.isTANMandetory === true &&( values.taxAgencyNumber=="" ||values.taxAgencyNumber==undefined)) 
+							{
+								errors.taxAgencyNumber ='TAN is Required';
+							}													
+																			
+							return errors;
+						}}
 						validationSchema={Yup.object().shape({
 							taxAgentName: Yup.string().required('Tax Agent Name is Required'),
 							taxablePersonNameInEnglish: Yup.string().required('Taxable Person Name In English is Required'),
 							taxablePersonNameInArabic: Yup.string().required('Taxable Person Name In Arabic is Required'),
 							taxAgentApprovalNumber: Yup.string().required('Tax Agent Approval Number is Required'),
-							vatRegistrationNumber: Yup.string().required('Tax Registration Number is required'),
+							vatRegistrationNumber: Yup.string().required('Tax Registration Number is Required'),
+							taxFiledOn: Yup.string().required(
+								'Date of Filling is Required',
+							),
 										})}
 					>
 						{(props) => {
@@ -279,8 +300,16 @@ class FileTaxReturnModal extends React.Component {
 																	name="taxAgencyName"
 																	id="taxAgencyName"
 																	placeholder={"Enter Tax Agency Name"}
-																	onChange={(option) =>
+																	onChange={(option) =>{
 																		props.handleChange('taxAgencyName')(option)
+																
+																			if(option.target.value !=""){
+																				this.setState({isTANMandetory:true})
+																			}
+																			else{
+																			    this.setState({isTANMandetory:false})
+																			}
+																		}
 																	}
 																	defaultValue={props.values.taxAgencyName}
 																/>
@@ -288,25 +317,33 @@ class FileTaxReturnModal extends React.Component {
 														</Col>
 														<Col lg={4}>
 															<FormGroup className="mb-3">
+													{this.state.isTANMandetory === true &&(<span className="text-danger">* </span> )}
 																<Label htmlFor="taxAgencyNumber">Tax Agency Number (TAN)</Label>
 																<Input
 																	type="text"
 																	name="taxAgencyNumber"
 																	id="taxAgencyNumber"
 																	maxLength={10}
+																	autoComplete='off'
 																	placeholder={"Enter Tax Agency Number (TAN)"}
 																	onChange={(option) =>
 																		{
 																		if (option.target.value === '' ||
-																				this.regExAlpha.test(option.target.value)
+																				this.regExBoth.test(option.target.value)
 																			) {
 																				props.handleChange('taxAgencyNumber')(option)
 																			}
 																		}
 																		
 																	}
-																	defaultValue={props.values.taxAgencyNumber}
+																	value={props.values.taxAgencyNumber}
 																/>
+																	{props.errors.taxAgencyNumber &&												
+																(
+																		<div className='text-danger' >
+																			{props.errors.taxAgencyNumber}
+																		</div>
+																	)}
 															</FormGroup>
 														</Col>
 														<Col lg={4}>
@@ -392,9 +429,10 @@ class FileTaxReturnModal extends React.Component {
 																		placeholderText={"Tax Filed On"}
 																		showMonthDropdown
 																		showYearDropdown
+																		autoComplete='off'
 																		dateFormat="dd/MM/yyyy"
 																		dropdownMode="select"
-																		minDate={new Date(endDate)}
+																		minDate={this.dateLimit()}
 																		value={props.values.taxFiledOn}
 																		selected={props.values.taxFiledOn}
 																		onChange={(value) => {																			
@@ -407,6 +445,12 @@ class FileTaxReturnModal extends React.Component {
 																				: ''
 																		}`}
 																	/>
+																	{props.errors.taxFiledOn &&
+																   (
+																		<div className='text-danger'>
+																			{props.errors.taxFiledOn}
+																		</div>
+																	)}
 															</FormGroup>
 														</Col>
 													</Row>
@@ -427,7 +471,8 @@ class FileTaxReturnModal extends React.Component {
 										<Button
 											color="secondary"
 											className="btn-square"
-											onClick={() => {
+											onClick={() => {											
+												this.setState({isTANMandetory:false})
 												closeModal(false);
 											}}
 										>

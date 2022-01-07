@@ -29,7 +29,7 @@ import { CommonActions } from 'services/global';
 
 import { WareHouseModal } from '../../sections';
 import { selectOptionsFactory } from 'utils';
-
+import Switch from "react-switch";
 const mapStateToProps = (state) => {
 	return {
 		vat_list: state.product.vat_list,
@@ -111,14 +111,16 @@ class CreateProduct extends React.Component {
 			isActive:true,
 			selectedStatus:true,
 			exciseTaxList:[],
-			exciseTaxCheck:false
+			exciseTaxCheck:false,
+			exciseType:false,
+			exciseAmount:0			
 		};
 		this.formRef = React.createRef();       
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[ +a-zA-Z0-9-./\\|!@#$%^&*()_<>,]+$/;
 		this.regExAlpha = /^[0-9!@#$&()-\\`.+,/\"]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
-		this.regDecimal5 =/^\d{1,5}$/;
+		this.regDecimal5 =/^\d{1,10}$/;
 		this.regExAlpha2 = /^[a-zA-Z ]+$/;
 	}
 
@@ -263,7 +265,8 @@ try {
 		const transactionCategoryId = data['transactionCategoryId'];
 		const productCategoryId = data['productCategoryId'];
 		const isActive = this.state.productActive;
-
+		const exciseType = this.state.exciseType;
+		const exciseAmount=this.state.exciseAmount;
 		let productPriceType;
 		if (data['productPriceType'].includes('SALES')) {
 			productPriceType = 'SALES';
@@ -292,6 +295,7 @@ try {
 			transactionCategoryId,
 			productCategoryId,
 			isActive,
+			exciseType,
 			...(salesUnitPrice.length !== 0 && {
 				salesUnitPrice,
 			}),
@@ -614,6 +618,8 @@ try {
 																						props.handleChange('productType')(
 																							value,
 																						);
+																						this.setState({exciseTaxCheck:false,exciseType:false})
+																						props.handleChange('exciseTaxId')('',);
 																					}}
 																					checked={
 																						props.values.productType ===
@@ -703,7 +709,7 @@ try {
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
-																					this.regExAlpha2.test(
+																					this.regExBoth.test(
 																						option.target.value,
 																					)
 																				) {
@@ -923,7 +929,10 @@ try {
 																						this.state.exciseTaxCheck===true
 																						)
 																					 {
-																						this.setState({exciseTaxCheck:false})
+																						this.setState({exciseTaxCheck:false,exciseType:false})
+																						props.handleChange('exciseTaxId')(
+																							'',
+																						);
 																					} else {
 																						this.setState({exciseTaxCheck:true})
 																					}
@@ -932,7 +941,7 @@ try {
 																				
 																			/>
 																			Excise Product ?
-																		</Label>
+																		</Label>										
 																	</FormGroup>
 																</Col>)}
 																{this.state.exciseTaxCheck===true&&(	
@@ -990,7 +999,35 @@ try {
 															)}
 																
 																</Row>
-															
+																{this.state.exciseTaxCheck===true&&(	<Row>
+															<Col  style={{display: props.values.productType !='SERVICE'   ?'' : 'none'}}>
+																<label className='mr-4'><b>Excise Type</b></label>
+																	{this.state.exciseType === false ?
+																	 <span style={{color : "#0069d9"}} className='mr-4'><b>Inclusive</b></span> :
+																	 <span className='mr-4'>Inclusive</span>}
+																	<Switch
+																		checked={this.state.exciseType}
+																		onChange={(exciseType) => {
+																			props.handleChange('exciseType')(exciseType);
+																			this.setState({exciseType,},	() => {},);
+																		}}
+																		onColor="#2064d8"
+																		onHandleColor="#2693e6"
+																		handleDiameter={25}
+																		uncheckedIcon={false}
+																		checkedIcon={false}
+																		boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+																		activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+																		height={20}
+																		width={48}
+																	className="react-switch "
+																	/>
+																	{this.state.exciseType === true ? 
+																	<span style={{color : "#0069d9"}} className='ml-4'><b>Exclusive</b></span>
+																	 : <span className='ml-4'>Exclusive</span>
+																	}	
+																</Col>
+															</Row>)}
 															<hr></hr>
 															{/* <Row>
 															<Col lg={12}>

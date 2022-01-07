@@ -13,6 +13,7 @@ import {
 	Input,
 	Label,
 	NavLink,
+	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
@@ -215,13 +216,11 @@ class DetailPurchaseOrder extends React.Component {
 										supplierReferenceNumber: res.data.supplierReferenceNumber ? 
 										res.data.supplierReferenceNumber : '',
 										rfqNumber: res.data.rfqNumber ? res.data.rfqNumber : '',
-										checked: res.data.exciseType ? res.data.exciseType : res.data.exciseType,
 										placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 										total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
 								
 								},
 								customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
-								checked: res.data.exciseType ? res.data.exciseType : res.data.exciseType,
 								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 								total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
 								data: res.data.poQuatationLineItemRequestModelList
@@ -362,7 +361,7 @@ class DetailPurchaseOrder extends React.Component {
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						isDisabled={row.exciseTaxId === 0 || this.state.checked === false}
+						isDisabled={row.exciseTaxId === 0 || row.isExciseTaxExclusive === false}
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -722,6 +721,7 @@ class DetailPurchaseOrder extends React.Component {
 				obj['vatCategoryId'] = parseInt(result.vatCategoryId);
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['description'] = result.description;
+				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
 				idx = index;
 			}
 			return obj;
@@ -881,7 +881,7 @@ class DetailPurchaseOrder extends React.Component {
 
 			//Excise calculation
 			if(obj.exciseTaxId !=  0){
-			if(this.state.checked === true){
+			if(obj.isExciseTaxExclusive === true){
 				if(obj.exciseTaxId === 1){
 				const value = +(obj.unitPrice) / 2 ;
 					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
@@ -1801,41 +1801,7 @@ class DetailPurchaseOrder extends React.Component {
 																		<i className="fa fa-plus"></i>  {strings.Addmore}
 																	</Button>
 																</Col>
-																<Col lg={3}>
-																					<FormGroup>
-
-																						<span className='mr-4'>Inclusive</span>
-																						<Switch
-            checked={this.state.checked}
-			onChange={(checked) => {
-
-				props.handleChange('checked')(checked);
-				this.setState(
-					{
-						checked,
-					},
-					() => {
-						this.updateAmount(data, props);
-					},
-				);
-
-			}}
-            onColor="#2064d8"
-            onHandleColor="#2693e6"
-            handleDiameter={25}
-            uncheckedIcon={false}
-            checkedIcon={false}
-            boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-            activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-            height={20}
-            width={48}
-            className="react-switch "
-
-          />
-		  <span  className='ml-4'>Exclusive</span>
-
-																					</FormGroup>
-																				</Col>
+															
 																				</Row>
 															<Row>
 																<Col lg={12}>
@@ -1932,6 +1898,17 @@ class DetailPurchaseOrder extends React.Component {
 																		}
 																	>
 																	Excise
+																	<i
+																			id="ExiseTooltip"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="ExiseTooltip"
+																		>
+																			If Exise Type for a product is Inclusive
+																			then the Excise dropdown will be Disabled
+																		</UncontrolledTooltip>
 																	</TableHeaderColumn> 
 																		<TableHeaderColumn
 																			dataField="vat"

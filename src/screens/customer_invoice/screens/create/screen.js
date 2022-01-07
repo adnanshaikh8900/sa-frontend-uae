@@ -107,17 +107,17 @@ class CreateCustomerInvoice extends React.Component {
 					unitPrice: '',
 					vatCategoryId: '',
 					exciseTaxId:'',
-					discountType :'FIXED',
+					discountType: '',
 					exciseAmount:'',
 					discount: 0,
 					subTotal: 0,
 					vatAmount:0,
 					productId: '',
+					isExciseTaxExclusive: ''
 
 				},
 			],
 			idCount: 0,
-			checked: false,
 			initValue: {
 				receiptAttachmentDescription: '',
 				receiptNumber: '',
@@ -161,7 +161,6 @@ class CreateCustomerInvoice extends React.Component {
 			createMore: false,
 			fileName: '',
 			term: '',
-			selectedType: { value: 'FIXED', label: 'Fixed' },
 			discountPercentage: '',
 			discountAmount: 0,
 			exist: false,
@@ -581,6 +580,7 @@ renderVatAmount = (cell, row,extraData) => {
 	};
 
 	selectItem = (e, row, name, form, field, props) => {
+		debugger
 		//e.preventDefault();
 		let data = this.state.data;
 		let idx;
@@ -625,7 +625,7 @@ renderVatAmount = (cell, row,extraData) => {
 
 	   return (
 		   <Field
-			   // name={`lineItemsString.${idx}.vatCategoryId`}
+			    name={`lineItemsString.${idx}.discountType`}
 			   render={({ field, form }) => (
 			   <div>
 			   <div  class="input-group">
@@ -677,10 +677,10 @@ renderVatAmount = (cell, row,extraData) => {
 																						   id="discountType"
 																						   name="discountType"
 																						   value={
-																							   discountOptions &&
-																							   selectOptionsFactory
-																								   .renderOptions('label', 'value', discountOptions, 'discount')
-																								   .find((option) => option.value === +row.discountType)
+																						discountOptions &&
+																							selectOptionsFactory
+																								.renderOptions('label', 'value', discountOptions, 'discount')
+																								.find((option) => option.value === +row.discountType)
 																						   }
 																						   onChange={(e) => {
 																							   this.selectItem(
@@ -707,6 +707,16 @@ renderVatAmount = (cell, row,extraData) => {
 		   />
 	   );
    }
+discountType = (row) =>
+
+{
+	debugger
+	
+		return this.state.discountOptions &&
+		selectOptionsFactory
+			.renderOptions('label', 'value', this.state.discountOptions, 'discount')
+			.find((option) => option.value === +row.discountType)
+}
 
 	renderVat = (cell, row, props) => {
 		const { vat_list } = this.props;
@@ -787,7 +797,7 @@ renderVatAmount = (cell, row,extraData) => {
 				render={({ field, form }) => (
 					<Select
 						styles={customStyles}
-						 isDisabled={row.exciseTaxId === 0 }
+						 isDisabled={row.exciseTaxId === 0 || row.isExciseTaxExclusive=== false}
 						options={
 							excise_list
 								? selectOptionsFactory.renderOptions(
@@ -851,6 +861,8 @@ renderVatAmount = (cell, row,extraData) => {
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
 				obj['exciseTaxId'] = result.exciseTaxId;
+				obj['discountType'] = result.discountType;
+				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive
 				idx = index;
 			}
 			return obj;
@@ -873,6 +885,11 @@ renderVatAmount = (cell, row,extraData) => {
 		form.setFieldValue(
 			`lineItemsString.${idx}.description`,
 			result.description,
+			true,
+		);
+		form.setFieldValue(
+			`lineItemsString.${idx}.discountType`,
+			result.discountType,
 			true,
 		);
 		this.updateAmount(data, props);
@@ -1066,10 +1083,9 @@ renderVatAmount = (cell, row,extraData) => {
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-
 			//Excise calculation
 			if(obj.exciseTaxId !=  0){
-			if(this.state.checked === true){
+			if(obj.isExciseTaxExclusive === true){
 				if(obj.exciseTaxId === 1){
 				const value = +(obj.unitPrice) / 2 ;
 					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
@@ -1229,7 +1245,6 @@ renderVatAmount = (cell, row,extraData) => {
 		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
 		formData.append('totalExciseAmount', this.state.initValue.total_excise);
-		formData.append('exciseType', this.state.checked);
 	
 		
 		if (term && term.value) {
@@ -2296,6 +2311,17 @@ renderVatAmount = (cell, row,extraData) => {
 																		}
 																	>
 																	Excise
+																	<i
+																			id="ExiseTooltip"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="ExiseTooltip"
+																		>
+																			If Exise Type for a product is Inclusive
+																			then the Excise dropdown will be Disabled
+																		</UncontrolledTooltip>
 																	</TableHeaderColumn> 
 																	<TableHeaderColumn
 																		width="12%"
@@ -2468,7 +2494,7 @@ renderVatAmount = (cell, row,extraData) => {
 
 																<Col lg={4}>
 																	<div className="">																		
-																		<div className="total-item p-2" style={{display:this.state.checked === true ? '':'none'}}>
+																		<div className="total-item p-2" >
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">

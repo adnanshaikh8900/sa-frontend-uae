@@ -1386,42 +1386,6 @@ class CreateCreditNoteModal extends React.Component {
 														</Row>
 													
 														<Row>
-														<Col lg={3}>
-																					<FormGroup>
-																						
-																						<span className='mr-4'>Inclusive</span>
-																						<Switch
-																						disabled
-																							 checked={this.state.selectedData.exciseType}
-																							// onChange={(checked) => {
-																								
-																							// 	props.handleChange('checked')(checked);
-																							// 	this.setState(
-																							// 		{
-																							// 			checked,
-																							// 		},
-																							// 		() => {
-																							// 			this.updateAmount(data, props);
-																							// 		},
-																							// 	);
-																								
-																							// }}
-																							onColor="#2064d8"
-																							onHandleColor="#2693e6"
-																							handleDiameter={25}
-																							uncheckedIcon={false}
-																							checkedIcon={false}
-																							boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-																							activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-																							height={20}
-																							width={48}
-																							className="react-switch "
-																							
-																						/>
-																						<span  className='ml-4'>Exclusive</span>
-																																										
-																					</FormGroup>
-																				</Col>
 															<Col lg={12} className="mb-3">
 																{/* <Button
 																	color="primary"
@@ -1530,7 +1494,18 @@ class CreateCreditNoteModal extends React.Component {
 																			this.renderExcise(cell, rows, props)
 																		}
 																	>
-																	Excise Tax
+																	Excise
+																	<i
+																			id="ExiseTooltip"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="ExiseTooltip"
+																		>
+																			If Exise Type for a product is Inclusive
+																			then the Excise dropdown will be Disabled
+																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
 																	
 																	<TableHeaderColumn

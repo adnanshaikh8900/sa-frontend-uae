@@ -34,7 +34,7 @@ import { AgGridReact,AgGridColumn } from 'ag-grid-react/lib/agGridReact';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { CallToActionSharp } from '@material-ui/icons';
-
+import ReactToPrint from 'react-to-print';
 const mapStateToProps = (state) => {
 	return {
 		transaction_category_list: state.chart_account.transaction_category_list,
@@ -67,6 +67,7 @@ class ChartAccount extends React.Component {
 			csvData: [],
 			view: false,
 			unselectable: [],
+			pageSize:10,
 		};
 
 		this.options = {
@@ -98,7 +99,11 @@ class ChartAccount extends React.Component {
 			}
 		});
 	}
-
+	onGridReady = (params) => {
+		this.gridApi = params.api;
+		this.columnApi = params.columnApi;
+		// this.gridApi.sizeColumnsToFit();
+	  };
 	componentDidMount = () => {
 		this.props.chartOfAccountActions.getTransactionTypes();
 		this.initializeData();
@@ -113,8 +118,8 @@ class ChartAccount extends React.Component {
 	initializeData = (search) => {
 		let { filterData } = this.state;
 		const paginationData = {
-			pageNo: this.options.page ? this.options.page - 1 : 0,
-			pageSize: this.options.sizePerPage,
+			// pageNo: this.options.page ? this.options.page - 1 : 0,
+			// pageSize: this.options.sizePerPage,
 		};
 		const sortingData = {
 			order: this.options.sortOrder ? this.options.sortOrder : '',
@@ -342,6 +347,38 @@ class ChartAccount extends React.Component {
 		}
 	}
 
+	componentDidUpdate = (prevProps, prevState) => {
+		if (prevState.domLayout !== this.state.domLayout) {
+		  if (this.state.domLayout === "print") {
+			this.setState({ style: { height: "", width: "" } });
+		  } else if (this.state.domLayout === null) {
+			this.setState({ style: { height: "600px", width: "600px" } });
+		  }
+		  this.gridApi.setDomLayout(this.state.domLayout);
+		}
+	  };
+
+	  setNormal = () => {
+		this.setState({ domLayout: null });
+	  };
+	  onBtPrinterFriendly = () => {
+		var eGridDiv = document.querySelector('#section-to-print');
+		eGridDiv.style.width = '';
+		eGridDiv.style.height = '';
+		this.gridApi.setDomLayout('print');
+	  };
+	
+	  onPageSizeChanged = (newPageSize) => {
+		var value = document.getElementById('page-size').value;
+		this.setState({pageSize:value})
+		this.gridApi.paginationSetPageSize(Number(value));
+	};
+	  onBtNormal = () => {
+		var eGridDiv = document.querySelector('#section-to-print');
+		eGridDiv.style.width = '100%';
+		eGridDiv.style.height = '590px';
+		this.gridApi.setDomLayout(null);
+	  };	  
 	render() {
 		strings.setLanguage(this.state.language);
 		const {
@@ -390,6 +427,7 @@ class ChartAccount extends React.Component {
 									<Col lg={12}>
 										<div className="d-flex justify-content-end">
 											<ButtonGroup size="sm">
+											
 											<Button
 											color="primary"
 											className="btn-square pull-right mr-1"
@@ -416,6 +454,19 @@ class ChartAccount extends React.Component {
 														target="_blank"
 													/>
 												)}
+												<Button 	color="primary"	className="mr-2 btn-square"
+													onClick={() => {
+														this.onBtPrinterFriendly();
+														this.setState({pageSize:10000})
+														this.gridApi.paginationSetPageSize(Number(10000));														
+														window.print()		
+														// this.onBtNormal()										
+													}}
+													style={{
+														cursor: 'pointer',
+														}}>
+											 		<i className="fa fa-print"> {strings.Print} </i>
+											</Button>
 												{/* <Button
 													color="primary"
 													className="btn-square mr-1"
@@ -581,7 +632,7 @@ class ChartAccount extends React.Component {
 											</BootstrapTable> 
 										</div>*/}
 										
-<div className="ag-theme-alpine mb-3" style={{ height: 590,width:"100%" }}>
+<div id="section-to-print" className="ag-theme-alpine mb-3" style={{ height: 590,width:"100%" }}>
 	
 			<AgGridReact
 				rowData={transaction_category_list &&
@@ -611,7 +662,7 @@ class ChartAccount extends React.Component {
 				sortable={ true } 
 				filter={ true } 
 				enablePivot={true}
-				cellRendererFramework={(params) => <label
+				cellRendererFramework={(params) => <div
 					className="mb-0 label-bank"
 					style={{
 						cursor: 'pointer',
@@ -621,7 +672,7 @@ class ChartAccount extends React.Component {
 						this.goToTransactionCategoryDetail(params.data.transactionCategoryId) : ''}                                                             
 		>
 		{params.value}
-		</label>
+		</div>
 }
 				></AgGridColumn>
 
@@ -686,7 +737,7 @@ class ChartAccount extends React.Component {
 			</AgGridReact>  
 			<div className="example-header mt-1">
 					Page Size:
-					<select onChange={() => this.onPageSizeChanged()} id="page-size">
+					<select  value={this.state.pageSize} onChange={() => this.onPageSizeChanged()} id="page-size">
 					<option value="10" selected={true}>10</option>
 					<option value="100">100</option>
 					<option value="500">500</option>

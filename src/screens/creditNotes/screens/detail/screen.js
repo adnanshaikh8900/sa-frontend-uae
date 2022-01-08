@@ -1017,7 +1017,7 @@ class DetailCreditNote extends React.Component {
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
-		formData.append('totalExciseAmount', this.state.initValue.total_excise);
+		formData.append('totalExciseTaxAmount', this.state.initValue.total_excise);
 		formData.append('exciseType', this.state.checked);
 		// formData.append('discount', discount);
 		// formData.append('discountType', discountType);

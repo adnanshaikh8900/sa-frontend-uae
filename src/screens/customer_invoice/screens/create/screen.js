@@ -292,6 +292,15 @@ class CreateCustomerInvoice extends React.Component {
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+									var { product_list } = this.props;
+									product_list=product_list.filter((obj)=>obj.id == row.productId)
+									
+									if(parseInt(e.target.value) >product_list[0].stockOnHand && product_list[0].isInventoryEnabled==true)
+									this.props.commonActions.tostifyAlert(
+										'error',
+										 `Quantity (${e.target.value}) must not be greater than stock on Hand  (${product_list[0].stockOnHand})`,
+									);
+									else
 									this.selectItem(
 										e.target.value,
 										row,
@@ -903,7 +912,8 @@ discountType = (row) =>
 	};
 
 	renderProduct = (cell, row, props) => {
-		const { product_list } = this.props;
+		var { product_list } = this.props;
+		product_list=product_list.filter((row)=>row.stockOnHand !=0 )
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {

@@ -39,6 +39,42 @@ export const getSalesByCustomer = (postData) => {
 	}
   }
 
+  export const getFtaAuditReport = (postData) => {
+	const { startDate, endDate ,companyId, userId} = postData
+	let url = `/rest/simpleaccountReports/getFtaAuditReport?startDate=${startDate}&endDate=${endDate}&companyId=${companyId}&userId=${userId}`
+	return (dispatch) => {
+	  let data = {
+		method: 'get',
+		url
+	  }
+	  return authApi(data).then((res) => {
+		if (res.status === 200) {
+		  return res
+		}
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }
+
+  export const getFtaExciseAuditReport = (postData) => {
+	const { startDate, endDate ,companyId, userId} = postData
+	let url = `/rest/simpleaccountReports/getFtaExciseAuditReport?startDate=${startDate}&endDate=${endDate}&companyId=${companyId}&userId=${userId}`
+	return (dispatch) => {
+	  let data = {
+		method: 'get',
+		url
+	  }
+	  return authApi(data).then((res) => {
+		if (res.status === 200) {
+		  return res
+		}
+	  }).catch((err) => {
+		throw err
+	  })
+	}
+  }
+
 export const getReceivableInvoiceSummary = (postData) => {
 	const { startDate, endDate} = postData
 	let url = `/rest/simpleaccountReports/ReceivableInvoiceSummary?startDate=${startDate}&endDate=${endDate}`

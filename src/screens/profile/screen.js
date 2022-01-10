@@ -737,7 +737,7 @@ class Profile extends React.Component {
 						'success',
 						'Company Updated Successfully',
 					);
-					this.props.history.push('/admin/dashboard');
+					this.props.history.push('/login');
 				
 				}
 			})

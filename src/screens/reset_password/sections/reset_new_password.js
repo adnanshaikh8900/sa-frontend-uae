@@ -117,7 +117,7 @@ class ResetNewPassword extends React.Component {
                             // .min(8, "Password Too Short")
                             .matches(
                               /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-                              "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
+                              "Must Contain 8 Characters, Must contain max 16 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
                             ),
                           confirmPassword: Yup.string()
                             .required('Confirm Password is Required')
@@ -131,11 +131,17 @@ class ResetNewPassword extends React.Component {
                                 <Col lg={12}>
                                   <FormGroup>
 																			<Label htmlFor="select">
-																				<span className="text-danger">*</span>
-																				 Password
+																				<span className="text-danger">*</span> Password
 																			</Label>
 																			<div>
 																				<Input
+                                        onPaste={(e)=>{
+                                          e.preventDefault()
+                                          return false;
+                                          }} onCopy={(e)=>{
+                                          e.preventDefault()
+                                          return false;
+                                          }}
 																					type={
 																						this.state.isPasswordShown
 																							? 'text'
@@ -175,6 +181,7 @@ class ResetNewPassword extends React.Component {
 																			<PasswordChecklist
 																				rules={["minLength", "specialChar", "number", "capital"]}
 																				minLength={8}
+                                        maxLength={16}
 																				value={props.values.password}
 																				valueAgain={props.values.confirmPassword}
 																			/>
@@ -183,10 +190,16 @@ class ResetNewPassword extends React.Component {
                                 <Col lg={12}>
                                   <FormGroup>
 																			<Label htmlFor="select">
-																				<span className="text-danger">*</span>
-																			Confirm Password
+																				<span className="text-danger">*</span> Confirm Password
 																			</Label>
 																			<Input
+                                      onPaste={(e)=>{
+                                        e.preventDefault()
+                                        return false;
+                                        }} onCopy={(e)=>{
+                                        e.preventDefault()
+                                        return false;
+                                        }}
 																				type="password"
 																				id="confirmPassword"
 																				name="confirmPassword"
@@ -213,6 +226,7 @@ class ResetNewPassword extends React.Component {
 																				<PasswordChecklist
 																				rules={[ "match"]}
 																				minLength={8}
+                                        maxLength={16}
 																				value={props.values.password}
 																				valueAgain={props.values.confirmPassword}
 																			/>

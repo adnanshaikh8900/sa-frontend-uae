@@ -140,6 +140,21 @@ export const updateCompany = (obj) => {
   }
 }
 
+export const resetNewpassword = (obj) => {
+  return (dispatch) => {
+    let data = {
+      method: 'POST',
+      url: '/rest/user/resetNewpassword',
+      data: obj
+    }
+    return authFileUploadApi(data).then((res) => {
+      return res
+    }).catch((err) => {
+      throw err
+    })
+  }
+}
+
 export const getRoleList = (obj) => {
 
   return (dispatch) => {

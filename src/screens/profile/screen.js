@@ -733,12 +733,11 @@ class Profile extends React.Component {
 			.then((res) => {
 				debugger
 				if (res.status === 200) {
+					this.props.history.push('/login');
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Company Updated Successfully',
+						'Password Updated Successfully. Please Login With New Password',
 					);
-					this.props.history.push('/login');
-				
 				}
 			})
 			.catch((err) => {

@@ -162,7 +162,7 @@ dateLimit=()=>{
 
 		if(endDate){
 			var datearray = endDate.split("/");
-			return	new Date(parseInt(datearray[2]),parseInt(datearray[1])-1,parseInt(datearray[0]))
+			return	new Date(parseInt(datearray[2]),parseInt(datearray[1])-1,parseInt(datearray[0])+1)
 		}
 	}
 	render() {
@@ -230,6 +230,7 @@ dateLimit=()=>{
 																	type="text"
 																	name="taxablePersonNameInEnglish"
 																	id="taxablePersonNameInEnglish"
+																	maxLength="100"
 																	placeholder={"Enter Taxable Person Name (English)"}
 																	onChange={(option) =>{
 																		props.handleChange('taxablePersonNameInEnglish')(option)
@@ -253,6 +254,7 @@ dateLimit=()=>{
 																	type="text"
 																	name="taxablePersonNameInArabic"
 																	id="taxablePersonNameInArabic"
+																	maxLength="100"
 																	placeholder={"Enter Taxable Person Name (Arabic)"}
 																	onChange={(option) =>
 																		props.handleChange('taxablePersonNameInArabic')(option)
@@ -274,6 +276,7 @@ dateLimit=()=>{
 																	type="text"
 																	name="taxAgentName"
 																	id="taxAgentName"
+																	maxLength="100"
 																	placeholder={"Enter Agenct Name"}
 																	onChange={(option) =>
 																		props.handleChange('taxAgentName')(option)
@@ -299,6 +302,7 @@ dateLimit=()=>{
 																	type="text"
 																	name="taxAgencyName"
 																	id="taxAgencyName"
+																	maxLength="100"
 																	placeholder={"Enter Tax Agency Name"}
 																	onChange={(option) =>{
 																		props.handleChange('taxAgencyName')(option)

@@ -328,7 +328,7 @@ class CustomerInvoice extends React.Component {
 				{row.status}
 			</span>
 			{
-				row.cnCreatedOnPaidInvoice==true &&(
+				row.cnCreatedOnPaidInvoice==true && (row.status=="Paid" || row.status=="Partially Paid") &&(
 					<><br/>( Credit Note Created )</>
 				)
 			}

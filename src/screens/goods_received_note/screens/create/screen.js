@@ -1925,11 +1925,9 @@ console.log(this.state.data)
 																	color="primary"
 																	className="btn-square mr-3"
 																	onClick={(e, props) => {
-																		this.openProductModal(props);
+																		this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/expense/goods-received-note/create"})
 																		}}
-																	
-																
-																>
+																	>
 																	<i className="fa fa-plus"></i>&nbsp;{strings.Addproduct}
 																</Button>
 															</Col>

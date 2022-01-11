@@ -1245,7 +1245,7 @@ discountType = (row) =>
 		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
 		formData.append('totalExciseAmount', this.state.initValue.total_excise);
-	
+		formData.append('discount',this.state.initValue.discount);
 		
 		if (term && term.value) {
 			formData.append('term', term.value);

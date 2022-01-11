@@ -577,6 +577,15 @@ debugger
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+									var { product_list } = this.props;
+									product_list=product_list.filter((obj)=>obj.id == row.productId)
+									
+									if(parseInt(e.target.value) >product_list[0].stockOnHand && product_list[0].isInventoryEnabled==true)
+									this.props.commonActions.tostifyAlert(
+										'error',
+										 `Quantity (${e.target.value}) must not be greater than stock on Hand  (${product_list[0].stockOnHand})`,
+									);
+									else
 									this.selectItem(
 										e.target.value,
 										row,
@@ -876,10 +885,14 @@ debugger
 		);
 	};
 	renderProduct = (cell, row, props) => {
-		const { product_list } = this.props;
-		let productList = product_list.length
-			? [{ id: '', name: 'Select Product' }, ...product_list]
-			: product_list;
+		var { product_list } = this.props;
+		var {data}=this.state;
+		//  productList = product_list.length
+		// 	? [{ id: '', name: 'Select Product' }, ...product_list]
+		// 	: product_list;
+			
+		var product_list1=product_list.filter((obj)=>obj.stockOnHand !=0 )
+		
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -888,6 +901,19 @@ debugger
 			return obj;
 		});
 
+		// let product_list2=[]
+		
+		// product_list1.map(function (o1) {
+		// 	 data.map(function (o2) {
+		// 		if( o1.id !== o2.productId)
+		// 		{	
+		// 			debugger
+		// 			product_list2.push(o1)
+		// 	 // return the ones with equal id.
+		// 		}
+		// });
+		// 	});
+			
 		return (
 			<Field
 				name={`lineItemsString.${idx}.productId`}
@@ -895,11 +921,11 @@ debugger
 					<Select
 						styles={customStyles}
 						options={
-							product_list
+							product_list1
 								? selectOptionsFactory.renderOptions(
 										'name',
 										'id',
-										product_list,
+										product_list1,
 										'Product',
 								  )
 								: []

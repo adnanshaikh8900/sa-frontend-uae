@@ -323,10 +323,16 @@ class CustomerInvoice extends React.Component {
 		} else {
 			classname = 'label-overdue';
 		}
-		return (
+		return (<>
 			<span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
 				{row.status}
 			</span>
+			{
+				row.cnCreatedOnPaidInvoice==true &&(
+					<><br/>( Credit Note Created )</>
+				)
+			}
+			</>
 		);
 	};
 

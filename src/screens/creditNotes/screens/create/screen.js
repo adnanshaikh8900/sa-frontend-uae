@@ -1129,7 +1129,7 @@ class CreateCreditNote extends React.Component {
 		formData.append('totalAmount', this.state.initValue.totalAmount);
 		formData.append('discount', discount);
 		
-		formData.append('totalExciseAmount', this.state.initValue.total_excise);
+		formData.append('totalExciseTaxAmount', this.state.initValue.total_excise);
 	
 		// if (term && term.value) {
 		// 	formData.append('term', term.value);

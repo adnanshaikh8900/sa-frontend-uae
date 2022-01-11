@@ -25,6 +25,7 @@ import {
 	selectOptionsFactory,
 	cryptoService,
 	selectCurrencyFactory,
+	api,
 } from 'utils';
 
 import DatePicker from 'react-datepicker';
@@ -45,6 +46,8 @@ import PhoneInput  from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
 import {data}  from '../Language/index'
 import LocalizedStrings from 'react-localization';
+import { Message } from '@material-ui/icons';
+import PasswordChecklist from "react-password-checklist"
 
 const mapStateToProps = (state) => {
 	return {
@@ -88,6 +91,7 @@ class Profile extends React.Component {
 			companyLogo: [],
 			companyLogoFile: [],
 			initUserData: {},
+			email:'',
 			initCompanyData: {
 				companyName: '',
 				companyRegistrationNumber: '',
@@ -236,6 +240,7 @@ class Profile extends React.Component {
 								email: res.data.email ? res.data.email : '',
 								password: '',
 								confirmPassword:'',
+								currentPassword:'',
 								dob: res.data.dob
 									? moment(res.data.dob, 'DD-MM-YYYY').toDate()
 									: '',
@@ -245,6 +250,7 @@ class Profile extends React.Component {
 								timezone: res.data.timeZone ? res.data.timeZone : '',
 								// companyId: res.data.companyId ? res.data.companyId : '',
 							},
+							userId: res.data.id ? res.data.id : '',
 							loading: false,
 							selectedStatus: res.data.active ? true : false,
 							userPhoto: res.data.profilePicByteArray
@@ -276,6 +282,7 @@ class Profile extends React.Component {
 			dob,
 			password,
 			confirmPassword,
+			currentPassword,
 			roleId,
 			timezone,
 		} = data;
@@ -302,7 +309,10 @@ class Profile extends React.Component {
 		if (this.state.userPhotoFile.length > 0) {
 			formData.append('profilePic', userPhotoFile[0]);
 		}
-
+		// if (currentPassword.length > 0) {
+		// 	formData.append('currentPassword ', currentPassword);
+		// }
+		
 		this.props.profileActions
 			.updateUser(formData)
 			.then((res) => {
@@ -418,6 +428,9 @@ class Profile extends React.Component {
 									? res.data.vatRegistrationDate
 									: '',
 								},
+								email: res.data.email
+										? res.data.email
+										: '',
 								companyLogo: res.data.companyLogoByteArray
 									? this.state.companyLogo.concat(res.data.companyLogoByteArray)
 									: [],
@@ -494,6 +507,37 @@ class Profile extends React.Component {
 				});
 			});
 	};
+
+	resetPassword = (email) => {
+		debugger
+		
+			let data = {
+			  method: 'post',
+			  url: '/public/forgotPassword',
+			  data: { "username": email,url:window.location.href }
+			}
+			api(data).then((res) => {
+			  this.setState({
+				alert: <Message
+				  type="success"
+				  content="We Have Sent You a Verification Email. Please Check Your Mail Box."
+				/>
+			  },() => {
+				  setTimeout(() => {
+					this.props.history.push('/login')
+				}, 1500);
+			  })
+			}).catch((err) => {
+			  this.setState({
+				alert: <Message
+				  type="danger"
+				  content="Invalid Email Address"
+				/>
+			  })
+			})
+		  }
+	
+
 	handleCompanySubmit = (data) => {
 		const {
 			companyName,
@@ -674,6 +718,36 @@ class Profile extends React.Component {
 			});
 	};
 
+	handlePasswordSubmit = (data) => {
+		const {
+			currentPassword,
+			password,
+		} = data;
+		let formData = new FormData();
+		formData.append('id', this.state.userId ? this.state.userId : '');
+		formData.append('currentPassword', currentPassword ? currentPassword : '');
+		formData.append('password', password ? password : '');
+
+		this.props.profileActions
+			.resetNewpassword(formData)
+			.then((res) => {
+				debugger
+				if (res.status === 200) {
+					this.props.history.push('/login');
+					this.props.commonActions.tostifyAlert(
+						'success',
+						'Password Updated Successfully. Please Login With New Password',
+					);
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
+	}
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const { loading, isSame, timezone ,companyTypeList} = this.state;
@@ -722,6 +796,16 @@ class Profile extends React.Component {
 												 {strings.CompanyProfile}
 											</NavLink>
 										</NavItem>
+										<NavItem>
+											<NavLink
+												active={this.state.activeTab[0] === '3'}
+												onClick={() => {
+													this.toggle(0, '3');
+												}}
+											>
+												 {strings.ResetPassword}
+											</NavLink>
+										</NavItem>
 									</Nav>
 									<TabContent activeTab={this.state.activeTab[0]}>
 										<TabPane tabId="1">
@@ -758,19 +842,19 @@ class Profile extends React.Component {
 																	timezone: Yup.string().required(
 																		'Time Zone is Required',
 																	),
-																	password: Yup.string()
-																		 .required("Password is Required")
-																		// .min(8, "Password Too Short")
-																		.matches(
-																			/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-																			'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
-																		),
-																	confirmPassword: Yup.string()
-																		 .required('Confirm Password is Required')
-																		.oneOf(
-																			[Yup.ref('password'), null],
-																			'Passwords must match',
-																		),
+																	// password: Yup.string()
+																	// 	 .required("Password is Required")
+																	// 	// .min(8, "Password Too Short")
+																	// 	.matches(
+																	// 		/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
+																	// 		'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
+																	// 	),
+																	// confirmPassword: Yup.string()
+																	// 	 .required('Confirm Password is Required')
+																	// 	.oneOf(
+																	// 		[Yup.ref('password'), null],
+																	// 		'Passwords must match',
+																	// 	),
 																	dob: Yup.string().required('DOB is Required'),
 																})}
 															>
@@ -1122,80 +1206,7 @@ class Profile extends React.Component {
                                         </FormGroup>
                                       </Col> */}
 																				</Row>
-																				<Row>
-																					<Col lg={6}>
-																						<FormGroup>
-																							<Label htmlFor="select">
-																							<span className="text-danger">
-																									*
-																							</span> {strings.Password}
-																						</Label>
-																							<Input
-																								type="password"
-																								id="password"
-																								name="password"
-																								autoComplete="new-password"
-																								placeholder={strings.Enter+strings.Password}
-																								onChange={(value) => {
-																									props.handleChange('password')(
-																										value,
-																									);
-																								}}
-																								className={
-																									props.errors.password &&
-																										props.touched.password
-																										? 'is-invalid'
-																										: ''
-																								}
-																							/>
-																							{props.errors.password &&
-																								props.touched.password ? (
-																									<div className="invalid-feedback">
-																										{props.errors.password}
-																									</div>
-																								) : (
-																									<span className="password-msg">
-																										Must Contain 8 Characters, One
-																										Uppercase, One Lowercase, One
-																										Number and one special case
-																										Character.
-																									</span>
-																								)}
-																						</FormGroup>
-																					</Col>
-																					<Col lg={6}>
-																						<FormGroup>
-																							<Label htmlFor="select">
-																							<span className="text-danger">
-																									*
-																							</span> {strings.ConfirmPassword}
-																						</Label>
-																							<Input
-																								type="password"
-																								id="confirmPassword"
-																								name="confirmPassword"
-																								placeholder={strings.Enter+strings.ConfirmPassword}
-																								onChange={(value) => {
-																									props.handleChange(
-																										'confirmPassword',
-																									)(value);
-																								}}
-																								className={
-																									props.errors.confirmPassword &&
-																										props.touched.confirmPassword
-																										? 'is-invalid'
-																										: ''
-																								}
-																							/>
-																							{props.errors.confirmPassword &&
-																								props.touched.confirmPassword && (
-																									<div className="invalid-feedback">
-																										{props.errors.confirmPassword}
-																									</div>
-																								)}
-																						</FormGroup>
-																					</Col>
-																				</Row>
+																			
 																				{/* {this.state.userId !== 1 &&
 																				(
 																				<Row>
@@ -1315,6 +1326,7 @@ class Profile extends React.Component {
 																				lg={12}
 																				className="mt-5 d-flex flex-wrap align-items-center  justify-content-end"
 																			>
+																				
 																				<FormGroup className="text-right">
 																					<Button
 																						type="submit"
@@ -3486,6 +3498,238 @@ class Profile extends React.Component {
 													</Row>
 												)}
 										</TabPane>
+										<TabPane tabId="3">{loading ? (
+												<Loader></Loader>
+											) : (
+												<Row>
+													<Col lg="12">
+													<Formik
+																// initialValues={this.state.initCompanyData}
+																onSubmit={(values, { resetForm }) => {
+																	this.handlePasswordSubmit(values);
+																	// resetForm(this.state.initValue)
+
+																	// this.setState({
+																	//   selectedContactCurrency: null,
+																	//   selectedCurrency: null,
+																	//   selectedInvoiceLanguage: null
+																	// })
+																}}
+															// validationSchema={Yup.object().shape({
+															//   firstName: Yup.()
+															//     .required("First Name is Required"),
+															//   lastName: Yup.()
+															//     .required("Last Name is Required"),
+															// })}
+															// // validationSchema={Yup.object().shape({
+															// // 	password: Yup.string()
+															// // 		 .required("Password is Required")
+															// // 		// .min(8, "Password Too Short")
+															// // 		.matches(
+															// // 			/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
+															// // 			'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
+															// // 		),
+															// // 	confirmPassword: Yup.string()
+															// // 		 .required('Confirm Password is Required')
+															// // 		.oneOf(
+															// // 			[Yup.ref('password'), null],
+															// // 			'Passwords must match',
+															// // 		),
+															// })}
+
+															>
+																{(props) => (
+																	<Form
+																		onSubmit={props.handleSubmit}
+																		encType="multipart/form-data"
+																	>
+
+																		<Row>
+																			<Col lg={10}>
+																				<Row>
+																				<Col lg={4}>
+																						<FormGroup>
+																							<Label htmlFor="select">
+																							<span className="text-danger">
+																									*
+																							</span> {strings.CurrentPassword}
+																						</Label>
+																							<Input
+																								type="password"
+																								id="currentPassword"
+																								name="currentPassword"
+																								autoComplete="current-password"
+																								placeholder={strings.Enter+strings.Password}
+																								onChange={(value) => {
+																									props.handleChange('currentPassword')(
+																										value,
+																									);
+																								}}
+																								className={
+																									props.errors.currentPassword &&
+																										props.touched.currentPassword
+																										? 'is-invalid'
+																										: ''
+																								}
+																							/>
+																							{props.errors.currentPassword &&
+																								props.touched.currentPassword ? (
+																									<div className="invalid-feedback">
+																										{props.errors.currentPassword}
+																									</div>
+																								) : (
+																									<span className="password-msg">
+																										{/* Must Contain 8 Characters, One
+																										Uppercase, One Lowercase, One
+																										Number and one special case
+																										Character. */}
+																									</span>
+																								)}
+																						</FormGroup>
+																					</Col>
+																					<Col lg={4}>
+																						<FormGroup>
+																							<Label htmlFor="select">
+																							<span className="text-danger">
+																									*
+																							</span> {strings.NewPassword}
+																						</Label>
+																							<Input
+																							onPaste={(e)=>{
+																								e.preventDefault()
+																								return false;
+																							  }} onCopy={(e)=>{
+																								e.preventDefault()
+																								return false;
+																							  }}
+																							// onselectstart="return false"
+																							// oncopy="return false"
+																							// ondrop="return false"
+																							// onpaste="return false"
+																								type="password"
+																								id="password"
+																								name="password"
+																								autoComplete="new-password"
+																								placeholder={strings.Enter+strings.Password}
+																								onChange={(value) => {
+																									props.handleChange('password')(
+																										value,
+																									);
+																								}}
+																								className={
+																									props.errors.password &&
+																										props.touched.password
+																										? 'is-invalid'
+																										: ''
+																								}
+																							/>
+																							{props.errors.password &&
+																								props.touched.password ? (
+																									<div className="invalid-feedback">
+																										{props.errors.password}
+																									</div>
+																								) : (
+																									<span className="password-msg">
+																										Must Contain 8 Characters, One
+																										Uppercase, One Lowercase, One
+																										Number and one special case
+																										Character.
+																									</span>
+																								)}
+																						</FormGroup>
+																					</Col>
+																					<Col lg={4}>
+																						<FormGroup>
+																							<Label htmlFor="select">
+																							<span className="text-danger">
+																									*
+																							</span> {strings.ConfirmPassword}
+																						</Label>
+																							<Input
+																							onPaste={(e)=>{
+																								e.preventDefault()
+																								return false;
+																							  }} onCopy={(e)=>{
+																								e.preventDefault()
+																								return false;
+																							  }}
+																							// onselectstart="return false"
+																							// oncopy="return false"
+																							// ondrop="return false"
+																							// onpaste="return false"
+																								type="password"
+																								id="confirmPassword"
+																								name="confirmPassword"
+																								placeholder={strings.Enter+strings.ConfirmPassword}
+																								onChange={(value) => {
+																									props.handleChange(
+																										'confirmPassword',
+																									)(value);
+																								}}
+																								className={
+																									props.errors.confirmPassword &&
+																										props.touched.confirmPassword
+																										? 'is-invalid'
+																										: ''
+																								}
+																							/>
+																							{props.errors.confirmPassword &&
+																								props.touched.confirmPassword && (
+																									<div className="invalid-feedback">
+																										{props.errors.confirmPassword}
+																									</div>
+																								)}
+																						</FormGroup>
+																					</Col>
+																				</Row>
+																				
+																			</Col>
+																			
+																		</Row>
+																		<Row>
+																			<Col
+																				lg={12}
+																				className="mt-5 d-flex flex-wrap align-items-center  justify-content-end"
+																			>
+																				<FormGroup className="text-right">
+																				{/* <Button
+																					color="primary"
+																					type="button"
+																					className="btn-square mr-3 submit-btn"
+																					//   disabled={isSubmitting}
+																					onClick={() => { 
+																						this.resetPassword(props.values.email) }}
+																					>
+																					{strings.ResetPassword}
+																				</Button> */}
+																					<Button
+																						type="submit"
+																						color="primary"
+																						className="btn-square mr-3"
+																					>
+																						<i className="fa fa-dot-circle-o"></i>{' '}
+																					 {strings.Update}
+																				</Button>
+																					<Button
+																						color="secondary"
+																						className="btn-square"
+																						onClick={() => {
+																							this.props.history.push(
+																								'/admin/dashboard',
+																							);
+																						}}
+																					>
+																						<i className="fa fa-ban"></i> {strings.Cancel}
+																				</Button>
+																				</FormGroup>
+																			</Col>
+																		</Row>
+																	</Form>
+																)}
+															</Formik>
+												</Col>
+											</Row>
+											)}</TabPane>
 									</TabContent>
 								</CardBody>
 							</Card>

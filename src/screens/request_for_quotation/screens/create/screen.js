@@ -1819,13 +1819,12 @@ class CreateRequestForQuotation extends React.Component {
 																	color="primary"
 																	className= "btn-square mr-3"
 																	onClick={(e, props) => {
-																		this.openProductModal(props);
+																		this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/expense/request-for-quotation/create"})
 																		}}
-																	
 																>
 																	<i className="fa fa-plus"></i> {strings.Addproduct} 
 																</Button>
-															</Col>
+													           </Col>
 														
 																				</Row>
 														<Row>

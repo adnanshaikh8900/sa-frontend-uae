@@ -2307,12 +2307,12 @@ class CreateSupplierInvoice extends React.Component {
 																	color="primary"
 																	className= "btn-square "
 																	onClick={(e, props) => {
-																		this.openProductModal(props);
+																		this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/expense/supplier-invoice/create"})
 																		}}
 																>
 																	<i className="fa fa-plus"></i> {strings.Addproduct} 
 																</Button>
-															</Col>
+																</Col>
 
 															
 																				</Row>

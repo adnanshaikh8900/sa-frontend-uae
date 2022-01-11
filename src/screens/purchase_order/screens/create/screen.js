@@ -2052,16 +2052,13 @@ getrfqDetails = (e, row, props,form,field) => {
 																	color="primary"
 																	className= "btn-square mr-3"
 																	onClick={(e, props) => {
-																		this.openProductModal(props);
+																		this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/expense/purchase-order/create"})
 																		}}
-																	
-																	
 																>
 																	<i className="fa fa-plus"></i> {strings.Addproduct}
 																</Button>
-															</Col>
-															
-																				</Row>
+								                                </Col>
+																</Row>
 													
 														<Row>
 															<Col lg={12}>

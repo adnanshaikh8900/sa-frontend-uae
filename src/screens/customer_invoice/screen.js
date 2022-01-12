@@ -1401,6 +1401,7 @@ class CustomerInvoice extends React.Component {
 					openModal={this.state.openModal}
 					closeModal={(e) => {
 						this.closeModal(e);
+						this.initializeData();
 					}}
 				updateParentAmount={
 					(e,e1) => {

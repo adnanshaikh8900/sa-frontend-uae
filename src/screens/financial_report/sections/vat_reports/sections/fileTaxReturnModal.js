@@ -327,14 +327,14 @@ dateLimit=()=>{
 																	type="text"
 																	name="taxAgencyNumber"
 																	id="taxAgencyNumber"
-																	maxLength={10}
+																	maxLength="8"
 																	autoComplete='off'
 																	placeholder={"Enter Tax Agency Number (TAN)"}
 																	onChange={(option) =>
 																		{
 																		if (option.target.value === '' ||
-																				this.regExBoth.test(option.target.value)
-																			) {
+																				this.regEx.test(option.target.value)
+																			) {																				
 																				props.handleChange('taxAgencyNumber')(option)
 																			}
 																		}
@@ -357,19 +357,19 @@ dateLimit=()=>{
 																	type="text"
 																	name="taxAgentApprovalNumber"
 																	id="taxAgentApprovalNumber"
-																	maxLength={8}
-																	placeholder={"Enter Agenct Approval Number"}
+																	maxLength="8"
+																	placeholder={"Enter Agent Approval Number"}
 															
 																	onChange={(option) => {
 																		
 																		if (
 																			option.target.value === '' ||
-																			this.regExTelephone.test(option.target.value)
+																			this.regEx.test(option.target.value)
 																		) {
 																			props.handleChange('taxAgentApprovalNumber')(option);
 																		}
 																	}}
-																	defaultValue={props.values.taxAgentApprovalNumber}
+																	value={props.values.taxAgentApprovalNumber}
 																/>
 																{props.errors.taxAgentApprovalNumber &&												
 																		(

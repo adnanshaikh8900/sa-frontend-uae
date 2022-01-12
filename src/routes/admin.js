@@ -194,7 +194,10 @@ import {
 	UpdatePayroll,
 	Migrate,
 	MigrateHistory,
-	SOAReport
+	SOAReport,
+	FtaAuditReport,
+	GenerateAuditFile,
+	ViewFtaAuditReport
 } from 'screens';
 
 const adminRoutes = [
@@ -763,6 +766,21 @@ const adminRoutes = [
 		path: '/admin/report/trailbalances',
 		name: 'TrialBalance',
 		component: TrailBalances.screen,
+	},
+	{
+		path: '/admin/report/ftaAuditReports',
+		name: 'FTA Reports',
+		component: FtaAuditReport.screen,
+	},		
+	{
+		path: '/admin/report/ftaAuditReports/generateftaAuditReport',
+		name: 'Generate FTA Report',
+		component: GenerateAuditFile.screen,
+	},	
+	{
+		path: '/admin/report/ftaAuditReports/view',
+		name: 'View FTA Report',
+		component: ViewFtaAuditReport.screen,
 	},
 	{
 		path: '/admin/report/vatreports/view',

@@ -51,7 +51,7 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 
-class FtaAuditReport extends React.Component {
+class ViewFtaAuditReport extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -61,8 +61,8 @@ class FtaAuditReport extends React.Component {
 			FtaAuditData: [],
 			view: false,
 			initValue: {
-				startDate: moment().startOf('month').format('DD/MM/YYYY'),
-				endDate: moment().endOf('month').format('DD/MM/YYYY'),
+				startDate:this.props.location.state.startDate,
+				endDate: this.props.location.state.endDate,
 				companyId: 1,
 				userId: 1,
 			},
@@ -211,7 +211,13 @@ class FtaAuditReport extends React.Component {
 				this.setState({ loading: false });
 			});
 	};
-
+	renderDate = (cell, row) => {
+		
+		return cell ? moment(cell)
+			.format('DD/MM/YYYY') 
+			// .format('LL')
+			: '-';
+	};
 	exportFile = () => {
 
 	
@@ -222,7 +228,7 @@ class FtaAuditReport extends React.Component {
 		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
 		return dl ?
 		  XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
-		  XLSX.writeFile(wb, fn || ('FTA AUDIT REPORT.'+ (type || 'csv')));
+		  XLSX.writeFile(wb, fn || ('FTA AUDIT REPORT'+this.state.startDate+"-"+this.state.endDate+'.'+ (type || 'csv')));
 
 	   }
 
@@ -234,7 +240,7 @@ class FtaAuditReport extends React.Component {
 		   var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
 		   return dl ?
 			 XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
-			 XLSX.writeFile(wb, fn || ('FTA AUDIT REPORT.'+ (type || 'xlsx')));
+			 XLSX.writeFile(wb, fn || ('FTA AUDIT REPORT'+this.state.startDate+"-"+this.state.endDate+'.'+ (type || 'xlsx')));
    
 	   }
 
@@ -283,9 +289,10 @@ class FtaAuditReport extends React.Component {
 														fontSize: '1rem',
 														paddingLeft: '15px',
 													}}
-													onClick={this.viewFilter}
+													// onClick={this.viewFilter}
 												>
-													<i className="fa fa-cog mr-2"></i>CustomizeReport
+												<i className="fa fa-cog mr-2"></i> FTA Audit Report From  <b>{ this.state.initValue.startDate +"  to  "+this.state.initValue.endDate }</b>
+													{/* <i className="fa fa-cog mr-2"></i>CustomizeReport */}
 												</p>
 											</div>
 											<div className="d-flex">
@@ -315,9 +322,9 @@ class FtaAuditReport extends React.Component {
 														     onClick={()=>{this.exportExcelFile()}}
 															>Excel</span>
 														</DropdownItem>
-														<DropdownItem onClick={this.exportPDFWithComponent}>
+														{/* <DropdownItem onClick={this.exportPDFWithComponent}>
 															Pdf
-														</DropdownItem>
+														</DropdownItem> */}
 														
 													</DropdownMenu>
 												</Dropdown>
@@ -335,7 +342,7 @@ class FtaAuditReport extends React.Component {
 												<div
 													className="mr-2 print-btn-cont"
                                                     onClick={() => {
-                                                        this.props.history.push('/admin/report/reports-page');
+                                                        this.props.history.push('/admin/report/ftaAuditReports');
                                                     }}
 													style={{
 														cursor: 'pointer',
@@ -369,7 +376,7 @@ class FtaAuditReport extends React.Component {
 													</td>
 												</tr>
 												<thead>
-													<tr className="header-row">
+													<tr className="header-row" style={{color:"black"}}>
 														{this.columnHeaderCompany.map((column, index) => {
 															return (
 																<th
@@ -409,13 +416,16 @@ class FtaAuditReport extends React.Component {
 																						{this.state.FtaAuditData.taxAgencyAgentNumber}
 																					</td>
 																					<td style={{ width: '13%', textAlign: 'center'}}>
-																						{this.state.FtaAuditData.startDate}
+																						
+																						{this.renderDate(this.state.FtaAuditData.startDate,'')}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'center'}}>
-																						{this.state.FtaAuditData.endDate}
+																					
+																						{this.renderDate(this.state.FtaAuditData.endDate,'')}
 																					</td>
 																					<td style={{ width: '18%', textAlign: 'center'}}>
-																						{this.state.FtaAuditData.creationDate}
+																				
+																						{this.renderDate(this.state.FtaAuditData.creationDate,'')}
 																					</td>
 																					<td style={{ width: '13%', textAlign: 'center'}}>
 																						{this.state.FtaAuditData.productVersion}
@@ -432,11 +442,11 @@ class FtaAuditReport extends React.Component {
 												<Table>
 												<tr>
 													<td>
-													Costumer Data Audit File
+													Customer Data Audit File
 													</td>
 												</tr>
 												<thead>
-													<tr className="header-row">
+													<tr className="header-row" style={{color:"black"}}>
 														{this.columnHeaderCustomer.map((column, index) => {
 															return (
 																<th
@@ -487,7 +497,7 @@ class FtaAuditReport extends React.Component {
 													</td>
 												</tr>
 												<thead>
-													<tr className="header-row">
+													<tr className="header-row" style={{color:"black"}}>
 														{this.columnHeaderSupplier.map((column, index) => {
 															return (
 																<th
@@ -537,7 +547,7 @@ class FtaAuditReport extends React.Component {
 													</td>
 												</tr>
 												<thead>
-													<tr className="header-row">
+													<tr className="header-row" style={{color:"black"}}>
 														{this.columnHeaderSupply.map((column, index) => {
 															return (
 																<th
@@ -568,7 +578,7 @@ class FtaAuditReport extends React.Component {
 																						{item['customerTRN']}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'center'}}>
-																						{item['invoiceDate']}
+																						{this.renderDate(item['invoiceDate'],item)}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'center'}}>
 																						{item['invoiceNo']}
@@ -628,7 +638,7 @@ class FtaAuditReport extends React.Component {
 													</td>
 												</tr>
 												<thead>
-													<tr className="header-row">
+													<tr className="header-row" style={{color:"black"}}>
 														{this.columnHeaderCustomerTotal.map((column, index) => {
 															return (
 																<th
@@ -674,7 +684,7 @@ class FtaAuditReport extends React.Component {
 													</td>
 												</tr>
 												<thead>
-													<tr className="header-row">
+													<tr className="header-row" style={{color:"black"}}>
 														{this.columnHeaderPurchase.map((column, index) => {
 															return (
 																<th
@@ -705,7 +715,7 @@ class FtaAuditReport extends React.Component {
 																						{item['supplierTRN']}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'center'}}>
-																						{item['invoiceDate']}
+																					{this.renderDate(item['invoiceDate'],item)}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'center'}}>
 																						{item['invoiceNo']}
@@ -765,7 +775,7 @@ class FtaAuditReport extends React.Component {
 													</td>
 												</tr>
 												<thead>
-													<tr className="header-row">
+													<tr className="header-row" style={{color:"black"}}>
 														{this.columnHeaderSupplierTotal.map((column, index) => {
 															return (
 																<th
@@ -810,7 +820,7 @@ class FtaAuditReport extends React.Component {
 													</td>
 												</tr>
 												<thead>
-													<tr className="header-row">
+													<tr className="header-row" style={{color:"black"}}>
 														{this.columnHeaderGenral.map((column, index) => {
 															return (
 																<th
@@ -832,7 +842,8 @@ class FtaAuditReport extends React.Component {
 																		
 																				<tr key={index}>
 																				<td style={{ width: '12%', textAlign: 'center'}}>
-																						{item['transactionDate']}
+																						
+																						{this.renderDate(item['transactionDate'],item)}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'center'}}>
 																						{item['accountID']}
@@ -880,7 +891,7 @@ class FtaAuditReport extends React.Component {
 													</td>
 												</tr>
 												<thead>
-													<tr className="header-row">
+													<tr className="header-row" style={{color:"black"}}>
 														{this.columnHeaderGeneralTotal.map((column, index) => {
 															return (
 																<th
@@ -934,4 +945,4 @@ class FtaAuditReport extends React.Component {
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps,
-)(FtaAuditReport);
+)(ViewFtaAuditReport);

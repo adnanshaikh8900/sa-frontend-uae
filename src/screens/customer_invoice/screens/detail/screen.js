@@ -243,9 +243,7 @@ class DetailCustomerInvoice extends React.Component {
 										: [],
 									discount: res.data.discount ? res.data.discount : 0,
 									
-									discountType: res.data.discountType
-										? res.data.discountType
-										: '',
+								
 									term: res.data.term ? res.data.term : '',
 									placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 									fileName: res.data.fileName ? res.data.fileName : '',
@@ -401,7 +399,7 @@ debugger
 
        return (
            <Field
-               // name={`lineItemsString.${idx}.vatCategoryId`}
+              name={`lineItemsString.${idx}.discountType`}
                render={({ field, form }) => (
                <div>
                <div  class="input-group">
@@ -455,7 +453,7 @@ debugger
                                                                                            value={
                                                                                                discountOptions &&
                                                                                                selectOptionsFactory
-                                                                                                   .renderOptions('label', 'value', discountOptions, 'discount')
+                                                                                                   .renderOptions('value', 'label', discountOptions, 'discount')
                                                                                                    .find((option) => option.value === +row.discountType)
                                                                                            }
                                                                                            // onChange={(item) => {
@@ -1218,6 +1216,7 @@ debugger
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
 		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
+		formData.append('discount',this.state.initValue.discount);
 	
 		formData.append('totalExciseAmount', this.state.initValue.total_excise);
 		formData.append('exciseType', this.state.checked);

@@ -377,13 +377,10 @@ class Register extends React.Component {
 																	<Row className="mt-2">
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
-																				<Label htmlFor="companyName">
-
-																					Company Name
-																				</Label>
+																			<Label htmlFor="select"><span className="text-danger">* </span>Company Name</Label>
 																				<Input
 																					type="text"
-																					maxLength="50"
+																					maxLength="100"
 																					id="companyName"
 																					name="companyName"
 																					placeholder="Enter Company Name"
@@ -411,10 +408,11 @@ class Register extends React.Component {
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="currencyCode">
-
+																				
 																					Currency
 																				</Label>
 																				<Select
+																				isDisabled
 																					styles={customStyles}
 																					id="currencyCode"
 																					name="currencyCode"
@@ -472,8 +470,8 @@ class Register extends React.Component {
 																		<Col lg={4}>
 																						<FormGroup>
 																							<Label htmlFor="companyId">
-																							{/* <span className="text-danger">*</span> */}
-																								 Company /Business Type
+																							<span className="text-danger">* </span>
+																								 Company / Business Type
 																						</Label>
 																							<Select
 																								options={
@@ -509,6 +507,7 @@ class Register extends React.Component {
 																								placeholder={strings.Enter+strings.CompanyName}
 																								id="companyTypeCode"
 																								name="companyTypeCode"
+																								placeholder="Enter Buisness Type"
 																								className={
 																									props.errors.companyTypeCode &&
 																										props.touched.companyTypeCode
@@ -529,10 +528,7 @@ class Register extends React.Component {
 																	<Row className="row-wrapper">
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
-																				<Label htmlFor="companyAddress1">
-
-																				Company Address Line1
-																				</Label>
+																			<Label htmlFor="select"><span className="text-danger">* </span>Company Address 1</Label>
 																				<Input
 																					type="text"
 																					maxLength="100"
@@ -702,7 +698,7 @@ class Register extends React.Component {
 															<Col lg={4}>
 																<FormGroup>
 																	{/* <Label htmlFor="stateId"> {props.values.countryId.value === 229 ? "Emirates" : "State/Provinces"}</Label> */}
-																	<Label htmlFor="stateId"> Emirates</Label>
+																	<Label htmlFor="select"><span className="text-danger">* </span>Emirates</Label>
 																	<Select
 																		styles={customStyles}
 																		options={
@@ -926,7 +922,7 @@ class Register extends React.Component {
 															</Row>
 															<hr />
 																<div>
-																	<h4>User Details</h4>
+																	<h4>Super Admin</h4>
 																	</div>
 														
 																		<Row>
@@ -938,7 +934,7 @@ class Register extends React.Component {
 																				</Label>
 																				<Input
 																					type="text"
-																					maxLength="50"
+																					maxLength="100"
 																					id="firstName"
 																					name="firstName"
 																					placeholder="Enter First Name"
@@ -971,7 +967,7 @@ class Register extends React.Component {
 																				</Label>
 																				<Input
 																					type="text"
-																					maxLength="50"
+																					maxLength="100"
 																					id="lastName"
 																					name="lastName"
 																					placeholder="Enter Last Name"
@@ -1004,6 +1000,7 @@ class Register extends React.Component {
 																				</Label>
 																				<Input
 																					type="text"
+																					maxLength="80"
 																					id="email"
 																					name="email"
 																					placeholder="Enter Email Address"

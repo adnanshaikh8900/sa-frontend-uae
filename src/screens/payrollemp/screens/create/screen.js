@@ -216,8 +216,8 @@ class CreateEmployeePayroll extends React.Component {
         this.regExBoth = /[a-zA-Z0-9]+$/;
         this.regExAlpha = /^[a-zA-Z ]+$/;
         this.regExAddress = /^[a-zA-Z0-9\s\D,'-/ ]+$/;
-        this.regExQualification = /^[a-zA-Z,'-/ ]+$/;
-        this.regExQualificationYear = /^[0-9,'-/ ]+$/;
+        this.regExQualification = /^[a-zA-Z,-/]+$/;
+        this.regExQualificationYear = /^[0-9,'-]+$/;
 
         this.gender = [
             { label: 'Male', value: 'Male' },
@@ -1974,9 +1974,11 @@ existForAccountNumber = (value) => {
                                                                                                         maxLength="100"
                                                                                                         id="university"
                                                                                                         name="university"
-                                                                                                        placeholder={strings.Enter+strings.University}
-                                                                                                        onChange={(value) => { props.handleChange("university")(value) }}
                                                                                                         value={props.values.university}
+                                                                                                        placeholder={strings.Enter+strings.University}
+                                                                                                        onChange={(option) => {
+                                                                                                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('university')(option) }
+                                                                                                          } }
                                                                                                         className={
                                                                                                             props.errors.university && props.touched.university
                                                                                                                 ? "is-invalid"

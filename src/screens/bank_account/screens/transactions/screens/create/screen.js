@@ -822,7 +822,7 @@ class CreateBankTransaction extends React.Component {
 																		maxDate={new Date()}
 																		showMonthDropdown
 																		showYearDropdown
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		dropdownMode="select"
 																		value={props.values.transactionDate}
 																		selected={props.values.transactionDate}

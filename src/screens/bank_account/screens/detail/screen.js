@@ -162,7 +162,7 @@ class DetailBankAccount extends React.Component {
 									account_is_for: res.personalCorporateAccountInd
 										? res.personalCorporateAccountInd
 										: '',
-									openingDate: moment(res.openingDate).format('DD/MM/YYYY'),
+									openingDate: moment(res.openingDate).format('DD-MM-YYYY'),
 								},
 							});
 						})
@@ -575,7 +575,7 @@ class DetailBankAccount extends React.Component {
 																	showYearDropdown
 																	disabled={this.state.disabledDate}
 																	dropdownMode="select"
-																	dateFormat="dd/MM/yyyy"
+																	dateFormat="dd-MM-yyyy"
 																	 //maxDate={new Date()}
 																	// onChange={(value) => {
 																	
@@ -584,7 +584,7 @@ class DetailBankAccount extends React.Component {
 
 																	onChange={(value) => {
 																		props.handleChange('openingDate')(
-																			moment(value).format('DD/MM/YYYY'),
+																			moment(value).format('DD-M-/YYYY'),
 																		);
 																	
 																	}}

@@ -246,8 +246,6 @@ class CreateEmployment extends React.Component {
                        <Row>
                          
                            <Col lg={10}>
-                      
-                          
                             <Row  >
                             <Col md="4">
                                 <FormGroup>
@@ -293,7 +291,7 @@ class CreateEmployment extends React.Component {
                                 </FormGroup>
                               </Col>
                             </Row>
-                     
+
                             <Row className="row-wrapper">
                             <Col md="4">
                                 <FormGroup>
@@ -323,7 +321,7 @@ class CreateEmployment extends React.Component {
                                     id="labourCard"
                                     name="labourCard"
                                     value={props.values.labourCard}
-                                    placeholder="Enter labour Card"
+                                    placeholder="Enter Labour Card"
                                     onChange={(option) => {
                                       if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('labourCard')(option) }
                                     }}

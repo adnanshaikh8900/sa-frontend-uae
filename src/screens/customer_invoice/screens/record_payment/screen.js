@@ -715,7 +715,7 @@ class RecordCustomerPayment extends React.Component {
 																				</Label>
 																				<Input
 																					type="text"
-																					maxLength="50"
+																					maxLength="100"
 																					id="referenceCode"
 																					name="referenceCode"
 																					placeholder={strings.Enter+strings.ReceiptNumber}

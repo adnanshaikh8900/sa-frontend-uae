@@ -1169,7 +1169,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                 <Label htmlFor="state"><span className="text-danger">* </span>{strings.City} </Label>
                                                                                 <Input
                                                                                                         type="text"
-                                                                                                        maxLength="20"
+                                                                                                        maxLength="100"
                                                                                                         id="city"
                                                                                                         name="city"
                                                                                                         value={props.values.city}

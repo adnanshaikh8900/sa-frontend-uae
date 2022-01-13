@@ -284,26 +284,26 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                   
                                                                     <Row  >
                                                                     <Col md="4">
-                                                                                                <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">* </span> {strings.EmployeeCode}  </Label>
-                                                                                                    <Input
-                                                                                                        type="text"
-                                                                                                        maxLength="50"
-                                                                                                        id="employeeCode"
-                                                                                                        name="employeeCode"
-                                                                                                        value={props.values.employeeCode}
-                                                                                                        placeholder={strings.Enter+strings.EmployeeCode}
-                                                                                                        onChange={(value) => {
-                                                                                                            props.handleChange('employeeCode')(value);
-                                                                                                            this.employeeValidationCheck(value.target.value);
-                                                                                                        }}
-                                                                                                        className={props.errors.employeeCode && props.touched.employeeCode ? "is-invalid" : ""}
-                                                                                                    />
-                                                                                                    {props.errors.employeeCode && props.touched.employeeCode && (
-                                                                                                        <div className="invalid-feedback">{props.errors.employeeCode}</div>
-                                                                                                    )}
-                                                                                                </FormGroup>
-                                                                                            </Col>
+                                                                        <FormGroup>
+                                                                        <Label htmlFor="select"><span className="text-danger">* </span> {strings.EmployeeCode}  </Label>
+                                                                        <Input
+                                                                            type="text"
+                                                                            maxLength="50"
+                                                                            id="employeeCode"
+                                                                            name="employeeCode"
+                                                                            value={props.values.employeeCode}
+                                                                            placeholder={strings.Enter+strings.EmployeeCode}
+                                                                            onChange={(value) => {
+                                                                                props.handleChange('employeeCode')(value);
+                                                                                this.employeeValidationCheck(value.target.value);
+                                                                                }}
+                                                                            className={props.errors.employeeCode && props.touched.employeeCode ? "is-invalid" : ""}
+                                                                            />
+                                                                            {props.errors.employeeCode && props.touched.employeeCode && (
+                                                                        <div className="invalid-feedback">{props.errors.employeeCode}</div>
+                                                                        )}
+                                                                        </FormGroup>
+                                                                        </Col>
 
                                                                         <Col md="4">
                                                                             <FormGroup className="mb-3">
@@ -362,6 +362,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                 <Label htmlFor="select"> {strings.Department} </Label>
                                                                                 <Input
                                                                                     type="text"
+                                                                                    maxLength="100"
                                                                                     id="department"
                                                                                     name="department"
                                                                                     value={props.values.department}

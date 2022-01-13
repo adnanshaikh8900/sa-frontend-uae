@@ -136,7 +136,7 @@ class ResetPassword extends React.Component {
                                   <Col lg="12">
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="username">
-                                        <span className="text-danger">*</span><b>Email Address</b>
+                                        <span className="text-danger">*</span> <b>Email Address</b>
                                      </Label>
                                       <Input
                                         type="text"

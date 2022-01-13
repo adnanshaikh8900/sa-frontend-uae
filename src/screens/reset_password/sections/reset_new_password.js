@@ -147,6 +147,8 @@ class ResetNewPassword extends React.Component {
 																							? 'text'
 																							: 'password'
 																					}
+                                          minLength={8}
+                                          maxLength={16}
 																					id="password"
 																					name="password"
 																					placeholder=" Enter Password"
@@ -200,6 +202,8 @@ class ResetNewPassword extends React.Component {
                                         e.preventDefault()
                                         return false;
                                         }}
+                                        minLength={8}
+                                        maxLength={16}
 																				type="password"
 																				id="confirmPassword"
 																				name="confirmPassword"

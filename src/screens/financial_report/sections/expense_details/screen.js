@@ -58,8 +58,8 @@ class ExpenseDetailsReport extends React.Component {
 			expenseDetailsList: {},
 			view: false,
 			initValue: {
-				startDate: moment().startOf('month').format('DD/MM/YYYY'),
-				endDate: moment().endOf('month').format('DD/MM/YYYY'),
+				startDate: moment().startOf('month').format('DD-MM-YYYY'),
+				endDate: moment().endOf('month').format('DD-MM-YYYY'),
 			},
 			csvData: [],
 			activePage: 1,
@@ -170,8 +170,8 @@ class ExpenseDetailsReport extends React.Component {
 		this.setState(
 			{
 				initValue: {
-					startDate: moment(value.startDate).format('DD/MM/YYYY'),
-					endDate: moment(value.endDate).format('DD/MM/YYYY'),
+					startDate: moment(value.startDate).format('DD-MM-YYYY'),
+					endDate: moment(value.endDate).format('DD-MM-YYYY'),
 				},
 				loading: true,
 				view: !this.state.view,
@@ -198,10 +198,10 @@ class ExpenseDetailsReport extends React.Component {
 					nameB = b[`${column}`] ? b[`${column}`].toUpperCase() : '';
 				} else {
 					nameA = a[`${column}`]
-						? moment(a[`${column}`], 'DD/MM/YYYY').toDate()
+						? moment(a[`${column}`], 'DD-MM-YYYY').toDate()
 						: '';
 					nameB = b[`${column}`]
-						? moment(b[`${column}`], 'DD/MM/YYYY').toDate()
+						? moment(b[`${column}`], 'DD-MM-YYYY').toDate()
 						: '';
 				}
 				if (nameA < nameB) {
@@ -523,7 +523,7 @@ class ExpenseDetailsReport extends React.Component {
 																<tr key={index}>
 
 																	<td style={{ textAlign: 'center' }}>{item.expenseDate ? (
-																		moment(item.expenseDate).format('DD/MM/YYYY')
+																		moment(item.expenseDate).format('DD-MM-YYYY')
 																	) : (" ")}</td>
 																	<td style={{ textAlign: 'center' }}>{item.transactionCategoryName}</td>
 																	<td style={{ textAlign: 'center' }}>{item.status}</td>

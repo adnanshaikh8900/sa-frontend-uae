@@ -70,8 +70,8 @@ class HorizontalBalanceSheet extends React.Component {
 			dropdownOpen: false,
 			view: false,
 			initValue: {
-				startDate: moment().startOf('month').format('DD/MM/YYYY'),
-				endDate: moment().endOf('month').format('DD/MM/YYYY'),
+				startDate: moment().startOf('month').format('DD-MM-YYYY'),
+				endDate: moment().endOf('month').format('DD-MM-YYYY'),
 				reportBasis: 'ACCRUAL',
 				chartOfAccountId: '',
 			},
@@ -123,7 +123,7 @@ class HorizontalBalanceSheet extends React.Component {
 		this.setState(
 			{
 				initValue: {
-					endDate: moment(value.endDate).format('DD/MM/YYYY'),
+					endDate: moment(value.endDate).format('DD-MM-YYYY'),
 				},
 				loading: true,
 				view: !this.state.view,

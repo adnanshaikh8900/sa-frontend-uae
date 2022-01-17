@@ -1006,7 +1006,7 @@ class CreditNotes extends React.Component {
 													autoComplete="off"
 													showMonthDropdown
 													showYearDropdown
-													dateFormat="dd/MM/yyyy"
+													dateFormat="dd-MM-yyyy"
 													dropdownMode="select"
 													value={filterData.invoiceDate}
 													onChange={(value) => {

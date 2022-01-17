@@ -146,11 +146,11 @@ class Refund extends React.Component {
 						id: this.props.location.state.id.id,
 						date: moment(
 							this.props.location.state.id.invoiceDate,
-							'DD/MM/YYYY',
+							'DD-MM-YYYY',
 						).toDate(),
 						dueDate: moment(
 							this.props.location.state.id.invoiceDueDate,
-							'DD/MM/YYYY',
+							'DD-MM-YYYY',
 						).toDate(),
 						paidAmount: this.props.location.state.id.invoiceAmount,
 						dueAmount: this.props.location.state.id.dueAmount,
@@ -289,7 +289,7 @@ class Refund extends React.Component {
 		formData.append(
 			'receiptDate',
 			typeof receiptDate === 'string'
-				? moment(receiptDate, 'DD/MM/YYYY').toDate()
+				? moment(receiptDate, 'DD-MM-YYYY').toDate()
 				: receiptDate,
 		);
 		formData.append(
@@ -619,7 +619,7 @@ class Refund extends React.Component {
 																			placeholderText={strings.PaymentDate}
 																			showMonthDropdown
 																			showYearDropdown
-																			dateFormat="dd/MM/yyyy"
+																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			value={props.values.receiptDate}
 																			selected={props.values.receiptDate}

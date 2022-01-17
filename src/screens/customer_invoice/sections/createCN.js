@@ -923,6 +923,7 @@ class CreateCreditNoteModal extends React.Component {
 		formData.append('type', 7);
 		formData.append('lineItemsString', JSON.stringify(this.state.selectedData.invoiceLineItems));
 		formData.append('totalAmount', this.state.totalAmount );
+		formData.append('discount', this.state.selectedData.discount ?this.state.selectedData.discount:0 );
         formData.append('totalVatAmount',this.state.totalVatAmount );
 	   	// formData.append('discount', discount);
 		// if (discountType && discountType.value) {
@@ -1544,7 +1545,23 @@ class CreateCreditNoteModal extends React.Component {
 																</Col>
 																	<Col lg={4}>
 																		<div className="">
-																		
+																		<div className="total-item p-2">
+																				<Row>
+																					<Col lg={6}>
+																						<h5 className="mb-0 text-right">
+																						Discount
+																						</h5>
+																					</Col>
+																					<Col lg={6} className="text-right">
+																						<label className="mb-0">
+																					
+																								{this.state.selectedData.currencyIsoCode}  &nbsp;
+																								{this.state.selectedData.discount ? this.state.selectedData.discount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 }):"0"}
+																							
+																						</label>
+																					</Col>
+																				</Row>
+																			</div>
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>

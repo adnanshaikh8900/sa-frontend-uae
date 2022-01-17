@@ -1143,7 +1143,7 @@ if (invoiceNumber && invoiceNumber.value) {
 				formData.append('lineItemsString', JSON.stringify(this.state.data));
 				formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
 				formData.append('totalAmount', this.state.initValue.totalAmount);
-				formData.append('discount', discount);
+				formData.append('discount', this.state.initValue.discount);
 				
 				formData.append('totalExciseTaxAmount', this.state.initValue.total_excise);
 		}
@@ -1464,7 +1464,8 @@ if (invoiceNumber && invoiceNumber.value) {
 						...{
 							totalVatAmount: response.data.totalVatAmount,
 							totalAmount: response.data.totalAmount,
-							total_net: response.data.totalAmount -response.data.totalVatAmount 
+							total_net: response.data.totalAmount -response.data.totalVatAmount ,
+							discount:response.data.discount,
 						},
 					},
 	
@@ -2753,6 +2754,23 @@ min="0"
 																				</Col>
 																			</Row> */}
 																		</div>
+																			<div className="total-item p-2">
+																			<Row>
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																						 {strings.Discount}
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																					<label className="mb-0">
+																				
+																						{this.state.customer_currency_symbol} &nbsp;
+																							{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					
+																					</label>
+																				</Col>
+																			</Row>
+																		</div>
 																		<div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>
@@ -2799,23 +2817,7 @@ min="0"
 																				</Col>
 																			</Row>
 																		</div>
-																		{/* <div className="total-item p-2">
-																			<Row>
-																				<Col lg={6}>
-																					<h5 className="mb-0 text-right">
-																						 {strings.Discount}
-																					</h5>
-																				</Col>
-																				<Col lg={6} className="text-right">
-																					<label className="mb-0">
-																				
-																						{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																					
-																					</label>
-																				</Col>
-																			</Row>
-																		</div> */}
+																	
 																		<div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>

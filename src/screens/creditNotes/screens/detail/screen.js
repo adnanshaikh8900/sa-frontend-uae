@@ -976,6 +976,7 @@ class DetailCreditNote extends React.Component {
 			// exchangeRate,
 			invoice_number,
 			notes,
+			creditAmount,
 			discount,
 			discountType,
 			discountPercentage,
@@ -1016,11 +1017,18 @@ class DetailCreditNote extends React.Component {
 			receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',
 		);
 		formData.append('notes', notes !== null ? notes : '');
-		formData.append('lineItemsString', JSON.stringify(this.state.data));
-		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
-		formData.append('totalAmount', this.state.initValue.totalAmount);
-		formData.append('totalExciseTaxAmount', this.state.initValue.total_excise);
-		formData.append('exciseType', this.state.checked);
+
+		
+		formData.append('isCreatedWithoutInvoice', this.props.location.state.isCNWithoutProduct==true ?true:false);
+		if(this.props.location.state.isCNWithoutProduct==true)
+		formData.append('totalAmount', creditAmount);
+		else
+		{
+			formData.append('lineItemsString', JSON.stringify(this.state.data));
+			formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
+			formData.append('totalAmount', this.state.initValue.totalAmount);		
+		formData.append('totalExciseTaxAmount', this.state.initValue.total_excise);}
+		// formData.append('exciseType', this.state.checked);
 		// formData.append('discount', discount);
 		// formData.append('discountType', discountType);
 		// formData.append('term', term);
@@ -2372,6 +2380,23 @@ min="0"
 																					</Col>
 																				</Row>
 																			</div> */}
+																				<div className="total-item p-2">
+																			<Row>
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																						 {strings.Discount}
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																					<label className="mb-0">
+																				
+																						{this.state.customer_currency_symbol} &nbsp;
+																							{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					
+																					</label>
+																				</Col>
+																			</Row>
+																		</div>
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>

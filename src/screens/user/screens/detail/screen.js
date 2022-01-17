@@ -578,7 +578,7 @@ class DetailUser extends React.Component {
 																					name="dob "
 																					showMonthDropdown
 																					showYearDropdown
-																					dateFormat="dd/MM/yyyy"
+																					dateFormat="dd-MM-yyyy"
 																					dropdownMode="select"
 																					maxDate={new Date()}
 																					autoComplete="off"

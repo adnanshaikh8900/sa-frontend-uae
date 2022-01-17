@@ -333,7 +333,7 @@ class FtaAuditReport extends React.Component {
 	renderDate = (cell, row) => {
 		
 		return cell ? moment(cell)
-			.format('DD/MM/YYYY') 
+			.format('DD-MM-YYYY') 
 			// .format('LL')
 			: '-';
 	};

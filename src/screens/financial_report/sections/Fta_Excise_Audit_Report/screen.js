@@ -61,8 +61,8 @@ class FtaExciseAuditReport extends React.Component {
 			FtaExciseAuditData: [],
 			view: false,
 			initValue: {
-				startDate: moment().startOf('month').format('DD/MM/YYYY'),
-				endDate: moment().endOf('month').format('DD/MM/YYYY'),
+				startDate: moment().startOf('month').format('DD-MM-YYYY'),
+				endDate: moment().endOf('month').format('DD-MM-YYYY'),
 				companyId: 1,
 				userId: 1,
 			},

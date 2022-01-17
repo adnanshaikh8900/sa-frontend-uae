@@ -503,7 +503,7 @@ class VatReports extends React.Component {
 
 	renderDate = (cell, row) => {
 		return cell ? moment(cell)
-			// .format('DD/MM/YYYY') 
+			// .format('DD-MM-YYYY') 
 			.format('LL')
 			: '-';
 	};
@@ -511,8 +511,8 @@ class VatReports extends React.Component {
 	renderTaxReturns = (cell, row) => {
 		let dateArr = cell ? cell.split("-") : [];
 
-		let startDate = moment(dateArr[0]).format('DD/MM/YYYY')
-		let endDate = moment(dateArr[1]).format('DD/MM/YYYY')
+		let startDate = moment(dateArr[0]).format('DD-MM-YYYY')
+		let endDate = moment(dateArr[1]).format('DD-MM-YYYY')
 
 		return (<>{dateArr[0]}</>);
 	};

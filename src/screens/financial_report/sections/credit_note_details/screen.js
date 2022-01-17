@@ -57,8 +57,8 @@ class CreditNoteDetailsReport extends React.Component {
 			dropdownOpen: false,
 			view: false,
 			initValue: {
-				startDate: moment().startOf('month').format('DD/MM/YYYY'),
-				endDate: moment().endOf('month').format('DD/MM/YYYY'),
+				startDate: moment().startOf('month').format('DD-MM-YYYY'),
+				endDate: moment().endOf('month').format('DD-MM-YYYY'),
 			
 			},
 			csvData: [],
@@ -78,8 +78,8 @@ class CreditNoteDetailsReport extends React.Component {
 		this.setState(
 			{
 				initValue: {
-					startDate: moment(value.startDate).format('DD/MM/YYYY'),
-					endDate: moment(value.endDate).format('DD/MM/YYYY'),
+					startDate: moment(value.startDate).format('DD-MM-YYYY'),
+					endDate: moment(value.endDate).format('DD-MM-YYYY'),
 				},
 				loading: true,
 				view: !this.state.view,
@@ -169,10 +169,10 @@ class CreditNoteDetailsReport extends React.Component {
 		this.pdfExportComponent.save();
 	};
 	renderinvoiceDate = (cell, rows) => {
-		return moment(rows.creditNoteDate).format('DD/MM/YYYY');
+		return moment(rows.creditNoteDate).format('DD-MM-YYYY');
 	};
 	renderinvoiceDueDate = (cell, rows) => {
-		return moment(rows.invoiceDueDate).format('DD/MM/YYYY');
+		return moment(rows.invoiceDueDate).format('DD-MM-YYYY');
 	};
 	renderbalance = (cell, row, extraData) => {
 		return row.balance === 0 ? (
@@ -394,7 +394,7 @@ class CreditNoteDetailsReport extends React.Component {
 																	<td style={{ textAlign: 'center'}}>{item.creditNoteNumber}</td>
 																	<td style={{ textAlign: 'center'}}>{item.customerName}</td>
 																	<td style={{ textAlign: 'center'}}>{item.creditNoteDate ? (
-																		moment(item.creditNoteDate).format('DD/MM/YYYY')
+																		moment(item.creditNoteDate).format('DD-MM-YYYY')
 																	) : (" ")}</td>
 
 																	<td style={{ textAlign: 'center' }}>{item.status}</td>

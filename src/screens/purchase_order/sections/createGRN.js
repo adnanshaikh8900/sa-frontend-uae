@@ -1219,7 +1219,7 @@ min="0"
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		maxDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('grnReceiveDate')(value);

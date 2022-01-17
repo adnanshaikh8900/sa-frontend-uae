@@ -439,10 +439,10 @@ class RequestForQuotation extends React.Component {
 				openPurchaseOrder : true, rowId : id,
 				    selectedData:res.data,
 					rfqReceiveDate: res.data.rfqReceiveDate
-						? moment(res.data.rfqReceiveDate).format('DD/MM/YYYY')
+						? moment(res.data.rfqReceiveDate).format('DD-MM-YYYY')
 						: '',
 						rfqExpiryDate: res.data.rfqExpiryDate
-						? moment(res.data.rfqExpiryDate).format('DD/MM/YYYY')
+						? moment(res.data.rfqExpiryDate).format('DD-MM-YYYY')
 						: '',
 						supplierId: res.data.supplierId ? res.data.supplierId : '',
 						rfqNumber: res.data.rfqNumber
@@ -953,7 +953,7 @@ class RequestForQuotation extends React.Component {
 													showYearDropdown
 													autoComplete="off"
 													dropdownMode="select"
-													dateFormat="dd/MM/yyyy"
+													dateFormat="dd-MM-yyyy"
 													selected={filterData.invoiceDate}
 													// value={filterData.invoiceDate}
 													onChange={(value) => {
@@ -971,7 +971,7 @@ class RequestForQuotation extends React.Component {
 													showYearDropdown
 													autoComplete="off"
 													dropdownMode="select"
-													dateFormat="dd/MM/yyyy"
+													dateFormat="dd-MM-yyyy"
 													selected={filterData.invoiceDueDate}
 													onChange={(value) => {
 														this.handleChange(value, 'invoiceDueDate');

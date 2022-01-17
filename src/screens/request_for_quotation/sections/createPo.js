@@ -1274,7 +1274,7 @@ min="0"
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		onChange={(value) => {
 																			props.handleChange('poApproveDate')(value);
 																		}}
@@ -1307,7 +1307,7 @@ min="0"
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		onChange={(value) => {
 																			props.handleChange('poReceiveDate')(value);
 																		}}

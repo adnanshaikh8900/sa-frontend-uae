@@ -217,11 +217,11 @@ class CreateCreditNoteModal extends React.Component {
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 		const values = value
 			? value
-			: moment(props.values.creditNoteDate, 'DD/MM/YYYY').toDate();
+			: moment(props.values.creditNoteDate, 'DD-MM-YYYY').toDate();
 		// if (temp && values) {
 		// 	const date = moment(values)
 		// 		.add(temp - 1, 'days')
-		// 		.format('DD/MM/YYYY');
+		// 		.format('DD-MM-YYYY');
 		// 	props.setFieldValue('invoiceDueDate', date, true);
 		// }
 	};
@@ -892,13 +892,13 @@ class CreateCreditNoteModal extends React.Component {
 		formData.append('cnCreatedOnPaidInvoice','1');
 		// formData.append(
 		// 	'invoiceDueDate',
-		// 	invoiceDueDate ? moment(invoiceDueDate, 'DD/MM/YYYY').toDate() : null,
+		// 	invoiceDueDate ? moment(invoiceDueDate, 'DD-MM-YYYY').toDate() : null,
 		// );
 		formData.append(
 			'creditNoteDate',
 			creditNoteDate
 				?
-						moment(creditNoteDate,'DD/MM/YYYY')
+						moment(creditNoteDate,'DD-MM-YYYY')
 						.toDate()
 				: '',
 		);
@@ -1299,7 +1299,7 @@ class CreateCreditNoteModal extends React.Component {
 																		placeholderText={strings.CreditNoteDate}
 																		showMonthDropdown
 																		showYearDropdown
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		dropdownMode="select"
 																		value={props.values.creditNoteDate}
 																		selected={props.values.creditNoteDate}

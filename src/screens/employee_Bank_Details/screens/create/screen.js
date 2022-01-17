@@ -433,7 +433,7 @@ class CreateEmployeeFinancial extends React.Component {
                                     placeholderText="Select passportExpiryDate"
                                     showMonthDropdown
                                     showYearDropdown 
-                                    dateFormat="dd/MM/yyyy"
+                                    dateFormat="dd-MM-yyyy"
                                     dropdownMode="select"
                                     selected={props.values.passportExpiryDate}
                                     value={props.values.passportExpiryDate}
@@ -480,7 +480,7 @@ class CreateEmployeeFinancial extends React.Component {
                                     placeholderText="Select visa Expiry Date"
                                     showMonthDropdown
                                     showYearDropdown 
-                                    dateFormat="dd/MM/yyyy"
+                                    dateFormat="dd-MM-yyyy"
                                     dropdownMode="select"
                                     selected={props.values.visaExpiryDate}
                                     value={props.values.visaExpiryDate}

@@ -301,7 +301,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                                 <Label htmlFor="select"><span className="text-danger">* </span>{strings.AccountHolderName} </Label>
                                                                                 <Input
                                                                                     type="text"
-                                                                                    maxLength="60"
+                                                                                    maxLength="100"
                                                                                     id="accountHolderName"
                                                                                     name="accountHolderName"
                                                                                     value={props.values.accountHolderName}
@@ -346,37 +346,36 @@ class UpdateEmployeeBank extends React.Component {
                                                                             </FormGroup>
                                                                         </Col>
                                                                         <Col md="4">
-                                                                                                <FormGroup>
-                                                                                                <Label htmlFor="select"><span className="text-danger">* </span> {strings.BankName} </Label>
-                                                                                                    <Select
-
-                                                                                                        options={
-                                                                                                            bankList
-                                                                                                                ? selectOptionsFactory.renderOptions(
-                                                                                                                    'bankName',
-                                                                                                                    'bankId',
-                                                                                                                    bankList,
-                                                                                                                    'Bank',
-                                                                                                                )
-                                                                                                                : []
-                                                                                                        }
-                                                                                                        value={props.values.bankId}
-                                                                                                        value={bankList &&
-                                                                                                            selectOptionsFactory
-                                                                                                                .renderOptions(
-                                                                                                                    'bankName',
-                                                                                                                    'bankId',
-                                                                                                                    bankList,
-                                                                                                                    'Bank',
-                                                                                                                )
-                                                                                                                .find(
-                                                                                                                    (option) =>
-                                                                                                                        option.value ===
-                                                                                                                        props.values.bankId,
-                                                                                                                )}
-                                                                                                        onChange={(option) => {
-                                                                                                            if (option && option.value) {
-                                                                                                                props.handleChange('bankId')(option);
+                                                                            <FormGroup>
+                                                                                <Label htmlFor="select"><span className="text-danger">* </span> {strings.BankName} </Label>
+                                                                                    <Select
+                                                                                        options={
+                                                                                        bankList
+                                                                                        ? selectOptionsFactory.renderOptions(
+                                                                                        'bankName',
+                                                                                        'bankId',
+                                                                                        bankList,
+                                                                                        'Bank',
+                                                                                        )
+                                                                                        : []
+                                                                                        }
+                                                                                        value={props.values.bankId}
+                                                                                        value={bankList &&
+                                                                                        selectOptionsFactory
+                                                                                        .renderOptions(
+                                                                                        'bankName',
+                                                                                        'bankId',
+                                                                                        bankList,
+                                                                                        'Bank',
+                                                                                        )
+                                                                                        .find(
+                                                                                            (option) =>
+                                                                                            option.value ===
+                                                                                            props.values.bankId,
+                                                                                                )}
+                                                                                                onChange={(option) => {
+                                                                                                if (option && option.value) {
+                                                                                                props.handleChange('bankId')(option);
                                                                                                             } else {
                                                                                                                 props.handleChange('bankId')('');
                                                                                                             }
@@ -433,7 +432,7 @@ class UpdateEmployeeBank extends React.Component {
                                                                                 <Label htmlFor="select"><span className="text-danger">* </span>{strings.Branch}</Label>
                                                                                 <Input
                                                                                     type="text"
-                                                                                    maxLength="30"
+                                                                                    maxLength="100"
                                                                                     id="branch"
                                                                                     name="branch"
                                                                                     value={props.values.branch}

@@ -71,7 +71,7 @@ class SOAReport extends React.Component {
 			dropdownOpen: false,
 			view: false,
 			initValue: {
-				startDate: moment().startOf('month').format('DD/MM/YYYY'),
+				startDate: moment().startOf('month').format('DD-MM-YYYY'),
 				endDate: moment().endOf('month').format('YYYY-MM-DD hh:mm'),
 			},
 			csvData: [],
@@ -111,8 +111,8 @@ class SOAReport extends React.Component {
 		this.setState(
 			{
 				initValue: {
-					startDate: moment(value.startDate).format('DD/MM/YYYY'),
-					endDate: moment(value.endDate).format('DD/MM/YYYY'),
+					startDate: moment(value.startDate).format('DD-MM-YYYY'),
+					endDate: moment(value.endDate).format('DD-MM-YYYY'),
 				},
 				customerName:this.state.contactId && this.state.contactId.label ? this.state.contactId.label:'',
 			},
@@ -211,13 +211,13 @@ this.props.financialReportActions
 		this.pdfExportComponent.save();
 	};
 	renderinvoiceDate = (cell, rows) => {
-		return moment(rows.invoiceDate).format('DD/MM/YYYY');
+		return moment(rows.invoiceDate).format('DD-MM-YYYY');
 	};
 	renderDate = (cell, rows) => {
 		if(rows.invoiceNumber=="Total Balance Due")		
 		return ("")
 		else
-		return moment(rows.date).format('DD/MM/YYYY');
+		return moment(rows.date).format('DD-MM-YYYY');
 	};
 	renderbalance = (cell, row, extraData) => {
 		return row.balance === 0 ? (
@@ -433,10 +433,10 @@ this.props.financialReportActions
 													autoComplete="off"
 													maxDate={new Date()}
 													value={moment(props.values.startDate).format(
-														'DD/MM/YYYY',
+														'DD-MM-YYYY',
 													)}
 													dropdownMode="select"
-													dateFormat="dd/MM/yyyy"
+													dateFormat="dd-MM-yyyy"
 											
 													onChange={(value) => {
 														props.handleChange('startDate')(value);
@@ -457,10 +457,10 @@ this.props.financialReportActions
 													showMonthDropdown
 													showYearDropdown
 													value={moment(props.values.endDate).format(
-														'DD/MM/YYYY',
+														'DD-MM-YYYY',
 													)}
 													dropdownMode="select"
-													dateFormat="dd/MM/yyyy"
+													dateFormat="dd-MM-yyyy"
 						
 													onChange={(value) => {
 														props.handleChange('endDate')(value);

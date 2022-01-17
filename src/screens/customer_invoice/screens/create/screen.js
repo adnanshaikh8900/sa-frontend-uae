@@ -407,14 +407,14 @@ renderVatAmount = (cell, row,extraData) => {
 		 
 		const values = value
 			? value
-			: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
+			: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
 			if (temp && values) {
 				this.setState({
 					date: moment(values).add(temp, 'days'),
 				});
 				const date1 = moment(values)
 				.add(temp, 'days')
-				.format('DD/MM/YYYY')
+				.format('DD-MM-YYYY')
 				props.setFieldValue('invoiceDueDate',date1, true);
 			}
 	};
@@ -1229,7 +1229,7 @@ discountType = (row) =>
 			'invoiceDate',
 			invoiceDate
 				?invoiceDate
-						// moment(invoiceDate,'DD/MM/YYYY')
+						// moment(invoiceDate,'DD-MM-YYYY')
 						// .toDate()
 				: null,
 		);
@@ -2004,7 +2004,7 @@ discountType = (row) =>
 																		placeholderText={strings.InvoiceDate}
 																		showMonthDropdown
 																		showYearDropdown
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		dropdownMode="select"
 																		value={props.values.invoiceDate}
 																		selected={props.values.invoiceDate}
@@ -2042,7 +2042,7 @@ discountType = (row) =>
 																			showMonthDropdown
 																			showYearDropdown
 																			disabled
-																			dateFormat="dd/MM/yyyy"
+																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			value={props.values.invoiceDueDate}
 																			onChange={(value) => {
@@ -2396,7 +2396,7 @@ discountType = (row) =>
 																				</Label>
 																				<Input
 																					type="text"
-																					maxLength="50"
+																					maxLength="100"
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					value={props.values.receiptNumber}
@@ -2410,9 +2410,6 @@ discountType = (row) =>
 																				{props.errors.receiptNumber && props.touched.receiptNumber && (
 																					<div className="invalid-feedback">{props.errors.receiptNumber}</div>
 																				)}
-		 
-																				
-																				
 																			</FormGroup>
 																		</Col>
 																		<Col lg={6}>

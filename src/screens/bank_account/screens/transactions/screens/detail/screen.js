@@ -434,13 +434,13 @@ class DetailBankTransaction extends React.Component {
                                       placeholderText={strings.TransactionDate}
                                       showMonthDropdown
                                       showYearDropdown
-                                      dateFormat="dd/MM/yyyy"
+                                      dateFormat="dd-MM-yyyy"
                                       dropdownMode="select"
                                       value={
                                         props.values.transactionDate
                                           ? moment(
                                               props.values.transactionDate,
-                                            ).format('DD/MM/YYYY')
+                                            ).format('DD-MM-YYYY')
                                           : ''
                                       }
                                       // selected={props.values.transactionDate}

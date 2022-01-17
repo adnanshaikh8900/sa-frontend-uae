@@ -68,8 +68,8 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 			receivbaleInvoiceDetailsList: {},
 			view: false,
 			initValue: {
-				startDate: moment().startOf('month').format('DD/MM/YYYY'),
-				endDate: moment().endOf('month').format('DD/MM/YYYY'),
+				startDate: moment().startOf('month').format('DD-MM-YYYY'),
+				endDate: moment().endOf('month').format('DD-MM-YYYY'),
 			},
 			csvData: [],
 			activePage: 1,
@@ -197,8 +197,8 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 		this.setState(
 			{
 				initValue: {
-					startDate: moment(value.startDate).format('DD/MM/YYYY'),
-					endDate: moment(value.endDate).format('DD/MM/YYYY'),
+					startDate: moment(value.startDate).format('DD-MM-YYYY'),
+					endDate: moment(value.endDate).format('DD-MM-YYYY'),
 					// reportBasis: value.reportBasis.value,
 					// chartOfAccountId: value.chartOfAccountId.value,
 				},
@@ -227,10 +227,10 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 					nameB = b[`${column}`] ? b[`${column}`].toUpperCase() : '';
 				} else {
 					nameA = a[`${column}`]
-						? moment(a[`${column}`], 'DD/MM/YYYY').toDate()
+						? moment(a[`${column}`], 'DD-MM-YYYY').toDate()
 						: '';
 					nameB = b[`${column}`]
-						? moment(b[`${column}`], 'DD/MM/YYYY').toDate()
+						? moment(b[`${column}`], 'DD-MM-YYYY').toDate()
 						: '';
 				}
 				if (nameA < nameB) {
@@ -579,7 +579,7 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 																				<tr key={index}>
 																					<td style={{ width: '12%', textAlign:'center'}}>
 																					{row.invoiceDate ? (
-																							moment(row.invoiceDate).format('DD/MM/YYYY')
+																							moment(row.invoiceDate).format('DD-MM-YYYY')
 																						) : (" ")}
 																					</td>
 																					<td style={{ width: '12%', textAlign:'center'}}>

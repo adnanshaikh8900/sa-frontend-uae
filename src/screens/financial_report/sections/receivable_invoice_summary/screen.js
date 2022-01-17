@@ -56,8 +56,8 @@ class ReceivableInvoiceSummary extends React.Component {
 			dropdownOpen: false,
 			view: false,
 			initValue: {
-				startDate: moment().startOf('month').format('DD/MM/YYYY'),
-				endDate: moment().endOf('month').format('DD/MM/YYYY'),
+				startDate: moment().startOf('month').format('DD-MM-YYYY'),
+				endDate: moment().endOf('month').format('DD-MM-YYYY'),
 			
 			},
 			csvData: [],
@@ -77,8 +77,8 @@ class ReceivableInvoiceSummary extends React.Component {
 		this.setState(
 			{
 				initValue: {
-					startDate: moment(value.startDate).format('DD/MM/YYYY'),
-					endDate: moment(value.endDate).format('DD/MM/YYYY'),
+					startDate: moment(value.startDate).format('DD-MM-YYYY'),
+					endDate: moment(value.endDate).format('DD-MM-YYYY'),
 				},
 				loading: true,
 				view: !this.state.view,
@@ -154,10 +154,10 @@ class ReceivableInvoiceSummary extends React.Component {
 		this.pdfExportComponent.save();
 	};
 	renderinvoiceDate = (cell, rows) => {
-		return moment(rows.invoiceDate).format('DD/MM/YYYY');
+		return moment(rows.invoiceDate).format('DD-MM-YYYY');
 	};
 	renderinvoiceDueDate = (cell, rows) => {
-		return moment(rows.invoiceDueDate).format('DD/MM/YYYY');
+		return moment(rows.invoiceDueDate).format('DD-MM-YYYY');
 	};
 	renderbalance = (cell, row, extraData) => {
 		return row.balance === 0 ? (
@@ -368,11 +368,11 @@ class ReceivableInvoiceSummary extends React.Component {
 																	<td style={{ textAlign: 'center'}}>{item.invoiceNumber}</td>
 																	<td style={{ textAlign: 'center'}}>{item.customerName}</td>
 																	<td style={{ textAlign: 'center'}}>{item.invoiceDate ? (
-																		moment(item.invoiceDate).format('DD/MM/YYYY')
+																		moment(item.invoiceDate).format('DD-MM-YYYY')
 																	) : (" ")}</td>
 																	<td style={{ textAlign: 'center'}}>
 																	{item.invoiceDueDate ? (
-																		moment(item.invoiceDueDate).format('DD/MM/YYYY')
+																		moment(item.invoiceDueDate).format('DD-MM-YYYY')
 																	) : ("-")}</td>
 																	<td style={{ textAlign: 'center' }}>{item.status}</td>
 																	<td style={{ textAlign: 'right' }}>

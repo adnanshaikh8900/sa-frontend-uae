@@ -226,10 +226,10 @@ class DetailCreditNote extends React.Component {
 									exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
 									currencyName:res.data.currencyName ? res.data.currencyName : '',
 									// invoiceDueDate: res.data.invoiceDueDate
-									// 	? moment(res.data.invoiceDueDate).format('DD/MM/YYYY')
+									// 	? moment(res.data.invoiceDueDate).format('DD-MM-YYYY')
 									// 	: '',
 									invoiceDate: res.data.creditNoteDate
-										? moment(res.data.creditNoteDate).format('DD/MM/YYYY')
+										? moment(res.data.creditNoteDate).format('DD-MM-YYYY')
 										: '',
 									contactId: res.data.contactId ? res.data.contactId : '',
 									project: res.data.projectId ? res.data.projectId : '',
@@ -937,11 +937,11 @@ class DetailCreditNote extends React.Component {
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 		const values = value
 			? value
-			: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
+			: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
 		if (temp && values) {
 			const date = moment(values)
 				.add(temp - 1, 'days')
-				.format('DD/MM/YYYY');
+				.format('DD-MM-YYYY');
 			// props.setFieldValue('invoiceDueDate', date, true);
 		}
 	};
@@ -989,13 +989,13 @@ class DetailCreditNote extends React.Component {
 		formData.append(
 			'creditNoteDate',
 			typeof invoiceDate === 'string'
-				? moment(invoiceDate, 'DD/MM/YYYY').toDate()
+				? moment(invoiceDate, 'DD-MM-YYYY').toDate()
 				: invoiceDate,
 		);
 		// formData.append(
 		// 	'invoiceDueDate',
 		// 	typeof invoiceDueDate === 'string'
-		// 		? moment(invoiceDueDate, 'DD/MM/YYYY').toDate()
+		// 		? moment(invoiceDueDate, 'DD-MM-YYYY').toDate()
 		// 		: invoiceDueDate,
 		// );
 
@@ -1693,12 +1693,12 @@ class DetailCreditNote extends React.Component {
 																			placeholderText={strings.InvoiceDate}
 																			showMonthDropdown
 																			showYearDropdown
-																			dateFormat="dd/MM/yyyy"
+																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			value={props.values.invoiceDate}
 																			onChange={(value) => {
 																				props.handleChange('invoiceDate')(
-																					moment(value).format('DD/MM/YYYY'),
+																					moment(value).format('DD-MM-YYYY'),
 																				);
 																				this.setDate(props, value);
 																			}}
@@ -1731,7 +1731,7 @@ class DetailCreditNote extends React.Component {
 																				showMonthDropdown
 																				showYearDropdown
 																				disabled
-																				dateFormat="dd/MM/yyyy"
+																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
 																				value={props.values.invoiceDueDate}
 																				onChange={(value) => {

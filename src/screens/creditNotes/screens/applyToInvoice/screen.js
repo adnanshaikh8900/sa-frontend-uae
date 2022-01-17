@@ -362,7 +362,7 @@ min="0"
 	};
 
 	renderDate = (cell, rows) => {
-		return moment(rows.date).format('DD/MM/YYYY');
+		return moment(rows.date).format('DD-MM-YYYY');
 	};
 	renderCreditAmount = (cell, row, extraData) => {
 		return (
@@ -771,11 +771,11 @@ min="0"
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 		const values = value
 			? value
-			: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
+			: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
 		if (temp && values) {
 			const date = moment(values)
 				.add(temp - 1, 'days')
-				.format('DD/MM/YYYY');
+				.format('DD-MM-YYYY');
 			props.setFieldValue('invoiceDueDate', date, true);
 		}
 	};
@@ -848,13 +848,13 @@ min="0"
 	// 	formData.append(
 	// 		'invoiceDate',
 	// 		typeof invoiceDate === 'string'
-	// 			? moment(invoiceDate, 'DD/MM/YYYY').toDate()
+	// 			? moment(invoiceDate, 'DD-MM-YYYY').toDate()
 	// 			: invoiceDate,
 	// 	);
 	// 	formData.append(
 	// 		'invoiceDueDate',
 	// 		typeof invoiceDueDate === 'string'
-	// 			? moment(invoiceDueDate, 'DD/MM/YYYY').toDate()
+	// 			? moment(invoiceDueDate, 'DD-MM-YYYY').toDate()
 	// 			: invoiceDueDate,
 	// 	);
 

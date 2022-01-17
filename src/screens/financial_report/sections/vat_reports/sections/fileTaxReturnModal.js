@@ -434,7 +434,7 @@ dateLimit=()=>{
 																		showMonthDropdown
 																		showYearDropdown
 																		autoComplete='off'
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		dropdownMode="select"
 																		minDate={this.dateLimit()}
 																		value={props.values.taxFiledOn}

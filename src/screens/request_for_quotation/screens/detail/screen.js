@@ -210,10 +210,10 @@ class DetailRequestForQuotation extends React.Component {
 								current_rfq_id: this.props.location.state.id,
 								initValue: {
 									rfqReceiveDate: res.data.rfqReceiveDate
-										? moment(res.data.rfqReceiveDate).format('DD/MM/YYYY')
+										? moment(res.data.rfqReceiveDate).format('DD-MM-YYYY')
 										: '',
 										rfqExpiryDate: res.data.rfqExpiryDate
-										? moment(res.data.rfqExpiryDate).format('DD/MM/YYYY')
+										? moment(res.data.rfqExpiryDate).format('DD-MM-YYYY')
 										: '',
 										supplierId: res.data.supplierId ? res.data.supplierId : '',
 										rfqNumber: res.data.rfqNumber
@@ -1008,13 +1008,13 @@ class DetailRequestForQuotation extends React.Component {
 		formData.append(
 			'rfqExpiryDate',
 			typeof rfqExpiryDate === 'string'
-				? moment(rfqExpiryDate, 'DD/MM/YYYY').toDate()
+				? moment(rfqExpiryDate, 'DD-MM-YYYY').toDate()
 				: rfqExpiryDate,
 		);
 		formData.append(
 			'rfqReceiveDate',
 			typeof rfqReceiveDate === 'string'
-				? moment(rfqReceiveDate, 'DD/MM/YYYY').toDate()
+				? moment(rfqReceiveDate, 'DD-MM-YYYY').toDate()
 				: rfqReceiveDate,
 		);
 	
@@ -1112,11 +1112,11 @@ class DetailRequestForQuotation extends React.Component {
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 		const values = value
 			? value
-			: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
+			: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
 		if (temp && values) {
 			const date = moment(values)
 				.add(temp - 1, 'days')
-				.format('DD/MM/YYYY');
+				.format('DD-MM-YYYY');
 			props.setFieldValue('invoiceDueDate', date, true);
 		}
 	};
@@ -1599,12 +1599,12 @@ class DetailRequestForQuotation extends React.Component {
 																			placeholderText={strings.RFQDate}
 																			showMonthDropdown
 																			showYearDropdown
-																			dateFormat="dd/MM/yyyy"
+																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			value={props.values.rfqReceiveDate}
 																			onChange={(value) => {
 																				props.handleChange('rfqReceiveDate')(
-																					moment(value).format('DD/MM/YYYY'),
+																					moment(value).format('DD-MM-YYYY'),
 																				);
 																				this.setDate(props, value);
 																			}}
@@ -1636,7 +1636,7 @@ class DetailRequestForQuotation extends React.Component {
 																				value={props.values.rfqExpiryDate}
 																				showMonthDropdown
 																				showYearDropdown
-																				dateFormat="dd/MM/yyyy"
+																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
 																				onChange={(value) => {
 																					props.handleChange('rfqExpiryDate')(

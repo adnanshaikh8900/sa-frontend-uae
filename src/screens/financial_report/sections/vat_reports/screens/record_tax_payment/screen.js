@@ -158,7 +158,7 @@ class RecordVatPayment extends React.Component {
 		formData.append(
 			'vatPaymentDate',
 			typeof vatPaymentDate === 'string'
-				? moment(vatPaymentDate, 'DD/MM/YYYY').toDate()
+				? moment(vatPaymentDate, 'DD-MM-YYYY').toDate()
 				: vatPaymentDate,
 		);
 
@@ -425,7 +425,7 @@ class RecordVatPayment extends React.Component {
 																			placeholderText={strings.vatPaymentDate}
 																			showMonthDropdown
 																			showYearDropdown
-																			dateFormat="dd/MM/yyyy"
+																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			value={props.values.vatPaymentDate}
 																			selected={props.values.vatPaymentDate}

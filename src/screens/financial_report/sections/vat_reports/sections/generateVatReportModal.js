@@ -141,8 +141,8 @@ class GenerateVatReportModal extends React.Component {
 		this.setState({ disabled: true });
 		const { initValue } = this.state;
 		const postData = {
-			startDate: moment(this.state.initValue.startDate).format('DD/MM/YYYY'),
-			endDate: moment(this.state.initValue.endDate).format('DD/MM/YYYY'),
+			startDate: moment(this.state.initValue.startDate).format('DD-MM-YYYY'),
+			endDate: moment(this.state.initValue.endDate).format('DD-MM-YYYY'),
 		};
 
 		this.props.vatReportActions
@@ -211,10 +211,10 @@ class GenerateVatReportModal extends React.Component {
 																	// maxDate={firstdayoflastmonth.setMonth(firstdayoflastmonth.getMonth()-1)}
 																	maxDate={new Date(Date.now() - 86400000)}
 																	value={moment(props.values.startDate).format(
-																		'DD/MM/YYYY',
+																		'DD-MM-YYYY',
 																	)}
 																	dropdownMode="select"
-																	dateFormat="dd/MM/yyyy"
+																	dateFormat="dd-MM-yyyy"
 																	// onChange={(value) => {
 																	// 	props.handleChange('startDate')(value);
 																	// 	if (moment(value).isBefore(props.values.startDate)) {
@@ -247,10 +247,10 @@ class GenerateVatReportModal extends React.Component {
 																	showMonthDropdown
 																	showYearDropdown
 																	value={moment(props.values.endDate).format(
-																		'DD/MM/YYYY',
+																		'DD-MM-YYYY',
 																	)}
 																	dropdownMode="select"
-																	dateFormat="dd/MM/yyyy"
+																	dateFormat="dd-MM-yyyy"
 																	onChange={(value) => {
 																		props.handleChange('endDate')(value);
 																		this.setState({...this.state.initValue,initValue: {endDate: value,startDate:this.state.initValue.startDate} })

@@ -654,7 +654,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                     showYearDropdown
                                                                                     maxDate={new Date()}
                                                                                     autoComplete={"off"}
-                                                                                    dateFormat="dd/MM/yyyy"
+                                                                                    dateFormat="dd-MM-yyyy"
                                                                                     dropdownMode="select"
                                                                                     selected={props.values.dob}
                                                                                     value={props.values.dob}
@@ -1169,7 +1169,7 @@ class UpdateEmployeePersonal extends React.Component {
                                                                                 <Label htmlFor="state"><span className="text-danger">* </span>{strings.City} </Label>
                                                                                 <Input
                                                                                                         type="text"
-                                                                                                        maxLength="20"
+                                                                                                        maxLength="100"
                                                                                                         id="city"
                                                                                                         name="city"
                                                                                                         value={props.values.city}

@@ -134,7 +134,7 @@ class GenerateAuditFile extends React.Component {
 
 	renderDate = (cell, row) => {
 		return cell ? moment(cell)
-			// .format('DD/MM/YYYY') 
+			// .format('DD-MM-YYYY') 
 			.format('LL')
 			: '-';
 	};
@@ -154,8 +154,8 @@ class GenerateAuditFile extends React.Component {
 	renderTaxReturns = (cell, row) => {
 		let dateArr = cell ? cell.split(" ") : [];
 
-		let startDate = moment(dateArr[0]).format('DD/MM/YYYY')
-		let endDate = moment(dateArr[1]).format('DD/MM/YYYY')
+		let startDate = moment(dateArr[0]).format('DD-MM-YYYY')
+		let endDate = moment(dateArr[1]).format('DD-MM-YYYY')
 
 		return (<>{dateArr[0]}</>);
 	};
@@ -447,7 +447,7 @@ class GenerateAuditFile extends React.Component {
 																		showMonthDropdown
 																		showYearDropdown
 																		autoComplete='off'
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		dropdownMode="select"
 																		// minDate={this.dateLimit()}
 																		value={props.values.taxFiledOn}
@@ -483,13 +483,13 @@ class GenerateAuditFile extends React.Component {
 																	showMonthDropdown
 																	showYearDropdown
 																	autoComplete="off"
-																	minDate={new Date("01/01/2018")}
+																	minDate={new Date("01-01-2018")}
 																	// maxDate={firstdayoflastmonth.setMonth(firstdayoflastmonth.getMonth()-1)}
 																	value={moment(props.values.startDate).format(
-																		'DD/MM/YYYY',
+																		'DD-MM-YYYY',
 																	)}
 																	dropdownMode="select"
-																	dateFormat="dd/MM/yyyy"
+																	dateFormat="dd-MM-yyyy"
 																	// onChange={(value) => {
 																	// 	props.handleChange('startDate')(value);
 																	// 	if (moment(value).isBefore(props.values.startDate)) {
@@ -520,10 +520,10 @@ class GenerateAuditFile extends React.Component {
 																	showMonthDropdown
 																	showYearDropdown
 																	value={moment(props.values.endDate).format(
-																		'DD/MM/YYYY',
+																		'DD-MM-YYYY',
 																	)}
 																	dropdownMode="select"
-																	dateFormat="dd/MM/yyyy"
+																	dateFormat="dd-MM-yyyy"
 																	onChange={(value) => {
 																		props.handleChange('endDate')(value);
 																		this.setState({...this.state.initValue,initValue: {endDate: value,startDate:this.state.initValue.startDate} })

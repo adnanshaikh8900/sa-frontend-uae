@@ -285,8 +285,8 @@ class VatTransactions extends React.Component {
 	};
 	renderDate = (cell, row) => {
 		return typeof row['effectiveDate'] === 'string'
-		? moment(row['effectiveDate'], 'DD/MM/YYYY').format('DD/MM/YYYY')
-		: moment(row['effectiveDate']).format('DD/MM/YYYY');
+		? moment(row['effectiveDate'], 'DD-MM-YYYY').format('DD-MM-YYYY')
+		: moment(row['effectiveDate']).format('DD-MM-YYYY');
 	};
 
 	render() {
@@ -296,7 +296,7 @@ class VatTransactions extends React.Component {
 		// 		? this.props.vat_transaction_list.data.map((data) => ({
 		// 				id: data.id,
 		// 				amount: data.amount,
-		// 				date: data.date ? moment(data.date).format('DD/MM/YYYY') : '',
+		// 				date: data.date ? moment(data.date).format('DD-MM-YYYY') : '',
 		// 				referenceType: data.referenceType,
 		// 				vatAmount: data.vatAmount,
 		// 				vatType: data.vatType,
@@ -349,7 +349,7 @@ class VatTransactions extends React.Component {
 											showYearDropdown
 											autoComplete="off"
 											dropdownMode="select"
-											dateFormat="dd/MM/yyyy"
+											dateFormat="dd-MM-yyyy"
 											selected={filterData.date}
 											onChange={(value) => {
 												this.handleChange(value, 'date');

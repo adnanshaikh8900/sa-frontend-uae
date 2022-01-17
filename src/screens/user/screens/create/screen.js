@@ -178,8 +178,8 @@ class CreateUser extends React.Component {
 		// 	'dob',
 		// 	dob
 		// 		? moment(
-		// 				moment(dob).format('DD/MM/YYYY'),
-		// 				'DD/MM/YYYY',
+		// 				moment(dob).format('DD-MM-YYYY'),
+		// 				'DD-MM-YYYY',
 		// 		  ).toDate()
 		// 		: null,
 		// );
@@ -530,7 +530,7 @@ class CreateUser extends React.Component {
 																				name="dob"
 																				showMonthDropdown
 																				showYearDropdown
-																				dateFormat="dd/MM/yyyy"
+																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
 																				placeholderText={strings.Enter+strings.DateOfBirth}
 																				maxDate={new Date()}

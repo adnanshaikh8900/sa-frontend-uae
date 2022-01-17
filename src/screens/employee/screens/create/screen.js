@@ -320,7 +320,7 @@ class CreateEmployee extends React.Component {
                                     placeholderText="Select Date of Birth"
                                     showMonthDropdown
                                     showYearDropdown
-                                    dateFormat="dd/MM/yyyy"
+                                    dateFormat="dd-MM-yyyy"
                                     dropdownMode="select"
                                     selected={props.values.dob}
                                     maxDate={new Date()}

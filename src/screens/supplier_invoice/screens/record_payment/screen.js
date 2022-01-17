@@ -146,11 +146,11 @@ class RecordSupplierPayment extends React.Component {
 						id: this.props.location.state.id.id,
 						date: moment(
 							this.props.location.state.id.invoiceDate,
-							'DD/MM/YYYY',
+							'DD-MM-YYYY',
 						).toDate(),
 						dueDate: moment(
 							this.props.location.state.id.invoiceDueDate,
-							'DD/MM/YYYY',
+							'DD-MM-YYYY',
 						).toDate(),
 						paidAmount: this.props.location.state.id.invoiceAmount,
 						dueAmount: this.props.location.state.id.dueAmount,
@@ -253,7 +253,7 @@ class RecordSupplierPayment extends React.Component {
 		formData.append(
 			'paymentDate',
 			typeof paymentDate === 'string'
-				? moment(paymentDate, 'DD/MM/YYYY').toDate()
+				? moment(paymentDate, 'DD-MM-YYYY').toDate()
 				: paymentDate,
 		);
 		formData.append(
@@ -594,7 +594,7 @@ class RecordSupplierPayment extends React.Component {
 																			placeholderText={strings.PaymentDate}
 																			showMonthDropdown
 																			showYearDropdown
-																			dateFormat="dd/MM/yyyy"
+																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			value={props.values.paymentDate}
 																			selected={props.values.paymentDate}

@@ -219,10 +219,10 @@ class DetailCustomerInvoice extends React.Component {
 									exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
 									currencyName:res.data.currencyName ? res.data.currencyName : '',
 									invoiceDueDate: res.data.invoiceDueDate
-										? moment(res.data.invoiceDueDate).format('DD/MM/YYYY')
+										? moment(res.data.invoiceDueDate).format('DD-MM-YYYY')
 										: '',
 									invoiceDate: res.data.invoiceDate
-										? moment(res.data.invoiceDate).format('DD/MM/YYYY')
+										? moment(res.data.invoiceDate).format('DD-MM-YYYY')
 										: '',
 										invoiceDate1: res.data.invoiceDate
 										? res.data.invoiceDate
@@ -1125,7 +1125,7 @@ debugger
 			});
 			const date = moment(values)
 				.add(temp, 'days')
-				.format('DD/MM/YYYY');
+				.format('DD-MM-YYYY');
 			props.setFieldValue('invoiceDueDate', date, true);
 			props.setFieldValue('invoiceDate1', values, true);
 		}
@@ -1896,7 +1896,7 @@ debugger
 																			placeholderText={strings.InvoiceDate}
 																			showMonthDropdown
 																			showYearDropdown
-																			dateFormat="dd/MM/yyyy"
+																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			 value={props.values.invoiceDate}
 																			 selected={new Date(props.values.invoiceDate1)} 
@@ -1936,7 +1936,7 @@ debugger
 																				showMonthDropdown
 																				showYearDropdown
 																				disabled
-																				dateFormat="dd/MM/yyyy"
+																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
 																				value={props.values.invoiceDueDate}
 																				onChange={(value) => {

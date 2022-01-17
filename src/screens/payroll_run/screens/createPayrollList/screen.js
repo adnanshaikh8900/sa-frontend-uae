@@ -299,7 +299,7 @@ calculatePayperioad=(startDate,endDate)=>{
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 		const values = value
 			? value
-			: moment(props.values.payrollDate, 'DD/MM/YYYY').toDate();
+			: moment(props.values.payrollDate, 'DD-MM-YYYY').toDate();
 
 	};
 
@@ -819,7 +819,7 @@ showTotal=()=>{
 																				placeholderText={strings.payrollDate}
 																				showMonthDropdown
 																				showYearDropdown
-																				dateFormat="dd/MM/yyyy"
+																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
 																				selected={props.values.payrollDate}
 																			
@@ -851,7 +851,7 @@ showTotal=()=>{
 
 																			<FormGroup >
 																			<DateRangePicker
-																			displayFormat="DD/MM/YYYY"
+																			displayFormat="DD-MM-YYYY"
 																				endDate={this.state.endDate}
 																				endDateId="endDate"
 																				focusedInput={this.state.focusedInput}

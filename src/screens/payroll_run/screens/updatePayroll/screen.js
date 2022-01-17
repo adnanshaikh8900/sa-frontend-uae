@@ -409,7 +409,7 @@ class UpdatePayroll extends React.Component {
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 		const values = value
 			? value
-			: moment(props.values.payrollDate, 'DD/MM/YYYY').toDate();
+			: moment(props.values.payrollDate, 'DD-MM-YYYY').toDate();
 	};
 
 	getAllPayrollEmployee2 = () => {
@@ -1040,7 +1040,7 @@ class UpdatePayroll extends React.Component {
 																				placeholderText={strings.payrollDate}
 																				showMonthDropdown
 																				showYearDropdown
-																				dateFormat="dd/MM/yyyy"
+																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
 																				selected={this.state.payrollDate}
 																				onChange={(value) => {
@@ -1073,7 +1073,7 @@ class UpdatePayroll extends React.Component {
 																	{/* <FormGroup className="mt-2"><i class="far fa-calendar-alt mt-1"></i>&nbsp;</FormGroup> */}
 																	<FormGroup >
 																				<DateRangePicker
-																				displayFormat="DD/MM/YYYY"
+																				displayFormat="DD-MM-YYYY"
 																					startDate={this.state.startDate}
 																					startDateId="tata-start-date"
 																					endDate={this.state.endDate}

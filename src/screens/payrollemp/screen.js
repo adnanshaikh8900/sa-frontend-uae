@@ -287,7 +287,7 @@ class PayrollEmployee extends React.Component {
         }
     }
     renderDOB = (cell, rows) => {
-        return moment(rows.dob).format('DD/MM/YYYY');
+        return moment(rows.dob).format('DD-MM-YYYY');
     };
 
     renderStatus = (cell, row) => {

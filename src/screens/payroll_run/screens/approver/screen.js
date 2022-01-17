@@ -138,7 +138,7 @@ class PayrollApproverScreen extends React.Component {
 			if (res.status === 200) {
 			//pay period date format 
 let dateArr=res.data.payPeriod.split("-");
-let payPeriodString=moment(dateArr[0]).format('DD/MM/YYYY')+" - "+moment(dateArr[1]).format('DD/MM/YYYY')
+let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr[1]).format('DD-MM-YYYY')
 
 				this.setState({
 					loading: false,
@@ -153,7 +153,7 @@ let payPeriodString=moment(dateArr[0]).format('DD/MM/YYYY')+" - "+moment(dateArr
 					payPeriod: payPeriodString,
 					payrollApprover: res.data.payrollApprover ? res.data.payrollApprover : '',
 					payrollDate: res.data.payrollDate
-						? moment(res.data.payrollDate).format('DD/MM/YYYY')
+						? moment(res.data.payrollDate).format('DD-MM-YYYY')
 						: '',
 					payrollSubject: res.data.payrollSubject ? res.data.payrollSubject : '',
 					runDate: res.data.runDate ? res.data.runDate : '',
@@ -345,11 +345,11 @@ let payPeriodString=moment(dateArr[0]).format('DD/MM/YYYY')+" - "+moment(dateArr
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 		const values = value
 			? value
-			: moment(props.values.payrollDate, 'DD/MM/YYYY').toDate();
+			: moment(props.values.payrollDate, 'DD-MM-YYYY').toDate();
 		// if (temp && values) {
 		// 	const date = moment(values)
 		// 		.add(temp - 1, 'days')
-		// 		.format('DD/MM/YYYY');
+		// 		.format('DD-MM-YYYY');
 		// 	props.setFieldValue('invoiceDueDate', date, true);
 		// }
 	};
@@ -875,12 +875,12 @@ let payPeriodString=moment(dateArr[0]).format('DD/MM/YYYY')+" - "+moment(dateArr
 																				placeholderText={strings.payrollDate}
 																				showMonthDropdown
 																				showYearDropdown
-																				dateFormat="dd/MM/yyyy"
+																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
 																				value={this.state.payrollDate}
 																				onChange={(value) => {
 																					props.handleChange('payrollDate')(
-																						moment(value).format('DD/MM/YYYY'),
+																						moment(value).format('DD-MM-YYYY'),
 																					);
 																					this.setDate(props, value);
 																				}}

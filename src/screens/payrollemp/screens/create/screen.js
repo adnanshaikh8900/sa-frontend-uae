@@ -216,7 +216,7 @@ class CreateEmployeePayroll extends React.Component {
         this.regExBoth = /[a-zA-Z0-9]+$/;
         this.regExAlpha = /^[a-zA-Z ]+$/;
         this.regExAddress = /^[a-zA-Z0-9\s\D,'-/ ]+$/;
-        this.regExQualification = /^[a-zA-Z,-/]+$/;
+        this.regExQualification = /^[a-zA-Z,-/ ]+$/;
         this.regExQualificationYear = /^[0-9,'-]+$/;
 
         this.gender = [
@@ -1395,7 +1395,7 @@ existForAccountNumber = (value) => {
                                                                                                         showYearDropdown
                                                                                                         maxDate={new Date()}
                                                                                                         autoComplete={"off"}
-                                                                                                        dateFormat="dd/MM/yyyy"
+                                                                                                        dateFormat="dd-MM-yyyy"
                                                                                                         dropdownMode="select"
                                                                                                         selected={props.values.dob}
                                                                                                         value={props.values.dob}
@@ -1996,7 +1996,7 @@ existForAccountNumber = (value) => {
                                                                                                     <Label htmlFor="qualification"> {strings.qualification} </Label>
                                                                                                     <Input
                                                                                                         type="text"
-                                                                                                        maxLength="50"
+                                                                                                        maxLength="100"
                                                                                                         id="qualification"
                                                                                                         name="qualification"
                                                                                                         placeholder={strings.Enter+strings.qualification}
@@ -2452,7 +2452,7 @@ existForAccountNumber = (value) => {
                                                                                                         placeholderText={strings.Select+strings.DateOfJoining}
                                                                                                         showMonthDropdown
                                                                                                         showYearDropdown
-                                                                                                        dateFormat="dd/MM/yyyy"
+                                                                                                        dateFormat="dd-MM-yyyy"
                                                                                                         dropdownMode="select"
                                                                                                         maxDate={new Date()}
                                                                                                         autoComplete={"off"}
@@ -2500,7 +2500,7 @@ existForAccountNumber = (value) => {
                                                                                                         placeholderText={strings.Select+strings.PassportExpiryDate}
                                                                                                         showMonthDropdown
                                                                                                         showYearDropdown
-                                                                                                        dateFormat="dd/MM/yyyy"
+                                                                                                        dateFormat="dd-MM-yyyy"
                                                                                                         dropdownMode="select"
                                                                                                         selected={props.values.passportExpiryDate}
                                                                                                         value={props.values.passportExpiryDate}
@@ -2544,7 +2544,7 @@ existForAccountNumber = (value) => {
                                                                                                         placeholderText={strings.Select+strings.VisaExpiryDate}
                                                                                                         showMonthDropdown
                                                                                                         showYearDropdown
-                                                                                                        dateFormat="dd/MM/yyyy"
+                                                                                                        dateFormat="dd-MM-yyyy"
                                                                                                         dropdownMode="select"
                                                                                                         selected={props.values.visaExpiryDate}
                                                                                                         value={props.values.visaExpiryDate}

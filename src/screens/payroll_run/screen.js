@@ -72,7 +72,7 @@ class PayrollRun extends React.Component {
 			loading: true,
 			selectedRows: [],
 			dialog: false,
-			salaryDate: moment().startOf('month').format('DD/MM/YYYY'),
+			salaryDate: moment().startOf('month').format('DD-MM-YYYY'),
 			filterData: {
 				contactId: '',
 				invoiceId: '',
@@ -81,7 +81,7 @@ class PayrollRun extends React.Component {
 				contactType: 2,
 			},
 			initValue: {
-				presentdate: moment().local().format('DD/MM/YYYY'),
+				presentdate: moment().local().format('DD-MM-YYYY'),
 			},
 			activeTab: new Array(4).fill('1'),
 			csvData: [],
@@ -230,7 +230,7 @@ class PayrollRun extends React.Component {
 	};
 
 	renderDate = (cell, rows) => {
-		return rows.payrollDate ? moment(rows.payrollDate).format('DD/MM/YYYY') : '-';
+		return rows.payrollDate ? moment(rows.payrollDate).format('DD-MM-YYYY') : '-';
 	};
 
 	renderAmount = (cell, row, extraData) => {
@@ -303,7 +303,7 @@ class PayrollRun extends React.Component {
 		});
 	};
 	renderRunDate = (cell, row) => {
-		return row.runDate ? moment(row.runDate).format('DD/MM/YYYY') : '-';
+		return row.runDate ? moment(row.runDate).format('DD-MM-YYYY') : '-';
 	};
 	renderPayrolltotalAmount= (cell, row) => {
 		return (
@@ -330,8 +330,8 @@ class PayrollRun extends React.Component {
 	renderPayperiod = (cell, row) => {
 		let dateArr=row.payPeriod ? row.payPeriod.split("-"):[];
 
-				let  startDate= moment(dateArr[0]).format('DD/MM/YYYY')
-				let	 endDate=moment(dateArr[1]).format('DD/MM/YYYY')
+				let  startDate= moment(dateArr[0]).format('DD-MM-YYYY')
+				let	 endDate=moment(dateArr[1]).format('DD-MM-YYYY')
 		
 		return(<Table>
 			<Row><Col className="pull-right"><b>Start-Date</b></Col><Col>: {startDate}</Col></Row>

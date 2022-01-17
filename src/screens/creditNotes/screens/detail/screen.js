@@ -195,7 +195,8 @@ class DetailCreditNote extends React.Component {
 		})
 		//CN details
 			this.props.creditNotesDetailActions
-				.getCreditNoteById(this.props.location.state.id)
+				.getCreditNoteById(this.props.location.state.id,
+					this.props.location.state.isCNWithoutProduct ?this.props.location.state.isCNWithoutProduct:false)
 				.then((res) => {
 					if (res.status === 200) {
 						this.getCompanyCurrency();
@@ -241,6 +242,7 @@ class DetailCreditNote extends React.Component {
 										? res.data.totalVatAmount
 										: 0,
 									totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
+									creditAmount: res.data.totalAmount ? res.data.totalAmount : 0,
 									notes: res.data.notes ? res.data.notes : '',
 									lineItemsString: res.data.invoiceLineItems
 										? res.data.invoiceLineItems
@@ -1188,13 +1190,14 @@ class DetailCreditNote extends React.Component {
 	removeInvoice = () => {
 		this.setState({ disabled1: true });
 		const { current_customer_id } = this.state;
-		this.props.creditNotesDetailActions
+		if(this.props.location.state.isCNWithoutProduct!=true)
+		{this.props.creditNotesDetailActions
 			.deleteInvoice(current_customer_id)
 			.then((res) => {
 				if (res.status === 200) {
 					this.props.commonActions.tostifyAlert(
 						'success',
-						res.data ? res.data.message : 'Invoice Deleted Successfully'
+						res.data ? res.data.message : 'Credit Note Deleted Successfully'
 					);
 					this.props.history.push('/admin/income/credit-notes');
 				}
@@ -1202,9 +1205,27 @@ class DetailCreditNote extends React.Component {
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
 					'error',
-					err.data ? err.data.message : 'Invoice Deleted Unsuccessfully'
+					err.data ? err.data.message : 'Credit Note Deleted Unsuccessfully'
 				);
-			});
+			});}
+			else
+			{this.props.creditNotesDetailActions
+				.deleteCN(current_customer_id)
+				.then((res) => {
+					if (res.status === 200) {
+						this.props.commonActions.tostifyAlert(
+							'success',
+							res.data ? res.data.message : 'Credit Note Deleted Successfully'
+						);
+						this.props.history.push('/admin/income/credit-notes');
+					}
+				})
+				.catch((err) => {
+					this.props.commonActions.tostifyAlert(
+						'error',
+						err.data ? err.data.message : 'Credit Note Deleted Unsuccessfully'
+					);
+				});}
 	};
 
 	removeDialog = () => {
@@ -1811,6 +1832,38 @@ class DetailCreditNote extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
+																{this.props.location.state.isCNWithoutProduct==true &&(<Col  lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="creditAmount"><span className="text-danger">* </span>
+																	Credit Amount
+																	</Label>
+																	<Input
+																		type="text"
+																		id="creditAmount"
+																		name="creditAmount"
+																		placeholder={strings.Enter+" Credit Amount"}																		
+																		value={props.values.creditAmount}
+																		// onBlur={props.handleBlur('currencyCode')}
+																		onChange={(value) => {
+																			props.handleChange('creditAmount')(
+																				value,
+																			);
+																		}}
+																		className={
+																			props.errors.creditAmount &&
+																			props.touched.creditAmount
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.creditAmount &&
+																	 (
+																			<div className="invalid-feedback">
+																				{props.errors.creditAmount}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>)}
 																</Row>
 																<hr />
 																{/* <Row style={{display: props.values.exchangeRate === 1 ? 'none' : ''}}>
@@ -1911,7 +1964,7 @@ min="0"
 																</Col>
 															</Row> */}
 														
-															<Row>
+														{this.props.location.state.isCNWithoutProduct!=true &&(	<Row>
 																{props.errors.lineItemsString &&
 																	typeof props.errors.lineItemsString ===
 																		'string' && (
@@ -2026,7 +2079,7 @@ min="0"
 																		</TableHeaderColumn>
 																	</BootstrapTable>
 																</Col>
-															</Row>
+															</Row>)}
 															{data.length > 0 && (
 																<Row>
 																	<Col lg={8}>

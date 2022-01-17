@@ -47,12 +47,25 @@ export const deleteInvoice = (id) => {
     })
   }
 }
+export const deleteCN = (id) => {
+  return (dispatch) => {
+    let data = {
+      method: 'DELETE',
+      url: `/rest/creditNote/delete?id=${id}`
+    }
 
-export const getCreditNoteById = (_id) => {
+    return authApi(data).then((res) => {
+      return res
+    }).catch((err) => {
+      throw err
+    })
+  }
+}
+export const getCreditNoteById = (_id,isCNWithoutProduct) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `/rest/creditNote/getCreditNoteById?id=${_id}`
+      url: `/rest/creditNote/getCreditNoteById?id=${_id}&isCNWithoutProduct=${isCNWithoutProduct}`
     }
     return authApi(data).then((res) => {
       return res

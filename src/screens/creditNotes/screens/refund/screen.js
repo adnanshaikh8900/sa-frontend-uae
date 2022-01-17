@@ -95,6 +95,7 @@ class Refund extends React.Component {
 			},
 			amount: this.props.location.state.id.dueAmount,
 			invoiceId: this.props.location.state.id.id,
+			isCNWithoutProduct: this.props.location.state.id.isCNWithoutProduct,
 			contactType: 2,
 			openCustomerModal: false,
 			selectedContact: '',
@@ -285,7 +286,41 @@ class Refund extends React.Component {
 		} = data;
 
 		let formData = new FormData();
-		formData.append('receiptNo', receiptNo !== null ? receiptNo : '');
+	if(this.state.isCNWithoutProduct ==true)
+	{	
+		formData.append('isCNWithoutProduct', this.state.isCNWithoutProduct);
+		formData.append('creditNoteId', this.props.location.state.id.id);
+		formData.append('amountReceived', amount !== null ? amount : '');
+		formData.append('notes', notes !== null ? notes : '');
+
+		formData.append('depositeTo', depositeTo !== null ? depositeTo.value : '');
+		formData.append('payMode', payMode !== null ? payMode.value : '');
+		if (contactId) {
+			formData.append('contactId', contactId);
+		}
+		formData.append(
+			'paymentDate',
+			typeof receiptDate === 'string'
+				? moment(receiptDate, 'DD/MM/YYYY').toDate()
+				: receiptDate,
+		);
+		this.props.CustomerRecordPaymentActions.recordPaymentCNWithoutInvoice(formData)
+			.then((res) => {
+				this.props.commonActions.tostifyAlert(
+					'success',
+					res.data ? res.data.message : 'Credit Refund Successfully',
+				);
+				this.props.history.push('/admin/income/credit-notes');
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Credit Refund Unsuccessfully.',
+				);
+			});
+		}//
+	else
+	{	formData.append('receiptNo', receiptNo !== null ? receiptNo : '');
 		formData.append(
 			'receiptDate',
 			typeof receiptDate === 'string'
@@ -332,6 +367,7 @@ class Refund extends React.Component {
 					err && err.data ? err.data.message : 'Credit Refund Unsuccessfully.',
 				);
 			});
+		}//
 	};
 
 	openCustomerModal = (e) => {
@@ -534,7 +570,9 @@ class Refund extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																{this.showInvoiceNumber()}
+																{
+																this.state.isCNWithoutProduct !=true &&
+																(this.showInvoiceNumber())}
 																{/* <Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="project">

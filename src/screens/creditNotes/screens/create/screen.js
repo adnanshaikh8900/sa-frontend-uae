@@ -36,6 +36,7 @@ import moment from 'moment';
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 import Switch from "react-switch";
+import { Checkbox } from '@material-ui/core';
 
 const mapStateToProps = (state) => {
 	return {
@@ -144,6 +145,7 @@ class CreateCreditNote extends React.Component {
 				discount: 0,
 				discountPercentage: '',
 				discountType: { value: 'FIXED', label: 'Fixed' },
+				creditAmount:0,
 			},
 			total_excise: 0,
 			// excisetype: { value: 'Inclusive', label: 'Inclusive' },
@@ -167,8 +169,11 @@ class CreateCreditNote extends React.Component {
 			// exchangeRate:'',		
 			basecurrency:[],
 			inventoryList:[],
+            remainingInvoiceAmount:'',
 			invoiceSelected:false,
+			isCreatedWIWP:false,
 			quantityExceeded:'',
+			isCreatedWithoutInvoice:false
 		};
 
 		this.formRef = React.createRef();
@@ -567,7 +572,7 @@ class CreateCreditNote extends React.Component {
 						id="exciseTaxId"
 						placeholder={strings.Select+strings.Vat}
 						onChange={(e) => {
-							debugger
+							
 							this.selectItem(
 								e.value,
 								row,
@@ -1074,14 +1079,15 @@ class CreateCreditNote extends React.Component {
 			discountType,
 			discountPercentage,
 			notes,
-			email
+			email,
+			creditAmount
 		} = data;
 		const { term } = this.state;
 		const formData = new FormData();
-		if (invoiceNumber && invoiceNumber.value) {
-			formData.append('invoiceId', invoiceNumber.value);
-			formData.append('cnCreatedOnPaidInvoice','1');
-		}
+
+		formData.append('isCreatedWithoutInvoice',this.state.isCreatedWIWP);
+		
+
 
 			// formData.append('invoiceNumber',this.state.referenceNumber !== null ? this.state.selectedData.referenceNumber : '');
 
@@ -1124,13 +1130,23 @@ class CreateCreditNote extends React.Component {
 		formData.append('notes', notes !== null ? notes : '');
 		formData.append('email', email !== null ? email : '');
 		formData.append('type', 7);
-		formData.append('lineItemsString', JSON.stringify(this.state.data));
-		formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
-		formData.append('totalAmount', this.state.initValue.totalAmount);
-		formData.append('discount', discount);
-		
-		formData.append('totalExciseTaxAmount', this.state.initValue.total_excise);
-	
+		if(this.state.isCreatedWIWP ===true)
+		formData.append('totalAmount', creditAmount);
+
+if (invoiceNumber && invoiceNumber.value) {
+	formData.append('invoiceId', invoiceNumber.value);
+	formData.append('cnCreatedOnPaidInvoice','1');
+	}	
+		if(this.state.isCreatedWIWP ===false)
+		{
+							
+				formData.append('lineItemsString', JSON.stringify(this.state.data));
+				formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
+				formData.append('totalAmount', this.state.initValue.totalAmount);
+				formData.append('discount', discount);
+				
+				formData.append('totalExciseTaxAmount', this.state.initValue.total_excise);
+		}
 		// if (term && term.value) {
 		// 	formData.append('term', term.value);
 		// }
@@ -1545,17 +1561,28 @@ class CreateCreditNote extends React.Component {
 													if (exist === true) 
 													{
 														errors.creditNoteNumber ='Tax Credit Note Number cannot be same';
-													}													
-													if(this.state.invoiceSelected && this.state.initValue.totalAmount>this.state.remainingInvoiceAmount)
+													}	
+													
+													if(this.state.isCreatedWIWP==false && !values.invoiceNumber)
 													{
-														errors.remainingInvoiceAmount =	'Invoice Total Amount Cannot be greater than  Remaining Invoice Amount';
-													}													
+														errors.invoiceNumber =	'Invoice Number is Required';}
+													if(this.state.isCreatedWIWP==true && this.state.invoiceSelected ==true && !values.creditAmount)
+														{
+															errors.creditAmount =	'Credit Amount is Required';}
+													// if(this.state.invoiceSelected && this.state.initValue.totalAmount>this.state.remainingInvoiceAmount)
+													// {
+													// 	errors.remainingInvoiceAmount =	'Invoice Total Amount Cannot be greater than  Remaining Invoice Amount';
+													// }	
+													// if(this.state.remainingInvoiceAmount && values.creditAmount<this.state.remainingInvoiceAmount)		
+													// {
+													// 	errors.creditAmount = 'Credit Amount Cannot be less than Remaining Invoice Amount';
+													// }														
 													return errors;
 												}}
 												validationSchema={Yup.object().shape({
-													invoiceNumber: Yup.string().required(
-														'Invoice Number is Required',
-													),
+													// invoiceNumber: Yup.string().required(
+													// 	'Invoice Number is Required',
+													// ),
 													creditNoteNumber: Yup.string().required(
 														'Tax Credit Note Number is Required',
 													),
@@ -1573,46 +1600,46 @@ class CreateCreditNote extends React.Component {
 													creditNoteDate: Yup.string().required(
 														'Tax Credit Note Date is Required',
 													),
-													lineItemsString: Yup.array()
-														.required(
-															'Atleast one Tax Credit Note sub detail is mandatory',
-														)
-														.of(
-															Yup.object().shape({
-																quantity: Yup.string()
-																	.required('Value is Required')
-																	.test(
-																		'quantity',
-																		'Quantity should be greater than 0',
-																		(value) => {
-																			if (value > 0) {
-																				return true;
-																			} else {
-																				return false;
-																			}
-																		},
-																	),
-																unitPrice: Yup.string()
-																	.required('Value is Required')
-																	.test(
-																		'Unit Price',
-																		'Unit Price Should be Greater than 1',
-																		(value) => {
-																			if (value > 0) {
-																				return true;
-																			} else {
-																				return false;
-																			}
-																		},
-																	),
-																vatCategoryId: Yup.string().required(
-																	'Value is Required',
-																),
-																productId: Yup.string().required(
-																	'Product is Required',
-																),
-															}),
-														),
+													// lineItemsString: Yup.array()
+													// 	.required(
+													// 		'Atleast one Tax Credit Note sub detail is mandatory',
+													// 	)
+													// 	.of(
+													// 		Yup.object().shape({
+													// 			quantity: Yup.string()
+													// 				.required('Value is Required')
+													// 				.test(
+													// 					'quantity',
+													// 					'Quantity should be greater than 0',
+													// 					(value) => {
+													// 						if (value > 0) {
+													// 							return true;
+													// 						} else {
+													// 							return false;
+													// 						}
+													// 					},
+													// 				),
+													// 			unitPrice: Yup.string()
+													// 				.required('Value is Required')
+													// 				.test(
+													// 					'Unit Price',
+													// 					'Unit Price Should be Greater than 1',
+													// 					(value) => {
+													// 						if (value > 0) {
+													// 							return true;
+													// 						} else {
+													// 							return false;
+													// 						}
+													// 					},
+													// 				),
+													// 			vatCategoryId: Yup.string().required(
+													// 				'Value is Required',
+													// 			),
+													// 			productId: Yup.string().required(
+													// 				'Product is Required',
+													// 			),
+													// 		}),
+													// 	),
 													attachmentFile: Yup.mixed()
 														.test(
 															'fileType',
@@ -1651,8 +1678,32 @@ class CreateCreditNote extends React.Component {
 											>
 												{(props) => (
 													<Form onSubmit={props.handleSubmit}>
+
+																<Row  style={{display:this.state.invoiceSelected===true ? '':'none'}}>
+																			<Col lg={4}>
+																				<Checkbox 
+																				checked={this.state.isCreatedWIWP}
+																				onChange={(check)=>{
+																					this.setState({isCreatedWIWP:!this.state.isCreatedWIWP})
+																				}}
+																				/>	Create Credit Note Without Product 
+																				</Col>
+																				</Row>
+																{this.state.invoiceSelected==false &&(<Row  >
+																			<Col lg={4}>
+																				<Checkbox 
+																				checked={this.state.isCreatedWithoutInvoice}
+																				onChange={(check)=>{
+																					this.setState({isCreatedWithoutInvoice:!this.state.isCreatedWithoutInvoice})
+																					this.setState({isCreatedWIWP:!this.state.isCreatedWIWP})
+																				}}
+																				/>	Create Credit Note Without Invoice
+																				</Col>
+																				</Row>)}
+																				<hr />
+
 														<Row>
-														<Col lg={3}>
+														{this.state.isCreatedWithoutInvoice===false &&(<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="invoiceNumber"><span className="text-danger">* </span>
 																	{strings.InvoiceNumber}
@@ -1708,7 +1759,7 @@ class CreateCreditNote extends React.Component {
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>
+															</Col>)}
 
 														</Row>
 														<Row>
@@ -1770,7 +1821,7 @@ class CreateCreditNote extends React.Component {
 																		}
 																		value={props.values.contactId}
 																		
-																		isDisabled={this.state.invoiceSelected}
+																		// isDisabled={this.state.invoiceSelected}
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				this.formRef.current.setFieldValue('currency', this.getCurrency(option.value), true);
@@ -1807,6 +1858,7 @@ class CreateCreditNote extends React.Component {
 																		styles={customStyles}
 																		id="taxTreatmentid"
 																		name="taxTreatmentid"
+																		placeholder='Tax Treatment'
 																		value={
 																		this.state.customer_taxTreatment_des
 																	 	
@@ -2102,7 +2154,8 @@ class CreateCreditNote extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
-															<Col lg={3} style={{display:this.state.invoiceSelected===true ? '':'none'}}>
+															
+															{(this.state.isCreatedWIWP===false || this.state.invoiceSelected==true) &&(<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="remainingInvoiceAmount">
 																
@@ -2112,15 +2165,9 @@ class CreateCreditNote extends React.Component {
 																		type="text"
 																		id="remainingInvoiceAmount"
 																		name="remainingInvoiceAmount"
+																		placeholder='Remaining invoice Amount'
 																		disabled={true}
-																		value={this.state.remainingInvoiceAmount}
-																		// onBlur={props.handleBlur('currencyCode')}
-																		// onChange={(value) => {
-																		// 	props.handleChange('currencyCode')(
-																		// 		value,
-																		// 	);
-																		// }}
-																	
+																		value={this.state.remainingInvoiceAmount}																							
 																	/>
 																	{props.errors.remainingInvoiceAmount &&
 																	 (
@@ -2129,7 +2176,41 @@ class CreateCreditNote extends React.Component {
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>
+															</Col>)}
+                                                            
+															{this.state.isCreatedWIWP===true &&(<Col  lg={3}>
+																<FormGroup className="mb-3">
+																	<Label htmlFor="creditAmount"><span className="text-danger">* </span>
+																	Credit Amount
+																	</Label>
+																	<Input
+																		type="text"
+																		id="creditAmount"
+																		name="creditAmount"
+																		placeholder={strings.Enter+" Credit Amount"}																		
+																		value={this.state.creditAmount}
+																		// onBlur={props.handleBlur('currencyCode')}
+																		onChange={(value) => {
+																			props.handleChange('creditAmount')(
+																				value,
+																			);
+																		}}
+																		className={
+																			props.errors.creditAmount &&
+																			props.touched.creditAmount
+																				? 'is-invalid'
+																				: ''
+																		}
+																	/>
+																	{props.errors.creditAmount &&
+																	 (
+																			<div className="invalid-feedback">
+																				{props.errors.creditAmount}
+																			</div>
+																		)}
+																</FormGroup>
+															</Col>)}
+
 															{/* <Col lg={3}>
 												<FormGroup>
 													<Label htmlFor="email">
@@ -2260,8 +2341,9 @@ min="0"
 																<i className="fa fa-plus"></i> {strings.Addproduct}
 															</Button>
 														</Col> */}
+														
 													
-														<Row>
+														{this.state.isCreatedWIWP===false &&(<Row>
 															{props.errors.lineItemsString &&
 																typeof props.errors.lineItemsString ===
 																	'string' && (
@@ -2383,7 +2465,7 @@ min="0"
 																	</TableHeaderColumn>
 																</BootstrapTable>
 															</Col>
-														</Row>
+															</Row>)}
 														{this.state.data.length > 0 ? (
 															<Row>
 																<Col lg={8}>
@@ -2529,7 +2611,7 @@ min="0"
 																	</FormGroup>
 																</Col>
 																<Col lg={4}>
-																	<div className="">
+																{this.state.isCreatedWIWP===false &&(	<div className="">
 																		<div className="total-item p-2">
 																			{/* <Row>
 																				<Col lg={6}>
@@ -2749,7 +2831,7 @@ min="0"
 																				</Col>
 																			</Row>
 																		</div>
-																	</div>
+																	</div>)}
 																</Col>
 															</Row>
 														) : null}

@@ -317,7 +317,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                     showYearDropdown
                                                                                     maxDate={new Date()}
                                                                                     autoComplete={"off"}
-                                                                                    dateFormat="dd/MM/yyyy"
+                                                                                    dateFormat="dd-MM-yyyy"
                                                                                     dropdownMode="select"
                                                                                     selected={props.values.dateOfJoining}
                                                                                     value={props.values.dateOfJoining}
@@ -410,7 +410,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                     placeholderText={strings.Select+strings.PassportExpiryDate}
                                                                                     showMonthDropdown
                                                                                     showYearDropdown
-                                                                                    dateFormat="dd/MM/yyyy"
+                                                                                    dateFormat="dd-MM-yyyy"
                                                                                     dropdownMode="select"
                                                                                     selected={props.values.passportExpiryDate}
                                                                                     value={props.values.passportExpiryDate}
@@ -454,7 +454,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                     placeholderText={strings.Select+strings.VisaExpiryDate}
                                                                                     showMonthDropdown
                                                                                     showYearDropdown
-                                                                                    dateFormat="dd/MM/yyyy"
+                                                                                    dateFormat="dd-MM-yyyy"
                                                                                     dropdownMode="select"
                                                                                     selected={props.values.visaExpiryDate}
                                                                                     value={props.values.visaExpiryDate}

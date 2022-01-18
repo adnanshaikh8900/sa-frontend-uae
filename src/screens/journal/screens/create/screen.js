@@ -762,7 +762,7 @@ min="0"
 																		selected={props.values.journalDate}
 																		showMonthDropdown
 																		showYearDropdown
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		dropdownMode="select"
 																		onChange={(value) => {
 																			props.handleChange('journalDate')(value);

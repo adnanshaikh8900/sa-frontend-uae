@@ -82,9 +82,9 @@ class FilterComponent extends Component {
 													placeholderText="From"
 													showMonthDropdown
 													showYearDropdown
-													value={moment(props.values.startDate).format('DD/MM/YYYY')}
+													value={moment(props.values.startDate).format('DD-MM-YYYY')}
 													dropdownMode="select"
-													dateFormat="dd/MM/yyyy"
+													dateFormat="dd-MM-yyyy"
 													onChange={(value) => {
 														props.handleChange("startDate")(value);
 														if (moment(value).isAfter(props.values.endDate)) {
@@ -107,9 +107,9 @@ class FilterComponent extends Component {
 													placeholderText={strings.Select}
 													showMonthDropdown
 													showYearDropdown
-													value={moment(props.values.endDate).format('DD/MM/YYYY')}
+													value={moment(props.values.endDate).format('DD-MM-YYYY')}
 													dropdownMode="select"
-													dateFormat="dd/MM/yyyy"
+													dateFormat="dd-MM-yyyy"
 													onChange={(value) => {
 														props.handleChange("endDate")(value);
 														if (moment(value).isBefore(props.values.endDate)) {

@@ -195,7 +195,7 @@ class ReportsFiling extends React.Component {
                       placeholderText="Date"
                       showMonthDropdown
                       showYearDropdown
-                      dateFormat="dd/MM/yyyy"
+                      dateFormat="dd-MM-yyyy"
                       dropdownMode="select"
                     />
                   </Col>

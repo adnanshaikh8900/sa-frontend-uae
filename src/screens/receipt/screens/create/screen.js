@@ -193,7 +193,7 @@ class CreateReceipt extends React.Component {
 		formData.append(
 			'receiptDate',
 			typeof receiptDate === 'string'
-				? moment(receiptDate, 'DD/MM/YYYY').toDate()
+				? moment(receiptDate, 'DD-MM-YYYY').toDate()
 				: receiptDate,
 		);
 		formData.append('amount', amount !== null ? amount : '');
@@ -285,7 +285,7 @@ class CreateReceipt extends React.Component {
 	};
 
 	date = (cell, rows, props) => {
-		return <div>{moment.utc(rows.date).format('DD/MM/YYYY')}</div>;
+		return <div>{moment.utc(rows.date).format('DD-MM-YYYY')}</div>;
 	};
 
 	renderAmount = (cell, rows, props) => {
@@ -538,7 +538,7 @@ min="0"
 																						selected={props.values.receiptDate}
 																						showMonthDropdown
 																						showYearDropdown
-																						dateFormat="dd/MM/yyyy"
+																						dateFormat="dd-MM-yyyy"
 																						dropdownMode="select"
 																						onChange={(value) => {
 																							props.handleChange('receiptDate')(

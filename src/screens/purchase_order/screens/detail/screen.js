@@ -195,10 +195,10 @@ class DetailPurchaseOrder extends React.Component {
 								current_po_id: this.props.location.state.id,
 								initValue: {
 									poApproveDate: res.data.poApproveDate
-										? moment(res.data.poApproveDate).format('DD/MM/YYYY')
+										? moment(res.data.poApproveDate).format('DD-MM-YYYY')
 										: '',
 										poReceiveDate: res.data.poReceiveDate
-										? moment(res.data.poReceiveDate).format('DD/MM/YYYY')
+										? moment(res.data.poReceiveDate).format('DD-MM-YYYY')
 										: '',
 										supplierId: res.data.supplierId ? res.data.supplierId : '',
 										poNumber: res.data.poNumber
@@ -994,13 +994,13 @@ class DetailPurchaseOrder extends React.Component {
 		formData.append(
 			'poReceiveDate',
 			typeof poReceiveDate === 'string'
-				? moment(poReceiveDate, 'DD/MM/YYYY').toDate()
+				? moment(poReceiveDate, 'DD-MM-YYYY').toDate()
 				: poReceiveDate,
 		);
 		formData.append(
 			'poApproveDate',
 			typeof poApproveDate === 'string'
-				? moment(poApproveDate, 'DD/MM/YYYY').toDate()
+				? moment(poApproveDate, 'DD-MM-YYYY').toDate()
 				: poApproveDate,
 		);
 	
@@ -1097,11 +1097,11 @@ class DetailPurchaseOrder extends React.Component {
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 		const values = value
 			? value
-			: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
+			: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
 		if (temp && values) {
 			const date = moment(values)
 				.add(temp - 1, 'days')
-				.format('DD/MM/YYYY');
+				.format('DD-MM-YYYY');
 			props.setFieldValue('invoiceDueDate', date, true);
 		}
 	};
@@ -1624,12 +1624,12 @@ class DetailPurchaseOrder extends React.Component {
 																			placeholderText={strings.InvoiceDate}
 																			showMonthDropdown
 																			showYearDropdown
-																			dateFormat="dd/MM/yyyy"
+																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			value={props.values.poApproveDate}
 																			onChange={(value) => {
 																				props.handleChange('poApproveDate')(
-																					moment(value).format('DD/MM/YYYY'),
+																					moment(value).format('DD-MM-YYYY'),
 																				);
 																				this.setDate(props, value);
 																			}}
@@ -1662,11 +1662,11 @@ class DetailPurchaseOrder extends React.Component {
 																				value={props.values.poReceiveDate}
 																				showMonthDropdown
 																				showYearDropdown
-																				dateFormat="dd/MM/yyyy"
+																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
 																				onChange={(value) => {
 																					props.handleChange('poReceiveDate')(
-																						moment(value).format('DD/MM/YYYY'),
+																						moment(value).format('DD-MM-YYYY'),
 																					);
 																					this.setDate(props, value);
 																				}}

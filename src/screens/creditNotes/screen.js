@@ -211,13 +211,16 @@ class CreditNotes extends React.Component {
 		this.setState({
 			loading: true,
 		});
+
 		const postingRequestModel = {
 			amount: row.invoiceAmount,
 			postingRefId: row.id,
 			postingRefType: 'CREDIT_NOTE',
+			isCNWithoutProduct :row.isCNWithoutProduct==true?true:false ,
 			amountInWords:upperCase(row.currencyName + " " +(toWords.convert(row.invoiceAmount))+" ONLY" ).replace("POINT","AND"),
 			vatInWords:row.totalVatAmount ? upperCase(row.currencyName + " " +(toWords.convert(row.totalVatAmount))+" ONLY" ).replace("POINT","AND") :"-"
 		};
+		debugger
 		this.props.creditNotesActions
 			.creditNoteposting(postingRequestModel)
 			.then((res) => {
@@ -389,14 +392,8 @@ class CreditNotes extends React.Component {
 					isOpen={this.state.actionButtons[row.id]}
 					toggle={() => this.toggleActionButton(row.id)}
 				>
-					{/* <DropdownToggle size="lg" color="link" >
-						{this.state.actionButtons[row.id] === true ? (
-							<i style={{color:'grey'}} className="fas fa-ellipsis-h " />
-						) : (
-							<i  style={{color:'grey'}}  className="fas fa-ellipsis-h " />
-						)}
-					</DropdownToggle> */}
-							<DropdownToggle size="sm" color="primary" className="btn-brand icon">
+	
+					<DropdownToggle size="sm" color="primary" className="btn-brand icon">
 						{this.state.actionButtons[row.id] === true ? (
 							<i className="fas fa-chevron-up" />
 						) : (
@@ -410,14 +407,14 @@ class CreditNotes extends React.Component {
 									onClick={() => {
 										this.props.history.push(
 											'/admin/income/credit-notes/detail',
-											{ id: row.id },
+											{ id: row.id ,isCNWithoutProduct:row.isCNWithoutProduct},
 										);
 									}}
 								>
 									<i className="fas fa-edit" /> {strings.Edit}
 								</div>
 							</DropdownItem>
-						)}	{row.statusEnum !== 'Closed' && row.statusEnum !== 'Draft' && row.cnCreatedOnPaidInvoice !==true &&  (
+						)}	{row.statusEnum !== 'Closed' && row.statusEnum !== 'Draft' && row.cnCreatedOnPaidInvoice !==true && row.isCNWithoutProduct !==true &&   (
 							<DropdownItem>
 								<div
 									onClick={() => {
@@ -444,19 +441,7 @@ class CreditNotes extends React.Component {
 								<i className="fas fa-send" />  {strings.Post}
 							</DropdownItem>
 						)}
-						{/* <DropdownItem onClick={() => { this.openInvoicePreviewModal(row.id) }}>
-              <i className="fas fa-eye" /> View
-            </DropdownItem> */}
-						
-						{/* {row.statusEnum === 'Sent' && (
-							<DropdownItem
-								onClick={() => {
-									this.unPostInvoice(row);
-								}}
-							>
-								<i className="fas fa-file" />  {strings.Draft}
-							</DropdownItem>
-						)} */}
+
 									{row.statusEnum !== 'Closed' && row.statusEnum !== 'Draft'  && (
 							<DropdownItem
 								onClick={() =>
@@ -469,28 +454,11 @@ class CreditNotes extends React.Component {
 								<i className="fas fa-university" /> {strings.Refund}
 							</DropdownItem>
 									)}
-						{/* {row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
-							<DropdownItem
-								onClick={() => {
-									this.closeInvoice(row.id, row.status);
-								}}
-							>
-								<i className="fa fa-trash-o" /> Delete
-							</DropdownItem>
-						)} */}
-						{/* {row.statusEnum !== 'Paid' && row.statusEnum !== 'Sent' && (
-							<DropdownItem
-								onClick={() => {
-									this.sendCustomEmail(row.id);
-								}}
-							>
-								<i className="fa fa-send" /> Send Custom Email
-							</DropdownItem>
-						)} */}
+
 						<DropdownItem
 							onClick={() =>
 								this.props.history.push('/admin/income/credit-notes/view', {
-									id: row.id,status:row.status
+									id: row.id,status:row.status,isCNWithoutProduct:row.isCNWithoutProduct
 								})
 							}
 						>
@@ -777,6 +745,7 @@ class CreditNotes extends React.Component {
 						invoiceAmount: customer.totalAmount,
 						totalVatAmount: customer.totalVatAmount,
 						cnCreatedOnPaidInvoice: customer.cnCreatedOnPaidInvoice,
+						isCNWithoutProduct: customer.isCNWithoutProduct,
 				  }))
 				: '';
 

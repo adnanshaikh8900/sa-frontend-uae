@@ -196,7 +196,7 @@ class DetailQuotation extends React.Component {
 								current_po_id: this.props.location.state.id,
 								initValue: {
 									quotaionExpiration: res.data.quotaionExpiration
-										? moment(res.data.quotaionExpiration).format('DD/MM/YYYY')
+										? moment(res.data.quotaionExpiration).format('DD-MM-YYYY')
 										: '',
 										customerId: res.data.customerId ? res.data.customerId : '',
 										quotationNumber: res.data.quotationNumber
@@ -984,7 +984,7 @@ min="0"
 		formData.append(
 			'quotaionExpiration',
 			typeof quotaionExpiration === 'string'
-				? moment(quotaionExpiration, 'DD/MM/YYYY').toDate()
+				? moment(quotaionExpiration, 'DD-MM-YYYY').toDate()
 				: quotaionExpiration,
 		);
 	
@@ -1079,11 +1079,11 @@ min="0"
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 		const values = value
 			? value
-			: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
+			: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
 		if (temp && values) {
 			const date = moment(values)
 				.add(temp - 1, 'days')
-				.format('DD/MM/YYYY');
+				.format('DD-MM-YYYY');
 			props.setFieldValue('invoiceDueDate', date, true);
 		}
 	};
@@ -1611,12 +1611,12 @@ console.log(this.state.supplier_currency)
 																			placeholderText={strings.InvoiceDate}
 																			showMonthDropdown
 																			showYearDropdown
-																			dateFormat="dd/MM/yyyy"
+																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			value={props.values.quotaionExpiration}
 																			onChange={(value) => {
 																				props.handleChange('quotaionExpiration')(
-																					moment(value).format('DD/MM/YYYY'),
+																					moment(value).format('DD-MM-YYYY'),
 																				);
 																				this.setDate(props, value);
 																			}}

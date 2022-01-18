@@ -941,11 +941,11 @@ class CreatePurchaseOrder extends React.Component {
 	// 	const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 	// 	const values = value
 	// 		? value
-	// 		: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
+	// 		: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
 	// 	if (temp && values) {
 	// 		const date = moment(values)
 	// 			.add(temp - 1, 'days')
-	// 			.format('DD/MM/YYYY');
+	// 			.format('DD-MM-YYYY');
 	// 		props.setFieldValue('invoiceDueDate', date, true);
 	// 	}
 	// };
@@ -1891,7 +1891,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		maxDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('poApproveDate')(value);
@@ -1925,7 +1925,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 
 																		onChange={(value) => {
 																			props.handleChange('poReceiveDate')(value);

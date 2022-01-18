@@ -935,11 +935,11 @@ this.state.data.map((obj, index) => {
 	// 	const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 	// 	const values = value
 	// 		? value
-	// 		: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
+	// 		: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
 	// 	if (temp && values) {
 	// 		const date = moment(values)
 	// 			.add(temp - 1, 'days')
-	// 			.format('DD/MM/YYYY');
+	// 			.format('DD-MM-YYYY');
 	// 		props.setFieldValue('invoiceDueDate', date, true);
 	// 	}
 	// };
@@ -1815,7 +1815,7 @@ console.log(this.state.data)
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		maxDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('grnReceiveDate')(value);
@@ -1849,7 +1849,7 @@ console.log(this.state.data)
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		maxDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('rfqExpiryDate')(value);

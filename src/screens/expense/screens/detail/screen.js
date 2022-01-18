@@ -1150,11 +1150,11 @@ class DetailExpense extends React.Component {
 																			placeholderText={strings.ExpenseDate}
 																			value={moment(
 																				props.values.expenseDate,
-																			).format('DD/MM/YYYY')}
+																			).format('DD-MM-YYYY')}
 																			showMonthDropdown
 																			showYearDropdown
 																			dropdownMode="select"
-																			dateFormat="dd/MM/yyyy"
+																			dateFormat="dd-MM-yyyy"
 																			// maxDate={new Date()}
 																			onChange={(value) => {
 																				props.handleChange('expenseDate')(

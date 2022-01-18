@@ -522,7 +522,7 @@ min="0"
                                           placeholderText=""
                                           showMonthDropdown
                                           showYearDropdown
-                                          dateFormat="dd/MM/yyyy"
+                                          dateFormat="dd-MM-yyyy"
                                           dropdownMode="select"
                                           onChange={(option) =>
                                             props.handleChange("payment_date")(

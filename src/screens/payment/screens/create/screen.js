@@ -229,7 +229,7 @@ class CreatePayment extends React.Component {
 		formData.append(
 			'paymentDate',
 			typeof paymentDate === 'string'
-				? moment(paymentDate, 'DD/MM/YYYY').toDate()
+				? moment(paymentDate, 'DD-MM-YYYY').toDate()
 				: paymentDate,
 		);
 		formData.append('amount', amount !== null ? amount : '');
@@ -332,7 +332,7 @@ min="0" value="0.00" />;
 	};
 
 	date = (cell, rows, props) => {
-		return <div>{moment.utc(rows.date).format('DD/MM/YYYY')}</div>;
+		return <div>{moment.utc(rows.date).format('DD-MM-YYYY')}</div>;
 	};
 
 	renderAmount = (cell, rows, props) => {
@@ -559,14 +559,14 @@ min="0"
 																					placeholderText={strings.PaymentDate}
 																					showMonthDropdown
 																					showYearDropdown
-																					dateFormat="dd/MM/yyyy"
+																					dateFormat="dd-MM-yyyy"
 																					dropdownMode="select"
 																					value={props.values.paymentDate}
 																					selected={props.values.paymentDate}
 																					onChange={(value) => {
 																						props.handleChange('paymentDate')(
 																							moment(value).format(
-																								'DD/MM/YYYY',
+																								'DD-MM-YYYY',
 																							),
 																						);
 																					}}

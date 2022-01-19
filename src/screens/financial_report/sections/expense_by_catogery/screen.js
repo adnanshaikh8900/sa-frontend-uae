@@ -58,8 +58,8 @@ class ExpenseByCategory extends React.Component {
 			dropdownOpen: false,
 			view: false,
 			initValue: {
-				startDate: moment().startOf('month').format('DD-MM-YYYY'),
-				endDate: moment().endOf('month').format('DD-MM-YYYY'),
+				startDate: moment().startOf('month').format('DD/MM/YYYY'),
+				endDate: moment().endOf('month').format('DD/MM/YYYY'),
 
 			},
 			csvData: [],
@@ -80,8 +80,8 @@ class ExpenseByCategory extends React.Component {
 		this.setState(
 			{
 				initValue: {
-					startDate: moment(value.startDate).format('DD-MM-YYYY'),
-					endDate: moment(value.endDate).format('DD/MM-YYYY'),
+					startDate: moment(value.startDate).format('DD/MM/YYYY'),
+					endDate: moment(value.endDate).format('DD/MM/YYYY'),
 				},
 				loading: true,
 				view: !this.state.view,

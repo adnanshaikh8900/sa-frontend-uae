@@ -141,8 +141,8 @@ class GenerateVatReportModal extends React.Component {
 		this.setState({ disabled: true });
 		const { initValue } = this.state;
 		const postData = {
-			startDate: moment(this.state.initValue.startDate).format('DD-MM-YYYY'),
-			endDate: moment(this.state.initValue.endDate).format('DD-MM-YYYY'),
+			startDate: moment(this.state.initValue.startDate).format('DD/MM/YYYY'),
+			endDate: moment(this.state.initValue.endDate).format('DD/MM/YYYY'),
 		};
 
 		this.props.vatReportActions

@@ -106,8 +106,8 @@ class ProfitAndLossReport extends React.Component {
 		this.setState(
 			{
 				initValue: {
-					startDate: moment(value.startDate).format('DD-MM-YYYY'),
-					endDate: moment(value.endDate).format('DD-MM-YYYY'),
+					startDate: moment(value.startDate).format('DD/MM/YYYY'),
+					endDate: moment(value.endDate).format('DD/MM/YYYY'),
 				},
 				loading: true,
 				view: !this.state.view,
@@ -361,7 +361,7 @@ class ProfitAndLossReport extends React.Component {
 											<br style={{ marginBottom: '5px' }} />
 											<b style ={{ fontSize: '18px'}}>{strings.ProfitandLoss}</b>
 											<br style={{ marginBottom: '5px' }} />
-											{strings.From} {initValue.startDate} {strings.To} {initValue.endDate}
+											{strings.From} {moment(initValue.startDate).format('DD-MM-YYYY')} {strings.To} {initValue.endDate}
 											
 									</div>
 									<div>

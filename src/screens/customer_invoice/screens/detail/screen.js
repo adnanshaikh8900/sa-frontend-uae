@@ -326,7 +326,7 @@ class DetailCustomerInvoice extends React.Component {
 			}
 			return obj;
 		});
-debugger
+
 		return (
 			<Field
 				name={`lineItemsString.${idx}.exciseTaxId`}
@@ -354,7 +354,7 @@ debugger
 						id="exciseTaxId"
 						placeholder={"Select Excise"}
 						onChange={(e) => {
-							debugger
+							
 							this.selectItem(
 								e.value,
 								row,
@@ -396,7 +396,7 @@ debugger
            }
            return obj;
        });
-
+	   debugger
        return (
            <Field
               name={`lineItemsString.${idx}.discountType`}
@@ -406,6 +406,7 @@ debugger
                    <Input
                    type="text"
                    min="0"
+				   width={"50%"}
                        maxLength="17,2"
                        value={row['discount'] !== 0 ? row['discount'] : 0}
                        onChange={(e) => {
@@ -443,18 +444,17 @@ debugger
    />
     <div class="dropdown open input-group-append">
 
-        <div 	style={{width:'100px'}}>
+        <div 	style={{width:'80px'}}>
         <Select
-
+   
 
                                                                                            options={discountOptions}
                                                                                            id="discountType"
                                                                                            name="discountType"
                                                                                            value={
                                                                                                discountOptions &&
-                                                                                               selectOptionsFactory
-                                                                                                   .renderOptions('value', 'label', discountOptions, 'discount')
-                                                                                                   .find((option) => option.value === +row.discountType)
+                                                                                               discountOptions
+                                                                                                   .find((option) => option.value == row.discountType)
                                                                                            }
                                                                                            // onChange={(item) => {
                                                                                            // 	props.handleChange(
@@ -718,7 +718,7 @@ debugger
 					vatCategoryId: '',
 					subTotal: 0,
 					exciseTaxId:'',
-					discountType :'',
+					discountType :'FIXED',
 					vatAmount:0,
 					discount: 0,
 					productId: '',
@@ -1219,7 +1219,7 @@ debugger
 		formData.append('discount',this.state.initValue.discount);
 	
 		formData.append('totalExciseAmount', this.state.initValue.total_excise);
-		formData.append('exciseType', this.state.checked);
+		// formData.append('exciseType', this.state.checked);
 		formData.append('term', term);
 		//formData.append('placeOfSupplyId',placeOfSupplyId.value);
 		
@@ -2147,7 +2147,7 @@ debugger
 																		className="invoice-create-table"
 																	>
 																		<TableHeaderColumn
-																			width="5%"
+																			width="3%"
 																			dataAlign="center"
 																			dataFormat={(cell, rows) =>
 																				this.renderActions(cell, rows, props)
@@ -2183,6 +2183,7 @@ debugger
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="quantity"
+																			width="5%"
 																			dataFormat={(cell, rows) =>
 																				this.renderQuantity(cell, rows, props)
 																			}

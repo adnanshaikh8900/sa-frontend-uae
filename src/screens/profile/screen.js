@@ -997,7 +997,7 @@ class Profile extends React.Component {
 																								name="dob "
 																								showMonthDropdown
 																								showYearDropdown
-																								dateFormat="dd/MM/yyyy"
+																								dateFormat="dd-MM-yyyy"
 																								dropdownMode="select"
 																								placeholderText={strings.Enter+strings.DateOfBirth}
 																								maxDate={new Date()}
@@ -2422,11 +2422,11 @@ class Profile extends React.Component {
 																			
 																			value={moment(
 																				props.values.vatRegistrationDate,
-																			).format('DD/MM/YYYY')}
+																			).format('DD-MM-YYYY')}
 																			showMonthDropdown
 																			showYearDropdown
 																			dropdownMode="select"
-																			dateFormat="dd/MM/yyyy"
+																			dateFormat="dd-MM-yyyy"
 																		 maxDate={new Date()}
 																			onChange={(value) => {
 																				props.handleChange('vatRegistrationDate')(
@@ -2453,7 +2453,7 @@ class Profile extends React.Component {
 																			name="vatRegistrationDate"
 																			showMonthDropdown
 																			showYearDropdown
-																			dateFormat="dd/MM/yyyy"
+																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			 value={props.values.vatRegistrationDate}
 																			 selected={new Date(props.values.vatRegistrationDate)} 
@@ -2960,7 +2960,7 @@ class Profile extends React.Component {
 																						value={props.values.dateFormat}
 																						showMonthDropdown
 																						showYearDropdown
-																						dateFormat="dd/MM/yyyy"
+																						dateFormat="dd-MM-yyyy"
 																						dropdownMode="select"
 																						onChange={(option) => {
 																							props.handleChange('dateFormat')(
@@ -3098,11 +3098,11 @@ class Profile extends React.Component {
 																			
 																			value={moment(
 																				props.values.vatRegistrationDate,
-																			).format('DD/MM/YYYY')}
+																			).format('DD-MM-YYYY')}
 																			showMonthDropdown
 																			showYearDropdown
 																			dropdownMode="select"
-																			dateFormat="dd/MM/yyyy"
+																			dateFormat="dd-MM-yyyy"
 																		 maxDate={new Date()}
 																			onChange={(value) => {
 																				props.handleChange('vatRegistrationDate')(
@@ -3129,7 +3129,7 @@ class Profile extends React.Component {
 																			name="vatRegistrationDate"
 																			showMonthDropdown
 																			showYearDropdown
-																			dateFormat="dd/MM/yyyy"
+																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			 value={props.values.vatRegistrationDate}
 																			 selected={new Date(props.values.vatRegistrationDate)} 

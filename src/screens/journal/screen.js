@@ -240,7 +240,7 @@ class Journal extends React.Component {
 
 	renderDate = (cell, rows) => {
 		return rows.journalDate
-			? moment(rows.journalDate).format('DD/MM/YYYY')
+			? moment(rows.journalDate).format('DD-MM-YYYY')
 			: '';
 	};
 
@@ -527,7 +527,7 @@ console.log(journal_list_data,"journal_list_data")
 														showMonthDropdown
 														showYearDropdown
 														dropdownMode="select"
-														dateFormat="dd/MM/yyyy"
+														dateFormat="dd-MM-yyyy"
 														autoComplete="off"
 														selected={filterData.journalDate}
 														onChange={(value) => {

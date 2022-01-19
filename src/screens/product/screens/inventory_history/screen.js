@@ -41,7 +41,7 @@ import moment from 'moment'
 import {data}  from '../../../Language/index'
 import LocalizedStrings from 'react-localization';
 function dateFormat(value, row, index) {
-	return moment(value).format('DD/MM/YYYY');
+	return moment(value).format('DD-MM-YYYY');
  }
 
 const mapStateToProps = (state) => {
@@ -304,7 +304,7 @@ class InventoryHistory extends React.Component {
 	};
 
 	renderDate = (cell, rows) => {
-		return moment(rows.date).format('DD/MM/YYYY');
+		return moment(rows.date).format('DD-MM-YYYY');
 	};
 	getInventoryById = (data) => {
 		this.getInventoryId();

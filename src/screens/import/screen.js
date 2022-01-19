@@ -810,7 +810,7 @@ class Import extends React.Component {
 											name="effectiveDate"
 											showMonthDropdown
 											showYearDropdown
-											dateFormat="dd/MM/yyyy"
+											dateFormat="dd-MM-yyyy"
 											dropdownMode="select"
 											value={cell}
 											 selected={cell}
@@ -1016,7 +1016,7 @@ class Import extends React.Component {
 																		placeholderText={"Select Date"}
 																		showMonthDropdown
 																		showYearDropdown
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		dropdownMode="select"
 																		style={{ textAlign: "center" }}
 																		selected={props.values.date}

@@ -64,6 +64,16 @@ class RFQTemplate extends Component {
 			number1=number1[0];
 			return number1
 		}
+renderVat=(POData)=>{
+let TotalVatAmount=0
+if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLineItemRequestModelList.length &&POData.poQuatationLineItemRequestModelList.length!=0)
+	{
+		POData.poQuatationLineItemRequestModelList.map((row)=>{
+			TotalVatAmount=TotalVatAmount+row.vatAmount
+		})
+	}
+	return TotalVatAmount;
+}
 
 	render() {
 		strings.setLanguage(this.state.language);
@@ -389,7 +399,8 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{POData.totalVatAmount?POData.currencyIsoCode+ " " +POData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 }
+													{POData ?POData.currencyIsoCode+ " " +this.renderVat(POData).toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 }
+										
 													{/* ? (
 														<Currency
 															value={POData.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}

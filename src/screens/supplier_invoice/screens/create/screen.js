@@ -157,11 +157,11 @@ class CreateSupplierInvoice extends React.Component {
 				notes: '',
 				discount: 0,
 				discountPercentage: 0,
-				discountType:'',
+				discountType:'FIXED',
 				total_excise: 0,
 
 			},
-			discountType : {value: 'FIXED', label: 'FIXED' },
+			discountType : "FIXED",
 			// excisetype: { value: 'Inclusive', label: 'Inclusive' },
 			currentData: {},
 			contactType: 1,
@@ -519,7 +519,7 @@ class CreateSupplierInvoice extends React.Component {
 					vatCategoryId: '',
 					subTotal: 0,
 					exciseTaxId:'',
-					discountType:'',
+					discountType:'FIXED',
 					vatAmount:0,
 					discount: 0,
 					productId: '',
@@ -642,7 +642,7 @@ class CreateSupplierInvoice extends React.Component {
 																								discountOptions &&
 																								selectOptionsFactory
 																									.renderOptions('label', 'value', discountOptions, 'discount')
-																									.find((option) => option.value === +row.discountType)
+																									.find((option) => option.value == row.discountType)
 																							}
 																							// onChange={(item) => {
 																							// 	props.handleChange(
@@ -2342,7 +2342,7 @@ class CreateSupplierInvoice extends React.Component {
 																	class="container-fluid"
 																>
 																	<TableHeaderColumn
-																		width="5%"
+																		width="3%"
 																		dataAlign="center"
 																		dataFormat={(cell, rows) =>
 																			this.renderActions(cell, rows, props)

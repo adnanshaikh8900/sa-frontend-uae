@@ -107,7 +107,7 @@ class CreateCustomerInvoice extends React.Component {
 					unitPrice: '',
 					vatCategoryId: '',
 					exciseTaxId:'',
-					discountType: '',
+					discountType: 'FIXED',
 					exciseAmount:'',
 					discount: 0,
 					subTotal: 0,
@@ -147,7 +147,7 @@ class CreateCustomerInvoice extends React.Component {
 				notes: '',
 				discount: 0,
 				discountPercentage: '',
-				discountType: { value: 'FIXED', label: 'Fixed' },
+				discountType: "FIXED",
 				total_excise: 0,
 			},
 			// excisetype: { value: 'Inclusive', label: 'Inclusive' },
@@ -566,7 +566,7 @@ renderVatAmount = (cell, row,extraData) => {
 					vatCategoryId: '',
 					subTotal: 0,
 					exciseTaxId:'',
-					discountType:'',
+					discountType:'FIXED',
 					vatAmount:0,
 					discount: 0,
 					productId: '',
@@ -689,7 +689,7 @@ renderVatAmount = (cell, row,extraData) => {
 																						discountOptions &&
 																							selectOptionsFactory
 																								.renderOptions('label', 'value', discountOptions, 'discount')
-																								.find((option) => option.value === +row.discountType)
+																								.find((option) => option.value == row.discountType)
 																						   }
 																						   onChange={(e) => {
 																							   this.selectItem(

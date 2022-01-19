@@ -687,7 +687,7 @@ class DetailSupplierInvoice extends React.Component {
                                                                                                discountOptions &&
                                                                                                selectOptionsFactory
                                                                                                    .renderOptions('label', 'value', discountOptions, 'discount')
-                                                                                                   .find((option) => option.value === +row.discountType)
+                                                                                                   .find((option) => option.value == row.discountType)
                                                                                            }
                                                                                            // onChange={(item) => {
                                                                                            // 	props.handleChange(
@@ -776,7 +776,7 @@ class DetailSupplierInvoice extends React.Component {
 					vatCategoryId: '',
 					subTotal: 0,
 					exciseTaxId:'',
-					discountType :'',
+					discountType :'FIXED',
 					vatAmount:0,
 					discount: 0,
 					productId: '',

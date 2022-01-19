@@ -68,8 +68,8 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 			receivbaleInvoiceDetailsList: {},
 			view: false,
 			initValue: {
-				startDate: moment().startOf('month').format('DD-MM-YYYY'),
-				endDate: moment().endOf('month').format('DD-MM-YYYY'),
+				startDate: moment().startOf('month').format('DD/MM/YYYY'),
+				endDate: moment().endOf('month').format('DD/MM/YYYY'),
 			},
 			csvData: [],
 			activePage: 1,
@@ -197,8 +197,8 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 		this.setState(
 			{
 				initValue: {
-					startDate: moment(value.startDate).format('DD-MM-YYYY'),
-					endDate: moment(value.endDate).format('DD-MM-YYYY'),
+					startDate: moment(value.startDate).format('DD/MM/YYYY'),
+					endDate: moment(value.endDate).format('DD/MM/YYYY'),
 					// reportBasis: value.reportBasis.value,
 					// chartOfAccountId: value.chartOfAccountId.value,
 				},

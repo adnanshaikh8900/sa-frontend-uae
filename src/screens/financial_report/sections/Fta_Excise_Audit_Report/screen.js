@@ -51,7 +51,7 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 
-class FtaExciseAuditReport extends React.Component {
+class ViewFtaExciseAuditReport extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -994,4 +994,4 @@ class FtaExciseAuditReport extends React.Component {
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps,
-)(FtaExciseAuditReport);
+)(ViewFtaExciseAuditReport);

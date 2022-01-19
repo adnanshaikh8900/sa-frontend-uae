@@ -71,8 +71,8 @@ class SOAReport extends React.Component {
 			dropdownOpen: false,
 			view: false,
 			initValue: {
-				startDate: moment().startOf('month').format('DD-MM-YYYY'),
-				endDate: moment().endOf('month').format('YYYY-MM-DD hh:mm'),
+				startDate: moment().startOf('month').format('DD/MM/YYYY'),
+				endDate: moment().endOf('month').format('YYYY/MM/DD hh:mm'),
 			},
 			csvData: [],
 			activePage: 1,
@@ -111,8 +111,8 @@ class SOAReport extends React.Component {
 		this.setState(
 			{
 				initValue: {
-					startDate: moment(value.startDate).format('DD-MM-YYYY'),
-					endDate: moment(value.endDate).format('DD-MM-YYYY'),
+					startDate: moment(value.startDate).format('DD/MM/YYYY'),
+					endDate: moment(value.endDate).format('DD/MM/YYYY'),
 				},
 				customerName:this.state.contactId && this.state.contactId.label ? this.state.contactId.label:'',
 			},

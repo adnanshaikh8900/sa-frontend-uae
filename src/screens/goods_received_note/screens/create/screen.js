@@ -431,9 +431,15 @@ class CreateGoodsReceivedNote extends React.Component {
 									{props.errors.lineItemsString[parseInt(idx, 10)].grnReceivedQuantity}
 								</div>
 							)} */}
-								<div  className="text-danger">
+								{/* <div  className="text-danger">
 									{this.state.grnReceivedQuantityError}
+								</div> */}
+								{row['grnReceivedQuantity'] <= 0 && (
+								<div  className="text-danger">
+									Please Enter Quantity
 								</div>
+								)
+							}
 					</div>
 				)}
 			/>

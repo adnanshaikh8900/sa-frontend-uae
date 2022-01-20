@@ -309,7 +309,7 @@ class DetailCustomerInvoice extends React.Component {
 	calTotalNet = (data) => {
 		let total_net = 0;
 		data.map((obj) => {
-			total_net = +(total_net + +obj.unitPrice * obj.quantity);
+			total_net = +(total_net + (obj.exciseAmount +obj.unitPrice) * obj.quantity);
 			return obj;
 		});
 		this.setState({
@@ -396,7 +396,7 @@ class DetailCustomerInvoice extends React.Component {
            }
            return obj;
        });
-	   debugger
+	   
        return (
            <Field
               name={`lineItemsString.${idx}.discountType`}
@@ -1008,6 +1008,7 @@ class DetailCustomerInvoice extends React.Component {
 		let total_vat = 0;
 		let net_value = 0;
 		let discount = 0;
+		debugger
 		data.map((obj) => {
 			const index =
 				obj.vatCategoryId !== ''
@@ -1020,7 +1021,7 @@ class DetailCustomerInvoice extends React.Component {
 			if(obj.isExciseTaxExclusive === true){
 				if(obj.exciseTaxId === 1){
 				const value = +(obj.unitPrice) / 2 ;
-					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
+					net_value = parseFloat(obj.unitPrice) + parseFloat(value);
 					obj.exciseAmount = parseFloat(value) * obj.quantity;
 				}else if (obj.exciseTaxId === 2){
 					const value = obj.unitPrice;
@@ -2378,7 +2379,7 @@ class DetailCustomerInvoice extends React.Component {
 																</Col>
 																	<Col lg={4}>
 																		<div className="">
-																		<div className="total-item p-2" style={{display:this.state.checked === true ? '':'none'}}>
+																		<div className="total-item p-2" >
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
@@ -2394,31 +2395,7 @@ class DetailCustomerInvoice extends React.Component {
 																				</Col>
 																			</Row>
 																		</div>
-																			<div className="total-item p-2">
-																				<Row>
-																					<Col lg={6}>
-																						<h5 className="mb-0 text-right">
-																							{strings.TotalNet}
-																						</h5>
-																					</Col>
-																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
-																						{/* {universal_currency_list[0] && (
-																						<Currency
-																						value=	{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						currencySymbol={
-																							universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
-																							/>
-																							)} */}
-																							{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						</label>
-																					</Col>
-																				</Row>
-																			</div>
+																			
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
@@ -2440,6 +2417,31 @@ class DetailCustomerInvoice extends React.Component {
 																							)} */}
 																							{this.state.customer_currency_symbol} &nbsp;
 																							{initValue.discount ? '-'+initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						</label>
+																					</Col>
+																				</Row>
+																			</div>
+																			<div className="total-item p-2">
+																				<Row>
+																					<Col lg={6}>
+																						<h5 className="mb-0 text-right">
+																							{strings.TotalNet}
+																						</h5>
+																					</Col>
+																					<Col lg={6} className="text-right">
+																						<label className="mb-0">
+																						{/* {universal_currency_list[0] && (
+																						<Currency
+																						value=	{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						currencySymbol={
+																							universal_currency_list[0]
+																						? universal_currency_list[0].currencyIsoCode
+																						: 'USD'
+																							}
+																							/>
+																							)} */}
+																							{this.state.customer_currency_symbol} &nbsp;
+																							{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>

@@ -78,7 +78,59 @@ class ViewCreditNote extends React.Component {
 					}
 				});
 		if (this.props.location.state && this.props.location.state.id) {
-			this.props.supplierInvoiceDetailActions
+
+			if(this.props.location.state.isCNWithoutProduct == true)
+			{this.props.supplierInvoiceDetailActions
+				.getCreditNoteById(this.props.location.state.id,this.props.location.state.isCNWithoutProduct)
+				.then((res) => {
+					let val = 0;
+					if (res.status === 200) {
+						res.data.invoiceLineItems &&
+							res.data.invoiceLineItems.map((item) => {
+								val = val + item.subTotal;
+								return item;
+							});
+						this.setState(
+							{
+								invoiceData: res.data,
+								totalNet: val,
+								id: this.props.location.state.id,
+							},
+							() => {
+								if (this.state.invoiceData.currencyCode) {
+									this.props.supplierInvoiceActions
+										.getCurrencyList()
+										.then((res) => {
+											if (res.status === 200) {
+												const temp = res.data.filter(
+													(item) =>
+														item.currencyCode ===
+														this.state.invoiceData.currencyCode,
+												);
+												this.setState({
+													currencyData: temp,
+												});
+											}
+										});
+								}
+								if(this.state.invoiceData.contactId)
+						     {	
+							this.props.supplierInvoiceDetailActions
+							.getContactById(this.state.invoiceData.contactId)
+							.then((res) => {
+								if (res.status === 200) {									
+									this.setState({
+										contactData: res.data,
+									});
+								}
+							});
+							}
+							},
+						);
+					}
+				});}
+			else
+			{this.props.supplierInvoiceDetailActions
 				.getInvoiceById(this.props.location.state.id)
 				.then((res) => {
 					let val = 0;
@@ -126,7 +178,7 @@ class ViewCreditNote extends React.Component {
 							},
 						);
 					}
-				});
+				});}
 
 //
 this.props.supplierInvoiceDetailActions
@@ -217,6 +269,7 @@ this.props.supplierInvoiceDetailActions
 										totalNet={this.state.totalNet}
 										companyData={this.state && this.state.companyData ?this.state.companyData:''}
 										contactData={contactData}
+										isCNWithoutProduct={this.props.location.state.isCNWithoutProduct&&this.props.location.state.isCNWithoutProduct==true?true:false}
 									/>
 								</PDFExport>
 							</div>

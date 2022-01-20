@@ -433,7 +433,7 @@ class InvoiceTemplate extends Component {
 												<span>
 													{invoiceData.discount ? (
 														<Currency
-															value={invoiceData.discount ? '-'+invoiceData.discount : invoiceData.discount}
+															value={invoiceData.discount ? +invoiceData.discount : invoiceData.discount}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode

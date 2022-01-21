@@ -792,7 +792,6 @@ class CreateSupplierInvoice extends React.Component {
 						id="exciseTaxId"
 						placeholder={"Select Excise"}
 						onChange={(e) => {
-							debugger
 							this.selectItem(
 								e.value,
 								row,
@@ -1295,7 +1294,7 @@ class CreateSupplierInvoice extends React.Component {
 		formData.append('exciseType', this.state.checked);
 		formData.append('isReverseChargeEnabled',this.state.isReverseChargeEnabled);
 		formData.append('exchangeRate', exchangeRate);
-
+        formData.append('discount',this.state.initValue.discount);
 
 		if (term && term.value) {
 			formData.append('term', term.value);

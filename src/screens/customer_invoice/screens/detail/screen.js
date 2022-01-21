@@ -312,6 +312,7 @@ class DetailCustomerInvoice extends React.Component {
 			total_net = +(total_net + (obj.exciseAmount +obj.unitPrice) * obj.quantity);
 			return obj;
 		});
+		total_net=total_net-this.state.discountAmount
 		this.setState({
 			initValue: Object.assign(this.state.initValue, { total_net }),
 		});
@@ -1008,7 +1009,6 @@ class DetailCustomerInvoice extends React.Component {
 		let total_vat = 0;
 		let net_value = 0;
 		let discount = 0;
-		debugger
 		data.map((obj) => {
 			const index =
 				obj.vatCategoryId !== ''
@@ -2237,6 +2237,15 @@ class DetailCustomerInvoice extends React.Component {
 																		>
 																			{strings.VAT}
 																		</TableHeaderColumn>
+																		<TableHeaderColumn
+                                                                        dataField="vat_amount"
+																		dataFormat={this.renderVatAmount}
+																		className="text-right"
+																		columnClassName="text-right"
+																		formatExtraData={universal_currency_list}
+																	>
+																		Vat amount
+																	</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="sub_total"
 																			dataFormat={this.renderSubTotal}

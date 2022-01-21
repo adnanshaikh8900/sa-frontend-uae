@@ -1749,7 +1749,7 @@ class CreateContact extends React.Component {
 																		disabled={this.state.disabled}
 																		onClick={() => {
 																			this.setState(
-																				{ createMore: true },
+																				{ createMore: true, isSame:false },
 																				() => {
 																					props.handleSubmit();
 																				},

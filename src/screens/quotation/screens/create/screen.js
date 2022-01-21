@@ -1682,6 +1682,7 @@ class CreateQuotation extends React.Component {
 																				? 'is-invalid'
 																				: ''
 																		}`}
+																		minDate={new Date()}
 																		placeholderText={strings.OrderDueDate}
 																		selected={props.values.quotaionExpiration}
 																		showMonthDropdown

@@ -148,7 +148,7 @@ class RFQTemplate extends Component {
 									margin:'1.5rem 9.0rem 0.5rem 4rem',
 									// // border:'1px solid',
 									 marginTop:'6.4rem',
-									 marginLeft:'6.5rem'
+									 marginLeft:'7rem'
 								}}>
 								<h4 className="mb-1 ml-2"><b>{companyData && companyData.company
 											? companyData.company.companyName

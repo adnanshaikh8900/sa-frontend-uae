@@ -140,6 +140,13 @@ class NewPassword extends React.Component {
 																			</Label>
 																			<div>
 																				<Input
+                                        onPaste={(e)=>{
+                                          e.preventDefault()
+                                          return false;
+                                          }} onCopy={(e)=>{
+                                          e.preventDefault()
+                                          return false;
+                                          }}
 																					type={
 																						this.state.isPasswordShown
 																							? 'text'
@@ -191,6 +198,13 @@ class NewPassword extends React.Component {
 																			Confirm Password
 																			</Label>
 																			<Input
+                                      onPaste={(e)=>{
+                                        e.preventDefault()
+                                        return false;
+                                        }} onCopy={(e)=>{
+                                        e.preventDefault()
+                                        return false;
+                                        }}
 																				type="password"
 																				id="confirmPassword"
 																				name="confirmPassword"

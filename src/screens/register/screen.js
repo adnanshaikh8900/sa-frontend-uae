@@ -221,14 +221,14 @@ class Register extends React.Component {
 		formData.append('companyAddressLine1',companyAddress1 ? companyAddress1 : '')
         formData.append('companyAddressLine2',companyAddress2 ? companyAddress2 : '')
 		formData.append('loginUrl', window.location.origin);
+		
+		toast.success('Please check you email to set your password', {
+			position: toast.POSITION.TOP_RIGHT,
+			autoClose:15000,});
 		this.props.authActions
 			.register(formData)
 			.then((res) => {
 				this.setState({ loading: true });
-				toast.success('Please check you email to set your password', {
-					position: toast.POSITION.TOP_RIGHT,
-					autoClose:15000,
-				});
 			
 				this.setState({
 					userDetail: true,

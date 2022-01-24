@@ -141,7 +141,7 @@ class ExplainTrasactionDetail extends React.Component {
 							amount: res.data.amount ? res.data.amount : '',
 							dueAmount:res.data.dueAmount ? res.data.dueAmount : '',
 							date: res.data.date
-								? moment(res.data.date, 'DD/MM/YYYY').format('DD/MM/YYYY')
+								? moment(res.data.date, 'DD-MM-YYYY').format('DD-MM-YYYY')
 								: '',
 							description: res.data.description ? res.data.description : '',
 							transactionCategoryId: res.data.transactionCategoryId
@@ -174,7 +174,7 @@ class ExplainTrasactionDetail extends React.Component {
 							bankId: bankId,
 							amount: res.data.amount ? res.data.amount : '',
 							date: res.data.date
-								? moment(res.data.date, 'DD/MM/YYYY').format('DD/MM/YYYY')
+								? moment(res.data.date, 'DD-MM-YYYY').format('DD-MM-YYYY')
 								: '',
 							description: res.data.description ? res.data.description : '',
 							transactionCategoryId: res.data.transactionCategoryId
@@ -504,7 +504,7 @@ class ExplainTrasactionDetail extends React.Component {
 		formData.append('bankId ', bankId ? bankId : '');
 		formData.append(
 			'date',
-			typeof date === 'object' ? moment(date).format('DD/MM/YYYY') : date,
+			typeof date === 'object' ? moment(date).format('DD-MM-YYYY') : date,
 		);
 		formData.append(
 			'exchangeRate',
@@ -2273,14 +2273,14 @@ min="0"
 																						placeholderText={strings.TransactionDate}
 																						showMonthDropdown
 																						showYearDropdown
-																						dateFormat="dd/MM/yyyy"
+																						dateFormat="dd-MM-yyyy"
 																						dropdownMode="select"
 																						value={
 																							props.values.date
 																								? moment(
 																									props.values.date,
-																									'DD/MM/YYYY',
-																								).format('DD/MM/YYYY')
+																									'DD-MM-YYYY',
+																								).format('DD-MM-YYYY')
 																								: ''
 																						}
 																						//selected={props.values.date}

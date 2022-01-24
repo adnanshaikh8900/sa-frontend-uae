@@ -111,6 +111,8 @@ class CreatePurchaseOrder extends React.Component {
 					vatCategoryId: '',
 					exciseTaxId:'',
 					exciseAmount:'',
+					// discountType:'FIXED',
+					// discount:0,
 					subTotal: 0,
 					vatAmount:0,
 					productId: '',
@@ -150,9 +152,9 @@ class CreatePurchaseOrder extends React.Component {
 				term: '',
 				totalAmount: 0,
 				notes: '',
-				discount: 0,
+				// discount: 0,
 				discountPercentage: 0,
-				discountType: { value: 'FIXED', label: 'Fixed' },
+				// discountType: 'FIXED',
 			},
 			currentData: {},
 			contactType: 1,
@@ -438,6 +440,102 @@ class CreatePurchaseOrder extends React.Component {
 		);
 	};
 
+// 	renderDiscount = (cell, row, props) => {
+// 		const { discountOptions } = this.state;
+// 	   let idx;
+// 	   this.state.data.map((obj, index) => {
+// 		   if (obj.id === row.id) {
+// 			   idx = index;
+// 		   }
+// 		   return obj;
+// 	   });
+// 	   debugger
+// 	   console.log('DiscountType:'+row.discountType)
+// 	   return (
+// 		   <Field
+// 			    name={`lineItemsString.${idx}.discountType`}
+// 			   render={({ field, form }) => (
+// 			   <div>
+// 			   <div  class="input-group">
+// 				   <Input
+// 	 					type="text"
+// 				   	    min="0"
+// 					    maxLength="17,2"
+// 					    value={row['discount'] !== 0 ? row['discount'] : 0}
+// 					    onChange={(e) => {
+// 						   if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+// 							   this.selectItem(
+// 								   e.target.value,
+// 								   row,
+// 								   'discount',
+// 								   form,
+// 								   field,
+// 								   props,
+// 							   );
+// 						   }
+					   
+// 							   this.updateAmount(
+// 								   this.state.data,
+// 								   props,
+// 							   );
+					   
+// 					   }}
+// 					   placeholder={strings.discount}
+// 					   className={`form-control 
+// 		   ${
+// 						   props.errors.lineItemsString &&
+// 						   props.errors.lineItemsString[parseInt(idx, 10)] &&
+// 						   props.errors.lineItemsString[parseInt(idx, 10)].discount &&
+// 						   Object.keys(props.touched).length > 0 &&
+// 						   props.touched.lineItemsString &&
+// 						   props.touched.lineItemsString[parseInt(idx, 10)] &&
+// 						   props.touched.lineItemsString[parseInt(idx, 10)].discount
+// 							   ? 'is-invalid'
+// 							   : ''
+// 					   }`}
+//    type="text"
+//    />
+// 	<div class="dropdown open input-group-append">
+
+// 		<div 	style={{width:'100px'}}>
+// 		<Select
+
+
+// 																						   options={discountOptions}
+// 																						   id="discountType"
+// 																						   name="discountType"
+// 																						   value={
+// 																						discountOptions &&
+// 																							selectOptionsFactory
+// 																								.renderOptions('label', 'value', discountOptions, 'discount')
+// 																								.find((option) => option.value == row.discountType)
+// 																						   }
+// 																						   onChange={(e) => {
+// 																							   this.selectItem(
+// 																								   e.value,
+// 																								   row,
+// 																								   'discountType',
+// 																								   form,
+// 																								   field,
+// 																								   props,
+// 																							   );
+// 																							   this.updateAmount(
+// 																								   this.state.data,
+// 																								   props,
+// 																							   );
+// 																						   }}
+// 																					   />
+// 			 </div>
+// 			  </div>
+// 			  </div>
+// 			   </div>
+
+// 				   )}
+
+// 		   />
+// 	   );
+//    }
+
 	renderSubTotal = (cell, row, extraData) => {
 		// return row.subTotal === 0 ? (
 		// 	<Currency
@@ -451,6 +549,21 @@ class CreatePurchaseOrder extends React.Component {
 		// 	/>
 		// );
 		return row.subTotal === 0 ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+	};
+
+	renderVatAmount = (cell, row, extraData) => {
+		// return row.subTotal === 0 ? (
+		// 	<Currency
+		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// ) : (
+		// 	<Currency
+		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// );
+		return row.vatAmount === 0 ? this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
 
 	componentDidMount = () => {
@@ -580,6 +693,10 @@ class CreatePurchaseOrder extends React.Component {
 					unitPrice: '',
 					vatCategoryId: '',
 					subTotal: 0,
+					exciseTaxId:'',
+					// discountType:'FIXED',
+					vatAmount:0,
+					// discount: 0,
 					productId: '',
 				}),
 				idCount: this.state.idCount + 1,
@@ -941,11 +1058,11 @@ class CreatePurchaseOrder extends React.Component {
 	// 	const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 	// 	const values = value
 	// 		? value
-	// 		: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
+	// 		: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
 	// 	if (temp && values) {
 	// 		const date = moment(values)
 	// 			.add(temp - 1, 'days')
-	// 			.format('DD/MM/YYYY');
+	// 			.format('DD-MM-YYYY');
 	// 		props.setFieldValue('invoiceDueDate', date, true);
 	// 	}
 	// };
@@ -1038,7 +1155,7 @@ class CreatePurchaseOrder extends React.Component {
 				var val = (+net_value * vat * obj.quantity) / 100;
 				var val1 = net_value * obj.quantity
 			}
-
+			console.log('value '+val)
 			//discount calculation
 			discount = +(discount +(net_value * obj.quantity)) - parseFloat(val1)
 			total_net = +(total_net + net_value * obj.quantity);
@@ -1062,7 +1179,7 @@ class CreatePurchaseOrder extends React.Component {
 					...this.state.initValue,
 					...{
 						total_net: discount ? total_net - discount : total_net,
-						invoiceVATAmount: total_vat,
+						totalVatAmount: total_vat,
 						discount:  discount ? discount : 0,
 						totalAmount: total_net > discount ? total - discount : total - discount,
 						total_excise: total_excise
@@ -1156,7 +1273,7 @@ class CreatePurchaseOrder extends React.Component {
 									total_net: 0,
 									invoiceVATAmount: 0,
 									totalAmount: 0,
-									discountType: '',
+									// discountType: 'FIXED', 
 									discount: 0,
 									discountPercentage: '',
 								},
@@ -1891,7 +2008,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		maxDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('poApproveDate')(value);
@@ -1925,7 +2042,7 @@ getrfqDetails = (e, row, props,form,field) => {
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 
 																		onChange={(value) => {
 																			props.handleChange('poReceiveDate')(value);
@@ -2052,16 +2169,13 @@ getrfqDetails = (e, row, props,form,field) => {
 																	color="primary"
 																	className= "btn-square mr-3"
 																	onClick={(e, props) => {
-																		this.openProductModal(props);
+																		this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/expense/purchase-order/create"})
 																		}}
-																	
-																	
 																>
 																	<i className="fa fa-plus"></i> {strings.Addproduct}
 																</Button>
-															</Col>
-															
-																				</Row>
+								                                </Col>
+																</Row>
 													
 														<Row>
 															<Col lg={12}>
@@ -2166,6 +2280,15 @@ getrfqDetails = (e, row, props,form,field) => {
 																			then the Excise dropdown will be Disabled
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn> 
+																	{/* <TableHeaderColumn
+																		width="12%"
+																		dataField="discount"
+																		dataFormat={(cell, rows) =>
+																			this.renderDiscount(cell, rows, props)
+																		}
+																	>
+																	DisCount
+																	</TableHeaderColumn> */}
 																	<TableHeaderColumn
 																		dataField="vat"
 																		dataFormat={(cell, rows) =>
@@ -2173,6 +2296,16 @@ getrfqDetails = (e, row, props,form,field) => {
 																		}
 																	>
 																		{strings.VAT}
+																	</TableHeaderColumn>
+																	<TableHeaderColumn
+																	width="10%"
+																	dataField="sub_total"
+																	dataFormat={this.renderVatAmount}
+																	className="text-right"
+																	columnClassName="text-right"
+																	formatExtraData={universal_currency_list}
+																	>
+																	Vat amount
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="sub_total"
@@ -2266,7 +2399,7 @@ getrfqDetails = (e, row, props,form,field) => {
 
 																<Col lg={4}>
 																	<div className="">
-																	<div className="total-item p-2" style={{display:this.state.checked === true ? '':'none'}}>
+																	<div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
@@ -2282,6 +2415,34 @@ getrfqDetails = (e, row, props,form,field) => {
 																				</Col>
 																			</Row>
 																		</div>
+																		{/* <div className="total-item p-2">
+																			<Row>
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																					{strings.Discount}
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																					<label className="mb-0"> */}
+																						{/* {universal_currency_list[0] && (
+																							<Currency
+																								value={initValue.total_net.toFixed(
+																									2,
+																								)}
+																								currencySymbol={
+																									universal_currency_list[0]
+																										? universal_currency_list[0]
+																												.currencyIsoCode
+																										: 'USD'
+																								}
+																							/>
+																						)} */}
+																						{/* {this.state.customer_currency_symbol} &nbsp;
+																						{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					</label>
+																				</Col>
+																			</Row>
+																		</div> */}
 																		<div className="total-item p-2">
 																			<Row>
 																				<Col lg={6}>

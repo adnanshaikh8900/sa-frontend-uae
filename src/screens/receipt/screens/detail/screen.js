@@ -263,7 +263,7 @@ class DetailReceipt extends React.Component {
                                         name="receiptDate"
                                         showMonthDropdown
                                         showYearDropdown
-                                        dateFormat="dd/MM/yyyy"
+                                        dateFormat="dd-MM-yyyy"
                                         dropdownMode="select"
                                         placeholderText={strings.ReceiptDate}
                                         value={props.values.receiptDate ? moment(props.values.receiptDate).format('DD-MM-YYYY') : ''}

@@ -51,7 +51,7 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 
-class FtaExciseAuditReport extends React.Component {
+class ViewFtaExciseAuditReport extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -61,8 +61,8 @@ class FtaExciseAuditReport extends React.Component {
 			FtaExciseAuditData: [],
 			view: false,
 			initValue: {
-				startDate: moment().startOf('month').format('DD/MM/YYYY'),
-				endDate: moment().endOf('month').format('DD/MM/YYYY'),
+				startDate: moment().startOf('month').format('DD-MM-YYYY'),
+				endDate: moment().endOf('month').format('DD-MM-YYYY'),
 				companyId: 1,
 				userId: 1,
 			},
@@ -994,4 +994,4 @@ class FtaExciseAuditReport extends React.Component {
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps,
-)(FtaExciseAuditReport);
+)(ViewFtaExciseAuditReport);

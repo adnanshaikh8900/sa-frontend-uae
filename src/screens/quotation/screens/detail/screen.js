@@ -196,7 +196,7 @@ class DetailQuotation extends React.Component {
 								current_po_id: this.props.location.state.id,
 								initValue: {
 									quotaionExpiration: res.data.quotaionExpiration
-										? moment(res.data.quotaionExpiration).format('DD/MM/YYYY')
+										? moment(res.data.quotaionExpiration).format('DD-MM-YYYY')
 										: '',
 										customerId: res.data.customerId ? res.data.customerId : '',
 										quotationNumber: res.data.quotationNumber
@@ -578,6 +578,22 @@ min="0"
 		// );
 		return row.subTotal === 0 ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
+
+	renderVatAmount = (cell, row, extraData) => {
+		// return row.subTotal === 0 ? (
+		// 	<Currency
+		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// ) : (
+		// 	<Currency
+		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// );
+		return row.vatAmount === 0 ? this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+	};
+	
 	addRow = () => {
 		const data = [...this.state.data];
 		this.setState(
@@ -984,7 +1000,7 @@ min="0"
 		formData.append(
 			'quotaionExpiration',
 			typeof quotaionExpiration === 'string'
-				? moment(quotaionExpiration, 'DD/MM/YYYY').toDate()
+				? moment(quotaionExpiration, 'DD-MM-YYYY').toDate()
 				: quotaionExpiration,
 		);
 	
@@ -995,7 +1011,7 @@ min="0"
 		formData.append('totalExciseAmount', this.state.initValue.total_excise);
         if(placeOfSupplyId){
 		formData.append('placeOfSupplyId' , placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);}
-		formData.append('exciseType', this.state.checked);
+		// formData.append('exciseType', this.state.checked);
 		if (customerId) {
 			formData.append('customerId', customerId);
 		}
@@ -1079,11 +1095,11 @@ min="0"
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 		const values = value
 			? value
-			: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
+			: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
 		if (temp && values) {
 			const date = moment(values)
 				.add(temp - 1, 'days')
-				.format('DD/MM/YYYY');
+				.format('DD-MM-YYYY');
 			props.setFieldValue('invoiceDueDate', date, true);
 		}
 	};
@@ -1608,15 +1624,16 @@ console.log(this.state.supplier_currency)
 																		<DatePicker
 																			id="quotaionExpiration"
 																			name="quotaionExpiration"
+																			minDate={new Date()}
 																			placeholderText={strings.InvoiceDate}
 																			showMonthDropdown
 																			showYearDropdown
-																			dateFormat="dd/MM/yyyy"
+																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			value={props.values.quotaionExpiration}
 																			onChange={(value) => {
 																				props.handleChange('quotaionExpiration')(
-																					moment(value).format('DD/MM/YYYY'),
+																					moment(value).format('DD-MM-YYYY'),
 																				);
 																				this.setDate(props, value);
 																			}}
@@ -1831,6 +1848,16 @@ console.log(this.state.supplier_currency)
 																			{strings.VAT}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
+																			width="10%"
+																			dataField="sub_total"
+																			dataFormat={this.renderVatAmount}
+																			className="text-right"
+																			columnClassName="text-right"
+																			formatExtraData={universal_currency_list}
+																			>
+																			Vat amount
+																		</TableHeaderColumn>
+																		<TableHeaderColumn
 																			dataField="sub_total"
 																			dataFormat={this.renderSubTotal}
 																			className="text-right"
@@ -1864,7 +1891,8 @@ console.log(this.state.supplier_currency)
 																</Col>
 																	<Col lg={4}>
 																		<div className="">
-																		<div className="total-item p-2" style={{display:this.state.checked === true ? '':'none'}}>
+																		<div className="total-item p-2" >
+																		{/* style={{display:this.state.checked === true ? '':'none'}} */}
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">

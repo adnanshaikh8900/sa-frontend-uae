@@ -1902,16 +1902,22 @@ try {
 																			: strings.CreateandMore }
 																		</Button>
 																		<Button
-																			color="secondary"
-																			className="btn-square"
-																			onClick={() => {
-																				this.props.history.push(
-																					'/admin/master/product',
-																				);
-																			}}
-																		>
-																			<i className="fa fa-ban"></i> {strings.Cancel}
-																		</Button>
+																		color="secondary"
+																		className="btn-square"
+																		onClick={() => {
+																			if(this.props.location
+																				&& this.props.location.state
+																				&& this.props.location.state.gotoParentURL
+																			)
+																				this.props.history.push(this.props.location.state.gotoParentURL)
+																			else
+																				this.props.history.push('/admin/master/product');
+													
+																			
+																		}}
+																	>
+																		<i className="fa fa-ban mr-1"></i>{strings.Cancel}
+																	</Button>
 																	</FormGroup>
 																</Col>
 															</Row>

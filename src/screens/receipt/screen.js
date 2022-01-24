@@ -145,7 +145,7 @@ class Receipt extends React.Component {
 
 	renderDate = (cell, rows) => {
 		return rows['receiptDate'] !== null
-			? moment(rows['receiptDate']).format('DD/MM/YYYY')
+			? moment(rows['receiptDate']).format('DD-MM-YYYY')
 			: '';
 	};
 
@@ -487,7 +487,7 @@ class Receipt extends React.Component {
 														autoComplete="off"
 														showMonthDropdown
 														showYearDropdown
-														dateFormat="dd/MM/yyyy"
+														dateFormat="dd-MM-yyyy"
 														dropdownMode="select"
 														onChange={(value) => {
 															this.handleChange(value, 'receiptDate');

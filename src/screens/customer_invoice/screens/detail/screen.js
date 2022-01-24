@@ -219,10 +219,10 @@ class DetailCustomerInvoice extends React.Component {
 									exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
 									currencyName:res.data.currencyName ? res.data.currencyName : '',
 									invoiceDueDate: res.data.invoiceDueDate
-										? moment(res.data.invoiceDueDate).format('DD/MM/YYYY')
+										? moment(res.data.invoiceDueDate).format('DD-MM-YYYY')
 										: '',
 									invoiceDate: res.data.invoiceDate
-										? moment(res.data.invoiceDate).format('DD/MM/YYYY')
+										? moment(res.data.invoiceDate).format('DD-MM-YYYY')
 										: '',
 										invoiceDate1: res.data.invoiceDate
 										? res.data.invoiceDate
@@ -248,7 +248,7 @@ class DetailCustomerInvoice extends React.Component {
 									placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 									fileName: res.data.fileName ? res.data.fileName : '',
 									filePath: res.data.filePath ? res.data.filePath : '',
-									total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
+									total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
 
 								},
 								customer_taxTreatment_des : res.data.taxTreatment ? res.data.taxTreatment : '',
@@ -309,9 +309,10 @@ class DetailCustomerInvoice extends React.Component {
 	calTotalNet = (data) => {
 		let total_net = 0;
 		data.map((obj) => {
-			total_net = +(total_net + +obj.unitPrice * obj.quantity);
+			total_net = +(total_net + (obj.exciseAmount +obj.unitPrice) * obj.quantity);
 			return obj;
 		});
+		total_net=total_net-this.state.discountAmount
 		this.setState({
 			initValue: Object.assign(this.state.initValue, { total_net }),
 		});
@@ -326,7 +327,7 @@ class DetailCustomerInvoice extends React.Component {
 			}
 			return obj;
 		});
-debugger
+
 		return (
 			<Field
 				name={`lineItemsString.${idx}.exciseTaxId`}
@@ -354,7 +355,7 @@ debugger
 						id="exciseTaxId"
 						placeholder={"Select Excise"}
 						onChange={(e) => {
-							debugger
+							
 							this.selectItem(
 								e.value,
 								row,
@@ -396,7 +397,7 @@ debugger
            }
            return obj;
        });
-
+	   
        return (
            <Field
               name={`lineItemsString.${idx}.discountType`}
@@ -406,6 +407,7 @@ debugger
                    <Input
                    type="text"
                    min="0"
+				   width={"50%"}
                        maxLength="17,2"
                        value={row['discount'] !== 0 ? row['discount'] : 0}
                        onChange={(e) => {
@@ -443,18 +445,17 @@ debugger
    />
     <div class="dropdown open input-group-append">
 
-        <div 	style={{width:'100px'}}>
+        <div 	style={{width:'80px'}}>
         <Select
-
+   
 
                                                                                            options={discountOptions}
                                                                                            id="discountType"
                                                                                            name="discountType"
                                                                                            value={
                                                                                                discountOptions &&
-                                                                                               selectOptionsFactory
-                                                                                                   .renderOptions('value', 'label', discountOptions, 'discount')
-                                                                                                   .find((option) => option.value === +row.discountType)
+                                                                                               discountOptions
+                                                                                                   .find((option) => option.value == row.discountType)
                                                                                            }
                                                                                            // onChange={(item) => {
                                                                                            // 	props.handleChange(
@@ -718,7 +719,7 @@ debugger
 					vatCategoryId: '',
 					subTotal: 0,
 					exciseTaxId:'',
-					discountType :'',
+					discountType :'FIXED',
 					vatAmount:0,
 					discount: 0,
 					productId: '',
@@ -1020,7 +1021,7 @@ debugger
 			if(obj.isExciseTaxExclusive === true){
 				if(obj.exciseTaxId === 1){
 				const value = +(obj.unitPrice) / 2 ;
-					net_value = parseFloat(obj.unitPrice) + parseFloat(value) ;
+					net_value = parseFloat(obj.unitPrice) + parseFloat(value);
 					obj.exciseAmount = parseFloat(value) * obj.quantity;
 				}else if (obj.exciseTaxId === 2){
 					const value = obj.unitPrice;
@@ -1125,7 +1126,7 @@ debugger
 			});
 			const date = moment(values)
 				.add(temp, 'days')
-				.format('DD/MM/YYYY');
+				.format('DD-MM-YYYY');
 			props.setFieldValue('invoiceDueDate', date, true);
 			props.setFieldValue('invoiceDate1', values, true);
 		}
@@ -1219,7 +1220,7 @@ debugger
 		formData.append('discount',this.state.initValue.discount);
 	
 		formData.append('totalExciseAmount', this.state.initValue.total_excise);
-		formData.append('exciseType', this.state.checked);
+		// formData.append('exciseType', this.state.checked);
 		formData.append('term', term);
 		//formData.append('placeOfSupplyId',placeOfSupplyId.value);
 		
@@ -1896,7 +1897,7 @@ debugger
 																			placeholderText={strings.InvoiceDate}
 																			showMonthDropdown
 																			showYearDropdown
-																			dateFormat="dd/MM/yyyy"
+																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			 value={props.values.invoiceDate}
 																			 selected={new Date(props.values.invoiceDate1)} 
@@ -1936,7 +1937,7 @@ debugger
 																				showMonthDropdown
 																				showYearDropdown
 																				disabled
-																				dateFormat="dd/MM/yyyy"
+																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
 																				value={props.values.invoiceDueDate}
 																				onChange={(value) => {
@@ -2147,7 +2148,7 @@ debugger
 																		className="invoice-create-table"
 																	>
 																		<TableHeaderColumn
-																			width="5%"
+																			width="3%"
 																			dataAlign="center"
 																			dataFormat={(cell, rows) =>
 																				this.renderActions(cell, rows, props)
@@ -2183,6 +2184,7 @@ debugger
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="quantity"
+																			width="5%"
 																			dataFormat={(cell, rows) =>
 																				this.renderQuantity(cell, rows, props)
 																			}
@@ -2236,6 +2238,15 @@ debugger
 																			{strings.VAT}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
+                                                                        dataField="vat_amount"
+																		dataFormat={this.renderVatAmount}
+																		className="text-right"
+																		columnClassName="text-right"
+																		formatExtraData={universal_currency_list}
+																	>
+																		Vat amount
+																	</TableHeaderColumn>
+																		<TableHeaderColumn
 																			dataField="sub_total"
 																			dataFormat={this.renderSubTotal}
 																			className="text-right"
@@ -2273,7 +2284,7 @@ debugger
 																				</Label>
 																				<Input
 																					type="text"
-																					maxLength="50"
+																					maxLength="100"
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					value={props.values.receiptNumber}
@@ -2377,7 +2388,7 @@ debugger
 																</Col>
 																	<Col lg={4}>
 																		<div className="">
-																		<div className="total-item p-2" style={{display:this.state.checked === true ? '':'none'}}>
+																		<div className="total-item p-2" >
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">
@@ -2393,31 +2404,7 @@ debugger
 																				</Col>
 																			</Row>
 																		</div>
-																			<div className="total-item p-2">
-																				<Row>
-																					<Col lg={6}>
-																						<h5 className="mb-0 text-right">
-																							{strings.TotalNet}
-																						</h5>
-																					</Col>
-																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
-																						{/* {universal_currency_list[0] && (
-																						<Currency
-																						value=	{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						currencySymbol={
-																							universal_currency_list[0]
-																						? universal_currency_list[0].currencyIsoCode
-																						: 'USD'
-																							}
-																							/>
-																							)} */}
-																							{this.state.customer_currency_symbol} &nbsp;
-																							{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																						</label>
-																					</Col>
-																				</Row>
-																			</div>
+																			
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
@@ -2439,6 +2426,31 @@ debugger
 																							)} */}
 																							{this.state.customer_currency_symbol} &nbsp;
 																							{initValue.discount ? '-'+initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						</label>
+																					</Col>
+																				</Row>
+																			</div>
+																			<div className="total-item p-2">
+																				<Row>
+																					<Col lg={6}>
+																						<h5 className="mb-0 text-right">
+																							{strings.TotalNet}
+																						</h5>
+																					</Col>
+																					<Col lg={6} className="text-right">
+																						<label className="mb-0">
+																						{/* {universal_currency_list[0] && (
+																						<Currency
+																						value=	{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						currencySymbol={
+																							universal_currency_list[0]
+																						? universal_currency_list[0].currencyIsoCode
+																						: 'USD'
+																							}
+																							/>
+																							)} */}
+																							{this.state.customer_currency_symbol} &nbsp;
+																							{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																						</label>
 																					</Col>
 																				</Row>

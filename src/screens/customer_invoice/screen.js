@@ -328,7 +328,7 @@ class CustomerInvoice extends React.Component {
 				{row.status}
 			</span>
 			{
-				row.cnCreatedOnPaidInvoice==true &&(
+				row.cnCreatedOnPaidInvoice==true && (row.status=="Paid" || row.status=="Partially Paid") &&(
 					<><br/>( Credit Note Created )</>
 				)
 			}
@@ -554,10 +554,10 @@ class CustomerInvoice extends React.Component {
 		// 					exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
 		// 					currencyName:res.data.currencyName ? res.data.currencyName : '',
 		// 					invoiceDueDate: res.data.invoiceDueDate
-		// 						? moment(res.data.invoiceDueDate).format('DD/MM/YYYY')
+		// 						? moment(res.data.invoiceDueDate).format('DD-MM-YYYY')
 		// 						: '',
 		// 					invoiceDate: res.data.invoiceDate
-		// 						? moment(res.data.invoiceDate).format('DD/MM/YYYY')
+		// 						? moment(res.data.invoiceDate).format('DD-MM-YYYY')
 		// 						: '',
 		// 					contactId: res.data.contactId ? res.data.contactId : '',
 		// 					project: res.data.projectId ? res.data.projectId : '',
@@ -636,10 +636,10 @@ class CustomerInvoice extends React.Component {
 				    selectedData:res.data,
 					invoiceNumber:res.data.referenceNumber,
 					rfqReceiveDate: res.data.invoiceDate
-						? moment(res.data.invoiceDate).format('DD/MM/YYYY')
+						? moment(res.data.invoiceDate).format('DD-MM-YYYY')
 						: '',
 						rfqExpiryDate: res.data.invoiceDueDate
-						? moment(res.data.invoiceDueDate).format('DD/MM/YYYY')
+						? moment(res.data.invoiceDueDate).format('DD-MM-YYYY')
 						: '',
 						supplierId: res.data.supplierId ? res.data.supplierId : '',
 						rfqNumber: res.data.referenceNumber
@@ -1174,7 +1174,7 @@ class CustomerInvoice extends React.Component {
 													autoComplete="off"
 													showMonthDropdown
 													showYearDropdown
-													dateFormat="dd/MM/yyyy"
+													dateFormat="dd-MM-yyyy"
 													dropdownMode="select"
 												 value={filterData.invoiceDate}
 													onChange={(value) => {
@@ -1191,7 +1191,7 @@ class CustomerInvoice extends React.Component {
 													showMonthDropdown
 													showYearDropdown
 													dropdownMode="select"
-													dateFormat="dd/MM/yyyy"
+													dateFormat="dd-MM-yyyy"
 													autoComplete="off"
 													selected={filterData.invoiceDueDate}
 													onChange={(value) => {
@@ -1401,6 +1401,7 @@ class CustomerInvoice extends React.Component {
 					openModal={this.state.openModal}
 					closeModal={(e) => {
 						this.closeModal(e);
+						this.initializeData();
 					}}
 				updateParentAmount={
 					(e,e1) => {

@@ -208,10 +208,10 @@ class DetailSupplierInvoice extends React.Component {
 									exchangeRate:res.data.exchangeRate ? res.data.exchangeRate : '',
 									currencyName:res.data.currencyName ? res.data.currencyName : '',
 									invoiceDueDate: res.data.invoiceDueDate
-										? moment(res.data.invoiceDueDate).format('DD/MM/YYYY')
+										? moment(res.data.invoiceDueDate).format('DD-MM-YYYY')
 										: '',
 									invoiceDate: res.data.invoiceDate
-									? moment(res.data.invoiceDate).format('DD/MM/YYYY')
+									? moment(res.data.invoiceDate).format('DD-MM-YYYY')
 									: '',
 									invoiceDate1: res.data.invoiceDate
 									? res.data.invoiceDate
@@ -244,7 +244,7 @@ class DetailSupplierInvoice extends React.Component {
 									filePath: res.data.filePath ? res.data.filePath : '',
                                     isReverseChargeEnabled: res.data.isReverseChargeEnabled ? true : false,
 									checked: res.data.exciseType ? res.data.exciseType : '',
-									total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
+									total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
 								},
 								customer_taxTreatment_des: res.data.taxTreatment ? res.data.taxTreatment : '',
 								checked: res.data.exciseType ? res.data.exciseType : res.data.exciseType,
@@ -328,9 +328,10 @@ class DetailSupplierInvoice extends React.Component {
 	calTotalNet = (data) => {
 		let total_net = 0;
 		data.map((obj) => {
-			total_net = +(total_net + +obj.unitPrice * obj.quantity);
+			total_net = +(total_net +(obj.exciseAmount +obj.unitPrice) * obj.quantity); 
 			return obj;
 		});
+		total_net=total_net-this.state.discountAmount
 		this.setState({
 			initValue: Object.assign(this.state.initValue, { total_net }),
 		});
@@ -426,7 +427,6 @@ class DetailSupplierInvoice extends React.Component {
 						id="exciseTaxId"
 						placeholder={strings.Select+strings.Vat}
 						onChange={(e) => {
-							debugger
 							this.selectItem(
 								e.value,
 								row,
@@ -687,7 +687,7 @@ class DetailSupplierInvoice extends React.Component {
                                                                                                discountOptions &&
                                                                                                selectOptionsFactory
                                                                                                    .renderOptions('label', 'value', discountOptions, 'discount')
-                                                                                                   .find((option) => option.value === +row.discountType)
+                                                                                                   .find((option) => option.value == row.discountType)
                                                                                            }
                                                                                            // onChange={(item) => {
                                                                                            // 	props.handleChange(
@@ -776,7 +776,7 @@ class DetailSupplierInvoice extends React.Component {
 					vatCategoryId: '',
 					subTotal: 0,
 					exciseTaxId:'',
-					discountType :'',
+					discountType :'FIXED',
 					vatAmount:0,
 					discount: 0,
 					productId: '',
@@ -1402,7 +1402,7 @@ class DetailSupplierInvoice extends React.Component {
 			});
 			const date = moment(values)
 				.add(temp, 'days')
-				.format('DD/MM/YYYY');
+				.format('DD-MM-YYYY');
 			props.setFieldValue('invoiceDueDate', date, true);
 			props.setFieldValue('invoiceDate1', values, true);
 		}
@@ -1959,7 +1959,7 @@ class DetailSupplierInvoice extends React.Component {
 																			placeholderText={strings.InvoiceDate}
 																			showMonthDropdown
 																			showYearDropdown
-																			dateFormat="dd/MM/yyyy"
+																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			value={props.values.invoiceDate}
 																			selected={new Date(props.values.invoiceDate1)} 
@@ -1998,7 +1998,7 @@ class DetailSupplierInvoice extends React.Component {
 																				showMonthDropdown
 																				showYearDropdown
 																				disabled
-																				dateFormat="dd/MM/yyyy"
+																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
 																				onChange={(value) => {
 																					props.handleChange('invoiceDueDate')(
@@ -2362,7 +2362,7 @@ class DetailSupplierInvoice extends React.Component {
 																				</Label>
 																				<Input
 																					type="text"
-																					maxLength="50"
+																					maxLength="100"
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					placeholder={strings.ReceiptNumber}
@@ -2476,12 +2476,30 @@ class DetailSupplierInvoice extends React.Component {
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
 
-																						{this.state.customer_currency_symbol} &nbsp;
+																						{this.state.supplier_currency_symbol} &nbsp;
 																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
 																		</div>
+																		<div className="total-item p-2">
+																				<Row>
+																					<Col lg={6}>
+																						<h5 className="mb-0 text-right">
+																							{strings.Discount}
+																						</h5>
+																					</Col>
+																					<Col lg={6} className="text-right">
+																						<label className="mb-0">
+																						{this.state.supplier_currency_symbol} &nbsp;
+																							{this.state.initValue.discount  ? '-'+initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })
+																							
+																						}
+																						
+																						</label>
+																					</Col>
+																				</Row>
+																			</div>
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>
@@ -2507,24 +2525,7 @@ class DetailSupplierInvoice extends React.Component {
 																					</Col>
 																				</Row>
 																			</div>
-																			<div className="total-item p-2">
-																				<Row>
-																					<Col lg={6}>
-																						<h5 className="mb-0 text-right">
-																							{strings.Discount}
-																						</h5>
-																					</Col>
-																					<Col lg={6} className="text-right">
-																						<label className="mb-0">
-																						{this.state.supplier_currency_symbol} &nbsp;
-																							{this.state.initValue.discount  ? '-'+initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })
-																							
-																						}
-																						
-																						</label>
-																					</Col>
-																				</Row>
-																			</div>
+																	
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>

@@ -94,7 +94,7 @@ class CreateGoodsReceivedNote extends React.Component {
 					vatCategoryId: '',
 					subTotal: 0,
 					productId: '',
-					
+					grnReceivedQuantity: 0,
 					
 				},
 			],
@@ -288,7 +288,7 @@ class CreateGoodsReceivedNote extends React.Component {
 						<Input
 						disabled
 							type="number"
-min="0"
+							min="0"
 							value={row['quantity'] !== 0 ? row['quantity'] : 0}
 							onChange={(e) => {
 								if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -555,7 +555,7 @@ min="0"
 				render={({ field, form }) => (
 					<div>
 						<Input
-							type="number"
+							type="text"
 							min="0"
 							maxLength="10"
 							value={row['grnReceivedQuantity'] !== 0 ? row['grnReceivedQuantity'] : 0}
@@ -596,10 +596,15 @@ min="0"
 			// 			}`}
 						/>
 				
-								<div  className="text-danger">
+								{/* <div  className="text-danger">
 									{this.state.grnReceivedQuantityError}
-								</div>
-							
+								</div> */}
+							{row['grnReceivedQuantity'] <=0 && (
+							<div  className="text-danger">
+								Please Enter Quantity
+							</div>
+							)
+						}
 					</div>
 				)}
 			/>
@@ -1219,7 +1224,7 @@ min="0"
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		maxDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('grnReceiveDate')(value);
@@ -1474,7 +1479,14 @@ min="0"
 											type="submit"
 											className="btn-square"
 											disabled={this.state.isSubmitting}
-											
+											onClick={() => {
+												this.setState(
+													{ createMore: false },
+													() => {
+														props.handleSubmit();
+													},
+												);
+											}}
 										>
 											<i className="fa fa-dot-circle-o"></i> {strings.Create}
 										</Button>

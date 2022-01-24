@@ -217,11 +217,11 @@ class CreateCreditNoteModal extends React.Component {
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 		const values = value
 			? value
-			: moment(props.values.creditNoteDate, 'DD/MM/YYYY').toDate();
+			: moment(props.values.creditNoteDate, 'DD-MM-YYYY').toDate();
 		// if (temp && values) {
 		// 	const date = moment(values)
 		// 		.add(temp - 1, 'days')
-		// 		.format('DD/MM/YYYY');
+		// 		.format('DD-MM-YYYY');
 		// 	props.setFieldValue('invoiceDueDate', date, true);
 		// }
 	};
@@ -892,13 +892,13 @@ class CreateCreditNoteModal extends React.Component {
 		formData.append('cnCreatedOnPaidInvoice','1');
 		// formData.append(
 		// 	'invoiceDueDate',
-		// 	invoiceDueDate ? moment(invoiceDueDate, 'DD/MM/YYYY').toDate() : null,
+		// 	invoiceDueDate ? moment(invoiceDueDate, 'DD-MM-YYYY').toDate() : null,
 		// );
 		formData.append(
 			'creditNoteDate',
 			creditNoteDate
 				?
-						moment(creditNoteDate,'DD/MM/YYYY')
+						moment(creditNoteDate,'DD-MM-YYYY')
 						.toDate()
 				: '',
 		);
@@ -923,6 +923,7 @@ class CreateCreditNoteModal extends React.Component {
 		formData.append('type', 7);
 		formData.append('lineItemsString', JSON.stringify(this.state.selectedData.invoiceLineItems));
 		formData.append('totalAmount', this.state.totalAmount );
+		formData.append('discount', this.state.selectedData.discount ?this.state.selectedData.discount:0 );
         formData.append('totalVatAmount',this.state.totalVatAmount );
 	   	// formData.append('discount', discount);
 		// if (discountType && discountType.value) {
@@ -1299,7 +1300,7 @@ class CreateCreditNoteModal extends React.Component {
 																		placeholderText={strings.CreditNoteDate}
 																		showMonthDropdown
 																		showYearDropdown
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		dropdownMode="select"
 																		value={props.values.creditNoteDate}
 																		selected={props.values.creditNoteDate}
@@ -1544,7 +1545,23 @@ class CreateCreditNoteModal extends React.Component {
 																</Col>
 																	<Col lg={4}>
 																		<div className="">
-																		
+																		<div className="total-item p-2">
+																				<Row>
+																					<Col lg={6}>
+																						<h5 className="mb-0 text-right">
+																						Discount
+																						</h5>
+																					</Col>
+																					<Col lg={6} className="text-right">
+																						<label className="mb-0">
+																					
+																								{this.state.selectedData.currencyIsoCode}  &nbsp;
+																								{this.state.selectedData.discount ? this.state.selectedData.discount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 }):"0"}
+																							
+																						</label>
+																					</Col>
+																				</Row>
+																			</div>
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>

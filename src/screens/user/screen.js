@@ -278,7 +278,7 @@ class User extends React.Component {
 
 	renderDate = (cell, row) => {
 		return row['dob'] !== null
-			? moment(row['dob'], 'DD-MM-YYYY').format('DD/MM/YYYY')
+			? moment(row['dob'], 'DD-MM-YYYY').format('DD-MM-YYYY')
 			: '';
 	};
 
@@ -433,7 +433,7 @@ class User extends React.Component {
 														showMonthDropdown
 														showYearDropdown
 														autoComplete="off"
-														dateFormat="dd/MM/yyyy"
+														dateFormat="dd-MM-yyyy"
 														dropdownMode="select"
 														selected={filterData.dob}
 														value={filterData.dob}

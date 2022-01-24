@@ -162,7 +162,7 @@ dateLimit=()=>{
 
 		if(endDate){
 			var datearray = endDate.split("/");
-			return	new Date(parseInt(datearray[2]),parseInt(datearray[1])-1,parseInt(datearray[0]))
+			return	new Date(parseInt(datearray[2]),parseInt(datearray[1])-1,parseInt(datearray[0])+1)
 		}
 	}
 	render() {
@@ -230,6 +230,7 @@ dateLimit=()=>{
 																	type="text"
 																	name="taxablePersonNameInEnglish"
 																	id="taxablePersonNameInEnglish"
+																	maxLength="100"
 																	placeholder={"Enter Taxable Person Name (English)"}
 																	onChange={(option) =>{
 																		props.handleChange('taxablePersonNameInEnglish')(option)
@@ -253,6 +254,7 @@ dateLimit=()=>{
 																	type="text"
 																	name="taxablePersonNameInArabic"
 																	id="taxablePersonNameInArabic"
+																	maxLength="100"
 																	placeholder={"Enter Taxable Person Name (Arabic)"}
 																	onChange={(option) =>
 																		props.handleChange('taxablePersonNameInArabic')(option)
@@ -274,6 +276,7 @@ dateLimit=()=>{
 																	type="text"
 																	name="taxAgentName"
 																	id="taxAgentName"
+																	maxLength="100"
 																	placeholder={"Enter Agenct Name"}
 																	onChange={(option) =>
 																		props.handleChange('taxAgentName')(option)
@@ -299,6 +302,7 @@ dateLimit=()=>{
 																	type="text"
 																	name="taxAgencyName"
 																	id="taxAgencyName"
+																	maxLength="100"
 																	placeholder={"Enter Tax Agency Name"}
 																	onChange={(option) =>{
 																		props.handleChange('taxAgencyName')(option)
@@ -323,14 +327,14 @@ dateLimit=()=>{
 																	type="text"
 																	name="taxAgencyNumber"
 																	id="taxAgencyNumber"
-																	maxLength={10}
+																	maxLength="8"
 																	autoComplete='off'
 																	placeholder={"Enter Tax Agency Number (TAN)"}
 																	onChange={(option) =>
 																		{
 																		if (option.target.value === '' ||
-																				this.regExBoth.test(option.target.value)
-																			) {
+																				this.regEx.test(option.target.value)
+																			) {																				
 																				props.handleChange('taxAgencyNumber')(option)
 																			}
 																		}
@@ -353,19 +357,19 @@ dateLimit=()=>{
 																	type="text"
 																	name="taxAgentApprovalNumber"
 																	id="taxAgentApprovalNumber"
-																	maxLength={8}
-																	placeholder={"Enter Agenct Approval Number"}
+																	maxLength="8"
+																	placeholder={"Enter Agent Approval Number"}
 															
 																	onChange={(option) => {
 																		
 																		if (
 																			option.target.value === '' ||
-																			this.regExTelephone.test(option.target.value)
+																			this.regEx.test(option.target.value)
 																		) {
 																			props.handleChange('taxAgentApprovalNumber')(option);
 																		}
 																	}}
-																	defaultValue={props.values.taxAgentApprovalNumber}
+																	value={props.values.taxAgentApprovalNumber}
 																/>
 																{props.errors.taxAgentApprovalNumber &&												
 																		(
@@ -430,7 +434,7 @@ dateLimit=()=>{
 																		showMonthDropdown
 																		showYearDropdown
 																		autoComplete='off'
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		dropdownMode="select"
 																		minDate={this.dateLimit()}
 																		value={props.values.taxFiledOn}

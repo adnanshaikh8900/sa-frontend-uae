@@ -176,8 +176,8 @@ class PayrollSummaryReport extends React.Component {
 	renderPayperiod = (row) => {
 		let dateArr=row.payPeriod ? row.payPeriod.split("-"):[];
 
-				let  startDate= moment(dateArr[0]).format('DD/MM/YYYY')
-				let	 endDate=moment(dateArr[1]).format('DD/MM/YYYY')
+				let  startDate= moment(dateArr[0]).format('DD-MM-YYYY')
+				let	 endDate=moment(dateArr[1]).format('DD-MM-YYYY')
 		
 		return(
 			<div>{startDate}<b>&nbsp;to&nbsp;</b>{endDate}</div>
@@ -201,10 +201,10 @@ class PayrollSummaryReport extends React.Component {
 		this.pdfExportComponent.save();
 	};
 	renderinvoiceDate = (cell, rows) => {
-		return moment(rows.invoiceDate).format('DD/MM/YYYY');
+		return moment(rows.invoiceDate).format('DD-MM-YYYY');
 	};
 	renderinvoiceDueDate = (cell, rows) => {
-		return moment(rows.invoiceDueDate).format('DD/MM/YYYY');
+		return moment(rows.invoiceDueDate).format('DD-MM-YYYY');
 	};
 	renderbalance = (cell, row, extraData) => {
 		return row.balance === 0 ? (
@@ -431,7 +431,7 @@ class PayrollSummaryReport extends React.Component {
 																<tr key={index}>
 																	<td style={{ textAlign: 'center'}}>
 																	{item.payrollDate ? (
-																		moment(item.payrollDate).format('DD/MM/YYYY')
+																		moment(item.payrollDate).format('DD-MM-YYYY')
 																	) : (" ")}</td>
 																	
 																	<td style={{ textAlign: 'center'}}>{item.payrollSubject}</td>
@@ -442,7 +442,7 @@ class PayrollSummaryReport extends React.Component {
 																	
 																	<td style={{ textAlign: 'center'}}>
 																	{item.runDate ? (
-																		moment(item.runDate).format('DD/MM/YYYY')
+																		moment(item.runDate).format('DD-MM-YYYY')
 																	) : (" ")}</td>
 																	<td style={{ textAlign: 'center' }}>{item.status}</td>
 																	<td style={{ textAlign: 'right' }}>{this.renderPayrolltotalAmount(item)}</td>

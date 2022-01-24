@@ -157,11 +157,11 @@ class CreateSupplierInvoice extends React.Component {
 				notes: '',
 				discount: 0,
 				discountPercentage: 0,
-				discountType:'',
+				discountType:'FIXED',
 				total_excise: 0,
 
 			},
-			discountType : {value: 'FIXED', label: 'FIXED' },
+			discountType : "FIXED",
 			// excisetype: { value: 'Inclusive', label: 'Inclusive' },
 			currentData: {},
 			contactType: 1,
@@ -217,7 +217,7 @@ class CreateSupplierInvoice extends React.Component {
 			{ label: 'Fujairah', value: '7' },
 		];
 		this.regEx = /^[0-9\b]+$/;
-		this.regExBoth = /[a-zA-Z0-9]+$/;
+		this.regExBoth = /[a-zA-Z0-9 /D]+$/;
 		this.regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 		this.regDec1=/^\d{1,2}\.\d{1,2}$|^\d{1,2}$/;
 	}
@@ -519,7 +519,7 @@ class CreateSupplierInvoice extends React.Component {
 					vatCategoryId: '',
 					subTotal: 0,
 					exciseTaxId:'',
-					discountType:'',
+					discountType:'FIXED',
 					vatAmount:0,
 					discount: 0,
 					productId: '',
@@ -642,7 +642,7 @@ class CreateSupplierInvoice extends React.Component {
 																								discountOptions &&
 																								selectOptionsFactory
 																									.renderOptions('label', 'value', discountOptions, 'discount')
-																									.find((option) => option.value === +row.discountType)
+																									.find((option) => option.value == row.discountType)
 																							}
 																							// onChange={(item) => {
 																							// 	props.handleChange(
@@ -792,7 +792,6 @@ class CreateSupplierInvoice extends React.Component {
 						id="exciseTaxId"
 						placeholder={"Select Excise"}
 						onChange={(e) => {
-							debugger
 							this.selectItem(
 								e.value,
 								row,
@@ -1100,14 +1099,14 @@ class CreateSupplierInvoice extends React.Component {
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 		const values = value
 			? value
-			: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
+			: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
 			if (temp && values) {
 				this.setState({
 					date: moment(values).add(temp, 'days'),
 				});
 				const date1 = moment(values)
 				.add(temp, 'days')
-				.format('DD/MM/YYYY')
+				.format('DD-MM-YYYY')
 				props.setFieldValue('invoiceDueDate',date1, true);
 			}
 	};
@@ -1273,7 +1272,7 @@ class CreateSupplierInvoice extends React.Component {
 			'invoiceDate',
 			invoiceDate
 				?invoiceDate
-						// moment(invoiceDate,'DD/MM/YYYY')
+						// moment(invoiceDate,'DD-MM-YYYY')
 						// .toDate()
 				: null,
 		);
@@ -1295,7 +1294,7 @@ class CreateSupplierInvoice extends React.Component {
 		formData.append('exciseType', this.state.checked);
 		formData.append('isReverseChargeEnabled',this.state.isReverseChargeEnabled);
 		formData.append('exchangeRate', exchangeRate);
-
+        formData.append('discount',this.state.initValue.discount);
 
 		if (term && term.value) {
 			formData.append('term', term.value);
@@ -2090,7 +2089,7 @@ class CreateSupplierInvoice extends React.Component {
 																		placeholderText={strings.InvoiceDate}
 																		showMonthDropdown
 																		showYearDropdown
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		dropdownMode="select"
 																		value={props.values.invoiceDate}
 																		selected={props.values.invoiceDate}
@@ -2127,7 +2126,7 @@ class CreateSupplierInvoice extends React.Component {
 																			showMonthDropdown
 																			showYearDropdown
 																			disabled
-																			dateFormat="dd/MM/yyyy"
+																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			onChange={(value) => {
 																				props.handleChange('invoiceDueDate')(
@@ -2307,12 +2306,12 @@ class CreateSupplierInvoice extends React.Component {
 																	color="primary"
 																	className= "btn-square "
 																	onClick={(e, props) => {
-																		this.openProductModal(props);
+																		this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/expense/supplier-invoice/create"})
 																		}}
 																>
 																	<i className="fa fa-plus"></i> {strings.Addproduct} 
 																</Button>
-															</Col>
+																</Col>
 
 															
 																				</Row>
@@ -2342,7 +2341,7 @@ class CreateSupplierInvoice extends React.Component {
 																	class="container-fluid"
 																>
 																	<TableHeaderColumn
-																		width="5%"
+																		width="3%"
 																		dataAlign="center"
 																		dataFormat={(cell, rows) =>
 																			this.renderActions(cell, rows, props)
@@ -2502,24 +2501,20 @@ class CreateSupplierInvoice extends React.Component {
 																				</Label>
 																				<Input
 																					type="text"
-																					maxLength="50"
+																					maxLength="100"
 																					id="receiptNumber"
 																					name="receiptNumber"
-																					placeholder={strings.ReceiptNumber}
-																					onChange={(option) => {
-																						if (
-																							option.target.value === '' ||
-																							this.regExBoth.test(
-																								option.target.value,
-																							)
-																						) {
-																							props.handleChange(
-																								'receiptNumber',
-																							)(option);
-																						}
-																					}}
 																					value={props.values.receiptNumber}
+																					placeholder={strings.ReceiptNumber}
+																					onChange={(value) => {
+																						props.handleChange('receiptNumber')(value);
+
+																					}}
+																					className={props.errors.receiptNumber && props.touched.receiptNumber ? "is-invalid" : ""}
 																				/>
+																				{props.errors.receiptNumber && props.touched.receiptNumber && (
+																					<div className="invalid-feedback">{props.errors.receiptNumber}</div>
+																				)}
 																			</FormGroup>
 																		</Col>
 																		<Col lg={6}>
@@ -2617,7 +2612,7 @@ class CreateSupplierInvoice extends React.Component {
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
 																					
-																						{this.state.customer_currency_symbol} &nbsp;
+																						{this.state.supplier_currency_symbol} &nbsp;
 																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																					</label>
 																				</Col>

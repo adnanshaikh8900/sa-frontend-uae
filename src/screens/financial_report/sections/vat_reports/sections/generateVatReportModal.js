@@ -208,12 +208,13 @@ class GenerateVatReportModal extends React.Component {
 																	showYearDropdown
 																	autoComplete="off"
 																	minDate={new Date("01/01/2018")}
-																	maxDate={firstdayoflastmonth.setMonth(firstdayoflastmonth.getMonth()-1)}
+																	// maxDate={firstdayoflastmonth.setMonth(firstdayoflastmonth.getMonth()-1)}
+																	maxDate={new Date(Date.now() - 86400000)}
 																	value={moment(props.values.startDate).format(
-																		'DD/MM/YYYY',
+																		'DD-MM-YYYY',
 																	)}
 																	dropdownMode="select"
-																	dateFormat="dd/MM/yyyy"
+																	dateFormat="dd-MM-yyyy"
 																	// onChange={(value) => {
 																	// 	props.handleChange('startDate')(value);
 																	// 	if (moment(value).isBefore(props.values.startDate)) {
@@ -239,15 +240,17 @@ class GenerateVatReportModal extends React.Component {
 																	name="endDate"
 																	className={`form-control`}
 																	autoComplete="off"
-																	maxDate={lastdayoflastmonth.setMonth(lastdayoflastmonth.getMonth(), 0)}
+																	minDate={new Date("01/01/2018")}
+																	// maxDate={lastdayoflastmonth.setMonth(lastdayoflastmonth.getMonth(), 0)}
+																	maxDate={new Date(Date.now() - 86400000)}
 																	placeholderText="From"
 																	showMonthDropdown
 																	showYearDropdown
 																	value={moment(props.values.endDate).format(
-																		'DD/MM/YYYY',
+																		'DD-MM-YYYY',
 																	)}
 																	dropdownMode="select"
-																	dateFormat="dd/MM/yyyy"
+																	dateFormat="dd-MM-yyyy"
 																	onChange={(value) => {
 																		props.handleChange('endDate')(value);
 																		this.setState({...this.state.initValue,initValue: {endDate: value,startDate:this.state.initValue.startDate} })

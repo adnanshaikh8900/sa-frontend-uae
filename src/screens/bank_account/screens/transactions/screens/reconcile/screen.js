@@ -326,12 +326,12 @@ class ReconcileTransaction extends React.Component {
 																			placeholderText={strings.Select+" "+strings.BankClosingDate}
 																			showMonthDropdown
 																			showYearDropdown
-																			dateFormat="dd/MM/yyyy"
+																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			value={
 																				props.values.date
 																					? moment(props.values.date).format(
-																							'DD/MM/YYYY',
+																							'DD-MM-YYYY',
 																					  )
 																					: ''
 																			}

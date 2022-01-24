@@ -925,7 +925,7 @@ min="0"
 																			}
 																			showMonthDropdown
 																			showYearDropdown
-																			dateFormat="dd/MM/yyyy"
+																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			autoComplete="off"
 																			value={

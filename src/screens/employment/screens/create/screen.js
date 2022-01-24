@@ -246,8 +246,6 @@ class CreateEmployment extends React.Component {
                        <Row>
                          
                            <Col lg={10}>
-                      
-                          
                             <Row  >
                             <Col md="4">
                                 <FormGroup>
@@ -279,7 +277,7 @@ class CreateEmployment extends React.Component {
                                     placeholderText="Select Date Of Joining"
                                     showMonthDropdown
                                     showYearDropdown 
-                                    dateFormat="dd/MM/yyyy"
+                                    dateFormat="dd-MM-yyyy"
                                     dropdownMode="select"
                                     selected={props.values.dateOfJoining}
                                     value={props.values.dateOfJoining}
@@ -293,7 +291,7 @@ class CreateEmployment extends React.Component {
                                 </FormGroup>
                               </Col>
                             </Row>
-                     
+
                             <Row className="row-wrapper">
                             <Col md="4">
                                 <FormGroup>
@@ -323,7 +321,7 @@ class CreateEmployment extends React.Component {
                                     id="labourCard"
                                     name="labourCard"
                                     value={props.values.labourCard}
-                                    placeholder="Enter labour Card"
+                                    placeholder="Enter Labour Card"
                                     onChange={(option) => {
                                       if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('labourCard')(option) }
                                     }}
@@ -415,7 +413,7 @@ class CreateEmployment extends React.Component {
                                     placeholderText="Select passport Expiry Date"
                                     showMonthDropdown
                                     showYearDropdown 
-                                    dateFormat="dd/MM/yyyy"
+                                    dateFormat="dd-MM-yyyy"
                                     dropdownMode="select"
                                     selected={props.values.passportExpiryDate}
                                     value={props.values.passportExpiryDate}
@@ -462,7 +460,7 @@ class CreateEmployment extends React.Component {
                                     placeholderText="Select visa Expiry Date"
                                     showMonthDropdown
                                     showYearDropdown 
-                                    dateFormat="dd/MM/yyyy"
+                                    dateFormat="dd-MM-yyyy"
                                     dropdownMode="select"
                                     selected={props.values.visaExpiryDate}
                                     value={props.values.visaExpiryDate}

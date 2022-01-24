@@ -54,10 +54,13 @@ class ImportTransaction extends React.Component {
 				skipRows: '',
 				headerRowNo: '',
 				textQualifier: '',
-				dateFormatId: '',
+				dateFormatId: 3,
 				delimiter: '',
 				otherDilimiterStr: '',
 			},
+			// DateErrorMessage:"-",
+			isDateFormatAndFileDateFormatSame:true,
+			showMessage: false,
 			delimiterList: [],
 			fileName: '',
 			tableHeader: [],
@@ -68,7 +71,7 @@ class ImportTransaction extends React.Component {
 			tableData: [],
 			columnStatus: [],
 			selectedDelimiter: '',
-			selectedDateFormat: '',
+			selectedDateFormat: 3,
 			configurationList: [],
 			selectedConfiguration: '',
 			selectError: [],
@@ -304,6 +307,27 @@ class ImportTransaction extends React.Component {
 		});
 	};
 
+
+	// setDateMessage=()=>{
+	// 		//date,file tabledata ,date column 
+			
+	// 		let dateFormat=this.state.dateFormat  ?this.state.dateFormat:"";
+	// 		let tableDataDate=this.state.tableData && this.state.tableData[0] && this.state.tableData[0].Date?this.state.tableData[0].Date :"";
+			
+	// 		if(tableDataDate !=""){
+	// 			if(tableDataDate.includes("-")!=dateFormat.includes("-")){
+	// 				this.setState({DateErrorMessage:"date formats must be same.",isDateFormatAndFileDateFormatSame:false});
+	// 				return false
+	// 				}
+	// 	            // tableDataDate=tableDataDate.replaceAll("-","/");
+	// 				// let tableDateFormat=moment(tableDataDate).creationData();
+	// 				// if(tableDateFormat=="Invalid Date")
+	// 				//    tableDateFormat=new Date(tableDataDate).format("DD/MM/YYYY");
+	// 				debugger
+	// 		}
+	// 		this.setState({isDateFormatAndFileDateFormatSame:true});
+	// 		return true
+	// }
 	handleSave = () => {
 		let optionErr = [...this.state.selectError];
 		let item = this.state.selectedValueDropdown
@@ -340,6 +364,9 @@ class ImportTransaction extends React.Component {
 						id: res.data.id,
 						bankAccountId: this.props.location.state.bankAccountId,
 					});
+					// if (res.data.includes('Transactions Imported 0')) {
+					// 	this.setState({ selectedTemplate: [], tableData: [] ,showMessage : true});
+					// }
 				})
 				.catch((err) => {
 					this.props.commonActions.tostifyAlert(
@@ -361,6 +388,7 @@ class ImportTransaction extends React.Component {
 			tableData,
 			initialloading,
 			configurationList,
+			showMessage,
 		} = this.state;
 		const { date_format_list } = this.props;
 		const bankAccountId = this.props.location.state.bankAccountId;
@@ -746,6 +774,7 @@ class ImportTransaction extends React.Component {
 																						style={{ flexDirection: 'column' }}
 																					>
 																						<Select
+																						isDisabled
 																							type=""
 																							options={
 																								date_format_list
@@ -786,6 +815,7 @@ class ImportTransaction extends React.Component {
 																											...this.state.error,
 																											...{ dateFormatId: '' },
 																										},
+																										dateFormat:option.label
 																									});
 																								} else {
 																									this.handleInputChange(
@@ -826,7 +856,9 @@ class ImportTransaction extends React.Component {
 																					className="btn-square"
 																					// disabled={this.state.fileName ? false : true}
 																					onClick={() => {
-																						this.handleApply();
+																						
+																						// if(this.setDateMessage())
+																					{	this.handleApply();}
 																					}}
 																				>
 																					<i className="fa fa-dot-circle-o"></i>{' '}
@@ -840,6 +872,17 @@ class ImportTransaction extends React.Component {
 														</Row>
 														{/* <Row className="mt-5"> */}
 														{/* </Row> */}
+														<div 
+															//  style={{display: this.state.showMessage === true ? '': 'none'}}
+															className="mt-4"
+															>
+																<Label
+																className="text-center">
+																	{/* Message */}
+																</Label>
+																{/* {this.setDateMessage()} */}
+																{this.state.DateErrorMessage}
+															</div>
 													</Form>
 													{/* )
                             }
@@ -847,7 +890,7 @@ class ImportTransaction extends React.Component {
 													<Row>
 														{loading ? (
 															<Loader />
-														) : this.state.tableDataKey.length > 0 ? (
+														) : this.state.tableDataKey.length > 0 && this.state.isDateFormatAndFileDateFormatSame==true ? (
 															this.state.tableDataKey.map((header, index) => {
 																return (
 																	<Col
@@ -909,7 +952,7 @@ class ImportTransaction extends React.Component {
 															})
 														) : null}
 														{/* <div> */}
-														{this.state.tableDataKey.length > 0 ? (
+														{this.state.tableDataKey.length > 0  &&this.state.isDateFormatAndFileDateFormatSame==true? (
 															<BootstrapTable
 																data={tableData}
 																keyField={this.state.tableDataKey[0]}

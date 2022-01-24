@@ -57,44 +57,45 @@ class VatReports extends React.Component {
 			openVatSettingModal: false,
 			openFileTaxRetrunModal: false,
 			coaName: '',
-			vatReportDataList: [
-				{
-				id:11,	taxReturns: "30/11/2021-14/12/2021", totalTaxPayable: 3000, totalTaxReclaimable: null, filedOn: "2021-12-23T06:41:37", status: "Paid", balanceDue: null, currency: "AED", currency: "AED", action: true
-				},
-				{
-					id:12,	taxReturns: "30/11/2021-14/12/2021", totalTaxPayable: 5380, totalTaxReclaimable: null, filedOn: "2021-12-23T06:41:37", status: "Partially Paid", balanceDue: 1380, currency: "AED", action: true
-				},
-				{
-					id:13,	taxReturns: "30/11/2021-14/12/2021", totalTaxPayable: 4555, totalTaxReclaimable: null, filedOn: "2021-12-23T06:41:37", status: "Filed", balanceDue: 4500, currency: "AED", action: true
-				},
-				{
-					id:14,	taxReturns: "30/11/2021-14/12/2021", totalTaxPayable: 6780, totalTaxReclaimable: null, filedOn: null, status: "UnFiled", balanceDue: 4500, currency: "AED", action: true
-				},
-				{
-					id:15,	taxReturns: "30/11/2021-14/12/2021", totalTaxPayable: null, totalTaxReclaimable: 1252, filedOn: "2021-12-23T06:41:37", status: "Reclaimed", balanceDue: null, currency: "AED", action: true
-				},
-				{
-					id:16,	taxReturns: "30/11/2021-14/12/2021", totalTaxPayable: null, totalTaxReclaimable: 4500, filedOn: "2021-12-23T06:41:37", status: "Filed", balanceDue: 4500, currency: "AED", action: true
-				},
-				{
-					taxReturns: "30/11/2021-14/12/2021", totalTaxPayable: 3000, totalTaxReclaimable: null, filedOn: "2021-12-23T06:41:37", status: "Paid", balanceDue: null, currency: "AED", action: true
-				},
-				{
-					taxReturns: "30/11/2021-14/12/2021", totalTaxPayable: 5380, totalTaxReclaimable: null, filedOn: "2021-12-23T06:41:37", status: "Partially Paid", balanceDue: 1380, currency: "AED", action: true
-				},
-				{
-					taxReturns: "30/11/2021-14/12/2021", totalTaxPayable: 4555, totalTaxReclaimable: null, filedOn: "2021-12-23T06:41:37", status: "Filed", balanceDue: 4500, currency: "AED", action: true
-				},
-				{
-					taxReturns: "30/11/2021-14/12/2021", totalTaxPayable: 6780, totalTaxReclaimable: null, filedOn: null, status: "UnFiled", balanceDue: 4500, currency: "AED", action: true
-				},
-				{
-					taxReturns: "30/11/2021-14/12/2021", totalTaxPayable: null, totalTaxReclaimable: 1252, filedOn: "2021-12-23T06:41:37", status: "Reclaimed", balanceDue: null, currency: "AED", action: true
-				},
-				{
-					taxReturns: "30/11/2021-14/12/2021", totalTaxPayable: null, totalTaxReclaimable: 4500, filedOn: "2021-12-23T06:41:37", status: "Filed", balanceDue: 4500, currency: "AED", action: true
-				}
-			],
+			vatReportDataList:[],
+			// vatReportDataList: [
+			// 	{
+			// 	id:11,	taxReturns: "30/11/2021-14/12/2021", totalTaxPayable: 3000, totalTaxReclaimable: null, filedOn: "2021-12-23T06:41:37", status: "Paid", balanceDue: null, currency: "AED", currency: "AED", action: true
+			// 	},
+			// 	{
+			// 		id:12,	taxReturns: "30/11/2021-14/12/2021", totalTaxPayable: 5380, totalTaxReclaimable: null, filedOn: "2021-12-23T06:41:37", status: "Partially Paid", balanceDue: 1380, currency: "AED", action: true
+			// 	},
+			// 	{
+			// 		id:13,	taxReturns: "30/11/2021-14/12/2021", totalTaxPayable: 4555, totalTaxReclaimable: null, filedOn: "2021-12-23T06:41:37", status: "Filed", balanceDue: 4500, currency: "AED", action: true
+			// 	},
+			// 	{
+			// 		id:14,	taxReturns: "30/11/2021-14/12/2021", totalTaxPayable: 6780, totalTaxReclaimable: null, filedOn: null, status: "UnFiled", balanceDue: 4500, currency: "AED", action: true
+			// 	},
+			// 	{
+			// 		id:15,	taxReturns: "30/11/2021-14/12/2021", totalTaxPayable: null, totalTaxReclaimable: 1252, filedOn: "2021-12-23T06:41:37", status: "Reclaimed", balanceDue: null, currency: "AED", action: true
+			// 	},
+			// 	{
+			// 		id:16,	taxReturns: "30/11/2021-14/12/2021", totalTaxPayable: null, totalTaxReclaimable: 4500, filedOn: "2021-12-23T06:41:37", status: "Filed", balanceDue: 4500, currency: "AED", action: true
+			// 	},
+			// 	{
+			// 		taxReturns: "30/11/2021-14/12/2021", totalTaxPayable: 3000, totalTaxReclaimable: null, filedOn: "2021-12-23T06:41:37", status: "Paid", balanceDue: null, currency: "AED", action: true
+			// 	},
+			// 	{
+			// 		taxReturns: "30/11/2021-14/12/2021", totalTaxPayable: 5380, totalTaxReclaimable: null, filedOn: "2021-12-23T06:41:37", status: "Partially Paid", balanceDue: 1380, currency: "AED", action: true
+			// 	},
+			// 	{
+			// 		taxReturns: "30/11/2021-14/12/2021", totalTaxPayable: 4555, totalTaxReclaimable: null, filedOn: "2021-12-23T06:41:37", status: "Filed", balanceDue: 4500, currency: "AED", action: true
+			// 	},
+			// 	{
+			// 		taxReturns: "30/11/2021-14/12/2021", totalTaxPayable: 6780, totalTaxReclaimable: null, filedOn: null, status: "UnFiled", balanceDue: 4500, currency: "AED", action: true
+			// 	},
+			// 	{
+			// 		taxReturns: "30/11/2021-14/12/2021", totalTaxPayable: null, totalTaxReclaimable: 1252, filedOn: "2021-12-23T06:41:37", status: "Reclaimed", balanceDue: null, currency: "AED", action: true
+			// 	},
+			// 	{
+			// 		taxReturns: "30/11/2021-14/12/2021", totalTaxPayable: null, totalTaxReclaimable: 4500, filedOn: "2021-12-23T06:41:37", status: "Filed", balanceDue: 4500, currency: "AED", action: true
+			// 	}
+			// ],
 			paginationPageSize: 10,
 			dialog: false,
 			current_report_id: '',
@@ -503,7 +504,7 @@ class VatReports extends React.Component {
 
 	renderDate = (cell, row) => {
 		return cell ? moment(cell)
-			// .format('DD/MM/YYYY') 
+			// .format('DD-MM-YYYY') 
 			.format('LL')
 			: '-';
 	};
@@ -511,8 +512,8 @@ class VatReports extends React.Component {
 	renderTaxReturns = (cell, row) => {
 		let dateArr = cell ? cell.split("-") : [];
 
-		let startDate = moment(dateArr[0]).format('DD/MM/YYYY')
-		let endDate = moment(dateArr[1]).format('DD/MM/YYYY')
+		let startDate = moment(dateArr[0]).format('DD-MM-YYYY')
+		let endDate = moment(dateArr[1]).format('DD-MM-YYYY')
 
 		return (<>{dateArr[0]}</>);
 	};

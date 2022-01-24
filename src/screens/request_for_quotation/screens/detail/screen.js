@@ -210,10 +210,10 @@ class DetailRequestForQuotation extends React.Component {
 								current_rfq_id: this.props.location.state.id,
 								initValue: {
 									rfqReceiveDate: res.data.rfqReceiveDate
-										? moment(res.data.rfqReceiveDate).format('DD/MM/YYYY')
+										? moment(res.data.rfqReceiveDate).format('DD-MM-YYYY')
 										: '',
 										rfqExpiryDate: res.data.rfqExpiryDate
-										? moment(res.data.rfqExpiryDate).format('DD/MM/YYYY')
+										? moment(res.data.rfqExpiryDate).format('DD-MM-YYYY')
 										: '',
 										supplierId: res.data.supplierId ? res.data.supplierId : '',
 										rfqNumber: res.data.rfqNumber
@@ -231,7 +231,7 @@ class DetailRequestForQuotation extends React.Component {
 										fileName: res.data.fileName ? res.data.fileName : '',
 										
 										placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
-										total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
+										total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
 								},
 								customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
 								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
@@ -629,6 +629,21 @@ class DetailRequestForQuotation extends React.Component {
 		);
 	};
 
+	renderVatAmount = (cell, row, extraData) => {
+		// return row.subTotal === 0 ? (
+		// 	<Currency
+		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// ) : (
+		// 	<Currency
+		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// );
+		return row.vatAmount === 0 ? this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+	};
+
 	selectItem = (e, row, name, form, field, props) => {
 		//e.preventDefault();
 		let data = this.state.data;
@@ -1008,13 +1023,13 @@ class DetailRequestForQuotation extends React.Component {
 		formData.append(
 			'rfqExpiryDate',
 			typeof rfqExpiryDate === 'string'
-				? moment(rfqExpiryDate, 'DD/MM/YYYY').toDate()
+				? moment(rfqExpiryDate, 'DD-MM-YYYY').toDate()
 				: rfqExpiryDate,
 		);
 		formData.append(
 			'rfqReceiveDate',
 			typeof rfqReceiveDate === 'string'
-				? moment(rfqReceiveDate, 'DD/MM/YYYY').toDate()
+				? moment(rfqReceiveDate, 'DD-MM-YYYY').toDate()
 				: rfqReceiveDate,
 		);
 	
@@ -1112,11 +1127,11 @@ class DetailRequestForQuotation extends React.Component {
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 		const values = value
 			? value
-			: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
+			: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
 		if (temp && values) {
 			const date = moment(values)
 				.add(temp - 1, 'days')
-				.format('DD/MM/YYYY');
+				.format('DD-MM-YYYY');
 			props.setFieldValue('invoiceDueDate', date, true);
 		}
 	};
@@ -1599,12 +1614,12 @@ class DetailRequestForQuotation extends React.Component {
 																			placeholderText={strings.RFQDate}
 																			showMonthDropdown
 																			showYearDropdown
-																			dateFormat="dd/MM/yyyy"
+																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			value={props.values.rfqReceiveDate}
 																			onChange={(value) => {
 																				props.handleChange('rfqReceiveDate')(
-																					moment(value).format('DD/MM/YYYY'),
+																					moment(value).format('DD-MM-YYYY'),
 																				);
 																				this.setDate(props, value);
 																			}}
@@ -1636,7 +1651,7 @@ class DetailRequestForQuotation extends React.Component {
 																				value={props.values.rfqExpiryDate}
 																				showMonthDropdown
 																				showYearDropdown
-																				dateFormat="dd/MM/yyyy"
+																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
 																				onChange={(value) => {
 																					props.handleChange('rfqExpiryDate')(
@@ -1852,6 +1867,16 @@ class DetailRequestForQuotation extends React.Component {
 																			}
 																		>
 																			{strings.VAT}
+																		</TableHeaderColumn>
+																		<TableHeaderColumn
+																			width="10%"
+																			dataField="sub_total"
+																			dataFormat={this.renderVatAmount}
+																			className="text-right"
+																			columnClassName="text-right"
+																			formatExtraData={universal_currency_list}
+																			>
+																			Vat amount
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="sub_total"

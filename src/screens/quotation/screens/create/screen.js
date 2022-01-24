@@ -144,7 +144,7 @@ class CreateQuotation extends React.Component {
 						vatCategoryId: '',
 						subTotal: 0,
 						productId: '',
-					
+						isExciseTaxExclusive:''
 					},
 				],
 				quotation_Number: '',
@@ -456,6 +456,21 @@ class CreateQuotation extends React.Component {
 		return row.subTotal === 0 ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
 
+	renderVatAmount = (cell, row, extraData) => {
+		// return row.subTotal === 0 ? (
+		// 	<Currency
+		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// ) : (
+		// 	<Currency
+		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// );
+		return row.vatAmount === 0 ? this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+	};
+
 	componentDidMount = () => {
 		this.getInitialData();
 	};
@@ -545,6 +560,10 @@ class CreateQuotation extends React.Component {
 					unitPrice: '',
 					vatCategoryId: '',
 					subTotal: 0,
+					exciseTaxId:'',
+					// discountType:'FIXED',
+					vatAmount:0,
+					// discount: 0,
 					productId: '',
 				}),
 				idCount: this.state.idCount + 1,
@@ -867,11 +886,11 @@ class CreateQuotation extends React.Component {
 	// 	const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 	// 	const values = value
 	// 		? value
-	// 		: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
+	// 		: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
 	// 	if (temp && values) {
 	// 		const date = moment(values)
 	// 			.add(temp - 1, 'days')
-	// 			.format('DD/MM/YYYY');
+	// 			.format('DD-MM-YYYY');
 	// 		props.setFieldValue('invoiceDueDate', date, true);
 	// 	}
 	// };
@@ -1653,7 +1672,7 @@ class CreateQuotation extends React.Component {
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		maxDate={new Date()}
 																		onChange={(value) => {
 																			props.handleChange('poApproveDate')(value);
@@ -1682,12 +1701,13 @@ class CreateQuotation extends React.Component {
 																				? 'is-invalid'
 																				: ''
 																		}`}
+																		minDate={new Date()}
 																		placeholderText={strings.OrderDueDate}
 																		selected={props.values.quotaionExpiration}
 																		showMonthDropdown
 																		showYearDropdown
 																		dropdownMode="select"
-																		dateFormat="dd/MM/yyyy"
+																		dateFormat="dd-MM-yyyy"
 																		
 																		onChange={(value) => {
 																			props.handleChange('quotaionExpiration')(value);
@@ -1782,13 +1802,12 @@ class CreateQuotation extends React.Component {
 																	color="primary"
 																	className= "btn-square mr-3"
 																	onClick={(e, props) => {
-																		this.openProductModal(props);
+																		this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/income/quotation/create"})
 																		}}
-																	
-																>
+													                >
 																	<i className="fa fa-plus"></i>{' '}{strings.Addproduct} 
 																</Button>
-															</Col>
+																</Col>
 
 															
 														</Row>
@@ -1904,6 +1923,16 @@ class CreateQuotation extends React.Component {
 																		{strings.VAT}
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
+																	width="10%"
+																	dataField="sub_total"
+																	dataFormat={this.renderVatAmount}
+																	className="text-right"
+																	columnClassName="text-right"
+																	formatExtraData={universal_currency_list}
+																	>
+																	Vat amount
+																	</TableHeaderColumn>
+																	<TableHeaderColumn
 																		dataField="sub_total"
 																		dataFormat={this.renderSubTotal}
 																		className="text-right"
@@ -1939,7 +1968,8 @@ class CreateQuotation extends React.Component {
 
 																<Col lg={4}>
 																	<div className="">
-																	<div className="total-item p-2" style={{display:this.state.checked === true ? '':'none'}}>
+																	<div className="total-item p-2" >
+																	{/* style={{display:this.state.checked === true ? '':'none'}} */}
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">

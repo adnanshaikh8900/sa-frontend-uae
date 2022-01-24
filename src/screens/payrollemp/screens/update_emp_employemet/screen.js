@@ -284,26 +284,26 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                   
                                                                     <Row  >
                                                                     <Col md="4">
-                                                                                                <FormGroup>
-                                                                                                    <Label htmlFor="select"><span className="text-danger">* </span> {strings.EmployeeCode}  </Label>
-                                                                                                    <Input
-                                                                                                        type="text"
-                                                                                                        maxLength="50"
-                                                                                                        id="employeeCode"
-                                                                                                        name="employeeCode"
-                                                                                                        value={props.values.employeeCode}
-                                                                                                        placeholder={strings.Enter+strings.EmployeeCode}
-                                                                                                        onChange={(value) => {
-                                                                                                            props.handleChange('employeeCode')(value);
-                                                                                                            this.employeeValidationCheck(value.target.value);
-                                                                                                        }}
-                                                                                                        className={props.errors.employeeCode && props.touched.employeeCode ? "is-invalid" : ""}
-                                                                                                    />
-                                                                                                    {props.errors.employeeCode && props.touched.employeeCode && (
-                                                                                                        <div className="invalid-feedback">{props.errors.employeeCode}</div>
-                                                                                                    )}
-                                                                                                </FormGroup>
-                                                                                            </Col>
+                                                                        <FormGroup>
+                                                                        <Label htmlFor="select"><span className="text-danger">* </span> {strings.EmployeeCode}  </Label>
+                                                                        <Input
+                                                                            type="text"
+                                                                            maxLength="50"
+                                                                            id="employeeCode"
+                                                                            name="employeeCode"
+                                                                            value={props.values.employeeCode}
+                                                                            placeholder={strings.Enter+strings.EmployeeCode}
+                                                                            onChange={(value) => {
+                                                                                props.handleChange('employeeCode')(value);
+                                                                                this.employeeValidationCheck(value.target.value);
+                                                                                }}
+                                                                            className={props.errors.employeeCode && props.touched.employeeCode ? "is-invalid" : ""}
+                                                                            />
+                                                                            {props.errors.employeeCode && props.touched.employeeCode && (
+                                                                        <div className="invalid-feedback">{props.errors.employeeCode}</div>
+                                                                        )}
+                                                                        </FormGroup>
+                                                                        </Col>
 
                                                                         <Col md="4">
                                                                             <FormGroup className="mb-3">
@@ -317,7 +317,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                     showYearDropdown
                                                                                     maxDate={new Date()}
                                                                                     autoComplete={"off"}
-                                                                                    dateFormat="dd/MM/yyyy"
+                                                                                    dateFormat="dd-MM-yyyy"
                                                                                     dropdownMode="select"
                                                                                     selected={props.values.dateOfJoining}
                                                                                     value={props.values.dateOfJoining}
@@ -362,6 +362,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                 <Label htmlFor="select"> {strings.Department} </Label>
                                                                                 <Input
                                                                                     type="text"
+                                                                                    maxLength="100"
                                                                                     id="department"
                                                                                     name="department"
                                                                                     value={props.values.department}
@@ -409,7 +410,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                     placeholderText={strings.Select+strings.PassportExpiryDate}
                                                                                     showMonthDropdown
                                                                                     showYearDropdown
-                                                                                    dateFormat="dd/MM/yyyy"
+                                                                                    dateFormat="dd-MM-yyyy"
                                                                                     dropdownMode="select"
                                                                                     selected={props.values.passportExpiryDate}
                                                                                     value={props.values.passportExpiryDate}
@@ -453,7 +454,7 @@ class UpdateEmployeeEmployment extends React.Component {
                                                                                     placeholderText={strings.Select+strings.VisaExpiryDate}
                                                                                     showMonthDropdown
                                                                                     showYearDropdown
-                                                                                    dateFormat="dd/MM/yyyy"
+                                                                                    dateFormat="dd-MM-yyyy"
                                                                                     dropdownMode="select"
                                                                                     selected={props.values.visaExpiryDate}
                                                                                     value={props.values.visaExpiryDate}

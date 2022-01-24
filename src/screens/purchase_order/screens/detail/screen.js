@@ -121,6 +121,7 @@ class DetailPurchaseOrder extends React.Component {
 			basecurrency:[],
 			supplier_currency: '',
 			disabled1:false,
+			selectedType: 'FIXED',
 		};
 
 		// this.options = {
@@ -195,10 +196,10 @@ class DetailPurchaseOrder extends React.Component {
 								current_po_id: this.props.location.state.id,
 								initValue: {
 									poApproveDate: res.data.poApproveDate
-										? moment(res.data.poApproveDate).format('DD/MM/YYYY')
+										? moment(res.data.poApproveDate).format('DD-MM-YYYY')
 										: '',
 										poReceiveDate: res.data.poReceiveDate
-										? moment(res.data.poReceiveDate).format('DD/MM/YYYY')
+										? moment(res.data.poReceiveDate).format('DD-MM-YYYY')
 										: '',
 										supplierId: res.data.supplierId ? res.data.supplierId : '',
 										poNumber: res.data.poNumber
@@ -217,7 +218,8 @@ class DetailPurchaseOrder extends React.Component {
 										res.data.supplierReferenceNumber : '',
 										rfqNumber: res.data.rfqNumber ? res.data.rfqNumber : '',
 										placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
-										total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
+										total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
+										// discount: res.data.discount ? res.data.discount : 0,
 								
 								},
 								customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
@@ -309,6 +311,7 @@ class DetailPurchaseOrder extends React.Component {
 							description: res.data[0].description,
 							quantity: 1,
 							unitPrice: res.data[0].unitPrice,
+							// discountType: res.data[0].discountType,
 							vatCategoryId: res.data[0].vatCategoryId,
 							subTotal: res.data[0].unitPrice,
 							productId: res.data[0].id,
@@ -575,6 +578,101 @@ class DetailPurchaseOrder extends React.Component {
 			/>
 		);
 	};
+
+// 	renderDiscount = (cell, row, props) => {
+// 		const { discountOptions } = this.state;
+// 	   let idx;
+// 	   this.state.data.map((obj, index) => {
+// 		   if (obj.id === row.id) {
+// 			   idx = index;
+// 		   }
+// 		   return obj;
+// 	   });
+// 	   return (
+// 		   <Field
+// 			    name={`lineItemsString.${idx}.discountType`}
+// 			   render={({ field, form }) => (
+// 			   <div>
+// 			   <div  class="input-group">
+// 				   <Input
+// 	 					type="text"
+// 				   	    min="0"
+// 					    maxLength="17,2"
+// 					    value={row['discount'] !== 0 ? row['discount'] : 0}
+// 					    onChange={(e) => {
+// 						   if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+// 							   this.selectItem(
+// 								   e.target.value,
+// 								   row,
+// 								   'discount',
+// 								   form,
+// 								   field,
+// 								   props,
+// 							   );
+// 						   }
+					   
+// 							   this.updateAmount(
+// 								   this.state.data,
+// 								   props,
+// 							   );
+					   
+// 					   }}
+// 					   placeholder={strings.discount}
+// 					   className={`form-control 
+// 		   ${
+// 						   props.errors.lineItemsString &&
+// 						   props.errors.lineItemsString[parseInt(idx, 10)] &&
+// 						   props.errors.lineItemsString[parseInt(idx, 10)].discount &&
+// 						   Object.keys(props.touched).length > 0 &&
+// 						   props.touched.lineItemsString &&
+// 						   props.touched.lineItemsString[parseInt(idx, 10)] &&
+// 						   props.touched.lineItemsString[parseInt(idx, 10)].discount
+// 							   ? 'is-invalid'
+// 							   : ''
+// 					   }`}
+//    type="text"
+//    />
+// 	<div class="dropdown open input-group-append">
+
+// 		<div 	style={{width:'100px'}}>
+// 		<Select
+
+
+// 		options={discountOptions}
+// 		id="discountType"
+// 		name="discountType"
+// 		value={
+// 			discountOptions &&
+// 			selectOptionsFactory
+// 			.renderOptions('label', 'value', discountOptions, 'discount')
+// 			.find((option) => option.value == row.discountType)
+// 		}
+// 		onChange={(e) => {
+// 			this.selectItem(
+// 				e.value,
+// 				row,
+// 				'discountType',
+// 				form,
+// 				field,
+// 				props,
+// 			);
+// 			this.updateAmount(
+// 				this.state.data,
+// 				props,
+// 			);
+// 			}}
+// 		/>
+// 			 </div>
+// 			  </div>
+// 			  </div>
+// 			   </div>
+
+// 				   )}
+
+// 		   />
+// 	   );
+//    }
+
 	renderSubTotal = (cell, row,extraData) => {
 		// return row.subTotal ? (
 		// 	<Currency
@@ -587,6 +685,22 @@ class DetailPurchaseOrder extends React.Component {
 		return row.subTotal === 0 ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 		// return row.subTotal ? row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : '';
 	};
+
+	renderVatAmount = (cell, row, extraData) => {
+		// return row.subTotal === 0 ? (
+		// 	<Currency
+		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// ) : (
+		// 	<Currency
+		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// );
+		return row.vatAmount === 0 ? this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+	};
+
 	addRow = () => {
 		const data = [...this.state.data];
 		this.setState(
@@ -598,6 +712,10 @@ class DetailPurchaseOrder extends React.Component {
 					unitPrice: '',
 					vatCategoryId: '',
 					subTotal: 0,
+					exciseTaxId:'',
+					// discountType:'FIXED',
+					vatAmount:0,
+					// discount: 0,
 					productId: '',
 				}),
 				idCount: this.state.idCount + 1,
@@ -994,13 +1112,13 @@ class DetailPurchaseOrder extends React.Component {
 		formData.append(
 			'poReceiveDate',
 			typeof poReceiveDate === 'string'
-				? moment(poReceiveDate, 'DD/MM/YYYY').toDate()
+				? moment(poReceiveDate, 'DD-MM-YYYY').toDate()
 				: poReceiveDate,
 		);
 		formData.append(
 			'poApproveDate',
 			typeof poApproveDate === 'string'
-				? moment(poApproveDate, 'DD/MM/YYYY').toDate()
+				? moment(poApproveDate, 'DD-MM-YYYY').toDate()
 				: poApproveDate,
 		);
 	
@@ -1011,9 +1129,10 @@ class DetailPurchaseOrder extends React.Component {
 		formData.append('supplierReferenceNumber', supplierReferenceNumber ? supplierReferenceNumber : '');
 		formData.append('rfqNumber',rfqNumber ? rfqNumber : '');
 		formData.append('totalExciseAmount', this.state.initValue.total_excise);
+		// formData.append('discount',this.state.initValue.discount);
         if(placeOfSupplyId){
 		formData.append('placeOfSupplyId' , placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);}
-		formData.append('exciseType', this.state.checked);
+		// formData.append('exciseType', this.state.checked);
 		if (supplierId) {
 			formData.append('supplierId', supplierId);
 		}
@@ -1097,11 +1216,11 @@ class DetailPurchaseOrder extends React.Component {
 		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
 		const values = value
 			? value
-			: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
+			: moment(props.values.invoiceDate, 'DD-MM-YYYY').toDate();
 		if (temp && values) {
 			const date = moment(values)
 				.add(temp - 1, 'days')
-				.format('DD/MM/YYYY');
+				.format('DD-MM-YYYY');
 			props.setFieldValue('invoiceDueDate', date, true);
 		}
 	};
@@ -1624,12 +1743,12 @@ class DetailPurchaseOrder extends React.Component {
 																			placeholderText={strings.InvoiceDate}
 																			showMonthDropdown
 																			showYearDropdown
-																			dateFormat="dd/MM/yyyy"
+																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
 																			value={props.values.poApproveDate}
 																			onChange={(value) => {
 																				props.handleChange('poApproveDate')(
-																					moment(value).format('DD/MM/YYYY'),
+																					moment(value).format('DD-MM-YYYY'),
 																				);
 																				this.setDate(props, value);
 																			}}
@@ -1662,11 +1781,11 @@ class DetailPurchaseOrder extends React.Component {
 																				value={props.values.poReceiveDate}
 																				showMonthDropdown
 																				showYearDropdown
-																				dateFormat="dd/MM/yyyy"
+																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
 																				onChange={(value) => {
 																					props.handleChange('poReceiveDate')(
-																						moment(value).format('DD/MM/YYYY'),
+																						moment(value).format('DD-MM-YYYY'),
 																					);
 																					this.setDate(props, value);
 																				}}
@@ -1910,6 +2029,15 @@ class DetailPurchaseOrder extends React.Component {
 																			then the Excise dropdown will be Disabled
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn> 
+																	{/* <TableHeaderColumn
+																		width="12%"
+																		dataField="discount"
+																		dataFormat={(cell, rows) =>
+																			this.renderDiscount(cell, rows, props)
+																		}
+																	>
+																	DisCount
+																	</TableHeaderColumn> */}
 																		<TableHeaderColumn
 																			dataField="vat"
 																			dataFormat={(cell, rows) =>
@@ -1917,6 +2045,16 @@ class DetailPurchaseOrder extends React.Component {
 																			}
 																		>
 																			 {strings.VAT}
+																		</TableHeaderColumn>
+																		<TableHeaderColumn
+																			width="10%"
+																			dataField="sub_total"
+																			dataFormat={this.renderVatAmount}
+																			className="text-right"
+																			columnClassName="text-right"
+																			formatExtraData={universal_currency_list}
+																			>
+																			Vat amount
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="sub_total"
@@ -1952,7 +2090,8 @@ class DetailPurchaseOrder extends React.Component {
 																</Col>
 																	<Col lg={4}>
 																		<div className="">
-																		<div className="total-item p-2" style={{display:this.state.checked === true ? '':'none'}}>
+																		<div className="total-item p-2" >
+																		{/* style={{display:this.state.checked === true ? '':'none'}} */}
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">

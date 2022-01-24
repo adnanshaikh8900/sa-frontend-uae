@@ -107,7 +107,9 @@ class CreateCreditNote extends React.Component {
 					subTotal: 0,
 					vatAmount:0,
 					productId: '',
-					isExciseTaxExclusive:''
+					isExciseTaxExclusive:'',
+					discountType: 'FIXED',
+					discount: 0,
 				},
 			],
 			idCount: 0,
@@ -144,8 +146,9 @@ class CreateCreditNote extends React.Component {
 				email:'',
 				discount: 0,
 				discountPercentage: '',
-				discountType: { value: 'FIXED', label: 'Fixed' },
+				discountType: 'FIXED',
 				creditAmount:0,
+				total_excise: 0,
 			},
 			total_excise: 0,
 			// excisetype: { value: 'Inclusive', label: 'Inclusive' },
@@ -386,6 +389,118 @@ class CreateCreditNote extends React.Component {
 		return row.subTotal === 0 ? this.state.customer_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.customer_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 
 }
+
+renderVatAmount = (cell, row,extraData) => {
+	return row.vatAmount === 0 ? this.state.customer_currency_symbol +" "+  row.vatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 }): this.state.customer_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 });
+
+}
+
+renderDiscount = (cell, row, props) => {
+	const { discountOptions } = this.state;
+   let idx;
+   this.state.data.map((obj, index) => {
+	   if (obj.id === row.id) {
+		   idx = index;
+	   }
+	   return obj;
+   });
+
+   return (
+	   <Field
+			name={`lineItemsString.${idx}.discountType`}
+		   render={({ field, form }) => (
+		   <div>
+		   <div  class="input-group">
+			   <Input
+					 type="text"
+					   min="0"
+					maxLength="17,2"
+					value={row['discount'] !== 0 ? row['discount'] : 0}
+					onChange={(e) => {
+					   if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
+						   this.selectItem(
+							   e.target.value,
+							   row,
+							   'discount',
+							   form,
+							   field,
+							   props,
+						   );
+					   }
+				   
+						   this.updateAmount(
+							   this.state.data,
+							   props,
+						   );
+				   
+				   }}
+				   placeholder={strings.discount}
+				   className={`form-control 
+	   ${
+					   props.errors.lineItemsString &&
+					   props.errors.lineItemsString[parseInt(idx, 10)] &&
+					   props.errors.lineItemsString[parseInt(idx, 10)].discount &&
+					   Object.keys(props.touched).length > 0 &&
+					   props.touched.lineItemsString &&
+					   props.touched.lineItemsString[parseInt(idx, 10)] &&
+					   props.touched.lineItemsString[parseInt(idx, 10)].discount
+						   ? 'is-invalid'
+						   : ''
+				   }`}
+type="text"
+/>
+<div class="dropdown open input-group-append">
+
+	<div 	style={{width:'100px'}}>
+	<Select
+
+
+																					   options={discountOptions}
+																					   id="discountType"
+																					   name="discountType"
+																					   value={
+																					discountOptions &&
+																						selectOptionsFactory
+																							.renderOptions('label', 'value', discountOptions, 'discount')
+																							.find((option) => option.value == row.discountType)
+																					   }
+																					   onChange={(e) => {
+																						   this.selectItem(
+																							   e.value,
+																							   row,
+																							   'discountType',
+																							   form,
+																							   field,
+																							   props,
+																						   );
+																						   this.updateAmount(
+																							   this.state.data,
+																							   props,
+																						   );
+																					   }}
+																				   />
+		 </div>
+		  </div>
+		  </div>
+		   </div>
+
+			   )}
+
+	   />
+   );
+}
+
+discountType = (row) =>
+
+{
+	debugger
+	
+		return this.state.discountOptions &&
+		selectOptionsFactory
+			.renderOptions('label', 'value', this.state.discountOptions, 'discount')
+			.find((option) => option.value === +row.discountType)
+}
+
 	setDate = (props, value) => {
 		const { term } = this.state;
 		const val = term ? term.value.split('_') : '';
@@ -615,6 +730,9 @@ class CreateCreditNote extends React.Component {
 					vatCategoryId: '',
 					productId: '',
 					subTotal: 0,
+					discountType:'FIXED',
+					discount: 0,
+					exciseTaxId:'',
 				}),
 				idCount: this.state.idCount + 1,
 			},
@@ -741,6 +859,7 @@ class CreateCreditNote extends React.Component {
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
 				obj['exciseTaxId'] = result.exciseTaxId;
+				obj['discountType'] = result.discountType;
 				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive
 				idx = index;
 			}
@@ -764,6 +883,11 @@ class CreateCreditNote extends React.Component {
 		form.setFieldValue(
 			`lineItemsString.${idx}.description`,
 			result.description,
+			true,
+		);
+		form.setFieldValue(
+			`lineItemsString.${idx}.discountType`,
+			result.discountType,
 			true,
 		);
 		this.updateAmount(data, props);
@@ -1302,12 +1426,15 @@ if (invoiceNumber && invoiceNumber.value) {
 					data: [
 						{
 							id: 0,
+							discount:0,
 							description: res.data[0].description,
 							quantity: 1,
 							unitPrice: res.data[0].unitPrice,
 							vatCategoryId: res.data[0].vatCategoryId,
 							subTotal: res.data[0].unitPrice,
 							productId: res.data[0].id,
+							discountType: res.data[0].discountType,
+							exciseTaxId: res.data[0].exciseTaxId,
 						},
 					],
 				},
@@ -1336,6 +1463,16 @@ if (invoiceNumber && invoiceNumber.value) {
 			this.formRef.current.setFieldValue(
 				`lineItemsString.${0}.productId`,
 				res.data[0].id,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.discountType`,
+				1,
+				true,
+			);
+			this.formRef.current.setFieldValue(
+				`lineItemsString.${0}.exciseTaxId`,
+				1,
 				true,
 			);
 		});
@@ -1466,6 +1603,7 @@ if (invoiceNumber && invoiceNumber.value) {
 							totalAmount: response.data.totalAmount,
 							total_net: response.data.totalAmount -response.data.totalVatAmount ,
 							discount:response.data.discount,
+							total_excise:response.data.totalExciseAmount,
 						},
 					},
 	
@@ -2448,12 +2586,31 @@ min="0"
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn> 
 																	<TableHeaderColumn
+																		width="12%"
+																		dataField="discount"
+																		dataFormat={(cell, rows) =>
+																			this.renderDiscount(cell, rows, props)
+																		}
+																	>
+																	DisCount
+																	</TableHeaderColumn>
+																	<TableHeaderColumn
 																		dataField="vat"
 																		dataFormat={(cell, rows) =>
 																			this.renderVat(cell, rows, props)
 																		}
 																	>
 																		{strings.VAT}
+																	</TableHeaderColumn>
+																	<TableHeaderColumn
+
+																		dataField="vat_amount"
+																		dataFormat={this.renderVatAmount}
+																		className="text-right"
+																		columnClassName="text-right"
+																		formatExtraData={universal_currency_list}
+																	>
+																		Vat amount
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="sub_total"
@@ -2767,6 +2924,22 @@ min="0"
 																						{this.state.customer_currency_symbol} &nbsp;
 																							{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																					
+																					</label>
+																				</Col>
+																			</Row>
+																		</div>
+																		<div className="total-item p-2" >
+																			<Row>
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																					Total Excise
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																					<label className="mb-0">
+
+																						{this.state.customer_currency_symbol} &nbsp;
+																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>

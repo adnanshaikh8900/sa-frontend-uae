@@ -578,6 +578,22 @@ min="0"
 		// );
 		return row.subTotal === 0 ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
+
+	renderVatAmount = (cell, row, extraData) => {
+		// return row.subTotal === 0 ? (
+		// 	<Currency
+		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// ) : (
+		// 	<Currency
+		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// );
+		return row.vatAmount === 0 ? this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+	};
+	
 	addRow = () => {
 		const data = [...this.state.data];
 		this.setState(
@@ -995,7 +1011,7 @@ min="0"
 		formData.append('totalExciseAmount', this.state.initValue.total_excise);
         if(placeOfSupplyId){
 		formData.append('placeOfSupplyId' , placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);}
-		formData.append('exciseType', this.state.checked);
+		// formData.append('exciseType', this.state.checked);
 		if (customerId) {
 			formData.append('customerId', customerId);
 		}
@@ -1832,6 +1848,16 @@ console.log(this.state.supplier_currency)
 																			{strings.VAT}
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
+																			width="10%"
+																			dataField="sub_total"
+																			dataFormat={this.renderVatAmount}
+																			className="text-right"
+																			columnClassName="text-right"
+																			formatExtraData={universal_currency_list}
+																			>
+																			Vat amount
+																		</TableHeaderColumn>
+																		<TableHeaderColumn
 																			dataField="sub_total"
 																			dataFormat={this.renderSubTotal}
 																			className="text-right"
@@ -1865,7 +1891,8 @@ console.log(this.state.supplier_currency)
 																</Col>
 																	<Col lg={4}>
 																		<div className="">
-																		<div className="total-item p-2" style={{display:this.state.checked === true ? '':'none'}}>
+																		<div className="total-item p-2" >
+																		{/* style={{display:this.state.checked === true ? '':'none'}} */}
 																			<Row>
 																				<Col lg={6}>
 																					<h5 className="mb-0 text-right">

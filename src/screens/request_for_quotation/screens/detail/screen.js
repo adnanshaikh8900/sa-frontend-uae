@@ -231,7 +231,7 @@ class DetailRequestForQuotation extends React.Component {
 										fileName: res.data.fileName ? res.data.fileName : '',
 										
 										placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
-										total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
+										total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
 								},
 								customer_taxTreatment_des : res.data.taxtreatment ? res.data.taxtreatment : '',
 								placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
@@ -627,6 +627,21 @@ class DetailRequestForQuotation extends React.Component {
 				);
 			},
 		);
+	};
+
+	renderVatAmount = (cell, row, extraData) => {
+		// return row.subTotal === 0 ? (
+		// 	<Currency
+		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// ) : (
+		// 	<Currency
+		// 		value={row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+		// 	/>
+		// );
+		return row.vatAmount === 0 ? this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
 	};
 
 	selectItem = (e, row, name, form, field, props) => {
@@ -1852,6 +1867,16 @@ class DetailRequestForQuotation extends React.Component {
 																			}
 																		>
 																			{strings.VAT}
+																		</TableHeaderColumn>
+																		<TableHeaderColumn
+																			width="10%"
+																			dataField="sub_total"
+																			dataFormat={this.renderVatAmount}
+																			className="text-right"
+																			columnClassName="text-right"
+																			formatExtraData={universal_currency_list}
+																			>
+																			Vat amount
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="sub_total"

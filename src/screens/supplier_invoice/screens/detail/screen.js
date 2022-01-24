@@ -244,7 +244,7 @@ class DetailSupplierInvoice extends React.Component {
 									filePath: res.data.filePath ? res.data.filePath : '',
                                     isReverseChargeEnabled: res.data.isReverseChargeEnabled ? true : false,
 									checked: res.data.exciseType ? res.data.exciseType : '',
-									total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
+									total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
 								},
 								customer_taxTreatment_des: res.data.taxTreatment ? res.data.taxTreatment : '',
 								checked: res.data.exciseType ? res.data.exciseType : res.data.exciseType,
@@ -2476,7 +2476,7 @@ class DetailSupplierInvoice extends React.Component {
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
 
-																						{this.state.customer_currency_symbol} &nbsp;
+																						{this.state.supplier_currency_symbol} &nbsp;
 																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																					</label>
 																				</Col>

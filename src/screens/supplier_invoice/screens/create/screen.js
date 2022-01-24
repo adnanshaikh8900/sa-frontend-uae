@@ -2612,7 +2612,7 @@ class CreateSupplierInvoice extends React.Component {
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
 																					
-																						{this.state.customer_currency_symbol} &nbsp;
+																						{this.state.supplier_currency_symbol} &nbsp;
 																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
 																					</label>
 																				</Col>

@@ -248,7 +248,7 @@ class DetailCustomerInvoice extends React.Component {
 									placeOfSupplyId: res.data.placeOfSupplyId ? res.data.placeOfSupplyId : '',
 									fileName: res.data.fileName ? res.data.fileName : '',
 									filePath: res.data.filePath ? res.data.filePath : '',
-									total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : '',
+									total_excise: res.data.totalExciseAmount ? res.data.totalExciseAmount : 0,
 
 								},
 								customer_taxTreatment_des : res.data.taxTreatment ? res.data.taxTreatment : '',

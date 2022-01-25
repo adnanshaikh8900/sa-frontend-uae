@@ -52,10 +52,22 @@ class RFQTemplate extends Component {
 			number1=number1[0];
 			return number1
 		}
-		
+	
+		renderExcise=(item)=>{
+        if(item.exciseTaxId && item.exciseTaxId==1)
+			{
+              return '50 %'
+			}
+			else
+			if(item.exciseTaxId && item.exciseTaxId==2)
+			{
+              return '100 %'
+			}
+		}
+
 	render() {
 		strings.setLanguage(this.state.language);
-		const { RFQData, currencyData, totalNet, companyData,status,contactData } = this.props;
+		const { RFQData, currencyData, totalNet,totalExciseAmount, companyData,status,contactData } = this.props;
 		console.log(contactData,"contactData")
 		return (
 			<div>
@@ -215,13 +227,16 @@ class RFQTemplate extends Component {
 									{/* <th style={{ padding: '0.5rem' }}>Item</th> */}
 									<th style={{ padding: '0.5rem' }}>{strings.ProductName }</th>
 									<th style={{ padding: '0.5rem' }}>{strings.Description }</th>
+								
 									<th className="center" style={{ padding: '0.5rem' }}>
 										{strings.Quantity }
 									</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 										{strings.UnitCost }
 									</th>
+									<th style={{ padding: '0.5rem' }}>{strings.Excise}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Vat}</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.VatAmount}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 										{strings.Total }
 									</th>
@@ -236,7 +251,7 @@ class RFQTemplate extends Component {
 												<td className="center">{index + 1}</td>
 												<td>{item.productName}</td>
 												<td>{item.description}</td>
-												<td>{item.quantity}</td>
+											    <td>{item.quantity}</td>
 												<td style={{ textAlign: 'right', width: '20%' }}>
 													{/* <Currency
 														value={item.unitPrice}
@@ -248,9 +263,11 @@ class RFQTemplate extends Component {
 													/> */}
 													{RFQData.currencyIsoCode + " " +item.unitPrice}
 												</td>
+												<td>{item.exciseTaxId ? this.renderExcise(item):"-"}</td>
 												<td
 													style={{ textAlign: 'right' }}
 												>{`${item.vatPercentage}%`}</td>
+												<td style={{ textAlign: 'right' }}>{item.vatAmount}</td>
 												<td style={{ textAlign: 'right' }}>
 													{/* <Currency
 														value={item.subTotal}
@@ -311,9 +328,9 @@ class RFQTemplate extends Component {
 								<div style={{ width: '100%' }}>
 								<Table className="table-clear cal-table">
 									<tbody>
-										<tr >
+									<tr >
 											<td style={{ width: '40%' }}>
-												<strong>{strings.SubTotal }</strong>
+												<strong>{strings.TotalExcise}</strong>
 											</td>
 											<td
 												style={{
@@ -323,29 +340,27 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{RFQData.currencyIsoCode + " " +totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-													{/* {totalNet ? (
-													 	<Currency
-													 		value={totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-													 		currencySymbol={
-													 			currencyData[0]
-													 				? currencyData[0].currencyIsoCode
-													 				: 'USD'
-													 		}
-													 	/>
-												 ) : (
-														<Currency
-												 		value={0}
-													 		currencySymbol={
-													 			currencyData[0]
-												 				? currencyData[0].currencyIsoCode
-													 				: 'USD'
-													 		}
-													 	/>
-													 )} */}
+												{RFQData.totalExciseAmount? RFQData.currencyIsoCode + " " +RFQData.totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 } 
 												</span>
 											</td>
 										</tr>
+										<tr>
+											<td style={{ width: '40%' }}>
+												<strong>Total Net</strong>
+											</td>
+											<td
+												style={{
+													display: 'flex',
+													justifyContent: 'space-between',
+												}}
+											>
+												<span style={{ marginLeft: '2rem' }}></span>
+												<span>
+												{RFQData.totalAmount? RFQData.currencyIsoCode + " " +(RFQData.totalAmount-RFQData.totalVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 } 
+												</span>
+											</td>
+										</tr>
+										
 										
 										<tr >
 											<td style={{ width: '40%' }}>

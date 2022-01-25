@@ -1123,7 +1123,7 @@ existForAccountNumber = (value) => {
                                 </NavItem>
                                 <NavItem>
                                     <NavLink
-                                        active={this.state.activeTab[0] === '2'}
+                                        // active={this.state.activeTab[0] === '2'}
                                         // onClick={() => {
                                         //     this.toggle(0, '2');
                                         // }}
@@ -2265,14 +2265,6 @@ existForAccountNumber = (value) => {
                                                                         onSubmit={(values, { resetForm }) => {
                                                                             this.handleSubmitForEmployement(values, resetForm)
                                                                         }}
-                                                                        validate={(values) => {
-                                                                            let errors = {};
-                                                                            if (exist === true) {
-                                                                                errors.employeeCode =
-                                                                                'Employee Code Number Already Exists';
-                                                                            }
-                                                                            return errors;
-                                                                        }}
                                                                         validationSchema={Yup.object().shape({
                                                                             employeeCode: Yup.string()
                                                                                 .required("Employee Code is Required"),
@@ -2282,6 +2274,17 @@ existForAccountNumber = (value) => {
                                                                             dateOfJoining: Yup.date()
                                                                                 .required('Date of Joining is Required')                   
                                                                         })}
+                                                                        validate={(values) => {
+                                                                            let errors = {};
+                                                                            debugger
+                                                                            if (exist === true  && values.employeeCode!="") {
+                                                                                errors.employeeCode =
+                                                                                'Employee Code Number Already Exists';
+                                                                            }
+                                                                            return errors;
+
+                                                                        }}
+                                                                        
                                                                     >
                                                                         {(props) => (
 

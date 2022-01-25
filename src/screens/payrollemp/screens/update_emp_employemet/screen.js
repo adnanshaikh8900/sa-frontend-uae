@@ -256,14 +256,6 @@ class UpdateEmployeeEmployment extends React.Component {
                                                     onSubmit={(values) => {
                                                         this.handleSubmit(values)
                                                     }}
-                                                    validate={(values) => {
-                                                        let errors = {};
-                                                        if (exist === true) {
-                                                            errors.employeeCode =
-                                                                'Employee Code Number Already Exists';
-                                                        }
-                                                        return errors;
-                                                    }}
                                                     validationSchema={Yup.object().shape({
                                                         employeeCode: Yup.string()
                                                             .required("Employee Code is Required"),
@@ -273,6 +265,16 @@ class UpdateEmployeeEmployment extends React.Component {
                                                         dateOfJoining: Yup.date()
                                                             .required('Date of Joining is Required')                   
                                                     })}
+                                                    validate={(values) => {
+                                                        let errors = {};
+                                                        debugger
+                                                        if (exist === true  && values.employeeCode!="") {
+                                                            errors.employeeCode =
+                                                            'Employee Code Number Already Exists';
+                                                        }
+                                                        return errors;
+
+                                                    }}
 
                                                 >
                                                     {(props) => (

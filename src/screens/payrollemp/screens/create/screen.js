@@ -2018,12 +2018,12 @@ existForAccountNumber = (value) => {
 
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="qualificationYearOfCompletionDate"> {strings.qualificationYearOfCompletionDate} </Label>
+                                                                                                    <Label htmlFor="Year Of Passing"> {strings.qualificationYearOfCompletionDate} </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         maxLength="10"
-                                                                                                        id="qualificationYearOfCompletionDate"
-                                                                                                        name="qualificationYearOfCompletionDate"
+                                                                                                        id="Year Of Passing"
+                                                                                                        name="Year Of Passing"
                                                                                                         placeholder={strings.Enter+strings.qualificationYearOfCompletionDate}
                                                                                                         onChange={(option) => {
                                                                                                             if (option.target.value === '' || this.regExQualificationYear.test(option.target.value)) { props.handleChange('qualificationYearOfCompletionDate')(option) }

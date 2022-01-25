@@ -110,9 +110,22 @@ class InvoiceTemplate extends Component {
 				number1=number1[0];
 				return number1
 			}
-	render() {
+
+			renderExcise=(item)=>{
+			if(item.exciseTaxId && item.exciseTaxId==1)
+					{
+					  return '50 %'
+					}
+					else
+					if(item.exciseTaxId && item.exciseTaxId==2)
+					{
+					  return '100 %'
+					}
+				}
+        
+render() {
 		strings.setLanguage(this.state.language);
-		const { invoiceData, currencyData, totalNet, companyData,status, contactData } = this.props;
+		const { invoiceData, currencyData, totalNet, totalExciseAmount,companyData,status, contactData } = this.props;
 			return (
 			<div>
 				<Card id="singlePage" className="box">
@@ -294,11 +307,17 @@ class InvoiceTemplate extends Component {
 									<th className="center" style={{ padding: '0.5rem' }}>
 										{strings.Quantity}
 									</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
+								    <th style={{ padding: '0.5rem', textAlign: 'right' }}>
 										{strings.UnitCost }
 									</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right' ,   width: "60px" }}>{strings.Vat }</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
+										{strings.Discount }
+									</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.DiscountType}</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.Excise}</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right' ,  width: "60px" }}>{strings.Vat }</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.VatAmount}</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right'}}>
 										{strings.SubTotal }
 									</th>
 								</tr>
@@ -323,9 +342,23 @@ class InvoiceTemplate extends Component {
 														}
 													/>
 												</td>
+												{/* <td style={{ textAlign: 'right', width: '20%' }}>
+													<Currency
+														value={item.discount}
+														currencySymbol={
+															currencyData[0]
+																? currencyData[0].currencyIsoCode
+																: 'USD'
+														}
+													/>
+												</td> */}
+												<td style={{ textAlign: 'right' }}>{item.discount}</td>
+												<td style={{ textAlign: 'right' }}>{item.discountType}</td>
+												<td style={{ textAlign: 'right' }}>{item.exciseTaxId ? this.renderExcise(item):"-"}</td>
 												<td
 													style={{ textAlign: 'right' }}
 												>{`${item.vatPercentage}%`}</td>
+													<td style={{ textAlign: 'right' }}>{item.vatAmount}</td>
 												<td style={{ textAlign: 'right' }}>
 													<Currency
 														value={item.subTotal}
@@ -387,14 +420,21 @@ class InvoiceTemplate extends Component {
 								<div style={{ width: '100%' }}>
 								<Table className="table-clear cal-table">
 									<tbody>
-										<tr >
-											<td style={{ width: '40%' }}><strong>{strings.SubTotal }</strong></td>
-											<td style={{display: 'flex',justifyContent: 'space-between',}}>
+									<tr >
+											<td style={{ width: '40%' }}>
+												<strong>{strings.TotalExcise}</strong>
+											</td>
+											<td
+												style={{
+													display: 'flex',
+													justifyContent: 'space-between',
+												}}
+											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													 {totalNet ? (
+													{invoiceData.totalExciseAmount ? (
 														<Currency
-															value={totalNet}
+															value={invoiceData.totalExciseAmount}
 															currencySymbol={
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode
@@ -408,12 +448,13 @@ class InvoiceTemplate extends Component {
 																currencyData[0]
 																	? currencyData[0].currencyIsoCode
 																	: 'USD'
-															} 
+															}
 														/>
-													)}  
+													)}
 												</span>
 											</td>
 										</tr>
+										
 										<tr >
 											<td style={{ width: '40%' }}>
 												<strong>
@@ -450,6 +491,33 @@ class InvoiceTemplate extends Component {
 															}
 														/>
 													)}
+												</span>
+											</td>
+										</tr>
+										<tr >
+											<td style={{ width: '40%' }}><strong>{strings.TotalNet }</strong></td>
+											<td style={{display: 'flex',justifyContent: 'space-between',}}>
+												<span style={{ marginLeft: '2rem' }}></span>
+												<span>
+													 {totalNet ? (
+														<Currency
+															value={totalNet-invoiceData.totalVatAmount}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															}
+														/>
+													) : (
+														<Currency
+															value={0}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															} 
+														/>
+													)}  
 												</span>
 											</td>
 										</tr>

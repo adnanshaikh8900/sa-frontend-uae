@@ -1123,7 +1123,7 @@ existForAccountNumber = (value) => {
                                 </NavItem>
                                 <NavItem>
                                     <NavLink
-                                        active={this.state.activeTab[0] === '2'}
+                                        // active={this.state.activeTab[0] === '2'}
                                         // onClick={() => {
                                         //     this.toggle(0, '2');
                                         // }}
@@ -2018,12 +2018,12 @@ existForAccountNumber = (value) => {
 
                                                                                             <Col md="4">
                                                                                                 <FormGroup>
-                                                                                                    <Label htmlFor="qualificationYearOfCompletionDate"> {strings.qualificationYearOfCompletionDate} </Label>
+                                                                                                    <Label htmlFor="Year Of Passing"> {strings.qualificationYearOfCompletionDate} </Label>
                                                                                                     <Input
                                                                                                         type="text"
                                                                                                         maxLength="10"
-                                                                                                        id="qualificationYearOfCompletionDate"
-                                                                                                        name="qualificationYearOfCompletionDate"
+                                                                                                        id="Year Of Passing"
+                                                                                                        name="Year Of Passing"
                                                                                                         placeholder={strings.Enter+strings.qualificationYearOfCompletionDate}
                                                                                                         onChange={(option) => {
                                                                                                             if (option.target.value === '' || this.regExQualificationYear.test(option.target.value)) { props.handleChange('qualificationYearOfCompletionDate')(option) }
@@ -2265,14 +2265,6 @@ existForAccountNumber = (value) => {
                                                                         onSubmit={(values, { resetForm }) => {
                                                                             this.handleSubmitForEmployement(values, resetForm)
                                                                         }}
-                                                                        validate={(values) => {
-                                                                            let errors = {};
-                                                                            if (exist === true) {
-                                                                                errors.employeeCode =
-                                                                                'Employee Code Number Already Exists';
-                                                                            }
-                                                                            return errors;
-                                                                        }}
                                                                         validationSchema={Yup.object().shape({
                                                                             employeeCode: Yup.string()
                                                                                 .required("Employee Code is Required"),
@@ -2282,6 +2274,17 @@ existForAccountNumber = (value) => {
                                                                             dateOfJoining: Yup.date()
                                                                                 .required('Date of Joining is Required')                   
                                                                         })}
+                                                                        validate={(values) => {
+                                                                            let errors = {};
+                                                                            debugger
+                                                                            if (exist === true  && values.employeeCode!="") {
+                                                                                errors.employeeCode =
+                                                                                'Employee Code Number Already Exists';
+                                                                            }
+                                                                            return errors;
+
+                                                                        }}
+                                                                        
                                                                     >
                                                                         {(props) => (
 

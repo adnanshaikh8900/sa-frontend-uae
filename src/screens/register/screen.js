@@ -221,7 +221,7 @@ class Register extends React.Component {
 		formData.append('companyAddressLine1',companyAddress1 ? companyAddress1 : '')
         formData.append('companyAddressLine2',companyAddress2 ? companyAddress2 : '')
 		formData.append('loginUrl', window.location.origin);
-		
+
 		toast.success('Please check you email to set your password', {
 			position: toast.POSITION.TOP_RIGHT,
 			autoClose:15000,});
@@ -243,7 +243,7 @@ class Register extends React.Component {
 				this.setState({ loading: true });
 				toast.error(
 					err && err.data
-						? 'Login failed. Please try again'
+						? 'Login Failed. Please Try Again'
 						: 'Something Went Wrong',
 					{
 						position: toast.POSITION.TOP_RIGHT,
@@ -299,28 +299,28 @@ class Register extends React.Component {
 														}}
 														validationSchema={Yup.object().shape({
 															companyName: Yup.string().required(
-																'Company name is required',
+																'Company Name is Required',
 															),
 															currencyCode: Yup.string().required(
-																'Currency is required',
+																'Currency is Required',
 															),
 															companyTypeCode: Yup.string().required(
-																'Company/Business Type is required',
+																'Company / Business Type is Required',
 															),
 															companyAddress1: Yup.string().required(
-																'Company Address is required',
+																'Company Address is Required',
 															),
 															countryId: Yup.string().required(
-																'Country is required',
+																'Country is Required',
 															),
 															stateId: Yup.string().required(
-																'State is required',
+																'State is Required',
 															),
 															firstName: Yup.string().required(
 																'First Name is required',
 															),
 															lastName: Yup.string().required(
-																'Last Name is required',
+																'Last Name is Required',
 															),
 															email: Yup.string()
 																.required('Email is Required')
@@ -369,7 +369,7 @@ class Register extends React.Component {
 																	{/* <h1>Log In</h1> */}
 																	<div className="registerScreen">
 																		<h2 className="">Register</h2>
-																		<p>Enter your details below to register</p>
+																		<p>Enter Your Details Below To Register</p>
 																	</div>
 																	<div>
 																	<h4 className="">Company Details</h4>
@@ -528,7 +528,7 @@ class Register extends React.Component {
 																	<Row className="row-wrapper">
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
-																			<Label htmlFor="select"><span className="text-danger">* </span>Company Address 1</Label>
+																			<Label htmlFor="select"><span className="text-danger">* </span>Company Address Line 1</Label>
 																				<Input
 																					type="text"
 																					maxLength="100"
@@ -558,10 +558,7 @@ class Register extends React.Component {
 																		</Col>
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
-																				<Label htmlFor="companyAddress2">
-																					 
-																				Company Address Line2
-																				</Label>
+																				<Label htmlFor="companyAddress2">Company Address Line 2</Label>
 																				<Input
 																					type="text"
 																				 	maxLength="100"
@@ -633,7 +630,7 @@ class Register extends React.Component {
 																		<Row className="row-wrapper">
 															<Col lg={4}>
 																<FormGroup>
-																	<Label htmlFor="countryId"> Country</Label>
+																	<Label htmlFor="countryId">Country</Label>
 																	<Select
 																		isDisabled
 																		styles={customStyles}
@@ -731,6 +728,7 @@ class Register extends React.Component {
 																		// placeholder={strings.Select+strings.StateRegion}
 																		id="stateId"
 																		name="stateId"
+																		placeholder="Select Emirates"
 																		className={
 																			props.errors.stateId &&
 																			props.touched.stateId
@@ -929,9 +927,7 @@ class Register extends React.Component {
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="firstName">
-
-																					First Name
-																				</Label>
+																				<span className="text-danger">* </span>First Name</Label>
 																				<Input
 																					type="text"
 																					maxLength="100"
@@ -962,9 +958,7 @@ class Register extends React.Component {
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="lastName">
-
-																					Last Name
-																				</Label>
+																				<span className="text-danger">* </span>Last Name</Label>
 																				<Input
 																					type="text"
 																					maxLength="100"
@@ -995,9 +989,7 @@ class Register extends React.Component {
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="email">
-
-																					Email Address
-																				</Label>
+																				<span className="text-danger">* </span>Email Address</Label>
 																				<Input
 																					type="text"
 																					maxLength="80"
@@ -1024,6 +1016,7 @@ class Register extends React.Component {
 																			</FormGroup>
 																		</Col>
 																		</Row>
+																		<><b>Note: Super Admin Details cannot be altered after registration</b></>
 																	<Row>
 																		<Col className="text-center">
 																			<Button

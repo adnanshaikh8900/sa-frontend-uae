@@ -64,6 +64,19 @@ class RFQTemplate extends Component {
 			number1=number1[0];
 			return number1
 		}
+
+		renderExcise=(item)=>{
+            if(item.exciseTaxId && item.exciseTaxId==1)
+				{
+				  return '50 %'
+				}
+				else
+				if(item.exciseTaxId && item.exciseTaxId==2)
+				{
+				  return '100 %'
+				}
+			}
+
 renderVat=(POData)=>{
 let TotalVatAmount=0
 if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLineItemRequestModelList.length &&POData.poQuatationLineItemRequestModelList.length!=0)
@@ -259,10 +272,12 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 									<th className="center" style={{ padding: '0.5rem' }}>
 										{strings.Quantity }
 									</th>
-									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
+					                <th style={{ padding: '0.5rem', textAlign: 'right' }}>
 										{strings.UnitCost }
 									</th>
+									<th style={{ padding: '0.5rem' }}>{strings.Excise}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Vat}</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.VatAmount}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 									{strings.Total}
 									</th>
@@ -289,9 +304,11 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 													/> */}
 												{POData.currencyIsoCode + " " +item.unitPrice}
 												</td>
+												<td>{item.exciseTaxId ? this.renderExcise(item):"-"}</td>
 												<td
 													style={{ textAlign: 'right' }}
 												>{`${item.vatPercentage}%`}</td>
+												<td style={{ textAlign: 'right' }}>{item.vatAmount}</td>
 												<td style={{ textAlign: 'right' }}>
 													{/* <Currency
 														value={item.subTotal}
@@ -352,9 +369,9 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 								<div style={{ width: '100%' }}>
 								<Table className="table-clear cal-table">
 									<tbody>
-										<tr >
+									<tr >
 											<td style={{ width: '40%' }}>
-												<strong>{strings.SubTotal }</strong>
+												<strong>{strings.TotalExcise}</strong>
 											</td>
 											<td
 												style={{
@@ -364,29 +381,27 @@ if(POData && POData.poQuatationLineItemRequestModelList &&POData.poQuatationLine
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{POData.currencyIsoCode + " " +totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-													 {/* ? (
-														<Currency
-															value={totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													) : (
-														<Currency
-															value={0}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													)} */}
+												{POData.totalExciseAmount? POData.currencyIsoCode + " " +POData.totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 } 
 												</span>
 											</td>
 										</tr>
+										<tr>
+											<td style={{ width: '40%' }}>
+												<strong>Total Net</strong>
+											</td>
+											<td
+												style={{
+													display: 'flex',
+													justifyContent: 'space-between',
+												}}
+											>
+												<span style={{ marginLeft: '2rem' }}></span>
+												<span>
+												{POData.totalAmount? POData.currencyIsoCode + " " +(POData.totalAmount-POData.totalVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 } 
+												</span>
+											</td>
+										</tr>
+										
 										<tr >
 											<td style={{ width: '40%' }}>
 												<strong>{strings.Vat }</strong>

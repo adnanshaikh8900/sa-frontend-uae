@@ -1292,7 +1292,7 @@ class DetailSupplierInvoice extends React.Component {
         formData.append('totalExciseAmount', this.state.initValue.total_excise);
 		formData.append('exciseType', this.state.checked);
 		formData.append('isReverseChargeEnabled',this.state.isReverseChargeEnabled);
-
+        formData.append('discount',this.state.initValue.discount);
 		formData.append('term', term);
 		formData.append('exchangeRate',  exchangeRate ? exchangeRate : '');
 		if (placeOfSupplyId) {

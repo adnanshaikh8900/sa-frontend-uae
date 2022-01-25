@@ -66,7 +66,18 @@ class RFQTemplate extends Component {
 			return number1
 		}
 		
-
+    
+	renderExcise=(item)=>{
+				if(item.exciseTaxId && item.exciseTaxId==1)
+						{
+						  return '50 %'
+						}
+						else
+						if(item.exciseTaxId && item.exciseTaxId==2)
+						{
+						  return '100 %'
+						}
+					}
 	render() {
 
 		strings.setLanguage(this.state.language);
@@ -247,7 +258,9 @@ class RFQTemplate extends Component {
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 										{strings.UnitCost }
 									</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right'}}>{strings.Excise}</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.Vat }</th>
+									<th style={{ padding: '0.5rem', textAlign: 'right' }}>{strings.VatAmount }</th>
 									<th style={{ padding: '0.5rem', textAlign: 'right' }}>
 									  {strings.Total }
 									</th>
@@ -274,9 +287,11 @@ class RFQTemplate extends Component {
 													/> */}
 												{QuotationData.currencyIsoCode + " " +item.unitPrice}
 												</td>
+												<td style={{ textAlign: 'right' }}>{item.exciseTaxId ? this.renderExcise(item):"-"}</td>
 												<td
 													style={{ textAlign: 'right' }}
 												>{`${item.vatPercentage}%`}</td>
+												<td style={{ textAlign: 'right' }}>{item.vatAmount}</td>
 												<td style={{ textAlign: 'right' }}>
 													{/* <Currency
 														value={item.subTotal}
@@ -337,9 +352,9 @@ class RFQTemplate extends Component {
 								<div style={{ width: '100%' }}>
 								<Table className="table-clear cal-table">
 									<tbody>
-										<tr >
+									<tr >
 											<td style={{ width: '40%' }}>
-												<strong>{strings.SubTotal }</strong>
+												<strong>{strings.TotalExcise}</strong>
 											</td>
 											<td
 												style={{
@@ -349,30 +364,27 @@ class RFQTemplate extends Component {
 											>
 												<span style={{ marginLeft: '2rem' }}></span>
 												<span>
-													{totalNet?QuotationData.currencyIsoCode + " " +totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 }): 0}
-													 {/* ? (
-														<Currency
-															value={totalNet.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													) : (
-														<Currency
-															value={0}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													)} */}
+												{QuotationData.totalExciseAmount? QuotationData.currencyIsoCode + " " +QuotationData.totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 } 
 												</span>
 											</td>
 										</tr>
-										<tr >
+										<tr>
+											<td style={{ width: '40%' }}>
+												<strong>Total Net</strong>
+											</td>
+											<td
+												style={{
+													display: 'flex',
+													justifyContent: 'space-between',
+												}}
+											>
+												<span style={{ marginLeft: '2rem' }}></span>
+												<span>
+												{QuotationData.totalAmount? QuotationData.currencyIsoCode + " " +(QuotationData.totalAmount-QuotationData.totalVatAmount).toLocaleString(navigator.language, { minimumFractionDigits: 2 }):0 } 
+												</span>
+											</td>
+										</tr>
+											<tr >
 											<td style={{ width: '40%' }}>
 												<strong>{strings.Vat }</strong>
 											</td>

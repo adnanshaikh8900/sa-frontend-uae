@@ -242,27 +242,27 @@ class SupplierInvoice extends React.Component {
 								<div>
 						<label className="font-weight-bold mr-2 ">{strings.InvoiceAmount} : </label>
 						<label>
-					{row.invoiceAmount  === 0 ? row.currencySymbol +" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol +" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+					{row.invoiceAmount  === 0 ? row.currencySymbol +" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : row.currencySymbol +" "+ row.invoiceAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 						</label>
 					</div>
 					<div style={{display: row.vatAmount === 0 ? 'none' : ''}}>
 					<label className="font-weight-bold mr-2">{strings.VatAmount} : </label>
-					<label>{row.vatAmount === 0  ?  row.currencySymbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :  row.currencySymbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
+					<label>{row.vatAmount === 0  ?  row.currencySymbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) :  row.currencySymbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}</label>
 					</div>
 					<div style={{display: row.dueAmount === 0 ? 'none' : ''}}>
 						<label className="font-weight-bold mr-2">{strings.DueAmount} : </label>
-						<label>{row.dueAmount === 0  ?  row.currencySymbol +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :  row.currencySymbol +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
+						<label>{row.dueAmount === 0  ?  row.currencySymbol +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) :  row.currencySymbol +" "+ row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}</label>
 					</div>
 					
 			</div>);
 		};
 
 	renderDueAmount =(cell,row,extraData) => {
-		return row.dueAmount === 0  ? row.currencySymbol+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.dueAmount === 0  ? row.currencySymbol+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : row.currencySymbol+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	}
 
 	renderVatAmount = (cell, row, extraData) => {
-		return row.vatAmount === 0 ? row.currencySymbol+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencySymbol+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.vatAmount === 0 ? row.currencySymbol+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : row.currencySymbol+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	};
 	renderCurrency = (cell, row) => {
 		if (row.currencySymbol) {
@@ -1022,7 +1022,7 @@ console.log(supplier_invoice_list)
 											<Col lg={2} className="mb-1">
 												<Input
 													type="number"
-													maxLength="17,2"
+													maxLength="14,2"
 													min="0"
 													value={filterData.amount}
 													placeholder={strings.Amount}

@@ -357,7 +357,7 @@ class CreateCustomerInvoice extends React.Component {
 					<Input
 					type="text"
 					min="0"
-						maxLength="17,2"
+						maxLength="14,2"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (
@@ -393,11 +393,11 @@ class CreateCustomerInvoice extends React.Component {
 	};
 
 		renderSubTotal = (cell, row,extraData) => {
-			return row.subTotal === 0 ? this.state.customer_currency_symbol +" "+  row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2 }): this.state.customer_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2 });
+			return row.subTotal === 0 ? this.state.customer_currency_symbol +" "+  row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2,maximumFractionDigits: 2 }): this.state.customer_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language,{ minimumFractionDigits: 2,maximumFractionDigits: 2 });
 
 }
 renderVatAmount = (cell, row,extraData) => {
-	return row.vatAmount === 0 ? this.state.customer_currency_symbol +" "+  row.vatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 }): this.state.customer_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2 });
+	return row.vatAmount === 0 ? this.state.customer_currency_symbol +" "+  row.vatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2,maximumFractionDigits: 2 }): this.state.customer_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language,{ minimumFractionDigits: 2,maximumFractionDigits: 2 });
 
 }
 	setDate = (props, value) => {
@@ -589,7 +589,7 @@ renderVatAmount = (cell, row,extraData) => {
 	};
 
 	selectItem = (e, row, name, form, field, props) => {
-		debugger
+		
 		//e.preventDefault();
 		let data = this.state.data;
 		let idx;
@@ -641,7 +641,7 @@ renderVatAmount = (cell, row,extraData) => {
 				   <Input
 	 					type="text"
 				   	    min="0"
-					    maxLength="17,2"
+					    maxLength="14,2"
 					    value={row['discount'] !== 0 ? row['discount'] : 0}
 					    onChange={(e) => {
 						   if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -1554,6 +1554,13 @@ discountType = (row) =>
 		return customer_taxTreatmentId;
 	}
 
+	rendertotalexcise=()=>{
+		const {initValue}= this.state
+		
+		let val=initValue.total_excise.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})
+		
+		return parseFloat(val).toFixed(2)
+	}
 	render() {
 		strings.setLanguage(this.state.language);
 		const { data, discountOptions, initValue, exist, param,prefix ,tax_treatment_list} = this.state;
@@ -2509,7 +2516,8 @@ discountType = (row) =>
 																					<label className="mb-0">
 
 																						{this.state.customer_currency_symbol} &nbsp;
-																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						{this.rendertotalexcise()}
+																						{/* {initValue.total_excise.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})} */}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2537,7 +2545,7 @@ discountType = (row) =>
 																							/>
 																						)} */}
 																						{this.state.customer_currency_symbol} &nbsp;
-																						{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2565,7 +2573,7 @@ discountType = (row) =>
 																							/>
 																						)} */}
 																						{this.state.customer_currency_symbol} &nbsp;
-																						{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2610,7 +2618,7 @@ discountType = (row) =>
 																							/>
 																						)} */}
 																						{this.state.customer_currency_symbol} &nbsp;
-																						{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2639,7 +2647,7 @@ discountType = (row) =>
 																							/>
 																						)} */}
 																						{this.state.customer_currency_symbol} &nbsp;
-																						{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>

@@ -609,7 +609,7 @@ min="0"
 		// ) : (
 		// 	''
 		// );
-		return row.subTotal === 0 ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.subTotal === 0 ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	};
 	addRow = () => {
 		const data = [...this.state.data];
@@ -898,7 +898,7 @@ min="0"
 			if (props.values.discountType === 'PERCENTAGE') {
 				var val =
 					((+obj.unitPrice -
-						+((obj.unitPrice * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })) *
+						+((obj.unitPrice * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })) *
 						vat *
 						obj.grnReceivedQuantity) /
 					100;
@@ -918,7 +918,7 @@ min="0"
 		});
 		const discount =
 			props.values.discountType === 'PERCENTAGE'
-				? +((total_net * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })
+				? +((total_net * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })
 				: discountAmount;
 		this.setState(
 			{

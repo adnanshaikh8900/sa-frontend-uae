@@ -479,7 +479,7 @@ class CreateEmployment extends React.Component {
                                   <Label htmlFor="gender">Gross Salary </Label>
                                   <Input  
                                     type="text"
-                                    maxLength="17,2"
+                                    maxLength="14,2"
                                     id="grossSalary"
                                     name="grossSalary"
                                     placeholder="Enter  grossSalary "

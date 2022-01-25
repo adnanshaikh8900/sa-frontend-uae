@@ -717,7 +717,7 @@ class DetailCreditNote extends React.Component {
 				   <Input
 						 type="text"
 						   min="0"
-						maxLength="17,2"
+						maxLength="14,2"
 						value={row['discount'] !== 0 ? row['discount'] : 0}
 						onChange={(e) => {
 						   if (e.target.value === '' || this.regDecimal.test(e.target.value)) {

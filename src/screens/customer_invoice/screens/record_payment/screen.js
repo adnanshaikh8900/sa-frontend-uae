@@ -553,7 +553,7 @@ class RecordCustomerPayment extends React.Component {
 																		</Label>
 																		<Input
 																			type="number"
-																			maxLength="17,2"
+																			maxLength="14,2"
 																			id="amount"
 																			name="amount"
 																			value={props.values.amount}

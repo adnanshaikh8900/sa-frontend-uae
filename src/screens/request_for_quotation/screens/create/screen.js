@@ -134,6 +134,7 @@ class CreateRequestForQuotation extends React.Component {
 				rfq_number: '',
 				total_net: 0,
 				invoiceVATAmount: 0,
+				totalVatAmount: 0,
 				term: '',
 				totalAmount: 0,
 				notes: '',
@@ -550,6 +551,7 @@ class CreateRequestForQuotation extends React.Component {
 					vatCategoryId: '',
 					subTotal: 0,
 					exciseTaxId:'',
+					exciseAmount:'',
 					// discountType:'FIXED',
 					vatAmount:0,
 					// discount: 0,
@@ -678,6 +680,7 @@ class CreateRequestForQuotation extends React.Component {
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['exciseTaxId'] = result.exciseTaxId;
 				obj['description'] = result.description;
+				obj['isExciseTaxExclusive'] = result.isExciseTaxExclusive;
 				
 				idx = index;
 			}
@@ -810,7 +813,6 @@ class CreateRequestForQuotation extends React.Component {
 		// 	);
 		// }
 	};
-
 	// selectCategory = (options, row, name, form, field, props) => {
 	// 	let data = this.state.data;
 	// 	let idx;
@@ -899,7 +901,6 @@ class CreateRequestForQuotation extends React.Component {
 		
 	    this.formRef.current.setFieldValue('curreancyname', result[0].currencyName, true);
 	};
-
 	updateAmount = (data, props) => {
 		const { vat_list , excise_list} = this.props;
 		const { discountPercentage, discountAmount } = this.state;
@@ -972,7 +973,7 @@ class CreateRequestForQuotation extends React.Component {
 				var val = (+net_value * vat * obj.quantity) / 100;
 				var val1 = net_value * obj.quantity
 			}
-
+			console.log('value '+val)
 			//discount calculation
 			discount = +(discount +(net_value * obj.quantity)) - parseFloat(val1)
 			total_net = +(total_net + net_value * obj.quantity);
@@ -996,7 +997,7 @@ class CreateRequestForQuotation extends React.Component {
 					...this.state.initValue,
 					...{
 						total_net: discount ? total_net - discount : total_net,
-						invoiceVATAmount: total_vat,
+						totalVatAmount: total_vat,
 						discount:  discount ? discount : 0,
 						totalAmount: total_net > discount ? total - discount : total - discount,
 						total_excise: total_excise
@@ -1007,7 +1008,6 @@ class CreateRequestForQuotation extends React.Component {
 
 		);
 	};
-
 	handleFileChange = (e, props) => {
 		e.preventDefault();
 		let reader = new FileReader();
@@ -1047,12 +1047,13 @@ class CreateRequestForQuotation extends React.Component {
 		formData.append('notes', notes ? notes : '');
 		formData.append('type', 3);
 		formData.append('totalExciseAmount', this.state.initValue.total_excise);
+		formData.append('exciseType', this.state.checked);
 		if (placeOfSupplyId) {
 			formData.append('placeOfSupplyId', placeOfSupplyId.value ? placeOfSupplyId.value : placeOfSupplyId);
 		}
 
 		formData.append('lineItemsString', JSON.stringify(this.state.data));
-		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
+		formData.append('totalVatAmount', this.state.initValue.totalVatAmount);
 		formData.append('totalAmount', this.state.initValue.totalAmount);
 		if (supplierId && supplierId.value) {
 			formData.append('supplierId', supplierId.value);
@@ -1094,6 +1095,7 @@ class CreateRequestForQuotation extends React.Component {
 								...{
 									total_net: 0,
 									invoiceVATAmount: 0,
+									totalVatAmount: 0,
 									totalAmount: 0,
 									discountType: '',
 									discount: 0,
@@ -2129,7 +2131,7 @@ class CreateRequestForQuotation extends React.Component {
 																							/>
 																						)} */}
 																						{this.state.supplier_currency_symbol} &nbsp;
-																						{initValue.invoiceVATAmount.toFixed(
+																						{initValue.totalVatAmount.toFixed(
 																									2,
 																								)}
 																					</label>

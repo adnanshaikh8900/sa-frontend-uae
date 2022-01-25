@@ -309,9 +309,10 @@ class DetailCreditNote extends React.Component {
 	calTotalNet = (data) => {
 		let total_net = 0;
 		data.map((obj) => {
-			total_net = +(total_net + +obj.unitPrice * obj.quantity);
+			total_net = +(total_net + (obj.exciseAmount +obj.unitPrice) * obj.quantity);
 			return obj;
 		});
+		total_net=total_net-this.state.discountAmount
 		this.setState({
 			initValue: Object.assign(this.state.initValue, { total_net }),
 		});
@@ -1157,7 +1158,7 @@ class DetailCreditNote extends React.Component {
 			formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
 			formData.append('totalAmount', this.state.initValue.totalAmount);	
 			formData.append('totalExciseAmount', this.state.initValue.total_excise);
-			formData.append('discount', discount);	
+			formData.append('discount',this.state.initValue.discount);	
 		formData.append('totalExciseTaxAmount', this.state.initValue.total_excise);}
 		// formData.append('exciseType', this.state.checked);
 		// formData.append('discountType', discountType);

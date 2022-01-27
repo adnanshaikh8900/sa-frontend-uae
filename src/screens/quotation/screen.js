@@ -203,13 +203,13 @@ class Quatation extends React.Component {
 								<div>
 						<label className="font-weight-bold mr-2 ">{strings.QuotationAmount}: </label>
 						<label>
-							{row.totalAmount  === 0 ? row.currencyIsoCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :  row.currencyIsoCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+							{row.totalAmount  === 0 ? row.currencyIsoCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) :  row.currencyIsoCode +" "+ row.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 						</label>
 					</div>
 				
 					<div style={{display: row.totalVatAmount === 0 ? 'none' : ''}}>
 					<label className="font-weight-bold mr-2">{strings.VatAmount}: </label>
-					<label>{row.totalVatAmount === 0  ?  row.currencyIsoCode +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) :   row.currencyIsoCode +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</label>
+					<label>{row.totalVatAmount === 0  ?  row.currencyIsoCode +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) :   row.currencyIsoCode +" "+ row.totalVatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}</label>
 				
 					</div>
 					
@@ -218,11 +218,11 @@ class Quatation extends React.Component {
 		};
 
 	renderDueAmount =(cell,row,extraData) => {
-		return row.dueAmount === 0  ? row.currencyIsoCode+" "+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyIsoCode+" "+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.dueAmount === 0  ? row.currencyIsoCode+" "+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : row.currencyIsoCode+" "+row.dueAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	}
 
 	renderVatAmount = (cell, row, extraData) => {
-		return row.vatAmount === 0 ? row.currencyIsoCode+" "+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : row.currencyIsoCode+" "+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.vatAmount === 0 ? row.currencyIsoCode+" "+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : row.currencyIsoCode+" "+row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	};
 	renderCurrency = (cell, row) => {
 		if (row.currencyName) {

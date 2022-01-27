@@ -505,7 +505,7 @@ this.state.data.map((obj, index) => {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.subTotal === 0 ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+  row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.subTotal === 0 ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+  row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	};
 
 	componentDidMount = () => {
@@ -983,7 +983,7 @@ this.state.data.map((obj, index) => {
 			if (props.values.discountType.value === 'PERCENTAGE') {
 				var val =
 					((+obj.unitPrice -
-						+((obj.unitPrice * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })) *
+						+((obj.unitPrice * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })) *
 						vat *
 						obj.grnReceivedQuantity) /
 					100;
@@ -1004,7 +1004,7 @@ this.state.data.map((obj, index) => {
 
 		const discount =
 			props.values.discountType.value === 'PERCENTAGE'
-				? +((total_net * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2 })
+				? +((total_net * discountPercentage) / 100).toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })
 				: discountAmount;
 		this.setState(
 			{

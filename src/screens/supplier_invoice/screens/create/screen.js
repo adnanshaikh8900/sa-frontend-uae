@@ -353,7 +353,7 @@ class CreateSupplierInvoice extends React.Component {
 					<Input
 					type="text"
 					min="0"
-						maxLength="17,2"
+						maxLength="14,2"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -398,7 +398,7 @@ class CreateSupplierInvoice extends React.Component {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.subTotal === 0 ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.subTotal === 0 ? this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.subTotal.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	};
 	renderVatAmount = (cell, row, extraData) => {
 		// return row.subTotal === 0 ? (
@@ -412,7 +412,7 @@ class CreateSupplierInvoice extends React.Component {
 		// 		currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 		// 	/>
 		// );
-		return row.vatAmount === 0 ? this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+		return row.vatAmount === 0 ? this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 }) : this.state.supplier_currency_symbol +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 });
 	};
 
 	componentDidMount = () => {
@@ -594,7 +594,7 @@ class CreateSupplierInvoice extends React.Component {
 					<Input
 					type="text"
 					min="0"
-						maxLength="17,2"
+						maxLength="14,2"
 						value={row['discount'] !== 0 ? row['discount'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {
@@ -1606,6 +1606,22 @@ class CreateSupplierInvoice extends React.Component {
 		return customer_taxTreatmentId;
 	}
 
+	rendertotalexcise=()=>{
+		const {initValue}= this.state
+
+		let val=initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })
+
+		return parseFloat(val).toFixed(2)
+	}
+
+	rendertotalexcise=()=>{
+		const {initValue}= this.state
+
+		let val=initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })
+
+		return parseFloat(val).toFixed(2)
+	}
+
 	render() {
 		strings.setLanguage(this.state.language);
 		const { data, discountOptions, initValue, prefix ,param} = this.state;
@@ -2613,7 +2629,9 @@ class CreateSupplierInvoice extends React.Component {
 																					<label className="mb-0">
 																					
 																						{this.state.supplier_currency_symbol} &nbsp;
-																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
+																						{this.state.customer_currency_symbol} &nbsp;
+																						{this.rendertotalexcise()}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2641,7 +2659,7 @@ class CreateSupplierInvoice extends React.Component {
 																							/>
 																						)} */}
 																						{this.state.supplier_currency_symbol} &nbsp;
-																						{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						{initValue.discount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2669,7 +2687,7 @@ class CreateSupplierInvoice extends React.Component {
 																							/>
 																						)} */}
 																						{this.state.supplier_currency_symbol} &nbsp;
-																						{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						{initValue.total_net.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2714,7 +2732,7 @@ class CreateSupplierInvoice extends React.Component {
 																							/>
 																						)} */}
 																						{this.state.supplier_currency_symbol} &nbsp;
-																						{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						{initValue.invoiceVATAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>
@@ -2743,7 +2761,7 @@ class CreateSupplierInvoice extends React.Component {
 																							/>
 																						)} */}
 																						{this.state.supplier_currency_symbol} &nbsp;
-																						{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																						{initValue.totalAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																					</label>
 																				</Col>
 																			</Row>

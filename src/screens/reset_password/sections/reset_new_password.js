@@ -36,7 +36,8 @@ class ResetNewPassword extends React.Component {
         confirmPassword: ''
       },
       isPasswordShown: false,
-      alert: null
+      alert: null,
+      displayRules:false
     };
     this.formikRef = React.createRef();
   }
@@ -149,6 +150,7 @@ class ResetNewPassword extends React.Component {
 																					}
                                           minLength={8}
                                           maxLength={16}
+                                          autoComplete="off"
 																					id="password"
 																					name="password"
 																					placeholder=" Enter Password"
@@ -157,6 +159,7 @@ class ResetNewPassword extends React.Component {
 																						props.handleChange('password')(
 																							option,
 																						);
+                                            this.setState({displayRules:true})
 																					}}
 																					className={
 																						props.errors.password &&
@@ -165,14 +168,14 @@ class ResetNewPassword extends React.Component {
 																							: ''
 																					}
 																				/>
-																				<i className={`fa ${isPasswordShown ? "fa-eye-slash" : "fa-eye"} password-icon fa-lg`}
+																				{/* <i className={`fa ${isPasswordShown ? "fa-eye-slash" : "fa-eye"} password-icon fa-lg`}
 																					onClick={this.togglePasswordVisiblity}
-																				>
+																				> */}
 																					{/* <img 
 																			src={eye}
 																			style={{ width: '20px' }}
 																		/> */}
-																				</i>
+																				{/* </i> */}
 																			</div>
 																			{props.errors.password &&
 																				props.touched.password && (
@@ -180,13 +183,13 @@ class ResetNewPassword extends React.Component {
 																						{props.errors.password}
 																					</div>
 																				)}
-																			<PasswordChecklist
+																			{this.state.displayRules==true&&( <PasswordChecklist
 																				rules={["minLength", "specialChar", "number", "capital"]}
 																				minLength={8}
                                         maxLength={16}
 																				value={props.values.password}
 																				valueAgain={props.values.confirmPassword}
-																			/>
+																			/>)}
 																		</FormGroup>
                                 </Col>
                                 <Col lg={12}>
@@ -204,6 +207,7 @@ class ResetNewPassword extends React.Component {
                                         }}
                                         minLength={8}
                                         maxLength={16}
+                                        autoComplete="off"
 																				type="password"
 																				id="confirmPassword"
 																				name="confirmPassword"
@@ -227,13 +231,13 @@ class ResetNewPassword extends React.Component {
 																						{props.errors.confirmPassword}
 																					</div>
 																				)}
-																				<PasswordChecklist
+																				{this.state.displayRules==true&&( <PasswordChecklist
 																				rules={[ "match"]}
 																				minLength={8}
                                         maxLength={16}
 																				value={props.values.password}
 																				valueAgain={props.values.confirmPassword}
-																			/>
+																			/>)}
 																		</FormGroup>
                                 </Col>
                               </Row>

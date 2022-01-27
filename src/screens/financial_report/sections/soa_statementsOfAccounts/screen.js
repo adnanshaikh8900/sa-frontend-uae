@@ -386,7 +386,7 @@ this.props.financialReportActions
 								/>{' '}
 							</div> */}
 							<div>
-				<Card>
+			
 					<CardBody>
 						<Formik initialValues={initValue}>
 							{(props) => (
@@ -492,15 +492,21 @@ this.props.financialReportActions
 							)}
 						</Formik>
 					</CardBody>
-				</Card>
+			
+					</div>
 			</div>
-							{soa_data.length!=0 &&(<CardBody id="section-to-print">
+					</Card>
+
+							{soa_data.length!=0 &&(
+						
+								
 								<PDFExport
 									ref={(component) => (this.pdfExportComponent = component)}
 									scale={0.8}
 									paperSize="A3"
 									fileName={'Statement Of Account ( '+this.state.customerName+' ).pdf'}
 								>
+								<Card><CardBody>	
 									<div style={{
 
 										display: 'flex',
@@ -670,10 +676,11 @@ this.props.financialReportActions
 										</div>
 									)}
 									<div style={{ textAlignLast: 'center' }}> {strings.PoweredBy} <b>SimpleAccounts</b></div>
+									</CardBody>
+									</Card>
 								</PDFExport>
-							</CardBody>)}
-						</div>
-					</Card>
+							)}
+					
 				</div>
 			</div>
 		);

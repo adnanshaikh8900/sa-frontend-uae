@@ -40,7 +40,8 @@ class NewPassword extends React.Component {
         token: queryParams.get('token')
       },
       isPasswordShown: false,
-      alert: null
+      alert: null,
+      displayRules:false
     };
     this.formikRef = React.createRef();
      }
@@ -152,6 +153,7 @@ class NewPassword extends React.Component {
 																							? 'text'
 																							: 'password'
 																					}
+                                          autoComplete="off"
 																					id="password"
 																					name="password"
 																					placeholder=" Enter Password"
@@ -160,6 +162,7 @@ class NewPassword extends React.Component {
 																						props.handleChange('password')(
 																							option,
 																						);
+                                            this.setState({displayRules:true})
 																					}}
 																					className={
 																						props.errors.password &&
@@ -168,14 +171,14 @@ class NewPassword extends React.Component {
 																							: ''
 																					}
 																				/>
-																				<i className={`fa ${isPasswordShown ? "fa-eye-slash" : "fa-eye"} password-icon fa-lg`}
+																				{/* <i className={`fa ${isPasswordShown ? "fa-eye-slash" : "fa-eye"} password-icon fa-lg`}
 																					onClick={this.togglePasswordVisiblity}
-																				>
+																				> */}
 																					{/* <img 
 																			src={eye}
 																			style={{ width: '20px' }}
 																		/> */}
-																				</i>
+																				{/* </i> */}
 																			</div>
 																			{props.errors.password &&
 																				props.touched.password && (
@@ -183,12 +186,12 @@ class NewPassword extends React.Component {
 																						{props.errors.password}
 																					</div>
 																				)}
-																			<PasswordChecklist
+																		{this.state.displayRules==true&&(	<PasswordChecklist
 																				rules={["minLength", "specialChar", "number", "capital"]}
 																				minLength={8}
 																				value={props.values.password}
 																				valueAgain={props.values.confirmPassword}
-																			/>
+																			/>)}
 																		</FormGroup>
                                 </Col>
                                 <Col lg={12}>
@@ -205,6 +208,7 @@ class NewPassword extends React.Component {
                                         e.preventDefault()
                                         return false;
                                         }}
+                                        // autoComplete="off"
 																				type="password"
 																				id="confirmPassword"
 																				name="confirmPassword"
@@ -228,12 +232,12 @@ class NewPassword extends React.Component {
 																						{props.errors.confirmPassword}
 																					</div>
 																				)}
-																				<PasswordChecklist
+																				{this.state.displayRules==true&&(	<PasswordChecklist
 																				rules={[ "match"]}
 																				minLength={8}
 																				value={props.values.password}
 																				valueAgain={props.values.confirmPassword}
-																			/>
+																			/>)}
 																		</FormGroup>
                                 </Col>
                               </Row>

@@ -287,7 +287,7 @@ class CreateOpeningBalance extends React.Component {
 																	</Label>
 																	<Input
 																		type="number"
-																		maxLength="15"
+																		maxLength="14,2"
 																		name="openingBalance"
 																		id="openingBalance"
 																		rows="5"

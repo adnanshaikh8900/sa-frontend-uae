@@ -1164,7 +1164,7 @@ this.formRef.current.setFieldValue('exchangeRate', result[0].exchangeRate, true)
 																	<Input
 																		type="text"
 																		min="0"
-																		maxLength="17,3"
+																		maxLength="14,2"
 																		name="expenseAmount"
 																		id="expenseAmount"
 																		rows="5"

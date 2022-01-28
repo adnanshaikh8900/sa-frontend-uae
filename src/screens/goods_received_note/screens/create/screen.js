@@ -460,7 +460,7 @@ this.state.data.map((obj, index) => {
 				render={({ field, form }) => (
 					<Input
 					type="number"
-						maxLength="17,3"
+						maxLength="14,2"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regDecimal.test(e.target.value)) {

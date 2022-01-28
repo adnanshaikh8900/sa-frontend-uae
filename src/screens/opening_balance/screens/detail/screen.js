@@ -275,8 +275,8 @@ class DetailOpeningBalance extends React.Component {
 																	</Label>
 																	<Input
 																		type="number"
-min="0"
-																		maxLength="10"
+                                    min="0"
+																		maxLength="14,2"
 																		name="openingBalance"
 																		id="openingBalance"
 																		rows="5"

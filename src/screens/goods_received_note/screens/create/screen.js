@@ -1923,7 +1923,8 @@ console.log(this.state.data)
 																			? `Please add detail to add more`
 																			: ''
 																	}
-																	disabled={this.checkedRow() ? true : false}
+																	disabled={this.checkedRow() ? true : false ||
+																		props.values.poNumber ? true : false}
 																>
 																	<i className="fa fa-plus"></i>&nbsp;{strings.Addmore}
 																</Button>
@@ -1933,6 +1934,7 @@ console.log(this.state.data)
 																	onClick={(e, props) => {
 																		this.props.history.push(`/admin/master/product/create`,{gotoParentURL:"/admin/expense/goods-received-note/create"})
 																		}}
+																	disabled={props.values.poNumber ? true : false}	
 																	>
 																	<i className="fa fa-plus"></i>&nbsp;{strings.Addproduct}
 																</Button>

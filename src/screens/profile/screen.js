@@ -91,6 +91,12 @@ class Profile extends React.Component {
 			companyLogo: [],
 			companyLogoFile: [],
 			initUserData: {},
+			displayRules:false,
+			initValue: {
+				password: "",
+				confirmPassword: '',
+			
+			  },
 			email:'',
 			initCompanyData: {
 				companyName: '',
@@ -536,7 +542,24 @@ class Profile extends React.Component {
 			  })
 			})
 		  }
-	
+		  validateCurrentPassword = (username,password) => {
+			let obj = {
+				username,
+				password
+			};
+			this.props.authActions
+				.logIn(obj)
+				.then((res) => {
+			debugger
+					this.setState({ currentPasswordMatched: true });
+				})
+				.catch((err) => {
+					debugger
+					if(err.status==401)
+					this.setState({ currentPasswordMatched: false });
+					
+				});
+		};
 
 	handleCompanySubmit = (data) => {
 		const {
@@ -731,7 +754,7 @@ class Profile extends React.Component {
 		this.props.profileActions
 			.resetNewpassword(formData)
 			.then((res) => {
-				debugger
+				
 				if (res.status === 200) {
 					this.props.history.push('/login');
 					this.props.commonActions.tostifyAlert(
@@ -3504,7 +3527,7 @@ class Profile extends React.Component {
 												<Row>
 													<Col lg="12">
 													<Formik
-																// initialValues={this.state.initCompanyData}
+																initialValues={this.state.initValue}
 																onSubmit={(values, { resetForm }) => {
 																	this.handlePasswordSubmit(values);
 																	// resetForm(this.state.initValue)
@@ -3521,21 +3544,38 @@ class Profile extends React.Component {
 															//   lastName: Yup.()
 															//     .required("Last Name is Required"),
 															// })}
-															// // validationSchema={Yup.object().shape({
-															// // 	password: Yup.string()
-															// // 		 .required("Password is Required")
-															// // 		// .min(8, "Password Too Short")
-															// // 		.matches(
-															// // 			/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-															// // 			'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
-															// // 		),
-															// // 	confirmPassword: Yup.string()
-															// // 		 .required('Confirm Password is Required')
-															// // 		.oneOf(
-															// // 			[Yup.ref('password'), null],
-															// // 			'Passwords must match',
-															// // 		),
-															// })}
+															validate={(values)=>{
+																
+																let errors={};
+																	if(this.state.currentPasswordMatched==false)
+																	errors.currentPassword="Please Enter The Correct Password"
+																return errors;
+
+															}}
+															validationSchema={Yup.object().shape({
+																currentPassword: Yup.string().required(
+																	'Current Password is Required',
+																),
+																password: Yup.string().required(
+																	'New Password is Required',
+																),
+																confirmPassword: Yup.string().required(
+																	'Confirm Password is Required',
+																),
+																password: Yup.string()
+																	 .required("Password is Required")
+																	// .min(8, "Password Too Short")
+																	.matches(
+																		/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
+																		'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
+																	),
+																confirmPassword: Yup.string()
+																	 .required('Confirm Password is Required')
+																	.oneOf(
+																		[Yup.ref('password'), null],
+																		'Passwords must match',
+																	),
+															})}
 
 															>
 																{(props) => (
@@ -3555,15 +3595,26 @@ class Profile extends React.Component {
 																							</span> {strings.CurrentPassword}
 																						</Label>
 																							<Input
+																							onPaste={(e)=>{
+																								e.preventDefault()
+																								return false;
+																							  }} onCopy={(e)=>{
+																								e.preventDefault()
+																								return false;
+																							  }}
+																								minLength={8}
+																								maxLength={16}
 																								type="password"
 																								id="currentPassword"
 																								name="currentPassword"
 																								autoComplete="current-password"
-																								placeholder={strings.Enter+strings.Password}
-																								onChange={(value) => {
+																								placeholder={strings.Enter+strings.CurrentPassword}
+																								onChange={(option) => {
 																									props.handleChange('currentPassword')(
-																										value,
+																										option,
 																									);
+																									
+																									this.validateCurrentPassword(this.state.initUserData.email,option.target.value)
 																								}}
 																								className={
 																									props.errors.currentPassword &&
@@ -3606,15 +3657,19 @@ class Profile extends React.Component {
 																							// oncopy="return false"
 																							// ondrop="return false"
 																							// onpaste="return false"
+																								minLength={8}
+																								maxLength={16}
 																								type="password"
 																								id="password"
 																								name="password"
 																								autoComplete="new-password"
+																								value={props.values.password}
 																								placeholder={strings.Enter+strings.Password}
 																								onChange={(value) => {
 																									props.handleChange('password')(
 																										value,
 																									);
+																									this.setState({displayRules:true})
 																								}}
 																								className={
 																									props.errors.password &&
@@ -3624,18 +3679,17 @@ class Profile extends React.Component {
 																								}
 																							/>
 																							{props.errors.password &&
-																								props.touched.password ? (
-																									<div className="invalid-feedback">
-																										{props.errors.password}
-																									</div>
-																								) : (
-																									<span className="password-msg">
-																										Must Contain 8 Characters, One
-																										Uppercase, One Lowercase, One
-																										Number and one special case
-																										Character.
-																									</span>
-																								)}
+																							props.touched.password && (
+																								<div className="invalid-feedback">
+																									{props.errors.password}
+																								</div>
+																							)}
+																						{this.state.displayRules==true&&(<PasswordChecklist
+																							rules={["minLength", "specialChar", "number", "capital"]}
+																							minLength={8}
+																							value={props.values.password}
+																							valueAgain={props.values.confirmPassword}
+																						/>)}
 																						</FormGroup>
 																					</Col>
 																					<Col lg={4}>
@@ -3657,9 +3711,12 @@ class Profile extends React.Component {
 																							// oncopy="return false"
 																							// ondrop="return false"
 																							// onpaste="return false"
+																								minLength={8}
+																								maxLength={16}
 																								type="password"
 																								id="confirmPassword"
 																								name="confirmPassword"
+																								value={props.values.confirmPassword}
 																								placeholder={strings.Enter+strings.ConfirmPassword}
 																								onChange={(value) => {
 																									props.handleChange(
@@ -3674,11 +3731,17 @@ class Profile extends React.Component {
 																								}
 																							/>
 																							{props.errors.confirmPassword &&
-																								props.touched.confirmPassword && (
-																									<div className="invalid-feedback">
-																										{props.errors.confirmPassword}
-																									</div>
-																								)}
+																							props.touched.confirmPassword && (
+																								<div className="invalid-feedback">
+																									{props.errors.confirmPassword}
+																								</div>
+																							)}
+																						{this.state.displayRules==true&&(<PasswordChecklist
+																							rules={[ "match"]}
+																							minLength={8}
+																							value={props.values.password}
+																							valueAgain={props.values.confirmPassword}
+																						/>)}
 																						</FormGroup>
 																					</Col>
 																				</Row>

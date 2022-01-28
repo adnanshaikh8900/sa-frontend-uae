@@ -197,7 +197,9 @@ import {
 	SOAReport,
 	FtaAuditReport,
 	GenerateAuditFile,
-	ViewFtaAuditReport
+	ViewFtaAuditReport,
+	ExciseTaxAuditReport,
+	ViewFtaExciseAuditReport
 } from 'screens';
 
 const adminRoutes = [
@@ -781,6 +783,21 @@ const adminRoutes = [
 		path: '/admin/report/ftaAuditReports/view',
 		name: 'View FTA Report',
 		component: ViewFtaAuditReport.screen,
+	},
+	{
+		path: '/admin/report/exciseTaxAuditReports',
+		name: 'FTA Reports',
+		component: ExciseTaxAuditReport.screen,
+	},		
+	{
+		path: '/admin/report/exciseTaxAuditReports/generateexcisetaxAuditReport',
+		name: 'Generate FTA Report',
+		component: GenerateAuditFile.screen,
+	},	
+	{
+		path: '/admin/report/exciseTaxAuditReports/view',
+		name: 'View FTA Report',
+		component: ViewFtaExciseAuditReport.screen,
 	},
 	{
 		path: '/admin/report/vatreports/view',

@@ -279,7 +279,7 @@ class DetailQuotation extends React.Component {
 	calTotalNet = (data) => {
 		let total_net = 0;
 		data.map((obj) => {
-			total_net = +(total_net + +obj.unitPrice * obj.quantity);
+			total_net = +(total_net + (+obj.unitPrice + +obj.exciseAmount) * obj.quantity);
 			return obj;
 		});
 		this.setState({
@@ -870,6 +870,7 @@ min="0"
 	};
 
 	updateAmount = (data, props) => {
+		debugger
 		const { vat_list , excise_list} = this.props;
 		const { discountPercentage, discountAmount } = this.state;
 		let total_net = 0;

@@ -287,7 +287,7 @@ class DetailPurchaseOrder extends React.Component {
 	calTotalNet = (data) => {
 		let total_net = 0;
 		data.map((obj) => {
-			total_net = +(total_net + +obj.unitPrice * obj.quantity);
+			total_net = +(total_net + (+obj.unitPrice + +obj.exciseAmount) * obj.quantity);
 			return obj;
 		});
 		this.setState({

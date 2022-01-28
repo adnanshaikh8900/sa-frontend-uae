@@ -407,55 +407,49 @@ class CreateCurrencyConvert extends React.Component {
 																			</FormGroup>
 																				</Col>
 																				<FormGroup className="mt-5"><label><b>=</b></label>	</FormGroup>
-																	<Col lg={3}>
+																				<Col lg={3}>
 																	<FormGroup className="mt-2">
-																	<Label htmlFor="Exchange rate">
+																	<Label htmlFor="exchangeRate">
 																	{strings.Exchangerate}
-																	{/* <i
-																		id="ProductcatcodeTooltip"
-																		className="fa fa-question-circle ml-1"
-																	></i>
-																	<UncontrolledTooltip
-																		placement="right"
-																		target="ProductcatcodeTooltip"
-																	>
-																		Product Category Code - Unique identifier code of the product 
-																	</UncontrolledTooltip> */}
 																	</Label>
 																	<Input
-																	type="number"
-																	maxLength="17,2"
-																	id="exchangeRate"
-																	name="exchangeRate"
-																	placeholder={strings.Enter+strings.Exchangerate}
-																	onChange={(option) => {
-																		if (
-																			option.target.value === '' ||
-																			this.regDecimal.test(option.target.value)
-																		) {
-																			handleChange('exchangeRate')(
-																				option,
-																			);
-																		}
-																	}}
-																	onBlur={handleBlur}
-																	value={values.exchangeRate}
-																	className={
-																		errors.exchangeRate &&
-																		touched.exchangeRate
-																			? 'is-invalid'
-																			: ''
-																	}
-																	/>
-															
-																	{errors.exchangeRate &&
+																			type="text"
+																			maxLength="20"
+																			id="exchangeRate"
+																			name="exchangeRate"
+																			placeholder={strings.Enter+strings.Exchangerate}
+																		
+																			onChange={(option) => {
+																				if (
+																					option.target.value === '' ||
+																					this.regDecimal.test(
+																						option.target.value,
+																					)
+																				) {
+																					props.handleChange('exchangeRate')(
+																						option,
+																					);
+																				}
+																			}}
+																			value={values.exchangeRate}
+																			className={
+																				errors.exchangeRate &&
+																				touched.exchangeRate
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																			{errors.exchangeRate &&
 																	touched.exchangeRate && (
 																		<div className="invalid-feedback">
 																			{errors.exchangeRate}
 																		</div>
 																	)}
-																	</FormGroup >
-																	</Col>
+																	</FormGroup>
+																		</Col>	
+																	
+
+																
 																	<Col lg={3}>
 																		<FormGroup className="mt-2">
 																		<Label htmlFor="currencyName">

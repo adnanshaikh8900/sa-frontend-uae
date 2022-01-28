@@ -425,8 +425,8 @@ class DetailCurrencyConvert extends React.Component {
 																	</UncontrolledTooltip> */}
 																</Label>
 																<Input
-																	type="number"
-                                    								maxLength="17,2"
+																	type="text"
+                                    								maxLength="20"
 																	id="exchangeRate"
 																	name="exchangeRate"
 																	placeholder={strings.Enter+strings.Exchangerate}

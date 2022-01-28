@@ -1614,14 +1614,6 @@ class CreateSupplierInvoice extends React.Component {
 		return parseFloat(val).toFixed(2)
 	}
 
-	rendertotalexcise=()=>{
-		const {initValue}= this.state
-
-		let val=initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })
-
-		return parseFloat(val).toFixed(2)
-	}
-
 	render() {
 		strings.setLanguage(this.state.language);
 		const { data, discountOptions, initValue, prefix ,param} = this.state;
@@ -2627,9 +2619,7 @@ class CreateSupplierInvoice extends React.Component {
 																				</Col>
 																				<Col lg={6} className="text-right">
 																					<label className="mb-0">
-																					
 																						{this.state.supplier_currency_symbol} &nbsp;
-																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2,maximumFractionDigits: 2 })}
 																						{this.state.customer_currency_symbol} &nbsp;
 																						{this.rendertotalexcise()}
 																					</label>

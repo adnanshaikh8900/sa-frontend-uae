@@ -299,7 +299,7 @@ class DetailRequestForQuotation extends React.Component {
 	calTotalNet = (data) => {
 		let total_net = 0;
 		data.map((obj) => {
-			total_net = +(total_net + (+obj.unitPrice + +obj.exciseAmount) * obj.quantity);
+			total_net = +(total_net + (obj.exciseAmount +obj.unitPrice) * obj.quantity);
 			return obj;
 		});
 		this.setState({
@@ -997,7 +997,7 @@ class DetailRequestForQuotation extends React.Component {
 					...this.state.initValue,
 					...{
 						total_net: discount ? total_net - discount : total_net,
-						invoiceVATAmount: total_vat,
+						totalVatAmount: total_vat,
 						discount:  discount ? discount : 0,
 						totalAmount: total_net > discount ? total - discount : total - discount,
 						total_excise: total_excise

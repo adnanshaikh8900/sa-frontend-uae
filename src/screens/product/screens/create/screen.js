@@ -1139,7 +1139,7 @@ try {
 																		>
 																			<Input
 																				type="checkbox"
-																				max="17,3"
+																				max="14,2"
 																				id="productPriceTypeOne"
 																				name="productPriceTypeOne"
 																				onChange={(event) => {
@@ -1205,7 +1205,7 @@ try {
 																		</Label>
 																		<Input
 																			type="text"
-																			maxLength="17,3"
+																			maxLength="14,2"
 																			id="salesUnitPrice"
 																			name="salesUnitPrice"
 																			placeholder={strings.Enter+strings.SellingPrice}
@@ -1341,7 +1341,7 @@ try {
 																			<Input
 																				type="checkbox"
 																				id="productPriceTypetwo"
-																				maxLength="17,3"
+																				maxLength="14,2"
 																				name="productPriceTypetwo"
 																				onChange={(event) => {
 																					if (
@@ -1407,7 +1407,7 @@ try {
 																		</Label>
 																		<Input
 																		type="text"
-																			maxLength="17,3"
+																			maxLength="14,2"
 																			id="purchaseUnitPrice"
 																			name="purchaseUnitPrice"
 																			
@@ -1703,7 +1703,7 @@ try {
 																		<Input
 																			type="text"
 																			min="0"
-																			maxLength="17,3"
+																			maxLength="14,2"
 																			id="inventoryPurchasePrice"
 																			name="inventoryPurchasePrice"
 																			placeholder={strings.Enter+strings.PurchasePrice}

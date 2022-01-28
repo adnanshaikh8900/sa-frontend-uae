@@ -541,7 +541,7 @@ class DetailPurchaseOrder extends React.Component {
 				render={({ field, form }) => (
 					<Input
 					type="text"
-					maxLength="17,3"
+					maxLength="14,2"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (

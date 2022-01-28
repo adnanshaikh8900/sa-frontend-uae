@@ -351,7 +351,7 @@ class CreateCreditNote extends React.Component {
 					disabled
 					type="text"
 					min="0"
-						maxLength="17,3"
+						maxLength="14,2"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (

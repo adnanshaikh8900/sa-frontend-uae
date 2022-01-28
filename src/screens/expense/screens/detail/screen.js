@@ -1235,6 +1235,7 @@ class DetailExpense extends React.Component {
 																			type="text"
 																			// min="0"
 																			name="expenseAmount"
+																			maxLength="14,2"
 																			id="expenseAmount"
 																			rows="5"
 																			className={

@@ -47,7 +47,8 @@ const mapStateToProps = (state) => {
 		product_category_list: state.product.product_category_list,
 		universal_currency_list: state.common.universal_currency_list,
 		currency_convert_list: state.currencyConvert.currency_convert_list,
-		rfqReceiveDate: state.rfqReceiveDate
+		rfqReceiveDate: state.rfqReceiveDate,
+		excise_list: state.request_for_quotation.excise_list,
 	};
 	
 };
@@ -100,6 +101,7 @@ class CreatePurchaseOrder extends React.Component {
 				},
 			],
 			initValue: {
+				total_excise: 0,
 				poApproveDate: new Date(),
 				poReceiveDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
 				supplierId: '',
@@ -188,6 +190,7 @@ class CreatePurchaseOrder extends React.Component {
 		 	selectedData :nextProps.selectedData,
 			 totalAmount :nextProps.totalAmount,
 			 totalVatAmount :nextProps.totalVatAmount,
+			 totalExciseAmount:nextProps.totalExciseAmount
 		};
         }
 		// else if(prevState.totalAmount !== nextProps.totalAmount)
@@ -401,6 +404,74 @@ min="0"
 			/>
 		);
 	}
+
+	renderExcise = (cell, row, props) => {
+		const { excise_list } = this.props;
+
+		let idx;
+		this.state.selectedData.poQuatationLineItemRequestModelList.map((obj, index) => {
+			if (obj.id === row.id) {
+				idx = index;
+			}
+			return obj;
+		});
+
+		return (
+			<Field
+				name={`poQuatationLineItemRequestModelList.${idx}.exciseTaxId`}
+				render={({ field, form }) => (
+					<Select
+					isDisabled={true}
+						styles={customStyles}
+						options={
+							excise_list
+								? selectOptionsFactory.renderOptions(
+										'name',
+										'id',
+										excise_list,
+										'Excise Tax',
+								  )
+								: []
+						}
+						value={
+							excise_list &&
+							selectOptionsFactory
+								.renderOptions('name', 'id', excise_list, 'Excise Tax')
+								.find((option) => option.value ==row.exciseTaxId)
+						}
+						id="exciseTaxId"
+						placeholder={strings.Select+strings.Vat}
+						onChange={(e) => {
+							this.selectItem(
+								e.value,
+								row,
+								'exciseTaxId',
+								form,
+								field,
+								props,
+							);
+						}}
+						className={`${
+							props.errors.poQuatationLineItemRequestModelList &&
+							props.errors.poQuatationLineItemRequestModelList[parseInt(idx, 10)] &&
+							props.errors.poQuatationLineItemRequestModelList[parseInt(idx, 10)].exciseTaxId &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.poQuatationLineItemRequestModelList &&
+							props.touched.poQuatationLineItemRequestModelList[parseInt(idx, 10)] &&
+							props.touched.poQuatationLineItemRequestModelList[parseInt(idx, 10)].exciseTaxId
+								? 'is-invalid'
+								: ''
+						}`}
+					/>
+				)}
+			/>
+		);
+	}
+
+	renderVatAmount = (cell, row, extraData) => {
+		return row.vatAmount === 0 ? this.state.selectedData.currencyIsoCode +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 }) : this.state.selectedData.currencyIsoCode +" "+ row.vatAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 });
+	};
+
 
 	renderVat = (cell, row, props) => {
 		const { vat_list } = this.props;
@@ -627,6 +698,7 @@ min="0"
 		let total_net = 0;
 		let total = 0;
 		let total_vat = 0;
+		let total_excise = 0;
 		const { discountPercentage, discountAmount } = this.state;
 
 		data.map((obj) => {
@@ -655,6 +727,7 @@ min="0"
 			total_net = +(total_net + +obj.unitPrice * obj.quantity);
 			total_vat = +(total_vat + val);
 			total = total_vat + total_net;
+			total_excise = +(total_excise + obj.exciseAmount)
 			return obj;
 		});
 		console.log(total_net,"total_net")
@@ -674,6 +747,7 @@ min="0"
 						totalVatAmount: total_vat,
 						discount: total_net > discount ? discount : 0,
 						totalAmount: total_net > discount ? total - discount : total,
+						total_excise: total_excise
 					},
 				},
 				
@@ -795,6 +869,7 @@ min="0"
         formData.append('totalVatAmount',this.state.totalVatAmount );
 	    formData.append('supplierId', this.state.selectedData.supplierId);
 		formData.append('supplierReferenceNumber',supplierReferenceNumber ? supplierReferenceNumber : '');
+		formData.append('totalExciseAmount', this.state.initValue.total_excise);
 		formData.append('currencyCode', this.state.selectedData.currencyCode);
         if (rfqNumber && rfqNumber.value) {
 			formData.append('rfqNumber', rfqNumber.value);
@@ -858,7 +933,7 @@ min="0"
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { openPurchaseOrder, closePurchaseOrder, id, supplier_list,rfqReceiveDate } = this.props;
+		const { openPurchaseOrder, closePurchaseOrder, id, supplier_list,rfqReceiveDate,universal_currency_list } = this.props;
 		const { initValue, contentState,data,supplierId } = this.state;
  
 		let tmpSupplier_list = []
@@ -1420,12 +1495,40 @@ min="0"
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
+																	width="10%"
+																		dataField="exciseTaxId"
+																		dataFormat={(cell, rows) =>
+																			this.renderExcise(cell, rows, props)
+																		}
+																	>
+																	Excise
+																	<i
+																			id="ExiseTooltip"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="ExiseTooltip"
+																		>
+																			If Exise Type for a product is Inclusive
+																			then the Excise dropdown will be Disabled
+																		</UncontrolledTooltip>
+																	</TableHeaderColumn> 
+																	<TableHeaderColumn
 																		dataField="vat"
 																		dataFormat={(cell, rows) =>
 																			this.renderVat(cell, rows, props)
 																		}
 																	>
 																		{strings.VAT}
+																	</TableHeaderColumn>
+																	<TableHeaderColumn
+																	width="10%"
+																	dataField="sub_total"
+																	dataFormat={this.renderVatAmount}
+																	className="text-right"
+																	columnClassName="text-right"																	>
+																	Vat amount
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="sub_total"
@@ -1463,7 +1566,22 @@ min="0"
 																</Col>
 																	<Col lg={4}>
 																		<div className="">
-																		
+																	<div className="total-item p-2">
+																			<Row>
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																					Total Excise
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																					<label className="mb-0">
+
+																						{this.state.selectedData.currencyIsoCode} &nbsp;
+																						{this.state.selectedData.totalExciseAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2})}
+																					</label>
+																				</Col>
+																			</Row>
+																		</div>
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>

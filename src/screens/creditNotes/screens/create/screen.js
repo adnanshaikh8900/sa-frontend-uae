@@ -412,6 +412,7 @@ renderDiscount = (cell, row, props) => {
 		   <div>
 		   <div  class="input-group">
 			   <Input
+			         disabled
 					 type="text"
 					   min="0"
 					maxLength="14,2"
@@ -454,7 +455,7 @@ type="text"
 	<div 	style={{width:'100px'}}>
 	<Select
 
-
+                                                                                       isDisabled={true}
 																					   options={discountOptions}
 																					   id="discountType"
 																					   name="discountType"

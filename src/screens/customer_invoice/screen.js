@@ -956,7 +956,8 @@ class CustomerInvoice extends React.Component {
 		})
 
 		return (
-			<div className="customer-invoice-screen">
+			loading ==true? <Loader/> :
+<div> <div className="customer-invoice-screen">
 				<div className="animated fadeIn">
 					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
 					<Card>
@@ -1437,7 +1438,8 @@ class CustomerInvoice extends React.Component {
 					}}
 					id={this.state.rowId}
 				/>
-			</div>
+			</div></div>
+			
 		);
 	}
 }

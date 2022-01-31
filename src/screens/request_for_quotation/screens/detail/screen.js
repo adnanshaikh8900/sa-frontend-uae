@@ -299,9 +299,18 @@ class DetailRequestForQuotation extends React.Component {
 	calTotalNet = (data) => {
 		let total_net = 0;
 		data.map((obj) => {
-			total_net = +(total_net + (obj.exciseAmount +obj.unitPrice) * obj.quantity);
-			return obj;
-		});
+			if(obj.isExciseTaxExclusive === false){
+
+                total_net = +(total_net + +obj.unitPrice  * obj.quantity);
+
+            }else{
+
+                total_net = +(total_net + +(obj.unitPrice + obj.exciseAmount) * obj.quantity);
+
+            }
+        return obj;
+
+        });
 		this.setState({
 			initValue: Object.assign(this.state.initValue, { total_net }),
 		});

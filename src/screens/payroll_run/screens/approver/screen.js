@@ -815,6 +815,8 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 		const { loading, initValue,dialog } = this.state
 		console.log(approver_dropdown_list, "approver_dropdown_list")
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="create-employee-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -1165,6 +1167,7 @@ let payPeriodString=moment(dateArr[0]).format('DD-MM-YYYY')+" - "+moment(dateArr
 
 				// employee_list={employee_list.data}				
 				/>
+			</div>
 			</div>
 		)
 	}

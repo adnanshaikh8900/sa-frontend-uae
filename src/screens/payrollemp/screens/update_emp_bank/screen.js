@@ -235,6 +235,8 @@ class UpdateEmployeeBank extends React.Component {
         console.log(this.state.selectedStatus)
 
         return (
+            loading ==true? <Loader/> :
+<div>
             <div className="detail-vat-code-screen">
                 <div className="animated fadeIn">
                     {dialog}
@@ -535,6 +537,7 @@ class UpdateEmployeeBank extends React.Component {
                         </Col>
                     </Row>
                 </div>
+            </div>
             </div>
         )
     }

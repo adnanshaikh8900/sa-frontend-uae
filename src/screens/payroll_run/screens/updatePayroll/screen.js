@@ -922,6 +922,8 @@ class UpdatePayroll extends React.Component {
 				}
 		var today = new Date();
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="create-employee-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -1310,6 +1312,7 @@ class UpdatePayroll extends React.Component {
 
 				// employee_list={employee_list.data}				
 				/> */}
+			</div>
 			</div>
 		)
 	}

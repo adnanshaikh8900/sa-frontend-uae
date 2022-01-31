@@ -818,6 +818,8 @@ class GoodsReceivedNote extends React.Component {
 		console.log(request_for_quotation_data);
 		console.log(goods_received_note_list);
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="supplier-invoice-screen">
 				<div className="animated fadeIn">
 					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
@@ -1135,6 +1137,7 @@ class GoodsReceivedNote extends React.Component {
 						this.closeEmailModal(e);
 					}}
 				/>
+			</div>
 			</div>
 		);
 	}

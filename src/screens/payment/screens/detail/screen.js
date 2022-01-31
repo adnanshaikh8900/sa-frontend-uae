@@ -261,6 +261,8 @@ class DetailPayment extends React.Component {
     } = this.props;
 
     return (
+      loading ==true? <Loader/> :
+<div>
       <div className="detail-payment-screen">
         <div className="animated fadeIn">
           {dialog}
@@ -655,6 +657,7 @@ min="0"
           currency_list={this.props.currency_list}
           country_list={this.props.country_list}
         />
+      </div>
       </div>
     );
   }

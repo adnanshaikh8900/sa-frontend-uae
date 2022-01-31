@@ -181,6 +181,8 @@ class DetailProductCategory extends React.Component {
 			});
 		}
     return (
+      loading ==true? <Loader/> :
+<div>
       <div className="detail-vat-code-screen">
         <div className="animated fadeIn">
           {dialog}
@@ -325,6 +327,7 @@ class DetailProductCategory extends React.Component {
             </Col>
           </Row>
         </div>
+      </div>
       </div>
     )
   }

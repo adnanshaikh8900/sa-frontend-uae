@@ -374,6 +374,8 @@ class InventoryEdit extends React.Component {
 		})
 	console.log(current_inventory_id)
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="detail-product-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -730,6 +732,7 @@ min="0"
 					openModal={this.state.openWarehouseModal}
 					closeWarehouseModal={this.closeWarehouseModal}
 				/>
+			</div>
 			</div>
 		);
 	}

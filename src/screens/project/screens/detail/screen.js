@@ -215,6 +215,8 @@ class DetailProject extends React.Component {
     const { currency_list, country_list,contact_list} = this.props
     const { initValue , loading , dialog} = this.state;
     return (
+      loading ==true? <Loader/> :
+<div>
       <div className="create-product-screen">
         <div className="animated fadeIn">
       {dialog}
@@ -511,7 +513,7 @@ class DetailProject extends React.Component {
 					countryList={country_list}
 					getStateList={this.props.projectActions.getStateList}
         />
-
+      </div>
       </div>
     )
   }

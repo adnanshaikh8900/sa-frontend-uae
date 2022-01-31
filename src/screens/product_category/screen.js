@@ -343,6 +343,8 @@ class ProductCategory extends React.Component {
 		// let display_data = this.filterVatList(vatList)
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="vat-code-screen">
 				<div className="animated fadeIn">
 					<Card>
@@ -583,6 +585,7 @@ class ProductCategory extends React.Component {
             </ModalFooter>
           </Modal> */}
 				</div>
+			</div>
 			</div>
 		);
 	}

@@ -792,6 +792,8 @@ class Profile extends React.Component {
 			company_state_list,
 		} = this.props;
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="profile-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -3820,6 +3822,7 @@ class Profile extends React.Component {
 						</Col>
 					</Row>
 				</div>
+			</div>
 			</div>
 		);
 	}

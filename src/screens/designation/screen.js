@@ -266,6 +266,8 @@ class Designation extends React.Component {
 console.log("designation_list",designation_list)
 
     return (
+      loading ==true? <Loader/> :
+<div>
       <div className="employee-screen">
         <div className="animated fadeIn">
           {dialog}
@@ -374,6 +376,7 @@ console.log("designation_list",designation_list)
             </CardBody>
           </Card>
         </div>
+      </div>
       </div>
     )
   }

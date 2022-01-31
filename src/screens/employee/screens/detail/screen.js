@@ -161,6 +161,8 @@ class DetailEmployee extends React.Component {
     const { currency_list } = this.props
     const { dialog, loading, initValue } = this.state
     return (
+      loading ==true? <Loader/> :
+<div>
       <div className="detail-employee-screen">
         <div className="animated fadeIn">
           <Row>
@@ -518,6 +520,7 @@ class DetailEmployee extends React.Component {
             </Col>
           </Row>
         </div>
+      </div>
       </div>
     )
   }

@@ -229,6 +229,8 @@ class DetailCurrencyConvert extends React.Component {
 
     const{currencyList} =this.props;
     return (
+		loading ==true? <Loader/> :
+<div>
       <div className="detail-vat-code-screen">
         <div className="animated fadeIn">
           {dialog}
@@ -519,6 +521,7 @@ class DetailCurrencyConvert extends React.Component {
           </Row>
         </div>
       </div>
+	  </div>
     )
   }
 }

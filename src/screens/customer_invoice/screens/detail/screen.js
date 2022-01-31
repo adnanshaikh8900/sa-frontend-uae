@@ -1481,7 +1481,8 @@ class DetailCustomerInvoice extends React.Component {
 		})
 
 		return (
-			<div className="detail-customer-invoice-screen">
+			loading ==true? <Loader/> :
+<div><div className="detail-customer-invoice-screen">
 				<div className="animated fadeIn">
 					<Row>
 						<Col lg={12} className="mx-auto">
@@ -2609,7 +2610,7 @@ class DetailCustomerInvoice extends React.Component {
 					salesCategory={this.state.salesCategory}
 					purchaseCategory={this.state.purchaseCategory}
 				/>
-			</div>
+			</div></div>
 		);
 	}
 }

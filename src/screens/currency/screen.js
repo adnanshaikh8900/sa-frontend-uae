@@ -113,6 +113,8 @@ class Currency extends React.Component {
     })) : ""
 
     return (
+      loading ==true? <Loader/> :
+<div>
       <div className="transaction-category-screen">
         <div className="animated fadeIn">
           <ToastContainer
@@ -237,6 +239,7 @@ class Currency extends React.Component {
             </Form>
           </Modal>
         </div>
+      </div>
       </div>
     )
   }

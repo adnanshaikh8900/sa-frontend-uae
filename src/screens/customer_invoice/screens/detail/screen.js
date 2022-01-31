@@ -2408,7 +2408,8 @@ class DetailCustomerInvoice extends React.Component {
 																					<label className="mb-0">
 																					
 																						{this.state.customer_currency_symbol} &nbsp;
-																						{this.rendertotalexcise()}
+																						{/* {this.rendertotalexcise()} */}
+																						{initValue.total_excise.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}	
 																					</label>
 																				</Col>
 																			</Row>

@@ -340,7 +340,7 @@ class SupplierInvoice extends React.Component {
               <i className="fas fa-eye" /> View
             </DropdownItem> */}
 
-						{row.statusEnum === 'Sent' && (
+						{row.statusEnum === 'Sent'  && row.editFlag==true&& (
 							<DropdownItem
 								onClick={() => {
 									this.unPostInvoice(row);
@@ -764,6 +764,7 @@ console.log(supplier_invoice_list)
 						currencyName:supplier.currencyName ? supplier.currencyName:'',
 						currencySymbol: supplier.currencySymbol ? supplier.currencySymbol : '',
 						contactId: supplier.contactId,
+						editFlag:supplier.editFlag,
 				  }))
 				: '';
 

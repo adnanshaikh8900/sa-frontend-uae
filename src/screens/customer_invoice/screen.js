@@ -453,7 +453,7 @@ class CustomerInvoice extends React.Component {
               <i className="fas fa-eye" /> View
             </DropdownItem> */}
 
-						{row.statusEnum === 'Sent' && (
+						{row.statusEnum === 'Sent' && row.editFlag==true && (
 							<DropdownItem
 								onClick={() => {
 									this.unPostInvoice(row);
@@ -945,6 +945,7 @@ class CustomerInvoice extends React.Component {
 					invoiceAmount: customer.totalAmount,
 					vatAmount: customer.totalVatAmount,
 					cnCreatedOnPaidInvoice:customer.cnCreatedOnPaidInvoice,
+					editFlag:customer.editFlag,
 				}))
 				: '';
 

@@ -701,6 +701,8 @@ showTotal=()=>{
 		console.log(employee_list.data, "employee_list.data")
 		var today = new Date();
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="create-employee-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -1057,6 +1059,7 @@ showTotal=()=>{
 
 				// employee_list={employee_list.data}				
 				/> */}
+			</div>
 			</div>
 		)
 	}

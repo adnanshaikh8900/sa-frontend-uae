@@ -681,6 +681,8 @@ class PayrollRun extends React.Component {
 
 		console.log(user_approver_generater_dropdown_list, "user_approver_generater_dropdown_list")
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="receipt-screen">
 				<div className="animated fadeIn">
 					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
@@ -877,6 +879,7 @@ class PayrollRun extends React.Component {
 
 
 				/> */}
+			</div>
 			</div>
 		);
 	}

@@ -459,6 +459,8 @@ class Journal extends React.Component {
 		
 console.log(journal_list_data,"journal_list_data")
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="journal-screen">
 				<div className="animated fadeIn">
 					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
@@ -702,6 +704,7 @@ console.log(journal_list_data,"journal_list_data")
 						</CardBody>
 					</Card>
 				</div>
+			</div>
 			</div>
 		);
 	}

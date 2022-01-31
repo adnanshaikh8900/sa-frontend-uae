@@ -397,6 +397,8 @@ class UpdateEmployeePersonal extends React.Component {
         const { designation_dropdown, country_list, state_list, employee_list_dropdown,salary_role_dropdown } = this.props
 
         return (
+            loading ==true? <Loader/> :
+<div>
             <div className="detail-vat-code-screen">
                 <div className="animated fadeIn">
                     {dialog}
@@ -1493,6 +1495,7 @@ class UpdateEmployeePersonal extends React.Component {
                         </Col>
                     </Row>
                 </div>
+            </div>
             </div>
         )
     }

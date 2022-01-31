@@ -463,6 +463,8 @@ class PayrollConfigurations extends React.Component {
 		const { loading, dialog } = this.state;
 		const {  salaryRole_list, salaryStructure_list, designation_list } = this.props;
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="financial-report-screen">
 				<div className="animated fadeIn">
 					<Card>
@@ -943,6 +945,7 @@ class PayrollConfigurations extends React.Component {
 				 Variable={this.state.Variable}
 				 companyData={profile}
 				/> */}
+			</div>
 			</div>
 		);
 	}

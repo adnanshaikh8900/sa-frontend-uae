@@ -653,6 +653,8 @@ class Expense extends React.Component {
 		// }
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="expense-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -946,6 +948,7 @@ class Expense extends React.Component {
 						</CardBody>
 					</Card>
 				</div>
+			</div>
 			</div>
 		);
 	}

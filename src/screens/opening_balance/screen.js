@@ -479,6 +479,8 @@ class OpeningBalance extends React.Component {
 		let opening_balance_list1=	Object.assign({},opening_balance_list)
 	
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="expense-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -625,6 +627,7 @@ class OpeningBalance extends React.Component {
 						</CardBody>
 					</Card>
 				</div>
+			</div>
 			</div>
 		);
 	}

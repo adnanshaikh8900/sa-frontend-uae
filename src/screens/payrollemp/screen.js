@@ -411,6 +411,8 @@ class PayrollEmployee extends React.Component {
         const { payroll_employee_list } = this.props
 
         return (
+            loading ==true? <Loader/> :
+<div>
             <div className="employee-screen">
                 <div className="animated fadeIn">
                     {dialog}
@@ -641,6 +643,7 @@ class PayrollEmployee extends React.Component {
                         </CardBody>
                     </Card>
                 </div>
+            </div>
             </div>
         )
     }

@@ -712,6 +712,8 @@ class DetailExpense extends React.Component {
 		const { initValue, loading, dialog ,taxTreatmentList,placelist} = this.state;
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="detail-expense-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -1791,6 +1793,7 @@ class DetailExpense extends React.Component {
 						</Row>
 					)}
 				</div>
+			</div>
 			</div>
 		);
 	}

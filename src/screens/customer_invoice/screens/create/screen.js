@@ -2516,8 +2516,8 @@ discountType = (row) =>
 																					<label className="mb-0">
 
 																						{this.state.customer_currency_symbol} &nbsp;
-																						{this.rendertotalexcise()}
-																						{/* {initValue.total_excise.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})} */}
+																						{/* {this.rendertotalexcise()} */}
+																						{initValue.total_excise.toLocaleString(navigator.language, {minimumFractionDigits: 2,maximumFractionDigits: 2})}
 																					</label>
 																				</Col>
 																			</Row>

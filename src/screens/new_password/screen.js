@@ -122,7 +122,7 @@ class NewPassword extends React.Component {
                             // .min(8, "Password Too Short")
                             .matches(
                               /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-                              "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
+                              "Must Contain 8 Characters,Must contain max 16 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
                             ),
                           confirmPassword: Yup.string()
                             .required('Confirm Password is Required')
@@ -171,24 +171,25 @@ class NewPassword extends React.Component {
 																							: ''
 																					}
 																				/>
-																				{/* <i className={`fa ${isPasswordShown ? "fa-eye-slash" : "fa-eye"} password-icon fa-lg`}
+																				<i className={`fa ${isPasswordShown ? "fa-eye-slash" : "fa-eye"} password-icon fa-lg`}
 																					onClick={this.togglePasswordVisiblity}
-																				> */}
+																				>
 																					{/* <img 
-																			src={eye}
-																			style={{ width: '20px' }}
-																		/> */}
-																				{/* </i> */}
+                                          src={eye}
+                                          style={{ width: '20px' }}
+                                        /> */}
+																				</i>
 																			</div>
 																			{props.errors.password &&
 																				props.touched.password && (
-																					<div className="invalid-feedback">
+																					<div style={{ color: "red" }}>
 																						{props.errors.password}
 																					</div>
 																				)}
 																		{this.state.displayRules==true&&(	<PasswordChecklist
-																				rules={["minLength", "specialChar", "number", "capital"]}
+																				rules={["maxLength", "minLength", "specialChar", "number", "capital"]}
 																				minLength={8}
+                                        maxLength={16}
 																				value={props.values.password}
 																				valueAgain={props.values.confirmPassword}
 																			/>)}

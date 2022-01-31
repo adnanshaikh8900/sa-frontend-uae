@@ -246,14 +246,14 @@ class LogIn extends React.Component {
 																						: ''
 																				}
 																			/>
-																		{/* <i   className={`fa ${ isPasswordShown ? "fa-eye-slash" : "fa-eye" } password-icon fa-lg`}
+																		<i   className={`fa ${ isPasswordShown ? "fa-eye-slash" : "fa-eye" } password-icon fa-lg`}
 																		onClick={this.togglePasswordVisiblity}
-																	> */}
+																	>
 																		{/* <img 
 																			src={eye}
 																			style={{ width: '20px' }}
 																		/> */}
-																		{/* </i> */}
+																		</i>
 																	
 																			{props.errors.password &&
 																				props.touched.password && (

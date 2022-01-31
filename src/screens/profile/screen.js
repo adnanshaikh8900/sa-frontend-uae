@@ -92,9 +92,11 @@ class Profile extends React.Component {
 			companyLogoFile: [],
 			initUserData: {},
 			displayRules:false,
+			isPasswordShown: false,
 			initValue: {
 				password: "",
 				confirmPassword: '',
+				currentPassword: '',
 			
 			  },
 			email:'',
@@ -280,6 +282,11 @@ class Profile extends React.Component {
 		this.props.profileActions.getStateList(countryCode, type);
 	};
 
+	togglePasswordVisiblity = () => {
+		const { isPasswordShown } = this.state;
+		this.setState({ isPasswordShown: !isPasswordShown });
+	};
+
 	handleUserSubmit = (data) => {
 		const {
 			firstName,
@@ -309,6 +316,9 @@ class Profile extends React.Component {
 			formData.append('password ', password);
 		}
 		
+		if (currentPassword.length > 0) {
+			formData.append('currentPassword ', currentPassword);
+		}
 		if (confirmPassword.length > 0) {
 			formData.append('confirmPassword ', confirmPassword);
 		}
@@ -773,7 +783,7 @@ class Profile extends React.Component {
 
 	render() {
 		strings.setLanguage(this.state.language);
-		const { loading, isSame, timezone ,companyTypeList} = this.state;
+		const { loading, isSame, timezone ,companyTypeList ,isPasswordShown} = this.state;
 		const {
 			currency_list,
 			country_list,
@@ -3556,18 +3566,18 @@ class Profile extends React.Component {
 																currentPassword: Yup.string().required(
 																	'Current Password is Required',
 																),
-																password: Yup.string().required(
-																	'New Password is Required',
-																),
-																confirmPassword: Yup.string().required(
-																	'Confirm Password is Required',
-																),
+																// password: Yup.string().required(
+																// 	'New Password is Required',
+																// ),
+																// confirmPassword: Yup.string().required(
+																// 	'Confirm Password is Required',
+																// ),
 																password: Yup.string()
 																	 .required("Password is Required")
 																	// .min(8, "Password Too Short")
 																	.matches(
 																		/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-																		'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
+																		'Must Contain 8 Characters,Must contain max 16 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
 																	),
 																confirmPassword: Yup.string()
 																	 .required('Confirm Password is Required')
@@ -3645,6 +3655,7 @@ class Profile extends React.Component {
 																									*
 																							</span> {strings.NewPassword}
 																						</Label>
+																						{/* <div> */}
 																							<Input
 																							onPaste={(e)=>{
 																								e.preventDefault()
@@ -3653,6 +3664,11 @@ class Profile extends React.Component {
 																								e.preventDefault()
 																								return false;
 																							  }}
+																							  type={
+																								this.state.isPasswordShown
+																									? 'text'
+																									: 'password'
+																								}
 																							// onselectstart="return false"
 																							// oncopy="return false"
 																							// ondrop="return false"
@@ -3664,7 +3680,7 @@ class Profile extends React.Component {
 																								name="password"
 																								autoComplete="new-password"
 																								value={props.values.password}
-																								placeholder={strings.Enter+strings.Password}
+																								placeholder={strings.Enter+strings.NewPassword}
 																								onChange={(value) => {
 																									props.handleChange('password')(
 																										value,
@@ -3678,6 +3694,10 @@ class Profile extends React.Component {
 																										: ''
 																								}
 																							/>
+																							{/* <i className={`fa ${isPasswordShown ? "fa-eye-slash" : "fa-eye"} password-icon fa-lg`}
+																								onClick={this.togglePasswordVisiblity}
+																							></i> */}
+																						{/* </div> */}
 																							{props.errors.password &&
 																							props.touched.password && (
 																								<div className="invalid-feedback">
@@ -3685,8 +3705,9 @@ class Profile extends React.Component {
 																								</div>
 																							)}
 																						{this.state.displayRules==true&&(<PasswordChecklist
-																							rules={["minLength", "specialChar", "number", "capital"]}
+																							rules={["maxLength", "minLength", "specialChar", "number", "capital"]}
 																							minLength={8}
+																							maxLength={16}
 																							value={props.values.password}
 																							valueAgain={props.values.confirmPassword}
 																						/>)}

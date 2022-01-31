@@ -230,6 +230,8 @@ class LogIn extends React.Component {
 																						? 'text'
 																						: 'password'
 																				}
+																				minLength={8}
+																				maxLength={16}
 																				id="password"
 																				name="password"
 																				placeholder="Enter password"

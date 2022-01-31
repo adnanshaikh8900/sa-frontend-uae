@@ -153,7 +153,7 @@ class ResetNewPassword extends React.Component {
                                           autoComplete="off"
 																					id="password"
 																					name="password"
-																					placeholder=" Enter Password"
+																					placeholder=" Enter New Password"
 																					value={props.values.password}
 																					onChange={(option) => {
 																						props.handleChange('password')(
@@ -168,23 +168,23 @@ class ResetNewPassword extends React.Component {
 																							: ''
 																					}
 																				/>
-																				{/* <i className={`fa ${isPasswordShown ? "fa-eye-slash" : "fa-eye"} password-icon fa-lg`}
+																				<i className={`fa ${isPasswordShown ? "fa-eye-slash" : "fa-eye"} password-icon fa-lg`}
 																					onClick={this.togglePasswordVisiblity}
-																				> */}
+																				>
 																					{/* <img 
 																			src={eye}
 																			style={{ width: '20px' }}
 																		/> */}
-																				{/* </i> */}
+																				</i>
 																			</div>
 																			{props.errors.password &&
 																				props.touched.password && (
-																					<div className="invalid-feedback">
+																					<div style={{ color: "red" }}>
 																						{props.errors.password}
 																					</div>
 																				)}
 																			{this.state.displayRules==true&&( <PasswordChecklist
-																				rules={["minLength", "specialChar", "number", "capital"]}
+																				rules={["maxLength", "minLength", "specialChar", "number", "capital"]}
 																				minLength={8}
                                         maxLength={16}
 																				value={props.values.password}

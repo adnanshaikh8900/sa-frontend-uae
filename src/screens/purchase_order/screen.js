@@ -854,6 +854,8 @@ class PurchaseOrder extends React.Component {
 		})		
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="supplier-invoice-screen">
 				<div className="animated fadeIn">
 					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
@@ -1179,6 +1181,7 @@ class PurchaseOrder extends React.Component {
 					createGRN={this.props.goodsReceivedNoteCreateAction.createGNR}
 
 				/>
+			</div>
 			</div>
 		);
 	}

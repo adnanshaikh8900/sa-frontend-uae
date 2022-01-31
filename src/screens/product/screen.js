@@ -461,6 +461,8 @@ class Product extends React.Component {
 		const { product_list, vat_list, universal_currency_list } = this.props;
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="product-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -789,6 +791,7 @@ class Product extends React.Component {
 						</CardBody>
 					</Card>
 				</div>
+			</div>
 			</div>
 		);
 	}

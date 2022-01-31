@@ -266,6 +266,8 @@ class Project extends React.Component {
 
 
     return (
+      loading ==true? <Loader/> :
+<div>
       <div className="product-screen">
         <div className="animated fadeIn">
           {/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
@@ -402,6 +404,7 @@ class Project extends React.Component {
             </CardBody>
           </Card>
         </div>
+      </div>
       </div>
     )
   }

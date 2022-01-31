@@ -734,6 +734,8 @@ renderName=(cell,row)=>{
 			beforeSaveCell: this.beforeSaveCell,
 		  };
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="detail-product-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -2199,6 +2201,7 @@ min="0"
 					// id={this.state.rowId}
 					 inventory_history_list={this.state.inventory_history_list}
 				/>
+			</div>
 			</div>
 		);
 	}

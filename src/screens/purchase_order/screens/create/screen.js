@@ -1522,6 +1522,7 @@ getrfqDetails = (e, row, props,form,field) => {
 				initValue: {
 					...this.state.initValue,
 					...{
+						total_excise: response.data.totalExciseAmount,
 						totalVatAmount: response.data.totalVatAmount,
 						totalAmount: response.data.totalAmount,
 						total_net: response.data.totalAmount -response.data.totalVatAmount 

@@ -375,6 +375,8 @@ class Contact extends React.Component {
 		const { contact_list, contact_type_list } = this.props;
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="contact-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -569,6 +571,7 @@ class Contact extends React.Component {
 						</CardBody>
 					</Card>
 				</div>
+			</div>
 			</div>
 		);
 	}

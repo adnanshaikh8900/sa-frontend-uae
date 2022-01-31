@@ -401,6 +401,8 @@ class ChartAccount extends React.Component {
 			}),
 		};
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="chart-account-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -752,7 +754,7 @@ class ChartAccount extends React.Component {
 						</CardBody>
 					</Card>
 				</div>
-			</div>
+			</div></div>
 		);
 	}
 }

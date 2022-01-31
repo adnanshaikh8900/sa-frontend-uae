@@ -517,6 +517,8 @@ class DetailContact extends React.Component {
 		const { initValue, loading, dialog, checkmobileNumberParam , taxTreatmentList,isSame,state_list_for_shipping} = this.state;
 		
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="create-contact-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -2049,6 +2051,7 @@ class DetailContact extends React.Component {
 						</Row>
 					)}
 				</div>
+			</div>
 			</div>
 		);
 	}

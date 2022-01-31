@@ -257,6 +257,8 @@ class DetailChartAccount extends React.Component {
 		// const { sub_transaction_type_list } = this.props
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="chart-account-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -461,6 +463,7 @@ class DetailChartAccount extends React.Component {
 						</Row>
 					)}
 				</div>
+			</div>
 			</div>
 		);
 	}

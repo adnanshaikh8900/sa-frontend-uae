@@ -1457,6 +1457,8 @@ class DetailCreditNote extends React.Component {
 		})
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="detail-customer-invoice-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -2752,6 +2754,7 @@ min="0"
 					salesCategory={this.state.salesCategory}
 					purchaseCategory={this.state.purchaseCategory}
 				/>
+			</div>
 			</div>
 		);
 	}

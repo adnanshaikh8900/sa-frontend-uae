@@ -616,6 +616,8 @@ class BankAccount extends React.Component {
 		const { universal_currency_list, bank_account_list } = this.props;
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="bank-account-screen">
 				<div className="animated fadeIn">
 					{dialog}
@@ -886,7 +888,7 @@ class BankAccount extends React.Component {
 						</CardBody>
 					</Card>
 				</div>
-			</div>
+			</div></div>
 		);
 	}
 }

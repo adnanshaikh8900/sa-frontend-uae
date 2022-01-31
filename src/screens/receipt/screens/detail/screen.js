@@ -192,6 +192,8 @@ class DetailReceipt extends React.Component {
     const { loading, dialog, initValue } = this.state
 
     return (
+      loading ==true? <Loader/> :
+<div>
       <div className="detail-receipt-screen">
         <div className="animated fadeIn">
           <Row>
@@ -428,6 +430,7 @@ min="0"
             </Col>
           </Row>
         </div>
+      </div>
       </div>
     )
   }

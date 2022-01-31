@@ -1264,6 +1264,8 @@ min="0"
 		})
 console.log(this.state.supplier_currency)
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="detail-supplier-invoice-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -2077,6 +2079,7 @@ console.log(this.state.supplier_currency)
 					salesCategory={this.state.salesCategory}
 					purchaseCategory={this.state.purchaseCategory}
 				/>
+			</div>
 			</div>
 		);
 	}

@@ -838,7 +838,7 @@ class Profile extends React.Component {
 													this.toggle(0, '3');
 												}}
 											>
-												 {strings.ResetPassword}
+												 {strings.PasswordSettings}
 											</NavLink>
 										</NavItem>
 									</Nav>

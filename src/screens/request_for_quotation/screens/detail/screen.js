@@ -246,7 +246,7 @@ class DetailRequestForQuotation extends React.Component {
 							},
 							() => {
 								if (this.state.data.length > 0) {
-									this.calTotalNet(this.state.data);
+									this.updateAmount(this.state.data);
 									const { data } = this.state;
 									const idCount =
 										data.length > 0

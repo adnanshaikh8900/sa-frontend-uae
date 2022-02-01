@@ -152,9 +152,9 @@ class FileTaxReturnModal extends React.Component {
 
 
 	componentDidMount = () => {
-		this.props.vatreportActions.getCompany().then((res)=>{
-			if(res.status==200)
-			this.setState({initValue:{vatRegistrationNumber:res.data.vatRegistrationNumber}})
+		this.props.vatreportActions.getCompanyDetails().then((res)=>{			
+			if(res.status==200){
+			this.setState({initValue:{vatRegistrationNumber:res.data.vatRegistrationNumber?res.data.vatRegistrationNumber:""}})}
 		});
 	};
 dateLimit=()=>{

@@ -925,7 +925,7 @@ min="0"
 			value = value+d.subTotal
 		})
 
-		return value;
+		return value-this.state.totalVatAmount;
 
 
 

@@ -1335,7 +1335,7 @@ min="0"
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
 																		<span className="text-danger">* </span>
-																		{strings.PODATE}
+																		{strings.PODate}
 																	</Label>
 																	<DatePicker
 																		id="date"

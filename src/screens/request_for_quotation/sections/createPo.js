@@ -881,6 +881,8 @@ min="0"
 			.then((res) => {				
 				if (res.status === 200) {
 					resetForm();
+					this.props.getNextTemplateNo();
+					this.setState({isSubmitting:false})
 					this.props.closePurchaseOrder(true);
 
 					

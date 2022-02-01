@@ -150,3 +150,20 @@ export const getCompany = () => {
 			});
 	};
 };
+export const getCompanyDetails = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/company/getCompanyDetails',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {				
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

@@ -1184,6 +1184,10 @@ class RequestForQuotation extends React.Component {
 				//	getProductList={this.props.purchaseOrderAction.getProductList()}
 					createPO={this.props.purchaseOrderCreateAction.createPO}
                     totalAmount={this.state.totalAmount}
+					getNextTemplateNo={()=>{
+						this.props.purchaseOrderCreateAction.getPoNo().then((response) => {
+							this.setState({prefixData:response.data	});
+							});}}
 					totalVatAmount={this.state.totalVatAmount}
 				/>
 			</div>

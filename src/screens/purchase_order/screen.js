@@ -1177,7 +1177,10 @@ class PurchaseOrder extends React.Component {
 				//	nextprefixData={this.state.nextprefixData}
 					getVat={this.props.purchaseOrderAction.getVatList()}
 					getProductList={this.props.purchaseOrderAction.getProductList()}
-					
+					getNextGrnNo={()=>{
+						this.props.goodsReceivedNoteCreateAction.getInvoiceNo().then((response) => {
+						this.setState({prefixData:response.data	});
+						});}}
 					createGRN={this.props.goodsReceivedNoteCreateAction.createGNR}
 
 				/>

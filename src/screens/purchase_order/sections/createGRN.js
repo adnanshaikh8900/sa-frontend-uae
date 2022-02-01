@@ -852,7 +852,7 @@ min="0"
 
 					resetForm();
 					this.props.closeGoodsReceivedNotes(true);
-
+					this.props.getNextGrnNo();
 					
 				}
 			})

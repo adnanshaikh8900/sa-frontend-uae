@@ -313,6 +313,8 @@ class DetailUser extends React.Component {
 		console.log(role_list,"role_list")
 		console.log(active_roles_list,"temp_role_list")
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="create-user-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -927,6 +929,7 @@ class DetailUser extends React.Component {
 						</Col>
 					</Row>
 				</div>
+			</div>
 			</div>
 		);
 	}

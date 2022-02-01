@@ -777,6 +777,8 @@ console.log(supplier_invoice_list)
 		})		
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="supplier-invoice-screen">
 				<div className="animated fadeIn">
 					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
@@ -1221,6 +1223,7 @@ console.log(supplier_invoice_list)
 						this.closeEmailModal(e);
 					}}
 				/>
+			</div>
 			</div>
 		);
 	}

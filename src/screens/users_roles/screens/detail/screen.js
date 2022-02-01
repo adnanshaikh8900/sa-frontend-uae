@@ -320,6 +320,8 @@ class UpdateRole extends React.Component {
 		  ];
 		  
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="role-create-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -583,6 +585,7 @@ class UpdateRole extends React.Component {
 						</Col>
 					</Row>
 
+				</div>
 				</div>
 			</div>
 		);

@@ -131,6 +131,8 @@ class TaxReport extends React.Component {
 
   render() {
     return (
+      loading ==true? <Loader/> :
+<div>
       <div className="tax-report-screen">
         <div className="animated fadeIn">
           <Card>
@@ -272,6 +274,7 @@ class TaxReport extends React.Component {
             </CardBody>
           </Card>
         </div>
+      </div>
       </div>
     )
   }

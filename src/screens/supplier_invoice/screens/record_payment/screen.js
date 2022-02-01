@@ -382,6 +382,8 @@ class RecordSupplierPayment extends React.Component {
 		})
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="detail-customer-invoice-screen">
 				<div className="animated fadeIn">
 					<Row>
@@ -892,6 +894,7 @@ class RecordSupplierPayment extends React.Component {
 					country_list={this.props.country_list}
 					getStateList={this.props.SupplierInvoiceActions.getStateList}
 				/>
+			</div>
 			</div>
 		);
 	}

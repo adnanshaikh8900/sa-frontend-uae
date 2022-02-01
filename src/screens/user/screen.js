@@ -358,6 +358,8 @@ class User extends React.Component {
 		const { user_list, role_list } = this.props;
 
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="user-screen">
 				<div className="animated fadeIn">
 					{/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
@@ -594,6 +596,7 @@ class User extends React.Component {
 						</CardBody>
 					</Card>
 				</div>
+			</div>
 			</div>
 		);
 	}

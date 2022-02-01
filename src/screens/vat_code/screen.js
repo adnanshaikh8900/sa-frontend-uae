@@ -368,6 +368,8 @@ class VatCode extends React.Component {
 				vat_list_data.push(vat_list.data[i])
 		}
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="vat-code-screen">
 				<div className="animated fadeIn">
 					<Card>
@@ -610,6 +612,7 @@ class VatCode extends React.Component {
 						</CardBody>
 					</Card>
 				</div>
+			</div>
 			</div>
 		);
 	}

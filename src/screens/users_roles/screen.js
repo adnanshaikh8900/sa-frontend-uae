@@ -150,6 +150,8 @@ class UsersRoles extends React.Component {
 		};
 		const { role_list } = this.props;
 		return (
+			loading ==true? <Loader/> :
+<div>
 			<div className="transaction-category-screen">
 				<div className="animated fadeIn">
 					<ToastContainer
@@ -298,6 +300,7 @@ class UsersRoles extends React.Component {
 						</ModalFooter>
 					</Modal>
 				</div>
+			</div>
 			</div>
 		);
 	}

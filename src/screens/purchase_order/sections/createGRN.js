@@ -1024,6 +1024,7 @@ min="0"
 																		 {strings.GRNNumber}
 																	</Label>
 																	<Input
+																		disabled={true}
 																		type="text"
 																		id="grn_number"
 																		name="grn_number"
@@ -1486,6 +1487,7 @@ min="0"
 														props.handleSubmit();
 													},
 												);
+												
 											}}
 										>
 											<i className="fa fa-dot-circle-o"></i> {strings.Create}

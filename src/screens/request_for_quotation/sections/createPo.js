@@ -1111,6 +1111,7 @@ min="0"
 																		 {strings.PONumber}
 																	</Label>
 																	<Input
+																		disabled={true}
 																		type="text"
 																		id="po_number"
 																		name="po_number"

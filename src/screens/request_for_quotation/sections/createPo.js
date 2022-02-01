@@ -1073,7 +1073,7 @@ min="0"
                                                               <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="rfqNumber">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.RFQNumber}
 																	</Label>
 																	<Input
@@ -1107,7 +1107,7 @@ min="0"
                                                             <Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="po_number">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.PONumber}
 																	</Label>
 																	<Input
@@ -1146,7 +1146,7 @@ min="0"
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currencyCode">
-																	<span className="text-danger">*</span>
+																	<span className="text-danger">* </span>
 																		{strings.Currency}
 																	</Label>
 																	<Input
@@ -1182,7 +1182,7 @@ min="0"
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="supplierName">
-																		<span className="text-danger">*</span>
+																		<span className="text-danger">* </span>
 																		 {strings.SupplierName}
 																	</Label>
                                                                     <Input
@@ -1334,8 +1334,8 @@ min="0"
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
-																		<span className="text-danger">*</span>
-																		{strings.StartDate}
+																		<span className="text-danger">* </span>
+																		{strings.PODATE}
 																	</Label>
 																	<DatePicker
 																		id="date"
@@ -1359,7 +1359,7 @@ min="0"
 																	{
 																		!props.values.poApproveDate && (
 																			<div className="text-danger">
-																				{"Please Select Start Date"}
+																				{"Please Select PO Date"}
 																			</div>
 																		)}
 																</FormGroup>
@@ -1367,8 +1367,8 @@ min="0"
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="due_date">
-																	<span className="text-danger">*</span>
-																		 {strings.EndDate}
+																	<span className="text-danger">* </span>
+																		 {strings.PODueDate}
 																	</Label>
 																	<DatePicker
 																		id="date"
@@ -1392,7 +1392,7 @@ min="0"
 																																		{
 																		!props.values.poReceiveDate && (
 																			<div className="text-danger">
-																				{"Please Select End Date"}
+																				{"Please Select PO Due Date"}
 																			</div>
 																		)}
 

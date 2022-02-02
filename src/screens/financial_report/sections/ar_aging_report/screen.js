@@ -80,7 +80,7 @@ class ArAgingReport extends React.Component {
 			// { label: 'Salesperson Name', value: 'salespersonName', sort: true },
 			// { label: 'Currency Id', value: 'currencyId', sort: false,align: 'right'  },
 			// { label: 'Currency Code', value: 'currencyCode', sort: false },
-			{ label: 'Current', value: 'current', sort: false },
+			// 	{ label: 'Current', value: 'current', sort: false },
 			{ label: 'Days 1 to 15', value: 'lessthen15', sort: false },
 			{ label: 'Days 16 to 30', value: 'between15to30', sort: false },
 			{ label: 'Days 31 and above', value: 'morethan30', sort: false },
@@ -371,9 +371,9 @@ class ArAgingReport extends React.Component {
 									) : (
 										
 										<div id="tbl_exporttable_to_xls" className="table-wrapper">
-											<Table>
-												
-												<thead>
+											<Table className="table-bordered">
+											<thead className="table-header-bg">
+
 													<tr className="header-row">
 														{this.columnHeaderCompany.map((column, index) => {
 															return (
@@ -401,7 +401,7 @@ class ArAgingReport extends React.Component {
 																						
 																					</td>
 																					
-																					<td style={{ width: '12%', textAlign:'center' }}>
+																					{/* <td style={{ width: '12%', textAlign:'center' }}>
 																							{item.currentAmount && (
 																									<Currency
 																										value={item.currentAmount }
@@ -413,9 +413,9 @@ class ArAgingReport extends React.Component {
 																										}
 																									/>
 																							)}
-																						</td>
+																						</td> */}
 																						<td style={{ width: '12%', textAlign:'center' }}>
-																							{item.lessthen15  && (
+																						
 																									<Currency
 																										value={item.lessthen15 }
 																										currencySymbol={
@@ -425,10 +425,10 @@ class ArAgingReport extends React.Component {
 																												: 'INR'
 																										}
 																									/>
-																							)}
+																						
 																						</td>
 																						<td style={{ width: '12%', textAlign:'center' }}>
-																							{item.between15to30 && (
+																							
 																									<Currency
 																										value={item.between15to30 }
 																										currencySymbol={
@@ -438,10 +438,10 @@ class ArAgingReport extends React.Component {
 																												: 'INR'
 																										}
 																									/>
-																							)}
+																						
 																						</td>
 																						<td style={{ width: '12%', textAlign:'center' }}>
-																						{item.morethan30 && (
+																					
 																									<Currency
 																										value={ item.morethan30}
 																										currencySymbol={
@@ -451,11 +451,10 @@ class ArAgingReport extends React.Component {
 																												: 'INR'
 																										}
 																									/>
-																								)
-																							}
+																							
 																						</td>
 																						<td style={{ width: '12%', textAlign:'center' }}>
-																							{item.totalAmount > 0 && (
+																						
 																									<Currency
 																										value={item.totalAmount }
 																										currencySymbol={
@@ -465,14 +464,9 @@ class ArAgingReport extends React.Component {
 																												: 'INR'
 																										}
 																									/>
-																							)}
+																							
 																						</td>
-																						
-																					
-
-																				
-																				
-																				</tr>
+																					</tr>
 																		
 																	</>
 																);

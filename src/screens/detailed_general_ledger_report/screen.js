@@ -69,7 +69,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 			view: false,
 			initValue: {
 				startDate: moment().startOf('month').format('DD/MM/YYYY'),
-				endDate: moment().endOf('month').format('DD/MM/YYYY'),
+				endDate: moment().endOf('month').format('DD-MM-YYYY'),
 				reportBasis: 'ACCRUAL',
 				chartOfAccountId: '',
 			},
@@ -87,7 +87,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 			{ label: strings1.Date, value: 'date', sort: true },
 			{ label: strings1.TransactionType, value: 'transcation_type', sort: false },
 			{ label: strings1.Account, value: 'name', sort: true },
-			{label: strings1.Transaction+" "+strings1.Details,value: 'postingReferenceTypeEnum',sort: true,},
+			{ label: strings1.Transaction+" "+strings1.Details,value: 'postingReferenceTypeEnum',sort: true,},
 			{ label: strings1.Transaction+"#", value: 'transactonRefNo', sort: true },
 			{ label: strings1.Reference+"#", value: 'referenceNo', sort: false,align: 'right'  },
 			{ label: strings1.Debit, value: 'debitAmount', sort: false, align: 'right' },
@@ -480,7 +480,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 												<b style ={{ fontSize: '18px'}}>{strings.DetailedGeneralLedger}</b>
 												<br/>
 												
-												{strings.From } {initValue.startDate} {strings.To} {initValue.endDate}
+												{strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
 											</div>	
 									</div>
 									<div className='mr-3'>
@@ -560,7 +560,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 																			return (
 																				<tr key={index}>
 																					<td style={{ width: '12%', textAlign: 'center'}}>
-																						{row.date}
+																						{row.date.replaceAll("/","-")}
 																					</td>
 																					<td style={{ width: '18%', textAlign: 'center'}}>
 																						{/* {row.transactionTypeName} */}

@@ -498,7 +498,8 @@ class ReceivableInvoiceDetailsReport extends React.Component {
 												<b style ={{ fontSize: '18px'}}>{strings.Receivable+" "+strings.Invoice+" "+strings.Details}</b>
 												<br/>
 												
-												{strings.From}{initValue.startDate} {strings.To} {initValue.endDate}
+												{strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
+
 											</div>	
 									</div>
 									<div className='mr-3'>

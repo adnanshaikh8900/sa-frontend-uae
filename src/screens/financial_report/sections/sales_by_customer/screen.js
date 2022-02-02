@@ -343,7 +343,7 @@ class SalesByCustomer extends React.Component {
 											<br style={{ marginBottom: '5px' }} />
 											<b style={{ fontSize: '18px' }}>{strings.SalesByCustomer}</b>
 											<br style={{ marginBottom: '5px' }} />
-											{strings.From} {initValue.startDate} {strings.To} {initValue.endDate}
+											{strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
 
 										</div>
 										<div>
@@ -358,12 +358,8 @@ class SalesByCustomer extends React.Component {
 													<tr>
 														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.CustomerName}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.InvoiceCount}</th>
-
-														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>
-															{strings.SalesExcludingTax} 
-														</th>
+														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.SalesExcludingTax}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'right', color:'black' }}>{strings.SalesWithTax}</th>
-
 													</tr>
 												</thead>
 												<tbody className=" table-bordered table-hover">

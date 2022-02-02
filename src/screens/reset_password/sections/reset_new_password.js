@@ -156,10 +156,18 @@ class ResetNewPassword extends React.Component {
 																					placeholder=" Enter New Password"
 																					value={props.values.password}
 																					onChange={(option) => {
-																						props.handleChange('password')(
+                                            if(option.target.value!="")
+																				  {		
+                                            props.handleChange('password')(
 																							option,
 																						);
-                                            this.setState({displayRules:true})
+                                            this.setState({displayRules:true})}
+                                            else{
+                                              props.handleChange('password')(
+                                                option,
+                                              );
+                                              this.setState({displayRules:false})
+                                            }
 																					}}
 																					className={
 																						props.errors.password &&

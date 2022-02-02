@@ -470,7 +470,7 @@ class ExpenseDetailsReport extends React.Component {
 												<b style={{ fontSize: '18px' }}>{strings.Expense+" "+strings.Details}</b>
 												<br />
 
-												{strings.From} {initValue.startDate} {strings.To} {initValue.endDate}
+												{strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
 											</div>
 										</div>
 										<div className='mr-3'>

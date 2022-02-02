@@ -344,7 +344,8 @@ class PurchaseByVendor extends React.Component {
 											<br style={{ marginBottom: '5px' }} />
 											<b style ={{ fontSize: '18px'}}>{strings.PurhaseByVendor}</b>
 											<br style={{ marginBottom: '5px' }} />
-											{strings.From} {initValue.startDate} {strings.To} {initValue.endDate}
+											{strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
+
 											
 									</div>
 									<div>

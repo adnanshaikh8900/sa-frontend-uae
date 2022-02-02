@@ -1672,9 +1672,7 @@ class DetailRequestForQuotation extends React.Component {
 																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
 																				onChange={(value) => {
-																					props.handleChange('rfqExpiryDate')(
-																						moment(value).format('DD-MM-YYYY'),
-																					);
+																					props.handleChange('rfqExpiryDate')(value);
 																				}}
 																				className={`form-control ${
 																					props.errors.rfqExpiryDate &&

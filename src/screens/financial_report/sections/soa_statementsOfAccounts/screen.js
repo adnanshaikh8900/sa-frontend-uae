@@ -539,7 +539,7 @@ this.props.financialReportActions
 											<br style={{ marginBottom: '5px' }} />
 											<b style={{ fontSize: '18px' }}>Statement of Account ( {this.state.customerName} )</b>
 											<br style={{ marginBottom: '5px' }} />
-											{strings.From} {initValue.startDate} {strings.To} {initValue.endDate}
+											{strings.From} {(initValue.startDate).replaceAll("/","-")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
 
 										</div>
 										<div>

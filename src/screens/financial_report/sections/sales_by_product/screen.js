@@ -341,7 +341,8 @@ class SalesByProduct extends React.Component {
 											<br style={{ marginBottom: '5px' }} />
 											<b style ={{ fontSize: '18px'}}>{strings.SalesByProduct}</b>
 											<br style={{ marginBottom: '5px' }} />
-											{strings.From} {initValue.startDate} {strings.To} {initValue.endDate}
+																				{strings.From} {moment(initValue.startDate).format("DD-MM-YYYY")} {strings.To} {initValue.endDate.replaceAll("/","-")} 
+
 											
 									</div>
 									<div>

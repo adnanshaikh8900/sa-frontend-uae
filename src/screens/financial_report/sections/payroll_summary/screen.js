@@ -411,7 +411,7 @@ class PayrollSummaryReport extends React.Component {
 									) : (
 										<div id="tbl_exporttable_to_xls" className="table-wrapper">
 											<Table >
-												<thead className="header-row" >
+												<thead className="table-header-bg">
 													<tr>
 														<th style={{ padding: '0.5rem', textAlign: 'center' ,width:"10%", color:'black'}}>	Payroll Date</th>
 														<th style={{ padding: '0.5rem', textAlign: 'center', width:"25%", color:'black'}}>	Payroll Subject</th>

@@ -61,10 +61,11 @@ class ViewFtaExciseAuditReport extends React.Component {
 			FtaExciseAuditData: [],
 			view: false,
 			initValue: {
-				startDate: moment().startOf('month').format('DD-MM-YYYY'),
-				endDate: moment().endOf('month').format('DD-MM-YYYY'),
+				startDate:this.props.location.state.startDate,
+				endDate: this.props.location.state.endDate,
 				companyId: 1,
 				userId: 1,
+				taxAgencyId: this.props.location.state.taxAgencyId,
 			},
 			csvData: [],
 			activePage: 1,
@@ -93,14 +94,14 @@ class ViewFtaExciseAuditReport extends React.Component {
 		];
 		this.columnHeaderCustomer = [
 			{ label: 'Customer Name', value: 'customerName', sort: true },
-			{ label: 'GL/ID', value: 'GL/ID', sort: true },
+			{ label: 'GL/ID', value: 'glid', sort: true },
 			{ label: 'Customer Country/Emirate', value: 'customerCountry', sort: false },
 			{ label: 'Customer TRN', value: 'customerTRN', sort: true },
-			{ label: 'Reverse Charge', value: 'reverseCharge', sort: true },
+			// { label: 'Reverse Charge', value: 'reverseCharge', sort: true },
 		];
 		this.columnHeaderSupplier = [
 			{ label: 'Supplier Name', value: 'supplierName', sort: true },
-			{ label: 'GL/ID', value: 'GL/ID', sort: true },
+			{ label: 'GL/ID', value: 'glid', sort: true },
 			{ label: 'Supplier Country/Emirate', value: 'supplierCountry', sort: false },
 			{ label: 'Supplier TRN', value: 'supplierTRN', sort: true },
 			{ label: 'Reverse Charge', value: 'reverseCharge', sort: true },
@@ -191,6 +192,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 			{ label: 'Goods Location', value: 'goodsLocation', sort: true }
 		];
 	}
+	
 
 	componentDidMount = () => {
 		this.initializeData();
@@ -205,6 +207,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 			endDate: initValue.endDate,
 			companyId: initValue.companyId,
 			userId: initValue.userId,
+			taxAgencyId: initValue.taxAgencyId
 		};
 		this.props.financialReportActions
 			.getFtaExciseAuditReport(postData)
@@ -231,6 +234,13 @@ class ViewFtaExciseAuditReport extends React.Component {
 			.catch((err) => {
 				this.setState({ loading: false });
 			});
+	};
+	renderDate = (cell, row) => {
+		
+		return cell ? moment(cell)
+			.format('DD-MM-YYYY') 
+			// .format('LL')
+			: '-';
 	};
 
 	exportFile = () => {
@@ -273,11 +283,6 @@ class ViewFtaExciseAuditReport extends React.Component {
 		this.pdfExportComponent.save();
 	};
 
-	
-
-
-
-	
 
 	render() {
 
@@ -308,8 +313,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 													}}
 													onClick={this.viewFilter}
 												>
-													<i className="fa fa-cog mr-2"></i>CustomizeReport
-												</p>
+													<i className="fa fa-cog mr-2"></i> Excise Tax Report <b>{ this.state.initValue.startDate.replaceAll("/","-") +"  to  "+this.state.initValue.endDate.replaceAll("/","-") }</b>												</p>
 											</div>
 											<div className="d-flex">
 											<Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
@@ -494,13 +498,11 @@ class ViewFtaExciseAuditReport extends React.Component {
 																						{this.state.FtaExciseAuditData.taxAgencyAgentNumber}
 																					</td>
 																					<td style={{ width: '13%', textAlign: 'center'}}>
-																						{this.state.FtaExciseAuditData.startDate}
-																					</td>
+																					{this.renderDate(this.state.FtaExciseAuditData.startDate,'')}																					</td>
 																					<td style={{ width: '12%', textAlign: 'center'}}>
-																						{this.state.FtaExciseAuditData.endDate}
-																					</td>
+																					{this.renderDate(this.state.FtaExciseAuditData.endDate,'')}																					</td>
 																					<td style={{ width: '18%', textAlign: 'center'}}>
-																						{this.state.FtaExciseAuditData.creationDate}
+																					{this.renderDate(this.state.FtaExciseAuditData.creationDate,'')}
 																					</td>
 																					<td style={{ width: '13%', textAlign: 'center'}}>
 																						{this.state.FtaExciseAuditData.productVersion}
@@ -551,7 +553,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 																						{item['customerName']}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{item['GL/ID']}
+																						{item['glid']}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['customerCountry']}
@@ -559,9 +561,9 @@ class ViewFtaExciseAuditReport extends React.Component {
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['customerTRN']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'left'}}>
+																					{/* <td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['Reverse Charge']}
-																					</td>
+																					</td> */}
 																					
 																				
 																				</tr>
@@ -608,7 +610,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 																						{item['supplierName']}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{item['GL/ID']}
+																						{item['glid']}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																						{item['supplierCountry']}
@@ -617,7 +619,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 																						{item['supplierTRN']}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																						{item['Reverse Charge']}
+																						{item['reverseCharge']}
 																					</td>
 																					
 																					
@@ -699,10 +701,10 @@ class ViewFtaExciseAuditReport extends React.Component {
 																						{item['productDescription']}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'center'}}>
-																						{item['purchaseAmount']}
+																						{item['purchaseValue']}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'center'}}>
-																						{item['exciseTaxAmount']}
+																						{item['exciseTaxValue']}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'center'}}>
 																						{item['taxCode']}
@@ -760,7 +762,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 																					{this.state.FtaExciseAuditData.purchaseTotal}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																					{this.state.FtaExciseAuditData.supplierVATTotal}
+																					{this.state.FtaExciseAuditData.supplierExciseTotal}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																					{this.state.FtaExciseAuditData.supplierTransactionCountTotal}
@@ -851,11 +853,12 @@ class ViewFtaExciseAuditReport extends React.Component {
 																					<td style={{ width: '12%', textAlign: 'center'}}>
 																						{item['excisetaxCode']}
 																					</td>
-																					<td style={{ width: '12%', textAlign: 'center'}}>
-																						{item['supplyFCY']}
-																					</td>
+																				
 																					<td style={{ width: '12%', textAlign: 'center'}}>
 																						{item['fcycode']}
+																					</td>
+																					<td style={{ width: '12%', textAlign: 'center'}}>
+																						{item['supplyFCY']}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'center'}}>
 																						{item['exciseTaxFCY']}
@@ -903,7 +906,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 																					{this.state.FtaExciseAuditData.supplyTotal}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
-																					{this.state.FtaExciseAuditData.exciseTaxTotal}
+																					{this.state.FtaExciseAuditData.customerExciseTotal}
 																					</td>
 																					<td style={{ width: '12%', textAlign: 'left'}}>
 																					{this.state.FtaExciseAuditData.customerTransactionCountTotal}

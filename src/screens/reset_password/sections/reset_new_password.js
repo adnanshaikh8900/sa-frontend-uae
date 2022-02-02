@@ -168,7 +168,7 @@ class ResetNewPassword extends React.Component {
 																							: ''
 																					}
 																				/>
-																				<i className={`fa ${isPasswordShown ? "fa-eye-slash" : "fa-eye"} password-icon fa-lg`}
+																				<i className={`fa ${isPasswordShown ? "fa-eye" : "fa-eye-slash"} password-icon fa-lg`}
 																					onClick={this.togglePasswordVisiblity}
 																				>
 																					{/* <img 

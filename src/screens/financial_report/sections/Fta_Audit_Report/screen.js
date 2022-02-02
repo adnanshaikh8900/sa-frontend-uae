@@ -65,6 +65,7 @@ class ViewFtaAuditReport extends React.Component {
 				endDate: this.props.location.state.endDate,
 				companyId: 1,
 				userId: 1,
+				taxAgencyId: this.props.location.state.taxAgencyId,
 			},
 			csvData: [],
 			activePage: 1,
@@ -176,12 +177,14 @@ class ViewFtaAuditReport extends React.Component {
 	};
 
 	initializeData = () => {
+		debugger
 		const { initValue } = this.state;
 		const postData = {
 			startDate: initValue.startDate,
 			endDate: initValue.endDate,
 			companyId: initValue.companyId,
 			userId: initValue.userId,
+			taxAgencyId: initValue.taxAgencyId
 		};
 		this.props.financialReportActions
 			.getFtaAuditReport(postData)
@@ -212,15 +215,13 @@ class ViewFtaAuditReport extends React.Component {
 			});
 	};
 	renderDate = (cell, row) => {
-		
+		debugger
 		return cell ? moment(cell)
 			.format('DD-MM-YYYY') 
 			// .format('LL')
 			: '-';
 	};
 	exportFile = () => {
-
-	
 		let dl =""
 		let fn =""
 		let type="csv"

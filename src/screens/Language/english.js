@@ -815,6 +815,7 @@ CurrentLiability:"Current Liability",
 AccountsPayable:"Accounts Payable",
 Thereisnodatatodisplay:"There is no data to display",
 Other:"Other",
+ARAgingReport:"AR Aging Report",
 
 RunReport:"Run Report",
 From:"From",

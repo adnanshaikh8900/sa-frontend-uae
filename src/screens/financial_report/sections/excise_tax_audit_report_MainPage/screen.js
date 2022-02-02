@@ -197,7 +197,7 @@ class ExciseTaxAuditReport extends React.Component {
 				onClick={() => {
 					this.setState({current_report_id:params.data.id})
 					let dateArr = params.data.taxReturns ? params.data.taxReturns.split("-") : [];debugger
-					this.props.history.push('/admin/report/exciseTaxAuditReports/view', {startDate:dateArr[0],endDate:dateArr[1],userId:params.data.userId,	companyId:1})
+					this.props.history.push('/admin/report/exciseTaxAuditReports/view', {startDate:dateArr[0],endDate:dateArr[1],userId:params.data.userId,	companyId:1,taxAgencyId:params.data.taxAgencyId})
 
 					// const postData = {
 					// 	startDate:dateArr[0],

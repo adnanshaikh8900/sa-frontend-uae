@@ -317,7 +317,7 @@ class Register extends React.Component {
 																'State is Required',
 															),
 															firstName: Yup.string().required(
-																'First Name is required',
+																'First Name is Required',
 															),
 															lastName: Yup.string().required(
 																'Last Name is Required',
@@ -1016,7 +1016,7 @@ class Register extends React.Component {
 																			</FormGroup>
 																		</Col>
 																		</Row>
-																		<><b>Note: Super Admin Details cannot be altered after registration</b></>
+																		<>Note:<b> Super Admin</b> Details Cannot Be Altered After Registration</>
 																	<Row>
 																		<Col className="text-center">
 																			<Button

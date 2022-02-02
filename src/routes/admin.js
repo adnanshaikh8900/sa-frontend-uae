@@ -102,6 +102,7 @@ import {
 	VatPaymentRecord,
 	RecordTaxClaim,
 	RecordVatPayment,
+	ARAgingReport,
 
 
 	// Master Screens
@@ -824,7 +825,12 @@ const adminRoutes = [
 		path: '/admin/report/vatreports/recordtaxpayment',
 		name: 'Record Tax Payment',
 		component: RecordVatPayment.screen,
-	},	
+	},
+	{
+		path: '/admin/report/arAgingReport',
+		name: 'Record Tax Payment',
+		component: ARAgingReport.screen,
+	},
 	{
 		path: '/admin/report/salesbycustomer',
 		name: 'SalesByCustomer',

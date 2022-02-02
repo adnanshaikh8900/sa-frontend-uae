@@ -805,6 +805,7 @@ PaymentsRecevied : 'paiement reçu',
 CreditNoteDetails:"Détails de la note de crédit d'impôt",
 InvoiceDetails: 'Détails de la facture',	
 Invoices: 'Factures',
+ARAgingReport:"Rapport de vieillissement AR",
 
 //placeholder	
 ReceiptAttachmentDescription:"Description de la pièce jointe au reçu",	

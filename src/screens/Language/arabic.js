@@ -811,6 +811,7 @@ PaymentsRecevied : 'الدفعات المستلمة',
 CreditNoteDetails : 'تفاصيل مذكرة الائتمان الضريبي',
 InvoiceDetails: 'تفاصيل الفاتورة',	
 Invoices: 'الفواتير',
+ARAgingReport:"تقرير الشيخوخة AR",
 //placeholder
 ReceiptAttachmentDescription:"وصف مرفق الإيصال",	
 DiscountPercentage:"نسبة الخصم",		

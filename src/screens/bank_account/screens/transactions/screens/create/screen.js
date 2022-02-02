@@ -1489,7 +1489,10 @@ class CreateBankTransaction extends React.Component {
 																		rows="6"
 																		placeholder={strings.Description}
 																		onChange={(option) =>
-																			props.handleChange('description')(option)
+																			{
+																				if(!option.target.value.includes("="))
+																				props.handleChange('description')(option)
+																			}
 																		}
 																		value={props.values.description}
 																	/>

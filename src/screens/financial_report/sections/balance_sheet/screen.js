@@ -392,7 +392,7 @@ class BalanceSheet extends React.Component {
 										<div className="table-wrapper mt-4">
 											<Table id="tbl_exporttable_to_xls"
 											 responsive className="table-bordered">
-												<thead className="thead-dark ">
+												<thead>
 													<tr className="header-row">
 														{this.columnHeader.map((column, index) => {
 															return (
@@ -401,7 +401,7 @@ class BalanceSheet extends React.Component {
 																	style={{ fontWeight: '600', color:'black'
 																 }}
 																	className={column.align ? 'text-right' : ''}
-																	className="table-header-color"
+																	className="table-header-bg"
 																>
 																	{column.label}
 																</th>

@@ -363,8 +363,8 @@ class PayablesInvoiceSummary extends React.Component {
 										<Loader />
 									) : (
 										<div id="tbl_exporttable_to_xls" className="table-wrapper">
-											<Table >
-												<thead className="header-row" >
+											<Table className="table-bordered">
+												<thead className="table-header-bg">
 													<tr>
 														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.InvoiceNumber}</th>
 														<th style={{ padding: '0.5rem', textAlign: 'center', color:'black' }}>{strings.SupplierName}</th>

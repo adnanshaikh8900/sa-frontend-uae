@@ -393,7 +393,7 @@ class HorizontalBalanceSheet extends React.Component {
 											<Row>
 											<Col>
 											<Table  responsive className="table-bordered">
-												<thead className="thead-dark ">
+												<thead>
 													<tr className="header-row">
 														{this.columnHeader.map((column, index) => {
 															return (
@@ -401,7 +401,7 @@ class HorizontalBalanceSheet extends React.Component {
 																	key={index}
 																	style={{ fontWeight: '600', color:'black' }}
 																	className={column.align ? 'text-right' : ''}
-																	className="table-header-color"
+																	className="table-header-bg"
 																>
 																	{column.label}
 																</th>
@@ -647,7 +647,7 @@ class HorizontalBalanceSheet extends React.Component {
 											</Col>
 											<Col>
 											<Table responsive className="table-bordered">
-												<thead className="thead-dark ">
+												<thead>
 													<tr className="header-row">
 														{this.columnHeader.map((column, index) => {
 															return (
@@ -655,7 +655,7 @@ class HorizontalBalanceSheet extends React.Component {
 																	key={index}
 																	style={{ fontWeight: '600', color:'black' }}
 																	className={column.align ? 'text-right' : ''}
-																	className="table-header-color"
+																	className="table-header-bg"
 																>
 																	{column.label}
 																</th>

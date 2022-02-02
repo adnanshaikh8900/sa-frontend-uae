@@ -526,7 +526,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
 																	key={index}
 																	style={{ fontWeight: '600' ,textAlign:'center', color:'black'}}
 																	className={column.align ? 'text-center' : ''}
-																	className="table-header-color"
+																	className="table-header-bg"
 																>
 																	<span>{column.label}</span>
 																	{/* // onClick={() => { column.sort && this.onSort(column.value) }} */}

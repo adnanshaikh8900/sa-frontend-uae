@@ -568,10 +568,11 @@ min="0"
                                       id="description"
                                       rows="6"
                                       placeholder={strings.Description}
-                                      onChange={(option) =>
+                                      onChange={(option) =>{
+                                        if(!option.target.value.includes("="))
                                         props.handleChange(
                                           'transactionDescription',
-                                        )(option)
+                                        )(option)}
                                       }
                                       value={
                                         props.values.transactionDescription

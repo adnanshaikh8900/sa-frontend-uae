@@ -47,7 +47,7 @@ const mapStateToProps = (state) => {
 		project_list: state.request_for_quotation.project_list,
 		contact_list: state.request_for_quotation.contact_list,
 		currency_list: state.request_for_quotation.currency_list,
-		vat_list: state.request_for_quotation.vat_list,
+		// vat_list: state.request_for_quotation.vat_list,
 		product_list: state.customer_invoice.product_list,
 		excise_list: state.request_for_quotation.excise_list,
 		supplier_list: state.request_for_quotation.supplier_list,
@@ -120,6 +120,7 @@ class DetailRequestForQuotation extends React.Component {
 			basecurrency:[],
 			supplier_currency: '',
 			disabled1:false,
+			vat_list:[]
 		};
 
 		// this.options = {
@@ -170,6 +171,10 @@ class DetailRequestForQuotation extends React.Component {
 	// }
 
 	componentDidMount = () => {
+		this.props.requestForQuotationAction.getVatList().then((res)=>{
+			if(res.status==200)
+			 this.setState({vat_list:res.data})
+		});
 		this.initializeData();
 	};
 
@@ -197,7 +202,7 @@ class DetailRequestForQuotation extends React.Component {
 							// );
 						});
 						this.getCompanyCurrency();
-						this.props.requestForQuotationAction.getVatList();
+						
 						this.props.requestForQuotationAction.getExciseList();
 						this.props.requestForQuotationAction.getSupplierList(
 							this.state.contactType,
@@ -212,8 +217,14 @@ class DetailRequestForQuotation extends React.Component {
 									rfqReceiveDate: res.data.rfqReceiveDate
 										? moment(res.data.rfqReceiveDate).format('DD-MM-YYYY')
 										: '',
+										rfqReceiveDate1: res.data.rfqReceiveDate
+										? res.data.rfqReceiveDate
+										: '',
 										rfqExpiryDate: res.data.rfqExpiryDate
 										? moment(res.data.rfqExpiryDate).format('DD-MM-YYYY')
+										: '',
+										rfqExpiryDate1: res.data.rfqExpiryDate
+										?  res.data.rfqExpiryDate
 										: '',
 										supplierId: res.data.supplierId ? res.data.supplierId : '',
 										rfqNumber: res.data.rfqNumber
@@ -695,7 +706,7 @@ class DetailRequestForQuotation extends React.Component {
 	};
 
 	renderVat = (cell, row, props) => {
-		const { vat_list } = this.props;
+		const { vat_list } = this.state;
 		let vatList = vat_list.length
 			? [{ id: '', vat: 'Select Vat' }, ...vat_list]
 			: vat_list;
@@ -911,7 +922,7 @@ class DetailRequestForQuotation extends React.Component {
 	};
 
 	updateAmount = (data, props) => {
-		const { vat_list , excise_list} = this.props;
+		const { vat_list , excise_list} = this.state;
 		const { discountPercentage, discountAmount } = this.state;
 		let total_net = 0;
 		let total_excise = 0;
@@ -1213,7 +1224,23 @@ class DetailRequestForQuotation extends React.Component {
 				this.setState({ loading: false });
 			});
 	};	
-
+	setDate1 = (props, value) => {		
+		const values = value
+			? value
+			: props.values.rfqExpiryDate1
+		if ( values) {	
+			props.setFieldValue('rfqExpiryDate1', values, true);
+		}
+	};
+	
+	setDate2 = (props, value) => {		
+		const values = value
+			? value
+			: props.values.rfqReceiveDate1
+		if ( values) {	
+			props.setFieldValue('rfqReceiveDate1', values, true);
+		}
+	};
 	setExchange = (value) => {
 		let result = this.props.currency_convert_list.filter((obj) => {
 		return obj.currencyCode === value;
@@ -1634,12 +1661,13 @@ class DetailRequestForQuotation extends React.Component {
 																			showYearDropdown
 																			dateFormat="dd-MM-yyyy"
 																			dropdownMode="select"
+																			selected={new Date(props.values.rfqReceiveDate1)}
 																			value={props.values.rfqReceiveDate}
 																			onChange={(value) => {
 																				props.handleChange('rfqReceiveDate')(
 																					moment(value).format('DD-MM-YYYY'),
 																				);
-																				this.setDate(props, value);
+																				this.setDate2(props, value);
 																			}}
 																			className={`form-control ${
 																				props.errors.rfqReceiveDate &&
@@ -1671,8 +1699,10 @@ class DetailRequestForQuotation extends React.Component {
 																				showYearDropdown
 																				dateFormat="dd-MM-yyyy"
 																				dropdownMode="select"
+																				selected={new Date(props.values.rfqExpiryDate1)}
 																				onChange={(value) => {
 																					props.handleChange('rfqExpiryDate')(value);
+																					this.setDate1(props,value)
 																				}}
 																				className={`form-control ${
 																					props.errors.rfqExpiryDate &&
@@ -2154,7 +2184,7 @@ class DetailRequestForQuotation extends React.Component {
 					}}
 					getCurrentProduct={(e) => this.getCurrentProduct(e)}
 					createProduct={this.props.ProductActions.createAndSaveProduct}
-					vat_list={this.props.vat_list}
+					vat_list={this.state.vat_list}
 					product_category_list={this.props.product_category_list}
 					salesCategory={this.state.salesCategory}
 					purchaseCategory={this.state.purchaseCategory}

@@ -1020,6 +1020,8 @@ renderName=(cell,row)=>{
 																			type="text"
 																			id="productCode"
 																			name="productCode"
+																			/**Added as per discussion with sajid sir ,disabled product code for sanity*/
+																			disabled
 																			value={props.values.productCode || ''}
 																			placeholder={strings.Enter+strings.ProductCode}
 																			onChange={(option) => {

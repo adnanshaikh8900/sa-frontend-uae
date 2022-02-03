@@ -313,12 +313,36 @@ class CreateContact extends React.Component {
 													// }
 													if (values.vatRegistrationNumber === '' && this.state.isRegisteredForVat==true)
 														errors.vatRegistrationNumber =	'Tax Registration Number is Required';
+													
+														if(values.vatRegistrationNumber.length!=15){
+															errors.vatRegistrationNumber="Please enter 15 digit Tax Registration Number"
+														}
 												
 													// if (param === true) {
 													// 	errors.discount =
 													// 		'Discount amount Cannot be greater than Invoice Total Amount';
 													// }
+													if(values.billingPostZipCode.length!=6){
+														errors.billingPostZipCode="Please enter 6 digit Postal Zip Code"
+													}
+
+													if(values.shippingPostZipCode.length!=6){
+														errors.shippingPostZipCode="Please enter 6 digit Postal Zip Code"
+													}
+
+													if(this.state.showbillingFaxErrorMsg==true)
+													errors.billingFax="Please enter 8 digit Fax"
+
+													
+													if(this.state.showshippingFaxErrorMsg==true)
+													errors.shippingFax="Please enter 8 digit Fax"
+
+													if(this.state.showpoBoxNumberErrorMsg==true)
+													errors.poBoxNumber="Please enter 6 digit PO Box Number"
+
+
 													return errors;
+													
 												}}
 												validationSchema={Yup.object().shape({
 													firstName: Yup.string().required(
@@ -887,7 +911,8 @@ class CreateContact extends React.Component {
 																	<Label htmlFor="select">{strings.POBoxNumber}</Label>
 																	<Input
 																		type="text"
-																		maxLength="8"
+																		minLength="6"
+																		maxLength="6"
 																		id="poBoxNumber"
 																		name="poBoxNumber"
 																		placeholder={strings.Enter + strings.POBoxNumber}
@@ -896,6 +921,10 @@ class CreateContact extends React.Component {
 																				option.target.value === '' ||
 																				this.regEx.test(option.target.value)
 																			) {
+																				if(option.target.value.length !=6 && option.target.value !="")
+																				this.setState({showpoBoxNumberErrorMsg:true})
+																				else
+																				this.setState({showpoBoxNumberErrorMsg:false})
 																				props.handleChange('poBoxNumber')(
 																					option,
 																				);
@@ -1260,7 +1289,7 @@ class CreateContact extends React.Component {
 																	</Label>
 																	<Input
 																		type="text"
-																		maxLength="8"
+																		maxLength="6"
 																		id="billingPostZipCode"
 																		name="billingPostZipCode"
 																		placeholder={strings.Enter + strings.PostZipCode}
@@ -1340,6 +1369,10 @@ class CreateContact extends React.Component {
 																				option.target.value === '' ||
 																				this.regEx.test(option.target.value)
 																			) {
+																				if(option.target.value.length !=8 && option.target.value !="")
+																				this.setState({showbillingFaxErrorMsg:true})
+																				else
+																				this.setState({showbillingFaxErrorMsg:false})
 																				props.handleChange('billingFax')(
 																					option,
 																				);
@@ -1387,6 +1420,10 @@ class CreateContact extends React.Component {
 																					props.handleChange('shippingTelephone')(props.values.billingPhoneNumber);
 																					props.handleChange('shippingPostZipCode')(props.values.billingPostZipCode);
 																					props.handleChange('shippingFax')(props.values.billingFax);
+																					if(props.values.billingFax.length !=8 && props.values.billingFax !="")
+																				this.setState({showshippingFaxErrorMsg:true})
+																				else
+																				this.setState({showshippingFaxErrorMsg:false})
 																				} else {
 																					this.setState({isSame: !this.state.isSame,});
 
@@ -1613,7 +1650,7 @@ class CreateContact extends React.Component {
 																	<Input
 																	
 																		type="text"
-																		maxLength="8"
+																		maxLength="6"
 																		id="shippingPostZipCode"
 																		name="shippingPostZipCode"
 																		placeholder={strings.Enter + strings.PostZipCode}
@@ -1696,6 +1733,10 @@ class CreateContact extends React.Component {
 																				option.target.value === '' ||
 																				this.regEx.test(option.target.value)
 																			) {
+																				if(option.target.value.length !=8 && option.target.value !="")
+																				this.setState({showshippingFaxErrorMsg:true})
+																				else
+																				this.setState({showshippingFaxErrorMsg:false})
 																				props.handleChange('shippingFax')(
 																					option,
 																				);

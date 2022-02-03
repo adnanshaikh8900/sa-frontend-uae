@@ -311,12 +311,13 @@ class CreateContact extends React.Component {
 													// if (values.stateId.label && values.stateId.label === 'Select State') {
 													// 	errors.stateId ='State is Required';
 													// }
-													if (values.vatRegistrationNumber === '' && this.state.isRegisteredForVat==true)
+													
+													if (values.vatRegistrationNumber === '' && this.state.isRegisteredForVat==true){
 														errors.vatRegistrationNumber =	'Tax Registration Number is Required';
 													
 														if(values.vatRegistrationNumber.length!=15){
 															errors.vatRegistrationNumber="Please enter 15 digit Tax Registration Number"
-														}
+														}}
 												
 													// if (param === true) {
 													// 	errors.discount =

@@ -557,10 +557,12 @@ class DetailContact extends React.Component {
 														}
 
 														
-														if (values.vatRegistrationNumber === '' && this.state.isRegisteredForVat==true)
-														errors.vatRegistrationNumber =	'Tax Registration Number is Required';
-												
-
+														if (values.vatRegistrationNumber === '' && this.state.isRegisteredForVat==true){
+															errors.vatRegistrationNumber =	'Tax Registration Number is Required';
+														
+															if(values.vatRegistrationNumber.length!=15){
+																errors.vatRegistrationNumber="Please enter 15 digit Tax Registration Number"
+															}}
 														// if( values.stateId ===''){
 														// 	errors.stateId =
 														// 	'State is Required';

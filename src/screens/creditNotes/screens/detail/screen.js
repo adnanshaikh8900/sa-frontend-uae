@@ -2400,6 +2400,22 @@ min="0"
 																	</FormGroup>
 																</Col>
 																	<Col lg={4}>
+																	<div className="total-item p-2" >
+																			<Row>
+																				<Col lg={6}>
+																					<h5 className="mb-0 text-right">
+																					Total Excise
+																					</h5>
+																				</Col>
+																				<Col lg={6} className="text-right">
+																					<label className="mb-0">
+
+																						{this.state.customer_currency_symbol} &nbsp;
+																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
+																					</label>
+																				</Col>
+																			</Row>
+																		</div>
 																		<div className="">
 																			{/* <div className="total-item p-2">
 																				<Row>
@@ -2563,22 +2579,7 @@ min="0"
 																				</Col>
 																			</Row>
 																		</div>
-																		<div className="total-item p-2" >
-																			<Row>
-																				<Col lg={6}>
-																					<h5 className="mb-0 text-right">
-																					Total Excise
-																					</h5>
-																				</Col>
-																				<Col lg={6} className="text-right">
-																					<label className="mb-0">
-
-																						{this.state.customer_currency_symbol} &nbsp;
-																						{initValue.total_excise.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}
-																					</label>
-																				</Col>
-																			</Row>
-																		</div>
+																		
 																			<div className="total-item p-2">
 																				<Row>
 																					<Col lg={6}>

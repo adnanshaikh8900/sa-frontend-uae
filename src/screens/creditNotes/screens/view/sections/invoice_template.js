@@ -389,7 +389,42 @@ class InvoiceTemplate extends Component {
 												</span>
 											</td>
 										</tr> */}
-										{isCNWithoutProduct==false&&(<tr >
+										
+										<tr >
+											<td style={{ width: '40%' }}>
+												<strong>{strings.TotalExcise}</strong>
+											</td>
+											<td
+												style={{
+													display: 'flex',
+													justifyContent: 'space-between',
+												}}
+											>
+												<span style={{ marginLeft: '2rem' }}></span>
+												<span>
+													{invoiceData.totalExciseAmount ? (
+														<Currency
+															value={invoiceData.totalExciseAmount}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															}
+														/>
+													) : (
+														<Currency
+															value={0}
+															currencySymbol={
+																currencyData[0]
+																	? currencyData[0].currencyIsoCode
+																	: 'USD'
+															}
+														/>
+													)}
+												</span>
+											</td>
+										</tr>
+                                        {isCNWithoutProduct==false&&(<tr >
 											<td style={{ width: '40%' }}>
 												<strong>
 													{strings.Discount }
@@ -428,41 +463,6 @@ class InvoiceTemplate extends Component {
 												</span>
 											</td>
 										</tr>)}
-										<tr >
-											<td style={{ width: '40%' }}>
-												<strong>{strings.TotalExcise}</strong>
-											</td>
-											<td
-												style={{
-													display: 'flex',
-													justifyContent: 'space-between',
-												}}
-											>
-												<span style={{ marginLeft: '2rem' }}></span>
-												<span>
-													{invoiceData.totalExciseAmount ? (
-														<Currency
-															value={invoiceData.totalExciseAmount}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													) : (
-														<Currency
-															value={0}
-															currencySymbol={
-																currencyData[0]
-																	? currencyData[0].currencyIsoCode
-																	: 'USD'
-															}
-														/>
-													)}
-												</span>
-											</td>
-										</tr>
-                                        
 										<tr >
 											<td style={{ width: '40%' }}><strong>{strings.TotalNet }</strong></td>
 											<td style={{display: 'flex',justifyContent: 'space-between',}}>

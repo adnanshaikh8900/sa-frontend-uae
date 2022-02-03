@@ -762,6 +762,9 @@ try {
 																			maxLength="50"
 																			id="productCode"
 																			name="productCode"
+	                         /**Added as per discussion with sajid sir ,disabled product code for sanity*/
+
+																			disabled
 																			placeholder={strings.Enter+strings.ProductCode}
 																			onChange={(option) => {
 																				if (

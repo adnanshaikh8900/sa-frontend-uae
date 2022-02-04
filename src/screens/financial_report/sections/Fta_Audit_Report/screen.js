@@ -229,7 +229,7 @@ class ViewFtaAuditReport extends React.Component {
 		var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
 		return dl ?
 		  XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
-		  XLSX.writeFile(wb, fn || ('FTA AUDIT REPORT'+this.state.startDate+"-"+this.state.endDate+'.'+ (type || 'csv')));
+		  XLSX.writeFile(wb, fn || ('FTA AUDIT REPORT'+this.props.startDate+"-"+this.props.endDate+'.'+ (type || 'csv')));
 
 	   }
 
@@ -241,7 +241,7 @@ class ViewFtaAuditReport extends React.Component {
 		   var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });		
 		   return dl ?
 			 XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
-			 XLSX.writeFile(wb, fn || ('FTA AUDIT REPORT'+this.state.startDate+"-"+this.state.endDate+'.'+ (type || 'xlsx')));
+			 XLSX.writeFile(wb, fn || ('FTA AUDIT REPORT'+this.props.startDate+"-"+this.props.endDate+'.'+ (type || 'xlsx')));
    
 	   }
 
@@ -370,20 +370,24 @@ class ViewFtaAuditReport extends React.Component {
 									) : (
 										<div id="tbl_exporttable_to_xls" className="table-wrapper">
 											<Table responsive>
-												<Table>
-												<tr>
+											<tr>
 													<td>
 													Company Information Table
 													</td>
 												</tr>
+												<Table>
+												
 												<thead>
 													<tr className="header-row" style={{color:"black"}}>
 														{this.columnHeaderCompany.map((column, index) => {
 															return (
 																<th
 																	key={index}
+																	style={{ fontWeight: '600', color:'black' }}
+																	className={column.align ? 'text-right' : '' }
+																	className="table-header-bg"
 																>
-																	<span>{column.label}</span>
+																	{column.label}
 																</th>
 															);
 														})}
@@ -440,20 +444,24 @@ class ViewFtaAuditReport extends React.Component {
 													<tr>
 															<> </>
 													</tr>
-												<Table>
-												<tr>
+													<tr>
 													<td>
 													Customer Data Audit File
 													</td>
 												</tr>
+												<Table>
+												
 												<thead>
 													<tr className="header-row" style={{color:"black"}}>
 														{this.columnHeaderCustomer.map((column, index) => {
 															return (
 																<th
 																	key={index}
+																	style={{ fontWeight: '600', color:'black' }}
+																	className={column.align ? 'text-right' : '' }
+																	className="table-header-bg"
 																>
-																	<span>{column.label}</span>
+																	{column.label}
 																</th>
 															);
 														})}
@@ -491,20 +499,24 @@ class ViewFtaAuditReport extends React.Component {
 												<tr>
 												<> </>
 													</tr>
-												<Table>
-												<tr>
+													<tr>
 													<td>
 													Supplier Data Audit File
 													</td>
 												</tr>
+												<Table>
+												
 												<thead>
 													<tr className="header-row" style={{color:"black"}}>
 														{this.columnHeaderSupplier.map((column, index) => {
 															return (
 																<th
 																	key={index}
+																	style={{ fontWeight: '600', color:'black' }}
+																	className={column.align ? 'text-right' : '' }
+																	className="table-header-bg"
 																>
-																	<span>{column.label}</span>
+																	{column.label}
 																</th>
 															);
 														})}
@@ -541,20 +553,25 @@ class ViewFtaAuditReport extends React.Component {
 												<tr>
 												<> </>
 												</tr>
-												<Table>
+												
 												<tr>
 													<td>
 													Supply Data Information
 													</td>
 												</tr>
+												<Table>
+												
 												<thead>
 													<tr className="header-row" style={{color:"black"}}>
 														{this.columnHeaderSupply.map((column, index) => {
 															return (
 																<th
 																	key={index}
+																	style={{ fontWeight: '600', color:'black' }}
+																	className={column.align ? 'text-right' : '' }
+																	className="table-header-bg"
 																>
-																	<span>{column.label}</span>
+																	{column.label}
 																</th>
 															);
 														})}
@@ -632,20 +649,24 @@ class ViewFtaAuditReport extends React.Component {
 												<tr>
 													<> </>
 												</tr>
-												<Table>
 												<tr>
 													<td>
 													Customer Supply Listing Total
 													</td>
 												</tr>
+												<Table>
+												
 												<thead>
 													<tr className="header-row" style={{color:"black"}}>
 														{this.columnHeaderCustomerTotal.map((column, index) => {
 															return (
 																<th
 																	key={index}
+																	style={{ fontWeight: '600', color:'black' }}
+																	className={column.align ? 'text-right' : '' }
+																	className="table-header-bg"
 																>
-																	<span>{column.label}</span>
+																	{column.label}
 																</th>
 															);
 														})}
@@ -678,20 +699,24 @@ class ViewFtaAuditReport extends React.Component {
 												<tr>
 												<> </>
 												</tr>
-												<Table>
 												<tr>
 													<td>
 													Supply Data Information
 													</td>
 												</tr>
+												<Table>
+												
 												<thead>
 													<tr className="header-row" style={{color:"black"}}>
 														{this.columnHeaderPurchase.map((column, index) => {
 															return (
 																<th
 																	key={index}
+																	style={{ fontWeight: '600', color:'black' }}
+																	className={column.align ? 'text-right' : '' }
+																	className="table-header-bg"
 																>
-																	<span>{column.label}</span>
+																	{column.label}
 																</th>
 															);
 														})}
@@ -769,20 +794,24 @@ class ViewFtaAuditReport extends React.Component {
 												<tr>
 													<> </>
 												</tr>
-												<Table>
 												<tr>
 													<td>
 													Supplier Purchase Listing Total
 													</td>
 												</tr>
+												<Table>
+												
 												<thead>
 													<tr className="header-row" style={{color:"black"}}>
 														{this.columnHeaderSupplierTotal.map((column, index) => {
 															return (
 																<th
 																	key={index}
+																	style={{ fontWeight: '600', color:'black' }}
+																	className={column.align ? 'text-right' : '' }
+																	className="table-header-bg"
 																>
-																	<span>{column.label}</span>
+																	{column.label}
 																</th>
 															);
 														})}
@@ -814,20 +843,24 @@ class ViewFtaAuditReport extends React.Component {
 												<tr>
 												<> </>
 												</tr>
-												<Table>
 												<tr>
 													<td>
 													General Ledger Table
 													</td>
 												</tr>
+												<Table>
+												
 												<thead>
 													<tr className="header-row" style={{color:"black"}}>
 														{this.columnHeaderGenral.map((column, index) => {
 															return (
 																<th
 																	key={index}
+																	style={{ fontWeight: '600', color:'black' }}
+																	className={column.align ? 'text-right' : '' }
+																	className="table-header-bg"
 																>
-																	<span>{column.label}</span>
+																	{column.label}
 																</th>
 															);
 														})}
@@ -885,20 +918,24 @@ class ViewFtaAuditReport extends React.Component {
 												<tr>
 													<> </>
 												</tr>
-												<Table>
 												<tr>
 													<td>
 													General Ledger Table Total
 													</td>
 												</tr>
+												<Table>
+												
 												<thead>
 													<tr className="header-row" style={{color:"black"}}>
 														{this.columnHeaderGeneralTotal.map((column, index) => {
 															return (
 																<th
 																	key={index}
+																	style={{ fontWeight: '600', color:'black' }}
+																	className={column.align ? 'text-right' : '' }
+																	className="table-header-bg"
 																>
-																	<span>{column.label}</span>
+																	{column.label}
 																</th>
 															);
 														})}

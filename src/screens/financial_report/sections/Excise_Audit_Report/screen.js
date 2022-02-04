@@ -78,18 +78,18 @@ class ViewFtaExciseAuditReport extends React.Component {
 			chart_of_account_list: [],
 		};
 		this.columnHeaderCompany = [
-			// { label: 'Company Name', value: 'companyName', sort: true },
+			{ label: 'Company Name', value: 'companyName', sort: true },
 			{ label: 'Taxable Person Name En', value: 'taxablePersonNameEn', sort: false },
 			{ label: 'Taxable Person Name Ar', value: 'taxablePersonNameAr', sort: true },
 			{ label: 'Tax Registration Number',value: 'taxRegistrationNumber',sort: true,},
 			{ label: 'Tax Agency Name', value: 'TaxAgencyName', sort: true },
 			{ label: 'Tax Agency Number', value: 'taxAgencyNumber', sort: false,align: 'right'  },
-			{ label: 'TaxAgentName', value: 'TaxAgentName', sort: false },
+			{ label: 'Tax Agent Name', value: 'TaxAgentName', sort: false },
 			{ label: 'Tax Agency Agent Number', value: 'taxAgencyAgentNumber', sort: false },
 			{ label: 'Period Start ', value: 'startDate', sort: false },
 			{ label: 'Period End ', value: 'endDate', sort: false },
-			{ label: 'FAFCreationDate ', value: 'creationDate', sort: false },
-			{ label: 'ProductVersion ', value: 'productVersion', sort: false },
+			{ label: 'FAF Creation Date ', value: 'creationDate', sort: false },
+			{ label: 'Product Version ', value: 'productVersion', sort: false },
 			{ label: 'FAFVersion ', value: 'fafVersion', sort: false },
 		];
 		this.columnHeaderCustomer = [
@@ -102,7 +102,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 		this.columnHeaderSupplier = [
 			{ label: 'Supplier Name', value: 'supplierName', sort: true },
 			{ label: 'GL/ID', value: 'glid', sort: true },
-			{ label: 'Supplier Country/Emirate', value: 'supplierCountry', sort: false },
+			{ label: 'Supplier Country / Emirate', value: 'supplierCountry', sort: false },
 			{ label: 'Supplier TRN', value: 'supplierTRN', sort: true },
 			{ label: 'Reverse Charge', value: 'reverseCharge', sort: true },
 		];
@@ -113,9 +113,9 @@ class ViewFtaExciseAuditReport extends React.Component {
 			// { label: 'GL/ID', value: 'GL/ID', sort: true },
 			{ label: 'Invoice Date', value: 'invoiceDate', sort: true },
 			{ label: 'Invoice No', value: 'invoiceNo', sort: false },
-			{ label: 'Permit.No', value: 'permitNo', sort: true },
+			{ label: 'Permit No', value: 'permitNo', sort: true },
 			{ label: 'Transaction ID', value: 'transactionID', sort: true },
-			{ label: 'Line No.', value: 'lineNo', sort: false },
+			{ label: 'Line No', value: 'lineNo', sort: false },
 			{ label: 'Product Name', value: 'productName', sort: true },
 			{ label: 'Product Type', value: 'productType', sort: true },
 			{ label: 'Product Description', value: 'productDescription', sort: false },
@@ -138,7 +138,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 			{ label: 'Customer TRN', value: 'customerTRN', sort: true },
 			{ label: 'Invoice Date', value: 'invoiceDate', sort: true },
 			{ label: 'Invoice No', value: 'invoiceNo', sort: false },
-			{ label: 'Permit.No', value: 'permitNo', sort: true },
+			{ label: 'Permit No', value: 'permitNo', sort: true },
 			{ label: 'Transaction ID', value: 'transactionID', sort: true },
 			{ label: 'Line No.', value: 'lineNo', sort: false },
 			{ label: 'Product Name', value: 'productName', sort: true },
@@ -166,7 +166,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 			{ label: 'Transaction ID', value: 'transactionID', sort: true },
 			{ label: 'Source Document ID', value: 'sourceDocumentID', sort: true },
 			{ label: 'Source Type', value: 'sourceType', sort: true },
-			{ label: 'Debit.', value: 'debit', sort: false },
+			{ label: 'Debit', value: 'debit', sort: false },
 			{ label: 'Credit', value: 'credit', sort: true },
 			{ label: 'Balance', value: 'balance', sort: true },
 		
@@ -176,7 +176,7 @@ class ViewFtaExciseAuditReport extends React.Component {
 			{ label: 'Total Debit', value: 'totalDebit', sort: true },
 			{ label: 'Total Credit', value: 'totalCredit', sort: false },
 			{ label: 'Transaction Count Total', value: 'transactionCountTotal', sort: true },
-			{ label: 'GLTCurrency', value: 'gltcurrency', sort: true }
+			{ label: 'GLT Currency', value: 'gltcurrency', sort: true }
 		];
 		this.columnStockFileTable= [
 			{ label: 'Ware House Id', value: 'wareHouseId', sort: true },
@@ -463,8 +463,11 @@ class ViewFtaExciseAuditReport extends React.Component {
 															return (
 																<th
 																	key={index}
+																	style={{ fontWeight: '600', color:'black' }}
+																	className={column.align ? 'text-right' : '' }
+																	className="table-header-bg"
 																>
-																	<span>{column.label}</span>
+																	{column.label}
 																</th>
 															);
 														})}
@@ -532,8 +535,11 @@ class ViewFtaExciseAuditReport extends React.Component {
 															return (
 																<th
 																	key={index}
+																	style={{ fontWeight: '600', color:'black' }}
+																	className={column.align ? 'text-right' : '' }
+																	className="table-header-bg"
 																>
-																	<span>{column.label}</span>
+																	{column.label}
 																</th>
 															);
 														})}
@@ -590,8 +596,11 @@ class ViewFtaExciseAuditReport extends React.Component {
 															return (
 																<th
 																	key={index}
+																	style={{ fontWeight: '600', color:'black' }}
+																	className={column.align ? 'text-right' : '' }
+																	className="table-header-bg"
 																>
-																	<span>{column.label}</span>
+																	{column.label}
 																</th>
 															);
 														})}
@@ -648,8 +657,11 @@ class ViewFtaExciseAuditReport extends React.Component {
 															return (
 																<th
 																	key={index}
+																	style={{ fontWeight: '600', color:'black' }}
+																	className={column.align ? 'text-right' : '' }
+																	className="table-header-bg"
 																>
-																	<span>{column.label}</span>
+																	{column.label}
 																</th>
 															);
 														})}
@@ -745,8 +757,11 @@ class ViewFtaExciseAuditReport extends React.Component {
 															return (
 																<th
 																	key={index}
+																	style={{ fontWeight: '600', color:'black' }}
+																	className={column.align ? 'text-right' : '' }
+																	className="table-header-bg"
 																>
-																	<span>{column.label}</span>
+																	{column.label}
 																</th>
 															);
 														})}
@@ -795,8 +810,11 @@ class ViewFtaExciseAuditReport extends React.Component {
 															return (
 																<th
 																	key={index}
+																	style={{ fontWeight: '600', color:'black' }}
+																	className={column.align ? 'text-right' : '' }
+																	className="table-header-bg"
 																>
-																	<span>{column.label}</span>
+																	{column.label}
 																</th>
 															);
 														})}
@@ -888,8 +906,11 @@ class ViewFtaExciseAuditReport extends React.Component {
 															return (
 																<th
 																	key={index}
+																	style={{ fontWeight: '600', color:'black' }}
+																	className={column.align ? 'text-right' : '' }
+																	className="table-header-bg"
 																>
-																	<span>{column.label}</span>
+																	{column.label}
 																</th>
 															);
 														})}
@@ -934,10 +955,13 @@ class ViewFtaExciseAuditReport extends React.Component {
 														{this.columnHeaderGenral.map((column, index) => {
 															return (
 																<th
-																	key={index}
-																>
-																	<span>{column.label}</span>
-																</th>
+																key={index}
+																style={{ fontWeight: '600', color:'black' }}
+																className={column.align ? 'text-right' : '' }
+																className="table-header-bg"
+															>
+																{column.label}
+															</th>
 															);
 														})}
 													</tr>
@@ -1009,8 +1033,11 @@ class ViewFtaExciseAuditReport extends React.Component {
 															return (
 																<th
 																	key={index}
+																	style={{ fontWeight: '600', color:'black' }}
+																	className={column.align ? 'text-right' : '' }
+																	className="table-header-bg"
 																>
-																	<span>{column.label}</span>
+																	{column.label}
 																</th>
 															);
 														})}
